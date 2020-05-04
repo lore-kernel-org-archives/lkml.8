@@ -2,226 +2,145 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D5AC47258
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E263C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20A8620721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:36:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="w0XGA768"
+	by mail.kernel.org (Postfix) with ESMTP id E6B3320735
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:37:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgEDGgB (ORCPT
+        id S1727811AbgEDGhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 02:36:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726910AbgEDGgA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 02:36:00 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9BE4C061A0F
-        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 23:35:58 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id g2so10433434vsb.4
-        for <linux-kernel@vger.kernel.org>; Sun, 03 May 2020 23:35:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=5sFJYLc/0VUdiszQsskqwyzqT4X+yBo4BGoRsgAELP8=;
-        b=w0XGA768oHIzv2ggftjQOGlT6jWI8cD7B/hFDXHnLiHdftXRdssuj+DM4uSXaAgTpI
-         5eIRxvoNBR8MEvD36bWKlbPvLEDKwUaPPeTE7oEtxH9uWFLOVHeWFq9iaT09woZiUbxX
-         gOw+c2Ar5IMdSlobe97mK788mPLoWO8d9s6FwRa9XSNKkaRWZPOiFPcNlRH4P5Zdjafm
-         qqbpoJ9LX9jm5/aYTAShd4JXVlfZ46AZyX9VBNiDjTcx4j/wrfDuGnaXfnRPVoM8nMbm
-         Kx+ofGOiNwHx2Q+ryv2D60qNRiv1rSS4a/IsD/R9d37W89kor/isaYMqwaQurXpzcBKe
-         Jl+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5sFJYLc/0VUdiszQsskqwyzqT4X+yBo4BGoRsgAELP8=;
-        b=S9e5FinoeRTAHfmVRQ/Qk9MSIpa9zpscp/BgJPVROfZU8k2WHOWwknjS2vrj7DX2Vc
-         aM+FpANduqP4jMEJFFn+cdsKf36kvjvpFeM+cRQ3kePKFjdI6NFb8AFPAR9PV3nBWvK+
-         VBIMb6gzmMjoJKfSYt5H4PImrdzQLyjOM/bj0BPJer2pZ1leOnJxR4F5Jz4/TamYYFj6
-         qxNNLk490W3bMK0qJcWMUrlC13k7XcUkJwUM8WWj9Vaw7R/pbY89KxidWpxkmvYcgOAp
-         4XKVXUOv7fmJvmQH3Ket2AEeR7CgI1seIitcNnsHKMJrQ1LjdBFDOerdLSR+0X8g71W6
-         60JQ==
-X-Gm-Message-State: AGi0PuZ+JU8Zx7P/aaHab6elTlxgPDYztluIRQ07bwku9pDDCmpgWVpD
-        h1AKTL4UeTjPww7Uql7GjrWCehHgbhmHgv2gsn9djQ==
-X-Google-Smtp-Source: APiQypKTJI0Xlt9dGE+0uJMLYsCNcQkeRzkxYMbdYpJXByDZ7vhKcQaxHvTj/nEv+e1qF1f+EkvX1YRc9YSoLnOdaBo=
-X-Received: by 2002:a67:bd07:: with SMTP id y7mr11154865vsq.109.1588574157839;
- Sun, 03 May 2020 23:35:57 -0700 (PDT)
+        Mon, 4 May 2020 02:37:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49810 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726906AbgEDGhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 02:37:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id EBFF7ABBD;
+        Mon,  4 May 2020 06:37:38 +0000 (UTC)
+Subject: Re: [PATCH 1/3] tty: n_gsm: Improve debug output
+To:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20200430113433.2162886-1-gregory.clement@bootlin.com>
+ <20200430113433.2162886-2-gregory.clement@bootlin.com>
+From:   Jiri Slaby <jslaby@suse.cz>
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <344a3762-ddbe-f57a-6929-83bf255736ca@suse.cz>
+Date:   Mon, 4 May 2020 08:37:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
- <20200427072342.5499-1-jian-hong@endlessm.com> <20200428162152.ztsqp7nxqbwqrm6r@gilmour.lan>
-In-Reply-To: <20200428162152.ztsqp7nxqbwqrm6r@gilmour.lan>
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-Date:   Mon, 4 May 2020 14:35:08 +0800
-Message-ID: <CAPpJ_efvtVzb_hvoVOeaePh7UdE13wOiiGaDBH38cToB-yhkUg@mail.gmail.com>
-Subject: Re: [PATCH v2 00/91] drm/vc4: Support BCM2711 Display Pipelin
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-i2c@vger.kernel.org,
-        Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200430113433.2162886-2-gregory.clement@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maxime Ripard <maxime@cerno.tech> =E6=96=BC 2020=E5=B9=B44=E6=9C=8829=E6=97=
-=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=8812:21=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Hi,
->
-> On Mon, Apr 27, 2020 at 03:23:42PM +0800, Jian-Hong Pan wrote:
-> > Hi Maxime,
-> >
-> > Thanks for your V2 patch series!  I'm testing it.
-> >
-> > This patch series is applied upon mainline kernel 5.7-rc2 cleanly and b=
-uilt.
-> > System can boot into console text mode, but no graphic UI.
-> >
-> > Get the error in vc5_hdmi_phy_init(), and full dmesg is at [1]:
-> >
-> > [    5.587543] vc4_hdmi fef00700.hdmi: Unknown register ID 46
-> > [    5.587700] debugfs: Directory 'fef00700.hdmi' with parent 'vc4-hdmi=
-' already present!
-> > [    5.588070] vc4_hdmi fef00700.hdmi: vc4-hdmi-hifi <-> fef00700.hdmi =
-mapping ok
-> > [    5.588076] vc4_hdmi fef00700.hdmi: ASoC: no DMI vendor name!
-> > [    5.588263] vc4-drm gpu: bound fef00700.hdmi (ops vc4_hdmi_ops)
-> > [    5.588299] vc4_hdmi fef05700.hdmi: Unknown register ID 46
-> > [    5.588373] debugfs: Directory 'vc4-hdmi' with parent 'asoc' already=
- present!
-> > [    5.588673] vc4_hdmi fef05700.hdmi: vc4-hdmi-hifi <-> fef05700.hdmi =
-mapping ok
-> > [    5.588677] vc4_hdmi fef05700.hdmi: ASoC: no DMI vendor name!
-> > [    5.588809] vc4-drm gpu: bound fef05700.hdmi (ops vc4_hdmi_ops)
-> > [    5.588854] vc4-drm gpu: bound fe806000.vec (ops vc4_vec_ops)
-> > [    5.588897] vc4-drm gpu: bound fe004000.txp (ops vc4_txp_ops)
-> > [    5.588934] vc4-drm gpu: bound fe400000.hvs (ops vc4_hvs_ops)
-> > [    5.588990] vc4-drm gpu: bound fe206000.pixelvalve (ops vc4_crtc_ops=
-)
-> > [    5.589030] vc4-drm gpu: bound fe207000.pixelvalve (ops vc4_crtc_ops=
-)
-> > [    5.589074] vc4-drm gpu: bound fe20a000.pixelvalve (ops vc4_crtc_ops=
-)
-> > [    5.589106] vc4-drm gpu: bound fe216000.pixelvalve (ops vc4_crtc_ops=
-)
-> > [    5.589145] vc4-drm gpu: bound fec12000.pixelvalve (ops vc4_crtc_ops=
-)
-> > [    5.589294] checking generic (3e513000 6d8c00) vs hw (0 ffffffffffff=
-ffff)
-> > [    5.589297] fb0: switching to vc4drmfb from simple
-> > [    5.589433] Console: switching to colour dummy device 80x25
-> > [    5.589481] [drm] Supports vblank timestamp caching Rev 2 (21.10.201=
-3).
-> > [    5.589816] [drm] Initialized vc4 0.0.0 20140616 for gpu on minor 0
-> > [    5.601079] ------------[ cut here ]------------
-> > [    5.601095] WARNING: CPU: 2 PID: 127 at drivers/gpu/drm/vc4/vc4_hdmi=
-_phy.c:413 vc5_hdmi_phy_init+0x7ac/0x2078
-> > [    5.601097] Modules linked in:
-> > [    5.601103] CPU: 2 PID: 127 Comm: kworker/2:1 Not tainted 5.7.0-rc2-=
-00091-ga181df59a930 #7
-> > [    5.601105] Hardware name: Raspberry Pi 4 Model B (DT)
-> > [    5.601112] Workqueue: events deferred_probe_work_func
-> > [    5.601116] pstate: 20000005 (nzCv daif -PAN -UAO)
-> > [    5.601119] pc : vc5_hdmi_phy_init+0x7ac/0x2078
-> > [    5.601123] lr : vc4_hdmi_encoder_enable+0x1b8/0x1ac0
-> > [    5.601124] sp : ffff80001217b410
-> > [    5.601126] x29: ffff80001217b410 x28: ffff0000ec6370f0
-> > [    5.601129] x27: ffff0000f650d400 x26: 000000008a500000
-> > [    5.601132] x25: ffff8000113b4ac0 x24: 0000000000002060
-> > [    5.601135] x23: 000000000a500000 x22: 0000000000000300
-> > [    5.601137] x21: 0000000008d9ee20 x20: ffff0000ec535080
-> > [    5.601140] x19: 000000010989e7c0 x18: 0000000000000000
-> > [    5.601142] x17: 0000000000000001 x16: 0000000000005207
-> > [    5.601145] x15: 00004932ad293c92 x14: 0000000000000137
-> > [    5.601147] x13: ffff800010015000 x12: 0000000000000001
-> > [    5.601150] x11: 0000000000000001 x10: 0000000000000000
-> > [    5.601152] x9 : 0000000000000000 x8 : ffff800010015038
-> > [    5.601154] x7 : 0000000000000001 x6 : ffff80001217b368
-> > [    5.601157] x5 : 0000000000000000 x4 : 000000000000004c
-> > [    5.601159] x3 : 0000000000000000 x2 : ffff8000113b4ac0
-> > [    5.601162] x1 : ffff8000120c5f44 x0 : 00000000dc8984ff
-> > [    5.601164] Call trace:
-> > [    5.601169]  vc5_hdmi_phy_init+0x7ac/0x2078
-> > [    5.601172]  vc4_hdmi_encoder_enable+0x1b8/0x1ac0
-> > [    5.601176]  drm_atomic_helper_commit_modeset_enables+0x224/0x248
-> > [    5.601179]  vc4_atomic_complete_commit+0x400/0x558
-> > [    5.601182]  vc4_atomic_commit+0x1e0/0x200
-> > [    5.601185]  drm_atomic_commit+0x4c/0x60
-> > [    5.601190]  drm_client_modeset_commit_atomic.isra.0+0x17c/0x238
-> > [    5.601192]  drm_client_modeset_commit_locked+0x5c/0x198
-> > [    5.601195]  drm_client_modeset_commit+0x30/0x58
-> > [    5.601201]  drm_fb_helper_restore_fbdev_mode_unlocked+0x78/0xe0
-> > [    5.601204]  drm_fb_helper_set_par+0x30/0x68
-> > [    5.601208]  fbcon_init+0x3d4/0x598
-> > [    5.601212]  visual_init+0xb0/0x108
-> > [    5.601214]  do_bind_con_driver+0x1d0/0x3a8
-> > [    5.601217]  do_take_over_console+0x144/0x208
-> > [    5.601219]  do_fbcon_takeover+0x68/0xd8
-> > [    5.601222]  fbcon_fb_registered+0x100/0x118
-> > [    5.601226]  register_framebuffer+0x1f4/0x338
-> > [    5.601229]  __drm_fb_helper_initial_config_and_unlock+0x2f8/0x4a0
-> > [    5.601232]  drm_fbdev_client_hotplug+0xd4/0x1b0
-> > [    5.601235]  drm_fbdev_generic_setup+0xb0/0x130
-> > [    5.601238]  vc4_drm_bind+0x184/0x1a0
-> > [    5.601241]  try_to_bring_up_master+0x168/0x1c8
-> > [    5.601244]  __component_add+0xa4/0x170
-> > [    5.601246]  component_add+0x14/0x20
-> > [    5.601248]  vc4_vec_dev_probe+0x20/0x30
-> > [    5.601252]  platform_drv_probe+0x54/0xa8
-> > [    5.601254]  really_probe+0xd8/0x320
-> > [    5.601256]  driver_probe_device+0x58/0xf0
-> > [    5.601258]  __device_attach_driver+0x84/0xc8
-> > [    5.601263]  bus_for_each_drv+0x78/0xc8
-> > [    5.601265]  __device_attach+0xe4/0x140
-> > [    5.601267]  device_initial_probe+0x14/0x20
-> > [    5.601269]  bus_probe_device+0x9c/0xa8
-> > [    5.601271]  deferred_probe_work_func+0x74/0xb0
-> > [    5.601276]  process_one_work+0x1bc/0x338
-> > [    5.601279]  worker_thread+0x1f8/0x428
-> > [    5.601282]  kthread+0x138/0x158
-> > [    5.601286]  ret_from_fork+0x10/0x1c
-> > [    5.601288] ---[ end trace cfba0996218c3f3d ]---
->
-> Thanks for testing!
->
-> Do you have a bit more details regarding your setup? Was it connected to =
-an
-> external display?
+On 30. 04. 20, 13:34, Gregory CLEMENT wrote:
+> Use appropriate print helpers for debug messages.
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> ---
+>  drivers/tty/n_gsm.c | 18 +++++-------------
+>  1 file changed, 5 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
+> index d77ed82a4840..4965e39e0223 100644
+> --- a/drivers/tty/n_gsm.c
+> +++ b/drivers/tty/n_gsm.c
+> @@ -459,7 +459,7 @@ static void gsm_print_packet(const char *hdr, int addr, int cr,
+>  	if (!(debug & 1))
+>  		return;
+>  
+> -	pr_info("%s %d) %c: ", hdr, addr, "RC"[cr]);
+> +	pr_debug("%s %d) %c: ", hdr, addr, "RC"[cr]);
 
-Yes, the HDMI cable is connected to HDMI0 port on RPi 4.
+Now, you need both debug=1 module parameter *and* fiddling with
+dynamic_debug, if enabled. And it is enabled in most distros…
 
-> If so, do you know the resolution it was trying to setup?
+We don't have any unconditional KERN_DEBUG printk helper, unfortunately.
 
-According to the log, I think it is 1920x1080:
-Apr 27 15:37:25 endless gdm-Xorg-:0[1960]: (II) modeset(0): Output
-HDMI-1 connected
-Apr 27 15:37:25 endless gdm-Xorg-:0[1960]: (II) modeset(0): Output
-HDMI-2 disconnected
-Apr 27 15:37:25 endless gdm-Xorg-:0[1960]: (II) modeset(0): Output
-Composite-1 disconnected
-Apr 27 15:37:25 endless gdm-Xorg-:0[1960]: (II) modeset(0): Using
-exact sizes for initial modes
-Apr 27 15:37:25 endless gdm-Xorg-:0[1960]: (II) modeset(0): Output
-HDMI-1 using initial mode 1920x1080 +0+0
+>  	switch (control & ~PF) {
+>  	case SABM:
+> @@ -504,18 +504,10 @@ static void gsm_print_packet(const char *hdr, int addr, int cr,
+>  	else
+>  		pr_cont("(F)");
+>  
+> -	if (dlen) {
+> -		int ct = 0;
+> -		while (dlen--) {
+> -			if (ct % 8 == 0) {
+> -				pr_cont("\n");
+> -				pr_debug("    ");
+> -			}
+> -			pr_cont("%02X ", *data++);
+> -			ct++;
+> -		}
+> -	}
+> -	pr_cont("\n");
+> +	if (dlen)
 
-https://gist.github.com/starnight/45e1468bfa0426a54d2fb4a9269cfb94
+print_hex_dump* handle zero len quite well. No need for the if.
 
-Regards,
-Jian-Hong Pan
+> +		print_hex_dump_bytes("", DUMP_PREFIX_NONE, data, dlen);
+> +
+> +	pr_debug("\n");
+
+This is superfluous too. It was intended as the last \n in the previous
+code.
+
+thanks,
+-- 
+js
+suse labs
