@@ -2,100 +2,153 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9480C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF19C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A3662073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF4F6206B9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:30:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="J+lp2Lu8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbgEDMak (ORCPT
+        id S1728748AbgEDMaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 08:30:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:43276 "EHLO foss.arm.com"
+        Mon, 4 May 2020 08:30:55 -0400
+Received: from mout.web.de ([212.227.17.12]:51955 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726915AbgEDMak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 08:30:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D84F31FB;
-        Mon,  4 May 2020 05:30:39 -0700 (PDT)
-Received: from p8cg001049571a15.arm.com (unknown [10.163.71.79])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 02DE73F71F;
-        Mon,  4 May 2020 05:30:36 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64/cpuinfo: Drop boot_cpu_data
-Date:   Mon,  4 May 2020 18:00:00 +0530
-Message-Id: <1588595400-4560-1-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
+        id S1726915AbgEDMay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 08:30:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1588595426;
+        bh=4vtckfEA/Gm+6t8z2cMn4aydD8EVKVyz7dijkkXOO7E=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=J+lp2Lu8oTLdScCp4N1xYAmsWaAeBEaNynd68ALXT3T3rVQNhDGqH8WmD00/LTl0j
+         RDwxa1obRgZzw+ff9MZtW1PHNUgLeeXXOsy/igbzr4TRHMEaQPJkyo7D2Krx0pDh4U
+         DyZiXxqmf/AuVAmIUu/556c+FdzFq7KofIQiRlsw=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.152.69]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MKa2F-1jXVmY43L5-0022S7; Mon, 04
+ May 2020 14:30:26 +0200
+To:     Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>,
+        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Dejin Zheng <zhengdejin5@gmail.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Pierre-Yves Mordret <pierre-yves.mordret@st.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        Vladimir Zapolskiy <vz@mleia.com>
+Subject: Re: [PATCH] i2c: drivers: Remove superfluous error messages
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <9ecae921-be46-dec0-f62a-f388740b03ea@web.de>
+Date:   Mon, 4 May 2020 14:30:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:82XsyLyiADQjPETTZUXqQDyUj51NmnSRLUZ/CUItTRuhWhb0zPt
+ tCFeaYfqeXeStYyR7mzvhuhBHFDlIeaMH7jVwDEl1YkzZlnTktLZV7lLAodSZlkdjRG9zyV
+ 4gV5ldHjw92kyo+M68xJZXhPZdozkZ4DIEz7aehAamR5HusyBx+JdJ70YwYeT43w/kwe11o
+ Xzm5NDnrqrtrpNe1Jcv8w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qBm+VNjh1RM=:uZCCvUWfpo5r2gu8R0umae
+ zzOKBSV80kv8XocS1a7mE0yugGxjJLDKsOAd7RQHlZMK06IIwayXMc+g/CyyBZMWK0MFxX1NW
+ PMDGv0tQgjt8eigYOZVWOsHvphWpOvQZJ6GsiDE5crXoMuXEPfz+fybMXfW2rGAuDHion5Xm9
+ uun9WzVh5e8SuhsWv1W+J+m6W2dCoajZn+GgqmtopSSGk5F2M/77sGIMb6bkcMT4hO77Of40B
+ 1yYNs9zMP3KLetQzvEbbf41X0KDvhECMQ3IJbRfOK8Erk0Me7SR4NO2UDmLBSycqj8jVGSfPv
+ WZbPMCsBGSIJl0uhGhRzWNGbjTpm7Mw3Glx/QYGDiUz95uzA6QEVyIbymET71BbJo30ARiZ2y
+ 00Xn6gNQiJgTS7GBWEbhLQFtBV6TtBst3ebY/y9Xz+sJw2ZnGIyV1Lr29oCgFjyCDCWDxTYlZ
+ HPHEnR9a4N6wEerSgaWHJMx07B463MrG5UOCAS7SyUeU9oiEobXDf7GhfbG838w9rgEIqbTw4
+ zdV4u089d97l+Y0ZQqv3Cait3eHrmGUhTV43N7qohvt++dEb0Wf60tCdEp6eJtZ3/RohYYOZ6
+ szaxS5lI7qTaKTKWuNEJvxxZvXJUCJfrIRzb8DHbtYHh6fXsswMUOveYGVC/0A6bEOS1wsWcw
+ iesJnA6FhjGMzUAcSCuwJ4qbLXbBGp6wOKvZape/R9xukkwQ7bLb63OCxYpaEpru7N8/tJlyd
+ ZF0gTUKOfGPtsISZpSMX1oanAU4UxsjrVLVlRsLbzw9pTsFDpHIVg9G1/DO02IifDEkRlju1N
+ GXYXyzzKPQ9vFEBQTikBzCb/3DYXnLuTxahGMqk7o/Ent25POL0UIHYY7vgj4I8AiO6Ha6QEt
+ trbHiWgCESyolIO8ZUDb380AfAycJX9hXI2puar7t2V4Xdrcb8/FcU3O4Qeosb1rYGMVxZ0Zo
+ A1SH9e6L1FyeecXB5vnTSap8sVmcKxKDbZ3owQNHcHczcAFrhHxcnvXBs6OaW51FL3wfNw0Xu
+ BzIyDWBBVarj9x64uLI8VEZ8B/uiG/1pJo9zoYMu+41XZR74dGKZR5CJlOGcP/sONqVm4eTHU
+ lk6cD5aF3VzbRkc2d2/eqDApYdIcpzV3apLGTUjSYz+jtp3iPuMwzpe20WQkdaePw67hWhMfP
+ 4RwE1SPR7M+j6VPZ8ks2W1NPNvYiZNAQGpcWnqF/wdEvFIeJEzSqoHF2z1WC9g4U5tUBP3E38
+ t9q/42j45WRUzIhbG
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A global boot_cpu_data is not really required. Lets drop this. While
-here, rename the local variable as boot_cpu_info when it is fetched
-for the boot cpu.
+> The function platform_get_irq can log an error by itself.
+> This omit a redundant message for exception handling in the
+> calling function.
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Suzuki Poulose <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
+I propose to avoid a typo in a word of this change description.
 
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
-Based on 5.7-rc4
 
- arch/arm64/kernel/cpuinfo.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+> Suggested by Coccinelle.
 
-diff --git a/arch/arm64/kernel/cpuinfo.c b/arch/arm64/kernel/cpuinfo.c
-index a515d8f3639e..dabcdc132e56 100644
---- a/arch/arm64/kernel/cpuinfo.c
-+++ b/arch/arm64/kernel/cpuinfo.c
-@@ -31,7 +31,6 @@
-  * values depending on configuration at or after reset.
-  */
- DEFINE_PER_CPU(struct cpuinfo_arm64, cpu_data);
--static struct cpuinfo_arm64 boot_cpu_data;
- 
- static const char *icache_policy_str[] = {
- 	[0 ... ICACHE_POLICY_PIPT]	= "RESERVED/UNKNOWN",
-@@ -393,15 +392,16 @@ static void __cpuinfo_store_cpu(struct cpuinfo_arm64 *info)
- void cpuinfo_store_cpu(void)
- {
- 	struct cpuinfo_arm64 *info = this_cpu_ptr(&cpu_data);
-+	struct cpuinfo_arm64 *boot_cpu_info = &per_cpu(cpu_data, 0);
-+
- 	__cpuinfo_store_cpu(info);
--	update_cpu_features(smp_processor_id(), info, &boot_cpu_data);
-+	update_cpu_features(smp_processor_id(), info, boot_cpu_info);
- }
- 
- void __init cpuinfo_store_boot_cpu(void)
- {
--	struct cpuinfo_arm64 *info = &per_cpu(cpu_data, 0);
--	__cpuinfo_store_cpu(info);
-+	struct cpuinfo_arm64 *boot_cpu_info = &per_cpu(cpu_data, 0);
- 
--	boot_cpu_data = *info;
--	init_cpu_features(&boot_cpu_data);
-+	__cpuinfo_store_cpu(boot_cpu_info);
-+	init_cpu_features(boot_cpu_info);
- }
--- 
-2.20.1
+Can an information like the following be more helpful?
 
+Generated by: scripts/coccinelle/api/platform_get_irq.cocci
+
+
+I observe that a command like =E2=80=9Cmake COCCI=3D=E2=80=A6 M=3Ddrivers/=
+i2c/busses/ coccicheck=E2=80=9D
+points only three source files out for further considerations
+according to such a known transformation pattern in the software =E2=80=9C=
+Linux next-20200504=E2=80=9D.
+
+Regards,
+Markus
