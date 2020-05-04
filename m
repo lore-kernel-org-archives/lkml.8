@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3B5C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0119C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FCEA206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C305620707
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615397;
-	bh=zivjASXuTcwXToZEQ5jKqUzA5DmwyF9J+js3XOWYvNE=;
+	s=default; t=1588615399;
+	bh=EWFFcTEu2u5Wpuly/p+eP+0dSJ8gj+K2GbeLtohLHyI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rmv9eEIvGM7323dOVFLMxPMnEUQkmfRwr8SJzzDi/GSzuk5WuPnaWxqT1s87kIWlQ
-	 AbTs2s7O0KIVAV48MO7zywZnz80dFlwMObok7s9nZEigbsRk5pYgudK1s/cJlPPk1D
-	 nOGRetWJH0zUdMM9vpozNB4rlc/Z1C783TarnozA=
+	b=Qo+D5hT/a8M8JzmhUDY39n5nvd78vPNoEI0OXlWXa7oQnOTroYDFtyYUsXhDJeb50
+	 valp+gHYgHRUnhvSJrr0JPLExYt8e2i8t+upRDtn8B56I0TSzNR8GSPBv+yhwomPL4
+	 jVepdo9WgNxfcw1nGkxlrDpeOunBNgR+Zz2jY0zA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731482AbgEDSDQ (ORCPT
+        id S1731488AbgEDSDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:03:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60152 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:03:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731464AbgEDSDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:03:11 -0400
+        id S1731481AbgEDSDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:03:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2DDB20707;
-        Mon,  4 May 2020 18:03:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5D752073E;
+        Mon,  4 May 2020 18:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615391;
-        bh=zivjASXuTcwXToZEQ5jKqUzA5DmwyF9J+js3XOWYvNE=;
+        s=default; t=1588615396;
+        bh=EWFFcTEu2u5Wpuly/p+eP+0dSJ8gj+K2GbeLtohLHyI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IJaVAfJl91ffknR0IGow3x3m2jZIkS/bibShhJ5L/sneZ/Q+fBbqtS0o1bq7X3i9N
-         yZ8rc6olVqyh4foeirXulWm/+fmwUcD+3zWlj0NzVsmM5q+V4qVFBvGTztR8Ry2y7Q
-         aUYO5a3L/NWKtVIsEfTj4Kg3BGbNGUsaipYnlg2o=
+        b=KYiRpTOJnVINKODHA3SY3qLJOKrb+dvQ6ykC52Ddq59CU2C615x254Cdn90XSZRvx
+         3VTVBq2WA1spBGZm3UAExxyfny3PtipUKBKy9sXZ/nSWnWpFtth5mu2frg3atlNUc7
+         s0RuLywfUCnEAdEozHoRW6rVMMQ8nbkOr0JOtKu0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Manasi Navare <manasi.d.navare@intel.com>
-Subject: [PATCH 5.4 02/57] drm/edid: Fix off-by-one in DispID DTD pixel clock
-Date:   Mon,  4 May 2020 19:57:06 +0200
-Message-Id: <20200504165456.913883200@linuxfoundation.org>
+        stable@vger.kernel.org, Wu Bo <wubo40@huawei.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 21/57] ALSA: hda/hdmi: fix without unlocked before return
+Date:   Mon,  4 May 2020 19:57:25 +0200
+Message-Id: <20200504165458.197655876@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165456.783676004@linuxfoundation.org>
 References: <20200504165456.783676004@linuxfoundation.org>
@@ -61,39 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ville Syrjälä <ville.syrjala@linux.intel.com>
+From: Wu Bo <wubo40@huawei.com>
 
-commit 6292b8efe32e6be408af364132f09572aed14382 upstream.
+commit a2f647240998aa49632fb09b01388fdf2b87acfc upstream.
 
-The DispID DTD pixel clock is documented as:
-"00 00 00 h → FF FF FF h | Pixel clock ÷ 10,000 0.01 → 167,772.16 Mega Pixels per Sec"
-Which seems to imply that we to add one to the raw value.
+Fix the following coccicheck warning:
+sound/pci/hda/patch_hdmi.c:1852:2-8: preceding lock on line 1846
 
-Reality seems to agree as there are tiled displays in the wild
-which currently show a 10kHz difference in the pixel clock
-between the tiles (one tile gets its mode from the base EDID,
-the other from the DispID block).
+After add sanity check to pass klockwork check,
+The spdif_mutex should be unlock before return true
+in check_non_pcm_per_cvt().
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200423151743.18767-1-ville.syrjala@linux.intel.com
-Reviewed-by: Manasi Navare <manasi.d.navare@intel.com>
+Fixes: 960a581e22d9 ("ALSA: hda: fix some klockwork scan warnings")
+Signed-off-by: Wu Bo <wubo40@huawei.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1587907042-694161-1-git-send-email-wubo40@huawei.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_edid.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/patch_hdmi.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -4743,7 +4743,7 @@ static struct drm_display_mode *drm_mode
- 	struct drm_display_mode *mode;
- 	unsigned pixel_clock = (timings->pixel_clock[0] |
- 				(timings->pixel_clock[1] << 8) |
--				(timings->pixel_clock[2] << 16));
-+				(timings->pixel_clock[2] << 16)) + 1;
- 	unsigned hactive = (timings->hactive[0] | timings->hactive[1] << 8) + 1;
- 	unsigned hblank = (timings->hblank[0] | timings->hblank[1] << 8) + 1;
- 	unsigned hsync = (timings->hsync[0] | (timings->hsync[1] & 0x7f) << 8) + 1;
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -1861,8 +1861,10 @@ static bool check_non_pcm_per_cvt(struct
+ 	/* Add sanity check to pass klockwork check.
+ 	 * This should never happen.
+ 	 */
+-	if (WARN_ON(spdif == NULL))
++	if (WARN_ON(spdif == NULL)) {
++		mutex_unlock(&codec->spdif_mutex);
+ 		return true;
++	}
+ 	non_pcm = !!(spdif->status & IEC958_AES0_NONAUDIO);
+ 	mutex_unlock(&codec->spdif_mutex);
+ 	return non_pcm;
 
 
