@@ -2,97 +2,134 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E4EC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95908C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D2F320746
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:59:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615160;
-	bh=19ZLzxZ3iCQ95N4Ki0BMSsdfiekRIWUaniX2b/lyVuk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kpNpfrKpiwUYr1utaF7+YHwHjbqIpplUX4LF0451MC8xQAXapGR/O9rLFDfeSlbFj
-	 I6Ttb5X+N+FuItbCSmtP90yCla5SOOvGmWl9XdqkxYmIuJPWlXoQw+9eDigOUP1fWJ
-	 WZTuidXiDq8g61PZpuj7nvr0b8R9YHL8/eZGaN9A=
+	by mail.kernel.org (Postfix) with ESMTP id 7223B2073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:59:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nKm/NU/E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730758AbgEDR7T (ORCPT
+        id S1730766AbgEDR7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:59:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52420 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730715AbgEDR7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:59:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37073207DD;
-        Mon,  4 May 2020 17:59:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615150;
-        bh=19ZLzxZ3iCQ95N4Ki0BMSsdfiekRIWUaniX2b/lyVuk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KEW8wftZbUpEmxFotn3YU9a97Rx/SMnhZGNkzqQiDeH3sheOQuxMZpoXIP9FbO9Po
-         maoI4sE06JBJ+ORaqsDMBGpPvSJJoNQO0wO6lMTY/45418tRs+DY8VewN5baLUdjoq
-         xXhL4R3aYs55HbmxWYxamia1RtybWzmWJQG6DLG0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.4 16/18] ASoC: imx-spdif: Fix crash on suspend
-Date:   Mon,  4 May 2020 19:57:14 +0200
-Message-Id: <20200504165445.006367933@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200504165441.533160703@linuxfoundation.org>
-References: <20200504165441.533160703@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 4 May 2020 13:59:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56786 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730712AbgEDR7J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 13:59:09 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DFBDC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 10:59:09 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id q7so480207qkf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 10:59:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=hmchGPRatpHGz7FXodcq0SJqPYC5mC9nnx68TlaFw4w=;
+        b=nKm/NU/E8zknhGFBOyhBDH4qXUn8D776cT5h6JHftF4GhhDK6x9ry2rz/3390vKj+L
+         tN2liW5eIzpYXyOpEagl2/5lPJmBZ/VQImzT4IVSWB4A1XwFTg5LAMBg+Y79lMTvnRbz
+         fqUzQGcouFhzr7nhC+k8ZJKatIpZACKQ5KsgukU8IdQ4ybdM5qw3Q2p8bw7XJfI58Ne8
+         d+GGbZTZ274frK+wfzNePMwxV38lK3jsUAI762x47ra+I05WuZNE7YyUGRj4Ej2dR8IG
+         Zvj23kfA5xhRNdBa/Sm5jyZbT83OnNaTEKCCSmD7asI0QyaFyDOXBFhqBZG9KzBxltEi
+         hTnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=hmchGPRatpHGz7FXodcq0SJqPYC5mC9nnx68TlaFw4w=;
+        b=mEl3zA6cxMmjmgCvkyy2oofouYfccsdyFjjAs3c7R7m4MvPGnDUk2T9PEH3Vy3XF5a
+         HpSPYHuMVDj+w9xSg30Anq0mKPlnWuJLLCUn5Ioisd/nuib8HR8nk9rvGTpy96tcRuFr
+         hgqYyHurHiLYD/Mo6KCTc3+21XTIkww0rHqK1Pqgv0JJwe+jtng1COC4crhQcyEpiWJw
+         iRxoJG9jqmbYmFD/1y33u10zsItFN47kFAF/f3YNGgI5kla8yfd4WIZZtc1lvrBccxRZ
+         KquRG6rCtnhEdu5rWcVsHcqDu+gMP3+PYJADujYLC5i7ApDK/MnKJX/RunFyrbUc4MSU
+         uPSg==
+X-Gm-Message-State: AGi0PuaLtgbel9AbCQkmUDDCJfNIcxW5ZJMsw1ymgkWkPXXuS/3OtvId
+        NhIIYnHqeIfLzZqzjacVTRCMbA==
+X-Google-Smtp-Source: APiQypKHzejQhJPuhrRIg5ZslvlTZGo4JtzrXdUU6lsW+xZU4Q0pY9zUQ7/oIZ0C/MMhJDrMkTTBcg==
+X-Received: by 2002:a05:620a:15c1:: with SMTP id o1mr387681qkm.187.1588615148533;
+        Mon, 04 May 2020 10:59:08 -0700 (PDT)
+Received: from beast.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.gmail.com with ESMTPSA id h19sm11271088qtk.78.2020.05.04.10.59.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 10:59:08 -0700 (PDT)
+From:   Alex Elder <elder@linaro.org>
+To:     robh+dt@kernel.org, davem@davemloft.net
+Cc:     evgreen@chromium.org, subashab@codeaurora.org,
+        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
+        agross@kernel.org, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v2 1/4] dt-bindings: net: add IPA iommus property
+Date:   Mon,  4 May 2020 12:58:56 -0500
+Message-Id: <20200504175859.22606-2-elder@linaro.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200504175859.22606-1-elder@linaro.org>
+References: <20200504175859.22606-1-elder@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars-Peter Clausen <lars@metafoo.de>
+The IPA accesses "IMEM" and main system memory through an SMMU, so
+its DT node requires an iommus property to define range of stream IDs
+it uses.
 
-commit 9954859185c6e8359e71121037b627f1e294057d upstream.
-
-When registering a ASoC card the driver data of the parent device is set to
-point to the card. This driver data is used in the
-snd_soc_suspend()/resume() callbacks.
-
-The imx-spdif driver overwrites the driver data with custom data which
-causes snd_soc_suspend() to crash.  Since the custom driver is not used
-anywhere simply deleting the line which sets the custom driver data fixes
-the issue.
-
-Fixes: 43ac946922b3 ("ASoC: imx-spdif: add snd_soc_pm_ops for spdif machine driver")
-Tested-by: Fabio Estevam <fabio.estevam@nxp.com>
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- sound/soc/fsl/imx-spdif.c |    2 --
- 1 file changed, 2 deletions(-)
+ Documentation/devicetree/bindings/net/qcom,ipa.yaml | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
---- a/sound/soc/fsl/imx-spdif.c
-+++ b/sound/soc/fsl/imx-spdif.c
-@@ -72,8 +72,6 @@ static int imx_spdif_audio_probe(struct
- 		goto end;
- 	}
+diff --git a/Documentation/devicetree/bindings/net/qcom,ipa.yaml b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
+index 140f15245654..7b749fc04c32 100644
+--- a/Documentation/devicetree/bindings/net/qcom,ipa.yaml
++++ b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
+@@ -20,7 +20,10 @@ description:
+   The GSI is an integral part of the IPA, but it is logically isolated
+   and has a distinct interrupt and a separately-defined address space.
  
--	platform_set_drvdata(pdev, data);
--
- end:
- 	of_node_put(spdif_np);
+-  See also soc/qcom/qcom,smp2p.txt and interconnect/interconnect.txt.
++  See also soc/qcom/qcom,smp2p.txt and interconnect/interconnect.txt.  See
++  iommu/iommu.txt and iommu/arm,smmu.yaml for more information about SMMU
++  bindings.
++
  
-
+   - |
+     --------             ---------
+@@ -54,6 +57,9 @@ properties:
+       - const: ipa-shared
+       - const: gsi
+ 
++  iommus:
++    maxItems: 1
++
+   clocks:
+     maxItems: 1
+ 
+@@ -126,6 +132,7 @@ properties:
+ 
+ required:
+   - compatible
++  - iommus
+   - reg
+   - clocks
+   - interrupts
+@@ -164,6 +171,7 @@ examples:
+                 modem-init;
+                 modem-remoteproc = <&mss_pil>;
+ 
++                iommus = <&apps_smmu 0x720 0x3>;
+                 reg = <0 0x1e40000 0 0x7000>,
+                         <0 0x1e47000 0 0x2000>,
+                         <0 0x1e04000 0 0x2c000>;
+-- 
+2.20.1
 
