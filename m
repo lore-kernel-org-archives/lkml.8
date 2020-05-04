@@ -2,145 +2,124 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E70C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 05:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEE2C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 05:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC437206EB
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 05:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F804206EB
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 05:06:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbgEDFEw (ORCPT
+        id S1726751AbgEDFG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 01:04:52 -0400
-Received: from mga12.intel.com ([192.55.52.136]:43373 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725894AbgEDFEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 01:04:50 -0400
-IronPort-SDR: RI4gvK+9HDVAKbRklvMRzIq+pixxdYwbvyTVuNGFD83c+J+nmEf9PVYs8K3ZAJRRWmwQxHCADe
- 82/fHngT1KIw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2020 22:04:49 -0700
-IronPort-SDR: MxCGejezytWAFr2qtWtnEu9Zlbx9sDBny4KBWGPuntnxpb8eeVieC20Y3SJ8U7XteAAgk3t7Pj
- fSoUNNLnXPgQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,350,1583222400"; 
-   d="scan'208";a="295395757"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga008.jf.intel.com with ESMTP; 03 May 2020 22:04:48 -0700
-Date:   Sun, 3 May 2020 22:04:47 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH V2 00/11] Subject: Remove duplicated kmap code
-Message-ID: <20200504050447.GA979899@iweiny-DESK2.sc.intel.com>
-References: <20200504010912.982044-1-ira.weiny@intel.com>
- <20200504013509.GU23230@ZenIV.linux.org.uk>
+        Mon, 4 May 2020 01:06:28 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27588 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725894AbgEDFG2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 01:06:28 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04452qkT113557;
+        Mon, 4 May 2020 01:05:55 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30s45s686b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 04 May 2020 01:05:55 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04454KHg117006;
+        Mon, 4 May 2020 01:05:54 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30s45s685t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 04 May 2020 01:05:54 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04450AvU014136;
+        Mon, 4 May 2020 05:05:53 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma04wdc.us.ibm.com with ESMTP id 30s0g6e1qy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 04 May 2020 05:05:53 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04455qjY50397568
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 4 May 2020 05:05:52 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AD7CD136051;
+        Mon,  4 May 2020 05:05:52 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4CE7813604F;
+        Mon,  4 May 2020 05:05:52 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.85.125.95])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon,  4 May 2020 05:05:52 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id 379432E3019; Mon,  4 May 2020 10:35:47 +0530 (IST)
+Date:   Mon, 4 May 2020 10:35:47 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        npiggin@gmail.com, tglx@linutronix.de, maddy@linux.vnet.ibm.com,
+        cclaudio@linux.ibm.com, zhangshaokun@hisilicon.com,
+        atrajeev@linux.vnet.ibm.com, akshay.adiga@linux.vnet.ibm.com,
+        ego@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH] powerpc/powernv: Fix a warning message
+Message-ID: <20200504050547.GA2783@in.ibm.com>
+Reply-To: ego@linux.vnet.ibm.com
+References: <20200502115949.139000-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200504013509.GU23230@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20200502115949.139000-1-christophe.jaillet@wanadoo.fr>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-04_02:2020-05-01,2020-05-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
+ phishscore=0 clxscore=1011 suspectscore=0 impostorscore=0 mlxscore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005040043
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 02:35:09AM +0100, Al Viro wrote:
-> On Sun, May 03, 2020 at 06:09:01PM -0700, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > The kmap infrastructure has been copied almost verbatim to every architecture.
-> > This series consolidates obvious duplicated code by defining core functions
-> > which call into the architectures only when needed.
-> > 
-> > Some of the k[un]map_atomic() implementations have some similarities but the
-> > similarities were not sufficient to warrant further changes.
-> > 
-> > In addition we remove a duplicate implementation of kmap() in DRM.
-> > 
-> > Testing was done by 0day to cover all the architectures I can't readily
-> > build/test.
+Hello Christophe,
+
+On Sat, May 02, 2020 at 01:59:49PM +0200, Christophe JAILLET wrote:
+> Fix a cut'n'paste error in a warning message. This should be
+> 'cpu-idle-state-residency-ns' to match the property searched in the
+> previous 'of_property_read_u32_array()'
 > 
-> OK...  Looking through my old notes on kmap unification (this winter, never
-> went anywhere),
+> Fixes: 9c7b185ab2fe ("powernv/cpuidle: Parse dt idle properties into global structure")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+
+Thanks for catching this.
+
+Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+
+> ---
+>  arch/powerpc/platforms/powernv/idle.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> * arch/mips/mm/cache.c ought to use linux/highmem.h, not asm/highmem.h
-> I suspect that your series doesn't build on some configs there.  Hadn't
-> verified that, though.
-
-Yes patch 6 makes the change because kmap_atomic() was no longer declared in
-asm/highmem.h.  I'm pretty sure 0-day caught that ...  but I seem to remember
-noticing some oddness in that file and I did go through it by hand.
-
+> diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
+> index 78599bca66c2..2dd467383a88 100644
+> --- a/arch/powerpc/platforms/powernv/idle.c
+> +++ b/arch/powerpc/platforms/powernv/idle.c
+> @@ -1270,7 +1270,7 @@ static int pnv_parse_cpuidle_dt(void)
+>  	/* Read residencies */
+>  	if (of_property_read_u32_array(np, "ibm,cpu-idle-state-residency-ns",
+>  				       temp_u32, nr_idle_states)) {
+> -		pr_warn("cpuidle-powernv: missing ibm,cpu-idle-state-latencies-ns in DT\n");
+> +		pr_warn("cpuidle-powernv: missing ibm,cpu-idle-state-residency-ns in DT\n");
+>  		rc = -EINVAL;
+>  		goto out;
+>  	}
+> -- 
+> 2.25.1
 > 
-> * kmap_atomic_to_page() is dead, but not quite gone - csky and nds32 brought
-> the damn thing back (nds32 - only an extern).  It needs killin'...
-
-Easy enough. Added as a follow on patch.
-
-> 
-> * parisc is (arguably) abusing kunmap()/kunmap_atomic() for cache flushing.
-> Replace the bulk of its highmem.h with
-> #define ARCH_HAS_FLUSH_ON_KUNMAP
-> #define arch_before_kunmap flush_kernel_dcache_page_addr
-> and have default kunmap()/kunmap_atomic() do
-> #ifdef ARCH_HAS_FLUSH_ON_KUNMAP
-> 	arch_before_kunmap(page_address(page));
-> #endif
-> and
-> #ifdef ARCH_HAS_FLUSH_ON_KUNMAP
-> 	arch_before_kunmap(addr);
-> #endif
-> resp.  Kills ARCH_HAS_KMAP along with ifdefs on it, makes parisc use somewhat
-> less hacky.
-
-Agreed.  Done in a follow on patch.
-
-> 
-> I'd suggest checking various configs on mips - that's likely to cause headache.
-> Said that, my analysis of include chains back then is pretty much worthless
-> by now - I really hate the amount of indirect include chains leading to that
-> sucker on some, but not all configs ;-/  IIRC, the proof that everything
-> using kmap*/kunmap* would pull linux/highmem.h regardless of config took several
-> hours of digging, ran for several pages and had been hopelessly brittle.
-> arch/mips/mm/cache.c was the only exception caught by it, but these days
-> there might be more.
-
-Grepping for 'asm/highmem.h' and investigations don't reveal any issues...  But
-you do have me worried.  That said 0-day has been crunching on multiple
-versions of this series without issues such as this (save the mips issue
-above).
-
-I have to say it would be nice if the relation between linux/highmem.h and
-asm/highmem.h was more straightforward.
-
-Ira
-
