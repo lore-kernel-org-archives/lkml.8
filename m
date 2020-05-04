@@ -2,135 +2,92 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60997C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 00:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D6ECC28CBC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 00:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B9EA20757
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 00:41:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="eiIirED3"
+	by mail.kernel.org (Postfix) with ESMTP id 59497206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 00:47:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbgEDAli (ORCPT
+        id S1727090AbgEDArS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 20:41:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36698 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726842AbgEDAlh (ORCPT
+        Sun, 3 May 2020 20:47:18 -0400
+Received: from smtprelay0122.hostedemail.com ([216.40.44.122]:53038 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726549AbgEDArR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 20:41:37 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94AD5C061A0E
-        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 17:41:37 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id z90so12705080qtd.10
-        for <linux-kernel@vger.kernel.org>; Sun, 03 May 2020 17:41:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=PhoRsdVUpxSefTN3nA18NxBE6Bc3GIrO3qESKoaBeLw=;
-        b=eiIirED3qHhOWipGjeDdkfgS6x9vBM5QEEOf5fRffYbj9YWUhCyermSfNDb9pxgsaL
-         RIsNfefUqTcEkuOc2GNAnhFoEyZOcoLG8zd6vtNEyf3FvwpXOyxGMNGw9P3XhM3utgRr
-         nOGkEiElDA/CQ+ecaVClVdNWF9en8Q5WFMcZs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PhoRsdVUpxSefTN3nA18NxBE6Bc3GIrO3qESKoaBeLw=;
-        b=q++AAbs4K2pBfoIjwksiFPNWokVLZ/Wk0N+11BZibx3so8k9Xk47FTtHSts+utJAh8
-         ceWj91CrEehFw6smDogXIJH70oaB8GSLFqdvJm6KFAIRrHrunSGoPkxOIx/wRs6GnzBS
-         eLXZlEwk98+RX5XUgIRQ9b0C4mY2OUGJVAivWkXEVxfvaR7+4ItR7LBa5V1lX4zG9c+X
-         8ndon2QfzCXiYstMhXRRIxCwi0wTKs+3lWM3PlC3OiW5GNTasf1MtYRxaOqdxdfrasUb
-         OHgC2QQI3f2b8D+zpDB2ls4lAlT1GyT532wqX5Dr3ODRJmYoov4QJWCSAFGnyWnkyRgY
-         pGFw==
-X-Gm-Message-State: AGi0PuYpf2FM/iAWyMVfaBjjUGMI1Pz1jSQ5O4eaTDdssAWUc8IO1ljx
-        YI8Skz923W4c8/3sheJvELEsKg==
-X-Google-Smtp-Source: APiQypLm9DWQtztLxl8yVs7UxAPvJPkNvWCOEKzw7QaqkrVjpn0b8WccC6XYYNBsMVi9l03kwIDEVw==
-X-Received: by 2002:ac8:44aa:: with SMTP id a10mr15083681qto.230.1588552896694;
-        Sun, 03 May 2020 17:41:36 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id t14sm9407295qtj.71.2020.05.03.17.41.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 May 2020 17:41:36 -0700 (PDT)
-Date:   Sun, 3 May 2020 20:41:35 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Joe Perches <joe@perches.com>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        RCU <rcu@vger.kernel.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 03/24] rcu/tree: Use consistent style for comments
-Message-ID: <20200504004135.GF212435@google.com>
-References: <20200428205903.61704-1-urezki@gmail.com>
- <20200428205903.61704-4-urezki@gmail.com>
- <20200501190555.GB7560@paulmck-ThinkPad-P72>
- <93f764ad743082f2bbab4595eb892c2004e61b44.camel@perches.com>
- <20200503234400.GB197097@google.com>
- <20200504002309.GD2869@paulmck-ThinkPad-P72>
+        Sun, 3 May 2020 20:47:17 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 84CBB1800A695;
+        Mon,  4 May 2020 00:47:16 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: pen33_21ed1a190575c
+X-Filterd-Recvd-Size: 2603
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf18.hostedemail.com (Postfix) with ESMTPA;
+        Mon,  4 May 2020 00:47:13 +0000 (UTC)
+Message-ID: <a88be1298aa1600f46e868dd45f83a6075c7162e.camel@perches.com>
+Subject: Re: [PATCH 12/14] docs: move remaining stuff under
+ Documentation/*.txt to Documentation/staging
+From:   Joe Perches <joe@perches.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Sameer Rahmani <lxsameer@gnu.org>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-remoteproc@vger.kernel.org, tee-dev@lists.linaro.org,
+        linux-arch@vger.kernel.org
+Date:   Sun, 03 May 2020 17:47:11 -0700
+In-Reply-To: <20200504085415.db8e0e3b40e795f2fb4af009@kernel.org>
+References: <cover.1588345503.git.mchehab+huawei@kernel.org>
+         <28687056965ff46c0e6c81663a419bc59cfb94b4.1588345503.git.mchehab+huawei@kernel.org>
+         <20200504085415.db8e0e3b40e795f2fb4af009@kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504002309.GD2869@paulmck-ThinkPad-P72>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 03, 2020 at 05:23:09PM -0700, Paul E. McKenney wrote:
-> On Sun, May 03, 2020 at 07:44:00PM -0400, Joel Fernandes wrote:
-> > On Fri, May 01, 2020 at 01:52:46PM -0700, Joe Perches wrote:
-> > > On Fri, 2020-05-01 at 12:05 -0700, Paul E. McKenney wrote:
-> > > > On Tue, Apr 28, 2020 at 10:58:42PM +0200, Uladzislau Rezki (Sony) wrote:
-> > > > > Simple clean up of comments in kfree_rcu() code to keep it consistent
-> > > > > with majority of commenting styles.
-> > > []
-> > > > on /* */ style?
-> > > > 
-> > > > I am (slowly) moving RCU to "//" for those reasons.  ;-)
-> > > 
-> > > I hope c99 comment styles are more commonly used soon too.
-> > > checkpatch doesn't care.
-> > > 
-> > > Perhaps a change to coding-style.rst
-> > > ---
-> > >  Documentation/process/coding-style.rst | 5 +++++
-> > >  1 file changed, 5 insertions(+)
-> > > 
-> > > diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
-> > > index acb2f1b..fee647 100644
-> > > --- a/Documentation/process/coding-style.rst
-> > > +++ b/Documentation/process/coding-style.rst
-> > > @@ -565,6 +565,11 @@ comments is a little different.
-> > >  	 * but there is no initial almost-blank line.
-> > >  	 */
-> > >  
-> > > +.. code-block:: c
-> > > +
-> > > +	// Single line and inline comments may also use the c99 // style
-> > > +	// Block comments as well
-> > > +
-> > >  It's also important to comment data, whether they are basic types or derived
-> > >  types.  To this end, use just one data declaration per line (no commas for
-> > >  multiple data declarations).  This leaves you room for a small comment on each
-> > 
-> > Yeah that's fine with me. This patch just tries to keep it consistent. I am
-> > Ok with either style.
-> 
-> My approach has been gradual change.  Big-bang changes of this sort
-> cause quite a bit of trouble.  So I use "//" in new code and (sometimes)
-> convert nearby ones when making a change.
+On Mon, 2020-05-04 at 08:54 +0900, Masami Hiramatsu wrote:
+> On Fri,  1 May 2020 17:37:56 +0200
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+[]
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+[]
+> > @@ -9855,7 +9855,7 @@ L:	linux-kernel@vger.kernel.org
+> >  L:	linux-arch@vger.kernel.org
+> >  S:	Supported
+> >  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev
+> > -F:	Documentation/atomic_bitops.txt
+> > +F:	Documentation/staging/atomic_bitops.txt
 
-Ok thanks for the guidance on that, will follow similar conversion strategy
-as well.
+Can you please keep the file lists in alphabetic order
+and move this entry down appropriately?  Thanks.
 
-thanks,
+> >  F:	Documentation/atomic_t.txt
+> >  F:	Documentation/core-api/atomic_ops.rst
+> >  F:	Documentation/core-api/refcount-vs-atomic.rst
 
- - Joel
 
