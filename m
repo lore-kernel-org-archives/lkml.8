@@ -2,176 +2,167 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B530C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F94C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4587820746
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16F5B20746
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:31:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="2oipZs19"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727867AbgEDGbA (ORCPT
+        id S1727925AbgEDGbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 02:31:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48266 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726404AbgEDGa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 02:30:59 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A7EE9ABBD;
-        Mon,  4 May 2020 06:30:58 +0000 (UTC)
-Subject: Re: [PATCH 3/3] tty: n_gsm: Fix waking up upper tty layer when room
- available
-To:     Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-References: <20200430113433.2162886-1-gregory.clement@bootlin.com>
- <20200430113433.2162886-5-gregory.clement@bootlin.com>
-From:   Jiri Slaby <jslaby@suse.cz>
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <dee67599-a3bf-3904-e26b-4a02f36cf67f@suse.cz>
-Date:   Mon, 4 May 2020 08:30:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200430113433.2162886-5-gregory.clement@bootlin.com>
-Content-Type: text/plain; charset=iso-8859-2
+        Mon, 4 May 2020 02:31:16 -0400
+Received: from mail-eopbgr760078.outbound.protection.outlook.com ([40.107.76.78]:30786
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726404AbgEDGbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 02:31:15 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=K1MEnqCYMt3Ws+6WCHoYwzN7V2XBnXUeV8pncfmjqJHogg0rPHkXKjjutlBFMnidgy1OpEsHG90GlW08emF/v9VPrRNXgP2ZEqNd/18qwTkMXJAAKDU7ykBxttQYIMMval0Mh5ASkvnjLYDtCQd+YCtZ0d6jQklUvqqpP5VrkCIzfRa8xA9Jz04g1WmUU8e3Z8gGPrb+e8YcUo5toKMUJwSHcqbiVM+RDEpMN97vT1yU0vAy8iJMQqBAG1KhlPncqe0TArdlYJ4o5PjGeDBPU0dnyTgaPklWqjF6QiOtSURfAImiQqQAB4kHvyT3TMx1uvvVEbDUGVtICbssnszhVA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pJs9APsA/TA2m/74703C5FE7qbDPux9zMDGgDchf5J0=;
+ b=NM5+rT93mF9/OV6ef8MIeOqJe1MCjT3gV+6do+lO5cp+OFtNw/7a9Sw0P1PQOhVF2/uIkA1Ok9xWagN7ynvmCsbZmWmuW4W9hJLbHTv6MZxgYIONeZRWYqUdasQbEnu8kDEO93bvIKtKWHCjlt1dFP7cMZBCrIf2+doP+cK0k7zgLQIjC/Bd3LA7syT5fShsyHGBS9BSCZN6W+0ksw06VXRDqs4kI/8F8ffapB9DGt17C30bgfMPQa3HrxOaIZJi5wcADHnhX+GyZBGoAb3uGuN4uMK/dDlLbkLmM3UbuwatKszmcQiW1/KkGQ7RmQFH99LaKcGpi/z3cv/LOBhQlA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pJs9APsA/TA2m/74703C5FE7qbDPux9zMDGgDchf5J0=;
+ b=2oipZs19OF2Chopy4zHtywlwKeztQEfyUGjV+oyk0O5NwsYWgXPqclNtqE7woCsTvi2iqJG8y/H8LL7+uQkzn9pSDBuQ0xu8pC+Iy5n9y3lthwJV2rS/otOOVIdrN7ZZvPeYWF3L7hVx93sejuugNGWDjUmOCbkaGO5J+KgIVmg=
+Authentication-Results: bstnet.org; dkim=none (message not signed)
+ header.d=none;bstnet.org; dmarc=none action=none header.from=amd.com;
+Received: from DM5PR12MB1163.namprd12.prod.outlook.com (2603:10b6:3:7a::18) by
+ DM5PR12MB1466.namprd12.prod.outlook.com (2603:10b6:4:d::15) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2958.29; Mon, 4 May 2020 06:31:12 +0000
+Received: from DM5PR12MB1163.namprd12.prod.outlook.com
+ ([fe80::d061:4c5:954e:4744]) by DM5PR12MB1163.namprd12.prod.outlook.com
+ ([fe80::d061:4c5:954e:4744%4]) with mapi id 15.20.2958.029; Mon, 4 May 2020
+ 06:31:12 +0000
+Subject: Re: [PATCH v2] kvm: ioapic: Introduce arch-specific check for lazy
+ update EOI mechanism
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     rkrcmar@redhat.com, joro@8bytes.org, jon.grimm@amd.com,
+        borisvk@bstnet.org
+References: <1588411495-202521-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <e09f0be9-6a2f-a8ee-3a96-c8ffdf3add3f@redhat.com>
+From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Message-ID: <fd2529b7-66f9-fd4e-d071-a38d01e4b61c@amd.com>
+Date:   Mon, 4 May 2020 13:31:02 +0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
+In-Reply-To: <e09f0be9-6a2f-a8ee-3a96-c8ffdf3add3f@redhat.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2PR04CA0181.apcprd04.prod.outlook.com
+ (2603:1096:4:14::19) To DM5PR12MB1163.namprd12.prod.outlook.com
+ (2603:10b6:3:7a::18)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from Suravees-MacBook-Pro.local (2403:6200:8862:d0e7:1811:ded2:5c1a:f796) by SG2PR04CA0181.apcprd04.prod.outlook.com (2603:1096:4:14::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19 via Frontend Transport; Mon, 4 May 2020 06:31:09 +0000
+X-Originating-IP: [2403:6200:8862:d0e7:1811:ded2:5c1a:f796]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 2ad30cfa-711d-4639-1422-08d7eff4bd16
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1466:|DM5PR12MB1466:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR12MB1466CCAD497D203C88FB69B3F3A60@DM5PR12MB1466.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 03932714EB
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: rnV7mmZi8YH+pYCwewJqBU0sh2JVPuve+0Z+idkAqWtOBwnDukOr1EkuDJq82kjTjH0jOQfQR9T1UNh5hQnzCLq9yfd4FNO4wm4c4ZiiZ4GYTmdQEd0Mn04G74oeKzUEeFcFDDUIPkbBeHGpbnjKkDjLtBnCVDNMB1HqYMv/pI1/6z1z4tkuwTWesn5TIdAvZGJKxBnjZ/6voiOUOqRI6sD/wYtXA64gRAKwn+pzbm90NqMxrdIAAjGJQgwixxEQqIcSkfYI7OIOb1gi+nFsdgt1ZtgVldE2JGud+yyLgHO+YguQ/gSYSvo6Axvkifx8S5Dp8v/kre8rts1Y1xvCATXvlmVq8wbAoxe0tyRt6XZpv14+gLrdZY63gZ/YfPwT8la+akwHjOgYr6SSb0gc1HMxbpM3QRsILeKxH0NmClwADu4u4HkrNIv6O9RDMERS
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1163.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(39860400002)(366004)(396003)(346002)(44832011)(6666004)(5660300002)(2616005)(86362001)(31696002)(2906002)(4326008)(31686004)(15650500001)(6512007)(478600001)(6486002)(66556008)(66476007)(66946007)(8676002)(52116002)(316002)(36756003)(6506007)(8936002)(53546011)(186003)(16526019);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: S+bPUe2GdRjQtn7rbPlTG/aBqWWtJu1AHu+QjTuEUgAiDVujBfJLvyKwFWZvVvFtnOaUdgjj5nmJeD0nzuUMeyuzThfPRmPCk226uFmopkigk5VmWl9zgGZNNNiqc13PVC+LFqS1ZKx5speOaxH124kQ+ENqTyFrIvMqAxdK2BrukOdKf7s2shRrNnqNXZyL8s15Ibp+adRLVmgNth8NsWYYLUoaBwoSt9yuir0aZWN08Eu/b4lu3COL9Wyu+EvAsP+DHvzthEEcloIXCJb5zCGo6/IcliTT1xkn9DEcuxvDmjPuqgv/WnfUK3hT44zRDC+Hfpgj2Im1Lbd+E1p0DmyZVhlCxX3M4/TNsTH9BCqUAP/CyLuLBmyiUsZtO0sCxCCIccVWPWwg8/abuna1OLIhPDFobVzz3H2QFECMc/qZHskgTMcPbLHIYl+egJn4JIUP5CU2aEsRVH+s/wH3NvVT/g4nobf1ctGo4ngG7W8SJmW9xBcESrpCwPY7KPkUyc3tYkLj1FjMqiZA8x8O9RE+5nkdi+wdFRnNPYCyMDFTA/8Pvyjl6pL7pg95hhIjSQRpv3O6sq4QPYAc39LV9gDb4/MeUwh4Dqclw1MxveskPX+E7E4COuWnDNo2FGWviMccNMt57rhpKGVDv40FdFovcJyZIFNX0sq6wcqNp5xDJB5KFwzMA7PcCggYmjzL0MKJRew3R0PtHxYLsuntGu7LF6WzMIJF552ABmmL2qsJOnlXCtnvixOMDmWw/b5orhX7LPUJ9RvQxCu2XsvCX6HUtHGcaIFzWqByD+/mHPSEcL9jkXsZrozmaS/mJNsy/f6raUl2RUGoxOFbGqSVGfHsRdFahiilLb5XwWdgl78M/44Ltrxiq6S8i+AL8n05
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ad30cfa-711d-4639-1422-08d7eff4bd16
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2020 06:31:12.1723
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PnJ4T0WZy1SIMNS51bntGhdrbk8OCOU/YNqvQttHlJuDqGI8Hh6rGxlsdnrYokGaU1PTf1pv+Q/43hjC5clwSg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1466
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30. 04. 20, 13:34, Gregory CLEMENT wrote:
-> Warn the upper layer when n_gms is ready to receive data
-> again. Without this the associated virtual tty remain blocked
+Paolo,
 
-s/remain/&s/
-
-> indefinitely.
+On 5/3/20 12:19 AM, Paolo Bonzini wrote:
+> On 02/05/20 11:24, Suravee Suthikulpanit wrote:
+> ....
+> The questions to answer are: what is causing the re-entrancy? and why
+> is dropping the second EOI update safe?
 > 
-> Fixes: 96fd7ce58ffb ("TTY: create drivers/tty and move the tty core files there")
-
-This looks invalid. Did you use git blame? Or git log, with --follow -M?
-
-> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-> ---
->  drivers/tty/n_gsm.c | 33 +++++++++++++++++++++++++++++----
->  1 file changed, 29 insertions(+), 4 deletions(-)
+> The answer to the latter could well be "because we've already processed
+> it", but the answer to the former is more important.
 > 
-> diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
-> index 58950b33e5ac..4ff2b981aa7e 100644
-> --- a/drivers/tty/n_gsm.c
-> +++ b/drivers/tty/n_gsm.c
-> @@ -665,10 +665,12 @@ static struct gsm_msg *gsm_data_alloc(struct gsm_mux *gsm, u8 addr, int len,
->   *	FIXME: lock against link layer control transmissions
->   */
->  
-> -static void gsm_data_kick(struct gsm_mux *gsm)
-> +static void gsm_data_kick(struct gsm_mux *gsm, struct gsm_dlci *dlci)
->  {
->  	struct gsm_msg *msg, *nmsg;
->  	int len;
-> +	struct tty_struct *tty_dlci = NULL;
-> +
->  
->  	list_for_each_entry_safe(msg, nmsg, &gsm->tx_list, list) {
->  		if (gsm->constipated && msg->addr)
-> @@ -697,6 +699,29 @@ static void gsm_data_kick(struct gsm_mux *gsm)
->  
->  		list_del(&msg->list);
->  		kfree(msg);
-> +
-> +		if (dlci) {
-> +			tty_dlci = tty_port_tty_get(&dlci->port);
-> +			if (tty_dlci)
-> +				tty_wakeup(tty_dlci);
+> The re-entrancy happens because the irq state is the OR of
+> the interrupt state and the resamplefd state.  That is, we don't
+> want to show the state as 0 until we've had a chance to set the
+> resamplefd.  But if the interrupt has _not_ gone low then we get an
+> infinite loop.
 
-No tty_port_put looks wrong to me?
+I'm not too familiar w/ the resamplefd.  I must have missed this part.
+Could you please point out to me where the OR logic is?
 
-Why not to use tty_port_tty_wakeup?
+> So the actual root cause is that this is a level-triggered interrupt,
+> otherwise irqfd_inject would immediately set the KVM_USERSPACE_IRQ_SOURCE_ID
+> high and then low and you wouldn't have the infinite loop.  
 
-> +		} else {
-> +			int i = 0;
-> +
-> +			while (i < NUM_DLCI) {
+Okay.
 
-Hmm, feels like 'for' loop fits better here.
+> But in the case of level-triggered interrupts the VMEXIT already happens because
+> TMR is set; only edge-triggered interrupts need the lazy invocation
+> of the ack notifier.  
 
-> +				struct gsm_dlci *dlci;
-> +
-> +				dlci = gsm->dlci[i];
-> +				if (dlci == NULL) {
-> +					i++;
-> +					continue;
-> +				}
-> +
-> +				tty_dlci = tty_port_tty_get(&dlci->port);
-> +				if (tty_dlci)
-> +					tty_wakeup(tty_dlci);
+For AVIC, EOI write for level-triggered would have also be trapped.
+And yes, edge-triggered needs lazy ack notifier.
 
-Dtto
+> So this should be the fix:
+> 
+> diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
+> index 7668fed1ce65..ca2d73cd00a3 100644
+> --- a/arch/x86/kvm/ioapic.c
+> +++ b/arch/x86/kvm/ioapic.c
+> @@ -225,12 +225,12 @@ static int ioapic_set_irq(struct kvm_ioapic *ioapic, unsigned int irq,
+>   	}
+>   
+>   	/*
+> -	 * AMD SVM AVIC accelerate EOI write and do not trap,
+> -	 * in-kernel IOAPIC will not be able to receive the EOI.
+> +	 * AMD SVM AVIC accelerate EOI write iff the interrupt is level
+> +	 * triggered, in-kernel IOAPIC will not be able to receive the EOI.
 
-> +				i++;
-> +			}
-> +		}
->  	}
->  }
->  
-> @@ -748,7 +773,7 @@ static void __gsm_data_queue(struct gsm_dlci *dlci, struct gsm_msg *msg)
->  	/* Add to the actual output queue */
->  	list_add_tail(&msg->list, &gsm->tx_list);
->  	gsm->tx_bytes += msg->len;
-> -	gsm_data_kick(gsm);
-> +	gsm_data_kick(gsm, dlci);
+Actually, it should be "AMD SVM AVIC accelerate EOI write iff the interrupt is _edge_ triggered".
 
-thanks,
--- 
-js
-suse labs
+>   	 * In this case, we do lazy update of the pending EOI when
+>   	 * trying to set IOAPIC irq.
+>   	 */
+> -	if (kvm_apicv_activated(ioapic->kvm))
+> +	if (edge && kvm_apicv_activated(ioapic->kvm))
+>   		ioapic_lazy_update_eoi(ioapic, irq);
+>   
+>   	/*
+> 
+> Did I miss anything in the above analysis with respect to AVIC?
+
+
+For AMD:
+Tested-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+
+Thanks,
+Suravee
