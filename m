@@ -2,97 +2,128 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA32C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 567B2C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F8F72054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35C3E20735
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:15:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ilRGt2zT"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Q6MAxaim"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728332AbgEDJNz (ORCPT
+        id S1728116AbgEDJP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 05:13:55 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:39660 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727801AbgEDJNz (ORCPT
+        Mon, 4 May 2020 05:15:26 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:37079 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727799AbgEDJP0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 05:13:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588583633;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=84FYeu+Y/BZJ25AptG7IThNwoOt4gkPs9yl7t+IFJuc=;
-        b=ilRGt2zTaLdrqY09+IEfCBEl+ylffendz5gXMaTApB1MrNhdYcR2vUc5/gKhW+Ju9N4EJJ
-        gkz1gT5UVcSEqODPqz5T9hCIWAAhj2MBvl2+18M9n6pEWzVv+KQr90Bo4kbPRCW+4BBrUF
-        tWFUnCnC87ru/j8gRcyVvcoQI71sPYg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-221-ahw7Sc6jNv2Od3h0BoWisA-1; Mon, 04 May 2020 05:13:51 -0400
-X-MC-Unique: ahw7Sc6jNv2Od3h0BoWisA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 508138014C0;
-        Mon,  4 May 2020 09:13:50 +0000 (UTC)
-Received: from maximlenovopc.usersys.redhat.com (unknown [10.35.206.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 14766100239A;
-        Mon,  4 May 2020 09:13:48 +0000 (UTC)
-Message-ID: <159382e7fdf0f9b50d79e29554842289e92e1ed7.camel@redhat.com>
-Subject: Re: AVIC related warning in enable_irq_window
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Date:   Mon, 04 May 2020 12:13:47 +0300
-In-Reply-To: <c5c32371-4b4e-1382-c616-3830ba46bf85@amd.com>
-References: <9ce7bb5c4fb8bcc4ac21103f7534a6edfcbe195d.camel@redhat.com>
-         <758b27a8-74c0-087d-d90b-d95faee2f561@redhat.com>
-         <c5c32371-4b4e-1382-c616-3830ba46bf85@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
+        Mon, 4 May 2020 05:15:26 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200504091523euoutp0162063ffdfd45a4e89ccc90281cf0ae34~LyHrfsWRv0863408634euoutp01s
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 09:15:23 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200504091523euoutp0162063ffdfd45a4e89ccc90281cf0ae34~LyHrfsWRv0863408634euoutp01s
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1588583723;
+        bh=CtJ5D+XH+++f+BDG9gPxVNC4UIlkzWo+wffpj9ZE2bI=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Q6MAxaimysWE37CnQaD7KTCvpfTvy+SD2Xd9Vk//X6EUMlswGejTp0Oy35MeOkTQz
+         6PSWknJi/hzR1G7iRjzVSAic0ufwflAYgWmMGN+1EQNxBnZ7NY0r/sQqIEM82muQeV
+         w/ZIlGrcE+JGj3nt3CagrRsNRFfX1cmxWFQ6j5pw=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200504091523eucas1p10fee346c7a71491263197f9abb03e307~LyHrP45qd1298212982eucas1p1b;
+        Mon,  4 May 2020 09:15:23 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 3E.F1.60698.B2DDFAE5; Mon,  4
+        May 2020 10:15:23 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200504091523eucas1p1856860f6f7f9ddcd6b8bec87fdbc0447~LyHq9nAor1298612986eucas1p1J;
+        Mon,  4 May 2020 09:15:23 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200504091523eusmtrp226626b15904afb416921dadd37541b70~LyHq9FStq2111921119eusmtrp2D;
+        Mon,  4 May 2020 09:15:23 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-fc-5eafdd2b730b
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id C5.07.07950.B2DDFAE5; Mon,  4
+        May 2020 10:15:23 +0100 (BST)
+Received: from [106.210.123.115] (unknown [106.210.123.115]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200504091522eusmtip1da9209630cfaf00707561ac100869ea6~LyHqr0WsY0557905579eusmtip1c;
+        Mon,  4 May 2020 09:15:22 +0000 (GMT)
+Subject: Re: linux-next: error when fetching the clk-samsung tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <1ab13824-6fcc-e2fa-c2d8-3595bc070f03@samsung.com>
+Date:   Mon, 4 May 2020 11:15:22 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200504084835.5814c682@canb.auug.org.au>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgleLIzCtJLcpLzFFi42LZduzneV3tu+vjDJo2C1tc3jWHzeLgwjZG
+        i617r7I7MHs03rjB5vF5k1wAUxSXTUpqTmZZapG+XQJXxvLN+5gKGlgqphw7xdbAOJ+5i5GT
+        Q0LAROLcigb2LkYuDiGBFYwS77edYIJwvjBKHF7SDOV8ZpRo6ngB1/L/8TtmiMRyRomve2az
+        Qjgfgfq/bGfsYuTgEBZwlPi6SATEFBHQljjwWwCkl1mgROLT6t2sIDabgKFE79E+RhCbV8BO
+        YvPf42BxFgEViZ93jrKAtIoKxEpMvxYCUSIocXLmExYQm1PAXGL5yRnMECMNJI4smsMKYYtL
+        3HoynwnClpfY/nYO2JkSAv/ZJGa03GeEuN9F4tal6VC/CEu8Or6FHcKWkfi/cz4TREMzo0TP
+        7tvsEM4ERon7xxdAdVtL3Dn3iw3CdpTYsmgDK8ilEgJ8EjfeCkJs5pOYtA1kAUiYV6KjTQii
+        WkXi96rpTBC2lET3k/8sExiVZiH5bRaSf2Yh+WcWkn8WMLKsYhRPLS3OTU8tNs5LLdcrTswt
+        Ls1L10vOz93ECEwfp/8d/7qDcd+fpEOMAhyMSjy8Dz6vixNiTSwrrsw9xCjBwawkwrujZX2c
+        EG9KYmVValF+fFFpTmrxIUZpDhYlcV7jRS9jhQTSE0tSs1NTC1KLYLJMHJxSDYx5ET+sXp8I
+        13xVd2LzQds5fmEO/l/VP1+5emrxv6NSXU4sup86dh68bG+j4Mm4aGO+UsQ1cyl+y8sWmpfz
+        vn/nz+Nlc0v8rfrFba/u8RbR9NY3bZ9PnayPl5DoN53+xvaA7C4Wjm3ZKZnl4lGSAdl7wraI
+        ibZbsPy6fEpFTK/3yCPxSdysRUosxRmJhlrMRcWJALiHLZ4bAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOIsWRmVeSWpSXmKPExsVy+t/xu7rad9fHGcyZxGxxedccNouDC9sY
+        LbbuvcruwOzReOMGm8fnTXIBTFF6NkX5pSWpChn5xSW2StGGFkZ6hpYWekYmlnqGxuaxVkam
+        Svp2NimpOZllqUX6dgl6Gcs372MqaGCpmHLsFFsD43zmLkZODgkBE4n/j98B2VwcQgJLGSW+
+        vDrG1MXIAZSQkpjfogRRIyzx51oXG0TNe0aJid2nmEFqhAUcJb4uEgExRQS0JQ78FgApZxYo
+        kZg2YycrRHkXo8Ten+tYQRJsAoYSvUf7GEFsXgE7ic1/j4PFWQRUJH7eOcoCMkdUIFai5aIm
+        RImgxMmZT1hAbE4Bc4nlJ2cwQ8zXk9hx/RcrhC0ucevJfCYIW15i+9s5zBMYhWYhaZ+FpGUW
+        kpZZSFoWMLKsYhRJLS3OTc8tNtIrTswtLs1L10vOz93ECIyUbcd+btnB2PUu+BCjAAejEg/v
+        g8/r4oRYE8uKK3MPMUpwMCuJ8O5oWR8nxJuSWFmVWpQfX1Sak1p8iNEU6LeJzFKiyfnAKM4r
+        iTc0NTS3sDQ0NzY3NrNQEuftEDgYIySQnliSmp2aWpBaBNPHxMEp1cBY6DNzol5w9eOgk14S
+        QpN+a1qLs4goZq893dt1wiBzlpug1AaNdTFv/N41rIqNmmT9+0jGjIr7dqv+arY7OHtkv5Az
+        Pf3oedsUhaPTK/n8wircOCf+50xelHH6BevcEpXDB112+b8+LfyRM+FNDG9zz+b+W3sEkyex
+        1yo2ikybyWh056TrOgMlluKMREMt5qLiRADbpmjmqgIAAA==
+X-CMS-MailID: 20200504091523eucas1p1856860f6f7f9ddcd6b8bec87fdbc0447
+X-Msg-Generator: CA
+X-RootMTR: 20200503224848eucas1p2446520ac65d79c4a59d5665bf915f7e6
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200503224848eucas1p2446520ac65d79c4a59d5665bf915f7e6
+References: <CGME20200503224848eucas1p2446520ac65d79c4a59d5665bf915f7e6@eucas1p2.samsung.com>
+        <20200504084835.5814c682@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-05-04 at 15:46 +0700, Suravee Suthikulpanit wrote:
-> Paolo / Maxim,
-> 
-> On 5/2/20 11:42 PM, Paolo Bonzini wrote:
-> > On 02/05/20 15:58, Maxim Levitsky wrote:
-> > > The AVIC is disabled by svm_toggle_avic_for_irq_window, which calls
-> > > kvm_request_apicv_update, which broadcasts the KVM_REQ_APICV_UPDATE vcpu request,
-> > > however it doesn't broadcast it to CPU on which now we are running, which seems OK,
-> > > because the code that handles that broadcast runs on each VCPU entry, thus
-> > > when this CPU will enter guest mode it will notice and disable the AVIC.
-> > > 
-> > > However later in svm_enable_vintr, there is test 'WARN_ON(kvm_vcpu_apicv_active(&svm->vcpu));'
-> > > which is still true on current CPU because of the above.
-> > 
-> > Good point!  We can just remove the WARN_ON I think.  Can you send a patch?
-> 
-> Instead, as an alternative to remove the WARN_ON(), would it be better to just explicitly
-> calling kvm_vcpu_update_apicv(vcpu) to update the apicv_active flag right after
-> kvm_request_apicv_update()?
-> 
-> Thanks,
-> Suravee
-> 
+Hi Stephen,
 
-This should work IMHO, other that the fact kvm_vcpu_update_apicv will be called again,
-when this vcpu is entered since the KVM_REQ_APICV_UPDATE will still be pending on it.
-It shoudn't be a problem, and we can even add a check to do nothing when it is called
-while avic is already in target enable state.
+On 04.05.2020 00:48, Stephen Rothwell wrote:
+> Fetching the clk-samsung tree
+> (git://git.kernel.org/pub/scm/linux/kernel/git/snawrocki/clk.git#for-next)
+> produces the following error:
+> 
+> fatal: couldn't find remote ref refs/heads/for-next
+> 
+> I am using the last version I fetched (which is empty relative to Linus'
+> tree).
 
-Best regards,
-	Maxim Levitsky
+Apologies for an oversight on my side, it should be fixed now (there will 
+be still no new patches comparing to Linus' tree).
 
+--
+Regards, 
+Sylwester
