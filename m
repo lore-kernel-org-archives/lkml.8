@@ -2,120 +2,140 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D05C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CA5C47254
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 648F920752
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5613D20752
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:44:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="TE0iYyWa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QdrM3gPH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728290AbgEDNnN (ORCPT
+        id S1728357AbgEDNoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 09:43:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44770 "EHLO
+        Mon, 4 May 2020 09:44:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726922AbgEDNnM (ORCPT
+        by vger.kernel.org with ESMTP id S1726922AbgEDNoB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 09:43:12 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBC33C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 06:43:11 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id h12so23753pjz.1
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 06:43:11 -0700 (PDT)
+        Mon, 4 May 2020 09:44:01 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AACEC061A0E;
+        Mon,  4 May 2020 06:44:01 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id g14so8849152otg.10;
+        Mon, 04 May 2020 06:44:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QAn+2RM7soSoqdOBHN+11VsA1mCP/YaXzCZebzqANzo=;
-        b=TE0iYyWaTh8bQ7IhHQUx/YbRFRnMkI4YDJatk7J/aBL01J5cQhnQxteoR6dI47x2WM
-         9w6GKjsw2MxaEcoWrmr/sfBb3M1hW9o+V38nO1wdEs99XhLm+b2sfzz39ExcH7Z7lrZ8
-         3hh+1EqtCInJBgFUsAjijAZjvXJGKLf9i3PXhKlPubiiU6+tfcNv7UkM+PY/8BPiU/+d
-         0CoCZeT/EiobAGwHu4cy1D0QsKI5zVK1WHzdEKSvmisLf2zRy7QYw/rrIHiUOHZ8dhxs
-         uJZKIS6sSR+EKs2QnO8trbgF6u3PH7lG36bjbej6xNQnma4QOJvC2lWBsb9KM2jn0a0+
-         JAFg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hEWs1xs69QGFQT8FpFMUjbbXsqIGW+k2px0Ls7b6Oi8=;
+        b=QdrM3gPHzWbm4Ut0s77CXXuPeXeO3+pWV0ebjCCBJG+EiLxeyghlid3QCd7Um13g3Q
+         jMfneriy+x5BaIONl5wKwdXifl1ySev0gDGA0O2A6aLemvnsfCbjMxPirHTS/JOIOvtP
+         vPfTmyLF+G4kTQBg6kgc33HQ2ZKi/0rJa/kZUXKNu41yGYhZGOjWCN5t8bpmdMLx2k0t
+         rJe8rVsJGOXwZi4Gw0ty8U4DsWbSXKDKfT/rbVlDFgmPVsDhDYmevn1xfD9USEgw4xAu
+         yTEgKiIyjSji1U2sF8bmzhDWsVx8yo+sLoRKqK/5gVRibpacAxOtgwApzMIJT/fekupS
+         CnnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QAn+2RM7soSoqdOBHN+11VsA1mCP/YaXzCZebzqANzo=;
-        b=p2LLPAQ4nNAW+tycSfDjCrG03zUwUqh1GlP+D/oVCQJgl+VjG9WzOV1rYcEr/Oikgy
-         PKe1z9cpL/z27Aqc+HepkivuFBh9y8LWe1dKVuMoSR2tPzJxtMHy6wE8GyE/f4/7IzUv
-         FHPoh3XpOyk9qRN14C0A/fgcktwuzet/lZrOqe/NGu23WCCnuUKgN55zp+B2UttG4FqV
-         Qx1ZNaumKPS366P1iOhdBsNkGqfWQK1ZGfPVsVDud3R5ltua+wZHcnrHatnDp+md6135
-         qAnf4F3dylB6nWyLHv6xnYDy43dtm0ZySiVho1iGbnTiH273GdcFXNvarmecaizmycnN
-         2tJQ==
-X-Gm-Message-State: AGi0PuZ5OTN7babtsF9Xq6t6mTPjUwy2YvqIIRTk64JqomI2Fanz4h/d
-        0Lkdv71Mk+zQ5+4byFnGJnNqJA==
-X-Google-Smtp-Source: APiQypKVxfCwaRhwua444a4sKxbwU/GHLXZIu8GXcoaQjL6NbjBrUVGGq7g2rF/uM+Rfwd9g0kYMdA==
-X-Received: by 2002:a17:902:9693:: with SMTP id n19mr18232346plp.277.1588599791407;
-        Mon, 04 May 2020 06:43:11 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id a23sm8908180pfo.145.2020.05.04.06.43.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 06:43:10 -0700 (PDT)
-Subject: Re: [PATCH 1/2] splice: export do_tee()
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        Jann Horn <jannh@google.com>
-Cc:     io-uring <io-uring@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Clay Harris <bugs@claycon.org>
-References: <cover.1588421219.git.asml.silence@gmail.com>
- <56e9c3c84e5dbf0be8272b520a7f26b039724175.1588421219.git.asml.silence@gmail.com>
- <CAG48ez0h6950sPrwfirF2rJ7S0GZhHcBM=+Pm+T2ky=-iFyOKg@mail.gmail.com>
- <387c1e30-cdb0-532b-032e-6b334b9a69fa@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <b62d84b0-c5a8-402f-d62e-e0b8d41221bb@kernel.dk>
-Date:   Mon, 4 May 2020 07:43:09 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hEWs1xs69QGFQT8FpFMUjbbXsqIGW+k2px0Ls7b6Oi8=;
+        b=YBIARUgrvamv4YPxL4WPJDCkb2/40tEkM1LDrBUwyVryz1K4mtuDAxfVO4yETIkU2B
+         Cx4Qq6LArvIljF7P8nNEnW4ipvx5KEiA/wjU0u5JXHZd/nsf3FLXMm7NXFcSRLbjaGTh
+         W5Ug45WjlI/stF1qo/vQpLQFGLwmR5YWx0EqJea7AmHTVDKfS0l9mnJVA/SpW5xbzF/s
+         mZ4ETK7A5iZHk8vH8m7wxcMz0XOrLyBUhpCIDCddoitx4bbYXBnnOEbJeCi4DK1oZsyF
+         wSkqWVrcMmtveBoVKyzplsr+j+9ONykGsP4HwEeT+rpamvIH8qht9MwTh97dqHvSfRQ0
+         KZwA==
+X-Gm-Message-State: AGi0PuaMNGX0/FnoZOd5seJ1vQLpLP+WM6ZA3MGh42gHefB6PzYklotQ
+        0b4TJqUNpYPf7Aen9PeIU6wwza2iIllsAkpdFR4=
+X-Google-Smtp-Source: APiQypLNn94uuIHxhLJOj/nbkJcX/HXrwlyBrRZSV8ynXzT8RUBOpYvtk0ulNzKDoqpofBW0lh97EwemfFvkm8NH9KE=
+X-Received: by 2002:a9d:7390:: with SMTP id j16mr13274515otk.43.1588599840793;
+ Mon, 04 May 2020 06:44:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <387c1e30-cdb0-532b-032e-6b334b9a69fa@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588542414-14826-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWBp_+PAa9VNhHCxd8CwrZVeeH1swDrZhegS-7YuQaL2g@mail.gmail.com>
+In-Reply-To: <CAMuHMdWBp_+PAa9VNhHCxd8CwrZVeeH1swDrZhegS-7YuQaL2g@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Mon, 4 May 2020 14:43:34 +0100
+Message-ID: <CA+V-a8sRtYy5VoMegnrwW535wjaSiv3YAJ=eBUAbiLiC5fu=Qg@mail.gmail.com>
+Subject: Re: [PATCH v2 04/10] dt-bindings: mmc: renesas,mmcif: Document
+ r8a7742 DT bindings
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/4/20 6:31 AM, Pavel Begunkov wrote:
-> On 04/05/2020 14:09, Jann Horn wrote:
->> On Sat, May 2, 2020 at 2:10 PM Pavel Begunkov <asml.silence@gmail.com> wrote:
->>> export do_tee() for use in io_uring
->> [...]
->>> diff --git a/fs/splice.c b/fs/splice.c
->> [...]
->>>   * The 'flags' used are the SPLICE_F_* variants, currently the only
->>>   * applicable one is SPLICE_F_NONBLOCK.
->>>   */
->>> -static long do_tee(struct file *in, struct file *out, size_t len,
->>> -                  unsigned int flags)
->>> +long do_tee(struct file *in, struct file *out, size_t len, unsigned int flags)
->>>  {
->>>         struct pipe_inode_info *ipipe = get_pipe_info(in);
->>>         struct pipe_inode_info *opipe = get_pipe_info(out);
->>
->> AFAICS do_tee() in its current form is not something you should be
->> making available to anything else, because the file mode checks are
->> performed in sys_tee() instead of in do_tee(). (And I don't see any
->> check for file modes in your uring patch, but maybe I missed it?) If
->> you want to make do_tee() available elsewhere, please refactor the
->> file mode checks over into do_tee().
-> 
-> Overlooked it indeed. Glad you found it
+Hi Geert,
 
-Yeah indeed, that's a glaring oversight on my part too. Will you send
-a patch for 5.7-rc as well for splice?
+Thank you for the review.
 
--- 
-Jens Axboe
+On Mon, May 4, 2020 at 11:26 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Sun, May 3, 2020 at 11:47 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > Add support for r8a7742 SoC. Renesas RZ/G1H (R8A7742) MMCIF is identical
+> > to the R-Car Gen2 family.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> > --- a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+> > +++ b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+> > @@ -11,6 +11,7 @@ Required properties:
+> >         - "renesas,mmcif-r7s72100" for the MMCIF found in r7s72100 SoCs
+> >         - "renesas,mmcif-r8a73a4" for the MMCIF found in r8a73a4 SoCs
+> >         - "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
+> > +       - "renesas,mmcif-r8a7742" for the MMCIF found in r8a7742 SoCs
+> >         - "renesas,mmcif-r8a7743" for the MMCIF found in r8a7743 SoCs
+> >         - "renesas,mmcif-r8a7744" for the MMCIF found in r8a7744 SoCs
+> >         - "renesas,mmcif-r8a7745" for the MMCIF found in r8a7745 SoCs
+>
+> Please also update the paragraph stating the number of interrupts
+> (1 for r8a7742).
+>
+Oops missed that, will fixup and post a v3.
 
+> With that fixed:
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+Thanks for the Ack.
+
+Cheers,
+--Prabhakar
+
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
