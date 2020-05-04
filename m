@@ -2,98 +2,118 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 968C2C47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C32A0C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73EFC206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A02772073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:14:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KiOHvGeI"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="nG7On+yM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbgEDMLA (ORCPT
+        id S1728730AbgEDMOG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 08:11:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58658 "EHLO
+        Mon, 4 May 2020 08:14:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726445AbgEDMLA (ORCPT
+        by vger.kernel.org with ESMTP id S1728630AbgEDMOE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 08:11:00 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5DCEC061A0E;
-        Mon,  4 May 2020 05:10:59 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id s9so4299352lfp.1;
-        Mon, 04 May 2020 05:10:59 -0700 (PDT)
+        Mon, 4 May 2020 08:14:04 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE626C061A10
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 05:14:03 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id k81so13519753qke.5
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 05:14:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=6IzobKamdx6AWobQAsBJeBJj3dra3/Qhj8m4FejlIx4=;
-        b=KiOHvGeIUeyZv5sImlMlL9o+C5/7T93X2NonnrLyrz7FedqeaH3CxNBZFeiABm9XVB
-         vQTwvz/VUpMHZDaPnwFqVxC+BjLihteORKj2fyhUi4NezgMi72UJUVnO7kPLa1zvY8BQ
-         sk+LB0U3klHmyK8MQ+dQs9vvvZ8y1dxLJvx/EBBl1t6H1hALhvp31uiUFV/J1OAGdvWp
-         b7IcSJQGIFPiYq04X6Dl8UqmQuUzFaL+eNPZc85Kw39jzDs9qlZM7mlGjVGhufR0vPfZ
-         JTr94RBLwqFqPpd4S8taE3QvFYCzuu1CFr5XgWsDcTISiw8dELWWLum8v1wBXY2YjukZ
-         PlKQ==
+        bh=uYct+1EXK4RvBhS2R9oCZJOA6YnnY92fxMdH3FTHSR4=;
+        b=nG7On+yMwtfGBMG3EEnGP/Eyr+dDKC4jICpKbPO6K4fszentgI/sW7dpsCMmC3kiqN
+         r05PiNpFvfalngk5g8x2kENDR3bKi+zfFry4JRXeKkoS3rM3hNXK/XEdpT8Eq/owHSGW
+         UdGPVNu1ZZE1RFEa4aePGP7JUhSU9acIvXIAgsAUBkHPimnV3tZu8BatePbjTXLAgV7+
+         9j2xKqJiFFEFoCV0uizdmuOa8BXz0tOnGSMScdbrYZl1Tgqm2W/ItGaqMvd7WKHjuPUD
+         CVJsX/sNmyL9+anfWB63V5O4sThGrMWEzqEkdprm3ZBcuTYZytOlWIPSHHZERyGUDr5J
+         kOZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6IzobKamdx6AWobQAsBJeBJj3dra3/Qhj8m4FejlIx4=;
-        b=H3gtUtI6xSLMXqj87c5qI8bVmbpKB27k2MqJRWC/o9NYgrPvYf0fwNtSM0cgXAmBgm
-         sF/Pp7JoL204Nf/ERagnyq6mjupgMrDJoPO+jBt+MpTVUo12DSIZWrnywwO8NE3eLr2M
-         DSgiHXgn66KZHH97YgscbtJl/QKc5mNqVLagOBuVopyKAQFWc05ZNwsvVMN42IvvzW3b
-         NvVMD1pTNJonZcx9RPM6hUmgKotNrwbT0C19StesTGotYkd3QKBt3I/eHhA3gWE4ICIU
-         gUzxWK1U1UZQ/cNN8s9HQvdc+7IRIS8H20jPzLJrj5MUHpU76XI7nal/XRPnzvP+TzS3
-         la5g==
-X-Gm-Message-State: AGi0PuaZxxO+lrtMZqhtGj30vtOH/6zBhBKevWyV0PaFuQ961l0Hr5bk
-        3gL0o/+n6Lvi55kbACFsV+Q=
-X-Google-Smtp-Source: APiQypLO6HaXBufG+Iur+eLtCO6qgxjVTCFmu/o65Sm7lU1n6hbH0hvVL0cOXHKWWiUX/2c8K2qUPQ==
-X-Received: by 2002:ac2:47fb:: with SMTP id b27mr10305946lfp.10.1588594258308;
-        Mon, 04 May 2020 05:10:58 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id u24sm8061362ljl.28.2020.05.04.05.10.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 05:10:57 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Mon, 4 May 2020 14:10:55 +0200
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        RCU <rcu@vger.kernel.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH 08/24] rcu/tree: Use static initializer for krc.lock
-Message-ID: <20200504121055.GA17457@pc636>
-References: <20200428205903.61704-1-urezki@gmail.com>
- <20200428205903.61704-9-urezki@gmail.com>
- <20200501211703.GC7560@paulmck-ThinkPad-P72>
+        bh=uYct+1EXK4RvBhS2R9oCZJOA6YnnY92fxMdH3FTHSR4=;
+        b=lnrHzoFoKpaeEQJ8gZIX14fjSOhCDEHr11wkhg0mPxB3geCNLWp7NVOh72ArTOuplu
+         wuBSK3S3ykm1uodocQAC3F0RdAmtY6zZPik8EdBXk122zsZ5avE80MAoz+s1bKa8Hy46
+         hMudr/NVCi21zVU0FSQKPeHfwH1CGWI14yOCFnnplHU3NjvIDm3d/O2MfodKpmgANg+5
+         ZKZrEykkUCLA0eWtP+EoSyq7jZygNIPOfTjg20hR0Qx0Hk3j+wCKEnNrcyY1IpSxkeIe
+         +8NhD9iCnPLgRoYwCUzriou44nr0/NcjioQBZ0ssF7+OFSObMMdhr9WsTLdvmza6/aRM
+         X+eA==
+X-Gm-Message-State: AGi0PubJ/frOGQTZoCujNoUz2oMP1mcgSzA5L1RMNCkmr/FEJ1Loep3j
+        7UX/MqJ4G7KmwG0X6sLVmEAjnw==
+X-Google-Smtp-Source: APiQypJo409ZJxzf2nxC+vnBmVCvb7bUK735uBejgyjN4EXp0iDnDYCtO3gUOEBm4tnsvWXbjqQYtA==
+X-Received: by 2002:a37:5941:: with SMTP id n62mr15543383qkb.419.1588594442936;
+        Mon, 04 May 2020 05:14:02 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id a139sm5077890qkg.107.2020.05.04.05.14.02
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 04 May 2020 05:14:02 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jVZyz-0005Zd-K8; Mon, 04 May 2020 09:14:01 -0300
+Date:   Mon, 4 May 2020 09:14:01 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     "Dey, Megha" <megha.dey@linux.intel.com>
+Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        maz@kernel.org, bhelgaas@google.com, rafael@kernel.org,
+        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
+        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH RFC 04/15] drivers/base: Add support for a new IMS irq
+ domain
+Message-ID: <20200504121401.GV26002@ziepe.ca>
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
+ <158751205175.36773.1874642824360728883.stgit@djiang5-desk3.ch.intel.com>
+ <20200423201118.GA29567@ziepe.ca>
+ <35f701d9-1034-09c7-8117-87fb8796a017@linux.intel.com>
+ <20200503222513.GS26002@ziepe.ca>
+ <1ededeb8-deff-4db7-40e5-1d5e8a800f52@linux.intel.com>
+ <20200503224659.GU26002@ziepe.ca>
+ <8ff2aace-0697-b8ef-de68-1bcc49d6727f@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200501211703.GC7560@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <8ff2aace-0697-b8ef-de68-1bcc49d6727f@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> >  
-> > -	local_irq_save(*flags);	// For safely calling this_cpu_ptr().
-> > +	local_irq_save(*flags);	/* For safely calling this_cpu_ptr(). */
+On Sun, May 03, 2020 at 05:25:28PM -0700, Dey, Megha wrote:
+> > > The use case if when we have a device assigned to a guest and we
+> > > want to allocate IMS(platform-msi) interrupts for that
+> > > guest-assigned device. Currently, this is abstracted through a mdev
+> > > interface.
+> > 
+> > And the mdev has the pci_device internally, so it should simply pass
+> > that pci_device to the platform_msi machinery.
 > 
-> And here as well.  ;-)
-> 
-OK. For me it works either way. I can stick to "//" :)
+> hmm i am not sure I follow this. mdev has a pci_device internally? which
+> struct are you referring to here?
 
---
-Vlad Rezki
+mdev in general may not, but any ADI trying to use mdev will
+necessarily have access to a struct pci_device.
+
+> mdev is merely a micropartitioned PCI device right, which no real PCI
+> resource backing. I am not how else we can find the IRQ domain associated
+> with an mdev..
+
+ADI always has real PCI resource backing.
+
+Jason
