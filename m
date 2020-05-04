@@ -2,87 +2,107 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB76C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD2AFC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29E41206B9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FD90206D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:56:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GxKkqI6S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbgEDOyH (ORCPT
+        id S1728660AbgEDO4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 10:54:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:46662 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727106AbgEDOyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 10:54:07 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2BA381FB;
-        Mon,  4 May 2020 07:54:06 -0700 (PDT)
-Received: from [10.163.71.79] (unknown [10.163.71.79])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 332DE3F305;
-        Mon,  4 May 2020 07:54:00 -0700 (PDT)
-Subject: Re: [PATCH] arm64/cpuinfo: Drop boot_cpu_data
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org
-References: <1588595400-4560-1-git-send-email-anshuman.khandual@arm.com>
- <20200504124321.GA73375@C02TD0UTHF1T.local>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <224296d1-086a-5516-95a8-8f4ad5c533d9@arm.com>
-Date:   Mon, 4 May 2020 20:23:08 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 4 May 2020 10:56:33 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:7991 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725941AbgEDO4d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 10:56:33 -0400
+X-UUID: ee2d70f96baf4c97ae665b5e9fab27bf-20200504
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=z9UBm3lhUsBFsYMe0C1gLVie9eENIrFZzxYPHITHVjs=;
+        b=GxKkqI6SPRBF5GzLuBN2xuw3mpyk1oG7lVveRUGqNCKQx4r+zJZqgMuGlVS3acUUFKtg4FffDbGWGS4q6tgyBRnOBZMdDrEOFMUl+p5jrB8CgNUnkv99qrRUhBptB/MiK2JNo4PcQ5+hF+MkqzjfBOHYryxULtGlmXa5ofpEboc=;
+X-UUID: ee2d70f96baf4c97ae665b5e9fab27bf-20200504
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1878308132; Mon, 04 May 2020 22:56:30 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 4 May 2020 22:56:26 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 4 May 2020 22:56:20 +0800
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>, <asutoshd@codeaurora.org>
+CC:     <beanhuo@micron.com>, <cang@codeaurora.org>,
+        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH v6 0/8] scsi: ufs: support LU Dedicated buffer mode for WriteBooster
+Date:   Mon, 4 May 2020 22:56:14 +0800
+Message-ID: <20200504145622.13895-1-stanley.chu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-In-Reply-To: <20200504124321.GA73375@C02TD0UTHF1T.local>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+SGksDQpUaGlzIHBhdGNoc2V0IGFkZHMgTFUgZGVkaWNhdGVkIGJ1ZmZlciBtb2RlIHN1cHBvcnQg
+Zm9yIFdyaXRlQm9vc3Rlci4NCkluIHRoZSBtZWFud2hpbGUsIGVuYWJsZSBXcml0ZUJvb3N0ZXIg
+Y2FwYWJpbGl0eSBvbiBNZWRpYVRlayBVRlMgcGxhdGZvcm1zLg0KDQp2NSAtPiB2NjoNCiAgLSBS
+ZW1vdmUgZGVzY3JpcHRvciBsZW5ndGggY2hlY2sgaW4gdWZzaGNkX3diX3Byb2JlKCkgYmVjYXVz
+ZSB0aGUgZGV2aWNlIHF1aXJrIHNoYWxsIGJlIGFkZGVkIG9ubHkgYWZ0ZXIgV3JpdGVCb29zdGVy
+IHN1cHBvcnQgaXMgY29uZmlybWVkIGluIGF0dGFjaGVkIG9yZS0zLjEgVUZTIGRldmljZS4NCg0K
+djQgLT4gdjU6DQogIC0gQ2hlY2sgTFVOIElEIGZvciBhdmFpbGFibGUgV3JpdGVCb29zdGVyIGJ1
+ZmZlciBvbmx5IGZyb20gMCB0byA3IGFjY29yZGluZyB0byBzcGVjIChBdnJpIEFsdG1hbikNCiAg
+LSBTa2lwIGNoZWNraW5nIGFueSBwb3NzaWJsZSBlcnJvcnMgZnJvbSB1ZnNoY2RfcmVhZF91bml0
+X2Rlc2NfcGFyYW0oaGJhLCBsdW4sIFVOSVRfREVTQ19QQVJBTV9XQl9CVUZfQUxMT0NfVU5JVFMp
+IGluIHVmc2hjZF93Yl9wcm9iZSgpIGFuZCBjaGVjayByZXR1cm5lZCBkX2x1X3diX2J1Zl9hbGxv
+YyAoc2hhbGwgYmUgemVybyBpZiBlcnJvciBoYXBwZW5zKSAoQXZyaSBBbHRtYW4pDQoNCnYzIC0+
+IHY0Og0KICAtIEludHJvZHVjZSAiZml4dXBfZGV2X3F1aXJrcyIgdm9wcyB0byBhbGxvdyB2ZW5k
+b3JzIHRvIGZpeCBhbmQgbW9kaWZ5IGRldmljZSBxdWlya3MsIGFuZCBwcm92aWRlIGFuIGluaXRp
+YWwgdmVuZG9yLXNwZWNpZmljIGRldmljZSBxdWlyayB0YWJsZSBvbiBNZWRpYVRlayBVRlMgcGxh
+dGZvcm1zDQogIC0gQXZvaWQgcmVseWluZyBvbiBjb21tb24gZGV2aWNlIHF1aXJrIHRhYmxlIGZv
+ciBwcmUtMy4xIFVGUyBkZXZpY2Ugd2l0aCBub24tc3RhbmRhcmQgV3JpdGVCb29zdGVyIHN1cHBv
+cnQgKENhbiBHdW8pDQogIC0gRml4IGNvbW1lbnRzIGZvciB1ZnNoY2Rfd2JfcHJvYmUoKSAoQ2Fu
+IEd1bykNCiAgLSBNYWtlIHVmc2hjZF93Yl9nZXRfZmxhZ19pbmRleCgpIGlubGluZSBhbmQgZml4
+IHVmc2hjZF9pc193Yl9mbGFncygpIChBdnJpIEFsdG1hbikNCg0KdjIgLT4gdjM6DQogIC0gSW50
+cm9kdWNlIGEgZGV2aWNlIHF1aXJrIHRvIHN1cHBvcnQgV3JpdGVCb29zdGVyIGluIHByZS0zLjEg
+VUZTIGRldmljZXMgKEF2cmkgQWx0bWFuKQ0KICAtIEZpeCBXcml0ZUJvb3N0ZXIgcmVsYXRlZCBz
+eXNmcyBub2Rlcy4gTm93IGFsbCBXcml0ZUJvb3N0ZXIgcmVsYXRlZCBzeXNmcyBub2RlcyBhcmUg
+c3BlY2lmaWNhbGx5IG1hcHBlZCB0byB0aGUgTFVOIHdpdGggV3JpdGVCb29zdGVyIGVuYWJsZWQg
+aW4gTFUgRGVkaWNhdGVkIGJ1ZmZlciBtb2RlIChBdnJpIEFsdG1hbikNCg0KdjEgLT4gdjI6DQog
+IC0gQ2hhbmdlIHRoZSBkZWZpbml0aW9uIG5hbWUgb2YgV3JpdGVCb29zdGVyIGJ1ZmZlciBtb2Rl
+IHRvIGNvcnJlc3BvbmQgdG8gc3BlY2lmaWNhdGlvbiAoQmVhbiBIdW8pDQogIC0gQWRkIHBhdGNo
+ICM1OiAic2NzaTogdWZzOiBjbGVhbnVwIFdyaXRlQm9vc3RlciBmZWF0dXJlIg0KDQpTdGFubGV5
+IENodSAoOCk6DQogIHNjc2k6IHVmczogZW5hYmxlIFdyaXRlQm9vc3RlciBvbiBzb21lIHByZS0z
+LjEgVUZTIGRldmljZXMNCiAgc2NzaTogdWZzOiBpbnRyb2R1Y2UgZml4dXBfZGV2X3F1aXJrcyB2
+b3BzDQogIHNjc2k6IHVmczogZXhwb3J0IHVmc19maXh1cF9kZXZpY2Vfc2V0dXAoKSBmdW5jdGlv
+bg0KICBzY3NpOiB1ZnMtbWVkaWF0ZWs6IGFkZCBmaXh1cF9kZXZfcXVpcmtzIHZvcHMNCiAgc2Nz
+aTogdWZzOiBhZGQgImluZGV4IiBpbiBwYXJhbWV0ZXIgbGlzdCBvZiB1ZnNoY2RfcXVlcnlfZmxh
+ZygpDQogIHNjc2k6IHVmczogYWRkIExVIERlZGljYXRlZCBidWZmZXIgbW9kZSBzdXBwb3J0IGZv
+ciBXcml0ZUJvb3N0ZXINCiAgc2NzaTogdWZzLW1lZGlhdGVrOiBlbmFibGUgV3JpdGVCb29zdGVy
+IGNhcGFiaWxpdHkNCiAgc2NzaTogdWZzOiBjbGVhbnVwIFdyaXRlQm9vc3RlciBmZWF0dXJlDQoN
+CiBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRlay5jIHwgIDI1ICsrKysrLQ0KIGRyaXZlcnMv
+c2NzaS91ZnMvdWZzLXN5c2ZzLmMgICAgfCAgMTEgKystDQogZHJpdmVycy9zY3NpL3Vmcy91ZnMu
+aCAgICAgICAgICB8ICAxMCArKysNCiBkcml2ZXJzL3Njc2kvdWZzL3Vmc19xdWlya3MuaCAgIHwg
+ICA3ICsrDQogZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYyAgICAgICB8IDE1MiArKysrKysrKysr
+KysrKysrKysrKy0tLS0tLS0tLS0tLQ0KIGRyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmggICAgICAg
+fCAgMjAgKysrKy0NCiA2IGZpbGVzIGNoYW5nZWQsIDE2MyBpbnNlcnRpb25zKCspLCA2MiBkZWxl
+dGlvbnMoLSkNCg0KLS0gDQoyLjE4LjANCg==
 
-
-On 05/04/2020 06:13 PM, Mark Rutland wrote:
-> On Mon, May 04, 2020 at 06:00:00PM +0530, Anshuman Khandual wrote:
->> A global boot_cpu_data is not really required. Lets drop this.
-> 
-> I don't think it's true that this isn't required today.
-> 
-> One reason that we have both boot_cpu_data and a cpu_data variable for
-> CPU0 is that CPU0 itself can be hotplugged out then back in, and this
-> allows us to detect if CPU0's features have changed (e.g. due to FW
-> failing to configure it appropriately, or real physical hotplug
-> occurring).
-
-Understood. After hotplug, CPU0 will come back via secondary_start_kernel()
-where it's current register values will be checked against earlier captured
-values i.e boot_cpu_data.
-
-But wondering why should CPU0 be treated like any other secondary CPU. IOW
-in case the fresh boot CPU register values dont match with boot_cpu_data,
-should not the online process just be declined ? AFAICS, current approach
-will let the kernel run with taint in case of a mismatch.
-
-> 
-> So NAK to the patch as it stands. If we're certain we capture all of
-> those details even without boot_cpu_data, then we should make other
-> changes to make that clear (e.g. removing it as an argument to
-> update_cpu_features()).
-
-There might not be another way, unless we can override CPU0's cpu_data
-variable when the boot CPU comes back in after vetting against existing
-values. Is there any particular reason to store the very first boot CPU0
-info for ever ?
-
-Passing on CPU0's cpu_data variable in update_cpu_features() for secondary
-CPUs during boot still make sense. It helps in finalizing register values.
-Re-entering CPU0's test against boot_cpu_data seems different.
