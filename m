@@ -2,127 +2,115 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 870C5C47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFBEC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68F4E2073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:01:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CqeugUNx"
+	by mail.kernel.org (Postfix) with ESMTP id E76BC206D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:02:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728547AbgEDKBC (ORCPT
+        id S1728559AbgEDKCL convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 06:01:02 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22183 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728166AbgEDKBB (ORCPT
+        Mon, 4 May 2020 06:02:11 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59560 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728079AbgEDKCK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 06:01:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588586460;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yJkyvpNgmDmt2g0SlWdBRcilG1I4swf/Cj3EYZFCe0o=;
-        b=CqeugUNxmO1cLBMF6HsKJu/K8hR6+w2ti34cz4NRO/jyleq2lL4C4yTmWhONmldnDOIZ2S
-        IQOtONIk2FnaXlOJ4OHtWy6cj8EHaZ7ONnKn2AMdbVrJVh1LYnmFpyihU5+k4qiVX3VmP9
-        HOnUFYvTcVA3QL0oxZQfKoZx+OQnrpw=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-80-H9KJjw06NOWL479MUheNQw-1; Mon, 04 May 2020 06:00:58 -0400
-X-MC-Unique: H9KJjw06NOWL479MUheNQw-1
-Received: by mail-wm1-f71.google.com with SMTP id j5so4595405wmi.4
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 03:00:58 -0700 (PDT)
+        Mon, 4 May 2020 06:02:10 -0400
+Received: from mail-pj1-f72.google.com ([209.85.216.72])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jVXvM-0001Zo-L8
+        for linux-kernel@vger.kernel.org; Mon, 04 May 2020 10:02:08 +0000
+Received: by mail-pj1-f72.google.com with SMTP id bg6so8791803pjb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 03:02:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yJkyvpNgmDmt2g0SlWdBRcilG1I4swf/Cj3EYZFCe0o=;
-        b=U7WYVNbKbkX0wowW+blWQhC6Hkgw91XEjc1HD/D1+yz7UxMN9MB7bzPwXBzLI2t7OM
-         ezcdm+S0ZK9YlDiUHjX1F0wMYF/CyU1EOmh6IilaC2iqWk3QDkel432kcxtMt3sEbLiq
-         mr3qN+Z1T8qjUUCnUEDgdG0lTTR75aiWNDGtCEUHc8cse+Z4y6t5uQNeE2fvsIlW6vow
-         AeWHWu0EGsNHRMOdxc27aTGIe9pYdfVYgQ3OvpSZ12keYoH+90jV9+bqNm1G+3uLtKdj
-         pimVJ+FaDxLprPo5YWHlwpUL8zw3MYJiCwqpc9L3Zu9OEzOkpzbF9RQcRgKJ0R3mKiVP
-         5LOA==
-X-Gm-Message-State: AGi0Pua3ZlozxwITsF3dltpTq1cwsl3O2T5uZIS7sPnQY0QnQfFptWRP
-        CmclRMF2nBT3TU4XJU/oEza70RJHkRPB8j1B4awRKQmnQHFylWEnIURhMCTPXNwtgXArjsqCiYe
-        r9B3PbXiYmS9gf9Th7hh4ttG1
-X-Received: by 2002:adf:8169:: with SMTP id 96mr18097873wrm.283.1588586456908;
-        Mon, 04 May 2020 03:00:56 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLQy5hLsDEnTJRu3PFA8DqRI0Fz/y/rb45ogQc0EtnB3c3GLHDSSMAYlKb28Ib+4V9VlkGOng==
-X-Received: by 2002:adf:8169:: with SMTP id 96mr18097855wrm.283.1588586456718;
-        Mon, 04 May 2020 03:00:56 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id c190sm13003942wme.4.2020.05.04.03.00.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 03:00:56 -0700 (PDT)
-Subject: Re: [PATCH] i2c: cht-wc: Remove superfluous error message in
- cht_wc_i2c_adap_i2c_probe()
-To:     Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200503132339.17718-1-aishwaryarj100@gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <0605496b-d4f1-c87c-5b45-699c8c3dcaec@redhat.com>
-Date:   Mon, 4 May 2020 12:00:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200503132339.17718-1-aishwaryarj100@gmail.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=mwkkUiapeaLKnijBX2GICpmX1c9YuVtWjVfq3t3aBUE=;
+        b=p1QWF+kmyk7njRprIVovq4aFyMElKNl+XeMujMqrCMB2YDtZGFp0XJOdefxrZHGEOP
+         4UaB/Ds+Ejg1VfzhwmB1zGpkEwjT1CcNxkroDk9ItPXl5g7+mGpdnTe0S9bJe4TuCtih
+         h0drg0cPfJOpgBvdxDK3HiLc35Acojr35lok7v/ikcDuFTPRsQnMKeslEH8a6MRG066G
+         n7AMMRf8KokoDd2pekSiNDkKT4yQFJYyTRN55q2icJrLdIOhXbwn2fF0M4tziNEcwbpe
+         dA86sKFahAiL2iA0mN67PHvAdzN44W3pyy17RiGf+OaAt3rbXMcx/imtjXpWsGycwXsh
+         N0lg==
+X-Gm-Message-State: AGi0PuY8iDMZQTudX6R82wfT2PY1siP4+WHqO5YwLME9EJXeG8c2nPbt
+        hdECmZsduL81/h9xtz19QoeSCEhwswBBIcUGIz8PToDYTAccqkbQbvnOHG5aCYei+IbCyh9WSpp
+        Kos5VqRRjZuMpZA2aj4gghzPwTpT5M7n9LTX5ssaZNA==
+X-Received: by 2002:a63:3c0a:: with SMTP id j10mr12952911pga.373.1588586527267;
+        Mon, 04 May 2020 03:02:07 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIu8mDtm9MeCRzvqNEih08I9J+LtybM+hiynuAFMTv20dUUB3DYwEkSydFKCC6oqDYDzWT/yQ==
+X-Received: by 2002:a63:3c0a:: with SMTP id j10mr12952870pga.373.1588586526831;
+        Mon, 04 May 2020 03:02:06 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id p1sm6864214pjf.15.2020.05.04.03.02.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 May 2020 03:02:06 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] xhci: Prevent runtime suspend all the time with
+ XHCI_RESET_ON_RESUME quirk
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <1588585655.13662.5.camel@suse.com>
+Date:   Mon, 4 May 2020 18:02:03 +0800
+Cc:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <88A0FF32-C7D7-4E49-8470-FE23401371BD@canonical.com>
+References: <20200504091952.15820-1-kai.heng.feng@canonical.com>
+ <1588585655.13662.5.camel@suse.com>
+To:     Oliver Neukum <oneukum@suse.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 5/3/20 3:23 PM, Aishwarya Ramakrishnan wrote:
-> The function platform_get_irq can log an error by itself.
-> This omit a redundant message for exception handling in the
-> calling function.
+
+> On May 4, 2020, at 17:47, Oliver Neukum <oneukum@suse.com> wrote:
 > 
-> Suggested by Coccinelle.
+> Am Montag, den 04.05.2020, 17:19 +0800 schrieb Kai-Heng Feng:
+>> Etron EJ168 USB 3.0 Host Controller stops working after S3, if it was
+>> runtime suspended previously:
+>> [  370.080359] pci 0000:02:00.0: can't change power state from D3cold to D0 (config space inaccessible)
 > 
-> Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
-
-Thank you for the patch, patch looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-
-> ---
->   drivers/i2c/busses/i2c-cht-wc.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
+> Apparently this controller has issues with D3cold
 > 
-> diff --git a/drivers/i2c/busses/i2c-cht-wc.c b/drivers/i2c/busses/i2c-cht-wc.c
-> index 35e55feda763..343ae5754e6e 100644
-> --- a/drivers/i2c/busses/i2c-cht-wc.c
-> +++ b/drivers/i2c/busses/i2c-cht-wc.c
-> @@ -314,10 +314,8 @@ static int cht_wc_i2c_adap_i2c_probe(struct platform_device *pdev)
->   	int ret, reg, irq;
->   
->   	irq = platform_get_irq(pdev, 0);
-> -	if (irq < 0) {
-> -		dev_err(&pdev->dev, "Error missing irq resource\n");
-> +	if (irq < 0)
->   		return -EINVAL;
-> -	}
->   
->   	adap = devm_kzalloc(&pdev->dev, sizeof(*adap), GFP_KERNEL);
->   	if (!adap)
+>> [  370.080477] xhci_hcd 0000:04:00.0: can't change power state from D3cold to D0 (config space inaccessible)
+>> [  370.080532] pcieport 0000:00:1c.0: DPC: containment event, status:0x1f05 source:0x0200
+>> [  370.080533] pcieport 0000:00:1c.0: DPC: ERR_FATAL detected
+>> [  370.080536] xhci_hcd 0000:04:00.0: can't change power state from D3hot to D0 (config space inaccessible)
+>> [  370.080552] xhci_hcd 0000:04:00.0: AER: can't recover (no error_detected callback)
+>> [  370.080566] usb usb3: root hub lost power or was reset
+>> [  370.080566] usb usb4: root hub lost power or was reset
+>> [  370.080572] xhci_hcd 0000:04:00.0: Host halt failed, -19
+>> [  370.080574] xhci_hcd 0000:04:00.0: Host not accessible, reset failed.
+>> [  370.080575] xhci_hcd 0000:04:00.0: PCI post-resume error -19!
+>> [  370.080586] xhci_hcd 0000:04:00.0: HC died; cleaning up
+>> 
+>> This can be fixed by not runtime suspend the controller at all.
+>> 
+>> So instead of conditionally runtime suspend the controller, always
+>> prevent runtime suspend with XHCI_RESET_ON_RESUME quirk.
+> 
+> What does that do to other controllers that can do runtime suspend
+> under the current scheme?
+
+Ok, I'll add a new quirk specific to this controller.
+
+Kai-Heng
+
+> 
+> 	Regards
+> 		Oliver
 > 
 
