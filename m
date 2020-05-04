@@ -2,218 +2,164 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC631C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B4BC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93A9524965
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:44:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89F5024958
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:44:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rUWaCASb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728214AbgEDIoT (ORCPT
+        id S1728282AbgEDIon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 04:44:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54784 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726351AbgEDIoT (ORCPT
+        Mon, 4 May 2020 04:44:43 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:58854 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbgEDIon (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 04:44:19 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26BA6C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 01:44:19 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jVWhx-0004Ba-Uo; Mon, 04 May 2020 10:44:13 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jVWhw-00061L-O0; Mon, 04 May 2020 10:44:12 +0200
-Date:   Mon, 4 May 2020 10:44:12 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
-        devicetree@vger.kernel.org
-Subject: Re: [RFC PATCH] dt-bindings: net: nxp,tja11xx: add compatible support
-Message-ID: <20200504084412.juhnxip7lg2d3ct5@pengutronix.de>
-References: <20200504082617.11326-1-o.rempel@pengutronix.de>
+        Mon, 4 May 2020 04:44:43 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0448iaJb095179;
+        Mon, 4 May 2020 03:44:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588581876;
+        bh=MJFZeP9Kt0d/U5r8cedlUqKEgzNmU/L56TzLmHNhuwA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=rUWaCASbPDM5c8AbQEl/BHEC1S34pGHrrmTIrCEytrpIRC7r43gMhnh2SEwVSoDsQ
+         kWbrAWHMXTO5XjofI2djF5EIlUPNUI/1wCAqM17XhbB+4htYTn8vKCVmWIOSpB7OZ7
+         xX5ee6Zi4IF739eyV3OvEtRPGfm75XxIttsbnN/M=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0448iafK069176
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 4 May 2020 03:44:36 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 4 May
+ 2020 03:44:36 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 4 May 2020 03:44:36 -0500
+Received: from [10.250.150.106] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0448iUss019965;
+        Mon, 4 May 2020 03:44:31 -0500
+Subject: Re: [PATCH v2 2/4] PCI: cadence: Use "dma-ranges" instead of
+ "cdns,no-bar-match-nbits" property
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200417114322.31111-1-kishon@ti.com>
+ <20200417114322.31111-3-kishon@ti.com>
+ <20200501144645.GB7398@e121166-lin.cambridge.arm.com>
+ <dc581c5b-11de-f4b3-e928-208b9293e391@arm.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <2472c182-834c-d2c1-175e-4d73898aef35@ti.com>
+Date:   Mon, 4 May 2020 14:14:29 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="pe24nsds5j3wiypj"
-Content-Disposition: inline
-In-Reply-To: <20200504082617.11326-1-o.rempel@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:26:30 up 170 days, 23:45, 184 users,  load average: 0.17, 0.11,
- 0.09
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <dc581c5b-11de-f4b3-e928-208b9293e391@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Robin,
 
---pe24nsds5j3wiypj
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 5/1/2020 9:24 PM, Robin Murphy wrote:
+> On 2020-05-01 3:46 pm, Lorenzo Pieralisi wrote:
+>> [+Robin - to check on dma-ranges intepretation]
+>>
+>> I would need RobH and Robin to review this.
+>>
+>> Also, An ACK from Tom is required - for the whole series.
+>>
+>> On Fri, Apr 17, 2020 at 05:13:20PM +0530, Kishon Vijay Abraham I wrote:
+>>> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
+>>> property to configure the number of bits passed through from PCIe
+>>> address to internal address in Inbound Address Translation register.
+>>>
+>>> However standard PCI dt-binding already defines "dma-ranges" to
+>>> describe the address range accessible by PCIe controller. Parse
+>>> "dma-ranges" property to configure the number of bits passed
+>>> through from PCIe address to internal address in Inbound Address
+>>> Translation register.
+>>>
+>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>> ---
+>>>   drivers/pci/controller/cadence/pcie-cadence-host.c | 13 +++++++++++--
+>>>   1 file changed, 11 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>> b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>> index 9b1c3966414b..60f912a657b9 100644
+>>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>> @@ -206,8 +206,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>>>       struct device *dev = rc->pcie.dev;
+>>>       struct platform_device *pdev = to_platform_device(dev);
+>>>       struct device_node *np = dev->of_node;
+>>> +    struct of_pci_range_parser parser;
+>>>       struct pci_host_bridge *bridge;
+>>>       struct list_head resources;
+>>> +    struct of_pci_range range;
+>>>       struct cdns_pcie *pcie;
+>>>       struct resource *res;
+>>>       int ret;
+>>> @@ -222,8 +224,15 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>>>       rc->max_regions = 32;
+>>>       of_property_read_u32(np, "cdns,max-outbound-regions", &rc->max_regions);
+>>>   -    rc->no_bar_nbits = 32;
+>>> -    of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
+>>> +    if (!of_pci_dma_range_parser_init(&parser, np))
+>>> +        if (of_pci_range_parser_one(&parser, &range))
+>>> +            rc->no_bar_nbits = ilog2(range.size);
+> 
+> You probably want "range.pci_addr + range.size" here just in case the bottom of
+> the window is ever non-zero. Is there definitely only ever a single inbound
+> window to consider?
 
-Hi all,
+Cadence IP has 3 inbound address translation registers, however we use only 1
+inbound address translation register to map the entire 32 bit or 64 bit address
+region.
+> 
+> I believe that pci_parse_request_of_pci_ranges() could do the actual parsing
+> for you, but I suppose plumbing that in plus processing the resulting
+> dma_ranges resource probably ends up a bit messier than the concise open-coding
+> here.
 
-here is first attempt to rework this binding. So far I have following
-questions and/or issues:
-- currently this PHY is identified by ID, not by compatible. Should it
-  be probed by compatible?
-  Theoretically I can use:
-  	compatible =3D "nxp,tja1102", "ethernet-phy-ieee802.3-c22";
+right, pci_parse_request_of_pci_ranges() parses "ranges" property and is used
+for outbound configuration, whereas here we parse "dma-ranges" property and is
+used for inbound configuration.
 
-  But till now this was used only for nodes with not clear support state
-  and seems to be not a welcome solution (at least till now).
+Thanks
+Kishon
 
-- matching by node name patter seems to trigger warning by different
-  (not related) bindings. What is a best practice to avoid it?
-
-Regards,
-Oleksij
-
-On Mon, May 04, 2020 at 10:26:17AM +0200, Oleksij Rempel wrote:
-> ... and correct SPDX-License-Identifier.
->=20
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
->  .../devicetree/bindings/net/nxp,tja11xx.yaml  | 51 ++++++++++++-------
->  1 file changed, 32 insertions(+), 19 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml b/Doc=
-umentation/devicetree/bindings/net/nxp,tja11xx.yaml
-> index 42be0255512b3..e4ae8257f3258 100644
-> --- a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
-> +++ b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
-> @@ -1,4 +1,4 @@
-> -# SPDX-License-Identifier: GPL-2.0+
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->  %YAML 1.2
->  ---
->  $id: http://devicetree.org/schemas/net/nxp,tja11xx.yaml#
-> @@ -14,25 +14,36 @@ maintainers:
->  description:
->    Bindings for NXP TJA11xx automotive PHYs
-> =20
-> -allOf:
-> -  - $ref: ethernet-phy.yaml#
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +        - enum:
-> +          - nxp,tja1102
-> +        - const: ethernet-phy-ieee802.3-c22
-> =20
-> -patternProperties:
-> -  "^ethernet-phy@[0-9a-f]+$":
-> -    type: object
-> -    description: |
-> -      Some packages have multiple PHYs. Secondary PHY should be defines =
-as
-> -      subnode of the first (parent) PHY.
-> +  $nodename:
-> +    pattern: "^ethernet-phy(@[a-f0-9]+)?$"
-> =20
-> -    properties:
-> -      reg:
-> -        minimum: 0
-> -        maximum: 31
-> -        description:
-> -          The ID number for the child PHY. Should be +1 of parent PHY.
-> +  reg:
-> +    minimum: 0
-> +    maximum: 31
-> +    description:
-> +      The ID number for the child PHY. Should be +1 of parent PHY.
-> =20
-> -    required:
-> -      - reg
-> +  '#address-cells':
-> +    description: number of address cells for the MDIO bus
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    description: number of size cells on the MDIO bus
-> +    const: 0
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - '#address-cells'
-> +  - '#size-cells'
-> =20
->  examples:
->    - |
-> @@ -40,8 +51,9 @@ examples:
->          #address-cells =3D <1>;
->          #size-cells =3D <0>;
-> =20
-> -        tja1101_phy0: ethernet-phy@4 {
-> -            reg =3D <0x4>;
-> +        tja1101_phy0: ethernet-phy@1 {
-> +            compatible =3D "nxp,tja1101", "ethernet-phy-ieee802.3-c22";
-> +            reg =3D <0x1>;
->          };
->      };
->    - |
-> @@ -50,6 +62,7 @@ examples:
->          #size-cells =3D <0>;
-> =20
->          tja1102_phy0: ethernet-phy@4 {
-> +            compatible =3D "nxp,tja1102", "ethernet-phy-ieee802.3-c22";
->              reg =3D <0x4>;
->              #address-cells =3D <1>;
->              #size-cells =3D <0>;
-> --=20
-> 2.26.2
->=20
->=20
-
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---pe24nsds5j3wiypj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl6v1dgACgkQ4omh9DUa
-UbN3bhAAmwBlKUxD8sJbC2KWRGhMPoF1krEfvmCTUqG4Dr9yrhzztnMi2j+GIhmY
-JuDcR538mLieGd8iDo0BheWOShryiArR2ze4mvQxAxYYJRqGGFS3oDtBkzDA46hR
-LUWfcBE/7VyCI1dNu9vhn8K1GRtqFM4vffihDeoVxwNrSCUPViWabsuF31OZRhYo
-mlwRfRuz8UWj8juPwAtsRy4v5hr1cemfA3DLuN7pnvpgMpFv4bWGP9BcYI/ZVVtn
-YYFLsw6uuAwC5jcnz7TzQbyPEo68axNvI77n4nKld6SKFjjBQWMsrtxbBtcAYCAL
-DOykrEFJe9Mdpz8jutAfo8x6ddVj56Z6EIzsZkiG0Ajvlwurj3pGsdJZX/X8vx0B
-WHX2zekiaBxSefDNqeWj84O3bzgbPo0B/lt2Jd3C/jomgn1UPyEBulc/rrQsKNMg
-jUs6n9EGyNhuZMg2Q619W0fZ+I12B3GlnRUNCCP1IzGPoBed5KTmYR253pvapDG9
-rK2yR9esM1Yo1HAC/oz8omxqVqJLlNNoLu2i1Qzj/MJglUd/bYGijQHtb3Z75HRM
-oEnJdOqZuZKzZ8F/uWDGLdq9a6C10JJVetQEyXSK29IEM2x+DDyIY8j/lNszSKL6
-2bRYu3qC6p5MauuGaKw9AeRlhVUk5fphLX0UBDBFhAQsx3OLE6s=
-=2IeE
------END PGP SIGNATURE-----
-
---pe24nsds5j3wiypj--
+> 
+> Robin.
+> 
+>>> +
+>>> +    if (!rc->no_bar_nbits) {
+>>> +        rc->no_bar_nbits = 32;
+>>> +        of_property_read_u32(np, "cdns,no-bar-match-nbits",
+>>> +                     &rc->no_bar_nbits);
+>>> +    }
+>>>         rc->vendor_id = 0xffff;
+>>>       of_property_read_u16(np, "vendor-id", &rc->vendor_id);
+>>> -- 
+>>> 2.17.1
+>>>
