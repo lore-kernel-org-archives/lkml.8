@@ -2,446 +2,99 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 239BFC47258
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7325AC47254
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF69D20735
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:16:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="aHggx/wG"
+	by mail.kernel.org (Postfix) with ESMTP id 4C9A92073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:16:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729555AbgEDPQY (ORCPT
+        id S1729546AbgEDPQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 11:16:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59424 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728983AbgEDPQW (ORCPT
+        Mon, 4 May 2020 11:16:23 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:45093 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728684AbgEDPQW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 4 May 2020 11:16:22 -0400
-X-Greylist: delayed 6407 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 04 May 2020 08:16:22 PDT
-Received: from forwardcorp1p.mail.yandex.net (forwardcorp1p.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b6:217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04124C061A0E;
-        Mon,  4 May 2020 08:16:22 -0700 (PDT)
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 4F23C2E14A6;
-        Mon,  4 May 2020 18:16:20 +0300 (MSK)
-Received: from iva8-88b7aa9dc799.qloud-c.yandex.net (iva8-88b7aa9dc799.qloud-c.yandex.net [2a02:6b8:c0c:77a0:0:640:88b7:aa9d])
-        by mxbackcorp2j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id JW1R6D22n1-GIXGHS0J;
-        Mon, 04 May 2020 18:16:20 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1588605380; bh=mIhDrIHu3bhYRhKfd4UBzOVrYN6lf7sONXYInt4x5HA=;
-        h=Message-ID:Date:To:From:Subject:Cc;
-        b=aHggx/wGURLDFEvGZ0qadoyp8N5p7UsmMbxNMrtl4YJzaFVm6itFcudP/sdyiCtPD
-         3m2cFBdopF8LtBTBptofGJT8HKvNyR8+MP9WJ7ee5eS59hZnBLt9MqjSX+alNjt7ua
-         +fjywQUGj1fJwudq99q4vWcqozebjfAGllehzSOs=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b081:409::1:8])
-        by iva8-88b7aa9dc799.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id UFindhhTFh-GIW0r17w;
-        Mon, 04 May 2020 18:16:18 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: [PATCH RFC 1/2] tracing/block: cleanup rwbs filling in trace events
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
-Cc:     linux-bcache@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Christoph Hellwig <hch@infradead.org>
-Date:   Mon, 04 May 2020 18:16:17 +0300
-Message-ID: <158860537783.30407.1084087380643625249.stgit@buzz>
-User-Agent: StGit/0.22-32-g6a05
+Received: from mail-qt1-f181.google.com ([209.85.160.181]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MrOq7-1ilFCd3JlX-00oVu7; Mon, 04 May 2020 17:16:21 +0200
+Received: by mail-qt1-f181.google.com with SMTP id g16so10264400qtp.11;
+        Mon, 04 May 2020 08:16:20 -0700 (PDT)
+X-Gm-Message-State: AGi0PuY7Dy0tcYZRe5lO3fJFtrFFxb5fLFN9/bg1a15M1OAKTqOM5xIR
+        VbE9j8AIZQdQkreJ8B4ULYNavgDXL1EmESPI9Vc=
+X-Google-Smtp-Source: APiQypL5WgUAhbeT4hCo6s57/ai3QBtJeXFaXUuzlX+bmFS85Algr9U95kT2CU1vCl6sA5XuPw/rnlhJ6X2pgdEdJ/U=
+X-Received: by 2002:ac8:12c2:: with SMTP id b2mr17657477qtj.7.1588605379427;
+ Mon, 04 May 2020 08:16:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20200502233910.20851-1-clay@daemons.net>
+In-Reply-To: <20200502233910.20851-1-clay@daemons.net>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 4 May 2020 17:16:02 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1m-zmiTx0_KJb-9PTW0iK+Zkh10gKsaBzge0OJALBFmQ@mail.gmail.com>
+Message-ID: <CAK8P3a1m-zmiTx0_KJb-9PTW0iK+Zkh10gKsaBzge0OJALBFmQ@mail.gmail.com>
+Subject: Re: [PATCH] net: ethernet: ti: Remove TI_CPTS_MOD workaround
+To:     Clay McClure <clay@daemons.net>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        kbuild test robot <lkp@intel.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Tony Lindgren <tony@atomide.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Wingman Kwok <w-kwok2@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:V8qk58D27ufZzMhxnwD4iHjL4JpQbVrq0pC4GH9P7zw/lls1hfy
+ Z9nW9LV7MEeBqqVqOCt1Lg1rVGN5zKlg22Z2WcWOgFG3CQO3aXj6l7cAwOGc4cFn5mBITgB
+ RIPpgIHTmMQL5s1gRlwuwsM1rEKdkGDOW0BhOqaWwID0LhSr765B68eFsFWwF2xr/Mq3CmD
+ buBXmHa+4qJg/8uJ7FBpQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:tbcwA8OpZ0k=:WGi0zi7PnptrFt0O9QmWzc
+ H4mC49I97x4Qm0suvCYZm1vNIy3v7xWLmIfqeT+74cnP8oDKwyVBLFVQWQSBTS1xQFxYDFhlt
+ WnjzHLaONPV3EvAtRvYRrpNRnAo2cEbdRi40y+wS7pZHskMLtHogaAng7Tafyl4bqRIhqN9CO
+ Mih207YZupHpGD61ghLk0uftARgFAzntwoBYOWBvPgS5ei3olhWmX6FNEc728MA8r10ySmsdh
+ MzR23fgu1tV9s/aBl9+luHk/4VRdtca9NqPLWP29tBVjWHBWhtUsUzFPsCS40U3oAv8Nh8qO0
+ hfp9skO8dRKHMxsDt8+wIovdPby+EpbwxWTdnlOulb9SV4fJU/KlrSjqmTcoyCVLqzafLyjzz
+ cpVlKs+COt6puxOYe1pcUw/CxHnX9FXZXLqApS38PEHXhgMf5xTn+nKb635JbyriVp+3GJ8FH
+ S+bLFDP2E2L++2tEDYiI0V7bV6GoeQkOGB62JiCeMfyabUS0H+sd/LkpbTHd3eUJEIFgX8aC3
+ qhEPee5zMD5souwtNV0FdVv3TUV6b2GGPvJUAfHMtCgGtpEyoK+PgIbiwa2rYS5qH6xgUbcwA
+ kWDeEDOzvH9wkv6p0Ydjl5oc9wHyYXLLOZzfI8P/gZffkuI0a9dD/SPe7I8Ewstqtcprn1cjw
+ jnfRIYhhy2OrPYMLrhUWb84CSnQTXDH5cvL4etAEaVro1Krt8QpCHMCK2uOugJHNazqQOxtcp
+ 3aNCuucy+Qu98Gpa0ddWgm6u7DdlTFUGtlICcjgsJjel2efY3vrR4xdY8EMOZ9LDG2ZFyqhep
+ cuPdXjVEV5Bk3WTJh5aZWltLRH6QGQMDhxVJa+4592AhYfGecg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define BLK_RWBS_LEN in blktrace_api.h
-Bcache events use shorter 6 char buffer which could overflow.
+On Sun, May 3, 2020 at 1:41 AM Clay McClure <clay@daemons.net> wrote:
 
-Also remove unsed "bytes" argument.
+> To preserve the existing behavior of defconfigs that select TI_CPTS, we
+> must also select PTP_1588_CLOCK so that the dependency is satisfied.
+> omap2plus_defconfig and keystone_defconfig have not been updated in a
+> while, so some unrelated no-op changes appear in the diff.
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
----
- include/linux/blktrace_api.h  |    4 +-
- include/trace/events/bcache.h |   20 +++++-----
- include/trace/events/block.h  |   84 ++++++++++++++++++++---------------------
- kernel/trace/blktrace.c       |    2 -
- 4 files changed, 55 insertions(+), 55 deletions(-)
+Please don't do that at all. If you need to add a line to the defconfig file,
+add just that line, to avoid merge conflicts and dropping unrelated lines
+that have not been caught but need to be preserved in some way
+(by enabling another dependency, or renaming the option).
 
-diff --git a/include/linux/blktrace_api.h b/include/linux/blktrace_api.h
-index 3b6ff5902edc..ea9da15d32d9 100644
---- a/include/linux/blktrace_api.h
-+++ b/include/linux/blktrace_api.h
-@@ -120,7 +120,9 @@ struct compat_blk_user_trace_setup {
- 
- #endif
- 
--extern void blk_fill_rwbs(char *rwbs, unsigned int op, int bytes);
-+#define BLK_RWBS_LEN	8
-+
-+extern void blk_fill_rwbs(char *rwbs, unsigned int op);
- 
- static inline sector_t blk_rq_trace_sector(struct request *rq)
- {
-diff --git a/include/trace/events/bcache.h b/include/trace/events/bcache.h
-index 0bddea663b3b..7440d704c200 100644
---- a/include/trace/events/bcache.h
-+++ b/include/trace/events/bcache.h
-@@ -18,7 +18,7 @@ DECLARE_EVENT_CLASS(bcache_request,
- 		__field(sector_t,	sector			)
- 		__field(dev_t,		orig_sector		)
- 		__field(unsigned int,	nr_sector		)
--		__array(char,		rwbs,	6		)
-+		__array(char,		rwbs,	BLK_RWBS_LEN	)
- 	),
- 
- 	TP_fast_assign(
-@@ -28,7 +28,7 @@ DECLARE_EVENT_CLASS(bcache_request,
- 		__entry->sector		= bio->bi_iter.bi_sector;
- 		__entry->orig_sector	= bio->bi_iter.bi_sector - 16;
- 		__entry->nr_sector	= bio->bi_iter.bi_size >> 9;
--		blk_fill_rwbs(__entry->rwbs, bio->bi_opf, bio->bi_iter.bi_size);
-+		blk_fill_rwbs(__entry->rwbs, bio->bi_opf);
- 	),
- 
- 	TP_printk("%d,%d %s %llu + %u (from %d,%d @ %llu)",
-@@ -95,14 +95,14 @@ DECLARE_EVENT_CLASS(bcache_bio,
- 		__field(dev_t,		dev			)
- 		__field(sector_t,	sector			)
- 		__field(unsigned int,	nr_sector		)
--		__array(char,		rwbs,	6		)
-+		__array(char,		rwbs,	BLK_RWBS_LEN	)
- 	),
- 
- 	TP_fast_assign(
- 		__entry->dev		= bio_dev(bio);
- 		__entry->sector		= bio->bi_iter.bi_sector;
- 		__entry->nr_sector	= bio->bi_iter.bi_size >> 9;
--		blk_fill_rwbs(__entry->rwbs, bio->bi_opf, bio->bi_iter.bi_size);
-+		blk_fill_rwbs(__entry->rwbs, bio->bi_opf);
- 	),
- 
- 	TP_printk("%d,%d  %s %llu + %u",
-@@ -128,7 +128,7 @@ TRACE_EVENT(bcache_read,
- 		__field(dev_t,		dev			)
- 		__field(sector_t,	sector			)
- 		__field(unsigned int,	nr_sector		)
--		__array(char,		rwbs,	6		)
-+		__array(char,		rwbs,	BLK_RWBS_LEN	)
- 		__field(bool,		cache_hit		)
- 		__field(bool,		bypass			)
- 	),
-@@ -137,7 +137,7 @@ TRACE_EVENT(bcache_read,
- 		__entry->dev		= bio_dev(bio);
- 		__entry->sector		= bio->bi_iter.bi_sector;
- 		__entry->nr_sector	= bio->bi_iter.bi_size >> 9;
--		blk_fill_rwbs(__entry->rwbs, bio->bi_opf, bio->bi_iter.bi_size);
-+		blk_fill_rwbs(__entry->rwbs, bio->bi_opf);
- 		__entry->cache_hit = hit;
- 		__entry->bypass = bypass;
- 	),
-@@ -158,7 +158,7 @@ TRACE_EVENT(bcache_write,
- 		__field(u64,		inode			)
- 		__field(sector_t,	sector			)
- 		__field(unsigned int,	nr_sector		)
--		__array(char,		rwbs,	6		)
-+		__array(char,		rwbs,	BLK_RWBS_LEN	)
- 		__field(bool,		writeback		)
- 		__field(bool,		bypass			)
- 	),
-@@ -168,7 +168,7 @@ TRACE_EVENT(bcache_write,
- 		__entry->inode		= inode;
- 		__entry->sector		= bio->bi_iter.bi_sector;
- 		__entry->nr_sector	= bio->bi_iter.bi_size >> 9;
--		blk_fill_rwbs(__entry->rwbs, bio->bi_opf, bio->bi_iter.bi_size);
-+		blk_fill_rwbs(__entry->rwbs, bio->bi_opf);
- 		__entry->writeback = writeback;
- 		__entry->bypass = bypass;
- 	),
-@@ -229,7 +229,7 @@ TRACE_EVENT(bcache_journal_write,
- 		__field(dev_t,		dev			)
- 		__field(sector_t,	sector			)
- 		__field(unsigned int,	nr_sector		)
--		__array(char,		rwbs,	6		)
-+		__array(char,		rwbs,	BLK_RWBS_LEN	)
- 		__field(u32,		nr_keys			)
- 	),
- 
-@@ -238,7 +238,7 @@ TRACE_EVENT(bcache_journal_write,
- 		__entry->sector		= bio->bi_iter.bi_sector;
- 		__entry->nr_sector	= bio->bi_iter.bi_size >> 9;
- 		__entry->nr_keys	= keys;
--		blk_fill_rwbs(__entry->rwbs, bio->bi_opf, bio->bi_iter.bi_size);
-+		blk_fill_rwbs(__entry->rwbs, bio->bi_opf);
- 	),
- 
- 	TP_printk("%d,%d  %s %llu + %u keys %u",
-diff --git a/include/trace/events/block.h b/include/trace/events/block.h
-index 81b43f5bdf23..aac9a5c0e2cc 100644
---- a/include/trace/events/block.h
-+++ b/include/trace/events/block.h
-@@ -10,7 +10,6 @@
- #include <linux/buffer_head.h>
- #include <linux/tracepoint.h>
- 
--#define RWBS_LEN	8
- 
- DECLARE_EVENT_CLASS(block_buffer,
- 
-@@ -81,7 +80,7 @@ TRACE_EVENT(block_rq_requeue,
- 		__field(  dev_t,	dev			)
- 		__field(  sector_t,	sector			)
- 		__field(  unsigned int,	nr_sector		)
--		__array(  char,		rwbs,	RWBS_LEN	)
-+		__array(  char,		rwbs,	BLK_RWBS_LEN	)
- 		__dynamic_array( char,	cmd,	1		)
- 	),
- 
-@@ -90,7 +89,7 @@ TRACE_EVENT(block_rq_requeue,
- 		__entry->sector    = blk_rq_trace_sector(rq);
- 		__entry->nr_sector = blk_rq_trace_nr_sectors(rq);
- 
--		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags, blk_rq_bytes(rq));
-+		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
- 		__get_str(cmd)[0] = '\0';
- 	),
- 
-@@ -124,7 +123,7 @@ TRACE_EVENT(block_rq_complete,
- 		__field(  sector_t,	sector			)
- 		__field(  unsigned int,	nr_sector		)
- 		__field(  int,		error			)
--		__array(  char,		rwbs,	RWBS_LEN	)
-+		__array(  char,		rwbs,	BLK_RWBS_LEN	)
- 		__dynamic_array( char,	cmd,	1		)
- 	),
- 
-@@ -134,7 +133,7 @@ TRACE_EVENT(block_rq_complete,
- 		__entry->nr_sector = nr_bytes >> 9;
- 		__entry->error     = error;
- 
--		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags, nr_bytes);
-+		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
- 		__get_str(cmd)[0] = '\0';
- 	),
- 
-@@ -156,7 +155,7 @@ DECLARE_EVENT_CLASS(block_rq,
- 		__field(  sector_t,	sector			)
- 		__field(  unsigned int,	nr_sector		)
- 		__field(  unsigned int,	bytes			)
--		__array(  char,		rwbs,	RWBS_LEN	)
-+		__array(  char,		rwbs,	BLK_RWBS_LEN	)
- 		__array(  char,         comm,   TASK_COMM_LEN   )
- 		__dynamic_array( char,	cmd,	1		)
- 	),
-@@ -167,7 +166,7 @@ DECLARE_EVENT_CLASS(block_rq,
- 		__entry->nr_sector = blk_rq_trace_nr_sectors(rq);
- 		__entry->bytes     = blk_rq_bytes(rq);
- 
--		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags, blk_rq_bytes(rq));
-+		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
- 		__get_str(cmd)[0] = '\0';
- 		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
- 	),
-@@ -232,7 +231,7 @@ TRACE_EVENT(block_bio_bounce,
- 		__field( dev_t,		dev			)
- 		__field( sector_t,	sector			)
- 		__field( unsigned int,	nr_sector		)
--		__array( char,		rwbs,	RWBS_LEN	)
-+		__array( char,		rwbs,	BLK_RWBS_LEN	)
- 		__array( char,		comm,	TASK_COMM_LEN	)
- 	),
- 
-@@ -240,7 +239,7 @@ TRACE_EVENT(block_bio_bounce,
- 		__entry->dev		= bio_dev(bio);
- 		__entry->sector		= bio->bi_iter.bi_sector;
- 		__entry->nr_sector	= bio_sectors(bio);
--		blk_fill_rwbs(__entry->rwbs, bio->bi_opf, bio->bi_iter.bi_size);
-+		blk_fill_rwbs(__entry->rwbs, bio->bi_opf);
- 		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
- 	),
- 
-@@ -266,11 +265,11 @@ TRACE_EVENT(block_bio_complete,
- 	TP_ARGS(q, bio, error),
- 
- 	TP_STRUCT__entry(
--		__field( dev_t,		dev		)
--		__field( sector_t,	sector		)
--		__field( unsigned,	nr_sector	)
--		__field( int,		error		)
--		__array( char,		rwbs,	RWBS_LEN)
-+		__field( dev_t,		dev			)
-+		__field( sector_t,	sector			)
-+		__field( unsigned,	nr_sector		)
-+		__field( int,		error			)
-+		__array( char,		rwbs,	BLK_RWBS_LEN	)
- 	),
- 
- 	TP_fast_assign(
-@@ -278,7 +277,7 @@ TRACE_EVENT(block_bio_complete,
- 		__entry->sector		= bio->bi_iter.bi_sector;
- 		__entry->nr_sector	= bio_sectors(bio);
- 		__entry->error		= error;
--		blk_fill_rwbs(__entry->rwbs, bio->bi_opf, bio->bi_iter.bi_size);
-+		blk_fill_rwbs(__entry->rwbs, bio->bi_opf);
- 	),
- 
- 	TP_printk("%d,%d %s %llu + %u [%d]",
-@@ -297,7 +296,7 @@ DECLARE_EVENT_CLASS(block_bio_merge,
- 		__field( dev_t,		dev			)
- 		__field( sector_t,	sector			)
- 		__field( unsigned int,	nr_sector		)
--		__array( char,		rwbs,	RWBS_LEN	)
-+		__array( char,		rwbs,	BLK_RWBS_LEN	)
- 		__array( char,		comm,	TASK_COMM_LEN	)
- 	),
- 
-@@ -305,7 +304,7 @@ DECLARE_EVENT_CLASS(block_bio_merge,
- 		__entry->dev		= bio_dev(bio);
- 		__entry->sector		= bio->bi_iter.bi_sector;
- 		__entry->nr_sector	= bio_sectors(bio);
--		blk_fill_rwbs(__entry->rwbs, bio->bi_opf, bio->bi_iter.bi_size);
-+		blk_fill_rwbs(__entry->rwbs, bio->bi_opf);
- 		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
- 	),
- 
-@@ -364,7 +363,7 @@ TRACE_EVENT(block_bio_queue,
- 		__field( dev_t,		dev			)
- 		__field( sector_t,	sector			)
- 		__field( unsigned int,	nr_sector		)
--		__array( char,		rwbs,	RWBS_LEN	)
-+		__array( char,		rwbs,	BLK_RWBS_LEN	)
- 		__array( char,		comm,	TASK_COMM_LEN	)
- 	),
- 
-@@ -372,7 +371,7 @@ TRACE_EVENT(block_bio_queue,
- 		__entry->dev		= bio_dev(bio);
- 		__entry->sector		= bio->bi_iter.bi_sector;
- 		__entry->nr_sector	= bio_sectors(bio);
--		blk_fill_rwbs(__entry->rwbs, bio->bi_opf, bio->bi_iter.bi_size);
-+		blk_fill_rwbs(__entry->rwbs, bio->bi_opf);
- 		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
- 	),
- 
-@@ -392,7 +391,7 @@ DECLARE_EVENT_CLASS(block_get_rq,
- 		__field( dev_t,		dev			)
- 		__field( sector_t,	sector			)
- 		__field( unsigned int,	nr_sector		)
--		__array( char,		rwbs,	RWBS_LEN	)
-+		__array( char,		rwbs,	BLK_RWBS_LEN	)
- 		__array( char,		comm,	TASK_COMM_LEN	)
-         ),
- 
-@@ -400,8 +399,7 @@ DECLARE_EVENT_CLASS(block_get_rq,
- 		__entry->dev		= bio ? bio_dev(bio) : 0;
- 		__entry->sector		= bio ? bio->bi_iter.bi_sector : 0;
- 		__entry->nr_sector	= bio ? bio_sectors(bio) : 0;
--		blk_fill_rwbs(__entry->rwbs,
--			      bio ? bio->bi_opf : 0, __entry->nr_sector);
-+		blk_fill_rwbs(__entry->rwbs, bio ? bio->bi_opf : 0);
- 		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
-         ),
- 
-@@ -524,18 +522,18 @@ TRACE_EVENT(block_split,
- 	TP_ARGS(q, bio, new_sector),
- 
- 	TP_STRUCT__entry(
--		__field( dev_t,		dev				)
--		__field( sector_t,	sector				)
--		__field( sector_t,	new_sector			)
--		__array( char,		rwbs,		RWBS_LEN	)
--		__array( char,		comm,		TASK_COMM_LEN	)
-+		__field( dev_t,		dev			)
-+		__field( sector_t,	sector			)
-+		__field( sector_t,	new_sector		)
-+		__array( char,		rwbs,	BLK_RWBS_LEN	)
-+		__array( char,		comm,	TASK_COMM_LEN	)
- 	),
- 
- 	TP_fast_assign(
- 		__entry->dev		= bio_dev(bio);
- 		__entry->sector		= bio->bi_iter.bi_sector;
- 		__entry->new_sector	= new_sector;
--		blk_fill_rwbs(__entry->rwbs, bio->bi_opf, bio->bi_iter.bi_size);
-+		blk_fill_rwbs(__entry->rwbs, bio->bi_opf);
- 		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
- 	),
- 
-@@ -564,12 +562,12 @@ TRACE_EVENT(block_bio_remap,
- 	TP_ARGS(q, bio, dev, from),
- 
- 	TP_STRUCT__entry(
--		__field( dev_t,		dev		)
--		__field( sector_t,	sector		)
--		__field( unsigned int,	nr_sector	)
--		__field( dev_t,		old_dev		)
--		__field( sector_t,	old_sector	)
--		__array( char,		rwbs,	RWBS_LEN)
-+		__field( dev_t,		dev			)
-+		__field( sector_t,	sector			)
-+		__field( unsigned int,	nr_sector		)
-+		__field( dev_t,		old_dev			)
-+		__field( sector_t,	old_sector		)
-+		__array( char,		rwbs,	BLK_RWBS_LEN	)
- 	),
- 
- 	TP_fast_assign(
-@@ -578,7 +576,7 @@ TRACE_EVENT(block_bio_remap,
- 		__entry->nr_sector	= bio_sectors(bio);
- 		__entry->old_dev	= dev;
- 		__entry->old_sector	= from;
--		blk_fill_rwbs(__entry->rwbs, bio->bi_opf, bio->bi_iter.bi_size);
-+		blk_fill_rwbs(__entry->rwbs, bio->bi_opf);
- 	),
- 
- 	TP_printk("%d,%d %s %llu + %u <- (%d,%d) %llu",
-@@ -608,13 +606,13 @@ TRACE_EVENT(block_rq_remap,
- 	TP_ARGS(q, rq, dev, from),
- 
- 	TP_STRUCT__entry(
--		__field( dev_t,		dev		)
--		__field( sector_t,	sector		)
--		__field( unsigned int,	nr_sector	)
--		__field( dev_t,		old_dev		)
--		__field( sector_t,	old_sector	)
--		__field( unsigned int,	nr_bios		)
--		__array( char,		rwbs,	RWBS_LEN)
-+		__field( dev_t,		dev			)
-+		__field( sector_t,	sector			)
-+		__field( unsigned int,	nr_sector		)
-+		__field( dev_t,		old_dev			)
-+		__field( sector_t,	old_sector		)
-+		__field( unsigned int,	nr_bios			)
-+		__array( char,		rwbs,	BLK_RWBS_LEN	)
- 	),
- 
- 	TP_fast_assign(
-@@ -624,7 +622,7 @@ TRACE_EVENT(block_rq_remap,
- 		__entry->old_dev	= dev;
- 		__entry->old_sector	= from;
- 		__entry->nr_bios	= blk_rq_count_bios(rq);
--		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags, blk_rq_bytes(rq));
-+		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
- 	),
- 
- 	TP_printk("%d,%d %s %llu + %u <- (%d,%d) %llu %u",
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index ca39dc3230cb..dd10667d4164 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -1935,7 +1935,7 @@ void blk_trace_remove_sysfs(struct device *dev)
- 
- #ifdef CONFIG_EVENT_TRACING
- 
--void blk_fill_rwbs(char *rwbs, unsigned int op, int bytes)
-+void blk_fill_rwbs(char *rwbs, unsigned int op)
- {
- 	int i = 0;
- 
-
+      Arnd
