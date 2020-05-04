@@ -2,103 +2,265 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0412C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CED5C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD335206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:12:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Si7dlb0A"
+	by mail.kernel.org (Postfix) with ESMTP id 3F577206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:12:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgEDTMP (ORCPT
+        id S1727088AbgEDTMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 15:12:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725956AbgEDTMO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 15:12:14 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 426EAC061A0F
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 12:12:14 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id r14so6024900pfg.2
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 12:12:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=DRRJVsf51l5t9Dm4TlhSU/EZbXOvcOE4YxM3FowxRF0=;
-        b=Si7dlb0AnRhxMKmPOWWmPJJFBiUT4hTbUEZ13DYzEVOo2Il6yfzy/8I4eF85hIu4Kg
-         JTsIF/Gth/JFANckJbrIiWa1vqiV+Kn8c9EHteuh/ReoJW0U5GlArClgOw2sVllSjRef
-         3fe1eu6sfxWOOEXu+wxVB1GNh8zSo/xAskcUQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DRRJVsf51l5t9Dm4TlhSU/EZbXOvcOE4YxM3FowxRF0=;
-        b=nsVYsSuLbX64Pt3hnan38sVfSVPg4fVMjpbMEz+Vavz67emtpn4eKKEuIwrkB7LDpd
-         fy259OEsDtfkenYZJfB5nvMQ2seyPGrGVoIRmEkUa7l9bLWGjenL/4tUPH16MNRlOfMS
-         MyuXxx8TnbWqT4y6vEh8PpEPnnCuikEPjIjZQ5pCL3DM2eoIDHJq11Oe2340I3E2uFxX
-         q+jtO+PMH00ZuwAnLv1gtVAcWWBrCq74RVcIdvcU+w0hKgfp32QI8nCcmpIJy519IC2M
-         lgCQ3qJDi+6uJ0N3f0ZAU9OzMBoSqZMEIAQP0WH/SUC6qob8XzM1+iduWWK2mIT463vn
-         Jsew==
-X-Gm-Message-State: AGi0PuZJd+m+Q/COi06NRMi8IZuUuZ+m32Udtc4rEuk4Dx5qhDvAKrWg
-        QX4yx70B7sdu70i3ET+c5lPsXhLssS8=
-X-Google-Smtp-Source: APiQypK9UGDyEzyZDsYFS7KmpnuRRHd1CKSUuVF2CV0RkZbNly3BomdV876VP1jJ+iRSqqtxTefo9g==
-X-Received: by 2002:a63:7e1b:: with SMTP id z27mr403821pgc.19.1588619533882;
-        Mon, 04 May 2020 12:12:13 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s4sm1730400pgv.78.2020.05.04.12.12.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 12:12:13 -0700 (PDT)
-Date:   Mon, 4 May 2020 12:12:12 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>, anton@enomsg.org,
-        ccross@android.com, Tony Luck <tony.luck@intel.com>,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v1 0/3] allow ramoops to collect all kmesg_dump events
-Message-ID: <202005041211.040A1C65C8@keescook>
-References: <20200502143555.543636-1-pasha.tatashin@soleen.com>
- <202005041112.F3C8117F67@keescook>
- <CA+CK2bBDzbXdH23aDxqGzMoxPppNcVmitrYJ00tJqympMBVJOg@mail.gmail.com>
+        Mon, 4 May 2020 15:12:50 -0400
+Received: from mga01.intel.com ([192.55.52.88]:7903 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbgEDTMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 15:12:50 -0400
+IronPort-SDR: MDH2N+gkrJsMEh3aJ58w7K3xTdsQa5zsWH455Cd3GA9kTp6MBLGSbtGwWCfnc7xumlaSKbMOpV
+ YAGFqLVjYRtA==
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 12:12:33 -0700
+IronPort-SDR: nhI2Yatbe0vptIvamjooqlQtvy9RfXBRqCSXeZBte6I6X3+o14ZRp8HEPQe2r/mV1TmBgFnDfQ
+ maoTfxRv2TJA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,353,1583222400"; 
+   d="gz'50?scan'50,208,50";a="294721301"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 04 May 2020 12:12:31 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jVgVy-0004S3-Gi; Tue, 05 May 2020 03:12:30 +0800
+Date:   Tue, 5 May 2020 03:11:58 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Prasad Sodagudi <psodagud@codeaurora.org>, tglx@linutronix.de,
+        john.stultz@linaro.org, sboyd@kernel.org, tj@kernel.org
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        saravanak@google.com, psodagud@codeaurora.org,
+        pkondeti@codeaurora.org
+Subject: Re: [PATCH v3 2/2] sched: Add a check for cpu unbound deferrable
+ timers
+Message-ID: <202005050350.JrZ92nSI%lkp@intel.com>
+References: <1588444137-18651-3-git-send-email-psodagud@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/mixed; boundary="BXVAT5kNtrzKuDFl"
 Content-Disposition: inline
-In-Reply-To: <CA+CK2bBDzbXdH23aDxqGzMoxPppNcVmitrYJ00tJqympMBVJOg@mail.gmail.com>
+In-Reply-To: <1588444137-18651-3-git-send-email-psodagud@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 02:47:45PM -0400, Pavel Tatashin wrote:
-> > > # reboot -f
-> > >
-> > > After VM is back:
-> > >
-> > > # mount -t pstore pstore /mnt
-> > > # head /mnt/dmesg-ramoops-0
-> > > Restart#1 Part1
-> >
-> > Is there a reason that using ramoops.console_size isn't sufficient for
-> > this?
-> 
-> Unfortunately, the console option is not working for us (Microsoft),
-> we have an embedded device with a serial console, and the baud rate
-> reduces the reboot performance, so we must keep the console quiet. We
-> also want to be able collect full shutdown logs from the field that
-> are collected during kexec based updates.
 
-I meant collecting console via pstore (i.e. /mnt/console-ramoops-0). Are
-you saying that's still too large for your situation?
+--BXVAT5kNtrzKuDFl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-Kees Cook
+Hi Prasad,
+
+Thank you for the patch! Yet something to improve:
+
+[auto build test ERROR on tip/timers/core]
+[also build test ERROR on tip/auto-latest tip/timers/nohz v5.7-rc4 next-20200501]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Prasad-Sodagudi/timer-make-deferrable-cpu-unbound-timers-really-not-bound-to-a-cpu/20200503-025049
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git 4479730e9263befbb9ce9563a09563db2acb8f7c
+config: riscv-nommu_virt_defconfig (attached as .config)
+compiler: riscv64-linux-gcc (GCC) 9.3.0
+reproduce:
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # save the attached .config to linux build tree
+        COMPILER_INSTALL_PATH=$HOME/0day GCC_VERSION=9.3.0 make.cross ARCH=riscv 
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kbuild test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   kernel/time/timer.c: In function 'get_timer_cpu_base':
+   kernel/time/timer.c:848:11: error: 'timer_base_deferrable' undeclared (first use in this function)
+     848 |   base = &timer_base_deferrable;
+         |           ^~~~~~~~~~~~~~~~~~~~~
+   kernel/time/timer.c:848:11: note: each undeclared identifier is reported only once for each function it appears in
+   kernel/time/timer.c: In function 'get_timer_this_cpu_base':
+   kernel/time/timer.c:867:11: error: 'timer_base_deferrable' undeclared (first use in this function)
+     867 |   base = &timer_base_deferrable;
+         |           ^~~~~~~~~~~~~~~~~~~~~
+   kernel/time/timer.c: In function 'run_timer_softirq':
+>> kernel/time/timer.c:1829:24: error: 'deferrable_pending' undeclared (first use in this function)
+    1829 |   if ((atomic_cmpxchg(&deferrable_pending, 1, 0) &&
+         |                        ^~~~~~~~~~~~~~~~~~
+   kernel/time/timer.c:1832:18: error: 'timer_base_deferrable' undeclared (first use in this function)
+    1832 |    __run_timers(&timer_base_deferrable);
+         |                  ^~~~~~~~~~~~~~~~~~~~~
+
+vim +/deferrable_pending +1829 kernel/time/timer.c
+
+  1817	
+  1818	/*
+  1819	 * This function runs timers and the timer-tq in bottom half context.
+  1820	 */
+  1821	static __latent_entropy void run_timer_softirq(struct softirq_action *h)
+  1822	{
+  1823		struct timer_base *base = this_cpu_ptr(&timer_bases[BASE_STD]);
+  1824	
+  1825		__run_timers(base);
+  1826		if (IS_ENABLED(CONFIG_NO_HZ_COMMON)) {
+  1827			__run_timers(this_cpu_ptr(&timer_bases[BASE_DEF]));
+  1828	#ifdef CONFIG_SMP
+> 1829			if ((atomic_cmpxchg(&deferrable_pending, 1, 0) &&
+  1830					tick_do_timer_cpu == TICK_DO_TIMER_NONE) ||
+  1831					tick_do_timer_cpu == smp_processor_id())
+  1832				__run_timers(&timer_base_deferrable);
+  1833	#endif
+  1834		}
+  1835	}
+  1836	
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+--BXVAT5kNtrzKuDFl
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
+
+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
+
+--BXVAT5kNtrzKuDFl--
