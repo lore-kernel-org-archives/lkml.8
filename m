@@ -2,139 +2,115 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UPPERCASE_50_75,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE07C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 539ECC4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EE4E20735
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3216C20746
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:44:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rc7VQyjW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbgEDHna (ORCPT
+        id S1728117AbgEDHoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 03:43:30 -0400
-Received: from cmccmta3.chinamobile.com ([221.176.66.81]:5143 "EHLO
-        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727088AbgEDHn3 (ORCPT
+        Mon, 4 May 2020 03:44:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45492 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727088AbgEDHoX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 03:43:29 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.7]) by rmmx-syy-dmz-app12-12012 (RichMail) with SMTP id 2eec5eafc78e469-fd873; Mon, 04 May 2020 15:43:10 +0800 (CST)
-X-RM-TRANSID: 2eec5eafc78e469-fd873
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from [192.168.0.104] (unknown[112.3.182.180])
-        by rmsmtp-syy-appsvr04-12004 (RichMail) with SMTP id 2ee45eafc78d502-c2b00;
-        Mon, 04 May 2020 15:43:10 +0800 (CST)
-X-RM-TRANSID: 2ee45eafc78d502-c2b00
-Subject: Re: [PATCH v2] ipmi:bt-bmc: Fix error handling and status check
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-To:     minyard@acm.org
-Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-References: <20200418080228.19028-1-tangbin@cmss.chinamobile.com>
- <20200418134909.GF6246@minyard.net>
- <cc048630-831d-9765-7f7a-7eaacd3a8199@cmss.chinamobile.com>
-Message-ID: <45cddef3-eb69-bcff-3b0f-0d7f8e69f0a4@cmss.chinamobile.com>
-Date:   Mon, 4 May 2020 15:43:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+        Mon, 4 May 2020 03:44:23 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CE05C061A0E;
+        Mon,  4 May 2020 00:44:21 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id f11so8712066ljp.1;
+        Mon, 04 May 2020 00:44:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=e4Prdlmnh5uMplVy6wvzEHluFiUsOf4wHXUycuzMInI=;
+        b=rc7VQyjWHiU8q8qd53Z+gt23a2bhQs1Im6BnZyZBhVh5XJ6EL6dKzE0iatghW6oR0H
+         GL9eYKW6E7wbVT1gk9tepA8LjwnLXAcv+SyREN2WF6uyqARF0upWipHGR44MIPXI3tT/
+         mC01pyqegP/i+P24L1gtiPXRDUY9PRP2p68Nb79PKEkKH2FoU5Eymqqwr38LstdpGTea
+         KnOXiCfrxgYoURdxxy3lnKGl2x3v2lAnAtT/n/ON2L+UsmdX48dNiAmgiwDjljQHlFKL
+         gLnETiVHjve/Ud4pkfvKYZ3gQy+oiTX8KFtF6ipQcDDlKuboY0l3Ay0Iq55aUi2YKhT3
+         +KAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=e4Prdlmnh5uMplVy6wvzEHluFiUsOf4wHXUycuzMInI=;
+        b=U6eK5sh2SJWR3r3+sTXiTveVOcSruTCsGfzwqfPi4XwsDXL9298kDs49WG1Rcy3jOE
+         bZj43S0F2wVm558nfuqGjCuunPsjOyXAyW0inrgJlA78ns9udUBJ2ziyYAxw8XKYHFtC
+         f749s+B1IHs/1yJA7jQ1WZ24foE8t0SaUC/2AX/hqcnpxjS3l5JUU2Gbo53pJmjqPgyc
+         Qn6YwitwCe026eStLO5QjtA9VIoYDw4GVt3QX3q6TUu5SG2y56hfbSj1PC8FASF3KXV5
+         0G+gp9Zk6G18R40IqiDxLD1ICV3D3QDrheKI6efieWrzUHt5Tx3regX5quXid3DH1hoK
+         CBDg==
+X-Gm-Message-State: AGi0PubOfSz82sLpR9rJ0V+SNTM9NFxGBUGfXm9Jmxu5HtRNiOiUwWZb
+        fzMl1abpggZhkDTeRNhuzV9RY8K/
+X-Google-Smtp-Source: APiQypJ8wNAZdGO/6Y4ZZsGPSt3WVOBD64UxuHEzeznj10Lv1Ffj/SWws8iZ49zH7gwc43OFr4X0OQ==
+X-Received: by 2002:a2e:5813:: with SMTP id m19mr9144139ljb.230.1588578259413;
+        Mon, 04 May 2020 00:44:19 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id y21sm7535417ljg.66.2020.05.04.00.44.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 May 2020 00:44:18 -0700 (PDT)
+Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
+ <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <f1cbb602-163e-a539-aaa5-c7e947a8945b@gmail.com>
+Date:   Mon, 4 May 2020 10:44:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <cc048630-831d-9765-7f7a-7eaacd3a8199@cmss.chinamobile.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Corey:
+30.04.2020 01:00, Sowjanya Komatineni пишет:
+> +/*
+> + * VI channel input data type enum.
+> + * These data type enum value gets programmed into corresponding Tegra VI
+> + * channel register bits.
+> + */
+> +enum tegra_image_dt {
+> +	TEGRA_IMAGE_DT_YUV420_8 = 24,
+> +	TEGRA_IMAGE_DT_YUV420_10,
+> +
+> +	TEGRA_IMAGE_DT_YUV420CSPS_8 = 28,
+> +	TEGRA_IMAGE_DT_YUV420CSPS_10,
+> +	TEGRA_IMAGE_DT_YUV422_8,
+> +	TEGRA_IMAGE_DT_YUV422_10,
+> +	TEGRA_IMAGE_DT_RGB444,
+> +	TEGRA_IMAGE_DT_RGB555,
+> +	TEGRA_IMAGE_DT_RGB565,
+> +	TEGRA_IMAGE_DT_RGB666,
+> +	TEGRA_IMAGE_DT_RGB888,
+> +
+> +	TEGRA_IMAGE_DT_RAW6 = 40,
+> +	TEGRA_IMAGE_DT_RAW7,
+> +	TEGRA_IMAGE_DT_RAW8,
+> +	TEGRA_IMAGE_DT_RAW10,
+> +	TEGRA_IMAGE_DT_RAW12,
+> +	TEGRA_IMAGE_DT_RAW14,
+> +};
 
-On 2020/4/19 14:29, Tang Bin wrote:
-> Hi, Corey:
->
-> On 2020/4/18 21:49, Corey Minyard wrote:
->> On Sat, Apr 18, 2020 at 04:02:29PM +0800, Tang Bin wrote:
->>> If the function platform_get_irq() failed, the negative
->>> value returned will not be detected here. So fix error
->>> handling in bt_bmc_config_irq(). And if devm_request_irq()
->>> failed, 'bt_bmc->irq' is assigned to zero maybe redundant,
->>> it may be more suitable for using the correct negative values
->>> to make the status check in the function bt_bmc_remove().
->> You need to mention changing platform_get_irq to
->> platform_get_irq_optional in the header.
->>
->> Another comment inline below.
->>
->> Otherwise, this looks good.
->
-> Got it. The v3 will be as follows：
->
-> If the function platform_get_irq() failed, the negative value
->
-> returned will not be detected here. So fix error handling in
->
-> bt_bmc_config_irq(). And in the function bt_bmc_probe(),
->
-> when get irq failed, it will print error message. So use
->
-> platform_get_irq_optional() to simplify code. Finally in the
->
-> function bt_bmc_remove() should make the right status
->
-> check if get irq failed.
->
->>
->> You need to set this to rc.  Otherwise it will remain the interrupt
->> number assigned by platform_get_irq_optional().
->
-> Yes, I think you are right. I'm not as considerate as you. Thank you 
-> for your instruction.
->
-> When get irq failed, the 'bt_bmc->irq' is negative; when request irq 
-> failed, the 'bt_bmc->irq = 0' is right.
->
-> So 'bt_bmc->irq <= 0' means irq failed.
->
-> Now let me rearrange the logic here:
->
->     In bt_bmc_probe():
->
->         bt_bmc_config_irq(bt_bmc, pdev);
->
->         if (bt_bmc->irq > 0) {
->
->         }
->
->
->     In bt_bmc_remove():
->
->         if (bt_bmc->irq <= 0)
->             del_timer_sync(&bt_bmc->poll_timer);
->
->
-> If you think this logic is correct, I'll submit v3.
->
->
->
-I know you're very busy, and you have handed me a lot before, so I 
-should wait for your reply.
-
-But I don't know whether my above logic is correct, so I take the 
-liberty to write this email to you. I just wanted to say sorry for 
-disturbing you.
-
-Thanks,
-
-Tang Bin
-
-
-
-
-
-
-
-
+Are these format IDs common to all Tegra SoCs or they unique to T210?
