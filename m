@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F27C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43212C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 453732078C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22626206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615389;
-	bh=m0NOQkhaDLLWHMFRUMofd+9PQkdwLZpGR0kbkLzWY9M=;
+	s=default; t=1588615393;
+	bh=ytZwgFE7cLPXO0eUnNw0mcP7f4wwPBF7aiAhnHM+Z90=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DKd58eQZcGIngAox0yX2XJ/jdnevisFg+UcDBGPF2dc4Y9LTcLVTHPeGpxSveX61v
-	 dlXr8gRSARf+dKkiSVJLile7Wqlx6ITdnb/o0DScFJFDdivmcgFqJTrMGtazMm/xWn
-	 T9y5Qz0xvhn6V2seKObUUl/Gl8l/FJV6Wb3LnpUo=
+	b=TsaMhz6P+WdToJrFfFhyp0FRXFoVWw1rhpPe+ajAdftBZaalo8UZCzaY3Cca3bDbZ
+	 b/pFub4IZ0a3+1jRqQiSaAHVxX+LCA94OzsrrkKbEfAxRxhhm5hm3iDbblaMKMam0H
+	 GgZ8tbMSy6X/UpYtvV4NZBzRZHfZThcaOWirtvnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731457AbgEDSDH (ORCPT
+        id S1731463AbgEDSDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:03:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59970 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:03:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731426AbgEDSDE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:03:04 -0400
+        id S1731450AbgEDSDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:03:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D16E2073E;
-        Mon,  4 May 2020 18:03:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4B09206B8;
+        Mon,  4 May 2020 18:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615384;
-        bh=m0NOQkhaDLLWHMFRUMofd+9PQkdwLZpGR0kbkLzWY9M=;
+        s=default; t=1588615386;
+        bh=ytZwgFE7cLPXO0eUnNw0mcP7f4wwPBF7aiAhnHM+Z90=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WHTTa15tkVhTawOhmrl2a+8R6gbMCeav2nTtMN2V9LF0J+v/Gtys+Wsm4JfHLV0hb
-         TNGcP0E5mooI0xNAfgK81l6/SCcmQ6gaB628ny8gGBWh2OtF0E2rKQxRMOkj9dqHDy
-         7mZ1CFyaHGcn60weHeeB//mR0awEN4/ya7KA6X94=
+        b=d/CI2agnHHFi9sOZ9T0MOlbLia24Yd6igtcMsPgjjD6qTADf0PzBzACsK9+RNO21n
+         3bovQk09+pl4RioBiCDlnydXR0IOe3Y/w32FMeeAYiPIGK2ke1iX03aWFttyLOSuUH
+         9MGtKrbQLAivHOIRJKLc2jBNEbV4x6taxrO4KZN8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.4 17/57] mmc: meson-mx-sdio: remove the broken ->card_busy() op
-Date:   Mon,  4 May 2020 19:57:21 +0200
-Message-Id: <20200504165457.896543710@linuxfoundation.org>
+        stable@vger.kernel.org, Iuliana Prodan <iuliana.prodan@nxp.com>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.4 18/57] crypto: caam - fix the address of the last entry of S/G
+Date:   Mon,  4 May 2020 19:57:22 +0200
+Message-Id: <20200504165457.965888549@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165456.783676004@linuxfoundation.org>
 References: <20200504165456.783676004@linuxfoundation.org>
@@ -60,67 +60,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Iuliana Prodan <iuliana.prodan@nxp.com>
 
-commit ddca1092c4324c89cf692b5efe655aa251864b51 upstream.
+commit 55b3209acbb01cb02b1ee6b1afe80d83b1aab36d upstream.
 
-The recent commit 0d84c3e6a5b2 ("mmc: core: Convert to
-mmc_poll_for_busy() for erase/trim/discard") makes use of the
-->card_busy() op for SD cards. This uncovered that the ->card_busy() op
-in the Meson SDIO driver was never working right:
-while polling the busy status with ->card_busy()
-meson_mx_mmc_card_busy() reads only one of the two MESON_MX_SDIO_IRQC
-register values 0x1f001f10 or 0x1f003f10. This translates to "three out
-of four DAT lines are HIGH" and "all four DAT lines are HIGH", which
-is interpreted as "the card is busy".
+For skcipher algorithms, the input, output HW S/G tables
+look like this: [IV, src][dst, IV]
+Now, we can have 2 conditions here:
+- there is no IV;
+- src and dst are equal (in-place encryption) and scattered
+and the error is an "off-by-one" in the HW S/G table.
 
-It turns out that no situation can be observed where all four DAT lines
-are LOW, meaning the card is not busy anymore. Upon further research the
-3.10 vendor driver for this controller does not implement the
-->card_busy() op.
+This issue was seen with KASAN:
+BUG: KASAN: slab-out-of-bounds in skcipher_edesc_alloc+0x95c/0x1018
 
-Remove the ->card_busy() op from the meson-mx-sdio driver since it is
-not working. At the time of writing this patch it is not clear what's
-needed to make the ->card_busy() implementation work with this specific
-controller hardware. For all use-cases which have previously worked the
-MMC_CAP_WAIT_WHILE_BUSY flag is now taking over, even if we don't have
-a ->card_busy() op anymore.
+Read of size 4 at addr ffff000022a02958 by task cryptomgr_test/321
 
-Fixes: ed80a13bb4c4c9 ("mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8 and Meson8b SoCs")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200416183513.993763-3-martin.blumenstingl@googlemail.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+CPU: 2 PID: 321 Comm: cryptomgr_test Not tainted
+5.6.0-rc1-00165-ge4ef8383-dirty #4
+Hardware name: LS1046A RDB Board (DT)
+Call trace:
+ dump_backtrace+0x0/0x260
+ show_stack+0x14/0x20
+ dump_stack+0xe8/0x144
+ print_address_description.isra.11+0x64/0x348
+ __kasan_report+0x11c/0x230
+ kasan_report+0xc/0x18
+ __asan_load4+0x90/0xb0
+ skcipher_edesc_alloc+0x95c/0x1018
+ skcipher_encrypt+0x84/0x150
+ crypto_skcipher_encrypt+0x50/0x68
+ test_skcipher_vec_cfg+0x4d4/0xc10
+ test_skcipher_vec+0x178/0x1d8
+ alg_test_skcipher+0xec/0x230
+ alg_test.part.44+0x114/0x4a0
+ alg_test+0x1c/0x60
+ cryptomgr_test+0x34/0x58
+ kthread+0x1b8/0x1c0
+ ret_from_fork+0x10/0x18
+
+Allocated by task 321:
+ save_stack+0x24/0xb0
+ __kasan_kmalloc.isra.10+0xc4/0xe0
+ kasan_kmalloc+0xc/0x18
+ __kmalloc+0x178/0x2b8
+ skcipher_edesc_alloc+0x21c/0x1018
+ skcipher_encrypt+0x84/0x150
+ crypto_skcipher_encrypt+0x50/0x68
+ test_skcipher_vec_cfg+0x4d4/0xc10
+ test_skcipher_vec+0x178/0x1d8
+ alg_test_skcipher+0xec/0x230
+ alg_test.part.44+0x114/0x4a0
+ alg_test+0x1c/0x60
+ cryptomgr_test+0x34/0x58
+ kthread+0x1b8/0x1c0
+ ret_from_fork+0x10/0x18
+
+Freed by task 0:
+(stack is not available)
+
+The buggy address belongs to the object at ffff000022a02800
+ which belongs to the cache dma-kmalloc-512 of size 512
+The buggy address is located 344 bytes inside of
+ 512-byte region [ffff000022a02800, ffff000022a02a00)
+The buggy address belongs to the page:
+page:fffffe00006a8000 refcount:1 mapcount:0 mapping:ffff00093200c400
+index:0x0 compound_mapcount: 0
+flags: 0xffff00000010200(slab|head)
+raw: 0ffff00000010200 dead000000000100 dead000000000122 ffff00093200c400
+raw: 0000000000000000 0000000080100010 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff000022a02800: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff000022a02880: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>ffff000022a02900: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
+                                                    ^
+ ffff000022a02980: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff000022a02a00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+
+Fixes: 334d37c9e263 ("crypto: caam - update IV using HW support")
+Cc: <stable@vger.kernel.org> # v5.3+
+Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/meson-mx-sdio.c |    9 ---------
- 1 file changed, 9 deletions(-)
+ drivers/crypto/caam/caamalg.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/mmc/host/meson-mx-sdio.c
-+++ b/drivers/mmc/host/meson-mx-sdio.c
-@@ -357,14 +357,6 @@ static void meson_mx_mmc_request(struct
- 		meson_mx_mmc_start_cmd(mmc, mrq->cmd);
- }
+--- a/drivers/crypto/caam/caamalg.c
++++ b/drivers/crypto/caam/caamalg.c
+@@ -1810,7 +1810,7 @@ static struct skcipher_edesc *skcipher_e
  
--static int meson_mx_mmc_card_busy(struct mmc_host *mmc)
--{
--	struct meson_mx_mmc_host *host = mmc_priv(mmc);
--	u32 irqc = readl(host->base + MESON_MX_SDIO_IRQC);
--
--	return !!(irqc & MESON_MX_SDIO_IRQC_FORCE_DATA_DAT_MASK);
--}
--
- static void meson_mx_mmc_read_response(struct mmc_host *mmc,
- 				       struct mmc_command *cmd)
- {
-@@ -506,7 +498,6 @@ static void meson_mx_mmc_timeout(struct
- static struct mmc_host_ops meson_mx_mmc_ops = {
- 	.request		= meson_mx_mmc_request,
- 	.set_ios		= meson_mx_mmc_set_ios,
--	.card_busy		= meson_mx_mmc_card_busy,
- 	.get_cd			= mmc_gpio_get_cd,
- 	.get_ro			= mmc_gpio_get_ro,
- };
+ 	if (ivsize || mapped_dst_nents > 1)
+ 		sg_to_sec4_set_last(edesc->sec4_sg + dst_sg_idx +
+-				    mapped_dst_nents);
++				    mapped_dst_nents - 1 + !!ivsize);
+ 
+ 	if (sec4_sg_bytes) {
+ 		edesc->sec4_sg_dma = dma_map_single(jrdev, edesc->sec4_sg,
 
 
