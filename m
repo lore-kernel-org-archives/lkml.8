@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DBEC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 914A7C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA56420663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 720F920663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615897;
-	bh=Yyn+UyJFK1Ppepz905fcmrBn077nVypFjtSgwJx5q/0=;
+	s=default; t=1588615900;
+	bh=YPzUf6X8l4sxofIqUnY/WktEsRXeb6Pyt7y5ntodHeQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LlDJy5Loh8oBYRVgyMuuhYs/odtBRUOgyzUxVfM4M+PUbHws8LvKnn31l2czVRR1u
-	 wmv6A76IqFHw2yKBD1q6TI9nsuGzsL/d0OT6RhYKMX+iy6GVNjYYpLLLofsQCZMJE6
-	 U91pGdtJVip+/fBGO69ZXUqWXRO2oVZgPSMQsNNs=
+	b=H1LtGSfm1mLZmC7si1juIks48SnOZbkPk9dgmNT6TXV7JnhAJh6t5fkxipWitTv+B
+	 JzbQZ8jfgeyTJTNDQkHAqOPjAItrg2sOTpfmgHBYx6jh7cGRZAOeWRsoxr1Y/AfbbX
+	 jnfVvbFMAaceT4WwMSsegvanaG6rWNB7Wh/eLtII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732233AbgEDSLh (ORCPT
+        id S1731579AbgEDSDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:11:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33004 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:03:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731588AbgEDSDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:03:53 -0400
+        id S1731555AbgEDSDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:03:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66E5620707;
-        Mon,  4 May 2020 18:03:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3AF0206B8;
+        Mon,  4 May 2020 18:03:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615432;
-        bh=Yyn+UyJFK1Ppepz905fcmrBn077nVypFjtSgwJx5q/0=;
+        s=default; t=1588615423;
+        bh=YPzUf6X8l4sxofIqUnY/WktEsRXeb6Pyt7y5ntodHeQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yXp2B67xpTsbPWZUz4mulvd8/2QurhYUiJfwrzuW2DDXbtyRJNDPNVRDcQnmlLZnA
-         RoTXd9dD0qJq6rZVwgm9MEvY1oOPtOIyHZ3pWe8HfAEHzv+VxQ8uAYO1APHkpo8XVB
-         lnW+OzodbFayUjSK0VQcoyuFCo598C4rWU96lq2U=
+        b=04qWZlduMb+mmoC7DlbjYORu0AboZPz2SzfByzrJJ0HZxjZsMNTk+Mfi2zLfbKTF8
+         AaCLnluGefLqDjJyrkenPkKt6Q8WcAhSbjq09u1HMWMvRVZ2Bf6+8bVLf5CT7PBOpC
+         Mfog8Tky1B38DHAtDWhIeXZcCVvEEeQyBoaxorQc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alaa Hleihel <alaa@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.4 37/57] RDMA/mlx4: Initialize ib_spec on the stack
-Date:   Mon,  4 May 2020 19:57:41 +0200
-Message-Id: <20200504165459.561594268@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>, David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 09/57] btrfs: fix block group leak when removing fails
+Date:   Mon,  4 May 2020 19:57:13 +0200
+Message-Id: <20200504165457.297528177@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165456.783676004@linuxfoundation.org>
 References: <20200504165456.783676004@linuxfoundation.org>
@@ -61,38 +59,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alaa Hleihel <alaa@mellanox.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-commit c08cfb2d8d78bfe81b37cc6ba84f0875bddd0d5c upstream.
+commit f6033c5e333238f299c3ae03fac8cc1365b23b77 upstream.
 
-Initialize ib_spec on the stack before using it, otherwise we will have
-garbage values that will break creating default rules with invalid parsing
-error.
+btrfs_remove_block_group() invokes btrfs_lookup_block_group(), which
+returns a local reference of the block group that contains the given
+bytenr to "block_group" with increased refcount.
 
-Fixes: a37a1a428431 ("IB/mlx4: Add mechanism to support flow steering over IB links")
-Link: https://lore.kernel.org/r/20200413132235.930642-1-leon@kernel.org
-Signed-off-by: Alaa Hleihel <alaa@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+When btrfs_remove_block_group() returns, "block_group" becomes invalid,
+so the refcount should be decreased to keep refcount balanced.
+
+The reference counting issue happens in several exception handling paths
+of btrfs_remove_block_group(). When those error scenarios occur such as
+btrfs_alloc_path() returns NULL, the function forgets to decrease its
+refcnt increased by btrfs_lookup_block_group() and will cause a refcnt
+leak.
+
+Fix this issue by jumping to "out_put_group" label and calling
+btrfs_put_block_group() when those error scenarios occur.
+
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/mlx4/main.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/btrfs/block-group.c |   16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
---- a/drivers/infiniband/hw/mlx4/main.c
-+++ b/drivers/infiniband/hw/mlx4/main.c
-@@ -1492,8 +1492,9 @@ static int __mlx4_ib_create_default_rule
- 	int i;
+--- a/fs/btrfs/block-group.c
++++ b/fs/btrfs/block-group.c
+@@ -910,7 +910,7 @@ int btrfs_remove_block_group(struct btrf
+ 	path = btrfs_alloc_path();
+ 	if (!path) {
+ 		ret = -ENOMEM;
+-		goto out;
++		goto out_put_group;
+ 	}
  
- 	for (i = 0; i < ARRAY_SIZE(pdefault_rules->rules_create_list); i++) {
-+		union ib_flow_spec ib_spec = {};
- 		int ret;
--		union ib_flow_spec ib_spec;
+ 	/*
+@@ -948,7 +948,7 @@ int btrfs_remove_block_group(struct btrf
+ 		ret = btrfs_orphan_add(trans, BTRFS_I(inode));
+ 		if (ret) {
+ 			btrfs_add_delayed_iput(inode);
+-			goto out;
++			goto out_put_group;
+ 		}
+ 		clear_nlink(inode);
+ 		/* One for the block groups ref */
+@@ -971,13 +971,13 @@ int btrfs_remove_block_group(struct btrf
+ 
+ 	ret = btrfs_search_slot(trans, tree_root, &key, path, -1, 1);
+ 	if (ret < 0)
+-		goto out;
++		goto out_put_group;
+ 	if (ret > 0)
+ 		btrfs_release_path(path);
+ 	if (ret == 0) {
+ 		ret = btrfs_del_item(trans, tree_root, path);
+ 		if (ret)
+-			goto out;
++			goto out_put_group;
+ 		btrfs_release_path(path);
+ 	}
+ 
+@@ -1094,9 +1094,9 @@ int btrfs_remove_block_group(struct btrf
+ 
+ 	ret = remove_block_group_free_space(trans, block_group);
+ 	if (ret)
+-		goto out;
++		goto out_put_group;
+ 
+-	btrfs_put_block_group(block_group);
++	/* Once for the block groups rbtree */
+ 	btrfs_put_block_group(block_group);
+ 
+ 	ret = btrfs_search_slot(trans, root, &key, path, -1, 1);
+@@ -1119,6 +1119,10 @@ int btrfs_remove_block_group(struct btrf
+ 		/* once for the tree */
+ 		free_extent_map(em);
+ 	}
 +
- 		switch (pdefault_rules->rules_create_list[i]) {
- 		case 0:
- 			/* no rule */
++out_put_group:
++	/* Once for the lookup reference */
++	btrfs_put_block_group(block_group);
+ out:
+ 	if (remove_rsv)
+ 		btrfs_delayed_refs_rsv_release(fs_info, 1);
 
 
