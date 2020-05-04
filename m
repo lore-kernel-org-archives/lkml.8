@@ -2,260 +2,478 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BF0C47254
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B09ADC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 810822073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:01:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xPvV2kRQ"
+	by mail.kernel.org (Postfix) with ESMTP id 8AA36206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:02:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729396AbgEDPBp (ORCPT
+        id S1729400AbgEDPCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 11:01:45 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:47896 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728165AbgEDPBo (ORCPT
+        Mon, 4 May 2020 11:02:25 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:36659 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728165AbgEDPCZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 11:01:44 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044En9bZ024708;
-        Mon, 4 May 2020 15:00:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=GsovF01BLBXADs9ogvbBPifuM8m9iNcoQzHGafVfZWQ=;
- b=xPvV2kRQBk3Nlt40ptkPC9KCMt9BYKDiPFbPmxAgFBng46AyCQUZGwjiTU6qKYSbb2/2
- l97gXnRDxXCYqavU1u3WK4VV/AZNHg+kfGxqv+J/UnfAaUwh8rNebHujYO2WRXls2iYl
- 114hPLOOs7H28p6lsLWjbBNwf/V4UByCs1gZIi34GD0rfCtk65MN8dfHZ9GgAIxOrOQH
- YbevGLfZNHXwh7G256hpoyMmLjxRzr5zQFbAA9OavbQroFIMR8Pkr058C9HRLlW6NzjQ
- /nFSkSW+J/amLXkw+oMe6Yg6XDfeUU1zumGj32R0BB4W1kdlAqeDwSPsfKYeVBCwIPO+ Jw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 30s0tm7dn1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 May 2020 15:00:15 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044EmVae105750;
-        Mon, 4 May 2020 15:00:14 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 30sjjw0hkh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 May 2020 15:00:14 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 044F0AuU027632;
-        Mon, 4 May 2020 15:00:10 GMT
-Received: from linux-1.home.com (/10.175.9.166)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 04 May 2020 08:00:09 -0700
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     pbonzini@redhat.com, konrad.wilk@oracle.com,
-        jan.setjeeilers@oracle.com, liran.alon@oracle.com,
-        junaids@google.com, graf@amazon.de, rppt@linux.vnet.ibm.com,
-        kuzuno@gmail.com, mgross@linux.intel.com,
-        alexandre.chartre@oracle.com
-Subject: [RFC v4][PATCH part-2 09/13] mm/dpt: Functions to clear decorated page-table entries for a VA range
-Date:   Mon,  4 May 2020 16:58:06 +0200
-Message-Id: <20200504145810.11882-10-alexandre.chartre@oracle.com>
-X-Mailer: git-send-email 2.18.2
-In-Reply-To: <20200504145810.11882-1-alexandre.chartre@oracle.com>
-References: <20200504145810.11882-1-alexandre.chartre@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9610 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 phishscore=0
- bulkscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005040123
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9610 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 spamscore=0 suspectscore=0
- phishscore=0 clxscore=1015 bulkscore=0 mlxlogscore=999 adultscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005040123
+        Mon, 4 May 2020 11:02:25 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 13FEF3C009C;
+        Mon,  4 May 2020 17:02:21 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id yLPyA56NIFdM; Mon,  4 May 2020 17:02:14 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 92FCC3C058E;
+        Mon,  4 May 2020 17:01:29 +0200 (CEST)
+Received: from vmlxhi-121.adit-jv.com (10.72.94.9) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 4 May 2020
+ 17:01:29 +0200
+Date:   Mon, 4 May 2020 17:01:22 +0200
+From:   Michael Rodin <mrodin@de.adit-jv.com>
+To:     Suresh Udipi <sudipi@jp.adit-jv.com>
+CC:     <niklas.soderlund@ragnatech.se>, <akiyama@nds-osk.co.jp>,
+        <efriedrich@de.adit-jv.com>, <erosca@de.adit-jv.com>,
+        <hverkuil-cisco@xs4all.nl>, <jacopo+renesas@jmondi.org>,
+        <laurent.pinchart@ideasonboard.com>,
+        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>, <mrodin@de.adit-jv.com>,
+        <securitycheck@denso.co.jp>
+Subject: Re: [PATCH v5] media: rcar-csi2: Correct the selection of hsfreqrange
+Message-ID: <20200504150122.GA8532@vmlxhi-121.adit-jv.com>
+References: <20200414115600.GB285053@oden.dyn.berto.se>
+ <1588226590-12880-1-git-send-email-sudipi@jp.adit-jv.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <1588226590-12880-1-git-send-email-sudipi@jp.adit-jv.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [10.72.94.9]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide functions to clear page-table entries in a decorated page-table
-for a specified VA range. Functions also check that the clearing
-effectively happens in the decorated page-table and there is no crossing
-of the decorated page-table boundary (through references to another page
-table), so that another page table is not modified by mistake.
+Hello Suresh, Niklas,
 
-As information (address, size, page-table level) about VA ranges mapped
-to the decorated page-table is tracked, clearing is done with just
-specifying the start address of the range.
+I think that we should not change the structs for PHTW register configuration,
+because there are no "max" values in the table "PHTW Set Values" from the
+Renesas Hardware Manual. The patch looks just wrong. A major issue is also
+that the Hardware Manual does not provide any algorithm, how to select the
+right table entry for the configuration of PHTW and PHYPLL registers, so we
+can not say for sure that the patch is correct. It is also not clear, what
+are the "default" bit rates? It looks like they are made exactly for usage
+in driver code:
+ - both PHTW and PHYPLL tables have "default" values
+ - only PHYPLL (HSFREQRANGE) tables have min/max values and it requires
+   additional rounding in order to hardcode them in a driver
+But these are just my speculations. If they are correct, then the only
+exception, where the patch v2 failed, could be a typo in the Hardware Manual.
+Otherwise patch v2 looks much better to me. I think, we should wait for more
+details from Renesas before fixing this issue. 
 
-Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
----
- arch/x86/include/asm/dpt.h |   1 +
- arch/x86/mm/dpt.c          | 135 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 136 insertions(+)
+On Thu, Apr 30, 2020 at 03:03:10PM +0900, Suresh Udipi wrote:
+> hsfreqrange should be chosen based on the calculated mbps which
+> is within the range as per table[1]. But current calculation
+> always selects first value which is greater than or equal to the
+> calculated mbps which may lead to chosing a wrong range in some cases.
+> 
+> For example for 360 mbps for H3/M3N
+> Existing logic selects
+> Calculated value 360Mbps : Default 400Mbps Range [368.125 -433.125 mbps]
+> 
+> This hsfreqrange is out of range.
+> 
+> The logic is changed to select the first hsfreqrange whose max range[1] is
+> greater than the calculated bit rate.
+> 
+> Calculated value 360Mbps : max range 380.625 mbps is selected
+>  i.e Default 350Mbps  Range [320.625 -380.625 mpbs]
+> 
+> [1] specs r19uh0105ej0200-r-car-3rd-generation.pdf [Table 25.9]
+> 
+> Fixes: 769afd212b16 ("media: rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver driver")
+> 
+> Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
+> Signed-off-by: Kazuyoshi Akiyama <akiyama@nds-osk.co.jp>
+> ---
+>  Changes in v2:
+>   - Added the boundary check for the maximum bit rate.
+> 
+>   - Simplified the logic by remmoving range check
+>     as only the closest default value covers most
+>     of the use cases.
+> 
+>   - Aligning the commit message based on the above change
+> 
+> 
+>  Changes in v3:
+>     - Added max member from struct rcsi2_mbps_reg.
+>       mbps varialbe cannot be removed from rcsi2_mbps_reg,
+>       since this structure is reused for
+>       phtw_mbps_h3_v3h_m3n/phtw_mbps_v3m_e3 where mbps is
+>       used.
+> 
+> 
+>    -  Update the walk of the array in rcsi2_set_phypll() so that it finds
+>       the first entry where the calculated bit rate is less than the max.
+> 
+>    - Support lower bit rates less than 80Mbps like 48Mbps
+>      (Raspberry pi camera 640x480 connected to Kingfisher)
+>      can also be supported by selecting the lowest default bit rate 80Mbps
+>      as done before this fix
+> 
+>    - Alignement of the commit message based on above changes.
+> 
+>  Changes in v4:
+>    - Remove unncessary braces.
+>  
+>  Changes in v5:
+>    - Removed mbps variable in rcsi2_mbps_reg and aligned all 
+>      tables accordingly
+> 
+>  drivers/media/platform/rcar-vin/rcar-csi2.c | 282 ++++++++++++++--------------
+>  1 file changed, 141 insertions(+), 141 deletions(-)
+> 
+> diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> index faa9fb2..d45bf80 100644
+> --- a/drivers/media/platform/rcar-vin/rcar-csi2.c
+> +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> @@ -132,63 +132,63 @@ struct phtw_value {
+>  };
+>  
+>  struct rcsi2_mbps_reg {
+> -	u16 mbps;
+>  	u16 reg;
+> +	u16 max;
+>  };
+>  
+>  static const struct rcsi2_mbps_reg phtw_mbps_h3_v3h_m3n[] = {
+> -	{ .mbps =   80, .reg = 0x86 },
+> -	{ .mbps =   90, .reg = 0x86 },
+> -	{ .mbps =  100, .reg = 0x87 },
+> -	{ .mbps =  110, .reg = 0x87 },
+> -	{ .mbps =  120, .reg = 0x88 },
+> -	{ .mbps =  130, .reg = 0x88 },
+> -	{ .mbps =  140, .reg = 0x89 },
+> -	{ .mbps =  150, .reg = 0x89 },
+> -	{ .mbps =  160, .reg = 0x8a },
+> -	{ .mbps =  170, .reg = 0x8a },
+> -	{ .mbps =  180, .reg = 0x8b },
+> -	{ .mbps =  190, .reg = 0x8b },
+> -	{ .mbps =  205, .reg = 0x8c },
+> -	{ .mbps =  220, .reg = 0x8d },
+> -	{ .mbps =  235, .reg = 0x8e },
+> -	{ .mbps =  250, .reg = 0x8e },
+> +	{ .reg = 0x86, .max =  80  },
+> +	{ .reg = 0x86, .max =  90  },
+> +	{ .reg = 0x87, .max =  100 },
+> +	{ .reg = 0x87, .max =  110 },
+> +	{ .reg = 0x88, .max =  120 },
+> +	{ .reg = 0x88, .max =  130 },
+> +	{ .reg = 0x89, .max =  140 },
+> +	{ .reg = 0x89, .max =  150 },
+> +	{ .reg = 0x8a, .max =  160 },
+> +	{ .reg = 0x8a, .max =  170 },
+> +	{ .reg = 0x8b, .max =  180 },
+> +	{ .reg = 0x8b, .max =  190 },
+> +	{ .reg = 0x8c, .max =  205 },
+> +	{ .reg = 0x8d, .max =  220 },
+> +	{ .reg = 0x8e, .max =  235 },
+> +	{ .reg = 0x8e, .max =  250 },
+>  	{ /* sentinel */ },
+>  };
+>  
+>  static const struct rcsi2_mbps_reg phtw_mbps_v3m_e3[] = {
+> -	{ .mbps =   80, .reg = 0x00 },
+> -	{ .mbps =   90, .reg = 0x20 },
+> -	{ .mbps =  100, .reg = 0x40 },
+> -	{ .mbps =  110, .reg = 0x02 },
+> -	{ .mbps =  130, .reg = 0x22 },
+> -	{ .mbps =  140, .reg = 0x42 },
+> -	{ .mbps =  150, .reg = 0x04 },
+> -	{ .mbps =  170, .reg = 0x24 },
+> -	{ .mbps =  180, .reg = 0x44 },
+> -	{ .mbps =  200, .reg = 0x06 },
+> -	{ .mbps =  220, .reg = 0x26 },
+> -	{ .mbps =  240, .reg = 0x46 },
+> -	{ .mbps =  250, .reg = 0x08 },
+> -	{ .mbps =  270, .reg = 0x28 },
+> -	{ .mbps =  300, .reg = 0x0a },
+> -	{ .mbps =  330, .reg = 0x2a },
+> -	{ .mbps =  360, .reg = 0x4a },
+> -	{ .mbps =  400, .reg = 0x0c },
+> -	{ .mbps =  450, .reg = 0x2c },
+> -	{ .mbps =  500, .reg = 0x0e },
+> -	{ .mbps =  550, .reg = 0x2e },
+> -	{ .mbps =  600, .reg = 0x10 },
+> -	{ .mbps =  650, .reg = 0x30 },
+> -	{ .mbps =  700, .reg = 0x12 },
+> -	{ .mbps =  750, .reg = 0x32 },
+> -	{ .mbps =  800, .reg = 0x52 },
+> -	{ .mbps =  850, .reg = 0x72 },
+> -	{ .mbps =  900, .reg = 0x14 },
+> -	{ .mbps =  950, .reg = 0x34 },
+> -	{ .mbps = 1000, .reg = 0x54 },
+> -	{ .mbps = 1050, .reg = 0x74 },
+> -	{ .mbps = 1125, .reg = 0x16 },
+> +	{ .reg = 0x00, .max = 80   },
+> +	{ .reg = 0x20, .max = 90   },
+> +	{ .reg = 0x40, .max = 100  },
+> +	{ .reg = 0x02, .max = 110  },
+> +	{ .reg = 0x22, .max = 130  },
+> +	{ .reg = 0x42, .max = 140  },
+> +	{ .reg = 0x04, .max = 150  },
+> +	{ .reg = 0x24, .max = 170  },
+> +	{ .reg = 0x44, .max = 180  },
+> +	{ .reg = 0x06, .max = 200  },
+> +	{ .reg = 0x26, .max = 220  },
+> +	{ .reg = 0x46, .max = 240  },
+> +	{ .reg = 0x08, .max = 250  },
+> +	{ .reg = 0x28, .max = 270  },
+> +	{ .reg = 0x0a, .max = 300  },
+> +	{ .reg = 0x2a, .max = 330  },
+> +	{ .reg = 0x4a, .max = 360  },
+> +	{ .reg = 0x0c, .max = 400  },
+> +	{ .reg = 0x2c, .max = 450  },
+> +	{ .reg = 0x0e, .max = 500  },
+> +	{ .reg = 0x2e, .max = 550  },
+> +	{ .reg = 0x10, .max = 600  },
+> +	{ .reg = 0x30, .max = 650  },
+> +	{ .reg = 0x12, .max = 700  },
+> +	{ .reg = 0x32, .max = 750  },
+> +	{ .reg = 0x52, .max = 800  },
+> +	{ .reg = 0x72, .max = 850  },
+> +	{ .reg = 0x14, .max = 900  },
+> +	{ .reg = 0x34, .max = 950  },
+> +	{ .reg = 0x54, .max = 1000 },
+> +	{ .reg = 0x74, .max = 1050 },
+> +	{ .reg = 0x16, .max = 1125 },
+>  	{ /* sentinel */ },
+>  };
+>  
+> @@ -201,96 +201,96 @@ static const struct rcsi2_mbps_reg phtw_mbps_v3m_e3[] = {
+>  #define PHYPLL_HSFREQRANGE(n)		((n) << 16)
+>  
+>  static const struct rcsi2_mbps_reg hsfreqrange_h3_v3h_m3n[] = {
+> -	{ .mbps =   80, .reg = 0x00 },
+> -	{ .mbps =   90, .reg = 0x10 },
+> -	{ .mbps =  100, .reg = 0x20 },
+> -	{ .mbps =  110, .reg = 0x30 },
+> -	{ .mbps =  120, .reg = 0x01 },
+> -	{ .mbps =  130, .reg = 0x11 },
+> -	{ .mbps =  140, .reg = 0x21 },
+> -	{ .mbps =  150, .reg = 0x31 },
+> -	{ .mbps =  160, .reg = 0x02 },
+> -	{ .mbps =  170, .reg = 0x12 },
+> -	{ .mbps =  180, .reg = 0x22 },
+> -	{ .mbps =  190, .reg = 0x32 },
+> -	{ .mbps =  205, .reg = 0x03 },
+> -	{ .mbps =  220, .reg = 0x13 },
+> -	{ .mbps =  235, .reg = 0x23 },
+> -	{ .mbps =  250, .reg = 0x33 },
+> -	{ .mbps =  275, .reg = 0x04 },
+> -	{ .mbps =  300, .reg = 0x14 },
+> -	{ .mbps =  325, .reg = 0x25 },
+> -	{ .mbps =  350, .reg = 0x35 },
+> -	{ .mbps =  400, .reg = 0x05 },
+> -	{ .mbps =  450, .reg = 0x16 },
+> -	{ .mbps =  500, .reg = 0x26 },
+> -	{ .mbps =  550, .reg = 0x37 },
+> -	{ .mbps =  600, .reg = 0x07 },
+> -	{ .mbps =  650, .reg = 0x18 },
+> -	{ .mbps =  700, .reg = 0x28 },
+> -	{ .mbps =  750, .reg = 0x39 },
+> -	{ .mbps =  800, .reg = 0x09 },
+> -	{ .mbps =  850, .reg = 0x19 },
+> -	{ .mbps =  900, .reg = 0x29 },
+> -	{ .mbps =  950, .reg = 0x3a },
+> -	{ .mbps = 1000, .reg = 0x0a },
+> -	{ .mbps = 1050, .reg = 0x1a },
+> -	{ .mbps = 1100, .reg = 0x2a },
+> -	{ .mbps = 1150, .reg = 0x3b },
+> -	{ .mbps = 1200, .reg = 0x0b },
+> -	{ .mbps = 1250, .reg = 0x1b },
+> -	{ .mbps = 1300, .reg = 0x2b },
+> -	{ .mbps = 1350, .reg = 0x3c },
+> -	{ .mbps = 1400, .reg = 0x0c },
+> -	{ .mbps = 1450, .reg = 0x1c },
+> -	{ .mbps = 1500, .reg = 0x2c },
+> +	{ .reg = 0x00, .max =   97 },
+> +	{ .reg = 0x10, .max =  107 },
+> +	{ .reg = 0x20, .max =  118 },
+> +	{ .reg = 0x30, .max =  128 },
+> +	{ .reg = 0x01, .max =  139 },
+> +	{ .reg = 0x11, .max =  149 },
+> +	{ .reg = 0x21, .max =  160 },
+> +	{ .reg = 0x31, .max =  170 },
+> +	{ .reg = 0x02, .max =  181 },
+> +	{ .reg = 0x12, .max =  191 },
+> +	{ .reg = 0x22, .max =  202 },
+> +	{ .reg = 0x32, .max =  212 },
+> +	{ .reg = 0x03, .max =  228 },
+> +	{ .reg = 0x13, .max =  224 },
+> +	{ .reg = 0x23, .max =  259 },
+> +	{ .reg = 0x33, .max =  275 },
+> +	{ .reg = 0x04, .max =  301 },
+> +	{ .reg = 0x14, .max =  328 },
+> +	{ .reg = 0x25, .max =  354 },
+> +	{ .reg = 0x35, .max =  380 },
+> +	{ .reg = 0x05, .max =  433 },
+> +	{ .reg = 0x16, .max =  485 },
+> +	{ .reg = 0x26, .max =  538 },
+> +	{ .reg = 0x37, .max =  590 },
+> +	{ .reg = 0x07, .max =  643 },
+> +	{ .reg = 0x18, .max =  695 },
+> +	{ .reg = 0x28, .max =  748 },
+> +	{ .reg = 0x39, .max =  800 },
+> +	{ .reg = 0x09, .max =  853 },
+> +	{ .reg = 0x19, .max =  905 },
+> +	{ .reg = 0x29, .max =  958 },
+> +	{ .reg = 0x3a, .max = 1010 },
+> +	{ .reg = 0x0a, .max = 1063 },
+> +	{ .reg = 0x1a, .max = 1115 },
+> +	{ .reg = 0x2a, .max = 1168 },
+> +	{ .reg = 0x3b, .max = 1220 },
+> +	{ .reg = 0x0b, .max = 1273 },
+> +	{ .reg = 0x1b, .max = 1325 },
+> +	{ .reg = 0x2b, .max = 1378 },
+> +	{ .reg = 0x3c, .max = 1430 },
+> +	{ .reg = 0x0c, .max = 1483 },
+> +	{ .reg = 0x1c, .max = 1500 },
+> +	{ .reg = 0x2c, .max = 1500 },
+>  	{ /* sentinel */ },
+>  };
+>  
+>  static const struct rcsi2_mbps_reg hsfreqrange_m3w_h3es1[] = {
+> -	{ .mbps =   80,	.reg = 0x00 },
+> -	{ .mbps =   90,	.reg = 0x10 },
+> -	{ .mbps =  100,	.reg = 0x20 },
+> -	{ .mbps =  110,	.reg = 0x30 },
+> -	{ .mbps =  120,	.reg = 0x01 },
+> -	{ .mbps =  130,	.reg = 0x11 },
+> -	{ .mbps =  140,	.reg = 0x21 },
+> -	{ .mbps =  150,	.reg = 0x31 },
+> -	{ .mbps =  160,	.reg = 0x02 },
+> -	{ .mbps =  170,	.reg = 0x12 },
+> -	{ .mbps =  180,	.reg = 0x22 },
+> -	{ .mbps =  190,	.reg = 0x32 },
+> -	{ .mbps =  205,	.reg = 0x03 },
+> -	{ .mbps =  220,	.reg = 0x13 },
+> -	{ .mbps =  235,	.reg = 0x23 },
+> -	{ .mbps =  250,	.reg = 0x33 },
+> -	{ .mbps =  275,	.reg = 0x04 },
+> -	{ .mbps =  300,	.reg = 0x14 },
+> -	{ .mbps =  325,	.reg = 0x05 },
+> -	{ .mbps =  350,	.reg = 0x15 },
+> -	{ .mbps =  400,	.reg = 0x25 },
+> -	{ .mbps =  450,	.reg = 0x06 },
+> -	{ .mbps =  500,	.reg = 0x16 },
+> -	{ .mbps =  550,	.reg = 0x07 },
+> -	{ .mbps =  600,	.reg = 0x17 },
+> -	{ .mbps =  650,	.reg = 0x08 },
+> -	{ .mbps =  700,	.reg = 0x18 },
+> -	{ .mbps =  750,	.reg = 0x09 },
+> -	{ .mbps =  800,	.reg = 0x19 },
+> -	{ .mbps =  850,	.reg = 0x29 },
+> -	{ .mbps =  900,	.reg = 0x39 },
+> -	{ .mbps =  950,	.reg = 0x0a },
+> -	{ .mbps = 1000,	.reg = 0x1a },
+> -	{ .mbps = 1050,	.reg = 0x2a },
+> -	{ .mbps = 1100,	.reg = 0x3a },
+> -	{ .mbps = 1150,	.reg = 0x0b },
+> -	{ .mbps = 1200,	.reg = 0x1b },
+> -	{ .mbps = 1250,	.reg = 0x2b },
+> -	{ .mbps = 1300,	.reg = 0x3b },
+> -	{ .mbps = 1350,	.reg = 0x0c },
+> -	{ .mbps = 1400,	.reg = 0x1c },
+> -	{ .mbps = 1450,	.reg = 0x2c },
+> -	{ .mbps = 1500,	.reg = 0x3c },
+> +	{ .reg = 0x00, .max =  110 },
+> +	{ .reg = 0x10, .max =  120 },
+> +	{ .reg = 0x20, .max =  131 },
+> +	{ .reg = 0x30, .max =  141 },
+> +	{ .reg = 0x01, .max =  152 },
+> +	{ .reg = 0x11, .max =  162 },
+> +	{ .reg = 0x21, .max =  173 },
+> +	{ .reg = 0x31, .max =  183 },
+> +	{ .reg = 0x02, .max =  194 },
+> +	{ .reg = 0x12, .max =  204 },
+> +	{ .reg = 0x22, .max =  215 },
+> +	{ .reg = 0x32, .max =  225 },
+> +	{ .reg = 0x03, .max =  241 },
+> +	{ .reg = 0x13, .max =  257 },
+> +	{ .reg = 0x23, .max =  273 },
+> +	{ .reg = 0x33, .max =  275 },
+> +	{ .reg = 0x04, .max =  301 },
+> +	{ .reg = 0x14, .max =  328 },
+> +	{ .reg = 0x05, .max =  354 },
+> +	{ .reg = 0x15, .max =  393 },
+> +	{ .reg = 0x25, .max =  446 },
+> +	{ .reg = 0x06, .max =  498 },
+> +	{ .reg = 0x16, .max =  551 },
+> +	{ .reg = 0x07, .max =  603 },
+> +	{ .reg = 0x17, .max =  656 },
+> +	{ .reg = 0x08, .max =  708 },
+> +	{ .reg = 0x18, .max =  761 },
+> +	{ .reg = 0x09, .max =  813 },
+> +	{ .reg = 0x19, .max =  866 },
+> +	{ .reg = 0x29, .max =  918 },
+> +	{ .reg = 0x39, .max =  971 },
+> +	{ .reg = 0x0a, .max = 1023 },
+> +	{ .reg = 0x1a, .max = 1076 },
+> +	{ .reg = 0x2a, .max = 1128 },
+> +	{ .reg = 0x3a, .max = 1181 },
+> +	{ .reg = 0x0b, .max = 1233 },
+> +	{ .reg = 0x1b, .max = 1286 },
+> +	{ .reg = 0x2b, .max = 1338 },
+> +	{ .reg = 0x3b, .max = 1391 },
+> +	{ .reg = 0x0c, .max = 1443 },
+> +	{ .reg = 0x1c, .max = 1496 },
+> +	{ .reg = 0x2c, .max = 1500 },
+> +	{ .reg = 0x3c, .max = 1500 },
+>  	{ /* sentinel */ },
+>  };
+>  
+> @@ -432,11 +432,11 @@ static int rcsi2_set_phypll(struct rcar_csi2 *priv, unsigned int mbps)
+>  {
+>  	const struct rcsi2_mbps_reg *hsfreq;
+>  
+> -	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++)
+> -		if (hsfreq->mbps >= mbps)
+> +	for (hsfreq = priv->info->hsfreqrange; hsfreq->max != 0; hsfreq++)
+> +		if (hsfreq->max >= mbps)
+>  			break;
+>  
+> -	if (!hsfreq->mbps) {
+> +	if (!hsfreq->max) {
+>  		dev_err(priv->dev, "Unsupported PHY speed (%u Mbps)", mbps);
+>  		return -ERANGE;
+>  	}
+> @@ -907,11 +907,11 @@ static int rcsi2_phtw_write_mbps(struct rcar_csi2 *priv, unsigned int mbps,
+>  {
+>  	const struct rcsi2_mbps_reg *value;
+>  
+> -	for (value = values; value->mbps; value++)
+> -		if (value->mbps >= mbps)
+> +	for (value = values; value->max; value++)
+> +		if (value->max >= mbps)
+>  			break;
+>  
+> -	if (!value->mbps) {
+> +	if (!value->max) {
+>  		dev_err(priv->dev, "Unsupported PHY speed (%u Mbps)", mbps);
+>  		return -ERANGE;
+>  	}
+> -- 
+> 2.7.4
+> 
 
-diff --git a/arch/x86/include/asm/dpt.h b/arch/x86/include/asm/dpt.h
-index 0d74afb10141..01727ef0577e 100644
---- a/arch/x86/include/asm/dpt.h
-+++ b/arch/x86/include/asm/dpt.h
-@@ -56,6 +56,7 @@ extern void dpt_destroy(struct dpt *dpt);
- extern int dpt_map_range(struct dpt *dpt, void *ptr, size_t size,
- 			 enum page_table_level level);
- extern int dpt_map(struct dpt *dpt, void *ptr, unsigned long size);
-+extern void dpt_unmap(struct dpt *dpt, void *ptr);
- 
- static inline int dpt_map_module(struct dpt *dpt, char *module_name)
- {
-diff --git a/arch/x86/mm/dpt.c b/arch/x86/mm/dpt.c
-index 12eb0d794d84..c495c9b59b3e 100644
---- a/arch/x86/mm/dpt.c
-+++ b/arch/x86/mm/dpt.c
-@@ -636,6 +636,141 @@ int dpt_map(struct dpt *dpt, void *ptr, unsigned long size)
- }
- EXPORT_SYMBOL(dpt_map);
- 
-+static void dpt_clear_pte_range(struct dpt *dpt, pmd_t *pmd,
-+				unsigned long addr, unsigned long end)
-+{
-+	pte_t *pte;
-+
-+	pte = dpt_pte_offset(dpt, pmd, addr);
-+	if (IS_ERR(pte))
-+		return;
-+
-+	do {
-+		pte_clear(NULL, addr, pte);
-+	} while (pte++, addr += PAGE_SIZE, addr < end);
-+}
-+
-+static void dpt_clear_pmd_range(struct dpt *dpt, pud_t *pud,
-+				unsigned long addr, unsigned long end,
-+				enum page_table_level level)
-+{
-+	unsigned long next;
-+	pmd_t *pmd;
-+
-+	pmd = dpt_pmd_offset(dpt, pud, addr);
-+	if (IS_ERR(pmd))
-+		return;
-+
-+	do {
-+		next = pmd_addr_end(addr, end);
-+		if (pmd_none(*pmd))
-+			continue;
-+		if (level == PGT_LEVEL_PMD || pmd_trans_huge(*pmd) ||
-+		    pmd_devmap(*pmd) || !pmd_present(*pmd)) {
-+			pmd_clear(pmd);
-+			continue;
-+		}
-+		dpt_clear_pte_range(dpt, pmd, addr, next);
-+	} while (pmd++, addr = next, addr < end);
-+}
-+
-+static void dpt_clear_pud_range(struct dpt *dpt, p4d_t *p4d,
-+				unsigned long addr, unsigned long end,
-+				enum page_table_level level)
-+{
-+	unsigned long next;
-+	pud_t *pud;
-+
-+	pud = dpt_pud_offset(dpt, p4d, addr);
-+	if (IS_ERR(pud))
-+		return;
-+
-+	do {
-+		next = pud_addr_end(addr, end);
-+		if (pud_none(*pud))
-+			continue;
-+		if (level == PGT_LEVEL_PUD || pud_trans_huge(*pud) ||
-+		    pud_devmap(*pud)) {
-+			pud_clear(pud);
-+			continue;
-+		}
-+		dpt_clear_pmd_range(dpt, pud, addr, next, level);
-+	} while (pud++, addr = next, addr < end);
-+}
-+
-+static void dpt_clear_p4d_range(struct dpt *dpt, pgd_t *pgd,
-+				unsigned long addr, unsigned long end,
-+				enum page_table_level level)
-+{
-+	unsigned long next;
-+	p4d_t *p4d;
-+
-+	p4d = dpt_p4d_offset(dpt, pgd, addr);
-+	if (IS_ERR(p4d))
-+		return;
-+
-+	do {
-+		next = p4d_addr_end(addr, end);
-+		if (p4d_none(*p4d))
-+			continue;
-+		if (level == PGT_LEVEL_P4D) {
-+			p4d_clear(p4d);
-+			continue;
-+		}
-+		dpt_clear_pud_range(dpt, p4d, addr, next, level);
-+	} while (p4d++, addr = next, addr < end);
-+}
-+
-+static void dpt_clear_pgd_range(struct dpt *dpt, pgd_t *pagetable,
-+				unsigned long addr, unsigned long end,
-+				enum page_table_level level)
-+{
-+	unsigned long next;
-+	pgd_t *pgd;
-+
-+	pgd = pgd_offset_pgd(pagetable, addr);
-+	do {
-+		next = pgd_addr_end(addr, end);
-+		if (pgd_none(*pgd))
-+			continue;
-+		if (level == PGT_LEVEL_PGD) {
-+			pgd_clear(pgd);
-+			continue;
-+		}
-+		dpt_clear_p4d_range(dpt, pgd, addr, next, level);
-+	} while (pgd++, addr = next, addr < end);
-+}
-+
-+/*
-+ * Clear page table entries in the specified decorated page-table.
-+ */
-+void dpt_unmap(struct dpt *dpt, void *ptr)
-+{
-+	struct dpt_range_mapping *range_mapping;
-+	unsigned long addr, end;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&dpt->lock, flags);
-+
-+	range_mapping = dpt_get_range_mapping(dpt, ptr);
-+	if (!range_mapping) {
-+		pr_debug("DPT %p: UNMAP %px - not mapped\n", dpt, ptr);
-+		goto done;
-+	}
-+
-+	addr = (unsigned long)range_mapping->ptr;
-+	end = addr + range_mapping->size;
-+	pr_debug("DPT %p: UNMAP %px/%lx/%d\n", dpt, ptr,
-+		 range_mapping->size, range_mapping->level);
-+	dpt_clear_pgd_range(dpt, dpt->pagetable, addr, end,
-+			    range_mapping->level);
-+	list_del(&range_mapping->list);
-+	kfree(range_mapping);
-+done:
-+	spin_unlock_irqrestore(&dpt->lock, flags);
-+}
-+EXPORT_SYMBOL(dpt_unmap);
-+
- /*
-  * dpt_create - allocate a page-table and create a corresponding
-  * decorated page-table. The page-table is allocated and aligned
 -- 
-2.18.2
-
+Best Regards,
+Michael
