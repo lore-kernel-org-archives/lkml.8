@@ -2,108 +2,142 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC64C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 05:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9D8C47254
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 05:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51E3120735
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 05:16:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588569389;
-	bh=NDLbS7H6KX8JKKif2MK4betfRmG+k4ZuMRllise3FH4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=deY4L7djk/a2hkjNogfKktt664KKLgoSHZlUjtKJDZgcN3dXpPt24fZ0GZCH9P8u1
-	 IKzpJ3OD7IDmEPs0rm4z9ju2U0JTvvl9PrCcRWkTr5MGXMpgsjqon7+SCxV1zWAa5J
-	 SaMl2w6n6BINPCzV7sopG0MVVfdfC5m2SBawpaJY=
+	by mail.kernel.org (Postfix) with ESMTP id EDC3F20735
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 05:19:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cfZRFvM3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbgEDFQ2 (ORCPT
+        id S1726955AbgEDFTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 01:16:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56036 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726411AbgEDFQ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 01:16:28 -0400
-Received: from localhost (unknown [171.76.84.84])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 4 May 2020 01:19:42 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:60963 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726509AbgEDFTl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 01:19:41 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588569581; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=MxVD4lIGNr5TTM6n/CVOQaK8MEvwp2IKXE3ld2sTRzw=; b=cfZRFvM3WHNdSPUVFVGr1EiMNfqB7QUX10a4vhlO6XZp+UwGKPft7p2TCY1Y2jPl1jK2i26Q
+ /ZptJS3+59o4F/92rag+r1f1l+9JFGyk5UgRc074+C9QcYPn/dDQJi1jDATwStUjpCQg4K0a
+ DQIjVOD/ENLQ6MwOP5HSNuRKSWQ=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eafa5e5.7efd188171f0-smtp-out-n02;
+ Mon, 04 May 2020 05:19:33 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 64BB9C433D2; Mon,  4 May 2020 05:19:33 +0000 (UTC)
+Received: from [192.168.43.137] (unknown [106.213.157.33])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14099206C0;
-        Mon,  4 May 2020 05:16:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588569387;
-        bh=NDLbS7H6KX8JKKif2MK4betfRmG+k4ZuMRllise3FH4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LK29ZRn37F496akRaG3GcO+JOrxhO4ifvkyc5p8z9aryf4UhKyF+AThH5xKRPGT49
-         JYYrGGeesrtjQwRtI9m/4zOrMGJ11uFjbZdrd0pUmVDP5037K61cLpFCuYyME+Ne21
-         3EKAg5il2Xg3hUuTZb/FKfFmfRCy0okr1oTZG+yU=
-Date:   Mon, 4 May 2020 10:46:23 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     =?utf-8?B?UmFmYcWC?= Hibner <rafal.hibner@secom.com.pl>
-Cc:     Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
-        Harini Katakam <harini.katakam@xilinx.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>,
-        "moderated list:ARM/ZYNQ ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dma: zynqmp_dma: Initialize descriptor list after
- freeing during reset
-Message-ID: <20200504051623.GE1375924@vkoul-mobl>
-References: <20200428143225.3357-1-rafal.hibner@secom.com.pl>
- <20200502123242.GB1375924@vkoul-mobl>
- <1330934e-342e-1e16-6451-d8952463119c@secom.com.pl>
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 825AAC433CB;
+        Mon,  4 May 2020 05:19:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 825AAC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v5 1/5] soc: qcom: rpmh-rsc: Correctly ignore
+ CPU_CLUSTER_PM notifications
+To:     Douglas Anderson <dianders@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rafael.j.wysocki@intel.com, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     evgreen@chromium.org, mka@chromium.org, swboyd@chromium.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200424094610.v5.1.Ic7096b3b9b7828cdd41cd5469a6dee5eb6abf549@changeid>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <e8310c51-d7b1-ac88-cd6b-0965804eb754@codeaurora.org>
+Date:   Mon, 4 May 2020 10:49:24 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20200424094610.v5.1.Ic7096b3b9b7828cdd41cd5469a6dee5eb6abf549@changeid>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1330934e-342e-1e16-6451-d8952463119c@secom.com.pl>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02-05-20, 15:00, Rafał Hibner wrote:
-> Hello Vinod,
-> 
-> On 02.05.2020 14:32, Vinod Koul wrote:
-> > Would it not be better to use list_del_init() where we delete it rather
-> > than do the init here?
-> >
-> 
-> It is not a problem of list element itself not being initialized.
-> The problem is that during fault conditions (zynqmp_dma_reset) all
-> elements are moved to free list. List head however is not reinitialized.
-> 
-> In normal flow elements are removed by list_del and resubmitted to
-> free list with zynqmp_dma_free_descriptor.
-> 
-> static void zynqmp_dma_chan_desc_cleanup(struct zynqmp_dma_chan *chan)
-> {
->     ...
->     list_for_each_entry_safe(desc, next, &chan->done_list, node) {
->         ...
->         list_del(&desc->node);
->         ...
->         zynqmp_dma_free_descriptor(chan, desc);
->     }
-> }
-> 
-> The zynqmp_dma_free_descriptor does not delete elements from the
-> list by itself.
-> I am not he author of this driver so I fixed it by
-> doing non intrusive changes.
-> 
-> Anyways, I do not see how using list_del_init would fix the bug.
+Hi,
 
-Looking at this, i think it would make sense to do list_splice_init()
-before we send the list to be freed.
+On 4/24/2020 10:16 PM, Douglas Anderson wrote:
+> Our switch statement doesn't have entries for CPU_CLUSTER_PM_ENTER,
+> CPU_CLUSTER_PM_ENTER_FAILED, and CPU_CLUSTER_PM_EXIT and doesn't have
+> a default.  This means that we'll try to do a flush in those cases but
+> we won't necessarily be the last CPU down.  That's not so ideal since
+> our (lack of) locking assumes we're on the last CPU.
+>
+> Luckily this isn't as big a problem as you'd think since (at least on
+> the SoC I tested) we don't get these notifications except on full
+> system suspend.  ...and on full system suspend we get them on the last
+> CPU down.  That means that the worst problem we hit is flushing twice.
+> Still, it's good to make it correct.
+>
+> Fixes: 985427f997b6 ("soc: qcom: rpmh: Invoke rpmh_flush() for dirty caches")
+> Reported-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Maulik Shah <mkshah@codeaurora.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>
+> Changes in v5:
+> - Corrently => Correctly
+>
+> Changes in v4:
+> - ("...Corrently ignore CPU_CLUSTER_PM notifications") split out for v4.
+>
+> Changes in v3: None
+> Changes in v2: None
+>
+>   drivers/soc/qcom/rpmh-rsc.c | 2 ++
+>   1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+> index a9e15699f55f..3571a99fc839 100644
+> --- a/drivers/soc/qcom/rpmh-rsc.c
+> +++ b/drivers/soc/qcom/rpmh-rsc.c
+> @@ -806,6 +806,8 @@ static int rpmh_rsc_cpu_pm_callback(struct notifier_block *nfb,
+>   	case CPU_PM_EXIT:
+>   		cpumask_clear_cpu(smp_processor_id(), &drv->cpus_entered_pm);
+>   		goto exit;
+> +	default:
+> +		return NOTIFY_DONE;
 
-Radhey/Appana are cced, they should test this.
+I noticed a bug here,
+
+Either need to unlock and return here.
+
++	default:
++               ret = NOTIFY_DONE;
++		goto exit;
+
+Or
+
+If you move this patch at the end of series, it should will work fine as is.
+Since in patch 5 of this series,  pm_lock is removed, so return 
+NOTIFY_DONE; do not any unlock.
+
+When i pulled in only first two changes in this series i got spinlock 
+recursion during suspend-resume.
+Back when i pull in entire series for validation, the issue do not come 
+because last patch removes pm_lock.
+
+Thanks,
+Maulik
+>   	}
+>   
+>   	ret = rpmh_rsc_ctrlr_is_busy(drv);
 
 -- 
-~Vinod
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
