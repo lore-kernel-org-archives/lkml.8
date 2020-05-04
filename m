@@ -2,326 +2,272 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E312C47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F49C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCAFF20707
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 137C3206B9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:37:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="PMWl5peD"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KnjlfyKS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbgEDVcR (ORCPT
+        id S1726773AbgEDVhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 17:32:17 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:49993 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726453AbgEDVcD (ORCPT
+        Mon, 4 May 2020 17:37:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34480 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726419AbgEDVhX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 17:32:03 -0400
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 5EEEC23E8B;
-        Mon,  4 May 2020 23:31:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1588627919;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RFjN0KMxhMIhDG41QUjnIl56xV2lcy/ZtaX9W4VM89o=;
-        b=PMWl5peDdMit6spUGTm6++ZNhRojLCdlB6iimEUQZGwqsux0aKFQa8CHgyrqruhUyXXemS
-        9rblPqAAgY6jghLK3SbX0CwTFbv1JgY7iQp67ZU/tryKp8drBnQiaZ3a2DTojIDDzB7mIv
-        VBQcsKIdydAwPAU214w3JF0CZtOBJto=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH net-next v2 3/3] net: phy: mscc: use phy_package_shared
-Date:   Mon,  4 May 2020 23:31:36 +0200
-Message-Id: <20200504213136.26458-4-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200504213136.26458-1-michael@walle.cc>
-References: <20200504213136.26458-1-michael@walle.cc>
+        Mon, 4 May 2020 17:37:23 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E89BC061A0F
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 14:37:23 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id v2so310626plp.9
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 14:37:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=H5adPMRT8U6m0WDenVCh3aT5hmgtU4v7OZcwI4P6ZEM=;
+        b=KnjlfyKScJvUJ7shJ7XF079YoEZGsha4sYhEALul+DCumi8SI2gEXSIDp1+DHfn6G+
+         JJU1FTX/KOSrhilY9Xc5SYyPKl3GZSpNLNdYJohVprIV/UiBKUfmUXt9m0qAxs1gL5E3
+         PNvD3J1txjN1/mL0HOqyZr0wJMf2W05NH7Bub6fREB0D0ToHvIxVARb9kETZcwHdsGkc
+         FQFzf4UKIm5O+SMpMZTqp3tWlg419T+mBvJk6oxMqVeyji1ZVbQArMYQRhchCdUdWqyJ
+         mKYWVqTiT2WZEP32VWW9xwxrSIrREvlHcsOkn6Tqq2LNYqIgvfzGVBR7wGX3H1AJOMp8
+         lxNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=H5adPMRT8U6m0WDenVCh3aT5hmgtU4v7OZcwI4P6ZEM=;
+        b=WnuzwLQylUnm2/PqeYcK/LBn5vhQNPZF4fjfktJR4Kibf7RfzyHZ2n4/ql4o2NRGcn
+         oVxjdgCYA+xvDUqiRl0d2ibDwzkpk6aAXOwv9B0van+OBtcG2u+s41hp0bzVpwNivoKJ
+         NTp2SuBmpnwF7tp019v13pjD/6+Zp1PzzmzfGAmGk5NbUuOOH0oGhx1vN41sxx9o+atB
+         Gq6rt7ty/YLYRkzTT0FDQpVVnnT7dKVEmVng10NBCCSC19FQW/cqFg8mL91N0AAwqaOW
+         PpfpL8FluWGZEbRR8qbF7jPTldRXb6VMfD7d9qQzA8GIAwuKiXmplQoykL1Z+fwbCNsd
+         Uzqw==
+X-Gm-Message-State: AGi0PubXJyhP+cq//DkwekLCWqNuIu9SmKNiLn7xb1mFUGj9o/VX5HmJ
+        redSHC/UqOf/U3oFvCUETOu3kA==
+X-Google-Smtp-Source: APiQypKPRIa0A/V3Fd5/Lnpn3+cGaKBHc2mWimLD813JkWf2GKs8k1yI6ajvs+mmO4rFofsC7yMeiQ==
+X-Received: by 2002:a17:902:c3d3:: with SMTP id j19mr61083plj.340.1588628242060;
+        Mon, 04 May 2020 14:37:22 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id f76sm21697pfa.167.2020.05.04.14.37.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 14:37:21 -0700 (PDT)
+Date:   Mon, 4 May 2020 14:37:20 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Emanuele Giuseppe Esposito <eesposit@redhat.com>,
+        Jonathan Adams <jwadams@google.com>
+cc:     kvm@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] Statsfs: a new ram-based file sytem for Linux
+ kernel statistics
+In-Reply-To: <20200504110344.17560-1-eesposit@redhat.com>
+Message-ID: <alpine.DEB.2.22.394.2005041429210.224786@chino.kir.corp.google.com>
+References: <20200504110344.17560-1-eesposit@redhat.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 5EEEC23E8B
-X-Spamd-Result: default: False [6.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         NEURAL_SPAM(0.00)[0.861];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[10];
-         MID_CONTAINS_FROM(1.00)[];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
-         FREEMAIL_CC(0.00)[lunn.ch,gmail.com,armlinux.org.uk,davemloft.net,nxp.com,bootlin.com,walle.cc];
-         SUSPICIOUS_RECIPS(1.50)[]
-X-Spam: Yes
+Content-Type: multipart/mixed; boundary="1482994552-23947810-1588628241=:224786"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new phy_package_shared common storage to ease the package
-initialization and to access the global registers.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Signed-off-by: Michael Walle <michael@walle.cc>
-Tested-by: Vladimir Oltean <vladimir.oltean@nxp.com>
----
- drivers/net/phy/mscc/mscc.h      |   1 -
- drivers/net/phy/mscc/mscc_main.c | 101 ++++++++++---------------------
- 2 files changed, 31 insertions(+), 71 deletions(-)
+--1482994552-23947810-1588628241=:224786
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-diff --git a/drivers/net/phy/mscc/mscc.h b/drivers/net/phy/mscc/mscc.h
-index 030bf8b600df..acdd8ee61a39 100644
---- a/drivers/net/phy/mscc/mscc.h
-+++ b/drivers/net/phy/mscc/mscc.h
-@@ -353,7 +353,6 @@ struct vsc8531_private {
- 	const struct vsc85xx_hw_stat *hw_stats;
- 	u64 *stats;
- 	int nstats;
--	bool pkg_init;
- 	/* For multiple port PHYs; the MDIO address of the base PHY in the
- 	 * package.
- 	 */
-diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
-index 5391acdece05..a505286b2195 100644
---- a/drivers/net/phy/mscc/mscc_main.c
-+++ b/drivers/net/phy/mscc/mscc_main.c
-@@ -691,27 +691,23 @@ static int vsc85xx_eee_init_seq_set(struct phy_device *phydev)
- /* phydev->bus->mdio_lock should be locked when using this function */
- static int phy_base_write(struct phy_device *phydev, u32 regnum, u16 val)
- {
--	struct vsc8531_private *priv = phydev->priv;
--
- 	if (unlikely(!mutex_is_locked(&phydev->mdio.bus->mdio_lock))) {
- 		dev_err(&phydev->mdio.dev, "MDIO bus lock not held!\n");
- 		dump_stack();
- 	}
- 
--	return __mdiobus_write(phydev->mdio.bus, priv->base_addr, regnum, val);
-+	return __phy_package_write(phydev, regnum, val);
- }
- 
- /* phydev->bus->mdio_lock should be locked when using this function */
- static int phy_base_read(struct phy_device *phydev, u32 regnum)
- {
--	struct vsc8531_private *priv = phydev->priv;
--
- 	if (unlikely(!mutex_is_locked(&phydev->mdio.bus->mdio_lock))) {
- 		dev_err(&phydev->mdio.dev, "MDIO bus lock not held!\n");
- 		dump_stack();
- 	}
- 
--	return __mdiobus_read(phydev->mdio.bus, priv->base_addr, regnum);
-+	return __phy_package_read(phydev, regnum);
- }
- 
- /* bus->mdio_lock should be locked when using this function */
-@@ -1287,65 +1283,36 @@ static int vsc8584_config_pre_init(struct phy_device *phydev)
- 	return ret;
- }
- 
--/* Check if one PHY has already done the init of the parts common to all PHYs
-- * in the Quad PHY package.
-- */
--static bool vsc8584_is_pkg_init(struct phy_device *phydev, bool reversed)
-+static void vsc8584_get_base_addr(struct phy_device *phydev)
- {
--	struct mii_bus *bus = phydev->mdio.bus;
--	struct vsc8531_private *vsc8531;
--	struct phy_device *phy;
--	int i, addr;
--
--	/* VSC8584 is a Quad PHY */
--	for (i = 0; i < 4; i++) {
--		vsc8531 = phydev->priv;
--
--		if (reversed)
--			addr = vsc8531->base_addr - i;
--		else
--			addr = vsc8531->base_addr + i;
--
--		phy = mdiobus_get_phy(bus, addr);
--		if (!phy)
--			continue;
-+	struct vsc8531_private *vsc8531 = phydev->priv;
-+	u16 val, addr;
- 
--		if ((phy->phy_id & phydev->drv->phy_id_mask) !=
--		    (phydev->drv->phy_id & phydev->drv->phy_id_mask))
--			continue;
-+	mutex_lock(&phydev->mdio.bus->mdio_lock);
-+	__phy_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_EXTENDED);
- 
--		vsc8531 = phy->priv;
-+	addr = __phy_read(phydev, MSCC_PHY_EXT_PHY_CNTL_4);
-+	addr >>= PHY_CNTL_4_ADDR_POS;
- 
--		if (vsc8531 && vsc8531->pkg_init)
--			return true;
--	}
-+	val = __phy_read(phydev, MSCC_PHY_ACTIPHY_CNTL);
-+	mutex_unlock(&phydev->mdio.bus->mdio_lock);
- 
--	return false;
-+	if (val & PHY_ADDR_REVERSED)
-+		vsc8531->base_addr = phydev->mdio.addr + addr;
-+	else
-+		vsc8531->base_addr = phydev->mdio.addr - addr;
- }
- 
- static int vsc8584_config_init(struct phy_device *phydev)
- {
- 	struct vsc8531_private *vsc8531 = phydev->priv;
--	u16 addr, val;
- 	int ret, i;
-+	u16 val;
- 
- 	phydev->mdix_ctrl = ETH_TP_MDI_AUTO;
- 
- 	mutex_lock(&phydev->mdio.bus->mdio_lock);
- 
--	__mdiobus_write(phydev->mdio.bus, phydev->mdio.addr,
--			MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_EXTENDED);
--	addr = __mdiobus_read(phydev->mdio.bus, phydev->mdio.addr,
--			      MSCC_PHY_EXT_PHY_CNTL_4);
--	addr >>= PHY_CNTL_4_ADDR_POS;
--
--	val = __mdiobus_read(phydev->mdio.bus, phydev->mdio.addr,
--			     MSCC_PHY_ACTIPHY_CNTL);
--	if (val & PHY_ADDR_REVERSED)
--		vsc8531->base_addr = phydev->mdio.addr + addr;
--	else
--		vsc8531->base_addr = phydev->mdio.addr - addr;
--
- 	/* Some parts of the init sequence are identical for every PHY in the
- 	 * package. Some parts are modifying the GPIO register bank which is a
- 	 * set of registers that are affecting all PHYs, a few resetting the
-@@ -1359,7 +1326,7 @@ static int vsc8584_config_init(struct phy_device *phydev)
- 	 * do the correct init sequence for all PHYs that are package-critical
- 	 * in this pre-init function.
- 	 */
--	if (!vsc8584_is_pkg_init(phydev, val & PHY_ADDR_REVERSED ? 1 : 0)) {
-+	if (phy_package_init_once(phydev)) {
- 		/* The following switch statement assumes that the lowest
- 		 * nibble of the phy_id_mask is always 0. This works because
- 		 * the lowest nibble of the PHY_ID's below are also 0.
-@@ -1388,8 +1355,6 @@ static int vsc8584_config_init(struct phy_device *phydev)
- 			goto err;
- 	}
- 
--	vsc8531->pkg_init = true;
--
- 	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS,
- 		       MSCC_PHY_PAGE_EXTENDED_GPIO);
- 
-@@ -1427,7 +1392,8 @@ static int vsc8584_config_init(struct phy_device *phydev)
- 
- 	/* Disable SerDes for 100Base-FX */
- 	ret = vsc8584_cmd(phydev, PROC_CMD_FIBER_MEDIA_CONF |
--			  PROC_CMD_FIBER_PORT(addr) | PROC_CMD_FIBER_DISABLE |
-+			  PROC_CMD_FIBER_PORT(vsc8531->base_addr) |
-+			  PROC_CMD_FIBER_DISABLE |
- 			  PROC_CMD_READ_MOD_WRITE_PORT |
- 			  PROC_CMD_RST_CONF_PORT | PROC_CMD_FIBER_100BASE_FX);
- 	if (ret)
-@@ -1435,7 +1401,8 @@ static int vsc8584_config_init(struct phy_device *phydev)
- 
- 	/* Disable SerDes for 1000Base-X */
- 	ret = vsc8584_cmd(phydev, PROC_CMD_FIBER_MEDIA_CONF |
--			  PROC_CMD_FIBER_PORT(addr) | PROC_CMD_FIBER_DISABLE |
-+			  PROC_CMD_FIBER_PORT(vsc8531->base_addr) |
-+			  PROC_CMD_FIBER_DISABLE |
- 			  PROC_CMD_READ_MOD_WRITE_PORT |
- 			  PROC_CMD_RST_CONF_PORT | PROC_CMD_FIBER_1000BASE_X);
- 	if (ret)
-@@ -1750,26 +1717,14 @@ static int vsc8514_config_init(struct phy_device *phydev)
- {
- 	struct vsc8531_private *vsc8531 = phydev->priv;
- 	unsigned long deadline;
--	u16 val, addr;
- 	int ret, i;
-+	u16 val;
- 	u32 reg;
- 
- 	phydev->mdix_ctrl = ETH_TP_MDI_AUTO;
- 
- 	mutex_lock(&phydev->mdio.bus->mdio_lock);
- 
--	__phy_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_EXTENDED);
--
--	addr = __phy_read(phydev, MSCC_PHY_EXT_PHY_CNTL_4);
--	addr >>= PHY_CNTL_4_ADDR_POS;
--
--	val = __phy_read(phydev, MSCC_PHY_ACTIPHY_CNTL);
--
--	if (val & PHY_ADDR_REVERSED)
--		vsc8531->base_addr = phydev->mdio.addr + addr;
--	else
--		vsc8531->base_addr = phydev->mdio.addr - addr;
--
- 	/* Some parts of the init sequence are identical for every PHY in the
- 	 * package. Some parts are modifying the GPIO register bank which is a
- 	 * set of registers that are affecting all PHYs, a few resetting the
-@@ -1781,11 +1736,9 @@ static int vsc8514_config_init(struct phy_device *phydev)
- 	 * do the correct init sequence for all PHYs that are package-critical
- 	 * in this pre-init function.
- 	 */
--	if (!vsc8584_is_pkg_init(phydev, val & PHY_ADDR_REVERSED ? 1 : 0))
-+	if (phy_package_init_once(phydev))
- 		vsc8514_config_pre_init(phydev);
- 
--	vsc8531->pkg_init = true;
--
- 	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS,
- 		       MSCC_PHY_PAGE_EXTENDED_GPIO);
- 
-@@ -1991,6 +1944,10 @@ static int vsc8514_probe(struct phy_device *phydev)
- 
- 	phydev->priv = vsc8531;
- 
-+	vsc8584_get_base_addr(phydev);
-+	devm_phy_package_join(&phydev->mdio.dev, phydev,
-+			      vsc8531->base_addr, 0);
-+
- 	vsc8531->nleds = 4;
- 	vsc8531->supp_led_modes = VSC85XX_SUPP_LED_MODES;
- 	vsc8531->hw_stats = vsc85xx_hw_stats;
-@@ -2046,6 +2003,10 @@ static int vsc8584_probe(struct phy_device *phydev)
- 
- 	phydev->priv = vsc8531;
- 
-+	vsc8584_get_base_addr(phydev);
-+	devm_phy_package_join(&phydev->mdio.dev, phydev,
-+			      vsc8531->base_addr, 0);
-+
- 	vsc8531->nleds = 4;
- 	vsc8531->supp_led_modes = VSC8584_SUPP_LED_MODES;
- 	vsc8531->hw_stats = vsc8584_hw_stats;
--- 
-2.20.1
+On Mon, 4 May 2020, Emanuele Giuseppe Esposito wrote:
 
+> There is currently no common way for Linux kernel subsystems to expose
+> statistics to userspace shared throughout the Linux kernel; subsystems
+> have to take care of gathering and displaying statistics by themselves,
+> for example in the form of files in debugfs. For example KVM has its own
+> code section that takes care of this in virt/kvm/kvm_main.c, where it sets
+> up debugfs handlers for displaying values and aggregating them from
+> various subfolders to obtain information about the system state (i.e.
+> displaying the total number of exits, calculated by summing all exits of
+> all cpus of all running virtual machines).
+> 
+> Allowing each section of the kernel to do so has two disadvantages. First,
+> it will introduce redundant code. Second, debugfs is anyway not the right
+> place for statistics (for example it is affected by lockdown)
+> 
+> In this patch series I introduce statsfs, a synthetic ram-based virtual
+> filesystem that takes care of gathering and displaying statistics for the
+> Linux kernel subsystems.
+> 
+
+This is exciting, we have been looking in the same area recently.  Adding 
+Jonathan Adams <jwadams@google.com>.
+
+In your diffstat, one thing I notice that is omitted: an update to 
+Documentation/* :)  Any chance of getting some proposed Documentation/ 
+updates with structure of the fs, the per subsystem breakdown, and best 
+practices for managing the stats from the kernel level?
+
+> The file system is mounted on /sys/kernel/stats and would be already used
+> by kvm. Statsfs was initially introduced by Paolo Bonzini [1].
+> 
+> Statsfs offers a generic and stable API, allowing any kind of
+> directory/file organization and supporting multiple kind of aggregations
+> (not only sum, but also average, max, min and count_zero) and data types
+> (all unsigned and signed types plus boolean). The implementation, which is
+> a generalization of KVM’s debugfs statistics code, takes care of gathering
+> and displaying information at run time; users only need to specify the
+> values to be included in each source.
+> 
+> Statsfs would also be a different mountpoint from debugfs, and would not
+> suffer from limited access due to the security lock down patches. Its main
+> function is to display each statistics as a file in the desired folder
+> hierarchy defined through the API. Statsfs files can be read, and possibly
+> cleared if their file mode allows it.
+> 
+> Statsfs has two main components: the public API defined by
+> include/linux/statsfs.h, and the virtual file system which should end up
+> in /sys/kernel/stats.
+> 
+> The API has two main elements, values and sources. Kernel subsystems like
+> KVM can use the API to create a source, add child
+> sources/values/aggregates and register it to the root source (that on the
+> virtual fs would be /sys/kernel/statsfs).
+> 
+> Sources are created via statsfs_source_create(), and each source becomes a
+> directory in the file system. Sources form a parent-child relationship;
+> root sources are added to the file system via statsfs_source_register().
+> Every other source is added to or removed from a parent through the
+> statsfs_source_add_subordinate and statsfs_source_remote_subordinate APIs.
+> Once a source is created and added to the tree (via add_subordinate), it
+> will be used to compute aggregate values in the parent source.
+> 
+> Values represent quantites that are gathered by the statsfs user. Examples
+> of values include the number of vm exits of a given kind, the amount of
+> memory used by some data structure, the length of the longest hash table
+> chain, or anything like that. Values are defined with the
+> statsfs_source_add_values function. Each value is defined by a struct
+> statsfs_value; the same statsfs_value can be added to many different
+> sources. A value can be considered "simple" if it fetches data from a
+> user-provided location, or "aggregate" if it groups all values in the
+> subordinates sources that include the same statsfs_value.
+> 
+
+This seems like it could have a lot of overhead if we wanted to 
+periodically track the totality of subsystem stats as a form of telemetry 
+gathering from userspace.  To collect telemetry for 1,000 different stats, 
+do we need to issue lseek()+read() syscalls for each of them individually 
+(or, worse, open()+read()+close())?
+
+Any thoughts on how that can be optimized?  A couple of ideas:
+
+ - an interface that allows gathering of all stats for a particular
+   interface through a single file that would likely be encoded in binary
+   and the responsibility of userspace to disseminate, or
+
+ - an interface that extends beyond this proposal and allows the reader to
+   specify which stats they are interested in collecting and then the
+   kernel will only provide these stats in a well formed structure and 
+   also be binary encoded.
+
+We've found that the one-file-per-stat method is pretty much a show 
+stopper from the performance view and we always must execute at least two 
+syscalls to obtain a single stat.
+
+Since this is becoming a generic API (good!!), maybe we can discuss 
+possible ways to optimize gathering of stats in mass? 
+
+> For more information, please consult the kerneldoc documentation in patch
+> 2 and the sample uses in the kunit tests and in KVM.
+> 
+> This series of patches is based on my previous series "libfs: group and
+> simplify linux fs code" and the single patch sent to kvm "kvm_host: unify
+> VM_STAT and VCPU_STAT definitions in a single place". The former
+> simplifies code duplicated in debugfs and tracefs (from which statsfs is
+> based on), the latter groups all macros definition for statistics in kvm
+> in a single common file shared by all architectures.
+> 
+> Patch 1 adds a new refcount and kref destructor wrappers that take a
+> semaphore, as those are used later by statsfs. Patch 2 introduces the
+> statsfs API, patch 3 provides extensive tests that can also be used as
+> example on how to use the API and patch 4 adds the file system support.
+> Finally, patch 5 provides a real-life example of statsfs usage in KVM.
+> 
+> [1] https://lore.kernel.org/kvm/5d6cdcb1-d8ad-7ae6-7351-3544e2fa366d@redhat.com/?fbclid=IwAR18LHJ0PBcXcDaLzILFhHsl3qpT3z2vlG60RnqgbpGYhDv7L43n0ZXJY8M
+> 
+> Signed-off-by: Emanuele Giuseppe Esposito <eesposit@redhat.com>
+> 
+> v1->v2 remove unnecessary list_foreach_safe loops, fix wrong indentation,
+> change statsfs in stats_fs
+> 
+> Emanuele Giuseppe Esposito (5):
+>   refcount, kref: add dec-and-test wrappers for rw_semaphores
+>   stats_fs API: create, add and remove stats_fs sources and values
+>   kunit: tests for stats_fs API
+>   stats_fs fs: virtual fs to show stats to the end-user
+>   kvm_main: replace debugfs with stats_fs
+> 
+>  MAINTAINERS                     |    7 +
+>  arch/arm64/kvm/Kconfig          |    1 +
+>  arch/arm64/kvm/guest.c          |    2 +-
+>  arch/mips/kvm/Kconfig           |    1 +
+>  arch/mips/kvm/mips.c            |    2 +-
+>  arch/powerpc/kvm/Kconfig        |    1 +
+>  arch/powerpc/kvm/book3s.c       |    6 +-
+>  arch/powerpc/kvm/booke.c        |    8 +-
+>  arch/s390/kvm/Kconfig           |    1 +
+>  arch/s390/kvm/kvm-s390.c        |   16 +-
+>  arch/x86/include/asm/kvm_host.h |    2 +-
+>  arch/x86/kvm/Kconfig            |    1 +
+>  arch/x86/kvm/Makefile           |    2 +-
+>  arch/x86/kvm/debugfs.c          |   64 --
+>  arch/x86/kvm/stats_fs.c         |   56 ++
+>  arch/x86/kvm/x86.c              |    6 +-
+>  fs/Kconfig                      |   12 +
+>  fs/Makefile                     |    1 +
+>  fs/stats_fs/Makefile            |    6 +
+>  fs/stats_fs/inode.c             |  337 ++++++++++
+>  fs/stats_fs/internal.h          |   35 +
+>  fs/stats_fs/stats_fs-tests.c    | 1088 +++++++++++++++++++++++++++++++
+>  fs/stats_fs/stats_fs.c          |  773 ++++++++++++++++++++++
+>  include/linux/kref.h            |   11 +
+>  include/linux/kvm_host.h        |   39 +-
+>  include/linux/refcount.h        |    2 +
+>  include/linux/stats_fs.h        |  304 +++++++++
+>  include/uapi/linux/magic.h      |    1 +
+>  lib/refcount.c                  |   32 +
+>  tools/lib/api/fs/fs.c           |   21 +
+>  virt/kvm/arm/arm.c              |    2 +-
+>  virt/kvm/kvm_main.c             |  314 ++-------
+>  32 files changed, 2772 insertions(+), 382 deletions(-)
+>  delete mode 100644 arch/x86/kvm/debugfs.c
+>  create mode 100644 arch/x86/kvm/stats_fs.c
+>  create mode 100644 fs/stats_fs/Makefile
+>  create mode 100644 fs/stats_fs/inode.c
+>  create mode 100644 fs/stats_fs/internal.h
+>  create mode 100644 fs/stats_fs/stats_fs-tests.c
+>  create mode 100644 fs/stats_fs/stats_fs.c
+>  create mode 100644 include/linux/stats_fs.h
+> 
+> -- 
+> 2.25.2
+> 
+> 
+--1482994552-23947810-1588628241=:224786--
