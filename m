@@ -2,161 +2,120 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64798C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF27C47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4281320707
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:40:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8741C20705
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:42:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Y/aTiaTT";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cm9vUxZg"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="F1xfOa3k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729884AbgEDQkc (ORCPT
+        id S1729771AbgEDQl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 12:40:32 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:52077 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729670AbgEDQkb (ORCPT
+        Mon, 4 May 2020 12:41:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44588 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729676AbgEDQl6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 12:40:31 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 7B6705C012C;
-        Mon,  4 May 2020 12:40:30 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Mon, 04 May 2020 12:40:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=vdg1rkzemmkCMJ7/0H2GFUcV8lx
-        jS65Px6J0j+PovYg=; b=Y/aTiaTTCbUEqHfBZSwZqiKXNNL2FArO54/ZQMuMG0r
-        7qtCc7ho8YP4X+ye6cRZinCsk66zG7VqfuYaPPZms2PVkbC96ErrZX5dygRoaELW
-        aiSqDzSWQYW/BK0c11HWyEE2D4LeVnEDbCIimDlt02tVF2pml4YRFqRHEASmQyYO
-        56N6HjPQq57hnf41vAC81IArxfV+GrZiYJlLbzkNaRFJYJ1yztOc1usxYBkAyZZV
-        66s8KrGjnhAeiwsARNuj52vrgcQSpq0P/VT/Fj8tAJC42/iKcA36dRVL80j0+6Yc
-        n4piP5Uo4vwMzK6Gt7/yOB/BeSmFlpYapSniuW/Sg9Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=vdg1rk
-        zemmkCMJ7/0H2GFUcV8lxjS65Px6J0j+PovYg=; b=cm9vUxZgSj8xrHFvxxmOzq
-        IJ2j6pduJTzKjWN3uQ0bvn1W2MyQiSXXZ2PL1zQz1/rrXJrRLNveKsk3Wzp3t5ZT
-        EiOXtsQzbGrALLR9P2Jeelh4TWatBOvqgmasmkCDYMupZDGWnDe7sETdMgzAL2Qs
-        99nTioh79KMcdPYo0DBjYXwu14buskO81171EFz74VVQqKTjt4agAvfA3SNZWgwf
-        sfNQ034Gtjy/rFl2TOKcxI2RGDC6E9beHe2Vag03UYcMvkWJV81jc7KabB2DrHrj
-        5nro+w52i6l3Va5yw03TkJYm+JOoSFchh3tajxRb6cRhRAuglNlGmPG5+eL10ytg
-        ==
-X-ME-Sender: <xms:fUWwXtIxpP7Z6BWd5TBOc0GPf4E3C0H1kc18UMkU-StANVS9Frsk0g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrjeeggdeliecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpeduvdduhfekkeehgffftefflefgffdtheffudffgeevteffheeuiedvvdejvdfg
-    veenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:fUWwXgijMEiIURioYaNGaWvlFrwoefPOJqIOpzmFiNKHsEoUYX0xeg>
-    <xmx:fUWwXgDCftHLtOo3xW01oGUqFQmFQk-W0_BQIL9iGGuIuqFxTh6AOg>
-    <xmx:fUWwXkbXsAriOKdJj1Qm5quahlM6XVzafmgUAEfUcjoDwsWMw7D8gg>
-    <xmx:fkWwXuSseolPyCy4avuYkdADC-K5I3gogAImbNr52YNelYXAF2_dLg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 397F13066016;
-        Mon,  4 May 2020 12:40:29 -0400 (EDT)
-Date:   Mon, 4 May 2020 18:40:27 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Piotr Oniszczuk <warpme@o2.pl>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [linux-sunxi] Re: [PATCH v2] arm64: dts: allwinner: h6: Use
- dummy regulator for Tanix TX6
-Message-ID: <20200504164027.tvlkcbfoz3igeh6x@gilmour.lan>
-References: <20200428142629.8950-1-peron.clem@gmail.com>
- <98246e5d-ebef-bcb5-f0b8-d74b3834b835@arm.com>
- <CAJiuCcco0d_UoWeHqh6oc0rFNAMFynXjLRQ6APsT0WBh7m+GQg@mail.gmail.com>
- <20200428164522.p7ypca7zwocc7alq@gilmour.lan>
- <CAJiuCce9UDp--XQ=rXPZ5cZyNDMFC3zyq7pnw3ETXkR3=zMWaQ@mail.gmail.com>
+        Mon, 4 May 2020 12:41:58 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC399C061A10
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 09:41:57 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id s10so11851149iln.11
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 09:41:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=o+OExAmgyirreBNQZz1mdzV+UOlsl91T24IoRPDTUCA=;
+        b=F1xfOa3kXWTYolMLtey19TxDsFE0OVOmGFGXXfzZzeHq6Gq2eYJNzidg0G69JvwZY8
+         lVv/XrEzU8O49UtzvJe6YqyZi7d3+ayYhbnmazX9FZvG1VpGuTYl/CTkfWWGxw7dxKGX
+         8RB1X5d0fInxVY/9CA/mbxNjIYPCO85Vj5z2ChREefZA8zvo0a7ptA3YRya/4ZmucFwO
+         D/MG+YTf8WvACUS2237dItdL+U9M7unu3NRWe7Fltx72XWkqwz2qMlWSP3E5XlCnBGx9
+         DK9KMNtHed00BpweFl5P8s9V8xDsWysRZrUsyMAYHKjgxAvyG0OJE2rhI37J0GsBKNhm
+         nwjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=o+OExAmgyirreBNQZz1mdzV+UOlsl91T24IoRPDTUCA=;
+        b=c8pfDjEa3V1grTjyR8OiCmKCnj0eKVZXEMUVFQ8vIY95U/PqBCMENZ5WvIPCC5ObIz
+         jxyqyKEIoJzqOODIbgb8SNc5RXlmgazysPuqGXKY1u9/JX4vwVeYAsYFM98j7UViHmsD
+         07ZAB5LXRQgB1Bug/USBN9ZuRQmP0OLG0nN0g9z3698OZr2SsH0xHkaX5VdOm8NdIaYK
+         M0vjOjVXMzjnGHgcM/zwBrzsb7cZ+rej2nhjJoOiNXly8IQSNKsu4jXfHhPa4WPuJ14S
+         B/m4+msHNvPdbUyaBrn7JYcHDKU8Q0an8oSypD1bQmAAfsgnK4ILGevrfp3gdELHmAlq
+         7T1A==
+X-Gm-Message-State: AGi0PuZ+PUSglJI/mVff17XaV/6VChpURzyN223WeoH3M2Ltb9dCf/YP
+        mL5A4b2GDXba5l+QeV5WLeBHMA==
+X-Google-Smtp-Source: APiQypK3isUqB2C2sabeTTpk6n8V8noFEi6QUtgDDorDERlY5R+gZMBGol53QwqsH9zC6HzIIbmnWg==
+X-Received: by 2002:a92:41c6:: with SMTP id o189mr16632128ila.157.1588610516971;
+        Mon, 04 May 2020 09:41:56 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id t88sm5381273ild.30.2020.05.04.09.41.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 May 2020 09:41:56 -0700 (PDT)
+Subject: Re: [PATCH 5/7] hfsplus: stop using ioctl_by_bdev
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Tim Waugh <tim@cyberelk.net>, Borislav Petkov <bp@alien8.de>,
+        Jan Kara <jack@suse.com>, linux-block@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Damien Le Moal <damien.lemoal@wdc.com>
+References: <20200425075706.721917-1-hch@lst.de>
+ <20200425075706.721917-6-hch@lst.de>
+ <6c47f731-7bff-f186-da55-7ce6cffacdc3@kernel.dk>
+ <20200504162114.GA637@lst.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <6cbb8166-a419-9322-78ee-51fbec22b59d@kernel.dk>
+Date:   Mon, 4 May 2020 10:41:55 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="pwelueerzpkvwdem"
-Content-Disposition: inline
-In-Reply-To: <CAJiuCce9UDp--XQ=rXPZ5cZyNDMFC3zyq7pnw3ETXkR3=zMWaQ@mail.gmail.com>
+In-Reply-To: <20200504162114.GA637@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 5/4/20 10:21 AM, Christoph Hellwig wrote:
+> On Mon, May 04, 2020 at 10:16:40AM -0600, Jens Axboe wrote:
+>> On 4/25/20 1:57 AM, Christoph Hellwig wrote:
+>>>  	if (HFSPLUS_SB(sb)->session >= 0) {
+>>> +		struct cdrom_tocentry te;
+>>> +
+>>> +		if (!cdi)
+>>> +			return -EINVAL;
+>>> +
+>>>  		te.cdte_track = HFSPLUS_SB(sb)->session;
+>>>  		te.cdte_format = CDROM_LBA;
+>>> -		res = ioctl_by_bdev(sb->s_bdev,
+>>> -			CDROMREADTOCENTRY, (unsigned long)&te);
+>>> -		if (!res && (te.cdte_ctrl & CDROM_DATA_TRACK) == 4) {
+>>> -			*start = (sector_t)te.cdte_addr.lba << 2;
+>>> -			return 0;
+>>> +		if (cdrom_read_tocentry(cdi, &te) ||
+>>> +		    (te.cdte_ctrl & CDROM_DATA_TRACK) != 4) {
+>>> +			pr_err("invalid session number or type of track\n");
+>>> +			return -EINVAL;
+>>>  		}
+>>
+>> I must be missing something obvious from just looking over the patches,
+>> but how does this work if cdrom is modular and hfsplus is builtin?
+> 
+> In that case disk_to_cdi will return NULL as it uses IS_REACHABLE
+> and the file systems won't query the CD-ROM specific information.
 
---pwelueerzpkvwdem
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Got it, looks like that'll do the trick without nasty Kconfig
+dependencies.
 
-Hi,
+-- 
+Jens Axboe
 
-On Thu, Apr 30, 2020 at 03:48:04PM +0200, Cl=E9ment P=E9ron wrote:
-> On Tue, 28 Apr 2020 at 18:45, Maxime Ripard <maxime@cerno.tech> wrote:
-> >
-> > On Tue, Apr 28, 2020 at 06:23:35PM +0200, Cl=E9ment P=E9ron wrote:
-> > > Hi Robin,
-> > >
-> > > On Tue, 28 Apr 2020 at 17:21, Robin Murphy <robin.murphy@arm.com> wro=
-te:
-> > > >
-> > > > On 2020-04-28 3:26 pm, Cl=E9ment P=E9ron wrote:
-> > > > > Tanix TX6 has a fixed regulator. As DVFS is instructed to change
-> > > > > voltage to meet OPP table, the DVFS is not working as expected.
-> > > >
-> > > > Hmm, isn't that really a bug in the DVFS code? I guess it's just bl=
-indly
-> > > > propagating -EINVAL from the fixed regulators not implementing
-> > > > set_voltage, but AFAICS it has no real excuse not to be cleverer and
-> > > > still allow switching frequency as long as the voltage *is* high en=
-ough
-> > > > for the given OPP. I wonder how well it works if the regulator is
-> > > > programmable but shared with other consumers... that case probably =
-can't
-> > > > be hacked around in DT.
-> > >
-> > > Like you, I thought that the DVFS was clever enough to understand this
-> > > but guess not..
-> > >
-> > > Maybe they are some cases where you don't want to leave the voltage h=
-igh and
-> > > reduce the frequency. But I don't know such case.
-> >
-> > I assume the intent was to prevent a regulator driver to overshoot and =
-end up
-> > over-volting the CPU which would be pretty bad.
-> >
-> > I guess we could check that the voltage is in the range opp < actual vo=
-ltage <
-> > max opp voltage ?
->=20
-> As this could take more time than expected,
->=20
-> Could you drop the commit :
-> add1e27fb703f65f33191ccc70dd9d811254387c
-> arm64: dts: allwinner: h6: Enable CPU opp tables for Tanix TX6
-
-It's done, thanks!
-Maxime
-
---pwelueerzpkvwdem
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXrBFewAKCRDj7w1vZxhR
-xY/yAQDBc+uu39+S+nGtqfFozjixwQHz6PT7mFJIq3iYoXM1cAD/WNTMNvIvvI+Y
-UjQG+ErJYUhaQLPXVlTIfHrf9w8nNwc=
-=jPeV
------END PGP SIGNATURE-----
-
---pwelueerzpkvwdem--
