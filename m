@@ -2,147 +2,248 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C55C4C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8812BC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0147206D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:40:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MSrroLjX"
+	by mail.kernel.org (Postfix) with ESMTP id 6B0532071C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:40:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728430AbgEDJkV (ORCPT
+        id S1728444AbgEDJkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 05:40:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35272 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727781AbgEDJkU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 05:40:20 -0400
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EB32C061A0E;
-        Mon,  4 May 2020 02:40:20 -0700 (PDT)
-Received: by mail-wm1-x32b.google.com with SMTP id e26so7687956wmk.5;
-        Mon, 04 May 2020 02:40:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=Kbu0VxZ/QYO7Ixdkf6q7mL9ZGCB1E3Ur2BdwdumwcAY=;
-        b=MSrroLjXrwKV//z1QXkp3jabJmvZ7Ou9I0LEguKAQLP5LGx8jSFBWz9Htt5WZ98Op6
-         ma5/QOLItFhArQs2Ws/Cvh46OEt2h86fMMY76Ng4QJlBqCgXgGApjBzBB+KSQ8J9OHxO
-         zIS+hfafx9uCBkSpPCT9KL9Hd4OXhZyuxcZ8DkpEJgC+E74cGoiQ4ybgHGALzX+jfDW8
-         9hsMEycBXHTr3NlvKkZWJfFDdw+DZPdIIk+ufM0Mcoc+oKAXd3V7BPUGrgFW8sr1zj66
-         4WJk+eAU1l/5hm2he+PNaqGgSqM/eJ0fxFWaswFc5+715Jf1pDeXoHajNTVgZyZpW0FZ
-         Vq0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=Kbu0VxZ/QYO7Ixdkf6q7mL9ZGCB1E3Ur2BdwdumwcAY=;
-        b=cvietZanXUZtUFExeVCCZN6oFXDuWuIwoWM/lfg3tVfzVhQaJoY44C6SE83U9SR2Si
-         JNJ9U1WFMIf6R0oMi3i1Wm1Z4vkGeBscs3piUejUS9wtrct+aYIQ18YiV/aF6XLJIlim
-         FMN55pk6MWM8Lx/6CcdRbHo6vTo20IJVcyrC3KLd5qg6FqAn/DvDDo37Yw85v7NnOJU2
-         VHm1kEGawCcV5WWO/TYWRbEG2fyj9qd8lgkXo4UqsQmRu+aWjkd1ptTYCnjvdvBEBlSR
-         p90mR0cSrb6Ty3o8yAn78e6ekyhathdIQRWu7h2vGe7Sjvmh2OmGeZBahx2QIjtAUGtj
-         7wqw==
-X-Gm-Message-State: AGi0PuZ1atB1CawqC6CZi4hz7PClfuxyvGblyd8PcHZhg3uBmq4TibOu
-        Yv1s6aJLdgDggwSAh/n3KF4MWii5nQgODXGRHsbe2XpzXKk=
-X-Google-Smtp-Source: APiQypKxSk1onspTP4rFzkKSW76+hglmGDtVGqlc/jgvgWuURsiU1S/h0ui8OKEF/R4p533RUSCxxC5Nau70aiuu6gI=
-X-Received: by 2002:a1c:4d07:: with SMTP id o7mr14668145wmh.59.1588585218952;
- Mon, 04 May 2020 02:40:18 -0700 (PDT)
+        Mon, 4 May 2020 05:40:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58304 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727781AbgEDJkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 05:40:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 350A2AE53;
+        Mon,  4 May 2020 09:40:50 +0000 (UTC)
 MIME-Version: 1.0
-From:   Mark Marshall <markmarshall14@gmail.com>
-Date:   Mon, 4 May 2020 11:40:08 +0200
-Message-ID: <CAD4b4WK9W+dNZZ_WPt-9ZNpSHvyxdwPW86Rtq4AKOONuvyR37A@mail.gmail.com>
-Subject: Kernel crash due to memory corruption with v5.4.26-rt17 and PowerPC e500
-To:     linux-rt-users <linux-rt-users@vger.kernel.org>
-Cc:     Mark Marshall <mark.marshall@omicronenergy.com>,
-        thomas.graziadei@omicronenergy.com,
-        Thomas Gleixner <tglx@linutronix.de>, bigeasy@linutronix.de,
-        linux-kernel@vger.kernel.org, rostedt@goodmis.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Mon, 04 May 2020 11:40:47 +0200
+From:   Roman Penyaev <rpenyaev@suse.de>
+To:     Jason Baron <jbaron@akamai.com>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>, Heiher <r@hev.cc>,
+        Khazhismel Kumykov <khazhy@google.com>,
+        Davidlohr Bueso <dbueso@suse.de>, stable@vger.kernel.org
+Subject: Re: [PATCH] epoll: ensure ep_poll() doesn't miss wakeup events
+In-Reply-To: <8632df62-7475-3328-4a38-95462fbc410d@akamai.com>
+References: <1588360533-11828-1-git-send-email-jbaron@akamai.com>
+ <930c565705249d2b6264a31f1be6529e@suse.de>
+ <81612721-9448-83fa-4efe-603996d56b9a@akamai.com>
+ <f3c2e63ec34a611ec256785ebfd39270@suse.de>
+ <842aa331-b650-bf99-8ea9-b5d3e0866054@akamai.com>
+ <8632df62-7475-3328-4a38-95462fbc410d@akamai.com>
+Message-ID: <6a89e6eea469ece264e656970ad7be98@suse.de>
+X-Sender: rpenyaev@suse.de
+User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi RT experts,
+On 2020-05-04 06:59, Jason Baron wrote:
+> On 5/4/20 12:29 AM, Jason Baron wrote:
+>> 
+>> 
+>> On 5/3/20 6:24 AM, Roman Penyaev wrote:
+>>> On 2020-05-02 00:09, Jason Baron wrote:
+>>>> On 5/1/20 5:02 PM, Roman Penyaev wrote:
+>>>>> Hi Jason,
+>>>>> 
+>>>>> That is indeed a nice catch.
+>>>>> Seems we need smp_rmb() pair between 
+>>>>> list_empty_careful(&rp->rdllist) and
+>>>>> READ_ONCE(ep->ovflist) for ep_events_available(), do we?
+>>>>> 
+>>>> 
+>>>> Hi Roman,
+>>>> 
+>>>> Good point, even if we order those reads its still racy, since the
+>>>> read of the ready list could come after its been cleared and the
+>>>> read of the overflow could again come after its been cleared.
+>>> 
+>>> You mean the second chunk? True. Sigh.
+>>> 
+>>>> So I'm afraid we might need instead something like this to make
+>>>> sure they are read together:
+>>> 
+>>> No, impossible, I can't believe in that :) We can't give up.
+>>> 
+>>> All we need is to keep a mark, that ep->rdllist is not empty,
+>>> even we've just spliced it.  ep_poll_callback() always takes
+>>> the ->ovflist path, if ->ovflist is not EP_UNACTIVE_PTR, but
+>>> ep_events_available() does not need to observe ->ovflist at
+>>> all, just a ->rdllist.
+>>> 
+>>> Take a look at that, do I miss something? :
+>>> 
+>>> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+>>> index aba03ee749f8..a8770f9a917e 100644
+>>> --- a/fs/eventpoll.c
+>>> +++ b/fs/eventpoll.c
+>>> @@ -376,8 +376,7 @@ static void ep_nested_calls_init(struct 
+>>> nested_calls *ncalls)
+>>>   */
+>>>  static inline int ep_events_available(struct eventpoll *ep)
+>>>  {
+>>> -       return !list_empty_careful(&ep->rdllist) ||
+>>> -               READ_ONCE(ep->ovflist) != EP_UNACTIVE_PTR;
+>>> +       return !list_empty_careful(&ep->rdllist);
+>>>  }
+>>> 
+>>>  #ifdef CONFIG_NET_RX_BUSY_POLL
+>>> @@ -683,7 +682,8 @@ static __poll_t ep_scan_ready_list(struct 
+>>> eventpoll *ep,
+>>>  {
+>>>         __poll_t res;
+>>>         struct epitem *epi, *nepi;
+>>> -       LIST_HEAD(txlist);
+>>> +       LIST_HEAD(rdllist);
+>>> +       LIST_HEAD(ovflist);
+>>> 
+>>>         lockdep_assert_irqs_enabled();
+>>> 
+>>> @@ -704,14 +704,22 @@ static __poll_t ep_scan_ready_list(struct 
+>>> eventpoll *ep,
+>>>          * in a lockless way.
+>>>          */
+>>>         write_lock_irq(&ep->lock);
+>>> -       list_splice_init(&ep->rdllist, &txlist);
+>>> +       /*
+>>> +        * We do not call list_splice_init() because for lockless
+>>> +        * ep_events_available() ->rdllist is still "not empty".
+>>> +        * Otherwise the feature that there is something left in
+>>> +        * the list can be lost which causes missed wakeup.
+>>> +        */
+>>> +       list_splice(&ep->rdllist, &rdllist);
+>>> +       /*
+>>> +        * If ->rdllist was empty we should pretend it was not,
+>>> +        * because after the unlock ->ovflist comes into play,
+>>> +        * which is invisible for lockless ep_events_available().
+>>> +        */
+>>> +       ep->rdllist.next = LIST_POISON1;
+>>>         WRITE_ONCE(ep->ovflist, NULL);
+>>>         write_unlock_irq(&ep->lock);
+>>> 
+>>>         /*
+>>>          * Now call the callback function.
+>>>          */
+>>> -       res = (*sproc)(ep, &txlist, priv);
+>>> +       res = (*sproc)(ep, &rdllist, priv);
+>>> 
+>>>         write_lock_irq(&ep->lock);
+>>>         /*
+>>> @@ -724,7 +732,7 @@ static __poll_t ep_scan_ready_list(struct 
+>>> eventpoll *ep,
+>>>                 /*
+>>>                  * We need to check if the item is already in the 
+>>> list.
+>>>                  * During the "sproc" callback execution time, items 
+>>> are
+>>> -                * queued into ->ovflist but the "txlist" might 
+>>> already
+>>> +                * queued into ->ovflist but the "rdllist" might 
+>>> already
+>>>                  * contain them, and the list_splice() below takes 
+>>> care of them.
+>>>                  */
+>>>                 if (!ep_is_linked(epi)) {
+>>> @@ -732,7 +740,7 @@ static __poll_t ep_scan_ready_list(struct 
+>>> eventpoll *ep,
+>>>                          * ->ovflist is LIFO, so we have to reverse 
+>>> it in order
+>>>                          * to keep in FIFO.
+>>>                          */
+>>> -                       list_add(&epi->rdllink, &ep->rdllist);
+>>> +                       list_add(&epi->rdllink, &ovflist);
+>>>                         ep_pm_stay_awake(epi);
+>>>                 }
+>>>         }
+>>> @@ -743,10 +751,11 @@ static __poll_t ep_scan_ready_list(struct 
+>>> eventpoll *ep,
+>>>          */
+>>>         WRITE_ONCE(ep->ovflist, EP_UNACTIVE_PTR);
+>>> 
+>>> -       /*
+>>> -        * Quickly re-inject items left on "txlist".
+>>> -        */
+>>> -       list_splice(&txlist, &ep->rdllist);
+>>> +       /* Events from ->ovflist happened later, thus splice to the 
+>>> tail */
+>>> +       list_splice_tail(&ovflist, &rdllist);
+>>> +       /* Just replace list */
+>>> +       list_replace(&rdllist, &ep->rdllist);
+>>> +
+>>>         __pm_relax(ep->ws);
+>>>         write_unlock_irq(&ep->lock);
+>>> 
+>>> @@ -1763,13 +1772,13 @@ static __poll_t ep_send_events_proc(struct 
+>>> eventpoll *ep, struct list_head *head
+>>>                          * Trigger mode, we need to insert back 
+>>> inside
+>>>                          * the ready list, so that the next call to
+>>>                          * epoll_wait() will check again the events
+>>> -                        * availability. At this point, no one can 
+>>> insert
+>>> -                        * into ep->rdllist besides us. The 
+>>> epoll_ctl()
+>>> -                        * callers are locked out by
+>>> -                        * ep_scan_ready_list() holding "mtx" and the
+>>> -                        * poll callback will queue them in 
+>>> ep->ovflist.
+>>> +                        * availability. What we do here is simply
+>>> +                        * return the epi to the same position where
+>>> +                        * it was, the ep_scan_ready_list() will
+>>> +                        * re-inject the leftovers to the ->rdllist
+>>> +                        * under the proper lock.
+>>>                          */
+>>> -                       list_add_tail(&epi->rdllink, &ep->rdllist);
+>>> +                       list_add_tail(&epi->rdllink, &tmp->rdllink);
+>>>                         ep_pm_stay_awake(epi);
+>>>                 }
+>>>         }
+>>> 
+>>> 
+>>> --
+>>> Roman
+>>> 
+>> 
+>> 
+>> Hi Roman,
+>> 
+>> I think this misses an important case - the initial ep_poll_callback()
+>> may queue to the overflow list. In this case ep_poll has no visibility
+>> into the event since its only checking ep->rdllist.
+> 
+> Ok, my mistake - I see it sets: ep->rdllist.next = LIST_POISON1; for 
+> that
+> case. Ok I think this approach makes sense then.
 
-We are using the RT kernel with the PowerPC e500.  Until recently we
-were on the 4.19 kernel series, and are in the process of upgrading.
-When we switched to the v5.4 version, we get a reproducible kernel
-crash.  The crashes all contain the "BUG: Bad rss-counter state" line,
-and then after that it appears that a structure of type mm_struct or
-vm_area_struct is corrupted.
+Hi Jason,
 
-The easiest way we have found to reproduce the crash is to repeatedly
-insert and then remove a module.  The crash then appears to be related
-to either paging in the module or in exiting the mdev process.  (The
-crash does also happen at other times, but it is hard to reproduce
-reliably then).  This simple script will almost always crash:
+I want also to emphasize, that the original behavior should not be 
+changed
+(correct me if I'm wrong): callers of ep_events_available() will get 
+false
+positive (something is available, but under the lock when ->ovflist is
+resolved, it turns out to be no events to harvest). This was always like
+that and this is fine, since the final decision is made under the proper
+lock.
 
-   for i in $(seq 1000) ; do echo $i ; modprobe crc7 ; rmmod crc7 ; done
+(I speak it out loud to accurately cover all the cases).
 
-(The crc7 module is chosen as it is small and simple.  Any module will
-work / crash).
+I will take couple of days for testing and then send out a patch.
+No objections on that?
 
-We have tried kernels v5.0, v5.2 and v5.6.  The v5.0 and v5.2 kernels
-do not show the problem.  The v5.6 kernel does show the problem.
-Switching of RT fixes the problem.
+--
+Roman
 
-I have reduced the functionality in the kernel to a bare minimum
-(removing networking, USB and PCI, as we have some out-of-tree patches
-in those areas) and we still get the crash.
-
-Here are a couple of example stack traces:
-
-000: NIP [c003f8e0] __mmdrop+0x2c8/0x3dc
-000: LR [c003f8e0] __mmdrop+0x2c8/0x3dc
-000: Call Trace:
-000: [e953fd48] [c003f8e0] __mmdrop+0x2c8/0x3dc
-000:  (unreliable)
-000: [e953fd88] [c00c6d28] rcu_core+0x324/0x78c
-000: [e953fe58] [c00c79e0] rcu_cpu_kthread+0x1f4/0x42c
-000: [e953fe98] [c00838fc] smpboot_thread_fn+0x2e8/0x488
-000: [e953fef8] [c007d514] kthread+0x1b0/0x1b8
-000: [e953ff38] [c001a26c] ret_from_kernel_thread+0x14/0x1c
-
-
-000: NIP [c010cdd4] acct_collect+0x3a8/0x3e0
-000: LR [c010cdd4] acct_collect+0x3a8/0x3e0
-000: Call Trace:
-000: [c6f2bbe0] [c010cdd4] acct_collect+0x3a8/0x3e0
-000:  (unreliable)
-000: [c6f2bc10] [c0049354] do_exit+0x294/0xf9c
-000: [c6f2bcf0] [c0013030] die+0x220/0x2c4
-000: [c6f2bd30] [c00132cc] exception_common+0x1f8/0x238
-000: [c6f2bd30] [c00132cc] exception_common+0x1f8/0x238
-000: [c6f2bd70] [c0013404] _exception+0x34/0x80
-000: [c6f2bd90] [c001a4a8] ret_from_except_full+0x0/0x4
-
-
-I have added some debugging code where the mm_struct and
-vma_area_struct have "poision" values at the start and the end, and
-this seems to show that the vma_area_struct is getting corrupted, but
-I'm not able to see where.
-
-We have switched on all of the debugging that we can, including
-KASAN, and this shows nothing.
-
-
-Can anyone help us?  What can we try next?  Is anyone using the e500
-with the RT kernel?  Does anyone have any idea how to debug problems
-related to the error message "Bad rss-counter state"?
-
-Any help or advice would be most gratefully received.
-
-Many thanks,
-Mark Marshall and Thomas Graziadei
-
-PS.  Thomas Grazidei (my colleague) did find a bug in the start_32.S
-file for the e500, and we have the fix for that included.  We have
-also tried removing the LAZY_PREEMPTION patch completely, and this
-doesn't help.
