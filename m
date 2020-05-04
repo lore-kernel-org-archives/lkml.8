@@ -2,197 +2,120 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC81C47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A95FC47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B718206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34BC1206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:18:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbgEDVSM (ORCPT
+        id S1727890AbgEDVSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 17:18:12 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3936 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726291AbgEDVSL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 17:18:11 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 044L28Js064164;
-        Mon, 4 May 2020 17:18:10 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30s28fmsv1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 May 2020 17:18:10 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 044LCVvs098136;
-        Mon, 4 May 2020 17:18:09 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30s28fmstq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 May 2020 17:18:09 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 044LFwlY016853;
-        Mon, 4 May 2020 21:18:07 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma02fra.de.ibm.com with ESMTP id 30s0g5a8tw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 May 2020 21:18:07 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 044LI4Sf59244790
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 4 May 2020 21:18:05 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CD6F752052;
-        Mon,  4 May 2020 21:18:04 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.205.195])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id E902252057;
-        Mon,  4 May 2020 21:18:03 +0000 (GMT)
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     linux-integrity@vger.kernel.org
-Cc:     Mimi Zohar <zohar@linux.ibm.com>, Jann Horn <jannh@google.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] ima: verify mprotect change is consistent with mmap policy
-Date:   Mon,  4 May 2020 17:17:40 -0400
-Message-Id: <1588627060-7399-1-git-send-email-zohar@linux.ibm.com>
-X-Mailer: git-send-email 2.7.5
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-04_11:2020-05-04,2020-05-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=3
- impostorscore=0 lowpriorityscore=0 phishscore=0 priorityscore=1501
- mlxscore=0 malwarescore=0 bulkscore=0 adultscore=0 mlxlogscore=882
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005040160
+        Mon, 4 May 2020 17:18:49 -0400
+Received: from mga14.intel.com ([192.55.52.115]:20056 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726291AbgEDVSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 17:18:49 -0400
+IronPort-SDR: Wt8WZn5408eWAAqiEkLELxSrHt8BoYkGheIG7BWO96vsE3GTK2s5X53wJzPZgvvh+6NA4wxEjR
+ kyYeApbrh3dw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 14:18:48 -0700
+IronPort-SDR: sYeQx0a0gQVBS/v9cdNBZ0JhFJqfWuG0tO2fVanG8W0o6eY5lRQU+L52s4hrAx0hbjt0nDPPTe
+ nGrPPRDdSj5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,353,1583222400"; 
+   d="scan'208";a="304291629"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 04 May 2020 14:18:46 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jViUA-000HuC-8G; Tue, 05 May 2020 05:18:46 +0800
+Date:   Tue, 5 May 2020 05:18:28 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Dan Murphy <dmurphy@ti.com>, jacek.anaszewski@gmail.com,
+        pavel@ucw.cz
+Cc:     kbuild-all@lists.01.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v24 02/16] leds: multicolor: Introduce a multicolor class
+ definition
+Message-ID: <202005050509.ulcDbkZ2%lkp@intel.com>
+References: <20200503123215.6449-3-dmurphy@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200503123215.6449-3-dmurphy@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Files can be mmap'ed read/write and later changed to execute to circumvent
-IMA's mmap appraise policy rules.  Due to locking issues (mmap semaphore
-would be taken prior to i_mutex), files can not be measured or appraised at
-this point.  Eliminate this integrity gap, by denying the mprotect
-PROT_EXECUTE change, if an mmap appraise policy rule exists.
+Hi Dan,
 
-On mprotect change success, return 0.  On failure, return -EACESS.
+I love your patch! Yet something to improve:
 
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+[auto build test ERROR on pavel-linux-leds/for-next]
+[also build test ERROR on robh/for-next linus/master j.anaszewski-leds/for-next v5.7-rc4 next-20200504]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Dan-Murphy/Multicolor-Framework-v24/20200505-031241
+base:   git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git for-next
+config: parisc-allnoconfig
+compiler: hppa-linux-gcc (GCC) 9.3.0
+reproduce:
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        COMPILER_INSTALL_PATH=$HOME/0day GCC_VERSION=9.3.0 make.cross ARCH=parisc  allnoconfig
+        COMPILER_INSTALL_PATH=$HOME/0day GCC_VERSION=9.3.0 make.cross ARCH=parisc 
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kbuild test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+>> drivers/leds/Kconfig:33:error: recursive dependency detected!
+>> drivers/leds/Kconfig:33: symbol LEDS_CLASS_MULTI_COLOR depends on LEDS_CLASS_MULTI_COLOR
+   For a resolution refer to Documentation/kbuild/kconfig-language.rst
+   subsection "Kconfig recursive dependency limitations"
+
+vim +33 drivers/leds/Kconfig
+
+    16	
+    17	config LEDS_CLASS
+    18		tristate "LED Class Support"
+    19		help
+    20		  This option enables the LED sysfs class in /sys/class/leds.  You'll
+    21		  need this to do anything useful with LEDs.  If unsure, say N.
+    22	
+    23	config LEDS_CLASS_FLASH
+    24		tristate "LED Flash Class Support"
+    25		depends on LEDS_CLASS
+    26		help
+    27		  This option enables the flash LED sysfs class in /sys/class/leds.
+    28		  It wraps LED Class and adds flash LEDs specific sysfs attributes
+    29		  and kernel internal API to it. You'll need this to provide support
+    30		  for the flash related features of a LED device. It can be built
+    31		  as a module.
+    32	
+  > 33	config LEDS_CLASS_MULTI_COLOR
+    34		tristate "LED MultiColor LED Class Support"
+    35		depends on LEDS_CLASS
+    36		depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
+    37		help
+    38		  This option enables the multicolor LED sysfs class in /sys/class/leds.
+    39		  It wraps LED class and adds multicolor LED specific sysfs attributes
+    40		  and kernel internal API to it. You'll need this to provide support
+    41		  for multicolor LEDs that are grouped together. This class is not
+    42		  intended for single color LEDs. It can be built as a module.
+    43	
+
 ---
- include/linux/ima.h               |  7 ++++++
- security/integrity/ima/ima_main.c | 50 +++++++++++++++++++++++++++++++++++++++
- security/security.c               |  7 +++++-
- 3 files changed, 63 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index aefe758f4466..9164e1534ec9 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -18,6 +18,7 @@ extern int ima_file_check(struct file *file, int mask);
- extern void ima_post_create_tmpfile(struct inode *inode);
- extern void ima_file_free(struct file *file);
- extern int ima_file_mmap(struct file *file, unsigned long prot);
-+extern int ima_file_mprotect(struct vm_area_struct *vma, unsigned long prot);
- extern int ima_load_data(enum kernel_load_data_id id);
- extern int ima_read_file(struct file *file, enum kernel_read_file_id id);
- extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
-@@ -70,6 +71,12 @@ static inline int ima_file_mmap(struct file *file, unsigned long prot)
- 	return 0;
- }
- 
-+static inline int ima_file_mprotect(struct vm_area_struct *vma,
-+				    unsigned long prot)
-+{
-+	return 0;
-+}
-+
- static inline int ima_load_data(enum kernel_load_data_id id)
- {
- 	return 0;
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index f96f151294e6..a8706bf7ca25 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -394,6 +394,56 @@ int ima_file_mmap(struct file *file, unsigned long prot)
- }
- 
- /**
-+ * ima_file_mprotect - based on policy, limit mprotect change
-+ * @prot: contains the protection that will be applied by the kernel.
-+ *
-+ * Files can be mmap'ed read/write and later changed to execute to circumvent
-+ * IMA's mmap appraisal policy rules.  Due to locking issues (mmap semaphore
-+ * would be taken before i_mutex), files can not be measured or appraised at
-+ * this point.  Eliminate this integrity gap by denying the mprotect
-+ * PROT_EXECUTE change, if an mmap appraise policy rule exists.
-+ *
-+ * On mprotect change success, return 0.  On failure, return -EACESS.
-+ */
-+int ima_file_mprotect(struct vm_area_struct *vma, unsigned long prot)
-+{
-+	struct ima_template_desc *template;
-+	struct inode *inode;
-+	int result = 0;
-+	int action;
-+	u32 secid;
-+	int pcr;
-+
-+	if (vma->vm_file && (prot & PROT_EXEC) && !(vma->vm_flags & VM_EXEC)) {
-+		inode = file_inode(vma->vm_file);
-+
-+		security_task_getsecid(current, &secid);
-+		action = ima_get_action(inode, current_cred(), secid, MAY_EXEC,
-+					MMAP_CHECK, &pcr, &template, 0);
-+
-+		if (action & IMA_APPRAISE_SUBMASK)
-+			result = -EPERM;
-+
-+		if ((action & IMA_APPRAISE_SUBMASK) || (action & IMA_MEASURE)) {
-+			struct file *file = vma->vm_file;
-+			char *pathbuf = NULL;
-+			const char *pathname;
-+			char filename[NAME_MAX];
-+
-+			pathname = ima_d_path(&file->f_path, &pathbuf,
-+					      filename);
-+			integrity_audit_msg(AUDIT_INTEGRITY_DATA, inode,
-+					    pathname, "collect_data",
-+					    "failed-mprotect", result, 0);
-+
-+			if (pathbuf)
-+				__putname(pathbuf);
-+		}
-+	}
-+	return result;
-+}
-+
-+/**
-  * ima_bprm_check - based on policy, collect/store measurement.
-  * @bprm: contains the linux_binprm structure
-  *
-diff --git a/security/security.c b/security/security.c
-index 7fed24b9d57e..dd0917c5bfe9 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -1512,7 +1512,12 @@ int security_mmap_addr(unsigned long addr)
- int security_file_mprotect(struct vm_area_struct *vma, unsigned long reqprot,
- 			    unsigned long prot)
- {
--	return call_int_hook(file_mprotect, 0, vma, reqprot, prot);
-+	int ret;
-+
-+	ret = call_int_hook(file_mprotect, 0, vma, reqprot, prot);
-+	if (ret)
-+		return ret;
-+	return ima_file_mprotect(vma, prot);
- }
- 
- int security_file_lock(struct file *file, unsigned int cmd)
--- 
-2.7.5
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
