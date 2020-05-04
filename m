@@ -2,67 +2,98 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C95DC4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A78C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E72F9206D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF758206D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:56:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729814AbgEDQ4V (ORCPT
+        id S1729682AbgEDQ4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 12:56:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:49268 "EHLO foss.arm.com"
+        Mon, 4 May 2020 12:56:36 -0400
+Received: from elvis.franken.de ([193.175.24.41]:39547 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728655AbgEDQ4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 12:56:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0917F113E;
-        Mon,  4 May 2020 09:56:15 -0700 (PDT)
-Received: from e120937-lin.home (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CCC3F3F68F;
-        Mon,  4 May 2020 09:56:13 -0700 (PDT)
-From:   Cristian Marussi <cristian.marussi@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com,
-        james.quinlan@broadcom.com, Jonathan.Cameron@Huawei.com,
-        cristian.marussi@arm.com
-Subject: [PATCH v2 3/3] arm64: dts: juno: add SCMI SystemPower Protocol support
-Date:   Mon,  4 May 2020 17:55:40 +0100
-Message-Id: <20200504165540.37188-4-cristian.marussi@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200504165540.37188-1-cristian.marussi@arm.com>
-References: <20200504165540.37188-1-cristian.marussi@arm.com>
+        id S1728655AbgEDQ4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 12:56:35 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jVeON-0004p9-00; Mon, 04 May 2020 18:56:31 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id C9E36C036D; Mon,  4 May 2020 18:56:14 +0200 (CEST)
+Date:   Mon, 4 May 2020 18:56:14 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     "Maciej W. Rozycki" <macro@linux-mips.org>,
+        linux-mips@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Fangrui Song <maskray@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Jouni Hogander <jouni.hogander@unikie.com>,
+        Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
+        Borislav Petkov <bp@suse.de>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] MIPS: Truncate link address into 32bit for 32bit
+ kernel
+Message-ID: <20200504165614.GA15545@alpha.franken.de>
+References: <20200413062651.3992652-1-jiaxun.yang@flygoat.com>
+ <20200422143258.1250960-1-jiaxun.yang@flygoat.com>
+ <alpine.LFD.2.21.2004230036480.851719@eddie.linux-mips.org>
+ <B307BFAC-9973-4444-B69A-40B054210E84@flygoat.com>
+ <alpine.LFD.2.21.2004241316360.851719@eddie.linux-mips.org>
+ <20200504154613.GA14031@alpha.franken.de>
+ <86D4A0AC-59E1-4C82-B66D-6BFC71E08376@flygoat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <86D4A0AC-59E1-4C82-B66D-6BFC71E08376@flygoat.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-arm64: dts: juno: add SCMI SystemPower Protocol support
+On Tue, May 05, 2020 at 12:09:46AM +0800, Jiaxun Yang wrote:
+> 
+> 于 2020年5月4日 GMT+08:00 下午11:46:13, Thomas Bogendoerfer <tsbogend@alpha.franken.de> 写到:
+> >On Fri, Apr 24, 2020 at 01:22:30PM +0100, Maciej W. Rozycki wrote:
+> >> On Thu, 23 Apr 2020, Jiaxun Yang wrote:
+> >> 
+> >> > > Alternatively, have you made any attempt to verify if actually replacing 
+> >> > >the setting for VMLINUX_LOAD_ADDRESS would be safe?  Glancing over its use 
+> >> > >there do not appear to be many places.
+> >> > 
+> >> > Limited experiments showed it should be fine...
+> >> > 
+> >> > But MIPS kernel has some design I'm not really familiar with like SYM32 for
+> >> > 64-bit kernel and special address space design for Trap-and-emul KVM.
+> >> 
+> >>  This only affects CONFIG_32BIT kernels, so SYM32 does not apply; I can't 
+> >> comment on KVM.  There's still that bunch of:
+> >> 
+> >> $(shell expr $(...) \< 0xffffffff80000000)
+> >> 
+> >> constructs I mentioned before, so let's leave your change as it stands at 
+> >> this time.  Please do rename the variable as I suggested though, I hope 
+> >> that's not a big deal.
+> >
+> >Jiaxun, are you going to send an update with this change ?
+> 
+> Sorry my mail server missed Maciej's reply.
+> 
+> Should I send another version or you just fix it at apply time?
 
-Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
----
- arch/arm64/boot/dts/arm/juno-base.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+please send a new version, thank you.
 
-diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
-index af451935146e..ffb429120a13 100644
---- a/arch/arm64/boot/dts/arm/juno-base.dtsi
-+++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
-@@ -581,6 +581,10 @@
- 				#power-domain-cells = <1>;
- 			};
- 
-+			scmi_system: protocol@12 {
-+				reg = <0x12>;
-+			};
-+
- 			scmi_dvfs: protocol@13 {
- 				reg = <0x13>;
- 				#clock-cells = <1>;
+Thomas.
+
 -- 
-2.17.1
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
