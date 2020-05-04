@@ -2,103 +2,138 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3FFC47254
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 04:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2333C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 04:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E10FC20661
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 04:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3BA520705
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 04:13:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cZhxQs0B"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="mlLHsuMp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgEDEJA (ORCPT
+        id S1727097AbgEDENy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 00:09:00 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17434 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbgEDEI7 (ORCPT
+        Mon, 4 May 2020 00:13:54 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:23055 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbgEDENx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 00:08:59 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eaf954e0000>; Sun, 03 May 2020 21:08:47 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 03 May 2020 21:08:59 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 03 May 2020 21:08:59 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 May
- 2020 04:08:58 +0000
-Received: from [10.19.66.205] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 May 2020
- 04:08:55 +0000
-Subject: Re: [PATCH V2 2/8] usb: gadget: tegra-xudc: Add vbus_draw support
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <jonathanh@nvidia.com>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <kishon@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1586939108-10075-1-git-send-email-nkristam@nvidia.com>
- <1586939108-10075-3-git-send-email-nkristam@nvidia.com>
- <20200428095956.GB3592148@ulmo>
-X-Nvconfidentiality: public
-From:   Nagarjuna Kristam <nkristam@nvidia.com>
-Message-ID: <b22b696b-69db-a680-f3c6-a54ec6c7acad@nvidia.com>
-Date:   Mon, 4 May 2020 09:40:48 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 4 May 2020 00:13:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1588565632; x=1620101632;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=Yd+10rWQW4FomCOSZo0CIB/1DXTJzRoRxlZdKjs/E8c=;
+  b=mlLHsuMppIyV1Q6h0CTBBwRNnMhujtCyUkHX5T6GysCgu+J90DCCy9L/
+   q/M1FY/2WAv455nxWCb1AmCw7XLYRurMqA/yLxr4ZSetlcdFyqMTYbkjW
+   LZyLx4QH0Qu32G4EuJcbMfzNI2Yyg7B+rOVR/Dd57P9NorZESLBpraM3o
+   c=;
+IronPort-SDR: 70cVZn55GgC9eivLNLsWmZ0NFCEq7C6mFhqPHlBnYFeEzZcmdq3aJGvmlXleNTYWeyjl/2aYtk
+ WwHvRH/tJY5w==
+X-IronPort-AV: E=Sophos;i="5.73,350,1583193600"; 
+   d="scan'208";a="40970428"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-5bdc5131.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 04 May 2020 04:13:51 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2b-5bdc5131.us-west-2.amazon.com (Postfix) with ESMTPS id 83491A18E1;
+        Mon,  4 May 2020 04:13:50 +0000 (UTC)
+Received: from EX13D01UWA004.ant.amazon.com (10.43.160.99) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 4 May 2020 04:13:50 +0000
+Received: from EX13MTAUEE002.ant.amazon.com (10.43.62.24) by
+ EX13d01UWA004.ant.amazon.com (10.43.160.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 4 May 2020 04:13:50 +0000
+Received: from localhost (10.85.6.15) by mail-relay.amazon.com (10.43.62.224)
+ with Microsoft SMTP Server id 15.0.1497.2 via Frontend Transport; Mon, 4 May
+ 2020 04:13:48 +0000
+From:   Balbir Singh <sblbir@amazon.com>
+To:     <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>
+CC:     <jpoimboe@redhat.com>, <tony.luck@intel.com>,
+        <keescook@chromium.org>, <benh@kernel.crashing.org>,
+        <x86@kernel.org>, <dave.hansen@intel.com>,
+        <thomas.lendacky@amd.com>, Balbir Singh <sblbir@amazon.com>
+Subject: [PATCH v5 0/6] Optionally flush L1D on context switch
+Date:   Mon, 4 May 2020 14:13:37 +1000
+Message-ID: <20200504041343.9651-1-sblbir@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200428095956.GB3592148@ulmo>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588565327; bh=68fwostdTEIu4e1eYM/xozH9ML01bWeSStjD0PufGGA=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=cZhxQs0Bnq4E1UPuXHP+ngvhGzFdSmgUjfPs5pn6DuizxrrzDEzLje6RUejp54E6+
-         yPy30jRk/x24CioXuqDwN0qH1dXjk0YSBN2DkrkKXorEwcotngSAALc147BWmLglTD
-         cPFEVtztCWGJOvrIx4Wt1fE8dz79NO5zqXPjS4JRmbPHtxzM95KB57j6JSsmPkkTAz
-         oLYr1WZggv1TpAkq7lTPLCasKT8DytlS4gx+mP+GKv3HYtYyt48FXvxiFBXC0laiq4
-         PHRzCYrVpma5zRHHPHaNHmEBs07xMYvH6lKYPUR36WipwdsIFmjY4vNklFi7rDvU9b
-         J35MvePpyLqOQ==
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Provide a mechanism to flush the L1D cache on context switch.  The goal
+is to allow tasks that are paranoid due to the recent snoop assisted data
+sampling vulnerabilites, to flush their L1D on being switched out.
+This protects their data from being snooped or leaked via side channels
+after the task has context switched out.
 
 
-On 28-04-2020 15:29, Thierry Reding wrote:
->> @@ -2042,6 +2044,19 @@ static int tegra_xudc_gadget_stop(struct usb_gadget *gadget)
->>   	return 0;
->>   }
->>   
->> +static int tegra_xudc_gadget_vbus_draw(struct usb_gadget *gadget,
->> +						unsigned int m_a)
->> +{
->> +	struct tegra_xudc *xudc = to_xudc(gadget);
->> +
->> +	dev_dbg(xudc->dev, "%s: %u mA\n", __func__, m_a);
->> +
->> +	if (xudc->curr_usbphy->chg_type == SDP_TYPE)
->> +		usb_phy_set_power(xudc->curr_usbphy, m_a);
-> Do we need to propagate the error code here in case the USB PHY for some
-> reason doesn't support the given current? Or is it guaranteed that we
-> always do support whatever is passed in here?
-> 
-> Regardless of whether we support it or not, it might still be useful to
-> add proper handling, if for nothing else but to set a good example.
-> 
-> Thierry
-Will update accordingly, propagate the return the code to caller.
+Changelog v5:
+- Based on Tom's recommendation, restrict the patches to Intel CPUs
+  only (thomas.lendacky@amd.com)
+- Update reviewed-by tags based on v4.
+Changelog v4:
+- Refactor the L1D flushing code even further, pages are now allocated
+  once and never freed. Simplify the exported functions.
+- Change the name prefixs to be more consistent (l1d_flush_*)
+- Refactoring of the code done in the spirit of the comments, prctl
+  still requires arch bits for get/set L1D flush and ofcourse in
+  the arch switch_mm bits flushing the L1D cache.
+Changelog v3:
+ - Refactor the return value of what flush_l1d_cache_hw() returns
+ - Refactor the code, so that the generic setup bits come first
+   (patch 3 from previous posting is now patches 3 and 4)
+ - Move from arch_prctl() to the prctl() interface as recommend
+   in the reviews.
+Changelog v2:
+ - Fix a miss of mutex_unlock (caught by Borislav Petkov <bp@alien8.de>)
+ - Add documentation about the changes (Josh Poimboeuf
+   <jpoimboe@redhat.com>)
+
+Changelog:
+ - Refactor the code and reuse cond_ibpb() - code bits provided by tglx
+ - Merge mm state tracking for ibpb and l1d flush
+ - Rename TIF_L1D_FLUSH to TIF_SPEC_FLUSH_L1D
+
+Changelog RFC:
+ - Reuse existing code for allocation and flush
+ - Simplify the goto logic in the actual l1d_flush function
+ - Optimize the code path with jump labels/static functions
+
+The previous version of these patches are posted at:
+
+https://lore.kernel.org/lkml/20200423140125.7332-1-sblbir@amazon.com/
+
+
+Balbir Singh (6):
+  arch/x86/kvm: Refactor l1d flush lifecycle management
+  arch/x86/kvm: Refactor tlbflush and l1d flush
+  arch/x86/mm: Refactor cond_ibpb() to support other use cases
+  arch/x86/kvm: Refactor L1D flushing
+  Optionally flush L1D on context switch
+  Documentation: Add L1D flushing Documentation
+
+ Documentation/admin-guide/hw-vuln/index.rst   |   1 +
+ .../admin-guide/hw-vuln/l1d_flush.rst         |  40 ++++++
+ arch/x86/include/asm/cacheflush.h             |   8 ++
+ arch/x86/include/asm/thread_info.h            |   7 +-
+ arch/x86/include/asm/tlbflush.h               |   2 +-
+ arch/x86/kernel/Makefile                      |   1 +
+ arch/x86/kernel/l1d_flush.c                   | 120 ++++++++++++++++++
+ arch/x86/kvm/vmx/vmx.c                        |  62 +--------
+ arch/x86/mm/tlb.c                             |  83 +++++++++---
+ include/uapi/linux/prctl.h                    |   4 +
+ kernel/sys.c                                  |  20 +++
+ 11 files changed, 266 insertions(+), 82 deletions(-)
+ create mode 100644 Documentation/admin-guide/hw-vuln/l1d_flush.rst
+ create mode 100644 arch/x86/kernel/l1d_flush.c
+
+-- 
+2.17.1
+
