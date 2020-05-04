@@ -2,189 +2,122 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B13B3C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC21EC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91B1C20705
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:40:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LJ3MgiAf"
+	by mail.kernel.org (Postfix) with ESMTP id C567E20707
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:42:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbgEDTk4 (ORCPT
+        id S1726900AbgEDTmw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 15:40:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725956AbgEDTky (ORCPT
+        Mon, 4 May 2020 15:42:52 -0400
+Received: from smtprelay0170.hostedemail.com ([216.40.44.170]:45608 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726111AbgEDTmw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 15:40:54 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E538C061A0E;
-        Mon,  4 May 2020 12:40:53 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id x25so811959wmc.0;
-        Mon, 04 May 2020 12:40:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=x6Diq7oRDqkTM6TkRVDLHHEx/9bVRKYWWWp7nV67j3Y=;
-        b=LJ3MgiAf01pnCAbWw5QEkH3TmTqN+dvb+8pn/5kpoqL4SmiTkWPns9pps/IzP3o0m1
-         m1Cws2aYFu1A9BzK5wFGGEi930x/9va2D0GVN5VzWLN4TziNkaUMQbCsPNFnc4mA8D1J
-         MTR6htRme5PAiF1k7srA1cgeBYYIhCEuNU2d0U1pWw0kg2FpkVaPYOe5QktGU481wt0q
-         FdNQ80n7kvFiCn5yreAXWVtb/E36ENPVj+j8/vrOfNZv1z63MhVdHxlJxUFWVrWi+0I4
-         5LBaof8eHYCEMBjZmmQ0/VPsJtpgeQd2I7Rf58Ofk9sb5G7dbVoniyxCVjPqaSV/48iL
-         IfuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=x6Diq7oRDqkTM6TkRVDLHHEx/9bVRKYWWWp7nV67j3Y=;
-        b=gr8/sNlNyzCuw6eMhz9I4u8G1ePWWzFs80lF63iVPnbR25UdaHjWGBGov/hrzLx5sF
-         tjNQaW/JFwMwVJThAL0wVtE27Y9UGeXFKSrPS8SLqc0WbU5XIVj9+GVFyWHiGh8ZvP5f
-         Yln7HAufgz1hDNvfT4jbeDHnzjQLQIwU9Au8lYwh1xVPeLVd3gEDC4skmLCcigfj9COB
-         sV0fjpOMVFrlat+QplHAj4fgtocPieaKTHA6Fsp0EzPMn7lvtJ7+O0RoQj/Eq47IU/ST
-         3Ttibt3LBGFB4AiUULBMK7ZEa+2BV1YbCO3VFMvKHplHuwR9CmqksCkI1C629uiNnwUX
-         5nTw==
-X-Gm-Message-State: AGi0PuYzPDkDiUT/2OCQx4DKLdTUFy59nIRsm3VATJZaMitrH9yws9fd
-        qkMIKFQ28jS+VHWi2b9I3K/IpgNF
-X-Google-Smtp-Source: APiQypLkHMh9K10m3x2j4o9IHRGVNPo0tI7hiQOIARjkOtfiYiT0jvUOuZIq7vzZETWGoipI+DPcXA==
-X-Received: by 2002:a7b:c390:: with SMTP id s16mr15630119wmj.14.1588621252336;
-        Mon, 04 May 2020 12:40:52 -0700 (PDT)
-Received: from localhost.localdomain ([109.126.133.135])
-        by smtp.gmail.com with ESMTPSA id s6sm696602wmh.17.2020.05.04.12.40.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 12:40:51 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jann Horn <jannh@google.com>, io-uring@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH for-5.7] splice: move f_mode checks to do_{splice,tee}()
-Date:   Mon,  4 May 2020 22:39:35 +0300
-Message-Id: <51b4370ef70eebf941f6cef503943d7f7de3ea4d.1588621153.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Mon, 4 May 2020 15:42:52 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id B7990180AA4EE;
+        Mon,  4 May 2020 19:42:50 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: cream19_35bf089570f11
+X-Filterd-Recvd-Size: 3477
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf07.hostedemail.com (Postfix) with ESMTPA;
+        Mon,  4 May 2020 19:42:49 +0000 (UTC)
+Message-ID: <695919ca3010be4f2087c62530cf7b6ee4e01971.camel@perches.com>
+Subject: Re: [PATCH 5.6 61/73] iommu/vt-d: Use right Kconfig option name
+From:   Joe Perches <joe@perches.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sanjay K <sanjay.k.kumar@intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        iommu <iommu@lists.linux-foundation.org>
+Date:   Mon, 04 May 2020 12:42:48 -0700
+In-Reply-To: <20200504165509.860520707@linuxfoundation.org>
+References: <20200504165501.781878940@linuxfoundation.org>
+         <20200504165509.860520707@linuxfoundation.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-do_splice() is used by io_uring, as will be do_tee(). Move f_mode
-checks from sys_{splice,tee}() to do_{splice,tee}(), so they're
-enforced for io_uring as well.
+On Mon, 2020-05-04 at 19:58 +0200, Greg Kroah-Hartman wrote:
+> From: Lu Baolu <baolu.lu@linux.intel.com>
+> 
+> commit ba61c3da00f4a5bf8805aeca1ba5ac3c9bd82e96 upstream.
+> 
+> The CONFIG_ prefix should be added in the code.
+> 
+> Fixes: 046182525db61 ("iommu/vt-d: Add Kconfig option to enable/disable scalable mode")
+> Reported-and-tested-by: Kumar, Sanjay K <sanjay.k.kumar@intel.com>
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> Cc: Ashok Raj <ashok.raj@intel.com>
+> Link: https://lore.kernel.org/r/20200501072427.14265-1-baolu.lu@linux.intel.com
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> ---
+>  drivers/iommu/intel-iommu.c |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -371,11 +371,11 @@ int dmar_disabled = 0;
+>  int dmar_disabled = 1;
+>  #endif /* CONFIG_INTEL_IOMMU_DEFAULT_ON */
+>  
+> -#ifdef INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON
+> +#ifdef CONFIG_INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON
+>  int intel_iommu_sm = 1;
+>  #else
+>  int intel_iommu_sm;
+> -#endif /* INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON */
+> +#endif /* CONFIG_INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON */
 
-Fixes: 7d67af2c0134 ("io_uring: add splice(2) support")
-Reported-by: Jann Horn <jannh@google.com>
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Perhaps simpler as
+
+int intel_iommu_sm = IS_BUILTIN(CONFIG_INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON);
+
+So perhaps:
 ---
- fs/splice.c | 45 ++++++++++++++++++---------------------------
- 1 file changed, 18 insertions(+), 27 deletions(-)
+ drivers/iommu/intel-iommu.c | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
 
-diff --git a/fs/splice.c b/fs/splice.c
-index 4735defc46ee..fd0a1e7e5959 100644
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -1118,6 +1118,10 @@ long do_splice(struct file *in, loff_t __user *off_in,
- 	loff_t offset;
- 	long ret;
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 0182cff2c7ac..ab8552c48391 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -365,17 +365,8 @@ static int intel_iommu_attach_device(struct iommu_domain *domain,
+ static phys_addr_t intel_iommu_iova_to_phys(struct iommu_domain *domain,
+ 					    dma_addr_t iova);
  
-+	if (unlikely(!(in->f_mode & FMODE_READ) ||
-+		     !(out->f_mode & FMODE_WRITE)))
-+		return -EBADF;
-+
- 	ipipe = get_pipe_info(in);
- 	opipe = get_pipe_info(out);
- 
-@@ -1125,12 +1129,6 @@ long do_splice(struct file *in, loff_t __user *off_in,
- 		if (off_in || off_out)
- 			return -ESPIPE;
- 
--		if (!(in->f_mode & FMODE_READ))
--			return -EBADF;
+-#ifdef CONFIG_INTEL_IOMMU_DEFAULT_ON
+-int dmar_disabled = 0;
+-#else
+-int dmar_disabled = 1;
+-#endif /* CONFIG_INTEL_IOMMU_DEFAULT_ON */
 -
--		if (!(out->f_mode & FMODE_WRITE))
--			return -EBADF;
--
- 		/* Splicing to self would be fun, but... */
- 		if (ipipe == opipe)
- 			return -EINVAL;
-@@ -1153,9 +1151,6 @@ long do_splice(struct file *in, loff_t __user *off_in,
- 			offset = out->f_pos;
- 		}
+-#ifdef CONFIG_INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON
+-int intel_iommu_sm = 1;
+-#else
+-int intel_iommu_sm;
+-#endif /* CONFIG_INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON */
++int dmar_disabled = !IS_BUILTIN(CONFIG_INTEL_IOMMU_DEFAULT_ON);
++int intel_iommu_sm = IS_BUILTIN(CONFIG_INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON);
  
--		if (unlikely(!(out->f_mode & FMODE_WRITE)))
--			return -EBADF;
--
- 		if (unlikely(out->f_flags & O_APPEND))
- 			return -EINVAL;
- 
-@@ -1440,15 +1435,11 @@ SYSCALL_DEFINE6(splice, int, fd_in, loff_t __user *, off_in,
- 	error = -EBADF;
- 	in = fdget(fd_in);
- 	if (in.file) {
--		if (in.file->f_mode & FMODE_READ) {
--			out = fdget(fd_out);
--			if (out.file) {
--				if (out.file->f_mode & FMODE_WRITE)
--					error = do_splice(in.file, off_in,
--							  out.file, off_out,
--							  len, flags);
--				fdput(out);
--			}
-+		out = fdget(fd_out);
-+		if (out.file) {
-+			error = do_splice(in.file, off_in, out.file, off_out,
-+					  len, flags);
-+			fdput(out);
- 		}
- 		fdput(in);
- 	}
-@@ -1770,6 +1761,10 @@ static long do_tee(struct file *in, struct file *out, size_t len,
- 	struct pipe_inode_info *opipe = get_pipe_info(out);
- 	int ret = -EINVAL;
- 
-+	if (unlikely(!(in->f_mode & FMODE_READ) ||
-+		     !(out->f_mode & FMODE_WRITE)))
-+		return -EBADF;
-+
- 	/*
- 	 * Duplicate the contents of ipipe to opipe without actually
- 	 * copying the data.
-@@ -1795,7 +1790,7 @@ static long do_tee(struct file *in, struct file *out, size_t len,
- 
- SYSCALL_DEFINE4(tee, int, fdin, int, fdout, size_t, len, unsigned int, flags)
- {
--	struct fd in;
-+	struct fd in, out;
- 	int error;
- 
- 	if (unlikely(flags & ~SPLICE_F_ALL))
-@@ -1807,14 +1802,10 @@ SYSCALL_DEFINE4(tee, int, fdin, int, fdout, size_t, len, unsigned int, flags)
- 	error = -EBADF;
- 	in = fdget(fdin);
- 	if (in.file) {
--		if (in.file->f_mode & FMODE_READ) {
--			struct fd out = fdget(fdout);
--			if (out.file) {
--				if (out.file->f_mode & FMODE_WRITE)
--					error = do_tee(in.file, out.file,
--							len, flags);
--				fdput(out);
--			}
-+		out = fdget(fdout);
-+		if (out.file) {
-+			error = do_tee(in.file, out.file, len, flags);
-+			fdput(out);
- 		}
-  		fdput(in);
-  	}
--- 
-2.24.0
+ int intel_iommu_enabled = 0;
+ EXPORT_SYMBOL_GPL(intel_iommu_enabled);
 
