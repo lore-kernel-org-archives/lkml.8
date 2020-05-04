@@ -2,97 +2,120 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBA9C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA843C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBFD0206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9820720705
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:14:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="neQLZziZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729498AbgEDQMT (ORCPT
+        id S1729528AbgEDQOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 12:12:19 -0400
-Received: from mga04.intel.com ([192.55.52.120]:42892 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729207AbgEDQMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 12:12:18 -0400
-IronPort-SDR: GaO8djqiS2pGiJ4VEzK21OfRR+p9GR/H1OOoiF1LyDWwe8m9F4UWF+CgXZu/iEGTLYCSBEzCzW
- f95LkA7L/isQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 09:12:18 -0700
-IronPort-SDR: NjIs5eVckiefVYzs1nbR8TZZP08x1SCNuBp/AYXeYKVd5KTbFssOqilwxELtBYPR4imLSjI+d2
- TGTnF4ViDebw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,352,1583222400"; 
-   d="scan'208";a="262866242"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by orsmga006.jf.intel.com with SMTP; 04 May 2020 09:12:14 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Mon, 04 May 2020 19:12:13 +0300
-Date:   Mon, 4 May 2020 19:12:13 +0300
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Sultan Alsawaf <sultan@kerneltoast.com>
-Cc:     stable@vger.kernel.org, Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/i915: Don't enable WaIncreaseLatencyIPCEnabled when
- IPC is disabled
-Message-ID: <20200504161213.GD6112@intel.com>
-References: <20200430214654.51314-1-sultan@kerneltoast.com>
+        Mon, 4 May 2020 12:14:14 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:60244 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726578AbgEDQON (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 12:14:13 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044Fta2g150099;
+        Mon, 4 May 2020 16:13:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=Uuh1IJ8pB0K+VMTYDs8Zuh+vG5xj9hQbQ99FMw/17ys=;
+ b=neQLZziZ4rQ+6tvbTUB3Kcy+OFOZKVIq+dwiEKIRJz3K+rKIA8zXYSxUdg0v2oRfx4gt
+ 5Cr6hLdH/wM/TBnXuM2j49YZQ9HJWih61J1yaU8KJTk7fbmkM5IKh0BYf0aCSph6s2nE
+ xRQxNlkY05IhAFStfOKzpMQosS3kB7QVn95DvhlaZTtFd/cgBkQyue5rzsWr1LJwS2l1
+ GPrJfR0nU5YdgiBPI0v3KdGDoeEAIiM5nvustGd6ByNcbusoLpO6ivK/qvAFqoSRgAne
+ pPVbnA9G2jhzXnKqhHtn3YeTaZuy/JF65xtNyQdr6P9ToW051/LFZtsulYW1oA2zYdLA Sg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 30s0tm7vq9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 May 2020 16:13:57 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044G6qJR061942;
+        Mon, 4 May 2020 16:13:56 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 30sjdquymb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 May 2020 16:13:56 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 044GDskG025963;
+        Mon, 4 May 2020 16:13:54 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 04 May 2020 09:13:54 -0700
+Date:   Mon, 4 May 2020 09:13:52 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     ira.weiny@intel.com, Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>
+Subject: [ANNOUNCE] xfs-linux: vfs-for-next updated to 83d9088659e8
+Message-ID: <20200504161352.GA13783@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200430214654.51314-1-sultan@kerneltoast.com>
-X-Patchwork-Hint: comment
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9610 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=2 mlxscore=0
+ bulkscore=0 adultscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005040127
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9610 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 spamscore=0 suspectscore=2
+ phishscore=0 clxscore=1015 bulkscore=0 mlxlogscore=999 adultscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005040127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 02:46:54PM -0700, Sultan Alsawaf wrote:
-> From: Sultan Alsawaf <sultan@kerneltoast.com>
-> 
-> In commit 5a7d202b1574, a logical AND was erroneously changed to an OR,
-> causing WaIncreaseLatencyIPCEnabled to be enabled unconditionally for
-> kabylake and coffeelake, even when IPC is disabled. Fix the logic so
-> that WaIncreaseLatencyIPCEnabled is only used when IPC is enabled.
-> 
-> Fixes: 5a7d202b1574 ("drm/i915: Drop WaIncreaseLatencyIPCEnabled/1140 for cnl")
-> Cc: stable@vger.kernel.org # 5.3.x+
-> Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
-> ---
->  drivers/gpu/drm/i915/intel_pm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/intel_pm.c b/drivers/gpu/drm/i915/intel_pm.c
-> index 8375054ba27d..a52986a9e7a6 100644
-> --- a/drivers/gpu/drm/i915/intel_pm.c
-> +++ b/drivers/gpu/drm/i915/intel_pm.c
-> @@ -4992,7 +4992,7 @@ static void skl_compute_plane_wm(const struct intel_crtc_state *crtc_state,
->  	 * WaIncreaseLatencyIPCEnabled: kbl,cfl
->  	 * Display WA #1141: kbl,cfl
->  	 */
-> -	if ((IS_KABYLAKE(dev_priv) || IS_COFFEELAKE(dev_priv)) ||
-> +	if ((IS_KABYLAKE(dev_priv) || IS_COFFEELAKE(dev_priv)) &&
+Hi folks,
 
-Whoops. Thanks for the fix. Pushed.
+The vfs-for-next branch of the xfs-linux repository at:
 
->  	    dev_priv->ipc_enabled)
->  		latency += 4;
->  
-> -- 
-> 2.26.2
+	git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
 
--- 
-Ville Syrjälä
-Intel
+has just been updated.
+
+After a very, very long process of discussing how sysadmins and app
+programmers are supposed to tag files for DAX data access mode, we have
+reached an agreement about how the userspace knobs should work.  This
+first update contains the necessary documentation updates and statx mode
+flag to enable the behaviors that we have decided on.  The second part
+(hinting at inode eviction to change the DAX mode) will come later after
+everyone has had a few days to let this soak in.
+
+The new head of the vfs-for-next branch is commit:
+
+83d9088659e8 Documentation/dax: Update Usage section
+
+New Commits:
+
+Ira Weiny (3):
+      [efbe3c2493d2] fs: Remove unneeded IS_DAX() check in io_is_direct()
+      [712b2698e4c0] fs/stat: Define DAX statx attribute
+      [83d9088659e8] Documentation/dax: Update Usage section
+
+
+Code Diffstat:
+
+ Documentation/filesystems/dax.txt | 142 +++++++++++++++++++++++++++++++++++++-
+ drivers/block/loop.c              |   6 +-
+ fs/stat.c                         |   3 +
+ include/linux/fs.h                |   7 +-
+ include/uapi/linux/stat.h         |   1 +
+ 5 files changed, 147 insertions(+), 12 deletions(-)
