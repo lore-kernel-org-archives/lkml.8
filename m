@@ -2,63 +2,71 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06273C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE73C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB390206D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50555206D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:03:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vCjrVY7P"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KSO+cu4K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbgEDQAx (ORCPT
+        id S1729333AbgEDQDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 12:00:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38110 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726578AbgEDQAw (ORCPT
+        Mon, 4 May 2020 12:03:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38476 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726551AbgEDQDR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 12:00:52 -0400
+        Mon, 4 May 2020 12:03:17 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC281C061A0E;
-        Mon,  4 May 2020 09:00:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71AA5C061A0E;
+        Mon,  4 May 2020 09:03:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=BATpBtqBqL4zI1OrI7zzNo1CuDBthfYTyMzJ5Nwkppw=; b=vCjrVY7PzjjoLJQH9+P/guoOle
-        GrYcFfLKsNvFqzN1KYQ8FDpBZ3Jxiohzi4no+ZSVaO+7aSHe7yErUWm4DlQQuvchC3QAY6Yq7pR0V
-        4CRpk2v5o9GOoriXl1Wzzsjv3d24Mfjbt+V28gkD/op2PwfzRVb9USqaWllYakU3KHS01OBAEhUkT
-        rd+s8T8W3WSZ3BXzilwq2Oa3ehrG7E2yWLtjsKeGUgE3bO+4kgR5hqCjdfOtL0IUgoPh/xN1jQxT+
-        JWgoaHd++ntw8dQY5m45Pe50JjWRDzIaqQqDBZgl7AfeOaHsTMgFSBxKxpXZezVWOsozjktxKzqYm
-        gkSJ5P5A==;
+        bh=MJiG06idgkhQ7ETomKvk+pXIhWmcVzgg6Sh67pMiRa8=; b=KSO+cu4KS04f9QMSMnoEgpz4lP
+        xEUzzhMHMNy0nNQLb/oWLnGEmta0IgfeMaWPLFVU8v0KE5Q/SQ/kf7eZZQbtkWd1mh1jOtqlamJpr
+        YN+qE50vHOxXepS7SXteLP+Jz8YM7GoPnzdBjtA78HfjZE5ci7Ix61JXsgZmNOz3ITCwjRyIZY+8f
+        VyOZXfNmnntPRCfh/xfRBQBe6qX2/BPIpwkpCgcPE5LJxYzBjMyx5sO7eU8s1XolUvo0+SbSxsYHA
+        IxtQuHWPpYcGkzHJS2c5PU+nqLHZ77pbjoE7P9V0lYxoaoYguZ5auscSJkpBNu3v2LiCVcQSeLZB2
+        eIpOBNEQ==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jVdWW-0006dS-LY; Mon, 04 May 2020 16:00:52 +0000
-Date:   Mon, 4 May 2020 09:00:52 -0700
+        id 1jVdYo-0007fF-8J; Mon, 04 May 2020 16:03:14 +0000
+Date:   Mon, 4 May 2020 09:03:14 -0700
 From:   Christoph Hellwig <hch@infradead.org>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH RFC 1/2] fs/iomap/direct-io: pass NOWAIT to bio flags
-Message-ID: <20200504160052.GA8625@infradead.org>
-References: <158860769311.32485.8003552176738816448.stgit@buzz>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, bigeasy@linutronix.de,
+        tglx@linutronix.de, stable@vger.kernel.org
+Subject: Re: [PATCH] drm/i915: check to see if SIMD registers are available
+ before using SIMD
+Message-ID: <20200504160314.GA26373@infradead.org>
+References: <20200430221016.3866-1-Jason@zx2c4.com>
+ <20200501180731.GA2485@infradead.org>
+ <158853721918.8377.18286963845226122104@build.alporthouse.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <158860769311.32485.8003552176738816448.stgit@buzz>
+In-Reply-To: <158853721918.8377.18286963845226122104@build.alporthouse.com>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 06:54:53PM +0300, Konstantin Khlebnikov wrote:
-> This is required to avoid waiting in lower layers.
+On Sun, May 03, 2020 at 09:20:19PM +0100, Chris Wilson wrote:
+> > Err, why does i915 implements its own uncached memcpy instead of relying
+> > on core functionality to start with?
 > 
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> What is this core functionality that provides movntqda?
 
-This looks sensible.  Did you run this through xfstests?
+A sensible name might be memcpy_uncached or mempcy_nontemporal.
+But the important point is that this should be arch code with a common
+fallback rather than hacking it up in drivers.
