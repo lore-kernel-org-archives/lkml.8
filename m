@@ -2,120 +2,269 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A86A9C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20236C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78E9920752
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E816A206B9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:49:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="B1gaVhmy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R04Fjb4R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729232AbgEDOni (ORCPT
+        id S1728807AbgEDOtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 10:43:38 -0400
-Received: from mout.gmx.net ([212.227.15.19]:59039 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728399AbgEDOni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 10:43:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1588603410;
-        bh=rhIgO8knhk5KrlNGr7M8hfHM41dFa9/8X/4InpEenSg=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=B1gaVhmyZyPDdbVLXr5Ifrmiw46DQtjxWE99RRUd72YfouBe3BSMmMY1C1vU2PdLp
-         oKhAOPu+vEleC8Gyazt1+4k6qnww0rlStbErUggsU6lC/Lm7kcYbO9H4bPNE8ESgV2
-         O3eNQ6dXDcvKJoqGl7tlY42lri+m/NC5T17neavA=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1Mqs0R-1ijcJs48NV-00mrnC; Mon, 04
- May 2020 16:43:30 +0200
-Date:   Mon, 4 May 2020 16:43:13 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Joe Perches <joe@perches.com>, Ajay.Kathat@microchip.com,
-        adham.abozaeid@microchip.com
-Cc:     Oscar Carter <oscar.carter@gmx.com>, gregkh@linuxfoundation.org,
-        rachel.kim@atmel.com, johnny.kim@atmel.com, chris.park@atmel.com,
-        dean.lee@atmel.com, linux-wireless@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] staging: wilc1000: Increase the size of wid_list array
-Message-ID: <20200504144313.GA3213@ubuntu>
-References: <20200503075145.4563-1-oscar.carter@gmx.com>
- <d75b7f64-0ba0-65e9-ea4c-cc87b3a51a10@microchip.com>
- <d3e07dfd0efe21192d172b2e4e7d4a489a4fcc62.camel@perches.com>
+        Mon, 4 May 2020 10:49:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728353AbgEDOtR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 10:49:17 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87531C061A0F
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 07:49:17 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id s20so6849670plp.6
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 07:49:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5lmoQJYoeg3ybSPwplhMkrooqQOGOYA7nU2sY4Dq1pc=;
+        b=R04Fjb4R2zQrBdDiS1rI1lH0gMnWxIPItV5U2BOiCIby5HxxzYV7c9vaEBIuSU6TKc
+         N9yJAqZKcVjZS3dG2Rah6YyW6mKqK9XGAwKP4ZTnARpmIBVYbSR+v9/ffySNScve9KAS
+         fFp6YUwxhiVFrKpnhfNdNztyuV6JtUulx7ImPpPksB5T3uIrbqLIc2QZ0DIaH7vmMYa/
+         mlSuf4zp+Oh+k8sETM+eBqNyneLDT6QlrGT3CmLeedUqmbAq6giRJxV29uKfbeWsbvDB
+         yM6pyiRw2db9pa0Tm3awQzKDxTdw3iafUgw096RzVZ2cKOSKyRo5hi5nclBmgK32UOHY
+         x8EQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5lmoQJYoeg3ybSPwplhMkrooqQOGOYA7nU2sY4Dq1pc=;
+        b=W8u+RjVSjM/n211Y4YL3Bq1Em4agjqp81rBdZ9oGa5AxWX9/bR9v4MdQLnf0gsfhjp
+         lIkhPN5HEFXqMrvDbJlb7Qi69ATECn19jE/g1/ZDm0K3Uhlyd1Py26JNG3jaI56si+B0
+         sLRe3J/85lkdoJ5xEoaX1uSt1lDb8cVFS/eIY/aLftYmWGvxzzu8SuO0Z81HzZNBrdqP
+         uLPmajaEMWH938GjgfGBzdoVjZtAnjULwGAmJBOEgo1kv+3yyUydJ6i45gb2ZTBVGV6l
+         KUGRm/wQlAgoj1abYvpAdK72UoPRBfTgdp+WvYbRFxoHTolIO870cL/bfPr+wxED+gUw
+         TxYg==
+X-Gm-Message-State: AGi0Pub/cT28XuXllgeyH0/EsPY/krOEXilmeZUaGPN8Mdygd65frxky
+        Bdgmifjw9wRwKoeKD9CWhGo2
+X-Google-Smtp-Source: APiQypJjIapp5XKSell2YBv+inFoZ8mKXrHBT+VFs3IVljbQMp6IsqaBr1+529ONpM1jjcEHWag4sQ==
+X-Received: by 2002:a17:902:fe8e:: with SMTP id x14mr18541862plm.128.1588603756751;
+        Mon, 04 May 2020 07:49:16 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:41c:f7b5:bdcc:167e:2cd1:efea])
+        by smtp.gmail.com with ESMTPSA id p66sm9009181pfb.65.2020.05.04.07.49.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 04 May 2020 07:49:15 -0700 (PDT)
+Date:   Mon, 4 May 2020 20:19:06 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     davem@davemloft.net
+Cc:     gregkh@linuxfoundation.org, smohanad@codeaurora.org,
+        jhugo@codeaurora.org, kvalo@codeaurora.org,
+        bjorn.andersson@linaro.org, hemantk@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clew@codeaurora.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] net: qrtr: Add MHI transport layer
+Message-ID: <20200504144906.GF3391@Mani-XPS-13-9360>
+References: <20200427075829.9304-1-manivannan.sadhasivam@linaro.org>
+ <20200427075829.9304-3-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d3e07dfd0efe21192d172b2e4e7d4a489a4fcc62.camel@perches.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:WaZhZUrSWFeiDdnjwq+IVE7oWmd1xxkdZbdW99c6kzggZTPRiNv
- QUdZfn0Ngh91lWlISAwTQukgGeprj/C+AQzp4OqAMeTojVIgJslagmrfBMTeyAXLgV0rBP+
- etq6ZKEXPE8zx66U7MCDUgEcnxqrmxw3gbidHj66bcWncITAGQYh18DkHmP7D/ISkwRBkN1
- Jvb6R15eMZeV7sJ3Hs0hA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:53f5jrXMiwo=:9TYZyTRs4aL6kPTOUX/+in
- 3o0rl7+SJ2oxyNkLC1uk+41FIl5A+vDAur93nDr45RJdENFhmvjiRKJkNo1xinoicPsrk6rZx
- QvSSerQxyys4GBhXGBSLklMOLCF7CyNkz1kK7RRid7v5i58LPIfJGscy/daOmfkyi7/VNibGd
- 2RX0JsFS1MSO3trlJgN2TkqbXgmwJYM3WYJmBJSAxdXcq6MxYZUldiSHRsiEn1L2XWFnHQba6
- YzyjBdhu7Zq6lyezflEaGkZ95IZqL/06J/PLDYdhOMBZdzhlsWzfpBV6Q3zdDdL2q97w7YtqQ
- DmzYpPpuvdnmhuM/WqV3hm+/FMkMNjAH0aIhkjl0btLiDqzaize10BIMw+c4h7GRO2ysU9wU2
- mGj4GN8WxZ1I6mxEngb5DOEbADDmD5+H+Dx+INpU3IFG5LDC7w2aIYK9CEiSZWVG9bekW0f0e
- OiobrDCazsJjqxqnmqd+3fwYxTHT0jWWkBR56fsS5J8tUaenuZPT5t4yI5Zmvtvy4s43YI97G
- dr9imm0ob6pYq3T+5at+1HYWof9M3kzTskJG1H4ZfoT2c1T01Iyj5eTlJ+XkaYVjyq0ZNYTcJ
- 0GZlRdUdpEkly8rnxbi8HsEC1ZPaoZVZyUQ0X+XSDXf4Yp+yXSkG8x+Flrmvh4ZTYV7PGZ0MW
- Q7Vz+KHRBqNzd/2XFZmXVXn6BLzpmxZ2DpJz/5Jvf3xe2v2+6rCTZSIDfmfNJ3GX4Huu6RSjD
- yGUuE7jTPTz8nqYji8wN/pem//zdC9/kJWj5VNmetqa+mBCBF8I3v429Ma5kVhY2Ktp+faAvT
- 1FuUN0VBWgADF4ws2quAEJSa30rPI9koa0z7/cJ9FV13A1jYXIXV4hVRSegy0H90Up5N7lYr9
- H4f7cMbDkKdMq5h7cIG0M40E9nM4LzK/oMqRVBQskB28ufQocESpIq5cfayEY77gnsYhg8vjv
- W/NZoeGzZZy6tA9HgcC7nar8c6j36UJ32+0tV7VC73rt7yyqLUH0jNM92yKGR5iIcvcXNGzWf
- RWKfQCHEbJPwKavEbBQa+NzcLSab6qbfmimZiir3/gC8R1pu5bY3CsI2sAjqFtdE4WzLDp2MA
- mpsAYgyl3pXlgXf2hEJYGLCw9e9Xu8hJMB7aLyJm5pfTqwaWQKv1goAmKF/Mb2DUaw9Wy3tlt
- YZQFnKCmQbKFVNzgKxWcK2fspbyPTZFEmZQ8qLyvBAspG1ucBAYVlcBLJ9pdY4yA40e7o19Hi
- DqX8meZuUttwphwlu
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200427075829.9304-3-manivannan.sadhasivam@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 03, 2020 at 04:29:53PM -0700, Joe Perches wrote:
-> On Sun, 2020-05-03 at 14:52 +0000, Ajay.Kathat@microchip.com wrote:
-> > On 03/05/20 1:21 pm, Oscar Carter wrote:
-> > > EXTERNAL EMAIL: Do not click links or open attachments unless you kn=
-ow the content is safe
-> > >
-> > > Increase by one the size of wid_list array as index variable can rea=
-ch a
-> > > value of 5. If this happens, an out-of-bounds access is performed.
-> > >
-> > > Addresses-Coverity-ID: 1451981 ("Out-of-bounds access")
-> > > Fixes: f5a3cb90b802d ("staging: wilc1000: add passive scan support")
-> > > Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-> []
-> > > diff --git a/drivers/staging/wilc1000/hif.c b/drivers/staging/wilc10=
-00/hif.c
-> []
-> > > @@ -151,7 +151,7 @@ int wilc_scan(struct wilc_vif *vif, u8 scan_sour=
-ce, u8 scan_type,
-> > >               void *user_arg, struct cfg80211_scan_request *request)
-> > >  {
-> > >         int result =3D 0;
-> > > -       struct wid wid_list[5];
-> > > +       struct wid wid_list[6];
->
-> This looks like it should be using a #define instead of
-> a hard-coded number.
+Hi Dave,
 
-I agree. I will make the changes you suggested and I will resend a new ver=
-sion.
+On Mon, Apr 27, 2020 at 01:28:28PM +0530, Manivannan Sadhasivam wrote:
+> MHI is the transport layer used for communicating to the external modems.
+> Hence, this commit adds MHI transport layer support to QRTR for
+> transferring the QMI messages over IPC Router.
+> 
 
-> > >         u32 index =3D 0;
-> > >         u32 i, scan_timeout;
-> > >         u8 *buffer;
-> > > --
-> > > 2.20.1
->
+Can you please review this driver? It'd be great if this ends up in v5.8
+along with all other MHI patches.
+
 Thanks,
-Oscar Carter
+Mani
+
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: netdev@vger.kernel.org
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  net/qrtr/Kconfig  |   7 +++
+>  net/qrtr/Makefile |   2 +
+>  net/qrtr/mhi.c    | 127 ++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 136 insertions(+)
+>  create mode 100644 net/qrtr/mhi.c
+> 
+> diff --git a/net/qrtr/Kconfig b/net/qrtr/Kconfig
+> index 63f89cc6e82c..8eb876471564 100644
+> --- a/net/qrtr/Kconfig
+> +++ b/net/qrtr/Kconfig
+> @@ -29,4 +29,11 @@ config QRTR_TUN
+>  	  implement endpoints of QRTR, for purpose of tunneling data to other
+>  	  hosts or testing purposes.
+>  
+> +config QRTR_MHI
+> +	tristate "MHI IPC Router channels"
+> +	depends on MHI_BUS
+> +	help
+> +	  Say Y here to support MHI based ipcrouter channels. MHI is the
+> +	  transport used for communicating to external modems.
+> +
+>  endif # QRTR
+> diff --git a/net/qrtr/Makefile b/net/qrtr/Makefile
+> index 32d4e923925d..1b1411d158a7 100644
+> --- a/net/qrtr/Makefile
+> +++ b/net/qrtr/Makefile
+> @@ -5,3 +5,5 @@ obj-$(CONFIG_QRTR_SMD) += qrtr-smd.o
+>  qrtr-smd-y	:= smd.o
+>  obj-$(CONFIG_QRTR_TUN) += qrtr-tun.o
+>  qrtr-tun-y	:= tun.o
+> +obj-$(CONFIG_QRTR_MHI) += qrtr-mhi.o
+> +qrtr-mhi-y	:= mhi.o
+> diff --git a/net/qrtr/mhi.c b/net/qrtr/mhi.c
+> new file mode 100644
+> index 000000000000..2a2abf5b070d
+> --- /dev/null
+> +++ b/net/qrtr/mhi.c
+> @@ -0,0 +1,127 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/mhi.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/skbuff.h>
+> +#include <net/sock.h>
+> +
+> +#include "qrtr.h"
+> +
+> +struct qrtr_mhi_dev {
+> +	struct qrtr_endpoint ep;
+> +	struct mhi_device *mhi_dev;
+> +	struct device *dev;
+> +};
+> +
+> +/* From MHI to QRTR */
+> +static void qcom_mhi_qrtr_dl_callback(struct mhi_device *mhi_dev,
+> +				      struct mhi_result *mhi_res)
+> +{
+> +	struct qrtr_mhi_dev *qdev = dev_get_drvdata(&mhi_dev->dev);
+> +	int rc;
+> +
+> +	if (!qdev || mhi_res->transaction_status)
+> +		return;
+> +
+> +	rc = qrtr_endpoint_post(&qdev->ep, mhi_res->buf_addr,
+> +				mhi_res->bytes_xferd);
+> +	if (rc == -EINVAL)
+> +		dev_err(qdev->dev, "invalid ipcrouter packet\n");
+> +}
+> +
+> +/* From QRTR to MHI */
+> +static void qcom_mhi_qrtr_ul_callback(struct mhi_device *mhi_dev,
+> +				      struct mhi_result *mhi_res)
+> +{
+> +	struct sk_buff *skb = (struct sk_buff *)mhi_res->buf_addr;
+> +
+> +	if (skb->sk)
+> +		sock_put(skb->sk);
+> +	consume_skb(skb);
+> +}
+> +
+> +/* Send data over MHI */
+> +static int qcom_mhi_qrtr_send(struct qrtr_endpoint *ep, struct sk_buff *skb)
+> +{
+> +	struct qrtr_mhi_dev *qdev = container_of(ep, struct qrtr_mhi_dev, ep);
+> +	int rc;
+> +
+> +	rc = skb_linearize(skb);
+> +	if (rc)
+> +		goto free_skb;
+> +
+> +	rc = mhi_queue_skb(qdev->mhi_dev, DMA_TO_DEVICE, skb, skb->len,
+> +			   MHI_EOT);
+> +	if (rc)
+> +		goto free_skb;
+> +
+> +	if (skb->sk)
+> +		sock_hold(skb->sk);
+> +
+> +	return rc;
+> +
+> +free_skb:
+> +	kfree_skb(skb);
+> +
+> +	return rc;
+> +}
+> +
+> +static int qcom_mhi_qrtr_probe(struct mhi_device *mhi_dev,
+> +			       const struct mhi_device_id *id)
+> +{
+> +	struct qrtr_mhi_dev *qdev;
+> +	int rc;
+> +
+> +	qdev = devm_kzalloc(&mhi_dev->dev, sizeof(*qdev), GFP_KERNEL);
+> +	if (!qdev)
+> +		return -ENOMEM;
+> +
+> +	qdev->mhi_dev = mhi_dev;
+> +	qdev->dev = &mhi_dev->dev;
+> +	qdev->ep.xmit = qcom_mhi_qrtr_send;
+> +
+> +	dev_set_drvdata(&mhi_dev->dev, qdev);
+> +	rc = qrtr_endpoint_register(&qdev->ep, QRTR_EP_NID_AUTO);
+> +	if (rc)
+> +		return rc;
+> +
+> +	dev_dbg(qdev->dev, "Qualcomm MHI QRTR driver probed\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static void qcom_mhi_qrtr_remove(struct mhi_device *mhi_dev)
+> +{
+> +	struct qrtr_mhi_dev *qdev = dev_get_drvdata(&mhi_dev->dev);
+> +
+> +	qrtr_endpoint_unregister(&qdev->ep);
+> +	dev_set_drvdata(&mhi_dev->dev, NULL);
+> +}
+> +
+> +static const struct mhi_device_id qcom_mhi_qrtr_id_table[] = {
+> +	{ .chan = "IPCR" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(mhi, qcom_mhi_qrtr_id_table);
+> +
+> +static struct mhi_driver qcom_mhi_qrtr_driver = {
+> +	.probe = qcom_mhi_qrtr_probe,
+> +	.remove = qcom_mhi_qrtr_remove,
+> +	.dl_xfer_cb = qcom_mhi_qrtr_dl_callback,
+> +	.ul_xfer_cb = qcom_mhi_qrtr_ul_callback,
+> +	.id_table = qcom_mhi_qrtr_id_table,
+> +	.driver = {
+> +		.name = "qcom_mhi_qrtr",
+> +	},
+> +};
+> +
+> +module_mhi_driver(qcom_mhi_qrtr_driver);
+> +
+> +MODULE_AUTHOR("Chris Lew <clew@codeaurora.org>");
+> +MODULE_AUTHOR("Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>");
+> +MODULE_DESCRIPTION("Qualcomm IPC-Router MHI interface driver");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.17.1
+> 
