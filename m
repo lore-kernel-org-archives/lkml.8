@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B38F8C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCE7C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89E322078C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E81C2192A
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:16:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588616165;
-	bh=5QUy5jYKJIIMfYKDgTPoFWmg2ibHT8Qm88KIdr9mHas=;
+	s=default; t=1588616170;
+	bh=Z+tyRfl1Y/I0+t9KnKRbwn1BP0KDs/FUDpKOv23okvw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mo2gBcTe/BkoaczJRocPDOeyiAdKNtCjepdoaywiTuYojlQtRXuRfzt1F0X9K8blP
-	 33V6lDMwpGUGV2e6sm4fFFp6hZDyrGHu4n3Po2Y7/v6YT1mV/m/xLjpUEdRtodNVCs
-	 8FKTPfMWIApWcZahaeLyU/fwIXIr0VlVyyQmwQQA=
+	b=Gwz7ztcMd2+fXmWNq7i1MU70FpUgkHRqS+X1F2c84nXtBIlWCDlVdtFdJV7XYzHSa
+	 Wx2KzCfYW3AZOmY1IRWSeOjzB0Tyjh8/SFGMOa2097ST+FLl7z/CyDO+se4FAWx5yD
+	 Wx86572nxF/csa6eRBIbHaRCFq2JJaREVrWNjt/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730679AbgEDR7G (ORCPT
+        id S1731390AbgEDSQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:59:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52092 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:16:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730646AbgEDR7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:59:02 -0400
+        id S1730675AbgEDR7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 13:59:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DC3F2073E;
-        Mon,  4 May 2020 17:59:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6709E206D9;
+        Mon,  4 May 2020 17:59:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615141;
-        bh=5QUy5jYKJIIMfYKDgTPoFWmg2ibHT8Qm88KIdr9mHas=;
+        s=default; t=1588615145;
+        bh=Z+tyRfl1Y/I0+t9KnKRbwn1BP0KDs/FUDpKOv23okvw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GUHlZ+oveQ0cxWndxKQLDT2iBg6ZF1v2GWRWdzfPAiVWfPE1Z+x365+W10TbATD+1
-         dR1BnF0jfpTdWjArPnYVvZfWLAb/MU5W2w2RU+ni5a4po/YWoTIjfuexJjeC0rnDoe
-         QlwPEqgzkX91MOGRY/XAYL8cNewOwQ4yZ8EJdoE8=
+        b=mqKvdzZeFphi7raV6f84jn/uE10tBENYSwT/nAO8CjSzLY+kKK6MLHf2e4IDkoamn
+         jmt3i2YdlOeELxXiKbcp/TtWlOzFj5N4KXqU6zbTdVSBA0mAFs9aOvViLSxmqgcCd2
+         uF2p1rCh7GnGjDO2kNexGXQQtRVabS1PIxiUoRyw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.4 12/18] powerpc/perf: Remove PPMU_HAS_SSLOT flag for Power8
-Date:   Mon,  4 May 2020 19:57:10 +0200
-Message-Id: <20200504165444.020859784@linuxfoundation.org>
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Subject: [PATCH 4.4 14/18] [media] exynos4-is: fix a format string bug
+Date:   Mon,  4 May 2020 19:57:12 +0200
+Message-Id: <20200504165444.460789674@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165441.533160703@linuxfoundation.org>
 References: <20200504165441.533160703@linuxfoundation.org>
@@ -60,47 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-commit 370f06c88528b3988fe24a372c10e1303bb94cf6 upstream.
+commit 76a563675485849f6f9ad5b30df220438b3628c1 upstream.
 
-Commit 7a7868326d77 ("powerpc/perf: Add an explict flag indicating
-presence of SLOT field") introduced the PPMU_HAS_SSLOT flag to remove
-the assumption that MMCRA[SLOT] was present when PPMU_ALT_SIPR was not
-set.
+Ironically, 7d4020c3c400 ("[media] exynos4-is: fix some warnings when
+compiling on arm64") fixed some format string bugs but introduced a
+new one. buf_index is a simple int, so it should be printed with %d,
+not %pad (which is correctly used for dma_addr_t).
 
-That commit's changelog also mentions that Power8 does not support
-MMCRA[SLOT]. However when the Power8 PMU support was merged, it
-errnoeously included the PPMU_HAS_SSLOT flag.
+Fixes: 7d4020c3c400 ("[media] exynos4-is: fix some warnings when compiling on arm64")
 
-So remove PPMU_HAS_SSLOT from the Power8 flags.
-
-mpe: On systems where MMCRA[SLOT] exists, the field occupies bits 37:39
-(IBM numbering). On Power8 bit 37 is reserved, and 38:39 overlap with
-the high bits of the Threshold Event Counter Mantissa. I am not aware of
-any published events which use the threshold counting mechanism, which
-would cause the mantissa bits to be set. So in practice this bug is
-unlikely to trigger.
-
-Fixes: e05b9b9e5c10 ("powerpc/perf: Power8 PMU support")
-Signed-off-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/perf/power8-pmu.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/exynos4-is/fimc-isp-video.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/powerpc/perf/power8-pmu.c
-+++ b/arch/powerpc/perf/power8-pmu.c
-@@ -816,7 +816,7 @@ static struct power_pmu power8_pmu = {
- 	.get_constraint		= power8_get_constraint,
- 	.get_alternatives	= power8_get_alternatives,
- 	.disable_pmc		= power8_disable_pmc,
--	.flags			= PPMU_HAS_SSLOT | PPMU_HAS_SIER | PPMU_ARCH_207S,
-+	.flags			= PPMU_HAS_SIER | PPMU_ARCH_207S,
- 	.n_generic		= ARRAY_SIZE(power8_generic_events),
- 	.generic_events		= power8_generic_events,
- 	.cache_events		= &power8_cache_events,
+--- a/drivers/media/platform/exynos4-is/fimc-isp-video.c
++++ b/drivers/media/platform/exynos4-is/fimc-isp-video.c
+@@ -221,8 +221,8 @@ static void isp_video_capture_buffer_que
+ 							ivb->dma_addr[i];
+ 
+ 			isp_dbg(2, &video->ve.vdev,
+-				"dma_buf %pad (%d/%d/%d) addr: %pad\n",
+-				&buf_index, ivb->index, i, vb->index,
++				"dma_buf %d (%d/%d/%d) addr: %pad\n",
++				buf_index, ivb->index, i, vb->index,
+ 				&ivb->dma_addr[i]);
+ 		}
+ 
 
 
