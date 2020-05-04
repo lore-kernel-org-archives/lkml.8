@@ -2,120 +2,157 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D10D5C47258
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5894C47254
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACEE120757
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B488120757
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:07:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="stjHdQdv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wvs8yqi/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729062AbgEDOGJ (ORCPT
+        id S1728809AbgEDOHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 10:06:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48476 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728855AbgEDOFu (ORCPT
+        Mon, 4 May 2020 10:07:22 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28588 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728233AbgEDOHV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 10:05:50 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C465C061A0F;
-        Mon,  4 May 2020 07:05:50 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id z6so9220741wml.2;
-        Mon, 04 May 2020 07:05:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ErvFEMKqvUABuF+OXMSZ5E2o1lqXb+dXgSMBGHbqzAg=;
-        b=stjHdQdvYoqhgxBBTq1T0JVz+IpRPw3DwhxZVt77BBjfklLpXZmbshjACzLHyezrJl
-         7tWVPq06eclo5G9xuhPc5dNpMorhZ4ENiE6FaDfZZOaiF33/vGbgrLcLFjmQB/n+9Dqp
-         iaOipRXFCDhvWjadn0a/dvY+r7rE8BPO4IiCh4jp3YjXX4yHSoG7Ix7X37r+fiJWXNjT
-         hRgdpjBSZ+q2xUFYu2NoSmKipYDSI3mbvzbJIeLFuDvFXro/6W+OFO+pP17zLkeVybxo
-         fB/AkFcGUTAQ6CFtjyA/r4bsrOe1pIPbFoBvf+agxWBLVCuv+NPewAMe0GfF1869vzpB
-         imEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ErvFEMKqvUABuF+OXMSZ5E2o1lqXb+dXgSMBGHbqzAg=;
-        b=FT1AZ6xL1jJY2vtTS4T4uWcmZxE511Jf4Iu5jzY29VvUzonV823n5TIQupMc52tVVe
-         PMTKi1Y9DvN+oCbGEj8+CCweyapYY0Whunv3LARHzPih62P93fzBS67IUL2/ha0YvduK
-         QyJjeN/KKkxOFw32+mVCMskC3zmk/vlV0q29R/LZTDtT6iIJsa2vuwHLVVXraaQTGpCi
-         Q6g5i01D6qIy+KKDQzXXqQ9X1RDAxy5486TEdyHP0ME3RHm0T1f8/QaPsmXkIblreJ37
-         kGdLVI59++rQfhIGDw1bYLDbu0mBxYisGkVbVst1IzGVBxKY5O26ZUNDrjxstnVIZjbF
-         ZYnA==
-X-Gm-Message-State: AGi0PuYlwEDQLQalHzsD7PjBqq40haaGWM+MJq0pc/MaBOrHcBVqvf2E
-        05XsqvP5Z8N6EICDwSw4pYg=
-X-Google-Smtp-Source: APiQypKAQLLE2mjpAFWf4KcJIDw1JyCgSZma3SQ0vneWyKk94EX80M9q+Lo2cdiGxevlFoolf15bbw==
-X-Received: by 2002:a7b:cf27:: with SMTP id m7mr15887120wmg.183.1588601149013;
-        Mon, 04 May 2020 07:05:49 -0700 (PDT)
-Received: from localhost.localdomain (ip5f5bfcc8.dynamic.kabel-deutschland.de. [95.91.252.200])
-        by smtp.gmail.com with ESMTPSA id h137sm273832wme.0.2020.05.04.07.05.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 07:05:48 -0700 (PDT)
-From:   huobean@gmail.com
-X-Google-Original-From: beanhuo@micron.com
-To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
-        asutoshd@codeaurora.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
-        cang@codeaurora.org, rdunlap@infradead.org
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hch@infradead.org
-Subject: [PATCH RFC v3 3/5] scsi: ufs: add ufs_features parameter in structure ufs_dev_info
-Date:   Mon,  4 May 2020 16:05:29 +0200
-Message-Id: <20200504140531.16260-4-beanhuo@micron.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200504140531.16260-1-beanhuo@micron.com>
-References: <20200504140531.16260-1-beanhuo@micron.com>
+        Mon, 4 May 2020 10:07:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588601239;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UNEInDzsZUfgj6dVPP9TtTfYbCtjbqhCfb5bgYwLZbY=;
+        b=Wvs8yqi/dtKKxncigQNT5V6wC6U2InfYpy/WtybRt1213VQhx4/UffIWqddZYQcy1Mx73X
+        TlpgX5MJJGItTk5n6qWNs9Dk9mlb5o2KI7qLCUEN1kNc2i1erv+OshoEJ1i/Yiq/zHm/K7
+        JEgK/miZyAzwpVaOVQZcCoqMJbl7Lzc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-463-5Qn0jHjGNO2YUpdhuNEjLg-1; Mon, 04 May 2020 10:07:15 -0400
+X-MC-Unique: 5Qn0jHjGNO2YUpdhuNEjLg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9FA471856FD5;
+        Mon,  4 May 2020 14:06:34 +0000 (UTC)
+Received: from x1.home (ovpn-113-95.phx2.redhat.com [10.3.113.95])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9335D78B21;
+        Mon,  4 May 2020 14:06:31 +0000 (UTC)
+Date:   Mon, 4 May 2020 08:06:30 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, peterx@redhat.com
+Subject: Re: [PATCH 1/3] vfio/type1: Support faulting PFNMAP vmas
+Message-ID: <20200504080630.293f33e8@x1.home>
+In-Reply-To: <20200501235033.GA19929@ziepe.ca>
+References: <158836742096.8433.685478071796941103.stgit@gimli.home>
+        <158836914801.8433.9711545991918184183.stgit@gimli.home>
+        <20200501235033.GA19929@ziepe.ca>
+Organization: Red Hat
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bean Huo <beanhuo@micron.com>
+On Fri, 1 May 2020 20:50:33 -0300
+Jason Gunthorpe <jgg@ziepe.ca> wrote:
 
-Make a copy of bUFSFeaturesSupport, name it ufs_features, add it
-to structure ufs_dev_info.
+> On Fri, May 01, 2020 at 03:39:08PM -0600, Alex Williamson wrote:
+> > With conversion to follow_pfn(), DMA mapping a PFNMAP range depends on
+> > the range being faulted into the vma.  Add support to manually provide
+> > that, in the same way as done on KVM with hva_to_pfn_remapped().
+> > 
+> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> >  drivers/vfio/vfio_iommu_type1.c |   36 +++++++++++++++++++++++++++++++++---
+> >  1 file changed, 33 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> > index cc1d64765ce7..4a4cb7cd86b2 100644
+> > +++ b/drivers/vfio/vfio_iommu_type1.c
+> > @@ -317,6 +317,32 @@ static int put_pfn(unsigned long pfn, int prot)
+> >  	return 0;
+> >  }
+> >  
+> > +static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_struct *mm,
+> > +			    unsigned long vaddr, unsigned long *pfn,
+> > +			    bool write_fault)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = follow_pfn(vma, vaddr, pfn);
+> > +	if (ret) {
+> > +		bool unlocked = false;
+> > +
+> > +		ret = fixup_user_fault(NULL, mm, vaddr,
+> > +				       FAULT_FLAG_REMOTE |
+> > +				       (write_fault ?  FAULT_FLAG_WRITE : 0),
+> > +				       &unlocked);
+> > +		if (unlocked)
+> > +			return -EAGAIN;
+> > +
+> > +		if (ret)
+> > +			return ret;
+> > +
+> > +		ret = follow_pfn(vma, vaddr, pfn);
+> > +	}
+> > +
+> > +	return ret;
+> > +}
+> > +
+> >  static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+> >  			 int prot, unsigned long *pfn)
+> >  {
+> > @@ -339,12 +365,16 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+> >  
+> >  	vaddr = untagged_addr(vaddr);
+> >  
+> > +retry:
+> >  	vma = find_vma_intersection(mm, vaddr, vaddr + 1);
+> >  
+> >  	if (vma && vma->vm_flags & VM_PFNMAP) {
+> > -		if (!follow_pfn(vma, vaddr, pfn) &&
+> > -		    is_invalid_reserved_pfn(*pfn))
+> > -			ret = 0;
+> > +		ret = follow_fault_pfn(vma, mm, vaddr, pfn, prot & IOMMU_WRITE);
+> > +		if (ret == -EAGAIN)
+> > +			goto retry;
+> > +
+> > +		if (!ret && !is_invalid_reserved_pfn(*pfn))
+> > +			ret = -EFAULT;  
+> 
+> I suggest checking vma->vm_ops == &vfio_pci_mmap_ops and adding a
+> comment that this is racy and needs to be fixed up. The ops check
+> makes this only used by other vfio bars and should prevent some
+> abuses of this hacky thing
 
-Signed-off-by: Bean Huo <beanhuo@micron.com>
----
- drivers/scsi/ufs/ufs.h    | 2 ++
- drivers/scsi/ufs/ufshcd.c | 2 ++
- 2 files changed, 4 insertions(+)
+We can't do that, vfio-pci is only one bus driver within the vfio
+ecosystem.
 
-diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
-index 53a5e263f7c8..1f2d4b4950b8 100644
---- a/drivers/scsi/ufs/ufs.h
-+++ b/drivers/scsi/ufs/ufs.h
-@@ -543,6 +543,8 @@ struct ufs_dev_info {
- 	u16 hpb_ver;
- 	/* bHPBControl */
- 	u8 hpb_control_mode;
-+	/* bUFSFeaturesSupport */
-+	u8 ufs_features;
- };
- 
- /**
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 83ed2879d930..1fe7ffc1a75a 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -6625,6 +6625,8 @@ static int ufs_get_device_desc(struct ufs_hba *hba)
- 		goto out;
- 	}
- 
-+	dev_info->ufs_features = desc_buf[DEVICE_DESC_PARAM_UFS_FEAT];
-+
- 	if (desc_buf[DEVICE_DESC_PARAM_UFS_FEAT] & 0x80) {
- 		hba->dev_info.hpb_control_mode =
- 			desc_buf[DEVICE_DESC_PARAM_HPB_CTRL_MODE];
--- 
-2.17.1
+> However, I wonder if this chould just link itself into the
+> vma->private data so that when the vfio that owns the bar goes away,
+> so does the iommu mapping?
+
+I don't really see why we wouldn't use mmu notifiers so that the vfio
+iommu backend and vfio bus driver remain independent.
+
+> I feel like this patch set is not complete unless it also handles the
+> shootdown of this path too?
+
+It would be nice to solve both issues and I'll start working on the mmu
+notifier side of things, but this series does solve a real issue on
+its own and we're not changing the iommu mapping behavior here.  Thanks,
+
+Alex
 
