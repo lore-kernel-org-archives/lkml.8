@@ -2,329 +2,114 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 266FDC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0372C47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECF4F2073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:13:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZiGOEf/j"
+	by mail.kernel.org (Postfix) with ESMTP id D407D2073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:13:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730447AbgEDRNK (ORCPT
+        id S1730459AbgEDRNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:13:10 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:25330 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730439AbgEDRNJ (ORCPT
+        Mon, 4 May 2020 13:13:15 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:41248 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730179AbgEDRNM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:13:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588612386;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TD8IvGU/cs1ejkxvD4Als159+boOBcHJ/ANKfYOUjVo=;
-        b=ZiGOEf/jPYnkjcVo3MjzUdsxNIZ0FzyM6zceUAmLyfvHbaUBA3A46m5MGb9xkDw6Wp2P3H
-        HkZL2nIjFjq429ZdTyq7XlZB4ck+OVCVtlrsQBIM9+xbI+gykXSl5Jqm/nTQ9Z8ZPUqtcg
-        kVTfhyZA0LaVICkVru1BGLOJGZPkvCQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-9-AOKbFEc9PmWYUEvwg5nZjg-1; Mon, 04 May 2020 13:13:04 -0400
-X-MC-Unique: AOKbFEc9PmWYUEvwg5nZjg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 30A0B108BD0A;
-        Mon,  4 May 2020 17:13:01 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-118-225.rdu2.redhat.com [10.10.118.225])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DD9D160C80;
-        Mon,  4 May 2020 17:12:55 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 36/61] cachefiles: Implement read and write parts of new
- I/O API
-From:   David Howells <dhowells@redhat.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Jeff Layton <jlayton@redhat.com>
-Cc:     dhowells@redhat.com, Matthew Wilcox <willy@infradead.org>,
+        Mon, 4 May 2020 13:13:12 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jVeeT-000475-56; Mon, 04 May 2020 11:13:09 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jVeeS-0007Cd-8B; Mon, 04 May 2020 11:13:09 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-kernel@vger.kernel.org,
         Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 04 May 2020 18:12:55 +0100
-Message-ID: <158861237502.340223.8393701975417626960.stgit@warthog.procyon.org.uk>
-In-Reply-To: <158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk>
-References: <158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.21
+        =?utf-8?Q?St=C3=A9phane?= Graber <stgraber@ubuntu.com>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Serge Hallyn <serge@hallyn.com>, Jann Horn <jannh@google.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Aleksa Sarai <cyphar@cyphar.com>, linux-api@vger.kernel.org
+References: <20200504144141.3605533-1-christian.brauner@ubuntu.com>
+        <20200504144141.3605533-3-christian.brauner@ubuntu.com>
+        <87h7wvoefw.fsf@x220.int.ebiederm.org>
+        <20200504163907.jjgqe7qnnjpw4uwo@wittgenstein>
+Date:   Mon, 04 May 2020 12:09:46 -0500
+In-Reply-To: <20200504163907.jjgqe7qnnjpw4uwo@wittgenstein> (Christian
+        Brauner's message of "Mon, 4 May 2020 18:39:07 +0200")
+Message-ID: <87ftcfmxt1.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain
+X-XM-SPF: eid=1jVeeS-0007Cd-8B;;;mid=<87ftcfmxt1.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19bqNapwp8vFn0s3C2ELzsRQSZ1zw8pn/A=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v3 2/3] nsproxy: attach to namespaces via pidfds
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement writing into the cache and reading back from the cache inside
-cachefiles using asynchronous direct I/O from the specified iterator.  The
-size and position of the request should be aligned to the reported
-dio_block_size.
+Christian Brauner <christian.brauner@ubuntu.com> writes:
 
-Errors and completion are reported by callback.
+> On Mon, May 04, 2020 at 11:25:07AM -0500, Eric W. Biederman wrote:
+>> 
+>> I am not thrilled about treating nstype as a flags fields when it is not
+>> currently.  It was my hope when I designed the interface that not
+>> treating nstype as a flags field would save us from the problem of bits
+>> running out.
+>
+> Hm, I researched the setns() syscall history before that and I didn't
+> see that reasoning anywhere. The "nstype" arg was originally advertised
+> on the list as "having a flags field is useful in general".
 
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+Take a look at the code.  At the end of the day nstype is not treated at
+all like a flags field.
 
- fs/cachefiles/io.c |  208 +++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 202 insertions(+), 6 deletions(-)
+It isn't a very important point.  And it was certainly easier to use
+the existing bits for essentially their existing meanings.  But it was
+certainly something I was thinking at the time.
 
-diff --git a/fs/cachefiles/io.c b/fs/cachefiles/io.c
-index ddb44ec5a199..42e0d620d778 100644
---- a/fs/cachefiles/io.c
-+++ b/fs/cachefiles/io.c
-@@ -12,30 +12,226 @@
- #include <linux/xattr.h>
- #include "internal.h"
- 
-+struct cachefiles_kiocb {
-+	struct kiocb			iocb;
-+	struct fscache_io_request	*req;
-+	refcount_t			ki_refcnt;
-+};
-+
-+static inline void cachefiles_put_kiocb(struct cachefiles_kiocb *ki)
-+{
-+	if (refcount_dec_and_test(&ki->ki_refcnt)) {
-+		fscache_put_io_request(ki->req);
-+		fput(ki->iocb.ki_filp);
-+		kfree(ki);
-+	}
-+}
-+
-+/*
-+ * Handle completion of a read from the cache.
-+ */
-+static void cachefiles_read_complete(struct kiocb *iocb, long ret, long ret2)
-+{
-+	struct cachefiles_kiocb *ki = container_of(iocb, struct cachefiles_kiocb, iocb);
-+	struct fscache_io_request *req = ki->req;
-+
-+	_enter("%llx,%ld,%ld", req->len, ret, ret2);
-+
-+	fscache_end_io_operation(req->cookie);
-+
-+	if (ret < 0) {
-+		req->error = ret;
-+	} else if (ret != req->len) {
-+		req->error = -ENODATA;
-+	} else {
-+		req->transferred = ret;
-+		set_bit(FSCACHE_IO_DATA_FROM_CACHE, &req->flags);
-+	}
-+	if (req->io_done)
-+		req->io_done(req);
-+	cachefiles_put_kiocb(ki);
-+}
-+
- /*
-  * Initiate a read from the cache.
-  */
--int cachefiles_read(struct fscache_object *object,
-+int cachefiles_read(struct fscache_object *obj,
- 		    struct fscache_io_request *req,
- 		    struct iov_iter *iter)
- {
--	req->error = -ENODATA;
-+	struct cachefiles_object *object =
-+		container_of(obj, struct cachefiles_object, fscache);
-+	struct cachefiles_kiocb *ki;
-+	struct file *file = object->backing_file;
-+	ssize_t ret = -ENOBUFS;
-+
-+	_enter("%pD,%li,%llx,%llx/%llx",
-+	       file, file_inode(file)->i_ino, req->pos, req->len, i_size_read(file->f_inode));
-+
-+	ki = kzalloc(sizeof(struct cachefiles_kiocb), GFP_KERNEL);
-+	if (!ki)
-+		goto presubmission_error;
-+
-+	refcount_set(&ki->ki_refcnt, 2);
-+	ki->iocb.ki_filp	= get_file(file);
-+	ki->iocb.ki_pos		= req->pos;
-+	ki->iocb.ki_flags	= IOCB_DIRECT;
-+	ki->iocb.ki_hint	= ki_hint_validate(file_write_hint(file));
-+	ki->iocb.ki_ioprio	= get_current_ioprio();
-+	ki->req			= req;
-+
-+	if (req->io_done)
-+		ki->iocb.ki_complete = cachefiles_read_complete;
-+
-+	ret = rw_verify_area(READ, file, &ki->iocb.ki_pos, iov_iter_count(iter));
-+	if (ret < 0)
-+		goto presubmission_error_free;
-+
-+	fscache_get_io_request(req);
-+	ret = call_read_iter(file, &ki->iocb, iter);
-+	switch (ret) {
-+	case -EIOCBQUEUED:
-+		goto in_progress;
-+
-+	case -ERESTARTSYS:
-+	case -ERESTARTNOINTR:
-+	case -ERESTARTNOHAND:
-+	case -ERESTART_RESTARTBLOCK:
-+		/* There's no easy way to restart the syscall since other AIO's
-+		 * may be already running. Just fail this IO with EINTR.
-+		 */
-+		ret = -EINTR;
-+		/* Fall through */
-+	default:
-+		cachefiles_read_complete(&ki->iocb, ret, 0);
-+		if (ret > 0)
-+			ret = 0;
-+		break;
-+	}
-+
-+in_progress:
-+	cachefiles_put_kiocb(ki);
-+	_leave(" = %zd", ret);
-+	return ret;
-+
-+presubmission_error_free:
-+	fput(file);
-+	kfree(ki);
-+presubmission_error:
-+	req->error = -ENOMEM;
-+	if (req->io_done)
-+		req->io_done(req);
-+	return -ENOMEM;
-+}
-+
-+/*
-+ * Handle completion of a write to the cache.
-+ */
-+static void cachefiles_write_complete(struct kiocb *iocb, long ret, long ret2)
-+{
-+	struct cachefiles_kiocb *ki = container_of(iocb, struct cachefiles_kiocb, iocb);
-+	struct fscache_io_request *req = ki->req;
-+	struct inode *inode = file_inode(ki->iocb.ki_filp);
-+
-+	_enter("%llx,%ld,%ld", req->len, ret, ret2);
-+
-+	/* Tell lockdep we inherited freeze protection from submission thread */
-+	__sb_writers_acquired(inode->i_sb, SB_FREEZE_WRITE);
-+	__sb_end_write(inode->i_sb, SB_FREEZE_WRITE);
-+
-+	fscache_end_io_operation(req->cookie);
-+
-+	if (ret < 0)
-+		req->error = ret;
-+	else if (ret != req->len)
-+		req->error = -ENOBUFS;
-+	else
-+		cachefiles_mark_content_map(req);
- 	if (req->io_done)
- 		req->io_done(req);
--	return -ENODATA;
-+	cachefiles_put_kiocb(ki);
- }
- 
- /*
-  * Initiate a write to the cache.
-  */
--int cachefiles_write(struct fscache_object *object,
-+int cachefiles_write(struct fscache_object *obj,
- 		     struct fscache_io_request *req,
- 		     struct iov_iter *iter)
- {
--	req->error = -ENOBUFS;
-+	struct cachefiles_object *object =
-+		container_of(obj, struct cachefiles_object, fscache);
-+	struct cachefiles_kiocb *ki;
-+	struct inode *inode;
-+	struct file *file = object->backing_file;
-+	ssize_t ret = -ENOBUFS;
-+
-+	_enter("%pD,%li,%llx,%llx/%llx",
-+	       file, file_inode(file)->i_ino, req->pos, req->len, i_size_read(file->f_inode));
-+
-+	ki = kzalloc(sizeof(struct cachefiles_kiocb), GFP_KERNEL);
-+	if (!ki)
-+		goto presubmission_error;
-+
-+	refcount_set(&ki->ki_refcnt, 2);
-+	ki->iocb.ki_filp	= get_file(file);
-+	ki->iocb.ki_pos		= req->pos;
-+	ki->iocb.ki_flags	= IOCB_DIRECT | IOCB_WRITE;
-+	ki->iocb.ki_hint	= ki_hint_validate(file_write_hint(file));
-+	ki->iocb.ki_ioprio	= get_current_ioprio();
-+	ki->req			= req;
-+
-+	if (req->io_done)
-+		ki->iocb.ki_complete = cachefiles_write_complete;
-+
-+	ret = rw_verify_area(WRITE, file, &ki->iocb.ki_pos, iov_iter_count(iter));
-+	if (ret < 0)
-+		goto presubmission_error_free;
-+
-+	/* Open-code file_start_write here to grab freeze protection, which
-+	 * will be released by another thread in aio_complete_rw().  Fool
-+	 * lockdep by telling it the lock got released so that it doesn't
-+	 * complain about the held lock when we return to userspace.
-+	 */
-+	inode = file_inode(file);
-+	__sb_start_write(inode->i_sb, SB_FREEZE_WRITE, true);
-+	__sb_writers_release(inode->i_sb, SB_FREEZE_WRITE);
-+
-+	fscache_get_io_request(req);
-+	ret = call_write_iter(file, &ki->iocb, iter);
-+	switch (ret) {
-+	case -EIOCBQUEUED:
-+		goto in_progress;
-+
-+	case -ERESTARTSYS:
-+	case -ERESTARTNOINTR:
-+	case -ERESTARTNOHAND:
-+	case -ERESTART_RESTARTBLOCK:
-+		/* There's no easy way to restart the syscall since other AIO's
-+		 * may be already running. Just fail this IO with EINTR.
-+		 */
-+		ret = -EINTR;
-+		/* Fall through */
-+	default:
-+		cachefiles_write_complete(&ki->iocb, ret, 0);
-+		if (ret > 0)
-+			ret = 0;
-+		break;
-+	}
-+
-+in_progress:
-+	cachefiles_put_kiocb(ki);
-+	_leave(" = %zd", ret);
-+	return ret;
-+
-+presubmission_error_free:
-+	fput(file);
-+	kfree(ki);
-+presubmission_error:
-+	req->error = -ENOMEM;
- 	if (req->io_done)
- 		req->io_done(req);
--	return -ENOBUFS;
-+	return -ENOMEM;
- }
- 
- /*
+I think I left it as we can see either way, depending on how things
+evolve.
 
+I can imagine a use for a nstype being a single namespace from a pidfd.
+Do you have any actual usecases for setting some but not all of the
+namespaces from a pidfd?  If we don't have a compelling reason
+I would like to kick that can down the road a ways farther.
+
+I am also remembering that that setns freed the low 8 bits.  Which gave
+some freedom beyond clone.
+
+>> That aside.  It would be very good if the default version of setting
+>> everything from a pidfd would set the root directory from the process it
+>> is copying everything else from.
+>
+> I'm not sure I follow completely. If you specify CLONE_NEWNS then we do
+> set the root directory with set_fs_root() in commit_nsset(). Or are you
+> saying we should always do that independent of whether or not
+> CLONE_NEWNS is specified? And if so could you explain why we'd want
+> that? I'm sure I'm missing something!
+
+I am suggesting that when we do:
+
+"setns(pidfd, 0)" or "setns(pidfd, SETNS_PIDFD)"
+
+That the result is not just the namespaces changing but also the root
+directory changing to the pids root directory.  Something where the
+whole is greater than the parts.
+
+Eric
 
