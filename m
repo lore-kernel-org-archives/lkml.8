@@ -2,99 +2,176 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A51AC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84235C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E505C20757
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 686D92078E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:12:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgEDHLZ (ORCPT
+        id S1727901AbgEDHM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 03:11:25 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46454 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726625AbgEDHLY (ORCPT
+        Mon, 4 May 2020 03:12:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40512 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726935AbgEDHM1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 03:11:24 -0400
-Received: by mail-ot1-f65.google.com with SMTP id z25so8024653otq.13
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 00:11:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rfkxILgR6gYq3zL8Nxb8d3GiP3wwKG2LbudzQQF7WbU=;
-        b=oOfOSSr/dGmYh+jgyKl4faHKwXMWHkL4It14ig4D+xNsjyb8fJTiEs6WntlJ106M/8
-         MhQbUQDWNt/6+jc1D8Y34o1AP+Kgt9pkvgAwwo0pD8Kq1Rp5vi70iFCil04knWNtC/G7
-         KYW7ONL8p/ynSVAkpvyfxsgBqJAa+rPofwhzUxCkE/A2WLYXIOZFQ/ki9XXA7yWqTZwX
-         GitnNCnuiSr/VuvOkwQP3TWFVw0aTuVDjZ+3DJneTV5ELj5AfWAGWQvDfK4hRM1pDgPs
-         tmbEFjcQBpviVfs15700KoLFTCQFzzRJO02xFzUlGwGVVvLUnnUwh4LV784rxjYUnfck
-         JuEw==
-X-Gm-Message-State: AGi0Pub5s+YFPDTcH+4NcEuMRqUd73kFr8NgcpXeEpMnKw+VJOaQ7JOr
-        x/3x0BVas0DPulUXxfip6UpRnPuN8aOFQ6wI3z4=
-X-Google-Smtp-Source: APiQypJPMgeWBRUiVyeVnkIiZGgJNdYK9YfY571As0RfWeLMVNq4WlAgY4mBZ80+C3ouKbzMSZ5KFVm7VZsG8Eqtf1M=
-X-Received: by 2002:a9d:7d85:: with SMTP id j5mr12499692otn.107.1588576283223;
- Mon, 04 May 2020 00:11:23 -0700 (PDT)
+        Mon, 4 May 2020 03:12:27 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D870C061A0F
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 00:12:27 -0700 (PDT)
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jVVH2-0001Ta-0P; Mon, 04 May 2020 09:12:20 +0200
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jVVGx-0001YL-Tn; Mon, 04 May 2020 09:12:15 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Kubecek <mkubecek@suse.cz>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        David Jander <david@protonic.nl>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
+        Marek Vasut <marex@denx.de>,
+        Christian Herber <christian.herber@nxp.com>
+Subject: [PATCH v5 2/2] net: phy: tja11xx: add support for master-slave configuration
+Date:   Mon,  4 May 2020 09:12:14 +0200
+Message-Id: <20200504071214.5890-3-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200504071214.5890-1-o.rempel@pengutronix.de>
+References: <20200504071214.5890-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-References: <1585568499-21585-1-git-send-email-amit.kachhap@arm.com>
-In-Reply-To: <1585568499-21585-1-git-send-email-amit.kachhap@arm.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 4 May 2020 09:11:12 +0200
-Message-ID: <CAMuHMdWxTtFxgpabeK3L4Ev4zgZ6r=_c+5MBVYd7ZAHbNYxm=Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] init/kconfig: Add LD_VERSION Kconfig
-To:     Amit Daniel Kachhap <amit.kachhap@arm.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <Vincenzo.Frascino@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Amit,
+The TJA11xx PHYs have a vendor specific Master/Slave configuration bit,
+which is not compatible with IEEE 803.2-2018 spec for 100Base-T1
+devices. So, provide a custom config_ange call back to solve this
+problem.
 
-On Mon, Mar 30, 2020 at 1:42 PM Amit Daniel Kachhap
-<amit.kachhap@arm.com> wrote:
-> This option can be used in Kconfig files to compare the ld version
-> and enable/disable incompatible config options if required.
->
-> This option is used in the subsequent patch along with GCC_VERSION to
-> filter out an incompatible feature.
->
-> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ drivers/net/phy/nxp-tja11xx.c | 43 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -17,6 +17,10 @@ config GCC_VERSION
->         default $(shell,$(srctree)/scripts/gcc-version.sh $(CC)) if CC_IS_GCC
->         default 0
->
-> +config LD_VERSION
-> +       int
-> +       default $(shell,$(LD) --version | $(srctree)/scripts/ld-version.sh)
-> +
->  config CC_IS_CLANG
->         def_bool $(success,$(CC) --version | head -n 1 | grep -q clang)
-
-.config: warning: symbol value '2.01827e+11' invalid for LD_VERSION
-
-Seen with the or32 compiler on kisskb, e.g.
-http://kisskb.ellerman.id.au/kisskb/buildresult/14226173/
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/net/phy/nxp-tja11xx.c b/drivers/net/phy/nxp-tja11xx.c
+index cc766b2d4136e..ca5f9d4dc57ed 100644
+--- a/drivers/net/phy/nxp-tja11xx.c
++++ b/drivers/net/phy/nxp-tja11xx.c
+@@ -30,6 +30,7 @@
+ #define MII_ECTRL_WAKE_REQUEST		BIT(0)
+ 
+ #define MII_CFG1			18
++#define MII_CFG1_MASTER_SLAVE		BIT(15)
+ #define MII_CFG1_AUTO_OP		BIT(14)
+ #define MII_CFG1_SLEEP_CONFIRM		BIT(6)
+ #define MII_CFG1_LED_MODE_MASK		GENMASK(5, 4)
+@@ -167,6 +168,32 @@ static int tja11xx_soft_reset(struct phy_device *phydev)
+ 	return genphy_soft_reset(phydev);
+ }
+ 
++static int tja11xx_config_aneg(struct phy_device *phydev)
++{
++	u16 ctl = 0;
++	int ret;
++
++	switch (phydev->master_slave_set) {
++	case MASTER_SLAVE_CFG_MASTER_FORCE:
++		ctl |= MII_CFG1_MASTER_SLAVE;
++		break;
++	case MASTER_SLAVE_CFG_SLAVE_FORCE:
++		break;
++	case MASTER_SLAVE_CFG_UNKNOWN:
++	case MASTER_SLAVE_CFG_UNSUPPORTED:
++		return 0;
++	default:
++		phydev_warn(phydev, "Unsupported Master/Slave mode\n");
++		return -ENOTSUPP;
++	}
++
++	ret = phy_modify_changed(phydev, MII_CFG1, MII_CFG1_MASTER_SLAVE, ctl);
++	if (ret < 0)
++		return ret;
++
++	return __genphy_config_aneg(phydev, ret);
++}
++
+ static int tja11xx_config_init(struct phy_device *phydev)
+ {
+ 	int ret;
+@@ -224,10 +251,22 @@ static int tja11xx_read_status(struct phy_device *phydev)
+ {
+ 	int ret;
+ 
++	phydev->master_slave_get = MASTER_SLAVE_CFG_UNKNOWN;
++	phydev->master_slave_state = MASTER_SLAVE_STATE_UNSUPPORTED;
++
+ 	ret = genphy_update_link(phydev);
+ 	if (ret)
+ 		return ret;
+ 
++	ret = phy_read(phydev, MII_CFG1);
++	if (ret < 0)
++		return ret;
++
++	if (ret & MII_CFG1_MASTER_SLAVE)
++		phydev->master_slave_get = MASTER_SLAVE_CFG_MASTER_FORCE;
++	else
++		phydev->master_slave_get = MASTER_SLAVE_CFG_SLAVE_FORCE;
++
+ 	if (phydev->link) {
+ 		ret = phy_read(phydev, MII_COMMSTAT);
+ 		if (ret < 0)
+@@ -504,6 +543,7 @@ static struct phy_driver tja11xx_driver[] = {
+ 		.features       = PHY_BASIC_T1_FEATURES,
+ 		.probe		= tja11xx_probe,
+ 		.soft_reset	= tja11xx_soft_reset,
++		.config_aneg	= tja11xx_config_aneg,
+ 		.config_init	= tja11xx_config_init,
+ 		.read_status	= tja11xx_read_status,
+ 		.suspend	= genphy_suspend,
+@@ -519,6 +559,7 @@ static struct phy_driver tja11xx_driver[] = {
+ 		.features       = PHY_BASIC_T1_FEATURES,
+ 		.probe		= tja11xx_probe,
+ 		.soft_reset	= tja11xx_soft_reset,
++		.config_aneg	= tja11xx_config_aneg,
+ 		.config_init	= tja11xx_config_init,
+ 		.read_status	= tja11xx_read_status,
+ 		.suspend	= genphy_suspend,
+@@ -533,6 +574,7 @@ static struct phy_driver tja11xx_driver[] = {
+ 		.features       = PHY_BASIC_T1_FEATURES,
+ 		.probe		= tja1102_p0_probe,
+ 		.soft_reset	= tja11xx_soft_reset,
++		.config_aneg	= tja11xx_config_aneg,
+ 		.config_init	= tja11xx_config_init,
+ 		.read_status	= tja11xx_read_status,
+ 		.match_phy_device = tja1102_p0_match_phy_device,
+@@ -551,6 +593,7 @@ static struct phy_driver tja11xx_driver[] = {
+ 		.features       = PHY_BASIC_T1_FEATURES,
+ 		/* currently no probe for Port 1 is need */
+ 		.soft_reset	= tja11xx_soft_reset,
++		.config_aneg	= tja11xx_config_aneg,
+ 		.config_init	= tja11xx_config_init,
+ 		.read_status	= tja11xx_read_status,
+ 		.match_phy_device = tja1102_p1_match_phy_device,
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.26.2
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
