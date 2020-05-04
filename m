@@ -2,308 +2,129 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA30C47258
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A7DC47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5A220663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 018C2206EB
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:36:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aNZI+kPW"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="eDpXtSDz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbgEDWeM (ORCPT
+        id S1728189AbgEDWgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 18:34:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43360 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726291AbgEDWeL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 18:34:11 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66BE1C061A0E;
-        Mon,  4 May 2020 15:34:11 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id k18so357935ion.0;
-        Mon, 04 May 2020 15:34:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d5BZN4gsRt4QI1pKOn4DXdZ5N35QDy+YQ/6Med+JJqo=;
-        b=aNZI+kPW6aiwnJ0UeRhhTDJQToI93EqNL50BqlQcPjF83OqKmIh5bO3fMgCDh7NOCN
-         WX6ZjN0g4O10LdBXmSI2hJJPGZ7610+W6q4W7+s+KBBZMl8CLKNwrWBt6JMmJTj7BwmX
-         FbC+xNQe9Zs6JgmsN7nTXgcmeRmD4aXCnjiSmnJ3Ja1xE7ENso/IvZ8k9P4xAWT8HNm7
-         d3zsFhCIbDPwK5htXeXX+WrlTuQrDYkwvkVkA83sZgFkam5MoDy8Jh251yzCREwLTb++
-         HdyhPflpXGNZI1TmC5NSlM5rXbE0UNhEJ0XNOmg+0i3rBetDKAjiOCRna1ogmpr2DdZd
-         r8ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d5BZN4gsRt4QI1pKOn4DXdZ5N35QDy+YQ/6Med+JJqo=;
-        b=RicOQiFHewOPMLw3UqSLAppZwnC/TnXiZ3jHJ89xZWjWmNGztNapoW/KOkLK2RUCJi
-         PBvCA5W8Ywj+2FXtHFhl5zeMmuWJgrINu1qrcUVQs09YHg4QwnHRSS2FmFlvLvEcrsGK
-         /95bm0xBkEHRVwsF6hI81Rzcc8xxxzqB599IHoIRgzjSdX6wapV7updLQT3/gycnblD/
-         3A8Q+LxwupiX4MRfS1fpfT8PkurlYsjAViMUt4NTi5UpuZ4oY62QSFpLonuHKllTfW3e
-         qfuOq4wMhgUICkzx9nWax3gpvwADKjDDoqD4mjt/JzqwdU2t63rEeqhnrVC4Cba/0dak
-         z+XA==
-X-Gm-Message-State: AGi0PuaczyCtNwRA2qVVBN4sB/GIqNYB4NmUekzSxBIq80EoRCibqahG
-        41E8IRxRiLIk/LEmZSI/sIjLOA3alN2itQsMJoA=
-X-Google-Smtp-Source: APiQypJiYgHpmI5TrWtz0Qsju8xCdriCXD4TvQ+UhwsHMQqxat3fthuMCzQYU/3d41qVCRKsS+nI8tAtBsbehpRomWo=
-X-Received: by 2002:a6b:d90f:: with SMTP id r15mr552040ioc.5.1588631649053;
- Mon, 04 May 2020 15:34:09 -0700 (PDT)
+        Mon, 4 May 2020 18:36:09 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:30039 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726419AbgEDWgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 18:36:09 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 49GHks2CQ0z8r;
+        Tue,  5 May 2020 00:36:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1588631766; bh=r9Ra0YsTNI47z6MEyzSs2RXlk4X+BQLFr0esPWmvCXg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eDpXtSDzNBSoyYdFn2P0bsWoUvPEC9Um/JcPWFcXE0GRu5RqGFbwQ3WVQCIvasKj/
+         ezBtzKnZHmBd4lbrfJp0Iy8KuEWGqxK67p2cywxnPWQFSyUK/cQwvrI6zPlCPqLFrX
+         nf5HbWEGPa8+5u6gbVOo0duiz+GqulhBTx6zSG3HpEyQoVEZr7dqi1XSCnW4MrgZF1
+         i2y92nuXpIpcfsBqLJg9iBbKW1t8iNacBP2ILye/1C7wsCrHrmzbPPWFfDlui0iQWP
+         UHPObRQevE9wXlMf8WjCsBtYCxqKEsrxNTTjaHm2X0HVQaTmnQM+jIsuyxFH8MufYs
+         7X1mcVCx41/sQ==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Tue, 5 May 2020 00:36:04 +0200
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/3] clk: at91: allow setting PCKx parent via DT
+Message-ID: <20200504223604.GA16549@qmqm.qmqm.pl>
+References: <cover.1588623391.git.mirq-linux@rere.qmqm.pl>
+ <fd853126e9971b9ef9bdcfe469ed3146a0cad92b.1588623391.git.mirq-linux@rere.qmqm.pl>
+ <20200504204447.GL34497@piout.net>
 MIME-Version: 1.0
-References: <20200430201125.532129-1-daniel.m.jordan@oracle.com> <20200430201125.532129-7-daniel.m.jordan@oracle.com>
-In-Reply-To: <20200430201125.532129-7-daniel.m.jordan@oracle.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Mon, 4 May 2020 15:33:58 -0700
-Message-ID: <CAKgT0Uf7e5514SOi8dmkB5oXUK9bwqD_z-5KJ_F3MUn3CAQyPQ@mail.gmail.com>
-Subject: Re: [PATCH 6/7] mm: parallelize deferred_init_memmap()
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Michal Hocko <mhocko@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Tejun Heo <tj@kernel.org>, Zi Yan <ziy@nvidia.com>,
-        linux-crypto@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200504204447.GL34497@piout.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 1:12 PM Daniel Jordan
-<daniel.m.jordan@oracle.com> wrote:
->
-> Deferred struct page init uses one thread per node, which is a
-> significant bottleneck at boot for big machines--often the largest.
-> Parallelize to reduce system downtime.
->
-> The maximum number of threads is capped at the number of CPUs on the
-> node because speedups always improve with additional threads on every
-> system tested, and at this phase of boot, the system is otherwise idle
-> and waiting on page init to finish.
->
-> Helper threads operate on MAX_ORDER_NR_PAGES-aligned ranges to avoid
-> accessing uninitialized buddy pages, so set the job's alignment
-> accordingly.
->
-> The minimum chunk size is also MAX_ORDER_NR_PAGES because there was
-> benefit to using multiple threads even on relatively small memory (1G)
-> systems.
->
->     Intel(R) Xeon(R) Platinum 8167M CPU @ 2.00GHz (Skylake, bare metal)
->       2 nodes * 26 cores * 2 threads = 104 CPUs
->       384G/node = 768G memory
->
->                    kernel boot                 deferred init
->                    ------------------------    ------------------------
->                    speedup  time_ms (stdev)    speedup  time_ms (stdev)
->          base           --   4056.7 (  5.5)         --   1763.3 (  4.2)
->          test        39.9%   2436.7 (  2.1)      91.8%    144.3 (  5.9)
->
->     Intel(R) Xeon(R) CPU E5-2699C v4 @ 2.20GHz (Broadwell, bare metal)
->       1 node * 16 cores * 2 threads = 32 CPUs
->       192G/node = 192G memory
->
->                    kernel boot                 deferred init
->                    ------------------------    ------------------------
->                    speedup  time_ms (stdev)    speedup  time_ms (stdev)
->          base           --   1957.3 ( 14.0)         --   1093.7 ( 12.9)
->          test        49.1%    996.0 (  7.2)      88.4%    127.3 (  5.1)
->
->     Intel(R) Xeon(R) CPU E5-2699 v3 @ 2.30GHz (Haswell, bare metal)
->       2 nodes * 18 cores * 2 threads = 72 CPUs
->       128G/node = 256G memory
->
->                    kernel boot                 deferred init
->                    ------------------------    ------------------------
->                    speedup  time_ms (stdev)    speedup  time_ms (stdev)
->          base           --   1666.0 (  3.5)         --    618.0 (  3.5)
->          test        31.3%   1145.3 (  1.5)      85.6%     89.0 (  1.7)
->
->     AMD EPYC 7551 32-Core Processor (Zen, kvm guest)
->       1 node * 8 cores * 2 threads = 16 CPUs
->       64G/node = 64G memory
->
->                    kernel boot                 deferred init
->                    ------------------------    ------------------------
->                    speedup  time_ms (stdev)    speedup  time_ms (stdev)
->          base           --   1029.7 ( 42.3)         --    253.7 (  3.1)
->          test        23.3%    789.3 ( 15.0)      76.3%     60.0 (  5.6)
->
-> Server-oriented distros that enable deferred page init sometimes run in
-> small VMs, and they still benefit even though the fraction of boot time
-> saved is smaller:
->
->     AMD EPYC 7551 32-Core Processor (Zen, kvm guest)
->       1 node * 2 cores * 2 threads = 4 CPUs
->       16G/node = 16G memory
->
->                    kernel boot                 deferred init
->                    ------------------------    ------------------------
->                    speedup  time_ms (stdev)    speedup  time_ms (stdev)
->          base           --    757.7 ( 17.1)         --     57.0 (  0.0)
->          test         6.2%    710.3 ( 15.0)      63.2%     21.0 (  0.0)
->
->     Intel(R) Xeon(R) CPU E5-2699 v3 @ 2.30GHz (Haswell, kvm guest)
->       1 node * 2 cores * 2 threads = 4 CPUs
->       14G/node = 14G memory
->
->                    kernel boot                 deferred init
->                    ------------------------    ------------------------
->                    speedup  time_ms (stdev)    speedup  time_ms (stdev)
->          base           --    656.3 (  7.1)         --     57.3 (  1.5)
->          test         8.6%    599.7 (  5.9)      62.8%     21.3 (  1.2)
->
-> Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-> ---
->  mm/Kconfig      |  6 +++---
->  mm/page_alloc.c | 46 ++++++++++++++++++++++++++++++++++++++--------
->  2 files changed, 41 insertions(+), 11 deletions(-)
->
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index ab80933be65ff..e5007206c7601 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -622,13 +622,13 @@ config DEFERRED_STRUCT_PAGE_INIT
->         depends on SPARSEMEM
->         depends on !NEED_PER_CPU_KM
->         depends on 64BIT
-> +       select PADATA
->         help
->           Ordinarily all struct pages are initialised during early boot in a
->           single thread. On very large machines this can take a considerable
->           amount of time. If this option is set, large machines will bring up
-> -         a subset of memmap at boot and then initialise the rest in parallel
-> -         by starting one-off "pgdatinitX" kernel thread for each node X. This
-> -         has a potential performance impact on processes running early in the
-> +         a subset of memmap at boot and then initialise the rest in parallel.
-> +         This has a potential performance impact on tasks running early in the
->           lifetime of the system until these kthreads finish the
->           initialisation.
->
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 990514d8f0d94..96d6d0d920c27 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -68,6 +68,7 @@
->  #include <linux/lockdep.h>
->  #include <linux/nmi.h>
->  #include <linux/psi.h>
-> +#include <linux/padata.h>
->
->  #include <asm/sections.h>
->  #include <asm/tlbflush.h>
-> @@ -1729,6 +1730,25 @@ deferred_init_maxorder(struct zone *zone, unsigned long *start_pfn,
->         return nr_pages;
->  }
->
-> +struct def_init_args {
-> +       struct zone *zone;
-> +       atomic_long_t nr_pages;
-> +};
-> +
-> +static void __init deferred_init_memmap_chunk(unsigned long spfn,
-> +                                             unsigned long epfn, void *arg)
-> +{
-> +       struct def_init_args *args = arg;
-> +       unsigned long nr_pages = 0;
-> +
-> +       while (spfn < epfn) {
-> +               nr_pages += deferred_init_maxorder(args->zone, &spfn, epfn);
-> +               cond_resched();
-> +       }
-> +
-> +       atomic_long_add(nr_pages, &args->nr_pages);
-> +}
-> +
->  /* Initialise remaining memory on a node */
->  static int __init deferred_init_memmap(void *data)
->  {
-> @@ -1738,7 +1758,7 @@ static int __init deferred_init_memmap(void *data)
->         unsigned long first_init_pfn, flags;
->         unsigned long start = jiffies;
->         struct zone *zone;
-> -       int zid;
-> +       int zid, max_threads;
->         u64 i;
->
->         /* Bind memory initialisation thread to a local node if possible */
-> @@ -1778,15 +1798,25 @@ static int __init deferred_init_memmap(void *data)
->                 goto zone_empty;
->
->         /*
-> -        * Initialize and free pages in MAX_ORDER sized increments so
-> -        * that we can avoid introducing any issues with the buddy
-> -        * allocator.
-> +        * More CPUs always led to greater speedups on tested systems, up to
-> +        * all the nodes' CPUs.  Use all since the system is otherwise idle now.
->          */
+On Mon, May 04, 2020 at 10:44:47PM +0200, Alexandre Belloni wrote:
+> On 04/05/2020 22:19:17+0200, Micha³ Miros³aw wrote:
+> > This exposes PROGx clocks for use in assigned-clocks DeviceTree property
+> > for selecting PCKx parent clock.
+> > 
+> > Signed-off-by: Micha³ Miros³aw <mirq-linux@rere.qmqm.pl>
+> > Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > ---
+> > v2: rebase and update to clk/clk-at91 branch
+> > v3: rebase
+> > v4: no changes
+> > v5: no changes
+> > v6: no changes
+> > ---
+> >  drivers/clk/at91/at91rm9200.c    |  6 ++++--
+> >  drivers/clk/at91/at91sam9260.c   |  5 ++++-
+> >  drivers/clk/at91/at91sam9g45.c   |  6 ++++--
+> >  drivers/clk/at91/at91sam9n12.c   |  6 ++++--
+> >  drivers/clk/at91/at91sam9rl.c    |  4 +++-
+> >  drivers/clk/at91/at91sam9x5.c    |  4 +++-
+> >  drivers/clk/at91/pmc.c           | 12 ++++++++++--
+> >  drivers/clk/at91/pmc.h           |  5 ++++-
+> >  drivers/clk/at91/sam9x60.c       |  4 +++-
+> >  drivers/clk/at91/sama5d2.c       |  4 +++-
+> >  drivers/clk/at91/sama5d3.c       |  6 ++++--
+> >  drivers/clk/at91/sama5d4.c       |  4 +++-
+> >  include/dt-bindings/clock/at91.h |  1 +
+> >  13 files changed, 50 insertions(+), 17 deletions(-)
+> > 
+> > diff --git a/drivers/clk/at91/at91rm9200.c b/drivers/clk/at91/at91rm9200.c
+> > index c44a431b6c97..8da88e9a95d8 100644
+> > --- a/drivers/clk/at91/at91rm9200.c
+> > +++ b/drivers/clk/at91/at91rm9200.c
+> > @@ -100,7 +100,7 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
+> >  
+> >  	at91rm9200_pmc = pmc_data_allocate(PMC_MAIN + 1,
+> >  					    nck(at91rm9200_systemck),
+> > -					    nck(at91rm9200_periphck), 0);
+> > +					    nck(at91rm9200_periphck), 0, 4);
+> >  	if (!at91rm9200_pmc)
+> >  		return;
+> >  
+> > @@ -159,6 +159,8 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
+> >  						    &at91rm9200_programmable_layout);
+> >  		if (IS_ERR(hw))
+> >  			goto err_free;
+> > +
+> > +		at91rm9200_pmc->pchws[i] = hw;
+> >  	}
+> >  
+> >  	for (i = 0; i < ARRAY_SIZE(at91rm9200_systemck); i++) {
+> > @@ -187,7 +189,7 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
+> >  	return;
+> >  
+> >  err_free:
+> > -	pmc_data_free(at91rm9200_pmc);
+> > +	kfree(at91rm9200_pmc);
+> 
+> I missed that in the previous review but shouldn't that change be part
+> of the previous patch for bisectability ?
 
-I would be curious about your data. That isn't what I have seen in the
-past. Typically only up to about 8 or 10 CPUs gives you any benefit,
-beyond that I was usually cache/memory bandwidth bound.
+I was sure I already pushed all of them to the first patch...
+Fixed in v7.
 
-> +       max_threads = max(cpumask_weight(cpumask), 1u);
-> +
-
-We will need to gather data on if having a ton of threads works for
-all architectures. For x86 I think we are freeing back pages in
-pageblock_order sized chunks so we only have to touch them once in
-initialize and then free the two pageblock_order chunks into the buddy
-allocator.
-
->         for_each_free_mem_pfn_range_in_zone_from(i, zone, &spfn, &epfn) {
-> -               while (spfn < epfn) {
-> -                       nr_pages += deferred_init_maxorder(zone, &spfn, epfn);
-> -                       cond_resched();
-> -               }
-> +               struct def_init_args args = { zone, ATOMIC_LONG_INIT(0) };
-> +               struct padata_mt_job job = {
-> +                       .thread_fn   = deferred_init_memmap_chunk,
-> +                       .fn_arg      = &args,
-> +                       .start       = spfn,
-> +                       .size        = epfn - spfn,
-> +                       .align       = MAX_ORDER_NR_PAGES,
-> +                       .min_chunk   = MAX_ORDER_NR_PAGES,
-> +                       .max_threads = max_threads,
-> +               };
-> +
-> +               padata_do_multithreaded(&job);
-> +               nr_pages += atomic_long_read(&args.nr_pages);
->         }
->  zone_empty:
->         /* Sanity check that the next zone really is unpopulated */
-
-Okay so looking at this I can see why you wanted to structure the
-other patch the way you did. However I am not sure that is the best
-way to go about doing it. It might make more sense to go through and
-accumulate sections. If you hit the end of a range and the start of
-the next range is in another section, then you split it as a new job,
-otherwise I would just accumulate it into the current job. You then
-could section align the work and be more or less guaranteed that each
-worker thread should be generating finished work products, and not
-incomplete max order pages.
-
-That solution would work with the existing code as well since you
-could basically just compare the start pfn coming out of the
-deferred_init_maxorder versus the end of the chunk to determine if you
-should exit or not.
+Best Regards
+Micha³ Miros³aw
