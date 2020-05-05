@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B563CC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2865AC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D342206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:37:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF3DA206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:39:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="okmVBLYK"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="lOLjMYEh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgEEAhN (ORCPT
+        id S1727786AbgEEAjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 20:37:13 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:41426 "EHLO vps0.lunn.ch"
+        Mon, 4 May 2020 20:39:05 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:41448 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727784AbgEEAhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 20:37:13 -0400
+        id S1726531AbgEEAjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 20:39:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
         s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
         Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
         List-Post:List-Owner:List-Archive;
-        bh=rucxuUBb6/eWYUOVcTUmdx5XDXkdIBtyY3gk1Ouum0E=; b=okmVBLYKGPpNUu0HOggaFOmjFG
-        iKMkSJ7xpixCEefUP3mi+xjDfMTzAtmE81N0lOT9Ex0bfsTlmW2mqdJh8uewQBqZwcu+0AAHlLOzR
-        F6ziird3POwH0nv4TX0M4X8FhEoUNoorzdgAZ61kX76vlgLTnAjWSan4FFZHHOygnVZ0=;
+        bh=zMFD/1W3giR0m2xyej1RWginytW3yCvgYp5u+GbUTK0=; b=lOLjMYEhxizHLF7wVN5J544+JJ
+        mC+PvqB/dA1+5/GTouEgjUhLJU4foGel9fHeaL+/mp2g7nJtMxzrcsFeO5N1eZOF8Y34TjBns7PvE
+        3wq7uXywPVFwiKhKhaW4u4bu0+9FSrD9b37W7VFACaNG1QUeZArQCMWrtJgDLwnMYWOQ=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
         (envelope-from <andrew@lunn.ch>)
-        id 1jVla9-000sPn-5V; Tue, 05 May 2020 02:37:09 +0200
-Date:   Tue, 5 May 2020 02:37:09 +0200
+        id 1jVlby-000sRn-QT; Tue, 05 May 2020 02:39:02 +0200
+Date:   Tue, 5 May 2020 02:39:02 +0200
 From:   Andrew Lunn <andrew@lunn.ch>
 To:     Michael Walle <michael@walle.cc>
 Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
@@ -43,25 +43,25 @@ Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         "David S . Miller" <davem@davemloft.net>,
         Vladimir Oltean <vladimir.oltean@nxp.com>,
         Antoine Tenart <antoine.tenart@bootlin.com>
-Subject: Re: [PATCH net-next v2 2/3] net: phy: bcm54140: use
- phy_package_shared
-Message-ID: <20200505003709.GA208718@lunn.ch>
+Subject: Re: [PATCH net-next v2 3/3] net: phy: mscc: use phy_package_shared
+Message-ID: <20200505003902.GB208718@lunn.ch>
 References: <20200504213136.26458-1-michael@walle.cc>
- <20200504213136.26458-3-michael@walle.cc>
+ <20200504213136.26458-4-michael@walle.cc>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200504213136.26458-3-michael@walle.cc>
+In-Reply-To: <20200504213136.26458-4-michael@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 11:31:35PM +0200, Michael Walle wrote:
+On Mon, May 04, 2020 at 11:31:36PM +0200, Michael Walle wrote:
 > Use the new phy_package_shared common storage to ease the package
 > initialization and to access the global registers.
 > 
 > Signed-off-by: Michael Walle <michael@walle.cc>
+> Tested-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
