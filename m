@@ -2,91 +2,143 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F34DC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D621C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A98F2068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A7452068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:21:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aCwFA4fB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hfCvpOqo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbgEEISh (ORCPT
+        id S1728526AbgEEIVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 04:18:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49382 "EHLO
+        Tue, 5 May 2020 04:21:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725833AbgEEISg (ORCPT
+        by vger.kernel.org with ESMTP id S1725766AbgEEIVB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 04:18:36 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92A79C061A0F;
-        Tue,  5 May 2020 01:18:36 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id z8so669886wrw.3;
-        Tue, 05 May 2020 01:18:36 -0700 (PDT)
+        Tue, 5 May 2020 04:21:01 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71A78C061A0F;
+        Tue,  5 May 2020 01:21:01 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id h9so1645943wrt.0;
+        Tue, 05 May 2020 01:21:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=EIFxKxmFxgre3FE3hg4SRgHwf8DPj6vfKEDfHM3CKiQ=;
-        b=aCwFA4fBfDssQEipU83E5gLSF3r7zaHJkvIXCb1dXejB+cc5emDmQQMCF1Bi/lYHyZ
-         nogOXWKOoZM/FD7DzRznqlJy+RmjRdLlqHw+ma20qkCd37GaMOEOCs5pCoa6HDlOPvwY
-         aNzpdCgtSsm/36rWPoRXXtbO6adDsKSBefbLYrCdhvj/3N78si+y0B38O7uyYtRpV6UH
-         6WpH5Whq1hRLNf4xHm406O/KAO4uiQLntUvF4h8ShoQ0Eu+5S9MoKKwvYRJhkwmOL+7V
-         9IA3KknRRwfbgrFhe9ArlwfwZYbbrQqvNYIH2GogYwseHxxpit/74c3WD5SsoG4/9qQW
-         hQXA==
+        bh=tu5nPp2tsr/xXDZw6NiH6JY/janBM8/TqJS/baK6bXk=;
+        b=hfCvpOqo590T0shuE1cPR7Tyz4uhd2A/5uh7k+1VU2jedYxG9T1l4vgT1N5LVp7/rU
+         tBOap/HTZwM8PxrP/4Ry1VPhX+JjSr7aTQj32sKsZ361l7KSOldxc+/lOT4bb08zXTIY
+         bGsadrq+6cxj1FWYpnXSU1qMjEJQcvbHecedCmrt9tDQfKV5bNW1DJCKuqHw6OqylKyK
+         0nVefIu/SOI2KBuHsym/FdIb5P6Oza1bDm+mZMzXdIDrCWd106b5mQDChyD92l0ppLwI
+         pSAuWHwF8e1cLmCubRyxw+0jZgwwurLfMxVchOT31Zqja55LvsEICbiRb/7Zxlh3MSFy
+         TSaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=EIFxKxmFxgre3FE3hg4SRgHwf8DPj6vfKEDfHM3CKiQ=;
-        b=azwid+64/LE3kPq+g23cvHHtXI6q5fvps5DaocoT9IqvaKKN66Mvpqd+YxWH0/MHhQ
-         9itDXmDNJiqiC0a3F51C0qbHGPslomK6n/YHtInPEAJ9zVy2JtXh6lgJI6RzrLfS1dOW
-         YEkO5NzBZdEY8dswrygbGU9dY+depwHyP6k2NR+TKE/XEPboQZKCV56I3wC4U/em0R7s
-         8rBF3S/VqR5eMCmDUMmfEAZY9ZMM6vk4qNmHCmI0lpnGYh99YJolg1HccOJ3A/xsg6TE
-         b3MeQCk0guiDFA4SRSbTDuWVcCPzgGdEJ1ItXfxYeZnSPe5SYuHktF1L9di487rTVImd
-         a1Ew==
-X-Gm-Message-State: AGi0Pub69V+igEe1XTiXO6DyVAGBaN09NH1izu/lnVheCqrZQX88c+OE
-        nIfKKtSUptvpqSzFJ68f+/E=
-X-Google-Smtp-Source: APiQypKehcY7YzCDA1Wjt8XeBeLTP04ZFxaXOXH4V8yBBNrHkagzoD8d7KOQ77V0q2W6OMvwd6k8gg==
-X-Received: by 2002:a5d:51c9:: with SMTP id n9mr2257856wrv.84.1588666715387;
-        Tue, 05 May 2020 01:18:35 -0700 (PDT)
-Received: from user-8.122.vpn.cf.ac.uk (vpn-users-dip-pool162.dip.cf.ac.uk. [131.251.253.162])
-        by smtp.googlemail.com with ESMTPSA id f83sm2453308wmf.42.2020.05.05.01.18.34
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=tu5nPp2tsr/xXDZw6NiH6JY/janBM8/TqJS/baK6bXk=;
+        b=N+qZPeHjAzeInpmDIlsN3wI+LKpVqe4tmKa9vbjw7Fs2U3mIxwoOZCWYX7+SXlFmzX
+         hFYi1qYvut0lgraxmy4uEsy2fkTVh2cYbYpoMlC18JFnHUBtegW0I7SKEBTTzjLHsGES
+         MATG9ZTsujMeaksHw56/9pvi3hm0zeIpUn59EfrRa8+c1DtsObcivURHRmY8GlYNtY9/
+         5ep/A3TemTAocSZgS9aW1FHnCbRoxYPDH3YfMfzPso9U7Z+O/tTovYYGMLpn6rI6MlR8
+         PvAhd2o9mG0o+f1CS+Ne1aDUv86wU91FmDhtcgBHbNET1hYM7/uyvs29Siprk4qeKvHL
+         KT4A==
+X-Gm-Message-State: AGi0PuYH7E8ZLK80mI0NaNY1vTAcihhJBXB6xNWMa1F+buSA+mDNtuEh
+        Ren5X6mid3tK4Bt3QmxaLT70iCX44U9nsDF0
+X-Google-Smtp-Source: APiQypLrjmQKo6d9M8OL1hHuv8HTAuaj9UpwYWqHt0WxaUQvw0OPHJw9ZyiR41AHYzey4MuSaYo7Cw==
+X-Received: by 2002:adf:fa41:: with SMTP id y1mr2198454wrr.131.1588666860081;
+        Tue, 05 May 2020 01:21:00 -0700 (PDT)
+Received: from skynet.lan (246.red-83-44-9.dynamicip.rima-tde.net. [83.44.9.246])
+        by smtp.gmail.com with ESMTPSA id k9sm1969160wrd.17.2020.05.05.01.20.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 01:18:34 -0700 (PDT)
-Message-ID: <c654c9f6707a40eb32908e6cd90cca0df8a9cdd4.camel@gmail.com>
-Subject: Re: [PATCH net-next] net: agere: use true,false for bool variable
-From:   Mark Einon <mark.einon@gmail.com>
-To:     Jason Yan <yanaijie@huawei.com>, davem@davemloft.net,
-        hkallweit1@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 05 May 2020 09:18:28 +0100
-In-Reply-To: <20200505074556.22331-1-yanaijie@huawei.com>
-References: <20200505074556.22331-1-yanaijie@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Tue, 05 May 2020 01:20:59 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     computersforpeace@gmail.com, kdasu.kdev@gmail.com,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        sumit.semwal@linaro.org, linux-mtd@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH v2] nand: brcmnand: correctly verify erased pages
+Date:   Tue,  5 May 2020 10:20:55 +0200
+Message-Id: <20200505082055.2843847-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200504092943.2739784-1-noltari@gmail.com>
+References: <20200504092943.2739784-1-noltari@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The current code checks that the whole OOB area is erased.
+This is a problem when JFFS2 cleanmarkers are added to the OOB, since it will
+fail due to the usable OOB bytes not being 0xff.
+Correct this by only checking that the ECC aren't 0xff.
 
-On Tue, 2020-05-05 at 15:45 +0800, Jason Yan wrote:
-> Fix the following coccicheck warning:
-> 
-> drivers/net/ethernet/agere/et131x.c:717:3-22: WARNING: Assignment of
-> 0/1 to bool variable
-> drivers/net/ethernet/agere/et131x.c:721:1-20: WARNING: Assignment of
-> 0/1 to bool variable
-> 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Fixes: 02b88eea9f9c ("mtd: brcmnand: Add check for erased page bitflips")
 
-Acked-by: Mark Einon <mark.einon@gmail.com>
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+---
+ v2: Add Fixes tag
+
+ drivers/mtd/nand/raw/brcmnand/brcmnand.c | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+index e4e3ceeac38f..546f0807b887 100644
+--- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
++++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+@@ -2018,6 +2018,7 @@ static int brcmnand_read_by_pio(struct mtd_info *mtd, struct nand_chip *chip,
+ static int brcmstb_nand_verify_erased_page(struct mtd_info *mtd,
+ 		  struct nand_chip *chip, void *buf, u64 addr)
+ {
++	struct mtd_oob_region oobecc;
+ 	int i, sas;
+ 	void *oob = chip->oob_poi;
+ 	int bitflips = 0;
+@@ -2035,11 +2036,24 @@ static int brcmstb_nand_verify_erased_page(struct mtd_info *mtd,
+ 	if (ret)
+ 		return ret;
+ 
+-	for (i = 0; i < chip->ecc.steps; i++, oob += sas) {
++	for (i = 0; i < chip->ecc.steps; i++) {
+ 		ecc_chunk = buf + chip->ecc.size * i;
+-		ret = nand_check_erased_ecc_chunk(ecc_chunk,
+-						  chip->ecc.size,
+-						  oob, sas, NULL, 0,
++
++		ret = nand_check_erased_ecc_chunk(ecc_chunk, chip->ecc.size,
++						  NULL, 0, NULL, 0,
++						  chip->ecc.strength);
++		if (ret < 0)
++			return ret;
++
++		bitflips = max(bitflips, ret);
++	}
++
++	for (i = 0; mtd->ooblayout->ecc(mtd, i, &oobecc) != -ERANGE; i++)
++	{
++		ret = nand_check_erased_ecc_chunk(NULL, 0,
++						  oob + oobecc.offset,
++						  oobecc.length,
++						  NULL, 0,
+ 						  chip->ecc.strength);
+ 		if (ret < 0)
+ 			return ret;
+-- 
+2.26.2
 
