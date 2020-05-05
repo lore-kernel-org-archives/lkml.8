@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0607DC47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6602BC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E592224961
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:16:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 486E2215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:16:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730057AbgEEOQP (ORCPT
+        id S1729297AbgEEOQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:16:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49080 "EHLO
+        Tue, 5 May 2020 10:16:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730032AbgEEOQM (ORCPT
+        by vger.kernel.org with ESMTP id S1730033AbgEEOQM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 5 May 2020 10:16:12 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C61B0C061A10
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5CB9C061A0F
         for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:16:11 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jVyMU-0001vg-N3; Tue, 05 May 2020 16:15:54 +0200
+        id 1jVyMT-0001th-Dh; Tue, 05 May 2020 16:15:53 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 2AB3B1001F5;
-        Tue,  5 May 2020 16:15:54 +0200 (CEST)
-Message-Id: <20200505135314.137125609@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id E5732FFC8D;
+        Tue,  5 May 2020 16:15:52 +0200 (CEST)
+Message-Id: <20200505135314.045220765@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:49:34 +0200
+Date:   Tue, 05 May 2020 15:49:33 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -51,8 +51,9 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Brian Gerst <brgerst@gmail.com>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: [patch V4 part 4 08/24] x86/entry: Provide IDTENTRY_IST
+        Will Deacon <will@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [patch V4 part 4 07/24] x86/traps: Split int3 handler up
 References: <20200505134926.578885807@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -65,95 +66,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Same as IDTENTRY but for exceptions which run on Interrupt STacks (IST) on
-64bit. For 32bit this maps to IDTENTRY.
+For code simplicity split up the int3 handler into a kernel and user part
+which makes the code flow simpler to understand.
 
-There are 3 variants which will be used:
-      IDTENTRY_MCE
-      IDTENTRY_DB
-      IDTENTRY_NMI
-
-These map to IDTENTRY_IST, but only the MCE and DB variants are emitting
-ASM code as the NMI entry needs hand crafted ASM still.
-
-The function defines do not contain any idtenter/exit calls as these
-exceptions need special treatment.
-
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-
-
 ---
- arch/x86/include/asm/idtentry.h |   54 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ arch/x86/kernel/traps.c |   67 +++++++++++++++++++++++++++---------------------
+ 1 file changed, 39 insertions(+), 28 deletions(-)
 
---- a/arch/x86/include/asm/idtentry.h
-+++ b/arch/x86/include/asm/idtentry.h
-@@ -132,6 +132,42 @@ static __always_inline void __##func(str
- #define DEFINE_IDTENTRY_RAW(func)					\
- __visible noinstr void func(struct pt_regs *regs)
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -564,6 +564,35 @@ DEFINE_IDTENTRY_ERRORCODE(exc_general_pr
+ 	cond_local_irq_disable(regs);
+ }
  
-+#ifdef CONFIG_X86_64
-+/**
-+ * DECLARE_IDTENTRY_IST - Declare functions for IST handling IDT entry points
-+ * @vector:	Vector number (ignored for C)
-+ * @func:	Function name of the entry point
-+ *
-+ * Maps to DECLARE_IDTENTRY_RAW
-+ */
-+#define DECLARE_IDTENTRY_IST(vector, func)				\
-+	DECLARE_IDTENTRY_RAW(vector, func)
++static bool do_int3(struct pt_regs *regs)
++{
++	int res;
 +
-+/**
-+ * DEFINE_IDTENTRY_IST - Emit code for IST entry points
-+ * @func:	Function name of the entry point
-+ *
-+ * Maps to DEFINE_IDTENTRY_RAW
-+ */
-+#define DEFINE_IDTENTRY_IST(func)					\
-+	DEFINE_IDTENTRY_RAW(func)
++#ifdef CONFIG_KGDB_LOW_LEVEL_TRAP
++	if (kgdb_ll_trap(DIE_INT3, "int3", regs, 0, X86_TRAP_BP,
++			 SIGTRAP) == NOTIFY_STOP)
++		return true;
++#endif /* CONFIG_KGDB_LOW_LEVEL_TRAP */
 +
-+#else	/* CONFIG_X86_64 */
-+/* Maps to a regular IDTENTRY on 32bit for now */
-+# define DECLARE_IDTENTRY_IST		DECLARE_IDTENTRY
-+# define DEFINE_IDTENTRY_IST		DEFINE_IDTENTRY
-+#endif	/* !CONFIG_X86_64 */
-+
-+/* C-Code mapping */
-+#define DECLARE_IDTENTRY_MCE		DECLARE_IDTENTRY_IST
-+#define DEFINE_IDTENTRY_MCE		DEFINE_IDTENTRY_IST
-+
-+#define DECLARE_IDTENTRY_NMI		DECLARE_IDTENTRY_IST
-+#define DEFINE_IDTENTRY_NMI		DEFINE_IDTENTRY_IST
-+
-+#define DECLARE_IDTENTRY_DEBUG		DECLARE_IDTENTRY_IST
-+#define DEFINE_IDTENTRY_DEBUG		DEFINE_IDTENTRY_IST
-+
- #else /* !__ASSEMBLY__ */
- 
- /*
-@@ -149,6 +185,24 @@ static __always_inline void __##func(str
- #define DECLARE_IDTENTRY_RAW(vector, func)				\
- 	DECLARE_IDTENTRY(vector, func)
- 
-+#ifdef CONFIG_X86_64
-+# define DECLARE_IDTENTRY_MCE(vector, func)				\
-+	idtentry_mce_db vector asm_##func func
-+
-+# define DECLARE_IDTENTRY_DEBUG(vector, func)				\
-+	idtentry_mce_db vector asm_##func func
-+
-+#else
-+# define DECLARE_IDTENTRY_MCE(vector, func)				\
-+	DECLARE_IDTENTRY(vector, func)
-+
-+# define DECLARE_IDTENTRY_DEBUG(vector, func)				\
-+	DECLARE_IDTENTRY(vector, func)
++#ifdef CONFIG_KPROBES
++	if (kprobe_int3_handler(regs))
++		return true;
 +#endif
++	res = notify_die(DIE_INT3, "int3", regs, 0, X86_TRAP_BP, SIGTRAP);
 +
-+/* No ASM code emitted for NMI */
-+#define DECLARE_IDTENTRY_NMI(vector, func)
++	return res == NOTIFY_STOP;
++}
 +
- #endif /* __ASSEMBLY__ */
++static void do_int3_user(struct pt_regs *regs)
++{
++	if (do_int3(regs))
++		return;
++
++	cond_local_irq_enable(regs);
++	do_trap(X86_TRAP_BP, SIGTRAP, "int3", regs, 0, 0, NULL);
++	cond_local_irq_disable(regs);
++}
++
+ DEFINE_IDTENTRY_RAW(exc_int3)
+ {
+ 	/*
+@@ -581,37 +610,19 @@ DEFINE_IDTENTRY_RAW(exc_int3)
+ 	 * because the INT3 could have been hit in any context including
+ 	 * NMI.
+ 	 */
+-	if (user_mode(regs))
++	if (user_mode(regs)) {
+ 		idtentry_enter(regs);
+-	else
+-		nmi_enter();
+-
+-	instr_begin();
+-#ifdef CONFIG_KGDB_LOW_LEVEL_TRAP
+-	if (kgdb_ll_trap(DIE_INT3, "int3", regs, 0, X86_TRAP_BP,
+-				SIGTRAP) == NOTIFY_STOP)
+-		goto exit;
+-#endif /* CONFIG_KGDB_LOW_LEVEL_TRAP */
+-
+-#ifdef CONFIG_KPROBES
+-	if (kprobe_int3_handler(regs))
+-		goto exit;
+-#endif
+-
+-	if (notify_die(DIE_INT3, "int3", regs, 0, X86_TRAP_BP,
+-			SIGTRAP) == NOTIFY_STOP)
+-		goto exit;
+-
+-	cond_local_irq_enable(regs);
+-	do_trap(X86_TRAP_BP, SIGTRAP, "int3", regs, 0, 0, NULL);
+-	cond_local_irq_disable(regs);
+-
+-exit:
+-	instr_end();
+-	if (user_mode(regs))
++		instr_begin();
++		do_int3_user(regs);
++		instr_end();
+ 		idtentry_exit(regs);
+-	else
++	} else {
++		nmi_enter();
++		instr_begin();
++		do_int3(regs);
++		instr_end();
+ 		nmi_exit();
++	}
+ }
  
- /*
+ #ifdef CONFIG_X86_64
 
