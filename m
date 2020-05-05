@@ -2,261 +2,126 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B1CC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A7CC47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0D9B206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CC90206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:12:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="by3szt0l"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MPT/dcuC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728918AbgEEMMV (ORCPT
+        id S1728937AbgEEMMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 08:12:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57676 "EHLO
+        Tue, 5 May 2020 08:12:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727090AbgEEMMU (ORCPT
+        by vger.kernel.org with ESMTP id S1728837AbgEEMM3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 08:12:20 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9B35C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 05:12:19 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id a21so1331692ljb.9
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 05:12:19 -0700 (PDT)
+        Tue, 5 May 2020 08:12:29 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71C6BC0610D5
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 05:12:29 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id d25so1141256lfi.11
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 05:12:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=HMlQVlmeGXEReM1yut17rciX4AB+fLsrubK71t43Crw=;
-        b=by3szt0lWsRCqGRiMrxe/DgyNqYcEB22A1vW7AGwPkpIAuTE8oTuowy/tHPlyU+7Hr
-         zYnWeZRfy5tq+4ogzarERxS6xYJVm19GSgbX8tCVHhxBJ+SXzTKDp6UOEj+g8ZYD6maI
-         5zC94pX1b6XXgSs+iK/KYtRP0lrbaJNqa+b17nx/Jh2t8Bj2w4nwY0gznMIe3O85N/5L
-         ZWkvbqczD9hQBD0yFVF+8CZnAG0B3c4Ufu9iJA61VnJGsVPAdILBJOy7VoA9Bza4pCOC
-         k8EAwrX3zVhivffKg6X3aIVE2IrZjmKTacUz1hFTq5dnfV/aj9L1vZXyRf0GMC//S2I2
-         VqYA==
+        bh=5Q1oIBidrac3ZpT+HqALm45OEqYcdapj+GCOvfIEi3M=;
+        b=MPT/dcuC6j/g/wxBK43rwGsF2iR8c/I+QNZ6Z2SCpb6JphvZ/tYzP14cjXHTcuwPzr
+         kgdXsSrRMie/swEidbHTpoqYx3wWwE6tyvUIhFjXy5G46NZdYuSr/5moZjGDWUKjHTS9
+         Xl1f0KfDJ93DFGfClHNZgm2/6q9FVfuJClncFFOFeEDVjHhRtOOG9TTFMwohA2MOeo3a
+         bP1hLiNdnbFMKfiDAzAa0TVYpMG8Le7Gbg8cdLnQmGJqZjnP5T8hcQ8LYaTbZypq/pdD
+         RQtPCvVfotDAMWYvMdwNGRYUizwbanWzdLRUcNXng2IE8fF3X+00+1fyF2G3vB+m2r0D
+         ZziA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=HMlQVlmeGXEReM1yut17rciX4AB+fLsrubK71t43Crw=;
-        b=pqBNudw0inH0Cx6njfmelkJhPtYfxft+KDO9a1pik6XLo3hJaJy1NK42G+xThkMWbo
-         AgkZWLgIXBXLIgIjuKq1QO+4VUlX57XzHvN0QTkGbyzHii67swL/azy6JPLHYoMZmGYc
-         5bblzqL9p9QdOqkc3Zcx5B4BXFHC9IROtDgQDvwQnrZcg9Ig16o/WYpzSGTqMe6264Dl
-         G2boBN2ulvYcM1vVvETkcx9tUnQcvy6Wyu0TIvI5Catg4PKmgIjnqWgv7RpVqm1bxgq6
-         p9CTLF5aS7z6Uwus5wzDxXsl0cWFvp+Jw4NBYAXXVV/wOqd9iAd1jzXiOXjYm7CHOcAS
-         dyug==
-X-Gm-Message-State: AGi0PubWTiPWUo6RCDZhz5fgRrJoCczZuJCuVR8cTGoTOhMsyhYngPBv
-        oqHQ6u5hpbGlHszP3DJC3paaoSspY38tc5jXWQQzZg==
-X-Google-Smtp-Source: APiQypLhmclSpArV92q+mWNGffd3SX7sCUvNNXrXo90M3AxZAquw+B5r6LXmh3LnQqWsMYsSt2nT6Jp1IGBXxoz1qPY=
-X-Received: by 2002:a2e:b249:: with SMTP id n9mr1688630ljm.221.1588680737938;
- Tue, 05 May 2020 05:12:17 -0700 (PDT)
+        bh=5Q1oIBidrac3ZpT+HqALm45OEqYcdapj+GCOvfIEi3M=;
+        b=G2NtOnUxElP/9iuE6wOpgJ34rtmCbjEkK6rtpikNnpmZTXDeehbgYosBmOFVZLNr90
+         r9NX5vzgeOSHkgesRkG8HT1pYBOdKBnYLOjj9Q8JbfQUp0d7wDBRcjvnMS1ynQDQs1Tk
+         x2EYhfqxMUwtdsFXbY4tRi/Waw5yn/2xrqy/LFujDYzrAn6zg25a6bZn8xG3B2kffuJL
+         afoAWBbaNevD3zNNfyVRiEpjQVxFM80W25fAb2N8dEdi6ZSqeQUyD2E5lp+lNS+o2UDi
+         ChF53axuulMkje4QPfHXIkBx/bOYdKBluUXMSKTakTaZCrA0L6j62eGc5Dzb/Y+//rPd
+         3Odg==
+X-Gm-Message-State: AGi0PubpbUhoCT2heicXECDnu+AGhPj2rylzCz/3s9VJ0a0jJh2FlHoo
+        o+6Q/MceXYZ476Y4X1Zp1iH/IFoVXkAXmM3RrsGbqw==
+X-Google-Smtp-Source: APiQypJuMSHXNquobFYCWB9hv5q4xyLAPwqp5lGXvMhYky2m73bM5OmseIAgrQSDZ6rhqun7GXGUfaIlEQC+ebQyhYk=
+X-Received: by 2002:a05:6512:1044:: with SMTP id c4mr1581833lfb.7.1588680747672;
+ Tue, 05 May 2020 05:12:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200429214954.44866-1-jannh@google.com> <20200429214954.44866-5-jannh@google.com>
- <20200505110358.GC17400@lst.de>
-In-Reply-To: <20200505110358.GC17400@lst.de>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 5 May 2020 14:11:51 +0200
-Message-ID: <CAG48ez0QFYGXfp3x2T2_8sxsidJs5oQA3muaeJ61=EMEwdRnYQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] binfmt_elf, binfmt_elf_fdpic: Use a VMA list snapshot
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Mark Salter <msalter@redhat.com>,
-        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
-        linux-c6x-dev@linux-c6x.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>
+References: <20200505111204.963-1-manafm@codeaurora.org> <20200505111204.963-3-manafm@codeaurora.org>
+In-Reply-To: <20200505111204.963-3-manafm@codeaurora.org>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 5 May 2020 17:41:55 +0530
+Message-ID: <CAP245DX2=bY4kCERgnm_L26o9mY7CoOZRScXmXwfe-bAYczOnQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: thermal: tsens: Add zeroc interrupt
+ support in yaml
+To:     Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 1:04 PM Christoph Hellwig <hch@lst.de> wrote:
-> On Wed, Apr 29, 2020 at 11:49:53PM +0200, Jann Horn wrote:
-> > In both binfmt_elf and binfmt_elf_fdpic, use a new helper
-> > dump_vma_snapshot() to take a snapshot of the VMA list (including the gate
-> > VMA, if we have one) while protected by the mmap_sem, and then use that
-> > snapshot instead of walking the VMA list without locking.
-[...]
-> > diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-> > index fb36469848323..dffe9dc8497ca 100644
-> > --- a/fs/binfmt_elf.c
-> > +++ b/fs/binfmt_elf.c
-> > @@ -1292,8 +1292,12 @@ static bool always_dump_vma(struct vm_area_struct *vma)
-> >       return false;
-> >  }
-> >
-> > +#define DUMP_SIZE_MAYBE_ELFHDR_PLACEHOLDER 1
-> > +
-> >  /*
-> >   * Decide what to dump of a segment, part, all or none.
-> > + * The result must be fixed up via vma_dump_size_fixup() once we're in a context
-> > + * that's allowed to sleep arbitrarily long.
-> >   */
-> >  static unsigned long vma_dump_size(struct vm_area_struct *vma,
-> >                                  unsigned long mm_flags)
-> > @@ -1348,30 +1352,15 @@ static unsigned long vma_dump_size(struct vm_area_struct *vma,
-> >
-> >       /*
-> >        * If this looks like the beginning of a DSO or executable mapping,
-> > -      * check for an ELF header.  If we find one, dump the first page to
-> > -      * aid in determining what was mapped here.
-> > +      * we'll check for an ELF header. If we find one, we'll dump the first
-> > +      * page to aid in determining what was mapped here.
-> > +      * However, we shouldn't sleep on userspace reads while holding the
-> > +      * mmap_sem, so we just return a placeholder for now that will be fixed
-> > +      * up later in vma_dump_size_fixup().
-> >        */
-> >       if (FILTER(ELF_HEADERS) &&
-> > -         vma->vm_pgoff == 0 && (vma->vm_flags & VM_READ)) {
-> > -             u32 __user *header = (u32 __user *) vma->vm_start;
-> > -             u32 word;
-> > -             /*
-> > -              * Doing it this way gets the constant folded by GCC.
-> > -              */
-> > -             union {
-> > -                     u32 cmp;
-> > -                     char elfmag[SELFMAG];
-> > -             } magic;
-> > -             BUILD_BUG_ON(SELFMAG != sizeof word);
-> > -             magic.elfmag[EI_MAG0] = ELFMAG0;
-> > -             magic.elfmag[EI_MAG1] = ELFMAG1;
-> > -             magic.elfmag[EI_MAG2] = ELFMAG2;
-> > -             magic.elfmag[EI_MAG3] = ELFMAG3;
-> > -             if (unlikely(get_user(word, header)))
-> > -                     word = 0;
-> > -             if (word == magic.cmp)
-> > -                     return PAGE_SIZE;
-> > -     }
-> > +         vma->vm_pgoff == 0 && (vma->vm_flags & VM_READ))
-> > +             return DUMP_SIZE_MAYBE_ELFHDR_PLACEHOLDER;
-> >
-> >  #undef       FILTER
-> >
-> > @@ -1381,6 +1370,22 @@ static unsigned long vma_dump_size(struct vm_area_struct *vma,
-> >       return vma->vm_end - vma->vm_start;
-> >  }
-> >
-> > +/* Fix up the result from vma_dump_size(), now that we're allowed to sleep. */
-> > +static void vma_dump_size_fixup(struct core_vma_metadata *meta)
-> > +{
-> > +     char elfmag[SELFMAG];
-> > +
-> > +     if (meta->dump_size != DUMP_SIZE_MAYBE_ELFHDR_PLACEHOLDER)
-> > +             return;
-> > +
-> > +     if (copy_from_user(elfmag, (void __user *)meta->start, SELFMAG)) {
-> > +             meta->dump_size = 0;
-> > +             return;
-> > +     }
-> > +     meta->dump_size =
-> > +             (memcmp(elfmag, ELFMAG, SELFMAG) == 0) ? PAGE_SIZE : 0;
-> > +}
+On Tue, May 5, 2020 at 4:43 PM Manaf Meethalavalappu Pallikunhi
+<manafm@codeaurora.org> wrote:
 >
-> While this code looks entirely correct, it took me way too long to
-> follow.  I'd take te DUMP_SIZE_MAYBE_ELFHDR_PLACEHOLDER into the caller,
-> and then have a simple function like this:
+> Add 0C (zeroc) interrupt support for tsens in yaml.
 >
-> static void vma_dump_size_fixup(struct core_vma_metadata *meta)
-> {
->         char elfmag[SELFMAG];
+> Signed-off-by: Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 >
->         if (copy_from_user(elfmag, (void __user *)meta->start, SELFMAG) ||
->             memcmp(elfmag, ELFMAG, sizeof(elfmag)) != 0)
->                 meta->dump_size = 0;
->         else
->                 meta->dump_size = PAGE_SIZE;
-> }
-
-I guess I can make that change, even if I personally think it's less
-clear if parts of the fixup logic spill over into the caller instead
-of being handled locally here. :P
-
-> Also a few comments explaining why we do this fixup would help readers
-> of the code.
+> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> index 2ddd39d96766..8a0893f77d20 100644
+> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> @@ -52,12 +52,14 @@ properties:
+>      items:
+>        - description: Combined interrupt if upper or lower threshold crossed
+>        - description: Interrupt if critical threshold crossed
+> +      - description: Interrupt if zeroC threshold is crossed
 >
-> > -             if (vma->vm_flags & VM_WRITE)
-> > -                     phdr.p_flags |= PF_W;
-> > -             if (vma->vm_flags & VM_EXEC)
-> > -                     phdr.p_flags |= PF_X;
-> > +             phdr.p_flags = meta->flags & VM_READ ? PF_R : 0;
-> > +             phdr.p_flags |= meta->flags & VM_WRITE ? PF_W : 0;
-> > +             phdr.p_flags |= meta->flags & VM_EXEC ? PF_X : 0;
+>    interrupt-names:
+>      minItems: 1
+>      items:
+>        - const: uplow
+>        - const: critical
+> +      - const: zeroc
 >
-> Sorry for another nitpick, but I find the spelled out version with the
-> if a lot easier to read.
-
-Huh... I find it easier to scan if it is three lines with the same
-pattern, but I'm not too attached to it.
-
-In that case, I guess I should change it like this? The old code had a
-ternary for VM_READ and branches for the other two, which didn't seem
-very pretty to me.
-
-phdr.p_flags = 0;
-if (meta->flags & VM_READ)
-        phdr.p_flags |= PF_R;
-if (meta->flags & VM_WRITE)
-        phdr.p_flags |= PF_W;
-if (meta->flags & VM_EXEC)
-        phdr.p_flags |= PF_X;
-
-> > +int dump_vma_snapshot(struct coredump_params *cprm, int *vma_count,
-> > +     struct core_vma_metadata **vma_meta,
-> > +     unsigned long (*dump_size_cb)(struct vm_area_struct *, unsigned long))
+>    nvmem-cells:
+>      minItems: 1
+> @@ -168,8 +170,9 @@ examples:
+>                   <0xc222000 0x1ff>;
 >
-> Plase don't use single tabs for indentating parameter continuations
-> (we actually have two styles - either two tabs or aligned after the
-> opening brace, pick your poison :))
+>             interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
+> -                        <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
+> -           interrupt-names = "uplow", "critical";
+> +                        <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>,
+> +                        <GIC_SPI 510 IRQ_TYPE_EDGE_RISING>;
+> +           interrupt-names = "uplow", "critical", "zeroc";
 
-I did that because if I use either one of those styles, I'll have to
-either move the callback type into a typedef or add line breaks in the
-parameters of the callback type. I guess I can write it like this...
 
-int dump_vma_snapshot(struct coredump_params *cprm, int *vma_count,
-                      struct core_vma_metadata **vma_meta,
-                      unsigned long (*dump_size_cb)(struct vm_area_struct *,
-                                                    unsigned long));
+Add a new example for v2 with 0C interrupt here instead of reusing the old one.
 
-but if you also dislike that, let me know and I'll add a typedef instead. :P
-
-> > +     *vma_meta = kvmalloc_array(*vma_count, sizeof(**vma_meta), GFP_KERNEL);
-> > +     if (!*vma_meta) {
-> > +             up_read(&mm->mmap_sem);
-> > +             return -ENOMEM;
-> > +     }
-> > +
-> > +     for (i = 0, vma = first_vma(current, gate_vma); vma != NULL;
-> > +                     vma = next_vma(vma, gate_vma)) {
-> > +             (*vma_meta)[i++] = (struct core_vma_metadata) {
-> > +                     .start = vma->vm_start,
-> > +                     .end = vma->vm_end,
-> > +                     .flags = vma->vm_flags,
-> > +                     .dump_size = dump_size_cb(vma, cprm->mm_flags)
-> > +             };
->
-> This looks a little weird.  Why not kcalloc + just initialize the four
-> fields we actually fill out here?
-
-Yeah, I can just change the syntax here to normal member writes if you
-want. I just thought C99-style initialization looked nicer, but I
-guess that's unusual in the kernel...
-
-(And I just noticed that that "filesize" member of that struct
-core_vma_metadata I'm defining is entirely unused... I'll have to
-remove that in the next iteration.)
+>             #qcom,sensors = <13>;
+>             #thermal-sensor-cells = <1>;
+> --
+> 2.26.2
