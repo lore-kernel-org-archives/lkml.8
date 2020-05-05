@@ -2,109 +2,102 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08544C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7BFC47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCD33206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A4D5206D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:23:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588677824;
+	bh=DL0zScj/vD4HUZu7ZjuIWMlO3dmCiCLSWm3gS0fslLU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ht2Vt6kFo/FNOfnBgiCjRDti9HCYevMFDrqoKg9ncHXY4BdpvCExRD3DOMtJx/MW7
+	 NceNJJ9+htN1OeiTB7hoKuy8APJ5XWmllymi3foMc5Bb2uUZnw5BCZDborXHlOtN45
+	 B2d6aX64RibaipPX4YNbX3jP3FFb6HSDlWjh0QlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbgEELSn (ORCPT
+        id S1728683AbgEELXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 07:18:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:37610 "EHLO foss.arm.com"
+        Tue, 5 May 2020 07:23:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725766AbgEELSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 07:18:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E59D130E;
-        Tue,  5 May 2020 04:18:41 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.25.241])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 701963F305;
-        Tue,  5 May 2020 04:18:40 -0700 (PDT)
-Date:   Tue, 5 May 2020 12:18:37 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-kernel@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH V3 04/16] arm64/cpufeature: Introduce ID_PFR2 CPU register
-Message-ID: <20200505111837.GB82823@C02TD0UTHF1T.local>
-References: <1588426445-24344-1-git-send-email-anshuman.khandual@arm.com>
- <1588426445-24344-5-git-send-email-anshuman.khandual@arm.com>
- <20200505111241.GF19710@willie-the-truck>
- <20200505111607.GA82823@C02TD0UTHF1T.local>
+        id S1728233AbgEELXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 07:23:43 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0613F206B9;
+        Tue,  5 May 2020 11:23:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588677822;
+        bh=DL0zScj/vD4HUZu7ZjuIWMlO3dmCiCLSWm3gS0fslLU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HaKjKh8DwRfQ7dxTSVgpGyrStgSwSos6CFY6S1GHOHDBkTFVjlznmIGuhUWcaOzEo
+         U79svTYKdnSvgXqGglGyIhnzG8sInZdEzByTh1bb5uS2R7TZDkV4L1HFl4GJfSR3fe
+         XXlNKJm8aqX1vLSak2cztJ+pg2943mhflAfSU55M=
+Date:   Tue, 5 May 2020 12:23:39 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     Daniel Schwierzeck <daniel.schwierzeck@gmail.com>, robh@kernel.org,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hauke@hauke-m.de,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+Subject: Re: [PATCH 1/4] spi: lantiq: Synchronize interrupt handlers and
+ transfers
+Message-ID: <20200505112339.GC5377@sirena.org.uk>
+References: <cover.1587702428.git.eswara.kota@linux.intel.com>
+ <3bf88d24b9cad9f3df1da8ed65bf55c05693b0f2.1587702428.git.eswara.kota@linux.intel.com>
+ <310ca761-e7ae-1192-99fd-a1960697806b@gmail.com>
+ <46f31699-e781-ae33-3ee5-d51e6940ee43@linux.intel.com>
+ <20200429121310.GH4201@sirena.org.uk>
+ <28f6511e-fe85-a834-1652-fd70def9ca88@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Bu8it7iiRSEf40bY"
 Content-Disposition: inline
-In-Reply-To: <20200505111607.GA82823@C02TD0UTHF1T.local>
+In-Reply-To: <28f6511e-fe85-a834-1652-fd70def9ca88@linux.intel.com>
+X-Cookie: Poverty begins at home.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 12:16:07PM +0100, Mark Rutland wrote:
-> On Tue, May 05, 2020 at 12:12:41PM +0100, Will Deacon wrote:
-> > On Sat, May 02, 2020 at 07:03:53PM +0530, Anshuman Khandual wrote:
-> > > This adds basic building blocks required for ID_PFR2 CPU register which
-> > > provides information about the AArch32 programmers model which must be
-> > > interpreted along with ID_PFR0 and ID_PFR1 CPU registers. This is added
-> > > per ARM DDI 0487F.a specification.
-> > > 
-> > > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > > Cc: Will Deacon <will@kernel.org>
-> > > Cc: Marc Zyngier <maz@kernel.org>
-> > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > Cc: James Morse <james.morse@arm.com>
-> > > Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> > > Cc: kvmarm@lists.cs.columbia.edu
-> > > Cc: linux-arm-kernel@lists.infradead.org
-> > > Cc: linux-kernel@vger.kernel.org
-> > > 
-> > > Suggested-by: Mark Rutland <mark.rutland@arm.com>
-> > > Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> > > Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> > > ---
-> > >  arch/arm64/include/asm/cpu.h    |  1 +
-> > >  arch/arm64/include/asm/sysreg.h |  4 ++++
-> > >  arch/arm64/kernel/cpufeature.c  | 11 +++++++++++
-> > >  arch/arm64/kernel/cpuinfo.c     |  1 +
-> > >  arch/arm64/kvm/sys_regs.c       |  2 +-
-> > >  5 files changed, 18 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/arch/arm64/include/asm/cpu.h b/arch/arm64/include/asm/cpu.h
-> > > index b4a40535a3d8..464e828a994d 100644
-> > > --- a/arch/arm64/include/asm/cpu.h
-> > > +++ b/arch/arm64/include/asm/cpu.h
-> > > @@ -46,6 +46,7 @@ struct cpuinfo_arm64 {
-> > >  	u32		reg_id_mmfr3;
-> > >  	u32		reg_id_pfr0;
-> > >  	u32		reg_id_pfr1;
-> > > +	u32		reg_id_pfr2;
-> > >  
-> > >  	u32		reg_mvfr0;
-> > >  	u32		reg_mvfr1;
-> > > diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-> > > index e5317a6367b6..c977449e02db 100644
-> > > --- a/arch/arm64/include/asm/sysreg.h
-> > > +++ b/arch/arm64/include/asm/sysreg.h
-> > > @@ -153,6 +153,7 @@
-> > >  #define SYS_MVFR0_EL1			sys_reg(3, 0, 0, 3, 0)
-> > >  #define SYS_MVFR1_EL1			sys_reg(3, 0, 0, 3, 1)
-> > >  #define SYS_MVFR2_EL1			sys_reg(3, 0, 0, 3, 2)
-> > > +#define SYS_ID_PFR2_EL1			sys_reg(3, 0, 0, 3, 4)
-> > 
-> > nit: but please group these defines by name rather than encoding.
-> 
-> So far we've *always* grouped these by encoding in this file, so can we
-> keep things that way for now? Otherwise we're inconsistent with both
-> schemes.
 
-Unless you just meant "please put a newline before this" to avoid
-grouping without affecting ordering, in which case agreed!
+--Bu8it7iiRSEf40bY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Mark.
+On Mon, May 04, 2020 at 06:15:47PM +0800, Dilip Kota wrote:
+> On 4/29/2020 8:13 PM, Mark Brown wrote:
+
+> > > Workqueue has a higher chances of causing SPI transfers timedout.
+> > because...?
+
+> I just tried to get the history of removing workqueue in SPI driver, on
+> GRX500 (earlier chipset of LGM) the SPI transfers got timedout with
+> workqueues during regression testing. Once changed to threaded IRQs
+> transfers are working successfully.
+
+That doesn't really explain why though, it just explains what.
+
+--Bu8it7iiRSEf40bY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6xTLsACgkQJNaLcl1U
+h9DHMgf/aPi4uTtAR1hPXyPWjXGRdm0fnyj1tmL2P9wXWRg+T2JLycn95DS7eO7b
+hHsOVqARDBWCpBM+4dviis0DTExD1TaiuLp12Tl0qYwdPBUKBVlodYNYW22za9wV
+nB8lscg3UieLHMMJXZ70lBNpWAsxuCblKUy+VF5naMU3BIoTho/vY4tTnk8XAdYR
+a/H3cZbpv/TclAdnvdOfv8ZALLD5k8Cc5QF+GENIf1i8c5dGTs+9Zfakj5HhznPy
+hdbUQX7jnGMXnQvqenytxJG33PCSlfj5+3u2Y3DBU/G814PEdDqu2iuwt26PEf6F
+oOab46YmB8iPycZrWW+DNLDTyZ8csQ==
+=+ami
+-----END PGP SIGNATURE-----
+
+--Bu8it7iiRSEf40bY--
