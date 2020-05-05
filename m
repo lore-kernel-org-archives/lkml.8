@@ -2,105 +2,70 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBBEC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F11DC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 350AE20661
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B4F220661
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:04:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="wuqhlXhG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729495AbgEEOEd (ORCPT
+        id S1729502AbgEEOEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:04:33 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:47851 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728135AbgEEOEc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:04:32 -0400
-Received: from localhost.localdomain ([149.172.19.189]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1Md6AP-1ixBSU2MgF-00aDyq; Tue, 05 May 2020 16:04:09 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marco Elver <elver@google.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] omapfb: don't annotate dss_conv_list as __initdata
-Date:   Tue,  5 May 2020 16:03:52 +0200
-Message-Id: <20200505140407.373983-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
+        Tue, 5 May 2020 10:04:48 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:42644 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729040AbgEEOEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 10:04:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=2imX44azv32ai5I1Tmvby9JDO4UnjynDkcj1JvfO+xI=; b=wuqhlXhGQvKagsjIv8qyjqirEk
+        rxawIySnvAjtXLTW4D5oXGdKSdYp7Yu69NOEaZSfaiABISGTTgXnc4GRX8qkWyf1uJaCEScC3PbR5
+        ciGASjJz2nSLe+CkML/4AZZAx1CwFvuut6vuxB+q/HDbhZtgLnxDL4vaHgFzeVqhAVHc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jVyBf-000wQy-Ht; Tue, 05 May 2020 16:04:43 +0200
+Date:   Tue, 5 May 2020 16:04:43 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Vladimir Oltean <olteanv@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH] [net-next] dsa: sja1105: dynamically allocate stats
+ structure
+Message-ID: <20200505140443.GK208718@lunn.ch>
+References: <20200505135848.180753-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:b7GTK4JxzyLmn2gIsYhgbVf/xIlBzgBQDzJn6IhgPioBvsvScLO
- hkBobGOJ16kEh5G53aN++eiN7fEy2+8WNjNT2oAAh+pto0naL3H5RGdPuiPGftRLYE+WWk6
- AARHIaGwYWpgUPXoaHmYhwOoJNFWjRb9NvVIVNJ1vaGDXFt+mHz9QyUnAZl6/+oWiMZPV/U
- jTlT9OnyODlD3fxIq7spw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:kJXlH+hW/RM=:GF6iW7yf/Pyctg3y13GUV2
- FqaS5odzEtD72BBRKOElhcz2U29q1LNd/0g9U9cvxHcoGNelA0e2X+cWbz9NoPViSRltONkbm
- LGFE+3SZlqFaNTw6HHnzmjvCuCr0ZCnNxcORk1uAX+Sey3pNmJg2E4YT1mR7/HMrhT54dR9ts
- J4X5/BFzLGeko86ZgOn9pIDklBlnCoK6I5TjvbVjBYP1n6iO1zpOuv4DVRQ1XIdvqm0Afyx6Q
- NN9DNF/UxpQnwNk6AxRh+ZAYljaQMy6P/nNk8rSnCKfInuMJvpLLRlzTGRQfwwH51hZ/qH6kJ
- GVRF5EJgFdrY/GmQxvz7qdg6pZRs5bnMigu8+zm028MNOcJmaGY7EZp4KW1fS8JHoRa1b7FKg
- zag7CBsFaMmPV22qZvJdIIDm0wl5M6BqnQYGxLhrc2Rr0CPFRbHNQ5IGfXehZbjPhZ9hfKqwJ
- B6HdayRKMOpYvsMoivRxljBAGW8MRnMNWtuWKgjAFTdWacPd9pqEdzEJv4rZXVo2ufbp//ZUb
- gHYy4n7XY5GyijCSW9fVbHqO7dYRzg84I3dRveYdKcWxkUqz4Hc6HXFkPgmW9DRysy9glOIZp
- D0GqunN4gpNaJQYpfCS7+U+LA4mR4UiyESvK+5oVfVIB+uAVYMijAw1/n2v5iEGvZfAD9ejp5
- La0lZdiWAcQSxK+M/9XNjltEvLvOA3ImAHOawsmGo4wRlXMTXm/6Q4nTx48oalue2KSKvBOuj
- 0yjErUk/kCOrAMj0XMFmXosWZZFAbd/GbAaeFNtG3GQw0Y/IqMaFg9Slu2BZtppe+LVNj9Vb2
- BAdW/soKwj4RV9o1kG+AcGs+1G+ryxdeSkhmSUU9+eHuQkZ5uY=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505135848.180753-1-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the kcsan changes, __read_once_size() is not inlined, but
-clang can decide to emit a version that hardcodes the address, which
-in turn triggers a warning for dss_conv_list being __initdata but
-__read_once_size() not being __init:
+> -	rc = sja1105_port_status_get(priv, &status, port);
+> +	rc = sja1105_port_status_get(priv, status, port);
+>  	if (rc < 0) {
+>  		dev_err(ds->dev, "Failed to read port %d counters: %d\n",
+>  			port, rc);
+> -		return;
+> +		goto out;;
 
-WARNING: modpost: vmlinux.o(.text+0x6e4d7a): Section mismatch in
-reference from the function __read_once_size() to the variable
-.init.data:dss_conv_list
-The function __read_once_size() references
-the variable __initdata dss_conv_list.
-This is often because __read_once_size lacks a __initdata
-annotation or the annotation of dss_conv_list is wrong.
+Hi Arnd
 
-This is clearly a false positive warning, but it's hard to tell
-who is to blame for it. Work around it by removing the __initdata
-annotation, wasting the space of two pointers in return for getting
-rid of the warning.
+I expect static checker people will drive by soon with a fix for the ;; :-)
 
-Fixes: dfd402a4c4ba ("kcsan: Add Kernel Concurrency Sanitizer infrastructure")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/video/fbdev/omap2/omapfb/dss/omapdss-boot-init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/omapdss-boot-init.c b/drivers/video/fbdev/omap2/omapfb/dss/omapdss-boot-init.c
-index 0ae0cab252d3..29fdff9c95f6 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/omapdss-boot-init.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/omapdss-boot-init.c
-@@ -19,7 +19,7 @@
- #include <linux/slab.h>
- #include <linux/list.h>
- 
--static struct list_head dss_conv_list __initdata;
-+static struct list_head dss_conv_list;
- 
- static const char prefix[] __initconst = "omapdss,";
- 
--- 
-2.26.0
-
+  Andrew
