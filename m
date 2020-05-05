@@ -2,181 +2,133 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7EF1C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29290C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3D71206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02170206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:28:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qw4J8O9R"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="zkZhOMbL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728367AbgEEAXs (ORCPT
+        id S1728395AbgEEA2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 20:23:48 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:7495 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727028AbgEEAXs (ORCPT
+        Mon, 4 May 2020 20:28:06 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:51838 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728258AbgEEA2F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 20:23:48 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eb0b1940000>; Mon, 04 May 2020 17:21:40 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 04 May 2020 17:23:48 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 04 May 2020 17:23:48 -0700
-Received: from [10.2.56.198] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 5 May
- 2020 00:23:47 +0000
-Subject: Re: [PATCH hmm v2 4/5] mm/hmm: remove HMM_PFN_SPECIAL
-To:     Jason Gunthorpe <jgg@ziepe.ca>, <linux-mm@kvack.org>,
-        Ralph Campbell <rcampbell@nvidia.com>
-CC:     Alex Deucher <alexander.deucher@amd.com>,
-        <amd-gfx@lists.freedesktop.org>, Ben Skeggs <bskeggs@redhat.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        <dri-devel@lists.freedesktop.org>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Christoph Hellwig <hch@lst.de>,
-        <intel-gfx@lists.freedesktop.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        <linux-kernel@vger.kernel.org>,
-        Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
-        <nouveau@lists.freedesktop.org>,
-        "Yang, Philip" <Philip.Yang@amd.com>
-References: <4-v2-b4e84f444c7d+24f57-hmm_no_flags_jgg@mellanox.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <11e39f2e-e244-a75f-15f4-83d2f5dd2f26@nvidia.com>
-Date:   Mon, 4 May 2020 17:23:46 -0700
+        Mon, 4 May 2020 20:28:05 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0450HdsP079246;
+        Tue, 5 May 2020 00:27:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=A60tIjrFlCWczDSGE6nphoyY+quycdG0047aXGDBwXM=;
+ b=zkZhOMbL5ntt8V+FauVJdMoxGpMiiNxxKf4JrjWnjAN05FHvvX0Ql2S+bPRezp3uCU9L
+ H9PCi429eviWsQPB22XxSxA4ABVFlrZEXVoGnCqmnLb1/Y7kzKhFY8uqPRVra4iMqTYz
+ wQHLJzjmvD1lSCIik427sDWielozZiI0cWLaKhpCTVcPzO0jgByjY6aTCeGnSCfpoG9q
+ ILdQzrviGKqfWRhCYJkHy7O0weSnQ6PUdeQ8WrkZp4tVIEtAnXDvoaXhGuK/trdcIMYw
+ b1v+ZfzcchpXBMKdn5jY0Z0DR4hz0qS+myC335sjxVwil9mR8E0JpWQUaiogktg9EUT3 pg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 30s09r20ms-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 05 May 2020 00:27:59 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0450GtQN065070;
+        Tue, 5 May 2020 00:27:58 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 30sjdrs6uv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 05 May 2020 00:27:58 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0450RuSm027475;
+        Tue, 5 May 2020 00:27:56 GMT
+Received: from [10.159.232.15] (/10.159.232.15)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 04 May 2020 17:27:56 -0700
+Subject: Re: [PATCH] mm: Limit boost_watermark on small zones.
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1588294148-6586-1-git-send-email-henry.willard@oracle.com>
+ <20200501155729.a479c4b27f127d9aa866bd8e@linux-foundation.org>
+ <20200504124409.GB3758@techsingularity.net>
+ <20200504133604.5fd0b0b11b93bb4d9a0fed68@linux-foundation.org>
+From:   Henry Willard <henry.willard@oracle.com>
+Message-ID: <fdfd6647-da93-297a-1122-64be8daa8e1c@oracle.com>
+Date:   Mon, 4 May 2020 17:27:55 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <4-v2-b4e84f444c7d+24f57-hmm_no_flags_jgg@mellanox.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+In-Reply-To: <20200504133604.5fd0b0b11b93bb4d9a0fed68@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588638100; bh=LbTFGAO939OtgC3J478q1/lLZNcOmbmZm/bb6JPA+3g=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=qw4J8O9R40LD/qwoUcwvvA/9rtpnX8IImDRS9vHOyZrJtm90MVganf/mHpIZLk1G2
-         TAaZxWVsiQD4LfvXhom5hDALdA1n9rwzM/TX7FVswoGDDHCxrarRiboHsnvtRGwfaB
-         XKUfU9+NeTQ12kJUC1MpdFE2FpDUzqsBAAJ2qH76Gr+U2Wn+OGtNJBOQeTAFsxD7Xb
-         hzwEziNt+xMaVGWJ2xKZIj1gPJ5+BVHFfaGuaAaky5NcasEmrfLU4+U+l+TVi4bLUh
-         O7o5uuDV8EwCSq3Qst8WqzmyAaKwQMM7ipuSr9hNn9vnKmA4K1RyrTUleAA0KmoAm6
-         HX5++tYtaWNGw==
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=2 mlxscore=0
+ bulkscore=0 adultscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005050000
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1011 suspectscore=2
+ priorityscore=1501 malwarescore=0 mlxlogscore=999 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005050000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-01 11:20, Jason Gunthorpe wrote:
-> From: Jason Gunthorpe <jgg@mellanox.com>
-> 
-> This is just an alias for HMM_PFN_ERROR, nothing cares that the error was
-> because of a special page vs any other error case.
+On 5/4/20 1:36 PM, Andrew Morton wrote:
+> On Mon, 4 May 2020 13:44:09 +0100 Mel Gorman <mgorman@techsingularity.net> wrote:
+>
+>> On Fri, May 01, 2020 at 03:57:29PM -0700, Andrew Morton wrote:
+>>> On Thu, 30 Apr 2020 17:49:08 -0700 Henry Willard <henry.willard@oracle.com> wrote:
+>>>
+>>>> Commit 1c30844d2dfe ("mm: reclaim small amounts of memory when an external
+>>>> fragmentation event occurs") adds a boost_watermark() function which
+>>>> increases the min watermark in a zone by at least pageblock_nr_pages or
+>>>> the number of pages in a page block. On Arm64, with 64K pages and 512M
+>>>> huge pages, this is 8192 pages or 512M. It does this regardless of the
+>>>> number of managed pages managed in the zone or the likelihood of success.
+>>>> This can put the zone immediately under water in terms of allocating pages
+>>>> from the zone, and can cause a small machine to fail immediately due to
+>>>> OoM. Unlike set_recommended_min_free_kbytes(), which substantially
+>>>> increases min_free_kbytes and is tied to THP, boost_watermark() can be
+>>>> called even if THP is not active. The problem is most likely to appear
+>>>> on architectures such as Arm64 where pageblock_nr_pages is very large.
+>>>>
+>>>> It is desirable to run the kdump capture kernel in as small a space as
+>>>> possible to avoid wasting memory. In some architectures, such as Arm64,
+>>>> there are restrictions on where the capture kernel can run, and therefore,
+>>>> the space available. A capture kernel running in 768M can fail due to OoM
+>>>> immediately after boost_watermark() sets the min in zone DMA32, where
+>>>> most of the memory is, to 512M. It fails even though there is over 500M of
+>>>> free memory. With boost_watermark() suppressed, the capture kernel can run
+>>>> successfully in 448M.
+>>>>
+>>>> This patch limits boost_watermark() to boosting a zone's min watermark only
+>>>> when there are enough pages that the boost will produce positive results.
+>>>> In this case that is estimated to be four times as many pages as
+>>>> pageblock_nr_pages.
+>>>>
+>> ...
+>> Acked-by: Mel Gorman <mgorman@techsingularity.net>
+> Cool.  I wonder if we should backport this into -stable kernels?  "can
+> cause a small machine to fail immediately" sounds serious, but
+> 1c30844d2dfe is from December 2018.  Any thoughts?
+It is a trivial patch, and we always like to have them in -stable 
+kernels when possible. It was a serious problem for us, because we had a 
+configuration where kdump on Arm always failed. However, other than 
+kdump, the problem is probably relatively rare.
 
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-
-thanks,
--- 
-John Hubbard
-NVIDIA
-> 
-> Acked-by: Felix Kuehling <Felix.Kuehling@amd.com>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-> ---
->   drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c | 1 -
->   drivers/gpu/drm/nouveau/nouveau_svm.c   | 1 -
->   include/linux/hmm.h                     | 8 --------
->   mm/hmm.c                                | 2 +-
->   4 files changed, 1 insertion(+), 11 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-> index 41ae7f96f48194..76b4a4fa39ed04 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-> @@ -775,7 +775,6 @@ static const uint64_t hmm_range_flags[HMM_PFN_FLAG_MAX] = {
->   static const uint64_t hmm_range_values[HMM_PFN_VALUE_MAX] = {
->   	0xfffffffffffffffeUL, /* HMM_PFN_ERROR */
->   	0, /* HMM_PFN_NONE */
-> -	0xfffffffffffffffcUL /* HMM_PFN_SPECIAL */
->   };
->   
->   /**
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
-> index c68e9317cf0740..cf0d9bd61bebf9 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_svm.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
-> @@ -379,7 +379,6 @@ static const u64
->   nouveau_svm_pfn_values[HMM_PFN_VALUE_MAX] = {
->   	[HMM_PFN_ERROR  ] = ~NVIF_VMM_PFNMAP_V0_V,
->   	[HMM_PFN_NONE   ] =  NVIF_VMM_PFNMAP_V0_NONE,
-> -	[HMM_PFN_SPECIAL] = ~NVIF_VMM_PFNMAP_V0_V,
->   };
->   
->   /* Issue fault replay for GPU to retry accesses that faulted previously. */
-> diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-> index 0df27dd03d53d7..81c302c884c0e3 100644
-> --- a/include/linux/hmm.h
-> +++ b/include/linux/hmm.h
-> @@ -44,10 +44,6 @@ enum hmm_pfn_flag_e {
->    * Flags:
->    * HMM_PFN_ERROR: corresponding CPU page table entry points to poisoned memory
->    * HMM_PFN_NONE: corresponding CPU page table entry is pte_none()
-> - * HMM_PFN_SPECIAL: corresponding CPU page table entry is special; i.e., the
-> - *      result of vmf_insert_pfn() or vm_insert_page(). Therefore, it should not
-> - *      be mirrored by a device, because the entry will never have HMM_PFN_VALID
-> - *      set and the pfn value is undefined.
->    *
->    * Driver provides values for none entry, error entry, and special entry.
->    * Driver can alias (i.e., use same value) error and special, but
-> @@ -56,12 +52,10 @@ enum hmm_pfn_flag_e {
->    * HMM pfn value returned by hmm_vma_get_pfns() or hmm_vma_fault() will be:
->    * hmm_range.values[HMM_PFN_ERROR] if CPU page table entry is poisonous,
->    * hmm_range.values[HMM_PFN_NONE] if there is no CPU page table entry,
-> - * hmm_range.values[HMM_PFN_SPECIAL] if CPU page table entry is a special one
->    */
->   enum hmm_pfn_value_e {
->   	HMM_PFN_ERROR,
->   	HMM_PFN_NONE,
-> -	HMM_PFN_SPECIAL,
->   	HMM_PFN_VALUE_MAX
->   };
->   
-> @@ -110,8 +104,6 @@ static inline struct page *hmm_device_entry_to_page(const struct hmm_range *rang
->   		return NULL;
->   	if (entry == range->values[HMM_PFN_ERROR])
->   		return NULL;
-> -	if (entry == range->values[HMM_PFN_SPECIAL])
-> -		return NULL;
->   	if (!(entry & range->flags[HMM_PFN_VALID]))
->   		return NULL;
->   	return pfn_to_page(entry >> range->pfn_shift);
-> diff --git a/mm/hmm.c b/mm/hmm.c
-> index f06bcac948a79b..2e975eedb14f89 100644
-> --- a/mm/hmm.c
-> +++ b/mm/hmm.c
-> @@ -301,7 +301,7 @@ static int hmm_vma_handle_pte(struct mm_walk *walk, unsigned long addr,
->   			pte_unmap(ptep);
->   			return -EFAULT;
->   		}
-> -		*pfn = range->values[HMM_PFN_SPECIAL];
-> +		*pfn = range->values[HMM_PFN_ERROR];
->   		return 0;
->   	}
->   
-> 
+Thanks,
+Henry
 
