@@ -2,118 +2,129 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DB2C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94ECDC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA042083B
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:57:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="YSNRusfE"
+	by mail.kernel.org (Postfix) with ESMTP id 7A04D2084D
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:58:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730563AbgEEQ5v (ORCPT
+        id S1730582AbgEEQ6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:57:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46532 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729593AbgEEQ5u (ORCPT
+        Tue, 5 May 2020 12:58:37 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50042 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729949AbgEEQ6h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:57:50 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3450C061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 09:57:50 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id h26so2536486qtu.8
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 09:57:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fEeh741pti+zQtUqiU+d//divWdQ0COuz+a61BTeqwc=;
-        b=YSNRusfE9U5u8q3v9LefCY1rU6K93jnDg4I/Se7sXa6/yvJwAIFJruFuN/+VjtbSYG
-         WLGgbW8jcLo909cVZHzUEp9Vl+j+1knpGhiLLF/8yO7xI4PhQHn2jKn/XZ+7gIEL8BH/
-         PhBIW0QTlorsqAK3ECYQ7eylm0EjiRTeEix3nV7MDzfl4adlAlpi/WyRmqf5Ia/KQN4O
-         w1BXffany2R/o7burzJHOvzi7xx7uGRaTy/SVArfU9go+3KLVzW3kV2yZOZWk8hdENnp
-         gMwRI/VptGu32D36XJgI8z1S2S8eSXN0uchSFh2cN9VI3jrNmhOGTKXONkufx5pguBgZ
-         O5Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fEeh741pti+zQtUqiU+d//divWdQ0COuz+a61BTeqwc=;
-        b=rDSm7ni2/drLrbptTq87e/OM7psSBILcTxvNOP+vyAb6n50NcGSxh9jicSo2OzH7rA
-         2qWhSnmelNiQK/spA7ZoLjt2ZuxpgOB0Fnk7ALPQIveoX7L4CseLhu7Hmj2NHXr8lJQF
-         KSbqcCVugMfiVhF6llksBugrvRjcdncTggQO6AwLq19RqAmSycPAxTjaKWY/MDXUKvTd
-         3yViF4/2b0VsctmRonQWfQYz3bJXckU8mtxJz+bqpA04ReI57llSe6acAWbwWkIFmGEF
-         xY850ZBeElf9IxLTiM292DhYrkdCuox99EAo+NunGkI9sl18PIM9hqr7dQP/JD4NUjC2
-         Hj7Q==
-X-Gm-Message-State: AGi0PuajhYD7MynjV5rHIxehwsXCM72RjuMcXYTQ1fWUNdgmyNl3Uo6K
-        EolZNk9nfQxkYg36k28pp0Tlsg==
-X-Google-Smtp-Source: APiQypKo4D/DEYlsK/2z0fDu/HkNmZbZN2I+uP29hg08y0CiHEZZLic4UCq7t4Eov0dhnnf7ClF+Ug==
-X-Received: by 2002:ac8:2f15:: with SMTP id j21mr3745654qta.259.1588697869788;
-        Tue, 05 May 2020 09:57:49 -0700 (PDT)
-Received: from localhost (70.44.39.90.res-cmts.bus.ptd.net. [70.44.39.90])
-        by smtp.gmail.com with ESMTPSA id z40sm2371728qtj.45.2020.05.05.09.57.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 09:57:48 -0700 (PDT)
-Date:   Tue, 5 May 2020 12:57:34 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] memcg: oom: ignore oom warnings from memory.max
-Message-ID: <20200505165734.GD58018@cmpxchg.org>
-References: <20200504065600.GA22838@dhcp22.suse.cz>
- <CALvZod5Ao2PEFPEOckW6URBfxisp9nNpNeon1GuctuHehqk_6Q@mail.gmail.com>
- <20200504141136.GR22838@dhcp22.suse.cz>
- <CALvZod7Ls7rTDOr5vXwEiPneLqbq3JoxfFBxZZ71YWgvLkNr5A@mail.gmail.com>
- <20200504150052.GT22838@dhcp22.suse.cz>
- <CALvZod7EeQm-T4dsBddfMY_szYw3m8gRh5R5GfjQiuQAtCocug@mail.gmail.com>
- <20200504160613.GU22838@dhcp22.suse.cz>
- <CALvZod79hWns9366B+8ZK2Roz8c+vkdA80HqFNMep56_pumdRQ@mail.gmail.com>
- <20200505071324.GB16322@dhcp22.suse.cz>
- <CALvZod5H-fDbvu73=hkzN0Man_+03ZW0d5zc1N0YObVHSiy0Tw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALvZod5H-fDbvu73=hkzN0Man_+03ZW0d5zc1N0YObVHSiy0Tw@mail.gmail.com>
+        Tue, 5 May 2020 12:58:37 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 045GYAxg103744;
+        Tue, 5 May 2020 12:58:28 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30s4r4a1w6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 May 2020 12:58:28 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 045GZXNT014501;
+        Tue, 5 May 2020 16:58:27 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma03wdc.us.ibm.com with ESMTP id 30s0g6tadv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 May 2020 16:58:27 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 045GwReA26149314
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 5 May 2020 16:58:27 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 00D2D78063;
+        Tue,  5 May 2020 16:58:27 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 62BA97805F;
+        Tue,  5 May 2020 16:58:26 +0000 (GMT)
+Received: from talon7.ibm.com (unknown [9.211.137.116])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue,  5 May 2020 16:58:26 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-aspeed@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, joel@jms.id.au, andrew@aj.id.au,
+        eajames@linux.ibm.com
+Subject: [PATCH v11 0/8] soc: aspeed: Add XDMA engine driver
+Date:   Tue,  5 May 2020 11:58:17 -0500
+Message-Id: <1588697905-23444-1-git-send-email-eajames@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-05_09:2020-05-04,2020-05-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=805 clxscore=1015 priorityscore=1501 malwarescore=0
+ impostorscore=0 bulkscore=0 suspectscore=3 adultscore=0 phishscore=0
+ mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005050126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 08:03:17AM -0700, Shakeel Butt wrote:
-> On Tue, May 5, 2020 at 12:13 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > So instead of potentially removing a useful information can we focus on
-> > the remote charging side of the problem and deal with it in a sensible
-> > way? That would make memory.high usable for your usecase and I still
-> > believe that this is what you should be using in the first place.
-> 
-> We talked about this at LSFMM'19 and I think the decision was to not
-> fix high reclaim for remote memcg until it will be an actual issue. I
-> suppose now we can treat it as an actual issue.
-> 
-> There are a couple of open questions:
-> 1) Should the remote chargers be throttled and do the high reclaim?
+This series adds a driver to control the Aspeed XDMA engine embedded in the
+AST2500 and AST2600. The XDMA engine performs automatic DMA operations
+over PCI-E between the Aspeed SOC (acting as a BMC) and a host processor.
 
-I would say it depends on the caller. We may need both: a centralized
-charger like a kthread that does work on behalf of many cgroups should
-not be throttled, or we risk priority inversions - maybe not even held
-up for reclaim, although that would need some thinking about
-memory.max as well - whether remote charges should be allowed to
-overrun memory.max temporarily, and we punt all reclaim from such
-contexts to a worker. (Preferrably, in the future, with all the cpu
-cycles of that worker accounted to the cgroup. We want that for
-kswapd-style background reclaim as well).
+Changes since v10:
+ - Fix devicetree binding documentation
+ - Add patches to enable the device on witherspoon and tacoma systems
+ - Fix the driver to actually use the updated bindings
+ - Remove the device managed memory in favor of manually allocating and freeing
+   This adds considerable complexity to the probe function and requires the
+   use of a kobject and associated release method, but it fixes the problem of
+   the device context being deleted during an operation or with memory still
+   mapped if the device is unbound from the driver
+ - Remove the client kref system
+ - Reset the device when a user closes a file handle with an on-going operation
 
-We do similar things with IO for example, when offloading IO to a
-central kthread. The kthread is allowed to proceed past a cgroup's
-allowance in order to make forward progress, and the cgroup will be
-forced to pay up retroactively when it comes back for more of the
-resource.
+Changes since v9:
+ - Remove the kernel command queue
+ - Use memcpy_toio instead to copy commands to the buffer
+ - Free the client's genalloc'd memory in the release method
+ - Switch the bindings documentation to yaml
+ - Add patches to fix SCU interrupt controller include
+
+Changes since v8:
+ - Use DMA API to allocate memory from reserved region.
+ - Fix the driver for the AST2500 by keeping the command queue in kernel
+   memory and copying the whole buffer to the reserved memory area before
+   starting the operation.
+ - Add krefs to the client structure to prevent use-after-free.
+ - Switch reset-names binding to "device", "root-complex"
+
+Eddie James (8):
+  dt-bindings: soc: Add Aspeed XDMA Engine
+  soc: aspeed: Add XDMA Engine Driver
+  soc: aspeed: xdma: Add user interface
+  soc: aspeed: xdma: Add reset ioctl
+  ARM: dts: Aspeed: AST2600: Update XDMA engine node
+  ARM: dts: Aspeed: AST2500: Update XDMA engine node
+  ARM: dts: Aspeed: Witherspoon: Enable XDMA engine
+  ARM: dts: Aspeed: Tacoma: Enable XDMA engine
+
+ .../devicetree/bindings/soc/aspeed/xdma.yaml       |  103 ++
+ MAINTAINERS                                        |    8 +
+ arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts        |   11 +
+ arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts   |   11 +
+ arch/arm/boot/dts/aspeed-g5.dtsi                   |    5 +-
+ arch/arm/boot/dts/aspeed-g6.dtsi                   |    8 +-
+ drivers/soc/aspeed/Kconfig                         |    8 +
+ drivers/soc/aspeed/Makefile                        |    1 +
+ drivers/soc/aspeed/aspeed-xdma.c                   | 1205 ++++++++++++++++++++
+ include/uapi/linux/aspeed-xdma.h                   |   42 +
+ 10 files changed, 1397 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/aspeed/xdma.yaml
+ create mode 100644 drivers/soc/aspeed/aspeed-xdma.c
+ create mode 100644 include/uapi/linux/aspeed-xdma.h
+
+-- 
+1.8.3.1
+
