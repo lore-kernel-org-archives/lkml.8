@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5387BC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E57BC47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3992720675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 539D620675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:19:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730114AbgEEOQ3 (ORCPT
+        id S1730455AbgEEOTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:16:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49118 "EHLO
+        Tue, 5 May 2020 10:19:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730084AbgEEOQV (ORCPT
+        by vger.kernel.org with ESMTP id S1730115AbgEEOQ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:16:21 -0400
+        Tue, 5 May 2020 10:16:29 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 477DDC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:16:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8B97C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:16:29 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jVyMd-00023Z-Az; Tue, 05 May 2020 16:16:03 +0200
+        id 1jVyMm-0002Aa-4d; Tue, 05 May 2020 16:16:12 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id D2F75FFC8D;
-        Tue,  5 May 2020 16:16:02 +0200 (CEST)
-Message-Id: <20200505135314.808628211@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 82ABDFFC8D;
+        Tue,  5 May 2020 16:16:11 +0200 (CEST)
+Message-Id: <20200505135315.476734898@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:49:41 +0200
+Date:   Tue, 05 May 2020 15:49:48 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -51,9 +51,8 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Brian Gerst <brgerst@gmail.com>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [patch V4 part 4 15/24] x86/db: Split out dr6/7 handling
+        Will Deacon <will@kernel.org>
+Subject: [patch V4 part 4 22/24] x86/mce: Address objtools noinstr complaints
 References: <20200505134926.578885807@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -66,143 +65,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+Mark the relevant functions noinstr, use the plain non-instrumented MSR
+accessors. The only odd part is the instr_begin()/end() pair around the
+indirect machine_check_vector() call as objtool can't figure that out. The
+possible invoked functions are annotated correctly.
 
-DR6/7 should be handled before nmi_enter() is invoked and restore after
-nmi_exit() to minimize the exposure.
-
-Split it out into helper inlines and bring it into the correct order.
-
-Signed-off-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/kernel/hw_breakpoint.c |    6 ---
- arch/x86/kernel/traps.c         |   62 +++++++++++++++++++++++++++-------------
- 2 files changed, 44 insertions(+), 24 deletions(-)
+ arch/x86/kernel/cpu/mce/core.c    |   20 +++++++++++++++-----
+ arch/x86/kernel/cpu/mce/p5.c      |    4 +++-
+ arch/x86/kernel/cpu/mce/winchip.c |    4 +++-
+ kernel/time/timekeeping.c         |    2 +-
+ 4 files changed, 22 insertions(+), 8 deletions(-)
 
---- a/arch/x86/kernel/hw_breakpoint.c
-+++ b/arch/x86/kernel/hw_breakpoint.c
-@@ -464,7 +464,7 @@ static int hw_breakpoint_handler(struct
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -130,7 +130,7 @@ static void (*quirk_no_way_out)(int bank
+ BLOCKING_NOTIFIER_HEAD(x86_mce_decoder_chain);
+ 
+ /* Do initial initialization of a struct mce */
+-void mce_setup(struct mce *m)
++noinstr void mce_setup(struct mce *m)
  {
- 	int i, cpu, rc = NOTIFY_STOP;
- 	struct perf_event *bp;
--	unsigned long dr7, dr6;
-+	unsigned long dr6;
- 	unsigned long *dr6_p;
+ 	memset(m, 0, sizeof(struct mce));
+ 	m->cpu = m->extcpu = smp_processor_id();
+@@ -140,12 +140,12 @@ void mce_setup(struct mce *m)
+ 	m->cpuid = cpuid_eax(1);
+ 	m->socketid = cpu_data(m->extcpu).phys_proc_id;
+ 	m->apicid = cpu_data(m->extcpu).initial_apicid;
+-	rdmsrl(MSR_IA32_MCG_CAP, m->mcgcap);
++	m->mcgcap = __rdmsr(MSR_IA32_MCG_CAP);
  
- 	/* The DR6 value is pointed by args->err */
-@@ -479,9 +479,6 @@ static int hw_breakpoint_handler(struct
- 	if ((dr6 & DR_TRAP_BITS) == 0)
- 		return NOTIFY_DONE;
+ 	if (this_cpu_has(X86_FEATURE_INTEL_PPIN))
+-		rdmsrl(MSR_PPIN, m->ppin);
++		m->ppin = __rdmsr(MSR_PPIN);
+ 	else if (this_cpu_has(X86_FEATURE_AMD_PPIN))
+-		rdmsrl(MSR_AMD_PPIN, m->ppin);
++		m->ppin = __rdmsr(MSR_AMD_PPIN);
  
--	get_debugreg(dr7, 7);
--	/* Disable breakpoints during exception handling */
--	set_debugreg(0UL, 7);
- 	/*
- 	 * Assert that local interrupts are disabled
- 	 * Reset the DRn bits in the virtualized register value.
-@@ -538,7 +535,6 @@ static int hw_breakpoint_handler(struct
- 	    (dr6 & (~DR_TRAP_BITS)))
- 		rc = NOTIFY_DONE;
- 
--	set_debugreg(dr7, 7);
- 	put_cpu();
- 
- 	return rc;
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -691,6 +691,44 @@ static bool is_sysenter_singlestep(struc
- #endif
+ 	m->microcode = boot_cpu_data.microcode;
+ }
+@@ -1895,10 +1895,12 @@ bool filter_mce(struct mce *m)
  }
  
-+static __always_inline void debug_enter(unsigned long *dr6, unsigned long *dr7)
-+{
-+	/*
-+	 * Disable breakpoints during exception handling; recursive exceptions
-+	 * are exceedingly 'fun'.
-+	 *
-+	 * Since this function is NOKPROBE, and that also applies to
-+	 * HW_BREAKPOINT_X, we can't hit a breakpoint before this (XXX except a
-+	 * HW_BREAKPOINT_W on our stack)
-+	 *
-+	 * Entry text is excluded for HW_BP_X and cpu_entry_area, which
-+	 * includes the entry stack is excluded for everything.
-+	 */
-+	get_debugreg(*dr7, 6);
-+	set_debugreg(0, 7);
-+
-+	/*
-+	 * The Intel SDM says:
-+	 *
-+	 *   Certain debug exceptions may clear bits 0-3. The remaining
-+	 *   contents of the DR6 register are never cleared by the
-+	 *   processor. To avoid confusion in identifying debug
-+	 *   exceptions, debug handlers should clear the register before
-+	 *   returning to the interrupted task.
-+	 *
-+	 * Keep it simple: clear DR6 immediately.
-+	 */
-+	get_debugreg(*dr6, 6);
-+	set_debugreg(0, 6);
-+	/* Filter out all the reserved bits which are preset to 1 */
-+	*dr6 &= ~DR6_RESERVED;
-+}
-+
-+static __always_inline void debug_exit(unsigned long dr7)
-+{
-+	set_debugreg(dr7, 7);
-+}
-+
- /*
-  * Our handling of the processor debug registers is non-trivial.
-  * We do not clear them on entry and exit from the kernel. Therefore
-@@ -718,28 +756,13 @@ static bool is_sysenter_singlestep(struc
- dotraplinkage void do_debug(struct pt_regs *regs, long error_code)
+ /* Handle unconfigured int18 (should never happen) */
+-static void unexpected_machine_check(struct pt_regs *regs)
++static noinstr void unexpected_machine_check(struct pt_regs *regs)
  {
- 	struct task_struct *tsk = current;
-+	unsigned long dr6, dr7;
- 	int user_icebp = 0;
--	unsigned long dr6;
- 	int si_code;
++	instr_begin();
+ 	pr_err("CPU#%d: Unexpected int18 (Machine Check)\n",
+ 	       smp_processor_id());
++	instr_end();
+ }
  
--	nmi_enter();
--
--	get_debugreg(dr6, 6);
--	/*
--	 * The Intel SDM says:
--	 *
--	 *   Certain debug exceptions may clear bits 0-3. The remaining
--	 *   contents of the DR6 register are never cleared by the
--	 *   processor. To avoid confusion in identifying debug
--	 *   exceptions, debug handlers should clear the register before
--	 *   returning to the interrupted task.
--	 *
--	 * Keep it simple: clear DR6 immediately.
--	 */
--	set_debugreg(0, 6);
-+	debug_enter(&dr6, &dr7);
+ /* Call the installed machine check handler for this CPU setup. */
+@@ -1915,14 +1917,22 @@ static __always_inline void exc_machine_
+ 		return;
  
--	/* Filter out all the reserved bits which are preset to 1 */
--	dr6 &= ~DR6_RESERVED;
-+	nmi_enter();
- 
- 	/*
- 	 * The SDM says "The processor clears the BTF flag when it
-@@ -777,7 +800,7 @@ dotraplinkage void do_debug(struct pt_re
- #endif
- 
- 	if (notify_die(DIE_DEBUG, "debug", regs, (long)&dr6, error_code,
--							SIGTRAP) == NOTIFY_STOP)
-+		       SIGTRAP) == NOTIFY_STOP)
- 		goto exit;
- 
- 	/*
-@@ -816,6 +839,7 @@ dotraplinkage void do_debug(struct pt_re
- 
- exit:
+ 	nmi_enter();
++	/*
++	 * The call targets are marked noinstr, but objtool can't figure
++	 * that out because it's an indirect call. Annotate it.
++	 */
++	instr_begin();
+ 	machine_check_vector(regs);
++	instr_end();
  	nmi_exit();
-+	debug_exit(dr7);
  }
- NOKPROBE_SYMBOL(do_debug);
+ 
+ static __always_inline void exc_machine_check_user(struct pt_regs *regs)
+ {
+ 	idtentry_enter(regs);
++	instr_begin();
+ 	machine_check_vector(regs);
++	instr_end();
+ 	idtentry_exit(regs);
+ }
+ 
+--- a/arch/x86/kernel/cpu/mce/p5.c
++++ b/arch/x86/kernel/cpu/mce/p5.c
+@@ -21,10 +21,11 @@
+ int mce_p5_enabled __read_mostly;
+ 
+ /* Machine check handler for Pentium class Intel CPUs: */
+-static void pentium_machine_check(struct pt_regs *regs)
++static noinstr void pentium_machine_check(struct pt_regs *regs)
+ {
+ 	u32 loaddr, hi, lotype;
+ 
++	instr_begin();
+ 	rdmsr(MSR_IA32_P5_MC_ADDR, loaddr, hi);
+ 	rdmsr(MSR_IA32_P5_MC_TYPE, lotype, hi);
+ 
+@@ -37,6 +38,7 @@ static void pentium_machine_check(struct
+ 	}
+ 
+ 	add_taint(TAINT_MACHINE_CHECK, LOCKDEP_NOW_UNRELIABLE);
++	instr_end();
+ }
+ 
+ /* Set up machine check reporting for processors with Intel style MCE: */
+--- a/arch/x86/kernel/cpu/mce/winchip.c
++++ b/arch/x86/kernel/cpu/mce/winchip.c
+@@ -17,10 +17,12 @@
+ #include "internal.h"
+ 
+ /* Machine check handler for WinChip C6: */
+-static void winchip_machine_check(struct pt_regs *regs)
++static noinstr void winchip_machine_check(struct pt_regs *regs)
+ {
++	instr_begin();
+ 	pr_emerg("CPU0: Machine Check Exception.\n");
+ 	add_taint(TAINT_MACHINE_CHECK, LOCKDEP_NOW_UNRELIABLE);
++	instr_end();
+ }
+ 
+ /* Set up machine check reporting on the Winchip C6 series */
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -953,7 +953,7 @@ EXPORT_SYMBOL_GPL(ktime_get_real_seconds
+  * but without the sequence counter protect. This internal function
+  * is called just when timekeeping lock is already held.
+  */
+-time64_t __ktime_get_real_seconds(void)
++noinstr time64_t __ktime_get_real_seconds(void)
+ {
+ 	struct timekeeper *tk = &tk_core.timekeeper;
  
 
