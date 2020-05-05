@@ -2,80 +2,186 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF1DC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 777FDC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A38E206E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:25:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="exxQx5pQ"
+	by mail.kernel.org (Postfix) with ESMTP id 44B2620721
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:28:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588699733;
+	bh=0tg/+4uFrc4NuN9+XaScDh76eyqdHaQjaxnbXP2fh3M=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=WMI+llW3fN+IqXr8gHiqbLQKkKmPug9BE5RgQxk5rViKuiYNXke1HwrNQOJJKsP+I
+	 p6Q7+aWnLBA0oCq2Q4C6jv9b+4k5ke6fCfFoKDaRWnTokyBqmU31Kc/JYPSk4xF3mX
+	 NxmJXFlvVii/Vz1k0gaVZERXAHLXcl6V/fxNLZo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729933AbgEERZX (ORCPT
+        id S1730142AbgEER2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 13:25:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729199AbgEERZX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 13:25:23 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DF2FC061A0F;
-        Tue,  5 May 2020 10:25:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=YxvvGR/vhOw4v98ZqlbbGMF6Ldqy0REYQuhYbCnAaPM=; b=exxQx5pQ2uugq+dUB7Jv1Aw+QB
-        wYH8ARG/d9mqLuyLjjSG28V3/XmroRtH1Lg/WH/Ww99MdIx5yfgH25yNnhr1Xm+qApVr+PnkesnBo
-        aT+4QkBGhHIZxLr7V/QJ2C038AFmwQt3KlQxXs2ysMg71e9rwxESgOzh0j++KyyIOFsGdTpwdUkZA
-        7/k/aQCCLK8aUNjWK2y+llcA5gp5SCtA1s1SVDUpcPlzt1f4njFiF7CIVjIUITMFl61meIEulH0IJ
-        IMNwWQkvjonlIsfQxWuVg6j6yc55YQKT5B94chB/3VZe0cPpWjUdnVkYIgA5wWYOZ+QgB33iumgVj
-        jHgRw+OA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jW1Jo-00088X-Tj; Tue, 05 May 2020 17:25:20 +0000
-Date:   Tue, 5 May 2020 10:25:20 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Zhen Lei <thunder.leizhen@huawei.com>
-Cc:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>, Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        dm-devel <dm-devel@redhat.com>, Song Liu <song@kernel.org>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/4] mm/swap: use SECTORS_PER_PAGE_SHIFT to clean up code
-Message-ID: <20200505172520.GI16070@bombadil.infradead.org>
-References: <20200505115543.1660-1-thunder.leizhen@huawei.com>
- <20200505115543.1660-3-thunder.leizhen@huawei.com>
+        Tue, 5 May 2020 13:28:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33472 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726350AbgEER2w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 13:28:52 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C6D9206A4;
+        Tue,  5 May 2020 17:28:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588699731;
+        bh=0tg/+4uFrc4NuN9+XaScDh76eyqdHaQjaxnbXP2fh3M=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=HsdR6gXMlQz9DTbySEUZnv96Ssw8gwFHsnjXhl5n41r3XsNos7ePFU7PaeB8cC06z
+         vKtXku2yXZVkTNnShdzrDN32zETRTJDDsy59ylUZHDadRmA91ZhCCDWzf23/okw21g
+         qzojrmYp1rnHMIVe2SigXCIOxZeQQ2m7ywYhfU6I=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id F00643522F5F; Tue,  5 May 2020 10:28:50 -0700 (PDT)
+Date:   Tue, 5 May 2020 10:28:50 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     SeongJae Park <sjpark@amazon.com>,
+        Eric Dumazet <edumazet@google.com>,
+        David Miller <davem@davemloft.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        sj38.park@gmail.com, netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        SeongJae Park <sjpark@amazon.de>, snu@amazon.com,
+        amit@kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH net v2 0/2] Revert the 'socket_alloc' life cycle change
+Message-ID: <20200505172850.GD2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200505161302.547-1-sjpark@amazon.com>
+ <05843a3c-eb9d-3a0d-f992-7e4b97cc1f19@gmail.com>
+ <77124fc2-86b2-27f6-fd7c-4f1e86eb3fff@gmail.com>
+ <67bdfac9-0d7d-0bbe-dc7a-d73979fd8ed9@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200505115543.1660-3-thunder.leizhen@huawei.com>
+In-Reply-To: <67bdfac9-0d7d-0bbe-dc7a-d73979fd8ed9@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 07:55:41PM +0800, Zhen Lei wrote:
-> +++ b/mm/swapfile.c
-> @@ -177,8 +177,8 @@ static int discard_swap(struct swap_info_struct *si)
->  
->  	/* Do not discard the swap header page! */
->  	se = first_se(si);
-> -	start_block = (se->start_block + 1) << (PAGE_SHIFT - 9);
-> -	nr_blocks = ((sector_t)se->nr_pages - 1) << (PAGE_SHIFT - 9);
-> +	start_block = (se->start_block + 1) << SECTORS_PER_PAGE_SHIFT;
-> +	nr_blocks = ((sector_t)se->nr_pages - 1) << SECTORS_PER_PAGE_SHIFT;
+On Tue, May 05, 2020 at 09:37:42AM -0700, Eric Dumazet wrote:
+> 
+> 
+> On 5/5/20 9:31 AM, Eric Dumazet wrote:
+> > 
+> > 
+> > On 5/5/20 9:25 AM, Eric Dumazet wrote:
+> >>
+> >>
+> >> On 5/5/20 9:13 AM, SeongJae Park wrote:
+> >>> On Tue, 5 May 2020 09:00:44 -0700 Eric Dumazet <edumazet@google.com> wrote:
+> >>>
+> >>>> On Tue, May 5, 2020 at 8:47 AM SeongJae Park <sjpark@amazon.com> wrote:
+> >>>>>
+> >>>>> On Tue, 5 May 2020 08:20:50 -0700 Eric Dumazet <eric.dumazet@gmail.com> wrote:
+> >>>>>
+> >>>>>>
+> >>>>>>
+> >>>>>> On 5/5/20 8:07 AM, SeongJae Park wrote:
+> >>>>>>> On Tue, 5 May 2020 07:53:39 -0700 Eric Dumazet <edumazet@google.com> wrote:
+> >>>>>>>
+> >>>>>>
+> >>>>>>>> Why do we have 10,000,000 objects around ? Could this be because of
+> >>>>>>>> some RCU problem ?
+> >>>>>>>
+> >>>>>>> Mainly because of a long RCU grace period, as you guess.  I have no idea how
+> >>>>>>> the grace period became so long in this case.
+> >>>>>>>
+> >>>>>>> As my test machine was a virtual machine instance, I guess RCU readers
+> >>>>>>> preemption[1] like problem might affected this.
+> >>>>>>>
+> >>>>>>> [1] https://www.usenix.org/system/files/conference/atc17/atc17-prasad.pdf
+> >>>>>>>
+> >>>>>>>>
+> >>>>>>>> Once Al patches reverted, do you have 10,000,000 sock_alloc around ?
+> >>>>>>>
+> >>>>>>> Yes, both the old kernel that prior to Al's patches and the recent kernel
+> >>>>>>> reverting the Al's patches didn't reproduce the problem.
+> >>>>>>>
+> >>>>>>
+> >>>>>> I repeat my question : Do you have 10,000,000 (smaller) objects kept in slab caches ?
+> >>>>>>
+> >>>>>> TCP sockets use the (very complex, error prone) SLAB_TYPESAFE_BY_RCU, but not the struct socket_wq
+> >>>>>> object that was allocated in sock_alloc_inode() before Al patches.
+> >>>>>>
+> >>>>>> These objects should be visible in kmalloc-64 kmem cache.
+> >>>>>
+> >>>>> Not exactly the 10,000,000, as it is only the possible highest number, but I
+> >>>>> was able to observe clear exponential increase of the number of the objects
+> >>>>> using slabtop.  Before the start of the problematic workload, the number of
+> >>>>> objects of 'kmalloc-64' was 5760, but I was able to observe the number increase
+> >>>>> to 1,136,576.
+> >>>>>
+> >>>>>           OBJS ACTIVE  USE OBJ SIZE  SLABS OBJ/SLAB CACHE SIZE NAME
+> >>>>> before:   5760   5088  88%    0.06K     90       64       360K kmalloc-64
+> >>>>> after:  1136576 1136576 100%    0.06K  17759       64     71036K kmalloc-64
+> >>>>>
+> >>>>
+> >>>> Great, thanks.
+> >>>>
+> >>>> How recent is the kernel you are running for your experiment ?
+> >>>
+> >>> It's based on 5.4.35.
+> >>>
+> >>>>
+> >>>> Let's make sure the bug is not in RCU.
+> >>>
+> >>> One thing I can currently say is that the grace period passes at last.  I
+> >>> modified the benchmark to repeat not 10,000 times but only 5,000 times to run
+> >>> the test without OOM but easily observable memory pressure.  As soon as the
+> >>> benchmark finishes, the memory were freed.
+> >>>
+> >>> If you need more tests, please let me know.
+> >>>
+> >>
+> >> I would ask Paul opinion on this issue, because we have many objects
+> >> being freed after RCU grace periods.
+> >>
+> >> If RCU subsystem can not keep-up, I guess other workloads will also suffer.
+> >>
+> >> Sure, we can revert patches there and there trying to work around the issue,
+> >> but for objects allocated from process context, we should not have these problems.
+> >>
+> > 
+> > I wonder if simply adjusting rcu_divisor to 6 or 5 would help 
+> > 
+> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > index d9a49cd6065a20936edbda1b334136ab597cde52..fde833bac0f9f81e8536211b4dad6e7575c1219a 100644
+> > --- a/kernel/rcu/tree.c
+> > +++ b/kernel/rcu/tree.c
+> > @@ -427,7 +427,7 @@ module_param(qovld, long, 0444);
+> >  static ulong jiffies_till_first_fqs = ULONG_MAX;
+> >  static ulong jiffies_till_next_fqs = ULONG_MAX;
+> >  static bool rcu_kick_kthreads;
+> > -static int rcu_divisor = 7;
+> > +static int rcu_divisor = 6;
+> >  module_param(rcu_divisor, int, 0644);
+> >  
+> >  /* Force an exit from rcu_do_batch() after 3 milliseconds. */
+> > 
+> 
+> To be clear, you can adjust the value without building a new kernel.
+> 
+> echo 6 >/sys/module/rcutree/parameters/rcu_divisor
 
-Thinking about this some more, wouldn't this look better?
+Worth a try!  If that helps significantly, I have some ideas for updating
+that heuristic, such as checking for sudden increases in the number of
+pending callbacks.
 
-	start_block = page_sectors(se->start_block + 1);
-	nr_block = page_sectors(se->nr_pages - 1);
+But I would really also like to know whether there are long readers and
+whether v5.6 fares better.
 
+							Thanx, Paul
