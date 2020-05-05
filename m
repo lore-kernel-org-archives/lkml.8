@@ -2,168 +2,158 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C518C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9483DC47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BF442068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72E882068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:15:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vxdx7wlj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729552AbgEEWPX (ORCPT
+        id S1729568AbgEEWP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 18:15:23 -0400
-Received: from mga03.intel.com ([134.134.136.65]:16097 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727089AbgEEWPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 18:15:23 -0400
-IronPort-SDR: 6W2FH3KBKAnB0Mjl06WenQFjE6VsQwrpf0152crkqs/PpbvUVgvGr0LXYobU4niXdhyrKYhi6Y
- nDhEEHen2EyQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 15:15:22 -0700
-IronPort-SDR: 2djZaS+Ua3kYgAVBksmlGcdbv9mfIAB2CiNn0ln1iWG2qZA2YEFqy1xs8eX+n09OLEQ3AoYIch
- gnht/wFh7rpg==
-X-IronPort-AV: E=Sophos;i="5.73,356,1583222400"; 
-   d="scan'208";a="259903462"
-Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.254.111.36]) ([10.254.111.36])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 15:15:22 -0700
-Subject: Re: [PATCH 2/2] x86/resctrl: Support CPUID enumeration of MBM counter
- width
-From:   Reinette Chatre <reinette.chatre@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     tglx@linutronix.de, fenghua.yu@intel.com, tony.luck@intel.com,
-        kuo-lang.tseng@intel.com, mingo@redhat.com, babu.moger@amd.com,
-        hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1585763047.git.reinette.chatre@intel.com>
- <76dc65631c373e0c1c9f3e8aaa768f022a2c989c.1585763047.git.reinette.chatre@intel.com>
- <20200429181149.GE16407@zn.tnic>
- <6fb58472-88f2-925b-3a4e-4692957a9582@intel.com>
- <20200430095913.GA3996@zn.tnic>
- <4288b11f-d4da-d311-7112-fa05887f50b4@intel.com>
- <20200504075632.GB15046@zn.tnic>
- <b357e1f6-bf92-ec50-73f2-bd5987b159fc@intel.com>
-Message-ID: <6718a36a-f0f8-51be-913c-7700f110b1fb@intel.com>
-Date:   Tue, 5 May 2020 15:15:20 -0700
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 18:15:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39720 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727895AbgEEWPY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 18:15:24 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B4E3C061A41
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 15:15:24 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id 145so1593624pfw.13
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 15:15:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WLWOsjOGJm6CWI5BnvgjlmmbJOBBrRgGgKS+2MfQM9U=;
+        b=Vxdx7wljo2iZmV2a9JAM7LwXbjka8TA+rAvlvo/SqoizmrdaVRELMhuRnmaMP6Ijbf
+         9HMPJyt1a1fGNolV2ClKHMXrJIPfRxjyykDd+k1enL7NbAe0JWXRk84m9F/l30U3vJLd
+         nVWfEmSKlkdHIDIgNqOUKUx/qZhSEKD2scRNY3j9KeX3WQHNTlaDwNHdu5GqVBeYmVTl
+         QO69ZpPgXs+ky9xzqO6kg/+oAAnIW13NOOGFTu3Olv1Tc6uvf/q0fq7JnpDTrtIAS/FN
+         ULwTApsgzBvdYGYsspx9Kgrcs1QoD/Ltu50Hcozu0p7b/GKTga304FcLA+CU1GprjzCh
+         0hRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WLWOsjOGJm6CWI5BnvgjlmmbJOBBrRgGgKS+2MfQM9U=;
+        b=UKKJIUQSkM+exLzpkZrW8c+NsBGTSmMkrLjmmaPSdc+L8dZKQFvuFEyaS6UM4/TJwG
+         pK4QhWpkSQtKkl5b9VNWdFl642ExBLkUMWS+OrG6kBP1wlfufha0POtx1zWHCKxQhsDM
+         Gpef3q2yfAlX8gvysIumuGa0ae5nqZjmwAbCW21A7Ro/5dnftb5Mf1KeXi7ElJnmEF7E
+         YDMF7uEbQiwiRbDhFAUArRG82YKip/Yo7eRpqmq/3tj1pjEymv9vNh/5VIG4wvjdrph9
+         Ef9pkpFlEqw9McDXAjDo06hCP8EUmf1tlq7K3FeZVt2pwMhMf3eKPam/fdClkjipBZhv
+         HC8Q==
+X-Gm-Message-State: AGi0PubZ7hm4ZZG3pyNtE5/Bu38hB3Q6T9kilEzhsLUAu5ELCgn4Rf1j
+        KQptcBCBfoymwDs3WDxDj02K9w==
+X-Google-Smtp-Source: APiQypIkpgDKKbaVknUHuqijb1yDmklD4TRDh4hYEyL/2sFNqw/Z+p8e9Zuk8McZf8OUNCu1IbAFKg==
+X-Received: by 2002:a62:9211:: with SMTP id o17mr5184245pfd.234.1588716923511;
+        Tue, 05 May 2020 15:15:23 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id y25sm106878pgc.63.2020.05.05.15.15.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 15:15:22 -0700 (PDT)
+Date:   Tue, 5 May 2020 15:16:08 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     ohad@wizery.com, loic.pallardy@st.com, arnaud.pouliquen@st.com,
+        s-anna@ti.com, linux-remoteproc@vger.kernel.org, corbet@lwn.net,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 01/14] remoteproc: Make core operations optional
+Message-ID: <20200505221608.GA2329931@builder.lan>
+References: <20200424200135.28825-1-mathieu.poirier@linaro.org>
+ <20200424200135.28825-2-mathieu.poirier@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <b357e1f6-bf92-ec50-73f2-bd5987b159fc@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200424200135.28825-2-mathieu.poirier@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Borislav,
+On Fri 24 Apr 13:01 PDT 2020, Mathieu Poirier wrote:
 
-On 5/4/2020 9:19 PM, Reinette Chatre wrote:
-> On 5/4/2020 12:56 AM, Borislav Petkov wrote:
->> Hi,
->>
->> On Sun, May 03, 2020 at 11:51:00AM -0700, Reinette Chatre wrote:
->>> I am struggling with what should follow ...
->>
->> Since a diff is better than a thousand words :-) see below.
->>
-> 
-> Thank you so much for providing the details. Your explanation is clear
-> to me but I do have one clarification question ...
-> 
-> 
->> @@ -597,6 +598,8 @@ static void bsp_init_amd(struct cpuinfo_x86 *c)
->>  			x86_amd_ls_cfg_ssbd_mask = 1ULL << bit;
->>  		}
->>  	}
->> +
->> +	resctrl_cpu_detect(c);
->>  }
->>  
-> 
-> ...
-> 
->> @@ -322,6 +323,11 @@ static void early_init_intel(struct cpuinfo_x86 *c)
->>  		detect_ht_early(c);
->>  }
->>  
->> +static void bsp_init_intel(struct cpuinfo_x86 *c)
->> +{
->> +	resctrl_cpu_detect(c);
->> +}
->> +
->>  #ifdef CONFIG_X86_32
->>  /*
->>   *	Early probe support logic for ppro memory erratum #50
->> @@ -961,6 +967,7 @@ static const struct cpu_dev intel_cpu_dev = {
->>  #endif
->>  	.c_detect_tlb	= intel_detect_tlb,
->>  	.c_early_init   = early_init_intel,
->> +	.c_bsp_init	= bsp_init_intel,
->>  	.c_init		= init_intel,
->>  	.c_x86_vendor	= X86_VENDOR_INTEL,
->>  };
->> diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
->> index d8cc5223b7ce..5e5955aa6593 100644
->> --- a/arch/x86/kernel/cpu/resctrl/core.c
->> +++ b/arch/x86/kernel/cpu/resctrl/core.c
->> @@ -22,7 +22,7 @@
->>  #include <linux/cpuhotplug.h>
->>  
->>  #include <asm/intel-family.h>
->> -#include <asm/resctrl_sched.h>
->> +#include <asm/resctrl.h>
->>  #include "internal.h"
->>  
->>  /* Mutex to protect rdtgroup access. */
->> @@ -958,6 +958,35 @@ static __init void rdt_init_res_defs(void)
->>  
->>  static enum cpuhp_state rdt_online;
->>  
->> +/* Runs once on the BSP during boot. */
->> +void resctrl_cpu_detect(struct cpuinfo_x86 *c)
->> +{
->> +	if (!cpu_has(c, X86_FEATURE_CQM_LLC)) {
->> +		c->x86_cache_max_rmid  = -1;
->> +		c->x86_cache_occ_scale = -1;
->> +		c->x86_cache_mbm_width_offset = -1;
->> +		return;
->> +	}
->> +
->> +	/* will be overridden if occupancy monitoring exists */
->> +	c->x86_cache_max_rmid = cpuid_ebx(0xf);
->> +
->> +	if (cpu_has(c, X86_FEATURE_CQM_OCCUP_LLC) ||
->> +	    cpu_has(c, X86_FEATURE_CQM_MBM_TOTAL) ||
->> +	    cpu_has(c, X86_FEATURE_CQM_MBM_LOCAL)) {
->> +		u32 eax, ebx, ecx, edx;
->> +
->> +		/* QoS sub-leaf, EAX=0Fh, ECX=1 */
->> +		cpuid_count(0xf, 1, &eax, &ebx, &ecx, &edx);
->> +
->> +		c->x86_cache_max_rmid  = ecx;
->> +		c->x86_cache_occ_scale = ebx;
->> +
->> +		if (c->x86_vendor == X86_VENDOR_INTEL)
->> +			c->x86_cache_mbm_width_offset = eax & 0xff;
->> +	}
->> +}
->> +
-> 
-> resctrl_cpu_detect() is now identical among vendors. Do we still need
-> the c_bsp_init helpers? Could we not perhaps call resctrl_cpu_detect()
-> directly from early_identify_cpu()?
+> When synchronizing with a remote processor, it is entirely possible that
+> the remoteproc core is not the life cycle manager.  In such a case core
+> operations don't exist and should not be called.
 > 
 
-I should have given this more thought ... even though the function will
-be identical between the two vendors it does contain vendor-specific
-code, thus needing to be called from the c_bsp_init helpers? I will
-resubmit the new series that intends to follow all your suggestions shortly.
+Why would the core call these functions if it knows the remote is in a
+state where it doesn't need these?
 
-Thank you very much for your feedback
+Regards,
+Bjorn
 
-Reinette
+> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> ---
+>  drivers/remoteproc/remoteproc_internal.h | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
+> index b389dc79da81..59fc871743c7 100644
+> --- a/drivers/remoteproc/remoteproc_internal.h
+> +++ b/drivers/remoteproc/remoteproc_internal.h
+> @@ -67,7 +67,7 @@ rproc_find_carveout_by_name(struct rproc *rproc, const char *name, ...);
+>  static inline
+>  int rproc_fw_sanity_check(struct rproc *rproc, const struct firmware *fw)
+>  {
+> -	if (rproc->ops->sanity_check)
+> +	if (rproc->ops && rproc->ops->sanity_check)
+>  		return rproc->ops->sanity_check(rproc, fw);
+>  
+>  	return 0;
+> @@ -76,7 +76,7 @@ int rproc_fw_sanity_check(struct rproc *rproc, const struct firmware *fw)
+>  static inline
+>  u64 rproc_get_boot_addr(struct rproc *rproc, const struct firmware *fw)
+>  {
+> -	if (rproc->ops->get_boot_addr)
+> +	if (rproc->ops && rproc->ops->get_boot_addr)
+>  		return rproc->ops->get_boot_addr(rproc, fw);
+>  
+>  	return 0;
+> @@ -85,7 +85,7 @@ u64 rproc_get_boot_addr(struct rproc *rproc, const struct firmware *fw)
+>  static inline
+>  int rproc_load_segments(struct rproc *rproc, const struct firmware *fw)
+>  {
+> -	if (rproc->ops->load)
+> +	if (rproc->ops && rproc->ops->load)
+>  		return rproc->ops->load(rproc, fw);
+>  
+>  	return -EINVAL;
+> @@ -93,7 +93,7 @@ int rproc_load_segments(struct rproc *rproc, const struct firmware *fw)
+>  
+>  static inline int rproc_parse_fw(struct rproc *rproc, const struct firmware *fw)
+>  {
+> -	if (rproc->ops->parse_fw)
+> +	if (rproc->ops && rproc->ops->parse_fw)
+>  		return rproc->ops->parse_fw(rproc, fw);
+>  
+>  	return 0;
+> @@ -103,7 +103,7 @@ static inline
+>  int rproc_handle_rsc(struct rproc *rproc, u32 rsc_type, void *rsc, int offset,
+>  		     int avail)
+>  {
+> -	if (rproc->ops->handle_rsc)
+> +	if (rproc->ops && rproc->ops->handle_rsc)
+>  		return rproc->ops->handle_rsc(rproc, rsc_type, rsc, offset,
+>  					      avail);
+>  
+> @@ -114,7 +114,7 @@ static inline
+>  struct resource_table *rproc_find_loaded_rsc_table(struct rproc *rproc,
+>  						   const struct firmware *fw)
+>  {
+> -	if (rproc->ops->find_loaded_rsc_table)
+> +	if (rproc->ops && rproc->ops->find_loaded_rsc_table)
+>  		return rproc->ops->find_loaded_rsc_table(rproc, fw);
+>  
+>  	return NULL;
+> -- 
+> 2.20.1
+> 
