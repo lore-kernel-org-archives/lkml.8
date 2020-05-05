@@ -2,179 +2,118 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB32C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79755C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B2C920721
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:51:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588665071;
-	bh=jc+H61N9vNsq7z6RWa8sVHyNz5abdZOteKU9Ks7UD2o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LjPVWCiqxZLJJuHW1IwT6lq7S+wgYUlKqPnwwgvXtBnlHaETar6x9XPEAsYKYbygN
-	 yf1z22y14uEoYct3vBkY+6Z75uUyDqeE6o1rVzG701GMvR6xRpT41ESes6lora4SpQ
-	 tW5LKFJtDUfX2ToAEiWHqwBabRgEbyUeefM8pzK8=
+	by mail.kernel.org (Postfix) with ESMTP id 53B63206CC
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:51:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IHaVLpmS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728529AbgEEHvL (ORCPT
+        id S1728567AbgEEHvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 03:51:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43648 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727784AbgEEHvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 03:51:10 -0400
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 5 May 2020 03:51:32 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:47627 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727784AbgEEHva (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 03:51:30 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588665089; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=PIaNX+XjiI8iaziq2RQV4YWNfhjivHE+uwXFjmQivzQ=;
+ b=IHaVLpmSbc6cZSMGFhSC9tuEUrMxucwicM4SRQpTWKswJqxjGAGx6zfJTtvRY95KgT2CzZex
+ h/vp9KAvgdoO/17K16cZkru631tcpPoRu1cWQLWZWm9Oghh59pHMIc1FCKfFuHFg+XLL0kBy
+ WUIIolHZ705/ZX6zwVsRxM+68JQ=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb11afe.7fcea5582d88-smtp-out-n02;
+ Tue, 05 May 2020 07:51:26 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 86A73C432C2; Tue,  5 May 2020 07:51:26 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A992E2075A;
-        Tue,  5 May 2020 07:51:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588665069;
-        bh=jc+H61N9vNsq7z6RWa8sVHyNz5abdZOteKU9Ks7UD2o=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=dT/T1VRCyX6urOLpGh8Qqe/AGU8FLYkvpxCqNRT3e/RZpEq7ubRnwEbK6KLodRQfK
-         rOeKTs2jOdGGJdtH2s5GSKH/adp6pSYpLR0DwLWszmd07GamjXiYb1VSaezS7ILqNj
-         tOHWJcBalmMJtTg35IVKzDL4yBMonGgY+JMCs38E=
-Received: by mail-il1-f179.google.com with SMTP id x2so147572ilp.13;
-        Tue, 05 May 2020 00:51:09 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYFMrKZurVXdPr5nxygwduwmXzp/n9EvKDd3j9mE1YCVxew4gFu
-        nbQ+eHZHivmePQVnFEHLnNyTF8Ns22mz338miyY=
-X-Google-Smtp-Source: APiQypKmBGnftntz4dokwvJE/6EYRD4xwAb8w3zjNrSiqbYOWOIaqAG+92Pnmf8Y+LYP2xpDueVpen4xanrngfwBUFA=
-X-Received: by 2002:a92:405:: with SMTP id 5mr2256629ile.279.1588665069102;
- Tue, 05 May 2020 00:51:09 -0700 (PDT)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7AA10C433D2;
+        Tue,  5 May 2020 07:51:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7AA10C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <091e3fc3bdbc5f480af7d3b3ac096d174a4480d0.1588273612.git.joe@perches.com>
- <ec53e67b3ac928922807db3cb1585e911971dadc.1588273612.git.joe@perches.com>
- <CAMj1kXHwdy3BTqt-q_qnezyz666BcqKiFxeumfsD+Qjy5qRzZA@mail.gmail.com> <f1926d434cdeb091405ef8c01a90c0140d296bed.camel@perches.com>
-In-Reply-To: <f1926d434cdeb091405ef8c01a90c0140d296bed.camel@perches.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 5 May 2020 09:50:58 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGQ7dLNMnheWViBh7BnHd00kWw0AW2aF7i7S2wGti0qKg@mail.gmail.com>
-Message-ID: <CAMj1kXGQ7dLNMnheWViBh7BnHd00kWw0AW2aF7i7S2wGti0qKg@mail.gmail.com>
-Subject: Re: [trivial PATCH] efi/libstub: Reduce efi_printk object size
-To:     Joe Perches <joe@perches.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] ath10k: Replace zero-length array with flexible-array
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200504201108.GA32136@embeddedor>
+References: <20200504201108.GA32136@embeddedor>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200505075126.86A73C432C2@smtp.codeaurora.org>
+Date:   Tue,  5 May 2020 07:51:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 4 May 2020 at 20:29, Joe Perches <joe@perches.com> wrote:
->
-> Use a few more common kernel styles.
->
-> Trivially reduce efi_printk object size by using a dereference to
-> a temporary instead of multiple dereferences of the same object.
->
-> Use efi_printk(const char *str) and static or static const for its
-> internal variables.
->
-> Use the more common form of while instead of a for loop.
->
-> Change efi_char16_printk argument to const.
->
-> Signed-off-by: Joe Perches <joe@perches.com>
+"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
 
-Thanks Joe.
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> sizeof(flexible-array-member) triggers a warning because flexible array
+> members have incomplete type[1]. There are some instances of code in
+> which the sizeof operator is being incorrectly/erroneously applied to
+> zero-length arrays and the result is zero. Such instances may be hiding
+> some bugs. So, this work (flexible-array member conversions) will also
+> help to get completely rid of those sorts of issues.
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
+Fails to apply, please rebase on top of ath.git master branch.
 
-> ---
->  drivers/firmware/efi/libstub/efi-stub-helper.c | 16 ++++++++--------
->  drivers/firmware/efi/libstub/efistub.h         |  6 +++---
->  2 files changed, 11 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
-> index 1c92ac231f94..dfd72a4360ac 100644
-> --- a/drivers/firmware/efi/libstub/efi-stub-helper.c
-> +++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-> @@ -26,19 +26,19 @@ bool __pure __efi_soft_reserve_enabled(void)
->         return !efi_nosoftreserve;
->  }
->
-> -void efi_printk(char *str)
-> +void efi_printk(const char *str)
->  {
-> -       char *s8;
-> +       char s8;
->
-> -       for (s8 = str; *s8; s8++) {
-> -               efi_char16_t ch[2] = { 0 };
-> +       while ((s8 = *str++)) {
+error: patch failed: drivers/net/wireless/ath/ath10k/pci.h:182
+error: drivers/net/wireless/ath/ath10k/pci.h: patch does not apply
+stg import: Diff does not apply cleanly
 
-I'm not sure I prefer the assignment-as-truth-value construct over the
-original for () tbh
+Patch set to Changes Requested.
 
-> +               static efi_char16_t ch[2] = {0, 0};
->
+-- 
+https://patchwork.kernel.org/patch/11527635/
 
-UEFI code could potentially be reentrant, so this should not be static.
-
-> -               ch[0] = *s8;
-> -               if (*s8 == '\n') {
-> -                       efi_char16_t nl[2] = { '\r', 0 };
-> +               if (s8 == '\n') {
-> +                       static const efi_char16_t nl[2] = { '\r', 0 };
->                         efi_char16_printk(nl);
-
-We cannot make this const, unfortunately (see below). But we can clean
-this up by using L"\r" as the initializer.
-
->                 }
->
-> +               ch[0] = s8;
->                 efi_char16_printk(ch);
->         }
->  }
-> @@ -284,7 +284,7 @@ void *get_efi_config_table(efi_guid_t guid)
->         return NULL;
->  }
->
-> -void efi_char16_printk(efi_char16_t *str)
-> +void efi_char16_printk(const efi_char16_t *str)
->  {
->         efi_call_proto(efi_table_attr(efi_system_table, con_out),
->                        output_string, str);
-> diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-> index 5ff63230a1f1..a03a92c665f0 100644
-> --- a/drivers/firmware/efi/libstub/efistub.h
-> +++ b/drivers/firmware/efi/libstub/efistub.h
-> @@ -251,7 +251,7 @@ union efi_simple_text_output_protocol {
->         struct {
->                 void *reset;
->                 efi_status_t (__efiapi *output_string)(efi_simple_text_output_protocol_t *,
-> -                                                      efi_char16_t *);
-> +                                                      const efi_char16_t *);
-
-This prototype comes straight from the UEFI specification, and even
-though it is dumb that they forgot about const-qualified pointers
-entirely, I would prefer not to deviate from this.
-
->                 void *test_string;
->         };
->         struct {
-> @@ -599,7 +599,7 @@ efi_status_t efi_exit_boot_services(void *handle,
->                                     void *priv,
->                                     efi_exit_boot_map_processing priv_func);
->
-> -void efi_char16_printk(efi_char16_t *);
-> +void efi_char16_printk(const efi_char16_t *str);
->
->  efi_status_t allocate_new_fdt_and_exit_boot(void *handle,
->                                             unsigned long *new_fdt_addr,
-> @@ -624,7 +624,7 @@ efi_status_t check_platform_features(void);
->
->  void *get_efi_config_table(efi_guid_t guid);
->
-> -void efi_printk(char *str);
-> +void efi_printk(const char *str);
->
->  void efi_free(unsigned long size, unsigned long addr);
->
->
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
