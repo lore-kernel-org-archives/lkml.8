@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF37C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E723DC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 369ED20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0774206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:17:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730391AbgEEORs (ORCPT
+        id S1730367AbgEEORo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:17:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49352 "EHLO
+        Tue, 5 May 2020 10:17:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730286AbgEEORQ (ORCPT
+        by vger.kernel.org with ESMTP id S1730281AbgEEORP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:17:16 -0400
+        Tue, 5 May 2020 10:17:15 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B81EC061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:17:16 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BCE1C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:17:15 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jVyNX-0002gB-DZ; Tue, 05 May 2020 16:16:59 +0200
+        id 1jVyNR-0002cF-7r; Tue, 05 May 2020 16:16:53 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id E92111001F5;
-        Tue,  5 May 2020 16:16:58 +0200 (CEST)
-Message-Id: <20200505135831.175237951@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id B8D03FFC8D;
+        Tue,  5 May 2020 16:16:52 +0200 (CEST)
+Message-Id: <20200505135830.686385997@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:54:12 +0200
+Date:   Tue, 05 May 2020 15:54:07 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -52,7 +52,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Will Deacon <will@kernel.org>
-Subject: [patch V4 part 5 31/31] x86/entry: Remove the TRACE_IRQS cruft
+Subject: [patch V4 part 5 26/31] x86/entry/64: Remove IRQ stack switching ASM
 References: <20200505135341.730586321@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -65,84 +65,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No more users.
-
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/entry/entry_64.S       |   13 -------------
- arch/x86/entry/thunk_64.S       |    9 +--------
- arch/x86/include/asm/irqflags.h |   10 ----------
- 3 files changed, 1 insertion(+), 31 deletions(-)
+ arch/x86/entry/entry_64.S |   96 ----------------------------------------------
+ 1 file changed, 96 deletions(-)
 
 --- a/arch/x86/entry/entry_64.S
 +++ b/arch/x86/entry/entry_64.S
-@@ -53,19 +53,6 @@ SYM_CODE_START(native_usergs_sysret64)
- SYM_CODE_END(native_usergs_sysret64)
- #endif /* CONFIG_PARAVIRT */
+@@ -371,102 +371,6 @@ SYM_CODE_END(ret_from_fork)
+ #endif
+ .endm
  
--.macro TRACE_IRQS_FLAGS flags:req
--#ifdef CONFIG_TRACE_IRQFLAGS
--	btl	$9, \flags		/* interrupts off? */
--	jnc	1f
--	TRACE_IRQS_ON
--1:
+-/*
+- * Enters the IRQ stack if we're not already using it.  NMI-safe.  Clobbers
+- * flags and puts old RSP into old_rsp, and leaves all other GPRs alone.
+- * Requires kernel GSBASE.
+- *
+- * The invariant is that, if irq_count != -1, then the IRQ stack is in use.
+- */
+-.macro ENTER_IRQ_STACK regs=1 old_rsp save_ret=0
+-	DEBUG_ENTRY_ASSERT_IRQS_OFF
+-
+-	.if \save_ret
+-	/*
+-	 * If save_ret is set, the original stack contains one additional
+-	 * entry -- the return address. Therefore, move the address one
+-	 * entry below %rsp to \old_rsp.
+-	 */
+-	leaq	8(%rsp), \old_rsp
+-	.else
+-	movq	%rsp, \old_rsp
+-	.endif
+-
+-	.if \regs
+-	UNWIND_HINT_REGS base=\old_rsp
+-	.endif
+-
+-	incl	PER_CPU_VAR(irq_count)
+-	jnz	.Lirq_stack_push_old_rsp_\@
+-
+-	/*
+-	 * Right now, if we just incremented irq_count to zero, we've
+-	 * claimed the IRQ stack but we haven't switched to it yet.
+-	 *
+-	 * If anything is added that can interrupt us here without using IST,
+-	 * it must be *extremely* careful to limit its stack usage.  This
+-	 * could include kprobes and a hypothetical future IST-less #DB
+-	 * handler.
+-	 *
+-	 * The OOPS unwinder relies on the word at the top of the IRQ
+-	 * stack linking back to the previous RSP for the entire time we're
+-	 * on the IRQ stack.  For this to work reliably, we need to write
+-	 * it before we actually move ourselves to the IRQ stack.
+-	 */
+-
+-	movq	\old_rsp, PER_CPU_VAR(irq_stack_backing_store + IRQ_STACK_SIZE - 8)
+-	movq	PER_CPU_VAR(hardirq_stack_ptr), %rsp
+-
+-#ifdef CONFIG_DEBUG_ENTRY
+-	/*
+-	 * If the first movq above becomes wrong due to IRQ stack layout
+-	 * changes, the only way we'll notice is if we try to unwind right
+-	 * here.  Assert that we set up the stack right to catch this type
+-	 * of bug quickly.
+-	 */
+-	cmpq	-8(%rsp), \old_rsp
+-	je	.Lirq_stack_okay\@
+-	ud2
+-	.Lirq_stack_okay\@:
 -#endif
+-
+-.Lirq_stack_push_old_rsp_\@:
+-	pushq	\old_rsp
+-
+-	.if \regs
+-	UNWIND_HINT_REGS indirect=1
+-	.endif
+-
+-	.if \save_ret
+-	/*
+-	 * Push the return address to the stack. This return address can
+-	 * be found at the "real" original RSP, which was offset by 8 at
+-	 * the beginning of this macro.
+-	 */
+-	pushq	-8(\old_rsp)
+-	.endif
 -.endm
 -
--.macro TRACE_IRQS_IRETQ
--	TRACE_IRQS_FLAGS EFLAGS(%rsp)
+-/*
+- * Undoes ENTER_IRQ_STACK.
+- */
+-.macro LEAVE_IRQ_STACK regs=1
+-	DEBUG_ENTRY_ASSERT_IRQS_OFF
+-	/* We need to be off the IRQ stack before decrementing irq_count. */
+-	popq	%rsp
+-
+-	.if \regs
+-	UNWIND_HINT_REGS
+-	.endif
+-
+-	/*
+-	 * As in ENTER_IRQ_STACK, irq_count == 0, we are still claiming
+-	 * the irq stack but we're not on it.
+-	 */
+-
+-	decl	PER_CPU_VAR(irq_count)
 -.endm
 -
- /*
-  * 64-bit SYSCALL instruction entry. Up to 6 arguments in registers.
-  *
---- a/arch/x86/entry/thunk_64.S
-+++ b/arch/x86/entry/thunk_64.S
-@@ -3,7 +3,6 @@
-  * Save registers before calling assembly functions. This avoids
-  * disturbance of register allocation in some inline assembly constructs.
-  * Copyright 2001,2002 by Andi Kleen, SuSE Labs.
-- * Added trace_hardirqs callers - Copyright 2007 Steven Rostedt, Red Hat, Inc.
-  */
- #include <linux/linkage.h>
- #include "calling.h"
-@@ -70,11 +69,6 @@ SYM_FUNC_START_NOALIGN(\name)
- SYM_FUNC_END(\name)
- 	.endm
- 
--#ifdef CONFIG_TRACE_IRQFLAGS
--	THUNK trace_hardirqs_on_thunk,trace_hardirqs_on_caller, put_ret_addr_in_rdi=1
--	THUNK trace_hardirqs_off_thunk,trace_hardirqs_off_caller, put_ret_addr_in_rdi=1
--#endif
--
- #ifdef CONFIG_PREEMPTION
- 	THUNK preempt_schedule_thunk, preempt_schedule
- 	EXPORT_SYMBOL(preempt_schedule_thunk)
-@@ -83,8 +77,7 @@ SYM_FUNC_END(\name)
- 	EXPORT_SYMBOL(preempt_schedule_notrace_thunk)
- #endif
- 
--#if defined(CONFIG_TRACE_IRQFLAGS) \
-- || defined(CONFIG_PREEMPTION)
-+#ifdef CONFIG_PREEMPTION
- SYM_CODE_START_LOCAL_NOALIGN(.L_restore)
- 	popq %r11
- 	popq %r10
---- a/arch/x86/include/asm/irqflags.h
-+++ b/arch/x86/include/asm/irqflags.h
-@@ -171,14 +171,4 @@ static inline int arch_irqs_disabled(voi
- }
- #endif /* !__ASSEMBLY__ */
- 
--#ifdef __ASSEMBLY__
--#ifdef CONFIG_TRACE_IRQFLAGS
--#  define TRACE_IRQS_ON		call trace_hardirqs_on_thunk;
--#  define TRACE_IRQS_OFF	call trace_hardirqs_off_thunk;
--#else
--#  define TRACE_IRQS_ON
--#  define TRACE_IRQS_OFF
--#endif
--#endif /* __ASSEMBLY__ */
--
- #endif
+ /**
+  * idtentry_body - Macro to emit code calling the C function
+  * @cfunc:		C function to be called
 
