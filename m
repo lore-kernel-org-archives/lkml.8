@@ -2,162 +2,65 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CE3C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC98C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76C20207DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:57:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C7D6207DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:57:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730472AbgEEP5i (ORCPT
+        id S1730557AbgEEP5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:57:38 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:38058 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729892AbgEEP5h (ORCPT
+        Tue, 5 May 2020 11:57:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36982 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729892AbgEEP5i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:57:37 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 0CBCB1C023E; Tue,  5 May 2020 17:57:35 +0200 (CEST)
-Date:   Tue, 5 May 2020 17:57:34 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Pavel Machek <pavel@denx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stable <stable@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH 4.19 28/37] dmaengine: dmatest: Fix iteration non-stop
- logic
-Message-ID: <20200505155734.GA10069@duo.ucw.cz>
-References: <20200504165448.264746645@linuxfoundation.org>
- <20200504165451.307643203@linuxfoundation.org>
- <20200505123159.GC28722@amd>
- <CAHp75VeM+qwh5rHL7RDdacru0jPSB9me2aTs__jdy749dTKRng@mail.gmail.com>
- <20200505125818.GA31126@amd>
- <CAHp75VcKreeQpjROdL23XGqgVu+F_0eL5DsJ=5APEQUO9V69EQ@mail.gmail.com>
- <20200505133700.GA31753@amd>
- <CAHp75Ve+pzhamZXiKxHF+VD8yfsjRF2coattHyiD+0aa7Fy2DA@mail.gmail.com>
- <20200505153227.GI13035@sasha-vm>
+        Tue, 5 May 2020 11:57:38 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D549BC061A0F;
+        Tue,  5 May 2020 08:57:38 -0700 (PDT)
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 7C97E737;
+        Tue,  5 May 2020 15:57:38 +0000 (UTC)
+Date:   Tue, 5 May 2020 09:57:37 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Wang Wenhu <wenhu.wang@vivo.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@vivo.com, Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH] doc: thermal: add cpu-idle-cooling to index tree
+Message-ID: <20200505095737.15f42d53@lwn.net>
+In-Reply-To: <20200429131109.80891-1-wenhu.wang@vivo.com>
+References: <20200429131109.80891-1-wenhu.wang@vivo.com>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="17pEHd4RhPHOinZp"
-Content-Disposition: inline
-In-Reply-To: <20200505153227.GI13035@sasha-vm>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 29 Apr 2020 06:11:09 -0700
+Wang Wenhu <wenhu.wang@vivo.com> wrote:
 
---17pEHd4RhPHOinZp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Add cpu-idle-cooling.rst to the index list for user reference through
+> self-compiled htmldocs or online documentation tree of kernel.
+> 
+> Like: https://www.kernel.org/doc/html/latest/driver-api/thermal/index.html
+> 
+> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> ---
+>  Documentation/driver-api/thermal/cpu-idle-cooling.rst | 3 +++
+>  Documentation/driver-api/thermal/index.rst            | 1 +
+>  2 files changed, 4 insertions(+)
 
-On Tue 2020-05-05 11:32:27, Sasha Levin wrote:
-> On Tue, May 05, 2020 at 05:05:37PM +0300, Andy Shevchenko wrote:
-> > On Tue, May 5, 2020 at 4:37 PM Pavel Machek <pavel@denx.de> wrote:
-> > > On Tue 2020-05-05 16:19:11, Andy Shevchenko wrote:
-> > > > On Tue, May 5, 2020 at 3:58 PM Pavel Machek <pavel@denx.de> wrote:
-> > > > > On Tue 2020-05-05 15:51:16, Andy Shevchenko wrote:
-> > > > > > On Tue, May 5, 2020 at 3:37 PM Pavel Machek <pavel@denx.de> wro=
-te:
-> > > > > Yeah, I pointed that out above. Both && and || permit short
-> > > > > execution. But that does not matter, as neither "params->iteratio=
-ns"
-> > > > > nor "total_tests >=3D params->iterations" have side effects.
-> > > > >
-> > > > > Where is the runtime difference?
-> > > >
-> > > > We have to check *both* conditions. If we don't check iterations, we
-> > > > just wait indefinitely until somebody tells us to stop.
-> > > > Everything in the commit message and mentioned there commit IDs whi=
-ch
-> > > > you may check.
-> > >=20
-> > > No.
-> >=20
-> > Yes. Please, read carefully the commit message (for your convenience I
-> > emphasized above). I don't want to spend time on this basics stuff
-> > anymore.
->=20
-> I'm a bit confused about this too. Maybe it's too early in the morning,
-> so I wrote this little test program:
->=20
-> #include <stdio.h>
-> #include <stdlib.h>
->=20
-> int main(int argc, char *argv[])
-> {
->        int a =3D atoi(argv[1]);
->        int b =3D atoi(argv[2]);
->=20
->        if (!a && !b)
->                printf("A");
->        else
->                printf("B");
->=20
->        if (!(a || b))
->                printf("A");
->        else
->                printf("B");
->=20
->        printf("\n");
->=20
->        return 0;
-> }
->=20
-> Andy, could you give an example of two values which will print something
-> other than "AA" or "BB"?
+Applied, thanks.
 
-The issue here is "sideffects". Does b have to be evaluated at all?
-There is no difference between
-
-      int a, b;
-      if (a && b)
-
-and
-
-	if ((!!a) & (!!b))
-=2E
-
-But there would be difference between
-
-      int a, b;
-        if (a && b++)
-
-and
-	if ((!!a) & (!!(b++)))
-
-But:
-
-1) && and || behave same way w.r.t. side effects
-
-2) in the patch we are talking about b has no important side effects
-
-Best regards,
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---17pEHd4RhPHOinZp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXrGM7gAKCRAw5/Bqldv6
-8ieJAJ4v4FEtbiT64CSr1N7iWJDlt5yAyQCgt4ofhBcePU1F0Lwfl6ckQtbf7gc=
-=NMSn
------END PGP SIGNATURE-----
-
---17pEHd4RhPHOinZp--
+jon
