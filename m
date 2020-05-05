@@ -2,186 +2,188 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 956CDC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 133AAC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7848120675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:20:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECB8420675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:20:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730546AbgEEOUL (ORCPT
+        id S1729088AbgEEOUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:20:11 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:45565 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729997AbgEEOQF (ORCPT
+        Tue, 5 May 2020 10:20:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729994AbgEEOQE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:16:05 -0400
-Received: from localhost.localdomain ([149.172.19.189]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1M9nEJ-1jSNK23B49-005rjT; Tue, 05 May 2020 16:15:47 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Yan Yankovskyi <yyankovskyi@gmail.com>, Wei Liu <wl@xen.org>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] xenbus: avoid stack overflow warning
-Date:   Tue,  5 May 2020 16:15:37 +0200
-Message-Id: <20200505141546.824573-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
+        Tue, 5 May 2020 10:16:04 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 133F1C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:16:04 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jVyMM-0001ni-6q; Tue, 05 May 2020 16:15:46 +0200
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 7F25CFFC8D;
+        Tue,  5 May 2020 16:15:45 +0200 (CEST)
+Message-Id: <20200505135313.410702173@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Tue, 05 May 2020 15:49:27 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [patch V4 part 4 01/24] x86/int3: Ensure that poke_int3_handler() is
+ not traced
+References: <20200505134926.578885807@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:A6tw1zrTOAQW5yW+MxCDJvOopLSS/Ga3YzKkHajnYByzROmhf/Z
- UCjmaSkpNjyjF6nnYkDrgoDTQcQKOsy9GqpcEYeDBFITW4FIlbQVan7MDSfBvVH5vKDNaMG
- I57/Bb6kf/hHfTGPMDXpo9MiGKtA/lQKOkRk2jrdXtJteCeqspXA4ZRf6fi0zCQjBphQskO
- vo1QzWOdqSAs5HBhhLKyg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:AVDw9QU2Bq0=:RtvByz9YZEMaNPXxSQQaan
- cDa1tb8w5qa0/seyrGG5bEJDTWS1bQ6DU6Z3caE8AVZWP1DLGjx3JqQeK/1xFSA7XkiiMJyhk
- g9yWhIyFP3lr0xAKhrdIAeNeM227xqBDcoaJzkkSz7XLlBTcbuKxl+ZBf6c7IvRpJTium5Wpy
- wbna0RoQzxMBC5A1ijVWpzJPTQ7zvqxiSFQvyLxdIYvMvoRuaB1v0r0X2ffQfaZ/Czv/uqxyY
- E9XMnNAgucakN6lhB6eQ6MOsvvookARXupmUbbnYbrkjFuSavXZ5pPP4YBTM6PZq3heRt0Ffb
- JXcfBQqCOIzDgg7z68QhXEjzhQzOU4skSyZfx4/PAjDqxOMtEfkTgAIUF067/bJHW4AdVoJMY
- X+QbTqcaz/Ajz1Bf4V8+HNe3gCPNTAZr5Ybk5lRqkDoEqY/Ks4zyMQ/eR4+CxwQJ9LlAs7EQJ
- h6UvsBe6lcNJlmhfiIaAlxlQjzHwYJ2LmHLpAEq9YFUPDzY2vcYxrehJKsZD3z9sR9EMwrX1I
- SCBTxeQ5jjvIOIGLuslnh9tYC1VW3T9yt9QsuzcNAm2vg28xGYLkrNxvRpFlltV+SGz4EriaI
- ZKIpN/t8zQ1fTUnto9/GFaHTg0xIITo1QroKaSzEh2NeBZt5Z1ioW6I3pIWOY2xIhgHsRK/NH
- UIcynKaRVx7azRrZE9UI8sHcKSwYGlA0KhQM/SBjFqUO6NKyqrqMAwhYjVYdRmoSIMoeKxDMm
- ZE/GCuMVoM+OE+Jo4mT72blCEhI8HrcXl2M0M3aXX9f7P/C/S9P0oo9BzRoS655scEfNndInz
- 7spEwdABS87Ga/MwDfUpMag/fwUWsaGdnX00Lewh0xtIkUjZQc=
+Content-Type: text/plain; charset=UTF-8
+Content-transfer-encoding: 8-bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The __xenbus_map_ring() function has two large arrays, 'map' and
-'unmap' on its stack. When clang decides to inline it into its caller,
-xenbus_map_ring_valloc_hvm(), the total stack usage exceeds the warning
-limit for stack size on 32-bit architectures.
+From: Thomas Gleixner <tglx@linutronix.de>
 
-drivers/xen/xenbus/xenbus_client.c:592:12: error: stack frame size of 1104 bytes in function 'xenbus_map_ring_valloc_hvm' [-Werror,-Wframe-larger-than=]
+In order to ensure poke_int3_handler() is completely self contained -- this
+is called while modifying other text, imagine the fun of hitting another
+INT3 -- ensure that everything it uses is not traced.
 
-As far as I can tell, other compilers don't inline it here, so we get
-no warning, but the stack usage is actually the same. It is possible
-for both arrays to use the same location on the stack, but the compiler
-cannot prove that this is safe because they get passed to external
-functions that may end up using them until they go out of scope.
+The primary means here is to force inlining; bsearch() is notrace because
+all of lib/ is.
 
-Move the two arrays into separate basic blocks to limit the scope
-and force them to occupy less stack in total, regardless of the
-inlining decision.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- drivers/xen/xenbus/xenbus_client.c | 74 +++++++++++++++++-------------
- 1 file changed, 41 insertions(+), 33 deletions(-)
+ arch/x86/include/asm/ptrace.h        |    2 +-
+ arch/x86/include/asm/text-patching.h |   11 +++++++----
+ arch/x86/kernel/alternative.c        |   13 ++++++-------
+ 3 files changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/xen/xenbus/xenbus_client.c b/drivers/xen/xenbus/xenbus_client.c
-index 040d2a43e8e3..23ca70378e36 100644
---- a/drivers/xen/xenbus/xenbus_client.c
-+++ b/drivers/xen/xenbus/xenbus_client.c
-@@ -470,54 +470,62 @@ static int __xenbus_map_ring(struct xenbus_device *dev,
- 			     unsigned int flags,
- 			     bool *leaked)
+--- a/arch/x86/include/asm/ptrace.h
++++ b/arch/x86/include/asm/ptrace.h
+@@ -123,7 +123,7 @@ static inline void regs_set_return_value
+  * On x86_64, vm86 mode is mercifully nonexistent, and we don't need
+  * the extra check.
+  */
+-static inline int user_mode(struct pt_regs *regs)
++static __always_inline int user_mode(struct pt_regs *regs)
  {
--	struct gnttab_map_grant_ref map[XENBUS_MAX_RING_GRANTS];
--	struct gnttab_unmap_grant_ref unmap[XENBUS_MAX_RING_GRANTS];
- 	int i, j;
- 	int err = GNTST_okay;
+ #ifdef CONFIG_X86_32
+ 	return ((regs->cs & SEGMENT_RPL_MASK) | (regs->flags & X86_VM_MASK)) >= USER_RPL;
+--- a/arch/x86/include/asm/text-patching.h
++++ b/arch/x86/include/asm/text-patching.h
+@@ -64,7 +64,7 @@ extern void text_poke_finish(void);
  
--	if (nr_grefs > XENBUS_MAX_RING_GRANTS)
--		return -EINVAL;
-+	{
-+		struct gnttab_map_grant_ref map[XENBUS_MAX_RING_GRANTS];
+ #define DISP32_SIZE		4
  
--	for (i = 0; i < nr_grefs; i++) {
--		memset(&map[i], 0, sizeof(map[i]));
--		gnttab_set_map_op(&map[i], addrs[i], flags, gnt_refs[i],
--				  dev->otherend_id);
--		handles[i] = INVALID_GRANT_HANDLE;
--	}
-+		if (nr_grefs > XENBUS_MAX_RING_GRANTS)
-+			return -EINVAL;
+-static inline int text_opcode_size(u8 opcode)
++static __always_inline int text_opcode_size(u8 opcode)
+ {
+ 	int size = 0;
  
--	gnttab_batch_map(map, i);
-+		for (i = 0; i < nr_grefs; i++) {
-+			memset(&map[i], 0, sizeof(map[i]));
-+			gnttab_set_map_op(&map[i], addrs[i], flags,
-+					  gnt_refs[i], dev->otherend_id);
-+			handles[i] = INVALID_GRANT_HANDLE;
-+		}
-+
-+		gnttab_batch_map(map, i);
+@@ -118,12 +118,14 @@ extern __ro_after_init struct mm_struct
+ extern __ro_after_init unsigned long poking_addr;
  
--	for (i = 0; i < nr_grefs; i++) {
--		if (map[i].status != GNTST_okay) {
--			err = map[i].status;
--			xenbus_dev_fatal(dev, map[i].status,
-+		for (i = 0; i < nr_grefs; i++) {
-+			if (map[i].status != GNTST_okay) {
-+				err = map[i].status;
-+				xenbus_dev_fatal(dev, map[i].status,
- 					 "mapping in shared page %d from domain %d",
- 					 gnt_refs[i], dev->otherend_id);
--			goto fail;
--		} else
--			handles[i] = map[i].handle;
-+				goto fail;
-+			} else
-+				handles[i] = map[i].handle;
-+		}
- 	}
--
- 	return GNTST_okay;
+ #ifndef CONFIG_UML_X86
+-static inline void int3_emulate_jmp(struct pt_regs *regs, unsigned long ip)
++static __always_inline
++void int3_emulate_jmp(struct pt_regs *regs, unsigned long ip)
+ {
+ 	regs->ip = ip;
+ }
  
-  fail:
--	for (i = j = 0; i < nr_grefs; i++) {
--		if (handles[i] != INVALID_GRANT_HANDLE) {
--			memset(&unmap[j], 0, sizeof(unmap[j]));
--			gnttab_set_unmap_op(&unmap[j], (phys_addr_t)addrs[i],
--					    GNTMAP_host_map, handles[i]);
--			j++;
-+	{
-+		struct gnttab_unmap_grant_ref unmap[XENBUS_MAX_RING_GRANTS];
-+
-+		for (i = j = 0; i < nr_grefs; i++) {
-+			if (handles[i] != INVALID_GRANT_HANDLE) {
-+				memset(&unmap[j], 0, sizeof(unmap[j]));
-+				gnttab_set_unmap_op(&unmap[j],
-+						    (phys_addr_t)addrs[i],
-+						    GNTMAP_host_map,
-+						    handles[i]);
-+				j++;
-+			}
- 		}
--	}
+-static inline void int3_emulate_push(struct pt_regs *regs, unsigned long val)
++static __always_inline
++void int3_emulate_push(struct pt_regs *regs, unsigned long val)
+ {
+ 	/*
+ 	 * The int3 handler in entry_64.S adds a gap between the
+@@ -138,7 +140,8 @@ static inline void int3_emulate_push(str
+ 	*(unsigned long *)regs->sp = val;
+ }
  
--	if (HYPERVISOR_grant_table_op(GNTTABOP_unmap_grant_ref, unmap, j))
--		BUG();
-+		if (HYPERVISOR_grant_table_op(GNTTABOP_unmap_grant_ref,
-+					      unmap, j))
-+			BUG();
+-static inline void int3_emulate_call(struct pt_regs *regs, unsigned long func)
++static __always_inline
++void int3_emulate_call(struct pt_regs *regs, unsigned long func)
+ {
+ 	int3_emulate_push(regs, regs->ip - INT3_INSN_SIZE + CALL_INSN_SIZE);
+ 	int3_emulate_jmp(regs, func);
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -957,7 +957,8 @@ struct bp_patching_desc {
  
--	*leaked = false;
--	for (i = 0; i < j; i++) {
--		if (unmap[i].status != GNTST_okay) {
--			*leaked = true;
--			break;
-+		*leaked = false;
-+		for (i = 0; i < j; i++) {
-+			if (unmap[i].status != GNTST_okay) {
-+				*leaked = true;
-+				break;
-+			}
- 		}
- 	}
+ static struct bp_patching_desc *bp_desc;
  
--- 
-2.26.0
+-static inline struct bp_patching_desc *try_get_desc(struct bp_patching_desc **descp)
++static __always_inline
++struct bp_patching_desc *try_get_desc(struct bp_patching_desc **descp)
+ {
+ 	struct bp_patching_desc *desc = READ_ONCE(*descp); /* rcu_dereference */
+ 
+@@ -967,18 +968,18 @@ static inline struct bp_patching_desc *t
+ 	return desc;
+ }
+ 
+-static inline void put_desc(struct bp_patching_desc *desc)
++static __always_inline void put_desc(struct bp_patching_desc *desc)
+ {
+ 	smp_mb__before_atomic();
+ 	atomic_dec(&desc->refs);
+ }
+ 
+-static inline void *text_poke_addr(struct text_poke_loc *tp)
++static __always_inline void *text_poke_addr(struct text_poke_loc *tp)
+ {
+ 	return _stext + tp->rel_addr;
+ }
+ 
+-static int notrace patch_cmp(const void *key, const void *elt)
++static int noinstr patch_cmp(const void *key, const void *elt)
+ {
+ 	struct text_poke_loc *tp = (struct text_poke_loc *) elt;
+ 
+@@ -988,9 +989,8 @@ static int notrace patch_cmp(const void
+ 		return 1;
+ 	return 0;
+ }
+-NOKPROBE_SYMBOL(patch_cmp);
+ 
+-int notrace poke_int3_handler(struct pt_regs *regs)
++int noinstr poke_int3_handler(struct pt_regs *regs)
+ {
+ 	struct bp_patching_desc *desc;
+ 	struct text_poke_loc *tp;
+@@ -1064,7 +1064,6 @@ int notrace poke_int3_handler(struct pt_
+ 	put_desc(desc);
+ 	return ret;
+ }
+-NOKPROBE_SYMBOL(poke_int3_handler);
+ 
+ #define TP_VEC_MAX (PAGE_SIZE / sizeof(struct text_poke_loc))
+ static struct text_poke_loc tp_vec[TP_VEC_MAX];
 
