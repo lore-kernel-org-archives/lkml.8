@@ -2,143 +2,168 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D621C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC9BC47256
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A7452068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 169842068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:24:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hfCvpOqo"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="T8hLsHpM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728526AbgEEIVC (ORCPT
+        id S1728341AbgEEIYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 04:21:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49754 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725766AbgEEIVB (ORCPT
+        Tue, 5 May 2020 04:24:02 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:38056 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725320AbgEEIYB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 04:21:01 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71A78C061A0F;
-        Tue,  5 May 2020 01:21:01 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id h9so1645943wrt.0;
-        Tue, 05 May 2020 01:21:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=tu5nPp2tsr/xXDZw6NiH6JY/janBM8/TqJS/baK6bXk=;
-        b=hfCvpOqo590T0shuE1cPR7Tyz4uhd2A/5uh7k+1VU2jedYxG9T1l4vgT1N5LVp7/rU
-         tBOap/HTZwM8PxrP/4Ry1VPhX+JjSr7aTQj32sKsZ361l7KSOldxc+/lOT4bb08zXTIY
-         bGsadrq+6cxj1FWYpnXSU1qMjEJQcvbHecedCmrt9tDQfKV5bNW1DJCKuqHw6OqylKyK
-         0nVefIu/SOI2KBuHsym/FdIb5P6Oza1bDm+mZMzXdIDrCWd106b5mQDChyD92l0ppLwI
-         pSAuWHwF8e1cLmCubRyxw+0jZgwwurLfMxVchOT31Zqja55LvsEICbiRb/7Zxlh3MSFy
-         TSaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=tu5nPp2tsr/xXDZw6NiH6JY/janBM8/TqJS/baK6bXk=;
-        b=N+qZPeHjAzeInpmDIlsN3wI+LKpVqe4tmKa9vbjw7Fs2U3mIxwoOZCWYX7+SXlFmzX
-         hFYi1qYvut0lgraxmy4uEsy2fkTVh2cYbYpoMlC18JFnHUBtegW0I7SKEBTTzjLHsGES
-         MATG9ZTsujMeaksHw56/9pvi3hm0zeIpUn59EfrRa8+c1DtsObcivURHRmY8GlYNtY9/
-         5ep/A3TemTAocSZgS9aW1FHnCbRoxYPDH3YfMfzPso9U7Z+O/tTovYYGMLpn6rI6MlR8
-         PvAhd2o9mG0o+f1CS+Ne1aDUv86wU91FmDhtcgBHbNET1hYM7/uyvs29Siprk4qeKvHL
-         KT4A==
-X-Gm-Message-State: AGi0PuYH7E8ZLK80mI0NaNY1vTAcihhJBXB6xNWMa1F+buSA+mDNtuEh
-        Ren5X6mid3tK4Bt3QmxaLT70iCX44U9nsDF0
-X-Google-Smtp-Source: APiQypLrjmQKo6d9M8OL1hHuv8HTAuaj9UpwYWqHt0WxaUQvw0OPHJw9ZyiR41AHYzey4MuSaYo7Cw==
-X-Received: by 2002:adf:fa41:: with SMTP id y1mr2198454wrr.131.1588666860081;
-        Tue, 05 May 2020 01:21:00 -0700 (PDT)
-Received: from skynet.lan (246.red-83-44-9.dynamicip.rima-tde.net. [83.44.9.246])
-        by smtp.gmail.com with ESMTPSA id k9sm1969160wrd.17.2020.05.05.01.20.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 01:20:59 -0700 (PDT)
-From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-To:     computersforpeace@gmail.com, kdasu.kdev@gmail.com,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        sumit.semwal@linaro.org, linux-mtd@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-Subject: [PATCH v2] nand: brcmnand: correctly verify erased pages
-Date:   Tue,  5 May 2020 10:20:55 +0200
-Message-Id: <20200505082055.2843847-1-noltari@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200504092943.2739784-1-noltari@gmail.com>
-References: <20200504092943.2739784-1-noltari@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 5 May 2020 04:24:01 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588667040; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=QbuBmPty6sYHJmDdYUPa/PrW7ejMHdsCRelaXowWGh8=; b=T8hLsHpMAkJZtD18MuCz3Yl8BYzX2LZI4oov8w/YWM/F/dRn4O5siOsJMeHTaeLxWRNy6F6+
+ E3PV/KfFBruwRcaYMgMU8HPTRdbNHDaktX8i+m/8GaEn9cTxvh3Aml7hEAtnEl+gIFbbb/Fd
+ 5fMKc5MwMdIg62HLNW76ZkDWkyo=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb12295.7fe68b6e15a8-smtp-out-n01;
+ Tue, 05 May 2020 08:23:49 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4DB7EC433D2; Tue,  5 May 2020 08:23:49 +0000 (UTC)
+Received: from pillair-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0F071C433CB;
+        Tue,  5 May 2020 08:23:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0F071C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   Rakesh Pillai <pillair@codeaurora.org>
+To:     ath10k@lists.infradead.org
+Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rakesh Pillai <pillair@codeaurora.org>
+Subject: [PATCH v2] ath10k: Remove msdu from idr when management pkt send fails
+Date:   Tue,  5 May 2020 13:53:35 +0530
+Message-Id: <1588667015-25490-1-git-send-email-pillair@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current code checks that the whole OOB area is erased.
-This is a problem when JFFS2 cleanmarkers are added to the OOB, since it will
-fail due to the usable OOB bytes not being 0xff.
-Correct this by only checking that the ECC aren't 0xff.
+Currently when the sending of any management pkt
+via wmi command fails, the packet is being unmapped
+freed in the error handling. But the idr entry added,
+which is used to track these packet is not getting removed.
 
-Fixes: 02b88eea9f9c ("mtd: brcmnand: Add check for erased page bitflips")
+Hence, during unload, in wmi cleanup, all the entries
+in IDR are removed and the corresponding buffer is
+attempted to be freed. This can cause a situation where
+one packet is attempted to be freed twice.
 
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+Fix this error by rmeoving the msdu from the idr
+list when the sending of a management packet over
+wmi fails.
+
+Tested HW: WCN3990
+Tested FW: WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
+
+Fixes: 1807da49733e ("ath10k: wmi: add management tx by reference support over wmi")
+Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
 ---
- v2: Add Fixes tag
+Changes from v1:
+- Added a helper function in wmi-ops for cleanup_mgmt_tx_send
+---
+ drivers/net/wireless/ath/ath10k/wmi-ops.h | 15 ++++++++++++++-
+ drivers/net/wireless/ath/ath10k/wmi-tlv.c | 15 +++++++++++++++
+ 2 files changed, 29 insertions(+), 1 deletion(-)
 
- drivers/mtd/nand/raw/brcmnand/brcmnand.c | 22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-index e4e3ceeac38f..546f0807b887 100644
---- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-@@ -2018,6 +2018,7 @@ static int brcmnand_read_by_pio(struct mtd_info *mtd, struct nand_chip *chip,
- static int brcmstb_nand_verify_erased_page(struct mtd_info *mtd,
- 		  struct nand_chip *chip, void *buf, u64 addr)
- {
-+	struct mtd_oob_region oobecc;
- 	int i, sas;
- 	void *oob = chip->oob_poi;
- 	int bitflips = 0;
-@@ -2035,11 +2036,24 @@ static int brcmstb_nand_verify_erased_page(struct mtd_info *mtd,
- 	if (ret)
- 		return ret;
+diff --git a/drivers/net/wireless/ath/ath10k/wmi-ops.h b/drivers/net/wireless/ath/ath10k/wmi-ops.h
+index 1491c25..8c3a656 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi-ops.h
++++ b/drivers/net/wireless/ath/ath10k/wmi-ops.h
+@@ -133,6 +133,7 @@ struct wmi_ops {
+ 	struct sk_buff *(*gen_mgmt_tx_send)(struct ath10k *ar,
+ 					    struct sk_buff *skb,
+ 					    dma_addr_t paddr);
++	int (*cleanup_mgmt_tx_send)(struct ath10k *ar, struct sk_buff *msdu);
+ 	struct sk_buff *(*gen_dbglog_cfg)(struct ath10k *ar, u64 module_enable,
+ 					  u32 log_level);
+ 	struct sk_buff *(*gen_pktlog_enable)(struct ath10k *ar, u32 filter);
+@@ -442,6 +443,15 @@ ath10k_wmi_get_txbf_conf_scheme(struct ath10k *ar)
+ }
  
--	for (i = 0; i < chip->ecc.steps; i++, oob += sas) {
-+	for (i = 0; i < chip->ecc.steps; i++) {
- 		ecc_chunk = buf + chip->ecc.size * i;
--		ret = nand_check_erased_ecc_chunk(ecc_chunk,
--						  chip->ecc.size,
--						  oob, sas, NULL, 0,
+ static inline int
++ath10k_wmi_cleanup_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu)
++{
++	if (!ar->wmi.ops->cleanup_mgmt_tx_send)
++		return -EOPNOTSUPP;
 +
-+		ret = nand_check_erased_ecc_chunk(ecc_chunk, chip->ecc.size,
-+						  NULL, 0, NULL, 0,
-+						  chip->ecc.strength);
-+		if (ret < 0)
-+			return ret;
++	return ar->wmi.ops->cleanup_mgmt_tx_send(ar, msdu);
++}
 +
-+		bitflips = max(bitflips, ret);
++static inline int
+ ath10k_wmi_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu,
+ 			dma_addr_t paddr)
+ {
+@@ -457,8 +467,11 @@ ath10k_wmi_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu,
+ 
+ 	ret = ath10k_wmi_cmd_send(ar, skb,
+ 				  ar->wmi.cmd->mgmt_tx_send_cmdid);
+-	if (ret)
++	if (ret) {
++		/* remove this msdu from idr tracking */
++		ath10k_wmi_cleanup_mgmt_tx_send(ar, msdu);
+ 		return ret;
 +	}
+ 
+ 	return 0;
+ }
+diff --git a/drivers/net/wireless/ath/ath10k/wmi-tlv.c b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
+index e1ab900f..2a31a42 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi-tlv.c
++++ b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
+@@ -2898,6 +2898,18 @@ ath10k_wmi_tlv_op_gen_request_stats(struct ath10k *ar, u32 stats_mask)
+ }
+ 
+ static int
++ath10k_wmi_tlv_op_cleanup_mgmt_tx_send(struct ath10k *ar,
++				       struct sk_buff *msdu)
++{
++	struct ath10k_skb_cb *cb = ATH10K_SKB_CB(msdu);
++	struct ath10k_wmi *wmi = &ar->wmi;
 +
-+	for (i = 0; mtd->ooblayout->ecc(mtd, i, &oobecc) != -ERANGE; i++)
-+	{
-+		ret = nand_check_erased_ecc_chunk(NULL, 0,
-+						  oob + oobecc.offset,
-+						  oobecc.length,
-+						  NULL, 0,
- 						  chip->ecc.strength);
- 		if (ret < 0)
- 			return ret;
++	idr_remove(&wmi->mgmt_pending_tx, cb->msdu_id);
++
++	return 0;
++}
++
++static int
+ ath10k_wmi_mgmt_tx_alloc_msdu_id(struct ath10k *ar, struct sk_buff *skb,
+ 				 dma_addr_t paddr)
+ {
+@@ -2971,6 +2983,8 @@ ath10k_wmi_tlv_op_gen_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu,
+ 	if (desc_id < 0)
+ 		goto err_free_skb;
+ 
++	cb->msdu_id = desc_id;
++
+ 	ptr = (void *)skb->data;
+ 	tlv = ptr;
+ 	tlv->tag = __cpu_to_le16(WMI_TLV_TAG_STRUCT_MGMT_TX_CMD);
+@@ -4419,6 +4433,7 @@ static const struct wmi_ops wmi_tlv_ops = {
+ 	.gen_force_fw_hang = ath10k_wmi_tlv_op_gen_force_fw_hang,
+ 	/* .gen_mgmt_tx = not implemented; HTT is used */
+ 	.gen_mgmt_tx_send = ath10k_wmi_tlv_op_gen_mgmt_tx_send,
++	.cleanup_mgmt_tx_send = ath10k_wmi_tlv_op_cleanup_mgmt_tx_send,
+ 	.gen_dbglog_cfg = ath10k_wmi_tlv_op_gen_dbglog_cfg,
+ 	.gen_pktlog_enable = ath10k_wmi_tlv_op_gen_pktlog_enable,
+ 	.gen_pktlog_disable = ath10k_wmi_tlv_op_gen_pktlog_disable,
 -- 
-2.26.2
-
+2.7.4
