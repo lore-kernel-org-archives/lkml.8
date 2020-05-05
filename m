@@ -2,235 +2,132 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE59C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EB7C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC88C206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E46320735
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:56:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mEWDTOsv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RXHFNjbE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729182AbgEENz2 (ORCPT
+        id S1729193AbgEENz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 09:55:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45594 "EHLO
+        Tue, 5 May 2020 09:55:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729118AbgEENz2 (ORCPT
+        by vger.kernel.org with ESMTP id S1728180AbgEENz7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 09:55:28 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 788FCC061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 06:55:27 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id l19so1687312lje.10
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 06:55:27 -0700 (PDT)
+        Tue, 5 May 2020 09:55:59 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19A28C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 06:55:59 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t7so858616plr.0
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 06:55:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9W+5Jm1b81UkwC63+rGAZ2lTBixHqKEHTO4R5ClYteM=;
-        b=mEWDTOsvRfH8ej77W5x3aLADfUstdTw6WfDghmv/Zkfa8SB4RMzBaziHPDJ5p3x3dw
-         7Dm4RQuOT4V1GffWyPxuMAT7l2ovGSh6LqZCI00mh05SP8aV5/fGZzfuF1f8IJbIhv5W
-         cx89leMpPTfjAg/KVbmWmQki2ryF8mHz3DddN76pv7OPWhwlfMf+PP7yISHf/1HO5Ag4
-         55DEYLd3k3ZVRwrK6U2M3xrcHTt8ja3dboNFFlZ0eIt+vZbS8MaxIpProcXDIyiQ7O2/
-         46u71QHnQDhmcSM3yx/4VeoPp8QHhBWvXzZ011t1Gt0dzDpVGWM6RjtTxcU3zWOEZeYX
-         SJAA==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=DYoV4g+eBtUMQiWGeiHqcByOOgkJemjo7RNmxRSrxEU=;
+        b=RXHFNjbEfNN2/RlW1Hul1jwbxxG2m59QspzJlL0uZadHZCe7vTBfRFMqgL28fkluis
+         4HNC/CsUdbtnzQfr5FTpjcvJJ+rv6WYK+lUGRIUeT4nf/6K+hIExT9LqIIroo8ZJLwvO
+         ARnvblBicwU+0VfADtPkEF9RwlVm0Jq5qVa0aHKGs5JZrsrUaRACs3+CJ6ea/BDtrVIP
+         cjG9rmEYTcUQjM0Ui/CCl/pEuFG6l7xDSTpcKDTBfjirK6OVzKS+lvrqiCt8Rzw0HiNA
+         rgVmx6HMgEHnu7e9qRFlgI+zJqT49/usJD/ZKlIMA2YF99X/Yz3KVltk9MBNnTtZPPos
+         5GOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9W+5Jm1b81UkwC63+rGAZ2lTBixHqKEHTO4R5ClYteM=;
-        b=UfyIAAXQMYSboYY2dI/7PTlAYRIg1yI2H3oLwoTcUQUr2dpmump4RpNdw//WFUPXzM
-         /WWtNMtcT7TWOhefCw1hQ1fGTUWjGEZDy+0fWUrFhDk5Q93ZFGwr5DhiGbbBaQY1jMes
-         Ms2StEJ4c9pOGTURZ4Fx5J5+M7okkrrrSP0+0i8TqBx/HUd4kMxAWjWNQKZWltLfMDRI
-         v6CH9PyOH/m6B8zJKDx4FCxXqqlk82xivx5QeFlqlAhQmqH8X+a89HCfZbSJ65sWvArF
-         zCbg0TGDD1E2HbzLZiWTNbvWsfRNqNfGDMxAMvheOu0sxD5LWkyYX9JXICWmJrcu1zU+
-         KZuA==
-X-Gm-Message-State: AGi0PuZdZFjG7yBZDVzSKl7b0L3YDuxLq07mIFfl0Vsh2GX93MHTxuCj
-        AbZNM0Anq50u0RQLlA9o5KQq/o2bzrap0a0Jt8P/eA==
-X-Google-Smtp-Source: APiQypKWE2FCFxKV2s9wAYb49OyHcE3r3lTHSIiwCOLimy5/O6x2crNpb4pMbTs0tmwgyWjKOUYCCNEguBVeAM1ggek=
-X-Received: by 2002:a2e:b6cf:: with SMTP id m15mr1852440ljo.168.1588686925417;
- Tue, 05 May 2020 06:55:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200428161355.6377-1-schatzberg.dan@gmail.com>
- <20200428214653.GD2005@dread.disaster.area> <20200429022732.GA401038@cmpxchg.org>
- <20200505062946.GH2005@dread.disaster.area>
-In-Reply-To: <20200505062946.GH2005@dread.disaster.area>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Tue, 5 May 2020 06:55:14 -0700
-Message-ID: <CALvZod6b8o3rtgvbR6LVBtSmynTiWomyvKdbN_Dyg58Th5Yk-A@mail.gmail.com>
-Subject: Re: [PATCH v5 0/4] Charge loop device i/o to issuing cgroup
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Dan Schatzberg <schatzberg.dan@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=DYoV4g+eBtUMQiWGeiHqcByOOgkJemjo7RNmxRSrxEU=;
+        b=ph7F1cUM2o3SbtAi/RbNodJm9rije+XctrTcipWLpUwPMzZ2ToYuAP8ll4zJ0GdO59
+         66Bib8xps1AET7WvABSW3UGkhbvxSqB1tTz2NJrSn8Qe3cvXhobS/mc5ITqjPTvwVZYd
+         HlZhAAxxGU865pBuGThCkMaG7DaiCJCT+JPDJKfdO+3JCw749j3BDhBxQk8lyZI1kGZ4
+         klFrOL6BD/nX1nENcm6CbUx22HSvTMJ3iseb3ePIYGAfAXq5CRNtzGKfXs7gXn5kR5EV
+         IcLppUjhpkt+2n/2IbPU2ZlBehMsVXUzaTvdr1HCkpFpjqm0lTpI7Pql0PSrDoho6HJg
+         tYjg==
+X-Gm-Message-State: AGi0PuY5xeoXxVI5L45frWhn5DKgYCOSLjr2rkCObq3vypZlJWS08ueY
+        qCulBcw32JH86McZYlwhZnnThw==
+X-Google-Smtp-Source: APiQypK8A+s0fLvlIkTj9fiCvSROntMoJtckKK/YWvVvyq1ctUdfysHnkou/Uk3gNoYgVsDCI5hF2g==
+X-Received: by 2002:a17:902:a706:: with SMTP id w6mr2987753plq.173.1588686958545;
+        Tue, 05 May 2020 06:55:58 -0700 (PDT)
+Received: from localhost ([2400:8904::f03c:91ff:fe8a:bbe4])
+        by smtp.gmail.com with ESMTPSA id ie17sm2136120pjb.19.2020.05.05.06.55.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 05 May 2020 06:55:58 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:FILESYSTEMS (VFS and infrastructure)" 
-        <linux-fsdevel@vger.kernel.org>,
-        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
-        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
-        <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Paul Cercueil <paul@crapouillou.net>,
+        "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v2 0/3] arm64: perf_event: Fix time offset prior to epoch
+Date:   Tue,  5 May 2020 21:55:41 +0800
+Message-Id: <20200505135544.6003-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 4, 2020 at 11:30 PM Dave Chinner <david@fromorbit.com> wrote:
->
-> On Tue, Apr 28, 2020 at 10:27:32PM -0400, Johannes Weiner wrote:
-> > On Wed, Apr 29, 2020 at 07:47:34AM +1000, Dave Chinner wrote:
-> > > On Tue, Apr 28, 2020 at 12:13:46PM -0400, Dan Schatzberg wrote:
-> > > > This patch series does some
-> > > > minor modification to the loop driver so that each cgroup can make
-> > > > forward progress independently to avoid this inversion.
-> > > >
-> > > > With this patch series applied, the above script triggers OOM kills
-> > > > when writing through the loop device as expected.
-> > >
-> > > NACK!
-> > >
-> > > The IO that is disallowed should fail with ENOMEM or some similar
-> > > error, not trigger an OOM kill that shoots some innocent bystander
-> > > in the head. That's worse than using BUG() to report errors...
-> >
-> > Did you actually read the script?
->
+This patch set is to fix time offset prior to epoch for Arm arch timer.
+This series is mainly following on suggestions on LKML [1].
 
-Before responding, I want to make it clear that the OOM behavior which
-you are objecting to is already present in the kernel and is
-independent of this patch series. This patch series is only connecting
-the charging links which were missing for the loop device.
+To acheive the accurate time offset for a clock source prior to epoch,
+patch 01 adds a new variant sched_clock_register_epoch() which allows to
+output an extra argument for time offset prior to sched clock's
+registration.
 
-> Of course I did. You specifically mean this bit:
->
-> echo 64M > $CGROUP/memory.max;
-> mount -t tmpfs -o size=512m tmpfs /tmp;
-> truncate -s 512m /tmp/backing_file
-> losetup $LOOP_DEV /tmp/backing_file
-> dd if=/dev/zero of=$LOOP_DEV bs=1M count=256;
->
-> And with this patch set the dd gets OOM killed because the
-> /tmp/backing_file usage accounted to the cgroup goes over 64MB and
-> so tmpfs OOM kills the IO...
->
+Patch 02 is to add handling for time offset in Arm arch timer driver, As
+Will Deacon suggested to "disable the perf userpage if sched_clock
+changes clocksource too" [2], after thinking about this suggestion, the
+race condition doesn't exist between sched_clock's registration and perf
+userpage.  The reason is sched_clock's registration is finished in
+system's initialisation phase and at this point it has no chance to use
+any userpage by Perf tool.  For this reason let's keep the code simple
+and don't acquire all Perf events' seqlock during sched_clock's
+registration.
 
-A few queries to better understand your objection:
+Patch 03 is simply to pass time offset from arch timer driver
+(clocksource driver) to perf event.
 
-Let's forget about the cgroup for a second. Let's suppose I am running
-this script on a system/VM having 64 MiB. In your opinion what should
-happen?
+[1] https://lkml.org/lkml/2020/3/20/199
+[2] https://lkml.org/lkml/2020/5/1/906
 
-Next let's add the swap to the 64 MiB system/VM/cgroup and re-run the
-script, what should be the correct behavior?
+Changes from v1:
+- Added patch 01 to retrieve more accurate offset when sched clock
+  registration;
+- Added patch 02 to handle time offset in arch timer driver.
 
-Next replace the tmpfs with any other disk backed file system and
-re-run the script in a 64 MiB system/VM/cgroup, what should be the
-correct behavior?
+Leo Yan (3):
+  time/sched_clock: Add new variant sched_clock_register_epoch()
+  clocksource/drivers/arm_arch_timer: Handle time offset prior to epoch
+  arm64: perf_event: Fix time_offset for arch timer
 
-> As I said: that's very broken behaviour from a storage stack
-> perspective.
->
-> > It's OOMing because it's creating 256M worth of tmpfs pages inside a
-> > 64M cgroup. It's not killing an innocent bystander, it's killing in
-> > the cgroup that is allocating all that memory - after Dan makes sure
-> > that memory is accounted to its rightful owner.
->
-> What this example does is turn /tmp into thinly provisioned storage
-> for $CGROUP via a restricted quota. It has a device size of 512MB,
-> but only has physical storage capacity of 64MB, as constrained by
-> the cgroup memory limit.  You're dealing with management of -storage
-> devices- and -IO error reporting- here, not memory management.
->
-> When thin provisioned storage runs out of space - for whatever
-> reason - and it cannot resolve the issue by blocking, then it *must*
-> return ENOSPC to the IO submitter to tell it the IO has failed. This
-> is no different to if we set a quota on /tmp/backing_file and it is
-> exhausted at 64MB of data written - we fail the IO with ENOSPC or
-> EDQUOT, depending on which quota we used.
->
-> IOWs, we have solid expectations on how block devices report
-> unsolvable resource shortages during IO because those errors have to
-> be handled correctly by whatever is submitting the IO. We do not use
-> the OOM-killer to report or resolve ENOSPC errors.
->
-> Indeed, once you've killed the dd, that CGROUP still consumes 64MB
-> of tmpfs space in /tmp/backing_file, in which case any further IO to
-> $LOOP_DEV is also going to OOM kill. These are horrible semantics
-> for reporting errors to userspace.
->
-> And if the OOM-killer actually frees the 64MB of data written to
-> /tmp/backing_file through the $LOOP_DEV, then you're actually
-> corrupting the storage and ensuring that nobody can read the data
-> that was written to $LOOP_DEV.
->
-> So now lets put a filesystem on $LOOP_DEV in the above example, and
-> write out data to the filesystem which does IO to $LOOP_DEV. Just by
-> chance, the filesystem does some metadata writes iin the context of
-> the user process doing the writes (because journalling, etc) and
-> that metadata IO is what pushes the loop device over the cgroup's
-> memory limit.
->
-> You kill the user application even though it wasn't directly
-> responsible for going over the 64MB limit of space in $LOOP_DEV.
-> What happens now to the filesystem's metadata IO?  Did $LOOP_DEV
-> return an error, or after the OOM kill did the IO succeed?  What
-> happens if all the IO being generated from the user application is
-> metadata and that starts failing - killing the user application
-> doesn't help anything - the filesystem IO is failing and that's
-> where the errors need to be reported.
->
-> And if the answer is "metadata IO isn't accounted to the $CGROUP"
-> then what happens when the tmpfs actually runs out of it's 512MB of
-> space because of all the metadata the filesystem wrote (e.g. create
-> lots of zero length files)? That's an ENOSPC error, and we'll get
-> that from $LOOP_DEV just fine.
->
-> So why should the same error - running out of tmpfs space vs running
-> out of CGROUP quota space on tmpfs be handled differently? Either
-> they are both ENOSPC IO errors, or they are both OOM kill vectors
-> because tmpfs space has run out...
->
-> See the problem here? We report storage resource shortages
-> (whatever the cause) by IO errors, not by killing userspace
-> processes. Userspace may be able to handle the IO error sanely; it
-> has no warning or choice when you use OOM kill to report ENOSPC
-> errors...
->
-> > As opposed to before this series, where all this memory isn't
-> > accounted properly and goes to the root cgroup - where, ironically, it
-> > could cause OOM and kill an actually innocent bystander.
->
-> Johannes, I didn't question the need for the functionality. I
-> questioned the implementation and pointed out fundamental problems
-> it has as well as the architectural questions raised by needing
-> special kthread-based handling for correct accounting of
-> cgroup-aware IO.
->
-> It's a really bad look to go shoot the messenger when it's clear you
-> haven't understood the message that was delivered.
->
-> -Dave.
-> --
-> Dave Chinner
-> david@fromorbit.com
+ arch/arm64/kernel/perf_event.c       |  8 ++++++--
+ drivers/clocksource/arm_arch_timer.c | 10 +++++++++-
+ include/clocksource/arm_arch_timer.h |  6 ++++++
+ include/linux/sched_clock.h          | 10 ++++++++++
+ kernel/time/sched_clock.c            | 13 ++++++++++++-
+ 5 files changed, 43 insertions(+), 4 deletions(-)
+
+-- 
+2.17.1
+
