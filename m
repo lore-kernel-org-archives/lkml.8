@@ -2,101 +2,116 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B660C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 508EFC47256
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD525206CC
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:31:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dVlG2fTt"
+	by mail.kernel.org (Postfix) with ESMTP id 2FA8E206CC
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:34:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588660487;
+	bh=EI2muG+asOrX7U2AolxDsDkX4CxBCxnvK0ZMzAVDPkY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xtwmZZsxdzCU8AB5dHX9n4FPW62umexySzMr0CF4eP7Mn6xEwoqjK2YIeHw2A7eAC
+	 V11+ro1Yi06xiJ4bYqcbL6yAc7YaVHlaNpukVZORat8QcbTIEugBuN8nTjzXo6PgQs
+	 mFEI8CrdmGTDl8r9Kw7W5Q6tJC5OQ0p6RBietCuw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728104AbgEEGb4 (ORCPT
+        id S1728043AbgEEGeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 02:31:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32834 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725320AbgEEGbz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 02:31:55 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A567C061A10
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 23:31:54 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id m7so238784plt.5
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 23:31:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=WsDerNjxdxesEJaFr/5T4NQdjiDHk0GUg7G+n6u1IqA=;
-        b=dVlG2fTtHeRTrSzkk+hruHFfudqXYD66L/lgzYjYzhuDiDs2RF3289WRvJqBKtNVQ/
-         +oGNGzu6OOVOc5v6HCvATz+ur7U7ocHHaaTb4Lngy6XA/vKAv5owK/s199JqpN+2ejH0
-         boG8ds6+QrQyj7yqLIzqHVseboTWJQ4WMx4Vw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=WsDerNjxdxesEJaFr/5T4NQdjiDHk0GUg7G+n6u1IqA=;
-        b=IH1AiHgPiVOP1mPAvEdPp2JfPdaLKCS86NrX/+FKm67W2izcM3haLj1SoyQN4k44J+
-         SSbjVzOJjLTgUdaSkvSURy76lad7zXk6zU6mS7cW2QSA4zU9O8Ywz6mcVx+jSu70PD9E
-         2yBDuu3H1CjP9hz1gpW7b49f3Hb9IaaqhUHl1Sw2GMXcXLhB5O3sh5iwhvmUf04vWHRg
-         7oSlRzTJcSpXfozmpSbVzy0s9YI0hA1dDYKoondPifLX/6rvPL1vdczslR0I3+oheppK
-         4mXxA9KaGV8tuG9q32iu9PqvEV73Y61S6Hdn3uWwHc5ZhDKigI44awwpBhZ308vpEnmX
-         0zqg==
-X-Gm-Message-State: AGi0PuZBoQG2kh+Es2iJxLlx69uPtZunDFcUmrSSPIuskAG6NE8Jx5M2
-        5aBPuOpw4xc3JtSatoQ6+88w1A==
-X-Google-Smtp-Source: APiQypLEK4LRaac0ooJpXvg7SgtB+YvPX2y/SyoJ6VDM8uWvsO7Az4DL6KhPp1T1qmhiXi1rCqVAjQ==
-X-Received: by 2002:a17:90a:648a:: with SMTP id h10mr1123129pjj.69.1588660313926;
-        Mon, 04 May 2020 23:31:53 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id y24sm958645pfn.211.2020.05.04.23.31.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 23:31:53 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 5 May 2020 02:34:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43978 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725320AbgEEGeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 02:34:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1000206CC;
+        Tue,  5 May 2020 06:34:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588660484;
+        bh=EI2muG+asOrX7U2AolxDsDkX4CxBCxnvK0ZMzAVDPkY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QdoHgdZF/l07H77l97vo9if8+kenXB2DfksMgw4UDb33B73x4x2EAIv8KgviOz1Bg
+         4vQONFdBYgzx+WY+P/Tlxr5Qkpneac17nfvyIf0wG1N0s0ChfpxmIpb/h4Iy9zHkaY
+         2dx7bO1DFTi4prxw6mDDvctE3BVqkhPgMykUwm2U=
+Date:   Tue, 5 May 2020 08:34:41 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>, Christoph Hellwig <hch@lst.de>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sysctl: Make sure proc handlers can't expose heap memory
+Message-ID: <20200505063441.GA3877399@kroah.com>
+References: <202005041205.C7AF4AF@keescook>
+ <20200504195937.GS11244@42.do-not-panic.com>
+ <202005041329.169799C65D@keescook>
+ <20200504215903.GT11244@42.do-not-panic.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200504104917.v6.1.Ic7096b3b9b7828cdd41cd5469a6dee5eb6abf549@changeid>
-References: <20200504104917.v6.1.Ic7096b3b9b7828cdd41cd5469a6dee5eb6abf549@changeid>
-Subject: Re: [PATCH v6 1/5] soc: qcom: rpmh-rsc: Correctly ignore CPU_CLUSTER_PM notifications
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     evgreen@chromium.org, mka@chromium.org, mkshah@codeaurora.org,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rafael.j.wysocki@intel.com
-Date:   Mon, 04 May 2020 23:31:52 -0700
-Message-ID: <158866031221.24786.9383478212951903220@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200504215903.GT11244@42.do-not-panic.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Douglas Anderson (2020-05-04 10:50:15)
-> Our switch statement doesn't have entries for CPU_CLUSTER_PM_ENTER,
-> CPU_CLUSTER_PM_ENTER_FAILED, and CPU_CLUSTER_PM_EXIT and doesn't have
-> a default.  This means that we'll try to do a flush in those cases but
-> we won't necessarily be the last CPU down.  That's not so ideal since
-> our (lack of) locking assumes we're on the last CPU.
->=20
-> Luckily this isn't as big a problem as you'd think since (at least on
-> the SoC I tested) we don't get these notifications except on full
-> system suspend.  ...and on full system suspend we get them on the last
-> CPU down.  That means that the worst problem we hit is flushing twice.
-> Still, it's good to make it correct.
->=20
-> Fixes: 985427f997b6 ("soc: qcom: rpmh: Invoke rpmh_flush() for dirty cach=
-es")
-> Reported-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
+On Mon, May 04, 2020 at 09:59:03PM +0000, Luis Chamberlain wrote:
+> On Mon, May 04, 2020 at 01:32:07PM -0700, Kees Cook wrote:
+> > On Mon, May 04, 2020 at 07:59:37PM +0000, Luis Chamberlain wrote:
+> > > On Mon, May 04, 2020 at 12:08:55PM -0700, Kees Cook wrote:
+> > > > Just as a precaution, make sure that proc handlers don't accidentally
+> > > > grow "count" beyond the allocated kbuf size.
+> > > > 
+> > > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > > ---
+> > > > This applies to hch's sysctl cleanup tree...
+> > > > ---
+> > > >  fs/proc/proc_sysctl.c | 3 +++
+> > > >  1 file changed, 3 insertions(+)
+> > > > 
+> > > > diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+> > > > index 15030784566c..535ab26473af 100644
+> > > > --- a/fs/proc/proc_sysctl.c
+> > > > +++ b/fs/proc/proc_sysctl.c
+> > > > @@ -546,6 +546,7 @@ static ssize_t proc_sys_call_handler(struct file *filp, void __user *ubuf,
+> > > >  	struct inode *inode = file_inode(filp);
+> > > >  	struct ctl_table_header *head = grab_header(inode);
+> > > >  	struct ctl_table *table = PROC_I(inode)->sysctl_entry;
+> > > > +	size_t count_max = count;
+> > > >  	void *kbuf;
+> > > >  	ssize_t error;
+> > > >  
+> > > > @@ -590,6 +591,8 @@ static ssize_t proc_sys_call_handler(struct file *filp, void __user *ubuf,
+> > > >  
+> > > >  	if (!write) {
+> > > >  		error = -EFAULT;
+> > > > +		if (WARN_ON(count > count_max))
+> > > > +			count = count_max;
+> > > 
+> > > That would crash a system with panic-on-warn. I don't think we want that?
+> > 
+> > Eh? None of the handlers should be making this mistake currently and
+> > it's not a mistake that can be controlled from userspace. WARN() is
+> > absolutely what's wanted here: report an impossible situation (and
+> > handle it gracefully for the bulk of users that don't have
+> > panic_on_warn set).
+> 
+> Alrighty, Greg are you OK with this type of WARN_ON()? You recently
+> expressed concerns over its use due to panic-on-warn on another patch.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+We should never call WARN() on any path that a user can trigger.
+
+If it is just a "the developer called this api in a foolish way" then we
+could use a WARN_ON() to have them realize their mistake, but in my
+personal experience, foolish developers don't even notice that kind of
+mistake :(
+
+thanks,
+
+greg k-h
