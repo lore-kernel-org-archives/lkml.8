@@ -2,122 +2,235 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3344DC47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FB5C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0807720746
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04752206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:50:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dLgjlrJi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SodFMjn/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730431AbgEEPun (ORCPT
+        id S1730529AbgEEPuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:50:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35892 "EHLO
+        Tue, 5 May 2020 11:50:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729791AbgEEPum (ORCPT
+        with ESMTP id S1730442AbgEEPuv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:50:42 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73923C061A0F;
-        Tue,  5 May 2020 08:50:41 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id q24so561357pjd.1;
-        Tue, 05 May 2020 08:50:41 -0700 (PDT)
+        Tue, 5 May 2020 11:50:51 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FBC8C061A10
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 08:50:50 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id f11so2157831ljp.1
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 08:50:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=JCrj+xSNWBgnwkluYH5yEj5tGeDPbhNC0cOOAJmWsIw=;
-        b=dLgjlrJiG1l7gqN/69aiOdShJzV9KUD6CqPH5jgg6I9Glx8GrbLD+r+oJBiqXNL2ri
-         qKbLgBhx50Srw1bqJO4PVtSpX/AUueLxCR3/qlUjMpQTXHwy+yzQsEoTOs0Y31SsiCM3
-         kt3OUD4zkRiD27wXNRjXSRGro7/wekhe5W16MW9d3nB0oJCR5i6u5IpHRhS7AhVwh+cQ
-         A4xLE7LbgDpcsKzt9WxS2z0+E9/fQy4p3QyXVJOrjqrsgerRFQn+gxwDKp7nob6Fvv4s
-         ag8zuUDd8N8eV6bB9GFKFaAyom3ExodeY2u373oIyKLB4y6ZephmlYR4m49Z/eSi5mEB
-         G7jw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=UMlhFVIhuG4BQg7+7Jtw6J8Z8dON//8paovs3+Zex2Q=;
+        b=SodFMjn/B3pxZf7ZVhD75mEIZqjH+1/ziV1MYUIyyEhqLSS+pHK6Ws2DDP75ficdWZ
+         y2dwj3f4GsexWwrhDb/xpiaXozxhNFC1dfdBRQr3q3qJunqnJSz4UWC88zC7pp6/aUaM
+         38TWj5D6S5OquaYo9tEpkI0KFaKSzM1yU1sD/rmu9rS9dMrL9srIuyw/lSZ4G+ugMO0B
+         e/xLlYS16fd24RVaBObENrdBDL+xC/zslxwDzaGlAdCeCc4ScLEwEJo+hGza6P1f3Xsf
+         cMdrJwiU/Jopoc5LTnA1cDyrwwGp2qmiVwhFdGNfbbiJfv+OFMwokRyQ1zaLSF6pP2V1
+         lO/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-transfer-encoding:content-language;
-        bh=JCrj+xSNWBgnwkluYH5yEj5tGeDPbhNC0cOOAJmWsIw=;
-        b=QsNzIfq0tb0VQRCTwqW8WYP4KvFqLfhu/qcRHyj54q1DsWHaGig5c4kiynakC+NKJF
-         lRNyqllgwJRFf9M+fMTCG3kU4EYDgGlo9Umrfo8ijs7DB254p9Li8Tz3o1yHe9LftJHd
-         qdD4+Lp1ItiPtxgJRyYH6asKbVBgWw/azJ5HRx6y+GIOFGsMtttHaYFgNGSCoybr8xbl
-         gL0XlZ/h3th+bvyWj+ueS3/O+hRfLQXc5yEnnq+9f6g/TYunQEVdFZvyBCD1mjjj1vj8
-         vE3o88TBzhHDcar3oxOWj0NvY6HXG0tjWkIIlnZbtLieKnp5yPcjz+njzBPOFjCztk7g
-         Y/vA==
-X-Gm-Message-State: AGi0PuYw2tbclJjXCe7N9HJMktbihNosLZ92mQK0L6gi727S8NGP+8e9
-        okXr/CfhUQxLYQJWTCCvt/d48SqyidIaOA==
-X-Google-Smtp-Source: APiQypJ454qWi/idspGEYJX34417WWKUgWzgyWzx8xGegXqIyJ8D2Mi0dVFhUi8YvDBu5nBrYloHkg==
-X-Received: by 2002:a17:90a:68c1:: with SMTP id q1mr3834462pjj.35.1588693840419;
-        Tue, 05 May 2020 08:50:40 -0700 (PDT)
-Received: from [192.168.1.7] ([120.244.110.63])
-        by smtp.gmail.com with ESMTPSA id p64sm2498102pjp.7.2020.05.05.08.50.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2020 08:50:39 -0700 (PDT)
-To:     davem@davemloft.net, gregkh@linuxfoundation.org, kuba@kernel.org,
-        christophe.jaillet@wanadoo.fr, leon@kernel.org, tglx@linutronix.de
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [BUG] net: chelsio: Possible buffer overflow caused by DMA
- failures/attacks
-Message-ID: <95e19362-b9c9-faf9-3f9e-f6f4c65a6aff@gmail.com>
-Date:   Tue, 5 May 2020 23:50:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=UMlhFVIhuG4BQg7+7Jtw6J8Z8dON//8paovs3+Zex2Q=;
+        b=iCZYXecveHJA5OeoiT1kO1EmozuzusBsvGdyJjT1w25lifziFBR7mW237DMKkckbGa
+         KFuIQAIw/b+mvL/sb4aTbT7ia5jwcXNk5O2GKMPN49e4s0Q+Fc8TjUlQS/YUDw4qHkRy
+         Mb8rGnibroWjvJrnGMqACp9u6FGoFbd7YOdvv9GBKFs+3fAheZz0qJbcVULowFzxKJct
+         p3qWhsnSh4gkmZFLs+Z6a9QoK7yn49i9b0wW0TPEjCypyxXYioCQ8SPlT9BVd3OoLuDn
+         BfRgfc8FQ939qP3XsJpKXeB6ThVPCWCLsNah7vDMDSuD5St0CgChKqTN1fqWysbZHXE5
+         WRDQ==
+X-Gm-Message-State: AGi0PuZrZABDGx5dVVp50x6B6R5IDqAv85vPFf58elKPtjuaHekPP9kV
+        FKLrcImYdQPm5zBwBCzG0maQEQJS+YqcSdgXwF6oxw==
+X-Google-Smtp-Source: APiQypJb36H+6c8IlR0vTi9BXuXjJwwJvUVMzH0fBvWGdbfdEfk6ThGBEUXGm4auATlQOAa5YDCCxoc4uf0XtlhLTSo=
+X-Received: by 2002:a2e:80da:: with SMTP id r26mr2228163ljg.38.1588693848821;
+ Tue, 05 May 2020 08:50:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200504165441.533160703@linuxfoundation.org>
+In-Reply-To: <20200504165441.533160703@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 5 May 2020 21:20:37 +0530
+Message-ID: <CA+G9fYuXiDk4Mhv2KtkjD3VU-PFdibMNbnEpgDBj-S1bKNqUng@mail.gmail.com>
+Subject: Re: [PATCH 4.4 00/18] 4.4.222-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In alloc_rx_resources():
-     sge->respQ.entries =
-         pci_alloc_consistent(pdev, size, &sge->respQ.dma_addr);
+On Mon, 4 May 2020 at 23:29, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.4.222 release.
+> There are 18 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 06 May 2020 16:52:55 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.4.222-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Thus, "sge->respQ.entries" is a DMA value, and it is assigned to
-"e" in process_pure_responses():
-     struct sge *sge = adapter->sge;
-     struct respQ *q = &sge->respQ;
-     struct respQ_e *e = &q->entries[q->cidx];
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-When DMA failures or attacks occur, the data stored in "e" can be
-changed at any time. In this case, the value of "e->FreelistQid"
-can be a large number to cause buffer overflow when the
-following code is executed:
-     const struct freelQ *fl = &sge->freelQ[e->FreelistQid];
+Summary
+------------------------------------------------------------------------
 
-Similarly, "sge->respQ.entries" is also assigned to "e" in
-process_responses():
-     struct sge *sge = adapter->sge;
-     struct respQ *q = &sge->respQ;
-     struct respQ_e *e = &q->entries[q->cidx];
+kernel: 4.4.222-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.4.y
+git commit: 2f5149253281f474194117c5fa97972cf76c84ce
+git describe: v4.4.221-19-g2f5149253281
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
+ld/v4.4.221-19-g2f5149253281
 
-When DMA failures or attacks occur, the data stored in "e" can be
-changed at any time. In this case, the value of "e->FreelistQid"
-can be a large number to cause buffer overflow when the
-following code is executed:
-     struct freelQ *fl = &sge->freelQ[e->FreelistQid];
+No regressions (compared to build v4.4.221)
 
-Considering that DMA can fail or be attacked, I think that it is 
-dangerous to
-use a DMA value (or any value tainted by it) as an array index or a 
-control-flow
-condition. However, I have found many such dangerous cases in Linux 
-device drivers
-through my static-analysis tool and code review.
-I am not sure whether my opinion is correct, so I want to listen to your 
-points of view.
-Thanks in advance :)
+No fixes (compared to build v4.4.221)
+
+Ran 20159 total tests in the following environments and test suites.
+
+Environments
+--------------
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- x15 - arm
+- x86_64
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-open-posix-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* perf
+* v4l2-compliance
+* kvm-unit-tests
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest/net
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.4.222-rc1
+git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
+git branch: 4.4.222-rc1-hikey-20200504-710
+git commit: b9d78bbbdbd389fe97e31f51872b6feeb6251466
+git describe: 4.4.222-rc1-hikey-20200504-710
+Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4=
+-oe/build/4.4.222-rc1-hikey-20200504-710
 
 
-Best wishes,
-Jia-Ju Bai
+No regressions (compared to build 4.4.221-rc1-hikey-20200501-708)
 
+
+No fixes (compared to build 4.4.221-rc1-hikey-20200501-708)
+
+Ran 1766 total tests in the following environments and test suites.
+
+Environments
+--------------
+- hi6220-hikey - arm64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* v4l2-compliance
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
