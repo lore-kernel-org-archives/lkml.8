@@ -2,91 +2,112 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82207C47258
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4D3C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69FC520746
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 485C320746
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:24:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729075AbgEENXC (ORCPT
+        id S1729037AbgEENX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 09:23:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45076 "EHLO mx2.suse.de"
+        Tue, 5 May 2020 09:23:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46206 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728996AbgEENXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 09:23:01 -0400
+        id S1728892AbgEENX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 09:23:59 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 7C67FAB89;
-        Tue,  5 May 2020 13:23:01 +0000 (UTC)
-Message-ID: <1588684948.13662.11.camel@suse.com>
-Subject: Re: KASAN: slab-out-of-bounds Write in betop_probe
-From:   Oliver Neukum <oneukum@suse.com>
-To:     syzbot <syzbot+07efed3bc5a1407bd742@syzkaller.appspotmail.com>,
-        andreyknvl@google.com, benjamin.tissoires@redhat.com,
-        jikos@kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Date:   Tue, 05 May 2020 15:22:28 +0200
-In-Reply-To: <0000000000000610eb059e429abd@google.com>
-References: <0000000000000610eb059e429abd@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        by mx2.suse.de (Postfix) with ESMTP id BBA43AB3D;
+        Tue,  5 May 2020 13:23:59 +0000 (UTC)
+Message-ID: <7946e8efb23376a395d32b2ae2ea240c519502b9.camel@suse.de>
+Subject: Re: [PATCH v2 1/4] PCI: brcmstb: Don't clk_put() a managed clock
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Date:   Tue, 05 May 2020 15:23:54 +0200
+In-Reply-To: <20200501142831.35174-2-james.quinlan@broadcom.com>
+References: <20200501142831.35174-1-james.quinlan@broadcom.com>
+         <20200501142831.35174-2-james.quinlan@broadcom.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-j/ZrGLyXvIzAV7yVCtRN"
+User-Agent: Evolution 3.36.2 
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Montag, den 10.02.2020, 17:16 -0800 schrieb syzbot:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    e5cd56e9 usb: gadget: add raw-gadget interface
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1517fed9e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=8cff427cc8996115
-> dashboard link: https://syzkaller.appspot.com/bug?extid=07efed3bc5a1407bd742
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=147026b5e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1683b6b5e00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+07efed3bc5a1407bd742@syzkaller.appspotmail.com
-> 
-> betop 0003:20BC:5500.0001: unknown main item tag 0x0
-> betop 0003:20BC:5500.0001: hidraw0: USB HID v0.00 Device [HID 20bc:5500] on usb-dummy_hcd.0-1/input0
-> ==================================================================
-> BUG: KASAN: slab-out-of-bounds in set_bit include/asm-generic/bitops/instrumented-atomic.h:28 [inline]
-> BUG: KASAN: slab-out-of-bounds in betopff_init drivers/hid/hid-betopff.c:99 [inline]
-> BUG: KASAN: slab-out-of-bounds in betop_probe+0x396/0x570 drivers/hid/hid-betopff.c:134
-> Write of size 8 at addr ffff8881d4f43ac0 by task kworker/1:2/94
-> 
-> Freed by task 12:
->  save_stack+0x1b/0x80 mm/kasan/common.c:72
->  set_track mm/kasan/common.c:80 [inline]
->  kasan_set_free_info mm/kasan/common.c:337 [inline]
->  __kasan_slab_free+0x117/0x160 mm/kasan/common.c:476
->  slab_free_hook mm/slub.c:1444 [inline]
->  slab_free_freelist_hook mm/slub.c:1477 [inline]
->  slab_free mm/slub.c:3024 [inline]
->  kfree+0xd5/0x300 mm/slub.c:3976
->  urb_destroy drivers/usb/core/urb.c:26 [inline]
->  kref_put include/linux/kref.h:65 [inline]
-> 
 
-Hi,
+--=-j/ZrGLyXvIzAV7yVCtRN
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-this indicates that I am confused. Why are we getting an out-of-bounds
-on a freed region? Is this a strange way of reporting access
-to already freed memory?
+On Fri, 2020-05-01 at 10:28 -0400, Jim Quinlan wrote:
+> From: Jim Quinlan <jquinlan@broadcom.com>
+>=20
+> clk_put() was being invoked on a clock obtained by
+> devm_clk_get_optional().
+>=20
+> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
 
-	Regards
-		Oliver
+Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+
+Regards,
+Nicolas
+
+>  drivers/pci/controller/pcie-brcmstb.c | 1 -
+>  1 file changed, 1 deletion(-)
+>=20
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c
+> b/drivers/pci/controller/pcie-brcmstb.c
+> index 6d79d14527a6..454917ee9241 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -899,7 +899,6 @@ static void __brcm_pcie_remove(struct brcm_pcie *pcie=
+)
+>  	brcm_msi_remove(pcie);
+>  	brcm_pcie_turn_off(pcie);
+>  	clk_disable_unprepare(pcie->clk);
+> -	clk_put(pcie->clk);
+>  }
+> =20
+>  static int brcm_pcie_remove(struct platform_device *pdev)
+
+
+--=-j/ZrGLyXvIzAV7yVCtRN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6xaOoACgkQlfZmHno8
+x/4zFAf6A28BXIGgiFx4cGET/exjJuFYtSEdnxdHqrU3xmv0+qw+NJRL+o6kzhqa
+Pb1Wx5+R2KV1NbiU0BKwzhHL8vj2KiE2k/zi14dvyEoy1EHsnu3aQ96eeXralUOU
+AjubnENtm+mfBPX03xZaWzjRGs4fgrJbqEEE3INb8Iji4X85iMhTh46ylY49Hkdz
+oM0lPWTRTAEXQLzBONZe7VQi+S0Zd1t8mY0IZV8nJYifwqgvYoJdSvXzNxCfJ3fA
+slYEVGW5maJEO/qHsWKyJYE17mwWPGeskeAVF4dQWQt1rDPc1vm+AsaCJzjPLMhM
+904BWZ69Lu3pdxhAiLGBX8dd+oRvzA==
+=A2C7
+-----END PGP SIGNATURE-----
+
+--=-j/ZrGLyXvIzAV7yVCtRN--
 
