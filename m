@@ -1,94 +1,167 @@
 Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 912A6C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B276FC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A99920661
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:21:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A78620721
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:21:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BcOoH3Fj"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="vedzh/8c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729284AbgEEVVN (ORCPT
+        id S1729324AbgEEVV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 17:21:13 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55422 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726593AbgEEVVN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 17:21:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588713671;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/k8UcsPjQG2+7rFpDrJgoM6XT8Q73mUVSWFX1krD0BE=;
-        b=BcOoH3Fjv/zYXclaMOD8n+UwqTLKnsJKP4xCN03RUPhLYW4fFuNU0W1IvmQ4Y07ecUAE0Z
-        nvC1JwWJD9G6sSoSWDtAiXLyp7FUovoAGGQrI8OoTxfVK2ICWMSfz9VNyC9ML5MKTTZMPU
-        RGT/B9tdaR1QMwp6r3RKBWFTAjSQTlk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-291-vAPewjxXNp23ZuqMQ6HGmg-1; Tue, 05 May 2020 17:21:10 -0400
-X-MC-Unique: vAPewjxXNp23ZuqMQ6HGmg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DF866800D24;
-        Tue,  5 May 2020 21:21:07 +0000 (UTC)
-Received: from treble (ovpn-114-99.rdu2.redhat.com [10.10.114.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 109765C1BD;
-        Tue,  5 May 2020 21:21:02 +0000 (UTC)
-Date:   Tue, 5 May 2020 16:21:00 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, pbonzini@redhat.com,
-        mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH v4 06/18] static_call: Add basic static call
- infrastructure
-Message-ID: <20200505212004.2p4jbgy763lftmo6@treble>
-References: <20200501202849.647891881@infradead.org>
- <20200501202944.128942570@infradead.org>
+        Tue, 5 May 2020 17:21:58 -0400
+Received: from mail-eopbgr680053.outbound.protection.outlook.com ([40.107.68.53]:50171
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728584AbgEEVV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 17:21:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JkoBs0EpDKrn/TsTkZbUoB5S8d7q6WvMtKzqOXAKAD9xPESkAIf3dypV9xO8epHUzWtxxoyhCRirpES3v7375nvIO5DM5wTvWHw2Ii4rgdsmh8pPnQrwvWp2cW74hzHIUalAY6cSmRwyUxVVPWRoWaJDzY+fPaAYKCGoxNCGzgzx9ysIY5+SUl3QM18PkGZlt8BSRIAhiByo6cr3k82qWRxMay04GFpJKYbagZoocfy6mhzd/9DDwT//2vOXcH04OBh95igMJ1oo+djxHOi95zlD0ITy496WjzUeyCQq1JJxY1Z1Z0X+kb7wt6rAm035F2sw+k4lOwR00DnpZS7w8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LRen4pFPZF/iqIIqXMSRdOmlGqIWpQk3u36Pdq3rBKU=;
+ b=n500X0B+SsTZ02X5bygbbx0ouqdxWVp8Y8Q85u3j+9e9soQbYPxcLZO7OSSSOV7qauunksnZUMg0CZon5/HMbMyogGxN57XL2j3QqalDdCNqugzSqjCJelaay55HXMPqKcjcp7qPRIF230Oac8tmYHYQJHwxZmLGgPsOof0bpcuosqSDyEy+26eQXdrbs2Sb7xk73ALn7pDvJ0XY35X2n/s1ZLG43HVgGdPIf2npoZN5Cl86yCHgN89ZF59l+ZQYbk4CIysI9GTMP1jrJLLMOsGHFfuNxuvjuasF8sWTq4wtVl1xOTQfLy8Z3YyxJWoc7irqphWym6TI+djF3zgpqQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LRen4pFPZF/iqIIqXMSRdOmlGqIWpQk3u36Pdq3rBKU=;
+ b=vedzh/8cwel7B5k3sHqssn79OJI4IpZgn01JNKR5AINrbcKCMMzPgs617vsCi+XG90nJsUt6rStl+smjv1Mq24YcMm4foFd+ZCo9fUt9jyYBtCxYgqmYQgo5iGZClAgDJrf4aZhIgWRwgVcoSYvuyzTDvWp41fPqUFX7ilxMGWs=
+Authentication-Results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=amd.com;
+Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
+ DM5PR12MB2518.namprd12.prod.outlook.com (2603:10b6:4:b0::33) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2958.20; Tue, 5 May 2020 21:21:54 +0000
+Received: from DM5PR12MB1386.namprd12.prod.outlook.com
+ ([fe80::6962:a808:3fd5:7adb]) by DM5PR12MB1386.namprd12.prod.outlook.com
+ ([fe80::6962:a808:3fd5:7adb%3]) with mapi id 15.20.2958.030; Tue, 5 May 2020
+ 21:21:54 +0000
+From:   Ashish Kalra <Ashish.Kalra@amd.com>
+To:     pbonzini@redhat.com
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        joro@8bytes.org, bp@suse.de, Thomas.Lendacky@amd.com,
+        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        srutherford@google.com, rientjes@google.com,
+        venu.busireddy@oracle.com, brijesh.singh@amd.com,
+        kexec@lists.infradead.org
+Subject: [PATCH v8 17/18] KVM: x86: Add kexec support for SEV Live Migration.
+Date:   Tue,  5 May 2020 21:21:44 +0000
+Message-Id: <697cbb9301acf18296b65bb63686b6c0d422e382.1588711355.git.ashish.kalra@amd.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1588711355.git.ashish.kalra@amd.com>
+References: <cover.1588711355.git.ashish.kalra@amd.com>
+Content-Type: text/plain
+X-ClientProxiedBy: DM5PR22CA0019.namprd22.prod.outlook.com
+ (2603:10b6:3:101::29) To DM5PR12MB1386.namprd12.prod.outlook.com
+ (2603:10b6:3:77::9)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200501202944.128942570@infradead.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ashkalra_ubuntu_server.amd.com (165.204.77.1) by DM5PR22CA0019.namprd22.prod.outlook.com (2603:10b6:3:101::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Tue, 5 May 2020 21:21:53 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 17b7dd6f-675e-43a1-a819-08d7f13a55a4
+X-MS-TrafficTypeDiagnostic: DM5PR12MB2518:|DM5PR12MB2518:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR12MB251866B643C0A84403DD3AE28EA70@DM5PR12MB2518.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3383;
+X-Forefront-PRVS: 0394259C80
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 9SQKmArPcpvLceDNjqj2kamGeL0F9TTIZuqO/pI6HsU2kB/zC3tRh9Lp2U8VSt6NaEDpwfXpaal9tTb/Q21EVzaTOxf8KUJglqQrOMjVyqvFrD4PaQYKE+6HYnSR0IPt5qpgyjiBAQSiqealfSxMQJrFfrjvLTdLLY21rShNCfAPHo48vF5ntY9W1jhJ+8sJ7jhwFAwZl4+O2Opq/D05HjIFHVtR+ohzLKKvaz+2Zp7xz0Va6q6U6iYQapbxQeWF1f5RY5xVQJRLEI8J4uyGvQPXyJKPzq3FwIkihkBnRX4cGyAe09dD8lGd5aIxah1oyosbgfyJ/kDJZXAG8P6545QoFAuGq2EJPfh84ItRCzgo0ws1WUmfSYU1Z3To5LhkdWnGetx3BAaVfOGpBhbOtqkunJeGUpZwei6KLqk7jVdINLE/SFjPpESal6YjRtSpmoX6XvqcwJ1R2vpAjg6ib+5/ZjL8bC/9P1rYdjaNGlDC9RBC/ksWlQQshwj8afk5t+WgZSbe5w9dSPvtDjOpLl+YTG3UnvFjWvbT8icIhP+30khNr2owuMgBbVtJFYzM
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1386.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(39860400002)(136003)(366004)(396003)(33430700001)(86362001)(8676002)(66556008)(7696005)(66476007)(52116002)(8936002)(7416002)(4326008)(33440700001)(316002)(66946007)(16526019)(478600001)(6486002)(6916009)(26005)(36756003)(956004)(5660300002)(2906002)(6666004)(186003)(2616005)(136400200001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: luXNGpqSXp3iI+YgYq05al6MSZC85f4OrEvGEpLyUCTHUIdJORgXjZetT0kEZ3DZv49jC9+msbRlB86Efe+jWKtMo/44GZtocITAx/4C/eNJgmooWxKTO1gvEwYGs0ac1F60jqdFcq6E3okzd5Hfp1tey1jDaSHQgI+D92X0aR8GLaTnW0gTXOiTj3IUws5euSJX4UbcMj81CUok5S7LQNFWqDwIcFGNBahWCDIgJQqlXDFvfLe/DJ6oEQYhNjQmj1/sAFGj3pHP/vCbWle4E+1i4I9I/Ldsg9Xqt12esMisctbDCYEDq+lhitX6zrZNAUnwiHBTqmEboS5OQ5fLq5do8geDfhg0AaKNpMdj8YuCabJAi+vkQv3VnqWAwdG29MtVO3aWGtZPdZWzrEOSUj8cv4L2l3mG7X8poUW9JqFb9pGQ7f5naHpHJGINbeon5+Fh9me0FN+O0KDPMcrq13Pqb/RHFih/dovY0yAT5g5aNHdQ8Gxgdakxg099P499nZmWdg3q8LvfJSiOBCqwVgucluR+Z1LqJGTxeuRYhD5TnQrYsBFehMd3lcgkc6R2Z8yXLWy8AYxneisZUtmVX9uNYG6Vu70rh5IkqWB9lzK/Li1lk1+NlLNp1ZgF+HLJEWZL3lg19IdHnHK4V0sCZ53R/vxmzpS6m1MgTgAGtgFe886YXhlT9WD7ZmbfnOm40nlovFRakwTL5YEP+XfM73x94Sy7l/VJD9pgZ7/YU2CWRAViftaP5Rvaa85YNdfTQbEAV5DJRmgyin3jvin7i53ek2p4JfPbqaQvztgk+IM=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 17b7dd6f-675e-43a1-a819-08d7f13a55a4
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2020 21:21:54.5605
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: u0Xj+Tg2M+yb/dLIO99F/dGxozVbBBMJnBOs8weCISMOH67FnyKDOXGDq6Zahr4lElHlEmEX3HoXGi1gG2V7gA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2518
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 10:28:55PM +0200, Peter Zijlstra wrote:
-> +++ b/include/linux/static_call_types.h
-> @@ -0,0 +1,15 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _STATIC_CALL_TYPES_H
-> +#define _STATIC_CALL_TYPES_H
-> +
-> +#include <linux/stringify.h>
-> +
-> +#define STATIC_CALL_PREFIX		__SC__
+From: Ashish Kalra <ashish.kalra@amd.com>
 
-This should probably be STATIC_CALL_KEY_PREFIX.  And change the prefix
-to __SCK__ for consistency?
+Reset the host's page encryption bitmap related to kernel
+specific page encryption status settings before we load a
+new kernel by kexec. We cannot reset the complete
+page encryption bitmap here as we need to retain the
+UEFI/OVMF firmware specific settings.
 
-> +#define STATIC_CALL_KEY(name)		__PASTE(STATIC_CALL_PREFIX, name)
-> +
-> +#define STATIC_CALL_TRAMP_PREFIX	__SCT__
-> +#define STATIC_CALL_TRAMP_PREFIX_STR	__stringify(STATIC_CALL_TRAMP_PREFIX)
-> +#define STATIC_CALL_TRAMP(name)		__PASTE(STATIC_CALL_TRAMP_PREFIX, name)
-> +#define STATIC_CALL_TRAMP_STR(name)	__stringify(STATIC_CALL_TRAMP(name))
+The host's page encryption bitmap is maintained for the
+guest to keep the encrypted/decrypted state of the guest pages,
+therefore we need to explicitly mark all shared pages as
+encrypted again before rebooting into the new guest kernel.
 
+Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+---
+ arch/x86/kernel/kvm.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 4b29815de873..a8bc30d5b15b 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -35,6 +35,7 @@
+ #include <asm/hypervisor.h>
+ #include <asm/tlb.h>
+ #include <asm/cpuidle_haltpoll.h>
++#include <asm/e820/api.h>
+ 
+ static int kvmapf = 1;
+ 
+@@ -358,6 +359,33 @@ static void kvm_pv_guest_cpu_reboot(void *unused)
+ 	 */
+ 	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
+ 		wrmsrl(MSR_KVM_PV_EOI_EN, 0);
++	/*
++	 * Reset the host's page encryption bitmap related to kernel
++	 * specific page encryption status settings before we load a
++	 * new kernel by kexec. NOTE: We cannot reset the complete
++	 * page encryption bitmap here as we need to retain the
++	 * UEFI/OVMF firmware specific settings.
++	 */
++	if (sev_live_migration_enabled() & (smp_processor_id() == 0)) {
++		int i;
++		unsigned long nr_pages;
++
++		for (i = 0; i < e820_table->nr_entries; i++) {
++			struct e820_entry *entry = &e820_table->entries[i];
++			unsigned long start_pfn;
++			unsigned long end_pfn;
++
++			if (entry->type != E820_TYPE_RAM)
++				continue;
++
++			start_pfn = entry->addr >> PAGE_SHIFT;
++			end_pfn = (entry->addr + entry->size) >> PAGE_SHIFT;
++			nr_pages = DIV_ROUND_UP(entry->size, PAGE_SIZE);
++
++			kvm_sev_hypercall3(KVM_HC_PAGE_ENC_STATUS,
++					   entry->addr, nr_pages, 1);
++		}
++	}
+ 	kvm_pv_disable_apf();
+ 	kvm_disable_steal_time();
+ }
 -- 
-Josh
+2.17.1
 
