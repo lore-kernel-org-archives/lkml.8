@@ -2,163 +2,85 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA102C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADA3C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B11632078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:08:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="UIWX9Qri"
+	by mail.kernel.org (Postfix) with ESMTP id 231EF2078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:08:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730135AbgEEPIR (ORCPT
+        id S1730149AbgEEPI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:08:17 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:45492 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729571AbgEEPIQ (ORCPT
+        Tue, 5 May 2020 11:08:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729806AbgEEPHa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:08:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1588691295; x=1620227295;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=IAgZZDQAgmaOCAEF+gMgVxcblMlmWcnuMZ5A1KV3daA=;
-  b=UIWX9QriVhXaUgff+rXR8CA9p3BYxPpUa+3orOtDkb6FXERDofUChTKC
-   8MUSyAGmNNqx4e362Ei3lvfT5hIds/3aVLJVM9f6g/2h3xKC2V+KhEaIz
-   ivDgJKOUSjafjb7ELC0Gws+PdjFwiEyBfNvWkQUC7kzCCxOajjI9ZcNow
-   w=;
-IronPort-SDR: kyd4994nfXuQCwn5F4nNpODgpRWvzpQJ2KEhGPjS9GIDWdfh2joXL/vSHZCx1BE9ajvdBjCf9k
- VpSuB92/uMKw==
-X-IronPort-AV: E=Sophos;i="5.73,355,1583193600"; 
-   d="scan'208";a="28970664"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 05 May 2020 15:08:00 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com (Postfix) with ESMTPS id 994FBA1F77;
-        Tue,  5 May 2020 15:07:59 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 5 May 2020 15:07:59 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.38) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 5 May 2020 15:07:50 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     Eric Dumazet <edumazet@google.com>
-CC:     SeongJae Park <sjpark@amazon.com>,
-        David Miller <davem@davemloft.net>,
-        "Al Viro" <viro@zeniv.linux.org.uk>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        <sj38.park@gmail.com>, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>, <snu@amazon.com>,
-        <amit@kernel.org>, <stable@vger.kernel.org>
-Subject: Re: Re: [PATCH net v2 0/2] Revert the 'socket_alloc' life cycle change
-Date:   Tue, 5 May 2020 17:07:17 +0200
-Message-ID: <20200505150717.5688-1-sjpark@amazon.com>
+        Tue, 5 May 2020 11:07:30 -0400
+Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12D73C0610D6
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 08:07:29 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:bd97:8453:3b10:1832])
+        by andre.telenet-ops.be with bizsmtp
+        id b37U2200X3VwRR30137UPJ; Tue, 05 May 2020 17:07:28 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jVzAO-00028X-5l; Tue, 05 May 2020 17:07:28 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jVzAO-0000Qz-0c; Tue, 05 May 2020 17:07:28 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+List-Id: <soc.lore.kernel.org>
+To:     soc@kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org
+Subject: [PATCH v2 12/15] ARM: omap2plus: Drop unneeded select of MIGHT_HAVE_CACHE_L2X0
+Date:   Tue,  5 May 2020 17:07:19 +0200
+Message-Id: <20200505150722.1575-13-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <CANn89iJ6f=x9XSfjSCFc0KNcjSXop3QMEgAfh9PLJ6khTbXrnQ@mail.gmail.com> (raw)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.38]
-X-ClientProxiedBy: EX13D28UWB004.ant.amazon.com (10.43.161.56) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+In-Reply-To: <20200505150722.1575-1-geert+renesas@glider.be>
+References: <20200505150722.1575-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 May 2020 07:53:39 -0700 Eric Dumazet <edumazet@google.com> wrote:
+Support for TI AM43x SoCs depends on ARCH_MULTI_V7, which selects
+ARCH_MULTI_V6_V7.
+As the latter selects MIGHT_HAVE_CACHE_L2X0, there is no need for
+SOC_AM43XX to select MIGHT_HAVE_CACHE_L2X0.
 
-> On Tue, May 5, 2020 at 4:54 AM SeongJae Park <sjpark@amazon.com> wrote:
-> >
-> > CC-ing stable@vger.kernel.org and adding some more explanations.
-> >
-> > On Tue, 5 May 2020 10:10:33 +0200 SeongJae Park <sjpark@amazon.com> wrote:
-> >
-> > > From: SeongJae Park <sjpark@amazon.de>
-> > >
-> > > The commit 6d7855c54e1e ("sockfs: switch to ->free_inode()") made the
-> > > deallocation of 'socket_alloc' to be done asynchronously using RCU, as
-> > > same to 'sock.wq'.  And the following commit 333f7909a857 ("coallocate
-> > > socket_sq with socket itself") made those to have same life cycle.
-> > >
-> > > The changes made the code much more simple, but also made 'socket_alloc'
-> > > live longer than before.  For the reason, user programs intensively
-> > > repeating allocations and deallocations of sockets could cause memory
-> > > pressure on recent kernels.
-> >
-> > I found this problem on a production virtual machine utilizing 4GB memory while
-> > running lebench[1].  The 'poll big' test of lebench opens 1000 sockets, polls
-> > and closes those.  This test is repeated 10,000 times.  Therefore it should
-> > consume only 1000 'socket_alloc' objects at once.  As size of socket_alloc is
-> > about 800 Bytes, it's only 800 KiB.  However, on the recent kernels, it could
-> > consume up to 10,000,000 objects (about 8 GiB).  On the test machine, I
-> > confirmed it consuming about 4GB of the system memory and results in OOM.
-> >
-> > [1] https://github.com/LinuxPerfStudy/LEBench
-> 
-> To be fair, I have not backported Al patches to Google production
-> kernels, nor I have tried this benchmark.
-> 
-> Why do we have 10,000,000 objects around ? Could this be because of
-> some RCU problem ?
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Tony Lindgren <tony@atomide.com>
+---
+v2:
+  - Add Acked-by.
+---
+ arch/arm/mach-omap2/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-Mainly because of a long RCU grace period, as you guess.  I have no idea how
-the grace period became so long in this case.
+diff --git a/arch/arm/mach-omap2/Kconfig b/arch/arm/mach-omap2/Kconfig
+index dca7d06c0b938619..ea23205bf70f4df6 100644
+--- a/arch/arm/mach-omap2/Kconfig
++++ b/arch/arm/mach-omap2/Kconfig
+@@ -66,7 +66,6 @@ config SOC_AM43XX
+ 	select ARCH_OMAP2PLUS
+ 	select ARM_GIC
+ 	select MACH_OMAP_GENERIC
+-	select MIGHT_HAVE_CACHE_L2X0
+ 	select HAVE_ARM_SCU
+ 	select GENERIC_CLOCKEVENTS_BROADCAST
+ 	select HAVE_ARM_TWD
+-- 
+2.17.1
 
-As my test machine was a virtual machine instance, I guess RCU readers
-preemption[1] like problem might affected this.
-
-[1] https://www.usenix.org/system/files/conference/atc17/atc17-prasad.pdf
-
-> 
-> Once Al patches reverted, do you have 10,000,000 sock_alloc around ?
-
-Yes, both the old kernel that prior to Al's patches and the recent kernel
-reverting the Al's patches didn't reproduce the problem.
-
-
-Thanks,
-SeongJae Park
-
-> 
-> Thanks.
-> 
-> >
-> > >
-> > > To avoid the problem, this commit reverts the changes.
-> >
-> > I also tried to make fixup rather than reverts, but I couldn't easily find
-> > simple fixup.  As the commits 6d7855c54e1e and 333f7909a857 were for code
-> > refactoring rather than performance optimization, I thought introducing complex
-> > fixup for this problem would make no sense.  Meanwhile, the memory pressure
-> > regression could affect real machines.  To this end, I decided to quickly
-> > revert the commits first and consider better refactoring later.
-> >
-> >
-> > Thanks,
-> > SeongJae Park
-> >
-> > >
-> > > SeongJae Park (2):
-> > >   Revert "coallocate socket_wq with socket itself"
-> > >   Revert "sockfs: switch to ->free_inode()"
-> > >
-> > >  drivers/net/tap.c      |  5 +++--
-> > >  drivers/net/tun.c      |  8 +++++---
-> > >  include/linux/if_tap.h |  1 +
-> > >  include/linux/net.h    |  4 ++--
-> > >  include/net/sock.h     |  4 ++--
-> > >  net/core/sock.c        |  2 +-
-> > >  net/socket.c           | 23 ++++++++++++++++-------
-> > >  7 files changed, 30 insertions(+), 17 deletions(-)
-> > >
-> > > --
-> > > 2.17.1
