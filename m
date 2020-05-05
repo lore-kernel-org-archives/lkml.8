@@ -2,235 +2,149 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C57C47258
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF5EC47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA94620721
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A405206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:10:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588713002;
+	bh=6rBHJ+G5KTVMta9WCiHz7v1fLze2DzexhDsvmnpSUyc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=a61acIIUqgpae3KRonsIvhi6nQD61Nd7R7wff0XFNDEtASmiwOGjdd0KJJXgLDzvV
+	 Zftld/VJvlEI/NO1SfNx4y/DuQPgWF2Hx1kQGD9C5fqQbAmB3uPsrPjXUAqOTM1Ag7
+	 4y1d2lNuDgocpex75e5CveR1QDYxi+uqam82TYvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729132AbgEEVJQ (ORCPT
+        id S1729282AbgEEVKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 17:09:16 -0400
-Received: from mga01.intel.com ([192.55.52.88]:40999 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726350AbgEEVJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 17:09:15 -0400
-IronPort-SDR: l6AVyi6acyij8Bbd/3UDWHcHEFvyAaUbpT+MFH8DrHCjRkjDViEWkESDocEeKFCBWBnmMdNMuO
- fA7rnh4+UDWg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 14:09:15 -0700
-IronPort-SDR: tR5H6gfso9+YUtdMqdKx1tjSAcYenZZWDu+V7lyzZxdScza+kgvEZaYMjzGNsap61llwsCPMCl
- YcQvDc83Olpw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,356,1583222400"; 
-   d="scan'208";a="434639700"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 05 May 2020 14:09:15 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
-        by linux.intel.com (Postfix) with ESMTP id 7283F580378;
-        Tue,  5 May 2020 14:09:15 -0700 (PDT)
-Message-ID: <dabb105d548746f26608c5a19b6b8529cf5529b8.camel@linux.intel.com>
-Subject: Re: [PATCH 3/3] platform/x86: Intel PMT Telemetry capability driver
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        alexander.h.duyck@intel.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Date:   Tue, 05 May 2020 14:09:15 -0700
-In-Reply-To: <CAHp75VdnVg7q-Nr-3cO-NyKzk0ckfauOso3yDM4qUF3ofSK_VQ@mail.gmail.com>
-References: <20200505013206.11223-1-david.e.box@linux.intel.com>
-         <20200505023149.11630-1-david.e.box@linux.intel.com>
-         <20200505023149.11630-2-david.e.box@linux.intel.com>
-         <CAHp75VdnVg7q-Nr-3cO-NyKzk0ckfauOso3yDM4qUF3ofSK_VQ@mail.gmail.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Tue, 5 May 2020 17:10:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57612 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728135AbgEEVKB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 17:10:01 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 888BDC061A0F;
+        Tue,  5 May 2020 14:09:59 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id ck5so1788275qvb.11;
+        Tue, 05 May 2020 14:09:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gxAlApzzt5Fr2H0K0z2Ers4SPsXxQpIbe0gDV+IiJdk=;
+        b=ZlG07WlUkAyur6dQ7aip9K3opgyw/I5mnWql1zI3HeSEU7nbUhBt2lsaZGx3VMayp2
+         xzo83Oj5Jh1zKx0mQyCEN8VYFFajXjc+hf+8KPdeCMnfe9Z7xpsBzd4JJwcakBInOPVZ
+         9Z1gMFw+OtfuB/7gbwJRxua5SlKm2nKvUuwM4Dm+H2WfxUBZZd9Rr/8NCgRxUgTiSNyM
+         dkopESb2AeeDUZ2C3UzJ7x9j2LCbDIxd1yzgtCWLL35jLo7sgkyMKtyIhn7j16evOKbo
+         kY7GM9DNyd586Cg2Ge9xHqaKxkVfVb7YNP+L3fM5IpykrP7IXbMGMJHrl9r13TnWzi07
+         RTAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=gxAlApzzt5Fr2H0K0z2Ers4SPsXxQpIbe0gDV+IiJdk=;
+        b=D4xU3Ts0yHU2lgdPM+Tv9+5WXc/DSFp4Gr3DqjAUJWQSgLDc9/Si1fM4mEuCfRpUOv
+         uXfchdBl5RnfdscI6OlwZRUVXpktfJ0pLtK1It00AbdKQx6gAktw16aumAkg8DxzcB+7
+         ZM9S5Mzp01QlZD30VzM+NM0AFyOLsBJq7sytGhcwbK/gl3t/P1iBTC/T06XdHWHCvct5
+         e2HXM3GQHbQMghioAh84yqFmw5PZK6eC4VtkmlIspPhJSmAywa9YV0EJQ7HSJogx2mPO
+         ILuq3B2ZvMc2M3xx0DaLtPW1Ps4JklHnbBiune0C0t8o3NQ1iX4XEYiY8HIK6k5W4yGU
+         CLvA==
+X-Gm-Message-State: AGi0Pual3tSta5p3RRpBSwWTzrg679gnV3qtl3kVZjeqlavb+GLGhN+4
+        NXDjA4jB3cGxAZC4C6dL6NUcT0MEkqI=
+X-Google-Smtp-Source: APiQypKA728Pg2MgizEDYb92QcuJxH1yoE0zafaProJrjubchOTsCxZq92aUE19dCNx9WJcJMZi7lw==
+X-Received: by 2002:ad4:4f86:: with SMTP id em6mr4980156qvb.218.1588712998509;
+        Tue, 05 May 2020 14:09:58 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:8365])
+        by smtp.gmail.com with ESMTPSA id i42sm3059938qtc.83.2020.05.05.14.09.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 14:09:57 -0700 (PDT)
+Date:   Tue, 5 May 2020 17:09:56 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     "J. Bruce Fields" <bfields@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        Jeff Layton <jlayton@redhat.com>,
+        David Howells <dhowells@redhat.com>, Shaohua Li <shli@fb.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/4] allow multiple kthreadd's
+Message-ID: <20200505210956.GA3350@mtj.thefacebook.com>
+References: <1588348912-24781-1-git-send-email-bfields@redhat.com>
+ <CAHk-=wiGhZ_5xCRyUN+yMFdneKMQ-S8fBvdBp8o-JWPV4v+nVw@mail.gmail.com>
+ <20200501182154.GG5462@mtj.thefacebook.com>
+ <20200505021514.GA43625@pick.fieldses.org>
+ <20200505210118.GC27966@fieldses.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505210118.GC27966@fieldses.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-05-05 at 16:49 +0300, Andy Shevchenko wrote:
-> On Tue, May 5, 2020 at 5:32 AM David E. Box <
-> david.e.box@linux.intel.com> wrote:
-> 
-> ...
-> 
-> > Register mappings are not provided by the driver. Instead, a GUID
-> > is read
-> > from a header for each endpoint. The GUID identifies the device and
-> > is to
-> > be used with an XML, provided by the vendor, to discover the
-> > available set
-> > of metrics and their register mapping.  This allows firmware
-> > updates to
-> > modify the register space without needing to update the driver
-> > every time
-> > with new mappings. Firmware writes a new GUID in this case to
-> > specify the
-> > new mapping.  Software tools with access to the associated XML file
-> > can
-> > then interpret the changes.
-> 
-> Is old hardware going to support this in the future?
-> (I have in mind Apollo Lake / Broxton)
+Hello,
 
-I don't know of any plans for this.
+On Tue, May 05, 2020 at 05:01:18PM -0400, J. Bruce Fields wrote:
+> On Mon, May 04, 2020 at 10:15:14PM -0400, J. Bruce Fields wrote:
+> > Though now I'm feeling greedy: it would be nice to have both some kind
+> > of global flag, *and* keep kthread->data pointing to svc_rqst (as that
+> > would give me a simpler and quicker way to figure out which client is
+> > conflicting).  Could I take a flag bit in kthread->flags, maybe?
+> 
+> Would something like this be too hacky?:
 
-> 
-> > This module manages access to all PMT Telemetry endpoints on a
-> > system,
-> > regardless of the device exporting them. It creates an
-> > intel_pmt_telem
-> 
-> Name is not the best we can come up with. Would anyone else use PMT?
-> Would it be vendor-agnostic ABI?
-> (For example, I know that MIPI standardizes tracing protocols, like
-> STM, do we have any plans to standardize this one?)
+It's not the end of the world but a bit hacky. I wonder whether something
+like the following would work better for identifying worker type so that you
+can do sth like
 
-Not at this time. The technology may be used as a feature on non-Intel
-devices, but it is Intel owned. Hence the use of DVSEC which allows
-hardware to enumerate and get driver support for IP from other vendors.
+ if (kthread_fn(current) == nfsd)
+        return kthread_data(current);
+ else
+        return NULL;     
 
-> 
-> telem -> telemetry.
-> 
-> > class to manage the list. For each endpoint, sysfs files provide
-> > GUID and
-> > size information as well as a pointer to the parent device the
-> > telemetry
-> > comes from. Software may discover the association between endpoints
-> > and
-> > devices by iterating through the list in sysfs, or by looking for
-> > the
-> > existence of the class folder under the device of interest.  A
-> > device node
-> > of the same name allows software to then map the telemetry space
-> > for direct
-> > access.
-> 
-> ...
-> 
-> > +       tristate "Intel PMT telemetry driver"
-> 
-> I think user should understand what is it from the title (hint: spell
-> PMT fully).
-> 
-> ...
-> 
-> >  obj-$(CONFIG_PMC_ATOM)                 += pmc_atom.o
-> > +obj-$(CONFIG_INTEL_PMT_TELEM)          += intel_pmt_telem.o
-> 
-> Keep this and Kconfig section in order with the other stuff.
-> 
-> ...
-> 
-> bits.h?
-> 
-> > +#include <linux/cdev.h>
-> > +#include <linux/intel-dvsec.h>
-> > +#include <linux/io-64-nonatomic-lo-hi.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/pci.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/uaccess.h>
-> > +#include <linux/xarray.h>
-> 
-> ...
-> 
-> > +/* platform device name to bind to driver */
-> > +#define TELEM_DRV_NAME         "pmt_telemetry"
-> 
-> Shouldn't be part of MFD header?
+Thanks.
 
-Can place in the dvsec header shared by MFD and drivers.
+diff --git a/kernel/kthread.c b/kernel/kthread.c
+index bfbfa481be3a..4f3ab9f2c994 100644
+--- a/kernel/kthread.c
++++ b/kernel/kthread.c
+@@ -46,6 +46,7 @@ struct kthread_create_info
+ struct kthread {
+ 	unsigned long flags;
+ 	unsigned int cpu;
++	int (*threadfn)(void *);
+ 	void *data;
+ 	struct completion parked;
+ 	struct completion exited;
+@@ -152,6 +153,13 @@ bool kthread_freezable_should_stop(bool *was_frozen)
+ }
+ EXPORT_SYMBOL_GPL(kthread_freezable_should_stop);
+ 
++void *kthread_fn(struct task_struct *task)
++{
++	if (task->flags & PF_KTHREAD)
++		return to_kthread(task)->threadfn;
++	return NULL;
++}
++
+ /**
+  * kthread_data - return data value specified on kthread creation
+  * @task: kthread task in question
+@@ -244,6 +252,7 @@ static int kthread(void *_create)
+ 		do_exit(-ENOMEM);
+ 	}
+ 
++	self->threadfn = threadfn;
+ 	self->data = data;
+ 	init_completion(&self->exited);
+ 	init_completion(&self->parked);
 
-> 
-> ...
-> 
-> > +#define TELEM_TBIR_MASK                0x7
-> 
-> GENMASK() ?
-> 
-> > +struct pmt_telem_priv {
-> > +       struct device                   *dev;
-> > +       struct intel_dvsec_header       *dvsec;
-> > +       struct telem_header             header;
-> > +       unsigned long                   base_addr;
-> > +       void __iomem                    *disc_table;
-> > +       struct cdev                     cdev;
-> > +       dev_t                           devt;
-> > +       int                             devid;
-> > +};
-> 
-> ...
-> 
-> > +       unsigned long phys = priv->base_addr;
-> > +       unsigned long pfn = PFN_DOWN(phys);
-> > +       unsigned long psize;
-> > +
-> > +       psize = (PFN_UP(priv->base_addr + priv->header.size) - pfn)
-> > * PAGE_SIZE;
-> > +       if (vsize > psize) {
-> > +               dev_err(priv->dev, "Requested mmap size is too
-> > large\n");
-> > +               return -EINVAL;
-> > +       }
-> 
-> ...
-> 
-> 
-> > +static ssize_t guid_show(struct device *dev, struct
-> > device_attribute *attr,
-> > +                        char *buf)
-> > +{
-> > +       struct pmt_telem_priv *priv = dev_get_drvdata(dev);
-> > +
-> > +       return sprintf(buf, "0x%x\n", priv->header.guid);
-> > +}
-> 
-> So, it's not a GUID but rather some custom number? Can we actually do
-> a real GUID / UUID here?
-
-I wish but this is the name it was called. We should have pushed back
-more on this. My concern now in calling the attribute something
-different is that it will not align with public documentation.
-
-...
-
-> 
-> > +       /* Local access and BARID only for now */
-> > +       switch (priv->header.access_type) {
-> > +       case TELEM_ACCESS_LOCAL:
-> > +               if (priv->header.tbir) {
-> > +                       dev_err(&pdev->dev,
-> > +                               "Unsupported BAR index %d for
-> > access type %d\n",
-> > +                               priv->header.tbir, priv-
-> > >header.access_type);
-> > +                       return -EINVAL;
-> > +               }
-> > +               fallthrough;
-> 
-> What's the point?
-
-The next case has the break. That case is only there to validate that
-it's not the default which would be an error. Will switch this to break
-though to make it explicit.
-
-Ack on everything else. Thanks.
-
+-- 
+tejun
