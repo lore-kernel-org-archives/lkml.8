@@ -3,80 +3,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8057AC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5A1C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66382206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C16112073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:04:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730315AbgEEQEd (ORCPT
+        id S1730496AbgEEQEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:04:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47106 "EHLO mx2.suse.de"
+        Tue, 5 May 2020 12:04:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:44342 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729398AbgEEQEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:04:33 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 882CBAF22;
-        Tue,  5 May 2020 16:04:34 +0000 (UTC)
-Subject: Re: [PATCH v2 02/15] ARM: actions: Drop unneeded select of COMMON_CLK
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-List-Id: <soc.lore.kernel.org>
-Cc:     soc@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Kevin Hilman <khilman@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-References: <20200505150722.1575-1-geert+renesas@glider.be>
- <20200505150722.1575-3-geert+renesas@glider.be>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <89ad77c9-4bc8-039e-1ba5-e8eb67734597@suse.de>
-Date:   Tue, 5 May 2020 18:04:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1729398AbgEEQEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 12:04:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BB43031B;
+        Tue,  5 May 2020 09:04:41 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 513D23F71F;
+        Tue,  5 May 2020 09:04:39 -0700 (PDT)
+Date:   Tue, 5 May 2020 17:04:22 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: Re: [patch V4 part 1 07/36] locking/atomics: Flip fallbacks and
+ instrumentation
+Message-ID: <20200505160421.GA27127@lakrids.cambridge.arm.com>
+References: <20200505131602.633487962@linutronix.de>
+ <20200505134058.769149955@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200505150722.1575-3-geert+renesas@glider.be>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505134058.769149955@linutronix.de>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
-
-Am 05.05.20 um 17:07 schrieb Geert Uytterhoeven:
-> Support for Actions Semi SoCs depends on ARCH_MULTI_V7, and thus on
-> ARCH_MULTIPLATFORM.
-> As the latter selects COMMON_CLK, there is no need for ARCH_ACTIONS to
-> select COMMON_CLK.
+On Tue, May 05, 2020 at 03:16:09PM +0200, Thomas Gleixner wrote:
+> Currently instrumentation of atomic primitives is done at the
+> architecture level, while composites or fallbacks are provided at the
+> generic level.
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Andreas Färber <afaerber@suse.de>
-> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> Reviewed-by: Andreas Färber <afaerber@suse.de>
-> ---
-> v2:
->    - Add Acked-by, Reviewed-by.
-> ---
->   arch/arm/mach-actions/Kconfig | 1 -
->   1 file changed, 1 deletion(-)
+> The result is that there are no uninstrumented variants of the
+> fallbacks. Since there is now need of such (see the next patch),
+> invert this ordering.
+> 
+> Doing this means moving the instrumentation into the generic code as
+> well as having (for now) two variants of the fallbacks.
+> 
+> Notes:
+> 
+>  - the various *cond_read* primitives are not proper fallbacks
+>    and got moved into linux/atomic.c. No arch_ variants are
+>    generated because the base primitives smp_cond_load*()
+>    are instrumented.
+> 
+>  - once all architectures are moved over to arch_atomic_ we can remove
+>    one of the fallback variants and reclaim some 2300 lines.
+> 
+>  - atomic_{read,set}*() are no longer double-instrumented
+> 
+> Reported-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Mark Rutland <mark.rutland@arm.com>
 
-Do you intend to apply the whole series through soc (my assumption due 
-to soc in To), or should I pick this one up as maintainer?
+FWIW, the scripting changes all look fine to me, so:
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+I'm hoping that I can convert the remaining arches over to arch_atomic
+atop of this, at which point we can remove the duplication, and have the
+usual arch_<foo>/raw_<foo>/<foo> split.
 
 Thanks,
-Andreas
-
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+Mark.
