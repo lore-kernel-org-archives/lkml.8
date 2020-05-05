@@ -2,161 +2,91 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5531C47256
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAFCC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 888F3206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C89D20721
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:49:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgEEEqq (ORCPT
+        id S1726538AbgEEEtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 00:46:46 -0400
-Received: from mga06.intel.com ([134.134.136.31]:7601 "EHLO mga06.intel.com"
+        Tue, 5 May 2020 00:49:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:59214 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725298AbgEEEqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 00:46:46 -0400
-IronPort-SDR: leSQzBa6urcowRP8QAIIvwb4jo1+IcbQJcnP5aIjTVCwcQKNpT6gurwE1oeJBePs0Avryq8ZhI
- fHOH8jmZmIcA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 21:46:45 -0700
-IronPort-SDR: wXCpqmVPfLx0GyKFbxYYM5IXnFBMDbSAwZ++Mtx93Kpb+zm7tKcl9CElJQ4sRfjtcNmtEJFpaT
- YmW548qCFYGA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,354,1583222400"; 
-   d="scan'208";a="369300834"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by fmsmga001.fm.intel.com with ESMTP; 04 May 2020 21:46:45 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
-        KarimAllah Raslan <karahmed@amazon.de>
-Subject: [PATCH v3] KVM: nVMX: Skip IBPB when switching between vmcs01 and vmcs02
-Date:   Mon,  4 May 2020 21:46:44 -0700
-Message-Id: <20200505044644.16563-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.26.0
+        id S1725298AbgEEEtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 00:49:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB06830E;
+        Mon,  4 May 2020 21:49:54 -0700 (PDT)
+Received: from [10.37.12.10] (unknown [10.37.12.10])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 12E1B3F68F;
+        Mon,  4 May 2020 21:49:49 -0700 (PDT)
+Subject: Re: [PATCH V3 09/16] arm64/cpufeature: Add remaining feature bits in
+ ID_AA64ISAR0 register
+To:     anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org
+Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org
+References: <1588426445-24344-1-git-send-email-anshuman.khandual@arm.com>
+ <1588426445-24344-10-git-send-email-anshuman.khandual@arm.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <0e5274dc-e2e3-646a-076b-ebe195048c5a@arm.com>
+Date:   Tue, 5 May 2020 05:54:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1588426445-24344-10-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Skip the Indirect Branch Prediction Barrier that is triggered on a VMCS
-switch when running with spectre_v2_user=on/auto if the switch is
-guaranteed to be between two VMCSes in the same guest, i.e. between
-vmcs01 and vmcs02.  The IBPB is intended to prevent one guest from
-attacking another, which is unnecessary in the nested case as it's the
-same guest from KVM's perspective.
+On 05/02/2020 02:33 PM, Anshuman Khandual wrote:
+> Enable TLB features bit in ID_AA64ISAR0 register as per ARM DDI 0487F.a
+> specification.
+> 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> Suggested-by: Will Deacon <will@kernel.org>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>   arch/arm64/include/asm/sysreg.h | 1 +
+>   arch/arm64/kernel/cpufeature.c  | 1 +
+>   2 files changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+> index 0f34927f52b9..40eaf89f1032 100644
+> --- a/arch/arm64/include/asm/sysreg.h
+> +++ b/arch/arm64/include/asm/sysreg.h
+> @@ -597,6 +597,7 @@
+>   
+>   /* id_aa64isar0 */
+>   #define ID_AA64ISAR0_RNDR_SHIFT		60
+> +#define ID_AA64ISAR0_TLB_SHIFT		56
+>   #define ID_AA64ISAR0_TS_SHIFT		52
+>   #define ID_AA64ISAR0_FHM_SHIFT		48
+>   #define ID_AA64ISAR0_DP_SHIFT		44
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index f4e15e355aee..dbedcae28061 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -174,6 +174,7 @@ static bool __system_matches_cap(unsigned int n);
+>    */
+>   static const struct arm64_ftr_bits ftr_id_aa64isar0[] = {
+>   	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_RNDR_SHIFT, 4, 0),
+> +	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_TLB_SHIFT, 4, 0),
 
-This all but eliminates the overhead observed for nested VMX transitions
-when running with CONFIG_RETPOLINE=y and spectre_v2_user=on/auto, which
-can be significant, e.g. roughly 3x on current systems.
+I don't see any reason why this should be VISIBLE to the userspace.
 
-Reported-by: Alexander Graf <graf@amazon.com>
-Cc: KarimAllah Raslan <karahmed@amazon.de>
-Cc: stable@vger.kernel.org
-Fixes: 15d45071523d ("KVM/x86: Add IBPB support")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
-
-v3: Switch back to passing 'struct loaded_vmcs buddy', but keep the WARN
-    if the buddy VMCS isn't already loaded as well as the comment as to
-    why skipping IBPB in the nested case is ok. [Paolo]
-
-v2: Pass a boolean to indicate a nested VMCS switch and instead WARN if
-    the buddy VMCS is not already loaded.  [Alex]
-
- arch/x86/kvm/vmx/nested.c |  2 +-
- arch/x86/kvm/vmx/vmx.c    | 18 ++++++++++++++----
- arch/x86/kvm/vmx/vmx.h    |  3 ++-
- 3 files changed, 17 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 2c36f3f53108..1a02bdfeeb2b 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -303,7 +303,7 @@ static void vmx_switch_vmcs(struct kvm_vcpu *vcpu, struct loaded_vmcs *vmcs)
- 	cpu = get_cpu();
- 	prev = vmx->loaded_vmcs;
- 	vmx->loaded_vmcs = vmcs;
--	vmx_vcpu_load_vmcs(vcpu, cpu);
-+	vmx_vcpu_load_vmcs(vcpu, cpu, prev);
- 	vmx_sync_vmcs_host_state(vmx, prev);
- 	put_cpu();
- 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 3ab6ca6062ce..06ee0572b929 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1311,10 +1311,12 @@ static void vmx_vcpu_pi_load(struct kvm_vcpu *vcpu, int cpu)
- 		pi_set_on(pi_desc);
- }
- 
--void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu)
-+void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu,
-+			struct loaded_vmcs *buddy)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	bool already_loaded = vmx->loaded_vmcs->cpu == cpu;
-+	struct vmcs *prev;
- 
- 	if (!already_loaded) {
- 		loaded_vmcs_clear(vmx->loaded_vmcs);
-@@ -1333,10 +1335,18 @@ void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu)
- 		local_irq_enable();
- 	}
- 
--	if (per_cpu(current_vmcs, cpu) != vmx->loaded_vmcs->vmcs) {
-+	prev = per_cpu(current_vmcs, cpu);
-+	if (prev != vmx->loaded_vmcs->vmcs) {
- 		per_cpu(current_vmcs, cpu) = vmx->loaded_vmcs->vmcs;
- 		vmcs_load(vmx->loaded_vmcs->vmcs);
--		indirect_branch_prediction_barrier();
-+
-+		/*
-+		 * No indirect branch prediction barrier needed when switching
-+		 * the active VMCS within a guest, e.g. on nested VM-Enter.
-+		 * The L1 VMM can protect itself with retpolines, IBPB or IBRS.
-+		 */
-+		if (!buddy || WARN_ON_ONCE(buddy->vmcs != prev))
-+			indirect_branch_prediction_barrier();
- 	}
- 
- 	if (!already_loaded) {
-@@ -1377,7 +1387,7 @@ void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 
--	vmx_vcpu_load_vmcs(vcpu, cpu);
-+	vmx_vcpu_load_vmcs(vcpu, cpu, NULL);
- 
- 	vmx_vcpu_pi_load(vcpu, cpu);
- 
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index b5e773267abe..d3d48acc6bd9 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -320,7 +320,8 @@ struct kvm_vmx {
- };
- 
- bool nested_vmx_allowed(struct kvm_vcpu *vcpu);
--void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu);
-+void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu,
-+			struct loaded_vmcs *buddy);
- void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu);
- int allocate_vpid(void);
- void free_vpid(int vpid);
--- 
-2.26.0
-
+Suzuki
