@@ -2,149 +2,328 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF5EC47258
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EA0C47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A405206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:10:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588713002;
-	bh=6rBHJ+G5KTVMta9WCiHz7v1fLze2DzexhDsvmnpSUyc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a61acIIUqgpae3KRonsIvhi6nQD61Nd7R7wff0XFNDEtASmiwOGjdd0KJJXgLDzvV
-	 Zftld/VJvlEI/NO1SfNx4y/DuQPgWF2Hx1kQGD9C5fqQbAmB3uPsrPjXUAqOTM1Ag7
-	 4y1d2lNuDgocpex75e5CveR1QDYxi+uqam82TYvc=
+	by mail.kernel.org (Postfix) with ESMTP id 706E9206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:12:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Of6p6Ur0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729282AbgEEVKB (ORCPT
+        id S1729206AbgEEVMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 17:10:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57612 "EHLO
+        Tue, 5 May 2020 17:12:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728135AbgEEVKB (ORCPT
+        by vger.kernel.org with ESMTP id S1728569AbgEEVMg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 17:10:01 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 888BDC061A0F;
-        Tue,  5 May 2020 14:09:59 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id ck5so1788275qvb.11;
-        Tue, 05 May 2020 14:09:59 -0700 (PDT)
+        Tue, 5 May 2020 17:12:36 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C308C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 14:12:36 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id l25so121157vso.6
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 14:12:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gxAlApzzt5Fr2H0K0z2Ers4SPsXxQpIbe0gDV+IiJdk=;
-        b=ZlG07WlUkAyur6dQ7aip9K3opgyw/I5mnWql1zI3HeSEU7nbUhBt2lsaZGx3VMayp2
-         xzo83Oj5Jh1zKx0mQyCEN8VYFFajXjc+hf+8KPdeCMnfe9Z7xpsBzd4JJwcakBInOPVZ
-         9Z1gMFw+OtfuB/7gbwJRxua5SlKm2nKvUuwM4Dm+H2WfxUBZZd9Rr/8NCgRxUgTiSNyM
-         dkopESb2AeeDUZ2C3UzJ7x9j2LCbDIxd1yzgtCWLL35jLo7sgkyMKtyIhn7j16evOKbo
-         kY7GM9DNyd586Cg2Ge9xHqaKxkVfVb7YNP+L3fM5IpykrP7IXbMGMJHrl9r13TnWzi07
-         RTAQ==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jG3l2QssozH7tH6QgjUy3dRoIAMx31iazzHnaRrw7Zw=;
+        b=Of6p6Ur0B8AhhMB99K9qZOK2un/BmcE5lhnPxoAVYMTa1/U0oVOTLq5t5Ri0Yhsmop
+         9jyDmaXOGHCGt6jXwi6G8e73lWO23bM+lZywfTWCeJ3yVWC+P+K7gRp4/GKk7ZWmu3AQ
+         s2DMf8qHL9cClqB9We4PpRhvIYA/TysD4vKyc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=gxAlApzzt5Fr2H0K0z2Ers4SPsXxQpIbe0gDV+IiJdk=;
-        b=D4xU3Ts0yHU2lgdPM+Tv9+5WXc/DSFp4Gr3DqjAUJWQSgLDc9/Si1fM4mEuCfRpUOv
-         uXfchdBl5RnfdscI6OlwZRUVXpktfJ0pLtK1It00AbdKQx6gAktw16aumAkg8DxzcB+7
-         ZM9S5Mzp01QlZD30VzM+NM0AFyOLsBJq7sytGhcwbK/gl3t/P1iBTC/T06XdHWHCvct5
-         e2HXM3GQHbQMghioAh84yqFmw5PZK6eC4VtkmlIspPhJSmAywa9YV0EJQ7HSJogx2mPO
-         ILuq3B2ZvMc2M3xx0DaLtPW1Ps4JklHnbBiune0C0t8o3NQ1iX4XEYiY8HIK6k5W4yGU
-         CLvA==
-X-Gm-Message-State: AGi0Pual3tSta5p3RRpBSwWTzrg679gnV3qtl3kVZjeqlavb+GLGhN+4
-        NXDjA4jB3cGxAZC4C6dL6NUcT0MEkqI=
-X-Google-Smtp-Source: APiQypKA728Pg2MgizEDYb92QcuJxH1yoE0zafaProJrjubchOTsCxZq92aUE19dCNx9WJcJMZi7lw==
-X-Received: by 2002:ad4:4f86:: with SMTP id em6mr4980156qvb.218.1588712998509;
-        Tue, 05 May 2020 14:09:58 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:8365])
-        by smtp.gmail.com with ESMTPSA id i42sm3059938qtc.83.2020.05.05.14.09.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 14:09:57 -0700 (PDT)
-Date:   Tue, 5 May 2020 17:09:56 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        Jeff Layton <jlayton@redhat.com>,
-        David Howells <dhowells@redhat.com>, Shaohua Li <shli@fb.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/4] allow multiple kthreadd's
-Message-ID: <20200505210956.GA3350@mtj.thefacebook.com>
-References: <1588348912-24781-1-git-send-email-bfields@redhat.com>
- <CAHk-=wiGhZ_5xCRyUN+yMFdneKMQ-S8fBvdBp8o-JWPV4v+nVw@mail.gmail.com>
- <20200501182154.GG5462@mtj.thefacebook.com>
- <20200505021514.GA43625@pick.fieldses.org>
- <20200505210118.GC27966@fieldses.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jG3l2QssozH7tH6QgjUy3dRoIAMx31iazzHnaRrw7Zw=;
+        b=lHSMfKpStDlxw7Nvrdf9NVdJdPyS2sLruqiPApLeDt4DPM8F77nyIa+85BqnK5yMxu
+         633tvOs4ZAKLuI5Xw7OIaCJL1b4xIBqHDsmbvu70M7+GToF1wvyoLqL/xx7uWjioAslp
+         bvLRQii3ltjyiZ6WhwvN6RLmv/8WZ74CzeL6QgDtjc5b/H229S5pgljjoaPPx4K/1M4J
+         X2AqR9kQEUzALLEanPDtyoSa9MGFFzRH1aPZ9xkrlyqAFD7b0iSHcVLOeTlo1uLrG4Jx
+         TuIOKFdaWfcAKmvuoBT8E/rP0Xx0VC9haxz5pXZjkNLKYBxuPcd/TyE7kW/AQCPhOMy9
+         KJOQ==
+X-Gm-Message-State: AGi0PuY1LmpZrWji1uduXhybs4/4igDqXdhNSu9VTXS0nweuFw0V2Ios
+        49sgbqXSIv9urEGsC6V2SvHqXu/hDbk=
+X-Google-Smtp-Source: APiQypKB/c7D6lBIdPDvz9dUtrzVE9xQLVHnjkIvZIU05AWXMIHAFzVjEgPNp2a834F+NbLeICLL7w==
+X-Received: by 2002:a67:6285:: with SMTP id w127mr5174573vsb.139.1588713154295;
+        Tue, 05 May 2020 14:12:34 -0700 (PDT)
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
+        by smtp.gmail.com with ESMTPSA id u63sm1691692vsc.13.2020.05.05.14.12.32
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2020 14:12:33 -0700 (PDT)
+Received: by mail-ua1-f48.google.com with SMTP id a7so980592uak.2
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 14:12:32 -0700 (PDT)
+X-Received: by 2002:ab0:6806:: with SMTP id z6mr4307507uar.0.1588713152018;
+ Tue, 05 May 2020 14:12:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505210118.GC27966@fieldses.org>
+References: <20200504213624.1.Ibc8eeddcee94984a608d6900b46f9ffde4045da4@changeid>
+ <20200505082436.GD9658@pendragon.ideasonboard.com> <CAD=FV=WjUpwu5204K8yHzqsJv4vQX5S5CArH1Kj_kqjhZzTc9A@mail.gmail.com>
+ <20200505210609.GA6094@pendragon.ideasonboard.com>
+In-Reply-To: <20200505210609.GA6094@pendragon.ideasonboard.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 5 May 2020 14:12:20 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=UnGOYh8JX2=fEAqPN7wqANc0QevTirNO-WUDYMPqXcrg@mail.gmail.com>
+Message-ID: <CAD=FV=UnGOYh8JX2=fEAqPN7wqANc0QevTirNO-WUDYMPqXcrg@mail.gmail.com>
+Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: Implement lane reordering + polarity
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi,
 
-On Tue, May 05, 2020 at 05:01:18PM -0400, J. Bruce Fields wrote:
-> On Mon, May 04, 2020 at 10:15:14PM -0400, J. Bruce Fields wrote:
-> > Though now I'm feeling greedy: it would be nice to have both some kind
-> > of global flag, *and* keep kthread->data pointing to svc_rqst (as that
-> > would give me a simpler and quicker way to figure out which client is
-> > conflicting).  Could I take a flag bit in kthread->flags, maybe?
-> 
-> Would something like this be too hacky?:
+On Tue, May 5, 2020 at 2:06 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Doug,
+>
+> On Tue, May 05, 2020 at 10:59:30AM -0700, Doug Anderson wrote:
+> > On Tue, May 5, 2020 at 1:24 AM Laurent Pinchart wrote:
+> > > On Mon, May 04, 2020 at 09:36:31PM -0700, Douglas Anderson wrote:
+> > > > The ti-sn65dsi86 MIPI DSI to eDP bridge chip supports arbitrary
+> > > > remapping of eDP lanes and also polarity inversion.  Both of these
+> > > > features have been described in the device tree bindings for the
+> > > > device since the beginning but were never implemented in the driver.
+> > > > Implement both of them.
+> > > >
+> > > > Part of this change also allows you to (via the same device tree
+> > > > bindings) specify to use fewer than the max number of DP lanes that
+> > > > the panel reports.  This could be useful if your display supports more
+> > > > lanes but only a few are hooked up on your board.
+> > > >
+> > > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > > > ---
+> > > > This patch is based upon my my outstanding series[1] not because there
+> > > > is any real requirement but simply to avoid merge conflicts.  I
+> > > > believe that my previous series is ready to land.  If, however, you'd
+> > > > prefer that I rebase this patch somewhere atop something else then
+> > > > please shout.
+> > > >
+> > > > [1] https://lore.kernel.org/r/20200430194617.197510-1-dianders@chromium.org
+> > > >
+> > > >  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 75 ++++++++++++++++++++++-----
+> > > >  1 file changed, 62 insertions(+), 13 deletions(-)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> > > > index 1a125423eb07..52cca54b525f 100644
+> > > > --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> > > > +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> > > > @@ -50,8 +50,12 @@
+> > > >  #define SN_CHA_VERTICAL_BACK_PORCH_REG               0x36
+> > > >  #define SN_CHA_HORIZONTAL_FRONT_PORCH_REG    0x38
+> > > >  #define SN_CHA_VERTICAL_FRONT_PORCH_REG              0x3A
+> > > > +#define SN_LN_ASSIGN_REG                     0x59
+> > > > +#define  LN_ASSIGN_WIDTH                     2
+> > > >  #define SN_ENH_FRAME_REG                     0x5A
+> > > >  #define  VSTREAM_ENABLE                              BIT(3)
+> > > > +#define  LN_POLRS_OFFSET                     4
+> > > > +#define  LN_POLRS_MASK                               0xf0
+> > > >  #define SN_DATA_FORMAT_REG                   0x5B
+> > > >  #define  BPP_18_RGB                          BIT(0)
+> > > >  #define SN_HPD_DISABLE_REG                   0x5C
+> > > > @@ -98,6 +102,7 @@
+> > > >
+> > > >  #define SN_REGULATOR_SUPPLY_NUM              4
+> > > >
+> > > > +#define SN_MAX_DP_LANES                      4
+> > > >  #define SN_NUM_GPIOS                 4
+> > > >
+> > > >  /**
+> > > > @@ -115,6 +120,8 @@
+> > > >   * @enable_gpio:  The GPIO we toggle to enable the bridge.
+> > > >   * @supplies:     Data for bulk enabling/disabling our regulators.
+> > > >   * @dp_lanes:     Count of dp_lanes we're using.
+> > > > + * @ln_assign:    Value to program to the LN_ASSIGN register.
+> > > > + * @ln_polr:      Value for the 4-bit LN_POLRS field of SN_ENH_FRAME_REG.
+> > > >   *
+> > > >   * @gchip:        If we expose our GPIOs, this is used.
+> > > >   * @gchip_output: A cache of whether we've set GPIOs to output.  This
+> > > > @@ -140,6 +147,8 @@ struct ti_sn_bridge {
+> > > >       struct gpio_desc                *enable_gpio;
+> > > >       struct regulator_bulk_data      supplies[SN_REGULATOR_SUPPLY_NUM];
+> > > >       int                             dp_lanes;
+> > > > +     u8                              ln_assign;
+> > > > +     u8                              ln_polrs;
+> > > >
+> > > >       struct gpio_chip                gchip;
+> > > >       DECLARE_BITMAP(gchip_output, SN_NUM_GPIOS);
+> > > > @@ -707,26 +716,20 @@ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
+> > > >       int dp_rate_idx;
+> > > >       unsigned int val;
+> > > >       int ret = -EINVAL;
+> > > > +     int max_dp_lanes;
+> > > >
+> > > > -     /*
+> > > > -      * Run with the maximum number of lanes that the DP sink supports.
+> > > > -      *
+> > > > -      * Depending use cases, we might want to revisit this later because:
+> > > > -      * - It's plausible that someone may have run fewer lines to the
+> > > > -      *   sink than the sink actually supports, assuming that the lines
+> > > > -      *   will just be driven at a higher rate.
+> > > > -      * - The DP spec seems to indicate that it's more important to minimize
+> > > > -      *   the number of lanes than the link rate.
+> > > > -      *
+> > > > -      * If we do revisit, it would be important to measure the power impact.
+> > > > -      */
+> > > > -     pdata->dp_lanes = ti_sn_get_max_lanes(pdata);
+> > > > +     max_dp_lanes = ti_sn_get_max_lanes(pdata);
+> > > > +     pdata->dp_lanes = min(pdata->dp_lanes, max_dp_lanes);
+> > > >
+> > > >       /* DSI_A lane config */
+> > > >       val = CHA_DSI_LANES(4 - pdata->dsi->lanes);
+> > > >       regmap_update_bits(pdata->regmap, SN_DSI_LANES_REG,
+> > > >                          CHA_DSI_LANES_MASK, val);
+> > > >
+> > > > +     regmap_write(pdata->regmap, SN_LN_ASSIGN_REG, pdata->ln_assign);
+> > > > +     regmap_update_bits(pdata->regmap, SN_ENH_FRAME_REG, LN_POLRS_MASK,
+> > > > +                        pdata->ln_polrs << LN_POLRS_OFFSET);
+> > > > +
+> > > >       /* set dsi clk frequency value */
+> > > >       ti_sn_bridge_set_dsi_rate(pdata);
+> > > >
+> > > > @@ -1063,6 +1066,50 @@ static int ti_sn_setup_gpio_controller(struct ti_sn_bridge *pdata)
+> > > >       return ret;
+> > > >  }
+> > > >
+> > > > +static void ti_sn_bridge_parse_lanes(struct ti_sn_bridge *pdata,
+> > > > +                                  struct device_node *np)
+> > > > +{
+> > > > +     u32 lane_assignments[SN_MAX_DP_LANES] = { 0, 1, 2, 3 };
+> > > > +     u32 lane_polarities[SN_MAX_DP_LANES] = { };
+> > > > +     struct device_node *endpoint;
+> > > > +     u8 ln_assign = 0;
+> > > > +     u8 ln_polrs = 0;
+> > > > +     int dp_lanes;
+> > > > +     int i;
+> > > > +
+> > > > +     /*
+> > > > +      * Read config from the device tree about lane remapping and lane
+> > > > +      * polarities.  These are optional and we assume identity map and
+> > > > +      * normal polarity if nothing is specified.  It's OK to specify just
+> > > > +      * data-lanes but not lane-polarities but not vice versa.
+> > > > +      */
+> > > > +     endpoint = of_graph_get_endpoint_by_regs(np, 1, -1);
+> > >
+> > > Shouldn't you check for endpoint == NULL and fail probe if it is ?
+> >
+> > I will if you feel strongly, but I don't think it's necessary.  Specifically:
+> >
+> > 1. By design of_property_count_u32_elems() will return an error if
+> > passed a NULL node pointer.
+> >
+> > 2. When we see an error this function will just init things to defaults.
+> >
+> > 3. Later code which really needs the endpoint to hook things up
+> > properly will catch the error and yell.
+> >
+> > ...so while I could add a yell here it doesn't seem like it gains much.
+>
+> As long as it doesn't crash and we eventually catch the error I'm fine.
+> I usually try to catch them early as otherwise it gets harder to make
+> sure all code paths are sanitized. Up to you.
 
-It's not the end of the world but a bit hacky. I wonder whether something
-like the following would work better for identifying worker type so that you
-can do sth like
+OK, I'll leave it as-is for now unless someone else chimes in and puts
+my opinion in the minority or unless you change your mind and decide
+you really hate the way I'm doing it.
 
- if (kthread_fn(current) == nfsd)
-        return kthread_data(current);
- else
-        return NULL;     
 
-Thanks.
+> > > > +     dp_lanes = of_property_count_u32_elems(endpoint, "data-lanes");
+> > > > +     if (dp_lanes > 0) {
+> > > > +             of_property_read_u32_array(endpoint, "data-lanes",
+> > > > +                                        lane_assignments, dp_lanes);
+> > > > +             of_property_read_u32_array(endpoint, "lane-polarities",
+> > > > +                                        lane_polarities, dp_lanes);
+> > >
+> > > Similarly, with a buggy DT, you may have a buffer overrun here. I would
+> > > first check that dp_lanes <= SN_MAX_DP_LANES and error out otherwise.
+> >
+> > I will definitely add that.  Buffer overrun is no bueno.
+> >
+> > > > +     } else {
+> > > > +             dp_lanes = SN_MAX_DP_LANES;
+> > > > +     }
+> > > > +
+> > > > +     /*
+> > > > +      * Convert into register format.  Loop over all lanes even if
+> > > > +      * data-lanes had fewer elements so that we nicely initialize
+> > > > +      * the LN_ASSIGN register.
+> > > > +      */
+> > > > +     for (i = SN_MAX_DP_LANES - 1; i >= 0; i--) {
+> > > > +             ln_assign = ln_assign << LN_ASSIGN_WIDTH | lane_assignments[i];
+> > > > +             ln_polrs = ln_polrs << 1 | lane_polarities[i];
+> > > > +     }
+> > >
+> > > The datasheet documents the lane remapping register as allowing pretty
+> > > much any combination, but "Table 12. Logical to Physical Supported
+> > > Combinations" only documents a subset (for instance data-lanes = <2 3>
+> > > isn't allowed in that table). Should we guard against invalid
+> > > configurations ?
+> >
+> > As I understand it, in general standard kernel policy is to not sanity
+> > check the DT _too_ much.  This feels a bit on the border.  It's up to
+> > the person designing the board and writing the dts to not get things
+> > like this wrong just like it's up to them to make sure they've setup
+> > the i2c pins for our bus w/ the right pullups, configured our
+> > interrupt properly, not overvolted things, put in the correct address
+> > for MMIO, etc.
+> >
+> > I wrote this code (untested) and it feels a bit much:
+> >
+> >   if (dp_lanes == 1) {
+> >     if (lane_assignments[0] == 1) {
+> >       pr_warn("Lane 0 to physical pin 1 not suggested\n");
+> >     } else if (lane_assignments[0] != 0) {
+> >       pr_err("Unsupported logical to physical pin mapping\n");
+> >       return -EINVAL;
+> >     }
+> >   } else if (dp_lanes == 2 || dp_lanes == 4) {
+> >     u8 good_mask = dp_lanes == 2 ? 0x3 : 0xf;
+> >     u8 mask = 0;
+> >
+> >     for (i = 0; i < dp_lanes; i++)
+> >       mask |= BIT(lane_assignments[i])
+> >
+> >     if (mask != good_mask) {
+> >       pr_err("Unsupported logical to physical pin mapping\n");
+> >       return -EINVAL;
+> >     }
+> >   } else {
+> >     pr_err("Invalid number of DP lanes: %d\n", dp_lanes);
+> >   }
+> >
+> > If you feel strongly I'll add it to the next version.  Does anyone
+> > else have any opinions of whether they'd like all that checking or
+> > whether we should just trust the person designing the hardware and
+> > writing the device tree to put the right values in?
+>
+> If we don't want to test that, I would at least document it in the DT
+> bindings. It will be a good occasion to switch the bindings to YAML ;-)
 
-diff --git a/kernel/kthread.c b/kernel/kthread.c
-index bfbfa481be3a..4f3ab9f2c994 100644
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -46,6 +46,7 @@ struct kthread_create_info
- struct kthread {
- 	unsigned long flags;
- 	unsigned int cpu;
-+	int (*threadfn)(void *);
- 	void *data;
- 	struct completion parked;
- 	struct completion exited;
-@@ -152,6 +153,13 @@ bool kthread_freezable_should_stop(bool *was_frozen)
- }
- EXPORT_SYMBOL_GPL(kthread_freezable_should_stop);
- 
-+void *kthread_fn(struct task_struct *task)
-+{
-+	if (task->flags & PF_KTHREAD)
-+		return to_kthread(task)->threadfn;
-+	return NULL;
-+}
-+
- /**
-  * kthread_data - return data value specified on kthread creation
-  * @task: kthread task in question
-@@ -244,6 +252,7 @@ static int kthread(void *_create)
- 		do_exit(-ENOMEM);
- 	}
- 
-+	self->threadfn = threadfn;
- 	self->data = data;
- 	init_completion(&self->exited);
- 	init_completion(&self->parked);
+Interesting that you bring this up.  Conversion to yaml is sitting
+waiting to land (or additional review comments):
 
--- 
-tejun
+https://lore.kernel.org/r/20200430124442.v4.4.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid/
+
+I'll add this documentation into the comments of the yaml, but I'm not
+going to try to implement enforcement at the yaml level.
+
+-Doug
