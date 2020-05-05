@@ -2,124 +2,105 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD12C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 03:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BE1C47256
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 03:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C8CF20746
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 03:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E082206CC
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 03:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588649931;
-	bh=WleWfKBPa+MkRl/FG3wti/YoY+kMD9A34Q+HR1DP3rQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mr7wvDlgdzA570MYqMB9fDrQv4BVQ3KyqHDahWYDHHiXvFaTZoMd16gJHS3pgxhOX
-	 eVekg+79R5z+3qhk/BeVjyoqN9XYK8sWEu+7VHLmLr0cubuK6P9Gw49u5yQkWm36Og
-	 7w9bG1cwILgqtfSEg5gXDCnf5Z4+KZ4FbIQzfN4s=
+	s=default; t=1588650948;
+	bh=rHTxzGcwMeCDg1nOjVr/jfX2SZVBp4avXgqxuwEXbW0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mEfDj4bEIBEUeqmdx2EVDPv/PpwNDBK8P0N/rlTwOqucWnVjD7uOMgpVYj/GSHvSr
+	 56Np+Upwho79pPkBd2dg7yz/pq7nGf8o3ZJ4Yj0GOrqbikLhfz4nHqtz8MbmdVVUcu
+	 FSyBhJo8RrQ5ioeCFcS+kBxCrhQ24URsSaES55Xs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbgEEDiu (ORCPT
+        id S1728143AbgEEDzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 23:38:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33694 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726516AbgEEDit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 23:38:49 -0400
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9A85206C0;
-        Tue,  5 May 2020 03:38:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588649928;
-        bh=WleWfKBPa+MkRl/FG3wti/YoY+kMD9A34Q+HR1DP3rQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=K5ON/HlTRAOgZfICZStefBx9lSbbPAA/K41KBb6cQhnqBrxIfWS7RgsgoLd6bRp+4
-         es1t31rnYIc8wSXooFrN8rt79VrEE1IpY1XLMVTIFVQ12GUx8lwZ1abK3Am/jr0ury
-         Nn6dtP0nMtx/Xa8qTkaFw2Xz15Rp+vdVKYrlf6fc=
-Received: by mail-oi1-f180.google.com with SMTP id i13so653912oie.9;
-        Mon, 04 May 2020 20:38:48 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZBTWSIQYC9UVa7TzpcrqKtA0PPuM2Gclr6xCG9b1fLumxBMnvv
-        uOKRh0ubUzO/dJiTYM9M1GPSXeZSGGrmjhBwnQ==
-X-Google-Smtp-Source: APiQypJX/QBWcGSuKqJEYGbDCnCt9bfCz9J9QX5Sgmjocbi6uqgC3ZjAszhb1FEmMEDJgFCqouxVRe7nnk6bhzFmOxk=
-X-Received: by 2002:a05:6808:356:: with SMTP id j22mr1180434oie.147.1588649928152;
- Mon, 04 May 2020 20:38:48 -0700 (PDT)
+        Mon, 4 May 2020 23:55:47 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44737 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbgEEDzr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 23:55:47 -0400
+Received: by mail-ot1-f68.google.com with SMTP id j4so524842otr.11;
+        Mon, 04 May 2020 20:55:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fVpmlRqOB7eXke8uevfSsRs8l7hcoXGDZESzEE9L/Kk=;
+        b=LTmzC+z2LtrtoCvIZe1d3Ny2xovOeB6f2rKZV6s3kHfC/8qn5qyqN0p8+bwJFxotHm
+         Zw0cQLRtOx/jciMAuAv76A2SwpoR0f+ljTL7r5/5FDvvbzrApIOlmwSPydkLUer83DGe
+         cqbKEtSQEMqluaOH2T4r41hYfPcdfwjGZaxIuNBlUp1S1A2Wnm8eoEbjfMGbe9nA92u4
+         y+QXHeTAV5QAPPHHsp0MA6kO2da0R1rTufWOi0opKAD+1eLBKw16puxkFZN/E74+Q7dz
+         vLyGbrAq0NxWOQSmelz7Yg56Yk0YNBxRVO7uf358RT0tXqRrMySmI4CHpcqvK6aV3yBU
+         W98Q==
+X-Gm-Message-State: AGi0PuYeact1L4SFN2P1fgTfEUx9WOcFtUntI213U8dbVUhaLA6dZhI3
+        5tuWvi21Th2S6zfRyEkjFiQEXEw=
+X-Google-Smtp-Source: APiQypJTqz87zIpF1xabhLlbR6oZBO16QbukiXQa0HRhnMbsIVziIpe/J85nsrXb8hc4FUxAuvipIg==
+X-Received: by 2002:a9d:5e04:: with SMTP id d4mr988124oti.312.1588650945786;
+        Mon, 04 May 2020 20:55:45 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id b63sm318718otc.23.2020.05.04.20.55.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 20:55:44 -0700 (PDT)
+Received: (nullmailer pid 7523 invoked by uid 1000);
+        Tue, 05 May 2020 03:55:43 -0000
+Date:   Mon, 4 May 2020 22:55:43 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Konrad Dybcio <konradybcio@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: media: Document MSM8939 Venus
+Message-ID: <20200505035543.GA5765@bogus>
+References: <20200501203505.144362-1-konradybcio@gmail.com>
+ <20200501203505.144362-3-konradybcio@gmail.com>
 MIME-Version: 1.0
-References: <cover.1586961793.git.mchehab+huawei@kernel.org>
-In-Reply-To: <cover.1586961793.git.mchehab+huawei@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 4 May 2020 22:38:37 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJxKoe0rk_JT1KO38gAcgw6nLVqQM65urc_aOYjXEb55g@mail.gmail.com>
-Message-ID: <CAL_JsqJxKoe0rk_JT1KO38gAcgw6nLVqQM65urc_aOYjXEb55g@mail.gmail.com>
-Subject: Re: [PATCH v3 00/12] Convert some DT documentation files to ReST
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Joe Perches <joe@perches.com>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Christian Hewitt <christianshewitt@gmail.com>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        Andy Whitcroft <apw@canonical.com>, devicetree@vger.kernel.org,
-        Harry Wei <harryxiyou@gmail.com>,
-        Jacob Huisman <jacobhuisman@kernelthusiast.com>,
-        Frank Rowand <frowand.list@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200501203505.144362-3-konradybcio@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 9:45 AM Mauro Carvalho Chehab
-<mchehab+huawei@kernel.org> wrote:
->
-> While most of the devicetree stuff has its own format (with is now being
-> converted to YAML format), some documents there are actually
-> describing the DT concepts and how to contribute to it.
->
-> IMHO, those documents would fit perfectly as part of the documentation
-> body, as part of the firmare documents set.
->
-> This patch series manually converts some DT documents that, on my
-> opinion, would belong to it.
->
-> If you want to see how this would show at the documentation body,
-> a sneak peak of this series (together with the other pending
-> doc patches from me) is available at:
->
->         https://www.infradead.org/~mchehab/kernel_docs/devicetree/index.html
->
-> -
->
-> v3:
->    - rebased on the top of next-20200414
->
-> Mauro Carvalho Chehab (12):
->   docs: dt: add an index.rst file for devicetree
->   docs: dt: convert usage-model.txt to ReST
->   docs: dt: usage_model.rst: fix link for DT usage
->   docs: dt: convert booting-without-of.txt to ReST format
->   docs: dt: convert changesets to ReST
->   docs: dt: convert dynamic-resolution-notes.txt to ReST
->   docs: dt: convert of_unittest.txt to ReST
->   docs: dt: convert overlay-notes.txt to ReST format
->   docs: dt: minor adjustments at writing-schema.rst
->   docs: dt: convert ABI.txt to ReST format
->   docs: dt: convert submitting-patches.txt to ReST format
->   docs: dt: convert writing-bindings.txt to ReST
+On Fri,  1 May 2020 22:35:03 +0200, Konrad Dybcio wrote:
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+> ---
+>  .../bindings/media/qcom,msm8939-venus.yaml    | 119 ++++++++++++++++++
+>  1 file changed, 119 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/qcom,msm8939-venus.yaml
+> 
 
-I've applied all but patch 4 as I'm working on just removing it.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Rob
+Documentation/devicetree/bindings/media/qcom,msm8939-venus.example.dts:20:18: fatal error: dt-bindings/clock/qcom,gcc-msm8939.h: No such file or directory
+         #include <dt-bindings/clock/qcom,gcc-msm8939.h>
+                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/media/qcom,msm8939-venus.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/media/qcom,msm8939-venus.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+Makefile:1300: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+See https://patchwork.ozlabs.org/patch/1281452
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
