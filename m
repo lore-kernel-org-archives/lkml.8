@@ -2,162 +2,130 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F1FC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 05:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 265A9C47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 05:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE8A8206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 05:19:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ihcDoq+3"
+	by mail.kernel.org (Postfix) with ESMTP id 065D12075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 05:21:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588656088;
+	bh=Y2jL3pSvPWYflkCioX814L9QG12+dvqUxYSa5B3DQp8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tBVAQ/xHMHvHU01fsOuSyS1AMdm+j3PCfdLYyKuLwB30ZH6tD1l7IMOTq3eVM51Oa
+	 TC75nJmJydxbZ37+/Gd5fFQvzpwZbssFoRvZU3JYMGMn3lhWBlvdxSskh5bAiL2xDA
+	 1teEJ/6BljKvSLZMObVeR39S4rX5oB290c6Ctp+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbgEEFTt (ORCPT
+        id S1726788AbgEEFV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 01:19:49 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:45384 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725535AbgEEFTt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 01:19:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588655987;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TDox4kEBOjt8ok5EwDS4BtmzAHx0WC6c0UbWruHoZeA=;
-        b=ihcDoq+3IjI5QDzYWEqbp6I800c9QbhKLBnsyQ4qUSo4R7fI17nht6r0gp6xx/xHaVZTUN
-        n6lAnhW802CL0sx1JRZK9nPqzSoscTQ8h0eWUT4rGb+YgsLBjfI2fuQmMquHnjs1w7wg4U
-        +U2QP3cYc+4M2E39WzVRkmM4ZuSDfsg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-344-iSxElwQHOpamPjQotqIKYw-1; Tue, 05 May 2020 01:19:40 -0400
-X-MC-Unique: iSxElwQHOpamPjQotqIKYw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 5 May 2020 01:21:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42932 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725320AbgEEFV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 01:21:27 -0400
+Received: from localhost (unknown [171.61.99.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4EE1A1005510;
-        Tue,  5 May 2020 05:19:38 +0000 (UTC)
-Received: from x1.home (ovpn-113-95.phx2.redhat.com [10.3.113.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 86DD25D9D3;
-        Tue,  5 May 2020 05:19:37 +0000 (UTC)
-Date:   Mon, 4 May 2020 23:19:36 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Ashok Raj <ashok.raj@intel.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Darrel Goeddel <DGoeddel@forcepoint.com>,
-        Mark Scott <mscott@forcepoint.com>,
-        Romil Sharma <rsharma@forcepoint.com>
-Subject: Re: [PATCH] iommu: Relax ACS requirement for RCiEP devices.
-Message-ID: <20200504231936.2bc07fe3@x1.home>
-In-Reply-To: <1588653736-10835-1-git-send-email-ashok.raj@intel.com>
-References: <1588653736-10835-1-git-send-email-ashok.raj@intel.com>
-Organization: Red Hat
+        by mail.kernel.org (Postfix) with ESMTPSA id 880C4206FA;
+        Tue,  5 May 2020 05:21:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588656086;
+        bh=Y2jL3pSvPWYflkCioX814L9QG12+dvqUxYSa5B3DQp8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sDbWqchGcvTFtjPTOVNucbIEpIesP5OdB7LGUFpSLW7FxtiCA8gY83OzmTfKXw0PT
+         p/qCIPshq5bbEWbHKDN08JXowaeclj+PH7R+h6HkBSOA0vTTwV9fBf7JYaG1PJ7qbO
+         2CHeCmY1+Td2N6K3rx/hCsQAumHFe7tnI5b9yVyM=
+Date:   Tue, 5 May 2020 10:51:22 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, kishon@ti.com,
+        devicetree@vger.kernel.org, lee.jones@linaro.org, arnd@arndb.de,
+        robh@kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@intel.com
+Subject: Re: [PATCH v7 3/3] phy: intel: Add driver support for ComboPhy
+Message-ID: <20200505052122.GW1375924@vkoul-mobl>
+References: <cover.1588230494.git.eswara.kota@linux.intel.com>
+ <af8a7d7025990d22f6062953247cf80e64c6fd2f.1588230494.git.eswara.kota@linux.intel.com>
+ <20200504072923.GN1375924@vkoul-mobl>
+ <f12e76ac-e0fd-4afa-e1cd-2b90f175adfd@linux.intel.com>
+ <20200504092034.GS1375924@vkoul-mobl>
+ <0de7ba47-bc98-9267-46b4-230a86151c2d@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0de7ba47-bc98-9267-46b4-230a86151c2d@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  4 May 2020 21:42:16 -0700
-Ashok Raj <ashok.raj@intel.com> wrote:
+On 04-05-20, 17:32, Dilip Kota wrote:
+> 
+> On 5/4/2020 5:20 PM, Vinod Koul wrote:
+> > On 04-05-20, 16:26, Dilip Kota wrote:
+> > > On 5/4/2020 3:29 PM, Vinod Koul wrote:
+> > > > On 30-04-20, 15:15, Dilip Kota wrote:
+> > > > 
+> > > > > +					  u32 mask, u32 val)
+> > > > > +{
+> > > > > +	u32 reg_val;
+> > > > > +
+> > > > > +	reg_val = readl(base + reg);
+> > > > > +	reg_val &= ~mask;
+> > > > > +	reg_val |= FIELD_PREP(mask, val);
+> > > > > +	writel(reg_val, base + reg);
+> > > > bypassing regmap here... why?
+> > > It is not regmap address, one of the below two addresses are passed to this
+> > > function.
+> > okay, perhaps add a comment somewhere that regmap is not used for this
+> > base?
+> I dont see a need of adding a comment, describing don't do regmap here.
 
-> PCIe Spec recommends we can relax ACS requirement for RCIEP devices.
-> 
-> PCIe 5.0 Specification.
-> 6.12 Access Control Services (ACS)
-> Implementation of ACS in RCiEPs is permitted but not required. It is
-> explicitly permitted that, within a single Root Complex, some RCiEPs
-> implement ACS and some do not. It is strongly recommended that Root Complex
-> implementations ensure that all accesses originating from RCiEPs
-> (PFs and VFs) without ACS capability are first subjected to processing by
-> the Translation Agent (TA) in the Root Complex before further decoding and
-> processing. The details of such Root Complex handling are outside the scope
-> of this specification.
-> 
-> Since Linux didn't give special treatment to allow this exception, certain
-> RCiEP MFD devices are getting grouped in a single iommu group. This
-> doesn't permit a single device to be assigned to a guest for instance.
-> 
-> In one vendor system: Device 14.x were grouped in a single IOMMU group.
-> 
-> /sys/kernel/iommu_groups/5/devices/0000:00:14.0
-> /sys/kernel/iommu_groups/5/devices/0000:00:14.2
-> /sys/kernel/iommu_groups/5/devices/0000:00:14.3
-> 
-> After the patch:
-> /sys/kernel/iommu_groups/5/devices/0000:00:14.0
-> /sys/kernel/iommu_groups/5/devices/0000:00:14.2
-> /sys/kernel/iommu_groups/6/devices/0000:00:14.3 <<< new group
-> 
-> 14.0 and 14.2 are integrated devices, but legacy end points.
-> Whereas 14.3 was a PCIe compliant RCiEP.
-> 
-> 00:14.3 Network controller: Intel Corporation Device 9df0 (rev 30)
-> Capabilities: [40] Express (v2) Root Complex Integrated Endpoint, MSI 00
-> 
-> This permits assigning this device to a guest VM.
-> 
-> Fixes: f096c061f552 ("iommu: Rework iommu_group_get_for_pci_dev()")
-> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-> To: Joerg Roedel <joro@8bytes.org>
-> To: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: iommu@lists.linux-foundation.org
-> Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Darrel Goeddel <DGoeddel@forcepoint.com>
-> Cc: Mark Scott <mscott@forcepoint.com>,
-> Cc: Romil Sharma <rsharma@forcepoint.com>
-> Cc: Ashok Raj <ashok.raj@intel.com>
-> ---
->  drivers/iommu/iommu.c | 15 ++++++++++++++-
->  1 file changed, 14 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index 2b471419e26c..5744bd65f3e2 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -1187,7 +1187,20 @@ static struct iommu_group *get_pci_function_alias_group(struct pci_dev *pdev,
->  	struct pci_dev *tmp = NULL;
->  	struct iommu_group *group;
->  
-> -	if (!pdev->multifunction || pci_acs_enabled(pdev, REQ_ACS_FLAGS))
-> +	/*
-> +	 * PCI Spec 5.0, Section 6.12 Access Control Service
-> +	 * Implementation of ACS in RCiEPs is permitted but not required.
-> +	 * It is explicitly permitted that, within a single Root
-> +	 * Complex, some RCiEPs implement ACS and some do not. It is
-> +	 * strongly recommended that Root Complex implementations ensure
-> +	 * that all accesses originating from RCiEPs (PFs and VFs) without
-> +	 * ACS capability are first subjected to processing by the Translation
-> +	 * Agent (TA) in the Root Complex before further decoding and
-> +	 * processing.
-> +	 */
+Driver uses regmap except here, which seems odd hence explanation
+required for this.
 
-Is the language here really strong enough to make this change?  ACS is
-an optional feature, so being permitted but not required is rather
-meaningless.  The spec is also specifically avoiding the words "must"
-or "shall" and even when emphasized with "strongly", we still only have
-a recommendation that may or may not be honored.  This seems like a
-weak basis for assuming that RCiEPs universally honor this
-recommendation.  Thanks,
+> > 
+> > > struct intel_combo_phy {
+> > > ...
+> > >          void __iomem            *app_base;
+> > >          void __iomem            *cr_base;
+> > > ...
+> > > }
+> > 
+> > > > > +static int intel_cbphy_calibrate(struct phy *phy)
+> > > > > +{
+> > > > > +	struct intel_cbphy_iphy *iphy = phy_get_drvdata(phy);
+> > > > > +	struct intel_combo_phy *cbphy = iphy->parent;
+> > > > > +	void __iomem *cr_base = cbphy->cr_base;
+> > > > > +	int val, ret, id;
+> > > > > +
+> > > > > +	if (cbphy->phy_mode != PHY_XPCS_MODE)
+> > > > > +		return 0;
+> > > > > +
+> > > > > +	id = PHY_ID(iphy);
+> > > > > +
+> > > > > +	/* trigger auto RX adaptation */
+> > > > > +	combo_phy_w32_off_mask(cr_base, CR_ADDR(PCS_XF_ATE_OVRD_IN_2, id),
+> > > > > +			       ADAPT_REQ_MSK, 3);
+> > > > > +	/* Wait RX adaptation to finish */
+> > > > > +	ret = readl_poll_timeout(cr_base + CR_ADDR(PCS_XF_RX_ADAPT_ACK, id),
+> > > > > +				 val, val & RX_ADAPT_ACK_BIT, 10, 5000);
+> > > > > +	if (ret)
+> > > > > +		dev_err(cbphy->dev, "RX Adaptation failed!\n");
+> > > > you want to continue her and not return error?
+> > > Next step is stopping the Adaptation, it should be done in both error and
+> > > success case.
+> > Again documenting this helps, pls add some comments on this behaviour
+> Comments are already in place, mentioning Start and Stop of Rx Adaptation.
+> And Stop is being is done as Start is triggered, so not needed to mention
+> error and success.
 
-Alex
+Ok
 
-> +	if (!pdev->multifunction ||
-> +	    (pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END) ||
-> +	     pci_acs_enabled(pdev, REQ_ACS_FLAGS))
->  		return NULL;
->  
->  	for_each_pci_dev(tmp) {
-
+-- 
+~Vinod
