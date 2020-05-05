@@ -2,155 +2,196 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D229C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C08C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FAC0206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:05:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F35F220721
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:07:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PRh4d0ae"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BPHouBLZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbgEETFG (ORCPT
+        id S1728885AbgEETHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 15:05:06 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32358 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729040AbgEETFE (ORCPT
+        Tue, 5 May 2020 15:07:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38402 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727857AbgEETHI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 15:05:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588705503;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=U4GrP7XNU8L0g24slP3Y9dEDs+NkxIqN98lAYXvDGmU=;
-        b=PRh4d0aeq4rTB2eB1x12BqHpVdDkxqOQveZcubcGV+XCGS1wkaGtzwT5anGFvir5Xmx+TR
-        7iUB8zuA9J6eHT9HBQtKSKvM1M7O82/+nUNiBbWuO3yySJ4YvBUJ7o/8UX8bfrrj53DjNh
-        v/ddbv2wTp64J6PFTfxCaHkbfXFS06E=
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
- [209.85.214.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-492-Verbd8TWMeqnUtFx_tnBsw-1; Tue, 05 May 2020 15:05:01 -0400
-X-MC-Unique: Verbd8TWMeqnUtFx_tnBsw-1
-Received: by mail-pl1-f198.google.com with SMTP id e9so2679770pls.11
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 12:05:01 -0700 (PDT)
+        Tue, 5 May 2020 15:07:08 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 406B4C061A0F;
+        Tue,  5 May 2020 12:07:08 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id f8so1221493plt.2;
+        Tue, 05 May 2020 12:07:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=fWyOOrvUK77uA/msSZdDDnmybty7hQPcowq4Z58m++0=;
+        b=BPHouBLZVWeHaubUI19wpiMPuNtIWM6/YUERDUNe9MNgSmVVq0+cuxhz5bbxK3kGR/
+         UxcdfDx5R8f3MQ80bBtDEUMhM0+5IrSRG1k40tEN/KtDJEk+cwmfyVkJy8XAOFHr8iZV
+         F4yJrLmDlhHmTlklDWECl6sk8bPgMQ2UzPK0tbwjp46p+Zg9ks/sU6Oi6OCWWSH+iOB3
+         W0bCCNjZW9NvvDQZt7CCmoZ3WNfRiAeq9LraUzBiD/CEpqKX37b7yIu+KkT6Sg0vWC5i
+         0TcYCFn7ETDBN3JI4s/uaXI2hQlYqm7S+dmA9jFiQBQtqioeyCarQZr4EkFEIw6owo/M
+         F3dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=U4GrP7XNU8L0g24slP3Y9dEDs+NkxIqN98lAYXvDGmU=;
-        b=uP9mojn4PVb2QpLfQIn+rrLr0Pyo00PcA+3ijC5cYEXoTF4t/41MoancfdNQgVbCDJ
-         dCQQcHwv5uJ0izSM3oB4TfUX3mwy4aiAXxbp6x9WD2E3V1zTA8DAPBV/4Ke377D6X5DS
-         nHujjcUDqrcnAGwBWtBJ5sfYOUE4Rn/RJJLhTmQ4UTV36a62BUFwlxUpI9pC+Mzuda2w
-         Ni1hDfdHvK9pzFn6HzdoDxtM07ysBJUul9T6T5fXQtn6KQsMv0Q6CHQCKZbN8FnVecod
-         oDZkOXUegvls6PtwqWD3uxeQWv22GyEle/rGbdP+u4a9zu/KoTEdiX/5MYXRumUDixOp
-         wKAg==
-X-Gm-Message-State: AGi0PuZAh8/c2ZRc1Ft0elta6kl2ADuQ96OZ0i+/i+VxNLQ8AqnVmcdx
-        xCRP4YpWOQFsLxdk/lEsEqReqw3OrpiF06FUlQNiWK3SoONeNcvh+5clQ+Wup8MwTtZHz9/fgiA
-        JUFvAkp88oo4BEyZPQGON5VDs
-X-Received: by 2002:a17:90a:2fc8:: with SMTP id n8mr4931057pjm.159.1588705499338;
-        Tue, 05 May 2020 12:04:59 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKasw2T0vbZ5atQn/rNAI6ZBPg7B5A29a3CWSro3nVzE6UVzU461CDw6k/5yIaqczr2W1pqXg==
-X-Received: by 2002:a17:90a:2fc8:: with SMTP id n8mr4931017pjm.159.1588705499081;
-        Tue, 05 May 2020 12:04:59 -0700 (PDT)
-Received: from localhost ([122.177.124.216])
-        by smtp.gmail.com with ESMTPSA id i128sm2494555pfc.149.2020.05.05.12.04.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 May 2020 12:04:58 -0700 (PDT)
-From:   Bhupesh Sharma <bhsharma@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     bhsharma@redhat.com, bhupesh.linux@gmail.com,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        aelior@marvell.com, GR-everest-linux-l2@marvell.com,
-        manishc@marvell.com, davem@davemloft.net
-Subject: [PATCH 2/2] net: qed: Disable SRIOV functionality inside kdump kernel
-Date:   Wed,  6 May 2020 00:34:41 +0530
-Message-Id: <1588705481-18385-3-git-send-email-bhsharma@redhat.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1588705481-18385-1-git-send-email-bhsharma@redhat.com>
-References: <1588705481-18385-1-git-send-email-bhsharma@redhat.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=fWyOOrvUK77uA/msSZdDDnmybty7hQPcowq4Z58m++0=;
+        b=nzv3F2dYOyGwxTUdlk87VcPVjNHiXWw9cPwe8cRrhqbv5jxXnXyRSghlIFt74mBQhV
+         oEyu3I4Kqi+exZraqiwzr4+wfWCaOqOQ+r3oW6IKOY9fW3QeLxQmsKb6G8OQ+HVfaCRH
+         yyxHWkZnjn1OBGv6L3Q8+gG8JQu4ABcBTIZoxmbSS2vgVIALt0M7sAtIcFn3kps2K1yH
+         16BM3Z4x312aO1qKCNvCSefWLEO9v8fins037atjsYvd6gVdxLTHrxjYOd6o8CN+9Hqt
+         LyWQSz4jPnvYQDhxL0pnnuv9HyjwGM+B+KH3kprvGiGb9OHSxzQ7TYUyItnHpDXxTkvx
+         pXjw==
+X-Gm-Message-State: AGi0PuYot68TqWr8+ASfoLiF0RvCl8HLHBbO0ASRhDxrSXn0/zDpFlwu
+        Bvkqj6eVWG4QgvKhKepp/vg=
+X-Google-Smtp-Source: APiQypIii3zV6Elp7IO251v6M6vB2QPxZ+fMr3HRaeN0DRbvD8NEebNCns+Io+5802VclUQUQzICSw==
+X-Received: by 2002:a17:90a:9e9:: with SMTP id 96mr4913003pjo.41.1588705627557;
+        Tue, 05 May 2020 12:07:07 -0700 (PDT)
+Received: from jordon-HP-15-Notebook-PC.domain.name ([122.167.156.195])
+        by smtp.gmail.com with ESMTPSA id 138sm2664906pfz.31.2020.05.05.12.07.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 May 2020 12:07:06 -0700 (PDT)
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+To:     tony.luck@intel.com, fenghua.yu@intel.com, rspringer@google.com,
+        toddpoynor@google.com, benchan@chromium.org,
+        gregkh@linuxfoundation.org, jens.wiklander@linaro.org,
+        akpm@linux-foundation.org, santosh.shilimkar@oracle.com,
+        davem@davemloft.net, kuba@kernel.org, jack@suse.cz,
+        jhubbard@nvidia.com, ira.weiny@intel.com, jglisse@redhat.com
+Cc:     inux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, tee-dev@lists.linaro.org,
+        linux-mm@kvack.org, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
+        Souptick Joarder <jrdr.linux@gmail.com>
+Subject: [RFC] mm/gup.c: Updated return value of {get|pin}_user_pages_fast()
+Date:   Wed,  6 May 2020 00:44:19 +0530
+Message-Id: <1588706059-4208-1-git-send-email-jrdr.linux@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we have kdump kernel(s) running under severe memory constraint
-it makes sense to disable the qed SRIOV functionality when running the
-kdump kernel as kdump configurations on several distributions don't
-support SRIOV targets for saving the vmcore (see [1] for example).
+Currently {get|pin}_user_pages_fast() have 3 return value 0, -errno
+and no of pinned pages. The only case where these two functions will
+return 0, is for nr_pages <= 0, which doesn't find a valid use case.
+But if at all any, then a -ERRNO will be returned instead of 0, which
+means {get|pin}_user_pages_fast() will have 2 return values -errno &
+no of pinned pages.
 
-Currently the qed SRIOV functionality ends up consuming memory in
-the kdump kernel, when we don't really use the same.
+Update all the callers which deals with return value 0 accordingly.
 
-An example log seen in the kdump kernel with the SRIOV functionality
-enabled can be seen below (obtained via memstrack tool, see [2]):
- dracut-pre-pivot[676]: ======== Report format module_summary: ========
- dracut-pre-pivot[676]: Module qed using 149.6MB (2394 pages), peak allocation 149.6MB (2394 pages)
-
-This patch disables the SRIOV functionality inside kdump kernel and with
-the same applied the memory consumption goes down:
- dracut-pre-pivot[671]: ======== Report format module_summary: ========
- dracut-pre-pivot[671]: Module qed using 124.6MB (1993 pages), peak allocation 124.7MB (1995 pages)
-
-[1]. https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/managing_monitoring_and_updating_the_kernel/installing-and-configuring-kdump_managing-monitoring-and-updating-the-kernel#supported-kdump-targets_supported-kdump-configurations-and-targets
-[2]. Memstrack tool: https://github.com/ryncsn/memstrack
-
-Cc: kexec@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Ariel Elior <aelior@marvell.com>
-Cc: GR-everest-linux-l2@marvell.com
-Cc: Manish Chopra <manishc@marvell.com>
-Cc: David S. Miller <davem@davemloft.net>
-Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
 ---
- drivers/net/ethernet/qlogic/qed/qed_sriov.h  | 10 +++++++---
- drivers/net/ethernet/qlogic/qede/qede_main.c |  2 +-
- 2 files changed, 8 insertions(+), 4 deletions(-)
+ arch/ia64/kernel/err_inject.c              | 2 +-
+ drivers/platform/goldfish/goldfish_pipe.c  | 2 +-
+ drivers/staging/gasket/gasket_page_table.c | 4 ++--
+ drivers/tee/tee_shm.c                      | 2 +-
+ mm/gup.c                                   | 6 +++---
+ net/rds/rdma.c                             | 2 +-
+ 6 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_sriov.h b/drivers/net/ethernet/qlogic/qed/qed_sriov.h
-index 368e88565783..f2ebd9a76e20 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_sriov.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_sriov.h
-@@ -32,6 +32,7 @@
+diff --git a/arch/ia64/kernel/err_inject.c b/arch/ia64/kernel/err_inject.c
+index 8b5b8e6b..fd72218 100644
+--- a/arch/ia64/kernel/err_inject.c
++++ b/arch/ia64/kernel/err_inject.c
+@@ -143,7 +143,7 @@ static DEVICE_ATTR(name, 0644, show_##name, store_##name)
+ 	int ret;
  
- #ifndef _QED_SRIOV_H
- #define _QED_SRIOV_H
-+#include <linux/crash_dump.h>
- #include <linux/types.h>
- #include "qed_vf.h"
+ 	ret = get_user_pages_fast(virt_addr, 1, FOLL_WRITE, NULL);
+-	if (ret<=0) {
++	if (ret < 0) {
+ #ifdef ERR_INJ_DEBUG
+ 		printk("Virtual address %lx is not existing.\n",virt_addr);
+ #endif
+diff --git a/drivers/platform/goldfish/goldfish_pipe.c b/drivers/platform/goldfish/goldfish_pipe.c
+index 1ab207e..831449d 100644
+--- a/drivers/platform/goldfish/goldfish_pipe.c
++++ b/drivers/platform/goldfish/goldfish_pipe.c
+@@ -277,7 +277,7 @@ static int goldfish_pin_pages(unsigned long first_page,
+ 	ret = pin_user_pages_fast(first_page, requested_pages,
+ 				  !is_write ? FOLL_WRITE : 0,
+ 				  pages);
+-	if (ret <= 0)
++	if (ret < 0)
+ 		return -EFAULT;
+ 	if (ret < requested_pages)
+ 		*iter_last_page_size = PAGE_SIZE;
+diff --git a/drivers/staging/gasket/gasket_page_table.c b/drivers/staging/gasket/gasket_page_table.c
+index f6d7157..1d08e1d 100644
+--- a/drivers/staging/gasket/gasket_page_table.c
++++ b/drivers/staging/gasket/gasket_page_table.c
+@@ -489,11 +489,11 @@ static int gasket_perform_mapping(struct gasket_page_table *pg_tbl,
+ 			ret = get_user_pages_fast(page_addr - offset, 1,
+ 						  FOLL_WRITE, &page);
  
-@@ -40,9 +41,12 @@
- #define QED_VF_ARRAY_LENGTH (3)
+-			if (ret <= 0) {
++			if (ret < 0) {
+ 				dev_err(pg_tbl->device,
+ 					"get user pages failed for addr=0x%lx, offset=0x%lx [ret=%d]\n",
+ 					page_addr, offset, ret);
+-				return ret ? ret : -ENOMEM;
++				return ret;
+ 			}
+ 			++pg_tbl->num_active_pages;
  
- #ifdef CONFIG_QED_SRIOV
--#define IS_VF(cdev)             ((cdev)->b_is_vf)
--#define IS_PF(cdev)             (!((cdev)->b_is_vf))
--#define IS_PF_SRIOV(p_hwfn)     (!!((p_hwfn)->cdev->p_iov_info))
-+#define IS_VF(cdev)             ((is_kdump_kernel()) ? \
-+				 (0) : ((cdev)->b_is_vf))
-+#define IS_PF(cdev)             ((is_kdump_kernel()) ? \
-+				 (1) : !((cdev)->b_is_vf))
-+#define IS_PF_SRIOV(p_hwfn)     ((is_kdump_kernel()) ? \
-+				 (0) : !!((p_hwfn)->cdev->p_iov_info))
- #else
- #define IS_VF(cdev)             (0)
- #define IS_PF(cdev)             (1)
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/ethernet/qlogic/qede/qede_main.c
-index 34fa3917eb33..f557ae90ce7c 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_main.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
-@@ -1187,7 +1187,7 @@ static int qede_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	case QEDE_PRIVATE_VF:
- 		if (debug & QED_LOG_VERBOSE_MASK)
- 			dev_err(&pdev->dev, "Probing a VF\n");
--		is_vf = true;
-+		is_vf = is_kdump_kernel() ? false : true;
- 		break;
- 	default:
- 		if (debug & QED_LOG_VERBOSE_MASK)
+diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
+index bd679b7..2706a1f 100644
+--- a/drivers/tee/tee_shm.c
++++ b/drivers/tee/tee_shm.c
+@@ -230,7 +230,7 @@ struct tee_shm *tee_shm_register(struct tee_context *ctx, unsigned long addr,
+ 	if (rc > 0)
+ 		shm->num_pages = rc;
+ 	if (rc != num_pages) {
+-		if (rc >= 0)
++		if (rc > 0)
+ 			rc = -ENOMEM;
+ 		ret = ERR_PTR(rc);
+ 		goto err;
+diff --git a/mm/gup.c b/mm/gup.c
+index 50681f0..8d293ed 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -2760,7 +2760,7 @@ static int internal_get_user_pages_fast(unsigned long start, int nr_pages,
+ 	end = start + len;
+ 
+ 	if (end <= start)
+-		return 0;
++		return -EINVAL;
+ 	if (unlikely(!access_ok((void __user *)start, len)))
+ 		return -EFAULT;
+ 
+@@ -2805,8 +2805,8 @@ static int internal_get_user_pages_fast(unsigned long start, int nr_pages,
+  * calling get_user_pages().
+  *
+  * Returns number of pages pinned. This may be fewer than the number requested.
+- * If nr_pages is 0 or negative, returns 0. If no pages were pinned, returns
+- * -errno.
++ * If nr_pages is 0 or negative, returns -errno. If no pages were pinned,
++ * returns -errno.
+  */
+ int get_user_pages_fast(unsigned long start, int nr_pages,
+ 			unsigned int gup_flags, struct page **pages)
+diff --git a/net/rds/rdma.c b/net/rds/rdma.c
+index a7ae118..44b96e6 100644
+--- a/net/rds/rdma.c
++++ b/net/rds/rdma.c
+@@ -161,7 +161,7 @@ static int rds_pin_pages(unsigned long user_addr, unsigned int nr_pages,
+ 		gup_flags |= FOLL_WRITE;
+ 
+ 	ret = pin_user_pages_fast(user_addr, nr_pages, gup_flags, pages);
+-	if (ret >= 0 && ret < nr_pages) {
++	if (ret > 0 && ret < nr_pages) {
+ 		unpin_user_pages(pages, ret);
+ 		ret = -EFAULT;
+ 	}
 -- 
-2.7.4
+1.9.1
 
