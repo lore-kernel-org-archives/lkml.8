@@ -2,112 +2,184 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64470C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B97C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EE38206CC
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AB6620721
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:12:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hc8H8Esd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730349AbgEERJ3 (ORCPT
+        id S1729729AbgEERMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 13:09:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:45982 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729998AbgEERJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 13:09:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9DB5831B;
-        Tue,  5 May 2020 10:09:28 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.47])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6FC133F305;
-        Tue,  5 May 2020 10:09:26 -0700 (PDT)
-Date:   Tue, 5 May 2020 18:09:23 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Peng Fan <peng.fan@nxp.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Steven Price <steven.price@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] firmware: arm_scmi: fix psci dependency
-Message-ID: <20200505170923.GB23612@bogus>
-References: <20200505140820.536615-1-arnd@arndb.de>
- <20200505150421.GA23612@bogus>
- <20200505162135.GB27127@lakrids.cambridge.arm.com>
+        Tue, 5 May 2020 13:12:38 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:45470 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728804AbgEERMi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 13:12:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588698756;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VY3mpgQiTbdJZabwq0nBtN+dwhOXmFZGPofJwgyYIco=;
+        b=Hc8H8EsdMccFu/5LJ/jPO8LL88hQHeFcPBV9PjumlMMDz2LJORsJcwuQlpLHHIUntBYDEF
+        v4c5YPCmT2xPSrZzj8SrTaPYpTp1/e+WkgAJgprmyE9D2ygcB6e6Metuppp9n4hAcW/yg5
+        tG2YHjJAI8HG0oX5+s6PnbRdGB2kv7k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-254-rAjydpGcNrm94b73QhlXSQ-1; Tue, 05 May 2020 13:12:32 -0400
+X-MC-Unique: rAjydpGcNrm94b73QhlXSQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4AD3D107ACCA;
+        Tue,  5 May 2020 17:12:31 +0000 (UTC)
+Received: from w520.home (ovpn-113-95.phx2.redhat.com [10.3.113.95])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2BEE95F7E2;
+        Tue,  5 May 2020 17:12:28 +0000 (UTC)
+Date:   Tue, 5 May 2020 11:12:27 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, peterx@redhat.com
+Subject: Re: [PATCH 3/3] vfio-pci: Invalidate mmaps and block MMIO access on
+ disabled memory
+Message-ID: <20200505111227.02ac9cee@w520.home>
+In-Reply-To: <20200504200123.GA26002@ziepe.ca>
+References: <158836742096.8433.685478071796941103.stgit@gimli.home>
+        <158836917028.8433.13715345616117345453.stgit@gimli.home>
+        <20200501234849.GQ26002@ziepe.ca>
+        <20200504122643.52267e44@x1.home>
+        <20200504184436.GZ26002@ziepe.ca>
+        <20200504133552.3d00c77d@x1.home>
+        <20200504200123.GA26002@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505162135.GB27127@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 05:21:36PM +0100, Mark Rutland wrote:
-> On Tue, May 05, 2020 at 04:04:21PM +0100, Sudeep Holla wrote:
-> > Hi Arnd,
-> >
-> > On Tue, May 05, 2020 at 04:08:08PM +0200, Arnd Bergmann wrote:
-> > > When CONFIG_ARM_PSCI_FW is disabled but CONFIG_HAVE_ARM_SMCCC is enabled,
-> > > arm-scmi runs into a link failure:
-> > >
-> > > arm-linux-gnueabi-ld: drivers/firmware/arm_scmi/smc.o: in function `smc_send_message':
-> > > smc.c:(.text+0x200): undefined reference to `arm_smccc_1_1_get_conduit'
-> > >
-> > > Use an inline helper to default to version v1.0 in the absence of psci.
-> > >
-> >
-> > Thanks for fixing this. I was thinking if we can separate PSCI and SMCCC
-> > quickly as a fix for this but I think he needs to be discussed in detail.
-> >
-> > I am fine with this fix as is and happy to apply to my tree if no one
-> > objects.
-> >
-> > Sorry but taking this patch as opportunity to discuss how to carry the
-> > dependency in future. Just a proposal,
-> >
-> > 1. Introduce a DT node for SMCCC v1.2+
-> > 2. The new SMCCC driver(strictly speaking library/few APIs) can probe
-> >    independent of PSCI if DT node is present
-> > 3. Else we fallback on PSCI and detect the SMCCC version for v1.1 and
-> >    v1.2
-> > 4. Assume v1.0 if
-> > 	a. PSCI FEATURE returns NOT_SUPPORTED for ARM_SMCCC_VERSION_FUNC_ID
-> > 	b. CONFIG_ARM_PSCI{,_FW} is not defined
-> >
-> > Mark/Will/Marc,
-> >
-> > Any other use-case config missed above ?
->
-> Do we need to support SMCCC without PSCI? Is anyone goingto build a
-> sysyem with SMCCC but no PSCI functionality?
->
+On Mon, 4 May 2020 17:01:23 -0300
+Jason Gunthorpe <jgg@ziepe.ca> wrote:
 
-May be arm32 using all new fancy specification we may come up to solve
-certain areas but continue to use legacy boot/power methods. I may be
-wrong. E.g: Today we enable HAVE_ARM_SMCCC for armv7 and above but not
-all have PSCI enabled.
+> On Mon, May 04, 2020 at 01:35:52PM -0600, Alex Williamson wrote:
+> 
+> > Ok, this all makes a lot more sense with memory_lock still in the
+> > picture.  And it looks like you're not insisting on the wait_event, we
+> > can block on memory_lock so long as we don't have an ordering issue.
+> > I'll see what I can do.  Thanks,  
+> 
+> Right, you can block on the rwsem if it is ordered properly vs
+> mmap_sem.
 
-> If not, then given we can always probe SMCCC from PSCI (for both ACPI
-> and DT), I'd prefer to support only support doing things that way
-> around. i.e. have SMCCC depend on PSCI.
->
+This is what I've come up with, please see if you agree with the logic:
 
-OK, but we still have above config.
+void vfio_pci_zap_and_down_write_memory_lock(struct vfio_pci_device *vdev)
+{
+        struct vfio_pci_mmap_vma *mmap_vma, *tmp;
 
-> Otherwise I suspect we're inviting more problems than a dependency on
-> PSCI.
->
+        /*
+         * Lock ordering:
+         * vma_lock is nested under mmap_sem for vm_ops callback paths.
+         * The memory_lock semaphore is used by both code paths calling
+         * into this function to zap vmas and the vm_ops.fault callback
+         * to protect the memory enable state of the device.
+         *
+         * When zapping vmas we need to maintain the mmap_sem => vma_lock
+         * ordering, which requires using vma_lock to walk vma_list to
+         * acquire an mm, then dropping vma_lock to get the mmap_sem and
+         * reacquiring vma_lock.  This logic is derived from similar
+         * requirements in uverbs_user_mmap_disassociate().
+         *
+         * mmap_sem must always be the top-level lock when it is taken.
+         * Therefore we can only hold the memory_lock write lock when
+         * vma_list is empty, as we'd need to take mmap_sem to clear
+         * entries.  vma_list can only be guaranteed empty when holding
+         * vma_lock, thus memory_lock is nested under vma_lock.
+         *
+         * This enables the vm_ops.fault callback to acquire vma_lock,
+         * followed by memory_lock read lock, while already holding
+         * mmap_sem without risk of deadlock.
+         */
+        while (1) {
+                struct mm_struct *mm = NULL;
 
-Agreed and I am happy to keep it as is.
+                mutex_lock(&vdev->vma_lock);
+                while (!list_empty(&vdev->vma_list)) {
+                        mmap_vma = list_first_entry(&vdev->vma_list,
+                                                    struct vfio_pci_mmap_vma,
+                                                    vma_next);
+                        mm = mmap_vma->vma->vm_mm;
+                        if (mmget_not_zero(mm))
+                                break;
 
---
-Regards,
-Sudeep
+                        list_del(&mmap_vma->vma_next);
+                        kfree(mmap_vma);
+                        mm = NULL;
+                }
+
+                if (!mm)
+                        break;
+                mutex_unlock(&vdev->vma_lock);
+
+                down_read(&mm->mmap_sem);
+                if (mmget_still_valid(mm)) {
+                        mutex_lock(&vdev->vma_lock);
+                        list_for_each_entry_safe(mmap_vma, tmp,
+                                                 &vdev->vma_list, vma_next) {
+                                struct vm_area_struct *vma = mmap_vma->vma;
+
+                                if (vma->vm_mm != mm)
+                                        continue;
+
+                                list_del(&mmap_vma->vma_next);
+                                kfree(mmap_vma);
+
+                                zap_vma_ptes(vma, vma->vm_start,
+                                             vma->vm_end - vma->vm_start);
+                        }
+                        mutex_unlock(&vdev->vma_lock);
+                }
+                up_read(&mm->mmap_sem);
+                mmput(mm);
+        }
+
+        down_write(&vdev->memory_lock);
+        mutex_unlock(&vdev->vma_lock);
+}
+
+As noted in the comment, the fault handler can simply do:
+
+mutex_lock(&vdev->vma_lock);
+down_read(&vdev->memory_lock);
+
+This should be deadlock free now, so we can drop the retry handling
+
+Paths needing to acquire memory_lock with vmas zapped (device reset,
+memory bit *->0 transition) call this function, perform their
+operation, then simply release with up_write(&vdev->memory_lock).  Both
+the read and write version of acquiring memory_lock can still occur
+outside this function for operations that don't require flushing all
+vmas or otherwise touch vma_lock or mmap_sem (ex. read/write, MSI-X
+vector table access, writing *->1 to memory enable bit).
+
+I still need to work on the bus reset path as acquiring memory_lock
+write locks across multiple devices seems like it requires try-lock
+behavior, which is clearly complicated, or at least messy in the above
+function.
+
+Does this seem like it's going in a reasonable direction?  Thanks,
+
+Alex
+
