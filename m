@@ -2,142 +2,162 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41211C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E9EC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE642068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91E882068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:16:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="UqOdNS+4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gOXZUd3c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbgEEIPd (ORCPT
+        id S1728458AbgEEIQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 04:15:33 -0400
-Received: from mout.web.de ([217.72.192.78]:57769 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725833AbgEEIPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 04:15:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1588666508;
-        bh=xb0+yObJ8LX/ryqF56WrDSm/1zLQIxqPtNdtj7KlzLQ=;
-        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
-        b=UqOdNS+4km77RSRM1WoqtscWjlmjpU/whCRrTEhVHavftK4qXyDODNzucPjWN+T0C
-         8/s3tWW1YrJV9JqIxZW+RH+wv31RihaTBKVAaLHhPJ0nCiDmVF/hCJNfWDs3wMEMaH
-         buUNOueAAtjVMDgbzYS09yV2KkrI9h6BtfpTo6HQ=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.48.132.123]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MrOhx-1ikzGt0K9v-00oX8B; Tue, 05
- May 2020 10:15:08 +0200
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chen-Yu Tsai <wens@csie.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH] media: sun8i: Fix an error handling path in
- deinterlace_runtime_resume()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
-Message-ID: <75dd05b8-7895-e1cf-2c76-2327aa11f033@web.de>
-Date:   Tue, 5 May 2020 10:15:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 04:16:20 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:44413 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725766AbgEEIQU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 04:16:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588666578;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=PLpw+0AF+YrhjhPFs8WCFBSF9TV0SgmVMW6RrggE9AY=;
+        b=gOXZUd3c/C97d+Ha6rFfcbgznuQAMGdEH2X28HZ4BJ7T7/0ZZt8eRtUCTBJdBAHBKk7Ng4
+        7KepOxFIyF+SsgvI8j8RSWymLahqxEjJx6PF/BBodvUbvxKMMqjzpylsszX6eWJIY1retx
+        i6FYCZAiBFJ7PJXWS/nmnl89pykUKrc=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-415-LaU7t-O8MaW-5P5ZPyIGlQ-1; Tue, 05 May 2020 04:16:16 -0400
+X-MC-Unique: LaU7t-O8MaW-5P5ZPyIGlQ-1
+Received: by mail-wr1-f69.google.com with SMTP id r11so822663wrx.21
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 01:16:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=PLpw+0AF+YrhjhPFs8WCFBSF9TV0SgmVMW6RrggE9AY=;
+        b=ZlV2XRbPHfKDFBZlcsq4n1+H9p9z6kQsEQcKkx7BBD8V0qgDXTDxUkjZLzADfWtUXo
+         25rAqxz/jUnNzd8BPRp8kvB0KKN0t3rjwHyWNIRnozPGhFMdyZG/X3ofGG5Ettf976jw
+         hT4UWPNypiHVhOskxruiV3s5kU2RG7SE38hTltaExDnpfLzo/LhI4C8RtB1NdPS6NmzR
+         4Mbvx/Aky2m8Os10T/AKri6jRyUvjKSohTxqJdcUawan3MK0/QFE3fD4ADExo0sIxkyr
+         UGGA5VjqOu7uXOhVt3xIKOdmP6/OYC0KQqzUbBbC3nF/MxRRCxPQeqYwYZC6Qdc0cwL9
+         CFbQ==
+X-Gm-Message-State: AGi0Puae7FE36yrwz0f5Fd4e4E2u13f7I6y+8SqAllYCunf/LhtYPEXC
+        DoLU1SwRRi0hiGjV+rsEkHkkBwx90xCR23e+5sJpOLymK1xoEWdhpW/voE/vfxdBAphDYGEejYx
+        tK+buBA1Pl7BYX+j4059eS84p
+X-Received: by 2002:a1c:4d17:: with SMTP id o23mr1810560wmh.47.1588666575821;
+        Tue, 05 May 2020 01:16:15 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLUtgQm6gLvTTvKMCOOVI0r2vbnTAko/RCspVruBrqFB7ryEUKretodCstSRgTv12PEO0zyqA==
+X-Received: by 2002:a1c:4d17:: with SMTP id o23mr1810540wmh.47.1588666575596;
+        Tue, 05 May 2020 01:16:15 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id v10sm1883540wrq.45.2020.05.05.01.16.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 01:16:14 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Gavin Shan <gshan@redhat.com>, x86@kernel.org, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH RFC 4/6] KVM: x86: acknowledgment mechanism for async pf page ready notifications
+In-Reply-To: <bdd3fba1-72d6-9096-e63d-a89f2990a26d@redhat.com>
+References: <20200429093634.1514902-1-vkuznets@redhat.com> <20200429093634.1514902-5-vkuznets@redhat.com> <bdd3fba1-72d6-9096-e63d-a89f2990a26d@redhat.com>
+Date:   Tue, 05 May 2020 10:16:13 +0200
+Message-ID: <87y2q6dcfm.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ra9Z1AZM1ohG0BJsAfpYw+Nq3NhM9qaNW9+6pJX6nXvLTpOydkY
- 0E9GoHt+vErz4+EFcOHtR2q45a38/z5DZ6wrk53Dv0iyymtqJI7cTecD2cyhxVL/5Fsxcw7
- qjWCCGhv6XQkDJ54Fh0UQd3u0NpkBWVTl+b4+JiHzc55lF2Pn/w7nfR3n3l6XR5j0y/ud+s
- WDl9IdT9Th2sD9a+NYa/w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:SEoUJAW4u8I=:eJrDYbtggXycnYIbCBf16Z
- P+y1YFruoAMZBTtQITaRV7TP74W0R6XLq4t2gBOgO6F3dNkjR21ab3jtb9HKwX6aDmgDxbwVV
- q+/r16AH5Wucqj/7RB2VGmgZVDbFzO61UwrXL0Wjir2ACek+W/bwOHXTbOIXSHpWVbbjOjJP2
- QP0mKkIopAIaHLhuroleE+A9VtQwgv+zDixbBXOFDQ4JX8J7L4Rr0i142UfvE/Kr9sKbFF6Dm
- xRr+TIvLAiix84TWCauT8jlKMLZndTd8cyQTIkrsBi2aF4HwuGIi7qy6QGRn2udzEhOSKnK69
- +z6+/XdcwooWa/wwtYnOF3KDCqUg2v4IJv01Wu5O9icxuBzRltKVnjuPsoxnfhHe9GwZyTVd5
- KpOfM1g0V/w9UqJeJ4LkYFBhcuMrBScSYWU/QCavSd2EylZdLCjM96vFd5biV3xd3yDZHWtaq
- amKCwTA6aUt1Yj0t6roxNb6CmvXsr6tQ1MFll+rGyULh/c7gf5wrDnhKyk6jazTzMdtVtihl+
- Jb5PS3w9rFRPn3zNzeG0vHoab4VDVTDFZiJqJQU20gRR7HA65twynG4MUiY6PlJsU1/DuogJ5
- VainFFj7zb5zozrJMk/4c5ssfu0/PCpAVPp45JQ0TdJx3rx9chZ4uuvi0ja8HMXo0vCNJXZLp
- nOviS2QlZKPJol9xpCQVdbAl1AcPsvoMJAeRhX7r/lr4YaRkJbwnviU8VykjFfJZ7Ez4GvqGk
- fOHgoDSqK2ST7qS1tKwV5Mmnuj5cwq4+qEDC9p2geh8rTGLu+g+oyepZSoF799Rsy23Ok1UPJ
- +jxH+wdSE/ukoB+C83yW8HxsaadjnK6Z5ZFZ0gLqUtvbRKoBPwPn8+gmCxDXtzoo++wjtg06E
- 27mI9YOB7+W5UHVAUbBYNRar+cPiqoThF05XJAUjygrf5kh4yKBkJ0cpzhUEa8m51PEDnlmDk
- enkBewrcQpT351gSSqSITNFDramlGNbQmPnaPQfCSJK6oVvKA3nL0SnCdzevav7LEyTYopVhu
- AVZqO+mIDKY6piQhtDw6zw49iHsy4/rFuxHk9CntmhUWDRzx9/f+5M29S65PK0ihOUdETpNDY
- 2Ytz/+j6L+k917zbaWbpH3SHK9BfRnnhyHx5ETRcU1RhD1/PCnGCWt/DV1qxQUox7jM4QrHVB
- o0AOBE/+CiT7BmHfWqlPyVOyjsvZ0IfVIgMThfsSjx0VE7de6BJMRh9qLiKFMTiOf12oGTRUl
- ACkejzQgzF8qCmDYL
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> It is spurious to call 'clk_disable_unprepare()' when
-> 'clk_prepare_enable()' has not been called yet.
+Gavin Shan <gshan@redhat.com> writes:
 
-Can it be that the usage of the word =E2=80=9Csuspicious=E2=80=9D would be=
- more appropriate
-for such a change description?
+> Hi Vitaly,
+>
+> On 4/29/20 7:36 PM, Vitaly Kuznetsov wrote:
+>> If two page ready notifications happen back to back the second one is not
+>> delivered and the only mechanism we currently have is
+>> kvm_check_async_pf_completion() check in vcpu_run() loop. The check will
+>> only be performed with the next vmexit when it happens and in some cases
+>> it may take a while. With interrupt based page ready notification delivery
+>> the situation is even worse: unlike exceptions, interrupts are not handled
+>> immediately so we must check if the slot is empty. This is slow and
+>> unnecessary. Introduce dedicated MSR_KVM_ASYNC_PF_ACK MSR to communicate
+>> the fact that the slot is free and host should check its notification
+>> queue. Mandate using it for interrupt based type 2 APF event delivery.
+>> 
+>> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> ---
+>>   Documentation/virt/kvm/msr.rst       | 16 +++++++++++++++-
+>>   arch/x86/include/uapi/asm/kvm_para.h |  1 +
+>>   arch/x86/kvm/x86.c                   |  9 ++++++++-
+>>   3 files changed, 24 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/Documentation/virt/kvm/msr.rst b/Documentation/virt/kvm/msr.rst
+>> index 7433e55f7184..18db3448db06 100644
+>> --- a/Documentation/virt/kvm/msr.rst
+>> +++ b/Documentation/virt/kvm/msr.rst
+>> @@ -219,6 +219,11 @@ data:
+>>   	If during pagefault APF reason is 0 it means that this is regular
+>>   	page fault.
+>>   
+>> +	For interrupt based delivery, guest has to write '1' to
+>> +	MSR_KVM_ASYNC_PF_ACK every time it clears reason in the shared
+>> +	'struct kvm_vcpu_pv_apf_data', this forces KVM to re-scan its
+>> +	queue and deliver next pending notification.
+>> +
+>>   	During delivery of type 1 APF cr2 contains a token that will
+>>   	be used to notify a guest when missing page becomes
+>>   	available. When page becomes available type 2 APF is sent with
+>> @@ -340,4 +345,13 @@ data:
+>>   
+>>   	To switch to interrupt based delivery of type 2 APF events guests
+>>   	are supposed to enable asynchronous page faults and set bit 3 in
+>> -	MSR_KVM_ASYNC_PF_EN first.
+>> +
+>> +MSR_KVM_ASYNC_PF_ACK:
+>> +	0x4b564d07
+>> +
+>> +data:
+>> +	Asynchronous page fault acknowledgment. When the guest is done
+>> +	processing type 2 APF event and 'reason' field in 'struct
+>> +	kvm_vcpu_pv_apf_data' is cleared it is supposed to write '1' to
+>> +	Bit 0 of the MSR, this caused the host to re-scan its queue and
+>> +	check if there are more notifications pending.
+>
+> I'm not sure if I understood the usage of MSR_KVM_ASYNC_PF_ACK
+> completely. It seems it's used to trapped to host, to have chance
+> to check/deliver pending page ready events. If there is no pending
+> events, no work will be finished in the trap. If it's true, it might
+> be good idea to trap conditionally, meaning writing to ASYNC_PF_ACK
+> if there are really pending events?
 
+How does the guest know if host has any pending events or not?
 
-> Re-order the error handling path to avoid it.
+The problem we're trying to address with ACK msr is the following:
+imagine host has two 'page ready' notifications back to back. It puts
+token for the first on in the slot and raises an IRQ but how do we know
+when the slot becomes free so we can inject the second one? Currently,
+we have kvm_check_async_pf_completion() check in vcpu_run() loop but
+this doesn't guarantee timely delivery of the event, we just hope that
+there's going to be a vmexit 'some time soon' and we'll piggy back onto
+that. Normally this works but in some special cases it may take really
+long before a vmexit happens. Also, we're penalizing each vmexit with an
+unneeded check. ACK msr is intended to solve these issues.
 
-Would it be also helpful to explicitly mention in the commit message
-that you would like to move a call of the function =E2=80=9Cclk_rate_exclu=
-sive_put=E2=80=9D
-to the end of this function implementation for the correction
-of the desired exception handling?
+-- 
+Vitaly
 
-Regards,
-Markus
