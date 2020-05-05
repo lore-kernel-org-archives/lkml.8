@@ -2,65 +2,100 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC98C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E71A7C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C7D6207DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B42B424957
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:57:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730557AbgEEP5k (ORCPT
+        id S1730577AbgEEP5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 5 May 2020 11:57:44 -0400
+Received: from mga06.intel.com ([134.134.136.31]:43147 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730542AbgEEP5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 5 May 2020 11:57:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36982 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729892AbgEEP5i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:57:38 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D549BC061A0F;
-        Tue,  5 May 2020 08:57:38 -0700 (PDT)
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 7C97E737;
-        Tue,  5 May 2020 15:57:38 +0000 (UTC)
-Date:   Tue, 5 May 2020 09:57:37 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Wang Wenhu <wenhu.wang@vivo.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@vivo.com, Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH] doc: thermal: add cpu-idle-cooling to index tree
-Message-ID: <20200505095737.15f42d53@lwn.net>
-In-Reply-To: <20200429131109.80891-1-wenhu.wang@vivo.com>
-References: <20200429131109.80891-1-wenhu.wang@vivo.com>
-Organization: LWN.net
+IronPort-SDR: pxVk6H4+g/DPi1API8PUDhb+n0YDmQ1z6s1oIYu59+ndSxn62jOGYeXbey4C6o1YxWdWdosD0h
+ cgPVDsnT2wpw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 08:57:39 -0700
+IronPort-SDR: alrkhE+2C4qXPTodsAh59qKNIdgUTi4My5rtciJamlWkLe/Gs6yVOlSzDYbd6Bd6u+HzoFRuZW
+ MicWtTkTw92Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,355,1583222400"; 
+   d="scan'208";a="249494130"
+Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.249.151.151]) ([10.249.151.151])
+  by fmsmga007.fm.intel.com with ESMTP; 05 May 2020 08:57:33 -0700
+Subject: Re: [PATCH V2] ASoC: Intel: boards: Use FS as nau8825 sysclk in
+ nau88125_* machine
+To:     =?UTF-8?Q?Rados=c5=82aw_Biernacki?= <rad@semihalf.com>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Lech Betlej <Lech.Betlej@intel.com>,
+        alsa-devel@alsa-project.org, Todd Broch <tbroch@google.com>,
+        Harshapriya <harshapriya.n@intel.com>,
+        John Hsu <KCHSU0@nuvoton.com>, linux-kernel@vger.kernel.org,
+        "Sienkiewicz, Michal" <michal.sienkiewicz@intel.com>,
+        Ben Zhang <benzh@chromium.org>,
+        Mac Chiang <mac.chiang@intel.com>,
+        Yong Zhi <yong.zhi@intel.com>, Marcin Wojtas <mw@semihalf.com>,
+        Vamshi Krishna <vamshi.krishna.gopal@intel.com>,
+        Alex Levin <levinale@google.com>
+References: <20200501193141.30293-1-rad@semihalf.com>
+ <3ad44b75-387f-da75-d7b2-3a16ed00550c@linux.intel.com>
+ <CAOs-w0LPeKgooa_98x_Jkzus-Y5Kad7pDby0CriDGb6nTp_6sA@mail.gmail.com>
+From:   Cezary Rojewski <cezary.rojewski@intel.com>
+Message-ID: <efca85c3-7078-efaa-88b5-536c8debea3d@intel.com>
+Date:   Tue, 5 May 2020 17:57:32 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOs-w0LPeKgooa_98x_Jkzus-Y5Kad7pDby0CriDGb6nTp_6sA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020 06:11:09 -0700
-Wang Wenhu <wenhu.wang@vivo.com> wrote:
-
-> Add cpu-idle-cooling.rst to the index list for user reference through
-> self-compiled htmldocs or online documentation tree of kernel.
+>>>
+>>> 2) Currently Skylake does not output MCLK/FS when the back-end DAI op
+>>>      hw_param is called, so we cannot switch to MCLK/FS in hw_param.  This
+>>>      patch reduces pop by letting nau8825 keep using its internal VCO clock
+>>>      during widget power up sequence, until SNDRV_PCM_TRIGGER_START when
+>>>      MCLK/FS is available. Once device resumes, the system will only enable
+>>>      power sequence for playback without doing hardware parameter, audio
+>>>      format, and PLL configure. In the mean time, the jack detecion sequence
+>>>      has changed PLL parameters and switched to internal clock. Thus, the
+>>>      playback signal distorted without correct PLL parameters.  That is why
+>>>      we need to configure the PLL again in SNDRV_PCM_TRIGGER_RESUME case.
+>>
+>> IIRC the FS can be controlled with the clk_ api with the Skylake driver,
+>> as done for some KBL platforms. Or is this not supported by the firmware
+>> used by this machine?
 > 
-> Like: https://www.kernel.org/doc/html/latest/driver-api/thermal/index.html
+> According to Ben, SKL had limitations in FW for managing the clk's
+> back in the days.
+> Can you point to the other driver you mention so we can cross check?
 > 
-> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->  Documentation/driver-api/thermal/cpu-idle-cooling.rst | 3 +++
->  Documentation/driver-api/thermal/index.rst            | 1 +
->  2 files changed, 4 insertions(+)
 
-Applied, thanks.
+Skylake driver is found within:
+	/sound/soc/intel/skylake
+directory.
 
-jon
+"SKL had limitations in FW" - that's misleading. This is neither FW 
+issue nor HW 'limitation'. SKL is an older platform and its goals and 
+design was different than say APL+. Basically, your needs do not align 
+with what's present on SKL hw.
+
+Czarek
