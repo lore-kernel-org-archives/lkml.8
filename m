@@ -2,142 +2,99 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E08C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6430C47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32C33206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3488215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:56:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rgFe5dJ+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aLHlS6xi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbgEEE4W (ORCPT
+        id S1727931AbgEEE4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 00:56:22 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:21001 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725915AbgEEE4V (ORCPT
+        Tue, 5 May 2020 00:56:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726065AbgEEE4n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 00:56:21 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588654580; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=PV7sEq8EmjCcuJpfW06q3OmdCQ5IpxPI2EjjZQwRIPw=; b=rgFe5dJ+dkpvCdcLwJLdPk3BJuQTuZ5qYzcYqJySGTtHvob4imSnFE78yXlMNmYvCEiN3UF8
- CFOW1/EuPSMrWp8lPIFNfJmoYfh9El7Y/LkW8Ob9dQG24ZEcXKHFnDJ6Rvo+yhJTRk55bfhw
- /apZg5Z+Rim28Lq7HmYvaMB495Q=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb0f1ea.7f3176e90500-smtp-out-n05;
- Tue, 05 May 2020 04:56:10 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 56675C433F2; Tue,  5 May 2020 04:56:10 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9D601C433D2;
-        Tue,  5 May 2020 04:56:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9D601C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Michal Kazior <michal.kazior@tieto.com>,
-        Maharaja Kennadyrajan <mkenna@codeaurora.org>,
-        Wen Gong <wgong@codeaurora.org>,
-        Erik Stromdahl <erik.stromdahl@gmail.com>,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH 04/15] ath10k: fix gcc-10 zero-length-bounds warnings
-References: <20200430213101.135134-1-arnd@arndb.de>
-        <20200430213101.135134-5-arnd@arndb.de>
-        <49831bca-b9cf-4b9a-1a60-f4289e9c83c0@embeddedor.com>
-        <87368flxui.fsf@codeaurora.org>
-        <69f5c551-01ab-3b90-01a1-42514cd58f60@embeddedor.com>
-Date:   Tue, 05 May 2020 07:56:03 +0300
-In-Reply-To: <69f5c551-01ab-3b90-01a1-42514cd58f60@embeddedor.com> (Gustavo A.
-        R. Silva's message of "Mon, 4 May 2020 11:09:21 -0500")
-Message-ID: <87d07jdlp8.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Tue, 5 May 2020 00:56:43 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AAE0C0610D5
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 21:56:43 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t16so334001plo.7
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 21:56:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0bcNjjam7owzFyIwJPvOejbVBTQ69maDzUfbwggZ2dA=;
+        b=aLHlS6xiNMHuJwgtS5c5FBNg7bB7qF2DSLw7iTqBVNXqJfmgox5k3SxD7cxrmKdk6v
+         l+kjTGGSZZKpT+CpQLlZN1qjlVBOya7XkibQvKsue/5dKzBH9vCbAJT8qr9Ma53x/3yI
+         QXIwV7ZAU1/UFqF4a6EW2NLopHZvqG1Rpm8orjkIk7tClG4Q8UbHmh8MOlLqqN0yzsYZ
+         Au7XZXV+dC9LVCS2NqNAnPzZ6jxJ22bARxfuvAPIT+7hPeuPDiMyHHV8G3Vs+JhdS+DR
+         cufyrx/Hws7YY7h93HkE1ORrPU2aw1a3ulvVLWrVW3NIhMU4oQfjzxIrNxURG6M226Uu
+         ucbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0bcNjjam7owzFyIwJPvOejbVBTQ69maDzUfbwggZ2dA=;
+        b=p+1fEFDFdgrl4FhhUdK9BpX4UFd+hM5d+119mW6catM+JYWyWmXVYTGzN+mCBqM0A9
+         bbE96mD6pntN3bmDE/R1u4aYIV9aH7TtN5XvPbYtJp8vPk62au0dA48q7sFeJh0nfyRj
+         bQBsnggJGDc58E7jV7wDN1fV0D8rkH5zLvVVkY1g/3vWdfrGN53xXqHj8L7cV9YvqgXY
+         uxY/CJ5JhAHN/GUyZLt1yCfueKW84zxeZzhjjOCQM9k2VP90xZshkcjy6TwZrORlOSwY
+         cGuIaPqTOr2pO+UmCYLupxlO7jAl9Li8kMcxRTfBCtZfdssuv4JmC0nhf3HpIXFdjETB
+         4XMw==
+X-Gm-Message-State: AGi0PuZzk3IOIZsbFLlqGRXHwdaRXjmjfdza76ATpv9HLTk6c24L5M1X
+        wqxf0G4Rs+zWTCi1ksdsyWISMg==
+X-Google-Smtp-Source: APiQypKz5PGkrZWTJbP3+f/TlvnG7+he8Ca87yIh/qmdt7h/HMYRPft82Ev9HjoCwI1XU0L+nqL4ug==
+X-Received: by 2002:a17:90a:f197:: with SMTP id bv23mr677669pjb.3.1588654601713;
+        Mon, 04 May 2020 21:56:41 -0700 (PDT)
+Received: from localhost ([122.171.118.46])
+        by smtp.gmail.com with ESMTPSA id h14sm721964pfq.46.2020.05.04.21.56.40
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 May 2020 21:56:41 -0700 (PDT)
+Date:   Tue, 5 May 2020 10:26:39 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     sboyd@kernel.org, georgi.djakov@linaro.org,
+        bjorn.andersson@linaro.org, saravanak@google.com, mka@chromium.org,
+        nm@ti.com, agross@kernel.org, david.brown@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        dianders@chromium.org, vincent.guittot@linaro.org,
+        amit.kucheria@linaro.org, ulf.hansson@linaro.org,
+        lukasz.luba@arm.com, sudeep.holla@arm.com
+Subject: Re: [PATCH v4 10/12] OPP: Add support for setting interconnect-tags
+Message-ID: <20200505045639.i4nnplwaxlkful4o@vireshk-i7>
+References: <20200504202243.5476-1-sibis@codeaurora.org>
+ <20200504202243.5476-11-sibis@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200504202243.5476-11-sibis@codeaurora.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavo@embeddedor.com> writes:
+On 05-05-20, 01:52, Sibi Sankar wrote:
+> Add support for setting tags on icc paths associated with
+> the opp_table.
+> 
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>  drivers/opp/of.c | 25 +++++++++++++++++++------
+>  1 file changed, 19 insertions(+), 6 deletions(-)
 
-> On 5/4/20 06:54, Kalle Valo wrote:
->> "Gustavo A. R. Silva" <gustavo@embeddedor.com> writes:
->> 
->>> Hi Arnd,
->>>
->>> On 4/30/20 16:30, Arnd Bergmann wrote:
->>>> gcc-10 started warning about out-of-bounds access for zero-length
->>>> arrays:
->>>>
->>>> In file included from drivers/net/wireless/ath/ath10k/core.h:18,
->>>>                  from drivers/net/wireless/ath/ath10k/htt_rx.c:8:
->>>> drivers/net/wireless/ath/ath10k/htt_rx.c: In function 'ath10k_htt_rx_tx_fetch_ind':
->>>> drivers/net/wireless/ath/ath10k/htt.h:1683:17: warning: array subscript 65535 is outside the bounds of an interior zero-length array 'struct htt_tx_fetch_record[0]' [-Wzero-length-bounds]
->>>>  1683 |  return (void *)&ind->records[le16_to_cpu(ind->num_records)];
->>>>       |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>>> drivers/net/wireless/ath/ath10k/htt.h:1676:29: note: while referencing 'records'
->>>>  1676 |  struct htt_tx_fetch_record records[0];
->>>>       |                             ^~~~~~~
->>>>
->>>> The structure was already converted to have a flexible-array member in
->>>> the past, but there are two zero-length members in the end and only
->>>> one of them can be a flexible-array member.
->>>>
->>>> Swap the two around to avoid the warning, as 'resp_ids' is not accessed
->>>> in a way that causes a warning.
->>>>
->>>> Fixes: 3ba225b506a2 ("treewide: Replace zero-length array with flexible-array member")
->>>> Fixes: 22e6b3bc5d96 ("ath10k: add new htt definitions")
->>>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->>>> ---
->>>>  drivers/net/wireless/ath/ath10k/htt.h | 4 ++--
->>>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/net/wireless/ath/ath10k/htt.h b/drivers/net/wireless/ath/ath10k/htt.h
->>>> index e7096a73c6ca..7621f0a3dc77 100644
->>>> --- a/drivers/net/wireless/ath/ath10k/htt.h
->>>> +++ b/drivers/net/wireless/ath/ath10k/htt.h
->>>> @@ -1673,8 +1673,8 @@ struct htt_tx_fetch_ind {
->>>>  	__le32 token;
->>>>  	__le16 num_resp_ids;
->>>>  	__le16 num_records;
->>>> -	struct htt_tx_fetch_record records[0];
->>>> -	__le32 resp_ids[]; /* ath10k_htt_get_tx_fetch_ind_resp_ids() */
->>>> +	__le32 resp_ids[0]; /* ath10k_htt_get_tx_fetch_ind_resp_ids() */
->>>> +	struct htt_tx_fetch_record records[];
->>>>  } __packed;
->>>>  
->>>>  static inline void *
->>>>
->>>
->>> The treewide patch is an experimental change and, as this change only applies
->>> to my -next tree, I will carry this patch in it, so other people don't have
->>> to worry about this at all.
->> 
->> Gustavo, why do you have ath10k patches in your tree? I prefer that
->> ath10k patches go through my ath.git tree so that they are reviewed and
->> tested.
->> 
->
-> I just wanted to test out a mechanical change. I will remove it from my tree
-> now and will send a patch to you so you can apply it to your ath.git tree.
-
-Great, thanks.
+Maybe this should be part of Georgi's series ?
 
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+viresh
