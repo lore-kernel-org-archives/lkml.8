@@ -2,101 +2,101 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B72C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 534DCC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CBCA20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2901720675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:00:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="WzXRH7om"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729636AbgEEPAf (ORCPT
+        id S1729666AbgEEPAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:00:35 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:52879 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729235AbgEEPAb (ORCPT
+        Tue, 5 May 2020 11:00:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56204 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729235AbgEEPAz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:00:31 -0400
-Received: from mail-qv1-f43.google.com ([209.85.219.43]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M6H7o-1jTl4Q0ZdQ-006cvC; Tue, 05 May 2020 17:00:30 +0200
-Received: by mail-qv1-f43.google.com with SMTP id p13so1109209qvt.12;
-        Tue, 05 May 2020 08:00:29 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZmBpVYAiEFjxHnkMj44pEum+WuhQRrU2a7ujZa/Yq3jfSU5GQx
-        3OA5ZUWaGF8Bg8GHBmE253KaY34iezgcjlVUnWU=
-X-Google-Smtp-Source: APiQypKrddD0XLM23ERKqp8jN3+C82vh7NIDRBG0Uf01KOrVl399PbZ2DcqmCHoRuZCUuRyJT5cdYW0eG7pmsStXQPk=
-X-Received: by 2002:a0c:e781:: with SMTP id x1mr3317423qvn.4.1588690828960;
- Tue, 05 May 2020 08:00:28 -0700 (PDT)
+        Tue, 5 May 2020 11:00:55 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3EC8C061A0F;
+        Tue,  5 May 2020 08:00:54 -0700 (PDT)
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 94D3423E80;
+        Tue,  5 May 2020 17:00:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1588690853;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=T8QHJzdQsqxKUorxv0i84+q/jnRbNR+waUrdwg8sxko=;
+        b=WzXRH7omIgdod2GwSr7P7NftvohR0t4Z6U/E+DQhKjCkTzaBB6v013s/9EAZW8xkJrpOCB
+        5LH8ly/cRqlGucUBJr3oqx/91F/JiXnHp0IaLASdw83rbiHODqxxEmFDqoPURkXME2DpDw
+        p7Ylps13Qk4orZFSTsF0mxPa6AnlrNY=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH] arm64: dts: freescale: sl28: enable LPUART1
+Date:   Tue,  5 May 2020 17:00:37 +0200
+Message-Id: <20200505150037.32573-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200505143028.1290686-1-arnd@arndb.de> <b287bb2f-28e2-7a41-e015-aa5a0cb3b5d7@embeddedor.com>
-In-Reply-To: <b287bb2f-28e2-7a41-e015-aa5a0cb3b5d7@embeddedor.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 5 May 2020 17:00:12 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0v-hK+Ury86-1D2_jfOFgR8ZTEFKVQZBWJq3dW=MuSzw@mail.gmail.com>
-Message-ID: <CAK8P3a0v-hK+Ury86-1D2_jfOFgR8ZTEFKVQZBWJq3dW=MuSzw@mail.gmail.com>
-Subject: Re: [PATCH] fsnotify: avoid gcc-10 zero-length-bounds warning
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Jan Kara <jack@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:rxM3GBXNbjQCzWEHPzyHTPa7qUdjCipkeA/r6+eAINZgG1WPD/j
- LYmMxQV7mBG3+0cXIAYsOZgIRjxVNaBydlVjKiCd6bH91u9kN1lCzlPAitJy3aAGek/a+GR
- FyY1X3GZ6hmlLpBFCgwH/zaTtO4D3Vx4/Tk7ThJ9rsfXh2oBg2YCdJuHP85TzmLHl0KucaQ
- jISdWaYRwtnpuIqS2gDcg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5mt9Fx4RWYw=:9fCUuVrwzdfJlVlyuFtWcn
- 1CPajEk6NCZx936DBzJvYz7hnImlDfykx6qoA4ZlvvN9oJF3HRFs68WQ8lC0WhJbl7XIEqwDo
- mrlfZgdgM56ZNF3JoYkVryfdc+VVYi3PZs3ZisMzx+e4HjOpQfV/V3YA9Tf3swKKhpo4fzzmV
- XKtzwIH+XoVyM/Iig3bcS5w2V2Ppl2PX05K9BfTaDvhnxQhUmYaGHjQsAV0jbPABqjCmg4DrX
- ZovnnD+hKl+w69j/RgFWRme0yxiHgEkiscaaPxBYaXFQNYIIrjn6YcVQDdsHPfazqh0SltOkJ
- sge/PhaHU7sh4sW+81+4TWDN5mTZwnBv0kasxxvsKcIdYDJ93eQEVQCpuweKqW2OfnpYvDrqQ
- OzdgdbFS48epsofYftSPyqERaOrRH8+2mDc8nHXUfAp4/5Ii4AlQPT/Afcb6Tf/ju1O9vOg7O
- VSo0c7fjuq1XBQhnYhqGIgCiVjcD9cokSVgyH1Cq2V9/3UAfdqaaicWolocH9GBfGDi5X4i3F
- Omf+wpbZ1eQdgcVa2HOmJr8Vk5v7lDBe/DhNGClZbtfSfD03h4AY5zCxy9qd9gsBO8iAIhI6+
- VIdCRPeeQ5ZStIS2q86S9qvlX1gc5O+L76wIxNdM8QuZc4ZUHqIRal4acBO1VWN1CSjOcCIyp
- ypzWzNAakklCar1zG3nll8K2oZJ1rk7x6S8A4XnRXmqbKBII1KDGBU7jdBzFSPPtuudtGB/vE
- msRaKD+ItnUa+cqdZwkKoiWyA5pnomIHBMAzkzWuiBNhNSWAQgrBx/7SIR72Vp5t9xEJ/dJdt
- b87hLa1M4Ui0nTz4Ua8ktzLSqxIQZKTZJIquBHmgPisW6Y59Z4=
+Content-Transfer-Encoding: 8bit
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 4:35 PM Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
-> On 5/5/20 09:30, Arnd Bergmann wrote:
-> > gcc-10 warns about accesses into the f_handle[] zero-length array.
-> >
-> > fs/notify/fdinfo.c: In function 'show_mark_fhandle':
-> > fs/notify/fdinfo.c:66:47: error: array subscript 'i' is outside the bounds of an interior zero-length array 'unsigned char[0]' [-Werror=zero-length-bounds]
-> >    66 |   seq_printf(m, "%02x", (int)f.handle.f_handle[i]);
-> >       |                              ~~~~~~~~~~~~~~~~~^~~
-> > In file included from fs/notify/fdinfo.c:3:
-> > include/linux/fs.h:988:16: note: while referencing 'f_handle'
-> >   988 |  unsigned char f_handle[0];
-> >       |                ^~~~~~~~
-> >
-> > This is solved by using a flexible array instead.
-> >
-> > Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> > Gustavo has done the same thing as part of a treewide change, but keeping
-> > this separate lets us backport it to stable kernels more easily later.
->
-> Arnd,
->
-> I wonder why would we need to backport these changes to -stable... merely
-> because of the use of a new version of GCC?
+Now that the LPUART has support for the LS1028A SoC, also enable it on
+our board.
 
-Yes, we usually backport trivial warning fixes to stable kernels to allow
-building those with any modern compiler version.
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
 
-       Arnd
+Hi Shawn,
+
+After adding/fixing the LPUART support for the LS1028A I've forgot to send
+this patch to actually enable the LPUART on our boards. It would be great
+if this could make it into the fixes queue for the -rc. If not its also ok.
+
+Thanks,
+-michael
+
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
+index 5eac8a6ab46f..360b3a168c10 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
+@@ -17,6 +17,7 @@
+ 		crypto = &crypto;
+ 		serial0 = &duart0;
+ 		serial1 = &duart1;
++		serial2 = &lpuart1;
+ 		spi0 = &fspi;
+ 		spi1 = &dspi2;
+ 	};
+@@ -189,3 +190,7 @@
+ 		pagesize = <32>;
+ 	};
+ };
++
++&lpuart1 {
++	status = "okay";
++};
+-- 
+2.20.1
+
