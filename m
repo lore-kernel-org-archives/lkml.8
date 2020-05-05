@@ -2,202 +2,130 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 097ABC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 690DDC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1A432078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:33:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TOyRiw6r"
+	by mail.kernel.org (Postfix) with ESMTP id 46B70206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:33:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729578AbgEEOdK (ORCPT
+        id S1729620AbgEEOdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:33:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51874 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727857AbgEEOdJ (ORCPT
+        Tue, 5 May 2020 10:33:19 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60172 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727857AbgEEOdS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:33:09 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 851E3C061A0F;
-        Tue,  5 May 2020 07:33:09 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id a21so1828074ljj.11;
-        Tue, 05 May 2020 07:33:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3yyBCAEOtVSPbMrEm7lYVHsTzxI11co2b75HQs0mAhQ=;
-        b=TOyRiw6rXYpPTg0x9FbRVPwKTrrQLmYeIAjAV1WDFOkGQecgEOc4i3gfWDnrXUY9wg
-         pyeGjfvYtPmFLNYi2zP+BW0cEdv95IAn1Ay/o/oblaLO9TbLtAh+O3vpftkixE+UD6H2
-         M0yYlMWbHXo1VAu5Ruz1JlMetHNpRnxQ3D92NPS8RxWhJOByD4UbHcO/ldKtqiVSUYc3
-         nVhXbJsZiiZFtv1S41CqiUey6nnP3TCEyx19VVmpi3uuxfYPB040Vc9jleeiMkjyIwhj
-         oJRN7vtt7z6ifG4mEZjOkPGYa/kXorAg+d0npunBVcCgQqA6rngOa0wscOVoyVl0tIgE
-         mxGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3yyBCAEOtVSPbMrEm7lYVHsTzxI11co2b75HQs0mAhQ=;
-        b=a1CeLV8HFI8AnhqdBmP0T/rdkE90dWMeVG+bq1cmaHJdWk4ZG2KEFR/CIfllW6dkaY
-         45dBNGqND3UjWXYdrrwWC+9t0W60anzIDjYMyMjmUa9RlaBOsys55TXtRnH6z6jIL0DQ
-         b/jE4OKIxEYp2CosNml5gm5WuHiX0Kf5wFaRpExDOccRYqIHSus3ceE4w1WSpp0Socjb
-         si/x6eTz3HesLCs9x7IDTF9gAsu6zueIyEy7TQYFE6uTDMwZY3zGs3AbMUacoFVvmhkH
-         iCcoYVpolT/gjC0XnvJ2fkG7vZdiPxvlVZuB1KX7cnbuZ2sVphbrGlLslGg/bg0EWXPX
-         oRSA==
-X-Gm-Message-State: AGi0PuZdlrGcRqFM4bETN6s88zVFJKLIilrOwTETRlWa7SJRlnInjkzL
-        Hb+xhZi3loRVJMGHCOFWW/zJQ8ulCmvvMuA9y38=
-X-Google-Smtp-Source: APiQypJDS6+xmYuy7ShucmxpoBa526M7IUnx2+GIok6Qd+RrQDQOkfiwZm+S6OVLYr/fG+tbj2BxgC2iXyF2OS+CoxI=
-X-Received: by 2002:a2e:9a93:: with SMTP id p19mr1861345lji.77.1588689187806;
- Tue, 05 May 2020 07:33:07 -0700 (PDT)
+        Tue, 5 May 2020 10:33:18 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 045E73OF041810;
+        Tue, 5 May 2020 10:33:07 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30s50gpn5j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 May 2020 10:33:07 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 045E7PCC044527;
+        Tue, 5 May 2020 10:33:06 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30s50gpn4r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 May 2020 10:33:06 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 045EUj3A028193;
+        Tue, 5 May 2020 14:33:04 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma05fra.de.ibm.com with ESMTP id 30s0g5jvvk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 May 2020 14:33:04 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 045EX1wo8782182
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 5 May 2020 14:33:02 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D997542041;
+        Tue,  5 May 2020 14:33:01 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C0F5C4203F;
+        Tue,  5 May 2020 14:33:01 +0000 (GMT)
+Received: from oc3748833570.ibm.com (unknown [9.145.26.196])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  5 May 2020 14:33:01 +0000 (GMT)
+Received: by oc3748833570.ibm.com (Postfix, from userid 1000)
+        id 39CBED80361; Tue,  5 May 2020 16:33:01 +0200 (CEST)
+Date:   Tue, 5 May 2020 16:33:01 +0200
+From:   Ulrich Weigand <uweigand@de.ibm.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        viro@zeniv.linux.org.uk, david@redhat.com,
+        akpm@linux-foundation.org, aarcange@redhat.com, linux-mm@kvack.org,
+        frankja@linux.ibm.com, sfr@canb.auug.org.au, jhubbard@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        jack@suse.cz, kirill@shutemov.name, peterz@infradead.org,
+        sean.j.christopherson@intel.com, Ulrich.Weigand@de.ibm.com
+Subject: Re: [PATCH v2 1/1] fs/splice: add missing callback for inaccessible
+ pages
+Message-ID: <20200505143300.GA14113@oc3748833570.ibm.com>
+References: <20200430143825.3534128-1-imbrenda@linux.ibm.com>
+ <1a3f5107-9847-73d4-5059-c6ef9d293551@de.ibm.com>
+ <e3e95a35-b0e3-b733-92f4-98bcccbe7ca5@intel.com>
+ <3d379d9e-241c-ef3b-dcef-20fdd3b8740d@de.ibm.com>
+ <a10ec7ad-2648-950e-7f30-07c08e400e7b@intel.com>
+ <20200504134154.GA21001@oc3748833570.ibm.com>
+ <231da2f1-a6ef-0cf9-7f57-95e8b925997b@intel.com>
+ <20200505135556.GA9920@oc3748833570.ibm.com>
+ <fd300dca-f0b4-ce3b-4a97-244030624fbd@de.ibm.com>
+ <d1de4fb2-dfe6-83fa-9973-2505d4c397ec@de.ibm.com>
 MIME-Version: 1.0
-References: <000000000000ea641705a350d2ee@google.com>
-In-Reply-To: <000000000000ea641705a350d2ee@google.com>
-From:   Taehee Yoo <ap420073@gmail.com>
-Date:   Tue, 5 May 2020 23:32:56 +0900
-Message-ID: <CAMArcTVqHzX94rDYds75MQL-h8h3zTZjt7ocv+nWhOOrR4cKMQ@mail.gmail.com>
-Subject: Re: WARNING: proc registration bug in snmp6_register_dev
-To:     syzbot <syzbot+1d51c8b74efa4c44adeb@syzkaller.appspotmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, kuznet@ms2.inr.ac.ru,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d1de4fb2-dfe6-83fa-9973-2505d4c397ec@de.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-05_08:2020-05-04,2020-05-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1015 impostorscore=0 adultscore=0 priorityscore=1501
+ malwarescore=0 phishscore=0 mlxscore=0 spamscore=0 mlxlogscore=641
+ bulkscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005050114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020 at 07:46, syzbot
-<syzbot+1d51c8b74efa4c44adeb@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    ab6f762f printk: queue wake_up_klogd irq_work only if per-..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1395613fe00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3010ccb0f380f660
-> dashboard link: https://syzkaller.appspot.com/bug?extid=1d51c8b74efa4c44adeb
-> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
->
-> Unfortunately, I don't have any reproducer for this crash yet.
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+1d51c8b74efa4c44adeb@syzkaller.appspotmail.com
->
-> ------------[ cut here ]------------
-> proc_dir_entry 'dev_snmp6/hsr1' already registered
-> WARNING: CPU: 0 PID: 22141 at fs/proc/generic.c:363 proc_register+0x2bc/0x4e0 fs/proc/generic.c:362
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 0 PID: 22141 Comm: syz-executor.2 Not tainted 5.6.0-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x1e9/0x30e lib/dump_stack.c:118
->  panic+0x264/0x7a0 kernel/panic.c:221
->  __warn+0x209/0x210 kernel/panic.c:582
->  report_bug+0x1ac/0x2d0 lib/bug.c:195
->  fixup_bug arch/x86/kernel/traps.c:175 [inline]
->  do_error_trap+0xca/0x1c0 arch/x86/kernel/traps.c:267
->  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
->  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-> RIP: 0010:proc_register+0x2bc/0x4e0 fs/proc/generic.c:362
-> Code: 08 4c 8b 74 24 28 48 8b 6c 24 20 74 08 48 89 ef e8 99 29 d1 ff 48 8b 55 00 48 c7 c7 24 4e e9 88 48 89 de 31 c0 e8 e4 7c 65 ff <0f> 0b 48 c7 c7 20 e6 32 89 e8 66 41 2a 06 48 8b 44 24 30 42 8a 04
-> RSP: 0000:ffffc900088feec0 EFLAGS: 00010246
-> RAX: f20851673ab1bb00 RBX: ffff8880908a5264 RCX: 0000000000040000
-> RDX: ffffc9000df22000 RSI: 00000000000150b4 RDI: 00000000000150b5
-> RBP: ffff88808981bc18 R08: ffffffff815cac69 R09: ffffed1015d06660
-> R10: ffffed1015d06660 R11: 0000000000000000 R12: dffffc0000000000
-> R13: 0000000000000004 R14: ffff88808981bbd4 R15: ffff88808981bb40
->  proc_create_single_data+0x18e/0x1e0 fs/proc/generic.c:631
->  snmp6_register_dev+0xa1/0x110 net/ipv6/proc.c:254
->  ipv6_add_dev+0x509/0x1430 net/ipv6/addrconf.c:408
->  addrconf_notify+0x5f8/0x3ad0 net/ipv6/addrconf.c:3503
->  notifier_call_chain kernel/notifier.c:83 [inline]
->  __raw_notifier_call_chain kernel/notifier.c:361 [inline]
->  raw_notifier_call_chain+0xd4/0x170 kernel/notifier.c:368
->  call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
->  call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
->  call_netdevice_notifiers net/core/dev.c:1974 [inline]
->  register_netdevice+0x14a4/0x1a50 net/core/dev.c:9421
->  hsr_dev_finalize+0x425/0x6d0 net/hsr/hsr_device.c:486
->  hsr_newlink+0x3b5/0x460 net/hsr/hsr_netlink.c:77
->  __rtnl_newlink net/core/rtnetlink.c:3333 [inline]
->  rtnl_newlink+0x143e/0x1c00 net/core/rtnetlink.c:3391
->  rtnetlink_rcv_msg+0x889/0xd40 net/core/rtnetlink.c:5454
->  netlink_rcv_skb+0x190/0x3a0 net/netlink/af_netlink.c:2469
->  netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
->  netlink_unicast+0x786/0x940 net/netlink/af_netlink.c:1329
->  netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1918
->  sock_sendmsg_nosec net/socket.c:652 [inline]
->  sock_sendmsg net/socket.c:672 [inline]
->  ____sys_sendmsg+0x4f9/0x7c0 net/socket.c:2362
->  ___sys_sendmsg net/socket.c:2416 [inline]
->  __sys_sendmsg+0x2a6/0x360 net/socket.c:2449
->  do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
->  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> RIP: 0033:0x45c889
-> Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007f007299ac78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-> RAX: ffffffffffffffda RBX: 00007f007299b6d4 RCX: 000000000045c889
-> RDX: 0000000000000000 RSI: 00000000200000c0 RDI: 0000000000000006
-> RBP: 000000000076c180 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-> R13: 00000000000009fc R14: 00000000004ccb7c R15: 000000000076c18c
-> Kernel Offset: disabled
-> Rebooting in 86400 seconds..
->
+On Tue, May 05, 2020 at 04:03:00PM +0200, Christian Borntraeger wrote:
+> > Just looked at 
+> > commit 88b1a17dfc3ed7728316478fae0f5ad508f50397  mm: add 'try_get_page()' helper function
+> > 
+> > which says:
+> >     Also like 'get_page()', you can't use this function unless you already
+> >     had a reference to the page.  The intent is that you can use this
+> >     exactly like get_page(), but in situations where you want to limit the
+> >     maximum reference count.
+> >     
+> >     The code currently does an unconditional WARN_ON_ONCE() if we ever hit
+> >     the reference count issues (either zero or negative), as a notification
+> >     that the conditional non-increment actually happened.
+> > 
+> > If try_get_page must not be called with an existing reference, that means
+> 		s/not//
+> > that when we call it the page reference is already higher and our freeze
+> > will never succeed. That would imply that we cannot trigger this. No?
 
-This is hsr module bug.
-When a hsr interface is being removed,
-"/proc/net/dev_snmp6/<interface name>" is removed and it is created again
-because of NETDEV_CHANGEMTU after NETDEV_UNREGISTER.
-So, this resource can't be released in the RTNL mutex critical section.
-This remained resources will be released by netdev_run_todo() but it is
-not protected by RTNL mutex. So that creating a new interface
-routine(rtnl_newlink()) can be executed concurrently.
-This routine would try to create the same proc entry
-("/proc/net/dev_snmp6/<interface name>")
-At this point, this warning could occur.
-In order to fix this problem, ->dellink() can be used.
-But the patch would cause conflict with 34a9c361dd48
-("hsr: remove hsr interface if all slaves are removed").
-That commit is not merged into "net" branch yet.
-So, I will send fix patch after the merge.
+Well, my understanding is that the "existing" reference may be one of the
+references that is expected by our freeze code, in particular in gup the
+existing reference is simply the one from the pte.  So in this case our
+freeze *would* succeeed.
 
-Test commands:
-#SHELL1
-ip link add dummy0 type dummy
-ip link add dummy1 type dummy
-ip link set dummy0 mtu 1300
-while :
-do
-    ip link add hsr0 type hsr slave1 dummy0 slave2 dummy1
-done
-#SHELL2
-while :
-do
-    ip link del hsr0
-done
+Bye,
+Ulrich
 
-Thank you,
-Taehee Yoo
-
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+-- 
+  Dr. Ulrich Weigand
+  GNU/Linux compilers and toolchain
+  Ulrich.Weigand@de.ibm.com
