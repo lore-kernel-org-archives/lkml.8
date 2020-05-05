@@ -2,102 +2,113 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2D3C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C34C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59079206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:12:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588695151;
-	bh=OMHKJSIPDPRNNrS/RWfaSOA46Dxl/+H8MIneOgNjauA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0MRnDtZRyVkf23lZMIYi+QOJfskUl1uZwbfFAXAktgDLk3w/8aNQLYKEttRQTHG1Z
-	 5fpdYcUHwH4X5pSuhAFRV0qxPEXbBAmqYxOrLVoB4Co2ErjRQbJGPlUOnmGJ4bPnMO
-	 Dc5s33Vjwcwzg88ma1JguyH2lScvCTocAtqfkL7E=
+	by mail.kernel.org (Postfix) with ESMTP id BD568206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:13:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729946AbgEEQMa (ORCPT
+        id S1729996AbgEEQNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:12:30 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33694 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729171AbgEEQM3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:12:29 -0400
-Received: by mail-oi1-f195.google.com with SMTP id o24so2463642oic.0;
-        Tue, 05 May 2020 09:12:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=P4uwIg6IznWYSiI4J+LB8KzTkIyPs2Mm/1Ia9wDW3Qw=;
-        b=Uf8Fm/+RQarS5djAk3ZuSuDk6ZIUfYeLVqqmBudontM/TxqpniBnxtKoJA077F4RNI
-         /iGW0UXRPytSUB+KHaeR9oep4tqisrQiKi7JGoKmMaNT9W4kyVmb0Hk2wXuEJ/xRlG8Q
-         BfGXpc20gzqBqKvcjg+rEk29K/o/Cbi0V6cFzcGO3TkVT2tVv8fDl6YPQIZ6Qmi87ydY
-         QvWOoi67TTwjGRiJGh6yTOGqXV/JrOHKpcPMflcvA1Gn8WEU/Vk0M7bx+5hG/N/Ka/BH
-         TbL8bdVznQ1E/dIewk/OvpbiF2kIyziU2Xe04EwIRLiVgV2vsLYkFnuJldupPz562DjE
-         gACw==
-X-Gm-Message-State: AGi0Pua5KQb338WRPQVMrTBRYQmZsmR+Np3ZooBSlFCPxTxNRarsZ4N4
-        hmJztXUlC8VBl3UtzA9Kpw==
-X-Google-Smtp-Source: APiQypLPTfyCDSQGXksszy6DzFalq0KOuLxkfmgzhJ5Qd4+1aprQV9wF6sc3emzl0a6+rBGzs5/Z+w==
-X-Received: by 2002:aca:ed13:: with SMTP id l19mr1736131oih.132.1588695148437;
-        Tue, 05 May 2020 09:12:28 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t20sm698707ott.51.2020.05.05.09.12.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 09:12:27 -0700 (PDT)
-Received: (nullmailer pid 21692 invoked by uid 1000);
-        Tue, 05 May 2020 16:12:26 -0000
-Date:   Tue, 5 May 2020 11:12:26 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     amirmizi6@gmail.com
-Cc:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
-        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
-        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org, benoit.houyere@st.com,
-        eajames@linux.ibm.com, joel@jms.id.au, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        oshri.alkoby@nuvoton.com, tmaimon77@gmail.com, gcwilson@us.ibm.com,
-        kgoldman@us.ibm.com, Dan.Morav@nuvoton.com,
-        oren.tanami@nuvoton.com, shmulik.hager@nuvoton.com,
-        amir.mizinski@nuvoton.com
-Subject: Re: [PATCH v7 6/7] tpm: Add YAML schema for TPM TIS I2C options
-Message-ID: <20200505161226.GA555@bogus>
-References: <20200427124931.115697-1-amirmizi6@gmail.com>
- <20200427124931.115697-7-amirmizi6@gmail.com>
+        Tue, 5 May 2020 12:13:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52784 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729171AbgEEQNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 12:13:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 380E5ABF4;
+        Tue,  5 May 2020 16:13:12 +0000 (UTC)
+From:   Andreas Schwab <schwab@suse.de>
+To:     Vasily Averin <vvs@virtuozzo.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        NeilBrown <neilb@suse.com>, Waiman Long <longman@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>
+Subject: Re: [PATCH 7/7] sysvipc_find_ipc should increase position index
+References: <b7a20945-e315-8bb0-21e6-3875c14a8494@virtuozzo.com>
+X-Yow:  C'MON, everybody!!  I've flown in LESLIE GORE and two dozen KOSHER
+ BUTCHERS!  They'll be doing intricate MILITARY MANEUVERS to the
+ soundtrack from "OKLAHOMA"!!
+Date:   Tue, 05 May 2020 18:13:08 +0200
+In-Reply-To: <b7a20945-e315-8bb0-21e6-3875c14a8494@virtuozzo.com> (Vasily
+        Averin's message of "Fri, 24 Jan 2020 10:03:12 +0300")
+Message-ID: <mvm4ksupdgr.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.0.91 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427124931.115697-7-amirmizi6@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 03:49:30PM +0300, amirmizi6@gmail.com wrote:
-> From: Amir Mizinski <amirmizi6@gmail.com>
-> 
-> Added a YAML schema to support tpm tis i2c related dt-bindings for the I2c
-> PTP based physical layer.
-> 
-> This patch adds the documentation for corresponding device tree bindings of
-> I2C based Physical TPM.
-> Refer to the 'I2C Interface Definition' section in
-> 'TCG PC Client PlatformTPMProfile(PTP) Specification' publication
-> for specification.
+I think this is causing this bug (seen on 5.6.8):
 
-Again, DT bindings describe h/w devices, not just a protocol. A device 
-is more than just a protocol interface. There's clocks, power rails, 
-resets, interrupts, firmware, etc. 
+# ipcs -q
 
-Unless there's something special about TPM chips that makes none of this 
-applicable and no chip will ever have any quirks (or extensions) in 
-their protocol to work-around, then you need compatible string(s) that 
-are specific to the TPM chip. You can have tcg,tpm-tis-i2c as a 
-fallback, but you need specific compatible to handle any quirks.
+------ Message Queues --------
+key        msqid      owner      perms      used-bytes   messages    
 
-Rob
+# ipcmk -Q
+Message queue id: 0
+# ipcs -q
+
+------ Message Queues --------
+key        msqid      owner      perms      used-bytes   messages    
+0x82db8127 0          root       644        0            0           
+
+# ipcmk -Q
+Message queue id: 1
+# ipcs -q
+
+------ Message Queues --------
+key        msqid      owner      perms      used-bytes   messages    
+0x82db8127 0          root       644        0            0           
+0x76d1fb2a 1          root       644        0            0           
+
+# ipcrm -q 0
+# ipcs -q
+
+------ Message Queues --------
+key        msqid      owner      perms      used-bytes   messages    
+0x76d1fb2a 1          root       644        0            0           
+0x76d1fb2a 1          root       644        0            0           
+
+# ipcmk -Q
+Message queue id: 2
+# ipcrm -q 2
+# ipcs -q
+
+------ Message Queues --------
+key        msqid      owner      perms      used-bytes   messages    
+0x76d1fb2a 1          root       644        0            0           
+0x76d1fb2a 1          root       644        0            0           
+
+# ipcmk -Q
+Message queue id: 3
+# ipcrm -q 1
+# ipcs -q
+
+------ Message Queues --------
+key        msqid      owner      perms      used-bytes   messages    
+0x7c982867 3          root       644        0            0           
+0x7c982867 3          root       644        0            0           
+0x7c982867 3          root       644        0            0           
+0x7c982867 3          root       644        0            0           
+
+
+As you can see, whenever an IPC item with a low id is deleted, the items
+with higher ids are duplicated, as if filling a hole.
+
+Andreas.
+
+-- 
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
