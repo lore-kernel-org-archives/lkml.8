@@ -2,120 +2,122 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F33C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA83C47259
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53E4220721
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03EB9206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:02:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ota0VHhL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MlVHtLTY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730550AbgEERCj (ORCPT
+        id S1730654AbgEERCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 13:02:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47286 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728804AbgEERCi (ORCPT
+        Tue, 5 May 2020 13:02:44 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51843 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730570AbgEERCl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 13:02:38 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08B85C061A0F;
-        Tue,  5 May 2020 10:02:38 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id x25so3111351wmc.0;
-        Tue, 05 May 2020 10:02:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=4Fa9SRX5iGefguq9oBjY0ujY1kxsa+01Ny22B/LnyJg=;
-        b=Ota0VHhLwimGfuqQXDT5Cm/ryqh3nix86NndMnb4/lv3yKDFdLDPzSIF3rL/1VCQ8J
-         c5JfalcNar2PI5aHHHMY+BVkiHyCgS/qr2yRvC8BUxaoZs/Opr9bgDh2xFrJP+yHb42Z
-         kdx2HPpLIBmypvHxR8iRBlw8v1gkOvij88nxQSDewwTherDFxQJ6j7OmpK3SH1fQw3HN
-         JR95is0tt0sfsleV0tTGzH+7CKoFhWTSNDUvBySF3MBuNv/wH3VWrpoijovq8iblG4TK
-         hz7RBOvoR9VUpVy+vH4y2KnH/cXOX8RqaAUT5ZRUfRHzKwXm5tjdXa2WsQZMSAloY40o
-         Oudg==
+        Tue, 5 May 2020 13:02:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588698159;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5wA5G//ZMwKX3KXqf3Mv3pq9KAcUMr/otngiqdWE/rQ=;
+        b=MlVHtLTYs5c/qp4v+MUqKfkdu+gayo+YrOPdAPrqUH17h94GAYml7XE29etNbtWuddsCtW
+        lHhOjlF5obhgRGHZImG+zNhOtOYCTCI2DKRDafbn3xN1h2wIaYHP7UseGYylGVXb7Hfr0K
+        tuDvQuLf2c42QCOCcWHjvH9qAmLE45U=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-155-rCi-DIU-NrqjjSqDuv59CA-1; Tue, 05 May 2020 13:02:38 -0400
+X-MC-Unique: rCi-DIU-NrqjjSqDuv59CA-1
+Received: by mail-wr1-f70.google.com with SMTP id f2so1528889wrm.9
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 10:02:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=4Fa9SRX5iGefguq9oBjY0ujY1kxsa+01Ny22B/LnyJg=;
-        b=YdFKyBzCQN0+/UT7zvIg6t2c1Ncz2jvPaFosUPdbRxf5eYkcV4rEtC9SxdodkTDabZ
-         bICF5XX9LyR7ddaKhTiW3RFQBGmPOnXFciSmUkcTrKdnDWUmsb0Mhg3AFseJ2xbj5KVT
-         Pk+379Sj5D7Lh9xBoFelYOkBE6Wtjif+gSIlnypJE6qRSrcdZGzyIKnoSgZeonawU+iG
-         IOOdHhqlPs5+PWHHNmGRxptkqA3gihrhnPtVtYhlF/0SnXovAGNDPYnsJAeT9CgL/glS
-         0k5LUtbNjjnILdMwLUi0ewYwE45bbmLYS4DE/rMPhehBPYEY6uy2IHiStND6tPLmAVv2
-         HTtA==
-X-Gm-Message-State: AGi0Pubm+Il/Fwg7lc+LMNRBm/b3JYC0t414HmzuZvyokkKOCWy7LeaC
-        zfkrxpmSNZgiJmlFs0/3SgE=
-X-Google-Smtp-Source: APiQypJAuuQIMcmMxXCSbON9abfTYyy02Wjgc8Q38il3f+5HzxAp3b1VaD3sXdGSeZIgUiwFGsXi7Q==
-X-Received: by 2002:a7b:c456:: with SMTP id l22mr4204827wmi.148.1588698156757;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5wA5G//ZMwKX3KXqf3Mv3pq9KAcUMr/otngiqdWE/rQ=;
+        b=C5ErChMINM7ju63DOgEHnm/rz396MjUcLqpFLbJTQvvISM77rhxxl9G82w0ox2/NkE
+         I9lUE37f8RDvOXCAmqvez69qztclcGKzuRu3BKAztspSMTr12jcyRCK7pTNhoDLmR6lu
+         zTxKNi1rNVW66O4skCHTJaJ9ue7TSClkghCoQFSrkzWCHnl+JiwgA9lnkzomv82lF/rd
+         joMZ3GkFs9CBeNgaH16uqfNW09/3NusbMBaY21JrxPwC0h/TDPftZaMZAjQQqXve5a9j
+         8pOC2NtGTW+PuhdFynE2+9hZiRT/7B4MX9qyAV55UQleJ6JW9pW2FXueCWxbGKBeS2lF
+         NZmg==
+X-Gm-Message-State: AGi0Pub0V9jTDpiO+zbp+92zlkC/c3W6dZMbpGCEt6r1j/jTcCWJOWwO
+        EvMSKq4UOpeVZATUFSPqRK2pmINRpJ5Urz106MunehE/aVHo1sNLnJQIoTOq2RBe872fZypxQZz
+        Dn/OY8gPZ6XAIYmI+07BrLGUJ
+X-Received: by 2002:adf:d0c5:: with SMTP id z5mr5096744wrh.410.1588698156792;
         Tue, 05 May 2020 10:02:36 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id o6sm4397252wrw.63.2020.05.05.10.02.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+X-Google-Smtp-Source: APiQypJLNwomNOVHwIvpSDnSwZmv6Omr127dtUlNqUvacYqezIg5AT62IcLqVfdIy2Hep5WWyqsAoA==
+X-Received: by 2002:adf:d0c5:: with SMTP id z5mr5096701wrh.410.1588698156541;
         Tue, 05 May 2020 10:02:36 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] arm64: dts: rockchip: fix phy nodename for rk3328
-Date:   Tue,  5 May 2020 19:02:27 +0200
-Message-Id: <20200505170227.6503-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200321215423.12176-1-jbx6244@gmail.com>
-References: <20200321215423.12176-1-jbx6244@gmail.com>
+Received: from [192.168.178.58] ([151.20.132.175])
+        by smtp.gmail.com with ESMTPSA id g24sm1632241wrb.35.2020.05.05.10.02.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2020 10:02:35 -0700 (PDT)
+Subject: Re: [PATCH v2 0/5] Statsfs: a new ram-based file sytem for Linux
+ kernel statistics
+To:     Jim Mattson <jmattson@google.com>,
+        Emanuele Giuseppe Esposito <eesposit@redhat.com>
+Cc:     David Rientjes <rientjes@google.com>,
+        Jonathan Adams <jwadams@google.com>,
+        kvm list <kvm@vger.kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+References: <20200504110344.17560-1-eesposit@redhat.com>
+ <alpine.DEB.2.22.394.2005041429210.224786@chino.kir.corp.google.com>
+ <f2654143-b8e5-5a1f-8bd0-0cb0df2cd638@redhat.com>
+ <CALMp9eQYcLr_REzDC1kWTHX4SJWt7x+Zd1KwNvS1YGd5TVM1xA@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <1d12f846-bf89-7b0a-5c71-e61d83b1a36f@redhat.com>
+Date:   Tue, 5 May 2020 19:02:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <CALMp9eQYcLr_REzDC1kWTHX4SJWt7x+Zd1KwNvS1YGd5TVM1xA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A test with the command below gives for example this error:
+On 05/05/20 18:53, Jim Mattson wrote:
+>>> Since this is becoming a generic API (good!!), maybe we can discuss
+>>> possible ways to optimize gathering of stats in mass?
+>> Sure, the idea of a binary format was considered from the beginning in
+>> [1], and it can be done either together with the current filesystem, or
+>> as a replacement via different mount options.
+> 
+> ASCII stats are not scalable. A binary format is definitely the way to go.
 
-arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml: phy@0:
-'#phy-cells' is a required property
+I am totally in favor of having a binary format, but it should be
+introduced as a separate series on top of this one---and preferably by
+someone who has already put some thought into the problem (which
+Emanuele and I have not, beyond ensuring that the statsfs concept and
+API is flexible enough).
 
-The phy nodename is normally used by a phy-handle.
-This node is however compatible with
-"ethernet-phy-id1234.d400", "ethernet-phy-ieee802.3-c22"
-which is just been added to 'ethernet-phy.yaml'.
-So change nodename to 'ethernet-phy' for which '#phy-cells'
-is not a required property
+ASCII stats are necessary for quick userspace consumption and for
+backwards compatibility with KVM debugfs (which is not an ABI, but it's
+damn useful and should not be dropped without providing something as
+handy), so this is what this series starts from.
 
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/schemas/
-phy/phy-provider.yaml
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
-Changes v2:
-  Reword commit message in the same way as in the patches for
-  'rk3228-evb.dts' and 'rk3229-xms6.dts'
-  that are already aproved.
-
-  Patch 2-6 of version 1 unchanged.
----
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index 931a9279e..fdf0e1b26 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -935,7 +935,7 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 
--			phy: phy@0 {
-+			phy: ethernet-phy@0 {
- 				compatible = "ethernet-phy-id1234.d400", "ethernet-phy-ieee802.3-c22";
- 				reg = <0>;
- 				clocks = <&cru SCLK_MAC2PHY_OUT>;
--- 
-2.11.0
+Paolo
 
