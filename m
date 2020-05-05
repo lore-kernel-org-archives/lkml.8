@@ -2,151 +2,97 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 540A1C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7937FC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 235F0206D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50711206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:50:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588683032;
+	bh=QLn+uOYzl/cbRxyiEyBEun7Xm83d5G4JJgdYrFQ1mEM=;
+	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
+	b=1x9JIbz7aaUzwTkn1Uz8GOq/eT9CUkVpcwYTGfbwzsBU04FaQU/U8WB/zN+NSd9Fe
+	 TW1IWD1iewW3HhfVWdcQvJYbzhJIXg302HzaBiTqisZ7O84Yco/+qGF4qkjsnLhHnc
+	 /g3wE41UfIvbv6sS5GorOE/Lg2kG80Yb6OpUerco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728993AbgEEMt6 (ORCPT
+        id S1729006AbgEEMub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 08:49:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:39098 "EHLO foss.arm.com"
+        Tue, 5 May 2020 08:50:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728497AbgEEMt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 08:49:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CB6AE30E;
-        Tue,  5 May 2020 05:49:56 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.25.241])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D688E3F68F;
-        Tue,  5 May 2020 05:49:54 -0700 (PDT)
-Date:   Tue, 5 May 2020 13:49:51 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 04/16] arm64/cpufeature: Introduce ID_PFR2 CPU register
-Message-ID: <20200505124951.GD82823@C02TD0UTHF1T.local>
-References: <1588426445-24344-1-git-send-email-anshuman.khandual@arm.com>
- <1588426445-24344-5-git-send-email-anshuman.khandual@arm.com>
- <20200505111241.GF19710@willie-the-truck>
- <20200505111607.GA82823@C02TD0UTHF1T.local>
- <20200505112718.GH19710@willie-the-truck>
- <20200505115054.GC82823@C02TD0UTHF1T.local>
- <20200505121239.GI19710@willie-the-truck>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505121239.GI19710@willie-the-truck>
+        id S1728497AbgEEMub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 08:50:31 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88A24206D7;
+        Tue,  5 May 2020 12:50:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588683031;
+        bh=QLn+uOYzl/cbRxyiEyBEun7Xm83d5G4JJgdYrFQ1mEM=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=LlydU9w3oIJGGcpoyZ0pzki1EndLuSQlFTvtvEWjo9UsVpbxJ0ukXp3YGq9LxhQ9C
+         btXFl9N+9sydEFBTK8xLhNSpEIPuzgQ+i3t+viO8J0u9gSTdvMvOVJ6Zbqwo7cQ9xH
+         V+mtntBtQKy+G2c5Y4juTV2mgMojTipJmPx2O3Pw=
+Date:   Tue, 05 May 2020 13:50:28 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     linux-spi@vger.kernel.org, Jacko Dirks <jdirks.linuxdev@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20200503200033.GA3256@vasteMachine>
+References: <20200503200033.GA3256@vasteMachine>
+Subject: Re: [PATCH] spi: bcm2835: Fixes bare use of unsigned
+Message-Id: <158868302840.38681.2575208609097582325.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 01:12:39PM +0100, Will Deacon wrote:
-> On Tue, May 05, 2020 at 12:50:54PM +0100, Mark Rutland wrote:
-> > On Tue, May 05, 2020 at 12:27:19PM +0100, Will Deacon wrote:
-> > > On Tue, May 05, 2020 at 12:16:07PM +0100, Mark Rutland wrote:
-> > > > On Tue, May 05, 2020 at 12:12:41PM +0100, Will Deacon wrote:
-> > > > > On Sat, May 02, 2020 at 07:03:53PM +0530, Anshuman Khandual wrote:
-> > > > > > diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-> > > > > > index e5317a6367b6..c977449e02db 100644
-> > > > > > --- a/arch/arm64/include/asm/sysreg.h
-> > > > > > +++ b/arch/arm64/include/asm/sysreg.h
-> > > > > > @@ -153,6 +153,7 @@
-> > > > > >  #define SYS_MVFR0_EL1			sys_reg(3, 0, 0, 3, 0)
-> > > > > >  #define SYS_MVFR1_EL1			sys_reg(3, 0, 0, 3, 1)
-> > > > > >  #define SYS_MVFR2_EL1			sys_reg(3, 0, 0, 3, 2)
-> > > > > > +#define SYS_ID_PFR2_EL1			sys_reg(3, 0, 0, 3, 4)
-> > > > > 
-> > > > > nit: but please group these defines by name rather than encoding.
-> > > > 
-> > > > So far we've *always* grouped these by encoding in this file, so can we
-> > > > keep things that way for now? Otherwise we're inconsistent with both
-> > > > schemes.
-> > > 
-> > > Hmm, but it's really hard to read sorted that way and we'll end up with
-> > > duplicate definitions like we had for some of the field offsets already.
-> > 
-> > I appreciate that, and don't disagree that the current scheme is not
-> > obvious.
-> > 
-> > I just want to ensure that we don't make things less consistent, and if
-> > we're going to change the scheme in order to make that easier, it should
-> > be a separate patch. There'll be other changes like MMFR4_EL1, and we
-> > should probably add a comment as to what the policy is either way (e.g.
-> > if we're just grouping at the top level, or if that should be sorted
-> > too).
+On Sun, 3 May 2020 22:00:33 +0200, Jacko Dirks wrote:
+> Signed-off-by: Jacko Dirks <jdirks.linuxdev@gmail.com>
+> ---
+>  drivers/spi/spi-bcm2835.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Ok, I added a comment below.
+> diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
+> index 11c235879bb7..e10b8f3b4bab 100644
+> 
+> [...]
+
+Applied to
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.8
 
 Thanks!
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+[1/1] spi: bcm2835: Fixes bare use of unsigned
+      commit: e37687c98ab9ee5872e672b81c44932cf5356d58
 
-Mark.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-> 
-> Will
-> 
-> --->8
-> 
-> commit be7ab6a6cdb0a6d7b10883094c2adf96f5d4e1e8
-> Author: Will Deacon <will@kernel.org>
-> Date:   Tue May 5 13:08:02 2020 +0100
-> 
->     arm64: cpufeature: Group indexed system register definitions by name
->     
->     Some system registers contain an index in the name (e.g. ID_MMFR<n>_EL1)
->     and, while this index often follows the register encoding, newer additions
->     to the architecture are necessarily tacked on the end. Sorting these
->     registers by encoding therefore becomes a bit of a mess.
->     
->     Group the indexed system register definitions by name so that it's easier to
->     read and will hopefully reduce the chance of us accidentally introducing
->     duplicate definitions in the future.
->     
->     Signed-off-by: Will Deacon <will@kernel.org>
-> 
-> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-> index 2dd3f4ca9780..194684301df0 100644
-> --- a/arch/arm64/include/asm/sysreg.h
-> +++ b/arch/arm64/include/asm/sysreg.h
-> @@ -105,6 +105,10 @@
->  #define SYS_DC_CSW			sys_insn(1, 0, 7, 10, 2)
->  #define SYS_DC_CISW			sys_insn(1, 0, 7, 14, 2)
->  
-> +/*
-> + * System registers, organised loosely by encoding but grouped together
-> + * where the architected name contains an index. e.g. ID_MMFR<n>_EL1.
-> + */
->  #define SYS_OSDTRRX_EL1			sys_reg(2, 0, 0, 0, 2)
->  #define SYS_MDCCINT_EL1			sys_reg(2, 0, 0, 2, 0)
->  #define SYS_MDSCR_EL1			sys_reg(2, 0, 0, 2, 2)
-> @@ -140,6 +144,7 @@
->  #define SYS_ID_MMFR1_EL1		sys_reg(3, 0, 0, 1, 5)
->  #define SYS_ID_MMFR2_EL1		sys_reg(3, 0, 0, 1, 6)
->  #define SYS_ID_MMFR3_EL1		sys_reg(3, 0, 0, 1, 7)
-> +#define SYS_ID_MMFR4_EL1		sys_reg(3, 0, 0, 2, 6)
->  
->  #define SYS_ID_ISAR0_EL1		sys_reg(3, 0, 0, 2, 0)
->  #define SYS_ID_ISAR1_EL1		sys_reg(3, 0, 0, 2, 1)
-> @@ -147,7 +152,6 @@
->  #define SYS_ID_ISAR3_EL1		sys_reg(3, 0, 0, 2, 3)
->  #define SYS_ID_ISAR4_EL1		sys_reg(3, 0, 0, 2, 4)
->  #define SYS_ID_ISAR5_EL1		sys_reg(3, 0, 0, 2, 5)
-> -#define SYS_ID_MMFR4_EL1		sys_reg(3, 0, 0, 2, 6)
->  #define SYS_ID_ISAR6_EL1		sys_reg(3, 0, 0, 2, 7)
->  
->  #define SYS_MVFR0_EL1			sys_reg(3, 0, 0, 3, 0)
-> 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
