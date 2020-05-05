@@ -2,111 +2,130 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E437CC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FA1C47259
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8BE520721
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0400206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:21:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jwmVKyJd"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="noLNRkIA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729398AbgEEXTF (ORCPT
+        id S1729537AbgEEXVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 19:19:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49620 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727989AbgEEXTE (ORCPT
+        Tue, 5 May 2020 19:21:38 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:45782 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbgEEXVh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 19:19:04 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 764AFC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 16:19:04 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id e6so24365pjt.4
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 16:19:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=owNe/yVivLu8lnuA6nUAqNW2cBSryrNQc9w98UalwzM=;
-        b=jwmVKyJdB6MEacSVwnKayMATUTmyNqGbKRMm+bb3btHQia+1GSAwm2KFtny0e4Av3a
-         wAJHyV835gzEJSNw6NgOeYBkp0Z5ZAlDAwfmiZLl/pUsBJb1wVbRGf46bQn8veiL/pLL
-         J84hSCM1nzAMdTR1hMlDvhhKicZuVPeaNoC7Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=owNe/yVivLu8lnuA6nUAqNW2cBSryrNQc9w98UalwzM=;
-        b=D6wQ3LTb1KObtLfFzFA06vyg+t/s9cd6TAG2IpycNN+Col+svNVR97Lr2tk/MULRDJ
-         fgncPI2eEY+/Te0dBD50qdaxMHpQrOMAfU8ZHEH6c68Uh/hof1Z3LsbkaXBusqXkXLox
-         GvlZmIhU0a2D4AP8dUVATncLp6C9I5+oxvjUBlRuGulxBHu+UREt4CMIOF9VCwOyYCkN
-         SYkSxUagnqEeBDNPGA+2z3gjl9tlYSghva7BiJNPA9JyK7MKZFwTYNGW0oqWair+E1IG
-         TQ+vxymctwdvxDK3oS5ypQPgN6k+ep/sKnq4c1eV6uKefP8aD6UfXZ+bw4iAqjwqnxDY
-         jEWA==
-X-Gm-Message-State: AGi0PubtIP8ShVvGQ5U7lKsUJ7jrq3wfQB14vA6JF00ggKLEaFAxNYU9
-        4Puf9IcIoNOqwbfq/ChhKoQtmw==
-X-Google-Smtp-Source: APiQypL1qkYOsLAPE3Ba+P8oJQLR8egLJ8j4FyEfyDo/yQDKyAA2OO5jf92DgLNtlCJnXKDn6CuGkg==
-X-Received: by 2002:a17:90a:a484:: with SMTP id z4mr5672933pjp.40.1588720743964;
-        Tue, 05 May 2020 16:19:03 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s123sm71340pfs.170.2020.05.05.16.19.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 16:19:03 -0700 (PDT)
-Date:   Tue, 5 May 2020 16:19:02 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Arnd Bergmann <arnd@arndb.de>, George Burgess <gbiv@google.com>
-Subject: Re: [PATCH] Kbuild: disable FORTIFY_SOURCE on clang-10
-Message-ID: <202005051617.F9B32B5526@keescook>
-References: <CAHmME9oMcfY4nwkknwN9c4rB-O7xD4GCAOFPoZCbdnq=034=Vw@mail.gmail.com>
- <20200505215503.691205-1-Jason@zx2c4.com>
- <CAKwvOdk32cDowvrqRPKDRpf2ZiXh=jVnBTmhM-NWD=Ownq9v3w@mail.gmail.com>
- <20200505222540.GA230458@ubuntu-s3-xlarge-x86>
- <CAHmME9qs0iavoBqd_z_7Xibyz7oxY+FRt+sHyy+sBa1wQc66ww@mail.gmail.com>
+        Tue, 5 May 2020 19:21:37 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 045NHtoc137361;
+        Tue, 5 May 2020 23:21:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=M9UOEBWwmZ184fEobRSilNOjw+98cXkdvmHQbspPnsY=;
+ b=noLNRkIA3arLBSV/Gy+JnMlFFFlWcsuRRx/XKm3QnFvmsLdVdtUHAHjKeso6l1oMQetI
+ DzL0URLbwldIJlBrg8IXt39smovo+u7nBrwT9iLMi7iIkad0QGba532SVAEX85lSUQks
+ caMQq55eR6rAWKVyxa+DB/OFLfLInKdJHShNqyH66ryVMek2Q/UguRgWawg4QTVQ0wnw
+ dgEZ5aBW+HY+QcW3wgRTJbsFjPgfxS6p7XWuFM/LK8gpk8XJ0nNOV9LOLYrE8uqE/b2c
+ X6tR3BNhTDE5rSUWQKarsOJjBCqfQ52u1GoE6BPus2dwpwBgcACTS2s2dcPcQv/gQdbJ NA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 30s1gn7bf5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 05 May 2020 23:21:21 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 045NHiPq009559;
+        Tue, 5 May 2020 23:21:20 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 30t1r67h7a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 05 May 2020 23:21:20 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 045NLJI3030865;
+        Tue, 5 May 2020 23:21:19 GMT
+Received: from [10.159.154.132] (/10.159.154.132)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 05 May 2020 16:21:19 -0700
+Subject: Re: [PATCH v2 0/2] soc: ti: add k3 platforms chipid module driver
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>, devicetree@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>, Dave Gerlach <d-gerlach@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+References: <20200505193417.2112-1-grygorii.strashko@ti.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <c091ac42-ac28-477c-90a9-4bbe790d42f7@oracle.com>
+Date:   Tue, 5 May 2020 16:21:17 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHmME9qs0iavoBqd_z_7Xibyz7oxY+FRt+sHyy+sBa1wQc66ww@mail.gmail.com>
+In-Reply-To: <20200505193417.2112-1-grygorii.strashko@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9612 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=0
+ spamscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005050175
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9612 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 mlxscore=0
+ spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005050175
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 04:37:38PM -0600, Jason A. Donenfeld wrote:
-> On Tue, May 5, 2020 at 4:25 PM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> > I believe these issues are one in the same. I did a reverse bisect with
-> > Arnd's test case and converged on George's first patch:
-> >
-> > https://github.com/llvm/llvm-project/commit/2dd17ff08165e6118e70f00e22b2c36d2d4e0a9a
-> >
-> > I think that in lieu of this patch, we should have that patch and its
-> > follow-up fix merged into 10.0.1.
+
+
+On 5/5/20 12:34 PM, Grygorii Strashko wrote:
+> Hi All,
 > 
-> If this is fixed in 10.0.1, do we even need to patch the kernel at
-> all? Or can we just leave it be, considering most organizations using
-> clang know what they're getting into? I'd personally prefer the
-> latter, so that we don't clutter things.
+> This series introduces TI K3 Multicore SoC platforms chipid module driver
+> which provides identification support of the TI K3 SoCs (family, revision)
+> and register this information with the SoC bus. It is available under
+> /sys/devices/soc0/ for user space, and can be checked, where needed,
+> in Kernel using soc_device_match().
+> It is also required for introducing support for new revisions of
+> K3 AM65x/J721E SoCs.
+> 
+> Example J721E:
+>    # cat /sys/devices/soc0/{machine,family,revision}
+>    Texas Instruments K3 J721E SoC
+>    J721E
+>    SR1.0
+> 
+> Example AM65x:
+>    # cat /sys/devices/soc0/{machine,family,revision}
+>    Texas Instruments AM654 Base Board
+>    AM65X
+>    SR1.0
+> 
+> Changes in v2:
+>   - pr_debug() replaced with pr_info() to show SoC info on init
+>   - minor format change
+>   - split series on driver and platform changes
+>   - add Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+> 
+> v1: https://lwn.net/Articles/818577/
+> 
+> Grygorii Strashko (2):
+>    dt-bindings: soc: ti: add binding for k3 platforms chipid module
+>    soc: ti: add k3 platforms chipid module driver
+> 
+Need ack from DT maintainers on bindings.
 
-I agree: I'd rather this was fixed in 10.0.1 (but if we do want a
-kernel-side work-around for 10.0.0, I would suggest doing the version
-check in the Kconfig for FORTIFY_SOURCE instead of in the Makefile,
-as that's where these things are supposed to live these days).
-
-(Though as was mentioned, it's likely that FORTIFY_SOURCE isn't working
-_at all_ under Clang, so I may still send a patch to depend on !clang
-just to avoid surprises until it's fixed, but I haven't had time to
-chase down a solution yet.)
-
--- 
-Kees Cook
+Regards,
+Santosh
