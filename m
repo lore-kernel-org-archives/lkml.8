@@ -2,115 +2,168 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7D6C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FF9C47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C607B206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEFBB206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:53:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OeQB4Pij"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729372AbgEEUv4 (ORCPT
+        id S1729299AbgEEUxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 16:51:56 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:44865 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728569AbgEEUvz (ORCPT
+        Tue, 5 May 2020 16:53:03 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11626 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727785AbgEEUxC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 16:51:55 -0400
-Received: from mail-qk1-f176.google.com ([209.85.222.176]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MMWcT-1joyyM0F4J-00Jaoz; Tue, 05 May 2020 22:51:53 +0200
-Received: by mail-qk1-f176.google.com with SMTP id s9so3881547qkm.6;
-        Tue, 05 May 2020 13:51:52 -0700 (PDT)
-X-Gm-Message-State: AGi0PuY94GjZLvlCWF8QhKb4mcf+YL2GDCDp44zv6NWiO5RWGoZ6n7k5
-        uiYBwdrETuPu0dgQbPAdsX//YI4JORASWImJXxo=
-X-Google-Smtp-Source: APiQypLeVpLfwvXnNr/kh8i7h3BF2MM1Zc18IcQzr8YZsPeSIkoUm3Eo4GM+Wy9kCf4P/OTrcCYa62E4Z/KzmhLco3M=
-X-Received: by 2002:a37:b543:: with SMTP id e64mr5487687qkf.394.1588711911720;
- Tue, 05 May 2020 13:51:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200505141327.746184-1-arnd@arndb.de> <CAHmME9oTO7DiWCXoeCBjmPOBMoZQ2hUhHjZ4_oi-nVP_9pRpSg@mail.gmail.com>
-In-Reply-To: <CAHmME9oTO7DiWCXoeCBjmPOBMoZQ2hUhHjZ4_oi-nVP_9pRpSg@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 5 May 2020 22:51:35 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3vno7BYwJZna8w1spRCcou2veXSbQZefnUbPpswkRGzQ@mail.gmail.com>
-Message-ID: <CAK8P3a3vno7BYwJZna8w1spRCcou2veXSbQZefnUbPpswkRGzQ@mail.gmail.com>
-Subject: Re: [PATCH] net: wireguard: avoid unused variable warning
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
+        Tue, 5 May 2020 16:53:02 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eb1d21f0000>; Tue, 05 May 2020 13:52:47 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 05 May 2020 13:52:59 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 05 May 2020 13:52:59 -0700
+Received: from [10.2.56.198] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 5 May
+ 2020 20:52:59 +0000
+Subject: Re: [RFC] mm/gup.c: Updated return value of
+ {get|pin}_user_pages_fast()
+To:     Souptick Joarder <jrdr.linux@gmail.com>
+CC:     Tony Luck <tony.luck@intel.com>, <fenghua.yu@intel.com>,
+        Rob Springer <rspringer@google.com>,
+        Todd Poynor <toddpoynor@google.com>, <benchan@chromium.org>,
         Greg KH <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        WireGuard mailing list <wireguard@lists.zx2c4.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:z5+pIoeQtH7SIz5NVx/42ZjLU8ORva5IW4Ry7DMSrYJNgVhxtoT
- R2OaGXs/TWAuk7TLS+4lSRWpYVhIdSNZmiNoCo1G+7apU0U6d0vjVc0P52qaP2tuVLg5M1q
- KVKs03GvY9sci8H4FmDCsOpUK+653CbH/mm+csUOJ4y7RQMnjWiJCEXFyfN5dP+muhbbAfq
- /DvLcNXkMWPBt8BN0z3vg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Z8toKnlnSpE=:Y51mBigACJ3t72pC5mEZuk
- YApItYk7gVWtWM1idKlowCMI2lOY3bl7A3mzRA7JCTl4eDLWU56uDF+fcQtEsBbaUSNlBcxwf
- 2Hk6ZuwqqepXH6d8AiesfgjT0Ej6V2gqEEVyVn4mx2XWm7zODqmcVq6BdQ60x5AAqwm7jwzBI
- x5/fMJUftjluVCgY3E/SNawYOpS17U8td9+MrAgXd0I4RMiG0Em99XVZncwbdNUxQuxWFjOph
- Nn84Ou1WTRw0vDTNB2n4MtYa3yPm3AHCG+hVr9jW5KuIVaqVDlPv/kv3SmHsnbQ4gBAPHTqVA
- Z1BSQKvd2JXP4oQfCM2DXd85ptUH++RKIWwTGFFR2iLYjBLM/T1yGWMQiPzIkBo4iAel1DLa+
- fxRCQygiNxvnBR5IilxGF0Y8DMfwBpha/oyVVHMbg7tp+MjPmiVLYP5ODg8VpuJLiyBXrUNBQ
- VJKV3kklNJBH/bEqmpGcs7Ei6B2nYTG6eWhEGYckD7g8OVm1c4X27jrZVwP9ImstbdNMv96KI
- Pv5/QqIJ6ElwzcnUSveCENxYPV0BBruPBpALl5yKRTchCMH0DPCf2pTLKhiWfER/UL8jkRmZh
- FrrQDDRld8TM2bDJERY/xJzV5TjTx8qAbl/IvGfyYjqinlsRsMDOYFoLl/sVGAn81bl8Rs8RY
- kfipYMznNHwHEW2elfBDSWg92E2/t7KFlhJgpvKzICXcwPdWP9eZPQ3lpRYC9xFndXV4tXvpU
- WWgEocjVXPTkaFoJGpB9OfPjzN0YzZx9j62HGPJwWJjh3ls7I7JCtWR0Lslc5lhntmro38Zw8
- yUJAwY++W1A9fWkUcOF24/HIPD2g0W3mX6BZvbeYQHzVMaWpkM=
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>, <kuba@kernel.org>,
+        Jan Kara <jack@suse.cz>, Ira Weiny <ira.weiny@intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        <inux-ia64@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        <tee-dev@lists.linaro.org>, Linux-MM <linux-mm@kvack.org>,
+        <netdev@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <rds-devel@oss.oracle.com>
+References: <1588706059-4208-1-git-send-email-jrdr.linux@gmail.com>
+ <0bfe4a8a-0d91-ef9b-066f-2ea7c68571b3@nvidia.com>
+ <CAFqt6zZMsQkOdjAb2k1EjwX=DtZ8gKfbRzwvreHOX-0vJLngNg@mail.gmail.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <3a974031-39dc-0359-a574-3ab6770de97f@nvidia.com>
+Date:   Tue, 5 May 2020 13:52:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <CAFqt6zZMsQkOdjAb2k1EjwX=DtZ8gKfbRzwvreHOX-0vJLngNg@mail.gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588711967; bh=SjPQ3EiGBoA/Ko2vVpbK4GSx23pqGazMC2fKGwkI0gs=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=OeQB4PijTuQKxfwtgJUNN+bgF8E0urXDFQHGK5s9+YU2d+c3XO8uHZOuK+cS6L33b
+         IYVD4vhIabsTLiFjDgGRq5B1Qc6lU7Nyb6/eeHDdDcXU+73enzQd/9USoq08BwpMvw
+         0sVdWMb9iZrxkNW2FUpDT0eMykb1cGNmOPucDfrk3t4r18UMzA0dU1olv8YHxzw4CM
+         DYhoIbCFgxBCdxNTscDrdPs8AANcdyRLkYghMf6Nx4tkDY11x+Qx9YQwYCqP9FHt58
+         RcFbTBk9Q7aQjbdUQfxT5dlgbcfSrc1pwR8cT9KkX1hxTXULYhYxEuC2s66Kc/dN6+
+         +m38xhXp9XIzA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 10:07 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
-> On Tue, May 5, 2020 at 8:13 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > clang points out a harmless use of uninitialized variables that
-> > get passed into a local function but are ignored there:
-> >
-> > In file included from drivers/net/wireguard/ratelimiter.c:223:
-> > drivers/net/wireguard/selftest/ratelimiter.c:173:34: error: variable 'skb6' is uninitialized when used here [-Werror,-Wuninitialized]
-> >                 ret = timings_test(skb4, hdr4, skb6, hdr6, &test_count);
-> >                                                ^~~~
-> > drivers/net/wireguard/selftest/ratelimiter.c:123:29: note: initialize the variable 'skb6' to silence this warning
-> >         struct sk_buff *skb4, *skb6;
-> >                                    ^
-> >                                     = NULL
-> > drivers/net/wireguard/selftest/ratelimiter.c:173:40: error: variable 'hdr6' is uninitialized when used here [-Werror,-Wuninitialized]
-> >                 ret = timings_test(skb4, hdr4, skb6, hdr6, &test_count);
-> >                                                      ^~~~
-> > drivers/net/wireguard/selftest/ratelimiter.c:125:22: note: initialize the variable 'hdr6' to silence this warning
-> >         struct ipv6hdr *hdr6;
-> >                             ^
->
-> Seems like the code is a bit easier to read and is more uniform
-> looking by just initializing those two variables to NULL, like the
-> warning suggests. If you don't mind, I'll queue something up in my
-> tree to this effect.
+On 2020-05-05 13:36, Souptick Joarder wrote:
+> On Wed, May 6, 2020 at 1:08 AM John Hubbard <jhubbard@nvidia.com> wrote:
+>>
+>> On 2020-05-05 12:14, Souptick Joarder wrote:
+>>> Currently {get|pin}_user_pages_fast() have 3 return value 0, -errno
+>>> and no of pinned pages. The only case where these two functions will
+>>> return 0, is for nr_pages <= 0, which doesn't find a valid use case.
+>>> But if at all any, then a -ERRNO will be returned instead of 0, which
+>>> means {get|pin}_user_pages_fast() will have 2 return values -errno &
+>>> no of pinned pages.
+>>>
+>>> Update all the callers which deals with return value 0 accordingly.
+>>
+>> Hmmm, seems a little shaky. In order to do this safely, I'd recommend
+>> first changing gup_fast/pup_fast so so that they return -EINVAL if
+>> the caller specified nr_pages==0, and of course auditing all callers,
+>> to ensure that this won't cause problems.
+> 
+> While auditing it was figured out, there are 5 callers which cares for
+> return value
+> 0 of gup_fast/pup_fast. What problem it might cause if we change
+> gup_fast/pup_fast
+> to return -EINVAL and update all the callers in a single commit ?
 
-I think we really should fix clang to not make this suggestion, as that
-normally leads to worse code ;-)
 
-The problem with initializing variables to NULL (or 0) is that it hides
-real bugs when the NULL initialization end up being used in a place
-where a non-NULL value is required, so I try hard not to send patches
-that add those.
+If you change the semantics of a core API, it's critical to do it
+in steps that are safe even against other code changes that may be
+merged in. There are other people potentially editing the callers. And
+those might very well be in different git trees, and on different mailing
+lists.
 
-It's your code though, so if you prefer to do it that way, just do that
-and add me as "Reported-by:"
+Even within a tree, it's possible to either overlook a call site during
+an audit, or for someone else (who overlooked your change's review
+discussions) to commit a change that doesn't follow the same assumptions.
+So API assumptions often need to be backed up by things like -errno return
+values, or sometimes even WARN*() statements.
 
-> By the way, I'm having a bit of a hard time reproducing the warning
-> with either clang-10 or clang-9. Just for my own curiosity, would you
-> mind sending the .config that results in this?
+For a recent example: gup() assumes that no one passes in a "bare"
+FOLL_PIN flag to it. Therfore, it returns -errno and also WARN's in that
+case--for precisely the same reasons: other people are editing the code
+base. It's not static.
 
-See https://pastebin.com/6zRSUYax
+> 
+>>
+>> The gup.c documentation would also need updating in a couple of comment
+>> blocks, above get_user_pages_remote(), and __get_user_pages(), because
+>> those talk about a zero return value.
+> 
+> OK.
+> 
+>>
+>> This might be practical without slowing down the existing code, because
+>> there is already a check in place, so just tweaking it like this (untested)
+>> won't change performance at all:
+>>
+>> diff --git a/mm/gup.c b/mm/gup.c
+>> index 11fda538c9d9..708eed79ae29 100644
+>> --- a/mm/gup.c
+>> +++ b/mm/gup.c
+>> @@ -2787,7 +2787,7 @@ static int internal_get_user_pages_fast(unsigned long start,
+>> int nr_pages,
+>>           end = start + len;
+>>
+>>           if (end <= start)
+>> -               return 0;
+>> +               return -EINVAL;
+>>           if (unlikely(!access_ok((void __user *)start, len)))
+>>                   return -EFAULT;
+>>
+>> ...although I might be missing some other things that need a similar change,
+>> so you should look carefully for yourself.
+> 
+> Do you refer to other gup APIs similar to gup_fast/pup_fast ?
 
-       Arnd
+
+Yes, like all the gup/pup variants.
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
