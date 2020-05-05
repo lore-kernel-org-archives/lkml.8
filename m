@@ -2,143 +2,197 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32554C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEF7C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10E3F206E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:22:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WOCKK9qm"
+	by mail.kernel.org (Postfix) with ESMTP id A42EC206E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:22:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730242AbgEERWB (ORCPT
+        id S1730349AbgEERWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 13:22:01 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35152 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730122AbgEERWB (ORCPT
+        Tue, 5 May 2020 13:22:54 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:58391 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729654AbgEERWx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 13:22:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588699319;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NLBNUm/fluAXkFzdIYicKdp0CV+hI9Whe6Z74OvWRXA=;
-        b=WOCKK9qmAGW/W4kNPJifS6UNnAdyf/8ruDXkpiSDUXTI6gSlgE78zW6SAngdQvE7eguELz
-        cHdIl7Hzxd6k6XO/TvXP7znXxa034cV660rLiqOJvNvCU+RIvA5i1SZo9gkjx+CcY9WZlt
-        nxxkkylpPT9htV70byFQ+RbUBMg6FWo=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-350-Le0twJd5NsKJcygzbYXdcg-1; Tue, 05 May 2020 13:21:57 -0400
-X-MC-Unique: Le0twJd5NsKJcygzbYXdcg-1
-Received: by mail-wm1-f69.google.com with SMTP id w2so1381027wmc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 10:21:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NLBNUm/fluAXkFzdIYicKdp0CV+hI9Whe6Z74OvWRXA=;
-        b=sTtp2j3OzuJCBQRl2JvvCKU/q2SpIKq83Id56jAi54o3isOAbEfYR7TJVwLo0Pt0xY
-         Rt0Dz/BONKxJoniQRFPR2HyISc2+mL8HA/TVEORKvMgogbJHidWr4MVydrigTExjc0pb
-         90SO825rDymy1qeLCGVqO+6yM0AICdt5RMdinO2fVlO77JYXdzeFA3xFV6tYu0K/P2Tc
-         u8Qz/r9ODAeUYoKxF0wgJETGG+5KWfuj/GCAB6mnPHXMQdnGRNLaqWFOSMK6syuttej8
-         gNm/cgsm41IEECXHX7QLQE7qdegnn25s19Gkp6mMvWXoFDhk19Mh6R/qc0UDIgMiwayd
-         7fuA==
-X-Gm-Message-State: AGi0PubgEuBecv+nrSYCwQWRbTMoj5T2gRkJz2H4FTP1RmWBho0hflBF
-        LqXKOiOr6j0TMR7UkmybxMIKo90WFpC+/AHfb0y5j2WAQpz1RteBNoriabN2rmwbMrOcwcv3S43
-        0ML16Zd868jP32W+9c6q08Dnp
-X-Received: by 2002:adf:dfcf:: with SMTP id q15mr4600166wrn.137.1588699316440;
-        Tue, 05 May 2020 10:21:56 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIVV+df8r3YAEgu8Bx29AN2Dhx6gB2SP3zMh8KI8zL75cn1CSbSYF73IUInRaU7M6AlZnT4Aw==
-X-Received: by 2002:adf:dfcf:: with SMTP id q15mr4600142wrn.137.1588699316221;
-        Tue, 05 May 2020 10:21:56 -0700 (PDT)
-Received: from [192.168.178.58] ([151.20.132.175])
-        by smtp.gmail.com with ESMTPSA id q17sm4693287wmj.45.2020.05.05.10.21.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2020 10:21:55 -0700 (PDT)
-Subject: Re: [PATCH v2 0/5] Statsfs: a new ram-based file sytem for Linux
- kernel statistics
-To:     David Rientjes <rientjes@google.com>
-Cc:     Jim Mattson <jmattson@google.com>,
-        Emanuele Giuseppe Esposito <eesposit@redhat.com>,
-        Jonathan Adams <jwadams@google.com>,
-        kvm list <kvm@vger.kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-References: <20200504110344.17560-1-eesposit@redhat.com>
- <alpine.DEB.2.22.394.2005041429210.224786@chino.kir.corp.google.com>
- <f2654143-b8e5-5a1f-8bd0-0cb0df2cd638@redhat.com>
- <CALMp9eQYcLr_REzDC1kWTHX4SJWt7x+Zd1KwNvS1YGd5TVM1xA@mail.gmail.com>
- <1d12f846-bf89-7b0a-5c71-e61d83b1a36f@redhat.com>
- <alpine.DEB.2.22.394.2005051003380.216575@chino.kir.corp.google.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <6cfdf81f-caef-2489-0906-25915d9d58ff@redhat.com>
-Date:   Tue, 5 May 2020 19:21:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 5 May 2020 13:22:53 -0400
+Received: from localhost.localdomain ([149.172.19.189]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1Mbj3e-1j0Y4W17pW-00dJht; Tue, 05 May 2020 19:22:38 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Willem de Bruijn <willemb@google.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Martin Varghese <martin.varghese@nokia.com>,
+        Taehee Yoo <ap420073@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH] net: bareudp: avoid uninitialized variable warning
+Date:   Tue,  5 May 2020 19:22:14 +0200
+Message-Id: <20200505172232.1034560-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.22.394.2005051003380.216575@chino.kir.corp.google.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:ScX50QBtpxPFHX9a2scBFJp+o7DWKydLzKgA2Q+e/2ogsI4SAtl
+ djmLGBbV1D639qDn9G714rq7fyC/8ZEqIclZmJSc+0InIrXToStgetKi8SWqcaCJl6UgCxk
+ KCKiquoiRbungr5pwrYYeZK3S+kzCczSOVZTD2dDycjCJBn3CKegMADSogr0LGqf1piMOxI
+ 9KtIuXpxh9hB+89TBJ9Iw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1wtMQ+rWzW8=:mcwGonjEhrQw1MIe99lyBE
+ y7Vk4eNKd/OkxLAPihR3aSI6irPA6m+nAbmzjAF8KzukyUcL6/dQSyVYPjYMnSdfMzZuTYMuD
+ dogqprIJM9wYZaDaeo0sBIovtgnufZUsARXBy+F0k/ItxXxyLmrd14KENnK/XqaaGAtKiG8ro
+ WCtaHARroay8i0jPdMDFiGQxEuQn+HhYUZai1p3eHRrwq4CHCyuE6KnzM3fYQHRzZCVjgYtU+
+ YZN2iyxRUo/09I9W8OjwTLTjoW/3M72e3vl3NmELnVH3bj29NOf152I7Z4sTPiz+Y5Qnzn0Zv
+ 1xBSAVN7lHzH1HoFD7YtUUhjzlCTZ5teDCVFyOKxSSwEf9r5hJWjMg8ykB9tDzxWXIVF1J6tN
+ TIDmIXFjJpjFoIy1iUre65uP3SEtGE7s8g0aPsUCwdnlb03rtK/btdf/6pRvKqf+BoK4lDCVM
+ NL2wR6NLPfufYROr3v0SrPpzhtd2o9JBxxMiC+VAxpjZ3opkxN4BlWecd6pNY0A1Vm0RrLfC+
+ OS5Ac9EyS7lh0OZ0h3Fj14uUivWsvzn5UPFRJBZ3cB5GlZONZnXhcm5ESM0bNsqEQxd/IXeXj
+ 146zB4dj8K+pN4KaD9ALradcG7O6Qu6/lkHrhk9O12E0vReIYLy8WjwegmTgOJoKsIC6gmgR4
+ DIu6Hm783J/VS5VaGP9v/LmhS+uIR1NwFIJAdbGivO5z7vule8RNeDfOeFgNT+O+ZUKGbGEvi
+ ciM+qk7DLO4K1ZTe4us/9Ln8Fo1VqkWP/nSo82HfsqkZZ87l3MTY7XeOSRPHg02knmSVha65O
+ ucJ4keWx+EJ1s1bYRQwOSm12P4rQSfoUa+AedHAoC3UxAaEvC0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/05/20 19:07, David Rientjes wrote:
->> I am totally in favor of having a binary format, but it should be
->> introduced as a separate series on top of this one---and preferably by
->> someone who has already put some thought into the problem (which
->> Emanuele and I have not, beyond ensuring that the statsfs concept and
->> API is flexible enough).
->>
-> The concern is that once this series is merged then /sys/kernel/stats 
-> could be considered an ABI and there would be a reasonable expectation 
-> that it will remain stable, in so far as the stats that userspace is 
-> interested in are stable and not obsoleted.
-> 
-> So is this a suggestion that the binary format becomes complementary to 
-> statsfs and provide a means for getting all stats from a single subsystem, 
-> or that this series gets converted to such a format before it is merged?
+clang points out that building without IPv6 would lead to returning
+an uninitialized variable if a packet with family!=AF_INET is
+passed into bareudp_udp_encap_recv():
 
-The binary format should be complementary.  The ASCII format should
-indeed be considered stable even though individual statistics would come
-and go.  It may make sense to allow disabling ASCII files via mount
-and/or Kconfig options; but either way, the binary format can and should
-be added on top.
+drivers/net/bareudp.c:139:6: error: variable 'err' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
+        if (family == AF_INET)
+            ^~~~~~~~~~~~~~~~~
+drivers/net/bareudp.c:146:15: note: uninitialized use occurs here
+        if (unlikely(err)) {
+                     ^~~
+include/linux/compiler.h:78:42: note: expanded from macro 'unlikely'
+ # define unlikely(x)    __builtin_expect(!!(x), 0)
+                                            ^
+drivers/net/bareudp.c:139:2: note: remove the 'if' if its condition is always true
+        if (family == AF_INET)
+        ^~~~~~~~~~~~~~~~~~~~~~
 
-I have not put any thought into what the binary format would look like
-and what its features would be.  For example these are but the first
-questions that come to mind:
+This cannot happen in practice, so change the condition in a way that
+gcc sees the IPv4 case as unconditionally true here.
+For consistency, change all the similar constructs in this file the
+same way, using "if(IS_ENABLED())" instead of #if IS_ENABLED()".
 
-* would it be possible to read/clear an arbitrary statistic with
-pread/pwrite, or do you have to read all of them?
+Fixes: 571912c69f0e ("net: UDP tunnel encapsulation module for tunnelling different protocols like MPLS, IP, NSH etc.")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/net/bareudp.c    | 18 ++++--------------
+ include/net/udp_tunnel.h |  2 --
+ 2 files changed, 4 insertions(+), 16 deletions(-)
 
-* if userspace wants to read the schema just once and then read the
-statistics many times, how is it informed of schema changes?
-
-* and of course the details of how the schema (names of stat and
-subsources) is encoded and what details it should include about the
-values (e.g. type or just signedness).
-
-Another possibility is to query stats via BPF.  This could be a third
-way to access the stats, or it could be alternative to a binary format.
-
-Paolo
+diff --git a/drivers/net/bareudp.c b/drivers/net/bareudp.c
+index cc0703c3d57f..efd1a1d1f35e 100644
+--- a/drivers/net/bareudp.c
++++ b/drivers/net/bareudp.c
+@@ -136,25 +136,21 @@ static int bareudp_udp_encap_recv(struct sock *sk, struct sk_buff *skb)
+ 	oiph = skb_network_header(skb);
+ 	skb_reset_network_header(skb);
+ 
+-	if (family == AF_INET)
++	if (!IS_ENABLED(CONFIG_IPV6) || family == AF_INET)
+ 		err = IP_ECN_decapsulate(oiph, skb);
+-#if IS_ENABLED(CONFIG_IPV6)
+ 	else
+ 		err = IP6_ECN_decapsulate(oiph, skb);
+-#endif
+ 
+ 	if (unlikely(err)) {
+ 		if (log_ecn_error) {
+-			if  (family == AF_INET)
++			if  (!IS_ENABLED(CONFIG_IPV6) || family == AF_INET)
+ 				net_info_ratelimited("non-ECT from %pI4 "
+ 						     "with TOS=%#x\n",
+ 						     &((struct iphdr *)oiph)->saddr,
+ 						     ((struct iphdr *)oiph)->tos);
+-#if IS_ENABLED(CONFIG_IPV6)
+ 			else
+ 				net_info_ratelimited("non-ECT from %pI6\n",
+ 						     &((struct ipv6hdr *)oiph)->saddr);
+-#endif
+ 		}
+ 		if (err > 1) {
+ 			++bareudp->dev->stats.rx_frame_errors;
+@@ -350,7 +346,6 @@ static int bareudp_xmit_skb(struct sk_buff *skb, struct net_device *dev,
+ 	return err;
+ }
+ 
+-#if IS_ENABLED(CONFIG_IPV6)
+ static int bareudp6_xmit_skb(struct sk_buff *skb, struct net_device *dev,
+ 			     struct bareudp_dev *bareudp,
+ 			     const struct ip_tunnel_info *info)
+@@ -411,7 +406,6 @@ static int bareudp6_xmit_skb(struct sk_buff *skb, struct net_device *dev,
+ 	dst_release(dst);
+ 	return err;
+ }
+-#endif
+ 
+ static netdev_tx_t bareudp_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+@@ -435,11 +429,9 @@ static netdev_tx_t bareudp_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	}
+ 
+ 	rcu_read_lock();
+-#if IS_ENABLED(CONFIG_IPV6)
+-	if (info->mode & IP_TUNNEL_INFO_IPV6)
++	if (IS_ENABLED(CONFIG_IPV6) && info->mode & IP_TUNNEL_INFO_IPV6)
+ 		err = bareudp6_xmit_skb(skb, dev, bareudp, info);
+ 	else
+-#endif
+ 		err = bareudp_xmit_skb(skb, dev, bareudp, info);
+ 
+ 	rcu_read_unlock();
+@@ -467,7 +459,7 @@ static int bareudp_fill_metadata_dst(struct net_device *dev,
+ 
+ 	use_cache = ip_tunnel_dst_cache_usable(skb, info);
+ 
+-	if (ip_tunnel_info_af(info) == AF_INET) {
++	if (!IS_ENABLED(CONFIG_IPV6) || ip_tunnel_info_af(info) == AF_INET) {
+ 		struct rtable *rt;
+ 		__be32 saddr;
+ 
+@@ -478,7 +470,6 @@ static int bareudp_fill_metadata_dst(struct net_device *dev,
+ 
+ 		ip_rt_put(rt);
+ 		info->key.u.ipv4.src = saddr;
+-#if IS_ENABLED(CONFIG_IPV6)
+ 	} else if (ip_tunnel_info_af(info) == AF_INET6) {
+ 		struct dst_entry *dst;
+ 		struct in6_addr saddr;
+@@ -492,7 +483,6 @@ static int bareudp_fill_metadata_dst(struct net_device *dev,
+ 
+ 		dst_release(dst);
+ 		info->key.u.ipv6.src = saddr;
+-#endif
+ 	} else {
+ 		return -EINVAL;
+ 	}
+diff --git a/include/net/udp_tunnel.h b/include/net/udp_tunnel.h
+index 4b1f95e08307..e7312ceb2794 100644
+--- a/include/net/udp_tunnel.h
++++ b/include/net/udp_tunnel.h
+@@ -143,14 +143,12 @@ void udp_tunnel_xmit_skb(struct rtable *rt, struct sock *sk, struct sk_buff *skb
+ 			 __be16 df, __be16 src_port, __be16 dst_port,
+ 			 bool xnet, bool nocheck);
+ 
+-#if IS_ENABLED(CONFIG_IPV6)
+ int udp_tunnel6_xmit_skb(struct dst_entry *dst, struct sock *sk,
+ 			 struct sk_buff *skb,
+ 			 struct net_device *dev, struct in6_addr *saddr,
+ 			 struct in6_addr *daddr,
+ 			 __u8 prio, __u8 ttl, __be32 label,
+ 			 __be16 src_port, __be16 dst_port, bool nocheck);
+-#endif
+ 
+ void udp_tunnel_sock_release(struct socket *sock);
+ 
+-- 
+2.26.0
 
