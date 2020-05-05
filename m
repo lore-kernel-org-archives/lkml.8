@@ -2,131 +2,112 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B41D1C47256
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3001C47256
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93A2C2075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB066206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:50:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VUb2ebxO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgEEGts (ORCPT
+        id S1728033AbgEEGuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 02:49:48 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:27348 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725320AbgEEGts (ORCPT
+        Tue, 5 May 2020 02:50:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725320AbgEEGuF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 02:49:48 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0456Xx35152663;
-        Tue, 5 May 2020 02:49:11 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30s1swjf9s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 02:49:11 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0456aN1p162949;
-        Tue, 5 May 2020 02:49:10 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30s1swjf8q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 02:49:10 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0456jPww029773;
-        Tue, 5 May 2020 06:49:08 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma01fra.de.ibm.com with ESMTP id 30s0g5ak8s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 06:49:08 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0456n54R65536390
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 May 2020 06:49:05 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A50B2AE04D;
-        Tue,  5 May 2020 06:49:05 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0AB1BAE045;
-        Tue,  5 May 2020 06:49:05 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Tue,  5 May 2020 06:49:04 +0000 (GMT)
-Date:   Tue, 5 May 2020 08:49:04 +0200
-From:   Sven Schnelle <svens@linux.ibm.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Guo Ren <guoren@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Jann Horn <jannh@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>,
-        Security Officers <security@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Ananth N Mavinakayanahalli <ananth@in.ibm.com>,
-        Naveen Rao <naveen.n.rao@linux.vnet.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH] uprobes: ensure that uprobe->offset and ->ref_ctr_offset
- are properly aligned
-Message-ID: <20200505064904.GA40867@tuxmaker.boeblingen.de.ibm.com>
-References: <CAHk-=whQt69ApMkZF8b2Q2idMDgPpPETZeeOuZg59CrOO4025w@mail.gmail.com>
- <20200428091149.GB19958@linux.vnet.ibm.com>
- <20200428123914.GA27920@redhat.com>
- <20200504164724.GA28697@redhat.com>
- <d30603a6-1055-bd78-46ac-94a9091cf487@de.ibm.com>
+        Tue, 5 May 2020 02:50:05 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7572C061A0F;
+        Mon,  4 May 2020 23:50:05 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id u22so398508plq.12;
+        Mon, 04 May 2020 23:50:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0aXe94VU2WISTIlufs3bfltwqE1JuV8SHwsemLcdlPY=;
+        b=VUb2ebxOqBa2eX4HEwAC4TSnsr/67cFpLtQ50LMIHcpva39QnEzqr3yXtnu7GqNhLy
+         GiYXsq6zUdUoFWZ2h7UJ3R/DiNoyvrfOrfxftC5aatZu2vlRb2Yft3CRkqMTmyTYE5lK
+         teCTSmflsWScuw39WtRUWBqMXzzLLUfoROuZkcafhKA7tXysUa1wAyk6joVC1rOxmagY
+         tpETTtS/+i/Ll1BapImmBp5CymTjHToomA4PbsA9FXr9BcSBBqGcSxmHwmHZBidA7C25
+         M+zICsV0+WdGLyfL6k1w49IBwFxM0DCbgmkHkZ5Eh+r/Sk/zsAKjgDeefng+1NSBEBxb
+         pKCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0aXe94VU2WISTIlufs3bfltwqE1JuV8SHwsemLcdlPY=;
+        b=lQ2c1V9qHEe+CH/NCdExqb7z3VbhPOsowSF8VqZpOAtVlml7HzsM+xALMKgl5yDVeP
+         EvoOiPY7l9VqFO4D+HZrRIT3C0j88L3Kd+2f9IKvVo5Sy1bU3cwAfpBIHJYGLf4KJEyA
+         U4cnN4gpGFKrS18YJAYb+2iJjEg7GQOwRpRFBjneo7vRpwVachhoJCqsP3KBrYeTjoVY
+         +GC5snmj/kMPiLS7RaZggH+s/PuA+juUsKkEGUPBDIJWlNimB5Hxt1tcoRG/y9c2enlL
+         z+8dxOmXewCF8hyF6wi8LORgt2QHvUY6H0/NLYwMdhaq5/0GwfbVZbppTLvSIVdOxpsg
+         eOFw==
+X-Gm-Message-State: AGi0PuZPgjhulvIKVj8ZAXCdXT/H4KH4/fvFXoyy2k9TKXj1WJizC9Qr
+        6lUmG7ZcS+8Ozl9hNtDDKKg=
+X-Google-Smtp-Source: APiQypI3URDDfdNNVIPkHt00KJRYSHOJH+UmM+3WQVkcv4oKDPy1TMORpL06DWRPurmnD5TWKsN1Nw==
+X-Received: by 2002:a17:902:a701:: with SMTP id w1mr1333852plq.165.1588661405149;
+        Mon, 04 May 2020 23:50:05 -0700 (PDT)
+Received: from localhost ([162.211.220.152])
+        by smtp.gmail.com with ESMTPSA id z7sm1036273pff.47.2020.05.04.23.50.03
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 04 May 2020 23:50:04 -0700 (PDT)
+Date:   Tue, 5 May 2020 14:49:58 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     davem@davemloft.net, swboyd@chromium.org, ynezz@true.cz,
+        netdev@vger.kernel.org, jonathan.richardson@broadcom.com,
+        linux-kernel@vger.kernel.org,
+        Scott Branden <scott.branden@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>
+Subject: Re: [PATCH net v1] net: broadcom: fix a mistake about ioremap
+ resource
+Message-ID: <20200505064958.GA1357@nuc8i5>
+References: <20200505020329.31638-1-zhengdejin5@gmail.com>
+ <8b71b3ba-edc8-ce78-27ba-ce05230efc31@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d30603a6-1055-bd78-46ac-94a9091cf487@de.ibm.com>
+In-Reply-To: <8b71b3ba-edc8-ce78-27ba-ce05230efc31@gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-05_02:2020-05-04,2020-05-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- lowpriorityscore=0 malwarescore=0 phishscore=0 adultscore=0
- impostorscore=0 mlxlogscore=871 bulkscore=0 clxscore=1011 suspectscore=0
- mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005050051
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Mon, May 04, 2020 at 08:40:44PM +0200, Christian Borntraeger wrote:
+On Mon, May 04, 2020 at 08:28:52PM -0700, Florian Fainelli wrote:
 > 
 > 
-> On 04.05.20 18:47, Oleg Nesterov wrote:
-> > uprobe_write_opcode() must not cross page boundary; prepare_uprobe()
-> > relies on arch_uprobe_analyze_insn() which should validate "vaddr" but
-> > some architectures (csky, s390, and sparc) don't do this.
-> 
-> I think the idea was that the uprobe instruction is 2 bytes and instructions
-> are always aligned to 2 bytes on s390.  (we can have 2,4 or 6 bytes).
-> 
+> On 5/4/2020 7:03 PM, Dejin Zheng wrote:
+> > Commit d7a5502b0bb8b ("net: broadcom: convert to
+> > devm_platform_ioremap_resource_byname()") will broke this driver.
+> > idm_base and nicpm_base were optional, after this change, they are
+> > mandatory. it will probe fails with -22 when the dtb doesn't have them
+> > defined. so revert part of this commit and make idm_base and nicpm_base
+> > as optional.
 > > 
-> > We can remove the BUG_ON() check in prepare_uprobe() and validate the
-> > offset early in __uprobe_register(). The new IS_ALIGNED() check matches
-> > the alignment check in arch_prepare_kprobe() on supported architectures,
-> > so I think that all insns must be aligned to UPROBE_SWBP_INSN_SIZE.
+> > Fixes: d7a5502b0bb8bde ("net: broadcom: convert to devm_platform_ioremap_resource_byname()")
+> > Reported-by: Jonathan Richardson <jonathan.richardson@broadcom.com>
+> > Cc: Scott Branden <scott.branden@broadcom.com>
+> > Cc: Ray Jui <ray.jui@broadcom.com>
+> > Cc: Florian Fainelli <f.fainelli@gmail.com>
+> > Cc: David S. Miller <davem@davemloft.net>
+> > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 > 
-> Not sure if it would have been possible to try to create a uprobe on an 
-> odd address. If yes, then the new IS_ALIGNED check certainly makes this
-> better for s390, so the patch looks sane. Adding Vasily and Sven to double
-> check.
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 
-I did a quick test, and without this patch it is possible to place a uprobe
-at an odd address. With the patch it fails with EINVAL, which is more
-reasonable.
+Florian, Thank you very much for helping me as always!
 
-Regards
-Sven
+BR,
+Dejin
+
+> -- 
+> Florian
