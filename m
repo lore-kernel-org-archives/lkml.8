@@ -2,176 +2,102 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81480C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EABEAC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA3F206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C71D0206CC
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:01:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h+wkAt1i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728547AbgEEKB3 (ORCPT
+        id S1728622AbgEEKBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 06:01:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37142 "EHLO
+        Tue, 5 May 2020 06:01:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727931AbgEEKB2 (ORCPT
+        by vger.kernel.org with ESMTP id S1727931AbgEEKBq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 06:01:28 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67FEEC061A0F;
-        Tue,  5 May 2020 03:01:28 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:d3ea:1c7:41fd:3038])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id B203B2A0982;
-        Tue,  5 May 2020 11:01:26 +0100 (BST)
-Date:   Tue, 5 May 2020 12:01:23 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     masonccyang@mxic.com.tw
-Cc:     "Pratyush Yadav" <me@yadavpratyush.com>, broonie@kernel.org,
-        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com,
-        "Pratyush Yadav" <p.yadav@ti.com>, richard@nod.at,
-        tudor.ambarus@microchip.com, vigneshr@ti.com
-Subject: Re: [PATCH v2 0/5] mtd: spi-nor: Add support for Octal 8D-8D-8D
- mode
-Message-ID: <20200505120123.24962338@collabora.com>
-In-Reply-To: <20200505114443.6ebd5d3c@collabora.com>
-References: <1587451187-6889-1-git-send-email-masonccyang@mxic.com.tw>
-        <20200421092328.129308f6@collabora.com>
-        <20200427175536.2mmei2fy6f7bg6jm@yadavpratyush.com>
-        <OF18214CA5.6A9B2B30-ON48258558.001D894C-48258558.002249E0@mxic.com.tw>
-        <20200428085401.574wmo6qddmumd7q@yadavpratyush.com>
-        <OF04289CE2.B346916F-ON48258559.002280BD-48258559.00295800@mxic.com.tw>
-        <20200429181856.kkavelcczylg4yxf@yadavpratyush.com>
-        <OF28AE0642.4F34D6BB-ON4825855F.002D6E58-4825855F.003458C9@mxic.com.tw>
-        <20200505114443.6ebd5d3c@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 5 May 2020 06:01:46 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 066A4C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 03:01:46 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id h4so1593585wmb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 03:01:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+LL5Exw/qifs+ywjXu90IVbYhDqBc3wJ0gzzOrYmWxA=;
+        b=h+wkAt1i/yCYuX+qg1JC8lx8oQsta2OrisDGdBFuMTcvtQk/cQivwwqTaDR0pmR3DP
+         39LFUa7BjHELU77lw1tHM5xu+whtgayMBcmmYv3pIh9k7md57hp0p93IVtvEWnIqdujM
+         coqXsmWyzIIzwqGFLyxYVnKyb92OfpUSbyDGNjGexX6ymnJPeW7KUNHXsCB2YO6JPH/n
+         ENOoE7YlGuM/vT5atE4/qKpekrQsvgrCqC2/4crQaO2O7W+OLjuQGfD5khlyDBk5OuuN
+         2wuWE6Kfi+D2X9DZJQ9f8lJU8LiHMfPbQu6xwjW/piotoJSnupNpYhyAgkg7XEWc77L+
+         ueSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+LL5Exw/qifs+ywjXu90IVbYhDqBc3wJ0gzzOrYmWxA=;
+        b=lp0jbzNPtiMJCnISyL6QR1hFVEH0R4kZ5FLvCDm4Lm2lPDKbvjGLYTeyjDAn78vuCw
+         Ru4gspQ7smHbNdgObhG4UvukAd+70dnlDjuj095NRz74Avcpjqoi4zsAJQjw8msiad5n
+         Ka1i0DU8PfImHJhhlA2R3cYdwbZif5rG4nspNJ8iv1wH9DgorwHqApOKZG76yc7P2N0o
+         zF1NKPj1r8HSnsCAOcitcoAJQWxwZLO+6MVpuzjLUM35PwSCyhhCwzjIByZJY4wf7g44
+         IYQ8x7h71oVLG/ZRdAiXs1pDSc2MEkZ/viaqLVMONsVanYN0g18C4t5Bq8ip9sYmwKrp
+         FPPQ==
+X-Gm-Message-State: AGi0PuYt5Qsw/libL8NF9y+50Bj/UIkzT8nAQF5er8OOwHsCkGxPL3l7
+        /W/NacEdOPr3RhGsw5ZVdSxSyQ==
+X-Google-Smtp-Source: APiQypJH4ypVMYFM9XMVWAInmVcCnVeQt1dycl0lYgZmTAGLLZ0z5kQZxnBsAutgmTA2Hwem48xMXg==
+X-Received: by 2002:a1c:2002:: with SMTP id g2mr2318452wmg.109.1588672904726;
+        Tue, 05 May 2020 03:01:44 -0700 (PDT)
+Received: from localhost.localdomain ([37.120.63.158])
+        by smtp.gmail.com with ESMTPSA id n6sm2884258wmc.28.2020.05.05.03.01.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 03:01:44 -0700 (PDT)
+From:   Robert Foss <robert.foss@linaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Maxime Ripard <maxime@cerno.tech>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Tomasz Figa <tfiga@chromium.org>, Ben Kao <ben.kao@intel.com>,
+        Robert Foss <robert.foss@linaro.org>
+Subject: [PATCH v7 0/3] media: ov8856: Add devicetree support
+Date:   Tue,  5 May 2020 12:01:27 +0200
+Message-Id: <20200505100129.104673-1-robert.foss@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 May 2020 11:44:43 +0200
-Boris Brezillon <boris.brezillon@collabora.com> wrote:
+This adds devicetree support to the ov8856 driver.
+In order to to aid debugging and enable future sensor
+modes to be supported, module revision detection is also added.
 
-> On Tue, 5 May 2020 17:31:45 +0800
-> masonccyang@mxic.com.tw wrote:
-> 
-> 
-> > > > > > I quickly went through your patches but can't reply them in each     
-> > your   
-> > > > > > patches.
-> > > > > > 
-> > > > > > i.e,.
-> > > > > > 1) [v4,03/16] spi: spi-mem: allow specifying a command's extension
-> > > > > > 
-> > > > > > -                                u8 opcode;
-> > > > > > +                                u16 opcode;
-> > > > > > 
-> > > > > > big/little Endian issue, right? 
-> > > > > > why not just u8 ext_opcode;
-> > > > > > No any impact for exist code and actually only xSPI device use     
-> > > > extension     
-> > > > > > command.    
-> > > > > 
-> > > > > Boris already explained the reasoning behind it.    
-> > > > 
-> > > > yup, I got his point and please make sure CPU data access.
-> > > > 
-> > > > i.e,.
-> > > > Fix endianness of the BFPT DWORDs and xSPI in sfdp.c
-> > > > 
-> > > > and your patch,
-> > > > +                                ext = spi_nor_get_cmd_ext(nor, op);
-> > > > +                                op->cmd.opcode = (op->cmd.opcode <<     
-> > 8) |   
-> > > > ext;
-> > > > +                                op->cmd.nbytes = 2;
-> > > > 
-> > > > I think maybe using u8 opcode[2] could avoid endianness.    
-> > > 
-> > > Again, thanks Boris for answering this. FWIW, I don't see anything wrong     
-> >   
-> > > with his suggestion.
-> > > 
-> > > To clarify a bit more, the idea is that we transmit the opcode MSB 
-> > > first, just we do for the address. Assume we want to issue the command 
-> > > 0x05. In 1S mode, we set cmd.opcode to 0x05. Here cmd.nbytes == 1. Treat     
-> >   
-> > > is as a 1-byte value, so the MSB is the same as the LSB. We directly 
-> > > send 0x5 on the bus.    
-> > 
-> > There are many SPI controllers driver use "op->cmd.opcode" directly,
-> > so is spi-mxic.c.
-> > 
-> > i.e,.
-> > ret = mxic_spi_data_xfer(mxic, &op->cmd.opcode, NULL, op->cmd.nbytes);  
-> 
-> Just because you do it doesn't mean it's right. And most controllers use
-> the opcode value, they don't dereference the pointer as you do here.
-> 
-> >   
-> > > 
-> > > If cmd.nbytes == 2, then the opcode would be 0x05FA (assuming extension 
-> > > is invert of command). So we send the MSB (0x05) first, and LSB (0xFA) 
-> > > next.    
-> > 
-> > My platform is Xilinx Zynq platform which CPU is ARMv7 processor.
-> > 
-> > In 1-1-1 mode, it's OK to send 1 byte command by u16 opcode but
-> > in 8D-8D-8D mode, I need to patch
-> > 
-> > i.e.,
-> > op->cmd.opcode = op->cmd.opcode | (ext << 8);
-> > 
-> > rather than your patch.  
-> 
-> Seriously, how hard is it to extract each byte from the u16 if your
-> controller needs to pass things in a different order? I mean, that's
-> already how it's done for the address cycle, so why is it a problem
-> here? This sounds like bikeshedding to me. If the order is properly
-> documented in the kernel doc, I see no problem having it grouped in one
-> u16, with the first cmd cycle placed in the MSB and the second one in
-> the LSB.
 
-So, I gave it a try, and we're talking about something as simple as the
-below diff. And yes, the mxic controller needs to be patched before
-extending the cmd.opcode field, but we're talking about one driver here
-(all other drivers should be fine). Oh, and if you look a few lines below
-the changed lines, you'll notice that we do exactly the same for the
-address.
+Dongchun Zhu (1):
+  media: dt-bindings: ov8856: Document YAML bindings
 
---->8---
-diff --git a/drivers/spi/spi-mxic.c b/drivers/spi/spi-mxic.c
-index 69491f3a515d..c3f4136a7c1d 100644
---- a/drivers/spi/spi-mxic.c
-+++ b/drivers/spi/spi-mxic.c
-@@ -356,6 +356,7 @@ static int mxic_spi_mem_exec_op(struct spi_mem *mem,
-        int nio = 1, i, ret;
-        u32 ss_ctrl;
-        u8 addr[8];
-+       u8 cmd[2];
- 
-        ret = mxic_spi_set_freq(mxic, mem->spi->max_speed_hz);
-        if (ret)
-@@ -393,7 +394,10 @@ static int mxic_spi_mem_exec_op(struct spi_mem *mem,
-        writel(readl(mxic->regs + HC_CFG) | HC_CFG_MAN_CS_ASSERT,
-               mxic->regs + HC_CFG);
- 
--       ret = mxic_spi_data_xfer(mxic, &op->cmd.opcode, NULL, 1);
-+       for (i = 0; i < op->cmd.nbytes; i++)
-+               cmd[i] = op->cmd.opcode >> (8 * (op->cmd.nbytes - i - 1));
-+
-+       ret = mxic_spi_data_xfer(mxic, cmd, NULL, op->cmd.nbytes);
-        if (ret)
-                goto out;
- 
+Robert Foss (2):
+  media: ov8856: Add devicetree support
+  media: ov8856: Implement sensor module revision identification
+
+ .../devicetree/bindings/media/i2c/ov8856.yaml | 142 +++++++++++++
+ MAINTAINERS                                   |   1 +
+ drivers/media/i2c/ov8856.c                    | 190 ++++++++++++++++--
+ 3 files changed, 319 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+
+-- 
+2.25.1
+
