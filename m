@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B9EC47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C7BC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D692E206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E98920675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:24:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729403AbgEEONu (ORCPT
+        id S1729392AbgEEONu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 5 May 2020 10:13:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48510 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729330AbgEEONr (ORCPT
+        by vger.kernel.org with ESMTP id S1729332AbgEEONr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 5 May 2020 10:13:47 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 084E3C061A41
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:13:46 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03E32C061BD3
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:13:47 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jVyK4-0000N2-8t; Tue, 05 May 2020 16:13:24 +0200
+        id 1jVyJw-0000Hb-KI; Tue, 05 May 2020 16:13:16 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id AFA1A1001F5;
-        Tue,  5 May 2020 16:13:23 +0200 (CEST)
-Message-Id: <20200505134058.863038566@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 22E8DFFC8D;
+        Tue,  5 May 2020 16:13:16 +0200 (CEST)
+Message-Id: <20200505134058.272448010@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:16:10 +0200
+Date:   Tue, 05 May 2020 15:16:04 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -51,9 +51,10 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Brian Gerst <brgerst@gmail.com>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Will Deacon <will@kernel.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V4 part 1 08/36] x86/doublefault: Remove memmove() call
+Subject: [patch V4 part 1 02/36] x86/hw_breakpoint: Prevent data breakpoints
+ on cpu_entry_area
 References: <20200505131602.633487962@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -66,46 +67,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use of memmove() in #DF is problematic considered tracing and other
-instrumentation.
+From: Andy Lutomirski <luto@kernel.org>
 
-Remove the memmove() call and simply write out what needs doing; this
-even clarifies the code, win-win! The code copies from the espfix64
-stack to the normal task stack, there is no possible way for that to
-overlap.
+A data breakpoint near the top of an IST stack will cause unresoverable
+recursion.  A data breakpoint on the GDT, IDT, or TSS is terrifying.
+Prevent either of these from happening.
 
-Survives selftests/x86, specifically sigreturn_64.
-
-Suggested-by: Borislav Petkov <bp@alien8.de>
+Co-developed-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Andy Lutomirski <luto@kernel.org>
-Link: https://lkml.kernel.org/r/20200220121727.GB507@zn.tnic
 ---
- arch/x86/kernel/traps.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ arch/x86/kernel/hw_breakpoint.c |   25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -278,6 +278,7 @@ dotraplinkage void do_double_fault(struc
- 		regs->ip == (unsigned long)native_irq_return_iret)
- 	{
- 		struct pt_regs *gpregs = (struct pt_regs *)this_cpu_read(cpu_tss_rw.x86_tss.sp0) - 1;
-+		unsigned long *p = (unsigned long *)regs->sp;
+--- a/arch/x86/kernel/hw_breakpoint.c
++++ b/arch/x86/kernel/hw_breakpoint.c
+@@ -227,10 +227,35 @@ int arch_check_bp_in_kernelspace(struct
+ 	return (va >= TASK_SIZE_MAX) || ((va + len - 1) >= TASK_SIZE_MAX);
+ }
  
- 		/*
- 		 * regs->sp points to the failing IRET frame on the
-@@ -285,7 +286,11 @@ dotraplinkage void do_double_fault(struc
- 		 * in gpregs->ss through gpregs->ip.
- 		 *
- 		 */
--		memmove(&gpregs->ip, (void *)regs->sp, 5*8);
-+		gpregs->ip	= p[0];
-+		gpregs->cs	= p[1];
-+		gpregs->flags	= p[2];
-+		gpregs->sp	= p[3];
-+		gpregs->ss	= p[4];
- 		gpregs->orig_ax = 0;  /* Missing (lost) #GP error code */
++/*
++ * Checks whether the range from addr to end, inclusive, overlaps the CPU
++ * entry area range.
++ */
++static inline bool within_cpu_entry_area(unsigned long addr, unsigned long end)
++{
++	return end >= CPU_ENTRY_AREA_PER_CPU &&
++	       addr < (CPU_ENTRY_AREA_PER_CPU + CPU_ENTRY_AREA_TOTAL_SIZE);
++}
++
+ static int arch_build_bp_info(struct perf_event *bp,
+ 			      const struct perf_event_attr *attr,
+ 			      struct arch_hw_breakpoint *hw)
+ {
++	unsigned long bp_end;
++
++	bp_end = attr->bp_addr + attr->bp_len - 1;
++	if (bp_end < attr->bp_addr)
++		return -EINVAL;
++
++	/*
++	 * Prevent any breakpoint of any type that overlaps the
++	 * cpu_entry_area.  This protects the IST stacks and also
++	 * reduces the chance that we ever find out what happens if
++	 * there's a data breakpoint on the GDT, IDT, or TSS.
++	 */
++	if (within_cpu_entry_area(attr->bp_addr, bp_end))
++		return -EINVAL;
++
+ 	hw->address = attr->bp_addr;
+ 	hw->mask = 0;
  
- 		/*
 
