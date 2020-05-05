@@ -2,164 +2,98 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E831DC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F37C47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7449207DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:50:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zxm+Rr7l"
+	by mail.kernel.org (Postfix) with ESMTP id 2F772206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:50:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729483AbgEEOuX (ORCPT
+        id S1729549AbgEEOug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:50:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54568 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729060AbgEEOuW (ORCPT
+        Tue, 5 May 2020 10:50:36 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:42959 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729332AbgEEOuf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:50:22 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57DE6C061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:50:22 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id ep1so1123384qvb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 07:50:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7Pq81uf2psyNx4BKzdHn/TmsDqiXEasycTFHLZy0fzE=;
-        b=Zxm+Rr7lLpiJvdemTptDsL+2zZbM+zXHxnpdq+7kYHi/FEzupKH81Jbj7V1OVb18eS
-         edWuL+9LercKknTbWawmw/cdwJ956rvQ8sV52vF4ouxcaSQ0iqd+ZhOnIWDlIwCg/mTp
-         ZwSkJEC1OCq5d4PdGYXyCVS2NPE7z3MUKA8AuJY7GoxHXcdxEBL+o1Q8Ha7B6xsEcgsA
-         OaJZj0Ugis6t9KWvqLg1zUTYYsoXtAFuWiG+HKeOZYnKMx8LuB5MWucR0iq4aP0KFYpq
-         WZB9VQE3+obD8DWNcYtJB/drR0OIcwtB03B8jG7w15m7OtCLwcOzw5OKDtcNSFaDYh1O
-         BjFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7Pq81uf2psyNx4BKzdHn/TmsDqiXEasycTFHLZy0fzE=;
-        b=r9JYo9hIXYmpO6MQc/TAmPjxW1TDLZr9eft7jx74oLD3rIgCYFwMjbds+nj6mniwY5
-         /X8vrxTjBq8+sXDeZkB1UCm8E6wGTrQHPk+mRQou06J7RDl0qpAo9D2Qs6Rj5qJyZ1Fk
-         P/196Gnjkx8yHT3d1D85kWgoNcgsZjKuAbA3vvmQNokYysw5JiA8w/G4RhNeFXhYww/c
-         3/pEmEABAUuJYcmogCfq+lyGaTnFc1sA3aZPK/ybbHf+571dNMVoWuGB0Jzr6a66YpzR
-         PVXI6lXfoGlw72w+1W7PQSNw/xxDCeGmEGPm1wffumWSo5p+k7ysIVJkguCPfPAnuVVH
-         sYsg==
-X-Gm-Message-State: AGi0PuYiBvfYHbqz9Tkz6GOpwD8SSZsLPmozWYP9azidoJsBxzEU24ai
-        JX2QDohLxZMkxZFP3txPKKFryuTRKP64xyMXzktABA==
-X-Google-Smtp-Source: APiQypL5uhC5XiH0WsPbx22wf8V5dxjjLdEZtLGl6qTwkFsmYzmexrrDZNczy6mxkMB1ZWimXKgUEcTpCfzri9Dvd+U=
-X-Received: by 2002:a0c:f8cf:: with SMTP id h15mr2976751qvo.22.1588690221148;
- Tue, 05 May 2020 07:50:21 -0700 (PDT)
+        Tue, 5 May 2020 10:50:35 -0400
+Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MfZDK-1iuhCk00VM-00fxiN; Tue, 05 May 2020 16:50:34 +0200
+Received: by mail-qk1-f172.google.com with SMTP id i14so2481696qka.10;
+        Tue, 05 May 2020 07:50:33 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYMK1Z5O7Lw3eOlNezFBug99HhG7qCIsvsG+rcLi3zrpBdCxkVl
+        vhsx8+AdyKCS6gV/qVrWzc37WbVf9uKLCjaoEcw=
+X-Google-Smtp-Source: APiQypJLyiXCJC5P9f6z2L3iZlBe5oRvFHw9Gwp3hVkojbjzPuoDSdiHrFCZeHWjvZ6SiDNDEMJvgXleWYPp8TYCh3o=
+X-Received: by 2002:a37:a492:: with SMTP id n140mr4053709qke.352.1588690232807;
+ Tue, 05 May 2020 07:50:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200505142341.1096942-1-arnd@arndb.de> <CANpmjNMtGy6YK8zuqf0dmkykZMt=qkxkZrZNEKde1nbw84ZLkg@mail.gmail.com>
-In-Reply-To: <CANpmjNMtGy6YK8zuqf0dmkykZMt=qkxkZrZNEKde1nbw84ZLkg@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 5 May 2020 16:50:09 +0200
-Message-ID: <CACT4Y+Zpp=+JJedhMpunuUh832eJFu+af-r8631Ar0kE2nv72A@mail.gmail.com>
-Subject: Re: [PATCH] ubsan, kcsan: don't combine sanitizer with kcov
-To:     Marco Elver <elver@google.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
+References: <20200429112834.24908-1-vincenzo.frascino@arm.com>
+In-Reply-To: <20200429112834.24908-1-vincenzo.frascino@arm.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 5 May 2020 16:50:16 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3u05wF1DT3Wnvmapc0jixu+gp_YG=KTEN9-n4JedJ9BA@mail.gmail.com>
+Message-ID: <CAK8P3a3u05wF1DT3Wnvmapc0jixu+gp_YG=KTEN9-n4JedJ9BA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] kselftest: Extend vDSO tests
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+        Andy Lutomirski <luto@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:c+CoYMx96cdZ0BvJpcEUhP+izzQf2qvPczyfYmJz90MuGAgBsFT
+ jMfPdM/yEXK6SbuaMAXipzXZXbg9jzWgLtqb5cq23xc3G1qDCAC26tG0i2ms1ynjdaL16yT
+ Gsy3YA72u/etcYVllRjoALQnvRwURDjVhGfE67JxB/QZcVhj07nZcU2MXvmkPQTReeeO175
+ bgz31FynO1mfcYliXp3LQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:m1zBxUvWGYA=:iKJeMF58+W+tPtenU7nQfr
+ RShj67StJ+z1sMcqv1ktsa3z+JilpsJM9Cmm8mE2Tn8Uup0xQT1jMEMvuNFiEqb1IADFMtgJX
+ 6vBe5SphWkLYD89hf22tEyLsVMV8QiW199qDf0zXdNb8mEzk/LJV2bXToEJC29HHanaW9RCsO
+ Tp6yUnzfnatsPIU3i/5iYceQvbksnY6nV76aIiobxrxd3nEa6183uGyRDid7zP8ohO+JRXwK4
+ 6aAhL7W16tux6BZtG2e3et6eSXFnHdEg60M1euyTqF0MFsFbUNJR6WSdMuVTWbipZNVQPm76n
+ 4heHXtPoRrY2hLDnRJ2yv9ibzZIGYDEMCMTfKDCQBQgpBwOdyg5gMhYB1bKpFQhyebKI616nC
+ F2HziDjqUQHVcsfIUVxIdo5qYcD/mG18NEwz53hGZJ4LniYkuU2Eeq4wp3AbV721uClxpaPws
+ BtBrPKgdlflUZ5DGak/Awm+vnlRYlcHeiEFaAKfQ3uSWpFPuqDU/c7VzSYrvjFe3vCGHQFNyH
+ MYwuOi0o+Mv8d//S22gxKA8v6DMiqm5pdnCvXC7WpmuARhyKB8c5CmGhNM61QZAfx6JIxTVeE
+ dTO8A8k1/3XWj+5LjpnCyBVyVCgY7ZMCPrXE/XLFc0mToIitWZPARCvP0Qc7oCFtZqc8lj2G3
+ YNrNDdW+scRp0Tcz/Ios5W5TRMi71A/2C4DnGgfpZcr/AcQkpRiwnnv6+emDYOva6NNCenY2Y
+ pbgfMw9ejR7aB4oRQs1PqFtpIL8I8YmnDmXSv8/zeaFADRgaNzVv82oo7McYT6h/HT67Ah23v
+ WAS8xXMlSiKzdKKwvyGZUJiRVaxewl0/VsZtQ0XOZ7q3b7dRzA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 4:36 PM Marco Elver <elver@google.com> wrote:
-> > Clang does not allow -fsanitize-coverage=trace-{pc,cmp} together
-> > with -fsanitize=bounds or with ubsan:
-> >
-> > clang: error: argument unused during compilation: '-fsanitize-coverage=trace-pc' [-Werror,-Wunused-command-line-argument]
-> > clang: error: argument unused during compilation: '-fsanitize-coverage=trace-cmp' [-Werror,-Wunused-command-line-argument]
-> >
-> > To avoid that case, add a Kconfig dependency. The dependency could
-> > go either way, disabling CONFIG_KCOV or CONFIG_UBSAN_BOUNDS when the
-> > other is set. I picked the second option here as this seems to have
-> > a smaller impact on the resulting kernel.
-> >
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> >  lib/Kconfig.kcsan | 2 +-
-> >  lib/Kconfig.ubsan | 1 +
-> >  2 files changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
-> > index ea28245c6c1d..8f856c8828d5 100644
-> > --- a/lib/Kconfig.kcsan
-> > +++ b/lib/Kconfig.kcsan
-> > @@ -5,7 +5,7 @@ config HAVE_ARCH_KCSAN
-> >
-> >  menuconfig KCSAN
-> >         bool "KCSAN: dynamic data race detector"
-> > -       depends on HAVE_ARCH_KCSAN && DEBUG_KERNEL && !KASAN
-> > +       depends on HAVE_ARCH_KCSAN && DEBUG_KERNEL && !KASAN && !KCOV
+On Wed, Apr 29, 2020 at 1:34 PM Vincenzo Frascino
+<vincenzo.frascino@arm.com> wrote:
 >
-> This also disables KCOV with GCC. Why does this not work with KCSAN?
+> This series extends the kselftests for the vDSO library making sure: that
+> they compile correctly on non x86 platforms, that they can be cross
+> compiled and introducing new tests that verify the correctness of the
+> library.
 >
-> This is a huge problem for us, since syzbot requires KCOV. In fact
-> I've always been building KCSAN kernels with CONFIG_KCOV=y (with GCC
-> or Clang) and cannot reproduce the problem.
+> The so extended vDSO kselftests have been verified on all the platforms
+> supported by the unified vDSO library [1].
 >
-> >         select STACKTRACE
-> >         help
-> >           The Kernel Concurrency Sanitizer (KCSAN) is a dynamic
-> > diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
-> > index 929211039bac..f98ef029553e 100644
-> > --- a/lib/Kconfig.ubsan
-> > +++ b/lib/Kconfig.ubsan
-> > @@ -29,6 +29,7 @@ config UBSAN_TRAP
-> >  config UBSAN_BOUNDS
-> >         bool "Perform array index bounds checking"
-> >         default UBSAN
-> > +       depends on !(CC_IS_CLANG && KCOV)
+> The only new patch that this series introduces is the first one, patch 2 and
+> patch 3 have already been reviewed in past as part of other series [2] [3].
 >
-> Ditto, we really need KCOV for all sanitizers. I also just tried to
-> reproduce the problem but can't.
->
-> Which version of clang is causing this? I'm currently using Clang 9.
-> My guess is that we should not fix this by disallowing KCOV, but
-> rather make Clang work with these configs.
->
-> Dmitry, can you comment?
+> [1] https://lore.kernel.org/lkml/20190621095252.32307-1-vincenzo.frascino@arm.com
+> [2] https://lore.kernel.org/lkml/20190621095252.32307-26-vincenzo.frascino@arm.com
+> [3] https://lore.kernel.org/lkml/20190523112116.19233-4-vincenzo.frascino@arm.com
 
-FWIW I can reproduce both with clang:
+Hi Vincenzo,
 
-$ clang /tmp/test.c -c -fsanitize-coverage=trace-pc -fsanitize=bounds
-clang-11: warning: argument unused during compilation:
-'-fsanitize-coverage=trace-pc' [-Wunused-command-line-argument]
+Not sure if you are aware of the recent bug report about clock_gettime64()
+returning invalid times on some arm32 kernels:
+https://github.com/raspberrypi/linux/issues/3579
 
-$ clang /tmp/test.c -c -fsanitize-coverage=trace-pc -fsanitize=thread
-clang-11: warning: argument unused during compilation:
-'-fsanitize-coverage=trace-pc' [-Wunused-command-line-argument]
+Regardless of when that gets fixed or by whom, I wonder if kselftest should
+also check for consistency, i.e. call both the vdso and the syscall version of
+clock_gettime() and clock_gettime64() and check that the results are always
+in sequence.
 
-with both my disto's 9.0.1 and fresher 11.0.0
-(7b80cb7cf45faf462d6193cc41c2cb7ad556600d.
-
-But both work with gcc
-
-$ gcc /tmp/test.c -c -fsanitize-coverage=trace-pc -fsanitize=thread
-$ gcc /tmp/test.c -c -fsanitize-coverage=trace-pc -fsanitize=bounds
-
-Is it a known issue in clang?
-
-Can we somehow disable it only for clang and not gcc?
-
-This will immediately break KCSAN on syzbot as it enables KCSAN and KCOV:
-https://syzkaller.appspot.com/upstream?manager=ci2-upstream-kcsan-gce
+      Arnd
