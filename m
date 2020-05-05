@@ -2,89 +2,193 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9BCC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0927BC47259
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F27C206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9F76206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:35:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E97CcwnJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730410AbgEEPe4 (ORCPT
+        id S1730173AbgEEPfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:34:56 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:32923 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729447AbgEEPe4 (ORCPT
+        Tue, 5 May 2020 11:35:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33354 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729576AbgEEPfP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:34:56 -0400
-Received: from mail-qk1-f171.google.com ([209.85.222.171]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MtfRp-1jHtsv2esh-00v4dV; Tue, 05 May 2020 17:34:54 +0200
-Received: by mail-qk1-f171.google.com with SMTP id f13so2735742qkh.2;
-        Tue, 05 May 2020 08:34:54 -0700 (PDT)
-X-Gm-Message-State: AGi0Pub2Lj7INkZdZeZmap/L7ibpyvMtORfQ2A/xm/7yxrSS2TbOdxGb
-        XV2Xx/RTXaHU5FaOTe4RgnI25XMuC5CQTGfBDxg=
-X-Google-Smtp-Source: APiQypJ6aNF96MJ+osF2WCBQeZWcDk6l1GVugJ56JpB8nOxW+eYqhDjSR3n8hNxMlYLYJbdvAfV1tblMIRLQi6j+tII=
-X-Received: by 2002:a37:4e08:: with SMTP id c8mr4066508qkb.286.1588692893453;
- Tue, 05 May 2020 08:34:53 -0700 (PDT)
+        Tue, 5 May 2020 11:35:15 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A557C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 08:35:15 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id b2so2092910ljp.4
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 08:35:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ZAA7onJRPzZjOTBQ9x3ajcbhIJAzkJ5I/J+jTuQ6Q2k=;
+        b=E97CcwnJoQaWV6oA4UNCFfR3iGM9N7GMOtrF7Z8NZseCnvGZ1XoEc39IlimdrqV3sr
+         Jkbwry7o484iTCPcczKikLU+FulNIGgt/IHOxwCJKojkNmNYUbZM01VjMBtHP/04I+uQ
+         X5zzLXbn7p1fUf4kVf+wHRCo+ZhmTYZehCp7oad6Az005kGNjfRgAOdgj09e2EWXqg7P
+         a0uzcZM/aLFEbvDVhtyeGyi61vWpC3Gf5QozbKrCbwB+rJsR1z0HJ86CAlqvdtPty4Kf
+         qxyFa3pGTaVU5QJ3cnXpxPt9h2qIdjf69DxSnCxixQ+C+xcVTXwTFKht1E2HrVj/uY8U
+         P6Bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ZAA7onJRPzZjOTBQ9x3ajcbhIJAzkJ5I/J+jTuQ6Q2k=;
+        b=FT9NsmsnjfNHgRsOSW/5R2mJE8WkiXJ8A37c89lDAAboZQgnyciGFoqxvzTgvt2PdC
+         EM5SQPmx6FzCstFDQ2hli4Aeo2g4d9sHoDf/e4cebaq4VfQWKYISmZkLD10FmhGxgVqT
+         bBhFumaJtQFQd037pxKG8Ht0AYpp8iohdEJyCZzE4XemZ0Q9erxdqCdQaTiew1u6nomA
+         yui4mdP2zVoQZHrU7lXVd3XQqeSXOw0OQTmSf7zwYIA0MCNu4i2jzOqK8w+NSgvPvrLt
+         uQdQvbfnjThckChR5dEdFnnwAFS2TUgWz+WPwiM1cmuugPwQk1CBZrblhmA7H4yjwC7J
+         3WQQ==
+X-Gm-Message-State: AGi0PuZ54yKMqm6vx4bIqEhwnzTEwRPL+wwLTBlLKph3erHqPiZuthEF
+        r7WUGd3IZj/mbUorNa4A7I0ZNyj8ayYs0oSrzg0zsA==
+X-Google-Smtp-Source: APiQypLDoWYmW4L26SDbyERJjIZ2DuJK2gWx85BAOQiZuPUtk8T4uqvnKdZi0zoVn+YVKnNsmihG6a84YQ8CsLN2JBI=
+X-Received: by 2002:a2e:8999:: with SMTP id c25mr2201549lji.73.1588692913181;
+ Tue, 05 May 2020 08:35:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200505135848.180753-1-arnd@arndb.de> <20200505140443.GK208718@lunn.ch>
-In-Reply-To: <20200505140443.GK208718@lunn.ch>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 5 May 2020 17:34:37 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2Dtr5Ng7tt0ibPkNL565S+7cyYfGxfo4WUftkQ9mxgWw@mail.gmail.com>
-Message-ID: <CAK8P3a2Dtr5Ng7tt0ibPkNL565S+7cyYfGxfo4WUftkQ9mxgWw@mail.gmail.com>
-Subject: Re: [PATCH] [net-next] dsa: sja1105: dynamically allocate stats structure
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Vladimir Oltean <olteanv@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>
+References: <20200504165442.494398840@linuxfoundation.org>
+In-Reply-To: <20200504165442.494398840@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 5 May 2020 21:05:01 +0530
+Message-ID: <CA+G9fYuvxY=67EPMOHuYQEkFHELHq0fODx4ZPw_Fi9QgRymhqQ@mail.gmail.com>
+Subject: Re: [PATCH 4.14 00/26] 4.14.179-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:yBMsXm2HGYg8sUK9ISFYJPBa5Zh9OYPYxhrn4HeznkNc9saoevk
- EBUJ6mAyWlRpoGY+nhYlpQNpoDtf3V+vmdCrzPOp7KWBD0DZjWR5D7c+QW02sB2vAOF5NKB
- AGnVIJ184N9M8wFpcWz3obPPxJ7P9ZhRLTZ4Q/Ark332CNZu5b/yKh+QVcjDEyU+4E4jVxz
- xzqh9TGTQIgHZOjIM93+A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ahYfMqjPmJ8=:Qa4mc42wjBSHKhfVxUB9N+
- 3s4eJA7LpiAxcvhQV13VGaVmD3gn/Ld+IMKFWU0LlO5IDzmCUTV1K8+NYLTAmt5go8nN5odzq
- cEtLbmsTjpXK34lO+dsy08D43RoSxhJU/CuQIRRcSFYlk0Bme8wqq1qsL9Zh0RFqP+lPIxsmW
- /JRqMd13Xb4mLPhWBxRLq+QmcYH2s1zc6f2nRBb8r8s8vYyGJ7jtZa6OjsWV2wjulxWv3Kt3i
- kQ218wOwHcD/JjTQOeEoYxkeUpJ5Mzo9wDS0+Pp0aKTIy8et9jaH/57oW8IlaT60GwStFYCsR
- 1qTRt+m+/5kBV1M8HD90+ArNaO/8EhbxLLiAVHruiuMMRmAiolf5wzQUFnB0JaHaT7n67eowd
- 8AkeotN1ZWLX/NcDNhufoZZnpz6IHbmfZNA2Ebfvp0j9gVxSix1olkTsxTZ7d7CCMqrAPHh6v
- CrstWmRTrjeXnSSyin7OIn3YQ88M826aVhodQx33zg/8rrNRp+2XGANMaUunBdnkfhkSj5I3M
- 9ozFd9hVclEJCEG+ZPMR6h85k8LSCn86wQceSHPpqo7I1+y9DxxKydGFY+0R9Us7j0XBDdKSL
- g3i/8SDG4C2sOYTZIbeS21fWU4I9VEeYiLvtHpZRrj0DSwe9sVtUYKE6yNY7PJnFu0cYjGW2q
- CqjJ0WSrMa63xkR/HkP+KHNFRgwoPJlefbXlufAiw/HwBxjRC5QAGZiu4CMVcRXkTFhHbKncg
- RcswhfLTaw4wa/NyXvG/LT1Ws4y3NA0d/teEIHtEv1hgL7aRKOsoKutUzrasidRHdH1EdIQqf
- TN88wcF3MTtFs8XkaHACJVJSpyO5MJ8fK/te0F3oHsVssf8lzw=
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 4:04 PM Andrew Lunn <andrew@lunn.ch> wrote:
+On Mon, 4 May 2020 at 23:31, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> > -     rc = sja1105_port_status_get(priv, &status, port);
-> > +     rc = sja1105_port_status_get(priv, status, port);
-> >       if (rc < 0) {
-> >               dev_err(ds->dev, "Failed to read port %d counters: %d\n",
-> >                       port, rc);
-> > -             return;
-> > +             goto out;;
+> This is the start of the stable review cycle for the 4.14.179 release.
+> There are 26 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> Hi Arnd
+> Responses should be made by Wed, 06 May 2020 16:52:55 +0000.
+> Anything received after that time might be too late.
 >
-> I expect static checker people will drive by soon with a fix for the ;; :-)
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.14.179-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-I need to fix the patch up anyway, as it accidentally included an unrelated
-change that fails to apply. Fixed now.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-      Arnd
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.14.179-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.14.y
+git commit: 6d39cf91974673a74d6d976ecc107e43bb5c3eb4
+git describe: v4.14.178-27-g6d39cf919746
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
+ild/v4.14.178-27-g6d39cf919746
+
+No regressions (compared to build v4.14.178)
+
+No fixes (compared to build v4.14.178)
+
+Ran 28789 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kselftest/net
+* kselftest/networking
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-sched-tests
+* ltp-syscalls-tests
+* v4l2-compliance
+* ltp-hugetlb-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* network-basic-tests
+* perf
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-native/networking
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+* kselftest-vsyscall-mode-none/networking
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
