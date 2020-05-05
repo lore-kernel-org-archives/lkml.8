@@ -2,72 +2,97 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A30E1C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A52CC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8424B20661
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EC9D20735
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:07:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729291AbgEEOHc (ORCPT
+        id S1729328AbgEEOH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:07:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47542 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729215AbgEEOHc (ORCPT
+        Tue, 5 May 2020 10:07:56 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:58365 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727857AbgEEOHz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:07:32 -0400
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08957C061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:07:31 -0700 (PDT)
-Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:bd97:8453:3b10:1832])
-        by andre.telenet-ops.be with bizsmtp
-        id b27V2200l3VwRR30127VQa; Tue, 05 May 2020 16:07:29 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jVyEL-0000Wi-IF; Tue, 05 May 2020 16:07:29 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jVyEL-0007eQ-GG; Tue, 05 May 2020 16:07:29 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] MAINTAINERS: Add missing header files to BLOCK LAYER section
-Date:   Tue,  5 May 2020 16:07:28 +0200
-Message-Id: <20200505140728.29369-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Tue, 5 May 2020 10:07:55 -0400
+Received: from localhost.localdomain ([149.172.19.189]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MSckp-1jgbDd2wEj-00SzC5; Tue, 05 May 2020 16:07:36 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Martin KaFai Lau <kafai@fb.com>,
+        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH] sysctl: fix unused function warning
+Date:   Tue,  5 May 2020 16:07:12 +0200
+Message-Id: <20200505140734.503701-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:3d2w6o/Pc8jpk4E6dFIe0waqDAGYBBiltl8xwm05XKzTS/tzFZH
+ wM6QVpdygqilv5m8jqAn3iINx2PgvGXlxHuWdgc3WYmVK+DjVlu6JrioYarRNKH4YSW7KJJ
+ C08I0iaqQgH7+7baXtogmFSLh3g5rXUY6/Py3//z6OKPKQguuo7h1VPzjNv4FvAv5tdOzrG
+ uINB2ZeUA65BUR3MOCzqA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:0zfdxagVU88=:2Xvisr/NI7pfy32yIaUe6f
+ EL6r4Zlig/Jg5SKrt1MSpeVIdiE3TSlDhFdNnjOZRdEkujHAODLH15mLqxQlGIQktnFgqWODs
+ qmhUC9/w7EH+1R40FCXvTNgEOis6kpL7Hlzj4Ccd34BlgxPEDo9BbircvahNBUrqOc9liaWDx
+ ynJ4etVdetVqJPGxO8O1SynFEKxgi1VZcR8lYRi2zRX3Hfvk5SL8wgKW3bNuBJ3/uW+RDeMTK
+ tuTIEqqM0LHi5tBxUfMWEzWxjKZi/sC/VFrnUaSyCBF/40D1kdoYzyu1f0647fuMkX3ai/liX
+ pLI1X15gvDRxdMC4dXi4GAtrElqOvkkjcRltQbcnBuz/Imm7vWp6lLuQ4D5mq7d2FUS292SGf
+ gTpHYknOQz/iXDomucdqmEu15plsNzhT7ObUpQnqhd+0dC+slV3t8mI3t7ky027D287+gspqG
+ DfcmWDNogN/OFRGPFvGicrnNTo99MDxFe1QfOa60W1XKoy1UnQd8j92OXMinLptq7OuOgxvcg
+ dbfWKG8zgztfKUlAjA/qOsyrBIxKRCxS+iXcV9OTMrsJxZ6YxVxdTJZ0JMTKk+t/3eOd+qQeI
+ V4cCDBX17dA+FB6varE0Y9p4iAGIdPbYeCjsf8U40Xlir8gHtZW4Z/BMwfxt+HS5h0Fttp9Vw
+ NReSAkSju1reIuUiWqn3ZCPZrcHNhstfKoy0Pu9NCj9jPEIAyIaxmrnztfSRLNk7ATzha7oJJ
+ QjIATrubtNYJPYP+Vq/9gh4GilQPXrUrj7TZpWAXwwjH/hQLkwnPwdqTFDWj3eBqNMEUBvBxA
+ 7fQL8CAM9kgnfQWFKss6pdCGY/uPAzMyvk4DeHJay9AqRlbTvo=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The various <linux/blk*.h> header files are part of the Block Layer.
-Add them to the corresponding section in the MAINTAINERS file, so
-scripts/get_maintainer.pl will pick them up.
+The newly added bpf_stats_handler function has the wrong #ifdef
+check around it, leading to an unused-function warning when
+CONFIG_SYSCTL is disabled:
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+kernel/sysctl.c:205:12: error: unused function 'bpf_stats_handler' [-Werror,-Wunused-function]
+static int bpf_stats_handler(struct ctl_table *table, int write,
+
+Fix the check to match the reference.
+
+Fixes: d46edd671a14 ("bpf: Sharing bpf runtime stats with BPF_ENABLE_STATS")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/sysctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f3fd61cde5125f74..16644a41d42737fe 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3136,6 +3136,7 @@ S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git
- F:	block/
- F:	drivers/block/
-+F:	include/linux/blk*
- F:	kernel/trace/blktrace.c
- F:	lib/sbitmap.c
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 86ed5dd29a61..3b0cecf57e79 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -201,7 +201,7 @@ static int max_extfrag_threshold = 1000;
  
+ #endif /* CONFIG_SYSCTL */
+ 
+-#ifdef CONFIG_BPF_SYSCALL
++#if defined(CONFIG_BPF_SYSCALL) && defined(CONFIG_SYSCTL)
+ static int bpf_stats_handler(struct ctl_table *table, int write,
+ 			     void __user *buffer, size_t *lenp,
+ 			     loff_t *ppos)
 -- 
-2.17.1
+2.26.0
 
