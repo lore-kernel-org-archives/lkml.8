@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD79C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B306C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74672206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6DE1206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:15:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729824AbgEEOPZ (ORCPT
+        id S1729834AbgEEOP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:15:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48876 "EHLO
+        Tue, 5 May 2020 10:15:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729800AbgEEOPU (ORCPT
+        by vger.kernel.org with ESMTP id S1729822AbgEEOPY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:15:20 -0400
+        Tue, 5 May 2020 10:15:24 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B224C061A41
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:15:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67F42C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:15:24 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jVyLX-0001GX-0e; Tue, 05 May 2020 16:14:55 +0200
+        id 1jVyLi-0001OD-5V; Tue, 05 May 2020 16:15:06 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 838F5FFC8D;
-        Tue,  5 May 2020 16:14:54 +0200 (CEST)
-Message-Id: <20200505134903.531534675@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id AF7E4FFC8D;
+        Tue,  5 May 2020 16:15:05 +0200 (CEST)
+Message-Id: <20200505134904.457578656@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:43:57 +0200
+Date:   Tue, 05 May 2020 15:44:06 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -52,8 +52,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Will Deacon <will@kernel.org>
-Subject: [patch V4 part 3 03/29] x86/entry: Disable interrupts for
- native_load_gs_index() in C code
+Subject: [patch V4 part 3 12/29] x86/entry/common: Provide idtentry_enter/exit()
 References: <20200505134354.774943181@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -66,86 +65,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is absolutely no point in doing this in ASM code. Move it to C.
+Provide functions which handle the low level entry and exit similiar to
+enter/exit from user mode.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/entry/entry_64.S            |   19 +++++++------------
- arch/x86/include/asm/special_insns.h |   14 ++++++++++++--
- 2 files changed, 19 insertions(+), 14 deletions(-)
+ arch/x86/entry/common.c         |   89 ++++++++++++++++++++++++++++++++++++++++
+ arch/x86/include/asm/idtentry.h |    3 +
+ 2 files changed, 92 insertions(+)
 
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -1036,27 +1036,22 @@ idtentry alignment_check		do_alignment_c
- idtentry simd_coprocessor_error		do_simd_coprocessor_error	has_error_code=0
- 
- 
--	/*
--	 * Reload gs selector with exception handling
--	 * edi:  new selector
--	 */
-+/*
-+ * Reload gs selector with exception handling
-+ * edi:  new selector
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -510,3 +510,92 @@ SYSCALL_DEFINE0(ni_syscall)
+ {
+ 	return -ENOSYS;
+ }
++
++/**
++ * idtentry_enter - Handle state tracking on idtentry
++ * @regs:	Pointer to pt_regs of interrupted context
++ *
++ * Invokes:
++ *  - lockdep irqflag state tracking as low level ASM entry disabled
++ *    interrupts.
++ *
++ *  - Context tracking if the exception hit user mode.
++ *
++ *  - RCU notification if the exception hit kernel mode
++ *
++ *  - The hardirq tracer to keep the state consistent as low level ASM
++ *    entry disabled interrupts.
 + */
- .pushsection .text, "ax"
--SYM_FUNC_START(native_load_gs_index)
-+SYM_FUNC_START(asm_native_load_gs_index)
- 	FRAME_BEGIN
--	pushfq
--	DISABLE_INTERRUPTS(CLBR_ANY & ~CLBR_RDI)
--	TRACE_IRQS_OFF
- 	SWAPGS
- .Lgs_change:
- 	movl	%edi, %gs
- 2:	ALTERNATIVE "", "mfence", X86_BUG_SWAPGS_FENCE
- 	SWAPGS
--	TRACE_IRQS_FLAGS (%rsp)
--	popfq
- 	FRAME_END
- 	ret
--SYM_FUNC_END(native_load_gs_index)
--EXPORT_SYMBOL(native_load_gs_index)
-+SYM_FUNC_END(asm_native_load_gs_index)
-+EXPORT_SYMBOL(asm_native_load_gs_index)
- .popsection
- 
- 	_ASM_EXTABLE(.Lgs_change, .Lbad_gs)
---- a/arch/x86/include/asm/special_insns.h
-+++ b/arch/x86/include/asm/special_insns.h
-@@ -7,6 +7,7 @@
- 
- #include <asm/nops.h>
- #include <asm/processor-flags.h>
-+#include <linux/irqflags.h>
- #include <linux/jump_label.h>
- 
- /*
-@@ -129,7 +130,16 @@ static inline void native_wbinvd(void)
- 	asm volatile("wbinvd": : :"memory");
- }
- 
--extern asmlinkage void native_load_gs_index(unsigned);
-+extern asmlinkage void asm_native_load_gs_index(unsigned int selector);
-+
-+static inline void native_load_gs_index(unsigned int selector)
++void noinstr idtentry_enter(struct pt_regs *regs)
 +{
-+	unsigned long flags;
-+
-+	local_irq_save(flags);
-+	asm_native_load_gs_index(selector);
-+	local_irq_restore(flags);
++	if (user_mode(regs)) {
++		enter_from_user_mode();
++	} else {
++		lockdep_hardirqs_off(CALLER_ADDR0);
++		rcu_irq_enter();
++		instr_begin();
++		trace_hardirqs_off_prepare();
++		instr_end();
++	}
 +}
++
++/**
++ * idtentry_exit - Common code to handle return from exceptions
++ * @regs:	Pointer to pt_regs (exception entry regs)
++ *
++ * Depending on the return target (kernel/user) this runs the necessary
++ * preemption and work checks if possible and reguired and returns to
++ * the caller with interrupts disabled and no further work pending.
++ *
++ * This is the last action before returning to the low level ASM code which
++ * just needs to return to the appropriate context.
++ *
++ * Invoked by all exception/interrupt IDTENTRY handlers which are not
++ * returning through the paranoid exit path (all except NMI, #DF and the IST
++ * variants of #MC and #DB).
++ */
++void noinstr idtentry_exit(struct pt_regs *regs)
++{
++	lockdep_assert_irqs_disabled();
++
++	/* Check whether this returns to user mode */
++	if (user_mode(regs)) {
++		prepare_exit_to_usermode(regs);
++	} else if (regs->flags & X86_EFLAGS_IF) {
++		/* Check kernel preemption, if enabled */
++		if (IS_ENABLED(CONFIG_PREEMPTION)) {
++			/*
++			 * This needs to be done very carefully.
++			 * idtentry_enter() invoked rcu_irq_enter(). This
++			 * needs to undone before scheduling.
++			 *
++			 * Preemption is disabled inside of RCU idle
++			 * sections. When the task returns from
++			 * preempt_schedule_irq(), RCU is still watching.
++			 *
++			 * rcu_irq_exit_preempt() has additional state
++			 * checking if CONFIG_PROVE_RCU=y
++			 */
++			if (!preempt_count()) {
++				instr_begin();
++				rcu_irq_exit_preempt();
++				if (need_resched())
++					preempt_schedule_irq();
++				/* Covers both tracing and lockdep */
++				trace_hardirqs_on();
++				instr_end();
++				return;
++			}
++		}
++		instr_begin();
++		/* Tell the tracer that IRET will enable interrupts */
++		trace_hardirqs_on_prepare();
++		lockdep_hardirqs_on_prepare(CALLER_ADDR0);
++		instr_end();
++		rcu_irq_exit();
++		lockdep_hardirqs_on(CALLER_ADDR0);
++	} else {
++		/* IRQ flags state is correct already. Just tell RCU */
++		rcu_irq_exit();
++	}
++}
+--- a/arch/x86/include/asm/idtentry.h
++++ b/arch/x86/include/asm/idtentry.h
+@@ -7,6 +7,9 @@
  
- static inline unsigned long __read_cr4(void)
- {
-@@ -186,7 +196,7 @@ static inline void wbinvd(void)
+ #ifndef __ASSEMBLY__
  
- #ifdef CONFIG_X86_64
- 
--static inline void load_gs_index(unsigned selector)
-+static inline void load_gs_index(unsigned int selector)
- {
- 	native_load_gs_index(selector);
- }
++void idtentry_enter(struct pt_regs *regs);
++void idtentry_exit(struct pt_regs *regs);
++
+ /**
+  * DECLARE_IDTENTRY - Declare functions for simple IDT entry points
+  *		      No error code pushed by hardware
 
