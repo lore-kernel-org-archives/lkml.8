@@ -2,799 +2,108 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C3DC47258
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C11AC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0EF720735
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:10:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="hX9O1DpS"
+	by mail.kernel.org (Postfix) with ESMTP id 27D2E20735
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:10:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588677053;
+	bh=tLnC3k0rye0luMgLxFSFH5txN4xnLzlLq84ZHZhCA2Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=x8wm3WGQVPaYS2C+utX4N2mC3JqJ/1XbyEsyRfV6bbTI8az4eRh/yMfuYi0g8QT3Z
+	 ZrTeCVfMDkDHFgFHhKqASlUKDMx4YULVzqGVZsL9VV9YYLxEv+v91q+ivocD0MzUPW
+	 WU6BwmhXWz2YxXuySIfUITmFUMMk0fEJZapvY/YQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728830AbgEELKt (ORCPT
+        id S1728841AbgEELKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 07:10:49 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:3560 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbgEELKs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 07:10:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1588677045; x=1620213045;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=40YT47tVy4me3OjP94fEnj3IwnLO50KQj6RU+t9sZqY=;
-  b=hX9O1DpSUrOEKH/NqD8zIYqCTMiN3VRkRSviBx+r+GJuAjoYPkRvkmJy
-   x4sdSjqyf1Y1IkScnqD51LA5H8Fy3WT8EGn2FspgXVUJQagwmNl+fRtQD
-   qv+N6p7XGdlwRy+Mgmb88bR9S7NQ2T/8YNFP0igQr9GIemfhcVZmkn4U5
-   s=;
-IronPort-SDR: R9gpt1huu2S2KOnIpI0Csf7GH8nT1wguFUXWznzm0BwbBIDFZOrBy3Ytpw8zCmdy7wNELckjg9
- mHPlbC/MZnYw==
-X-IronPort-AV: E=Sophos;i="5.73,354,1583193600"; 
-   d="scan'208";a="28931002"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2b-81e76b79.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 05 May 2020 11:10:42 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2b-81e76b79.us-west-2.amazon.com (Postfix) with ESMTPS id 4224EA1CEC;
-        Tue,  5 May 2020 11:10:30 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 5 May 2020 11:10:30 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.92) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 5 May 2020 11:10:14 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
-        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v10 04/16] mm/damon: Implement region based sampling
-Date:   Tue, 5 May 2020 13:08:03 +0200
-Message-ID: <20200505110815.10532-5-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200505110815.10532-1-sjpark@amazon.com>
-References: <20200505110815.10532-1-sjpark@amazon.com>
+        Tue, 5 May 2020 07:10:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50326 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725766AbgEELKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 07:10:50 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1ED0206B8;
+        Tue,  5 May 2020 11:10:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588677049;
+        bh=tLnC3k0rye0luMgLxFSFH5txN4xnLzlLq84ZHZhCA2Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Xcd5vIJgLtqRrkuJPCcdbU5b2WtJlWCm7UfhN/ckq+9vmS9qPWkYH8U94I7Ta3xG6
+         B3gwrGBf+MKsezEyVcBIqJfTF5o0pjmu+4FRTfre6YfZi2V53Ty7hZuThX/Y1cO5vq
+         S39yKwl2ZnHA6kNGQTole+6zuVkz6j6CVXpE84w0=
+Date:   Tue, 5 May 2020 12:10:45 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 03/16] arm64/cpufeature: Make doublelock a signed
+ feature in ID_AA64DFR0
+Message-ID: <20200505111045.GE19710@willie-the-truck>
+References: <1588426445-24344-1-git-send-email-anshuman.khandual@arm.com>
+ <1588426445-24344-4-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.92]
-X-ClientProxiedBy: EX13D35UWB004.ant.amazon.com (10.43.161.230) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588426445-24344-4-git-send-email-anshuman.khandual@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On Sat, May 02, 2020 at 07:03:52PM +0530, Anshuman Khandual wrote:
+> Double lock feature can have the following possible values.
+> 
+> 0b0000 - Double lock implemented
+> 0b1111 - Double lock not implemented
+> 
+> But in case of a conflict the safe value should be 0b1111. Hence this must
+> be a signed feature instead. Also change FTR_EXACT to FTR_LOWER_SAFE.
+> 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>  arch/arm64/kernel/cpufeature.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index 51386dade423..cba43e4a5c79 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -338,7 +338,7 @@ static const struct arm64_ftr_bits ftr_id_mmfr0[] = {
+>  };
+>  
+>  static const struct arm64_ftr_bits ftr_id_aa64dfr0[] = {
+> -	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_EXACT, 36, 28, 0),
+> +	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 36, 28, 0),
 
-This commit implements DAMON's basic access check and region based
-sampling mechanisms.  This change would seems make no sense, mainly
-because it is only a part of the DAMON's logics.  Following two commits
-will make more sense.
+Wait, isn't this buggered today? Shouldn't that 28 be a 4? I think we really
+need to:
 
-Basic Access Check
-------------------
+	1. Make it impossible to describe overlapping fields, incomplete
+	   registers etc (ideally at build-time)
 
-DAMON basically reports what pages are how frequently accessed.  Note
-that the frequency is not an absolute number of accesses, but a relative
-frequency among the pages of the target workloads.
+	2. Have a macro that for 4-bit fields so you don't have to type '4'
+	   all the time
 
-Users can control the resolution of the reports by setting two time
-intervals, ``sampling interval`` and ``aggregation interval``.  In
-detail, DAMON checks access to each page per ``sampling interval``,
-aggregates the results (counts the number of the accesses to each page),
-and reports the aggregated results per ``aggregation interval``.  For
-the access check of each page, DAMON uses the Accessed bits of PTEs.
+Suzuki, any ideas how we can make this a bit more robust?
 
-This is thus similar to common periodic access checks based access
-tracking mechanisms, which overhead is increasing as the size of the
-target process grows.
-
-Region Based Sampling
----------------------
-
-To avoid the unbounded increase of the overhead, DAMON groups a number
-of adjacent pages that assumed to have same access frequencies into a
-region.  As long as the assumption (pages in a region have same access
-frequencies) is kept, only one page in the region is required to be
-checked.  Thus, for each ``sampling interval``, DAMON randomly picks one
-page in each region and clears its Accessed bit.  After one more
-``sampling interval``, DAMON reads the Accessed bit of the page and
-increases the access frequency of the region if the bit has set
-meanwhile.  Therefore, the monitoring overhead is controllable by
-setting the number of regions.
-
-Nonetheless, this scheme cannot preserve the quality of the output if
-the assumption is not kept.  Following commit will introduce how we can
-make the guarantee with best effort.
-
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- include/linux/damon.h |  25 ++
- mm/damon.c            | 597 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 622 insertions(+)
-
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index 19f411d36c0d..558dd6ae0afa 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -11,6 +11,8 @@
- #define _DAMON_H_
- 
- #include <linux/random.h>
-+#include <linux/mutex.h>
-+#include <linux/time64.h>
- #include <linux/types.h>
- 
- /* Represents a monitoring target region of [vm_start, vm_end) */
-@@ -29,8 +31,31 @@ struct damon_task {
- 	struct list_head list;
- };
- 
-+/*
-+ * For each 'sample_interval', DAMON checks whether each region is accessed or
-+ * not.  It aggregates and keeps the access information (number of accesses to
-+ * each region) for each 'aggr_interval' time.
-+ *
-+ * All time intervals are in micro-seconds.
-+ */
- struct damon_ctx {
-+	unsigned long sample_interval;
-+	unsigned long aggr_interval;
-+	unsigned long min_nr_regions;
-+
-+	struct timespec64 last_aggregation;
-+
-+	struct task_struct *kdamond;
-+	bool kdamond_stop;
-+	struct mutex kdamond_lock;
-+
- 	struct list_head tasks_list;	/* 'damon_task' objects */
- };
- 
-+int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids);
-+int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
-+		unsigned long aggr_int, unsigned long min_nr_reg);
-+int damon_start(struct damon_ctx *ctx);
-+int damon_stop(struct damon_ctx *ctx);
-+
- #endif
-diff --git a/mm/damon.c b/mm/damon.c
-index e319c1e19f3d..9c9aa18e846a 100644
---- a/mm/damon.c
-+++ b/mm/damon.c
-@@ -10,10 +10,19 @@
- #define pr_fmt(fmt) "damon: " fmt
- 
- #include <linux/damon.h>
-+#include <linux/delay.h>
-+#include <linux/kthread.h>
- #include <linux/mm.h>
- #include <linux/module.h>
-+#include <linux/page_idle.h>
-+#include <linux/random.h>
-+#include <linux/sched/mm.h>
-+#include <linux/sched/task.h>
- #include <linux/slab.h>
- 
-+/* Minimal region size.  Every damon_region is aligned by this. */
-+#define MIN_REGION PAGE_SIZE
-+
- #define damon_get_task_struct(t) \
- 	(get_pid_task(find_vpid(t->pid), PIDTYPE_PID))
- 
-@@ -156,6 +165,594 @@ static unsigned int nr_damon_regions(struct damon_task *t)
- 	return nr_regions;
- }
- 
-+/*
-+ * Get the mm_struct of the given task
-+ *
-+ * Caller _must_ put the mm_struct after use, unless it is NULL.
-+ *
-+ * Returns the mm_struct of the task on success, NULL on failure
-+ */
-+static struct mm_struct *damon_get_mm(struct damon_task *t)
-+{
-+	struct task_struct *task;
-+	struct mm_struct *mm;
-+
-+	task = damon_get_task_struct(t);
-+	if (!task)
-+		return NULL;
-+
-+	mm = get_task_mm(task);
-+	put_task_struct(task);
-+	return mm;
-+}
-+
-+/*
-+ * Size-evenly split a region into 'nr_pieces' small regions
-+ *
-+ * Returns 0 on success, or negative error code otherwise.
-+ */
-+static int damon_split_region_evenly(struct damon_ctx *ctx,
-+		struct damon_region *r, unsigned int nr_pieces)
-+{
-+	unsigned long sz_orig, sz_piece, orig_end;
-+	struct damon_region *n = NULL, *next;
-+	unsigned long start;
-+
-+	if (!r || !nr_pieces)
-+		return -EINVAL;
-+
-+	orig_end = r->vm_end;
-+	sz_orig = r->vm_end - r->vm_start;
-+	sz_piece = ALIGN_DOWN(sz_orig / nr_pieces, MIN_REGION);
-+
-+	if (!sz_piece)
-+		return -EINVAL;
-+
-+	r->vm_end = r->vm_start + sz_piece;
-+	next = damon_next_region(r);
-+	for (start = r->vm_end; start + sz_piece <= orig_end;
-+			start += sz_piece) {
-+		n = damon_new_region(ctx, start, start + sz_piece);
-+		if (!n)
-+			return -ENOMEM;
-+		damon_insert_region(n, r, next);
-+		r = n;
-+	}
-+	/* complement last region for possible rounding error */
-+	if (n)
-+		n->vm_end = orig_end;
-+
-+	return 0;
-+}
-+
-+struct region {
-+	unsigned long start;
-+	unsigned long end;
-+};
-+
-+static unsigned long sz_region(struct region *r)
-+{
-+	return r->end - r->start;
-+}
-+
-+static void swap_regions(struct region *r1, struct region *r2)
-+{
-+	struct region tmp;
-+
-+	tmp = *r1;
-+	*r1 = *r2;
-+	*r2 = tmp;
-+}
-+
-+/*
-+ * Find three regions separated by two biggest unmapped regions
-+ *
-+ * vma		the head vma of the target address space
-+ * regions	an array of three 'struct region's that results will be saved
-+ *
-+ * This function receives an address space and finds three regions in it which
-+ * separated by the two biggest unmapped regions in the space.  Please refer to
-+ * below comments of 'damon_init_regions_of()' function to know why this is
-+ * necessary.
-+ *
-+ * Returns 0 if success, or negative error code otherwise.
-+ */
-+static int damon_three_regions_in_vmas(struct vm_area_struct *vma,
-+		struct region regions[3])
-+{
-+	struct region gap = {0}, first_gap = {0}, second_gap = {0};
-+	struct vm_area_struct *last_vma = NULL;
-+	unsigned long start = 0;
-+
-+	/* Find two biggest gaps so that first_gap > second_gap > others */
-+	for (; vma; vma = vma->vm_next) {
-+		if (!last_vma) {
-+			start = vma->vm_start;
-+			last_vma = vma;
-+			continue;
-+		}
-+		gap.start = last_vma->vm_end;
-+		gap.end = vma->vm_start;
-+		if (sz_region(&gap) > sz_region(&second_gap)) {
-+			swap_regions(&gap, &second_gap);
-+			if (sz_region(&second_gap) > sz_region(&first_gap))
-+				swap_regions(&second_gap, &first_gap);
-+		}
-+		last_vma = vma;
-+	}
-+
-+	if (!sz_region(&second_gap) || !sz_region(&first_gap))
-+		return -EINVAL;
-+
-+	/* Sort the two biggest gaps by address */
-+	if (first_gap.start > second_gap.start)
-+		swap_regions(&first_gap, &second_gap);
-+
-+	/* Store the result */
-+	regions[0].start = ALIGN(start, MIN_REGION);
-+	regions[0].end = ALIGN(first_gap.start, MIN_REGION);
-+	regions[1].start = ALIGN(first_gap.end, MIN_REGION);
-+	regions[1].end = ALIGN(second_gap.start, MIN_REGION);
-+	regions[2].start = ALIGN(second_gap.end, MIN_REGION);
-+	regions[2].end = ALIGN(last_vma->vm_end, MIN_REGION);
-+
-+	return 0;
-+}
-+
-+/*
-+ * Get the three regions in the given task
-+ *
-+ * Returns 0 on success, negative error code otherwise.
-+ */
-+static int damon_three_regions_of(struct damon_task *t,
-+				struct region regions[3])
-+{
-+	struct mm_struct *mm;
-+	int rc;
-+
-+	mm = damon_get_mm(t);
-+	if (!mm)
-+		return -EINVAL;
-+
-+	down_read(&mm->mmap_sem);
-+	rc = damon_three_regions_in_vmas(mm->mmap, regions);
-+	up_read(&mm->mmap_sem);
-+
-+	mmput(mm);
-+	return rc;
-+}
-+
-+/*
-+ * Initialize the monitoring target regions for the given task
-+ *
-+ * t	the given target task
-+ *
-+ * Because only a number of small portions of the entire address space
-+ * is actually mapped to the memory and accessed, monitoring the unmapped
-+ * regions is wasteful.  That said, because we can deal with small noises,
-+ * tracking every mapping is not strictly required but could even incur a high
-+ * overhead if the mapping frequently changes or the number of mappings is
-+ * high.  Nonetheless, this may seems very weird.  DAMON's dynamic regions
-+ * adjustment mechanism, which will be implemented with following commit will
-+ * make this more sense.
-+ *
-+ * For the reason, we convert the complex mappings to three distinct regions
-+ * that cover every mapped area of the address space.  Also the two gaps
-+ * between the three regions are the two biggest unmapped areas in the given
-+ * address space.  In detail, this function first identifies the start and the
-+ * end of the mappings and the two biggest unmapped areas of the address space.
-+ * Then, it constructs the three regions as below:
-+ *
-+ *     [mappings[0]->start, big_two_unmapped_areas[0]->start)
-+ *     [big_two_unmapped_areas[0]->end, big_two_unmapped_areas[1]->start)
-+ *     [big_two_unmapped_areas[1]->end, mappings[nr_mappings - 1]->end)
-+ *
-+ * As usual memory map of processes is as below, the gap between the heap and
-+ * the uppermost mmap()-ed region, and the gap between the lowermost mmap()-ed
-+ * region and the stack will be two biggest unmapped regions.  Because these
-+ * gaps are exceptionally huge areas in usual address space, excluding these
-+ * two biggest unmapped regions will be sufficient to make a trade-off.
-+ *
-+ *   <heap>
-+ *   <BIG UNMAPPED REGION 1>
-+ *   <uppermost mmap()-ed region>
-+ *   (other mmap()-ed regions and small unmapped regions)
-+ *   <lowermost mmap()-ed region>
-+ *   <BIG UNMAPPED REGION 2>
-+ *   <stack>
-+ */
-+static void damon_init_regions_of(struct damon_ctx *c, struct damon_task *t)
-+{
-+	struct damon_region *r, *m = NULL;
-+	struct region regions[3];
-+	int i;
-+
-+	if (damon_three_regions_of(t, regions)) {
-+		pr_err("Failed to get three regions of task %d\n", t->pid);
-+		return;
-+	}
-+
-+	/* Set the initial three regions of the task */
-+	for (i = 0; i < 3; i++) {
-+		r = damon_new_region(c, regions[i].start, regions[i].end);
-+		if (!r) {
-+			pr_err("%d'th init region creation failed\n", i);
-+			return;
-+		}
-+		damon_add_region(r, t);
-+		if (i == 1)
-+			m = r;
-+	}
-+
-+	/* Split the middle region into 'min_nr_regions - 2' regions */
-+	if (damon_split_region_evenly(c, m, c->min_nr_regions - 2))
-+		pr_warn("Init middle region failed to be split\n");
-+}
-+
-+/* Initialize '->regions_list' of every task */
-+static void kdamond_init_regions(struct damon_ctx *ctx)
-+{
-+	struct damon_task *t;
-+
-+	damon_for_each_task(ctx, t)
-+		damon_init_regions_of(ctx, t);
-+}
-+
-+static void damon_mkold(struct mm_struct *mm, unsigned long addr)
-+{
-+	pte_t *pte = NULL;
-+	pmd_t *pmd = NULL;
-+	spinlock_t *ptl;
-+
-+	if (follow_pte_pmd(mm, addr, NULL, &pte, &pmd, &ptl))
-+		return;
-+
-+	if (pte) {
-+		if (pte_young(*pte)) {
-+			clear_page_idle(pte_page(*pte));
-+			set_page_young(pte_page(*pte));
-+		}
-+		*pte = pte_mkold(*pte);
-+		pte_unmap_unlock(pte, ptl);
-+		return;
-+	}
-+
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+	if (pmd_young(*pmd)) {
-+		clear_page_idle(pmd_page(*pmd));
-+		set_page_young(pmd_page(*pmd));
-+	}
-+	*pmd = pmd_mkold(*pmd);
-+	spin_unlock(ptl);
-+#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
-+}
-+
-+static void damon_prepare_access_check(struct damon_ctx *ctx,
-+			struct mm_struct *mm, struct damon_region *r)
-+{
-+	r->sampling_addr = damon_rand(r->vm_start, r->vm_end);
-+
-+	damon_mkold(mm, r->sampling_addr);
-+}
-+
-+static void kdamond_prepare_access_checks(struct damon_ctx *ctx)
-+{
-+	struct damon_task *t;
-+	struct mm_struct *mm;
-+	struct damon_region *r;
-+
-+	damon_for_each_task(ctx, t) {
-+		mm = damon_get_mm(t);
-+		if (!mm)
-+			continue;
-+		damon_for_each_region(r, t)
-+			damon_prepare_access_check(ctx, mm, r);
-+		mmput(mm);
-+	}
-+}
-+
-+static bool damon_young(struct mm_struct *mm, unsigned long addr,
-+			unsigned long *page_sz)
-+{
-+	pte_t *pte = NULL;
-+	pmd_t *pmd = NULL;
-+	spinlock_t *ptl;
-+	bool young = false;
-+
-+	if (follow_pte_pmd(mm, addr, NULL, &pte, &pmd, &ptl))
-+		return false;
-+
-+	*page_sz = PAGE_SIZE;
-+	if (pte) {
-+		young = pte_young(*pte);
-+		pte_unmap_unlock(pte, ptl);
-+		return young;
-+	}
-+
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+	young = pmd_young(*pmd);
-+	spin_unlock(ptl);
-+	*page_sz = ((1UL) << HPAGE_PMD_SHIFT);
-+#endif	/* CONFIG_TRANSPARENT_HUGEPAGE */
-+
-+	return young;
-+}
-+
-+/*
-+ * Check whether the region was accessed and prepare for next check
-+ *
-+ * mm	'mm_struct' for the given virtual address space
-+ * r	the region to be checked
-+ */
-+static void damon_check_access(struct damon_ctx *ctx,
-+			       struct mm_struct *mm, struct damon_region *r)
-+{
-+	static struct mm_struct *last_mm;
-+	static unsigned long last_addr;
-+	static unsigned long last_page_sz = PAGE_SIZE;
-+	static bool last_accessed;
-+
-+	/* If the region is in the last checked page, reuse the result */
-+	if (mm == last_mm && (ALIGN_DOWN(last_addr, last_page_sz) ==
-+				ALIGN_DOWN(r->sampling_addr, last_page_sz))) {
-+		if (last_accessed)
-+			r->nr_accesses++;
-+		return;
-+	}
-+
-+	last_accessed = damon_young(mm, r->sampling_addr, &last_page_sz);
-+	if (last_accessed)
-+		r->nr_accesses++;
-+
-+	last_mm = mm;
-+	last_addr = r->sampling_addr;
-+}
-+
-+static void kdamond_check_accesses(struct damon_ctx *ctx)
-+{
-+	struct damon_task *t;
-+	struct mm_struct *mm;
-+	struct damon_region *r;
-+
-+	damon_for_each_task(ctx, t) {
-+		mm = damon_get_mm(t);
-+		if (!mm)
-+			continue;
-+		damon_for_each_region(r, t)
-+			damon_check_access(ctx, mm, r);
-+		mmput(mm);
-+	}
-+}
-+
-+/**
-+ * damon_check_reset_time_interval() - Check if a time interval is elapsed.
-+ * @baseline:	the time to check whether the interval has elapsed since
-+ * @interval:	the time interval (microseconds)
-+ *
-+ * See whether the given time interval has passed since the given baseline
-+ * time.  If so, it also updates the baseline to current time for next check.
-+ *
-+ * Return:	true if the time interval has passed, or false otherwise.
-+ */
-+static bool damon_check_reset_time_interval(struct timespec64 *baseline,
-+		unsigned long interval)
-+{
-+	struct timespec64 now;
-+
-+	ktime_get_coarse_ts64(&now);
-+	if ((timespec64_to_ns(&now) - timespec64_to_ns(baseline)) <
-+			interval * 1000)
-+		return false;
-+	*baseline = now;
-+	return true;
-+}
-+
-+/*
-+ * Check whether it is time to flush the aggregated information
-+ */
-+static bool kdamond_aggregate_interval_passed(struct damon_ctx *ctx)
-+{
-+	return damon_check_reset_time_interval(&ctx->last_aggregation,
-+			ctx->aggr_interval);
-+}
-+
-+/*
-+ * Reset the aggregated monitoring results
-+ */
-+static void kdamond_reset_aggregated(struct damon_ctx *c)
-+{
-+	struct damon_task *t;
-+	struct damon_region *r;
-+
-+	damon_for_each_task(c, t) {
-+		damon_for_each_region(r, t)
-+			r->nr_accesses = 0;
-+	}
-+}
-+
-+/*
-+ * Check whether current monitoring should be stopped
-+ *
-+ * The monitoring is stopped when either the user requested to stop, or all
-+ * monitoring target tasks are dead.
-+ *
-+ * Returns true if need to stop current monitoring.
-+ */
-+static bool kdamond_need_stop(struct damon_ctx *ctx)
-+{
-+	struct damon_task *t;
-+	struct task_struct *task;
-+	bool stop;
-+
-+	mutex_lock(&ctx->kdamond_lock);
-+	stop = ctx->kdamond_stop;
-+	mutex_unlock(&ctx->kdamond_lock);
-+	if (stop)
-+		return true;
-+
-+	damon_for_each_task(ctx, t) {
-+		task = damon_get_task_struct(t);
-+		if (task) {
-+			put_task_struct(task);
-+			return false;
-+		}
-+	}
-+
-+	return true;
-+}
-+
-+/*
-+ * The monitoring daemon that runs as a kernel thread
-+ */
-+static int kdamond_fn(void *data)
-+{
-+	struct damon_ctx *ctx = (struct damon_ctx *)data;
-+	struct damon_task *t;
-+	struct damon_region *r, *next;
-+
-+	pr_info("kdamond (%d) starts\n", ctx->kdamond->pid);
-+	kdamond_init_regions(ctx);
-+	while (!kdamond_need_stop(ctx)) {
-+		kdamond_prepare_access_checks(ctx);
-+
-+		usleep_range(ctx->sample_interval, ctx->sample_interval + 1);
-+
-+		kdamond_check_accesses(ctx);
-+
-+		if (kdamond_aggregate_interval_passed(ctx))
-+			kdamond_reset_aggregated(ctx);
-+
-+	}
-+	damon_for_each_task(ctx, t) {
-+		damon_for_each_region_safe(r, next, t)
-+			damon_destroy_region(r);
-+	}
-+	pr_debug("kdamond (%d) finishes\n", ctx->kdamond->pid);
-+	mutex_lock(&ctx->kdamond_lock);
-+	ctx->kdamond = NULL;
-+	mutex_unlock(&ctx->kdamond_lock);
-+
-+	do_exit(0);
-+}
-+
-+/*
-+ * Controller functions
-+ */
-+
-+static bool damon_kdamond_running(struct damon_ctx *ctx)
-+{
-+	bool running;
-+
-+	mutex_lock(&ctx->kdamond_lock);
-+	running = ctx->kdamond != NULL;
-+	mutex_unlock(&ctx->kdamond_lock);
-+
-+	return running;
-+}
-+
-+/**
-+ * damon_start() - Starts monitoring with given context.
-+ * @ctx:	monitoring context
-+ *
-+ * Return: 0 on success, negative error code otherwise.
-+ */
-+int damon_start(struct damon_ctx *ctx)
-+{
-+	int err = -EBUSY;
-+
-+	mutex_lock(&ctx->kdamond_lock);
-+	if (!ctx->kdamond) {
-+		err = 0;
-+		ctx->kdamond_stop = false;
-+		ctx->kdamond = kthread_run(kdamond_fn, ctx, "kdamond");
-+		if (IS_ERR(ctx->kdamond))
-+			err = PTR_ERR(ctx->kdamond);
-+	}
-+	mutex_unlock(&ctx->kdamond_lock);
-+
-+	return err;
-+}
-+
-+/**
-+ * damon_stop() - Stops monitoring of given context.
-+ * @ctx:	monitoring context
-+ *
-+ * Return: 0 on success, negative error code otherwise.
-+ */
-+int damon_stop(struct damon_ctx *ctx)
-+{
-+	mutex_lock(&ctx->kdamond_lock);
-+	if (ctx->kdamond) {
-+		ctx->kdamond_stop = true;
-+		mutex_unlock(&ctx->kdamond_lock);
-+		while (damon_kdamond_running(ctx))
-+			usleep_range(ctx->sample_interval,
-+					ctx->sample_interval * 2);
-+		return 0;
-+	}
-+	mutex_unlock(&ctx->kdamond_lock);
-+
-+	return -EPERM;
-+}
-+
-+/**
-+ * damon_set_pids() - Set monitoring target processes.
-+ * @ctx:	monitoring context
-+ * @pids:	array of target processes pids
-+ * @nr_pids:	number of entries in @pids
-+ *
-+ * This function should not be called while the kdamond is running.
-+ *
-+ * Return: 0 on success, negative error code otherwise.
-+ */
-+int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids)
-+{
-+	ssize_t i;
-+	struct damon_task *t, *next;
-+
-+	damon_for_each_task_safe(ctx, t, next)
-+		damon_destroy_task(t);
-+
-+	for (i = 0; i < nr_pids; i++) {
-+		t = damon_new_task(pids[i]);
-+		if (!t) {
-+			pr_err("Failed to alloc damon_task\n");
-+			return -ENOMEM;
-+		}
-+		damon_add_task(ctx, t);
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * damon_set_attrs() - Set attributes for the monitoring.
-+ * @ctx:		monitoring context
-+ * @sample_int:		time interval between samplings
-+ * @aggr_int:		time interval between aggregations
-+ * @min_nr_reg:		minimal number of regions
-+ *
-+ * This function should not be called while the kdamond is running.
-+ * Every time interval is in micro-seconds.
-+ *
-+ * Return: 0 on success, negative error code otherwise.
-+ */
-+int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
-+		unsigned long aggr_int, unsigned long min_nr_reg)
-+{
-+	if (min_nr_reg < 3) {
-+		pr_err("min_nr_regions (%lu) must be at least 3\n",
-+				min_nr_reg);
-+		return -EINVAL;
-+	}
-+
-+	ctx->sample_interval = sample_int;
-+	ctx->aggr_interval = aggr_int;
-+	ctx->min_nr_regions = min_nr_reg;
-+
-+	return 0;
-+}
-+
- static int __init damon_init(void)
- {
- 	return 0;
--- 
-2.17.1
-
+Will
