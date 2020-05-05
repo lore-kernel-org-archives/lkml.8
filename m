@@ -2,188 +2,119 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B52C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7375DC47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D28720675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4682320675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:20:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lxBGwppW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b+4dZwe2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730026AbgEEPUQ (ORCPT
+        id S1730056AbgEEPUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:20:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59228 "EHLO
+        Tue, 5 May 2020 11:20:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729951AbgEEPUO (ORCPT
+        by vger.kernel.org with ESMTP id S1729709AbgEEPUz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:20:14 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 924F9C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 08:20:14 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id j4so1923170otr.11
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 08:20:14 -0700 (PDT)
+        Tue, 5 May 2020 11:20:55 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D841FC061A0F;
+        Tue,  5 May 2020 08:20:53 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id mq3so1296245pjb.1;
+        Tue, 05 May 2020 08:20:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V8efal+sgU1en3J4nQ9rg/ceJ49rrnhyDi/kAbpO9w0=;
-        b=lxBGwppWljXJZO33BcCG8KoqAAmjWhtBl+eWw/n4r5atXyD/OKHd5SxYHZx5Sn8phF
-         JDk/tpvNCpaXGAo2Bv8uB1pDdzg72+GOZQVnmEcBcuzaPt242hiYIcMeYeNoV4EV4G9f
-         NwKVxQ0zuL3cSe8AzienovyKPEGN0k3RabrTMc8LqClPjwWx5E5BM+vva5UQvF2+Mh7M
-         DjkxjvIJuUFOr+lbK8Evyk10L4jkQ0QwxPfSPPvPZgbCgmgGhrvDRZnpK1wSnnIgzJbs
-         VHS5rDEJ7wRbfQSE1cwPrFJbYMbrZQ/gbC8AoXgsxjm2E3JaRKEhsC/f6AI8D6rS+OMy
-         kJqw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ijPZh8B4iDN+Zy3Lbn8azz7wIkX6gQvepkatyf1Zg2U=;
+        b=b+4dZwe21myBqVCmmpmf7s/5B4GYvFeMaXPncR16D1Lwjgt/CG4navWP1THhFFdxVC
+         FrgwbB7pTbqozj2ncAaWSkhSgi0Ug8t/9UuE24ydi5dzzEDqROPx2pkGFpbnTiAi5pvX
+         ylLJOy/L4/wUd0Mk1LIjMvaqPbHjr6SC9XAgcoDmfxp1pbcqFkoOZ6LHtXAhkQNzDvEA
+         5UNQYdWphLOVit2+RO+P4RMMPzPtJ5gZuMwz1r4VlF47oB2L9mV44+gloqHUqpFKikla
+         hNOHDE0O2jTGV/X6tFT7i/e8nwvC1HS9HrBK2zoBw7Uw4NKSKpuwIXgjilVj1V58SHVP
+         Upcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V8efal+sgU1en3J4nQ9rg/ceJ49rrnhyDi/kAbpO9w0=;
-        b=jp+ARHxqjiVtOtCDx+eSMYFCs9ce1fYCpkUu0CeG942EfmX4jriSEn0OlDNngAo0Yy
-         ONvan5HbIys4rPoBScbBnCopR79qVrPu7qZZ0SPYe4ChkPM2Gk5Hhl9S+A84FR5KR60r
-         9PONTdIYTgtGp0n/02Ycl+tGEbSrxguTQzeuuBpJLDa2Yg4S9UHi1+JnPYCPd+IQwWWF
-         /E0zYcDoqhJsXMPE8VAqAJ8SHZVcWUCN9u7acJ8hl6QQ5EQYcs1TeuKYcsJLnCAlvSwp
-         krDFMneXAKnFMXl0IJWEcBZ5w3f4B40QFNejMbRFJq1mKlgZVisNwJkM4+Z64OTGXkjU
-         iQOw==
-X-Gm-Message-State: AGi0PuYpuldFDjWdAH0hKd7hpesfSYmRjfnc+/CEKkYadNz7HInCpQT+
-        rtrF502klu8Q0JIaui2PgIOoFZ38Ui1cYrQu4p7jsA==
-X-Google-Smtp-Source: APiQypLwXOUqn3+C8eU3KpIVewgquQ7RlElMmwoTJNU9i9gYwxhLPbNOcFoOfjuDD/piS63oaY71amxzeEjB4MuCHSc=
-X-Received: by 2002:a9d:509:: with SMTP id 9mr3055453otw.17.1588692013635;
- Tue, 05 May 2020 08:20:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200505142341.1096942-1-arnd@arndb.de> <CANpmjNMtGy6YK8zuqf0dmkykZMt=qkxkZrZNEKde1nbw84ZLkg@mail.gmail.com>
- <CACT4Y+Zpp=+JJedhMpunuUh832eJFu+af-r8631Ar0kE2nv72A@mail.gmail.com> <CAK8P3a23XzLhZQNuFbeQhaSNru1abPwXV_mXR_P6N6Dvxm6jFw@mail.gmail.com>
-In-Reply-To: <CAK8P3a23XzLhZQNuFbeQhaSNru1abPwXV_mXR_P6N6Dvxm6jFw@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 5 May 2020 17:19:58 +0200
-Message-ID: <CANpmjNOE+GUG7O=WaJKQg6rdUOn+YMBhdS8enNWkD_8mdtaSBQ@mail.gmail.com>
-Subject: Re: [PATCH] ubsan, kcsan: don't combine sanitizer with kcov
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ijPZh8B4iDN+Zy3Lbn8azz7wIkX6gQvepkatyf1Zg2U=;
+        b=sClHn0bjOd9q4gsuIOcRd+9RMFp/r9TNeilOBcFrqNlyKccJ5Q7AWuNhkW4fSyWLac
+         zBKCVAU7zp4xu7j7PfohWljFBOYHh4Kps1zVajxYHjt2jIBkYveG14SCvwHldKJSY/Qt
+         2DmPPBbWpoaRJ4cDQBGCxLiy3gQDtydJRlbfLf0IHEvECyRoXsh+BHKx53TOCAsKp/1I
+         2/54c+fX0nDANl5FGh2UJ+cxuxewQA+t57J4uWuOJKNpOoETrKCguCQHwYHZ4MhxBEgu
+         B6/zm99RACqVp+g+/NrG2ibByz6YZiVXGU32TRHF6TnlGkAtWf13hNhw5EI9kwZ1kn4Z
+         ocmQ==
+X-Gm-Message-State: AGi0Pubjz16f39ZrutkH+Dr5H87GQI5SYtfboIupRzHVeYIU5j4XZvRh
+        1UnBCxPSDxFIucJqSsPB26HZisEm
+X-Google-Smtp-Source: APiQypJvLcl/oSqUO8QDsnhtfE89l2uZcumGHsREzxjyjBFBrNG2uLvQZpDgGISs0bngBpVE6Nt2VQ==
+X-Received: by 2002:a17:90b:f11:: with SMTP id br17mr1361595pjb.222.1588692053003;
+        Tue, 05 May 2020 08:20:53 -0700 (PDT)
+Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id 62sm2292222pfu.181.2020.05.05.08.20.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2020 08:20:51 -0700 (PDT)
+Subject: Re: [PATCH net v2 0/2] Revert the 'socket_alloc' life cycle change
+To:     SeongJae Park <sjpark@amazon.com>,
+        Eric Dumazet <edumazet@google.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jakub Kicinski <kuba@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kasan-dev <kasan-dev@googlegroups.com>,
+        sj38.park@gmail.com, netdev <netdev@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        SeongJae Park <sjpark@amazon.de>, snu@amazon.com,
+        amit@kernel.org, stable@vger.kernel.org
+References: <20200505150717.5688-1-sjpark@amazon.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <a8510327-d4f0-1207-1342-d688e9d5b8c3@gmail.com>
+Date:   Tue, 5 May 2020 08:20:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200505150717.5688-1-sjpark@amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 May 2020 at 16:59, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Tue, May 5, 2020 at 4:50 PM 'Dmitry Vyukov' via Clang Built Linux
-> <clang-built-linux@googlegroups.com> wrote:
-> > On Tue, May 5, 2020 at 4:36 PM Marco Elver <elver@google.com> wrote:
-> > > > Clang does not allow -fsanitize-coverage=trace-{pc,cmp} together
-> > > > with -fsanitize=bounds or with ubsan:
-> > > >
-> > > > clang: error: argument unused during compilation: '-fsanitize-coverage=trace-pc' [-Werror,-Wunused-command-line-argument]
-> > > > clang: error: argument unused during compilation: '-fsanitize-coverage=trace-cmp' [-Werror,-Wunused-command-line-argument]
-> > > >
-> > > >  menuconfig KCSAN
-> > > >         bool "KCSAN: dynamic data race detector"
-> > > > -       depends on HAVE_ARCH_KCSAN && DEBUG_KERNEL && !KASAN
-> > > > +       depends on HAVE_ARCH_KCSAN && DEBUG_KERNEL && !KASAN && !KCOV
-> > >
-> > > This also disables KCOV with GCC. Why does this not work with KCSAN?
->
-> My mistake, this should be kept enabled for gcc. If we can get the combination
-> to work in clang, that's something that should also get enabled.
 
-See my suggestion below how we might dynamically determine if the
-combination is supported.
 
-> > > This is a huge problem for us, since syzbot requires KCOV. In fact
-> > > I've always been building KCSAN kernels with CONFIG_KCOV=y (with GCC
-> > > or Clang) and cannot reproduce the problem.
+On 5/5/20 8:07 AM, SeongJae Park wrote:
+> On Tue, 5 May 2020 07:53:39 -0700 Eric Dumazet <edumazet@google.com> wrote:
+> 
+
+>> Why do we have 10,000,000 objects around ? Could this be because of
+>> some RCU problem ?
+> 
+> Mainly because of a long RCU grace period, as you guess.  I have no idea how
+> the grace period became so long in this case.
+> 
+> As my test machine was a virtual machine instance, I guess RCU readers
+> preemption[1] like problem might affected this.
+> 
+> [1] https://www.usenix.org/system/files/conference/atc17/atc17-prasad.pdf
+> 
+>>
+>> Once Al patches reverted, do you have 10,000,000 sock_alloc around ?
+> 
+> Yes, both the old kernel that prior to Al's patches and the recent kernel
+> reverting the Al's patches didn't reproduce the problem.
 >
-> I have some local patches that change the way we pick the warning options
-> for each compiler, and enable more of the warnings that are normally disabled.
->
-> Maybe -Wunused-command-line-argument is disabled by default?
-> I only started seeing this problem recently. It's also possible that there
-> are some other options that interact with it so only Kcov+FOO leads to
-> KCSAN being ignored.
 
-I see. It certainly seems quite bad if one or the other option is
-effectively ignored.
+I repeat my question : Do you have 10,000,000 (smaller) objects kept in slab caches ?
 
-> > > Ditto, we really need KCOV for all sanitizers. I also just tried to
-> > > reproduce the problem but can't.
-> > >
-> > > Which version of clang is causing this? I'm currently using Clang 9.
-> > > My guess is that we should not fix this by disallowing KCOV, but
-> > > rather make Clang work with these configs.
-> > >
-> > > Dmitry, can you comment?
-> >
-> > FWIW I can reproduce both with clang:
-> >
-> > $ clang /tmp/test.c -c -fsanitize-coverage=trace-pc -fsanitize=bounds
-> > clang-11: warning: argument unused during compilation:
-> > '-fsanitize-coverage=trace-pc' [-Wunused-command-line-argument]
-> >
-> > $ clang /tmp/test.c -c -fsanitize-coverage=trace-pc -fsanitize=thread
-> > clang-11: warning: argument unused during compilation:
-> > '-fsanitize-coverage=trace-pc' [-Wunused-command-line-argument]
-> >
-> > with both my disto's 9.0.1 and fresher 11.0.0
-> > (7b80cb7cf45faf462d6193cc41c2cb7ad556600d.
-> >
-> > But both work with gcc
-> >
-> > $ gcc /tmp/test.c -c -fsanitize-coverage=trace-pc -fsanitize=thread
-> > $ gcc /tmp/test.c -c -fsanitize-coverage=trace-pc -fsanitize=bounds
-> >
-> > Is it a known issue in clang?
-> >
-> > Can we somehow disable it only for clang and not gcc?
-> >
-> > This will immediately break KCSAN on syzbot as it enables KCSAN and KCOV:
-> > https://syzkaller.appspot.com/upstream?manager=ci2-upstream-kcsan-gce
->
-> I can respin the patch with this fixup if you like:
->
-> --- a/lib/Kconfig.kcsan
-> +++ b/lib/Kconfig.kcsan
-> @@ -5,7 +5,7 @@ config HAVE_ARCH_KCSAN
->
->  menuconfig KCSAN
->         bool "KCSAN: dynamic data race detector"
-> -       depends on HAVE_ARCH_KCSAN && DEBUG_KERNEL && !KASAN && !KCOV
-> +       depends on HAVE_ARCH_KCSAN && DEBUG_KERNEL && !KASAN && !(KCOV
-> && CC_IS_CLANG)
+TCP sockets use the (very complex, error prone) SLAB_TYPESAFE_BY_RCU, but not the struct socket_wq
+object that was allocated in sock_alloc_inode() before Al patches.
 
-I wonder if we can just add this:  depends on !(KCOV &&
-!$(cc-option,-Werror -fsanitize=thread -fsanitize-coverage=trace-pc))
+These objects should be visible in kmalloc-64 kmem cache.
 
-Similarly for UBSAN.
-
-That way, once Clang supports this combination, we don't need another
-patch to fix it.
-
-Thanks,
--- Marco
-
->         select STACKTRACE
->         help
->           The Kernel Concurrency Sanitizer (KCSAN) is a dynamic
->
-> As you both say, the combination seems to be quite important, so maybe there
-> is something else that can be to also enable it with clang.
->
->       Arnd
