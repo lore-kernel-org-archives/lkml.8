@@ -2,84 +2,108 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CDBC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC2EC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1B2120675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:19:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Ouq0b8PO"
+	by mail.kernel.org (Postfix) with ESMTP id 4972220675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:19:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730496AbgEEOTX (ORCPT
+        id S1730503AbgEEOTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:19:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49694 "EHLO
+        Tue, 5 May 2020 10:19:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729830AbgEEOTQ (ORCPT
+        by vger.kernel.org with ESMTP id S1730059AbgEEOQQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:19:16 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5A3FC061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:19:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=R8fDfWX4P2yPJD6o/XlgPtCXLkbf9HDss4RsKImeIag=; b=Ouq0b8POa+V6ud1wBnYKlX0dS
-        wYGr2eLWM5FQKt3psQSL1XN9/B3gzkSH5YDPNfPwBKnwZ2FOOLq6Cq2vL/KNmE24rOcLmlMlgFxw+
-        xj9PY7GJ1O9xEw295rSgrAf2h7jjhS1WlJGfuc0qb20+sEK8Euwi5kTUYvBhq98iLqC6kd9adobbS
-        Z1cb9vXBAodizzUU5JMA1atSzxb6O5u0Pw6G1LaqcmPabwTstOXOoJbSQswsZiYfV5CDEJG6NLZfw
-        GG3fTFhwGb2jFQOCuIDQRAKPFZNm64jN3O3uAUOdMudEvjkRc0bH+5AN5yPS/LqaU1Uf3uyuSQosm
-        +feM8msHg==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:54052)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jVyPd-0002rZ-5d; Tue, 05 May 2020 15:19:09 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jVyPc-0007DZ-9d; Tue, 05 May 2020 15:19:08 +0100
-Date:   Tue, 5 May 2020 15:19:08 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Nathan Huckleberry <nhuck15@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] ARM: use ARM unwinder for gcov
-Message-ID: <20200505141908.GH1551@shell.armlinux.org.uk>
-References: <20200505141218.684079-1-arnd@arndb.de>
+        Tue, 5 May 2020 10:16:16 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 706E0C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:16:16 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jVyMZ-00020R-LS; Tue, 05 May 2020 16:15:59 +0200
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 1B557FFC8D;
+        Tue,  5 May 2020 16:15:59 +0200 (CEST)
+Message-Id: <20200505135314.518622698@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Tue, 05 May 2020 15:49:38 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Subject: [patch V4 part 4 12/24] x86/idtentry: Provide IDTENTRY_XEN for XEN/PV
+References: <20200505134926.578885807@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505141218.684079-1-arnd@arndb.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-transfer-encoding: 8-bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 04:11:56PM +0200, Arnd Bergmann wrote:
-> Using gcov on ARM fails when the frame pointer unwinder is used:
-> 
-> arm-linux-gnueabi-ld: kernel/softirq.o:(.ARM.exidx+0x120): undefined reference to `__aeabi_unwind_cpp_pr0'
-> arm-linux-gnueabi-ld: init/main.o:(.ARM.exidx+0x98): undefined reference to `__aeabi_unwind_cpp_pr0'
-> arm-linux-gnueabi-ld: init/version.o:(.ARM.exidx+0x0): undefined reference to `__aeabi_unwind_cpp_pr0'
-> arm-linux-gnueabi-ld: init/do_mounts.o:(.ARM.exidx+0x28): undefined reference to `__aeabi_unwind_cpp_pr0'
-> arm-linux-gnueabi-ld: init/do_mounts_initrd.o:(.ARM.exidx+0x0): undefined reference to `__aeabi_unwind_cpp_pr0'
-> arm-linux-gnueabi-ld: init/initramfs.o:(.ARM.exidx+0x8): more undefined references to `__aeabi_unwind_cpp_pr0' follow
-> 
-> This is likely a bug in clang that should be fixed in the compiler.
-> Forcing the use of the ARM unwinder in this configuration however
-> works around the problem.
+XEN/PV has special wrappers for NMI and DB exceptions. They redirect these
+exceptions through regular IDTENTRY points. Provide the necessary IDTENTRY
+macros to make this work
 
-Or should the stub functions in arch/arm/kernel/unwind.c be moved out?
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/include/asm/idtentry.h |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+--- a/arch/x86/include/asm/idtentry.h
++++ b/arch/x86/include/asm/idtentry.h
+@@ -168,6 +168,18 @@ static __always_inline void __##func(str
+ #define DECLARE_IDTENTRY_DEBUG		DECLARE_IDTENTRY_IST
+ #define DEFINE_IDTENTRY_DEBUG		DEFINE_IDTENTRY_IST
+ 
++/**
++ * DECLARE_IDTENTRY_XEN - Declare functions for XEN redirect IDT entry points
++ * @vector:	Vector number (ignored for C)
++ * @func:	Function name of the entry point
++ *
++ * Used for xennmi and xendebug redirections. No DEFINE as this is all ASM
++ * indirection magic.
++ */
++#define DECLARE_IDTENTRY_XEN(vector, func)				\
++	asmlinkage void xen_asm_exc_xen##func(void);			\
++	asmlinkage void asm_exc_xen##func(void)
++
+ #else /* !__ASSEMBLY__ */
+ 
+ /*
+@@ -203,6 +215,10 @@ static __always_inline void __##func(str
+ /* No ASM code emitted for NMI */
+ #define DECLARE_IDTENTRY_NMI(vector, func)
+ 
++/* XEN NMI and DB wrapper */
++#define DECLARE_IDTENTRY_XEN(vector, func)				\
++	idtentry vector asm_exc_xen##func exc_##func has_error_code=0 sane=1
++
+ #endif /* __ASSEMBLY__ */
+ 
+ /*
+
