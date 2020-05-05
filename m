@@ -2,90 +2,145 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D12C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 01:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA049C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 01:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E60D3206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 01:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A013E206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 01:32:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgEEBcl (ORCPT
+        id S1727097AbgEEBcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 4 May 2020 21:32:41 -0400
-Received: from mga12.intel.com ([192.55.52.136]:52077 "EHLO mga12.intel.com"
+Received: from mga02.intel.com ([134.134.136.20]:41897 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726531AbgEEBck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726482AbgEEBck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 4 May 2020 21:32:40 -0400
-IronPort-SDR: xIEtsE+m9CAcakmqGcP+5s+rpQ041eFR2Qvpgl46aHGFgNPwd80/AxBczQQLzjwkbr0oeQDX99
- v+EaJ8tooq0g==
+IronPort-SDR: 0pnyot5BcEI8eVEnPzuov+LVBqp/7/T/hfT/wGx66VHu5oLj/IDfsGA+qrXTPamuWYgkj+pZ+P
+ HT7/UiBL163w==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 18:32:40 -0700
-IronPort-SDR: hHcKuDlrpepWuD8j8R8/g9YI9pBzTLbTh7UihT5c1jcZmfmhwmuuWM9V0uAGae6v67vQQ6dFvy
- aJ0HY1fVhfPQ==
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 18:32:40 -0700
+IronPort-SDR: 3KEitOO9aaD9RIM/1pOIlMqVW3k86nuDmiocDj29kl/+Ho1iUx52j0U2z7rReLhaoEn8WYxVVf
+ VK1ADIUyKeRg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,354,1583222400"; 
-   d="scan'208";a="338501940"
+   d="scan'208";a="406664749"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 04 May 2020 18:32:40 -0700
+  by orsmga004.jf.intel.com with ESMTP; 04 May 2020 18:32:40 -0700
 Received: from debox1-hc.jf.intel.com (debox1-hc.jf.intel.com [10.54.75.159])
-        by linux.intel.com (Postfix) with ESMTP id 51639580613;
+        by linux.intel.com (Postfix) with ESMTP id 44B5858048A;
         Mon,  4 May 2020 18:32:40 -0700 (PDT)
 From:   "David E. Box" <david.e.box@linux.intel.com>
-To:     bhelgaas@google.com, andy@infradead.org,
-        alexander.h.duyck@intel.com
 Cc:     "David E. Box" <david.e.box@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH 1/3] pci: Add Designated Vendor Specific Capability
-Date:   Mon,  4 May 2020 18:32:04 -0700
-Message-Id: <20200505013206.11223-2-david.e.box@linux.intel.com>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] Intel Platform Monitoring Technology
+Date:   Mon,  4 May 2020 18:32:03 -0700
+Message-Id: <20200505013206.11223-1-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200505013206.11223-1-david.e.box@linux.intel.com>
-References: <20200505013206.11223-1-david.e.box@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add pcie dvsec extended capability id along with helper macros to
-retrieve information from the headers.
+Intel Platform Monitoring Technology (PMT) is an architecture for
+enumerating and accessing hardware monitoring capabilities on a device.
+With customers increasingly asking for hardware telemetry, engineers not
+only have to figure out how to measure and collect data, but also how to
+deliver it and make it discoverable. The latter may be through some device
+specific method requiring device specific tools to collect the data. This
+in turn requires customers to manage a suite of different tools in order to
+collect the differing assortment of monitoring data on their systems.  Even
+when such information can be provided in kernel drivers, they may require
+constant maintanence to update register mappings as they change with
+firmware updates and new versions of hardware. PMT provides a solution for
+discovering and reading telemetry from a device through a hardware agnostic
+framework that allows for updates to systems without requiring patches to
+the kernel or software tools.
 
-https://members.pcisig.com/wg/PCI-SIG/document/12335
+PMT defines several capabilities to support collecting monitoring data from
+hardware. All are discoverable as separate instances of the PCIE Designated
+Vendor extended capability (DVSEC) with the Intel vendor code. The DVSEC ID
+field uniquely identifies the capability. Each DVSEC also provides a BAR
+offset to a header that defines capability-specific attributes, including
+GUID, feature type, offset and length, as well as configuration settings
+where applicable. The GUID uniquely identifies the register space of any
+monitor data exposed by the capability. The GUID is associated with an XML
+file from the vendor that describes the mapping of the register space along
+with properties of the monitor data. This allows vendors to perform
+firmware updates that can change the mapping (e.g. add new metrics) without
+requiring any changes to drivers or software tools. The new mapping is
+confirmed by an updated GUID, read from the hardware, which software uses
+with a new XML.
 
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
----
- include/uapi/linux/pci_regs.h | 5 +++++
- 1 file changed, 5 insertions(+)
+The current capabilities defined by PMT are Telemetry, Watcher, and
+Crashlog.  The Telemetry capability provides access to a continuous block
+of read only data. The Watcher capability provides access to hardware
+sampling and tracing features. Crashlog provides access to device crash
+dumps.  While there is some relationship between capabilities (Watcher can
+be configured to sample from the Telemetry data set) each exists as stand
+alone features with no dependency on any other. The design therefore splits
+them into individual, capability specific drivers. MFD is used to create
+platform devices for each capability so that they may be managed by their
+own driver. The PMT architecture is (for the most part) agnostic to the
+type of device it can collect from. Devices nodes are consequently generic
+in naming, e.g. /dev/telem<n> and /dev/smplr<n>. Each capability driver
+creates a class to manage the list of devices supporting it.  Software can
+see which devices support a PMT feature by perusing each device file
+underneath the class in sysfs. It can additionally see if a particluar
+device supports a PMT feature by seeing if that device contains a pointer
+to a PMT class in its device folder.
 
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index f9701410d3b5..c96f08d1e711 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -720,6 +720,7 @@
- #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port Containment */
- #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
- #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
-+#define PCI_EXT_CAP_ID_DVSEC	0x23	/* Desinated Vendor-Specific */
- #define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
- #define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer 16.0 GT/s */
- #define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL_16GT
-@@ -1062,6 +1063,10 @@
- #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /* LTR_L1.2_THRESHOLD_Scale */
- #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register */
- 
-+/* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
-+#define PCI_DVSEC_HEADER1		0x4 /* Vendor-Specific Header1 */
-+#define PCI_DVSEC_HEADER2		0x8 /* Vendor-Specific Header2 */
-+
- /* Data Link Feature */
- #define PCI_DLF_CAP		0x04	/* Capabilities Register */
- #define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchange Enable */
+This patch set provides support for the PMT framework, along with support
+for Telemetry on Tiger Lake.
+
+Patch 1 - adds the Designated Vendor PCI Extended Capability. The PMT
+	  feature is discoverable as an Intel DVSEC capabilitity.
+
+Patch 2 - an MFD driver that creates cells for each PMT capability found on
+	  a PCI device. This supports SoC platforms that expose PMT
+	  capabilities under a PMT dedicated PCI device id.
+
+Patch 3 - adds support for the PMT Telemetry feature.
+
+To: bhelgaas@google.com,
+    andy@infradead.org,
+    alexander.h.duyck@intel.com
+Cc: linux-kernel@vger.kernel.org,
+    linux-pci@vger.kernel.org
+
+*** BLURB HERE ***
+
+David E. Box (3):
+  pci: Add Designated Vendor Specific Capability
+  mfd: Intel Platform Monitoring Technology support
+  platform/x86: Intel PMT Telemetry capability driver
+
+ .../ABI/testing/sysfs-class-intel_pmt_telem   |  46 +++
+ MAINTAINERS                                   |   6 +
+ drivers/mfd/Kconfig                           |  10 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/intel_pmt.c                       | 174 +++++++++
+ drivers/platform/x86/Kconfig                  |  10 +
+ drivers/platform/x86/Makefile                 |   1 +
+ drivers/platform/x86/intel_pmt_telem.c        | 356 ++++++++++++++++++
+ drivers/platform/x86/intel_pmt_telem.h        |  20 +
+ include/linux/intel-dvsec.h                   |  44 +++
+ include/uapi/linux/pci_regs.h                 |   5 +
+ 11 files changed, 673 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-intel_pmt_telem
+ create mode 100644 drivers/mfd/intel_pmt.c
+ create mode 100644 drivers/platform/x86/intel_pmt_telem.c
+ create mode 100644 drivers/platform/x86/intel_pmt_telem.h
+ create mode 100644 include/linux/intel-dvsec.h
+
 -- 
 2.20.1
 
