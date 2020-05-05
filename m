@@ -2,138 +2,130 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25EA7C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 331B8C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0A28206CC
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:43:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qph4APLF"
+	by mail.kernel.org (Postfix) with ESMTP id 1B2EE206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:43:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730274AbgEERnF (ORCPT
+        id S1730457AbgEERnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 13:43:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728804AbgEERnE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 13:43:04 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C05EC061A0F;
-        Tue,  5 May 2020 10:43:04 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id x15so1226469pfa.1;
-        Tue, 05 May 2020 10:43:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kvERfMRg9N5gTCAlwuPKs93EBGmnYI4iJipCtIeq2gs=;
-        b=Qph4APLFoI2+hzETZ4MmK6/ia7rSIkOf+Q0tNR6/Yo671rXycMeMqjEDN4wuCsWKoi
-         eP5p3DBCR7byLb7+zZxVURtTEsaF6lQs4JpX5tNHKBLL5HbqdqaW2hu8nCH6uiXeO1Mt
-         TG357redEoBK4eVC5aKYVa1hUpHM6dTk7QwMRxdYeF3Wc5je3F24D9KNDZF1sNBA+EOX
-         kPkwmufXTAne9zliUtdZQGQA+pjzumbZDQsrPuyv80c3uivMX+42kn6gQgDwli//Ofc0
-         eD3MCUbBaHAq4nvhYYiFgk1cPvqNBDrTEL8+bkx+TofdZxjcP/M+9GgwDVJZ6WlaQLIG
-         33UA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kvERfMRg9N5gTCAlwuPKs93EBGmnYI4iJipCtIeq2gs=;
-        b=gsKJUGZRMUcq2txq1EsN4HH6uk3gwPxhDT/v8GsLyqzyiseANGQ0uNFktfYvdE36T4
-         kDbJ8SAK8oUF/QZJLoKogbCFQlkVKJW7R6xBoVB7M/7liER10utGJBktOE4h7OXqkpb3
-         u3UvluSdFA1uYcyOxc6iiwwJWDAljSUE9x1FocW5TU3xW2axnaeECG75BddoTUe7ptMQ
-         8qD06IHrmskZSVdiOxIYgMzoNqAFgiiMYu2xkGWgEhGWTDcSroI25Zg11FTzI3UqKMGD
-         mDzpVp/cPMOk7uP/707/BhgsZvsonAs3YFnUKOBgZR74CaipAQyiX+AwLohagrJcERLm
-         r5sQ==
-X-Gm-Message-State: AGi0Puars1VP+Q7ypvLsFblrkO7g8Hfn+1oZUeEHn0/QQ7DksPe9HY7A
-        uR8fS1VPniL4mZ/uXyfLE2o=
-X-Google-Smtp-Source: APiQypJsKH+LeTVhCiBz3tctOiyz1jq7J90tXBhNupoM92x5fxgvFC/LDvDfddsbxltiQK36joF2hA==
-X-Received: by 2002:aa7:951c:: with SMTP id b28mr3849168pfp.242.1588700583810;
-        Tue, 05 May 2020 10:43:03 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:6a9])
-        by smtp.gmail.com with ESMTPSA id a16sm1881501pgg.23.2020.05.05.10.43.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 10:43:02 -0700 (PDT)
-Date:   Tue, 5 May 2020 10:43:00 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] bpf: Tweak BPF jump table optimizations for objtool
- compatibility
-Message-ID: <20200505174300.gech3wr5v6kkho35@ast-mbp.dhcp.thefacebook.com>
-References: <b581438a16e78559b4cea28cf8bc74158791a9b3.1588273491.git.jpoimboe@redhat.com>
- <20200501190930.ptxyml5o4rviyo26@ast-mbp.dhcp.thefacebook.com>
- <20200501192204.cepwymj3fln2ngpi@treble>
- <20200501194053.xyahhknjjdu3gqix@ast-mbp.dhcp.thefacebook.com>
- <20200501195617.czrnfqqcxfnliz3k@treble>
- <20200502030622.yrszsm54r6s6k6gq@ast-mbp.dhcp.thefacebook.com>
- <20200502192105.xp2osi5z354rh4sm@treble>
+        Tue, 5 May 2020 13:43:16 -0400
+Received: from verein.lst.de ([213.95.11.211]:36572 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729315AbgEERnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 13:43:16 -0400
+Received: by verein.lst.de (Postfix, from userid 107)
+        id 3590468CEC; Tue,  5 May 2020 19:43:14 +0200 (CEST)
+Received: from blackhole (p5B0D8880.dip0.t-ipconnect.de [91.13.136.128])
+        by verein.lst.de (Postfix) with ESMTPSA id 4B6E268BFE;
+        Tue,  5 May 2020 19:42:48 +0200 (CEST)
+Date:   Tue, 5 May 2020 19:42:43 +0200
+From:   Torsten Duwe <duwe@lst.de>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        Torsten Duwe <duwe@suse.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Julien Thierry <jthierry@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Alexandre Ghiti <alex@ghiti.fr>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Ionela Voinescu <ionela.voinescu@arm.com>,
+        Steve Capper <steve.capper@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] arm64: disable patchable function entry on big-endian
+ clang builds
+Message-ID: <20200505194243.5bfc6ec6@blackhole>
+In-Reply-To: <20200505142556.GF82823@C02TD0UTHF1T.local>
+References: <20200505141257.707945-1-arnd@arndb.de>
+        <20200505142556.GF82823@C02TD0UTHF1T.local>
+Organization: LST e.V.
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200502192105.xp2osi5z354rh4sm@treble>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 02, 2020 at 02:21:05PM -0500, Josh Poimboeuf wrote:
+Hi Arnd, Mark and others,
+
+this may not be worth arguing but I'm currently fighting excessive
+workarounds in another area and so this triggers me, so I have to make
+a remark ;-)
+
+On Tue, 5 May 2020 15:25:56 +0100
+Mark Rutland <mark.rutland@arm.com> wrote:
+
+> On Tue, May 05, 2020 at 04:12:36PM +0200, Arnd Bergmann wrote:
+> > Clang only supports the patchable_function_entry attribute on
+> > little-endian arm64 builds, but not on big-endian:
+> > 
+> > include/linux/kasan-checks.h:16:8: error: unknown attribute
+> > 'patchable_function_entry' ignored [-Werror,-Wunknown-attributes]
+> > 
+> > Disable that configuration with another dependency. Unfortunately
+> > the existing check is not enough, as $(cc-option) at this point does
+> > not pass the -mbig-endian flag.
 > 
-> Ideally we would get rid of that label and just change all the 'goto
-> select_insn' to 'goto *jumptable[insn->code]'.  That allows objtool to
-> follow the code in both retpoline and non-retpoline cases.  It also
-> simplifies the code flow and (IMO) makes it easier for GCC to find
-> optimizations.
-
-No. It's the opposite. It's not simplifying the code. It pessimizes
-compilers.
-
+> Well that's unfortunate. :(
 > 
-> However, for the RETPOLINE=y case, that simplification actually would
-> cause GCC to grow the function text size by 40%.  
+> Do we know if this is deliberate and/or likely to change in future?
+> This practically rules out a BE distro kernel with things like PAC,
+> which isn't ideal.
 
-It pessimizes and causes text increase, since the version of gcc
-you're testing with cannot combine indirect gotos back into direct.
+But still better than cumulating workarounds. If clang's flags aren't
+orthogonal then that's a bug in clang. If I get a vote here I'm against
+it.
 
-> I thought we were in
-> agreement that significant text growth would be universally bad,
-> presumably because of i-cache locality/pressure issues.  
-
-No. As I explained before the extra code could give performance
-increase depending on how branch predictor is designed in HW.
-
-> Or, if you want to minimize the patch's impact on other arches, and keep
-> the current patch the way it is (with bug fixed and changed patch
-> description), that's fine too.  I can change the patch description
-> accordingly.
+> > Fixes: 3b23e4991fb6 ("arm64: implement ftrace with regs")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > 
-> Or if you want me to measure the performance impact of the +40% code
-> growth, and *then* decide what to do, that's also fine.  But you'd need
-> to tell me what tests to run.
+> This looks fine for now, and we can add a version check in future, so:
+                                      ^^^^^^^^^^^^^^^^^^^
+see what I mean? And in the end another line of code you'll never again
+get rid of.
 
-I'd like to minimize the risk and avoid code churn,
-so how about we step back and debug it first?
-Which version of gcc are you using and what .config?
-I've tried:
-Linux version 5.7.0-rc2 (gcc version 10.0.1 20200505 (prerelease) (GCC)
-CONFIG_UNWINDER_ORC=y
-# CONFIG_RETPOLINE is not set
+I suggest to get a quote from clang folks first about their schedule and
+regarded importance of patchable-function-entries on BE, and leave it as
+is: broken on certain clang configurations. It's not the kernel's fault.
 
-and objtool didn't complain.
-I would like to reproduce it first before making any changes.
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> 
+> Mark.
+> 
+> > ---
+> >  arch/arm64/Kconfig | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> > index 4b256fa6db7a..a33d6402b934 100644
+> > --- a/arch/arm64/Kconfig
+> > +++ b/arch/arm64/Kconfig
+> > @@ -151,7 +151,7 @@ config ARM64
+> >  	select HAVE_DMA_CONTIGUOUS
+> >  	select HAVE_DYNAMIC_FTRACE
+> >  	select HAVE_DYNAMIC_FTRACE_WITH_REGS \
+> > -		if $(cc-option,-fies on y=2)
+> > +		if $(cc-option,-fpatchable-function-entry=2) &&
+> > !(CC_IS_CLANG && CPU_BIG_ENDIAN) select
+> > HAVE_EFFICIENT_UNALIGNED_ACCESS select HAVE_FAST_GUP
+> >  	select HAVE_FTRACE_MCOUNT_RECORD
+> > -- 
+> > 2.26.0
+> > 
 
-Also since objtool cannot follow the optimizations compiler is doing
-how about admit the design failure and teach objtool to build ORC
-(and whatever else it needs to build) based on dwarf for the functions where
-it cannot understand the assembly code ?
-Otherwise objtool will forever be playing whackamole with compilers.
