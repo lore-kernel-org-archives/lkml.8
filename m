@@ -2,242 +2,195 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDBAC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF47C47259
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3158B20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7D0220735
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:28:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u5hW8PHz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729525AbgEEO2F (ORCPT
+        id S1729544AbgEEO2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:28:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:41792 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729308AbgEEO2D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:28:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EBF3D1FB;
-        Tue,  5 May 2020 07:28:02 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 840BD3F68F;
-        Tue,  5 May 2020 07:28:00 -0700 (PDT)
-Date:   Tue, 5 May 2020 15:27:58 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Patrick Bellasi <derkling@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] sched/uclamp: Add a new sysctl to control RT
- default boost value
-Message-ID: <20200505142757.rturrjok4uklf2ea@e107158-lin.cambridge.arm.com>
-References: <20200501114927.15248-1-qais.yousef@arm.com>
- <87h7wwrkcd.derkling@matbug.com>
+        Tue, 5 May 2020 10:28:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51104 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729308AbgEEO2K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 10:28:10 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5A13C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:28:09 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id g10so1506360lfj.13
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 07:28:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=+uAwrnVW9vl6fCjTny0Qx0tOY7EJAzfPhuaRYgJwZTI=;
+        b=u5hW8PHzJahWFyul2XkcmX+OO4CaXeWzoWY71xAAYmRT12aQyNIVWRm61Sg1OYvSf2
+         SXDHU6P+/AZ6P+IrR77i8+e4ShQn5nCWn31kFTm22XQOkX3bir+LrMU5Dm+GzmR6znCb
+         kFR3n96RxsBGnFs1v1TSrySHtsXKm9K39n9LPPcS8e5DJ1u7BcUJlCNrah3etkMMEjO1
+         Ri4jVv7NoGM7XiJOvtIU3Wcoj5OClz5aWRUkcmxCJ86QqXZgqnGSpmRXT+NjoMGAt9wo
+         Z4yM6y/P+HmRlZuo7/ePTArkmoi0e8NaaRyvMgHkIG8H3WKzopcgJrITlazuhtvK7rgh
+         3img==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+uAwrnVW9vl6fCjTny0Qx0tOY7EJAzfPhuaRYgJwZTI=;
+        b=Mu3cpBvVKl4s9IbyswWQT1DELBA4mU+/1ZCgJ+HQ/oLovdEKsIJvrf4xEZEjrlwZf7
+         0+RuIG+4kDgb1gnVYpqk+qI1KYxbFeZgy3PYScdFES0EliFGrwXBPyXW5CroKlkkf24w
+         SarBxzoyNZ5L91AS7Pc0qXOFLQk4G5PQgSJrqLoYuAHOLv6nZZtpZsl6eopmfHF68zYU
+         LWqH2PvIX4q9iBLsN7mGsWSZn68owl9JwNN0j7FAgCd45uCWKEGEePWUq/aZC9Hmk7Ch
+         ECE57e9caheHzlq8+ZOZMJLhqu6dPoxoX5QCRboAI1V3ZT5iCSH+xxVAPMmf7vk0P4Ap
+         c9jA==
+X-Gm-Message-State: AGi0PuZL/wXiUhJshdeWOhzTl9zyDzk35OrC2gJinIfutf2Uj2EGQuXy
+        7ofcDoKK0/Mle5QUvCyGijRXu2rIvcLds+xR+XdyRU1rxj0ZHg==
+X-Google-Smtp-Source: APiQypKlYrUPwwfMUuA8+0KSmGw0C746f6/PsmNEXiY4KhylVTyFuq1tsKFUBFmRIwZhzKUqk3m2th9smiFVOhmyM4k=
+X-Received: by 2002:a19:3817:: with SMTP id f23mr1863422lfa.6.1588688887748;
+ Tue, 05 May 2020 07:28:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87h7wwrkcd.derkling@matbug.com>
-User-Agent: NeoMutt/20171215
+References: <20200504165501.781878940@linuxfoundation.org>
+In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 5 May 2020 19:57:55 +0530
+Message-ID: <CA+G9fYtwpo01W30vF8PRNrDOxVgyVwyViC5RCmLvLu04t98u4Q@mail.gmail.com>
+Subject: Re: [PATCH 5.6 00/73] 5.6.11-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/03/20 19:37, Patrick Bellasi wrote:
+On Mon, 4 May 2020 at 23:36, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.6.11 release.
+> There are 73 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 06 May 2020 16:52:55 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.6.11-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.6.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-[...]
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-> > +static inline void uclamp_sync_util_min_rt_default(struct task_struct *p,
-> > +						   enum uclamp_id clamp_id)
-> > +{
-> > +	struct uclamp_se *uc_se;
-> > +
-> > +	/* Only sync for UCLAMP_MIN and RT tasks */
-> > +	if (clamp_id != UCLAMP_MIN || likely(!rt_task(p)))
->                                       ^^^^^^
-> Are we sure that likely makes any difference when used like that?
-> 
-> I believe you should either use:
-> 
-> 	if (likely(clamp_id != UCLAMP_MIN || !rt_task(p)))
-> 
-> or completely drop it.
+Summary
+------------------------------------------------------------------------
 
-I agree all these likely/unlikely better dropped.
+kernel: 5.6.11-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.6.y
+git commit: 6cd4bcd666cd831acf192bd7350b94121469ebcb
+git describe: v5.6.10-74-g6cd4bcd666cd
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.6-oe/bui=
+ld/v5.6.10-74-g6cd4bcd666cd
 
-> 
-> > +		return;
-> > +
-> > +	uc_se = &p->uclamp_req[UCLAMP_MIN];
-> 
-> nit-pick: you can probably move this at declaration time.
-> 
-> The compiler will be smart enough to either post-pone the init or, given
-> the likely() above, "pre-fetch" the value.
-> 
-> Anyway, the compiler is likely smarter then us. :)
+No regressions (compared to build v5.6.10)
 
-I'll fling this question to the reviewers who voiced concerns about the
-overhead. Personally I see the v3 implementation is the best fit :)
+No fixes (compared to build v5.6.10)
 
-> 
-> > +
-> > +	/*
-> > +	 * Only sync if user didn't override the default request and the sysctl
-> > +	 * knob has changed.
-> > +	 */
-> > +	if (unlikely(uc_se->user_defined) ||
-> > +	    likely(uc_se->value == sysctl_sched_uclamp_util_min_rt_default))
-> > +		return;
-> 
-> Same here, I believe likely/unlikely work only if wrapping a full if()
-> condition. Thus, you should probably better split the above in two
-> separate checks, which also makes for a better inline doc.
-> 
-> > +
-> > +	uclamp_se_set(uc_se, sysctl_sched_uclamp_util_min_rt_default, false);
-> 
-> Nit-pick: perhaps we can also improve a bit readability by defining at
-> the beginning an alias variable with a shorter name, e.g.
-> 
->        unsigned int uclamp_min =  sysctl_sched_uclamp_util_min_rt_default;
-> 
-> ?
+Ran 29045 total tests in the following environments and test suites.
 
-Could do. I used default_util_min as a name though.
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+- x86-kasan
 
-> 
-> > +}
-> > +
-> >  static inline struct uclamp_se
-> >  uclamp_tg_restrict(struct task_struct *p, enum uclamp_id clamp_id)
-> >  {
-> > @@ -907,8 +949,15 @@ uclamp_tg_restrict(struct task_struct *p, enum uclamp_id clamp_id)
-> >  static inline struct uclamp_se
-> >  uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
-> >  {
-> > -	struct uclamp_se uc_req = uclamp_tg_restrict(p, clamp_id);
-> > -	struct uclamp_se uc_max = uclamp_default[clamp_id];
-> > +	struct uclamp_se uc_req, uc_max;
-> > +
-> > +	/*
-> > +	 * Sync up any change to sysctl_sched_uclamp_util_min_rt_default value.
->                                                                          ^^^^^
-> > +	 */
-> 
-> nit-pick: we can use a single line comment if you drop the (useless)
-> 'value' at the end.
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* libgpiod
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-io-tests
+* kvm-unit-tests
+* libhugetlbfs
+* ltp-containers-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* perf
+* kselftest/net
+* kselftest/networking
+* ltp-commands-tests
+* ltp-cve-tests
+* ltp-fs-tests
+* ltp-hugetlb-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-open-posix-tests
+* ltp-sched-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* v4l2-compliance
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-native/networking
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+* kselftest-vsyscall-mode-none/networking
 
-Okay.
-
-> 
-> > +	uclamp_sync_util_min_rt_default(p, clamp_id);
-> > +
-> > +	uc_req = uclamp_tg_restrict(p, clamp_id);
-> > +	uc_max = uclamp_default[clamp_id];
-> >  
-> >  	/* System default restrictions always apply */
-> >  	if (unlikely(uc_req.value > uc_max.value))
-> > @@ -1114,12 +1163,13 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
-> >  				loff_t *ppos)
-> >  {
-> >  	bool update_root_tg = false;
-> > -	int old_min, old_max;
-> > +	int old_min, old_max, old_min_rt;
-> >  	int result;
-> >  
-> >  	mutex_lock(&uclamp_mutex);
-> >  	old_min = sysctl_sched_uclamp_util_min;
-> >  	old_max = sysctl_sched_uclamp_util_max;
-> > +	old_min_rt = sysctl_sched_uclamp_util_min_rt_default;
-> >  
-> >  	result = proc_dointvec(table, write, buffer, lenp, ppos);
-> >  	if (result)
-> > @@ -1133,6 +1183,18 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
-> >  		goto undo;
-> >  	}
-> >  
-> > +	/*
-> > +	 * The new value will be applied to RT tasks the next time the
-> > +	 * scheduler needs to calculate the effective uclamp.min for that task,
-> > +	 * assuming the task is using the system default and not a user
-> > +	 * specified value. In the latter we shall leave the value as the user
-> > +	 * requested.
-> 
-> IMO it does not make sense to explain here what you will do with this
-> value. This will make even more complicated to maintain the comment
-> above if the code using it should change in the future.
-> 
-> So, if the code where we use the knob is not clear enough, maybe we can
-> move this comment to the description of:
->    uclamp_sync_util_min_rt_default()
-> or to be part of the documentation of:
->   sysctl_sched_uclamp_util_min_rt_default
-> 
-> By doing that you can also just add this if condition with the previous ones.
-
-Okay.
-
-> 
-> > +	 */
-> > +	if (sysctl_sched_uclamp_util_min_rt_default > SCHED_CAPACITY_SCALE) {
-> > +		result = -EINVAL;
-> > +		goto undo;
-> > +	}
-> > +
-> >  	if (old_min != sysctl_sched_uclamp_util_min) {
-> >  		uclamp_se_set(&uclamp_default[UCLAMP_MIN],
-> >  			      sysctl_sched_uclamp_util_min, false);
-> > @@ -1158,6 +1220,7 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
-> >  undo:
-> >  	sysctl_sched_uclamp_util_min = old_min;
-> >  	sysctl_sched_uclamp_util_max = old_max;
-> > +	sysctl_sched_uclamp_util_min_rt_default = old_min_rt;
-> >  done:
-> >  	mutex_unlock(&uclamp_mutex);
-> >  
-> > @@ -1200,9 +1263,13 @@ static void __setscheduler_uclamp(struct task_struct *p,
-> >  		if (uc_se->user_defined)
-> >  			continue;
-> >  
-> > -		/* By default, RT tasks always get 100% boost */
-> > +		/*
-> > +		 * By default, RT tasks always get 100% boost, which the admins
-> > +		 * are allowed to change via
-> > +		 * sysctl_sched_uclamp_util_min_rt_default knob.
-> > +		 */
-> >  		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
-> > -			clamp_value = uclamp_none(UCLAMP_MAX);
-> > +			clamp_value = sysctl_sched_uclamp_util_min_rt_default;
-> 
-> Mmm... I suspect we don't need this anymore.
-> 
-> If the task has a user_defined value, we skip this anyway.
-> If the task has not a user_defined value, we will do set this anyway at
-> each enqueue time.
-> 
-> No?
-
-Indeed.
-
-Thanks
-
---
-Qais Yousef
+--=20
+Linaro LKFT
+https://lkft.linaro.org
