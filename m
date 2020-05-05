@@ -2,91 +2,122 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E89B7C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F92C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C434020735
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:20:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588695655;
-	bh=0cAfX6WAuzHeQRYxpczQiT++Fzbit2iwi8QK7XTC5TU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=daCE2lK4yM+0BZPsnShEfi0JWsM5X4HWV4Bl99LA0lX9MbAtN8IHwyeCUY4XUGGm8
-	 Ga9Q9x3SoSjfDB4rdSrjwsyJSWQE5A5T8WdPheBO2Sw3hzWkxgx0v5EW6IQ1vDk1d8
-	 bJ7ULMik0UgwGQ2e+7M7HZwD10VVNhp4RhAFuzjQ=
+	by mail.kernel.org (Postfix) with ESMTP id 73750206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:21:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RbzphmRf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730503AbgEEQUz (ORCPT
+        id S1730563AbgEEQVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:20:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45732 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729119AbgEEQUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:20:54 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F2E5206B9;
-        Tue,  5 May 2020 16:20:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588695654;
-        bh=0cAfX6WAuzHeQRYxpczQiT++Fzbit2iwi8QK7XTC5TU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u9CCkizEL0lBpe1KWV+w47OsscV8cueE55ygq0Ywj2NxIph5+eabCVMEQk836jWCL
-         ZStezxZkpcSlEcUnp/g7sQ/SyNn8N8+5dGnOa2CvCxK9ecpr9ieyZnbnsPK8oSG9OX
-         b5ER6U+oRcelUpsKYP9XXAobt9R49asLpvM0zrSI=
-Date:   Tue, 5 May 2020 17:20:50 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Steven Price <steven.price@arm.com>,
-        linux-kernel@vger.kernel.org, harb@amperecomputing.com
-Subject: Re: [PATCH v2 5/5] arm/arm64: smccc: Add ARCH_SOC_ID support
-Message-ID: <20200505162049.GG24239@willie-the-truck>
-References: <20200504092905.10580-1-sudeep.holla@arm.com>
- <20200504092905.10580-6-sudeep.holla@arm.com>
+        Tue, 5 May 2020 12:21:37 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45014 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729119AbgEEQVh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 12:21:37 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 045GLVnj022356;
+        Tue, 5 May 2020 11:21:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588695691;
+        bh=OxUyjvjTpC4dkBUPPz1IUnY359iQO02H2M1zKF1GPlc=;
+        h=From:To:CC:Subject:Date;
+        b=RbzphmRfOpEU1RoFFZjjFWb0wr6p1BzWmY3ZnlTL9AQT3O0gTHH4Xr7copS1vrCeu
+         quUAd71JiKxoQTk9o7HDQCbCu23xb3OXLWrUD/oKWp9QR67+RhJs8pFR7i65K7kC2o
+         kvWBkrD5XX8CX4PH3nwZwUs5DEhf9Z/GMfYGnUAk=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 045GLV6Y087775
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 5 May 2020 11:21:31 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 5 May
+ 2020 11:21:31 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 5 May 2020 11:21:31 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 045GLUkF026653;
+        Tue, 5 May 2020 11:21:30 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Anders Roxell <anders.roxell@linaro.org>
+CC:     <netdev@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH net-next] net: ethernet: ti: am65-cpts: fix build
+Date:   Tue, 5 May 2020 19:21:23 +0300
+Message-ID: <20200505162123.13366-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504092905.10580-6-sudeep.holla@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 10:29:05AM +0100, Sudeep Holla wrote:
-> diff --git a/drivers/firmware/psci/soc_id.c b/drivers/firmware/psci/soc_id.c
-> new file mode 100644
-> index 000000000000..b45f2d78e12e
-> --- /dev/null
-> +++ b/drivers/firmware/psci/soc_id.c
-> @@ -0,0 +1,165 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2020 Arm Limited
-> + */
-> +
-> +#include <linux/arm-smccc.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/device.h>
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/slab.h>
-> +#include <linux/sys_soc.h>
-> +
-> +#define SMCCC_SOC_ID_JEP106_BANK_IDX_MASK	GENMASK(30, 24)
-> +/*
-> + * As per the spec bits[23:16] are JEP-106 identification code with parity bit
-> + * for the SiP. We can drop the parity bit.
-> + */
+It's possible to have build configuration which will force PTP_1588_CLOCK=m
+and so TI_K3_AM65_CPTS=m while still have TI_K3_AM65_CPSW_NUSS=y. This will
+cause build failures:
 
-Which spec? Could you link to the doc and section here, please?
+aarch64-linux-gnu-ld: ../drivers/net/ethernet/ti/am65-cpsw-nuss.o: in function `am65_cpsw_init_cpts':
+../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1685: undefined reference to `am65_cpts_create'
+aarch64-linux-gnu-ld: ../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1685:(.text+0x2e20):
+relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `am65_cpts_create'
 
-Will
+Fix it by adding dependencies from CPTS in TI_K3_AM65_CPSW_NUSS as below:
+   config TI_K3_AM65_CPSW_NUSS
+   ...
+     depends on TI_K3_AM65_CPTS || !TI_K3_AM65_CPTS
+
+Note. This will create below dependencies and for NFS boot + CPTS all of them
+have to be built-in.
+  PTP_1588_CLOCK -> TI_K3_AM65_CPTS -> TI_K3_AM65_CPSW_NUSS
+
+While here, clean up TI_K3_AM65_CPTS definition.
+
+Fixes: b1f66a5bee07 ("net: ethernet: ti: am65-cpsw-nuss: enable packet timestamping support")
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Reported-by: Anders Roxell <anders.roxell@linaro.org>
+---
+ drivers/net/ethernet/ti/Kconfig | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+index 4ab35ce7b451..988e907e3322 100644
+--- a/drivers/net/ethernet/ti/Kconfig
++++ b/drivers/net/ethernet/ti/Kconfig
+@@ -99,7 +99,7 @@ config TI_K3_AM65_CPSW_NUSS
+ 	depends on ARCH_K3 && OF && TI_K3_UDMA_GLUE_LAYER
+ 	select TI_DAVINCI_MDIO
+ 	imply PHY_TI_GMII_SEL
+-	imply TI_AM65_CPTS
++	depends on TI_K3_AM65_CPTS || !TI_K3_AM65_CPTS
+ 	help
+ 	  This driver supports TI K3 AM654/J721E CPSW2G Ethernet SubSystem.
+ 	  The two-port Gigabit Ethernet MAC (MCU_CPSW0) subsystem provides
+@@ -112,9 +112,8 @@ config TI_K3_AM65_CPSW_NUSS
+ 
+ config TI_K3_AM65_CPTS
+ 	tristate "TI K3 AM65x CPTS"
+-	depends on ARCH_K3 && OF && PTP_1588_CLOCK
++	depends on ARCH_K3 && OF
+ 	depends on PTP_1588_CLOCK
+-	select NET_PTP_CLASSIFY
+ 	help
+ 	  Say y here to support the TI K3 AM65x CPTS with 1588 features such as
+ 	  PTP hardware clock for each CPTS device and network packets
+-- 
+2.17.1
+
