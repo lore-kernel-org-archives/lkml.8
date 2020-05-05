@@ -2,120 +2,142 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AE0C47256
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8B7C47259
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29726206CC
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:41:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="jdx2GA1k"
+	by mail.kernel.org (Postfix) with ESMTP id 196DA206E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:41:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbgEEGlT (ORCPT
+        id S1728297AbgEEGl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 02:41:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34318 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725766AbgEEGlT (ORCPT
+        Tue, 5 May 2020 02:41:26 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:60640 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725766AbgEEGl0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 02:41:19 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA7E4C061A0F
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 23:41:18 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id q124so582749pgq.13
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 23:41:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=b0cSV3VIHWOti9hEY160GUxOocjb2RCw+0GAblBav28=;
-        b=jdx2GA1koza677xbRvZximfAf3eGqC7089PhpVhfCaxhySIm3yOjCP9QXvpRhy04F3
-         oG7tyrbqfcEr32erEqjE7Z4UoG3MR3xAF+S8B3PPxGYNWfOndefMsxQYIbPQX9dRyIgv
-         xTCuzdHkr2Yr6X1CewqQeGNwmj+HA2xEB/y9O27sQZMIi80o6k0nPFd8qZ8Gc9PYMs4P
-         sI2G9wE1tO6OMvUE4KxQtmYL0ACqocC8upwIDbEr6kqrIpiTV6gbqH1AQ3w/3UdZPwyX
-         QFuBgyKLJgXrGF27aCnZHVzGUmPuIa717pzkI8uXOMGX5Q1D6/AnnEYexa0gavRMcLKM
-         4iLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=b0cSV3VIHWOti9hEY160GUxOocjb2RCw+0GAblBav28=;
-        b=mIgv9cfvSp+AVYxkkeMgDGRTAOPv3EhyGRABJGvaSeuUAhx/r1R1zGgl5XxKMEucLB
-         vNe2EeExf1NcK7psAiFOc/NVTtf1pVg3lm9PdyyQxuB67JGjgUuIfOC+luZLw7FD8avw
-         0GqvM7r4Cj2fIW3TC/cjSXFDmmtG/jrGI5V5uLcau5GTncuyfxlcgycW+POU6jiDBZtW
-         SMAWbo3YXZIMyvN4Hhd+cojoYk3V3P+0/Ccu++BGxFxj0wJv5ykvy138xNIanpxQVkAI
-         bHCcF3RRdmwA62beZ8mlCnhnaVK8MQ/JpB3U7L/j7QOb0b5+H50kTQ3T+pkvtxucTEQV
-         7D3A==
-X-Gm-Message-State: AGi0Pub8WAfXUrjmLS4rFHocz6lqwqeKpCiWFz+ML9vOpNuYWQE+VOVH
-        0LkHu4seVlBRGq8BBtt8REbNLA==
-X-Google-Smtp-Source: APiQypKGKEIRzYStVQ9WNqw/QSkSxDNZxHPjYla+bZdF1kI2qQtde6vSpCmlnwhpGdMfNCdr9rBAlw==
-X-Received: by 2002:a63:4f08:: with SMTP id d8mr1796556pgb.308.1588660878274;
-        Mon, 04 May 2020 23:41:18 -0700 (PDT)
-Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
-        by smtp.gmail.com with ESMTPSA id t188sm822858pgc.3.2020.05.04.23.41.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 23:41:17 -0700 (PDT)
-From:   Zong Li <zong.li@sifive.com>
-To:     palmer@dabbelt.com, paul.walmsley@sifive.com,
-        atishp@atishpatra.org, anup@brainfault.org, schwab@linux-m68k.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Zong Li <zong.li@sifive.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Atish Patra <atish.patra@wdc.com>
-Subject: [PATCH v3] riscv: force __cpu_up_ variables to put in data section
-Date:   Tue,  5 May 2020 14:41:13 +0800
-Message-Id: <20200505064113.3455-1-zong.li@sifive.com>
-X-Mailer: git-send-email 2.26.1
+        Tue, 5 May 2020 02:41:26 -0400
+Received: from dread.disaster.area (pa49-195-157-175.pa.nsw.optusnet.com.au [49.195.157.175])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id AEABB58BF91;
+        Tue,  5 May 2020 16:41:14 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jVrGU-000355-3x; Tue, 05 May 2020 16:41:14 +1000
+Date:   Tue, 5 May 2020 16:41:14 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Dan Schatzberg <schatzberg.dan@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Amir Goldstein <amir73il@gmail.com>, Tejun Heo <tj@kernel.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:FILESYSTEMS (VFS and infrastructure)" 
+        <linux-fsdevel@vger.kernel.org>,
+        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
+        <linux-mm@kvack.org>
+Subject: Re: [PATCH v5 0/4] Charge loop device i/o to issuing cgroup
+Message-ID: <20200505064114.GI2005@dread.disaster.area>
+References: <20200428161355.6377-1-schatzberg.dan@gmail.com>
+ <20200428214653.GD2005@dread.disaster.area>
+ <20200429102540.GA12716@quack2.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429102540.GA12716@quack2.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=QIgWuTDL c=1 sm=1 tr=0
+        a=ONQRW0k9raierNYdzxQi9Q==:117 a=ONQRW0k9raierNYdzxQi9Q==:17
+        a=kj9zAlcOel0A:10 a=sTwFKg_x9MkA:10 a=7-415B0cAAAA:8
+        a=rN2gyzmqWffP1ZJC7qsA:9 a=cE_fTOozNYi_-d1b:21 a=OBp7IKyJAvioFFSQ:21
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Put __cpu_up_stack_pointer and __cpu_up_task_pointer in data section.
-Currently, these two variables are put in bss section, there is a
-potential risk that secondary harts get the uninitialized value before
-main hart finishing the bss clearing. In this case, all secondary
-harts would pass the waiting loop and enable the MMU before main hart
-set up the page table.
+On Wed, Apr 29, 2020 at 12:25:40PM +0200, Jan Kara wrote:
+> On Wed 29-04-20 07:47:34, Dave Chinner wrote:
+> > On Tue, Apr 28, 2020 at 12:13:46PM -0400, Dan Schatzberg wrote:
+> > > The loop device runs all i/o to the backing file on a separate kworker
+> > > thread which results in all i/o being charged to the root cgroup. This
+> > > allows a loop device to be used to trivially bypass resource limits
+> > > and other policy. This patch series fixes this gap in accounting.
+> > 
+> > How is this specific to the loop device? Isn't every block device
+> > that offloads work to a kthread or single worker thread susceptible
+> > to the same "exploit"?
+> > 
+> > Or is the problem simply that the loop worker thread is simply not
+> > taking the IO's associated cgroup and submitting the IO with that
+> > cgroup associated with it? That seems kinda simple to fix....
+> > 
+> > > Naively charging cgroups could result in priority inversions through
+> > > the single kworker thread in the case where multiple cgroups are
+> > > reading/writing to the same loop device.
+> > 
+> > And that's where all the complexity and serialisation comes from,
+> > right?
+> > 
+> > So, again: how is this unique to the loop device? Other block
+> > devices also offload IO to kthreads to do blocking work and IO
+> > submission to lower layers. Hence this seems to me like a generic
+> > "block device does IO submission from different task" issue that
+> > should be handled by generic infrastructure and not need to be
+> > reimplemented multiple times in every block device driver that
+> > offloads work to other threads...
+> 
+> Yeah, I was thinking about the same when reading the patch series
+> description. We already have some cgroup workarounds for btrfs kthreads if
+> I remember correctly, we have cgroup handling for flush workers, now we are
+> adding cgroup handling for loopback device workers, and soon I'd expect
+> someone comes with a need for DM/MD worker processes and IMHO it's getting
+> out of hands because the complexity spreads through the kernel with every
+> subsystem comming with slightly different solution to the problem and also
+> the number of kthreads gets multiplied by the number of cgroups. So I
+> agree some generic solution how to approach IO throttling of kthreads /
+> workers would be desirable.
 
-This issue happened on random booting of multiple harts, which means
-it will manifest for BBL and OpenSBI which older than v0.6. In OpenSBI
-v0.7 (or higher version), we have HSM extension so all the secondary
-harts are brought-up by Linux kernel in an orderly fashion. This means
-we don't need this change for OpenSBI v0.7 (or higher version).
+Yup, that's pretty much what I was thinking: it's yet another
+special snowflake for cgroup-aware IO....
 
-Changes in v2 and v3:
-  - Add commit description about random booting.
+> OTOH I don't have a great idea how the generic infrastructure should look
+> like...
 
-Signed-off-by: Zong Li <zong.li@sifive.com>
-Reviewed-by: Greentime Hu <greentime.hu@sifive.com>
-Reviewed-by: Anup Patel <anup@brainfault.org>
-Reviewed-by: Atish Patra <atish.patra@wdc.com>
----
- arch/riscv/kernel/cpu_ops.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I haven't given it any thought - it's not something I have any
+bandwidth to spend time on.  I'll happily review a unified
+generic cgroup-aware kthread-based IO dispatch mechanism, but I
+don't have the time to design and implement that myself....
 
-diff --git a/arch/riscv/kernel/cpu_ops.c b/arch/riscv/kernel/cpu_ops.c
-index c4c33bf02369..0ec22354018c 100644
---- a/arch/riscv/kernel/cpu_ops.c
-+++ b/arch/riscv/kernel/cpu_ops.c
-@@ -15,8 +15,8 @@
- 
- const struct cpu_operations *cpu_ops[NR_CPUS] __ro_after_init;
- 
--void *__cpu_up_stack_pointer[NR_CPUS];
--void *__cpu_up_task_pointer[NR_CPUS];
-+void *__cpu_up_stack_pointer[NR_CPUS] __section(.data);
-+void *__cpu_up_task_pointer[NR_CPUS] __section(.data);
- 
- extern const struct cpu_operations cpu_ops_sbi;
- extern const struct cpu_operations cpu_ops_spinwait;
+OTOH, I will make time to stop people screwing up filesystems and
+block devices with questionable complexity and unique, storage
+device dependent userspace visible error behaviour. This sort of
+change is objectively worse for users than not supporting the
+functionality in the first place.
+
+Cheers,
+
+Dave.
 -- 
-2.26.1
-
+Dave Chinner
+david@fromorbit.com
