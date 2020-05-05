@@ -4,92 +4,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0ABFC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79623C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6EFF20721
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50FEE206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:50:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X68YJ+61"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h+g5LjLL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729088AbgEEUtf (ORCPT
+        id S1729196AbgEEUuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 16:49:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54380 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726593AbgEEUtf (ORCPT
+        Tue, 5 May 2020 16:50:07 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:25965 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726593AbgEEUuG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 16:49:35 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E932AC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 13:49:34 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id a7so142807pju.2
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 13:49:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gDQj+SjGugMQF8uI+esHL1nC61saNTbGZKF9q4vD+qY=;
-        b=X68YJ+6115N6xJQyXmzCTQ+PpT+i6HwBzGRgAcXyUKaveCJp095cI3uGI+MEomoRZ4
-         vvTeHPcOmw+LFxFuzftrI04yLDpWfcrQg4wNP+0hkHCoOBk6ys5D2SFBIRw2i5ZKl9Da
-         sxRMptkqta1hpE1wpKHxnWvOeTW6xpYDTH8pA=
+        Tue, 5 May 2020 16:50:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588711805;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=aTLHVMbsIaqAX7BaSrLpdm3P4nxyMTwYs/IkveEjuuM=;
+        b=h+g5LjLLgBeXLx9Ke1xo7Vg5QkKLoJglXE0clmhx17KDwrknFLI6FhDO0Y4zqmOnqKJxrC
+        RNn17P57hHh4JkHSaM5olEzN2gsBuMkLlgcPpBREmU5BQ9soPkF5cRO8N21PSIUnuNDlgH
+        HiY8JaJ6cJTy4xqs9qbtviPEXcA1QPI=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-249-LfjTTW26MU-jPornKl_tdQ-1; Tue, 05 May 2020 16:50:03 -0400
+X-MC-Unique: LfjTTW26MU-jPornKl_tdQ-1
+Received: by mail-qv1-f69.google.com with SMTP id d4so3214296qva.16
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 13:50:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gDQj+SjGugMQF8uI+esHL1nC61saNTbGZKF9q4vD+qY=;
-        b=RlSs1upU/dwd6n+TM6KWPi8zMPZ+B+M2QGz1DOr1A1A/dnVviabR9MbKtEcetgREht
-         iCzPL7sdb9AVZ61foDOLUAAhbKDR2ts+I4+/kMw6guP0APLQ8lVNOKdZRQ+mA9n6L6sE
-         wJkAjdN+OsE2nMLOmUe3N1kCWMRAIXyhF+5tb8UgZEJunWfWzvi3fQOt7zMFDEVWNKyi
-         9yKHuWGJGPSy6T5mvVCfjVuUffNo4w2h2opfp1fCFuf8GVadSo7HmY4+Xw71lRom3weD
-         LUKwb/aDkLroZY/PNMRHOaTLymzzWYcCDeDqZm6x1JYTp4U9l9b5pM6XFr47ItJa07k1
-         Ko5A==
-X-Gm-Message-State: AGi0PubCuM94zCUZJG0TsGrtGnRrVtR7amnHWeSy4aSlOklQ8qhVLw/f
-        c6kFBFHBY7mgbTBOLTIApDeia76X5v0=
-X-Google-Smtp-Source: APiQypIBAlkG8zHKPW1X6EBiSl1Icjz6jxjYzyrkYgoneeW15xc46ZNoZsg5tUq2F0BQbxBZhiuepA==
-X-Received: by 2002:a17:90a:8c3:: with SMTP id 3mr5039320pjn.147.1588711774351;
-        Tue, 05 May 2020 13:49:34 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j7sm2832507pjy.9.2020.05.05.13.49.33
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aTLHVMbsIaqAX7BaSrLpdm3P4nxyMTwYs/IkveEjuuM=;
+        b=DgLE4XQTTcAXBypQ/gqjg5OFMuwc1HiporOkYM9BIAW/3gtq8As5+gUUBs4gozoBUy
+         bAk9sIBgRQ08bFHEigVU3420xl8kMgmwggQU7a4SJhF3M4VlnD2PCih8dUx8YumimgGd
+         pEBt4J6Qqg8BGUJ0s90rqS3hNWjeGAWRhZPrMnoOqxxJzFnwdE8qf7KXbM1+ptf3ME2/
+         1Qh7LaPgkH+uFENwE092PBekcfvfB//lzksN4WFikvi9guMTSSbSPIaJJZRnNC3fa37f
+         Hk4g3UhrmxQiLbNAXntDIL1AucQzUkdPmAe3vwnPs7qxolXRQ3Xenp6S02v198oBO0H5
+         5jVw==
+X-Gm-Message-State: AGi0Pub3raGMcKD7O6JlQKhJXfr7YGV6MOff51IqjCv4F3Dw5fXjKXKf
+        T/oqyAF8HG7XWv2YAMcxWMIAR7UXwSjq9llFeStmKdiICeul9fYNqGuQasjeQ9SrldtBhJ413zc
+        VNZF5Cro5swkPaI2ppREPI0GA
+X-Received: by 2002:ac8:5653:: with SMTP id 19mr4679676qtt.252.1588711802814;
+        Tue, 05 May 2020 13:50:02 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJZWCseS8WCKKpT3aDra1sX1ikSoUZ46+/xjslmiir4MILBMJv5VWPlzmW+jNOSrx1v5dxLGw==
+X-Received: by 2002:ac8:5653:: with SMTP id 19mr4679660qtt.252.1588711802514;
+        Tue, 05 May 2020 13:50:02 -0700 (PDT)
+Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id 193sm19380qkl.42.2020.05.05.13.50.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 13:49:33 -0700 (PDT)
-Date:   Tue, 5 May 2020 13:49:32 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 3/7] exec: Rename the flag called_exec_mmap
- point_of_no_return
-Message-ID: <202005051348.E3358B456@keescook>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
- <87zhami2xp.fsf@x220.int.ebiederm.org>
+        Tue, 05 May 2020 13:50:01 -0700 (PDT)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        peterx@redhat.com, Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 0/3] KVM: X86: Two fixes for KVM_SET_GUEST_DEBUG, and a selftest
+Date:   Tue,  5 May 2020 16:49:57 -0400
+Message-Id: <20200505205000.188252-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87zhami2xp.fsf@x220.int.ebiederm.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 02:42:26PM -0500, Eric W. Biederman wrote:
-> 
-> Update the comments and make the code easier to understand by
-> renaming this flag.
-> 
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+The first two patches try to fix two issues I found (I think) with the
+selftest.  The 3rd patch is the test itself.  Note, we need below patches to be
+applied too for the test to work:
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+        KVM: X86: Declare KVM_CAP_SET_GUEST_DEBUG properly
+        KVM: selftests: Fix build for evmcs.h
+
+Please review, thanks.
+
+Peter Xu (3):
+  KVM: X86: Set RTM for DB_VECTOR too for KVM_EXIT_DEBUG
+  KVM: X86: Fix single-step with KVM_SET_GUEST_DEBUG
+  KVM: selftests: Add KVM_SET_GUEST_DEBUG test
+
+ arch/x86/kvm/vmx/vmx.c                        |   2 +-
+ arch/x86/kvm/x86.c                            |   2 +-
+ tools/testing/selftests/kvm/Makefile          |   1 +
+ .../testing/selftests/kvm/include/kvm_util.h  |   2 +
+ tools/testing/selftests/kvm/lib/kvm_util.c    |   9 +
+ .../testing/selftests/kvm/x86_64/debug_regs.c | 180 ++++++++++++++++++
+ 6 files changed, 194 insertions(+), 2 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/x86_64/debug_regs.c
 
 -- 
-Kees Cook
+2.26.2
+
