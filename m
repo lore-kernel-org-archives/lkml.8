@@ -6,41 +6,42 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1238FC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58394C47256
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2F18206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DC8D206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:08:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728278AbgEEHIP (ORCPT
+        id S1728329AbgEEHIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 03:08:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55914 "EHLO mx2.suse.de"
+        Tue, 5 May 2020 03:08:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55970 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725320AbgEEHIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 03:08:14 -0400
+        id S1725320AbgEEHIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 03:08:24 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 954C3AB8F;
-        Tue,  5 May 2020 07:08:15 +0000 (UTC)
-Date:   Tue, 05 May 2020 09:08:12 +0200
-Message-ID: <s5h4ksudfkz.wl-tiwai@suse.de>
+        by mx2.suse.de (Postfix) with ESMTP id BF4A5ABB2;
+        Tue,  5 May 2020 07:08:25 +0000 (UTC)
+Date:   Tue, 05 May 2020 09:08:23 +0200
+Message-ID: <s5h368edfko.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
 To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
 Cc:     <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>,
-        Amadeusz =?UTF-8?B?U8WCYXdpxYRza2k=?= 
-        <amadeuszx.slawinski@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        Evan Green <evgreen@chromium.org>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Nikhil Mahale <nmahale@nvidia.com>,
+        Aaron Plattner <aplattner@nvidia.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Jairaj Arava <jairaj.arava@intel.com>,
+        Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>,
         "moderated list:SOUND" <alsa-devel@alsa-project.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] ALSA: hda: Use dev_to_hdac_dev macro
-In-Reply-To: <20200505030357.28004-1-kai.heng.feng@canonical.com>
+Subject: Re: [PATCH 2/2] ALSA: hda: Use hdac_to_hda_codec macro
+In-Reply-To: <20200505030357.28004-2-kai.heng.feng@canonical.com>
 References: <20200505030357.28004-1-kai.heng.feng@canonical.com>
+        <20200505030357.28004-2-kai.heng.feng@canonical.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -51,10 +52,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 05 May 2020 05:03:52 +0200,
+On Tue, 05 May 2020 05:03:53 +0200,
 Kai-Heng Feng wrote:
 > 
-> Use dev_to_hdac_dev() instead of container_of().
+> Use hdac_to_hda_codec() instead of container_of().
 > 
 > No functional change intended.
 > 
