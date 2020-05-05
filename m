@@ -2,131 +2,180 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE5EC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C73C47259
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D20F206E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4969D20752
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:27:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GK0KKi8w"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SsJORsGW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbgEEK06 (ORCPT
+        id S1728715AbgEEK1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 06:26:58 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:38854 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbgEEK06 (ORCPT
+        Tue, 5 May 2020 06:27:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41168 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728642AbgEEK1C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 06:26:58 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 045AQm5c022773;
-        Tue, 5 May 2020 05:26:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588674408;
-        bh=DLomNfMRqwHmSyzWUGmjQc0v1EWBSRCnyaW1Xb6Iwnw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=GK0KKi8wd3BFB5dZarUtDsz5/IdaPoZ8QEjc1FxGSqSqGNfZbKoNfsztXvvljObN8
-         ua/fWSEP97ycNKo6srLnGd0jibf/ouo4mWHJxINnU1LiIESAa42qsiforudyVg9nrq
-         9O8K0VkM4i5YzvOi9wDIxyciV1g1k0swCoYg/AIU=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 045AQmxR017712;
-        Tue, 5 May 2020 05:26:48 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 5 May
- 2020 05:26:48 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 5 May 2020 05:26:47 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 045AQiqA040195;
-        Tue, 5 May 2020 05:26:45 -0500
-Subject: Re: [PATCH net-next 1/7] dt-binding: ti: am65x: document common
- platform time sync cpts module
-To:     Rob Herring <robh@kernel.org>
-CC:     Richard Cochran <richardcochran@gmail.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>, <netdev@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, Nishanth Menon <nm@ti.com>
-References: <20200501205011.14899-1-grygorii.strashko@ti.com>
- <20200501205011.14899-2-grygorii.strashko@ti.com>
- <20200505040511.GB8509@bogus>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <845264f3-66be-fc0b-7456-60bdcc91bc11@ti.com>
-Date:   Tue, 5 May 2020 13:26:44 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 06:27:02 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C4A1C0610D6
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 03:27:02 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id k8so1246187ejv.3
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 03:27:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Orh5u/cGFa6CUf3Ru5y/QPpEtSbGN9HXkDg7tWvYPnE=;
+        b=SsJORsGWqpqKroHw3juOiPB4jAoj7j0EugdHIIHw2eqbFfUiCLya+4s/vMXwX777AV
+         Q6Gvxzp1ptHMdUcThPhLS/5pv+LKe9X/D+xifOF/VxYr9M+vpHeYBIWBgbqf0I0Ak1mw
+         KKG9VB+GwPDv4zXgR51qnxe8nGhz2Ci2zJxls4yl5Pt7qUNgckkXy+L4d0cAg9hbRyhU
+         DoAMIi/U7nG2zB2FJn2l2yURSbHkoPHlr2VfZzBcTrM6IY4r2rBQRX4h4+t8FGHTjdLR
+         9diXW7lj9wss7Ubnw0i8NxTpKAOkAVKaPuRJJumf0TKHSK7E6PPPvS+F0CJ9+QeEGUfu
+         rVQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Orh5u/cGFa6CUf3Ru5y/QPpEtSbGN9HXkDg7tWvYPnE=;
+        b=ILxUlpTa+C2+WeU0kHoIW+fzWctQcYCgGfpkaWec7O9UZuE7mQocuc9bHydBXSf8wv
+         eTIRtAqf/gsiJtyweguZRcKYUTui/IO7CTbTr+D4yZnM/+eIOfDJLasUG2XloZMnvK48
+         568YibT1VMDxRpa2RFMhLPptjzLIn+7E8F1biQQMIHPvjNhkMb4KO1OFHdRRbo/wufpt
+         /rj0QHigVcI3UyeLzQOXbKIPb9ZD7rp1LKN7SS9sOAMbKqMrmS0qW0yoVqN4J2fRbrxr
+         OZ+hUfQ0wPkg512U3fbZCSMKEUfpCG0n2MMjy1VRmT1tZIX/QpSHVccFdzCLyhVRjUjP
+         wgOw==
+X-Gm-Message-State: AGi0PubWOnzhOlLE8jK9I4Fxd4/v+pX2x2BPglr7OSZMCwnOca0S7zQR
+        0dJZ937BbR3AwjV0MV0UXIUVUBN6is/YxOG6vHb4zw==
+X-Google-Smtp-Source: APiQypL4FFjkxMGI8aLXdMhTJ3XGyBUIZqnU0wyfYDKRQb8wG4Ok9jkG5xaBSuXBG86XDN48syzA5yMzvtKRdYvGaFE=
+X-Received: by 2002:a17:906:fcaf:: with SMTP id qw15mr1938820ejb.236.1588674420735;
+ Tue, 05 May 2020 03:27:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200505040511.GB8509@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <2869c4f6-9adf-3d55-a41d-a42865ae56f2@mageia.org> <20200505041050.GA8131@leoy-ThinkPad-X240s>
+In-Reply-To: <20200505041050.GA8131@leoy-ThinkPad-X240s>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Tue, 5 May 2020 11:26:49 +0100
+Message-ID: <CAJ9a7Vh8nqT5zGO1XPzWhPTpmMK+rx-S6DXvzPC4m31Fjkr+rQ@mail.gmail.com>
+Subject: Re: perf build error with gcc 10 on arm and aarch64
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Thomas Backlund <tmb@mageia.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Leo,
+
+This is caused by GCC 10 new default to -fno-common. Temporarily
+adding this to perf build reproduces issue with other compilers,
+including x86 build of perf with cs-etm.
+As such - your fix is good to resolve this issue.
+
+Tested by / Reviewed by Mike Leach <mike.leach@linaro.org>
+
+On Tue, 5 May 2020 at 05:11, Leo Yan <leo.yan@linaro.org> wrote:
+>
+> Hi Thomas,
+>
+> [ + Mathieu/Mike/Suzuki ]
+>
+> On Mon, May 04, 2020 at 10:22:27PM +0300, Thomas Backlund wrote:
+> > This is building perf from kernel-5.6.10 on armv7hl and aarch64:
+> >
+> > Compiler is gcc 10.1.0-RC
+> >
+> >
+> >   LD       perf-in.o
+> > ld: arch/perf-in.o: in function `.LANCHOR0':
+> > /home/iurt/rpmbuild/BUILD/kernel-arm/linux-5.6/tools/perf/util/include/../../util/cs-etm.h:118:
+> > multiple definition of `traceid_list'; util/perf-in.o:/home/iurt/rpmbuild/BUILD/kernel-arm/linux-5.6/tools/perf/util/cs-etm.h:118:
+> > first defined here
+> > make[3]: *** [/home/iurt/rpmbuild/BUILD/kernel-arm/linux-5.6/tools/build/Makefile.build:145:
+> > perf-in.o] Error 1
+> >
+> >   LD       perf-in.o
+> > ld: arch/perf-in.o:/home/iurt/rpmbuild/BUILD/kernel-aarch64/linux-5.6/tools/perf/util/include/../../util/cs-etm.h:118:
+> > multiple definition of `traceid_list'; util/perf-in.o:/home/iurt/rpmbuild/BUILD/kernel-aarch64/linux-5.6/tools/perf/util/cs-etm.h:118:
+> > first defined here
+> > make[3]: *** [/home/iurt/rpmbuild/BUILD/kernel-aarch64/linux-5.6/tools/build/Makefile.build:145:
+> > perf-in.o] Error 1
+> > make[2]: *** [Makefile.perf:616: perf-in.o] Error 2
+> > make[1]: *** [Makefile.perf:225: sub-make] Error 2
+> > make: *** [Makefile:70: all] Error 2
+> >
+> >
+> > The same build succeeds with gcc 9.3.0
+>
+> Thanks for reporting the issue.
+>
+> Could you help confirm if below change can resolve this issue?
+>
+> Thanks,
+> Leo
+>
+> ---8<---
+>
+> Subject: [PATCH] perf cs-etm: Move defined of traceid_list
+>
+> The variable 'traceid_list' is defined in the header file cs-etm.h,
+> if multiple C files include cs-etm.h the compiler might complaint for
+> multiple definition of 'traceid_list'.
+>
+> To fix multiple definition error, move the definition of 'traceid_list'
+> into cs-etm.c.
+>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>  tools/perf/util/cs-etm.c | 3 +++
+>  tools/perf/util/cs-etm.h | 3 ---
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 62d2f9b9ce1b..381d9708e9bd 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -94,6 +94,9 @@ struct cs_etm_queue {
+>         struct cs_etm_traceid_queue **traceid_queues;
+>  };
+>
+> +/* RB tree for quick conversion between traceID and metadata pointers */
+> +static struct intlist *traceid_list;
+> +
+>  static int cs_etm__update_queues(struct cs_etm_auxtrace *etm);
+>  static int cs_etm__process_queues(struct cs_etm_auxtrace *etm);
+>  static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
+> diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
+> index 650ecc2a6349..4ad925d6d799 100644
+> --- a/tools/perf/util/cs-etm.h
+> +++ b/tools/perf/util/cs-etm.h
+> @@ -114,9 +114,6 @@ enum cs_etm_isa {
+>         CS_ETM_ISA_T32,
+>  };
+>
+> -/* RB tree for quick conversion between traceID and metadata pointers */
+> -struct intlist *traceid_list;
+> -
+>  struct cs_etm_queue;
+>
+>  struct cs_etm_packet {
+> --
+> 2.17.1
 
 
-On 05/05/2020 07:05, Rob Herring wrote:
-> On Fri, 1 May 2020 23:50:05 +0300, Grygorii Strashko wrote:
->> Document device tree bindings for TI AM654/J721E SoC The Common Platform
->> Time Sync (CPTS) module. The CPTS module is used to facilitate host control
->> of time sync operations. Main features of CPTS module are:
->>    - selection of multiple external clock sources
->>    - 64-bit timestamp mode in ns with ppm and nudge adjustment.
->>    - control of time sync events via interrupt or polling
->>    - hardware timestamp of ext. events (HWx_TS_PUSH)
->>    - periodic generator function outputs (TS_GENFx)
->>    - PPS in combination with timesync router
->>    - Depending on integration it enables compliance with the IEEE 1588-2008
->> standard for a precision clock synchronization protocol, Ethernet Enhanced
->> Scheduled Traffic Operations (CPTS_ESTFn) and PCIe Subsystem Precision Time
->> Measurement (PTM).
->>
->> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->> ---
->>   .../bindings/net/ti,k3-am654-cpsw-nuss.yaml   |   7 +
->>   .../bindings/net/ti,k3-am654-cpts.yaml        | 152 ++++++++++++++++++
->>   2 files changed, 159 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml
->>
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml: $id: relative path/filename doesn't match actual path or filename
-> 	expected: http://devicetree.org/schemas/net/ti,k3-am654-cpts.yaml#
-> Unknown file referenced: [Errno 2] No such file or directory: '/usr/local/lib/python3.6/dist-packages/dtschema/schemas/net/ti,am654-cpts.yaml'
-> Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.example.dts' failed
-> make[1]: *** [Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.example.dts] Error 255
-> make[1]: *** Waiting for unfinished jobs....
-> Makefile:1300: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
-> 
-> See https://patchwork.ozlabs.org/patch/1281460
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
-> 
-> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-> 
-> Please check and re-submit.
-> 
-
-I've sent fix for this.
 
 -- 
-Best regards,
-grygorii
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
