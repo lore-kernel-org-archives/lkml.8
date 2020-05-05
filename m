@@ -2,76 +2,178 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79310C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A279C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B5542068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E9AA2068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:42:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbgEEImD (ORCPT
+        id S1728649AbgEEImI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 04:42:03 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3792 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725766AbgEEImC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 04:42:02 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 132FA4D18162402A46E4;
-        Tue,  5 May 2020 16:41:59 +0800 (CST)
-Received: from localhost (10.166.215.154) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Tue, 5 May 2020
- 16:41:53 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <wg@grandegger.com>, <mkl@pengutronix.de>, <davem@davemloft.net>,
-        <jhofstee@victronenergy.com>
-CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] can: c_can: Remove unused inline function
-Date:   Tue, 5 May 2020 16:41:49 +0800
-Message-ID: <20200505084149.23848-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 5 May 2020 04:42:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39482 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728627AbgEEImH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 04:42:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 808AFAFF2;
+        Tue,  5 May 2020 08:42:08 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.166.215.154]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 05 May 2020 10:42:05 +0200
+From:   Roman Penyaev <rpenyaev@suse.de>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jason Baron <jbaron@akamai.com>,
+        Khazhismel Kumykov <khazhy@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 1/1] epoll: call final ep_events_available() check under
+ the lock
+In-Reply-To: <20200505084049.1779243-1-rpenyaev@suse.de>
+References: <20200505084049.1779243-1-rpenyaev@suse.de>
+Message-ID: <a9898eaefa85fa9c85e179ff162d5e8d@suse.de>
+X-Sender: rpenyaev@suse.de
+User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 524369e2391f ("can: c_can: remove obsolete STRICT_FRAME_ORDERING Kconfig option")
-left behind this, remove it.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/can/c_can/c_can.c | 9 ---------
- 1 file changed, 9 deletions(-)
+Hi Andrew,
 
-diff --git a/drivers/net/can/c_can/c_can.c b/drivers/net/can/c_can/c_can.c
-index 8e9f5620c9a2..1ccdbe89585b 100644
---- a/drivers/net/can/c_can/c_can.c
-+++ b/drivers/net/can/c_can/c_can.c
-@@ -356,15 +356,6 @@ static void c_can_setup_tx_object(struct net_device *dev, int iface,
- 	}
- }
- 
--static inline void c_can_activate_all_lower_rx_msg_obj(struct net_device *dev,
--						       int iface)
--{
--	int i;
--
--	for (i = C_CAN_MSG_OBJ_RX_FIRST; i <= C_CAN_MSG_RX_LOW_LAST; i++)
--		c_can_object_get(dev, iface, i, IF_COMM_CLR_NEWDAT);
--}
--
- static int c_can_handle_lost_msg_obj(struct net_device *dev,
- 				     int iface, int objno, u32 ctrl)
- {
--- 
-2.17.1
+May I ask you to remove "epoll: ensure ep_poll() doesn't miss wakeup
+events" from your -mm queue? Jason lately found out that the patch
+does not fully solve the problem and this one patch is a second
+attempt to do things correctly in a different way (namely to do
+the final check under the lock). Previous changes are not needed.
 
+Thanks.
+
+--
+Roman
+
+
+On 2020-05-05 10:40, Roman Penyaev wrote:
+> The original problem was described here:
+>    https://lkml.org/lkml/2020/4/27/1121
+> 
+> There is a possible race when ep_scan_ready_list() leaves ->rdllist
+> and ->obflist empty for a short period of time although some events
+> are pending. It is quite likely that ep_events_available() observes
+> empty lists and goes to sleep. Since 339ddb53d373 ("fs/epoll: remove
+> unnecessary wakeups of nested epoll") we are conservative in wakeups
+> (there is only one place for wakeup and this is ep_poll_callback()),
+> thus ep_events_available() must always observe correct state of
+> two lists. The easiest and correct way is to do the final check
+> under the lock. This does not impact the performance, since lock
+> is taken anyway for adding a wait entry to the wait queue.
+> 
+> In this patch barrierless __set_current_state() is used. This is
+> safe since waitqueue_active() is called under the same lock on wakeup
+> side.
+> 
+> Short-circuit for fatal signals (i.e. fatal_signal_pending() check)
+> is moved to the line just before actual events harvesting routine.
+> This is fully compliant to what is said in the comment of the patch
+> where the actual fatal_signal_pending() check was added:
+> c257a340ede0 ("fs, epoll: short circuit fetching events if thread
+> has been killed").
+> 
+> Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
+> Reported-by: Jason Baron <jbaron@akamai.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Khazhismel Kumykov <khazhy@google.com>
+> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> Cc: linux-fsdevel@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: stable@vger.kernel.org
+> ---
+>  fs/eventpoll.c | 48 ++++++++++++++++++++++++++++--------------------
+>  1 file changed, 28 insertions(+), 20 deletions(-)
+> 
+> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+> index aba03ee749f8..8453e5403283 100644
+> --- a/fs/eventpoll.c
+> +++ b/fs/eventpoll.c
+> @@ -1879,34 +1879,33 @@ static int ep_poll(struct eventpoll *ep,
+> struct epoll_event __user *events,
+>  		 * event delivery.
+>  		 */
+>  		init_wait(&wait);
+> -		write_lock_irq(&ep->lock);
+> -		__add_wait_queue_exclusive(&ep->wq, &wait);
+> -		write_unlock_irq(&ep->lock);
+> 
+> +		write_lock_irq(&ep->lock);
+>  		/*
+> -		 * We don't want to sleep if the ep_poll_callback() sends us
+> -		 * a wakeup in between. That's why we set the task state
+> -		 * to TASK_INTERRUPTIBLE before doing the checks.
+> +		 * Barrierless variant, waitqueue_active() is called under
+> +		 * the same lock on wakeup ep_poll_callback() side, so it
+> +		 * is safe to avoid an explicit barrier.
+>  		 */
+> -		set_current_state(TASK_INTERRUPTIBLE);
+> +		__set_current_state(TASK_INTERRUPTIBLE);
+> +
+>  		/*
+> -		 * Always short-circuit for fatal signals to allow
+> -		 * threads to make a timely exit without the chance of
+> -		 * finding more events available and fetching
+> -		 * repeatedly.
+> +		 * Do the final check under the lock. ep_scan_ready_list()
+> +		 * plays with two lists (->rdllist and ->ovflist) and there
+> +		 * is always a race when both lists are empty for short
+> +		 * period of time although events are pending, so lock is
+> +		 * important.
+>  		 */
+> -		if (fatal_signal_pending(current)) {
+> -			res = -EINTR;
+> -			break;
+> +		eavail = ep_events_available(ep);
+> +		if (!eavail) {
+> +			if (signal_pending(current))
+> +				res = -EINTR;
+> +			else
+> +				__add_wait_queue_exclusive(&ep->wq, &wait);
+>  		}
+> +		write_unlock_irq(&ep->lock);
+> 
+> -		eavail = ep_events_available(ep);
+> -		if (eavail)
+> -			break;
+> -		if (signal_pending(current)) {
+> -			res = -EINTR;
+> +		if (eavail || res)
+>  			break;
+> -		}
+> 
+>  		if (!schedule_hrtimeout_range(to, slack, HRTIMER_MODE_ABS)) {
+>  			timed_out = 1;
+> @@ -1927,6 +1926,15 @@ static int ep_poll(struct eventpoll *ep, struct
+> epoll_event __user *events,
+>  	}
+> 
+>  send_events:
+> +	if (fatal_signal_pending(current))
+> +		/*
+> +		 * Always short-circuit for fatal signals to allow
+> +		 * threads to make a timely exit without the chance of
+> +		 * finding more events available and fetching
+> +		 * repeatedly.
+> +		 */
+> +		res = -EINTR;
+> +
+>  	/*
+>  	 * Try to transfer events to user space. In case we get 0 events and
+>  	 * there's still timeout left over, we go trying again in search of
 
