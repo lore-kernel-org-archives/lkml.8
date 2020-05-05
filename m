@@ -2,119 +2,132 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB90DC47258
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D23C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B00A42073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:05:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7EB220661
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:05:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YU+6u86+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tQWT+am+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729356AbgEEOFh (ORCPT
+        id S1729541AbgEEOFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:05:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47236 "EHLO
+        Tue, 5 May 2020 10:05:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727785AbgEEOFg (ORCPT
+        by vger.kernel.org with ESMTP id S1728707AbgEEOFo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:05:36 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1351C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:05:35 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id t12so1953210edw.3
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 07:05:35 -0700 (PDT)
+        Tue, 5 May 2020 10:05:44 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39D56C061A0F;
+        Tue,  5 May 2020 07:05:44 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id h11so851797plr.11;
+        Tue, 05 May 2020 07:05:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DQhPVNzCwxODV9jjVycfNahbwJl6DrUIjQ9AnoCrWCs=;
-        b=YU+6u86++6VWtYwNPHyc1ME4CNkzeonYAyS/jdldZueht1JjMExBXKZ2fwCZZnMaZI
-         ZhkNfG4Iq7Wa8TgqlSCI9rUl8C2Q7X0XofiEN2if0Co5+gwFJU/5PxOH4YrwKBPJ5sGz
-         zyiacbV9r11JC/U44S4xnE/s0Ymar0Oax5aJI=
+        bh=Q8WIz3FHXamstQ5RROHKWV22yynOgMb/3OWiPvwcH58=;
+        b=tQWT+am+PDIVhoLRtKQN601nKRhuHxjkHmD2ua/WG/JmA/HfvqnGjf2gnt42shavh1
+         gO0jskK+eEDNeD4EKB2n5QkqloIcRL5XyP6XMUwEDDpl7S0LefZj4R+NN/GsGOjwSxBt
+         ZQDznhzLfiSqR5I7HEeaFW6K2ImpedhcAof1XmLedvomwktlLT/WLz0cjwhCsafUytbS
+         zzQOwGZtIpoGUSZHcn9biw61unvfFzzrTI5Slx9pSvPLBBZUJYJEN/7x36Srcr1M47YG
+         N+iES3xdTY/ge8TVqkVEEs4BtREh8KJEfYXsS2Mm0HgLjr+/6fl7/N8qLI7ZkJh4VdIH
+         jxGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DQhPVNzCwxODV9jjVycfNahbwJl6DrUIjQ9AnoCrWCs=;
-        b=l2kpgnuaxdUih4SKRNq637HdzUpSZKJ4NtYz6wQQxe1eAJ7av+jbeY82WArRPzABX3
-         Yh+PFvujqB2fHoLWMZ+hh8fmXLdbtpEQt1yLfPt6yHducQs3ysMwFhXEO4MlMZT0ysGU
-         K9lUyYfE5QOc/DSbJ1ZvcFdlbGOL8Cj9QImJsJUrjFlWOrWguiSvSa+rjsbIC9Lb5BsL
-         Dma+5iMIahy9Z5ad54pDGEFloOpAf7dXAceDQFwsk9NFHGn1YCpo4cR59IPYkmh4fAKn
-         sxPztQVQjT6yTvMgFa6HDCCoAelJhIplJu+v/VjBwkwBYRj3Ml64SNrLO06u//7m9S1P
-         TkxA==
-X-Gm-Message-State: AGi0PuYC8Kj5WQynKh8mv6T6Ag2SAMfokkyLqfMpW2WUDjkLDj/NzEO+
-        owFqi2FojaXhXJ0Bxo1f/88pDpMDRK3q/g==
-X-Google-Smtp-Source: APiQypJvAdJ5T9ubYe6ooTQjRkaVi9jVob+Ai8aRYPfxkoAB72ZN9Pbp52HoNAJ3M6IZ4PRE/sFlWQ==
-X-Received: by 2002:a05:6402:22cd:: with SMTP id dm13mr2890372edb.56.1588687534319;
-        Tue, 05 May 2020 07:05:34 -0700 (PDT)
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com. [209.85.221.53])
-        by smtp.gmail.com with ESMTPSA id k24sm326357ejv.15.2020.05.05.07.05.33
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2020 07:05:33 -0700 (PDT)
-Received: by mail-wr1-f53.google.com with SMTP id f13so2866221wrm.13
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 07:05:33 -0700 (PDT)
-X-Received: by 2002:adf:fc4f:: with SMTP id e15mr3926804wrs.415.1588687532834;
- Tue, 05 May 2020 07:05:32 -0700 (PDT)
+        bh=Q8WIz3FHXamstQ5RROHKWV22yynOgMb/3OWiPvwcH58=;
+        b=Dpd4mi1c+PDQU76Q9mipmGpuiY2wHHLwb7nim0kvIqAePGK8sbyrVAlJWNG/7Qu3ZK
+         1uMvB2IYRFA1GtEyNKoUfNcc1SmxLeh9cxHBePvfoum8pIjbIyHNT+nUUWNJTixXb0PO
+         T91AF/giaoFzkcuzbCwckol38lp5Z/MMBOhiyMM8IOoHgcO45ifV+HZZgWObseteQL/m
+         HsgFwQmSILAF0Do6aI9QQmSLrCFEw5fiKshfA6gn2IqEjdLoPxh65D4gCzHANkbHCR19
+         HLvPBkGui93mUvi+Cel+wwMtdENIl7wwAiK3ZnIDlGkrJ+X6zjvyHC/WRdB9qNpR4ufM
+         VEWQ==
+X-Gm-Message-State: AGi0PuZU2SxL4oJIKbnUT3afIvnsKAxDwOD6ZDNowGsFRPLxnhQKETw7
+        zy48bBLuiuP3mWxDXbpmSBycpZMlj+jOSU5Rjvg=
+X-Google-Smtp-Source: APiQypJ62mwSQkFfLZx/rBqZHd6X5lul6H7QgfJRLPEdsV/Il7XmM4/gfZ8p9W1VY92PM68a4Y7lh17/kbNHBRZQoo4=
+X-Received: by 2002:a17:90a:fa81:: with SMTP id cu1mr3316017pjb.25.1588687543700;
+ Tue, 05 May 2020 07:05:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200505134110.3435-1-ezequiel@collabora.com> <20200505134110.3435-2-ezequiel@collabora.com>
- <CAAFQd5AWZFoPk2YTp2k8M7LvJshxw46-z+wK2VoM9EzB2CqiFA@mail.gmail.com> <c29fcc922a4917ac695043e605973ba9649f9c9b.camel@collabora.com>
-In-Reply-To: <c29fcc922a4917ac695043e605973ba9649f9c9b.camel@collabora.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Tue, 5 May 2020 16:05:19 +0200
-X-Gmail-Original-Message-ID: <CAAFQd5A458E8iqwakKTDEyTHC+NYY-M1SaTS3m0MARwPaRyOuw@mail.gmail.com>
-Message-ID: <CAAFQd5A458E8iqwakKTDEyTHC+NYY-M1SaTS3m0MARwPaRyOuw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] media: rkvdec: Fix .buf_prepare
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+References: <20200504165448.264746645@linuxfoundation.org> <20200504165451.307643203@linuxfoundation.org>
+ <20200505123159.GC28722@amd> <CAHp75VeM+qwh5rHL7RDdacru0jPSB9me2aTs__jdy749dTKRng@mail.gmail.com>
+ <20200505125818.GA31126@amd> <CAHp75VcKreeQpjROdL23XGqgVu+F_0eL5DsJ=5APEQUO9V69EQ@mail.gmail.com>
+ <20200505133700.GA31753@amd>
+In-Reply-To: <20200505133700.GA31753@amd>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 5 May 2020 17:05:37 +0300
+Message-ID: <CAHp75Ve+pzhamZXiKxHF+VD8yfsjRF2coattHyiD+0aa7Fy2DA@mail.gmail.com>
+Subject: Re: [PATCH 4.19 28/37] dmaengine: dmatest: Fix iteration non-stop logic
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel@collabora.com, Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Gustavo Padovan <gustavo.padovan@collabora.com>
+        Stable <stable@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 3:59 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
->
-> On Tue, 2020-05-05 at 15:56 +0200, Tomasz Figa wrote:
-> > Hi Ezequiel,
-> >
-> > On Tue, May 5, 2020 at 3:41 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
-> > > The driver should only set the payload on .buf_prepare
-> > > if the buffer is CAPTURE type, or if an OUTPUT buffer
-> > > has a zeroed payload.
-> >
-> > Thanks for the patch. Just one question below.
-> >
-> > Where does the requirement to set OUTPUT buffer bytesused to sizeimage
-> > if the original bytesused is 0 come from?
-> >
->
-> If I'm reading english correctly, it's here:
->
-> https://www.kernel.org/doc/html/latest/media/uapi/v4l/buffer.html
->
-> """
-> The number of bytes occupied by the data in the buffer. It depends on the negotiated data format and may change with each buffer for compressed
-> variable size data like JPEG images. Drivers must set this field when type refers to a capture stream, applications when it refers to an output
-> stream. If the application sets this to 0 for an output stream, then bytesused will be set to the size of the buffer (see the length field of this
-> struct) by the driver. For multiplanar formats this field is ignored and the planes pointer is used instead.
-> """
+On Tue, May 5, 2020 at 4:37 PM Pavel Machek <pavel@denx.de> wrote:
+> On Tue 2020-05-05 16:19:11, Andy Shevchenko wrote:
+> > On Tue, May 5, 2020 at 3:58 PM Pavel Machek <pavel@denx.de> wrote:
+> > > On Tue 2020-05-05 15:51:16, Andy Shevchenko wrote:
+> > > > On Tue, May 5, 2020 at 3:37 PM Pavel Machek <pavel@denx.de> wrote:
+> > > > > > So, to the point, the conditional of checking the thread to be stopped being
+> > > > > > first part of conjunction logic prevents to check iterations. Thus, we have to
+> > > > > > always check both conditions
 
-Okay, thanks. I wonder if this shouldn't be handled by the core,
-though. Especially given that the document refers to the length field
-specifically and not the sizeimage set in the format.
+vvv
+>>>>>> to be able to stop after given iterations.
+^^^
 
-Best regards,
-Tomasz
+...
+
+> > > Yeah, I pointed that out above. Both && and || permit short
+> > > execution. But that does not matter, as neither "params->iterations"
+> > > nor "total_tests >= params->iterations" have side effects.
+> > >
+> > > Where is the runtime difference?
+> >
+> > We have to check *both* conditions. If we don't check iterations, we
+> > just wait indefinitely until somebody tells us to stop.
+> > Everything in the commit message and mentioned there commit IDs which
+> > you may check.
+>
+> No.
+
+Yes. Please, read carefully the commit message (for your convenience I
+emphasized above). I don't want to spend time on this basics stuff
+anymore.
+
+> If kthread_should_stop() is true, we break the loop. Both old code and
+> new code does that. Neither old nor new code checks the
+> "params->iterations && total_tests >=dparams->iterations" condition,
+> as both && and || do short execution).
+>
+> If you wanted both conditions to always evaluate, you'd have to do
+>
+> #       while (!kthread_should_stop()
+> #              & !(params->iterations && total_tests >=
+> #              params->iterations)) {
+>
+> (note && -> &). But, again, there's no reason to do that, as second
+> part of expression does not have side effects.
+
+It fixes a bug in the code, try with and without this change. (I can
+reproduce it here)
+
+-- 
+With Best Regards,
+Andy Shevchenko
