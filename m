@@ -2,130 +2,117 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 998B0C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 891DBC47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79105206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6815B20721
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588651541;
-	bh=zF6sZRhsEgGpADrraSd7Rgy9rjEEJ9LkfiW61H42IdA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nSe1qQIFV4v1O8guJL5zL/dI6ift298aYQ+supZ0hlq8+DIjisq7OfSJJelXasVP2
-	 ap64+B9A2nqHl3yvuvyMcHAR/i6qjpD4BHm2wM7ZBU7Ak4VklJb0L0ab3TniySckaO
-	 4yTFYqjL/E5oNi74q72fTPberKx6XBnaW4Bs9U2s=
+	s=default; t=1588651692;
+	bh=uzzMCgqE/O5IIYjUlJGPkxkNrxePxpFGbx62v87B1yk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TaGhOoWMvFpKN62VZ9lIatQ14kqPCleLr5RA6ugBduOOExTen45INR0mXMp83IWM9
+	 9srPN8TuwDJAQxTZ36DszvRQuV2gwbUYusXoEhnM04F32h5ogTJ2XG5qBMf4PPkLWi
+	 0BN4IrO8gSiMpmrFa8cdIEW9ciIA9mEzpWnB8UT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727861AbgEEEFl (ORCPT
+        id S1726885AbgEEEIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 00:05:41 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35732 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725272AbgEEEFk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 00:05:40 -0400
-Received: by mail-oi1-f196.google.com with SMTP id o7so878066oif.2;
-        Mon, 04 May 2020 21:05:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NxcXGsja0RqwbNvyBbTQG5dqInSaMyIr4W7PW6vbWV0=;
-        b=jXUnYvJQVStbcYVTkL/Jw2kaOFvCP7u+v3ywFtgA8TQGU3zsFXnaEw2OAbednQaVqX
-         PH9ZnqDZZA+/CyUVFDHQfpV9ZPRmci8Wq5EVmx0y0cccFOGVW5sCHG5+owNcMlXCs4Kr
-         1eS7IHfc92GWspuXCycdZkAflpRkiLstgPukUmTAcn7xZgQnfzT8KAyUYo2X1TbeIwPa
-         GlTZQRLzB5JjK7XBlMxWiU5Pg9ap9mGtFvubgXxF6iyY43mmd0fxtEoJknmzdHTE3QSl
-         n0/02lyeig+VmBhaJD5wtTZ+bZRAQjefDFjMiidM9dYZEfiPS+FNFBTqOqXN0WwlBVjg
-         1oPA==
-X-Gm-Message-State: AGi0PuaJomyo3ngPktiGF7onaBkbeHlJxK90lLJ0hq5ORsQ9CYCdSSno
-        brt0bjq5kkD6NT2lO9YvfQ==
-X-Google-Smtp-Source: APiQypIm6bJ2GYcUWnDrZJSKFY2MMrVaOZ5DgIjiUPpdrF0QvVmDwHdw5rjjHX4mQ/dYp0iumLOLcQ==
-X-Received: by 2002:aca:d441:: with SMTP id l62mr1244483oig.9.1588651539145;
-        Mon, 04 May 2020 21:05:39 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 61sm329855otp.13.2020.05.04.21.05.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 21:05:38 -0700 (PDT)
-Received: (nullmailer pid 31439 invoked by uid 1000);
-        Tue, 05 May 2020 04:05:37 -0000
-Date:   Mon, 4 May 2020 23:05:37 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Artur Rojek <contact@artur-rojek.eu>
-Subject: Re: [PATCH v6 6/7] dt-bindings: input: Add docs for ADC driven
- joystick.
-Message-ID: <20200505040537.GA30791@bogus>
-References: <20200503171451.44034-1-contact@artur-rojek.eu>
- <20200503171451.44034-6-contact@artur-rojek.eu>
+        Tue, 5 May 2020 00:08:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45308 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725272AbgEEEIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 00:08:11 -0400
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 319202087E;
+        Tue,  5 May 2020 04:08:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588651690;
+        bh=uzzMCgqE/O5IIYjUlJGPkxkNrxePxpFGbx62v87B1yk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=BN6Cy/3HpCwbAGqGdvC+qqnnmWcpBeTMOV+avy7c5MqADF8o2RkgcRkJzIQXdsCsk
+         1Afk3jIt/KQM3TnQcStiKfqzuLsewX65wxQohWJds/+9oXyCCJshgXhqgUpXBb3dvp
+         Pj9E/11iNOGPIQykmHB/KEKg0M4b5I2GMOZkNt/o=
+Received: by mail-ot1-f54.google.com with SMTP id m13so561394otf.6;
+        Mon, 04 May 2020 21:08:10 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYCc8W08LyWksuW5sQZqz/19WrYFFaUhJea7EHP7Nd0bFUJ8bMP
+        TH24vvr7k6O4ssDpVm8Cn3ceMFQOC52xr3mHaw==
+X-Google-Smtp-Source: APiQypKr0Hhrl0+e44U31hazXs0o4bScaIuGYf4nCgkUWwDdJ4zYt2nRLPemlwjIE7S1TGeNHXWRAj+I7RpOjlh+8dk=
+X-Received: by 2002:a9d:7d85:: with SMTP id j5mr690540otn.107.1588651689440;
+ Mon, 04 May 2020 21:08:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200503171451.44034-6-contact@artur-rojek.eu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <967df5c3303b478b76199d4379fe40f5094f3f9b.1588584538.git.mchehab+huawei@kernel.org>
+ <20200504174522.GA3383@ravnborg.org> <20200504175553.jdm7a7aabloevxba@pengutronix.de>
+In-Reply-To: <20200504175553.jdm7a7aabloevxba@pengutronix.de>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 4 May 2020 23:07:57 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJuRrhEtt5uxaQ=7WvDKiF_2v025GiYUvrrFE5jxBr-Xg@mail.gmail.com>
+Message-ID: <CAL_JsqJuRrhEtt5uxaQ=7WvDKiF_2v025GiYUvrrFE5jxBr-Xg@mail.gmail.com>
+Subject: Re: [PATCH] docs: dt: fix broken links due to txt->yaml renames
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Sam Ravnborg <sam@ravnborg.org>
+Cc:     Linux-ALSA <alsa-devel@alsa-project.org>,
+        Olivier Moysan <olivier.moysan@st.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Sean Wang <sean.wang@mediatek.com>, Jyri Sarha <jsarha@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Sandy Huang <hjc@rock-chips.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  3 May 2020 19:14:50 +0200, Artur Rojek wrote:
-> Add documentation for the adc-joystick driver, used to provide support
-> for joysticks connected over ADC.
-> 
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> Tested-by: Paul Cercueil <paul@crapouillou.net>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> 
->  Changes:
-> 
->  v2: - Add `reg` property to axis subnode in order to enumerate the axes,
->      - rename `linux,abs-code` property to `linux,code`,
->      - drop `linux,` prefix from the remaining properties of axis subnode
-> 
->  v3: no change
-> 
->  v4: - remove "bindings" from the unique identifier string,
->      - replace `|` with `>` for all description properties,
->      - specify the number of items for `io-channels`,
->      - correct the regex pattern of `axis` property,
->      - specify the value range of `reg` property for each axis,
->      - put `abs-range` properties under `allOf` 
-> 
->  v5: add `a-f` to the regex pattern of `axis` property
-> 
->  v6: no change
-> 
->  .../bindings/input/adc-joystick.yaml          | 121 ++++++++++++++++++
->  1 file changed, 121 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/adc-joystick.yaml
-> 
+On Mon, May 4, 2020 at 12:56 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> Hi Sam,
+>
+> On Mon, May 04, 2020 at 07:45:22PM +0200, Sam Ravnborg wrote:
+> > On Mon, May 04, 2020 at 11:30:20AM +0200, Mauro Carvalho Chehab wrote:
+> > > There are some new broken doc links due to yaml renames
+> > > at DT. Developers should really run:
+> > >
+> > >     ./scripts/documentation-file-ref-check
+> > >
+> > > in order to solve those issues while submitting patches.
+> > Would love if some bot could do this for me on any patches that creates
+> > .yaml files or so.
+> > I know I will forget this and it can be automated.
+> > If I get a bot mail that my patch would broke a link I would
+> > have it fixed before it hits any tree.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+I can probably add this to what I'm already checking. Not completely
+automated though as it depends on me to review before sending.
 
-Error: Documentation/devicetree/bindings/input/adc-joystick.example.dts:24.31-32 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/input/adc-joystick.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/input/adc-joystick.example.dt.yaml] Error 1
-make[1]: *** Waiting for unfinished jobs....
-Makefile:1300: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+> What about adding a check to check_patch?
 
-See https://patchwork.ozlabs.org/patch/1282045
+That would be the best way to get submitters to do this.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+Rob
