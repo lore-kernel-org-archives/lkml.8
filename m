@@ -2,100 +2,136 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56207C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5222C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CEFA206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:51:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCC7F206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:52:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D7fddasA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IdIbvY1E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729593AbgEEOvS (ORCPT
+        id S1729346AbgEEOwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:51:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54714 "EHLO
+        Tue, 5 May 2020 10:52:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729142AbgEEOvR (ORCPT
+        by vger.kernel.org with ESMTP id S1729142AbgEEOwa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:51:17 -0400
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69943C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:51:17 -0700 (PDT)
-Received: by mail-pg1-x52a.google.com with SMTP id s18so1109988pgl.12
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 07:51:17 -0700 (PDT)
+        Tue, 5 May 2020 10:52:30 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EE5BC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:52:30 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id i19so2194416ioh.12
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 07:52:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=M2EXFFKRgen9dOdoaNmpWiHUyjNR6THbe0hOWRO7mK8=;
-        b=D7fddasAWnayCiXP2vHn30lJiXBOJv2aUiHOdfJde4gO8WX1JRBXjaUsSh2f8mxYla
-         4Vcx3Lj7+2jFSZozWlZUqJ4F/wBJeDLYJdvLg7VanqP07JlBBqtkBCqZZBIGaBx+ozlG
-         1CWshZSJFrUHiODphYd2AfN9t9lUsX3GgK4i4aGC1nbA1xu/8yhuTNkbYYH95w8mrY6G
-         wPAc0l7d1YO0y2OmI1XmbtlFcZaMGMBON7c84uuWbYjK6CgU8A3QCP2bD3UK4x38AqKg
-         OkLqZ+ZQlbycqkgaaImtw/veRODLqWCXNa3yJJ4Mq21juD5AOLy9wI9SpzCSNPT0yRF1
-         TIbQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qIG8VNicf2Kv0fMlZdv+IUFU5X7895FdPSaFu4JhLc8=;
+        b=IdIbvY1EZVldsRVIXSYUy+CDuRtYwezb6HSgPXVT4HRgsTs8yue/cx4pX0po6vBMcO
+         69rktrFKo/h4JIC19PP51c1B7osH9zL0O6CcJileJ/dMJWFY6wRYb4qWEx4wWoXgEuV/
+         CV9XowM9XDISA8KL1jLixhIlZkS24tlsfFnckZj1iHfhjBNgSsSoPCt1wdnbL/npmtv3
+         Djj813ndgWwRv5aMdz/3AvHNq86l6aU6g8yXsJtCT2qXItmwpMs89aAva/4UImMfQ+Tl
+         YV0xgBIB/l8v6nSzZ4irK96iD33RHWFF7Cf7KZz2NHW38U6G23bncGm4q+71zJONK+AL
+         HcMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=M2EXFFKRgen9dOdoaNmpWiHUyjNR6THbe0hOWRO7mK8=;
-        b=rrLxEvCYliyDUi/I4n0corDa4xGmaPp7fEvybjgqjRAzttxoL7y0OSm4dbLy3yk7rQ
-         verfk/WzP06kRWDtcloDWjxcZ0Qd5caHOfBd11Yoog5yQS350Ox3mzIZLu/OUqTQt7nR
-         wmwFOvHcFev2/YXEiTYAS/QQsPGXbc8YWwplYM30sLHvnKW2Rj/0ZnFDgarZFntGUG8C
-         M9MIsOy5UCFl947E8s4GW5ShnAa+2A4tVEvRnf+45KcJGi/s+9V6tYDqASPLK8nap6nR
-         3csnmqYC+6j4fPn32IDsdwUGrZemg3u9yH92kdWrq5MMYiidfr1LkAJv67LCW3JCbpAB
-         cdtQ==
-X-Gm-Message-State: AGi0Pua5ETW//5vt38yWZFbfnBVqdbC9etOThh9JAO3p1tlpMeIMF0zp
-        BnvAUfKAzOx/uvPFnWjYa+QndiEo05rlFw==
-X-Google-Smtp-Source: APiQypLWT/eT6bBlOmzsdnLhfcWjUIOGYmmUvs4tqBFlqETjzRpH8Cy+o7M1d/EQm2xTC6ZHMmnHZw==
-X-Received: by 2002:a63:da10:: with SMTP id c16mr3216084pgh.208.1588690276578;
-        Tue, 05 May 2020 07:51:16 -0700 (PDT)
-Received: from [192.168.1.7] ([120.244.110.63])
-        by smtp.gmail.com with ESMTPSA id x185sm2293389pfx.155.2020.05.05.07.51.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2020 07:51:15 -0700 (PDT)
-Subject: Re: [v2] fs: jfs: fix a possible data race in metapage_writepage()
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>,
-        jfs-discussion@lists.sourceforge.net
-Cc:     Dave Kleikamp <shaggy@kernel.org>, linux-kernel@vger.kernel.org
-References: <20200505135313.28793-1-baijiaju1990@gmail.com>
- <d3e126df-e7f6-00bd-aa3c-ea39fcd1582e@web.de>
- <05f9211d-6f57-b613-b584-a6d84b163645@gmail.com>
- <074b3682-054a-d2ec-8142-1d87e1e97ed6@web.de>
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-Message-ID: <10f050ee-1b73-d015-ab57-fa0a3b59577b@gmail.com>
-Date:   Tue, 5 May 2020 22:50:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qIG8VNicf2Kv0fMlZdv+IUFU5X7895FdPSaFu4JhLc8=;
+        b=Bwu2lz+E665JtSwgmGDr+KhR7h1MHMvG0gcBhRaQJKiSWLKSOXAst4HZbJHm/rqQHC
+         U9p0utEgZt5Lddglx+MFHFyQ0zbYWRqC/f1lJk0IxfTJPHvClE91BL2s7BjbHWJ+Wldx
+         3ycrpYY4qypevzbftsg9YzEJtge9IH/E/QKYQM5dKVjA9Ds0JRIo69GSPcSCWdxyGyzl
+         C11rWP2oDTN8eAhnzJVbqdjNo+dMNfq0AqC3FqmKE8ZfOJET+Y2E/hRkFO4zrgEJiWia
+         YKcCnNCZmWWfbPVlCR0//hk0JA+ipwm67qGtPbvX+uZ5/vTqy+QO4cBkoV3pHAa+vY3q
+         zUUg==
+X-Gm-Message-State: AGi0PuaiE696FA2LNh0QsLwRrVdJX9D3DqO21cre6cIKTaivABXC2+ln
+        t1uLP/S/lmR4SUWjCj3qeJ2Ib9I6WueU1o94e8rPlw==
+X-Google-Smtp-Source: APiQypK3s1ouG++CpfGxs1aiCBj+RgR3gBIhFZuKEIP/wFZnmiQcs7FD+RwsSDREk4fXZJx7+eOC9MfluRtssX9drd8=
+X-Received: by 2002:a6b:ea16:: with SMTP id m22mr3838198ioc.73.1588690349601;
+ Tue, 05 May 2020 07:52:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <074b3682-054a-d2ec-8142-1d87e1e97ed6@web.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200505133642.4756-1-leo.yan@linaro.org>
+In-Reply-To: <20200505133642.4756-1-leo.yan@linaro.org>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Tue, 5 May 2020 08:52:18 -0600
+Message-ID: <CANLsYkwfiQjYCq1htu8ry02zhFXB5S9Hk0W39aRpUz+W3gUvig@mail.gmail.com>
+Subject: Re: [PATCH] perf cs-etm: Move defined of traceid_list
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tor Jeremiassen <tor@ti.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 5 May 2020 at 07:37, Leo Yan <leo.yan@linaro.org> wrote:
+>
+> The variable 'traceid_list' is defined in the header file cs-etm.h,
+> if multiple C files include cs-etm.h the compiler might complaint for
+> multiple definition of 'traceid_list'.
+>
+> To fix multiple definition error, move the definition of 'traceid_list'
+> into cs-etm.c.
+>
+> Fixes: cd8bfd8c973e ("perf tools: Add processing of coresight metadata")
+> Reported-by: Thomas Backlund <tmb@mageia.org>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> Reviewed-by: Mike Leach <mike.leach@linaro.org>
+> Tested-by: Mike Leach <mike.leach@linaro.org>
+> Tested-by: Thomas Backlund <tmb@mageia.org>
+> ---
+>  tools/perf/util/cs-etm.c | 3 +++
+>  tools/perf/util/cs-etm.h | 3 ---
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 62d2f9b9ce1b..381d9708e9bd 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -94,6 +94,9 @@ struct cs_etm_queue {
+>         struct cs_etm_traceid_queue **traceid_queues;
+>  };
+>
+> +/* RB tree for quick conversion between traceID and metadata pointers */
+> +static struct intlist *traceid_list;
+> +
+>  static int cs_etm__update_queues(struct cs_etm_auxtrace *etm);
+>  static int cs_etm__process_queues(struct cs_etm_auxtrace *etm);
+>  static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
+> diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
+> index 650ecc2a6349..4ad925d6d799 100644
+> --- a/tools/perf/util/cs-etm.h
+> +++ b/tools/perf/util/cs-etm.h
+> @@ -114,9 +114,6 @@ enum cs_etm_isa {
+>         CS_ETM_ISA_T32,
+>  };
+>
+> -/* RB tree for quick conversion between traceID and metadata pointers */
+> -struct intlist *traceid_list;
+> -
 
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-On 2020/5/5 22:32, Markus Elfring wrote:
->>>> This data race is found by our concurrency fuzzer.
->>> * How do you think about to replace the word “is” by “was”?
->> Okay.
-> Can such a positive feedback influence the change descriptions
-> for any of your other patches?
-
-Okay, sure, thanks for the advice.
-I will resend my patches for jfs.
-
-
-Best wishes,
-Jia-Ju Bai
+>  struct cs_etm_queue;
+>
+>  struct cs_etm_packet {
+> --
+> 2.17.1
+>
