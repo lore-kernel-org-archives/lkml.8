@@ -2,128 +2,125 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D728DC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF4CC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5B492084D
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:54:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="aUUbOoS2"
+	by mail.kernel.org (Postfix) with ESMTP id B731A206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:56:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728846AbgEELyk (ORCPT
+        id S1728848AbgEEL4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 07:54:40 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:11182 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbgEELyj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 07:54:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1588679679; x=1620215679;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=8BQjmnGt09a7PAHU18wEkeIfDAmDAJHpQTHJEnn6w0k=;
-  b=aUUbOoS2RtAtpHXKclGfaQLW6yeqezbmLc+xAOZADImRYqhuXlfysdcB
-   DbKzin9MwuUY68ikfclv0PQHuf9nT7iXe8hGrqJPtTQiou6LarrqFPTh8
-   7TpMroLAXhXLwllHhN0h78QiX22+f8v324m//4UsmIMjXt2GQVjjgjRci
-   g=;
-IronPort-SDR: FZlmZwqxqqUZrb6JmIrTHUBiXbJoSIHpzmQ1GRvTLuYiD3jqOlzFxcoLjShd7Mzo8yVjiLfolf
- NMGkI93GDOTw==
-X-IronPort-AV: E=Sophos;i="5.73,354,1583193600"; 
-   d="scan'208";a="28942070"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-69849ee2.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 05 May 2020 11:54:25 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-69849ee2.us-west-2.amazon.com (Postfix) with ESMTPS id A54A5A22CE;
-        Tue,  5 May 2020 11:54:24 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 5 May 2020 11:54:24 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.204) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 5 May 2020 11:54:18 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     SeongJae Park <sjpark@amazon.com>
-CC:     <davem@davemloft.net>, <viro@zeniv.linux.org.uk>,
-        <kuba@kernel.org>, <gregkh@linuxfoundation.org>,
-        <edumazet@google.com>, <sj38.park@gmail.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>, <snu@amazon.com>,
-        <amit@kernel.org>, <stable@vger.kernel.org>
-Subject: Re: [PATCH net v2 0/2] Revert the 'socket_alloc' life cycle change
-Date:   Tue, 5 May 2020 13:54:02 +0200
-Message-ID: <20200505115402.25768-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200505081035.7436-1-sjpark@amazon.com> (raw)
+        Tue, 5 May 2020 07:56:07 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3802 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728705AbgEEL4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 07:56:06 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id CED93E741FB0B5C9C388;
+        Tue,  5 May 2020 19:56:03 +0800 (CST)
+Received: from DESKTOP-C3MD9UG.china.huawei.com (10.166.215.55) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 5 May 2020 19:55:56 +0800
+From:   Zhen Lei <thunder.leizhen@huawei.com>
+To:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
+        "Sergey Senozhatsky" <sergey.senozhatsky.work@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>, Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        dm-devel <dm-devel@redhat.com>, Song Liu <song@kernel.org>,
+        linux-raid <linux-raid@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH 2/4] mm/swap: use SECTORS_PER_PAGE_SHIFT to clean up code
+Date:   Tue, 5 May 2020 19:55:41 +0800
+Message-ID: <20200505115543.1660-3-thunder.leizhen@huawei.com>
+X-Mailer: git-send-email 2.26.0.windows.1
+In-Reply-To: <20200505115543.1660-1-thunder.leizhen@huawei.com>
+References: <20200505115543.1660-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.204]
-X-ClientProxiedBy: EX13D06UWC004.ant.amazon.com (10.43.162.97) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.166.215.55]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CC-ing stable@vger.kernel.org and adding some more explanations.
+1. Replace "PAGE_SHIFT - 9" with SECTORS_PER_PAGE_SHIFT
 
-On Tue, 5 May 2020 10:10:33 +0200 SeongJae Park <sjpark@amazon.com> wrote:
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+---
+ mm/page_io.c  |  4 ++--
+ mm/swapfile.c | 12 ++++++------
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-> From: SeongJae Park <sjpark@amazon.de>
-> 
-> The commit 6d7855c54e1e ("sockfs: switch to ->free_inode()") made the
-> deallocation of 'socket_alloc' to be done asynchronously using RCU, as
-> same to 'sock.wq'.  And the following commit 333f7909a857 ("coallocate
-> socket_sq with socket itself") made those to have same life cycle.
-> 
-> The changes made the code much more simple, but also made 'socket_alloc'
-> live longer than before.  For the reason, user programs intensively
-> repeating allocations and deallocations of sockets could cause memory
-> pressure on recent kernels.
+diff --git a/mm/page_io.c b/mm/page_io.c
+index b1d4f4558e6b..51f25238fd9a 100644
+--- a/mm/page_io.c
++++ b/mm/page_io.c
+@@ -38,7 +38,7 @@ static struct bio *get_swap_bio(gfp_t gfp_flags,
+ 
+ 		bio->bi_iter.bi_sector = map_swap_page(page, &bdev);
+ 		bio_set_dev(bio, bdev);
+-		bio->bi_iter.bi_sector <<= PAGE_SHIFT - 9;
++		bio->bi_iter.bi_sector <<= SECTORS_PER_PAGE_SHIFT;
+ 		bio->bi_end_io = end_io;
+ 
+ 		bio_add_page(bio, page, PAGE_SIZE * hpage_nr_pages(page), 0);
+@@ -266,7 +266,7 @@ int swap_writepage(struct page *page, struct writeback_control *wbc)
+ 
+ static sector_t swap_page_sector(struct page *page)
+ {
+-	return (sector_t)__page_file_index(page) << (PAGE_SHIFT - 9);
++	return (sector_t)__page_file_index(page) << SECTORS_PER_PAGE_SHIFT;
+ }
+ 
+ static inline void count_swpout_vm_event(struct page *page)
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 5871a2aa86a5..0871023c0166 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -177,8 +177,8 @@ static int discard_swap(struct swap_info_struct *si)
+ 
+ 	/* Do not discard the swap header page! */
+ 	se = first_se(si);
+-	start_block = (se->start_block + 1) << (PAGE_SHIFT - 9);
+-	nr_blocks = ((sector_t)se->nr_pages - 1) << (PAGE_SHIFT - 9);
++	start_block = (se->start_block + 1) << SECTORS_PER_PAGE_SHIFT;
++	nr_blocks = ((sector_t)se->nr_pages - 1) << SECTORS_PER_PAGE_SHIFT;
+ 	if (nr_blocks) {
+ 		err = blkdev_issue_discard(si->bdev, start_block,
+ 				nr_blocks, GFP_KERNEL, 0);
+@@ -188,8 +188,8 @@ static int discard_swap(struct swap_info_struct *si)
+ 	}
+ 
+ 	for (se = next_se(se); se; se = next_se(se)) {
+-		start_block = se->start_block << (PAGE_SHIFT - 9);
+-		nr_blocks = (sector_t)se->nr_pages << (PAGE_SHIFT - 9);
++		start_block = se->start_block << SECTORS_PER_PAGE_SHIFT;
++		nr_blocks = (sector_t)se->nr_pages << SECTORS_PER_PAGE_SHIFT;
+ 
+ 		err = blkdev_issue_discard(si->bdev, start_block,
+ 				nr_blocks, GFP_KERNEL, 0);
+@@ -240,8 +240,8 @@ static void discard_swap_cluster(struct swap_info_struct *si,
+ 		start_page += nr_blocks;
+ 		nr_pages -= nr_blocks;
+ 
+-		start_block <<= PAGE_SHIFT - 9;
+-		nr_blocks <<= PAGE_SHIFT - 9;
++		start_block <<= SECTORS_PER_PAGE_SHIFT;
++		nr_blocks <<= SECTORS_PER_PAGE_SHIFT;
+ 		if (blkdev_issue_discard(si->bdev, start_block,
+ 					nr_blocks, GFP_NOIO, 0))
+ 			break;
+-- 
+2.26.0.106.g9fadedd
 
-I found this problem on a production virtual machine utilizing 4GB memory while
-running lebench[1].  The 'poll big' test of lebench opens 1000 sockets, polls
-and closes those.  This test is repeated 10,000 times.  Therefore it should
-consume only 1000 'socket_alloc' objects at once.  As size of socket_alloc is
-about 800 Bytes, it's only 800 KiB.  However, on the recent kernels, it could
-consume up to 10,000,000 objects (about 8 GiB).  On the test machine, I
-confirmed it consuming about 4GB of the system memory and results in OOM.
 
-[1] https://github.com/LinuxPerfStudy/LEBench
-
-> 
-> To avoid the problem, this commit reverts the changes.
-
-I also tried to make fixup rather than reverts, but I couldn't easily find
-simple fixup.  As the commits 6d7855c54e1e and 333f7909a857 were for code
-refactoring rather than performance optimization, I thought introducing complex
-fixup for this problem would make no sense.  Meanwhile, the memory pressure
-regression could affect real machines.  To this end, I decided to quickly
-revert the commits first and consider better refactoring later.
-
-
-Thanks,
-SeongJae Park
-
-> 
-> SeongJae Park (2):
->   Revert "coallocate socket_wq with socket itself"
->   Revert "sockfs: switch to ->free_inode()"
-> 
->  drivers/net/tap.c      |  5 +++--
->  drivers/net/tun.c      |  8 +++++---
->  include/linux/if_tap.h |  1 +
->  include/linux/net.h    |  4 ++--
->  include/net/sock.h     |  4 ++--
->  net/core/sock.c        |  2 +-
->  net/socket.c           | 23 ++++++++++++++++-------
->  7 files changed, 30 insertions(+), 17 deletions(-)
-> 
-> -- 
-> 2.17.1
