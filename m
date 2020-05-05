@@ -2,35 +2,35 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C20FFC47256
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0844DC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA54F206CC
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D56B6206CC
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:35:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbgEEGfY (ORCPT
+        id S1728217AbgEEGfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 02:35:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33396 "EHLO
+        Tue, 5 May 2020 02:35:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728056AbgEEGfW (ORCPT
+        by vger.kernel.org with ESMTP id S1725320AbgEEGfV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 02:35:22 -0400
+        Tue, 5 May 2020 02:35:21 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA25DC061A0F
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 23:35:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA025C061A0F
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 23:35:20 -0700 (PDT)
 Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1jVrAe-0003lS-02; Tue, 05 May 2020 08:35:12 +0200
+        id 1jVrAe-0003kw-01; Tue, 05 May 2020 08:35:12 +0200
 Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1jVrAb-0001Zl-4v; Tue, 05 May 2020 08:35:09 +0200
+        id 1jVrAa-0001QN-BM; Tue, 05 May 2020 08:35:08 +0200
 From:   Oleksij Rempel <o.rempel@pengutronix.de>
 To:     Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>,
@@ -45,12 +45,10 @@ Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
         Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
         Marek Vasut <marex@denx.de>,
         Christian Herber <christian.herber@nxp.com>
-Subject: [PATCH net-next v6 2/2] net: phy: tja11xx: add support for master-slave configuration
-Date:   Tue,  5 May 2020 08:35:06 +0200
-Message-Id: <20200505063506.3848-3-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v6 0/2] provide support for PHY master/slave configuration
+Date:   Tue,  5 May 2020 08:35:04 +0200
+Message-Id: <20200505063506.3848-1-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200505063506.3848-1-o.rempel@pengutronix.de>
-References: <20200505063506.3848-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
@@ -62,116 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The TJA11xx PHYs have a vendor specific Master/Slave configuration bit,
-which is not compatible with IEEE 803.2-2018 spec for 100Base-T1
-devices. So, provide a custom config_ange call back to solve this
-problem.
+changes v6:
+- use NL_SET_ERR_MSG_ATTR in ethnl_update_linkmodes
+- add sanity checks in the ioctl interface
+- use bool for ethnl_validate_master_slave_cfg()
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- drivers/net/phy/nxp-tja11xx.c | 43 +++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+changes v5:
+- set MASTER_SLAVE_CFG_UNSUPPORTED as default value
+- send a netlink error message on validation error
+- more code fixes
 
-diff --git a/drivers/net/phy/nxp-tja11xx.c b/drivers/net/phy/nxp-tja11xx.c
-index cc766b2d4136e..ca5f9d4dc57ed 100644
---- a/drivers/net/phy/nxp-tja11xx.c
-+++ b/drivers/net/phy/nxp-tja11xx.c
-@@ -30,6 +30,7 @@
- #define MII_ECTRL_WAKE_REQUEST		BIT(0)
- 
- #define MII_CFG1			18
-+#define MII_CFG1_MASTER_SLAVE		BIT(15)
- #define MII_CFG1_AUTO_OP		BIT(14)
- #define MII_CFG1_SLEEP_CONFIRM		BIT(6)
- #define MII_CFG1_LED_MODE_MASK		GENMASK(5, 4)
-@@ -167,6 +168,32 @@ static int tja11xx_soft_reset(struct phy_device *phydev)
- 	return genphy_soft_reset(phydev);
- }
- 
-+static int tja11xx_config_aneg(struct phy_device *phydev)
-+{
-+	u16 ctl = 0;
-+	int ret;
-+
-+	switch (phydev->master_slave_set) {
-+	case MASTER_SLAVE_CFG_MASTER_FORCE:
-+		ctl |= MII_CFG1_MASTER_SLAVE;
-+		break;
-+	case MASTER_SLAVE_CFG_SLAVE_FORCE:
-+		break;
-+	case MASTER_SLAVE_CFG_UNKNOWN:
-+	case MASTER_SLAVE_CFG_UNSUPPORTED:
-+		return 0;
-+	default:
-+		phydev_warn(phydev, "Unsupported Master/Slave mode\n");
-+		return -ENOTSUPP;
-+	}
-+
-+	ret = phy_modify_changed(phydev, MII_CFG1, MII_CFG1_MASTER_SLAVE, ctl);
-+	if (ret < 0)
-+		return ret;
-+
-+	return __genphy_config_aneg(phydev, ret);
-+}
-+
- static int tja11xx_config_init(struct phy_device *phydev)
- {
- 	int ret;
-@@ -224,10 +251,22 @@ static int tja11xx_read_status(struct phy_device *phydev)
- {
- 	int ret;
- 
-+	phydev->master_slave_get = MASTER_SLAVE_CFG_UNKNOWN;
-+	phydev->master_slave_state = MASTER_SLAVE_STATE_UNSUPPORTED;
-+
- 	ret = genphy_update_link(phydev);
- 	if (ret)
- 		return ret;
- 
-+	ret = phy_read(phydev, MII_CFG1);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (ret & MII_CFG1_MASTER_SLAVE)
-+		phydev->master_slave_get = MASTER_SLAVE_CFG_MASTER_FORCE;
-+	else
-+		phydev->master_slave_get = MASTER_SLAVE_CFG_SLAVE_FORCE;
-+
- 	if (phydev->link) {
- 		ret = phy_read(phydev, MII_COMMSTAT);
- 		if (ret < 0)
-@@ -504,6 +543,7 @@ static struct phy_driver tja11xx_driver[] = {
- 		.features       = PHY_BASIC_T1_FEATURES,
- 		.probe		= tja11xx_probe,
- 		.soft_reset	= tja11xx_soft_reset,
-+		.config_aneg	= tja11xx_config_aneg,
- 		.config_init	= tja11xx_config_init,
- 		.read_status	= tja11xx_read_status,
- 		.suspend	= genphy_suspend,
-@@ -519,6 +559,7 @@ static struct phy_driver tja11xx_driver[] = {
- 		.features       = PHY_BASIC_T1_FEATURES,
- 		.probe		= tja11xx_probe,
- 		.soft_reset	= tja11xx_soft_reset,
-+		.config_aneg	= tja11xx_config_aneg,
- 		.config_init	= tja11xx_config_init,
- 		.read_status	= tja11xx_read_status,
- 		.suspend	= genphy_suspend,
-@@ -533,6 +574,7 @@ static struct phy_driver tja11xx_driver[] = {
- 		.features       = PHY_BASIC_T1_FEATURES,
- 		.probe		= tja1102_p0_probe,
- 		.soft_reset	= tja11xx_soft_reset,
-+		.config_aneg	= tja11xx_config_aneg,
- 		.config_init	= tja11xx_config_init,
- 		.read_status	= tja11xx_read_status,
- 		.match_phy_device = tja1102_p0_match_phy_device,
-@@ -551,6 +593,7 @@ static struct phy_driver tja11xx_driver[] = {
- 		.features       = PHY_BASIC_T1_FEATURES,
- 		/* currently no probe for Port 1 is need */
- 		.soft_reset	= tja11xx_soft_reset,
-+		.config_aneg	= tja11xx_config_aneg,
- 		.config_init	= tja11xx_config_init,
- 		.read_status	= tja11xx_read_status,
- 		.match_phy_device = tja1102_p1_match_phy_device,
+changes v4:
+- rename port_mode to master_slave 
+- move validation code to net/ethtool/linkmodes.c 
+- add UNSUPPORTED state and avoid sending unsupported fields
+- more formatting and naming fixes
+- tja11xx: support only force mode
+- tja11xx: mark state as unsupported
+
+changes v3:
+- provide separate field for config and state.
+- make state rejected on set
+- add validation
+
+changes v2:
+- change names. Use MASTER_PREFERRED instead of MULTIPORT
+- configure master/slave only on request. Default configuration can be
+  provided by PHY or eeprom
+- status and configuration to the user space.
+
+Oleksij Rempel (2):
+  ethtool: provide UAPI for PHY master/slave configuration.
+  net: phy: tja11xx: add support for master-slave configuration
+
+ Documentation/networking/ethtool-netlink.rst | 35 ++++----
+ drivers/net/phy/nxp-tja11xx.c                | 43 +++++++++
+ drivers/net/phy/phy.c                        |  4 +-
+ drivers/net/phy/phy_device.c                 | 94 ++++++++++++++++++++
+ include/linux/phy.h                          |  3 +
+ include/uapi/linux/ethtool.h                 | 16 +++-
+ include/uapi/linux/ethtool_netlink.h         |  2 +
+ include/uapi/linux/mii.h                     |  2 +
+ net/ethtool/ioctl.c                          |  6 ++
+ net/ethtool/linkmodes.c                      | 53 +++++++++++
+ 10 files changed, 240 insertions(+), 18 deletions(-)
+
 -- 
 2.26.2
 
