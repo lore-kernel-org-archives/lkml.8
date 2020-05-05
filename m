@@ -2,46 +2,123 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C2FC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB811C47259
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C485206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9831B2078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:02:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aEqHDp0U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729949AbgEEQCV (ORCPT
+        id S1730069AbgEEQC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:02:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45822 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728804AbgEEQCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:02:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 8B845AEFD;
-        Tue,  5 May 2020 16:02:21 +0000 (UTC)
-Subject: Re: [PATCH] xenbus: avoid stack overflow warning
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Yan Yankovskyi <yyankovskyi@gmail.com>, Wei Liu <wl@xen.org>,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-References: <20200505141546.824573-1-arnd@arndb.de>
- <30d49e6d-570b-f6fd-3a6f-628abcc8b127@suse.com>
- <CAK8P3a0mWH=Zcq180+cTRMpqOkGt05xDP1+kCTP6yc9grAg2VQ@mail.gmail.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <48893239-dde9-4e94-040d-859f4348816d@suse.com>
-Date:   Tue, 5 May 2020 18:02:18 +0200
+        Tue, 5 May 2020 12:02:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728804AbgEEQCz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 12:02:55 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78D43C061A0F;
+        Tue,  5 May 2020 09:02:55 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t7so1006880plr.0;
+        Tue, 05 May 2020 09:02:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=N+YUTI7kOf2qhR4xFZ0QEHQPKdNPj721DoA6J7/jULY=;
+        b=aEqHDp0Uj9ViBb1+RNxl/U+aObzf1UaGGNuOzF1pV7LO33feLMQkLqUK+QaLQGWlZA
+         KZBC4hK7XwJwj7cJWQY+b6iD3BWdm29n7XNmcVqgfzr5azdpuy/Tyk/V3Qdm5jgBqbhz
+         BEGlIPBaZVoDoED6PeXuhMV8cDYxo/6xM8Wg90/dQQdkK7MkDR98xpP/3mmC1fzCGjTV
+         cTr4ZffwXcIz4URNlEqftBdQ1IrbygVA/wl8xcLS/s43XflWQ9rvXb0rYlpmYhZ420I5
+         HZWD+wWQz2xdmhXqQ7YVDG3ku367FyI59Ygfv7B7Cso//fWMoHz/beLAGyNc/MNyL6o9
+         +W8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=N+YUTI7kOf2qhR4xFZ0QEHQPKdNPj721DoA6J7/jULY=;
+        b=sLf7npAuWYRIBmJaZQYbI/WnnArSTpuQMWCUe9Y0q4nPHzHB/ZXJ+S4Nn1HfWf9iiA
+         91K9cmz/oI1gNfslOmjOsZl15DJoBFTbUKsGrXTlVOk5GCqr4kysNZlHMPiIAVnV4WFu
+         pYhlZSbFvnIugkEeQrI1XU0xXWGzCDq5bHP2CF4LSRzzEOOH+DXPJbU+Y4okPZYNHSUM
+         jIZZ/4xlCmo9x46HYH6jR+AiFKye29QXX7S20S6ABNb2mmAqZk8ksWZ0iTE/2I7xnVIC
+         Dqogj5loaYdLAiwlMK4wleTPu4pAKP8Yt0cEEX2N2L/wJjv6VQcmY30E6Q8/gMXlTu0G
+         /lgg==
+X-Gm-Message-State: AGi0PuaNTv4xw8+1yAC/eCcy3+HhSknSWvpjtCeIW9/XistjRRq26U4n
+        usr7puBg6DcYURQLjwjC6MxACja+
+X-Google-Smtp-Source: APiQypIUbvGFgrTRgVpAE/zhxsh7+UV8om1lPhtCkgDRyLPjEMFWiRCDgusdese0Rm78iQ7PeQJ6iQ==
+X-Received: by 2002:a17:90a:6c96:: with SMTP id y22mr3888940pjj.74.1588694574801;
+        Tue, 05 May 2020 09:02:54 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id x7sm2377281pfj.122.2020.05.05.09.02.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2020 09:02:54 -0700 (PDT)
+Subject: Re: [PATCH 4.19 00/37] 4.19.121-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200504165448.264746645@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <7712f0f0-d51d-1f0a-419a-4b0ee19358cd@roeck-us.net>
+Date:   Tue, 5 May 2020 09:02:52 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a0mWH=Zcq180+cTRMpqOkGt05xDP1+kCTP6yc9grAg2VQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200504165448.264746645@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -49,38 +126,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05.05.20 17:01, Arnd Bergmann wrote:
-> On Tue, May 5, 2020 at 4:34 PM Jürgen Groß <jgross@suse.com> wrote:
->> On 05.05.20 16:15, Arnd Bergmann wrote:
->>> The __xenbus_map_ring() function has two large arrays, 'map' and
->>> 'unmap' on its stack. When clang decides to inline it into its caller,
->>> xenbus_map_ring_valloc_hvm(), the total stack usage exceeds the warning
->>> limit for stack size on 32-bit architectures.
->>>
->>> drivers/xen/xenbus/xenbus_client.c:592:12: error: stack frame size of 1104 bytes in function 'xenbus_map_ring_valloc_hvm' [-Werror,-Wframe-larger-than=]
->>>
->>> As far as I can tell, other compilers don't inline it here, so we get
->>> no warning, but the stack usage is actually the same. It is possible
->>> for both arrays to use the same location on the stack, but the compiler
->>> cannot prove that this is safe because they get passed to external
->>> functions that may end up using them until they go out of scope.
->>>
->>> Move the two arrays into separate basic blocks to limit the scope
->>> and force them to occupy less stack in total, regardless of the
->>> inlining decision.
->>
->> Why don't you put both arrays into a union?
+On 5/4/20 10:57 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.121 release.
+> There are 37 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> I considered that as well, and don't really mind either way. I think it does
-> get a bit ugly whatever we do. If you prefer the union, I can respin the
-> patch that way.
+> Responses should be made by Wed, 06 May 2020 16:52:55 +0000.
+> Anything received after that time might be too late.
+> 
 
-Hmm, thinking more about it I think the real clean solution would be to
-extend struct map_ring_valloc_hvm to cover the pv case, too, to add the
-map and unmap arrays (possibly as a union) to it and to allocate it
-dynamically instead of having it on the stack.
+Build results:
+	total: 155 pass: 155 fail: 0
+Qemu test results:
+	total: 417 pass: 417 fail: 0
 
-Would you be fine doing this?
-
-
-Juergen
+Guenter
