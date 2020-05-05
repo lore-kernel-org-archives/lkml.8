@@ -2,142 +2,289 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 104A7C47258
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A88A3C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDD2220707
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D54A206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:42:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kVBOX4+i"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FNVV24fC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgEEAkc (ORCPT
+        id S1726963AbgEEAmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 20:40:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbgEEAkb (ORCPT
+        Mon, 4 May 2020 20:42:35 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45525 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726531AbgEEAme (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 20:40:31 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81F18C061A0E;
-        Mon,  4 May 2020 17:40:31 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id w6so710055ilg.1;
-        Mon, 04 May 2020 17:40:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=F2N0yw9CtjKdQBdxtCgQ9EQo5C05PfhCk6kaMbyQP8g=;
-        b=kVBOX4+ioERAfmKI4jXBXAKq+7hDz0X9NL48BCmJIx9i9P+DaYsb9uEFk13CIwzZ86
-         kDS3FNP05eHe+dYITHg7QdO42ehdtvjC5lUVoDV5TQ0wsibMC5z945sANd72P4ovftdC
-         4l9P/1COaITBdAJEE8nj4u2SDM+PkNM4pgWEgNL/6k/6mvmyeHzw4G3V5yJwSsAIWQ2q
-         ECmzZeZeQcANmXX11Ea40DHvhaOc0P5eNvVhEtApZauetHRjdKYGSFYh3amkSNdMO2Wg
-         GmPNgsPuxZGiAesYP0UzOnNhcrb+D7ghov2qE06ifkBDPSkmfkiE9dSm1k0kbj98eksx
-         zfXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=F2N0yw9CtjKdQBdxtCgQ9EQo5C05PfhCk6kaMbyQP8g=;
-        b=KhuTywGfT7oTml+BPoPXoZBz9ddfo/mUnjPcGEVaf1Xspz46rZLzMf3m4H60hw0CDK
-         Z2kzqNDXSzuzfRvBIkg2eTNJjYb1T0H8Q0ynPhB715tlAozzUZz43V/gXrgww11bhLFS
-         askgvL1+9V4ku8VkVzCBvtBU7eOelSzlVQ/Vv0dcwJkfH1JefLurlUeOekHVDS2yZMF4
-         vlAPJMfTT2ktUgoQ1SVPO6+q+ecU4aRwg7710mQUAdIcZInI6wJuEhSfL7E1uwz/zP8X
-         hE9oxmS5wvMUfbdg9LuekksHcvdNoqfOpy6tjhb0l+OCZ2li06gdfPU04YOJlCZmqsmF
-         FVfA==
-X-Gm-Message-State: AGi0PuYDja0uAstSCgmoB70JzgqlxKMvYPKQeV4uc0FeTTQq+QdcqFy0
-        eFUk8G62EFdNfCCd5wkO3vWU2vRbXLjY7fyMzy0=
-X-Google-Smtp-Source: APiQypJcRt7XOS9secWqyeSwojx7NwEL4cUU4fk7R9HGOpe0IpLTzcwsqduPPi7rRjwPMMg6mVWmD+Z7Bl6O7EZZMRI=
-X-Received: by 2002:a92:3dd5:: with SMTP id k82mr1178579ilf.237.1588639230609;
- Mon, 04 May 2020 17:40:30 -0700 (PDT)
+        Mon, 4 May 2020 20:42:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588639351;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sSGS49q3WN+9F6RhzT1InoLhEYrc670AilMF8wVnH2Q=;
+        b=FNVV24fCK2UhpMuQMZ22J5IeitI3S7/u6pa/Zraemq5RMsk3Nf0308HopEgci1ifgg+dLt
+        P62uY235r8A0n13HiavHqB1oZdB8QNBS+wXu7iOPIZy0FJjIED7I2PD+dTvhXyEiK4eNtO
+        UbOMe1MxxdKrSPxFYxW5iaqduDhrHqU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-471-Ay-GMssaMRmBGeJIydfmkg-1; Mon, 04 May 2020 20:42:27 -0400
+X-MC-Unique: Ay-GMssaMRmBGeJIydfmkg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E7F621005510;
+        Tue,  5 May 2020 00:42:25 +0000 (UTC)
+Received: from localhost.localdomain (vpn2-54-132.bne.redhat.com [10.64.54.132])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5DC802C268;
+        Tue,  5 May 2020 00:42:21 +0000 (UTC)
+Reply-To: Gavin Shan <gshan@redhat.com>
+Subject: Re: [PATCH RFC 6/6] KVM: x86: Switch KVM guest to using interrupts
+ for page ready APF delivery
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, x86@kernel.org,
+        kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>
+References: <20200429093634.1514902-1-vkuznets@redhat.com>
+ <20200429093634.1514902-7-vkuznets@redhat.com>
+From:   Gavin Shan <gshan@redhat.com>
+Message-ID: <ee7cb56d-537d-e300-03fe-853f6fc5d56d@redhat.com>
+Date:   Tue, 5 May 2020 10:42:18 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-References: <20200430201125.532129-1-daniel.m.jordan@oracle.com>
- <20200430201125.532129-7-daniel.m.jordan@oracle.com> <CAKgT0Uf7e5514SOi8dmkB5oXUK9bwqD_z-5KJ_F3MUn3CAQyPQ@mail.gmail.com>
- <3C3C62BE-6363-41C3-834C-C3124EB3FFAB@joshtriplett.org>
-In-Reply-To: <3C3C62BE-6363-41C3-834C-C3124EB3FFAB@joshtriplett.org>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Mon, 4 May 2020 17:40:19 -0700
-Message-ID: <CAKgT0UdBv-Wj98P2wMFGDSihPLKWFsqpu77ZmO+eA51uteZ-Ag@mail.gmail.com>
-Subject: Re: [PATCH 6/7] mm: parallelize deferred_init_memmap()
-To:     Josh Triplett <josh@joshtriplett.org>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Michal Hocko <mhocko@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Tejun Heo <tj@kernel.org>, Zi Yan <ziy@nvidia.com>,
-        linux-crypto@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200429093634.1514902-7-vkuznets@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 4, 2020 at 4:44 PM Josh Triplett <josh@joshtriplett.org> wrote:
->
-> On May 4, 2020 3:33:58 PM PDT, Alexander Duyck <alexander.duyck@gmail.com=
-> wrote:
-> >On Thu, Apr 30, 2020 at 1:12 PM Daniel Jordan
-> ><daniel.m.jordan@oracle.com> wrote:
-> >>         /*
-> >> -        * Initialize and free pages in MAX_ORDER sized increments so
-> >> -        * that we can avoid introducing any issues with the buddy
-> >> -        * allocator.
-> >> +        * More CPUs always led to greater speedups on tested
-> >systems, up to
-> >> +        * all the nodes' CPUs.  Use all since the system is
-> >otherwise idle now.
-> >>          */
-> >
-> >I would be curious about your data. That isn't what I have seen in the
-> >past. Typically only up to about 8 or 10 CPUs gives you any benefit,
-> >beyond that I was usually cache/memory bandwidth bound.
->
-> I've found pretty much linear performance up to memory bandwidth, and on =
-the systems I was testing, I didn't saturate memory bandwidth until about t=
-he full number of physical cores. From number of cores up to number of thre=
-ads, the performance stayed about flat; it didn't get any better or worse.
+Hi Vitaly,
 
-That doesn't sound right though based on the numbers you provided. The
-system you had was 192GB spread over 2 nodes with 48thread/24core per
-node, correct? Your numbers went from ~290ms to ~28ms so a 10x
-decrease, that doesn't sound linear when you spread the work over 24
-cores to get there. I agree that the numbers largely stay flat once
-you hit the peak, I have seen similar behavior when I was working on
-the deferred init code previously. One concern I have though is that
-we may end up seeing better performance with a subset of cores instead
-of running all of the cores/threads, especially if features such as
-turbo come into play. In addition we are talking x86 only so far. I
-would be interested in seeing if this has benefits or not for other
-architectures.
+On 4/29/20 7:36 PM, Vitaly Kuznetsov wrote:
+> KVM now supports using interrupt for type 2 APF event delivery (page ready
+> notifications). Switch KVM guests to using it when the feature is present.
+> 
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>   arch/x86/entry/entry_32.S          |  5 ++++
+>   arch/x86/entry/entry_64.S          |  5 ++++
+>   arch/x86/include/asm/hardirq.h     |  3 +++
+>   arch/x86/include/asm/irq_vectors.h |  6 ++++-
+>   arch/x86/include/asm/kvm_para.h    |  6 +++++
+>   arch/x86/kernel/irq.c              |  9 +++++++
+>   arch/x86/kernel/kvm.c              | 42 ++++++++++++++++++++++++++++++
+>   7 files changed, 75 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+> index b67bae7091d7..d574dadcb2a1 100644
+> --- a/arch/x86/entry/entry_32.S
+> +++ b/arch/x86/entry/entry_32.S
+> @@ -1475,6 +1475,11 @@ BUILD_INTERRUPT3(hv_stimer0_callback_vector, HYPERV_STIMER0_VECTOR,
+>   
+>   #endif /* CONFIG_HYPERV */
+>   
+> +#ifdef CONFIG_KVM_GUEST
+> +BUILD_INTERRUPT3(kvm_async_pf_vector, KVM_ASYNC_PF_VECTOR,
+> +		 kvm_async_pf_intr)
+> +#endif
+> +
+>   SYM_CODE_START(page_fault)
+>   	ASM_CLAC
+>   	pushl	$do_page_fault
+> diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+> index 0e9504fabe52..6f127c1a6547 100644
+> --- a/arch/x86/entry/entry_64.S
+> +++ b/arch/x86/entry/entry_64.S
+> @@ -1190,6 +1190,11 @@ apicinterrupt3 HYPERVISOR_CALLBACK_VECTOR \
+>   	acrn_hv_callback_vector acrn_hv_vector_handler
+>   #endif
+>   
+> +#ifdef CONFIG_KVM_GUEST
+> +apicinterrupt3 KVM_ASYNC_PF_VECTOR \
+> +	kvm_async_pf_vector kvm_async_pf_intr
+> +#endif
+> +
+>   idtentry debug			do_debug		has_error_code=0	paranoid=1 shift_ist=IST_INDEX_DB ist_offset=DB_STACK_OFFSET
+>   idtentry int3			do_int3			has_error_code=0	create_gap=1
+>   idtentry stack_segment		do_stack_segment	has_error_code=1
+> diff --git a/arch/x86/include/asm/hardirq.h b/arch/x86/include/asm/hardirq.h
+> index 07533795b8d2..be0fbb15ad7f 100644
+> --- a/arch/x86/include/asm/hardirq.h
+> +++ b/arch/x86/include/asm/hardirq.h
+> @@ -44,6 +44,9 @@ typedef struct {
+>   	unsigned int irq_hv_reenlightenment_count;
+>   	unsigned int hyperv_stimer0_count;
+>   #endif
+> +#ifdef CONFIG_KVM_GUEST
+> +	unsigned int kvm_async_pf_pageready_count;
+> +#endif
+>   } ____cacheline_aligned irq_cpustat_t;
+>   
+>   DECLARE_PER_CPU_SHARED_ALIGNED(irq_cpustat_t, irq_stat);
+> diff --git a/arch/x86/include/asm/irq_vectors.h b/arch/x86/include/asm/irq_vectors.h
+> index 889f8b1b5b7f..8879a9ecd908 100644
+> --- a/arch/x86/include/asm/irq_vectors.h
+> +++ b/arch/x86/include/asm/irq_vectors.h
+> @@ -104,7 +104,11 @@
+>   #define HYPERV_STIMER0_VECTOR		0xed
+>   #endif
+>   
+> -#define LOCAL_TIMER_VECTOR		0xec
+> +#ifdef CONFIG_KVM_GUEST
+> +#define KVM_ASYNC_PF_VECTOR		0xec
+> +#endif
+> +
+> +#define LOCAL_TIMER_VECTOR		0xeb
+>   
+>   #define NR_VECTORS			 256
+>   
+> diff --git a/arch/x86/include/asm/kvm_para.h b/arch/x86/include/asm/kvm_para.h
+> index 9b4df6eaa11a..fde4f21607f9 100644
+> --- a/arch/x86/include/asm/kvm_para.h
+> +++ b/arch/x86/include/asm/kvm_para.h
+> @@ -4,6 +4,7 @@
+>   
+>   #include <asm/processor.h>
+>   #include <asm/alternative.h>
+> +#include <linux/interrupt.h>
+>   #include <uapi/asm/kvm_para.h>
+>   
+>   extern void kvmclock_init(void);
+> @@ -93,6 +94,11 @@ void kvm_async_pf_task_wake(u32 token);
+>   u32 kvm_read_and_reset_pf_reason(void);
+>   extern void kvm_disable_steal_time(void);
+>   void do_async_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address);
+> +extern void kvm_async_pf_vector(void);
+> +#ifdef CONFIG_TRACING
+> +#define trace_kvm_async_pf_vector kvm_async_pf_vector
+> +#endif
+> +__visible void __irq_entry kvm_async_pf_intr(struct pt_regs *regs);
+>   
+>   #ifdef CONFIG_PARAVIRT_SPINLOCKS
+>   void __init kvm_spinlock_init(void);
+> diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
+> index c7965ff429c5..a4c2f25ad74d 100644
+> --- a/arch/x86/kernel/irq.c
+> +++ b/arch/x86/kernel/irq.c
+> @@ -159,6 +159,15 @@ int arch_show_interrupts(struct seq_file *p, int prec)
+>   				   irq_stats(j)->hyperv_stimer0_count);
+>   		seq_puts(p, "  Hyper-V stimer0 interrupts\n");
+>   	}
+> +#endif
+> +#ifdef CONFIG_KVM_GUEST
+> +	if (test_bit(KVM_ASYNC_PF_VECTOR, system_vectors)) {
+> +		seq_printf(p, "%*s: ", prec, "APF");
+> +		for_each_online_cpu(j)
+> +			seq_printf(p, "%10u ",
+> +				   irq_stats(j)->kvm_async_pf_pageready_count);
+> +		seq_puts(p, "  KVM async PF page ready interrupts\n");
+> +	}
+>   #endif
+>   	seq_printf(p, "%*s: %10u\n", prec, "ERR", atomic_read(&irq_err_count));
+>   #if defined(CONFIG_X86_IO_APIC)
+> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> index 6efe0410fb72..1c00c7ba01ff 100644
+> --- a/arch/x86/kernel/kvm.c
+> +++ b/arch/x86/kernel/kvm.c
+> @@ -259,9 +259,39 @@ do_async_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned lon
+>   		rcu_irq_exit();
+>   		break;
+>   	}
+> +
+> +	if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF_INT))
+> +		wrmsrl(MSR_KVM_ASYNC_PF_ACK, 1);
+>   }
+>   NOKPROBE_SYMBOL(do_async_page_fault);
+>   
+> +__visible void __irq_entry kvm_async_pf_intr(struct pt_regs *regs)
+> +{
+> +	u32 token, reason;
+> +
+> +	entering_ack_irq();
+> +
+> +	inc_irq_stat(kvm_async_pf_pageready_count);
+> +
+> +	if (__this_cpu_read(apf_reason.enabled)) {
+> +		reason = __this_cpu_read(apf_reason.reason);
+> +		if (reason == KVM_PV_REASON_PAGE_READY) {
+> +			token = __this_cpu_read(apf_reason.token);
+> +			/*
+> +			 * Make sure we read 'token' before we reset
+> +			 * 'reason' or it can get lost.
+> +			 */
+> +			mb();
+> +			__this_cpu_write(apf_reason.reason, 0);
+> +			kvm_async_pf_task_wake(token);
+> +		}
+> +	}
+> +
+> +	wrmsrl(MSR_KVM_ASYNC_PF_ACK, 1);
+> +
+> +	exiting_irq();
+> +}
+In theory, it's possible the interrupt happens in the context of the
+suspended process. With the call to kvm_async_pf_task_wake(), the
+suspended process tries to wake up itself, but it seems it's not
+working because of aacedf26fb760 ("sched/core: Optimize try_to_wake_up()
+for local wakeups").
 
-Also what is the penalty that is being paid in order to break up the
-work before-hand and set it up for the parallel work? I would be
-interested in seeing what the cost is on a system with fewer cores per
-node, maybe even down to 1. That would tell us how much additional
-overhead is being added to set things up to run in parallel. If I get
-a chance tomorrow I might try applying the patches and doing some
-testing myself.
+It's one of issue I observed when enabling async page fault for arm64,
+but not sure it's valid to x86.
 
-Thanks.
+Thanks,
+Gavin
 
-- Alex
+>   static void __init paravirt_ops_setup(void)
+>   {
+>   	pv_info.name = "KVM";
+> @@ -316,10 +346,17 @@ static void kvm_guest_cpu_init(void)
+>   		if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF_VMEXIT))
+>   			pa |= KVM_ASYNC_PF_DELIVERY_AS_PF_VMEXIT;
+>   
+> +		if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF_INT))
+> +			pa |= KVM_ASYNC_PF_DELIVERY_AS_INT;
+> +
+>   		wrmsrl(MSR_KVM_ASYNC_PF_EN, pa);
+>   		__this_cpu_write(apf_reason.enabled, 1);
+>   		printk(KERN_INFO"KVM setup async PF for cpu %d\n",
+>   		       smp_processor_id());
+> +
+> +		if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF_INT))
+> +			wrmsrl(MSR_KVM_ASYNC_PF2, KVM_ASYNC_PF2_ENABLED |
+> +			       KVM_ASYNC_PF_VECTOR);
+>   	}
+>   
+>   	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI)) {
+> @@ -649,6 +686,11 @@ static void __init kvm_guest_init(void)
+>   	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
+>   		apic_set_eoi_write(kvm_guest_apic_eoi_write);
+>   
+> +	if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF_INT)) {
+> +		pr_info("KVM using interrupt for async PF page-ready\n");
+> +		alloc_intr_gate(KVM_ASYNC_PF_VECTOR, kvm_async_pf_vector);
+> +	}
+> +
+>   #ifdef CONFIG_SMP
+>   	smp_ops.smp_prepare_cpus = kvm_smp_prepare_cpus;
+>   	smp_ops.smp_prepare_boot_cpu = kvm_smp_prepare_boot_cpu;
+> 
+
