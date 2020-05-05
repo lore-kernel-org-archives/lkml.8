@@ -2,111 +2,136 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE532C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 482CBC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 832CD2073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:13:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588688001;
-	bh=R+70PJ9vucGn241Y2Cqa7rgwicdjK9Vs/+6SMmkQ9rA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O7pR3vtz+Vn5tHWAd2mPHgeIYTw7LioFXGwYN4uoyDr+zPqxW2q+cuh3iG2Zb4fG/
-	 6jm4KZpqcX0Rsl5D+L0n3x6wChhaZMEe5dbVfT8EX7VVRiNWg84Mc0JQ3Vv18JzF4g
-	 dDjrEkgvyVfU43aRVuL1U7PCbyImB255FNy0CENc=
+	by mail.kernel.org (Postfix) with ESMTP id 226FB2078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:13:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YkZw8YQX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729308AbgEEONV (ORCPT
+        id S1729322AbgEEONg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:13:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33604 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729292AbgEEONU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:13:20 -0400
-Received: from localhost (p54B335A1.dip0.t-ipconnect.de [84.179.53.161])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D8D420735;
-        Tue,  5 May 2020 14:13:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588688000;
-        bh=R+70PJ9vucGn241Y2Cqa7rgwicdjK9Vs/+6SMmkQ9rA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FLcOyPVXax4walL2ONgDDGm3H9TAh64RPOsmQNypepd9HqsoSBONz+ZzlsIDQ5vD5
-         YHgBECF+mKdfrretnacbW9YNrIHo84HsBZXGZITataDIOYcqrhrgueLdEdcIRKvjT6
-         Bgo9XVwRjgwp7Tv78kNCktWKQfVJYUTzZCZbKjmw=
-Date:   Tue, 5 May 2020 16:13:16 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
-Cc:     Thor Thayer <thor.thayer@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] i2c: drivers: Remove superfluous error message
-Message-ID: <20200505141316.GB2468@ninjato>
-References: <20200503120847.13528-1-aishwaryarj100@gmail.com>
- <20200504114408.9128-1-aishwaryarj100@gmail.com>
+        Tue, 5 May 2020 10:13:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48478 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729146AbgEEONf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 10:13:35 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B1E4C061A0F;
+        Tue,  5 May 2020 07:13:35 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id mq3so1186874pjb.1;
+        Tue, 05 May 2020 07:13:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vUI7H3zEQ9H8QIwCQ24EAq2pWsz3laTp86kjJwGCy2A=;
+        b=YkZw8YQXDccsDbBS4C0O5LMJGsSXIuT1ovPSHZeibMB4ZhJbetT5karBIQDGZyMu0k
+         IBdRJNOVOa1GNEbhoAuCCrvOK95e4ExfkjwNMMqw8yyFSpe6/HZclQjj/o/y/DEjyXQf
+         D8bD98dH4TU8N9iILFu6DwhyrLrlFYj24qKgldff3S35uVjPxaC8qpPHMbhOElowls51
+         NA+CUw+XfSpefYj0MsjjxqdD/1An+fcrvFfnPRdSVMHOAFB4Q7IZukrTfCHjNl6LuXlX
+         SkcXFYf+6CloWECw34gLTvnp/U4XgJ2AEyem4IDuABqVEJH0tksWHndPxMQsIdIQQlgL
+         50zQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vUI7H3zEQ9H8QIwCQ24EAq2pWsz3laTp86kjJwGCy2A=;
+        b=T/TvscqHdAIbMR/l9sfaTewI3wA0V+khggHHL3YFmdAyCvd1e1LkHhj33RmC7V3klf
+         YQyheZtE8PimCDkc/EdiMIdMFIMgDt8TxXDOGyG/Yr5tRNQotUji9SMxzDKF3l1Az5Rx
+         Dy/Q2oF8vl9xexPWXa97iw6ZWr69rwrKXmE/ri5Yplg97c38W4Te9VQjuNBmYAydYWJn
+         h6xm12uxfEfVlUWrZfSqwgwu68h/KLC0SvGgtyVGugdUCf1PhK0qW2NRbh04q31tNuz+
+         9s0XkPbNT0RjVEeXVEx7Q3yN5Z8q3sdz2Y2SP1Fak01Ety715SdKOEyQ9Ln5+T+RVvrF
+         N9Hg==
+X-Gm-Message-State: AGi0PuZYt4ZOwzb4DO6RhM+acBpokbvxX//GHQ0qfPzJHk7+6gVgz3lR
+        DXSSWABZRi1x0PfVLxbe27g8OPLfqSVqDIYdUZk=
+X-Google-Smtp-Source: APiQypKwqHcpUrfpqYd5uUdTyj3td5+1Wg/esi83wvGDAF8yQlrbm2K4xPgTkvNlPBQj0TfYH1WbhCd8ME96fqQEWY0=
+X-Received: by 2002:a17:90a:37a3:: with SMTP id v32mr3401271pjb.2.1588688015023;
+ Tue, 05 May 2020 07:13:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jq0ap7NbKX2Kqbes"
-Content-Disposition: inline
-In-Reply-To: <20200504114408.9128-1-aishwaryarj100@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200505132905.10276-1-calvin.johnson@oss.nxp.com> <20200505132905.10276-4-calvin.johnson@oss.nxp.com>
+In-Reply-To: <20200505132905.10276-4-calvin.johnson@oss.nxp.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 5 May 2020 17:13:28 +0300
+Message-ID: <CAHp75Ve4RMhfkNjO9NtNpjT9uRi3p1BAifCGDrB2fhAyBA8YtQ@mail.gmail.com>
+Subject: Re: [net-next PATCH v3 3/5] phylink: Introduce phylink_fwnode_phy_connect()
+To:     Calvin Johnson <calvin.johnson@oss.nxp.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        linux.cj@gmail.com, Jeremy Linton <jeremy.linton@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        netdev <netdev@vger.kernel.org>, Marcin Wojtas <mw@semihalf.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 5, 2020 at 4:29 PM Calvin Johnson
+<calvin.johnson@oss.nxp.com> wrote:
+>
+> Define phylink_fwnode_phy_connect() to connect phy specified by
+> a fwnode to a phylink instance.
 
---jq0ap7NbKX2Kqbes
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+...
 
-On Mon, May 04, 2020 at 05:14:06PM +0530, Aishwarya Ramakrishnan wrote:
-> The function platform_get_irq can log an error by itself.
-> This omit a redundant message for exception handling in the
-> calling function.
->=20
-> Suggested by Coccinelle.
->=20
-> Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+> +       int ret = 0;
 
-Sorry, I forgot that these are already fixed with
-e42688ed5cf5936fb55c78cc365dbe0944af7c63 in i2c/for-next.
+Redundant assignment.
 
+> +       if ((IS_ERR(phy_fwnode)) && pl->cfg_link_an_mode == MLO_AN_PHY)
 
---jq0ap7NbKX2Kqbes
-Content-Type: application/pgp-signature; name="signature.asc"
+No Lisp, please.
 
------BEGIN PGP SIGNATURE-----
+> +               return -ENODEV;
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6xdHgACgkQFA3kzBSg
-KbbwRA/+LGyt1I9I1ywJp0ulKpglf4waJU/2Fay5kC0dKFkixtjarMsChvsIcpJJ
-eJlTxUY6krLo7eUh223GmX5Y313bXl5uFIvEC4HCEbcxSVLOL81jvdVkDZcVG9u3
-CMBCXMCchPdGZnbPL7Yzvpshuj87+UtHNnS/a293LwO3exDR5eVZEGi/aICrRum/
-uf273Fx8g0pzh5h7J5erA4dgbrxP20PNt4BYUlfe9sdWft7yW1OS/kd3gaGxBnQp
-LCTk0q9f85vYTzrUX1bk2jvpls0n1kAnD5F1+73kvFq+DsnZD0t1C3FDv/GpRcc3
-TuC+rl4mcAVIoOtErmfT38xRW4PIAu0qzWJDNbnZrd12fZKH/kw20L7Yq5nmIjvi
-mXSpg+JKua+e69VuEsxSTuoDxxEVyWTo/yKc1rbDJNWKwngiR8bldUZDQDtOoSqA
-aWskPYf2kqarsWXYGeaXB8n4CXjD6fyufGjr+SsOD7tcd9ULOOzhfN6GUENw1t9L
-tI03I7owU1+hShjx/pBDpFlqzJQExHLFjMgoMD9aB5XxA7nY82ny4bcpjdy34qqW
-GF88XiojrHftpqtvEfq/qc22l89lvm9Yts8sNg0Axc+jp2/jiKLgY2rgfnZJ+e0r
-MdN0pEl1GRcD3e4WK+16qHy0BViPHmBqCreipeNddURCEXYezmo=
-=Q1Hw
------END PGP SIGNATURE-----
+...
 
---jq0ap7NbKX2Kqbes--
+> +       phy_dev = fwnode_phy_find_device(phy_fwnode);
+> +       fwnode_handle_put(phy_fwnode);
+
+Hmm... Isn't it racy? I mean if you put fwnode here the phy_dev may
+already be gone before you call phy_attach_direct, right?
+
+> +       if (!phy_dev)
+> +               return -ENODEV;
+> +
+> +       ret = phy_attach_direct(pl->netdev, phy_dev, flags,
+> +                               pl->link_interface);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = phylink_bringup_phy(pl, phy_dev, pl->link_config.interface);
+> +       if (ret)
+> +               phy_detach(phy_dev);
+> +
+> +       return ret;
+
+-- 
+With Best Regards,
+Andy Shevchenko
