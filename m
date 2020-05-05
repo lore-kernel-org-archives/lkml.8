@@ -2,93 +2,74 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25407C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5134BC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A04CF2078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C54E2064A
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:13:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="H307mnwY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729949AbgEEPM7 (ORCPT
+        id S1729726AbgEEPNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:12:59 -0400
-Received: from sauhun.de ([88.99.104.3]:34206 "EHLO pokefinder.org"
+        Tue, 5 May 2020 11:13:51 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:42868 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729332AbgEEPM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:12:58 -0400
-Received: from localhost (p54B335A1.dip0.t-ipconnect.de [84.179.53.161])
-        by pokefinder.org (Postfix) with ESMTPSA id 7F2872C0892;
-        Tue,  5 May 2020 17:12:56 +0200 (CEST)
-Date:   Tue, 5 May 2020 17:12:56 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc:     linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        id S1729301AbgEEPNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 11:13:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=/qO1lATGS9lr30c0r7Ux+K/eDJUDQRQ9Je/mQTvrCAk=; b=H307mnwYEziysPatqs3YdxPWW2
+        ImRftMGlfNCsgQbI9G7oIZPhMxECq7g/9i7HogcGZjNvfbhpA8pTAWu8kucvPedlhHKE0HE2IaCGq
+        jquU1hSMTmVUDsKx5R4c0kTqFWduOU8wXzc87ikdifv/HGNE/th3d25gLdw/mofw1YP0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jVzGU-000x3L-7B; Tue, 05 May 2020 17:13:46 +0200
+Date:   Tue, 5 May 2020 17:13:46 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+List-Id: <soc.lore.kernel.org>
+Cc:     soc@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Kevin Hilman <khilman@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        ludovic.desroches@microchip.com, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, kamel.bouhara@bootlin.com,
-        linux@armlinux.org.uk, linus.walleij@linaro.org, alan@softiron.com
-Subject: Re: [RFC PATCH] i2c: at91: Fix pinmux after devm_gpiod_get() for bus
- recovery
-Message-ID: <20200505151256.GF2468@ninjato>
-References: <20200415070643.23663-1-codrin.ciubotariu@microchip.com>
+        Jason Cooper <jason@lakedaemon.net>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v2 11/15] ARM: mvebu: Drop unneeded select of HAVE_SMP
+Message-ID: <20200505151346.GB224913@lunn.ch>
+References: <20200505150722.1575-1-geert+renesas@glider.be>
+ <20200505150722.1575-12-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="twz1s1Hj1O0rHoT0"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200415070643.23663-1-codrin.ciubotariu@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200505150722.1575-12-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 05, 2020 at 05:07:18PM +0200, Geert Uytterhoeven wrote:
+> Support for Marvell Armada 375, 380, 385, and 39x SoCs depends on
+> ARCH_MULTI_V7.
+> As the latter selects HAVE_SMP, there is no need for MACH_ARMADA_375,
+> MACH_ARMADA_38X, and MACH_ARMADA_39X to select HAVE_SMP.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Gregory Clement <gregory.clement@bootlin.com>
+> Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
 
---twz1s1Hj1O0rHoT0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-On Wed, Apr 15, 2020 at 10:06:43AM +0300, Codrin Ciubotariu wrote:
-> devm_gpiod_get() usually calls gpio_request_enable() for non-strict pinmux
-> drivers. These puts the pins in GPIO mode, whithout notifying the pinctrl
-> driver. At this point, the I2C bus no longer owns the pins. To mux the
-> pins back to the I2C bus, we use the pinctrl driver to change the state
-> of the pins to GPIO, before using devm_gpiod_get(). After the pins are
-> received as GPIOs, we switch theer pinctrl state back to the default
-> one,
->=20
-> Fixes: d3d3fdcc4c90 ("i2c: at91: implement i2c bus recovery")
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-
-Applied to for-current, thanks!
-
-This will do for 5.7. For 5.8 or 5.9, I can imagine to take the two
-pinctrl_state pointers into bus_recovery_info and handle all this in the
-core. I will try this later this week if noone is super-eager to try it
-out before.
-
-
---twz1s1Hj1O0rHoT0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6xgnQACgkQFA3kzBSg
-KbbY+xAArfL/iEHhieAsZoajJ8HCWqBjKMu523a4uPpmSCk4jP9UIqOQqtUac4tK
-wUCJg3LXJvbT8pfvfxAcSTHYjgVIvh0br6N44vO5zWz6uTlyEH0LXrg8NP9qrECb
-B5HHfsFxVWhTMuFTgcqRHel1qHzhd3rWCebhfdiFrBcHpM6xmeB9VlYyXoq4/qx5
-p3/5LwgKJW4xo4AT2J3PCfX5h/zVdIzeWW9qPX+xyUtCJ0MpCxsVxStpUXwudIH2
-rJahIU7t0NL0MtKLa4Waf8PjQULKShZc1vrQ/QQhi50kLicGkPwQSJnkFe+lLnjS
-aMGEKiJajucG8tz1nqsg8A2CsXpUC70f7bwQP7kGlUVPqEPp13soeor9qoKIClfX
-LleANdq18XOlIIRKGtcLKvg/abHXk1/OQ9efNx8Aa4G30im3rozCwbR+Fpn+mLZC
-oANKeX7VJ+DmuYqiWaD23Iz/j3M2skgBmUeuzAMYvA+OX6lERmWWnBqEMAqb0si2
-nngZTQcBg1s8HEbeDMkH7N9zu47bEdXAARoFE9ys16uZK3A7RRNnv46NSjZAph1b
-uepFxAB8QGm9a+sLjLY4Ym/G6vBAv9CRh5FCLDxZ1ODzYZfEiPtt3umtz7DFfGKp
-/9wolNpCGqYXQHYwgmakJq5f9MEASvhl4GNag81Qi1AHgRJeDqs=
-=kQ/H
------END PGP SIGNATURE-----
-
---twz1s1Hj1O0rHoT0--
+    Andrew
