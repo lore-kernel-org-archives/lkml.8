@@ -2,154 +2,273 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1575C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B22C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFF512068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7EFA206CC
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:57:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588704983;
-	bh=PdQpdNxjqmIC/2YRAqZNGAKFlA5zkFAy+Pvp2pJ381g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VvrpPn7V3a5/aC4iJVqjCf1jfQR7+d8B30Z8cR5fCdRJhsZycNp+00kf5qIvaRX32
-	 323fm8c8op9xTfBMpAV40bhaSPdJfsh9jGclnDdA7cjZp176miK6jjQCt8Pd1mTEHz
-	 E0ZQr0OExeN5EAq+jWIvZD9DXvod7gi6xQn4N8LM=
+	s=default; t=1588705055;
+	bh=CUEgPSVa4DXdIPpiKgaeLdjZmNy2Cg8TyiCnz2GYh9Q=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=PxpergH6FKEXNfdWrY2mRvqm9zbnZUAI44egWOd5lrS/fMnQD2jsSBTYc3bEs/mTE
+	 VFfhk4HSvnfSoxL/wrQkf6XXX6B4E5molrUFVlUEVVI9KaY2VdPoPSonv1sS8SVa8r
+	 wg8g/owOAIRN3UEZaQHxAx8wF/QTqJTKVqGyYd4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728356AbgEES4W (ORCPT
+        id S1728807AbgEES5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 14:56:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36724 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbgEES4W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 14:56:22 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DA73C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 11:56:20 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id d16so2662460edv.8
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 11:56:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0aeZoygCkgdrdhCxkXT0t0qKXTgK7qHp5yzHDFCrrt4=;
-        b=OrJoG2wV8NG38EDX42NRpQ3EMDSZgAZf0hVOcarbH8A4++ycqW8Y9x/9hb4ZNBZlqN
-         dBkmuhTl6HbYw63JIBeijQn6SIb61l3l6ZRUEMNPIwYceF2Qq58dZcj35hiyFqu2rx7R
-         OenyZW/iEsgRhBpi0c1mDGw5mrptZx2nvvV+A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0aeZoygCkgdrdhCxkXT0t0qKXTgK7qHp5yzHDFCrrt4=;
-        b=OWImQP7AJ4lW9ATQtZsiOuL2jtKy8CRaN563KJW+IvbJkJnuv7cZTs6JGeUo3K5G0D
-         2Ad/3R1EyyTwfWkDqClWFeGDb1S7UxEqOEw9rL5IY5/J10+6A3xLxqzue03rMR7qDvkr
-         bEXGlv9S0Rqt9S/Eq/KZvYsSFZw1GQUEDyg1A7woRPg5iUUtXDbyIeLCF6Ela2XZZBrW
-         /hfNeSkyKuG5fECzzrM54iUeJfLgf169Pegbn6ZbCDX066U4BUR4wHwoM5HXtzvercWv
-         p1vhZYjPZU1d9b+NTQyIKdLRbDFPiWtU5e0lIk4eCrRAZQ7wzmwbkUfqNvbrFl3Cs8Tl
-         EmGA==
-X-Gm-Message-State: AGi0PuZqlCG5p/Dse1jgBQRN/MpN2VVI8qRpcxNn3+dhaJZwc+GQuAzH
-        wQHI0NBInwDiNitGf1DkwAiF9ORdXnA=
-X-Google-Smtp-Source: APiQypJwFG2E5fw75bLhroRoVpYqh9ST6I66f+9lenp//FEM/cBZW3/cpm8/FiDpKsFsqo4lnJ3d+g==
-X-Received: by 2002:a50:a7e4:: with SMTP id i91mr3837997edc.381.1588704978715;
-        Tue, 05 May 2020 11:56:18 -0700 (PDT)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com. [209.85.221.46])
-        by smtp.gmail.com with ESMTPSA id s18sm343391ejm.63.2020.05.05.11.56.18
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2020 11:56:18 -0700 (PDT)
-Received: by mail-wr1-f46.google.com with SMTP id y4so3776511wrm.11
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 11:56:18 -0700 (PDT)
-X-Received: by 2002:ac2:4da1:: with SMTP id h1mr2492888lfe.152.1588704525320;
- Tue, 05 May 2020 11:48:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200501202849.647891881@infradead.org> <20200501202944.593400184@infradead.org>
- <1238787e-d97d-f09b-d76d-2df2dc273f4b@rasmusvillemoes.dk> <20200503125813.GL3762@hirez.programming.kicks-ass.net>
- <a53369f3-665a-af0e-efad-09ae456af847@rasmusvillemoes.dk> <20200504201445.GQ3762@hirez.programming.kicks-ass.net>
- <20200505093625.GE5298@hirez.programming.kicks-ass.net> <CAKwvOd=cP8UCX0+5pZ3AqzvOM8LKzLJJ_heDhrghqJdOnHoGMg@mail.gmail.com>
- <CAKwvOdkL+2Gvn2mkZ8cdHN=1F5cHQHii57ocD0RFeLJxEt=TUQ@mail.gmail.com>
-In-Reply-To: <CAKwvOdkL+2Gvn2mkZ8cdHN=1F5cHQHii57ocD0RFeLJxEt=TUQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 5 May 2020 11:48:29 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiUd=fcpegFLK4VK9iFfrO5BmpGKDszGpuyJkDdz4JaoQ@mail.gmail.com>
-Message-ID: <CAHk-=wiUd=fcpegFLK4VK9iFfrO5BmpGKDszGpuyJkDdz4JaoQ@mail.gmail.com>
-Subject: Re: [PATCH v4 14/18] static_call: Add static_cond_call()
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Tue, 5 May 2020 14:57:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58090 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727083AbgEES5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 14:57:33 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 348C22068E;
+        Tue,  5 May 2020 18:57:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588705052;
+        bh=CUEgPSVa4DXdIPpiKgaeLdjZmNy2Cg8TyiCnz2GYh9Q=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=h1CLZUQlGbOZ0jYvDM5ZOjVJoaiS4aG0no89U2QtIEms596O9/3yRoPxjQLZIcdlg
+         OqE87UtzBd0sk6CMt+kOHbFWjPnmqrNvECeSF/YKjNH+zp4R5YeOo6+jLEe4JIT5vs
+         QPq2CkiKdge89+Cj7ADXKrmZT5lsmYHEcu1/I6WY=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 0C1FE3523039; Tue,  5 May 2020 11:57:32 -0700 (PDT)
+Date:   Tue, 5 May 2020 11:57:32 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Al Viro <viro@ZenIV.linux.org.uk>,
         LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Jason Baron <jbaron@akamai.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Nadav Amit <namit@vmware.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-fsdevel@vger.kernel.org
+Subject: Re: splice() rcu_sched self-detected stall on CPU
+Message-ID: <20200505185732.GP2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <89F418A9-EB20-48CB-9AE0-52C700E6BB74@lca.pw>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <89F418A9-EB20-48CB-9AE0-52C700E6BB74@lca.pw>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 11:28 AM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> Changing
-> void *func = READ_ONCE(name.func); \
-> to
-> void *func = &READ_ONCE(name.func); \
+On Mon, May 04, 2020 at 03:11:09PM -0400, Qian Cai wrote:
+> Running a syscall fuzzer inside a container on linux-next floods systems with soft lockups. It looks like stuck in this line at iov_iter_copy_from_user_atomic(), Thoughts?
+> 
+> iterate_all_kinds(i, bytes, v,
+>                 copyin((p += v.iov_len) - v.iov_len, v.iov_base, v.iov_len),
+>                 memcpy_from_page((p += v.bv_len) - v.bv_len, v.bv_page,
+>                                  v.bv_offset, v.bv_len),
+>                 memcpy((p += v.iov_len) - v.iov_len, v.iov_base, v.iov_len)
+>         )
 
-What? That makes no sense.
+If the size being copied is large enough, something like this might happen.
 
-Yes,
+Is this a CONFIG_PREEMPT=n kernel?  And is the size passed in to
+iov_iter_copy_from_user_atomic() quite large, given that this is generated
+by a fuzzer?  If so, one thing to try is to add cond_resched() in the
+iterate_bvec(), iterate_kvec(), and iterate_iovec() macros.
 
-    void *func = foo;
+							Thanx, Paul
 
-and
-
-   void *func = &foo;
-
-are the same thing, _if_ "foo" is an actual function, because then
-"foo" degrades from a function to a pointer to a function as part of C
-type semantics.
-
-But that's not the case here. READ_ONCE(name.func) isn't a function -
-it's a pointer to a function. So it doesn't degrade to anything at
-all, and adding a '&' in front ot it completely changes the meaning of
-the expression. So now the '&' changes it from "pointer to a function"
-to "pointer to a pointer to a function", and the end result is not the
-same thing any more.
-
-Without the "&" it will call the function "bar" (which is the function
-pointer that was assigned).
-
-With the "&", it will not not call a function at all, it will do a
-call to an address that is actually data of type "struct
-static_call_key".
-
-That's also why the NULL pointer check goes away: now the pointer is a
-pointer to static data, which can never be NULL.
-
-That said, I found it interesting that the volatile read also goes
-away. That struck me as strange. But then I thought about it somem
-more, and realized that the '&' basically just peels off the '*', so
-now there isn't any actual volatile access any more, which is why the
-read went away too.
-
-Anyway, adding that '&' completely changes the meaning of the test.
-
-Your initial reaction that "you can't compile away the read and the
-test of NULL" was correct, I think.
-
-                   Linus
+> [18310.203791][  C118] watchdog: BUG: soft lockup - CPU#118 stuck for 22s! [trinity-c93:129976]
+> [18310.212289][  C118] Modules linked in: nfnetlink cn brd ext4 crc16 mbcache jbd2 loop nls_iso8859_1 nls_cp437 vfat fat kvm_amd kvm ses enclosure dax_pmem irqbypass dax_pmem_core efivars acpi_cpufreq efivarfs ip_tables x_tables xfs sd_mod smartpqi scsi_transport_sas mlx5_core tg3 libphy firmware_class dm_mirror dm_region_hash dm_log dm_mod [last unloaded: binfmt_misc]
+> [18310.245012][  C118] irq event stamp: 0
+> [18310.248847][  C118] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+> [18310.255867][  C118] hardirqs last disabled at (0): [<ffffffffa5ebffef>] copy_process+0x10ff/0x30a0
+> [18310.264889][  C118] softirqs last  enabled at (0): [<ffffffffa5ebffef>] copy_process+0x10ff/0x30a0
+> [18310.273908][  C118] softirqs last disabled at (0): [<0000000000000000>] 0x0
+> [18310.280958][  C118] CPU: 118 PID: 129976 Comm: trinity-c93 Tainted: G           O L    5.7.0-rc4-next-20200504+ #1
+> [18310.291463][  C118] Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+> [18310.300814][  C118] RIP: 0010:iov_iter_copy_from_user_atomic+0x3b4/0x510
+> lib/iov_iter.c:1000 (discriminator 10)
+> [18310.307699][  C118] Code: 92 dd ff 41 8b 47 08 8b 75 c8 8b 55 b8 29 d8 81 e2 ff 0f 00 00 39 f0 0f 47 c6 89 c1 b8 00 10 00 00 29 d0 39 c1 0f 46 c1 85 c0 <74> 55 4c 89 ff 89 45 d0 89 55 a4 e8 2c 93 dd ff 8b 75 b8 48 8b 7d
+> [18310.327430][  C118] RSP: 0018:ffffc900387f7758 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+> [18310.335863][  C118] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+> [18310.343747][  C118] RDX: 0000000000000000 RSI: 0000000000000b99 RDI: ffff888c8f804208
+> [18310.351731][  C118] RBP: ffffc900387f77b8 R08: ffffed1117c50075 R09: ffffed1117c50075
+> [18310.359659][  C118] R10: ffff8888be2803a7 R11: ffffed1117c50074 R12: 0000000000000b99
+> [18310.367624][  C118] R13: ffffc900387f7c30 R14: 0000000000000000 R15: ffff888c8f804200
+> [18310.375601][  C118] FS:  00007f733446f740(0000) GS:ffff889030700000(0000) knlGS:0000000000000000
+> [18310.384444][  C118] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [18310.391026][  C118] CR2: 00007f73340852fc CR3: 00000009e6ea4000 CR4: 00000000003406e0
+> [18310.398951][  C118] Call Trace:
+> [18310.402123][  C118]  generic_perform_write+0x254/0x340
+> [18310.407402][  C118]  ? filemap_check_errors+0xb0/0xb0
+> [18310.412493][  C118]  ? file_update_time+0x18a/0x220
+> [18310.417532][  C118]  ? update_time+0x70/0x70
+> [18310.421836][  C118]  ? __kasan_check_write+0x14/0x20
+> [18310.426928][  C118]  __generic_file_write_iter+0x1a5/0x2a0
+> [18310.432453][  C118]  generic_file_write_iter+0x219/0x2d8
+> [18310.437900][  C118]  ? kernel_text_address+0x59/0xc0
+> [18310.442901][  C118]  ? __generic_file_write_iter+0x2a0/0x2a0
+> [18310.448670][  C118]  do_iter_readv_writev+0x2cb/0x3d0
+> [18310.453757][  C118]  ? default_llseek+0x140/0x140
+> [18310.458571][  C118]  ? create_object+0x4a7/0x540
+> [18310.463224][  C118]  do_iter_write+0xd7/0x2b0
+> [18310.467680][  C118]  vfs_iter_write+0x4e/0x70
+> [18310.472072][  C118]  iter_file_splice_write+0x44a/0x620
+> [18310.477430][  C118]  ? page_cache_pipe_buf_steal+0x130/0x130
+> [18310.483130][  C118]  ? debug_lockdep_rcu_enabled+0x27/0x60
+> [18310.488709][  C118]  ? ___might_sleep+0x178/0x210
+> [18310.493449][  C118]  ? __sb_start_write+0x17b/0x270
+> [18310.498476][  C118]  do_splice+0x5ce/0xa20
+> [18310.502602][  C118]  ? __task_pid_nr_ns+0x5/0x290
+> [18310.507426][  C118]  ? __task_pid_nr_ns+0x145/0x290
+> [18310.512339][  C118]  ? default_file_splice_write+0x40/0x40
+> [18310.517952][  C118]  ? __kasan_check_read+0x11/0x20
+> [18310.522866][  C118]  ? __fget_light+0xba/0x120
+> [18310.527423][  C118]  __x64_sys_splice+0x16e/0x180
+> [18310.532163][  C118]  do_syscall_64+0xcc/0xaf0
+> [18310.536643][  C118]  ? syscall_return_slowpath+0x580/0x580
+> [18310.542168][  C118]  ? lockdep_hardirqs_off+0x1f/0x140
+> [18310.547386][  C118]  ? entry_SYSCALL_64_after_hwframe+0x3e/0xb3
+> [18310.553349][  C118]  ? trace_hardirqs_off_caller+0x3a/0x150
+> [18310.559046][  C118]  ? trace_hardirqs_off_thunk+0x1a/0x1c
+> [18310.564484][  C118]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> [18310.570342][  C118] RIP: 0033:0x7f73345b070d
+> [18310.574647][  C118] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 53 f7 0c 00 f7 d8 64 89 01 48
+> [18310.594352][  C118] RSP: 002b:00007ffe560d32f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000113
+> [18310.602719][  C118] RAX: ffffffffffffffda RBX: 0000000000000113 RCX: 00007f73345b070d
+> [18310.610653][  C118] RDX: 00000000000000a0 RSI: 0000000000000000 RDI: 00000000000000b1
+> [18310.618628][  C118] RBP: 0000000000000113 R08: 0000000000001000 R09: 0000000000000002
+> [18310.626597][  C118] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000002
+> [18310.634477][  C118] R13: 00007f7332cd5058 R14: 00007f733446f6c0 R15: 00007f7332cd5000
+> [18321.464794][  C118] rcu: INFO: rcu_sched self-detected stall on CPU
+> [18321.471149][  C118] rcu: 	118-....: (6410 ticks this GP) idle=496/1/0x4000000000000002 softirq=311635/311638 fqs=2933 
+> [18321.482019][  C118] 	(t=6502 jiffies g=1028673 q=377159)
+> [18321.487375][  C118] NMI backtrace for cpu 118
+> [18321.491767][  C118] CPU: 118 PID: 129976 Comm: trinity-c93 Tainted: G           O L    5.7.0-rc4-next-20200504+ #1
+> [18321.502180][  C118] Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+> [18321.511477][  C118] Call Trace:
+> [18321.514643][  C118]  <IRQ>
+> [18321.517381][  C118]  dump_stack+0xa7/0xea
+> [18321.521423][  C118]  nmi_cpu_backtrace.cold.9+0x2e/0x33
+> [18321.526706][  C118]  ? nmi_cpu_backtrace_handler+0x20/0x20
+> [18321.532230][  C118]  nmi_trigger_cpumask_backtrace+0x19f/0x1b2
+> [18321.538108][  C118]  arch_trigger_cpumask_backtrace+0x19/0x20
+> [18321.543898][  C118]  rcu_dump_cpu_stacks+0x1a3/0x1ee
+> [18321.549030][  C118]  rcu_sched_clock_irq.cold.110+0xe9/0x73a
+> [18321.554731][  C118]  ? trace_hardirqs_off+0x3a/0x150
+> [18321.559858][  C118]  update_process_times+0x28/0x60
+> [18321.564776][  C118]  tick_sched_handle+0x44/0x90
+> [18321.569525][  C118]  tick_sched_timer+0x3c/0xa0
+> [18321.574086][  C118]  __hrtimer_run_queues+0x45d/0x8c0
+> [18321.579251][  C118]  ? tick_sched_do_timer+0x90/0x90
+> [18321.584249][  C118]  ? enqueue_hrtimer+0x240/0x240
+> [18321.589203][  C118]  ? trace_hardirqs_off+0x3a/0x150
+> [18321.594205][  C118]  ? ktime_get_update_offsets_now+0xb7/0x1f0
+> [18321.600167][  C118]  hrtimer_interrupt+0x1aa/0x360
+> [18321.605071][  C118]  ? __kasan_check_read+0x11/0x20
+> [18321.610023][  C118]  smp_apic_timer_interrupt+0x103/0x430
+> [18321.615518][  C118]  apic_timer_interrupt+0xf/0x20
+> [18321.620341][  C118]  </IRQ>
+> [18321.623160][  C118] RIP: 0010:iov_iter_copy_from_user_atomic+0x35d/0x510
+> [18321.629982][  C118] Code: fe ff ff 49 8d 45 18 44 89 65 c8 45 31 f6 48 89 45 a8 8b 45 c8 85 c0 0f 84 0e fe ff ff 48 8b 7d a8 e8 97 93 dd ff 49 8b 4d 18 <44> 89 f0 48 c1 e0 04 48 89 4d d0 48 01 c1 49 89 cf 48 8d 79 0c 48
+> [18321.649567][  C118] RSP: 0018:ffffc900387f7758 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+> [18321.657890][  C118] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff888c8f804200
+> [18321.665906][  C118] RDX: dffffc0000000000 RSI: 0000000000000b99 RDI: ffffc900387f7c48
+> [18321.673789][  C118] RBP: ffffc900387f77b8 R08: ffffed1117c50075 R09: ffffed1117c50075
+> [18321.681753][  C118] R10: ffff8888be2803a7 R11: ffffed1117c50074 R12: 0000000000000b99
+> [18321.689635][  C118] R13: ffffc900387f7c30 R14: 0000000000000000 R15: ffff888c8f804200
+> [18321.697523][  C118]  ? iov_iter_copy_from_user_atomic+0x359/0x510
+> [18321.703660][  C118]  generic_perform_write+0x254/0x340
+> [18321.708920][  C118]  ? filemap_check_errors+0xb0/0xb0
+> [18321.714010][  C118]  ? file_update_time+0x18a/0x220
+> [18321.718944][  C118]  ? update_time+0x70/0x70
+> [18321.723242][  C118]  ? __kasan_check_write+0x14/0x20
+> [18321.728310][  C118]  __generic_file_write_iter+0x1a5/0x2a0
+> [18321.733833][  C118]  generic_file_write_iter+0x219/0x2d8
+> [18321.739236][  C118]  ? kernel_text_address+0x59/0xc0
+> [18321.744237][  C118]  ? __generic_file_write_iter+0x2a0/0x2a0
+> [18321.749937][  C118]  do_iter_readv_writev+0x2cb/0x3d0
+> [18321.755095][  C118]  ? default_llseek+0x140/0x140
+> [18321.759834][  C118]  ? create_object+0x4a7/0x540
+> [18321.764488][  C118]  do_iter_write+0xd7/0x2b0
+> [18321.768878][  C118]  vfs_iter_write+0x4e/0x70
+> [18321.773273][  C118]  iter_file_splice_write+0x44a/0x620
+> [18321.778537][  C118]  ? page_cache_pipe_buf_steal+0x130/0x130
+> [18321.784237][  C118]  ? debug_lockdep_rcu_enabled+0x27/0x60
+> [18321.789760][  C118]  ? ___might_sleep+0x178/0x210
+> [18321.794500][  C118]  ? __sb_start_write+0x17b/0x270
+> [18321.799410][  C118]  do_splice+0x5ce/0xa20
+> [18321.803534][  C118]  ? __task_pid_nr_ns+0x5/0x290
+> [18321.808275][  C118]  ? __task_pid_nr_ns+0x145/0x290
+> [18321.813186][  C118]  ? default_file_splice_write+0x40/0x40
+> [18321.818709][  C118]  ? __kasan_check_read+0x11/0x20
+> [18321.823622][  C118]  ? __fget_light+0xba/0x120
+> [18321.828131][  C118]  __x64_sys_splice+0x16e/0x180
+> [18321.832868][  C118]  do_syscall_64+0xcc/0xaf0
+> [18321.837290][  C118]  ? syscall_return_slowpath+0x580/0x580
+> [18321.842817][  C118]  ? lockdep_hardirqs_off+0x1f/0x140
+> [18321.847991][  C118]  ? entry_SYSCALL_64_after_hwframe+0x3e/0xb3
+> [18321.853952][  C118]  ? trace_hardirqs_off_caller+0x3a/0x150
+> [18321.859565][  C118]  ? trace_hardirqs_off_thunk+0x1a/0x1c
+> [18321.865040][  C118]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> [18321.870867][  C118] RIP: 0033:0x7f73345b070d
+> [18321.875174][  C118] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 53 f7 0c 00 f7 d8 64 89 01 48
+> [18321.894764][  C118] RSP: 002b:00007ffe560d32f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000113
+> [18321.903082][  C118] RAX: ffffffffffffffda RBX: 0000000000000113 RCX: 00007f73345b070d
+> [18321.910963][  C118] RDX: 00000000000000a0 RSI: 0000000000000000 RDI: 00000000000000b1
+> [18321.918845][  C118] RBP: 0000000000000113 R08: 0000000000001000 R09: 0000000000000002
+> [18321.926724][  C118] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000002
+> [18321.934605][  C118] R13: 00007f7332cd5058 R14: 00007f733446f6c0 R15: 00007f7332cd5000
+>  INFO: task trinity-c93:129976 can't die for more than 1725 seconds.
+> [20088.049356][  T794] trinity-c93     R  running task    27728 129976  97040 0x8000000e
+> [20088.057298][  T794] Call Trace:
+> [20088.060541][  T794]  ? __kasan_check_read+0x11/0x20
+> [20088.065459][  T794]  ? activate_page+0x233/0x330
+> [20088.070157][  T794]  ? __kasan_check_read+0x11/0x20
+> [20088.075074][  T794]  ? mark_page_accessed+0x10a/0x5f0
+> [20088.080202][  T794]  ? retint_kernel+0x10/0x10
+> [20088.084681][  T794]  ? lockdep_hardirqs_on+0x16/0x2c0
+> [20088.089772][  T794]  ? retint_kernel+0x10/0x10
+> [20088.094288][  T794]  ? trace_hardirqs_on_caller+0x3a/0x160
+> [20088.099909][  T794]  ? trace_hardirqs_on_thunk+0x1a/0x1c
+> [20088.105306][  T794]  ? irq_exit+0x60/0xf0
+> [20088.109346][  T794]  ? retint_kernel+0x10/0x10
+> [20088.113857][  T794]  ? iov_iter_copy_from_user_atomic+0x359/0x510
+> [20088.120156][  T794]  ? __asan_load8+0x30/0xb0
+> [20088.124602][  T794]  ? iov_iter_copy_from_user_atomic+0x38d/0x510
+> [20088.130850][  T794]  ? generic_perform_write+0x254/0x340
+> [20088.136204][  T794]  ? filemap_check_errors+0xb0/0xb0
+> [20088.141384][  T794]  ? file_update_time+0x18a/0x220
+> [20088.146299][  T794]  ? update_time+0x70/0x70
+> [20088.150633][  T794]  ? __kasan_check_write+0x14/0x20
+> [20088.155637][  T794]  ? __generic_file_write_iter+0x1a5/0x2a0
+> [20088.161371][  T794]  ? generic_file_write_iter+0x219/0x2d8
+> [20088.166902][  T794]  ? kernel_text_address+0x59/0xc0
+> [20088.171936][  T794]  ? __generic_file_write_iter+0x2a0/0x2a0
+> [20088.177638][  T794]  ? do_iter_readv_writev+0x2cb/0x3d0
+> [20088.182931][  T794]  ? default_llseek+0x140/0x140
+> [20088.187672][  T794]  ? create_object+0x4a7/0x540
+> [20088.192350][  T794]  ? do_iter_write+0xd7/0x2b0
+> [20088.196919][  T794]  ? vfs_iter_write+0x4e/0x70
+> [20088.201512][  T794]  ? iter_file_splice_write+0x44a/0x620
+> [20088.206952][  T794]  ? page_cache_pipe_buf_steal+0x130/0x130
+> [20088.212686][  T794]  ? debug_lockdep_rcu_enabled+0x27/0x60
+> [20088.218213][  T794]  ? ___might_sleep+0x178/0x210
+> [20088.223046][  T794]  ? __sb_start_write+0x17b/0x270
+> [20088.227959][  T794]  ? do_splice+0x5ce/0xa20
+> [20088.232290][  T794]  ? __task_pid_nr_ns+0x5/0x290
+> [20088.237028][  T794]  ? __task_pid_nr_ns+0x145/0x290
+> [20088.242054][  T794]  ? default_file_splice_write+0x40/0x40
+> [20088.247579][  T794]  ? __kasan_check_read+0x11/0x20
+> [20088.252564][  T794]  ? __fget_light+0xba/0x120
+> [20088.257041][  T794]  ? __x64_sys_splice+0x16e/0x180
+> [20088.262010][  T794]  ? do_syscall_64+0xcc/0xaf0
+> [20088.266575][  T794]  ? syscall_return_slowpath+0x580/0x580
+> [20088.272144][  T794]  ? lockdep_hardirqs_off+0x1f/0x140
+> [20088.277320][  T794]  ? entry_SYSCALL_64_after_hwframe+0x3e/0xb3
+> [20088.283305][  T794]  ? trace_hardirqs_off_caller+0x3a/0x150
+> [20088.288920][  T794]  ? trace_hardirqs_off_thunk+0x1a/0x1c
+> [20088.294398][  T794]  ? entry_SYSCALL_64_after_hwframe+0x49/0xb3
