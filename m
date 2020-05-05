@@ -2,156 +2,382 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED101C4725C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C3C5C4725A
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA0252085B
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:32:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588692758;
-	bh=NR80z2yPjqgO14WXQRPXI+q6gF+1S53iofV6VuLwBac=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wR5KcpnW1S6CrgSrxLvlcA6C6Eo9Ic5JNt0f4QgwfhwVGlu4dA2+MUIq7xW/+SFf8
-	 SoR198qDSPdMwZlPo+I1PjSfRZCPdE8IJdwlDJUbXiLjN5NkyI8IJK7PcPPLucbnKI
-	 Yfv4MvVSgCwBES/pDd9fRT8SZkru454eQ57Ub0As=
+	by mail.kernel.org (Postfix) with ESMTP id EB8DD2078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:32:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730181AbgEEPci (ORCPT
+        id S1730206AbgEEPcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:32:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32910 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730110AbgEEPc3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:32:29 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 916B92083B;
-        Tue,  5 May 2020 15:32:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588692748;
-        bh=NR80z2yPjqgO14WXQRPXI+q6gF+1S53iofV6VuLwBac=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JkMfcC55zIFvs6+OSV4SiX2FtfTw0QIvi20Axw9EpOzMh5R1ceS8HDj73hIA5jtpR
-         MNC6119kGguNpko2xuC5B4eGdJueQJNXg4VIt8q/vNXhhUSvpm9QSOE9ryaZR63Kq6
-         d3gagdQdwxFajtWcNHeSKNPLpF4ShuOAp2ltZpyM=
-Date:   Tue, 5 May 2020 11:32:27 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Pavel Machek <pavel@denx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stable <stable@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
+        Tue, 5 May 2020 11:32:41 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:47217 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730169AbgEEPcj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 11:32:39 -0400
+X-Originating-IP: 86.202.105.35
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 44261C000B;
+        Tue,  5 May 2020 15:32:31 +0000 (UTC)
+Date:   Tue, 5 May 2020 17:32:31 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Michael Turquette <mturquette@baylibre.com>,
         Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH 4.19 28/37] dmaengine: dmatest: Fix iteration non-stop
- logic
-Message-ID: <20200505153227.GI13035@sasha-vm>
-References: <20200504165448.264746645@linuxfoundation.org>
- <20200504165451.307643203@linuxfoundation.org>
- <20200505123159.GC28722@amd>
- <CAHp75VeM+qwh5rHL7RDdacru0jPSB9me2aTs__jdy749dTKRng@mail.gmail.com>
- <20200505125818.GA31126@amd>
- <CAHp75VcKreeQpjROdL23XGqgVu+F_0eL5DsJ=5APEQUO9V69EQ@mail.gmail.com>
- <20200505133700.GA31753@amd>
- <CAHp75Ve+pzhamZXiKxHF+VD8yfsjRF2coattHyiD+0aa7Fy2DA@mail.gmail.com>
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 2/3] clk: at91: allow setting PCKx parent via DT
+Message-ID: <20200505153231.GT34497@piout.net>
+References: <cover.1588630999.git.mirq-linux@rere.qmqm.pl>
+ <0054532c00163ddf405dad658b32f0d7d97fcc8e.1588630999.git.mirq-linux@rere.qmqm.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHp75Ve+pzhamZXiKxHF+VD8yfsjRF2coattHyiD+0aa7Fy2DA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0054532c00163ddf405dad658b32f0d7d97fcc8e.1588630999.git.mirq-linux@rere.qmqm.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 05:05:37PM +0300, Andy Shevchenko wrote:
->On Tue, May 5, 2020 at 4:37 PM Pavel Machek <pavel@denx.de> wrote:
->> On Tue 2020-05-05 16:19:11, Andy Shevchenko wrote:
->> > On Tue, May 5, 2020 at 3:58 PM Pavel Machek <pavel@denx.de> wrote:
->> > > On Tue 2020-05-05 15:51:16, Andy Shevchenko wrote:
->> > > > On Tue, May 5, 2020 at 3:37 PM Pavel Machek <pavel@denx.de> wrote:
->> > > Yeah, I pointed that out above. Both && and || permit short
->> > > execution. But that does not matter, as neither "params->iterations"
->> > > nor "total_tests >= params->iterations" have side effects.
->> > >
->> > > Where is the runtime difference?
->> >
->> > We have to check *both* conditions. If we don't check iterations, we
->> > just wait indefinitely until somebody tells us to stop.
->> > Everything in the commit message and mentioned there commit IDs which
->> > you may check.
->>
->> No.
->
->Yes. Please, read carefully the commit message (for your convenience I
->emphasized above). I don't want to spend time on this basics stuff
->anymore.
+On 05/05/2020 00:37:56+0200, Michał Mirosław wrote:
+> This exposes PROGx clocks for use in assigned-clocks DeviceTree property
+> for selecting PCKx parent clock.
+> 
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-I'm a bit confused about this too. Maybe it's too early in the morning,
-so I wrote this little test program:
-
-#include <stdio.h>
-#include <stdlib.h>
-
-int main(int argc, char *argv[])
-{
-        int a = atoi(argv[1]);
-        int b = atoi(argv[2]);
-
-        if (!a && !b)
-                printf("A");
-        else
-                printf("B");
-
-        if (!(a || b))
-                printf("A");
-        else
-                printf("B");
-
-        printf("\n");
-
-        return 0;
-}
-
-Andy, could you give an example of two values which will print something
-other than "AA" or "BB"?
-
-Heck, gcc even compiles these two conditions the same way:
-
-        if (!a && !b)
-    11a8:       83 7d f8 00             cmpl   $0x0,-0x8(%rbp)
-    11ac:       75 12                   jne    11c0 <main+0x57>
-    11ae:       83 7d fc 00             cmpl   $0x0,-0x4(%rbp)
-    11b2:       75 0c                   jne    11c0 <main+0x57>
-                printf("A");
-    11b4:       bf 41 00 00 00          mov    $0x41,%edi
-    11b9:       e8 a2 fe ff ff          callq  1060 <putchar@plt>
-    11be:       eb 0a                   jmp    11ca <main+0x61>
-        else
-                printf("B");
-    11c0:       bf 42 00 00 00          mov    $0x42,%edi
-    11c5:       e8 96 fe ff ff          callq  1060 <putchar@plt>
-
-        if (!(a || b))
-    11ca:       83 7d f8 00             cmpl   $0x0,-0x8(%rbp)
-    11ce:       75 12                   jne    11e2 <main+0x79>
-    11d0:       83 7d fc 00             cmpl   $0x0,-0x4(%rbp)
-    11d4:       75 0c                   jne    11e2 <main+0x79>
-                printf("A");
-    11d6:       bf 41 00 00 00          mov    $0x41,%edi
-    11db:       e8 80 fe ff ff          callq  1060 <putchar@plt>
-    11e0:       eb 0a                   jmp    11ec <main+0x83>
-        else
-                printf("B");
-    11e2:       bf 42 00 00 00          mov    $0x42,%edi
-    11e7:       e8 74 fe ff ff          callq  1060 <putchar@plt>
+> ---
+> v2: rebase and update to clk/clk-at91 branch
+> v3: rebase
+> v4: no changes
+> v5: no changes
+> v6: no changes
+> v7: push all pmc_data_free() to first patch (fix a rebase artifact)
+> ---
+>  drivers/clk/at91/at91rm9200.c    |  4 +++-
+>  drivers/clk/at91/at91sam9260.c   |  5 ++++-
+>  drivers/clk/at91/at91sam9g45.c   |  4 +++-
+>  drivers/clk/at91/at91sam9n12.c   |  4 +++-
+>  drivers/clk/at91/at91sam9rl.c    |  4 +++-
+>  drivers/clk/at91/at91sam9x5.c    |  4 +++-
+>  drivers/clk/at91/pmc.c           | 12 ++++++++++--
+>  drivers/clk/at91/pmc.h           |  5 ++++-
+>  drivers/clk/at91/sam9x60.c       |  4 +++-
+>  drivers/clk/at91/sama5d2.c       |  4 +++-
+>  drivers/clk/at91/sama5d3.c       |  4 +++-
+>  drivers/clk/at91/sama5d4.c       |  4 +++-
+>  include/dt-bindings/clock/at91.h |  1 +
+>  13 files changed, 46 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/clk/at91/at91rm9200.c b/drivers/clk/at91/at91rm9200.c
+> index 6f4e1151553d..8da88e9a95d8 100644
+> --- a/drivers/clk/at91/at91rm9200.c
+> +++ b/drivers/clk/at91/at91rm9200.c
+> @@ -100,7 +100,7 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
+>  
+>  	at91rm9200_pmc = pmc_data_allocate(PMC_MAIN + 1,
+>  					    nck(at91rm9200_systemck),
+> -					    nck(at91rm9200_periphck), 0);
+> +					    nck(at91rm9200_periphck), 0, 4);
+>  	if (!at91rm9200_pmc)
+>  		return;
+>  
+> @@ -159,6 +159,8 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
+>  						    &at91rm9200_programmable_layout);
+>  		if (IS_ERR(hw))
+>  			goto err_free;
+> +
+> +		at91rm9200_pmc->pchws[i] = hw;
+>  	}
+>  
+>  	for (i = 0; i < ARRAY_SIZE(at91rm9200_systemck); i++) {
+> diff --git a/drivers/clk/at91/at91sam9260.c b/drivers/clk/at91/at91sam9260.c
+> index 946f03a09858..7e5ff252fffc 100644
+> --- a/drivers/clk/at91/at91sam9260.c
+> +++ b/drivers/clk/at91/at91sam9260.c
+> @@ -354,7 +354,8 @@ static void __init at91sam926x_pmc_setup(struct device_node *np,
+>  
+>  	at91sam9260_pmc = pmc_data_allocate(PMC_MAIN + 1,
+>  					    ndck(data->sck, data->num_sck),
+> -					    ndck(data->pck, data->num_pck), 0);
+> +					    ndck(data->pck, data->num_pck),
+> +					    0, data->num_progck);
+>  	if (!at91sam9260_pmc)
+>  		return;
+>  
+> @@ -434,6 +435,8 @@ static void __init at91sam926x_pmc_setup(struct device_node *np,
+>  						    &at91rm9200_programmable_layout);
+>  		if (IS_ERR(hw))
+>  			goto err_free;
+> +
+> +		at91sam9260_pmc->pchws[i] = hw;
+>  	}
+>  
+>  	for (i = 0; i < data->num_sck; i++) {
+> diff --git a/drivers/clk/at91/at91sam9g45.c b/drivers/clk/at91/at91sam9g45.c
+> index 53e8252b8a63..5d18eb04c218 100644
+> --- a/drivers/clk/at91/at91sam9g45.c
+> +++ b/drivers/clk/at91/at91sam9g45.c
+> @@ -117,7 +117,7 @@ static void __init at91sam9g45_pmc_setup(struct device_node *np)
+>  
+>  	at91sam9g45_pmc = pmc_data_allocate(PMC_MAIN + 1,
+>  					    nck(at91sam9g45_systemck),
+> -					    nck(at91sam9g45_periphck), 0);
+> +					    nck(at91sam9g45_periphck), 0, 2);
+>  	if (!at91sam9g45_pmc)
+>  		return;
+>  
+> @@ -182,6 +182,8 @@ static void __init at91sam9g45_pmc_setup(struct device_node *np)
+>  						    &at91sam9g45_programmable_layout);
+>  		if (IS_ERR(hw))
+>  			goto err_free;
+> +
+> +		at91sam9g45_pmc->pchws[i] = hw;
+>  	}
+>  
+>  	for (i = 0; i < ARRAY_SIZE(at91sam9g45_systemck); i++) {
+> diff --git a/drivers/clk/at91/at91sam9n12.c b/drivers/clk/at91/at91sam9n12.c
+> index f3ae1cd3cb8d..3a2564c2f724 100644
+> --- a/drivers/clk/at91/at91sam9n12.c
+> +++ b/drivers/clk/at91/at91sam9n12.c
+> @@ -129,7 +129,7 @@ static void __init at91sam9n12_pmc_setup(struct device_node *np)
+>  		return;
+>  
+>  	at91sam9n12_pmc = pmc_data_allocate(PMC_MAIN + 1,
+> -					   nck(at91sam9n12_systemck), 31, 0);
+> +					   nck(at91sam9n12_systemck), 31, 0, 2);
+>  	if (!at91sam9n12_pmc)
+>  		return;
+>  
+> @@ -198,6 +198,8 @@ static void __init at91sam9n12_pmc_setup(struct device_node *np)
+>  						    &at91sam9x5_programmable_layout);
+>  		if (IS_ERR(hw))
+>  			goto err_free;
+> +
+> +		at91sam9n12_pmc->pchws[i] = hw;
+>  	}
+>  
+>  	for (i = 0; i < ARRAY_SIZE(at91sam9n12_systemck); i++) {
+> diff --git a/drivers/clk/at91/at91sam9rl.c b/drivers/clk/at91/at91sam9rl.c
+> index cc739d214ae3..bcf07f6a0e0e 100644
+> --- a/drivers/clk/at91/at91sam9rl.c
+> +++ b/drivers/clk/at91/at91sam9rl.c
+> @@ -89,7 +89,7 @@ static void __init at91sam9rl_pmc_setup(struct device_node *np)
+>  
+>  	at91sam9rl_pmc = pmc_data_allocate(PMC_MAIN + 1,
+>  					   nck(at91sam9rl_systemck),
+> -					   nck(at91sam9rl_periphck), 0);
+> +					   nck(at91sam9rl_periphck), 0, 2);
+>  	if (!at91sam9rl_pmc)
+>  		return;
+>  
+> @@ -138,6 +138,8 @@ static void __init at91sam9rl_pmc_setup(struct device_node *np)
+>  						    &at91rm9200_programmable_layout);
+>  		if (IS_ERR(hw))
+>  			goto err_free;
+> +
+> +		at91sam9rl_pmc->pchws[i] = hw;
+>  	}
+>  
+>  	for (i = 0; i < ARRAY_SIZE(at91sam9rl_systemck); i++) {
+> diff --git a/drivers/clk/at91/at91sam9x5.c b/drivers/clk/at91/at91sam9x5.c
+> index aac99d699568..f13756b407e2 100644
+> --- a/drivers/clk/at91/at91sam9x5.c
+> +++ b/drivers/clk/at91/at91sam9x5.c
+> @@ -151,7 +151,7 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
+>  		return;
+>  
+>  	at91sam9x5_pmc = pmc_data_allocate(PMC_MAIN + 1,
+> -					   nck(at91sam9x5_systemck), 31, 0);
+> +					   nck(at91sam9x5_systemck), 31, 0, 2);
+>  	if (!at91sam9x5_pmc)
+>  		return;
+>  
+> @@ -227,6 +227,8 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
+>  						    &at91sam9x5_programmable_layout);
+>  		if (IS_ERR(hw))
+>  			goto err_free;
+> +
+> +		at91sam9x5_pmc->pchws[i] = hw;
+>  	}
+>  
+>  	for (i = 0; i < ARRAY_SIZE(at91sam9x5_systemck); i++) {
+> diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
+> index ac46ea1b9fda..8a1577e2c2fd 100644
+> --- a/drivers/clk/at91/pmc.c
+> +++ b/drivers/clk/at91/pmc.c
+> @@ -67,6 +67,10 @@ struct clk_hw *of_clk_hw_pmc_get(struct of_phandle_args *clkspec, void *data)
+>  		if (idx < pmc_data->ngck)
+>  			return pmc_data->ghws[idx];
+>  		break;
+> +	case PMC_TYPE_PROGRAMMABLE:
+> +		if (idx < pmc_data->npck)
+> +			return pmc_data->pchws[idx];
+> +		break;
+>  	default:
+>  		break;
+>  	}
+> @@ -77,9 +81,10 @@ struct clk_hw *of_clk_hw_pmc_get(struct of_phandle_args *clkspec, void *data)
+>  }
+>  
+>  struct pmc_data *pmc_data_allocate(unsigned int ncore, unsigned int nsystem,
+> -				   unsigned int nperiph, unsigned int ngck)
+> +				   unsigned int nperiph, unsigned int ngck,
+> +				   unsigned int npck)
+>  {
+> -	unsigned int num_clks = ncore + nsystem + nperiph + ngck;
+> +	unsigned int num_clks = ncore + nsystem + nperiph + ngck + npck;
+>  	struct pmc_data *pmc_data;
+>  
+>  	pmc_data = kzalloc(struct_size(pmc_data, hwtable, num_clks),
+> @@ -99,6 +104,9 @@ struct pmc_data *pmc_data_allocate(unsigned int ncore, unsigned int nsystem,
+>  	pmc_data->ngck = ngck;
+>  	pmc_data->ghws = pmc_data->phws + nperiph;
+>  
+> +	pmc_data->npck = npck;
+> +	pmc_data->pchws = pmc_data->ghws + ngck;
+> +
+>  	return pmc_data;
+>  }
+>  
+> diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
+> index fc3ef772b9d9..df616f2937e7 100644
+> --- a/drivers/clk/at91/pmc.h
+> +++ b/drivers/clk/at91/pmc.h
+> @@ -24,6 +24,8 @@ struct pmc_data {
+>  	struct clk_hw **phws;
+>  	unsigned int ngck;
+>  	struct clk_hw **ghws;
+> +	unsigned int npck;
+> +	struct clk_hw **pchws;
+>  
+>  	struct clk_hw *hwtable[];
+>  };
+> @@ -96,7 +98,8 @@ struct clk_pcr_layout {
+>  #define ndck(a, s) (a[s - 1].id + 1)
+>  #define nck(a) (a[ARRAY_SIZE(a) - 1].id + 1)
+>  struct pmc_data *pmc_data_allocate(unsigned int ncore, unsigned int nsystem,
+> -				   unsigned int nperiph, unsigned int ngck);
+> +				   unsigned int nperiph, unsigned int ngck,
+> +				   unsigned int npck);
+>  
+>  int of_at91_get_clk_range(struct device_node *np, const char *propname,
+>  			  struct clk_range *range);
+> diff --git a/drivers/clk/at91/sam9x60.c b/drivers/clk/at91/sam9x60.c
+> index a7d4f648db26..db14e0427c7f 100644
+> --- a/drivers/clk/at91/sam9x60.c
+> +++ b/drivers/clk/at91/sam9x60.c
+> @@ -185,7 +185,7 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
+>  	sam9x60_pmc = pmc_data_allocate(PMC_MAIN + 1,
+>  					nck(sam9x60_systemck),
+>  					nck(sam9x60_periphck),
+> -					nck(sam9x60_gck));
+> +					nck(sam9x60_gck), 8);
+>  	if (!sam9x60_pmc)
+>  		return;
+>  
+> @@ -255,6 +255,8 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
+>  						    &sam9x60_programmable_layout);
+>  		if (IS_ERR(hw))
+>  			goto err_free;
+> +
+> +		sam9x60_pmc->pchws[i] = hw;
+>  	}
+>  
+>  	for (i = 0; i < ARRAY_SIZE(sam9x60_systemck); i++) {
+> diff --git a/drivers/clk/at91/sama5d2.c b/drivers/clk/at91/sama5d2.c
+> index b2560670e5af..ae5e83cadb3d 100644
+> --- a/drivers/clk/at91/sama5d2.c
+> +++ b/drivers/clk/at91/sama5d2.c
+> @@ -169,7 +169,7 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
+>  	sama5d2_pmc = pmc_data_allocate(PMC_I2S1_MUX + 1,
+>  					nck(sama5d2_systemck),
+>  					nck(sama5d2_periph32ck),
+> -					nck(sama5d2_gck));
+> +					nck(sama5d2_gck), 3);
+>  	if (!sama5d2_pmc)
+>  		return;
+>  
+> @@ -267,6 +267,8 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
+>  						    &sama5d2_programmable_layout);
+>  		if (IS_ERR(hw))
+>  			goto err_free;
+> +
+> +		sama5d2_pmc->pchws[i] = hw;
+>  	}
+>  
+>  	for (i = 0; i < ARRAY_SIZE(sama5d2_systemck); i++) {
+> diff --git a/drivers/clk/at91/sama5d3.c b/drivers/clk/at91/sama5d3.c
+> index 914e6f225510..507eef6797f1 100644
+> --- a/drivers/clk/at91/sama5d3.c
+> +++ b/drivers/clk/at91/sama5d3.c
+> @@ -127,7 +127,7 @@ static void __init sama5d3_pmc_setup(struct device_node *np)
+>  
+>  	sama5d3_pmc = pmc_data_allocate(PMC_MAIN + 1,
+>  					nck(sama5d3_systemck),
+> -					nck(sama5d3_periphck), 0);
+> +					nck(sama5d3_periphck), 0, 3);
+>  	if (!sama5d3_pmc)
+>  		return;
+>  
+> @@ -201,6 +201,8 @@ static void __init sama5d3_pmc_setup(struct device_node *np)
+>  						    &at91sam9x5_programmable_layout);
+>  		if (IS_ERR(hw))
+>  			goto err_free;
+> +
+> +		sama5d3_pmc->pchws[i] = hw;
+>  	}
+>  
+>  	for (i = 0; i < ARRAY_SIZE(sama5d3_systemck); i++) {
+> diff --git a/drivers/clk/at91/sama5d4.c b/drivers/clk/at91/sama5d4.c
+> index 4ca9a4619500..80692902b4e4 100644
+> --- a/drivers/clk/at91/sama5d4.c
+> +++ b/drivers/clk/at91/sama5d4.c
+> @@ -142,7 +142,7 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
+>  
+>  	sama5d4_pmc = pmc_data_allocate(PMC_MCK2 + 1,
+>  					nck(sama5d4_systemck),
+> -					nck(sama5d4_periph32ck), 0);
+> +					nck(sama5d4_periph32ck), 0, 3);
+>  	if (!sama5d4_pmc)
+>  		return;
+>  
+> @@ -224,6 +224,8 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
+>  						    &at91sam9x5_programmable_layout);
+>  		if (IS_ERR(hw))
+>  			goto err_free;
+> +
+> +		sama5d4_pmc->pchws[i] = hw;
+>  	}
+>  
+>  	for (i = 0; i < ARRAY_SIZE(sama5d4_systemck); i++) {
+> diff --git a/include/dt-bindings/clock/at91.h b/include/dt-bindings/clock/at91.h
+> index 38b5554153c8..c3f4aa6a2d29 100644
+> --- a/include/dt-bindings/clock/at91.h
+> +++ b/include/dt-bindings/clock/at91.h
+> @@ -12,6 +12,7 @@
+>  #define PMC_TYPE_SYSTEM		1
+>  #define PMC_TYPE_PERIPHERAL	2
+>  #define PMC_TYPE_GCK		3
+> +#define PMC_TYPE_PROGRAMMABLE	4
+>  
+>  #define PMC_SLOW		0
+>  #define PMC_MCK			1
+> -- 
+> 2.20.1
+> 
 
 -- 
-Thanks,
-Sasha
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
