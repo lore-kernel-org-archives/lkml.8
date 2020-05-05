@@ -2,119 +2,164 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E13C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E683C47259
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 230B3207DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:45:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="fkWDJP1j"
+	by mail.kernel.org (Postfix) with ESMTP id 4F5262073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:45:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588693535;
+	bh=w7mqyqaalml4dm4BofEVo4menoXUnNvEtnLgftyefjk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Jx9Fevwca4jzMUHLFhG/DJoBf0NcfxyrG6esH7N+RME8/ZgV6xDNC4V9l4wi+xG4k
+	 t76QT13k7L8BAuHmlclfayfIhW9LTLGcoBmgkrigQnllrpQZBJHkG0yHrzoVjZ+q5U
+	 80s73EN/yUv0sIvlvP8rH85ifPXm8G7XwsTTvV3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730739AbgEEPpa (ORCPT
+        id S1730750AbgEEPpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:45:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35036 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730708AbgEEPpV (ORCPT
+        Tue, 5 May 2020 11:45:34 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43115 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730708AbgEEPpb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:45:21 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D775C061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 08:45:21 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id q7so2764383qkf.3
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 08:45:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=WENNWj1ilE/s6sjTVfLYURVMvEjy8DNjQO3IRhPKbwM=;
-        b=fkWDJP1jacFRz7YWV0+ueBQGqTgxAU2InbrfW9H8wK3DlOnGgc6JwiJ7ZV8m+VgnTI
-         Sx1E77KXnqJqkNK2MpzkqmdGuHYRSU3bb9mdRfelU7uOTMwlCMNIlgujakO7Rznd4rX1
-         5a9p9DH+hzQrTmqlhSH4uPiHDgPwfbsGL/gec9u8tRxh8Lx+m3bX757G3KCS5YJnKDwk
-         0J7qPSSc8WJw9SR49ffv9Na3vRSL39jBpARdxJOwfqj0WpcTrXXUxYyEMhtgIAaQtioB
-         KvxWy0FXRSkIx1wYMhkPvYMCMB49FaihY7hjk30PETikKcR8ZoFiLSJYgloCZXb9hc+4
-         TTMA==
+        Tue, 5 May 2020 11:45:31 -0400
+Received: by mail-oi1-f193.google.com with SMTP id j16so2171804oih.10;
+        Tue, 05 May 2020 08:45:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WENNWj1ilE/s6sjTVfLYURVMvEjy8DNjQO3IRhPKbwM=;
-        b=foXzB7HtcT9+njUYGKNYEm8xk452xq7+DUuzQBHomzltp9uorIaOAPh4kPc/aHgcY1
-         xhQ3801R+tNpHiTSACTc4OqmQcuno/usMRyYIyt4dd27/4Xvgj2AgOAyPpQYgxNyKdVm
-         SCePfcyQyxxPlQ+TP6Fim10xWarbpMAKzZKAN7A7V63yfoYnuMCz2z12bpeCAqMt+Fit
-         IgVcE2KyJ8TJ9q9B5UMU51qyYI9i5Knu4jJrx3FNR6+LQ+YvHjpk/xA5StcMXUIaRN6Y
-         tby+3TfHEg3IdG9x2iUZJ2M/Z79Fyxit/glvqKOK04jM0VzjbeZpqefbEyunPWSbDe2u
-         qh4g==
-X-Gm-Message-State: AGi0Pub+cPep2h06aTUTWLwBjbjoPidmIs8/RJ47jHRNPxwNwVQXCnUt
-        Mkgu/pNJAVEfwCJlqjA8J9125A==
-X-Google-Smtp-Source: APiQypLY8f70x1GWXd4kilpdfqPTwR5Br126dbhXR6Twlcb2nKB75CR0gJ+IenUk06DOdY7ESkgZtQ==
-X-Received: by 2002:a05:620a:49e:: with SMTP id 30mr3965253qkr.294.1588693520486;
-        Tue, 05 May 2020 08:45:20 -0700 (PDT)
-Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id x7sm2122407qkx.36.2020.05.05.08.45.19
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ERx4rFY8Dz8RC1gA8oeju/oL9ln3h6g/sbUq2ZIsMqI=;
+        b=UfhzIl90Cx/F9yuIdyxeWiIAluj9jHVn52BAWVU7+xF4MUL2VQkgcVKpzRvtrMnzfD
+         /KVAbI+MORiK3Tzt0DxInwcc21gq6fifSNKoCckeGBpScp+MlJnXhb8p/8zE+UFBlMeU
+         SuvTfpDebNXhobP7xUsnv/cPtiXpDb86C+i4YJwpbL6QQeA3whkBGTHu57sqaUoBuBZW
+         Vbcvmm01xrNmGzHDBBDLZbJ9wB93B61DfBPD0UEpTAjr5gqsRqsIvHKD/v/VLHeTd63P
+         ae7M6/dQceBZwzCMlDj4jZiY+JV4X4CBaQuA18azQiGfFN/jURRWE4DgLf7gw0TqfhQg
+         tCiw==
+X-Gm-Message-State: AGi0PuY7ZK+8owYLfyC/KZQr8CqD03wZI+ocz+HRfuD5jAoOkJ4brE7Q
+        H9C6LPgc1VGFNU6YVec5mw==
+X-Google-Smtp-Source: APiQypLcJPiZQqfn4NTS17L4CqyYIL327lpeUG2R1ri3KMTOCuIxKZ2yhA2w+R3hoxnFV84blQoz4w==
+X-Received: by 2002:aca:3a55:: with SMTP id h82mr1248106oia.135.1588693530523;
+        Tue, 05 May 2020 08:45:30 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m18sm625885oie.38.2020.05.05.08.45.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 08:45:19 -0700 (PDT)
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
-        linux-kernel@vger.kernel.org, pmladek@suse.com,
-        sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
-        keescook@chromium.org, anton@enomsg.org, ccross@android.com,
-        tony.luck@intel.com, robh+dt@kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v2 5/5] ramoops: add max_reason optional field to ramoops DT node
-Date:   Tue,  5 May 2020 11:45:10 -0400
-Message-Id: <20200505154510.93506-6-pasha.tatashin@soleen.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200505154510.93506-1-pasha.tatashin@soleen.com>
-References: <20200505154510.93506-1-pasha.tatashin@soleen.com>
+        Tue, 05 May 2020 08:45:29 -0700 (PDT)
+Received: (nullmailer pid 11594 invoked by uid 1000);
+        Tue, 05 May 2020 15:45:29 -0000
+Date:   Tue, 5 May 2020 10:45:29 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v11 1/2] iio: proximity: provide device tree binding
+ document
+Message-ID: <20200505154528.GB4630@bogus>
+References: <20200422160509.7117-1-i.mikhaylov@yadro.com>
+ <20200422160509.7117-2-i.mikhaylov@yadro.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422160509.7117-2-i.mikhaylov@yadro.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, it is possible to dump kmsges for panic, or oops.
-With max_reason it is possible to dump messages for other
-kmesg_dump events, for example reboot, halt, shutdown, kexec.
+On Wed, Apr 22, 2020 at 07:05:08PM +0300, Ivan Mikhaylov wrote:
+> Mostly standard i2c driver with some additional led-current option
+> for vcnl3020.
+> 
+> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+> ---
+>  .../bindings/iio/proximity/vcnl3020.yaml      | 64 +++++++++++++++++++
 
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
----
- .../devicetree/bindings/reserved-memory/ramoops.txt    | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+vishay,vcnl3020.yaml
 
-diff --git a/Documentation/devicetree/bindings/reserved-memory/ramoops.txt b/Documentation/devicetree/bindings/reserved-memory/ramoops.txt
-index 0eba562fe5c6..886cff15d822 100644
---- a/Documentation/devicetree/bindings/reserved-memory/ramoops.txt
-+++ b/Documentation/devicetree/bindings/reserved-memory/ramoops.txt
-@@ -30,7 +30,7 @@ Optional properties:
- - ecc-size: enables ECC support and specifies ECC buffer size in bytes
-   (defaults to 0: no ECC)
- 
--- record-size: maximum size in bytes of each dump done on oops/panic
-+- record-size: maximum size in bytes of each kmsg dump.
-   (defaults to 0: disabled)
- 
- - console-size: size in bytes of log buffer reserved for kernel messages
-@@ -45,7 +45,13 @@ Optional properties:
- - unbuffered: if present, use unbuffered mappings to map the reserved region
-   (defaults to buffered mappings)
- 
--- no-dump-oops: if present, only dump panics (defaults to panics and oops)
-+- max_reason: maximum reason for kmsg dump. Defaults to 2 (dump oops and
-+  panics). Can be set to INT_MAX to dump for all reasons. See
-+  include/linux/kmsg_dump.h KMSG_DUMP_* for other kmsg dump values.
-+
-+- no-dump-oops: deprecated, use max_reason instead.
-+  if present, and max_reason is not specified is equivalent to
-+  max_reason = 1 (KMSG_DUMP_PANIC).
- 
- - flags: if present, pass ramoops behavioral flags (defaults to 0,
-   see include/linux/pstore_ram.h RAMOOPS_FLAG_* for flag values).
--- 
-2.25.1
-
+>  1 file changed, 64 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+> new file mode 100644
+> index 000000000000..ac47770609d2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+> @@ -0,0 +1,64 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/proximity/vcnl3020.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Integrated Proximity Sensor With Infrared Emitter
+> +
+> +maintainers:
+> +  - Ivan Mikhaylov <i.mikhaylov@yadro.com>
+> +
+> +description: |
+> +  The VCNL3020 is a fully integrated proximity sensor. Fully integrated means
+> +  that the infrared emitter is included in the package. It has 16-bit
+> +  resolution. It includes a signal processing IC and features standard I2C
+> +  communication interface. It features an interrupt function.
+> +
+> +  Specifications about the devices can be found at:
+> +  https://www.vishay.com/docs/84150/vcnl3020.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - vishay,vcnl3020
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  vdd-supply:
+> +    description: Regulator that provides power to the sensor
+> +
+> +  vddio-supply:
+> +    description: Regulator that provides power to the bus
+> +
+> +  vishay,led-current-microamp:
+> +    description:
+> +      IR LED current value with valid Range = 0 to 20d. e.g. 0 = 0 mA,
+> +      1 = 10 mA, 20 = 200 mA. LED Current is limited to 200 mA for values
+> +      higher than decimal 20.
+> +    enum: [0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000,
+> +          100000, 110000, 120000, 130000, 140000, 150000, 160000, 170000,
+> +          180000, 190000, 200000]
+> +    default: 20000
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        proximity@13 {
+> +              compatible = "vishay,vcnl3020";
+> +              reg = <0x13>;
+> +              vishay,led-current-microamp = <200000>;
+> +        };
+> +    };
+> -- 
+> 2.21.1
+> 
