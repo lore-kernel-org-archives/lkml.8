@@ -2,212 +2,104 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2439C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DB7C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC09F206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B52DB20746
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:59:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588697958;
+	bh=+0LpHcS2seDAe0VjmVPzK+KDfF5yEHrIvNddgRwfVLI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PCtthglsKaf4HCrUUJ+XDQj66U1hPAuwWIasbvc7WcOZKRt92pmq6NxgPXgfq/9dq
+	 4n27qWEw4Uo4QcewTsoLn7eCQr2IfVJLxKHdrfdqHG6VT80YlT0gRsqA3Ym3KNz/Yh
+	 JHXeGDf8Hd8mkvyD96giNZW1ij4W+I/8stnZFsEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730779AbgEEQ7M (ORCPT
+        id S1730798AbgEEQ7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:59:12 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49818 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729720AbgEEQ6h (ORCPT
+        Tue, 5 May 2020 12:59:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729720AbgEEQ7R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:58:37 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 045GWpLp043456;
-        Tue, 5 May 2020 12:58:29 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30sp8k0q6e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 12:58:29 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 045Gtmsl012169;
-        Tue, 5 May 2020 16:58:28 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma01wdc.us.ibm.com with ESMTP id 30s0g6a9jb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 16:58:28 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 045GwRDk26149326
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 May 2020 16:58:27 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A95A57805E;
-        Tue,  5 May 2020 16:58:27 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 258767805C;
-        Tue,  5 May 2020 16:58:27 +0000 (GMT)
-Received: from talon7.ibm.com (unknown [9.211.137.116])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue,  5 May 2020 16:58:27 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-aspeed@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, joel@jms.id.au, andrew@aj.id.au,
-        eajames@linux.ibm.com
-Subject: [PATCH v11 1/8] dt-bindings: soc: Add Aspeed XDMA Engine
-Date:   Tue,  5 May 2020 11:58:18 -0500
-Message-Id: <1588697905-23444-2-git-send-email-eajames@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1588697905-23444-1-git-send-email-eajames@linux.ibm.com>
-References: <1588697905-23444-1-git-send-email-eajames@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-05_09:2020-05-04,2020-05-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- malwarescore=0 suspectscore=1 priorityscore=1501 spamscore=0 clxscore=1015
- mlxscore=0 lowpriorityscore=0 mlxlogscore=974 impostorscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005050126
+        Tue, 5 May 2020 12:59:17 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEEB8C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 09:59:16 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id y4so2381883ljn.7
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 09:59:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dtzYgCuKkt/bmV036ncd6lENxrdBs3w2AEjDTg4Jym8=;
+        b=BvfMU4FkK4+TYSxq8r2HYJ1G6i+Kwe+It8iHrrdCrMNdjvKKRvhcIByeRqpEBOhvR2
+         z1Rngg1akXbqNshURhLPyo3W/aYzamFcP368MXvOl5NWCPy2QD7LKh8VVBEx+hd6Yb06
+         EFAluQBX7GxsusBdl6NXz6lGmArzuIOnv0zsc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dtzYgCuKkt/bmV036ncd6lENxrdBs3w2AEjDTg4Jym8=;
+        b=W30e18g7+J7b0E6u78gNFXNXVGiTMwl3JrVFcpTm7z6UWoZLyVsfAeB1YTv3y5c+wx
+         5jDyUgkNvF2nUYuaKWDZ42ST4jBv+e8kAXGRUmNr2cal5/LqankrtbH31xcL4s17uSTp
+         IsVZG+QrQ2dxajDoTfMayOtevAKS7nBgnrf7p8x9snYeUcfY6dDhUz2orcfXeh4uM9re
+         RPfjvLVfbnwwwW25VRUYxBNB/brVu0UHZOlb3LTthqUXGJDo90FE9dZxOrfVo5y4Rd80
+         fjUC59nPka+D6QW/F1edkH2aiPdnvq/MKH4cXIIuHed12m1lgo8Ohl6A0IZC57K1qq+3
+         VRFA==
+X-Gm-Message-State: AGi0PuZ0f3I4UJv4KFPtND/xabm8Lr5+4+E2P8M8DcvVppYZadsLasMI
+        rEUKC6bto3X/wdQs6+YlX54ZNVfbl6c=
+X-Google-Smtp-Source: APiQypLqIy++d/rxAXGaYO2z9GQz0moGb5wbUz9zfWrzYjfZ8T7j3jr3oMlAs9oDsv2Gi2Nz8Ez+gw==
+X-Received: by 2002:a2e:994a:: with SMTP id r10mr2373959ljj.105.1588697954018;
+        Tue, 05 May 2020 09:59:14 -0700 (PDT)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
+        by smtp.gmail.com with ESMTPSA id v18sm3136723lfd.0.2020.05.05.09.59.12
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2020 09:59:12 -0700 (PDT)
+Received: by mail-lf1-f54.google.com with SMTP id t11so1956598lfe.4
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 09:59:12 -0700 (PDT)
+X-Received: by 2002:a19:6e4e:: with SMTP id q14mr2226121lfk.192.1588697952227;
+ Tue, 05 May 2020 09:59:12 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200505143028.1290686-1-arnd@arndb.de> <b287bb2f-28e2-7a41-e015-aa5a0cb3b5d7@embeddedor.com>
+ <CAK8P3a0v-hK+Ury86-1D2_jfOFgR8ZTEFKVQZBWJq3dW=MuSzw@mail.gmail.com>
+ <1f33eec3-4851-e423-2d04-e02da25e2e6e@embeddedor.com> <CAK8P3a3wd2DxnUFFOBCC_SVsZCGTYO3ZBU9amMtK_uR+kvQXFA@mail.gmail.com>
+In-Reply-To: <CAK8P3a3wd2DxnUFFOBCC_SVsZCGTYO3ZBU9amMtK_uR+kvQXFA@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 5 May 2020 09:58:56 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whv7ummbSN1H_jFxLJtZbCD4JKAbb3XRf9xFYK54T-=nw@mail.gmail.com>
+Message-ID: <CAHk-=whv7ummbSN1H_jFxLJtZbCD4JKAbb3XRf9xFYK54T-=nw@mail.gmail.com>
+Subject: Re: [PATCH] fsnotify: avoid gcc-10 zero-length-bounds warning
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Jan Kara <jack@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the bindings for the Aspeed AST25XX and AST26XX XDMA engine.
+On Tue, May 5, 2020 at 8:24 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> Linus, let me know if you would like me to Cc you on the other gcc-10
+> warning fixes I have and possibly apply some directly.
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
----
- .../devicetree/bindings/soc/aspeed/xdma.yaml       | 103 +++++++++++++++++++++
- MAINTAINERS                                        |   6 ++
- 2 files changed, 109 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/aspeed/xdma.yaml
+Sure. If you have any of the "trivially correct, and doesn't make code
+look worse", push them my way.
 
-diff --git a/Documentation/devicetree/bindings/soc/aspeed/xdma.yaml b/Documentation/devicetree/bindings/soc/aspeed/xdma.yaml
-new file mode 100644
-index 0000000..4957435
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/aspeed/xdma.yaml
-@@ -0,0 +1,103 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/soc/aspeed/xdma.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Aspeed AST25XX and AST26XX XDMA Engine
-+
-+maintainers:
-+ - Eddie James <eajames@linux.ibm.com>
-+
-+description: |
-+  This binding describes the XDMA Engine embedded in the AST2500 and AST2600
-+  SOCs. The XDMA engine can perform automatic DMA operations over PCI between
-+  the SOC (acting as a BMC) and a host processor.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - aspeed,ast2500-xdma
-+      - aspeed,ast2600-xdma
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  resets:
-+    minItems: 1
-+    maxItems: 2
-+
-+  reset-names:
-+    maxItems: 2
-+    items:
-+      - const: device
-+      - const: root-complex
-+
-+  interrupts:
-+    maxItems: 2
-+    items:
-+      - description: global interrupt for the XDMA engine
-+      - description: PCI-E reset or PERST interrupt
-+
-+  aspeed,scu:
-+    description: a reference to the System Control Unit node of the Aspeed SOC.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  aspeed,pcie-device:
-+    description: describes which PCI-E device the XDMA engine should use
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/string
-+      - enum: [ bmc, vga ]
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - resets
-+  - interrupts-extended
-+  - aspeed,scu
-+  - memory-region
-+
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        const: aspeed,ast2600-xdma
-+then:
-+  required:
-+    - reset-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/ast2600-clock.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/aspeed-scu-ic.h>
-+    syscon: syscon@1e6e2000 {
-+        reg = <0x1e6e2000 0x1000>;
-+        ranges = <0 0x1e6e2000 0x1000>;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        #clock-cells = <1>;
-+        #reset-cells = <1>;
-+        scu_ic0: interrupt-controller@560 {
-+            reg = <0x560 0x4>;
-+            interrupt-controller;
-+            #interrupt-cells = <1>;
-+        };
-+    };
-+    xdma@1e6e7000 {
-+        compatible = "aspeed,ast2600-xdma";
-+        reg = <0x1e6e7000 0x100>;
-+        clocks = <&syscon ASPEED_CLK_GATE_BCLK>;
-+        resets = <&syscon ASPEED_RESET_DEV_XDMA>, <&syscon ASPEED_RESET_RC_XDMA>;
-+        reset-names = "device", "root-complex";
-+        interrupts-extended = <&gic GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+                              <&scu_ic0 ASPEED_AST2600_SCU_IC0_PCIE_PERST_LO_TO_HI>;
-+        aspeed,scu = <&syscon>;
-+        aspeed,pcie-device = "bmc";
-+        memory-region = <&vga_memory>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b103ff0..6a421fd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2780,6 +2780,12 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/media/aspeed-video.txt
- F:	drivers/media/platform/aspeed-video.c
- 
-+ASPEED XDMA ENGINE DRIVER
-+M:	Eddie James <eajames@linux.ibm.com>
-+L:	linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/soc/aspeed/xdma.yaml
-+
- ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS DRIVERS
- M:	Corentin Chary <corentin.chary@gmail.com>
- L:	acpi4asus-user@lists.sourceforge.net
--- 
-1.8.3.1
+I only did the ones that looked trivial and fairly core - didn't want
+to step on any driver toes etc.
 
+                  Linus
