@@ -2,159 +2,112 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD16C47256
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2355C47259
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93E1C206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:51:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588701093;
-	bh=r1NrOndU3YS+eWt28dmHa/oAPjSkGoQJ/pvTSw5jq/A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t9A06kx/6Nog0exf3vZw9Dt6EJs7hR8sP0qQaVQlsXXrbHQIK3/tWGD61AmT3WB8K
-	 zhsLxKRECx2RqC973A97mZJkIRq81BpNOzaHumTzqLtRIjd/kt1au1GqwvKn1an1MC
-	 GyGVdq/2jRInhuR3kVvV8MfHxbzMm7LaTROAs2e0=
+	by mail.kernel.org (Postfix) with ESMTP id A9CD1206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:51:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730707AbgEERvd (ORCPT
+        id S1730627AbgEERvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 13:51:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48892 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730685AbgEERv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 13:51:28 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EEE1206B9;
-        Tue,  5 May 2020 17:51:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588701087;
-        bh=r1NrOndU3YS+eWt28dmHa/oAPjSkGoQJ/pvTSw5jq/A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t75d5toBn8C/owlGNazWmDP3BOtSidvPKmezqRfAnkoUhyPEKiECNOJcaD1L92pfh
-         DBiQkwplUzakgMjJ5CEZYZah0kCNyLGFumEqJfbrWFbpPe8YMImoQ988s5GGXyaA9i
-         EKijL/urhdBf9031GrTJDZoeIOAHVryPi6aP4bZo=
-From:   Mark Brown <broonie@kernel.org>
-To:     Shuah Khan <shuah@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 3/3] selftests: vdso: Add a selftest for vDSO getcpu()
-Date:   Tue,  5 May 2020 18:47:28 +0100
-Message-Id: <20200505174728.46594-4-broonie@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200505174728.46594-1-broonie@kernel.org>
-References: <20200505174728.46594-1-broonie@kernel.org>
+        Tue, 5 May 2020 13:51:22 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43668 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730564AbgEERvV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 13:51:21 -0400
+Received: by mail-pf1-f194.google.com with SMTP id v63so1219632pfb.10;
+        Tue, 05 May 2020 10:51:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=cN+c0TAgCOlkFWBaF5foyo3htOvmHpO3q6sLeWVc0hA=;
+        b=qoUQwb5Crbom0QEajz4g4CjL99ZZTk5kwpRrTjm5+MZVitBo9kYsGvS5BfS56yXyhv
+         BrskgavtJUhpf2eg6KTQtQLXGWd3Sdwnc8bZAi0ZIy3FdXfPHZQ5wWU11F6lJoV9wFIb
+         yFb5TS0AaBRO2tERABhrd65tolWtX1X4P/E3xWYcCdfhPqNN4zd5Gj+CCfBZMI9s9FxV
+         loA+NAQux7YVzwkdU2NRPP7atqDjYv+jeaOidNyPaLYk7G/SfuFaziZJeWKuDRkTLmJe
+         /eBkGnwQVmYJ3YDwy8bD3Bjdss+VBWGvVFWdcbVY4dQGa6O74EilBGIdjmH4rQGtRIAn
+         C3lQ==
+X-Gm-Message-State: AGi0PuYOm0wmE4yrbux3prezvLeTf/AayJVSqEvAzCjltpYq2aWMcyY4
+        2znbT41/Ue7TK0/OZ2Eq7DzAgiCPSSk=
+X-Google-Smtp-Source: APiQypKDmVEHxp2kzQ0Os7lQFK4gehg8n4NjwhqbnaJ+sPp7i+3LUrLOrGPDoIwOjr/w1h7ZcGnyUA==
+X-Received: by 2002:a62:6807:: with SMTP id d7mr4300566pfc.296.1588701078622;
+        Tue, 05 May 2020 10:51:18 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:b435:750c:4181:403d? ([2601:647:4000:d7:b435:750c:4181:403d])
+        by smtp.gmail.com with ESMTPSA id p66sm2532164pfb.65.2020.05.05.10.51.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2020 10:51:17 -0700 (PDT)
+Subject: Re: [PATCH] MAINTAINERS: Add missing header files to BLOCK LAYER
+ section
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200505140728.29369-1-geert+renesas@glider.be>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <4029235a-1431-1dc2-8846-e79eb44b07b2@acm.org>
+Date:   Tue, 5 May 2020 10:51:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200505140728.29369-1-geert+renesas@glider.be>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide a very basic selftest for getcpu() which similarly to our existing
-test for gettimeofday() looks up the function in the vDSO and prints the
-results it gets if the function exists and succeeds.
+On 2020-05-05 07:07, Geert Uytterhoeven wrote:
+> The various <linux/blk*.h> header files are part of the Block Layer.
+> Add them to the corresponding section in the MAINTAINERS file, so
+> scripts/get_maintainer.pl will pick them up.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f3fd61cde5125f74..16644a41d42737fe 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3136,6 +3136,7 @@ S:	Maintained
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git
+>  F:	block/
+>  F:	drivers/block/
+> +F:	include/linux/blk*
+>  F:	kernel/trace/blktrace.c
+>  F:	lib/sbitmap.c
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- tools/testing/selftests/vDSO/.gitignore       |  1 +
- tools/testing/selftests/vDSO/Makefile         |  3 +-
- .../testing/selftests/vDSO/vdso_test_getcpu.c | 50 +++++++++++++++++++
- 3 files changed, 53 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/vDSO/vdso_test_getcpu.c
-
-diff --git a/tools/testing/selftests/vDSO/.gitignore b/tools/testing/selftests/vDSO/.gitignore
-index 74f49bd5f6dd..5eb64d41e541 100644
---- a/tools/testing/selftests/vDSO/.gitignore
-+++ b/tools/testing/selftests/vDSO/.gitignore
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
- vdso_test
- vdso_test_gettimeofday
-+vdso_test_getcpu
- vdso_standalone_test_x86
-diff --git a/tools/testing/selftests/vDSO/Makefile b/tools/testing/selftests/vDSO/Makefile
-index ae15d700b62e..0069f2f83f86 100644
---- a/tools/testing/selftests/vDSO/Makefile
-+++ b/tools/testing/selftests/vDSO/Makefile
-@@ -4,7 +4,7 @@ include ../lib.mk
- uname_M := $(shell uname -m 2>/dev/null || echo not)
- ARCH ?= $(shell echo $(uname_M) | sed -e s/i.86/x86/ -e s/x86_64/x86/)
- 
--TEST_GEN_PROGS := $(OUTPUT)/vdso_test_gettimeofday
-+TEST_GEN_PROGS := $(OUTPUT)/vdso_test_gettimeofday $(OUTPUT)/vdso_test_getcpu
- ifeq ($(ARCH),x86)
- TEST_GEN_PROGS += $(OUTPUT)/vdso_standalone_test_x86
- endif
-@@ -18,6 +18,7 @@ endif
- 
- all: $(TEST_GEN_PROGS)
- $(OUTPUT)/vdso_test_gettimeofday: parse_vdso.c vdso_test_gettimeofday.c
-+$(OUTPUT)/vdso_test_getcpu: parse_vdso.c vdso_test_getcpu.c
- $(OUTPUT)/vdso_standalone_test_x86: vdso_standalone_test_x86.c parse_vdso.c
- 	$(CC) $(CFLAGS) $(CFLAGS_vdso_standalone_test_x86) \
- 		vdso_standalone_test_x86.c parse_vdso.c \
-diff --git a/tools/testing/selftests/vDSO/vdso_test_getcpu.c b/tools/testing/selftests/vDSO/vdso_test_getcpu.c
-new file mode 100644
-index 000000000000..a9dd3db145f3
---- /dev/null
-+++ b/tools/testing/selftests/vDSO/vdso_test_getcpu.c
-@@ -0,0 +1,50 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * vdso_test_getcpu.c: Sample code to test parse_vdso.c and vDSO getcpu()
-+ *
-+ * Copyright (c) 2020 Arm Ltd
-+ */
-+
-+#include <stdint.h>
-+#include <elf.h>
-+#include <stdio.h>
-+#include <sys/auxv.h>
-+#include <sys/time.h>
-+
-+#include "../kselftest.h"
-+#include "parse_vdso.h"
-+
-+const char *version = "LINUX_2.6";
-+const char *name = "__vdso_getcpu";
-+
-+struct getcpu_cache;
-+typedef long (*getcpu_t)(unsigned int *, unsigned int *,
-+			 struct getcpu_cache *);
-+
-+int main(int argc, char **argv)
-+{
-+	unsigned long sysinfo_ehdr = getauxval(AT_SYSINFO_EHDR);
-+	if (!sysinfo_ehdr) {
-+		printf("AT_SYSINFO_EHDR is not present!\n");
-+		return KSFT_SKIP;
-+	}
-+
-+	vdso_init_from_sysinfo_ehdr(getauxval(AT_SYSINFO_EHDR));
-+
-+	getcpu_t get_cpu = (getcpu_t)vdso_sym(version, name);
-+	if (!get_cpu) {
-+		printf("Could not find %s\n", name);
-+		return KSFT_SKIP;
-+	}
-+
-+	unsigned int cpu, node;
-+	long ret = get_cpu(&cpu, &node, 0);
-+	if (ret == 0) {
-+		printf("Running on CPU %u node %u\n", cpu, node);
-+	} else {
-+		printf("%s failed\n", name);
-+		return KSFT_FAIL;
-+	}
-+
-+	return 0;
-+}
--- 
-2.20.1
-
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
