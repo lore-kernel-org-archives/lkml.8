@@ -2,89 +2,101 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CE8C47259
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 890E6C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E502120661
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:16:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N4s+XP8H"
+	by mail.kernel.org (Postfix) with ESMTP id 6CAA720661
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:20:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbgEEAQ0 (ORCPT
+        id S1728595AbgEEAUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 20:16:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59306 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728367AbgEEAQY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 20:16:24 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71A20C061A0F
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 17:16:24 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id a4so4953220lfh.12
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 17:16:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QiqUUss2jL8iYfIE6Bd+6noVnRyNqoTAQ9IVKOuRQgM=;
-        b=N4s+XP8Hut8idJW2OzJ7P2a4JzXglSpVAIJjOBw2Ld+5maAmt0BoeQ06cj4QDsgGDE
-         6NAcJbsXytHSsE4lwzCkdHu0rpMzM+wisgaZcziE5fWQOQV64jlS0LdKr7xstsB9UVpj
-         mvdwkKwFKgiksfSm/EgH/UxIAAWrqnO8bFFX0Lexs6cbcyu8KkMMItlCihp8z7iDO0ss
-         aNEAOQneXGQzOZoCkFT5iHrMhaq7DQ80aKybV35v5cm2xpXcpz7v57rzUH81ux+HoSU3
-         DZiwpOXUYwj1/gR1uVO5SGmB9WkBXR5UKZl8CKlSKBHoyL8UsOZlR+02AseogMgZ52Np
-         grdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QiqUUss2jL8iYfIE6Bd+6noVnRyNqoTAQ9IVKOuRQgM=;
-        b=I1sni+WfxyZaKfRyNJkCF0S8NCZIlDpJCx1a1W8zp6KrdQjdLkFuAJkpUwfNSGoz0E
-         aeA0nOK8mLU0iTj7UJEfjMspUWO8YnP0BDI+hphARIDU501/0YjONB8HNCuKBLdZafu4
-         s8ibPQ8jMnkYvB6otM8giZLkTfFOFicAJKSfcqMXIjncFGZiRlTHDUGs3WPK1MNupw+E
-         Y/RKCFer/rqhrEXg5eD8a8W0TXuWbVBxFYJFmkrC4HiAhn81SjK01JCQR4q114IpxQpi
-         i/9HVnag0jliVvAsR8ALlEp3xEhOV/krgHM5P9EEIjT/WEmgTegYv6jfk9Dx1AFvNLDv
-         4yew==
-X-Gm-Message-State: AGi0PuaKKSlZRsi2ukPoJ+4iaiGU3ThFYhTDq5OMhBtNTOFqhjwzOMLI
-        wolN1yJU2d612nFiDEa2AWULWN1j7AKRx5T7i4cS0Q==
-X-Google-Smtp-Source: APiQypJGv5tcseONQbK5x2mnROWwvW0Pn8R67E8fsfoelBLNFOf4MQLot2TT1lmzTeAvYKM70sV8eZFtKle0oWz4pT4=
-X-Received: by 2002:a05:6512:104a:: with SMTP id c10mr5802lfb.184.1588637782543;
- Mon, 04 May 2020 17:16:22 -0700 (PDT)
+        Mon, 4 May 2020 20:20:20 -0400
+Received: from mga17.intel.com ([192.55.52.151]:23633 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728258AbgEEAUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 20:20:20 -0400
+IronPort-SDR: rk00TNmXbCQ9GCvmdKsthmSpSgeQkhh6rmOSFdYwjJdRH/FH2ojBQAEXf6QOSNJMrpUbb0r/nF
+ jdTVlG2JQ+3w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 17:20:19 -0700
+IronPort-SDR: k1vUVvQaEJMjKfp0O1z1GRkDHRmiJVeN2zx0krf5kg8Gclm9wzZR9p1+B8TOjDxPzIh6L0DJ8r
+ feipGiwmSnQg==
+X-IronPort-AV: E=Sophos;i="5.73,354,1583222400"; 
+   d="scan'208";a="259517993"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 17:20:18 -0700
+From:   ira.weiny@intel.com
+To:     mtk.manpages@gmail.com
+Cc:     Ira Weiny <ira.weiny@intel.com>, linux-man@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH] man/statx: Add STATX_ATTR_DAX
+Date:   Mon,  4 May 2020 17:20:16 -0700
+Message-Id: <20200505002016.1085071-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <1588627060-7399-1-git-send-email-zohar@linux.ibm.com>
-In-Reply-To: <1588627060-7399-1-git-send-email-zohar@linux.ibm.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 5 May 2020 02:15:56 +0200
-Message-ID: <CAG48ez2PwqoDBx0pkZKFHvMXHNqAc8AfuTR5oPoF-obHqUo0zQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] ima: verify mprotect change is consistent with mmap policy
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     linux-integrity@vger.kernel.org,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 4, 2020 at 11:18 PM Mimi Zohar <zohar@linux.ibm.com> wrote:
-> Files can be mmap'ed read/write and later changed to execute to circumvent
-> IMA's mmap appraise policy rules.  Due to locking issues (mmap semaphore
-> would be taken prior to i_mutex), files can not be measured or appraised at
-> this point.  Eliminate this integrity gap, by denying the mprotect
-> PROT_EXECUTE change, if an mmap appraise policy rule exists.
+From: Ira Weiny <ira.weiny@intel.com>
 
-Just keep in mind that there are other ways to create executable
-mappings containing controlled code; e.g. PROT_EXEC with
-MAP_ANONYMOUS, or writing to /proc/self/mem (which is a debugging API
-that works entirely without ever making the VMA writable - I had an
-old series to provide LSM hooks for that stuff at
-<https://lore.kernel.org/lkml/1478142286-18427-3-git-send-email-jann@thejh.net/>,
-but I guess I must have forgotten about it or something...).
+Linux 5.8 is slated to have STATX_ATTR_DAX support.
+
+https://lore.kernel.org/lkml/20200428002142.404144-4-ira.weiny@intel.com/
+https://lore.kernel.org/lkml/20200504161352.GA13783@magnolia/
+
+Add the text to the statx man page.
+
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+---
+ man2/statx.2 | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/man2/statx.2 b/man2/statx.2
+index 2e90f07dbdbc..14c4ab78e7bd 100644
+--- a/man2/statx.2
++++ b/man2/statx.2
+@@ -468,6 +468,30 @@ The file has fs-verity enabled.
+ It cannot be written to, and all reads from it will be verified
+ against a cryptographic hash that covers the
+ entire file (e.g., via a Merkle tree).
++.TP
++.BR STATX_ATTR_DAX (since Linux 5.8)
++The file is in the DAX (cpu direct access) state.  DAX state attempts to
++minimize software cache effects for both I/O and memory mappings of this file.
++It requires a file system which has been configured to support DAX.
++.PP
++DAX generally assumes all accesses are via cpu load / store instructions which
++can minimize overhead for small accesses, but may adversely affect cpu
++utilization for large transfers.
++.PP
++File I/O is done directly to/from user-space buffers and memory mapped I/O may
++be performed with direct memory mappings that bypass kernel page cache.
++.PP
++While the DAX property tends to result in data being transferred synchronously,
++it does not give the same guarantees of O_SYNC where data and the necessary
++metadata are transferred together.
++.PP
++A DAX file may support being mapped with the MAP_SYNC flag, which enables a
++program to use CPU cache flush instructions to persist CPU store operations
++without an explicit
++.BR fsync(2).
++See
++.BR mmap(2)
++for more information.
+ .SH RETURN VALUE
+ On success, zero is returned.
+ On error, \-1 is returned, and
+-- 
+2.25.1
+
