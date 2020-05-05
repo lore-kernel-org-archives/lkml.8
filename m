@@ -2,132 +2,245 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0EFC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F272C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09DB52073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7485E206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:41:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="fv4zjtbu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G768Va8T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729032AbgEENkr (ORCPT
+        id S1729065AbgEENlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 09:40:47 -0400
-Received: from mail-db8eur05on2047.outbound.protection.outlook.com ([40.107.20.47]:13889
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728180AbgEENkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 09:40:46 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SeCcuYhEV+dU/mSTTxaSDeEr7nVfjJcB/DVd9r6NYX8JujSpr7jpjQ/T1HTj3yvJmZjoO7RdcfvSIrbZr9zsCVcMhbs8SJQbIRAC2fplcMLhhulrKAZ2YwbEU921YSm4pwgLcEwgRKslrMt1IuMUAs7cmA9WKFHSBYC+6isRiWldahAOOhj1BqwVbuXtApSGmsX6qF194KOimUzCPwGJ9uVRuCFJitqedEdLNzHXntNBeaW8srQUAI/QipKQtAbSgd6SC1MVCJqWNWCddXdFJzuVEFKLiK7l5lrOPJ6FfDRRw3Xk2rZcR6SYKg6bQZjSij45p1hpOll7IqqiyoMnyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wRotqXTcSsBDHa4PVW0dM7ESdzaavHPVM0yNWb72z8Q=;
- b=mYhS4AS3J2oITRxxYEARvwA45Anh9f7p1d8NhYmc0mXDzMdrY69/Bgq4lcJHstIbqz+b3a90lFm5ZGtFxzHRlRldTWt+U8Z4ZuaU3gb0GZj/WxYEpnDEhZcfU5fJJy/SJHzfjSRTM+Y5SydO3qDma6suCJNv1AcWHrhMwkQhJD4dFiCkpPF+54XO9c2+9xD1rl0VLz9xC0Euf66oEvQyzkTtl30MIR7eRKXfm7e0qfxdTdujJh3gZJkA5mk/Qpm3yhwmPje6EegAkDZtXjIJWBQD2sx/I7DDLvsSMqiDzNbfFkHllaTwJopPk51g+CsrwN3QnOoTmJYfe8vG2DY1/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wRotqXTcSsBDHa4PVW0dM7ESdzaavHPVM0yNWb72z8Q=;
- b=fv4zjtbuNvzbIg/HCcykB6xjD4DMZrGNfTxyHZ+ouIx3xIDOB8jJKtyFRuMiJhY4edCBpTK0/ln6rCMrg1Lm5+e3fuu2gD49DZCR8gEj0G3gjaOUXDVw11Ib8bpytdH9c1U7UngT2Ax+fnDAo3cmAWyG0AbhyMpZe38yqyzW+Tw=
-Authentication-Results: linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=none action=none header.from=oss.nxp.com;
-Received: from DB8PR04MB5643.eurprd04.prod.outlook.com (2603:10a6:10:aa::25)
- by DB8PR04MB5900.eurprd04.prod.outlook.com (2603:10a6:10:a3::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Tue, 5 May
- 2020 13:40:43 +0000
-Received: from DB8PR04MB5643.eurprd04.prod.outlook.com
- ([fe80::4031:5fb3:b908:40e9]) by DB8PR04MB5643.eurprd04.prod.outlook.com
- ([fe80::4031:5fb3:b908:40e9%7]) with mapi id 15.20.2958.030; Tue, 5 May 2020
- 13:40:43 +0000
-From:   Calvin Johnson <calvin.johnson@oss.nxp.com>
-To:     Mike Leach <mike.leach@linaro.org>, linux.cj@gmail.com
-Cc:     Calvin Johnson <calvin.johnson@oss.nxp.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] coresight: cti: remove incorrect NULL return check
-Date:   Tue,  5 May 2020 19:10:20 +0530
-Message-Id: <20200505134020.11148-1-calvin.johnson@oss.nxp.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR02CA0016.apcprd02.prod.outlook.com
- (2603:1096:3:17::28) To DB8PR04MB5643.eurprd04.prod.outlook.com
- (2603:10a6:10:aa::25)
+        Tue, 5 May 2020 09:41:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728180AbgEENlC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 09:41:02 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC63DC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 06:41:01 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id s10so841200plr.1
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 06:41:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BsCTpVIH2hYgIyAZzwlMyXVEC7jiBc22QaQN/32S3rc=;
+        b=G768Va8Tw4djhjT/eMQr63Ic+SIDXuohirY4qS9/+QpDD6MQbjtyd9T9N1GkCa1po3
+         bPJ5r4pkhRaxEvcuJ4dkvVA7Ti9eImuuD5HyWQKpShWMFci8S0vFy/KiSqUleudqZpVE
+         a5PrDy+L3dOGtHleS50WiETG+WWVDCXDROorYA5n8E1tX00FVPRxKp3Y01qKxPneFLsp
+         B2ly2K6O1V35bB1mpUrIFbagRJJ+VZflA8NASXDIXaGsXpHleDT1CVNp//kOF6aj4im/
+         kFxnSpYwsArafr5KQ+gs5I9uFz8ViMOy3nHt3Nnw9nz26+imBJxe+XD9OsBKCB0T4Ptd
+         +fZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BsCTpVIH2hYgIyAZzwlMyXVEC7jiBc22QaQN/32S3rc=;
+        b=VC6jmpzeUusvtBGjrvRAOqE9DKPkieSKxEq72fmNsazIhKPZlImF+6qxY8lxXYn4lb
+         N7mIID92d9QwLCJa5IE7U0Bk+8CoeXaVb7Ct4pAi7AO2CLisKReKd0HvaZuo6XuBU+15
+         zo3WwoMLOiZhuj1+wpExW2l2MDLZh/bnvM53iCvGWKo03mgfB/vB3fkxphqnPav3ixEX
+         g3S+dVGd23a9Vp7mx7amvmqWguwFqIX3xVD8nh/XSZbad8jytbWVg9Ny8S0mFtEz17dS
+         wgk3DlYgF0vh49K/KcFsUGVKqAEBzRIQ7gNSOGI1ZgAwFjK/aufV/cYx3mJCgaZTrgiX
+         u7MA==
+X-Gm-Message-State: AGi0PuYl8TjxtvQumyQ+wAfPd0Ny5atXIEK0i1NgEO1wYfuqc4cL/UZ6
+        dFna8/c5XIqWmkNspvY7Iha3l5li
+X-Google-Smtp-Source: APiQypLK8mEGpvD7solf+uZ1AOOzOnLCG+W770KX2w84hkuYwkcDXITXIISOJ1jwitZJAYfEU6ubsw==
+X-Received: by 2002:a17:902:8496:: with SMTP id c22mr3265291plo.182.1588686061336;
+        Tue, 05 May 2020 06:41:01 -0700 (PDT)
+Received: from iZj6chx1xj0e0buvshuecpZ ([47.75.1.235])
+        by smtp.gmail.com with ESMTPSA id b1sm2076944pfi.140.2020.05.05.06.40.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 05 May 2020 06:41:00 -0700 (PDT)
+Date:   Tue, 5 May 2020 21:40:56 +0800
+From:   Peng Liu <iwtbavbm@gmail.com>
+To:     vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        valentin.schneider@arm.com
+Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        iwtbavbm@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/fair: Fix nohz.next_balance update
+Message-ID: <20200505134056.GA31680@iZj6chx1xj0e0buvshuecpZ>
+References: <20200503083407.GA27766@iZj6chx1xj0e0buvshuecpZ>
+ <CAKfTPtCNG9Y4xNA-iLd+JRRsUCA1+SkkFFRbbzk5n7q6v401tw@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from lsv03152.swis.in-blr01.nxp.com (14.142.151.118) by SG2PR02CA0016.apcprd02.prod.outlook.com (2603:1096:3:17::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.30 via Frontend Transport; Tue, 5 May 2020 13:40:40 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [14.142.151.118]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: fe92431e-80bd-4b74-d245-08d7f0f9e80a
-X-MS-TrafficTypeDiagnostic: DB8PR04MB5900:|DB8PR04MB5900:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB8PR04MB590063727AC2E8EAE30EAFF8D2A70@DB8PR04MB5900.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:252;
-X-Forefront-PRVS: 0394259C80
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: CTNDIrnaURcd03FeS80+Yxu/YH4GTPLSlOyTcZ/iE0B2ZLAq4qnQNBNRmC1ryivvcGQJC2toktYwAU/XAMPu+9yPugIC01tgLkQ4a+Z+aD5KjAOdz0aYyaEIko/Nm/ciWUPySsjSsE8g1YNYJwEdTfe6TxcgFpEwKnFNJnGXWitIVEGbzfNnbYZCbC048KO0OTqSPDQHwSNJP7Sm286ThOT1080Z0VvCyycvblUSFyqSmi4gcUKyK/gG3okWAuimHz22O3JR3qRmaBnvHJxCZMTswRHdng61ifIr0Ve1lvsOuEv1sFhzkLWqAR4pWp431+9JtfuBUfZDus8Jww+PV/Iq6bOPvIi7C/EY6c/Rahtirwuh9WksSirej7z7f+TSSCbKudU8532nJBh59Rlx/tZDBExsf+bjBAKJ5DEMmYXwAA5yO6HfPHU2SHHJwZcRwHfTW/avh0eZWhZbiNIdhb2jR2O8e0ZEMdPc+EJ9FpZGbis9Q6fY54JtNWN0HgTwHMAwEeK3fN0RVgNdIxxoIj3DP6V/GNwwbOuH8Rl3j1DpeQ8ER1b/fKFaS6Mp+hKk
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB5643.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(33430700001)(498600001)(86362001)(1006002)(4326008)(6666004)(1076003)(52116002)(54906003)(66556008)(2906002)(66946007)(26005)(66476007)(16526019)(8936002)(2616005)(956004)(55236004)(8676002)(44832011)(186003)(6486002)(6506007)(5660300002)(33440700001)(6512007)(110426005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: GrQXmalPdeSiWv1MZPT6/63IXQBbfPyjiLnfdeBRcLgDkKiPfRAYy7uQ/Quy2UYOIP/h3npgtWJqnGE0HturCZM756cNmnJhLhBOlMAMw+L7dfERKqJyeSBNWR71QLg4MkCncds7zSGtd7SGSksaGGzwSEhSKECMHxkW4zC32xruCAYMzeNYJbsZmUEbLaNp5vvQ2vnDA2xcPwti+l8J9lJPCV3jedNFn5/0ZZw+KWJ/7AwYEOpgspDYYB2I1QY1IVXlSWWLU6z4r98yWvk/fL13RcSCXGBfg+TGEO38hsYUv8JN3A06UMxq/TGF8pd7aHbZKA0OKnZ2KC7aL61j2T4E2U5u28OlkS2ckClU9zr3fEVzNYBco/6rqqXJz6/Q5P4kN7IN+ZAcDn6YJMF85l0JC/ARLwAvboqo2trUO4h+zilom2Vb/kt9ESrEzeT3cJiCB6L5tx/t0VrYlZ5cRnZ7NfLCpsn7LOCAKFUctBk48BUHMGHtReg6DzJuNyMxw5qGcZ1QMxdB9gBm8u7NmuNwjFWVY1z2wKakKr/fsht3a2sTfqrFpJgiefjBTy7i5Z1ZkmtreBOkpasCrX49JjA22Rmi/7hmk3BIaB+zEYekbYNdvwRDDufb63nquzp+29jwMAjl/aekeILRJKguxhBtiVlrIaWKWL/vxdoDTQmwUWUCNaH4r9ruS6egj9j6/LX7MB/O+I+VVbh4c6E3K2zofvfi9+E3sZTl0PK4c/J6VUrhzsfTOOOtHOED7EL0QSW4/9BHkZ7IDU3ZdDdDchEQjCgGBPOftAblryMikzY=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fe92431e-80bd-4b74-d245-08d7f0f9e80a
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2020 13:40:43.0168
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RI83TUZtBgJQh7iCvJx09Xh6y3yzJJS2Fk66//WRWVj8OEdZAc9gE72d15YS3CwVS0zkV8bn6qswGmocg+IPUw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB5900
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtCNG9Y4xNA-iLd+JRRsUCA1+SkkFFRbbzk5n7q6v401tw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fwnode_find_reference() doesn't return NULL and hence that check
-should be avoided.
+On Mon, May 04, 2020 at 05:17:11PM +0200, Vincent Guittot wrote:
+> On Sun, 3 May 2020 at 10:34, Peng Liu <iwtbavbm@gmail.com> wrote:
+> >
+> > commit c5afb6a87f23 ("sched/fair: Fix nohz.next_balance update")
+> > During idle load balance, this_cpu(ilb) do load balance for the other
+> > idle CPUs, also gather the earliest (nohz.)next_balance.
+> >
+> > Since commit:
+> >   'b7031a02ec75 ("sched/fair: Add NOHZ_STATS_KICK")'
+> >
+> > We update nohz.next_balance like this:
+> >
+> >   _nohz_idle_balance() {
+> >       for_each_cpu(nohz.idle_cpus_mask) {
+> >           rebalance_domains() {
+> >               update nohz.next_balance <-- compare and update
+> >           }
+> >       }
+> >       rebalance_domains(this_cpu) {
+> >           update nohz.next_balance <-- compare and update
+> >       }
+> >       update nohz.next_balance <-- unconditionally update
+> >   }
+> >
+> > For instance, nohz.idle_cpus_mask spans {cpu2,3,5,8}, and this_cpu is
+> > cpu5. After the above loop we could gather the earliest *next_balance*
+> > among {cpu2,3,8}, then rebalance_domains(this_cpu) update
+> > nohz.next_balance with this_rq->next_balance, but finally overwrite
+> > nohz.next_balance with the earliest *next_balance* among {cpu2,3,8},
+> > we may end up with not getting the earliest next_balance.
+> >
+> > Since we can gather all the updated rq->next_balance, including this_cpu,
+> > in _nohz_idle_balance(), it's safe to remove the extra lines in
+> > rebalance_domains() which are originally intended for this_cpu. And
+> > finally the updating only happen in _nohz_idle_balance().
+> 
+> I'm not sure that's always true. Nothing prevents nohz_idle_balance()
+> to return false . Then run_rebalance_domains() calls
+> rebalance_domains(this_rq ,SCHED_IDLE) outside _nohz_idle_balance().
+> In this case we must keep the code in rebalance_domains().
+> 
+> For example when the tick is not stopped when entering idle. Or when
+> need_resched() returns true.
+> 
+> So instead of removing the code from rebalance_domains, you should
+> move the one in _nohz_idle_balance() to make sure that the "if
+> (likely(update_next_balance)) ..." is called before calling
+> rebalance_domains for the local cpu
+> 
 
-Signed-off-by: Calvin Johnson <calvin.johnson@oss.nxp.com>
----
+Yes, you're right. When need_resched() returns true, things become out
+of expectation. We haven't really got the earliest next_balance, abort
+the update immediately and let the successor to help. Doubtless this
+will incur some overhead due to the repeating work.
 
- drivers/hwtracing/coresight/coresight-cti-platform.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+About the "tick is not stopped when entering idle" case, defer the
+update to nohz_balance_enter_idle() would be a choice too.
 
-diff --git a/drivers/hwtracing/coresight/coresight-cti-platform.c b/drivers/hwtracing/coresight/coresight-cti-platform.c
-index b44d83142b62..2fdaeec80ee5 100644
---- a/drivers/hwtracing/coresight/coresight-cti-platform.c
-+++ b/drivers/hwtracing/coresight/coresight-cti-platform.c
-@@ -120,7 +120,7 @@ static int cti_plat_create_v8_etm_connection(struct device *dev,
- 
- 	/* Can optionally have an etm node - return if not  */
- 	cs_fwnode = fwnode_find_reference(root_fwnode, CTI_DT_CSDEV_ASSOC, 0);
--	if (IS_ERR_OR_NULL(cs_fwnode))
-+	if (IS_ERR(cs_fwnode))
- 		return 0;
- 
- 	/* allocate memory */
-@@ -393,7 +393,7 @@ static int cti_plat_create_connection(struct device *dev,
- 		/* associated device ? */
- 		cs_fwnode = fwnode_find_reference(fwnode,
- 						  CTI_DT_CSDEV_ASSOC, 0);
--		if (!IS_ERR_OR_NULL(cs_fwnode)) {
-+		if (!IS_ERR(cs_fwnode)) {
- 			assoc_name = cti_plat_get_csdev_or_node_name(cs_fwnode,
- 								     &csdev);
- 			fwnode_handle_put(cs_fwnode);
--- 
-2.17.1
+Of course, only update nohz.next_balance in rebalance_domains() is the
+simpliest way, but as @Valentin put, too many write to it may incur
+unnecessary overhead. If we can gather the earliest next_balance in
+advance, then a single write is considered to be better.
 
+By the way, remove the redundant check in nohz_idle_balance().
+
+FWIW, how about the below?
+***********************************************
+* Below code is !!!ENTIRELY UNTESTED!!!, just *
+* a draft to see whehter it's sensible!       *
+***********************************************
+-------------------<-----------------------
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 02f323b85b6d..a7d63ea706ac 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -9943,22 +9943,8 @@ static void rebalance_domains(struct rq *rq, enum cpu_idle_type idle)
+ 	 * When the cpu is attached to null domain for ex, it will not be
+ 	 * updated.
+ 	 */
+-	if (likely(update_next_balance)) {
++	if (likely(update_next_balance))
+ 		rq->next_balance = next_balance;
+-
+-#ifdef CONFIG_NO_HZ_COMMON
+-		/*
+-		 * If this CPU has been elected to perform the nohz idle
+-		 * balance. Other idle CPUs have already rebalanced with
+-		 * nohz_idle_balance() and nohz.next_balance has been
+-		 * updated accordingly. This CPU is now running the idle load
+-		 * balance for itself and we need to update the
+-		 * nohz.next_balance accordingly.
+-		 */
+-		if ((idle == CPU_IDLE) && time_after(nohz.next_balance, rq->next_balance))
+-			nohz.next_balance = rq->next_balance;
+-#endif
+-	}
+ }
+
+ static inline int on_null_domain(struct rq *rq)
+@@ -10218,6 +10204,9 @@ void nohz_balance_enter_idle(int cpu)
+
+ 	rq->nohz_tick_stopped = 1;
+
++	if (time_after(nohz.next_balance, rq->next_balance))
++		nohz.next_balance = rq->next_balance;
++
+ 	cpumask_set_cpu(cpu, nohz.idle_cpus_mask);
+ 	atomic_inc(&nohz.nr_cpus);
+
+@@ -10287,6 +10276,7 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
+ 		 */
+ 		if (need_resched()) {
+ 			has_blocked_load = true;
++			update_next_balance = 0;
+ 			goto abort;
+ 		}
+
+@@ -10321,9 +10311,15 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
+ 		has_blocked_load |= this_rq->has_blocked_load;
+ 	}
+
+-	if (flags & NOHZ_BALANCE_KICK)
++	if (flags & NOHZ_BALANCE_KICK) {
+ 		rebalance_domains(this_rq, CPU_IDLE);
+
++		if (time_after(next_balance, this_rq->next_balance)) {
++			next_balance = this_rq->next_balance;
++			update_next_balance = 1;
++		}
++	}
++
+ 	WRITE_ONCE(nohz.next_blocked,
+ 		now + msecs_to_jiffies(LOAD_AVG_PERIOD));
+
+@@ -10354,9 +10350,7 @@ static bool nohz_idle_balance(struct rq *this_rq, enum cpu_idle_type idle)
+ {
+ 	int this_cpu = this_rq->cpu;
+ 	unsigned int flags;
+-
+-	if (!(atomic_read(nohz_flags(this_cpu)) & NOHZ_KICK_MASK))
+-		return false;
++	bool done;
+
+ 	if (idle != CPU_IDLE) {
+ 		atomic_andnot(NOHZ_KICK_MASK, nohz_flags(this_cpu));
+@@ -10368,9 +10362,16 @@ static bool nohz_idle_balance(struct rq *this_rq, enum cpu_idle_type idle)
+ 	if (!(flags & NOHZ_KICK_MASK))
+ 		return false;
+
+-	_nohz_idle_balance(this_rq, flags, idle);
++	/*
++	 * If idle load balance terinated due to this CPU become busy,
++	 * pretend it has successfully pulled some loads, and abort
++	 * the following load balance.
++	 */
++	done = _nohz_idle_balance(this_rq, flags, idle);
++	if (done == false && need_resched())
++		return true;
+
+-	return true;
++	return done;
+ }
+
+ static void nohz_newidle_balance(struct rq *this_rq)
