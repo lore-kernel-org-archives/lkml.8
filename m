@@ -2,207 +2,127 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA60C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88656C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C791206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 655E7206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:22:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cQe6rtuY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729695AbgEEOO4 (ORCPT
+        id S1730388AbgEEOV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:14:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48788 "EHLO
+        Tue, 5 May 2020 10:21:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729651AbgEEOOy (ORCPT
+        by vger.kernel.org with ESMTP id S1729256AbgEEOV4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:14:54 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDD03C0610D6
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:14:53 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jVyLD-0001BC-Rv; Tue, 05 May 2020 16:14:36 +0200
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 4DB3EFFC8D;
-        Tue,  5 May 2020 16:14:35 +0200 (CEST)
-Message-Id: <20200505134341.873785437@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:41:30 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: [patch V4 part 2 18/18] x86/kvm/svm: Move guest enter/exit into .noinstr.text
-References: <20200505134112.272268764@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-transfer-encoding: 8-bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Tue, 5 May 2020 10:21:56 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13B45C061A0F;
+        Tue,  5 May 2020 07:21:56 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id 207so1086068pgc.6;
+        Tue, 05 May 2020 07:21:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=cPehjVZlHj3aHIpwlaH11wYRizkllSVBKTyEpG1u9o8=;
+        b=cQe6rtuYwQupTWb2O+AmXwy/AngOD5Gs7e004xd9rHZ8q0lFfYjREUPKhrReYPNq+y
+         Y+LFSx278dRQWd4kuh6dz9PX70JoD+PBkFrX6cAgBKSl4eIl8dSUWj6XCkiKYL3aa9bC
+         Bcxyclf2McA4goDo32h13h1kKMPxHbcRadw7TI9B2ynWCS8Jn2urb3BxH0ZiShuakOh0
+         M0NZgA9Ejv2g1rHRUcvXf+CSBa16TUnzfCJeOOGNoqOPgvMAOb1ry/qz6qOe9fa45sDl
+         9LNqnq714nyPQ17T8yZ4QlvQRvh7rb5qewA3WdIXi01mf/9V7W/X1Vs3HopzbBLiKtrn
+         2baA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=cPehjVZlHj3aHIpwlaH11wYRizkllSVBKTyEpG1u9o8=;
+        b=QK82PuiXB3KVWcJwb8IbpPerj0OO0ragzm8yRVGpaBDy6QzJ7Fzche4GGlpy7kbteV
+         mqSE2E9hIahwu0UZFttXozbjEEEzXU2wG/2mcIRwDd5hAjuvHK/53HUswmxYoOJfnPu9
+         AHz/JCUbeHgYsj27APY/UhrxLCcGN0v6JI+5UB4KdimOgUPKM+anrW4aFQRC449s+ziM
+         CSQIbg0P+ofVMkelzWe1cCltP+iBMIDxejO0/0kB1rs/ns4lpCbEkw3cV8wT9Rf84RE6
+         ogE2jQpZ/xiC3boW7FmH/f/UGaqNDecrRROqoOuq6p1TeLDAMhQoUpdnPSrCEEESuCWy
+         LTKw==
+X-Gm-Message-State: AGi0PubosorSy67EL2Kp7o5ldTMDPR7RnVTN5dymRZlgGY3MF3JQWQ1D
+        LwslKdI5SR+zvL2vZSlsfuc=
+X-Google-Smtp-Source: APiQypLEf1iEWLOIV3zKy//l6iBpXlZXz4d2EO3uWFl2oLEiwZOq4ELIBlobuJS0yMohcdO7rPPZow==
+X-Received: by 2002:a63:8d4b:: with SMTP id z72mr2992726pgd.376.1588688515628;
+        Tue, 05 May 2020 07:21:55 -0700 (PDT)
+Received: from localhost.localdomain ([120.244.110.63])
+        by smtp.gmail.com with ESMTPSA id o63sm2235060pjb.40.2020.05.05.07.21.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 07:21:55 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     mchehab@kernel.org, kstewart@linuxfoundation.org,
+        tomasbortoli@gmail.com, gregkh@linuxfoundation.org, sean@mess.org,
+        allison@lohutok.net, tglx@linutronix.de
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] media: usb: ttusb-dec: avoid buffer overflow in ttusb_dec_handle_irq() when DMA failures/attacks occur
+Date:   Tue,  5 May 2020 22:21:10 +0800
+Message-Id: <20200505142110.7620-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the functions which are inside the RCU off region into the
-non-instrumentable text section.
+In ttusb_dec_init_usb():
+  dec->irq_buffer = usb_alloc_coherent(...)
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Thus, "dec->irq_buffer" is a DMA value, and it is assigned to "buffer"
+in ttusb_dec_handle_irq():
+  char *buffer = dec->irq_buffer;
+
+When DMA failures or attacks occur, the value of buffer[4] can be
+changed at any time. In this case, "buffer[4] - 1 < ARRAY_SIZE(rc_keys)"
+can be first satisfied, and then the value of buffer[4] can be changed
+to a large number, causing a buffer-overflow vulnerability.
+
+To avoid the risk of this vulnerability, buffer[4] is assigned to a
+non-DMA local variable "index" at the beginning of
+ttusb_dec_handle_irq(), and then this variable replaces each use of
+buffer[4] in the function.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
 ---
- arch/x86/kvm/svm/svm.c     |  102 ++++++++++++++++++++++++---------------------
- arch/x86/kvm/svm/vmenter.S |    2 
- 2 files changed, 57 insertions(+), 47 deletions(-)
+ drivers/media/usb/ttusb-dec/ttusb_dec.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -3278,6 +3278,61 @@ static void svm_cancel_injection(struct
+diff --git a/drivers/media/usb/ttusb-dec/ttusb_dec.c b/drivers/media/usb/ttusb-dec/ttusb_dec.c
+index 3198f9624b7c..8543c552515b 100644
+--- a/drivers/media/usb/ttusb-dec/ttusb_dec.c
++++ b/drivers/media/usb/ttusb-dec/ttusb_dec.c
+@@ -250,6 +250,7 @@ static void ttusb_dec_handle_irq( struct urb *urb)
+ 	struct ttusb_dec *dec = urb->context;
+ 	char *buffer = dec->irq_buffer;
+ 	int retval;
++	u8 index = buffer[4];
  
- void __svm_vcpu_run(unsigned long vmcb_pa, unsigned long *regs);
- 
-+static noinstr void svm_vcpu_enter_exit(struct kvm_vcpu *vcpu,
-+					struct vcpu_svm *svm)
-+{
-+	/*
-+	 * VMENTER enables interrupts (host state), but the kernel state is
-+	 * interrupts disabled when this is invoked. Also tell RCU about
-+	 * it. This is the same logic as for exit_to_user_mode().
-+	 *
-+	 * 1) Trace interrupts on state
-+	 * 2) Prepare lockdep with RCU on
-+	 * 3) Invoke context tracking if enabled to adjust RCU state
-+	 * 4) Tell lockdep that interrupts are enabled
-+	 *
-+	 * This has to be after x86_spec_ctrl_set_guest() because that can
-+	 * take locks (lockdep needs RCU) and calls into world and some
-+	 * more.
-+	 */
-+	instr_begin();
-+	trace_hardirqs_on_prepare();
-+	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
-+	instr_end();
-+	guest_enter_irqoff();
-+	lockdep_hardirqs_on(CALLER_ADDR0);
-+
-+	__svm_vcpu_run(svm->vmcb_pa, (unsigned long *)&svm->vcpu.arch.regs);
-+
-+#ifdef CONFIG_X86_64
-+	native_wrmsrl(MSR_GS_BASE, svm->host.gs_base);
-+#else
-+	loadsegment(fs, svm->host.fs);
-+#ifndef CONFIG_X86_32_LAZY_GS
-+	loadsegment(gs, svm->host.gs);
-+#endif
-+#endif
-+
-+	/*
-+	 * VMEXIT disables interrupts (host state, see the CLI in the ASM
-+	 * above), but tracing and lockdep have them in state 'on'. Same as
-+	 * enter_from_user_mode().
-+	 *
-+	 * 1) Tell lockdep that interrupts are disabled
-+	 * 2) Invoke context tracking if enabled to reactivate RCU
-+	 * 3) Trace interrupts off state
-+	 *
-+	 * This needs to be done before the below as native_read_msr()
-+	 * contains a tracepoint and x86_spec_ctrl_restore_host() calls
-+	 * into world and some more.
-+	 */
-+	lockdep_hardirqs_off(CALLER_ADDR0);
-+	guest_exit_irqoff();
-+	instr_begin();
-+	trace_hardirqs_off_prepare();
-+	instr_end();
-+}
-+
- static void svm_vcpu_run(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_svm *svm = to_svm(vcpu);
-@@ -3330,52 +3385,7 @@ static void svm_vcpu_run(struct kvm_vcpu
- 	 */
- 	x86_spec_ctrl_set_guest(svm->spec_ctrl, svm->virt_spec_ctrl);
- 
--	/*
--	 * VMENTER enables interrupts (host state), but the kernel state is
--	 * interrupts disabled when this is invoked. Also tell RCU about
--	 * it. This is the same logic as for exit_to_user_mode().
--	 *
--	 * 1) Trace interrupts on state
--	 * 2) Prepare lockdep with RCU on
--	 * 3) Invoke context tracking if enabled to adjust RCU state
--	 * 4) Tell lockdep that interrupts are enabled
--	 *
--	 * This has to be after x86_spec_ctrl_set_guest() because that can
--	 * take locks (lockdep needs RCU) and calls into world and some
--	 * more.
--	 */
--	trace_hardirqs_on_prepare();
--	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
--	guest_enter_irqoff();
--	lockdep_hardirqs_on(CALLER_ADDR0);
--
--	__svm_vcpu_run(svm->vmcb_pa, (unsigned long *)&svm->vcpu.arch.regs);
--
--#ifdef CONFIG_X86_64
--	wrmsrl(MSR_GS_BASE, svm->host.gs_base);
--#else
--	loadsegment(fs, svm->host.fs);
--#ifndef CONFIG_X86_32_LAZY_GS
--	loadsegment(gs, svm->host.gs);
--#endif
--#endif
--
--	/*
--	 * VMEXIT disables interrupts (host state, see the CLI in the ASM
--	 * above), but tracing and lockdep have them in state 'on'. Same as
--	 * enter_from_user_mode().
--	 *
--	 * 1) Tell lockdep that interrupts are disabled
--	 * 2) Invoke context tracking if enabled to reactivate RCU
--	 * 3) Trace interrupts off state
--	 *
--	 * This needs to be done before the below as native_read_msr()
--	 * contains a tracepoint and x86_spec_ctrl_restore_host() calls
--	 * into world and some more.
--	 */
--	lockdep_hardirqs_off(CALLER_ADDR0);
--	guest_exit_irqoff();
--	trace_hardirqs_off_prepare();
-+	svm_vcpu_enter_exit(vcpu, svm);
- 
- 	/*
- 	 * We do not use IBRS in the kernel. If this vCPU has used the
---- a/arch/x86/kvm/svm/vmenter.S
-+++ b/arch/x86/kvm/svm/vmenter.S
-@@ -27,7 +27,7 @@
- #define VCPU_R15	__VCPU_REGS_R15 * WORD_SIZE
- #endif
- 
--	.text
-+.section .noinstr.text, "ax"
- 
- /**
-  * __svm_vcpu_run - Run a vCPU via a transition to SVM guest mode
+ 	switch(urb->status) {
+ 		case 0: /*success*/
+@@ -281,11 +282,11 @@ static void ttusb_dec_handle_irq( struct urb *urb)
+ 		 * this should/could be added later ...
+ 		 * for now lets report each signal as a key down and up
+ 		 */
+-		if (buffer[4] - 1 < ARRAY_SIZE(rc_keys)) {
+-			dprintk("%s:rc signal:%d\n", __func__, buffer[4]);
+-			input_report_key(dec->rc_input_dev, rc_keys[buffer[4] - 1], 1);
++		if (index - 1 < ARRAY_SIZE(rc_keys)) {
++			dprintk("%s:rc signal:%d\n", __func__, index);
++			input_report_key(dec->rc_input_dev, rc_keys[index - 1], 1);
+ 			input_sync(dec->rc_input_dev);
+-			input_report_key(dec->rc_input_dev, rc_keys[buffer[4] - 1], 0);
++			input_report_key(dec->rc_input_dev, rc_keys[index - 1], 0);
+ 			input_sync(dec->rc_input_dev);
+ 		}
+ 	}
+-- 
+2.17.1
 
