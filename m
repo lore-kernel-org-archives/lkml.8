@@ -2,120 +2,122 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6BEC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D25CC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C323620752
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:39:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RuljQ/OX"
+	by mail.kernel.org (Postfix) with ESMTP id 5475C20757
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:40:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588711220;
+	bh=KsXgkPIepQrTxi3STz1MeJ2XqM4eEMfu8mg3G7P86hg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=c1ru1eiCQFOS2cTM963XcQ39yUF/U5CjAIunOkrIH5PbaXP84huyeucD+z5G7EG58
+	 6JcIRii0IVcGF3k+8T0WJfl95Nru4Eh04ZX8MmQeLGEtMShKl5Ycj7WuP3Xuyhh3/T
+	 t7pO9dkMDA3vik3mYfywSmzIQwUxwWADPnikDsAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729096AbgEEUjN (ORCPT
+        id S1729186AbgEEUkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 16:39:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52758 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726350AbgEEUjN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 16:39:13 -0400
-Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F41A5C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 13:39:12 -0700 (PDT)
-Received: by mail-io1-xd29.google.com with SMTP id k6so3061132iob.3
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 13:39:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=U45TDLYumc2/K0rnmrk5/wRM/urCIpyQBeo6bZOouHs=;
-        b=RuljQ/OXfBBYKN9lpJ8XXeJiYlk1FhYn9x6V4lz4W1KkSG3Msg/Hj1FE8vRSUrQR8I
-         hwctAfVQNnCkhN0nSW+x3PBdUbVh8w5S0GF1oOVChy8I/tl89l0FtOoHi8RcYGoHq6BI
-         WbPMQ+kuqqyx2neS5AOouOSK5bU5O0OvTfSEQL7WesJmzVPGo98hEaJgcQmDOFPz2it7
-         kDTNTULXLeB84GDsFfVHVQ1WfUAOFEr/WVRr9eN8+7MTZRHvx8Ojwn0s8JEjQoHYZ/P0
-         O0lT6C1UOxBXWTg7BZe/YdU7tYB1U0pjCJCNCpsDvPbJ2EzcFADz2keanNQl0QT3vsKx
-         NjCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U45TDLYumc2/K0rnmrk5/wRM/urCIpyQBeo6bZOouHs=;
-        b=IaCxA9PiHf34M0YbNqHQuq2NaO7J57Ztpb5hTHlFrffut5rS6kI0YlqXHLPxOd1YWv
-         0JycscQ4EoaLB4OCxLZddIeSIrjTeM3ew/qVRYWLDDu0rRppnzwYsej3K9T/2yRvdrGZ
-         QXdpUfSQ1kr8aMBA1Ik1pM5DmnScUS/qRHmn0tIIRHsHhvoCmjStWM8/wmTV1a2iLHnR
-         Wfm1Co7HE2wkJKn7KITy/pLsUt9oPVb4dYjdqUKIRuPNR+snwsXqqvgAx5SJp7YFs0cE
-         1P8CV4K57UyXmN8HBiAOTL9zOTN0De7KHti7Oz+xXewVlE+WHBd6KekUp5FadZxYCSbx
-         r99A==
-X-Gm-Message-State: AGi0PuYjmeo/kfYGDi67wxXUmSBW6hMEaQ/ecfJlAJzhy9kMb4F48J/h
-        8mU1bG9xksiEiESVayQ/drHYG4jn6nRceG0OwQ==
-X-Google-Smtp-Source: APiQypIk0WCHK9kEO+y8L1VfUzkH9XXDLuobjN6N2h7Z1cHDypNLP1MtLtTic9XWU3qTWIA3DoD4nCWJ9BkKtjd54lU=
-X-Received: by 2002:a02:415:: with SMTP id 21mr5516935jab.126.1588711152291;
- Tue, 05 May 2020 13:39:12 -0700 (PDT)
+        Tue, 5 May 2020 16:40:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40944 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726350AbgEEUkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 16:40:18 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF5C920752;
+        Tue,  5 May 2020 20:40:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588711218;
+        bh=KsXgkPIepQrTxi3STz1MeJ2XqM4eEMfu8mg3G7P86hg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Kd3Y8n8K/YRIFOhhPweSLC+9q2w1NgM7FntiyXkAgNbpx7g1GG0YO06RDixKqu8Lw
+         eyR0UNKZwiWq1KgKk+h5ul4zS1tOgSxz/zHqJQiwHwlyiWygtZMZw3t2JP4yv6BBN1
+         2I7nQyVgfTGNc64wiaqTTIEuV69tpWbPHfqpccwI=
+Received: by pali.im (Postfix)
+        id C6C5E6F1; Tue,  5 May 2020 22:40:15 +0200 (CEST)
+Date:   Tue, 5 May 2020 22:40:15 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Andy Whitcroft <apw@canonical.com>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, users@linux.kernel.org
+Subject: Re: [kernel.org users] [PATCH v2] checkpatch: use patch subject when
+ reading from stdin
+Message-ID: <20200505204015.44ibvg4bapnalrct@pali>
+References: <20200505132613.17452-1-geert+renesas@glider.be>
+ <1b0b4e6562cbbf4621e71042e511ae3cd0b542f6.camel@perches.com>
 MIME-Version: 1.0
-References: <20200505131602.633487962@linutronix.de> <20200505134059.970057117@linutronix.de>
-In-Reply-To: <20200505134059.970057117@linutronix.de>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Tue, 5 May 2020 16:39:01 -0400
-Message-ID: <CAMzpN2i9bZhxagk1dNhHpZmYyHjNiPQU_yRmwY9y85LemkNFNw@mail.gmail.com>
-Subject: Re: [patch V4 part 1 19/36] x86/entry: Exclude low level entry code
- from sanitizing
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1b0b4e6562cbbf4621e71042e511ae3cd0b542f6.camel@perches.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 10:13 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> The sanitizers are not really applicable to the fragile low level entry
-> code. code. Entry code needs to carefully setup a normal 'runtime'
-> environment.
->
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Hello!
+
+On Tuesday 05 May 2020 12:57:37 Joe Perches wrote:
+> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > index eac40f0abd56a9f4..3355358697d9e790 100755
+> > --- a/scripts/checkpatch.pl
+> > +++ b/scripts/checkpatch.pl
+> > @@ -1057,6 +1057,10 @@ for my $filename (@ARGV) {
+> >  	}
+> >  	while (<$FILE>) {
+> >  		chomp;
+> > +		if ($vname eq 'Your patch') {
+> > +			my ($subject) = $_ =~ /^Subject:\s*(.*)/;
+> > +			$vname = '"' . $subject . '"' if $subject;
+> > +		}
+> >  		push(@rawlines, $_);
+> >  	}
+> >  	close($FILE);
+> 
+> There's a less cpu intensive way to do this,
+> for small patches, on my little laptop it's a
+> few dozen milliseconds faster, and for very
+> large patches multiple seconds faster to use
+> the following patch:
+> 
+> Substitute Geert's patch with the below but:
+> 
+> Acked-by: Joe Perches <joe@perches.com>
+> 
 > ---
->  arch/x86/entry/Makefile |    8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> --- a/arch/x86/entry/Makefile
-> +++ b/arch/x86/entry/Makefile
-> @@ -3,6 +3,14 @@
->  # Makefile for the x86 low level entry code
->  #
->
-> +KASAN_SANITIZE := n
-> +UBSAN_SANITIZE := n
-> +KCOV_INSTRUMENT := n
-> +
-> +CFLAGS_REMOVE_common.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
-> +CFLAGS_REMOVE_syscall_32.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
-> +CFLAGS_REMOVE_syscall_64.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
+> 
+>  scripts/checkpatch.pl | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index f0092104ff7b..29786a097862 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -1062,6 +1062,7 @@ for my $filename (@ARGV) {
+>  	while (<$FILE>) {
+>  		chomp;
+>  		push(@rawlines, $_);
+> +		$vname = "\"$1\"" if ($filename eq '-' && $_ =~ /^Subject:\s*(.*)/);
 
-Is this necessary for syscall_*.o?  They just contain the syscall
-tables (ie. data).
+Hint: You can use qq operator to make code more readable (no need to
+escape quote character). And maybe you should match Subject as
+case-insensitive and expects at least one space after colon.
+As a Perl developer I would write above code as:
 
---
-Brian Gerst
++		$vname = qq("$1") if $filename eq '-' && $_ =~ m/^Subject:\s+(.+)/i;
+
+Anyway, what would happen if subject line contains quotes?
+
+>  	}
+>  	close($FILE);
+>  
+> 
