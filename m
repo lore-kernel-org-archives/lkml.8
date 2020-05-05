@@ -2,147 +2,142 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4076C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B1AC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE41B206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:13:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T5S+O90V"
+	by mail.kernel.org (Postfix) with ESMTP id 4CB512087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:14:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728778AbgEEKNn (ORCPT
+        id S1728787AbgEEKOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 06:13:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39064 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728672AbgEEKNb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 06:13:31 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22F85C061A10;
-        Tue,  5 May 2020 03:13:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=pf+8UbD/8jsz87XgA7eBkoAI8lHWNvd/TrPDgE8g/Q8=; b=T5S+O90V8jpK1jZDT4Xxt2bEyq
-        vNENKGjTiapnYjdG+K+97VkW5vlrUBUMBrFYjM0CMTbcepQtRLcsfp+IEyEOCd2PuvKyeAiOIchRw
-        oz5akyY7rTAXJOXrp5gSEO0kYh70TTzn1a1PeT3/yZkafIsSqgOAh7NJa8qAcNWNj4lt+jfPIBfQr
-        35EzNTljJDykJnsLc50D1RB0lmLhFGnwsrp8Dl2CqiLvv2woKfnVoPuOvRoJw/eOkXMhFqInMtaUw
-        v1WjxeIsQD3j9MDW0PouPbgRi0aop/eiOL0wEdpg1hJmBr9TEWZpmQutpYxq6KhMWLTj6bfuYwfwb
-        TWIDtd4g==;
-Received: from [2001:4bb8:191:66b6:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jVuZi-0006wy-Kb; Tue, 05 May 2020 10:13:19 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jeremy Kerr <jk@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 7/7] binfmt_elf_fdpic: remove the set_fs(KERNEL_DS) in elf_fdpic_core_dump
-Date:   Tue,  5 May 2020 12:12:56 +0200
-Message-Id: <20200505101256.3121270-8-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200505101256.3121270-1-hch@lst.de>
-References: <20200505101256.3121270-1-hch@lst.de>
+        Tue, 5 May 2020 06:14:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:36356 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728422AbgEEKOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 06:14:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7169531B;
+        Tue,  5 May 2020 03:14:16 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 01A1D3F305;
+        Tue,  5 May 2020 03:14:12 -0700 (PDT)
+Date:   Tue, 5 May 2020 11:14:05 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     will@kernel.org, catalin.marinas@arm.com, suzuki.poulose@arm.com,
+        maz@kernel.org, steven.price@arm.com, guohanjun@huawei.com,
+        olof@lixom.net, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, xiexiangyou@huawei.com,
+        zhangshaokun@hisilicon.com, linux-mm@kvack.org, arm@kernel.org,
+        prime.zeng@hisilicon.com, kuhn.chenqun@huawei.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH v3 1/2] arm64: tlb: Detect the ARMv8.4 TLBI RANGE
+ feature
+Message-ID: <20200505101405.GB82424@C02TD0UTHF1T.local>
+References: <20200414112835.1121-1-yezhenyu2@huawei.com>
+ <20200414112835.1121-2-yezhenyu2@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414112835.1121-2-yezhenyu2@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no logic in elf_fdpic_core_dump itself or in the various arch
-helpers called from it which use uaccess routines on kernel pointers
-except for the file writes thate are nicely encapsulated by using
-__kernel_write in dump_emit.
+On Tue, Apr 14, 2020 at 07:28:34PM +0800, Zhenyu Ye wrote:
+> ARMv8.4-TLBI provides TLBI invalidation instruction that apply to a
+> range of input addresses. This patch detect this feature.
+> 
+> Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+> ---
+>  arch/arm64/include/asm/cpucaps.h |  3 ++-
+>  arch/arm64/include/asm/sysreg.h  |  4 ++++
+>  arch/arm64/kernel/cpufeature.c   | 11 +++++++++++
+>  3 files changed, 17 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/include/asm/cpucaps.h b/arch/arm64/include/asm/cpucaps.h
+> index 8eb5a088ae65..950095a72617 100644
+> --- a/arch/arm64/include/asm/cpucaps.h
+> +++ b/arch/arm64/include/asm/cpucaps.h
+> @@ -61,7 +61,8 @@
+>  #define ARM64_HAS_AMU_EXTN			51
+>  #define ARM64_HAS_ADDRESS_AUTH			52
+>  #define ARM64_HAS_GENERIC_AUTH			53
+> +#define ARM64_HAS_TLBI_RANGE			54
+>  
+> -#define ARM64_NCAPS				54
+> +#define ARM64_NCAPS				55
+>  
+>  #endif /* __ASM_CPUCAPS_H */
+> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+> index ebc622432831..ac1b98650234 100644
+> --- a/arch/arm64/include/asm/sysreg.h
+> +++ b/arch/arm64/include/asm/sysreg.h
+> @@ -592,6 +592,7 @@
+>  
+>  /* id_aa64isar0 */
+>  #define ID_AA64ISAR0_RNDR_SHIFT		60
+> +#define ID_AA64ISAR0_TLBI_RANGE_SHIFT	56
+>  #define ID_AA64ISAR0_TS_SHIFT		52
+>  #define ID_AA64ISAR0_FHM_SHIFT		48
+>  #define ID_AA64ISAR0_DP_SHIFT		44
+> @@ -605,6 +606,9 @@
+>  #define ID_AA64ISAR0_SHA1_SHIFT		8
+>  #define ID_AA64ISAR0_AES_SHIFT		4
+>  
+> +#define ID_AA64ISAR0_TLBI_RANGE_NI	0x0
+> +#define ID_AA64ISAR0_TLBI_RANGE		0x2
+> +
+>  /* id_aa64isar1 */
+>  #define ID_AA64ISAR1_I8MM_SHIFT		52
+>  #define ID_AA64ISAR1_DGH_SHIFT		48
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index 9fac745aa7bb..31bcfd0722b5 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -124,6 +124,7 @@ static bool __system_matches_cap(unsigned int n);
+>   */
+>  static const struct arm64_ftr_bits ftr_id_aa64isar0[] = {
+>  	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_RNDR_SHIFT, 4, 0),
+> +	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_TLBI_RANGE_SHIFT, 4, 0),
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/binfmt_elf_fdpic.c | 21 +++++++--------------
- 1 file changed, 7 insertions(+), 14 deletions(-)
+This should be FTR_HIDDEN as userspace has no reason to see this.
 
-diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
-index 240f666635437..d9501a86cec97 100644
---- a/fs/binfmt_elf_fdpic.c
-+++ b/fs/binfmt_elf_fdpic.c
-@@ -1549,7 +1549,6 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
- {
- #define	NUM_NOTES	6
- 	int has_dumped = 0;
--	mm_segment_t fs;
- 	int segs;
- 	int i;
- 	struct vm_area_struct *vma;
-@@ -1589,31 +1588,31 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
- 	/* alloc memory for large data structures: too large to be on stack */
- 	elf = kmalloc(sizeof(*elf), GFP_KERNEL);
- 	if (!elf)
--		goto cleanup;
-+		goto end_coredump;
- 	prstatus = kzalloc(sizeof(*prstatus), GFP_KERNEL);
- 	if (!prstatus)
--		goto cleanup;
-+		goto end_coredump;
- 	psinfo = kmalloc(sizeof(*psinfo), GFP_KERNEL);
- 	if (!psinfo)
--		goto cleanup;
-+		goto end_coredump;
- 	notes = kmalloc_array(NUM_NOTES, sizeof(struct memelfnote),
- 			      GFP_KERNEL);
- 	if (!notes)
--		goto cleanup;
-+		goto end_coredump;
- 	fpu = kmalloc(sizeof(*fpu), GFP_KERNEL);
- 	if (!fpu)
--		goto cleanup;
-+		goto end_coredump;
- #ifdef ELF_CORE_COPY_XFPREGS
- 	xfpu = kmalloc(sizeof(*xfpu), GFP_KERNEL);
- 	if (!xfpu)
--		goto cleanup;
-+		goto end_coredump;
- #endif
- 
- 	for (ct = current->mm->core_state->dumper.next;
- 					ct; ct = ct->next) {
- 		tmp = kzalloc(sizeof(*tmp), GFP_KERNEL);
- 		if (!tmp)
--			goto cleanup;
-+			goto end_coredump;
- 
- 		tmp->thread = ct->task;
- 		list_add(&tmp->list, &thread_list);
-@@ -1678,9 +1677,6 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
- 			  "LINUX", ELF_CORE_XFPREG_TYPE, sizeof(*xfpu), xfpu);
- #endif
- 
--	fs = get_fs();
--	set_fs(KERNEL_DS);
--
- 	offset += sizeof(*elf);				/* Elf header */
- 	offset += segs * sizeof(struct elf_phdr);	/* Program headers */
- 
-@@ -1788,9 +1784,6 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
- 	}
- 
- end_coredump:
--	set_fs(fs);
--
--cleanup:
- 	while (!list_empty(&thread_list)) {
- 		struct list_head *tmp = thread_list.next;
- 		list_del(tmp);
--- 
-2.26.2
+Otherwise this all seems to match the ARM ARM.
 
+Mark.
+
+>  	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_TS_SHIFT, 4, 0),
+>  	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_FHM_SHIFT, 4, 0),
+>  	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_DP_SHIFT, 4, 0),
+> @@ -1779,6 +1780,16 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+>  		.min_field_value = 1,
+>  	},
+>  #endif
+> +	{
+> +		.desc = "TLB range maintenance instruction",
+> +		.capability = ARM64_HAS_TLBI_RANGE,
+> +		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
+> +		.matches = has_cpuid_feature,
+> +		.sys_reg = SYS_ID_AA64ISAR0_EL1,
+> +		.field_pos = ID_AA64ISAR0_TLBI_RANGE_SHIFT,
+> +		.sign = FTR_UNSIGNED,
+> +		.min_field_value = ID_AA64ISAR0_TLBI_RANGE,
+> +	},
+>  	{},
+>  };
+>  
+> -- 
+> 2.19.1
+> 
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
