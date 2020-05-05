@@ -2,116 +2,129 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D31F8C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66148C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A99912068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:38:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="a4AcHy8T"
+	by mail.kernel.org (Postfix) with ESMTP id 46B6F2068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:43:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729067AbgEETih (ORCPT
+        id S1728804AbgEETnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 15:38:37 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:42243 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728076AbgEETig (ORCPT
+        Tue, 5 May 2020 15:43:01 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:40960 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728135AbgEETnB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 15:38:36 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588707516; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=5+l4sTupj4Jx3BRxaz5t8PSJeiWtuJYsTLLLRfWD2L4=; b=a4AcHy8TfQGDis7Y8hvXLUgyzWKpD+xgsS6CMlPKrt6Fba37cmhsf1gu05k8VbwSGP6TQgAm
- Xnad8LkDnZAzqfyNmpTBdleH1GX/gYdMXpa+weiTc+BTnsWtU4BSwfnPvLF1YOimlUQHAT/D
- KKus3MyteVvvHciHrexoRofjWWQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb1c0b9.7f1f2605c228-smtp-out-n04;
- Tue, 05 May 2020 19:38:33 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id F074CC43637; Tue,  5 May 2020 19:38:32 +0000 (UTC)
-Received: from [10.110.9.159] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 43824C433D2;
-        Tue,  5 May 2020 19:38:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 43824C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [PATCH v8 1/5] dt-bindings: phy: Add binding for
- qcom,usb-snps-femto-v2
-To:     Rob Herring <robh@kernel.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
-        mgautam@codeaurora.org, vkoul@kernel.org, sboyd@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, jackp@codeaurora.org
-References: <1588636467-23409-1-git-send-email-wcheng@codeaurora.org>
- <1588636467-23409-2-git-send-email-wcheng@codeaurora.org>
- <20200505133408.GA24731@bogus>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <d1b6c7f2-69d8-027d-267d-22018484441e@codeaurora.org>
-Date:   Tue, 5 May 2020 12:38:26 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 15:43:01 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jW3Sz-0000zc-E9; Tue, 05 May 2020 13:42:57 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jW3Sy-0003WK-3A; Tue, 05 May 2020 13:42:56 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     <linux-kernel@vger.kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        <linux-fsdevel@vger.kernel.org>, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Date:   Tue, 05 May 2020 14:39:32 -0500
+Message-ID: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200505133408.GA24731@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-XM-SPF: eid=1jW3Sy-0003WK-3A;;;mid=<87h7wujhmz.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19L4HMNcSPaWzPpAyNF2T7kOhipYhZQrjA=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: exec: Promised cleanups after introducing exec_update_mutex
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+In the patchset that introduced exec_update_mutex there were a few last
+minute discoveries and fixes that left the code in a state that can
+be very easily be improved.
 
-On 5/5/2020 6:34 AM, Rob Herring wrote:
-> On Mon,  4 May 2020 16:54:23 -0700, Wesley Cheng wrote:
->> This binding shows the descriptions and properties for the
->> Synopsis Femto USB PHY V2 used on QCOM platforms.
->>
->> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
->> ---
->>  .../bindings/phy/qcom,usb-snps-femto-v2.yaml       | 77 ++++++++++++++++++++++
->>  1 file changed, 77 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
->>
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.example.dt.yaml: phy@88e2000: 'vdda-pll-supply' is a required property
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.example.dt.yaml: phy@88e2000: 'vdda18-supply' is a required property
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.example.dt.yaml: phy@88e2000: 'vdda33-supply' is a required property
-> 
-> See https://patchwork.ozlabs.org/patch/1283143
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
-> 
-> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-> 
-> Please check and re-submit.
-> 
+During the merge window we discussed the first three of these patches
+and I promised I would resend them.
 
-Hi Rob,
+What the first patch does is it makes the the calls in the binfmts:
+	flush_old_exec();
+        /* set the personality */
+        setup_new_exec();
+        install_exec_creds();
 
-I updated the dt-schema version, and I can see the same error.  Will fix
-and resubmit.  I also realized that the dt_binding_check doesn't stop if
-errors are detected in the example DT checking phase, and that was
-probably why I missed this initially.  I'll pass the DT_SCHEMA_FILES
-argument to my specific binding next time to help verify my file.
-Thanks again!
+With no sleeps or anything in between.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+At the conclusion of this set of changes the the calls in the binfmts
+are:
+	begin_new_exec();
+        /* set the personality */
+        setup_new_exec();
+
+The intent is to make the code easier to follow and easier to change.
+
+Eric W. Biederman (7):
+      binfmt: Move install_exec_creds after setup_new_exec to match binfmt_elf
+      exec: Make unlocking exec_update_mutex explict
+      exec: Rename the flag called_exec_mmap point_of_no_return
+      exec: Merge install_exec_creds into setup_new_exec
+      exec: In setup_new_exec cache current in the local variable me
+      exec: Move most of setup_new_exec into flush_old_exec
+      exec: Rename flush_old_exec begin_new_exec
+
+ Documentation/trace/ftrace.rst |   2 +-
+ arch/x86/ia32/ia32_aout.c      |   4 +-
+ fs/binfmt_aout.c               |   3 +-
+ fs/binfmt_elf.c                |   3 +-
+ fs/binfmt_elf_fdpic.c          |   3 +-
+ fs/binfmt_flat.c               |   4 +-
+ fs/exec.c                      | 162 ++++++++++++++++++++---------------------
+ include/linux/binfmts.h        |  10 +--
+ kernel/events/core.c           |   2 +-
+ 9 files changed, 92 insertions(+), 101 deletions(-)
+
+---
+
+These changes are against v5.7-rc3.
+
+My intention once everything passes code reveiw is to place these
+changes in a topic branch in my tree and then into linux-next, and
+eventually to send Linus a pull when the next merge window opens.
+Unless someone has a better idea.
+
+I am a little concerned that I might conflict with the ongoing coredump
+cleanups.
+
+I have several follow up sets of changes with additional cleanups as
+well but I am trying to keep everything small enough that the code can
+be reviewed.
+
+After enough cleanups I hope to reopen the conversation of dealing with
+the livelock situation with cred_guard_mutex.  As I think figuring out
+what to do becomes much easier once several of my planned
+cleanups/improvements have been made.
+
+But ultimately I just want to get exec to the point where when
+we have disucssions on how to make exec better the code is in good
+enough shape we can actually address the issues we see.
+
+Eric
