@@ -2,104 +2,134 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D01C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC99EC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7891D206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0389206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:34:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729663AbgEEOeL (ORCPT
+        id S1729672AbgEEOeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:34:11 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:46673 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727857AbgEEOeL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:34:11 -0400
-Received: from localhost.localdomain ([149.172.19.189]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1Mof1D-1ila9N3wWf-00p29q; Tue, 05 May 2020 16:33:41 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Maya Erez <merez@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Dedy Lansky <dlansky@codeaurora.org>,
-        Ahmad Masri <amasri@codeaurora.org>,
-        Alexei Avshalom Lazar <ailizaro@codeaurora.org>,
-        Tzahi Sabo <stzahi@codeaurora.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Lior David <liord@codeaurora.org>,
-        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] wil6210: avoid gcc-10 zero-length-bounds warning
-Date:   Tue,  5 May 2020 16:33:24 +0200
-Message-Id: <20200505143332.1398524-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
+        Tue, 5 May 2020 10:34:46 -0400
+Received: from mga01.intel.com ([192.55.52.88]:10117 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729142AbgEEOep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 10:34:45 -0400
+IronPort-SDR: m3X7mIEB7tTfaLF17mfk2z5ysj7v4W6O4PK9ngLR78pBRSxTh28SskOU677H2x6GXyI3PXwTwC
+ apD5FTmVYSDQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 07:34:40 -0700
+IronPort-SDR: qrFj6iMtPzHsAywlLtyMywVTplrwJr0C8vOpRK7GA+E/Kw/OpjrehePNbXAVS+QBoAXTtr5oIU
+ BNFfxIzV/8QQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,355,1583222400"; 
+   d="scan'208";a="263187158"
+Received: from jmserbon-mobl1.amr.corp.intel.com (HELO [10.254.110.254]) ([10.254.110.254])
+  by orsmga006.jf.intel.com with ESMTP; 05 May 2020 07:34:39 -0700
+Subject: Re: [PATCH v2 1/1] fs/splice: add missing callback for inaccessible
+ pages
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ulrich Weigand <uweigand@de.ibm.com>
+Cc:     Claudio Imbrenda <imbrenda@linux.ibm.com>, viro@zeniv.linux.org.uk,
+        david@redhat.com, akpm@linux-foundation.org, aarcange@redhat.com,
+        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
+        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, jack@suse.cz, kirill@shutemov.name,
+        peterz@infradead.org, sean.j.christopherson@intel.com,
+        Ulrich.Weigand@de.ibm.com
+References: <20200430143825.3534128-1-imbrenda@linux.ibm.com>
+ <1a3f5107-9847-73d4-5059-c6ef9d293551@de.ibm.com>
+ <e3e95a35-b0e3-b733-92f4-98bcccbe7ca5@intel.com>
+ <3d379d9e-241c-ef3b-dcef-20fdd3b8740d@de.ibm.com>
+ <a10ec7ad-2648-950e-7f30-07c08e400e7b@intel.com>
+ <20200504134154.GA21001@oc3748833570.ibm.com>
+ <231da2f1-a6ef-0cf9-7f57-95e8b925997b@intel.com>
+ <45bc81bb-8765-ffff-6e47-8ee9702c8bcd@de.ibm.com>
+ <6e97a4b0-df4f-90c7-a6f7-61ee52e0833e@intel.com>
+ <da6bc7cb-ef13-08cd-f162-663b4a66043b@de.ibm.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <fcc9adea-598f-f882-c3e3-09d190cd5d52@intel.com>
+Date:   Tue, 5 May 2020 07:34:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:zDD9bs6aW0JYGWHkwYbnevv//40lQsm3jQwPwrI1bBnlk/bFmpk
- kZ7UaQ0Fyi+SxjBcJf1zuSa0Sz3irK8/KXdIuShUrvRKkFNI9G4bvKnkf2cMEqIsjTTsWGc
- iK24LCQ46DyASUuYCv6y4tJNO6BTxcEh+qtZzobf576RokNG5ZI0uC1W75wjZTJqMq7GEme
- Uo4NzDp2i0EOhyU1cZHVg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:d7gL+ZdLOB4=:eXPbZb3icMUiHmpRvU3P0f
- M/j7WeQ1Fe2vADPBhdEhyXAjOsnX7OVDvoWLybK1PrWEsAkAstoJPvhZM+RCmdRV3lv/1EsT+
- 44/Z+e+X+Da8UKYza5hXGqw/ZPGO7V4fLMakWwFuCbiXlkPQIDBT2/bqgXPimuR5d5fJC6mVP
- g9uQckF06ya8J9h4IvE9HKDN/kHNrf31RATZ5Y7xn51ELYjDvjxI6h2U/E8TcXTnS5LiUEb5/
- aDd+IdzrTqIrn0DfIhw7cYg5nsLHp/18eSWzLVcfB4Z0sD+LEOop8WnAN4zi5H/JVXQx6+lKE
- 9LQjWTnPxM+y9bZz36gnKnp0LxyPTF+H3HqKdwPnRfgWCaSjRRso7GDZfIXUeLLWN5l2djs6N
- ifckdjTpXQZ/tb1vSjeb2a0yCZlx/Tft5hB1Xpg2EDf3QVwtoVA2Y4bzT8G77zMYQAXbpo6kd
- V69z9mJgSDwSAdjeIVlsDSWI0UY/auf0jLRrIU+xpqsddEtPGchSVvGKSnsf91tP8yfhxvW4h
- jhgfu1ZAXXwd7yXViQzRgS/tj5tnBv2jk6XdmuHJjV6oZf4nrci4d65prswmwZbqF9Ix0WJAe
- D09TT3ksA0HDEGb/+OmuUsWReSvYjFdpWQIjSY/ufPnu3YW4OvUkxo0e2CLLTuIO3Q8dCSxUg
- CgMkfvEUzgMq9hhFKob5FNd02ssBqNbOf2vUpf0u0HPPPxWzilNtRh6Jm2sWxld/uy+dQpi7i
- wW7YUvshuEd78jav7rBxdQ9+Pa6RmFVEY81D1Rt8ebKSWR4+xQNb8BPOOGdxzKr1u3mpIIHoa
- ukyeR0YuBwbIWhdNrvfxDYx86WvWYTBaH24UoFOhAqbFfP8UPQ=
+In-Reply-To: <da6bc7cb-ef13-08cd-f162-663b4a66043b@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gcc-10 warns about accesses inside of a zero-length array:
+On 5/5/20 7:31 AM, Christian Borntraeger wrote:
+>> So, the requirements are:
+>>
+>> 1. Allow host-side DMA and CPU access to shared pages
+>> 2. Stop host-side DMA and CPU access to encrypted pages
+>> 3. Allow pages to be converted between the states at the request of the
+>>    guest
+>>
+>> Stopping the DMA is pretty easy, even across the gazillions of drivers
+>> in the tree because even random ethernet drivers do stuff like:
+>>
+>>                 txdr->buffer_info[i].dma =
+>>                         dma_map_single(&pdev->dev, skb->data, skb->len,
+>>                                        DMA_TO_DEVICE);
+>>
+>> So the DMA can be stopped at the mapping layer.  It's a *LOT* easier to
+>> catch there since the IOMMUs already provide isolation between the I/O
+>> and CPU address spaces.
+> And your problem is that the guest could convert this after the dma_map?
+> So you looked into our code if this would help?
 
-drivers/net/wireless/ath/wil6210/cfg80211.c: In function 'wil_cfg80211_scan':
-drivers/net/wireless/ath/wil6210/cfg80211.c:970:23: error: array subscript 255 is outside the bounds of an interior zero-length array 'struct <anonymous>[0]' [-Werror=zero-length-bounds]
-  970 |   cmd.cmd.channel_list[cmd.cmd.num_channels++].channel = ch - 1;
-      |   ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
-In file included from drivers/net/wireless/ath/wil6210/wil6210.h:17,
-                 from drivers/net/wireless/ath/wil6210/cfg80211.c:11:
-drivers/net/wireless/ath/wil6210/wmi.h:477:4: note: while referencing 'channel_list'
-  477 |  } channel_list[0];
-      |    ^~~~~~~~~~~~
-
-Turn this into a flexible array to avoid the warning.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-Gustavo has a patch to do it for all arrays in this file, and that
-should get merged as well, but this simpler patch is sufficient
-to shut up the warning.
----
- drivers/net/wireless/ath/wil6210/wmi.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/ath/wil6210/wmi.h b/drivers/net/wireless/ath/wil6210/wmi.h
-index e3558136e0c4..5bba45c1de48 100644
---- a/drivers/net/wireless/ath/wil6210/wmi.h
-+++ b/drivers/net/wireless/ath/wil6210/wmi.h
-@@ -474,7 +474,7 @@ struct wmi_start_scan_cmd {
- 	struct {
- 		u8 channel;
- 		u8 reserved;
--	} channel_list[0];
-+	} channel_list[];
- } __packed;
- 
- #define WMI_MAX_PNO_SSID_NUM	(16)
--- 
-2.26.0
-
+Yep, it seemed like a close-enough problem.
