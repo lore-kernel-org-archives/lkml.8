@@ -2,101 +2,105 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8B4C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD576C47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B184206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB77F206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:40:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ua2Y5pt+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="NWIDf8yH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729398AbgEEXhB (ORCPT
+        id S1729526AbgEEXkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 19:37:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52392 "EHLO
+        Tue, 5 May 2020 19:40:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728853AbgEEXhB (ORCPT
+        by vger.kernel.org with ESMTP id S1727895AbgEEXkY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 19:37:01 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3D81C061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 16:37:00 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id v2so1516534plp.9
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 16:37:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tV8k3SS2CHeSg6+79pVabsils9K32cepGXeLdcOAQJE=;
-        b=Ua2Y5pt+OErrGRBo/BnuHn8XmNGatlMJtl73UVMhbLZg9dIgLiG9H8VPBxyed0B7Xj
-         pKmDsX4Rt83fv/4OVyyvTJV9HeDQ4+kLkvr+rptl0op7KRmSeH7EEnl4TthCdLWJj7yy
-         JkOXNNPblnEzyNfdhD5kzDOuSmwuup3xkl1ednTKQG2+sWMKdTRE+ozniU56+75e2UpW
-         VgN4pKmjV+T/eqdZgP6qye1nvK3c+p+Ai+HpeHNTSIBuDmyBksU9kAkOSB84wBrhhvZi
-         ucE3e39d1LJMsPkYyXacggBre/HMsfXKi7/unaDw6t18STqzlf/Ja24RhpdClm7LSL79
-         cmTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tV8k3SS2CHeSg6+79pVabsils9K32cepGXeLdcOAQJE=;
-        b=LBgazbgiCK1tjDU2GUu+Rh6d9yrwnYsz0ksKYsssqgajSneNYSoiJ9J5hu0eVNKG9D
-         GYjSc1ytD0bfCXTEnSz9LjG9Ojq6gWpQVxMCzFzzTQXvJQiYkavnGgKeFTGe6QrTYfSc
-         GQ1qCpmw4sVVSG5S624PM1bRe3/UZgyPdo5qs6txG14BeTP60AyThG4J5ffLUmVU9BBc
-         sGzEc00KHO+8xfy39uRy3sltu3xTbsr2xDhWViAXNE14nPQLrqRxzqZE3Lf/8rG8ncho
-         vmWsxxqvcLa210gjEJQ01Jm9mToswcbPY2cfABkM+MtQ4n7O1fpvnVWANPNAVB+H0gm1
-         QmtQ==
-X-Gm-Message-State: AGi0PuZ0ZwcslwVc7swxwydhYg256nDod+xbCeWXm6Bep2VNhCuxHgB4
-        3k3N7Oh6lWKfqdR84jcp2AHOn6TqwkJKHTBGPhDOMQ==
-X-Google-Smtp-Source: APiQypLovBrf/kLoL/BVlwKUEVNCB111jD4tkdcRD9SkmNC5GRRsdT6HJAVxN1k0TY4QYYbCy47f8CCYIzjl3ZA/+OM=
-X-Received: by 2002:a17:90a:6488:: with SMTP id h8mr5982493pjj.51.1588721819875;
- Tue, 05 May 2020 16:36:59 -0700 (PDT)
+        Tue, 5 May 2020 19:40:24 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 426FEC061A0F;
+        Tue,  5 May 2020 16:40:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=i7LzIqelxTirgC24kz7WiSVTVMleXcRWmalGKIurdBs=; b=NWIDf8yHMHJLmpK5AJ7C6BGBW
+        KEplB4MxY0qLv8jphSm5OygZjvB3GdaGb0ILO1+Iuog6hNiuZk/fzt8OKgPoSOY8rx/wOFyGr0LvN
+        p6ILzTHq5VEXfDmaI7Lne6pbEHQWn18kfXMD0JrVNYcM9oo7jqT66EHvuQRVY13tu3Fpa5BM5JNUv
+        80DIn4PNi5bvPxZfIvrXWXsHCIhVE3kOztJA3d3fIrt6X7tLSG4JmYjwrULrjjeKPjoHJBVGba3VH
+        fIjarqLFLVRQe5xD23tnJEVkjIvataodA5AOnAA+1PVFLlAfXesdTj8b1RtFCdUUaKPb4iczk7aW4
+        E+UmKE29A==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:56670)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jW7AM-0005GA-9P; Wed, 06 May 2020 00:39:58 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jW7AE-0007aX-E1; Wed, 06 May 2020 00:39:50 +0100
+Date:   Wed, 6 May 2020 00:39:50 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Calvin Johnson <calvin.johnson@oss.nxp.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>, linux.cj@gmail.com,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        netdev@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [net-next PATCH v3 1/5] net: phy: Introduce phy related fwnode
+ functions
+Message-ID: <20200505233950.GM1551@shell.armlinux.org.uk>
+References: <20200505132905.10276-1-calvin.johnson@oss.nxp.com>
+ <20200505132905.10276-2-calvin.johnson@oss.nxp.com>
 MIME-Version: 1.0
-References: <CAHmME9oMcfY4nwkknwN9c4rB-O7xD4GCAOFPoZCbdnq=034=Vw@mail.gmail.com>
- <20200505215503.691205-1-Jason@zx2c4.com> <CAKwvOdk32cDowvrqRPKDRpf2ZiXh=jVnBTmhM-NWD=Ownq9v3w@mail.gmail.com>
- <20200505222540.GA230458@ubuntu-s3-xlarge-x86> <CAHmME9qs0iavoBqd_z_7Xibyz7oxY+FRt+sHyy+sBa1wQc66ww@mail.gmail.com>
- <202005051617.F9B32B5526@keescook> <CAHmME9q3zFe4e1xnpptJ27zywGqngZK2K7LCVzDSoG__ht=fNA@mail.gmail.com>
-In-Reply-To: <CAHmME9q3zFe4e1xnpptJ27zywGqngZK2K7LCVzDSoG__ht=fNA@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 5 May 2020 16:36:49 -0700
-Message-ID: <CAKwvOdkrS-P_AS1azSCP-DVq_h8Dhb8YiLTfH=9zzEJQphZTcA@mail.gmail.com>
-Subject: Re: [PATCH] Kbuild: disable FORTIFY_SOURCE on clang-10
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Kees Cook <keescook@chromium.org>,
-        George Burgess <gbiv@google.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505132905.10276-2-calvin.johnson@oss.nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 4:22 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
->
-> On Tue, May 5, 2020 at 5:19 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > (Though as was mentioned, it's likely that FORTIFY_SOURCE isn't working
-> > _at all_ under Clang, so I may still send a patch to depend on !clang
-> > just to avoid surprises until it's fixed, but I haven't had time to
-> > chase down a solution yet.)
+On Tue, May 05, 2020 at 06:59:01PM +0530, Calvin Johnson wrote:
+> +static inline struct phy_device *device_phy_find_device(struct device *dev)
+> +{
+> +	return NULL;
+> +}
+> +
+> +struct fwnode_handle *fwnode_get_phy_node(struct fwnode_handle *fwnode)
+> +{
+> +	return NULL;
+> +}
 
-Not good.  If it's completely broken, turn it off, and we'll prioritize fixing.
+This wants to be "static inline" to avoid the issue the 0-day robot
+found.
 
-> That might be the most coherent thing to do, at least so that people
-> don't get some false sense of mitigation.
+Thanks.
 
-Do we have a better test for "this is working as intended" or not
-other than excessive stack usage, since that doesn't repro for
-clang-9?
 -- 
-Thanks,
-~Nick Desaulniers
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
