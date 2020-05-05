@@ -2,98 +2,126 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F37C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B39C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F772206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EA59206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:51:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sBavfMWd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729549AbgEEOug (ORCPT
+        id S1729584AbgEEOvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:50:36 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:42959 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729332AbgEEOuf (ORCPT
+        Tue, 5 May 2020 10:51:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54672 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729183AbgEEOvA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:50:35 -0400
-Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MfZDK-1iuhCk00VM-00fxiN; Tue, 05 May 2020 16:50:34 +0200
-Received: by mail-qk1-f172.google.com with SMTP id i14so2481696qka.10;
-        Tue, 05 May 2020 07:50:33 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYMK1Z5O7Lw3eOlNezFBug99HhG7qCIsvsG+rcLi3zrpBdCxkVl
-        vhsx8+AdyKCS6gV/qVrWzc37WbVf9uKLCjaoEcw=
-X-Google-Smtp-Source: APiQypJLyiXCJC5P9f6z2L3iZlBe5oRvFHw9Gwp3hVkojbjzPuoDSdiHrFCZeHWjvZ6SiDNDEMJvgXleWYPp8TYCh3o=
-X-Received: by 2002:a37:a492:: with SMTP id n140mr4053709qke.352.1588690232807;
- Tue, 05 May 2020 07:50:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200429112834.24908-1-vincenzo.frascino@arm.com>
-In-Reply-To: <20200429112834.24908-1-vincenzo.frascino@arm.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 5 May 2020 16:50:16 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3u05wF1DT3Wnvmapc0jixu+gp_YG=KTEN9-n4JedJ9BA@mail.gmail.com>
-Message-ID: <CAK8P3a3u05wF1DT3Wnvmapc0jixu+gp_YG=KTEN9-n4JedJ9BA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] kselftest: Extend vDSO tests
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:c+CoYMx96cdZ0BvJpcEUhP+izzQf2qvPczyfYmJz90MuGAgBsFT
- jMfPdM/yEXK6SbuaMAXipzXZXbg9jzWgLtqb5cq23xc3G1qDCAC26tG0i2ms1ynjdaL16yT
- Gsy3YA72u/etcYVllRjoALQnvRwURDjVhGfE67JxB/QZcVhj07nZcU2MXvmkPQTReeeO175
- bgz31FynO1mfcYliXp3LQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:m1zBxUvWGYA=:iKJeMF58+W+tPtenU7nQfr
- RShj67StJ+z1sMcqv1ktsa3z+JilpsJM9Cmm8mE2Tn8Uup0xQT1jMEMvuNFiEqb1IADFMtgJX
- 6vBe5SphWkLYD89hf22tEyLsVMV8QiW199qDf0zXdNb8mEzk/LJV2bXToEJC29HHanaW9RCsO
- Tp6yUnzfnatsPIU3i/5iYceQvbksnY6nV76aIiobxrxd3nEa6183uGyRDid7zP8ohO+JRXwK4
- 6aAhL7W16tux6BZtG2e3et6eSXFnHdEg60M1euyTqF0MFsFbUNJR6WSdMuVTWbipZNVQPm76n
- 4heHXtPoRrY2hLDnRJ2yv9ibzZIGYDEMCMTfKDCQBQgpBwOdyg5gMhYB1bKpFQhyebKI616nC
- F2HziDjqUQHVcsfIUVxIdo5qYcD/mG18NEwz53hGZJ4LniYkuU2Eeq4wp3AbV721uClxpaPws
- BtBrPKgdlflUZ5DGak/Awm+vnlRYlcHeiEFaAKfQ3uSWpFPuqDU/c7VzSYrvjFe3vCGHQFNyH
- MYwuOi0o+Mv8d//S22gxKA8v6DMiqm5pdnCvXC7WpmuARhyKB8c5CmGhNM61QZAfx6JIxTVeE
- dTO8A8k1/3XWj+5LjpnCyBVyVCgY7ZMCPrXE/XLFc0mToIitWZPARCvP0Qc7oCFtZqc8lj2G3
- YNrNDdW+scRp0Tcz/Ios5W5TRMi71A/2C4DnGgfpZcr/AcQkpRiwnnv6+emDYOva6NNCenY2Y
- pbgfMw9ejR7aB4oRQs1PqFtpIL8I8YmnDmXSv8/zeaFADRgaNzVv82oo7McYT6h/HT67Ah23v
- WAS8xXMlSiKzdKKwvyGZUJiRVaxewl0/VsZtQ0XOZ7q3b7dRzA=
+        Tue, 5 May 2020 10:51:00 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 262CBC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:51:00 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id u10so912381pls.8
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 07:51:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=gqMtkzsSoPZBMMdRPapCy9u7s4SBqp2jU6yXsz651xs=;
+        b=sBavfMWdGoIANOSSLVXfXxC83qThaa0PpqS7Gu0n+50OKtn9f0tzizOmIqG2aTxtZ2
+         xp3HubkEHyBYGfLwk9sdggL6flPiZUZvKKQwy8GsCM8yTZ7LaNtDSwpxZpNzwSNfv6u0
+         H1Pio9FUQcYG/lkYk30Ywst5VEoF6G/Zt5DsgQxlGCZJevYunPeUUrixpsa1Sf8j6TQB
+         H2ruHWKzH0i8PhmCWp67lXb1UO+erKSBQAj5FlgOew7zF2kHf5BvBQzv0TmlWGewcqFq
+         Js+WWOGfBGVCGQTcfvhaZoqleU+outnnSDhigFJ1WXwhQCEvUdpPv4rpIH/3QZzcOH2G
+         IcBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=gqMtkzsSoPZBMMdRPapCy9u7s4SBqp2jU6yXsz651xs=;
+        b=LPHN+9ldeoTlk+Mcw7H0VbbBVHGhQ0Mpec+/HWRTZ4IS+ZeM7kq459B7rwvLMPq3fC
+         ODC6yGoHMFV2ugiN7yrQ+S996SaxCvApZRpN2stWU6CYVsTO1c/OE5em3vNFxx1pZmMW
+         Zmsh+j/axTedaJAZZTmyc/e1Z5/iHtjx0UhpA+ZPReXILky+YXhgNMFFC5lKYqHJ4+TZ
+         21TswNNV1y8ddp3ZTPXWWz9/NI2PPCBTO52j6+6p7cxlgLC0FbY1lMZzVamyA1jpCrSV
+         26AwEOSwM+OFCU5KxLxaMrDLEKHoMYbOxjyzwbgxcMAj0NCs52ER9noieHIzULZfV6zq
+         3ZLw==
+X-Gm-Message-State: AGi0PuYGM1brGjGkMNo40FVXH1/UuL58FvQ4P0cQNlW3obulVfmmghs4
+        fpCvjyP0BFieqLR9NLbXxaI=
+X-Google-Smtp-Source: APiQypLFBmQScYPm9uhGYX3oNnygObD/e41/YA0FYVhWFChPNj/bANXZeqfILu/X9kZs1suM8o1NIQ==
+X-Received: by 2002:a17:90b:93:: with SMTP id bb19mr3545245pjb.134.1588690259719;
+        Tue, 05 May 2020 07:50:59 -0700 (PDT)
+Received: from localhost.localdomain ([120.244.110.63])
+        by smtp.gmail.com with ESMTPSA id l16sm1727711pgh.35.2020.05.05.07.50.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 07:50:58 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     shaggy@kernel.org, Markus.Elfring@web.de
+Cc:     jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH v2] fs: jfs: fix a possible data race in txBegin()
+Date:   Tue,  5 May 2020 22:50:13 +0800
+Message-Id: <20200505145013.8040-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 1:34 PM Vincenzo Frascino
-<vincenzo.frascino@arm.com> wrote:
->
-> This series extends the kselftests for the vDSO library making sure: that
-> they compile correctly on non x86 platforms, that they can be cross
-> compiled and introducing new tests that verify the correctness of the
-> library.
->
-> The so extended vDSO kselftests have been verified on all the platforms
-> supported by the unified vDSO library [1].
->
-> The only new patch that this series introduces is the first one, patch 2 and
-> patch 3 have already been reviewed in past as part of other series [2] [3].
->
-> [1] https://lore.kernel.org/lkml/20190621095252.32307-1-vincenzo.frascino@arm.com
-> [2] https://lore.kernel.org/lkml/20190621095252.32307-26-vincenzo.frascino@arm.com
-> [3] https://lore.kernel.org/lkml/20190523112116.19233-4-vincenzo.frascino@arm.com
+The functions txBegin() and txLazyCommit() can be concurrently executed
+in the following call contexts:
 
-Hi Vincenzo,
+Thread1:
+  jfs_write_inode()
+    jfs_commit_inode()
+      txBegin()
 
-Not sure if you are aware of the recent bug report about clock_gettime64()
-returning invalid times on some arm32 kernels:
-https://github.com/raspberrypi/linux/issues/3579
+Thread2:
+  jfs_lazycommit()
+    txLazyCommit()
 
-Regardless of when that gets fixed or by whom, I wonder if kselftest should
-also check for consistency, i.e. call both the vdso and the syscall version of
-clock_gettime() and clock_gettime64() and check that the results are always
-in sequence.
+In txBegin():
+  tblk->next = tblk->last = tblk->xflag = tblk->flag = tblk->lsn = 0;
 
-      Arnd
+In txLazyCommit():
+  spin_lock_irq(&log->gclock);
+  ...
+  tblk->flag |= tblkGC_COMMITTED;
+  ...
+  spin_unlock_irq(&log->gclock);
+
+A data race can occur for the data structure member "flag". 
+This data race was found by our concurrency fuzzer.
+
+Thus use the spin lock "gclock" for the resetting of five 
+data structure members in this function implementation.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+v2:
+* Change the description.
+  Thank Markus Elfring for good advice.
+
+ fs/jfs/jfs_txnmgr.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/fs/jfs/jfs_txnmgr.c b/fs/jfs/jfs_txnmgr.c
+index c8ce7f1bc594..a1f124aad2e0 100644
+--- a/fs/jfs/jfs_txnmgr.c
++++ b/fs/jfs/jfs_txnmgr.c
+@@ -415,7 +415,9 @@ tid_t txBegin(struct super_block *sb, int flag)
+ 	 *
+ 	 * memset(tblk, 0, sizeof(struct tblock));
+ 	 */
++	spin_lock_irq(&log->gclock);
+ 	tblk->next = tblk->last = tblk->xflag = tblk->flag = tblk->lsn = 0;
++	spin_unlock_irq(&log->gclock);
+ 
+ 	tblk->sb = sb;
+ 	++log->logtid;
+-- 
+2.17.1
+
