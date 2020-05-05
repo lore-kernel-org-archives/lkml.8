@@ -2,160 +2,96 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D64C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A98C47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F448206E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E87412087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:22:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="D6pOHAQq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgEEETY (ORCPT
+        id S1725915AbgEEEWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 00:19:24 -0400
-Received: from mga06.intel.com ([134.134.136.31]:6442 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725272AbgEEETY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 00:19:24 -0400
-IronPort-SDR: 8ftTRlp9vlazqKYp6xM0TiWf6U0biTKc1EpilroVsoODo4O7UOx7I+x89DuwmAiJNpN96k22Ix
- srr129ITqvdg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 21:19:22 -0700
-IronPort-SDR: 19MUW11o3UgrQDTTg4md8G0ybJFc6HfNWwZfHSEpBuwhhB4PIO/eoxyfX1KyrrY6u/xY3AH8Ae
- m2dcTKImE9NQ==
-X-IronPort-AV: E=Sophos;i="5.73,354,1583222400"; 
-   d="scan'208";a="406697555"
-Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.254.112.104]) ([10.254.112.104])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 21:19:22 -0700
-Subject: Re: [PATCH 2/2] x86/resctrl: Support CPUID enumeration of MBM counter
- width
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     tglx@linutronix.de, fenghua.yu@intel.com, tony.luck@intel.com,
-        kuo-lang.tseng@intel.com, mingo@redhat.com, babu.moger@amd.com,
-        hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1585763047.git.reinette.chatre@intel.com>
- <76dc65631c373e0c1c9f3e8aaa768f022a2c989c.1585763047.git.reinette.chatre@intel.com>
- <20200429181149.GE16407@zn.tnic>
- <6fb58472-88f2-925b-3a4e-4692957a9582@intel.com>
- <20200430095913.GA3996@zn.tnic>
- <4288b11f-d4da-d311-7112-fa05887f50b4@intel.com>
- <20200504075632.GB15046@zn.tnic>
-From:   Reinette Chatre <reinette.chatre@intel.com>
-Message-ID: <b357e1f6-bf92-ec50-73f2-bd5987b159fc@intel.com>
-Date:   Mon, 4 May 2020 21:19:21 -0700
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 00:22:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41052 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725298AbgEEEWg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 00:22:36 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70664C061A10
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 21:22:36 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id k22so663586eds.6
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 21:22:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uJ0y6FcFB9jMQW7+VyYkys9OyOfLGv891tBYXbKQ6Lo=;
+        b=D6pOHAQqV6oRTxL2e0a/me5SShTY0XO/9NZf1dqbqzyQwZgQF3OarvhBJyqYJN0vjO
+         R5Ixk0dgTp9/EoOjz0rEcr0mPHhkEKxtTWV8FnJgtUhE/0w7hyYhPO/U7mbGI0Lj4LCf
+         typkORdm614GhaxIgrXewRMy0s/Rm7s7+FiKYI9aKY50ys18ZWYJhcAQA5DEU9sc+eoL
+         S0NjlXGpbt/FrqTmZrrQ3r3CjSYwmjVrUJunR0lNJUWKY42njsJqi9vwBhqDFVqWHE6q
+         HrD3+KbbvTIG+t+7wE1NPXVG7sUeofXBAV9ZWVqZldNFKRWqHbYonZvPwyVm1HhyM/oR
+         1W+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uJ0y6FcFB9jMQW7+VyYkys9OyOfLGv891tBYXbKQ6Lo=;
+        b=UVtagEGqu0wY6nEH7DLFGZ9obeJ6nBcgo59SQtQE1/7VTUReJhDos35KU3QGgjihsa
+         tGEXAyVA+ElYYBI5WcInlB+8zRQSd6ISBFAsFSLpP4pwu++KH2y+pdYHZ+VwPpCoM8br
+         mQvxkAeiF1RqZhlOeT+LDitAtBjRBZAwR+l0F3ZSHgNCO79Xsw7lFTcMwiPwF1Hso0yP
+         Vj2EjdukL1ZLwXfGK4MQKMmixp0ugovStGVcY/qBF5ESjIikoCT/VXF4M0NN7thYIKDQ
+         gpJsadN1INyhi3XhZulRmPqdYyUsvTri7fMYCiOACafZ6IwjNmO4Tirxd8/niL5/edgy
+         hpiw==
+X-Gm-Message-State: AGi0PuZfXICf2ZqDbt8wlIRyU2lBSGGf4jV9bfn9syurU605Ns/pB0z4
+        8EJw1nxbfslC4wBIOqVriFr0yRu59kol/uwZQ2uzhA==
+X-Google-Smtp-Source: APiQypKrSlYwMkQPNUw8t3+Xw52t8PsrOt2V3d2FTdJ37MpHOu8qVhpo1pFWdq/+9CH/1SCr+fYJEYbsTqkYq0TiiB8=
+X-Received: by 2002:aa7:c492:: with SMTP id m18mr960081edq.346.1588652554919;
+ Mon, 04 May 2020 21:22:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200504075632.GB15046@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200502143555.543636-1-pasha.tatashin@soleen.com>
+ <20200502143555.543636-2-pasha.tatashin@soleen.com> <20200505010219.GA2282345@jagdpanzerIV.localdomain>
+ <CA+CK2bASiWe=w07gsc-_fFZxPY0SSECSYh6femUCA8yugEpuRg@mail.gmail.com> <CA+CK2bAZAAzAK7G3bJ5dOHR__5+a8LgWPVBzwM+TnbHdVKDUgQ@mail.gmail.com>
+In-Reply-To: <CA+CK2bAZAAzAK7G3bJ5dOHR__5+a8LgWPVBzwM+TnbHdVKDUgQ@mail.gmail.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Tue, 5 May 2020 00:21:59 -0400
+Message-ID: <CA+CK2bAPhXL_p2WkDaLshw2U13KbdU5NMH6qJsy8YTq3rwZwBg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] printk: honor the max_reason field in kmsg_dumper
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kees Cook <keescook@chromium.org>, anton@enomsg.org,
+        ccross@android.com, Tony Luck <tony.luck@intel.com>,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Borislav,
+> > I changed it to make code cleaner:  for such basic operation there are
+> > too many conditions if we will keep it inside the kmsg_dump().
+> > However, if being able to set always_kmsg_dump dynamically during
+> > runtime is deemed important, I can change it back to be checked in
+> > kmsg_dump.
+>
+> If you agree that we do not have to modify this variable dynamically,
+> I will also change the permission here:
+> module_param_named(always_kmsg_dump, always_kmsg_dump, bool, S_IRUGO | S_IWUSR);
 
-On 5/4/2020 12:56 AM, Borislav Petkov wrote:
-> Hi,
-> 
-> On Sun, May 03, 2020 at 11:51:00AM -0700, Reinette Chatre wrote:
->> I am struggling with what should follow ...
-> 
-> Since a diff is better than a thousand words :-) see below.
-> 
+Hi Sergey,
 
-Thank you so much for providing the details. Your explanation is clear
-to me but I do have one clarification question ...
+After thinking about this. I will move this logic back to kmsg_dump(),
+to keep the current behavior where kmsg_dump can be modified during
+runtime.
 
-
-> @@ -597,6 +598,8 @@ static void bsp_init_amd(struct cpuinfo_x86 *c)
->  			x86_amd_ls_cfg_ssbd_mask = 1ULL << bit;
->  		}
->  	}
-> +
-> +	resctrl_cpu_detect(c);
->  }
->  
-
-...
-
-> @@ -322,6 +323,11 @@ static void early_init_intel(struct cpuinfo_x86 *c)
->  		detect_ht_early(c);
->  }
->  
-> +static void bsp_init_intel(struct cpuinfo_x86 *c)
-> +{
-> +	resctrl_cpu_detect(c);
-> +}
-> +
->  #ifdef CONFIG_X86_32
->  /*
->   *	Early probe support logic for ppro memory erratum #50
-> @@ -961,6 +967,7 @@ static const struct cpu_dev intel_cpu_dev = {
->  #endif
->  	.c_detect_tlb	= intel_detect_tlb,
->  	.c_early_init   = early_init_intel,
-> +	.c_bsp_init	= bsp_init_intel,
->  	.c_init		= init_intel,
->  	.c_x86_vendor	= X86_VENDOR_INTEL,
->  };
-> diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-> index d8cc5223b7ce..5e5955aa6593 100644
-> --- a/arch/x86/kernel/cpu/resctrl/core.c
-> +++ b/arch/x86/kernel/cpu/resctrl/core.c
-> @@ -22,7 +22,7 @@
->  #include <linux/cpuhotplug.h>
->  
->  #include <asm/intel-family.h>
-> -#include <asm/resctrl_sched.h>
-> +#include <asm/resctrl.h>
->  #include "internal.h"
->  
->  /* Mutex to protect rdtgroup access. */
-> @@ -958,6 +958,35 @@ static __init void rdt_init_res_defs(void)
->  
->  static enum cpuhp_state rdt_online;
->  
-> +/* Runs once on the BSP during boot. */
-> +void resctrl_cpu_detect(struct cpuinfo_x86 *c)
-> +{
-> +	if (!cpu_has(c, X86_FEATURE_CQM_LLC)) {
-> +		c->x86_cache_max_rmid  = -1;
-> +		c->x86_cache_occ_scale = -1;
-> +		c->x86_cache_mbm_width_offset = -1;
-> +		return;
-> +	}
-> +
-> +	/* will be overridden if occupancy monitoring exists */
-> +	c->x86_cache_max_rmid = cpuid_ebx(0xf);
-> +
-> +	if (cpu_has(c, X86_FEATURE_CQM_OCCUP_LLC) ||
-> +	    cpu_has(c, X86_FEATURE_CQM_MBM_TOTAL) ||
-> +	    cpu_has(c, X86_FEATURE_CQM_MBM_LOCAL)) {
-> +		u32 eax, ebx, ecx, edx;
-> +
-> +		/* QoS sub-leaf, EAX=0Fh, ECX=1 */
-> +		cpuid_count(0xf, 1, &eax, &ebx, &ecx, &edx);
-> +
-> +		c->x86_cache_max_rmid  = ecx;
-> +		c->x86_cache_occ_scale = ebx;
-> +
-> +		if (c->x86_vendor == X86_VENDOR_INTEL)
-> +			c->x86_cache_mbm_width_offset = eax & 0xff;
-> +	}
-> +}
-> +
-
-resctrl_cpu_detect() is now identical among vendors. Do we still need
-the c_bsp_init helpers? Could we not perhaps call resctrl_cpu_detect()
-directly from early_identify_cpu()?
-
-Thank you
-
-Reinette
+Thank you,
+Pasha
