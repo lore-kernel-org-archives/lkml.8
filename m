@@ -2,140 +2,118 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A72C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B4CC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DDCD206D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D13E9206D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:59:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H2EZzldd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgEEA4S (ORCPT
+        id S1727784AbgEEA7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 20:56:18 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:53848 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbgEEA4S (ORCPT
+        Mon, 4 May 2020 20:59:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37726 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbgEEA7P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 20:56:18 -0400
-Received: by mail-io1-f69.google.com with SMTP id i26so234257ioe.20
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 17:56:17 -0700 (PDT)
+        Mon, 4 May 2020 20:59:15 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D0F0C061A0F;
+        Mon,  4 May 2020 17:59:15 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id y6so258697pjc.4;
+        Mon, 04 May 2020 17:59:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6SbvvHuG282tx1BJXlB+6W9tHbbfB/CsKsZjXwYQB6M=;
+        b=H2EZzlddBSJ/4wSnvCWrD/5pmqfHRjtoU2walwps612vPPqT7uMyEJ86JL3FVoSx+I
+         6uXIMCMBupDAKTQ90ldWxmffdz6hgMDY/Zde4Dv50VLvuJIkqhQAj+QJWnXTsoKNiQvJ
+         +9RicTZtk4GQ7HvW0MvOlAkprJ17ELegTle9iH6XcDgZdGFdmw/cRbAivDgo5ru9c+7B
+         z3pfpBEjCObqRWexhsU7oC14nTO3NM8yVpeHfJvPaCKzgJuE5NpYWuRcqHBE+jglpOmU
+         iU3VVCj6D5VnAwyRnFSUF2DK1EY/7iovh+Q3vX54/McqcTZ0uOIDnIm6bRnCnxJw2421
+         mkBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Dv4O+0Da2ApKMxxVKOZ1rWiwoYjMBDdMmxohPYEYF8Y=;
-        b=BSjxRt+YT31lThmG8wPreRtPHfH0CGhxP1i/d3zfoJoEr2DubRYUFOtJTB4bRplWoy
-         Vv+5uUoyQNaLA0s3i89Loupo63YY6wGQklOk4DP+Ws7JUHCAEA4HJIRw0G0pfsI+CkAF
-         mTfe7C9SJB9U+lMftXCkAqUQsIMIAab8rCp+ngF1iBAY1lOk2dzQz5Vp+npFwl4G3X5c
-         Ntp0hDvcK18l4lMIvOFsuMkao5kfQuKSgfNqguti9yRCWEaIXDou6a2esBVKaZjOuJ91
-         aZOQdn2laIbYLqKurMxCCCsNcihgH8gEjOes6p0j1NbKe/eeL8HNpNLVhUJBGv9tStEJ
-         gomQ==
-X-Gm-Message-State: AGi0Pubnn3+JZfgz/wuit558WDSlRM4Dh9gFHXYmZF7a4rgQIr5tiIOP
-        G8JOjoXXAQg7NLElSMd8ols/qzvAtHygJh0/8sTXVmmWp8Ox
-X-Google-Smtp-Source: APiQypInnMvefjG0e09hsyb3MhTZCaH954WJchR+5hA16tZm9D3C5PD5LTr4shO5aDcIf0hVll8j83Dd4wKFinHAlEl1G5gPUkiI
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6SbvvHuG282tx1BJXlB+6W9tHbbfB/CsKsZjXwYQB6M=;
+        b=AJ4gB3OYY6XmDmK53g68kWq9Naen5VcJnplZHKJF1y8d3EotGu19VDni9K7/gHdWnd
+         oRPDDWtY7tBg889iDsVmclYd33gewsKH7iRPnQE6xLzEvtbX9LczqwYd7EpuJl+hxulp
+         nqMFpD6JlTk/n1u/jEjO3EVmbUL24qUkabmkCx2M60QSPPGH/nRdwBV1jlVK83ZZX+9K
+         Tcq7Y9l4vCGUyRjlKD/gLJ5IGNhxAca1UfJS3aShVwr01wioJ6ZDCRI/3QuTdRhHrsxz
+         SThTKhQuryMoe5ZUBVkH3+sn7Rt7OM72vj96bRyMXNOpiL53BxJ5G40xw716msIRah/B
+         TFZQ==
+X-Gm-Message-State: AGi0PuYEy3j02QCQKM6mTxiAoUGbU7kf8L654vjfPpYOs/0Ou5pj39m6
+        uOgETBjSU++eR/JJH4ApZyk=
+X-Google-Smtp-Source: APiQypKbwxQiSORcx46GjsuCviMeM8k4EtYU9bCm15TH/WlUMld56J2/s0aSYu2NQt5AqJ5mLiYsCA==
+X-Received: by 2002:a17:902:23:: with SMTP id 32mr712614pla.40.1588640354849;
+        Mon, 04 May 2020 17:59:14 -0700 (PDT)
+Received: from localhost ([162.211.220.152])
+        by smtp.gmail.com with ESMTPSA id a21sm298853pfk.39.2020.05.04.17.59.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 04 May 2020 17:59:14 -0700 (PDT)
+Date:   Tue, 5 May 2020 08:59:08 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Markus Elfring <Markus.Elfring@web.de>
+Subject: Re: [PATCH] net: rtw88: fix an issue about leak system resources
+Message-ID: <20200505005908.GA8464@nuc8i5>
+References: <79591cab-fe3e-0597-3126-c251d41d492b@web.de>
+ <20200504144206.GA5409@nuc8i5>
+ <882eacd1-1cbf-6aef-06c5-3ed6d402c0f5@web.de>
+ <CA+ASDXOJ2CSzdgos4Y8Wd7iZjRUkrMN=Ma0_-ujG8bihGzPKkQ@mail.gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:ce0d:: with SMTP id b13mr1174488ilo.55.1588640177098;
- Mon, 04 May 2020 17:56:17 -0700 (PDT)
-Date:   Mon, 04 May 2020 17:56:17 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006ea42405a4dc1d45@google.com>
-Subject: KASAN: null-ptr-deref Read in uncore_pmu_event_add
-From:   syzbot <syzbot+832ccf42c61e3c63654e@syzkaller.appspotmail.com>
-To:     acme@kernel.org, alexander.shishkin@linux.intel.com, bp@alien8.de,
-        hpa@zytor.com, jolsa@redhat.com, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+ASDXOJ2CSzdgos4Y8Wd7iZjRUkrMN=Ma0_-ujG8bihGzPKkQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, May 04, 2020 at 10:03:59AM -0700, Brian Norris wrote:
+> (Markus is clearly not taking the hint, but FYI for everyone else:)
+> 
+> On Mon, May 4, 2020 at 8:00 AM Markus Elfring <Markus.Elfring@web.de> wrote:
+> > > BTW, In the past week, you asked me to change the commit comments in my
+> > > 6 patches like this one. Let me return to the essence of patch, point
+> > > out the code problems and better solutions will be more popular.
+> >
+> > I would appreciate if various update suggestions would become nicer somehow.
+> 
+> Markus is not really providing any value to the community. Just search
+> for his recent mail history -- it's all silly commit message
+> nitpicking of little value. He's been blacklisted by a number of
+> people already:
+> 
+> https://lkml.kernel.org/lkml/20190919112937.GA3072241@kroah.com/
+> 
+> Some people continue to humor him, but it's mostly just a waste of
+> their time, as this has been going on for years. Just look at searches
+> like this, and tell me whether they produce anything useful:
+> 
+> https://lkml.kernel.org/lkml/?q=%22markus+elfring%22&o=5000
+>
+Brian, Thanks very much for your reminder, These comments have always
+bothered me. Now I can put it on my blacklist. Thank you very very much!
 
-syzbot found the following crash on:
+BR,
+Dejin
 
-HEAD commit:    ac935d22 Add linux-next specific files for 20200415
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=17f5743fe00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bc498783097e9019
-dashboard link: https://syzkaller.appspot.com/bug?extid=832ccf42c61e3c63654e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10fa7d40100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17bfa540100000
-
-Bisection is inconclusive: the bug happens on the oldest tested release.
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16b06540100000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=15b06540100000
-console output: https://syzkaller.appspot.com/x/log.txt?x=11b06540100000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+832ccf42c61e3c63654e@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: null-ptr-deref in instrument_atomic_read include/linux/instrumented.h:56 [inline]
-BUG: KASAN: null-ptr-deref in test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
-BUG: KASAN: null-ptr-deref in uncore_msr_perf_ctr arch/x86/events/intel/uncore.h:335 [inline]
-BUG: KASAN: null-ptr-deref in uncore_perf_ctr arch/x86/events/intel/uncore.h:378 [inline]
-BUG: KASAN: null-ptr-deref in uncore_assign_hw_event arch/x86/events/intel/uncore.c:230 [inline]
-BUG: KASAN: null-ptr-deref in uncore_pmu_event_add+0xa25/0x16d0 arch/x86/events/intel/uncore.c:602
-Read of size 8 at addr 0000000000000000 by task syz-executor764/7073
-
-CPU: 0 PID: 7073 Comm: syz-executor764 Not tainted 5.7.0-rc1-next-20200415-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- __kasan_report.cold+0x5/0x4d mm/kasan/report.c:515
- kasan_report+0x33/0x50 mm/kasan/common.c:625
- check_memory_region_inline mm/kasan/generic.c:187 [inline]
- check_memory_region+0x141/0x190 mm/kasan/generic.c:193
- instrument_atomic_read include/linux/instrumented.h:56 [inline]
- test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
- uncore_msr_perf_ctr arch/x86/events/intel/uncore.h:335 [inline]
- uncore_perf_ctr arch/x86/events/intel/uncore.h:378 [inline]
- uncore_assign_hw_event arch/x86/events/intel/uncore.c:230 [inline]
- uncore_pmu_event_add+0xa25/0x16d0 arch/x86/events/intel/uncore.c:602
- </IRQ>
-==================================================================
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 7073 Comm: syz-executor764 Tainted: G    B             5.7.0-rc1-next-20200415-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- end_report+0x4d/0x53 mm/kasan/report.c:103
- __kasan_report.cold+0xd/0x4d mm/kasan/report.c:518
- kasan_report+0x33/0x50 mm/kasan/common.c:625
- check_memory_region_inline mm/kasan/generic.c:187 [inline]
- check_memory_region+0x141/0x190 mm/kasan/generic.c:193
- instrument_atomic_read include/linux/instrumented.h:56 [inline]
- test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
- uncore_msr_perf_ctr arch/x86/events/intel/uncore.h:335 [inline]
- uncore_perf_ctr arch/x86/events/intel/uncore.h:378 [inline]
- uncore_assign_hw_event arch/x86/events/intel/uncore.c:230 [inline]
- uncore_pmu_event_add+0xa25/0x16d0 arch/x86/events/intel/uncore.c:602
- </IRQ>
-Shutting down cpus with NMI
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+> Brian
