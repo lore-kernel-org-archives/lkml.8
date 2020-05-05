@@ -4,50 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 055A8C47256
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B8CC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDD112075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED7EB206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:57:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728171AbgEEGvP (ORCPT
+        id S1727784AbgEEG5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 02:51:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:60766 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725320AbgEEGvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 02:51:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CCD061FB;
-        Mon,  4 May 2020 23:51:14 -0700 (PDT)
-Received: from [10.163.71.248] (unknown [10.163.71.248])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6AD753F68F;
-        Mon,  4 May 2020 23:51:12 -0700 (PDT)
-Subject: Re: [PATCH V3 02/16] arm64/cpufeature: Drop TraceFilt feature
- exposure from ID_DFR0 register
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org
-References: <1588426445-24344-1-git-send-email-anshuman.khandual@arm.com>
- <1588426445-24344-3-git-send-email-anshuman.khandual@arm.com>
- <20200504202453.GA5012@willie-the-truck>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <56cd3062-a0c2-6cdf-b7c6-c2b7bf56d23b@arm.com>
-Date:   Tue, 5 May 2020 12:20:41 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 5 May 2020 02:57:40 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43964 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725320AbgEEG5j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 02:57:39 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0456flWT004453;
+        Tue, 5 May 2020 02:57:13 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30s4gumg2e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 May 2020 02:57:13 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0456gAwC005174;
+        Tue, 5 May 2020 02:57:12 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30s4gumg17-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 May 2020 02:57:12 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0456o6xo025873;
+        Tue, 5 May 2020 06:57:10 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma01wdc.us.ibm.com with ESMTP id 30s0g66pd4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 May 2020 06:57:10 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0456v92n53018984
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 5 May 2020 06:57:09 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5EF87124054;
+        Tue,  5 May 2020 06:57:09 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 53540124053;
+        Tue,  5 May 2020 06:57:02 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.84.82])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue,  5 May 2020 06:57:02 +0000 (GMT)
+Subject: Re: [PATCH v7 5/5] powerpc/hv-24x7: Update post_mobility_fixup() to
+ handle migration
+To:     Michael Ellerman <mpe@ellerman.id.au>, acme@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sukadev@linux.vnet.ibm.com
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com,
+        ravi.bangoria@linux.ibm.com, peterz@infradead.org,
+        yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org,
+        kan.liang@linux.intel.com, jmario@redhat.com,
+        alexander.shishkin@linux.intel.com, mingo@kernel.org,
+        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
+        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
+        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
+        tglx@linutronix.de
+References: <20200327063642.26175-1-kjain@linux.ibm.com>
+ <20200327063642.26175-6-kjain@linux.ibm.com>
+ <877dxyfrpz.fsf@mpe.ellerman.id.au>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <9586f8ef-1f3e-d45c-e0dc-665889a4f190@linux.ibm.com>
+Date:   Tue, 5 May 2020 12:27:00 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200504202453.GA5012@willie-the-truck>
+In-Reply-To: <877dxyfrpz.fsf@mpe.ellerman.id.au>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-05_02:2020-05-04,2020-05-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 mlxlogscore=999 clxscore=1015 bulkscore=0 mlxscore=0
+ priorityscore=1501 malwarescore=0 phishscore=0 spamscore=0 impostorscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005050051
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -55,45 +96,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 05/05/2020 01:54 AM, Will Deacon wrote:
-> On Sat, May 02, 2020 at 07:03:51PM +0530, Anshuman Khandual wrote:
->> ID_DFR0 based TraceFilt feature should not be exposed to guests. Hence lets
->> drop it.
+On 4/29/20 5:07 PM, Michael Ellerman wrote:
+> Kajol Jain <kjain@linux.ibm.com> writes:
+>> Function 'read_sys_info_pseries()' is added to get system parameter
+>> values like number of sockets and chips per socket.
+>> and it gets these details via rtas_call with token
+>> "PROCESSOR_MODULE_INFO".
 >>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Marc Zyngier <maz@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: James Morse <james.morse@arm.com>
->> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
+>> Incase lpar migrate from one system to another, system
+>> parameter details like chips per sockets or number of sockets might
+>> change. So, it needs to be re-initialized otherwise, these values
+>> corresponds to previous system values.
+>> This patch adds a call to 'read_sys_info_pseries()' from
+>> 'post-mobility_fixup()' to re-init the physsockets and physchips values.
 >>
->> Suggested-by: Mark Rutland <mark.rutland@arm.com>
->> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
 >> ---
->>  arch/arm64/kernel/cpufeature.c | 1 -
->>  1 file changed, 1 deletion(-)
+>>  arch/powerpc/platforms/pseries/mobility.c | 12 ++++++++++++
+>>  1 file changed, 12 insertions(+)
 >>
->> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
->> index 6d032fbe416f..51386dade423 100644
->> --- a/arch/arm64/kernel/cpufeature.c
->> +++ b/arch/arm64/kernel/cpufeature.c
->> @@ -435,7 +435,6 @@ static const struct arm64_ftr_bits ftr_id_pfr1[] = {
->>  };
+>> diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
+>> index b571285f6c14..226accd6218b 100644
+>> --- a/arch/powerpc/platforms/pseries/mobility.c
+>> +++ b/arch/powerpc/platforms/pseries/mobility.c
+>> @@ -371,6 +371,18 @@ void post_mobility_fixup(void)
+>>  	/* Possibly switch to a new RFI flush type */
+>>  	pseries_setup_rfi_flush();
 >>  
->>  static const struct arm64_ftr_bits ftr_id_dfr0[] = {
->> -	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 28, 4, 0),
+>> +	/*
+>> +	 * Incase lpar migrate from one system to another, system
 > 
-> Hmm, this still confuses me. Is this not now FTR_NONSTRICT? Why is that ok?
+> In case an LPAR migrates
+> 
+>> +	 * parameter details like chips per sockets and number of sockets
+>> +	 * might change. So, it needs to be re-initialized otherwise these
+>                              ^                                       ^
+>                              they need                               the
+>> +	 * values corresponds to previous system.
+>                   ^
+>                   will correspond to the
+> 
+>> +	 * Here, adding a call to read_sys_info_pseries() declared in
+> 
+> Adding is the wrong tense in a comment. When someone reads the comment
+> the code has already been added. Past tense would be right, but really
+> the comment shouldn't say what you did, it should say why.
+> 
+>> +	 * platforms/pseries/pseries.h to re-init the physsockets and
+>> +	 * physchips value.
+> 
+> Call read_sys_info_pseries() to reinitialise the values.
+> 
+>> +	 */
+>> +	if (IS_ENABLED(CONFIG_HV_PERF_CTRS) && IS_ENABLED(CONFIG_PPC_RTAS))
+>> +		read_sys_info_pseries();
+> 
+> The RTAS check is not needed. pseries always selects RTAS.
+> 
+> You shouldn't need the IS_ENABLED() check here though, do it with an
+> empty version in the header when CONFIG_HV_PERF_CTRS is not enabled.
+> 
 
-Mark had mentioned about it earlier (https://patchwork.kernel.org/patch/11287805/)
-Did I misinterpret the first part ? Could not figure "capping the emulated debug
-features" part. Probably, Mark could give some more details.
+Hi Michael,
+	Thanks for reviewing the patch. Is something like this you are suggesting. Please
+let me know if my understanding is fine.
 
-From the earlier discussion:
++#ifndef CONFIG_HV_PERF_CTRS
++#define read_sys_info_pseries() 
++#endif
 
-* ID_DFR0 fields need more thought; we should limit what we expose here.
-  I don't think it's valid for us to expose TraceFilt, and I suspect we
-  need to add capping for debug features we currently emulate.
+Thanks,
+Kajol Jain
+> cheers
+> 
