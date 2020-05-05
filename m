@@ -2,133 +2,189 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29290C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB91C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02170206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6243206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:36:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="zkZhOMbL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RAipE/0m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728395AbgEEA2G (ORCPT
+        id S1727771AbgEEAgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 20:28:06 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:51838 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728258AbgEEA2F (ORCPT
+        Mon, 4 May 2020 20:36:47 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:53043 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725981AbgEEAgp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 20:28:05 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0450HdsP079246;
-        Tue, 5 May 2020 00:27:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=A60tIjrFlCWczDSGE6nphoyY+quycdG0047aXGDBwXM=;
- b=zkZhOMbL5ntt8V+FauVJdMoxGpMiiNxxKf4JrjWnjAN05FHvvX0Ql2S+bPRezp3uCU9L
- H9PCi429eviWsQPB22XxSxA4ABVFlrZEXVoGnCqmnLb1/Y7kzKhFY8uqPRVra4iMqTYz
- wQHLJzjmvD1lSCIik427sDWielozZiI0cWLaKhpCTVcPzO0jgByjY6aTCeGnSCfpoG9q
- ILdQzrviGKqfWRhCYJkHy7O0weSnQ6PUdeQ8WrkZp4tVIEtAnXDvoaXhGuK/trdcIMYw
- b1v+ZfzcchpXBMKdn5jY0Z0DR4hz0qS+myC335sjxVwil9mR8E0JpWQUaiogktg9EUT3 pg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 30s09r20ms-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 05 May 2020 00:27:59 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0450GtQN065070;
-        Tue, 5 May 2020 00:27:58 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 30sjdrs6uv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 05 May 2020 00:27:58 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0450RuSm027475;
-        Tue, 5 May 2020 00:27:56 GMT
-Received: from [10.159.232.15] (/10.159.232.15)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 04 May 2020 17:27:56 -0700
-Subject: Re: [PATCH] mm: Limit boost_watermark on small zones.
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1588294148-6586-1-git-send-email-henry.willard@oracle.com>
- <20200501155729.a479c4b27f127d9aa866bd8e@linux-foundation.org>
- <20200504124409.GB3758@techsingularity.net>
- <20200504133604.5fd0b0b11b93bb4d9a0fed68@linux-foundation.org>
-From:   Henry Willard <henry.willard@oracle.com>
-Message-ID: <fdfd6647-da93-297a-1122-64be8daa8e1c@oracle.com>
-Date:   Mon, 4 May 2020 17:27:55 -0700
+        Mon, 4 May 2020 20:36:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588639002;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0SZj6Gw7F7K83+hrO9xjG8SSTgvs+vu7sVPYN7PJrHA=;
+        b=RAipE/0mfCuEmlQPPzjvcJeo2gKHNTmpbhOThWlCjF4Hh/RhZaRMn+GJBd0Qmz9Qjb2pwl
+        VWh0B3xb3YELP1aeM4vNrtDV/jaciJy43wtu97wWjV3RShfZORSf4VvFKj2lN+1ownoLwf
+        aBw26G/IkjI6/0SgI4WKGJQJKrHKTFY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-167-l1hft9ObPeyd7nOG3vMWJw-1; Mon, 04 May 2020 20:36:41 -0400
+X-MC-Unique: l1hft9ObPeyd7nOG3vMWJw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7A729462;
+        Tue,  5 May 2020 00:36:39 +0000 (UTC)
+Received: from localhost.localdomain (vpn2-54-132.bne.redhat.com [10.64.54.132])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1E85666062;
+        Tue,  5 May 2020 00:36:34 +0000 (UTC)
+Reply-To: Gavin Shan <gshan@redhat.com>
+Subject: Re: [PATCH RFC 4/6] KVM: x86: acknowledgment mechanism for async pf
+ page ready notifications
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, x86@kernel.org,
+        kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>
+References: <20200429093634.1514902-1-vkuznets@redhat.com>
+ <20200429093634.1514902-5-vkuznets@redhat.com>
+From:   Gavin Shan <gshan@redhat.com>
+Message-ID: <bdd3fba1-72d6-9096-e63d-a89f2990a26d@redhat.com>
+Date:   Tue, 5 May 2020 10:36:32 +1000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <20200504133604.5fd0b0b11b93bb4d9a0fed68@linux-foundation.org>
+In-Reply-To: <20200429093634.1514902-5-vkuznets@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=2 mlxscore=0
- bulkscore=0 adultscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005050000
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0
- lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1011 suspectscore=2
- priorityscore=1501 malwarescore=0 mlxlogscore=999 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005050000
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/4/20 1:36 PM, Andrew Morton wrote:
-> On Mon, 4 May 2020 13:44:09 +0100 Mel Gorman <mgorman@techsingularity.net> wrote:
->
->> On Fri, May 01, 2020 at 03:57:29PM -0700, Andrew Morton wrote:
->>> On Thu, 30 Apr 2020 17:49:08 -0700 Henry Willard <henry.willard@oracle.com> wrote:
->>>
->>>> Commit 1c30844d2dfe ("mm: reclaim small amounts of memory when an external
->>>> fragmentation event occurs") adds a boost_watermark() function which
->>>> increases the min watermark in a zone by at least pageblock_nr_pages or
->>>> the number of pages in a page block. On Arm64, with 64K pages and 512M
->>>> huge pages, this is 8192 pages or 512M. It does this regardless of the
->>>> number of managed pages managed in the zone or the likelihood of success.
->>>> This can put the zone immediately under water in terms of allocating pages
->>>> from the zone, and can cause a small machine to fail immediately due to
->>>> OoM. Unlike set_recommended_min_free_kbytes(), which substantially
->>>> increases min_free_kbytes and is tied to THP, boost_watermark() can be
->>>> called even if THP is not active. The problem is most likely to appear
->>>> on architectures such as Arm64 where pageblock_nr_pages is very large.
->>>>
->>>> It is desirable to run the kdump capture kernel in as small a space as
->>>> possible to avoid wasting memory. In some architectures, such as Arm64,
->>>> there are restrictions on where the capture kernel can run, and therefore,
->>>> the space available. A capture kernel running in 768M can fail due to OoM
->>>> immediately after boost_watermark() sets the min in zone DMA32, where
->>>> most of the memory is, to 512M. It fails even though there is over 500M of
->>>> free memory. With boost_watermark() suppressed, the capture kernel can run
->>>> successfully in 448M.
->>>>
->>>> This patch limits boost_watermark() to boosting a zone's min watermark only
->>>> when there are enough pages that the boost will produce positive results.
->>>> In this case that is estimated to be four times as many pages as
->>>> pageblock_nr_pages.
->>>>
->> ...
->> Acked-by: Mel Gorman <mgorman@techsingularity.net>
-> Cool.  I wonder if we should backport this into -stable kernels?  "can
-> cause a small machine to fail immediately" sounds serious, but
-> 1c30844d2dfe is from December 2018.  Any thoughts?
-It is a trivial patch, and we always like to have them in -stable 
-kernels when possible. It was a serious problem for us, because we had a 
-configuration where kdump on Arm always failed. However, other than 
-kdump, the problem is probably relatively rare.
+Hi Vitaly,
+
+On 4/29/20 7:36 PM, Vitaly Kuznetsov wrote:
+> If two page ready notifications happen back to back the second one is not
+> delivered and the only mechanism we currently have is
+> kvm_check_async_pf_completion() check in vcpu_run() loop. The check will
+> only be performed with the next vmexit when it happens and in some cases
+> it may take a while. With interrupt based page ready notification delivery
+> the situation is even worse: unlike exceptions, interrupts are not handled
+> immediately so we must check if the slot is empty. This is slow and
+> unnecessary. Introduce dedicated MSR_KVM_ASYNC_PF_ACK MSR to communicate
+> the fact that the slot is free and host should check its notification
+> queue. Mandate using it for interrupt based type 2 APF event delivery.
+> 
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>   Documentation/virt/kvm/msr.rst       | 16 +++++++++++++++-
+>   arch/x86/include/uapi/asm/kvm_para.h |  1 +
+>   arch/x86/kvm/x86.c                   |  9 ++++++++-
+>   3 files changed, 24 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/virt/kvm/msr.rst b/Documentation/virt/kvm/msr.rst
+> index 7433e55f7184..18db3448db06 100644
+> --- a/Documentation/virt/kvm/msr.rst
+> +++ b/Documentation/virt/kvm/msr.rst
+> @@ -219,6 +219,11 @@ data:
+>   	If during pagefault APF reason is 0 it means that this is regular
+>   	page fault.
+>   
+> +	For interrupt based delivery, guest has to write '1' to
+> +	MSR_KVM_ASYNC_PF_ACK every time it clears reason in the shared
+> +	'struct kvm_vcpu_pv_apf_data', this forces KVM to re-scan its
+> +	queue and deliver next pending notification.
+> +
+>   	During delivery of type 1 APF cr2 contains a token that will
+>   	be used to notify a guest when missing page becomes
+>   	available. When page becomes available type 2 APF is sent with
+> @@ -340,4 +345,13 @@ data:
+>   
+>   	To switch to interrupt based delivery of type 2 APF events guests
+>   	are supposed to enable asynchronous page faults and set bit 3 in
+> -	MSR_KVM_ASYNC_PF_EN first.
+> +
+> +MSR_KVM_ASYNC_PF_ACK:
+> +	0x4b564d07
+> +
+> +data:
+> +	Asynchronous page fault acknowledgment. When the guest is done
+> +	processing type 2 APF event and 'reason' field in 'struct
+> +	kvm_vcpu_pv_apf_data' is cleared it is supposed to write '1' to
+> +	Bit 0 of the MSR, this caused the host to re-scan its queue and
+> +	check if there are more notifications pending.
+
+I'm not sure if I understood the usage of MSR_KVM_ASYNC_PF_ACK
+completely. It seems it's used to trapped to host, to have chance
+to check/deliver pending page ready events. If there is no pending
+events, no work will be finished in the trap. If it's true, it might
+be good idea to trap conditionally, meaning writing to ASYNC_PF_ACK
+if there are really pending events?
 
 Thanks,
-Henry
+Gavin
+
+> diff --git a/arch/x86/include/uapi/asm/kvm_para.h b/arch/x86/include/uapi/asm/kvm_para.h
+> index 1bbb0b7e062f..5c7449980619 100644
+> --- a/arch/x86/include/uapi/asm/kvm_para.h
+> +++ b/arch/x86/include/uapi/asm/kvm_para.h
+> @@ -51,6 +51,7 @@
+>   #define MSR_KVM_PV_EOI_EN      0x4b564d04
+>   #define MSR_KVM_POLL_CONTROL	0x4b564d05
+>   #define MSR_KVM_ASYNC_PF2	0x4b564d06
+> +#define MSR_KVM_ASYNC_PF_ACK	0x4b564d07
+>   
+>   struct kvm_steal_time {
+>   	__u64 steal;
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 861dce1e7cf5..e3b91ac33bfd 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -1243,7 +1243,7 @@ static const u32 emulated_msrs_all[] = {
+>   	HV_X64_MSR_TSC_EMULATION_STATUS,
+>   
+>   	MSR_KVM_ASYNC_PF_EN, MSR_KVM_STEAL_TIME,
+> -	MSR_KVM_PV_EOI_EN, MSR_KVM_ASYNC_PF2,
+> +	MSR_KVM_PV_EOI_EN, MSR_KVM_ASYNC_PF2, MSR_KVM_ASYNC_PF_ACK,
+>   
+>   	MSR_IA32_TSC_ADJUST,
+>   	MSR_IA32_TSCDEADLINE,
+> @@ -2915,6 +2915,10 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>   		if (kvm_pv_enable_async_pf2(vcpu, data))
+>   			return 1;
+>   		break;
+> +	case MSR_KVM_ASYNC_PF_ACK:
+> +		if (data & 0x1)
+> +			kvm_check_async_pf_completion(vcpu);
+> +		break;
+>   	case MSR_KVM_STEAL_TIME:
+>   
+>   		if (unlikely(!sched_info_on()))
+> @@ -3194,6 +3198,9 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>   	case MSR_KVM_ASYNC_PF2:
+>   		msr_info->data = vcpu->arch.apf.msr2_val;
+>   		break;
+> +	case MSR_KVM_ASYNC_PF_ACK:
+> +		msr_info->data = 0;
+> +		break;
+>   	case MSR_KVM_STEAL_TIME:
+>   		msr_info->data = vcpu->arch.st.msr_val;
+>   		break;
+> 
 
