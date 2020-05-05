@@ -2,239 +2,139 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C24C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D2AC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EDCD206E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:19:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ar+YQC5+"
+	by mail.kernel.org (Postfix) with ESMTP id 05DBF206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:21:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729857AbgEERTg (ORCPT
+        id S1730046AbgEERVE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 13:19:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729199AbgEERTg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 13:19:36 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90B4FC061A0F;
-        Tue,  5 May 2020 10:19:35 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id g10so1989685lfj.13;
-        Tue, 05 May 2020 10:19:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=fN8WwnE2LRlNaf6M77DU0dZatEfeAbfUlEhfB3nkRns=;
-        b=ar+YQC5+IzrhOrKTrrxeYt4gi+AFiDPYHMrHdE4YM6SBENqFc/X0mJch+2br09u24E
-         WZVB70SwBtqZfVWpSzMOYGg1rlGFYBCp9LVn8RaTDKXJgmDZj7cklL4gA9Ov3emQRwvA
-         izQyeHIf8CzcbAIhDZCq9HFAvBo2hBXCNC2/SVR7f5i5F/oDsW1O/Bah8HtLhSU2y7Vf
-         U3dER7ZjwMdYmuj2URglq9scPEMEQ6ZVOlqjBsuPx/ZGPvn2gvTgopUXaP4NekIbNRBE
-         6KyjZ7QwokC1coozpMxNzczcFhzJLQ2oIdVc7BoAsoVtgnJDSn0P0bCb7lzw7oM1XCYk
-         A/NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=fN8WwnE2LRlNaf6M77DU0dZatEfeAbfUlEhfB3nkRns=;
-        b=tXWLLGJxQF7tBBkrNNXPI4iNM4kKZoXrtN3GNJGGuwtnTXaovodPD9KRdz6xKr5CYE
-         fuXIESbxs+4XsfssLsqvAbOOKd2s4N+IuoTTs9Rq1X4xvr/15x6w6ipbH8pgpDBwbpqg
-         ylatmtzbbv1y/zaeEEySEqIwruyPlbSM3rWlmKB8QVHYVMs6CZ21gss4nEaip1Wee+6c
-         BLBH2jPpArUVhyw4oMb4P9YjJ9rvC/NgX6BKPeWiMh+VOugoSSMmUOgC66CU0pSse4DJ
-         120pUNfG7Kmy8EjFXnhdciHGtl5uonLBu6X6ZRXOF7LBd5TBT4F/NBlMs+Cz2r+GsuR3
-         TfeA==
-X-Gm-Message-State: AGi0PuZtcN3Yv4Lvk194TQNj6C5Hjgxx3X9cx7hTd818xJPbUbuZdahl
-        bkvy1QLZa59nnA3gwE9nXzk=
-X-Google-Smtp-Source: APiQypKsDr/pXwmUHR9eebHAaQ5nZ+uWqcSwO9LcijLmL2O2nr4OqLhlTriiwsBdbnsr4MUqCEuPMA==
-X-Received: by 2002:a19:c6c1:: with SMTP id w184mr2354137lff.20.1588699173876;
-        Tue, 05 May 2020 10:19:33 -0700 (PDT)
-Received: from ?IPv6:2a01:540:22b8:4400:dc3e:d899:ae3f:7683? ([2a01:540:22b8:4400:dc3e:d899:ae3f:7683])
-        by smtp.gmail.com with ESMTPSA id b1sm2625832lfb.22.2020.05.05.10.19.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2020 10:19:33 -0700 (PDT)
-Subject: Re: [PATCH 1/3] leds: add aw2013 driver
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     dmurphy@ti.com, robh+dt@kernel.org, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht
-References: <20200504162934.4693-1-nikitos.tr@gmail.com>
- <20200504180049.GA5067@duo.ucw.cz>
-From:   Nikita Travkin <nikitos.tr@gmail.com>
-Message-ID: <acbc956a-6cd8-97ca-545a-07533e43b7b7@gmail.com>
-Date:   Tue, 5 May 2020 22:19:31 +0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 13:21:04 -0400
+Received: from mga09.intel.com ([134.134.136.24]:23276 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726350AbgEERVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 13:21:03 -0400
+IronPort-SDR: IRQnpuZEfUA3rjgwVg5aBGRigYE1vAYIOkhIEA+BHKwVVoxqeCdAnE0DGPCDrlaNYs5DVPHnrw
+ Xy+6hVsNrdNg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 10:21:02 -0700
+IronPort-SDR: ul/Oo439OtJ4NN+4MpxUhZNWjqEBFThB4oPUGwXn0xqMusDJxtOZPLAhTOcY5nrWTwyDhhzIBR
+ ti2Jarj72tVA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,356,1583222400"; 
+   d="scan'208";a="295043860"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002.fm.intel.com with ESMTP; 05 May 2020 10:21:01 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jW1Fg-004r42-PX; Tue, 05 May 2020 20:21:04 +0300
+Date:   Tue, 5 May 2020 20:21:04 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Subject: [GIT PULL] platform-drivers-x86 for 5.7-2
+Message-ID: <20200505172104.GA1157275@smile.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200504180049.GA5067@duo.ucw.cz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Hi!
->
->> +#define AW2013_NAME "aw2013"
-> That's.... not really useful define. Make it NAME? Drop it?
-Will drop it as well as (unnecessary) lines it is used in.
->> +#define AW2013_TIME_STEP 130
-> I'd add comment with /* units */.
-Will add.
->> +#define STATE_OFF 0
->> +#define STATE_KEEP 1
->> +#define STATE_ON 2
-> We should add enum into core for this...
->
->> +static int aw2013_chip_init(struct aw2013 *chip)
->> +{
->> +	int i, ret;
->> +
->> +	ret = regmap_write(chip->regmap, AW2013_GCR, AW2013_GCR_ENABLE);
->> +	if (ret) {
->> +		dev_err(&chip->client->dev, "Failed to enable the chip: %d\n",
->> +			ret);
->> +		goto error;
->> +	}
->> +
->> +	for (i = 0; i < chip->num_leds; i++) {
->> +		ret = regmap_update_bits(chip->regmap,
->> +					 AW2013_LCFG(chip->leds[i].num),
->> +					 AW2013_LCFG_IMAX_MASK,
->> +					 chip->leds[i].imax);
->> +		if (ret) {
->> +			dev_err(&chip->client->dev,
->> +				"Failed to set maximum current for led %d: %d\n",
->> +				chip->leds[i].num, ret);
->> +			goto error;
->> +		}
->> +	}
->> +
->> +error:
->> +	return ret;
->> +}
-> No need for goto if you are just returning.
-Will change it.
->> +static bool aw2013_chip_in_use(struct aw2013 *chip)
->> +{
->> +	int i;
->> +
->> +	for (i = 0; i < chip->num_leds; i++)
->> +		if (chip->leds[i].cdev.brightness)
->> +			return true;
->> +
->> +	return false;
->> +}
-> How is this going to interact with ledstate == KEEP?
->
->> +static int aw2013_brightness_set(struct led_classdev *cdev,
->> +				 enum led_brightness brightness)
->> +{
->> +	struct aw2013_led *led = container_of(cdev, struct aw2013_led, cdev);
->> +	int ret, num;
->> +
->> +	mutex_lock(&led->chip->mutex);
->> +
->> +	if (aw2013_chip_in_use(led->chip)) {
->> +		ret = aw2013_chip_enable(led->chip);
->> +		if (ret)
->> +			return ret;
->> +	}
-> You are returning with mutex held.
-Will fix.
->> +	/* Never on - just set to off */
->> +	if (!*delay_on)
->> +		return aw2013_brightness_set(&led->cdev, LED_OFF);
->> +
->> +	/* Never off - just set to brightness */
->> +	if (!*delay_off)
->> +		return aw2013_brightness_set(&led->cdev, led->cdev.brightness);
-> Is this dance neccessary? Should we do it in the core somewhere?
-Right now blink_set() can be called with either delay_on or delay_off
-being zero.
+Hi Linus,
 
-Passing zero into calculations I do later will result in garbage so
-I'm trying to avoid it.
+Collected fixes for PDx96 so far.
 
-Core could probably handle situation where both are zero (This way
-default values will be shared across all drivers) and if only
-delay_on is zero it could disable led and the blink mode. (As if
-brightness was set to 0)
-In case where only delay_off is zero it's a bit more complicated
-since driver should disable blinking but leave led on if it was
-blinking already.
+Thanks,
 
-That also means that my current solution is a bit broken since changing
-delay_off to zero while led is already blinking will call brightness_set
-without clearing the mode bit so the led will still blink.
+With Best Regards,
+Andy Shevchenko
 
-For now I will fix that and leave all those checks in place.
->> +		} else {
->> +			led->imax = 1; // 5mA
->> +			dev_info(&client->dev,
->> +				 "DT property led-max-microamp is missing!\n");
->> +		}
-> Lets remove the exclamation mark.
-Will do.
->> +		led->num = source;
->> +		led->chip = chip;
->> +		led->fwnode = of_fwnode_handle(child);
->> +
->> +		if (!of_property_read_string(child, "default-state", &str)) {
->> +			if (!strcmp(str, "on"))
->> +				led->default_state = STATE_ON;
->> +			else if (!strcmp(str, "keep"))
->> +				led->default_state = STATE_KEEP;
->> +			else
->> +				led->default_state = STATE_OFF;
->> +		}
-> We should really have something in core for this. Should we support
-> arbitrary brightness there?
-Not sure if there is good dt property for that.
->> +static void aw2013_read_current_state(struct aw2013 *chip)
->> +{
->> +	int i, led_on;
->> +
->> +	regmap_read(chip->regmap, AW2013_LCTR, &led_on);
->> +
->> +	for (i = 0; i < chip->num_leds; i++) {
->> +		if (!(led_on & AW2013_LCTR_LE(chip->leds[i].num))) {
->> +			chip->leds[i].cdev.brightness = LED_OFF;
->> +			continue;
->> +		}
->> +		regmap_read(chip->regmap, AW2013_REG_PWM(chip->leds[i].num),
->> +			    &chip->leds[i].cdev.brightness);
->> +	}
->> +}
->> +
->> +static void aw2013_init_default_state(struct aw2013_led *led)
->> +{
->> +	switch (led->default_state) {
->> +	case STATE_ON:
->> +		led->cdev.brightness = LED_FULL;
->> +		break;
->> +	case STATE_OFF:
->> +		led->cdev.brightness = LED_OFF;
->> +	} /* On keep - just set brightness that was retrieved previously */
->> +
->> +	aw2013_brightness_set(&led->cdev, led->cdev.brightness);
->> +}
-> Aha; I guess this makes "keeping" the state to work. Do you really
-> need that functionality?
-I don't need that. On some theoretical device the chip could be
-enabled by bootloader but I consider that unlikely. I can drop
-support for keeping state. It would be then easier to get rid of
-"default_state" and "fwnode" in device struct. Should I?
->
-> Pretty nice driver, thanks.
->
-> 									Pavel
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+
+are available in the Git repository at:
+
+  git://git.infradead.org/linux-platform-drivers-x86.git tags/platform-drivers-x86-v5.7-2
+
+for you to fetch changes up to f8a31eca47bec197f5ec5dc40ad675450c2058a5:
+
+  platform/x86: thinkpad_acpi: Remove always false 'value < 0' statement (2020-05-05 15:33:24 +0300)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v5.7-2
+
+* Avoid loading asus-nb-wmi module on selected laptop models
+* Fix S0ix debug support for Jasper Lake PMC
+* Few fixes which have been reported by Hulk bot and others
+
+The following is an automated git shortlog grouped by driver:
+
+asus-nb-wmi:
+ -  Do not load on Asus T100TA and T200TA
+
+intel_pmc_core:
+ -  avoid unused-function warnings
+ -  Change Jasper Lake S0ix debug reg map back to ICL
+
+platform/x86/intel-uncore-freq:
+ -  make uncore_root_kobj static
+
+surface3_power:
+ -  Fix a NULL vs IS_ERR() check in probe
+
+thinkpad_acpi:
+ -  Remove always false 'value < 0' statement
+
+wmi:
+ -  Make two functions static
+
+----------------------------------------------------------------
+Archana Patni (1):
+      platform/x86: intel_pmc_core: Change Jasper Lake S0ix debug reg map back to ICL
+
+Arnd Bergmann (1):
+      platform/x86: intel_pmc_core: avoid unused-function warnings
+
+Dan Carpenter (1):
+      platform/x86: surface3_power: Fix a NULL vs IS_ERR() check in probe
+
+Hans de Goede (1):
+      platform/x86: asus-nb-wmi: Do not load on Asus T100TA and T200TA
+
+Jason Yan (1):
+      platform/x86/intel-uncore-freq: make uncore_root_kobj static
+
+Xiongfeng Wang (1):
+      platform/x86: thinkpad_acpi: Remove always false 'value < 0' statement
+
+YueHaibing (1):
+      platform/x86: wmi: Make two functions static
+
+ drivers/platform/x86/asus-nb-wmi.c            | 24 ++++++++++++++++++++++++
+ drivers/platform/x86/intel-uncore-frequency.c |  2 +-
+ drivers/platform/x86/intel_pmc_core.c         | 24 +++++-------------------
+ drivers/platform/x86/intel_pmc_core.h         |  2 --
+ drivers/platform/x86/surface3_power.c         |  4 ++--
+ drivers/platform/x86/thinkpad_acpi.c          |  2 +-
+ drivers/platform/x86/xiaomi-wmi.c             |  4 ++--
+ 7 files changed, 35 insertions(+), 27 deletions(-)
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
