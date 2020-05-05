@@ -2,196 +2,249 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C08C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD48C47256
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F35F220721
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:07:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BPHouBLZ"
+	by mail.kernel.org (Postfix) with ESMTP id A8B5820721
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:07:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588705676;
+	bh=JL5IORmgqPh9bputKI/4vX0xw2uIrlc4Mxz0cHBqlqo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gvC4r9DHegGIgtFA0u05RTSEYqVaR+YN3J8vsvBjQu4XQKW6pmqKIMqXYdtcKpz1f
+	 cYqHY8Fv85ziQAT7cHOlKPtkd/tj+sAHZnf6w83gZDKkNh2l0Eg5VZfPEvz6mHpsgL
+	 RP2ekrIMuaJbhlh6q6vkbbYPjCJtT5JOn/RcADHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbgEETHJ (ORCPT
+        id S1728940AbgEETH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 15:07:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38402 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727857AbgEETHI (ORCPT
+        Tue, 5 May 2020 15:07:56 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43729 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727857AbgEETHz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 15:07:08 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 406B4C061A0F;
-        Tue,  5 May 2020 12:07:08 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id f8so1221493plt.2;
-        Tue, 05 May 2020 12:07:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=fWyOOrvUK77uA/msSZdDDnmybty7hQPcowq4Z58m++0=;
-        b=BPHouBLZVWeHaubUI19wpiMPuNtIWM6/YUERDUNe9MNgSmVVq0+cuxhz5bbxK3kGR/
-         UxcdfDx5R8f3MQ80bBtDEUMhM0+5IrSRG1k40tEN/KtDJEk+cwmfyVkJy8XAOFHr8iZV
-         F4yJrLmDlhHmTlklDWECl6sk8bPgMQ2UzPK0tbwjp46p+Zg9ks/sU6Oi6OCWWSH+iOB3
-         W0bCCNjZW9NvvDQZt7CCmoZ3WNfRiAeq9LraUzBiD/CEpqKX37b7yIu+KkT6Sg0vWC5i
-         0TcYCFn7ETDBN3JI4s/uaXI2hQlYqm7S+dmA9jFiQBQtqioeyCarQZr4EkFEIw6owo/M
-         F3dg==
+        Tue, 5 May 2020 15:07:55 -0400
+Received: by mail-ot1-f66.google.com with SMTP id g14so2619590otg.10;
+        Tue, 05 May 2020 12:07:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=fWyOOrvUK77uA/msSZdDDnmybty7hQPcowq4Z58m++0=;
-        b=nzv3F2dYOyGwxTUdlk87VcPVjNHiXWw9cPwe8cRrhqbv5jxXnXyRSghlIFt74mBQhV
-         oEyu3I4Kqi+exZraqiwzr4+wfWCaOqOQ+r3oW6IKOY9fW3QeLxQmsKb6G8OQ+HVfaCRH
-         yyxHWkZnjn1OBGv6L3Q8+gG8JQu4ABcBTIZoxmbSS2vgVIALt0M7sAtIcFn3kps2K1yH
-         16BM3Z4x312aO1qKCNvCSefWLEO9v8fins037atjsYvd6gVdxLTHrxjYOd6o8CN+9Hqt
-         LyWQSz4jPnvYQDhxL0pnnuv9HyjwGM+B+KH3kprvGiGb9OHSxzQ7TYUyItnHpDXxTkvx
-         pXjw==
-X-Gm-Message-State: AGi0PuYot68TqWr8+ASfoLiF0RvCl8HLHBbO0ASRhDxrSXn0/zDpFlwu
-        Bvkqj6eVWG4QgvKhKepp/vg=
-X-Google-Smtp-Source: APiQypIii3zV6Elp7IO251v6M6vB2QPxZ+fMr3HRaeN0DRbvD8NEebNCns+Io+5802VclUQUQzICSw==
-X-Received: by 2002:a17:90a:9e9:: with SMTP id 96mr4913003pjo.41.1588705627557;
-        Tue, 05 May 2020 12:07:07 -0700 (PDT)
-Received: from jordon-HP-15-Notebook-PC.domain.name ([122.167.156.195])
-        by smtp.gmail.com with ESMTPSA id 138sm2664906pfz.31.2020.05.05.12.07.00
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 May 2020 12:07:06 -0700 (PDT)
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-To:     tony.luck@intel.com, fenghua.yu@intel.com, rspringer@google.com,
-        toddpoynor@google.com, benchan@chromium.org,
-        gregkh@linuxfoundation.org, jens.wiklander@linaro.org,
-        akpm@linux-foundation.org, santosh.shilimkar@oracle.com,
-        davem@davemloft.net, kuba@kernel.org, jack@suse.cz,
-        jhubbard@nvidia.com, ira.weiny@intel.com, jglisse@redhat.com
-Cc:     inux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, tee-dev@lists.linaro.org,
-        linux-mm@kvack.org, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
-        Souptick Joarder <jrdr.linux@gmail.com>
-Subject: [RFC] mm/gup.c: Updated return value of {get|pin}_user_pages_fast()
-Date:   Wed,  6 May 2020 00:44:19 +0530
-Message-Id: <1588706059-4208-1-git-send-email-jrdr.linux@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yRzXKHUNDJ+mtxR4YILju7sSskHiz9OTnTLXZbQ3p2Y=;
+        b=hIvg7SPDZem/i5nuv/x0WIHo3fP8UXKpoIxYdnDvlKZqdJFoCALTaVUOkXgNVFBqFa
+         MVmbgeAecx9cWY3LFz9TW44i9g8n0DnazcP1MeDyyHVUt7OR0R0Ys/7nxpgONNIzGTDO
+         9Smp5KK3fMUs6nmZIEmKIB3+F3WNbgzT+ZItryeunhuj6byIVBqErLA8y8nsLssxYxNN
+         3as4AFTSUPMVD9rW/wJiAH+/34SbIzjCdm3MOngQR8HoHTvrlyV+BpUF68YshYYgAaDF
+         KbZrkDmNvIshCsOhyF9gyvjQObU6l7SiOWVgXS4HbGOV6qlLo2y6Ga9kNtKjUW0od+zw
+         ltug==
+X-Gm-Message-State: AGi0PuYNHe4lL4/ufB+J9t/Vz2A9iWmQ2X2JaOMlrdULIHHUBkwzcNgF
+        rhq9/RrwOt26X6Nkprw6yQ==
+X-Google-Smtp-Source: APiQypK2eZKZF5A9T34e/f8dTGyfZ0o4fZJqUzZkYfTgjBhAmNs3W9y7CwGgIbJcYFLhw+3Fn9UvsA==
+X-Received: by 2002:a9d:4716:: with SMTP id a22mr3514646otf.46.1588705674224;
+        Tue, 05 May 2020 12:07:54 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id z10sm464168oon.5.2020.05.05.12.07.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 12:07:53 -0700 (PDT)
+Received: (nullmailer pid 19674 invoked by uid 1000);
+        Tue, 05 May 2020 19:07:52 -0000
+Date:   Tue, 5 May 2020 14:07:52 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 1/7] dt-bindings: iio/adc: Convert ingenic-adc docs to
+ YAML.
+Message-ID: <20200505190752.GA16143@bogus>
+References: <20200503171451.44034-1-contact@artur-rojek.eu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200503171451.44034-1-contact@artur-rojek.eu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently {get|pin}_user_pages_fast() have 3 return value 0, -errno
-and no of pinned pages. The only case where these two functions will
-return 0, is for nr_pages <= 0, which doesn't find a valid use case.
-But if at all any, then a -ERRNO will be returned instead of 0, which
-means {get|pin}_user_pages_fast() will have 2 return values -errno &
-no of pinned pages.
+On Sun, May 03, 2020 at 07:14:45PM +0200, Artur Rojek wrote:
+> Convert the textual documentation of Device Tree bindings for the
+> Ingenic JZ47xx SoCs ADC controller to YAML.
+> 
+> The `interrupts` property is now explicitly listed and marked as
+> required. While missing from the previous textual documentation, this
+> property has been used with all the boards which probe this driver.
+> 
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> Tested-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+> 
+> Changes:
+> 
+> v6: new patch
+> 
+>  .../bindings/iio/adc/ingenic,adc.txt          | 49 ------------
+>  .../bindings/iio/adc/ingenic,adc.yaml         | 74 +++++++++++++++++++
+>  2 files changed, 74 insertions(+), 49 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+> deleted file mode 100644
+> index cd9048cf9dcf..000000000000
+> --- a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+> +++ /dev/null
+> @@ -1,49 +0,0 @@
+> -* Ingenic JZ47xx ADC controller IIO bindings
+> -
+> -Required properties:
+> -
+> -- compatible: Should be one of:
+> -  * ingenic,jz4725b-adc
+> -  * ingenic,jz4740-adc
+> -  * ingenic,jz4770-adc
+> -- reg: ADC controller registers location and length.
+> -- clocks: phandle to the SoC's ADC clock.
+> -- clock-names: Must be set to "adc".
+> -- #io-channel-cells: Must be set to <1> to indicate channels are selected
+> -  by index.
+> -
+> -ADC clients must use the format described in iio-bindings.txt, giving
+> -a phandle and IIO specifier pair ("io-channels") to the ADC controller.
+> -
+> -Example:
+> -
+> -#include <dt-bindings/iio/adc/ingenic,adc.h>
+> -
+> -adc: adc@10070000 {
+> -	compatible = "ingenic,jz4740-adc";
+> -	#io-channel-cells = <1>;
+> -
+> -	reg = <0x10070000 0x30>;
+> -
+> -	clocks = <&cgu JZ4740_CLK_ADC>;
+> -	clock-names = "adc";
+> -
+> -	interrupt-parent = <&intc>;
+> -	interrupts = <18>;
+> -};
+> -
+> -adc-keys {
+> -	...
+> -	compatible = "adc-keys";
+> -	io-channels = <&adc INGENIC_ADC_AUX>;
+> -	io-channel-names = "buttons";
+> -	...
+> -};
+> -
+> -battery {
+> -	...
+> -	compatible = "ingenic,jz4740-battery";
+> -	io-channels = <&adc INGENIC_ADC_BATTERY>;
+> -	io-channel-names = "battery";
+> -	...
+> -};
+> diff --git a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
+> new file mode 100644
+> index 000000000000..e9c46fff840a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
+> @@ -0,0 +1,74 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019-2020 Artur Rojek
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/iio/adc/ingenic,adc.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Ingenic JZ47xx ADC controller IIO bindings
+> +
+> +maintainers:
+> +  - Artur Rojek <contact@artur-rojek.eu>
+> +
+> +description: >
+> +  Industrial I/O subsystem bindings for ADC controller found in
+> +  Ingenic JZ47xx SoCs.
+> +
+> +  ADC clients must use the format described in iio-bindings.txt, giving
+> +  a phandle and IIO specifier pair ("io-channels") to the ADC controller.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ingenic,jz4725b-adc
+> +      - ingenic,jz4740-adc
+> +      - ingenic,jz4770-adc
+> +
+> +  '#io-channel-cells':
+> +    const: 1
+> +    description:
+> +      Must be set to <1> to indicate channels are selected by index.
+> +
+> +  reg:
+> +    items:
+> +      - description: ADC controller registers location and length.
 
-Update all the callers which deals with return value 0 accordingly.
+That's all 'reg' properties. Just 'maxItems: 1' is good for single 
+entry.
 
-Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
----
- arch/ia64/kernel/err_inject.c              | 2 +-
- drivers/platform/goldfish/goldfish_pipe.c  | 2 +-
- drivers/staging/gasket/gasket_page_table.c | 4 ++--
- drivers/tee/tee_shm.c                      | 2 +-
- mm/gup.c                                   | 6 +++---
- net/rds/rdma.c                             | 2 +-
- 6 files changed, 9 insertions(+), 9 deletions(-)
+> +
+> +  clocks:
+> +    items:
+> +      - description: phandle to the SoC's ADC clock.
 
-diff --git a/arch/ia64/kernel/err_inject.c b/arch/ia64/kernel/err_inject.c
-index 8b5b8e6b..fd72218 100644
---- a/arch/ia64/kernel/err_inject.c
-+++ b/arch/ia64/kernel/err_inject.c
-@@ -143,7 +143,7 @@ static DEVICE_ATTR(name, 0644, show_##name, store_##name)
- 	int ret;
- 
- 	ret = get_user_pages_fast(virt_addr, 1, FOLL_WRITE, NULL);
--	if (ret<=0) {
-+	if (ret < 0) {
- #ifdef ERR_INJ_DEBUG
- 		printk("Virtual address %lx is not existing.\n",virt_addr);
- #endif
-diff --git a/drivers/platform/goldfish/goldfish_pipe.c b/drivers/platform/goldfish/goldfish_pipe.c
-index 1ab207e..831449d 100644
---- a/drivers/platform/goldfish/goldfish_pipe.c
-+++ b/drivers/platform/goldfish/goldfish_pipe.c
-@@ -277,7 +277,7 @@ static int goldfish_pin_pages(unsigned long first_page,
- 	ret = pin_user_pages_fast(first_page, requested_pages,
- 				  !is_write ? FOLL_WRITE : 0,
- 				  pages);
--	if (ret <= 0)
-+	if (ret < 0)
- 		return -EFAULT;
- 	if (ret < requested_pages)
- 		*iter_last_page_size = PAGE_SIZE;
-diff --git a/drivers/staging/gasket/gasket_page_table.c b/drivers/staging/gasket/gasket_page_table.c
-index f6d7157..1d08e1d 100644
---- a/drivers/staging/gasket/gasket_page_table.c
-+++ b/drivers/staging/gasket/gasket_page_table.c
-@@ -489,11 +489,11 @@ static int gasket_perform_mapping(struct gasket_page_table *pg_tbl,
- 			ret = get_user_pages_fast(page_addr - offset, 1,
- 						  FOLL_WRITE, &page);
- 
--			if (ret <= 0) {
-+			if (ret < 0) {
- 				dev_err(pg_tbl->device,
- 					"get user pages failed for addr=0x%lx, offset=0x%lx [ret=%d]\n",
- 					page_addr, offset, ret);
--				return ret ? ret : -ENOMEM;
-+				return ret;
- 			}
- 			++pg_tbl->num_active_pages;
- 
-diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
-index bd679b7..2706a1f 100644
---- a/drivers/tee/tee_shm.c
-+++ b/drivers/tee/tee_shm.c
-@@ -230,7 +230,7 @@ struct tee_shm *tee_shm_register(struct tee_context *ctx, unsigned long addr,
- 	if (rc > 0)
- 		shm->num_pages = rc;
- 	if (rc != num_pages) {
--		if (rc >= 0)
-+		if (rc > 0)
- 			rc = -ENOMEM;
- 		ret = ERR_PTR(rc);
- 		goto err;
-diff --git a/mm/gup.c b/mm/gup.c
-index 50681f0..8d293ed 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2760,7 +2760,7 @@ static int internal_get_user_pages_fast(unsigned long start, int nr_pages,
- 	end = start + len;
- 
- 	if (end <= start)
--		return 0;
-+		return -EINVAL;
- 	if (unlikely(!access_ok((void __user *)start, len)))
- 		return -EFAULT;
- 
-@@ -2805,8 +2805,8 @@ static int internal_get_user_pages_fast(unsigned long start, int nr_pages,
-  * calling get_user_pages().
-  *
-  * Returns number of pages pinned. This may be fewer than the number requested.
-- * If nr_pages is 0 or negative, returns 0. If no pages were pinned, returns
-- * -errno.
-+ * If nr_pages is 0 or negative, returns -errno. If no pages were pinned,
-+ * returns -errno.
-  */
- int get_user_pages_fast(unsigned long start, int nr_pages,
- 			unsigned int gup_flags, struct page **pages)
-diff --git a/net/rds/rdma.c b/net/rds/rdma.c
-index a7ae118..44b96e6 100644
---- a/net/rds/rdma.c
-+++ b/net/rds/rdma.c
-@@ -161,7 +161,7 @@ static int rds_pin_pages(unsigned long user_addr, unsigned int nr_pages,
- 		gup_flags |= FOLL_WRITE;
- 
- 	ret = pin_user_pages_fast(user_addr, nr_pages, gup_flags, pages);
--	if (ret >= 0 && ret < nr_pages) {
-+	if (ret > 0 && ret < nr_pages) {
- 		unpin_user_pages(pages, ret);
- 		ret = -EFAULT;
- 	}
--- 
-1.9.1
+Same here.
 
+> +
+> +  clock-names:
+> +    items:
+> +      - const: adc
+> +
+> +  interrupts:
+> +    items:
+> +      - description: IRQ line for the ADC.
+
+And here.
+
+> +
+> +required:
+> +  - compatible
+> +  - '#io-channel-cells'
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/jz4740-cgu.h>
+> +    #include <dt-bindings/iio/adc/ingenic,adc.h>
+> +
+> +    adc@10070000 {
+> +            compatible = "ingenic,jz4740-adc";
+> +            #io-channel-cells = <1>;
+> +
+> +            reg = <0x10070000 0x30>;
+> +
+> +            clocks = <&cgu JZ4740_CLK_ADC>;
+> +            clock-names = "adc";
+> +
+> +            interrupt-parent = <&intc>;
+> +            interrupts = <18>;
+> +    };
+> -- 
+> 2.26.2
+> 
