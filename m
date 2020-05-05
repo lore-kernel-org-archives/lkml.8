@@ -2,239 +2,139 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBA0C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBCFC47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0845020735
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:03:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OOFo0XOF"
+	by mail.kernel.org (Postfix) with ESMTP id BFFF7206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:04:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729457AbgEEWDd (ORCPT
+        id S1729459AbgEEWEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 18:03:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37816 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729178AbgEEWDb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 18:03:31 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AAB6C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 15:03:30 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id v2so1422205plp.9
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 15:03:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VCda7CdBJ7GD+X9YByeTjdG9v0RMwDipXe8ofov/KVQ=;
-        b=OOFo0XOFsR93rldJVgSfWUFQD/p4SseAWJ73I7C9e3gt5Hz6DpaCD9EMac9CtWOLey
-         1g/OhEO9QPHSe+f6vtflxL1sXNcDZgY/Qv/LJTV99dgkKPohEneEgOrcHv6tHMRNH/R+
-         YIzDRRWs8+16EOrrJ3LAKSZ9QVwkuNTZuebRao8lQrhjScTc4MwR2oFDN8kPdUCfw0uz
-         9Xte58dhqPF2fqOq1svKd1ED4TKc0zNc7X/W1BBgQyZN1NV/fInv0r4gkV5KMoQHsIV3
-         R+OpGZlvHtNuaCbd91bLqZd6jyRxhSKgM8rCrZhCVo2Pn97UJLQNISLNVqoiZBzqR4gI
-         RhlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VCda7CdBJ7GD+X9YByeTjdG9v0RMwDipXe8ofov/KVQ=;
-        b=jqud4/liMCNVmUcNBhzgcUWpcGnU/1dPMG54UsDR/7O7s57aEWrr9fY17HSGJRQEQK
-         kVUtusYm6GVxQ0rT1+wYKerJiuC+B8T0VSyAImJvotVJPXOdlDeVQ12dFdfRHKjJijS1
-         5ZU+Xiy3a7mOYJFu4rXpqDFnjpBSKmR3LNZMGjV466m5SrdidNrMbILYBy4On310+Klx
-         3zmNpcNFWXlohFYAR6opdJ3kI0ArMJ5wJoJ6fc9zMGIKK1+a0ht8DwqJCt/24n4BUTRa
-         pU9oTI/HoN9xibkOxD9crdK8VRnKGt7A4ds+TFsJmf/fFzyzVS41Pt8w7KPNvlPJq1bw
-         hsPg==
-X-Gm-Message-State: AGi0PuYkvFKZWBdyHosNkI/Qgm8TcmNWELrRjL+cubXeDzGNqCdmwnMs
-        atxXS7kJLsTx1AHNkWH92oQF9w==
-X-Google-Smtp-Source: APiQypJRRsGLm/zDX2haFdvC0uTHJdcrPR6/bbqt+R7pfaIn5nqtuYlc3GY94oHKm2cqcAmEbJIsEQ==
-X-Received: by 2002:a17:902:a413:: with SMTP id p19mr5231926plq.1.1588716209909;
-        Tue, 05 May 2020 15:03:29 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id y186sm6934pfy.66.2020.05.05.15.03.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 15:03:29 -0700 (PDT)
-Date:   Tue, 5 May 2020 16:03:27 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Cc:     bjorn.andersson@linaro.org, ohad@wizery.com, loic.pallardy@st.com,
-        s-anna@ti.com, linux-remoteproc@vger.kernel.org, corbet@lwn.net,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 10/14] remoteproc: Deal with synchronisation when
- shutting down
-Message-ID: <20200505220327.GB18333@xps15>
-References: <20200424200135.28825-1-mathieu.poirier@linaro.org>
- <20200424200135.28825-11-mathieu.poirier@linaro.org>
- <d2eeb480-6ba1-de12-53ba-cdf9c61b94b0@st.com>
- <20200430202312.GE17031@xps15>
- <04b8f860-2b01-7e4f-cdea-08a3cf8af26c@st.com>
+        Tue, 5 May 2020 18:04:24 -0400
+Received: from mga02.intel.com ([134.134.136.20]:48051 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727785AbgEEWEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 18:04:23 -0400
+IronPort-SDR: /RnhK7h5k59VMlvMt8V+WbILtuVBh3x2YbEmUBqbXHd2hQqsv/ik/JgxD5WTRcpB1DToMEecZp
+ Hgw9JufC7sIQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 15:04:20 -0700
+IronPort-SDR: y6UqgH1vxBwoaEF3R9aoJcRP4PwHDFLbYrd6lJw4h/SkEGEpO/usT3X8LjWcUD0ncc8j/uixfi
+ DIxqFLnT0P7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,356,1583222400"; 
+   d="scan'208";a="278022605"
+Received: from krogers-mobl1.amr.corp.intel.com (HELO [10.255.229.42]) ([10.255.229.42])
+  by orsmga002.jf.intel.com with ESMTP; 05 May 2020 15:04:16 -0700
+Subject: Re: [PATCH V2] ASoC: Intel: boards: Use FS as nau8825 sysclk in
+ nau88125_* machine
+To:     =?UTF-8?Q?Rados=c5=82aw_Biernacki?= <rad@semihalf.com>
+Cc:     Lech Betlej <Lech.Betlej@intel.com>, alsa-devel@alsa-project.org,
+        Todd Broch <tbroch@google.com>,
+        Harshapriya <harshapriya.n@intel.com>,
+        John Hsu <KCHSU0@nuvoton.com>,
+        Alex Levin <levinale@google.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        "Sienkiewicz, Michal" <michal.sienkiewicz@intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Ben Zhang <benzh@chromium.org>,
+        Mac Chiang <mac.chiang@intel.com>,
+        Vamshi Krishna <vamshi.krishna.gopal@intel.com>,
+        Marcin Wojtas <mw@semihalf.com>, linux-kernel@vger.kernel.org,
+        Yong Zhi <yong.zhi@intel.com>
+References: <20200501193141.30293-1-rad@semihalf.com>
+ <3ad44b75-387f-da75-d7b2-3a16ed00550c@linux.intel.com>
+ <CAOs-w0LPeKgooa_98x_Jkzus-Y5Kad7pDby0CriDGb6nTp_6sA@mail.gmail.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <8b97bf43-ddd8-df81-90e7-9e87c19af1ab@linux.intel.com>
+Date:   Tue, 5 May 2020 10:00:03 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <04b8f860-2b01-7e4f-cdea-08a3cf8af26c@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAOs-w0LPeKgooa_98x_Jkzus-Y5Kad7pDby0CriDGb6nTp_6sA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 01:34:43PM +0200, Arnaud POULIQUEN wrote:
+
+>>> This single fix address two issues on machines with nau88125:
+>>> 1) Audio distortion, due to lack of required clock rate on MCLK line
+>>> 2) Loud audible "pops" on headphones if there is no sysclk during nau8825
+>>>      playback power up sequence
+>>>
+>>> Explanation for:
+>>> 1) Due to Skylake HW limitation, MCLK pin can only output 24MHz clk
+>>>      rate (it can be only connected to XTAL parent clk). The BCLK pin
+>>>      can be driven by dividers and therefore FW is able to set it to rate
+>>>      required by chosen audio format. According to nau8825 datasheet, 256*FS
+>>>      sysclk gives the best audio quality and the only way to achieve this
+>>>      (taking into account the above limitations) its to regenerate the MCLK
+>>>      from BCLK on nau8825 side by FFL. Without required clk rate, audio is
+>>>      distorted by added harmonics.
+>>
+>> The BCLK is going to be a multiple of 50 * Fs due to clocking
+>> restrictions. Can the codec regenerate a good-enough sysclk from this?
 > 
+> According to Intel, silicon has a limitation, on SKL/KBL only clk_id =
+> SKL_XTAL, .name = "xtal" is available for IO domain.
+> As mentioned in the commit:
+> MCLK is generated by using 24MHz Xtal directly or applying a divider
+> (so no way of achieving the rate required by audio format).
+> BCLK/FS is generated from 24MHz and uses dividers and additional
+> padding bits are used to match the clock source.
+> Next gen silicon has the possibility of using additional clock sources.
 > 
-> On 4/30/20 10:23 PM, Mathieu Poirier wrote:
-> > On Wed, Apr 29, 2020 at 10:19:49AM +0200, Arnaud POULIQUEN wrote:
-> >>
-> >>
-> >> On 4/24/20 10:01 PM, Mathieu Poirier wrote:
-> >>> The remoteproc core must not allow function rproc_shutdown() to
-> >>> proceed if currently synchronising with a remote processor and
-> >>> the synchronisation operations of that remote processor does not
-> >>> support it.  Also part of the process is to set the synchronisation
-> >>> flag so that the remoteproc core can make the right decisions when
-> >>> restarting the system.
-> >>>
-> >>> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> >>> ---
-> >>>  drivers/remoteproc/remoteproc_core.c     | 32 ++++++++++++++++++++++++
-> >>>  drivers/remoteproc/remoteproc_internal.h |  7 ++++++
-> >>>  2 files changed, 39 insertions(+)
-> >>>
-> >>> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> >>> index 3a84a38ba37b..48afa1f80a8f 100644
-> >>> --- a/drivers/remoteproc/remoteproc_core.c
-> >>> +++ b/drivers/remoteproc/remoteproc_core.c
-> >>> @@ -1849,6 +1849,27 @@ int rproc_boot(struct rproc *rproc)
-> >>>  }
-> >>>  EXPORT_SYMBOL(rproc_boot);
-> >>>  
-> >>> +static bool rproc_can_shutdown(struct rproc *rproc)
-> >>> +{
-> >>> +	/*
-> >>> +	 * The remoteproc core is the lifecycle manager, no problem
-> >>> +	 * calling for a shutdown.
-> >>> +	 */
-> >>> +	if (!rproc_needs_syncing(rproc))
-> >>> +		return true;
-> >>> +
-> >>> +	/*
-> >>> +	 * The remoteproc has been loaded by another entity (as per above
-> >>> +	 * condition) and the platform code has given us the capability
-> >>> +	 * of stopping it.
-> >>> +	 */
-> >>> +	if (rproc->sync_ops->stop)
-> >>> +		return true;
-> >>
-> >> This means that if rproc->sync_ops->stop is null rproc_stop_subdevices will not
-> >> be called? seems not symmetric with the start sequence.
-> > 
-> > If rproc->sync_ops->stop is not provided then the remoteproc core can't stop the
-> > remote processor at all after it has synchronised with it.  If a usecase
-> > requires some kind of soft reset then a stop() function that uses a mailbox
-> > notification or some other mechanism can be provided to tell the remote
-> > processor to put itself back in startup mode again.
-> > 
-> > Is this fine with you or there is still something I don't get?
-> 
-> My point here is more around the subdevices. But perhaps i missed something...
-> 
-> In rproc_start rproc_start_subdevices is called, even if sync_start is null.
+> Summing up, using MCLK from SKL to NAU88L25 is not an option.
+> The only option we found is to use BCLK and regen the required clock
+> rate by FLL on the NAU88l25 side.
 
-Here I'll take that you mean sync_ops::start()
-
-> But in rproc_shutdown rproc_stop is not called, if sync_ops->stop is null.
-> So rproc_stop_subdevices is not called in this case.
-
-Correct.  I am pretty sure some people don't want the remoteproc core to be able
-to do anything other than synchronise with a remote processor, be it at boot
-time or when the remote processor has crashed.
-
-I can also see scenarios where people want to be able to start and stop
-subdevices from the remoteproc core, but _not_ power cycle the remote processor.
-In such cases the sync_ops::stop() should be some kind of notification telling
-the remote processor to put itself back in initialisation mode and
-sync_flags.after_stop should be set to true.
-
-> Then if sync_flags.after_stop is false, it looks like that something will go wrong
-> at next start.
-
-If sync_ops::stop is NULL then the value of sync_flags.after_stop becomes
-irrelevant because that state can't be reached. Let me know if you found a
-condition where this isn't the case and I will correct it. 
+Right, this 24 MHz is a recurring problem.
+But what I was asking was if the NAU8825 is fine working with e.g. a 
+2.4MHz bit clock. i.e. with 25 bit slots or padding at the end of the frame?
 
 > 
-> > 
-> >> Probably not useful to test it here as condition is already handled in rproc_stop_device...
-> >>
-> >> Regards
-> >> Arnaud
-> >>> +
-> >>> +	/* Any other condition should not be allowed */
-> >>> +	return false;
-> >>> +}
-> >>> +
-> >>>  /**
-> >>>   * rproc_shutdown() - power off the remote processor
-> >>>   * @rproc: the remote processor
-> >>> @@ -1879,6 +1900,9 @@ void rproc_shutdown(struct rproc *rproc)
-> >>>  		return;
-> >>>  	}
-> >>>  
-> >>> +	if (!rproc_can_shutdown(rproc))
-> >>> +		goto out;
-> >>> +
-> >>>  	/* if the remote proc is still needed, bail out */
-> >>>  	if (!atomic_dec_and_test(&rproc->power))
-> >>>  		goto out;
-> >>> @@ -1898,6 +1922,14 @@ void rproc_shutdown(struct rproc *rproc)
-> >>>  	kfree(rproc->cached_table);
-> >>>  	rproc->cached_table = NULL;
-> >>>  	rproc->table_ptr = NULL;
-> >>> +
-> >>> +	/*
-> >>> +	 * The remote processor has been switched off - tell the core what
-> >>> +	 * operation to use from hereon, i.e whether an external entity will
-> >>> +	 * reboot the remote processor or it is now the remoteproc core's
-> >>> +	 * responsability.
-> >>> +	 */
-> >>> +	rproc_set_sync_flag(rproc, RPROC_SYNC_STATE_SHUTDOWN);
-> >>>  out:
-> >>>  	mutex_unlock(&rproc->lock);
-> >>>  }
-> >>> diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
-> >>> index 61500981155c..7dcc0a26892b 100644
-> >>> --- a/drivers/remoteproc/remoteproc_internal.h
-> >>> +++ b/drivers/remoteproc/remoteproc_internal.h
-> >>> @@ -27,6 +27,9 @@ struct rproc_debug_trace {
-> >>>  /*
-> >>>   * enum rproc_sync_states - remote processsor sync states
-> >>>   *
-> >>> + * @RPROC_SYNC_STATE_SHUTDOWN	state to use after the remoteproc core
-> >>> + *				has shutdown (rproc_shutdown()) the
-> >>> + *				remote processor.
-> >>>   * @RPROC_SYNC_STATE_CRASHED	state to use after the remote processor
-> >>>   *				has crashed but has not been recovered by
-> >>>   *				the remoteproc core yet.
-> >>> @@ -36,6 +39,7 @@ struct rproc_debug_trace {
-> >>>   * operation to use.
-> >>>   */
-> >>>  enum rproc_sync_states {
-> >>> +	RPROC_SYNC_STATE_SHUTDOWN,
-> >>>  	RPROC_SYNC_STATE_CRASHED,
-> >>>  };
-> >>>  
-> >>> @@ -43,6 +47,9 @@ static inline void rproc_set_sync_flag(struct rproc *rproc,
-> >>>  				       enum rproc_sync_states state)
-> >>>  {
-> >>>  	switch (state) {
-> >>> +	case RPROC_SYNC_STATE_SHUTDOWN:
-> >>> +		rproc->sync_with_rproc = rproc->sync_flags.after_stop;
-> >>> +		break;
-> >>>  	case RPROC_SYNC_STATE_CRASHED:
-> >>>  		rproc->sync_with_rproc = rproc->sync_flags.after_crash;
-> >>>  		break;
-> >>>
+>>>
+>>> 2) Currently Skylake does not output MCLK/FS when the back-end DAI op
+>>>      hw_param is called, so we cannot switch to MCLK/FS in hw_param.  This
+>>>      patch reduces pop by letting nau8825 keep using its internal VCO clock
+>>>      during widget power up sequence, until SNDRV_PCM_TRIGGER_START when
+>>>      MCLK/FS is available. Once device resumes, the system will only enable
+>>>      power sequence for playback without doing hardware parameter, audio
+>>>      format, and PLL configure. In the mean time, the jack detecion sequence
+>>>      has changed PLL parameters and switched to internal clock. Thus, the
+>>>      playback signal distorted without correct PLL parameters.  That is why
+>>>      we need to configure the PLL again in SNDRV_PCM_TRIGGER_RESUME case.
+>>
+>> IIRC the FS can be controlled with the clk_ api with the Skylake driver,
+>> as done for some KBL platforms. Or is this not supported by the firmware
+>> used by this machine?
+> 
+> According to Ben, SKL had limitations in FW for managing the clk's
+> back in the days.
+> Can you point to the other driver you mention so we can cross check?
+
+There are two KBL drivers that control the SSP clocks from the machine 
+driver, but indeed I don't know if this would work on Firmware, it'd be 
+a question for Lech/Cezary.
+
+kbl_rt5663_max98927.c:          ret = clk_prepare_enable(priv->mclk);
+kbl_rt5663_max98927.c:          ret = clk_prepare_enable(priv->sclk);
+kbl_rt5663_rt5514_max98927.c:           ret = 
+clk_prepare_enable(priv->mclk);
+kbl_rt5663_rt5514_max98927.c:           ret = 
+clk_prepare_enable(priv->sclk);
+kbl_rt5663_rt5514_max98927.c:                   ret = 
+clk_prepare_enable(priv->mclk);
+
+
