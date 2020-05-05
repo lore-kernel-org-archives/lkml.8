@@ -6,66 +6,59 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A69C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C421C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DEA720675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:45:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5860020675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:45:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728599AbgEEIpC (ORCPT
+        id S1728615AbgEEIpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 04:45:02 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3793 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725766AbgEEIpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 04:45:02 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D4F092EA6AF3E865E9F2;
-        Tue,  5 May 2020 16:44:56 +0800 (CST)
-Received: from localhost (10.166.215.154) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Tue, 5 May 2020
- 16:44:49 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <tglx@linutronix.de>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] net: microchip: Remove unused inline function is_bits_set
-Date:   Tue, 5 May 2020 16:44:21 +0800
-Message-ID: <20200505084421.40052-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 5 May 2020 04:45:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41140 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725766AbgEEIpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 04:45:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id E94A4ADD5;
+        Tue,  5 May 2020 08:45:18 +0000 (UTC)
+From:   Mian Yousaf Kaukab <ykaukab@suse.de>
+To:     thierry.reding@gmail.com, linux-gpio@vger.kernel.org,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Mian Yousaf Kaukab <ykaukab@suse.de>
+Subject: [PATCH] gpio: tegra186: export MODULE_DEVICE_TABLE
+Date:   Tue,  5 May 2020 10:45:01 +0200
+Message-Id: <20200505084501.13170-1-ykaukab@suse.de>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.166.215.154]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's no callers in-tree.
+Export MODULE_DEVICE_TABLE since the driver can be built as a module.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
 ---
- drivers/net/ethernet/microchip/encx24j600-regmap.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/gpio/gpio-tegra186.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/microchip/encx24j600-regmap.c b/drivers/net/ethernet/microchip/encx24j600-regmap.c
-index 1f496fac7033..5bd7fb917b7a 100644
---- a/drivers/net/ethernet/microchip/encx24j600-regmap.c
-+++ b/drivers/net/ethernet/microchip/encx24j600-regmap.c
-@@ -17,11 +17,6 @@
+diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
+index 79b553dc39a3..178e9128ded0 100644
+--- a/drivers/gpio/gpio-tegra186.c
++++ b/drivers/gpio/gpio-tegra186.c
+@@ -894,6 +894,7 @@ static const struct of_device_id tegra186_gpio_of_match[] = {
+ 		/* sentinel */
+ 	}
+ };
++MODULE_DEVICE_TABLE(of, tegra186_gpio_of_match);
  
- #include "encx24j600_hw.h"
- 
--static inline bool is_bits_set(int value, int mask)
--{
--	return (value & mask) == mask;
--}
--
- static int encx24j600_switch_bank(struct encx24j600_context *ctx,
- 				  int bank)
- {
+ static struct platform_driver tegra186_gpio_driver = {
+ 	.driver = {
 -- 
-2.17.1
-
+2.25.0
 
