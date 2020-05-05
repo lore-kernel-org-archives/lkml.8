@@ -2,125 +2,144 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECBCC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47581C47256
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E314E206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BCA2206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:09:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Av0Il68p"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f0WBvbKy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728233AbgEEGHg (ORCPT
+        id S1727964AbgEEGJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 02:07:36 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:45300 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725320AbgEEGHf (ORCPT
+        Tue, 5 May 2020 02:09:50 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31905 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725320AbgEEGJt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 02:07:35 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04563f2W106378;
-        Tue, 5 May 2020 06:07:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=Hd7te6S50m+hUOHmKAL5qGjVQoqJ2ucNIjBwUVXEubA=;
- b=Av0Il68pcCYb/s6AmtrY4iUdwi6medwv7gkQA256Fs9RKlSSiHkMYyOhNzcdGolbAfM9
- GGmzAbs2FS1p6XPXJxrDIKSg35U1UhbYZ55tZRogPjCzMEKWzDsrHoMlQAhkBFknK9Ng
- 6wbnUKteuFCMd7q/84UUs6rKVxqQIP0Sk1Z8uJbpbbxg5yeP1FRC2lZRy7wcYEGmPa6B
- b0DUCIfxs7KbfkY19GNn84Zr0ohr1cWWphxy9sskl8ZhqTCgGRA2W+MYDgpeGF1xZQ4G
- l0x3I0y61xpbdQl4fX7PSZajErxLbQgzqeqjTLHoASnYxAFmHx5fT4SG5Q0oBsY0oaNI Mg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 30s1gn2h50-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 05 May 2020 06:07:26 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04566dqx079123;
-        Tue, 5 May 2020 06:07:25 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 30sjjxt8t0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 05 May 2020 06:07:25 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04567OBE030156;
-        Tue, 5 May 2020 06:07:24 GMT
-Received: from [10.191.203.202] (/10.191.203.202)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 04 May 2020 23:07:24 -0700
-Subject: Re: [PATCH net] net: dsa: Do not leave DSA master with NULL
- netdev_ops
-To:     Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200504201806.27192-1-f.fainelli@gmail.com>
-From:   Allen <allen.pais@oracle.com>
-Message-ID: <905b0b48-5184-3b11-2f78-e99834dbc38a@oracle.com>
-Date:   Tue, 5 May 2020 11:37:12 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 5 May 2020 02:09:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588658988;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=O7LlKBGs5CgTE1OyD7RL3R2uC0X6yz7gneyPxwwVA04=;
+        b=f0WBvbKyHjNuMn8PcoYD9AzqzUxHU0RMGeaPc4zHMqXWOlgrocSI9fiCuLxyzMtgVMoAwT
+        CMJr0ickMcOqIkmkCPY3WmXwo1ftA3uy0IgI68ryIb5L6gN/x5GVzd3NssMIb6ofRBMvAA
+        SKJta10y+V5iWCyS6ybzkME4JTgEMU4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-347-OIVSgUQ2PoyaDxWxIHVoKg-1; Tue, 05 May 2020 02:09:46 -0400
+X-MC-Unique: OIVSgUQ2PoyaDxWxIHVoKg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 764EE80B713;
+        Tue,  5 May 2020 06:09:45 +0000 (UTC)
+Received: from gondolin (ovpn-112-219.ams2.redhat.com [10.36.112.219])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 66B7363F84;
+        Tue,  5 May 2020 06:09:41 +0000 (UTC)
+Date:   Tue, 5 May 2020 08:09:39 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Neo Jia <cjia@nvidia.com>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] vfio-pci: Mask cap zero
+Message-ID: <20200505080939.1e5a224a.cohuck@redhat.com>
+In-Reply-To: <20200504170354.3b49d07b@x1.home>
+References: <158836927527.9272.16785800801999547009.stgit@gimli.home>
+        <20200504180916.0e90cad9.cohuck@redhat.com>
+        <20200504125253.3d5f9cbf@x1.home>
+        <20200504220804.GA22939@nvidia.com>
+        <20200504170354.3b49d07b@x1.home>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20200504201806.27192-1-f.fainelli@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 phishscore=0
- bulkscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005050050
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 mlxscore=0
- spamscore=0 clxscore=1011 priorityscore=1501 bulkscore=0 phishscore=0
- impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005050050
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> When ndo_get_phys_port_name() for the CPU port was added we introduced
-> an early check for when the DSA master network device in
-> dsa_master_ndo_setup() already implements ndo_get_phys_port_name(). When
-> we perform the teardown operation in dsa_master_ndo_teardown() we would
-> not be checking that cpu_dp->orig_ndo_ops was successfully allocated and
-> non-NULL initialized.
-> 
-> With network device drivers such as virtio_net, this leads to a NPD as
-> soon as the DSA switch hanging off of it gets torn down because we are
-> now assigning the virtio_net device's netdev_ops a NULL pointer.
-> 
-> Fixes: da7b9e9b00d4 ("net: dsa: Add ndo_get_phys_port_name() for CPU port")
-> Reported-by: Allen Pais <allen.pais@oracle.com>
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+On Mon, 4 May 2020 17:03:54 -0600
+Alex Williamson <alex.williamson@redhat.com> wrote:
 
-Tested-by: Allen Pais <allen.pais@oracle.com>
+> On Mon, 4 May 2020 15:08:08 -0700
+> Neo Jia <cjia@nvidia.com> wrote:
+>=20
+> > On Mon, May 04, 2020 at 12:52:53PM -0600, Alex Williamson wrote: =20
+> > > External email: Use caution opening links or attachments
+> > >=20
+> > >=20
+> > > On Mon, 4 May 2020 18:09:16 +0200
+> > > Cornelia Huck <cohuck@redhat.com> wrote:
+> > >    =20
+> > > > On Fri, 01 May 2020 15:41:24 -0600
+> > > > Alex Williamson <alex.williamson@redhat.com> wrote:
+> > > >   =20
+> > > > > There is no PCI spec defined capability with ID 0, therefore we d=
+on't
+> > > > > expect to find it in a capability chain and we use this index in =
+an
+> > > > > internal array for tracking the sizes of various capabilities to =
+handle
+> > > > > standard config space.  Therefore if a device does present us wit=
+h a
+> > > > > capability ID 0, we mark our capability map with nonsense that can
+> > > > > trigger conflicts with other capabilities in the chain.  Ignore I=
+D 0
+> > > > > when walking the capability chain, handling it as a hidden capabi=
+lity.
+> > > > >
+> > > > > Seen on an NVIDIA Tesla T4.
+> > > > >
+> > > > > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> > > > > ---
+> > > > >  drivers/vfio/pci/vfio_pci_config.c |    2 +-
+> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pc=
+i/vfio_pci_config.c
+> > > > > index 87d0cc8c86ad..5935a804cb88 100644
+> > > > > --- a/drivers/vfio/pci/vfio_pci_config.c
+> > > > > +++ b/drivers/vfio/pci/vfio_pci_config.c
+> > > > > @@ -1487,7 +1487,7 @@ static int vfio_cap_init(struct vfio_pci_de=
+vice *vdev)
+> > > > >             if (ret)
+> > > > >                     return ret;
+> > > > >
+> > > > > -           if (cap <=3D PCI_CAP_ID_MAX) {   =20
+> > > >
+> > > > Maybe add a comment:
+> > > >
+> > > > /* no PCI spec defined capability with ID 0: hide it */   =20
+> >=20
+> > Hi Alex,
+> >=20
+> > I think this is NULL Capability defined in Codes and IDs spec, probably=
+ we
+> > should just add a new enum to represent that? =20
+>=20
+> Yes, it looks like the 1.1 version of that specification from June 2015
+> changed ID 0 from reserved to a NULL capability.  So my description and
+> this comment are wrong, but I wonder if we should did anything
+> different with the handling of this capability.  It's specified to
+> contain only the ID and next pointer, so I'd expect it's primarily a
+> mechanism for hardware vendors to blow fuses in config space to
+> maintain a capability chain while maybe hiding a feature not supported
+> by the product sku.  Hiding the capability in vfio is trivial, exposing
+> it implies some changes to our config space map that might be more
+> subtle.  I'm inclined to stick with this solution for now.  Thanks,
+>=20
+> Alex
 
-Thank you Florain.
-> ---
->   net/dsa/master.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/dsa/master.c b/net/dsa/master.c
-> index b5c535af63a3..a621367c6e8c 100644
-> --- a/net/dsa/master.c
-> +++ b/net/dsa/master.c
-> @@ -289,7 +289,8 @@ static void dsa_master_ndo_teardown(struct net_device *dev)
->   {
->   	struct dsa_port *cpu_dp = dev->dsa_ptr;
->   
-> -	dev->netdev_ops = cpu_dp->orig_ndo_ops;
-> +	if (cpu_dp->orig_ndo_ops)
-> +		dev->netdev_ops = cpu_dp->orig_ndo_ops;
->   	cpu_dp->orig_ndo_ops = NULL;
->   }
->   
-> 
+=46rom this description, I also think that we should simply hide these
+NULL capabilities.
+
