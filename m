@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB4AC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B9EC47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 626C720675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D692E206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:24:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729422AbgEEONv (ORCPT
+        id S1729403AbgEEONu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:13:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48522 "EHLO
+        Tue, 5 May 2020 10:13:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729216AbgEEONs (ORCPT
+        by vger.kernel.org with ESMTP id S1729330AbgEEONr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:13:48 -0400
+        Tue, 5 May 2020 10:13:47 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D065AC0610D5
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:13:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 084E3C061A41
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:13:46 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jVyJz-0000KY-6k; Tue, 05 May 2020 16:13:19 +0200
+        id 1jVyK4-0000N2-8t; Tue, 05 May 2020 16:13:24 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id A3A0DFFC8D;
-        Tue,  5 May 2020 16:13:18 +0200 (CEST)
-Message-Id: <20200505134058.453581595@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id AFA1A1001F5;
+        Tue,  5 May 2020 16:13:23 +0200 (CEST)
+Message-Id: <20200505134058.863038566@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:16:06 +0200
+Date:   Tue, 05 May 2020 15:16:10 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -51,8 +51,9 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Brian Gerst <brgerst@gmail.com>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: [patch V4 part 1 04/36] sched: Make scheduler_ipi inline
+        Will Deacon <will@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [patch V4 part 1 08/36] x86/doublefault: Remove memmove() call
 References: <20200505131602.633487962@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -65,52 +66,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the scheduler IPI is trivial and simple again there is no point to
-have the little function out of line. This simplifies the effort of
-constraining the instrumentation nicely.
+Use of memmove() in #DF is problematic considered tracing and other
+instrumentation.
 
+Remove the memmove() call and simply write out what needs doing; this
+even clarifies the code, win-win! The code copies from the espfix64
+stack to the normal task stack, there is no possible way for that to
+overlap.
+
+Survives selftests/x86, specifically sigreturn_64.
+
+Suggested-by: Borislav Petkov <bp@alien8.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Andy Lutomirski <luto@kernel.org>
+Link: https://lkml.kernel.org/r/20200220121727.GB507@zn.tnic
 ---
- include/linux/sched.h |   10 +++++++++-
- kernel/sched/core.c   |   10 ----------
- 2 files changed, 9 insertions(+), 11 deletions(-)
+ arch/x86/kernel/traps.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1719,7 +1719,15 @@ extern char *__get_task_comm(char *to, s
- })
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -278,6 +278,7 @@ dotraplinkage void do_double_fault(struc
+ 		regs->ip == (unsigned long)native_irq_return_iret)
+ 	{
+ 		struct pt_regs *gpregs = (struct pt_regs *)this_cpu_read(cpu_tss_rw.x86_tss.sp0) - 1;
++		unsigned long *p = (unsigned long *)regs->sp;
  
- #ifdef CONFIG_SMP
--void scheduler_ipi(void);
-+static __always_inline void scheduler_ipi(void)
-+{
-+	/*
-+	 * Fold TIF_NEED_RESCHED into the preempt_count; anybody setting
-+	 * TIF_NEED_RESCHED remotely (for the first time) will also send
-+	 * this IPI.
-+	 */
-+	preempt_fold_need_resched();
-+}
- extern unsigned long wait_task_inactive(struct task_struct *, long match_state);
- #else
- static inline void scheduler_ipi(void) { }
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2312,16 +2312,6 @@ static void wake_csd_func(void *info)
- 	sched_ttwu_pending();
- }
+ 		/*
+ 		 * regs->sp points to the failing IRET frame on the
+@@ -285,7 +286,11 @@ dotraplinkage void do_double_fault(struc
+ 		 * in gpregs->ss through gpregs->ip.
+ 		 *
+ 		 */
+-		memmove(&gpregs->ip, (void *)regs->sp, 5*8);
++		gpregs->ip	= p[0];
++		gpregs->cs	= p[1];
++		gpregs->flags	= p[2];
++		gpregs->sp	= p[3];
++		gpregs->ss	= p[4];
+ 		gpregs->orig_ax = 0;  /* Missing (lost) #GP error code */
  
--void scheduler_ipi(void)
--{
--	/*
--	 * Fold TIF_NEED_RESCHED into the preempt_count; anybody setting
--	 * TIF_NEED_RESCHED remotely (for the first time) will also send
--	 * this IPI.
--	 */
--	preempt_fold_need_resched();
--}
--
- static void ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
- {
- 	struct rq *rq = cpu_rq(cpu);
+ 		/*
 
