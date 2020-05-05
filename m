@@ -2,124 +2,187 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EF0C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 430F0C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7A6920721
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DF5D206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:35:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RWLdkhnm"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="VJdZkGjv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728858AbgEESdY (ORCPT
+        id S1728927AbgEESfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 14:33:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728180AbgEESdY (ORCPT
+        Tue, 5 May 2020 14:35:05 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:24477 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbgEESfE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 14:33:24 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0B08C061A0F;
-        Tue,  5 May 2020 11:33:23 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id f11so2730879ljp.1;
-        Tue, 05 May 2020 11:33:23 -0700 (PDT)
+        Tue, 5 May 2020 14:35:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1A1CLPbro2Ce0m0/sfeeckkizp6g/6oLtB6WnuAQzhQ=;
-        b=RWLdkhnm+FEgBbgZFjFXx6x04F7jV8MEc4+8/X5DTOQjZId9DaJO0l9dsiHpH7FIeH
-         M+ovPPzMId8URTefVJFmFWf1ZTt+biAH27fHxgl2IZ1OYqzBWs0elXTJnDKQW/IL7JLy
-         mebWXsF1ilwXrRdf8/3DXqm597YL+4xz6xmmr2RG8/A90LbNGQpEoU5EYn3Sv3hQ9r2B
-         zlxsA3nLssGFLOuYMOR9T22IheC0k/q+7aTPyoLVepm4dELKyuZq7vBm+TDvuHl8VEqw
-         ot8gvaqaMe+dNI85evH059SIUavAcWMf5VUfzFr22ufkHjsoIABOaZlnwl5TPnhuisuq
-         HkkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1A1CLPbro2Ce0m0/sfeeckkizp6g/6oLtB6WnuAQzhQ=;
-        b=pnRQwFqiPzpKYLE8IImaJGupvP4NuXk61+oYlGlLYCPCYp03DZhxekUexnW+zhLu82
-         XRpc+L53EOj1G9THXdxlnr0E+IZ7pB/yWq8zRqDB2p0egwbrkm23unYC5jJxH7YD/wKd
-         Z2ylc9WyKfpMhpOLao56yLC2yoXLd7ceI5Wxvdmjew1qrTcQDJ/mcCXnP+3QWYRhrT6c
-         FWZjTWWAzfMDXCFfQI/D3waYGd/sUQ9S3ThlUjHJCi9VtFheUUImzwOt3Ywn2hICg++z
-         lFZiIFrnwhWg1+DsUzEWnQP+GM9aQZwepfG0OzModxemPhUIRP8QDGn5gAkAnec/Wrvr
-         5dnw==
-X-Gm-Message-State: AGi0PubwcE6p9tySgxgZapOdAcNWktkGG547QzkPJAhzRPqsKp6aMaJ2
-        G6dapc464e+eUoU4IrmtSlo=
-X-Google-Smtp-Source: APiQypIwq4XkX7k8PCo25yE8idLwl/YQxeBbdUHDLElkppj69emQ+ZSanadV9cQMgT9jQQJ1cX7Png==
-X-Received: by 2002:a2e:7d0f:: with SMTP id y15mr2659763ljc.91.1588703602392;
-        Tue, 05 May 2020 11:33:22 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id y21sm2297981ljg.66.2020.05.05.11.33.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 11:33:19 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Tue, 5 May 2020 20:33:17 +0200
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RFC] rcu/tree: Refactor object allocation and try harder
- for array allocation
-Message-ID: <20200505183317.GA28175@pc636>
-References: <20200416131745.GA90777@google.com>
- <20200416180100.GT17661@paulmck-ThinkPad-P72>
- <20200422145752.GB362484@cmpxchg.org>
- <20200422153503.GQ17661@paulmck-ThinkPad-P72>
- <20200423174831.GB389168@cmpxchg.org>
- <20200423180249.GT17661@paulmck-ThinkPad-P72>
- <20200423182750.GA32451@pc636>
- <20200423192115.GV17661@paulmck-ThinkPad-P72>
- <20200423195955.GA476@pc636>
- <20200505181743.GA109369@cmpxchg.org>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1588703704; x=1620239704;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=+yD817Ceo4htuXp5Qfj9nfPNfFFZZ68WXswqd/tAUZk=;
+  b=VJdZkGjvMbGABSLpAovhfjBZA53Ec5JO42T0qSNBaMf5qjYtcUB9QErZ
+   sJal/rPIktb7Hi3EfOGZmydMSaqwYXkbs93oCms3lxLQddsAlfsuR64s5
+   zNRDNGTdjqfkSspOHRLDq15h0wuca4tGY4aK+FZlkY9sXXiiEx7C/mOKl
+   8=;
+IronPort-SDR: RPQb8hctXlkWW7Jaw8MfFAq5p78DqW4wIQyRJJBG4unWZb9xCIXtjLUmx/w1+W1TBnEAY3FHlo
+ 53I2fDpQ89pg==
+X-IronPort-AV: E=Sophos;i="5.73,356,1583193600"; 
+   d="scan'208";a="29008117"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1e-a70de69e.us-east-1.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 05 May 2020 18:34:51 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-a70de69e.us-east-1.amazon.com (Postfix) with ESMTPS id C5D02A2071;
+        Tue,  5 May 2020 18:34:47 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 5 May 2020 18:34:46 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.200) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 5 May 2020 18:34:39 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+CC:     SeongJae Park <sjpark@amazon.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        David Miller <davem@davemloft.net>,
+        "Al Viro" <viro@zeniv.linux.org.uk>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        <sj38.park@gmail.com>, netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        SeongJae Park <sjpark@amazon.de>, <snu@amazon.com>,
+        <amit@kernel.org>, <stable@vger.kernel.org>
+Subject: Re: Re: Re: Re: [PATCH net v2 0/2] Revert the 'socket_alloc' life cycle change
+Date:   Tue, 5 May 2020 20:34:02 +0200
+Message-ID: <20200505183402.2021-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200505181707.GJ2869@paulmck-ThinkPad-P72> (raw)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505181743.GA109369@cmpxchg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.200]
+X-ClientProxiedBy: EX13D02UWB001.ant.amazon.com (10.43.161.240) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > b) Double argument(with rcu_head)
-> > This case we consider as it gets called from atomic context even though
-> > it can be not. Why we consider such case as atomic: we just assume that.
-> > The reason is to keep it simple, because it is not possible to detect whether
-> > a current context is attomic or not(for all type of kernels), i mean the one
-> > that calls kfree_rcu().
-> > 
-> > In this case we do not have synchronize_rcu() option. Instead we have an
-> > object with rcu_head inside. If an allocation gets failed we just make
-> > use of rcu_head inside the object, regular queuing.
-> > 
-> > In this case we do not need to hard in order to obtain memory. Therefore
-> > my question was to Johannes what is best way here. Since we decided to
-> > minimize reclaiming, whereas GFP_NOWAIT wakes up kswapd if no memory.
-> > GFP_ATOMIC also is not good, because for (b) we do not need to waste
-> > it.
-> 
-> Waking kswapd is fine, because it's a shared facility that doesn't
-> just reclaim on your behalf but on behalf of a central goal: to get
-> the freelist back to the watermarks. If they're low, somebody will
-> sooner or later kick kswapd anyway to do exactly that.
-> 
-> So unless you ask kswapd for a high order page that is unlikely to be
-> needed by anybody else, you're only doing the inevitable.
->
-Johannes, thank you for the clarification!
+On Tue, 5 May 2020 11:17:07 -0700 "Paul E. McKenney" <paulmck@kernel.org> wrote:
 
---
-Vlad Rezki
+> On Tue, May 05, 2020 at 07:56:05PM +0200, SeongJae Park wrote:
+> > On Tue, 5 May 2020 10:30:36 -0700 "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> > 
+> > > On Tue, May 05, 2020 at 07:05:53PM +0200, SeongJae Park wrote:
+> > > > On Tue, 5 May 2020 09:37:42 -0700 Eric Dumazet <eric.dumazet@gmail.com> wrote:
+> > > > 
+> > > > > 
+> > > > > 
+> > > > > On 5/5/20 9:31 AM, Eric Dumazet wrote:
+> > > > > > 
+> > > > > > 
+> > > > > > On 5/5/20 9:25 AM, Eric Dumazet wrote:
+> > > > > >>
+> > > > > >>
+> > > > > >> On 5/5/20 9:13 AM, SeongJae Park wrote:
+> > > > > >>> On Tue, 5 May 2020 09:00:44 -0700 Eric Dumazet <edumazet@google.com> wrote:
+> > > > > >>>
+> > > > > >>>> On Tue, May 5, 2020 at 8:47 AM SeongJae Park <sjpark@amazon.com> wrote:
+> > > > > >>>>>
+> > > > > >>>>> On Tue, 5 May 2020 08:20:50 -0700 Eric Dumazet <eric.dumazet@gmail.com> wrote:
+> > > > > >>>>>
+> > > > > >>>>>>
+> > > > > >>>>>>
+> > > > > >>>>>> On 5/5/20 8:07 AM, SeongJae Park wrote:
+> > > > > >>>>>>> On Tue, 5 May 2020 07:53:39 -0700 Eric Dumazet <edumazet@google.com> wrote:
+> > > > > >>>>>>>
+> > > > > >>>>>>
+> > > > [...]
+> > > > > >>
+> > > > > >> I would ask Paul opinion on this issue, because we have many objects
+> > > > > >> being freed after RCU grace periods.
+> > > > > >>
+> > > > > >> If RCU subsystem can not keep-up, I guess other workloads will also suffer.
+> > > > > >>
+> > > > > >> Sure, we can revert patches there and there trying to work around the issue,
+> > > > > >> but for objects allocated from process context, we should not have these problems.
+> > > > > >>
+> > > > > > 
+> > > > > > I wonder if simply adjusting rcu_divisor to 6 or 5 would help 
+> > > > > > 
+> > > > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > > > > index d9a49cd6065a20936edbda1b334136ab597cde52..fde833bac0f9f81e8536211b4dad6e7575c1219a 100644
+> > > > > > --- a/kernel/rcu/tree.c
+> > > > > > +++ b/kernel/rcu/tree.c
+> > > > > > @@ -427,7 +427,7 @@ module_param(qovld, long, 0444);
+> > > > > >  static ulong jiffies_till_first_fqs = ULONG_MAX;
+> > > > > >  static ulong jiffies_till_next_fqs = ULONG_MAX;
+> > > > > >  static bool rcu_kick_kthreads;
+> > > > > > -static int rcu_divisor = 7;
+> > > > > > +static int rcu_divisor = 6;
+> > > > > >  module_param(rcu_divisor, int, 0644);
+> > > > > >  
+> > > > > >  /* Force an exit from rcu_do_batch() after 3 milliseconds. */
+> > > > > > 
+> > > > > 
+> > > > > To be clear, you can adjust the value without building a new kernel.
+> > > > > 
+> > > > > echo 6 >/sys/module/rcutree/parameters/rcu_divisor
+> > > > 
+> > > > I tried value 6, 5, and 4, but none of those removed the problem.
+> > > 
+> > > Thank you for checking this!
+> > > 
+> > > Was your earlier discussion on long RCU readers speculation, or do you
+> > > have measurements?
+> > 
+> > It was just a guess without any measurement or dedicated investigation.
+> 
+> OK, another thing to check is the duration of the low-memory episode.
+> Does this duration exceed the RCU CPU stall warning time?  (21 seconds
+> in mainline, 60 in many distros, but check rcupdate.rcu_cpu_stall_timeout
+> to be sure.)
+
+The benchmark takes about 36 seconds for 10,000 repeats of the test.
+
+The value on the test machine is 60.
+
+So the duration would not exceeded the warning time and therefore I haven't
+seen the warning message.
+
+As told in other mail, I will also adjust this value to shorter one.
+
+> 
+> Also, any chance of a .config?  Or at least the RCU portions?  I am
+> guessing CONFIG_PREEMPT=n, for example.
+
+I guess this would be ok.
+
+    # CONFIG_PREEMPT is not set
+    
+    #
+    # RCU Subsystem
+    #
+    CONFIG_TREE_RCU=y
+    CONFIG_RCU_EXPERT=y
+    CONFIG_SRCU=y
+    CONFIG_TREE_SRCU=y
+    CONFIG_RCU_STALL_COMMON=y
+    CONFIG_RCU_NEED_SEGCBLIST=y
+    CONFIG_RCU_FANOUT=64
+    CONFIG_RCU_FANOUT_LEAF=16
+    # CONFIG_RCU_FAST_NO_HZ is not set
+    CONFIG_RCU_NOCB_CPU=y
+    # end of RCU Subsystem
+
+
+Thanks,
+SeongJae Park
