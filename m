@@ -2,147 +2,176 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B75C47256
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C53FC47256
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59E9B20721
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:16:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49212205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:18:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="FAFT/bMX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sIWZb9I8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbgEEGQP (ORCPT
+        id S1728217AbgEEGSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 02:16:15 -0400
-Received: from mout.web.de ([217.72.192.78]:44503 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725766AbgEEGQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 02:16:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1588659342;
-        bh=XmK5O44OmJ3eYVQg33Sdnbohqm5cOU1jNxpCWHBTu6A=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=FAFT/bMXb6o9udnUvj8IE/L1kcJpEvX+KRzsgKlil/cVeWWqvLzxv4xnOQ+Gw0UrO
-         MGp/YBCd84W5ns4q4eWjXK3Rt8giJ7exKL9MBhi8tVKPqeNH1Gj5bjCuJd82+2Z0o2
-         pL2gCqj36FZsO4b05mt5LKFUMmBm7OzXxE+qtEzc=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.48.132.123]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LuuS5-1j5Q683PyD-0101ej; Tue, 05
- May 2020 08:15:41 +0200
-Subject: Re: net: rtw88: fix an issue about leak system resources
-To:     Dejin Zheng <zhengdejin5@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Brian Norris <briannorris@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        Yan-Hsuan Chuang <yhchuang@realtek.com>
-References: <79591cab-fe3e-0597-3126-c251d41d492b@web.de>
- <20200504144206.GA5409@nuc8i5> <882eacd1-1cbf-6aef-06c5-3ed6d402c0f5@web.de>
- <CA+ASDXOJ2CSzdgos4Y8Wd7iZjRUkrMN=Ma0_-ujG8bihGzPKkQ@mail.gmail.com>
- <20200505005908.GA8464@nuc8i5>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <c5890e43-4b86-eed2-4de9-caa70743255d@web.de>
-Date:   Tue, 5 May 2020 08:15:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 02:18:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59030 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725320AbgEEGSg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 02:18:36 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 168E5C061A0F;
+        Mon,  4 May 2020 23:18:35 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 145so375294pfw.13;
+        Mon, 04 May 2020 23:18:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HczQXqwB0R1qGeJgz+vzGA9j7JqbZxbL0VHevumtOCA=;
+        b=sIWZb9I8mCBXoTcQngXc5UCNeaWbfxEn4MKnuQhQxwLJPyqcdQD5SARHtAEb2K9ZnX
+         kdkNMjjS3kiVSLGKuU6gj8r2D0t6ipSpr6v0UcQtp7NBL8X1zaIVJGDfOoDOuODbCkym
+         k9IEKfC/T4Wp+8nNQNqcO2Bc6RHTAMwvlbFPJS/vyImRZlQq7sS1dlh/4fR28CnhU1zJ
+         SNMP8rm1Fg6ZJ6b1Rafuq/dmrjJjOpW3YwV7JPDZfR/VMw8+Y1iPt0GLA/BYMiV2wRCJ
+         Z2ho5iQG15CyyxfYXSSREx18/12fPEQvesk71g6x+nUwmsI3Nw2jB0X1CWQHCJgnskBt
+         or9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HczQXqwB0R1qGeJgz+vzGA9j7JqbZxbL0VHevumtOCA=;
+        b=GzOMnnf8FQgE0RakvaYBL1AzYxYapM7CX1+N4ntmsA8s0hOeermQSWuY//oKmWYbq+
+         qF1fOBZkAcV1HMDlp+Uo5ZCX0TvVjNuyQmhFO6TXM5q5yIPSBxkWIc3Ct9fVEXR47DgQ
+         neuvbbxRpoqycpEM0TK/InmpzxK2GSL+0B8Dg20SjHS34y8H74acUMc+ZPTKLYyv6B1a
+         XW7TxjVuPK323ETUZ5KEHXhTt1DTqYpZ07PZGB5DjyTC+8y92hek6ADdth3/KHSrEJlZ
+         Ns16m71UILgN5UoGP+ppCmQMyQJqvDeq2p+LOwiwnMRVM38mT8usNRtzhFaEK/Tl4ptu
+         5Izw==
+X-Gm-Message-State: AGi0PubvHDDdHyEAhswQGKc+LviWspdDof1NQzl5egkt9T/DMO3Jmuf5
+        Zuk5o9Onn3gQwUn0H7bk8TM=
+X-Google-Smtp-Source: APiQypK5tezmezMLIgijN6F0ftN1PBVRc8C85+WLMH2EOlc3JUnxz153AxZ/LEr0lvaj49ptRlHK1Q==
+X-Received: by 2002:a62:3383:: with SMTP id z125mr1579520pfz.271.1588659514433;
+        Mon, 04 May 2020 23:18:34 -0700 (PDT)
+Received: from localhost.localdomain (111-240-39-190.dynamic-ip.hinet.net. [111.240.39.190])
+        by smtp.gmail.com with ESMTPSA id u15sm835913pjm.47.2020.05.04.23.18.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 23:18:34 -0700 (PDT)
+From:   Qi Zheng <arch0.zheng@gmail.com>
+To:     gregkh@linuxfoundation.org, rafael@kernel.org, corbet@lwn.net
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qi Zheng <arch0.zheng@gmail.com>
+Subject: [PATCH] kobject: documentation: Fix erroneous function example in kobject doc.
+Date:   Tue,  5 May 2020 14:18:28 +0800
+Message-Id: <20200505061828.42952-1-arch0.zheng@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200505005908.GA8464@nuc8i5>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-X-Provags-ID: V03:K1:04v4GgQazZfnLBwYRDKACuz5kVWtBLeCVWNzMsfuq0kNv5Luj/1
- g6h/n46RJVkJ1Bo0le1H0natVVECtTWfhpf4azmzAz8Ph/RoPtIYOiEB0hlQmrzZRth6qlB
- 4qQ56bRgBHIp82HyBzy8oSLIg2fMEMnZ+9WExPiESlyc8r1Q2GfE4HcQmiT9XDBLWl5lZ3t
- AkBzqOjof+LsTljRMeCdQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lkTaNKRfqBY=:7S23YAPDfggYtmMwgw/bvY
- Kc4o1/tOR0+mNqygGaszEAIAElITYnGEZMO36hEMyht9J+3lvx/ZrBeQg7aGElj0EplcicwMh
- pyWBDV18J9vodPvxikdPu+MH7fN1xoWTYSkbHfAbSq/+qhfflzzm/zNVW6UtyjEsheKmyfHGq
- ihY0pg815H7UgOr+EFb+bN7t+VakBg5EPVEomte+fKBoSN5IToaurYTHzTfC69Wm7U/HV96F7
- xJng4QATI/XdxghhskYjU4QefXIQYwE+/TItkNT3k3bAZbHK/2j5d/ojKSpvdLDx7pYgybg7Q
- LwhQfotmEIOD1sqBXe+cvMLiwS2n5uEhzI6yVddNawkTfhTy46updfBR42gAJ+9T52kbLuPjM
- ueJQ8vX1RRAIlvp3FIaWG51pSzYts5OruMdJpwdwqANk+NuHkmGK1k/5O25QPSYE7ZJI/sygb
- uuoiEqCdZClfmQ0oUV2nx4aNJbalxG0KtosoVjmuEaiTdRjxyqdB5eXo8cPBEKppoZN/SI6Bt
- vHDtUmzQxTpjZ36/MkPSJCqxoo0UBhNR4KFSHBwBx/rUzzeU0iQZV8MtFcGlUsrPgP1qSaCUg
- pIy2FLdI3sFQnS7xGyfO0TSXBuhqJpfrhfw9zJ6qGThXe4hdVduIKPg/FqaUJPhatsL8F6pin
- BH8nZynXzQdi+gqj43KBgUctsMdjg+9lJmbl9aDaboYtyo6+rHPPOUO6z71R7dVsL/o6C4P3s
- McesrJiNNri0WdYjMSYmE7vY5+/OkWIykPwN2yvwwYmjBA5IeeXQtYMyuuIOf5bsN3S+FWbrw
- aJyLnm9wcikm43gbCREeMMDm/ulpeYk3lh7jn9rdYxDAZgPnNBk6Vi7dUnwO4BZg/tVqYYQtC
- BKvX+8xxlq5WZrAKPUEWr01QWSK/yfHLfRxdCwq69HKSHxHB5Ce+GoqlBHoMR0B9vR3fi5F+a
- ahQOkSyPiPR7D7l1kVtb2EpqbtL5t14I+TIcmdVGtMvaKZ1weRsRsrZRsgqG5DkO23UsFYJAh
- yX3wQwdo0op5UIsEgyzBuko72D7thJbW9pjKNQ1XmY8mcPxudxuaK/JriYJ5sciaTHA8E6AxP
- V70xdtg0YwRd0qOoT/IKmePidACjj7HZYle6939J1PrVPSi+F71xt7JlsTeq5PRBk047xw9Q2
- ApHn6B1aKB2zzKa5l8jGrRitqiSq5gFoDj60vlokLxv9+LaGiI4QH1+2uLiZdMs3JwKLJAIeA
- eAux0RSRlqt3JTBOT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Brian, Thanks very much for your reminder,
+Update the definitions of some functions listed in the kobject
+document, since they have been changed.
 
-Reminders can hopefully trigger positive effects.
+Signed-off-by: Qi Zheng <arch0.zheng@gmail.com>
+---
+ Documentation/core-api/kobject.rst | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
+diff --git a/Documentation/core-api/kobject.rst b/Documentation/core-api/kobject.rst
+index 1f62d4d7d966..c3ac2963283b 100644
+--- a/Documentation/core-api/kobject.rst
++++ b/Documentation/core-api/kobject.rst
+@@ -80,11 +80,11 @@ what is the pointer to the containing structure?  You must avoid tricks
+ (such as assuming that the kobject is at the beginning of the structure)
+ and, instead, use the container_of() macro, found in ``<linux/kernel.h>``::
+ 
+-    container_of(pointer, type, member)
++    container_of(ptr, type, member)
+ 
+ where:
+ 
+-  * ``pointer`` is the pointer to the embedded kobject,
++  * ``ptr`` is the pointer to the embedded kobject,
+   * ``type`` is the type of the containing structure, and
+   * ``member`` is the name of the structure field to which ``pointer`` points.
+ 
+@@ -140,7 +140,7 @@ the name of the kobject, call kobject_rename()::
+ 
+     int kobject_rename(struct kobject *kobj, const char *new_name);
+ 
+-kobject_rename does not perform any locking or have a solid notion of
++kobject_rename() does not perform any locking or have a solid notion of
+ what names are valid so the caller must provide their own sanity checking
+ and serialization.
+ 
+@@ -222,17 +222,17 @@ ksets, show and store functions, and other details.  This is the one
+ exception where a single kobject should be created.  To create such an
+ entry, use the function::
+ 
+-    struct kobject *kobject_create_and_add(char *name, struct kobject *parent);
++    struct kobject *kobject_create_and_add(const char *name, struct kobject *parent);
+ 
+ This function will create a kobject and place it in sysfs in the location
+ underneath the specified parent kobject.  To create simple attributes
+ associated with this kobject, use::
+ 
+-    int sysfs_create_file(struct kobject *kobj, struct attribute *attr);
++    int sysfs_create_file(struct kobject *kobj, const struct attribute *attr);
+ 
+ or::
+ 
+-    int sysfs_create_group(struct kobject *kobj, struct attribute_group *grp);
++    int sysfs_create_group(struct kobject *kobj, const struct attribute_group *grp);
+ 
+ Both types of attributes used here, with a kobject that has been created
+ with the kobject_create_and_add(), can be of type kobj_attribute, so no
+@@ -300,8 +300,10 @@ kobj_type::
+             void (*release)(struct kobject *kobj);
+             const struct sysfs_ops *sysfs_ops;
+             struct attribute **default_attrs;
++            const struct attribute_group **default_groups;
+             const struct kobj_ns_type_operations *(*child_ns_type)(struct kobject *kobj);
+             const void *(*namespace)(struct kobject *kobj);
++            void (*get_ownership)(struct kobject *kobj, kuid_t *uid, kgid_t *gid);
+     };
+ 
+ This structure is used to describe a particular type of kobject (or, more
+@@ -352,12 +354,12 @@ created and never declared statically or on the stack.  To create a new
+ kset use::
+ 
+   struct kset *kset_create_and_add(const char *name,
+-                                   struct kset_uevent_ops *u,
+-                                   struct kobject *parent);
++                                   const struct kset_uevent_ops *uevent_ops,
++                                   struct kobject *parent_kobj);
+ 
+ When you are finished with the kset, call::
+ 
+-  void kset_unregister(struct kset *kset);
++  void kset_unregister(struct kset *k);
+ 
+ to destroy it.  This removes the kset from sysfs and decrements its reference
+ count.  When the reference count goes to zero, the kset will be released.
+@@ -371,9 +373,9 @@ If a kset wishes to control the uevent operations of the kobjects
+ associated with it, it can use the struct kset_uevent_ops to handle it::
+ 
+   struct kset_uevent_ops {
+-          int (*filter)(struct kset *kset, struct kobject *kobj);
+-          const char *(*name)(struct kset *kset, struct kobject *kobj);
+-          int (*uevent)(struct kset *kset, struct kobject *kobj,
++          int (* const filter)(struct kset *kset, struct kobject *kobj);
++          const char *(* const name)(struct kset *kset, struct kobject *kobj);
++          int (* const uevent)(struct kset *kset, struct kobject *kobj,
+                         struct kobj_uevent_env *env);
+   };
+ 
+-- 
+2.25.1
 
-> These comments have always bothered me.
-
-Thanks for such information.
-
-
-> Now I can put it on my blacklist.
-
-I find it unfortunate that you choose to adjust your communication preferences
-in this direction.
-Thus I am curious if other contributors will get more chances to integrate
-another bit of advice into your software development attention.
-
-Regards,
-Markus
