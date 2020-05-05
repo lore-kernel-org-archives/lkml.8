@@ -2,117 +2,168 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8635EC4725A
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A35C4725B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6537E20836
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:33:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BybiyQGR"
+	by mail.kernel.org (Postfix) with ESMTP id D7EFF2078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:33:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730342AbgEEPdK (ORCPT
+        id S1730296AbgEEPdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:33:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33022 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730294AbgEEPdH (ORCPT
+        Tue, 5 May 2020 11:33:01 -0400
+Received: from smtp-8fa8.mail.infomaniak.ch ([83.166.143.168]:52401 "EHLO
+        smtp-8fa8.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730245AbgEEPc5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:33:07 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 531E1C061A0F;
-        Tue,  5 May 2020 08:33:07 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id g10so1695913lfj.13;
-        Tue, 05 May 2020 08:33:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=L0UN3GdJ+vKgAwHZGo4xnJdgYYkX+IpknMqsaJEpZ0s=;
-        b=BybiyQGRkSRfHqlJtOAL2TZZ9fIM9njtz/iec0blwnKARpU22PJOmso+P2a6V6WikX
-         R4eEHy7CRUF88cnyTWXhANjldq+AG5XtduiWedAdSNotH3fRQs8Va+p783PpTYej0KMb
-         2We1pvJxMHq9X7oGimCi+O0rQbSOreOqKXOViUlBvsVzgJB+GSrU3ewaAxzBOcIJZEjn
-         wqZCWRPYctqXG1KVVDt7QdOjMBGIwfIp2nw9fZGKmPnwSsUnJb+2yuEHWuFy0ehSK432
-         st/sxRG7FRz74WOO/pNovUFRz0o/FXTdYmduACtAL0jONMms2Xbwjn0//p5a1yavbXEd
-         bgGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=L0UN3GdJ+vKgAwHZGo4xnJdgYYkX+IpknMqsaJEpZ0s=;
-        b=ttFDso1wZX/S2eqhiHz6VRMmmc3dTlZ0kzp73PrzxE4hM7nQ35dU96oJJXja6/aZyl
-         oEYoRr+SA/sTeTH63+3AfRaR43KGlJy553L/GuEmMJ2XrH00nF17HqSzSHoVwmzzQKJ9
-         dcvA0ApLOgRc0b0D5aXm4oKWDR/5d9849VWy0RnkkayEnHAsYhsdocA1ndgTgls1+htF
-         pq/LaroitMinSJ1/kaTryo9x2k6BbOinlHb/Lxw8+LcnX8zePGiX6HXnsk4BwaMh3Wlb
-         4aKFZd0ieZcovNsRismIL2/l5pcYsKgLEoG3aF6i8IUgwEyLjsH18uxadez4bw5k3CnG
-         5N9Q==
-X-Gm-Message-State: AGi0PuaCNhld19hVnxXpyMqWXEBjrcI2dApce1wwJu0l9q0xXA4GgCXK
-        W7aZnKpIInjuTEyrHm14In2jjzhF
-X-Google-Smtp-Source: APiQypJzIQigA9yElUci4Z1uO/sOB3hgnu6E74GLqXTUAPfxzXJVk3uVF0WpPra2UA6plGy32awuag==
-X-Received: by 2002:a19:cc92:: with SMTP id c140mr2058528lfg.34.1588692785272;
-        Tue, 05 May 2020 08:33:05 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id r80sm2240082lff.5.2020.05.05.08.33.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2020 08:33:04 -0700 (PDT)
-Subject: Re: [PATCH v7 0/6] Support NVIDIA Tegra-based Acer A500 and Nexus 7
- devices
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        =?UTF-8?Q?Pedro_=c3=82ngelo?= <pangelo@void.io>,
-        Matt Merhar <mattmerhar@protonmail.com>,
-        Zack Pearsall <zpearsall@yahoo.com>,
-        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200505022517.30523-1-digetx@gmail.com>
- <20200505151136.GA26776@qmqm.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <c34c3bc7-73f7-730c-1581-2e12f3e1d913@gmail.com>
-Date:   Tue, 5 May 2020 18:33:03 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 11:32:57 -0400
+Received: from smtp-2-0000.mail.infomaniak.ch (unknown [10.5.36.107])
+        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49GkHY2npdzlhp0K;
+        Tue,  5 May 2020 17:32:25 +0200 (CEST)
+Received: from localhost (unknown [94.23.54.103])
+        by smtp-2-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 49GkHX62J1zlqCkb;
+        Tue,  5 May 2020 17:32:24 +0200 (CEST)
+From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?q?Philippe=20Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH v5 5/6] doc: Add documentation for the fs.open_mayexec_enforce sysctl
+Date:   Tue,  5 May 2020 17:31:55 +0200
+Message-Id: <20200505153156.925111-6-mic@digikod.net>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200505153156.925111-1-mic@digikod.net>
+References: <20200505153156.925111-1-mic@digikod.net>
 MIME-Version: 1.0
-In-Reply-To: <20200505151136.GA26776@qmqm.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-05.05.2020 18:11, Michał Mirosław пишет:
-> On Tue, May 05, 2020 at 05:25:11AM +0300, Dmitry Osipenko wrote:
->> Hello,
->>
->> This series introduces upstream kernel support for Acer Iconia Tab A500
->> and ASUS Google Nexus 7 tablet devices. Please review and apply, thanks
->> in advance.
->>
->> Changelog:
->>
->> v7: - This version brings support for a Nexus 7 variant that uses Ti PMIC
->>       instead of the Maxim PMIC. Previously we assumed that variant with
->>       the Ti PMIC doesn't exist in a wild, but turned out that it was a
->>       wrong assumption. In a result the device-trees are separated into
->>       more DTSI pieces, which combined together form the final device-tree.
->>       Thanks to Zack Pearsall for testing the Ti version!
-> [...]
-> 
-> Hi Dmitry!
-> 
-> This Ti-based (PM269) version might be very similar to Asus TF300T I have.
-> I'll have a look on your DT during the weekend.
+This sysctl enables to propagate executable permission to userspace
+thanks to the O_MAYEXEC flag.
 
-Will be great, thank you!
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+Reviewed-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+Cc: Aleksa Sarai <cyphar@cyphar.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Kees Cook <keescook@chromium.org>
+---
+
+Changes since v3:
+* Switch back to O_MAYEXEC and highlight that it is only taken into
+  account by openat2(2).
+
+Changes since v2:
+* Update documentation with the new RESOLVE_MAYEXEC.
+* Improve explanations, including concerns about LD_PRELOAD.
+
+Changes since v1:
+* Move from LSM/Yama to sysctl/fs .
+---
+ Documentation/admin-guide/sysctl/fs.rst | 44 +++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+
+diff --git a/Documentation/admin-guide/sysctl/fs.rst b/Documentation/admin-guide/sysctl/fs.rst
+index 2a45119e3331..d55615c36772 100644
+--- a/Documentation/admin-guide/sysctl/fs.rst
++++ b/Documentation/admin-guide/sysctl/fs.rst
+@@ -37,6 +37,7 @@ Currently, these files are in /proc/sys/fs:
+ - inode-nr
+ - inode-state
+ - nr_open
++- open_mayexec_enforce
+ - overflowuid
+ - overflowgid
+ - pipe-user-pages-hard
+@@ -165,6 +166,49 @@ system needs to prune the inode list instead of allocating
+ more.
+ 
+ 
++open_mayexec_enforce
++--------------------
++
++While being ignored by :manpage:`open(2)` and :manpage:`openat(2)`, the
++``O_MAYEXEC`` flag can be passed to :manpage:`openat2(2)` to only open regular
++files that are expected to be executable.  If the file is not identified as
++executable, then the syscall returns -EACCES.  This may allow a script
++interpreter to check executable permission before reading commands from a file,
++or a dynamic linker to only load executable shared objects.  One interesting
++use case is to enforce a "write xor execute" policy through interpreters.
++
++The ability to restrict code execution must be thought as a system-wide policy,
++which first starts by restricting mount points with the ``noexec`` option.
++This option is also automatically applied to special filesystems such as /proc
++.  This prevents files on such mount points to be directly executed by the
++kernel or mapped as executable memory (e.g. libraries).  With script
++interpreters using the ``O_MAYEXEC`` flag, the executable permission can then
++be checked before reading commands from files. This makes it possible to
++enforce the ``noexec`` at the interpreter level, and thus propagates this
++security policy to scripts.  To be fully effective, these interpreters also
++need to handle the other ways to execute code: command line parameters (e.g.,
++option ``-e`` for Perl), module loading (e.g., option ``-m`` for Python),
++stdin, file sourcing, environment variables, configuration files, etc.
++According to the threat model, it may be acceptable to allow some script
++interpreters (e.g. Bash) to interpret commands from stdin, may it be a TTY or a
++pipe, because it may not be enough to (directly) perform syscalls.
++
++There are two complementary security policies: enforce the ``noexec`` mount
++option, and enforce executable file permission.  These policies are handled by
++the ``fs.open_mayexec_enforce`` sysctl (writable only with ``CAP_MAC_ADMIN``)
++as a bitmask:
++
++1 - Mount restriction: checks that the mount options for the underlying VFS
++    mount do not prevent execution.
++
++2 - File permission restriction: checks that the to-be-opened file is marked as
++    executable for the current process (e.g., POSIX permissions).
++
++Code samples can be found in tools/testing/selftests/openat2/omayexec_test.c
++and at
++https://github.com/clipos-archive/clipos4_portage-overlay/search?q=O_MAYEXEC .
++
++
+ overflowgid & overflowuid
+ -------------------------
+ 
+-- 
+2.26.2
+
