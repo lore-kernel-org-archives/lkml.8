@@ -2,87 +2,121 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B92A2C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1202AC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 909DE20752
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E408E20752
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:59:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588701551;
+	bh=0x7iqbFSynCom3RG2vdz4/c2M4DD2sIIWB2WCjFu2iQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HCvzYwVrKN3yzzCmaIQht+CLHOIOtnVv8ztZ/baKO/xuKVuP1t4xE9hfSk7lGC7s9
+	 ad9kFbuwAFFNcOUY4xfyZVmjExiFTsh1SwdCSQ4dtiqPDUR0YwjUeX+MIDr+O2jXfe
+	 5yZkkV0kORfBbW7K5D3yOn87XgnMhIBJ3j8jHRno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730367AbgEER7I (ORCPT
+        id S1730541AbgEER7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 13:59:08 -0400
-Received: from foss.arm.com ([217.140.110.172]:46792 "EHLO foss.arm.com"
+        Tue, 5 May 2020 13:59:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729315AbgEER7I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 13:59:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8B031FB;
-        Tue,  5 May 2020 10:59:07 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.47])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 118F83F305;
-        Tue,  5 May 2020 10:59:04 -0700 (PDT)
-Date:   Tue, 5 May 2020 18:59:01 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Steven Price <steven.price@arm.com>,
-        linux-kernel@vger.kernel.org, harb@amperecomputing.com
-Subject: Re: [PATCH v2 5/5] arm/arm64: smccc: Add ARCH_SOC_ID support
-Message-ID: <20200505175901.GD23612@bogus>
-References: <20200504092905.10580-1-sudeep.holla@arm.com>
- <20200504092905.10580-6-sudeep.holla@arm.com>
- <20200505162049.GG24239@willie-the-truck>
+        id S1729315AbgEER7J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 13:59:09 -0400
+Received: from gmail.com (unknown [104.132.1.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 087B1206B8;
+        Tue,  5 May 2020 17:59:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588701549;
+        bh=0x7iqbFSynCom3RG2vdz4/c2M4DD2sIIWB2WCjFu2iQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZGVlIeFj3wCCtSNeLmdjQArtitcehSpGtNv7FAO+I6CO8r2EqEtBe601I1+Puzarn
+         XF/raACUlARDMJXhC9+siFCPYaGiQGIjFBmLAGLfnoAnZ4lGhMDrTVnxacdQHLqlCC
+         2B8cP6Aes4oc9+LraO/fQC7v+4Z3JAi3SSiK5+ss=
+Date:   Tue, 5 May 2020 10:59:07 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     kernel-team@android.com, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [PATCH] f2fs: get parent inode when recovering pino
+Message-ID: <20200505175907.GB98848@gmail.com>
+References: <20200505153139.201697-1-jaegeuk@kernel.org>
+ <20200505165847.GA98848@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200505162049.GG24239@willie-the-truck>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200505165847.GA98848@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 05:20:50PM +0100, Will Deacon wrote:
-> On Mon, May 04, 2020 at 10:29:05AM +0100, Sudeep Holla wrote:
-> > diff --git a/drivers/firmware/psci/soc_id.c b/drivers/firmware/psci/soc_id.c
-> > new file mode 100644
-> > index 000000000000..b45f2d78e12e
-> > --- /dev/null
-> > +++ b/drivers/firmware/psci/soc_id.c
-> > @@ -0,0 +1,165 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright 2020 Arm Limited
-> > + */
+On Tue, May 05, 2020 at 09:58:47AM -0700, Eric Biggers wrote:
+> On Tue, May 05, 2020 at 08:31:39AM -0700, Jaegeuk Kim wrote:
+> > We had to grab the inode before retrieving i_ino.
+> > 
+> > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> > ---
+> >  fs/f2fs/file.c | 8 +++++++-
+> >  1 file changed, 7 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> > index a0a4413d6083b..9d4c3e3503567 100644
+> > --- a/fs/f2fs/file.c
+> > +++ b/fs/f2fs/file.c
+> > @@ -168,6 +168,7 @@ static const struct vm_operations_struct f2fs_file_vm_ops = {
+> >  static int get_parent_ino(struct inode *inode, nid_t *pino)
+> >  {
+> >  	struct dentry *dentry;
+> > +	struct inode *parent;
+> >  
+> >  	inode = igrab(inode);
+> >  	dentry = d_find_any_alias(inode);
+> > @@ -175,8 +176,13 @@ static int get_parent_ino(struct inode *inode, nid_t *pino)
+> >  	if (!dentry)
+> >  		return 0;
+> >  
+> > -	*pino = parent_ino(dentry);
+> > +	parent = igrab(d_inode(dentry->d_parent));
+> >  	dput(dentry);
+> > +	if (!parent)
+> > +		return 0;
 > > +
-> > +#include <linux/arm-smccc.h>
-> > +#include <linux/bitfield.h>
-> > +#include <linux/device.h>
-> > +#include <linux/module.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/sys_soc.h>
-> > +
-> > +#define SMCCC_SOC_ID_JEP106_BANK_IDX_MASK	GENMASK(30, 24)
-> > +/*
-> > + * As per the spec bits[23:16] are JEP-106 identification code with parity bit
-> > + * for the SiP. We can drop the parity bit.
-> > + */
+> > +	*pino = parent->i_ino;
+> > +	iput(parent);
+> >  	return 1;
 > 
-> Which spec? Could you link to the doc and section here, please?
+> This doesn't appear to be necessary.  parent_ino() is:
+> 
+> 	spin_lock(&dentry->d_lock);
+> 	res = dentry->d_parent->d_inode->i_ino;
+> 	spin_unlock(&dentry->d_lock);
+> 
+> Since dentry is locked and referenced, ->d_parent is stable and positive.
+> 
+> In the encrypt+casefold patch I was reviewing, it's indeed necessary, but only
+> because there was a check of inode->i_flags added outside the locked region.
+> The following would be simpler:
+> 
+>         spin_lock(&dentry->d_lock);
+>         dir = dentry->d_parent->d_inode;
+>         *pino = dir->i_ino;
+>         needs_recovery = IS_ENCRYPTED(dir) && IS_CASEFOLDED(dir);
+>         spin_unlock(&dentry->d_lock);
+> 
+> BTW, d_find_any_alias() is unnecessary too.  This code should just be using
+> file_dentry(file) from f2fs_do_sync_file().
 > 
 
-Sure, sorry since I updated the link in 1/5, I forgot all of it and just
-started referring it here.
+Also, what is this code trying to accomplish?  If it's trying to find the parent
+directory of an inode with i_nlink == 1, this isn't the correct way to do it.
+The fsync could be done via a deleted file, which would make the wrong p_ino be
+set.  I think the correct approach would be to iterate through all the dentry's
+aliases, and choose the parent directory that's !IS_DEADDIR().
 
--- 
-Regards,
-Sudeep
+- Eric
