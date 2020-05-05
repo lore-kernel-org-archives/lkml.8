@@ -2,95 +2,143 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B85E7C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 01:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5EAC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 02:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9526520705
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 01:58:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588643936;
-	bh=cQnMVodPsVGu6kr4A3A0f+mhcJdPPyK20x6xr8YdlKA=;
-	h=Subject:To:References:From:Date:In-Reply-To:List-ID:From;
-	b=kl27cfbMOpQNil7Apa3e/2fO0ZlY7ovR5AKJoSGLmDiVBxQmleFZICInDNtzt18XX
-	 L7stbWJLGPIYkKYK2+XzFdITvV0PQ3PRssGbMx72QJlLxOvC6HgMfUsSKQQ75U862/
-	 a/VS+/B8pEcFf+Ye9qNUIGntO+Z+1dMtRWpTwQhA=
+	by mail.kernel.org (Postfix) with ESMTP id B7893206D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 02:03:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K4p8qrSw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgEEB6z (ORCPT
+        id S1727108AbgEECDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 21:58:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58092 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726482AbgEEB6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 21:58:55 -0400
-Received: from [192.168.0.107] (unknown [58.213.210.203])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D3B6206C0;
-        Tue,  5 May 2020 01:58:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588643935;
-        bh=cQnMVodPsVGu6kr4A3A0f+mhcJdPPyK20x6xr8YdlKA=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=dG8o5twjxu0FpycuHeWowUTohcKzI5WM+H72CCEoKadH1XQZfel6wVQxdhy6X2R8Y
-         ekyXRTXOflT3PsZD8JZFhkPQ2ngLg2/36/IRzhi0oS1QS5qfDOF0Z7wjb6ILZfXBRF
-         TMbyxz0Xq51NDuPqVisI7RSOD+oRf4tBz2Fv7dDs=
-Subject: Re: [f2fs-dev] [PATCH] f2fs: remove redundant check in
- f2fs_force_buffered_io
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
-References: <20200504143538.159967-1-jaegeuk@kernel.org>
-From:   Chao Yu <chao@kernel.org>
-Message-ID: <b18c4be5-b56d-6b6e-3f99-d2fe05d330eb@kernel.org>
-Date:   Tue, 5 May 2020 09:58:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.8.0
+        Mon, 4 May 2020 22:03:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47802 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726449AbgEECDn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 22:03:43 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9797C061A0F;
+        Mon,  4 May 2020 19:03:41 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id x15so139627pfa.1;
+        Mon, 04 May 2020 19:03:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pe3jyn/UjqDKwafRVinnOYh9MKrSxi51+30s2pccLlE=;
+        b=K4p8qrSwmI/1zupjIN0ITVdbZJhfLFx4bfU3tFXZGHuJcuZ3EGWhx1T0GWTk1N1CW9
+         AkhfB3DLV2suzGAgFskJv9kSCDPTnDGBiCsms6qzmG4d64Vg+dShQP+dtyi2bguAF1dT
+         R+KVDAACRz6Ul3stYQ4IIrhE8SUMV60ezeIq4Q4LebcYMg1fHYsHb3okEXkmSyPEmm1f
+         BiT/LC38MMKaNO0Wetr06fC946gv21zO3CLnqIN1+8I7FT03nONU1VDHBRrMRHBQLPjN
+         dp4UbjpkWXfL/ThHImDfm9hMSH24+jHBwRTMDj3JvyFAAVBcJF5EXZJRyqvgeiJyFMhJ
+         HZgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pe3jyn/UjqDKwafRVinnOYh9MKrSxi51+30s2pccLlE=;
+        b=AzMg4z8JC1hMqe9vXW2gqLrpQ4rpu7qFxSfG8E1xGH6FO0R0ZGPWWM7tckzlq0Y6Nc
+         dN7iyjDBsg8QHgkNCN/+ehOygVrWccxjvtyRfa4E02XSzVgxIZz0ZevapRLbavuvDUUz
+         iZn8unoMCAGMbjSOGORXRgwStY4cNP5Z4mri/L84U2Xwxr8rWDQBtuU+MhP0St9l72yo
+         KNERvY4on7MjYhsAbxNILNWmkYEc4qwneJ1BQal3jYgYVzHLhIku8eGmYWh+hb2Yyx61
+         OyrNBNxbojqOkXuXX/UH1b0iaMQ6XyStUaIj/lpt2Og5Ntalmtisyp4wiV60nXdbXLCF
+         Uqyw==
+X-Gm-Message-State: AGi0PuYFzz6rE9ojCHomhVstyfK2g1C/O/F2dJh0uXBu4kN4kN3z/pPh
+        NXKMxu18d1ALsnZrHnM10CI=
+X-Google-Smtp-Source: APiQypIvim676iHFDZjXvK/Nb2PRLUij6USWl42OlXlhfv0KplixlMr0clPiP+b76D9WeUh5LK2iFA==
+X-Received: by 2002:aa7:9690:: with SMTP id f16mr967927pfk.20.1588644217084;
+        Mon, 04 May 2020 19:03:37 -0700 (PDT)
+Received: from localhost ([162.211.220.152])
+        by smtp.gmail.com with ESMTPSA id x132sm379112pfc.57.2020.05.04.19.03.35
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 04 May 2020 19:03:36 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     davem@davemloft.net, swboyd@chromium.org, ynezz@true.cz,
+        netdev@vger.kernel.org, jonathan.richardson@broadcom.com
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH net v1] net: broadcom: fix a mistake about ioremap resource
+Date:   Tue,  5 May 2020 10:03:29 +0800
+Message-Id: <20200505020329.31638-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-In-Reply-To: <20200504143538.159967-1-jaegeuk@kernel.org>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-5-4 22:35, Jaegeuk Kim wrote:
-> From: Daeho Jeong <daehojeong@google.com>
->
-> We already checked whether the file is compressed or not in
-> f2fs_post_read_required(). So removed f2fs_compressed_file()
-> in f2fs_force_buffered_io().
+Commit d7a5502b0bb8b ("net: broadcom: convert to
+devm_platform_ioremap_resource_byname()") will broke this driver.
+idm_base and nicpm_base were optional, after this change, they are
+mandatory. it will probe fails with -22 when the dtb doesn't have them
+defined. so revert part of this commit and make idm_base and nicpm_base
+as optional.
 
-Agreed, since I have sent similar patch before:
+Fixes: d7a5502b0bb8bde ("net: broadcom: convert to devm_platform_ioremap_resource_byname()")
+Reported-by: Jonathan Richardson <jonathan.richardson@broadcom.com>
+Cc: Scott Branden <scott.branden@broadcom.com>
+Cc: Ray Jui <ray.jui@broadcom.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: David S. Miller <davem@davemloft.net>
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+---
+ .../net/ethernet/broadcom/bgmac-platform.c    | 24 ++++++++++++-------
+ 1 file changed, 15 insertions(+), 9 deletions(-)
 
-https://lkml.org/lkml/2020/3/24/1819
+diff --git a/drivers/net/ethernet/broadcom/bgmac-platform.c b/drivers/net/ethernet/broadcom/bgmac-platform.c
+index a5d1a6cb9ce3..6795b6d95f54 100644
+--- a/drivers/net/ethernet/broadcom/bgmac-platform.c
++++ b/drivers/net/ethernet/broadcom/bgmac-platform.c
+@@ -172,6 +172,7 @@ static int bgmac_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct bgmac *bgmac;
++	struct resource *regs;
+ 	const u8 *mac_addr;
+ 
+ 	bgmac = bgmac_alloc(&pdev->dev);
+@@ -206,16 +207,21 @@ static int bgmac_probe(struct platform_device *pdev)
+ 	if (IS_ERR(bgmac->plat.base))
+ 		return PTR_ERR(bgmac->plat.base);
+ 
+-	bgmac->plat.idm_base =
+-		devm_platform_ioremap_resource_byname(pdev, "idm_base");
+-	if (IS_ERR(bgmac->plat.idm_base))
+-		return PTR_ERR(bgmac->plat.idm_base);
+-	bgmac->feature_flags &= ~BGMAC_FEAT_IDM_MASK;
++	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "idm_base");
++	if (regs) {
++		bgmac->plat.idm_base = devm_ioremap_resource(&pdev->dev, regs);
++		if (IS_ERR(bgmac->plat.idm_base))
++			return PTR_ERR(bgmac->plat.idm_base);
++		bgmac->feature_flags &= ~BGMAC_FEAT_IDM_MASK;
++	}
+ 
+-	bgmac->plat.nicpm_base =
+-		devm_platform_ioremap_resource_byname(pdev, "nicpm_base");
+-	if (IS_ERR(bgmac->plat.nicpm_base))
+-		return PTR_ERR(bgmac->plat.nicpm_base);
++	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "nicpm_base");
++	if (regs) {
++		bgmac->plat.nicpm_base = devm_ioremap_resource(&pdev->dev,
++							       regs);
++		if (IS_ERR(bgmac->plat.nicpm_base))
++			return PTR_ERR(bgmac->plat.nicpm_base);
++	}
+ 
+ 	bgmac->read = platform_bgmac_read;
+ 	bgmac->write = platform_bgmac_write;
+-- 
+2.25.0
 
-Just want to know what's the change of backport concern now.
-
-Thanks,
-
->
-> Signed-off-by: Daeho Jeong <daehojeong@google.com>
-> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> ---
->  fs/f2fs/f2fs.h | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index 6b7b963641696..01a00fc808361 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -4064,8 +4064,6 @@ static inline bool f2fs_force_buffered_io(struct inode *inode,
->  		return true;
->  	if (f2fs_is_multi_device(sbi))
->  		return true;
-> -	if (f2fs_compressed_file(inode))
-> -		return true;
->  	/*
->  	 * for blkzoned device, fallback direct IO to buffered IO, so
->  	 * all IOs can be serialized by log-structured write.
->
