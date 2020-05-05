@@ -2,95 +2,108 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1449C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D60B5C47256
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87E692068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:36:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4F1206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:36:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IrZIvOWk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbgEEIgh (ORCPT
+        id S1728595AbgEEIgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 04:36:37 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:44452 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725833AbgEEIgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 04:36:37 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0A92C1AC43DB951D8E36;
-        Tue,  5 May 2020 16:36:36 +0800 (CST)
-Received: from localhost (10.166.215.154) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Tue, 5 May 2020
- 16:36:29 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <jeffrey.t.kirsher@intel.com>, <davem@davemloft.net>
-CC:     <intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] ixgbe: Remove unused inline function ixgbe_irq_disable_queues
-Date:   Tue, 5 May 2020 16:35:54 +0800
-Message-ID: <20200505083554.25808-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 5 May 2020 04:36:40 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12333 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725833AbgEEIgi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 04:36:38 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eb125150000>; Tue, 05 May 2020 01:34:29 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 05 May 2020 01:36:38 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 05 May 2020 01:36:38 -0700
+Received: from [10.26.73.45] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 5 May
+ 2020 08:36:35 +0000
+Subject: Re: [PATCH 4.4 00/18] 4.4.222-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200504165441.533160703@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <779ededd-d368-95fd-bd26-70447775df77@nvidia.com>
+Date:   Tue, 5 May 2020 09:36:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.166.215.154]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200504165441.533160703@linuxfoundation.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588667669; bh=EZjaSzY5oCOxjQFkKHW2nMdSLp44HFcax5hGCGwiKiQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=IrZIvOWkumZtcB6RDV9fvr2WMh600QCiRfiiQ02UB6F3T7/qPKSNP8ocMRiL+WXkI
+         OuBlJWN9Z1AMMBhkReMDk9ITxaMb6pqSRcOdX5CO6IHWDcafCAcgZR7y6/doaZhxsQ
+         su1S8NtMoI242kMvBV8SLo0vxcJIoDuofMmOekPKOZb1m/6i8At9s0Kr0EvZ4Vqcrv
+         e7TerXCh+y2iuvGv6LdH8VBO1gYhnobgPWIP+qL/jTMHxZqQkUPGP154bdcwpKgL9t
+         rFKlWor9k0TWZhl44t03mBdmHlhoORvp44YOwJ1ANxu1po3HdDZ1izQxt0F2WZX0+R
+         BxdLEPhdu67fw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit b5f69ccf6765 ("ixgbe: avoid bringing rings up/down as macvlans are added/removed")
-left behind this, remove it.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 29 -------------------
- 1 file changed, 29 deletions(-)
+On 04/05/2020 18:56, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.222 release.
+> There are 18 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed, 06 May 2020 16:52:55 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.222-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index 718931d951bc..ebfe6b57ed30 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -2954,35 +2954,6 @@ static inline void ixgbe_irq_enable_queues(struct ixgbe_adapter *adapter,
- 	/* skip the flush */
- }
- 
--static inline void ixgbe_irq_disable_queues(struct ixgbe_adapter *adapter,
--					    u64 qmask)
--{
--	u32 mask;
--	struct ixgbe_hw *hw = &adapter->hw;
--
--	switch (hw->mac.type) {
--	case ixgbe_mac_82598EB:
--		mask = (IXGBE_EIMS_RTX_QUEUE & qmask);
--		IXGBE_WRITE_REG(hw, IXGBE_EIMC, mask);
--		break;
--	case ixgbe_mac_82599EB:
--	case ixgbe_mac_X540:
--	case ixgbe_mac_X550:
--	case ixgbe_mac_X550EM_x:
--	case ixgbe_mac_x550em_a:
--		mask = (qmask & 0xFFFFFFFF);
--		if (mask)
--			IXGBE_WRITE_REG(hw, IXGBE_EIMC_EX(0), mask);
--		mask = (qmask >> 32);
--		if (mask)
--			IXGBE_WRITE_REG(hw, IXGBE_EIMC_EX(1), mask);
--		break;
--	default:
--		break;
--	}
--	/* skip the flush */
--}
--
- /**
-  * ixgbe_irq_enable - Enable default interrupt generation settings
-  * @adapter: board private structure
+All tests are passing for Tegra ...
+
+Test results for stable-v4.4:
+    6 builds:	6 pass, 0 fail
+    12 boots:	12 pass, 0 fail
+    19 tests:	19 pass, 0 fail
+
+Linux version:	4.4.222-rc1-g2f5149253281
+Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+                tegra30-cardhu-a04
+
+Cheers
+Jon
+
 -- 
-2.17.1
-
-
+nvpublic
