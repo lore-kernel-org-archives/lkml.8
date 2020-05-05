@@ -2,88 +2,173 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40111C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2538C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24A9A20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AD69206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:51:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e5+wwUj5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbgEEIuX (ORCPT
+        id S1728637AbgEEIvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 04:50:23 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:55024 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728220AbgEEIuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 04:50:22 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 3DE181076B764A32DC6A;
-        Tue,  5 May 2020 16:50:20 +0800 (CST)
-Received: from localhost (10.166.215.154) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Tue, 5 May 2020
- 16:50:13 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <aelior@marvell.com>, <skalluru@marvell.com>,
-        <davem@davemloft.net>, <manishc@marvell.com>,
-        <yuehaibing@huawei.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next] bnx2x: Remove unused inline function bnx2x_vf_vlan_credit
-Date:   Tue, 5 May 2020 16:50:09 +0800
-Message-ID: <20200505085009.6916-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 5 May 2020 04:51:39 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:56222 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725833AbgEEIvi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 04:51:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588668697;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mYcKaiDdx5xyxyLMrz7cwsZz18pzP6X4gEIbfANKmVE=;
+        b=e5+wwUj5YNTHSPqe0FtRzXyut7D7OZ8yqblBq/vRZKw8hgCyG+N4M05SHTMRn5/UOVNt3u
+        zx9RMWWJ+m2fUg333tiJ4iJOnETT5vmQQ/Yt4CQyMsQAUjWEWCYfZ+PVnFl+YiTt0Ec/+k
+        sRW0NWB4mnHF6PqGruwGuLB5F68b4TI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-185-BRKyBttyOQW3sCgSzBHjIg-1; Tue, 05 May 2020 04:51:33 -0400
+X-MC-Unique: BRKyBttyOQW3sCgSzBHjIg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B22591899521;
+        Tue,  5 May 2020 08:51:31 +0000 (UTC)
+Received: from localhost.localdomain (vpn2-54-132.bne.redhat.com [10.64.54.132])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 32CA164421;
+        Tue,  5 May 2020 08:51:26 +0000 (UTC)
+Reply-To: Gavin Shan <gshan@redhat.com>
+Subject: Re: [PATCH RFC 4/6] KVM: x86: acknowledgment mechanism for async pf
+ page ready notifications
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, x86@kernel.org,
+        kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>
+References: <20200429093634.1514902-1-vkuznets@redhat.com>
+ <20200429093634.1514902-5-vkuznets@redhat.com>
+ <bdd3fba1-72d6-9096-e63d-a89f2990a26d@redhat.com>
+ <87y2q6dcfm.fsf@vitty.brq.redhat.com>
+From:   Gavin Shan <gshan@redhat.com>
+Message-ID: <f7e76889-a8fc-a348-90c2-2c27f3706585@redhat.com>
+Date:   Tue, 5 May 2020 18:51:23 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.166.215.154]
-X-CFilter-Loop: Reflected
+In-Reply-To: <87y2q6dcfm.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 05cc5a39ddb7 ("bnx2x: add vlan filtering offload")
-left behind this, remove it.
+Hi Vitaly,
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- .../net/ethernet/broadcom/bnx2x/bnx2x_sriov.c | 21 -------------------
- 1 file changed, 21 deletions(-)
+On 5/5/20 6:16 PM, Vitaly Kuznetsov wrote:
+>> On 4/29/20 7:36 PM, Vitaly Kuznetsov wrote:
+>>> If two page ready notifications happen back to back the second one is not
+>>> delivered and the only mechanism we currently have is
+>>> kvm_check_async_pf_completion() check in vcpu_run() loop. The check will
+>>> only be performed with the next vmexit when it happens and in some cases
+>>> it may take a while. With interrupt based page ready notification delivery
+>>> the situation is even worse: unlike exceptions, interrupts are not handled
+>>> immediately so we must check if the slot is empty. This is slow and
+>>> unnecessary. Introduce dedicated MSR_KVM_ASYNC_PF_ACK MSR to communicate
+>>> the fact that the slot is free and host should check its notification
+>>> queue. Mandate using it for interrupt based type 2 APF event delivery.
+>>>
+>>> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>>> ---
+>>>    Documentation/virt/kvm/msr.rst       | 16 +++++++++++++++-
+>>>    arch/x86/include/uapi/asm/kvm_para.h |  1 +
+>>>    arch/x86/kvm/x86.c                   |  9 ++++++++-
+>>>    3 files changed, 24 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/Documentation/virt/kvm/msr.rst b/Documentation/virt/kvm/msr.rst
+>>> index 7433e55f7184..18db3448db06 100644
+>>> --- a/Documentation/virt/kvm/msr.rst
+>>> +++ b/Documentation/virt/kvm/msr.rst
+>>> @@ -219,6 +219,11 @@ data:
+>>>    	If during pagefault APF reason is 0 it means that this is regular
+>>>    	page fault.
+>>>    
+>>> +	For interrupt based delivery, guest has to write '1' to
+>>> +	MSR_KVM_ASYNC_PF_ACK every time it clears reason in the shared
+>>> +	'struct kvm_vcpu_pv_apf_data', this forces KVM to re-scan its
+>>> +	queue and deliver next pending notification.
+>>> +
+>>>    	During delivery of type 1 APF cr2 contains a token that will
+>>>    	be used to notify a guest when missing page becomes
+>>>    	available. When page becomes available type 2 APF is sent with
+>>> @@ -340,4 +345,13 @@ data:
+>>>    
+>>>    	To switch to interrupt based delivery of type 2 APF events guests
+>>>    	are supposed to enable asynchronous page faults and set bit 3 in
+>>> -	MSR_KVM_ASYNC_PF_EN first.
+>>> +
+>>> +MSR_KVM_ASYNC_PF_ACK:
+>>> +	0x4b564d07
+>>> +
+>>> +data:
+>>> +	Asynchronous page fault acknowledgment. When the guest is done
+>>> +	processing type 2 APF event and 'reason' field in 'struct
+>>> +	kvm_vcpu_pv_apf_data' is cleared it is supposed to write '1' to
+>>> +	Bit 0 of the MSR, this caused the host to re-scan its queue and
+>>> +	check if there are more notifications pending.
+>>
+>> I'm not sure if I understood the usage of MSR_KVM_ASYNC_PF_ACK
+>> completely. It seems it's used to trapped to host, to have chance
+>> to check/deliver pending page ready events. If there is no pending
+>> events, no work will be finished in the trap. If it's true, it might
+>> be good idea to trap conditionally, meaning writing to ASYNC_PF_ACK
+>> if there are really pending events?
+> 
+> How does the guest know if host has any pending events or not?
+> 
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c
-index 5097a44686b3..b4476f44e386 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c
-@@ -331,27 +331,6 @@ bnx2x_vf_set_igu_info(struct bnx2x *bp, u8 igu_sb_id, u8 abs_vfid)
- 	BP_VFDB(bp)->vf_sbs_pool++;
- }
- 
--static inline void bnx2x_vf_vlan_credit(struct bnx2x *bp,
--					struct bnx2x_vlan_mac_obj *obj,
--					atomic_t *counter)
--{
--	struct list_head *pos;
--	int read_lock;
--	int cnt = 0;
--
--	read_lock = bnx2x_vlan_mac_h_read_lock(bp, obj);
--	if (read_lock)
--		DP(BNX2X_MSG_SP, "Failed to take vlan mac read head; continuing anyway\n");
--
--	list_for_each(pos, &obj->head)
--		cnt++;
--
--	if (!read_lock)
--		bnx2x_vlan_mac_h_read_unlock(bp, obj);
--
--	atomic_set(counter, cnt);
--}
--
- static int bnx2x_vf_vlan_mac_clear(struct bnx2x *bp, struct bnx2x_virtf *vf,
- 				   int qid, bool drv_only, int type)
- {
--- 
-2.17.1
+One way would be through struct kvm_vcpu_pv_apf_data, which is visible
+to host and guest. In the host, the workers that have completed their
+work (GUP) are queued into vcpu->async_pf.done. So we need a bit in
+struct kvm_vcpu_pv_apf_data, written by host while read by guest to
+see if there pending work. I even don't think the writer/reader need
+to be synchronized.
 
+> The problem we're trying to address with ACK msr is the following:
+> imagine host has two 'page ready' notifications back to back. It puts
+> token for the first on in the slot and raises an IRQ but how do we know
+> when the slot becomes free so we can inject the second one? Currently,
+> we have kvm_check_async_pf_completion() check in vcpu_run() loop but
+> this doesn't guarantee timely delivery of the event, we just hope that
+> there's going to be a vmexit 'some time soon' and we'll piggy back onto
+> that. Normally this works but in some special cases it may take really
+> long before a vmexit happens. Also, we're penalizing each vmexit with an
+> unneeded check. ACK msr is intended to solve these issues.
+> 
+
+Thanks for the explanation. I think vmexit frequency is somewhat proportional
+to the workload, meaning more vmexit would be observed if the VM has more
+workload. The async page fault is part of the workload. I agree it makes sense
+to proactively poke the pending events ('page ready'), but it would be reasonable
+to do so conditionally, to avoid overhead. However, I'm not sure how much overhead
+it would have on x86 :)
+
+Thanks,
+Gavin
 
