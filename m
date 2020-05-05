@@ -2,186 +2,170 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 777FDC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB273C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44B2620721
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:28:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588699733;
-	bh=0tg/+4uFrc4NuN9+XaScDh76eyqdHaQjaxnbXP2fh3M=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=WMI+llW3fN+IqXr8gHiqbLQKkKmPug9BE5RgQxk5rViKuiYNXke1HwrNQOJJKsP+I
-	 p6Q7+aWnLBA0oCq2Q4C6jv9b+4k5ke6fCfFoKDaRWnTokyBqmU31Kc/JYPSk4xF3mX
-	 NxmJXFlvVii/Vz1k0gaVZERXAHLXcl6V/fxNLZo0=
+	by mail.kernel.org (Postfix) with ESMTP id 8F383206CC
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:29:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QFxgVVwU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730142AbgEER2w (ORCPT
+        id S1730258AbgEER3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 13:28:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33472 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726350AbgEER2w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 13:28:52 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C6D9206A4;
-        Tue,  5 May 2020 17:28:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588699731;
-        bh=0tg/+4uFrc4NuN9+XaScDh76eyqdHaQjaxnbXP2fh3M=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=HsdR6gXMlQz9DTbySEUZnv96Ssw8gwFHsnjXhl5n41r3XsNos7ePFU7PaeB8cC06z
-         vKtXku2yXZVkTNnShdzrDN32zETRTJDDsy59ylUZHDadRmA91ZhCCDWzf23/okw21g
-         qzojrmYp1rnHMIVe2SigXCIOxZeQQ2m7ywYhfU6I=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id F00643522F5F; Tue,  5 May 2020 10:28:50 -0700 (PDT)
-Date:   Tue, 5 May 2020 10:28:50 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     SeongJae Park <sjpark@amazon.com>,
-        Eric Dumazet <edumazet@google.com>,
-        David Miller <davem@davemloft.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        sj38.park@gmail.com, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>, snu@amazon.com,
-        amit@kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH net v2 0/2] Revert the 'socket_alloc' life cycle change
-Message-ID: <20200505172850.GD2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200505161302.547-1-sjpark@amazon.com>
- <05843a3c-eb9d-3a0d-f992-7e4b97cc1f19@gmail.com>
- <77124fc2-86b2-27f6-fd7c-4f1e86eb3fff@gmail.com>
- <67bdfac9-0d7d-0bbe-dc7a-d73979fd8ed9@gmail.com>
+        Tue, 5 May 2020 13:29:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51384 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726350AbgEER3N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 13:29:13 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D250C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 10:29:13 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id z6so1088433plk.10
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 10:29:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kHcXHJ8ma+wHdOnq6wbVgZKgLxUnEELMmnMVXInJOCs=;
+        b=QFxgVVwUcZjMbp8kD9oXT7EVHZUxsKuReDdqqKCVYXKWf2hOOValeougGSA5KojQjm
+         HnYyb3Tyc3cKTJWNmy0j/kkImorKLiZ2MATkWbxwum7sPvSyLLDLWXSV9xQBRsjNhvCk
+         nkO8uDEhaLjHQ2jYdj9Am4WKZdnV2O0cGHsVVzWetCni3Oe/GE+9Fc6IZOR+fAwGiq6U
+         S3ex4fNAZ9fTplxoRFobYUBamjeiU+5zOMzEOz32x9o4k1kmvdKS6T8bSAtvyUcKDSr5
+         2cQWBcNp6g4IBkT4d1XhVdhUf5o0mHUAnJLqxH2kl/V9Rm4RZ0YBzMz8uGcP2/Jmx231
+         RfvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kHcXHJ8ma+wHdOnq6wbVgZKgLxUnEELMmnMVXInJOCs=;
+        b=ZvrmCKOWZU5NTOYXOJneSLziTTIYQwMglVVFz6kQXihbS50bNR8ScWSTTXzm47cmER
+         7ZDgUR8vq2k2Hm7twfod4gWp3Z19DkbTD+7X0Qh+jfEazwlcjGHvNIVW+JCD7KWx1IDY
+         rHi9Ghwi3ovl9OgAa8tt33owQfU1e17TLjlcsZ7o76uJNn+s6tXaVDMZJbHQcAZkyFCF
+         a0gVTBD6iWR7G5VRFB/1FJROUKAnxfXkyeSmbFbK9lVC+qnMU7q58vjuAyyx8XwOW4yb
+         JH80hGwHMPZ2+NKBbVrmLLaIy2WCRpNcbV51fa2FvfpEvlnuR/QFwf52H3Nw4awdxVcF
+         FqfQ==
+X-Gm-Message-State: AGi0PubQ8H6dXK2fMINMMKW9G0W3GsF2yVhA7F6uqUL6A2w6CY+jcD2U
+        9SfP67Yf9PbCKf80wY8DM2OSHH3EyUHZ0UK1jW/sCw==
+X-Google-Smtp-Source: APiQypLeRLINeL1L1L0WYEwrIUEXGVU1ZCMgEauEPmxfA7PjUVfU4MWi6GMoRGCeE3CpyoNX55m7TUDjpHaiaU7TF5M=
+X-Received: by 2002:a17:90a:6488:: with SMTP id h8mr4415749pjj.51.1588699752126;
+ Tue, 05 May 2020 10:29:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67bdfac9-0d7d-0bbe-dc7a-d73979fd8ed9@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200310221747.2848474-1-jesse.brandeburg@intel.com>
+ <20200504193524.GA221287@google.com> <20200504181443.00007a3d@intel.com> <20200505151438.GP185537@smile.fi.intel.com>
+In-Reply-To: <20200505151438.GP185537@smile.fi.intel.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 5 May 2020 10:29:01 -0700
+Message-ID: <CAKwvOdn503VpMu6x5qtmeQrcVnwkAqu6gnoU0Pb99sX98aZPHQ@mail.gmail.com>
+Subject: Re: [PATCH v6 1/2] x86: fix bitops.h warning with a moved cast
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 09:37:42AM -0700, Eric Dumazet wrote:
-> 
-> 
-> On 5/5/20 9:31 AM, Eric Dumazet wrote:
-> > 
-> > 
-> > On 5/5/20 9:25 AM, Eric Dumazet wrote:
-> >>
-> >>
-> >> On 5/5/20 9:13 AM, SeongJae Park wrote:
-> >>> On Tue, 5 May 2020 09:00:44 -0700 Eric Dumazet <edumazet@google.com> wrote:
-> >>>
-> >>>> On Tue, May 5, 2020 at 8:47 AM SeongJae Park <sjpark@amazon.com> wrote:
-> >>>>>
-> >>>>> On Tue, 5 May 2020 08:20:50 -0700 Eric Dumazet <eric.dumazet@gmail.com> wrote:
-> >>>>>
-> >>>>>>
-> >>>>>>
-> >>>>>> On 5/5/20 8:07 AM, SeongJae Park wrote:
-> >>>>>>> On Tue, 5 May 2020 07:53:39 -0700 Eric Dumazet <edumazet@google.com> wrote:
-> >>>>>>>
-> >>>>>>
-> >>>>>>>> Why do we have 10,000,000 objects around ? Could this be because of
-> >>>>>>>> some RCU problem ?
-> >>>>>>>
-> >>>>>>> Mainly because of a long RCU grace period, as you guess.  I have no idea how
-> >>>>>>> the grace period became so long in this case.
-> >>>>>>>
-> >>>>>>> As my test machine was a virtual machine instance, I guess RCU readers
-> >>>>>>> preemption[1] like problem might affected this.
-> >>>>>>>
-> >>>>>>> [1] https://www.usenix.org/system/files/conference/atc17/atc17-prasad.pdf
-> >>>>>>>
-> >>>>>>>>
-> >>>>>>>> Once Al patches reverted, do you have 10,000,000 sock_alloc around ?
-> >>>>>>>
-> >>>>>>> Yes, both the old kernel that prior to Al's patches and the recent kernel
-> >>>>>>> reverting the Al's patches didn't reproduce the problem.
-> >>>>>>>
-> >>>>>>
-> >>>>>> I repeat my question : Do you have 10,000,000 (smaller) objects kept in slab caches ?
-> >>>>>>
-> >>>>>> TCP sockets use the (very complex, error prone) SLAB_TYPESAFE_BY_RCU, but not the struct socket_wq
-> >>>>>> object that was allocated in sock_alloc_inode() before Al patches.
-> >>>>>>
-> >>>>>> These objects should be visible in kmalloc-64 kmem cache.
-> >>>>>
-> >>>>> Not exactly the 10,000,000, as it is only the possible highest number, but I
-> >>>>> was able to observe clear exponential increase of the number of the objects
-> >>>>> using slabtop.  Before the start of the problematic workload, the number of
-> >>>>> objects of 'kmalloc-64' was 5760, but I was able to observe the number increase
-> >>>>> to 1,136,576.
-> >>>>>
-> >>>>>           OBJS ACTIVE  USE OBJ SIZE  SLABS OBJ/SLAB CACHE SIZE NAME
-> >>>>> before:   5760   5088  88%    0.06K     90       64       360K kmalloc-64
-> >>>>> after:  1136576 1136576 100%    0.06K  17759       64     71036K kmalloc-64
-> >>>>>
-> >>>>
-> >>>> Great, thanks.
-> >>>>
-> >>>> How recent is the kernel you are running for your experiment ?
-> >>>
-> >>> It's based on 5.4.35.
-> >>>
-> >>>>
-> >>>> Let's make sure the bug is not in RCU.
-> >>>
-> >>> One thing I can currently say is that the grace period passes at last.  I
-> >>> modified the benchmark to repeat not 10,000 times but only 5,000 times to run
-> >>> the test without OOM but easily observable memory pressure.  As soon as the
-> >>> benchmark finishes, the memory were freed.
-> >>>
-> >>> If you need more tests, please let me know.
-> >>>
-> >>
-> >> I would ask Paul opinion on this issue, because we have many objects
-> >> being freed after RCU grace periods.
-> >>
-> >> If RCU subsystem can not keep-up, I guess other workloads will also suffer.
-> >>
-> >> Sure, we can revert patches there and there trying to work around the issue,
-> >> but for objects allocated from process context, we should not have these problems.
-> >>
-> > 
-> > I wonder if simply adjusting rcu_divisor to 6 or 5 would help 
-> > 
-> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > index d9a49cd6065a20936edbda1b334136ab597cde52..fde833bac0f9f81e8536211b4dad6e7575c1219a 100644
-> > --- a/kernel/rcu/tree.c
-> > +++ b/kernel/rcu/tree.c
-> > @@ -427,7 +427,7 @@ module_param(qovld, long, 0444);
-> >  static ulong jiffies_till_first_fqs = ULONG_MAX;
-> >  static ulong jiffies_till_next_fqs = ULONG_MAX;
-> >  static bool rcu_kick_kthreads;
-> > -static int rcu_divisor = 7;
-> > +static int rcu_divisor = 6;
-> >  module_param(rcu_divisor, int, 0644);
-> >  
-> >  /* Force an exit from rcu_do_batch() after 3 milliseconds. */
-> > 
-> 
-> To be clear, you can adjust the value without building a new kernel.
-> 
-> echo 6 >/sys/module/rcutree/parameters/rcu_divisor
+On Tue, May 5, 2020 at 8:14 AM Andy Shevchenko
+<andriy.shevchenko@intel.com> wrote:
+>
+> On Mon, May 04, 2020 at 06:14:43PM -0700, Jesse Brandeburg wrote:
+> > On Mon, 4 May 2020 12:51:12 -0700
+> > Nick Desaulniers <ndesaulniers@google.com> wrote:
+> >
+> > > Sorry for the very late report.  It turns out that if your config
+> > > tickles __builtin_constant_p just right, this now produces invalid
+> > > assembly:
+> > >
+> > > $ cat foo.c
+> > > long a(long b, long c) {
+> > >   asm("orb\t%1, %0" : "+q"(c): "r"(b));
+> > >   return c;
+> > > }
+> > > $ gcc foo.c
+> > > foo.c: Assembler messages:
+> > > foo.c:2: Error: `%rax' not allowed with `orb'
+> > >
+> > > The "q" constraint only has meanting on -m32 otherwise is treated as
+> > > "r".
+> > >
+> > > Since we have the mask (& 0xff), can we drop the `b` suffix from the
+> > > instruction? Or is a revert more appropriate? Or maybe another way to
+> > > skin this cat?
+> >
+> > Figures that such a small change can create problems :-( Sorry for the
+> > thrash!
+> >
+> > The patches in the link below basically add back the cast, but I'm
+> > interested to see if any others can come up with a better fix that
+> > a) passes the above code generation test
+> > b) still keeps sparse happy
+> > c) passes the test module and the code inspection
+> >
+> > If need be I'm OK with a revert of the original patch to fix the issue
+> > in the short term, but it seems to me there must be a way to satisfy
+> > both tools.  We went through several iterations on the way to the final
+> > patch that we might be able to pluck something useful from.
+>
+> For me the below seems to work:
 
-Worth a try!  If that helps significantly, I have some ideas for updating
-that heuristic, such as checking for sudden increases in the number of
-pending callbacks.
+Yep:
+https://github.com/ClangBuiltLinux/linux/issues/961#issuecomment-623785987
+https://github.com/ClangBuiltLinux/linux/issues/961#issuecomment-624162497
+Sedat wrote the same patch 22 days ago; I didn't notice before
+starting this thread.  I will sign off on his patch, add your
+Suggested by tag, and send shortly.
 
-But I would really also like to know whether there are long readers and
-whether v5.6 fares better.
+>
+>
+> diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
+> index b392571c1f1d1..139122e5b25b1 100644
+> --- a/arch/x86/include/asm/bitops.h
+> +++ b/arch/x86/include/asm/bitops.h
+> @@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long *addr)
+>         if (__builtin_constant_p(nr)) {
+>                 asm volatile(LOCK_PREFIX "orb %1,%0"
+>                         : CONST_MASK_ADDR(nr, addr)
+> -                       : "iq" (CONST_MASK(nr) & 0xff)
+> +                       : "iq" ((u8)(CONST_MASK(nr) & 0xff))
+>                         : "memory");
+>         } else {
+>                 asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
+> @@ -74,7 +74,7 @@ arch_clear_bit(long nr, volatile unsigned long *addr)
+>         if (__builtin_constant_p(nr)) {
+>                 asm volatile(LOCK_PREFIX "andb %1,%0"
+>                         : CONST_MASK_ADDR(nr, addr)
+> -                       : "iq" (CONST_MASK(nr) ^ 0xff));
+> +                       : "iq" ((u8)(CONST_MASK(nr) ^ 0xff)));
+>         } else {
+>                 asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
+>                         : : RLONG_ADDR(addr), "Ir" (nr) : "memory");
+>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
-							Thanx, Paul
+
+-- 
+Thanks,
+~Nick Desaulniers
