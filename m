@@ -2,126 +2,215 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06722C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C4AC47256
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D85942073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:03:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cwTwCOS5"
+	by mail.kernel.org (Postfix) with ESMTP id B8E9D206D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:04:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728675AbgEELD0 (ORCPT
+        id S1728750AbgEELEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 07:03:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46944 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725766AbgEELDZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 07:03:25 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EC70C061A0F;
-        Tue,  5 May 2020 04:03:25 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id a4so978476lfh.12;
-        Tue, 05 May 2020 04:03:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3xkwFF5dOZ2RDq1UBB0lVLNrru5zFIMvLUOVpyqz6+A=;
-        b=cwTwCOS54pbErQ0fdBL0vS5S3Xmjp0kGkcjQ9Mhy2iaiJyjwkzD+TqlF1jmFBbyeEP
-         BUV9Zsfr25k9IaOv5MXTIpgfsy1u1mOp4YlVSgr/iY65CjlDB1BnwOuC7lKFtYmLYwT8
-         PS9Cy4bjxxteruOhfDC79Zas3dmzaIV56RR3WqnSJRjDC41zQe3GlI4Q+D2foz78gRBa
-         5a2qXJuyVz5jWF2OkbwNBGJyRvCF+2jJ+H4AavhCJVSiZOHfGuoMSu9dUIH6CYqyf87u
-         LeCEc1K3XDMHzpYykjTYKoknLk9rT49Ia+kRFuA9GiVDtY4v7TX0NFpm1uf+Aw5r9UgG
-         8V7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3xkwFF5dOZ2RDq1UBB0lVLNrru5zFIMvLUOVpyqz6+A=;
-        b=P6UjHDF33I5XuTCfN3GaSCAzefVHcSPDZKgMd5Uw72yNergc1ncSq3pVUskYk/EQAi
-         yu9WeYQFw8ldwwQq/lhXeB77LCidyy2NzZAhQIDZQ1v7c5848qW9gKU4kF5rXDkJrOa4
-         lrhbiPEGv96F8JL1EVWXxFjuohmeJnpXoVsNYCBemISCSIsaH2brakG5CuLwL5tjCkjX
-         lmq9sii/ZRKfu8kc+4LmJyAZADsQOYX9qQpyb8Vdk7g0QMwWhiIVG8Af/9zAhxI52u8L
-         Pq/iUC7ZlmBd8NPJziiiedCPkt6EJrmgzURUh3BB6e2Jp+MyKbZPi/cA67h5CZqgc7kH
-         13Xg==
-X-Gm-Message-State: AGi0PuZbULVl+HMPvKJu06Q+pTKxh9nTA9/NShaEp0FqmXddW8r1uhea
-        s6Cq6OvXH4Qirmd2soqyCJ2gdgzc+k3ulQ==
-X-Google-Smtp-Source: APiQypLfCp0VzDXdDAXX3f8TJDDjAIHyi4mv0Mb8SM26DrkQwGwewhY9Wsmw9Yer7x+37mKK1DS36A==
-X-Received: by 2002:a19:5206:: with SMTP id m6mr1320669lfb.33.1588676603679;
-        Tue, 05 May 2020 04:03:23 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id k6sm1487807lfm.91.2020.05.05.04.03.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 04:03:22 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Tue, 5 May 2020 13:03:20 +0200
-To:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        RCU <rcu@vger.kernel.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 09/24] rcu/tree: cache specified number of objects
-Message-ID: <20200505110320.GA23774@pc636>
-References: <20200428205903.61704-10-urezki@gmail.com>
- <20200501212749.GD7560@paulmck-ThinkPad-P72>
- <20200504124323.GA17577@pc636>
- <20200504152437.GK2869@paulmck-ThinkPad-P72>
- <20200504174822.GA20446@pc636>
- <20200504180805.GA172409@google.com>
- <20200504190138.GU2869@paulmck-ThinkPad-P72>
- <CAEXW_YQmrfbaDocsc7bLULRR1yUv4=MMMEw3b0s1mXM8sEVVzQ@mail.gmail.com>
- <20200504195128.GA21830@pc636>
- <20200504201641.GV2869@paulmck-ThinkPad-P72>
+        Tue, 5 May 2020 07:04:04 -0400
+Received: from verein.lst.de ([213.95.11.211]:34717 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725766AbgEELED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 07:04:03 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 11E5F68C4E; Tue,  5 May 2020 13:03:59 +0200 (CEST)
+Date:   Tue, 5 May 2020 13:03:58 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jann Horn <jannh@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Salter <msalter@redhat.com>,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org
+Subject: Re: [PATCH v2 4/5] binfmt_elf, binfmt_elf_fdpic: Use a VMA list
+ snapshot
+Message-ID: <20200505110358.GC17400@lst.de>
+References: <20200429214954.44866-1-jannh@google.com> <20200429214954.44866-5-jannh@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200504201641.GV2869@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200429214954.44866-5-jannh@google.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 01:16:41PM -0700, Paul E. McKenney wrote:
-> On Mon, May 04, 2020 at 09:51:28PM +0200, Uladzislau Rezki wrote:
-> > > > > Since we don't care about traversing backwards, isn't it better to use llist
-> > > > > for this usecase?
-> > > > >
-> > > > > I think Vlad is using locking as we're also tracking the size of the llist to
-> > > > > know when to free pages. This tracking could suffer from the lost-update
-> > > > > problem without any locking, 2 lockless llist_add happened simulatenously.
-> > > > >
-> > > > > Also if list_head is used, it will take more space and still use locking.
-> > > >
-> > > > Indeed, it would be best to use a non-concurrent singly linked list.
-> > > 
-> > > Ok cool :-)
-> > > 
-> > > Is it safe to say something like the following is ruled out? ;-) :-D
-> > > #define kfree_rcu_list_add llist_add
-> > > 
-> > In that case i think it is better just to add a comment about using
-> > llist_head. To state that it used as a singular list to save space
-> > and the access is synchronized by the lock :)
-> > 
-> > IMHO.
+On Wed, Apr 29, 2020 at 11:49:53PM +0200, Jann Horn wrote:
+> In both binfmt_elf and binfmt_elf_fdpic, use a new helper
+> dump_vma_snapshot() to take a snapshot of the VMA list (including the gate
+> VMA, if we have one) while protected by the mmap_sem, and then use that
+> snapshot instead of walking the VMA list without locking.
 > 
-> But adding such a comment would be fine as well.
+> An alternative approach would be to keep the mmap_sem held across the
+> entire core dumping operation; however, keeping the mmap_sem locked while
+> we may be blocked for an unbounded amount of time (e.g. because we're
+> dumping to a FUSE filesystem or so) isn't really optimal; the mmap_sem
+> blocks things like the ->release handler of userfaultfd, and we don't
+> really want critical system daemons to grind to a halt just because someone
+> "gifted" them SCM_RIGHTS to an eternally-locked userfaultfd, or something
+> like that.
 > 
-Thank you Paul and Joel!
+> Since both the normal ELF code and the FDPIC ELF code need this
+> functionality (and if any other binfmt wants to add coredump support in the
+> future, they'd probably need it, too), implement this with a common helper
+> in fs/coredump.c.
+> 
+> A downside of this approach is that we now need a bigger amount of kernel
+> memory per userspace VMA in the normal ELF case, and that we need O(n)
+> kernel memory in the FDPIC ELF case at all; but 40 bytes per VMA shouldn't
+> be terribly bad.
+> 
+> Signed-off-by: Jann Horn <jannh@google.com>
+> ---
+>  fs/binfmt_elf.c          | 152 +++++++++++++--------------------------
+>  fs/binfmt_elf_fdpic.c    |  86 ++++++++++------------
+>  fs/coredump.c            |  68 ++++++++++++++++++
+>  include/linux/coredump.h |  10 +++
+>  4 files changed, 168 insertions(+), 148 deletions(-)
+> 
+> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+> index fb36469848323..dffe9dc8497ca 100644
+> --- a/fs/binfmt_elf.c
+> +++ b/fs/binfmt_elf.c
+> @@ -1292,8 +1292,12 @@ static bool always_dump_vma(struct vm_area_struct *vma)
+>  	return false;
+>  }
+>  
+> +#define DUMP_SIZE_MAYBE_ELFHDR_PLACEHOLDER 1
+> +
+>  /*
+>   * Decide what to dump of a segment, part, all or none.
+> + * The result must be fixed up via vma_dump_size_fixup() once we're in a context
+> + * that's allowed to sleep arbitrarily long.
+>   */
+>  static unsigned long vma_dump_size(struct vm_area_struct *vma,
+>  				   unsigned long mm_flags)
+> @@ -1348,30 +1352,15 @@ static unsigned long vma_dump_size(struct vm_area_struct *vma,
+>  
+>  	/*
+>  	 * If this looks like the beginning of a DSO or executable mapping,
+> -	 * check for an ELF header.  If we find one, dump the first page to
+> -	 * aid in determining what was mapped here.
+> +	 * we'll check for an ELF header. If we find one, we'll dump the first
+> +	 * page to aid in determining what was mapped here.
+> +	 * However, we shouldn't sleep on userspace reads while holding the
+> +	 * mmap_sem, so we just return a placeholder for now that will be fixed
+> +	 * up later in vma_dump_size_fixup().
+>  	 */
+>  	if (FILTER(ELF_HEADERS) &&
+> -	    vma->vm_pgoff == 0 && (vma->vm_flags & VM_READ)) {
+> -		u32 __user *header = (u32 __user *) vma->vm_start;
+> -		u32 word;
+> -		/*
+> -		 * Doing it this way gets the constant folded by GCC.
+> -		 */
+> -		union {
+> -			u32 cmp;
+> -			char elfmag[SELFMAG];
+> -		} magic;
+> -		BUILD_BUG_ON(SELFMAG != sizeof word);
+> -		magic.elfmag[EI_MAG0] = ELFMAG0;
+> -		magic.elfmag[EI_MAG1] = ELFMAG1;
+> -		magic.elfmag[EI_MAG2] = ELFMAG2;
+> -		magic.elfmag[EI_MAG3] = ELFMAG3;
+> -		if (unlikely(get_user(word, header)))
+> -			word = 0;
+> -		if (word == magic.cmp)
+> -			return PAGE_SIZE;
+> -	}
+> +	    vma->vm_pgoff == 0 && (vma->vm_flags & VM_READ))
+> +		return DUMP_SIZE_MAYBE_ELFHDR_PLACEHOLDER;
+>  
+>  #undef	FILTER
+>  
+> @@ -1381,6 +1370,22 @@ static unsigned long vma_dump_size(struct vm_area_struct *vma,
+>  	return vma->vm_end - vma->vm_start;
+>  }
+>  
+> +/* Fix up the result from vma_dump_size(), now that we're allowed to sleep. */
+> +static void vma_dump_size_fixup(struct core_vma_metadata *meta)
+> +{
+> +	char elfmag[SELFMAG];
+> +
+> +	if (meta->dump_size != DUMP_SIZE_MAYBE_ELFHDR_PLACEHOLDER)
+> +		return;
+> +
+> +	if (copy_from_user(elfmag, (void __user *)meta->start, SELFMAG)) {
+> +		meta->dump_size = 0;
+> +		return;
+> +	}
+> +	meta->dump_size =
+> +		(memcmp(elfmag, ELFMAG, SELFMAG) == 0) ? PAGE_SIZE : 0;
+> +}
 
---
-Vlad Rezki
+While this code looks entirely correct, it took me way too long to
+follow.  I'd take te DUMP_SIZE_MAYBE_ELFHDR_PLACEHOLDER into the caller,
+and then have a simple function like this:
+
+static void vma_dump_size_fixup(struct core_vma_metadata *meta)
+{
+	char elfmag[SELFMAG];
+
+	if (copy_from_user(elfmag, (void __user *)meta->start, SELFMAG) ||
+	    memcmp(elfmag, ELFMAG, sizeof(elfmag)) != 0)
+		meta->dump_size = 0;
+	else
+		meta->dump_size = PAGE_SIZE;
+}
+
+Also a few comments explaining why we do this fixup would help readers
+of the code.
+
+> -		if (vma->vm_flags & VM_WRITE)
+> -			phdr.p_flags |= PF_W;
+> -		if (vma->vm_flags & VM_EXEC)
+> -			phdr.p_flags |= PF_X;
+> +		phdr.p_flags = meta->flags & VM_READ ? PF_R : 0;
+> +		phdr.p_flags |= meta->flags & VM_WRITE ? PF_W : 0;
+> +		phdr.p_flags |= meta->flags & VM_EXEC ? PF_X : 0;
+
+Sorry for another nitpick, but I find the spelled out version with the
+if a lot easier to read.
+
+> +int dump_vma_snapshot(struct coredump_params *cprm, int *vma_count,
+> +	struct core_vma_metadata **vma_meta,
+> +	unsigned long (*dump_size_cb)(struct vm_area_struct *, unsigned long))
+
+Plase don't use single tabs for indentating parameter continuations
+(we actually have two styles - either two tabs or aligned after the
+opening brace, pick your poison :))
+
+> +	*vma_meta = kvmalloc_array(*vma_count, sizeof(**vma_meta), GFP_KERNEL);
+> +	if (!*vma_meta) {
+> +		up_read(&mm->mmap_sem);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	for (i = 0, vma = first_vma(current, gate_vma); vma != NULL;
+> +			vma = next_vma(vma, gate_vma)) {
+> +		(*vma_meta)[i++] = (struct core_vma_metadata) {
+> +			.start = vma->vm_start,
+> +			.end = vma->vm_end,
+> +			.flags = vma->vm_flags,
+> +			.dump_size = dump_size_cb(vma, cprm->mm_flags)
+> +		};
+
+This looks a little weird.  Why not kcalloc + just initialize the four
+fields we actually fill out here?
