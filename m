@@ -2,444 +2,420 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A85C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F56AC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7427220721
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 243D9206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:07:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588701892;
-	bh=gxQ9X4QqLM4ifn43Epi1xaqmsSAjK08ljpO1RMYITFA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=t+lva8N3YsETpt6HSMTge8S3q17ET8PtWQKxv3BDSwGNGBMkN1kFgUJc2xR/aB7NT
-	 fsUcjJsiGwLdvxEDDGi9tGb5E4DwOSeNFelOq7SD7/D/Pi1aWS0eAE1RwFMjMvWAWI
-	 6QF1ILBUIZrg00AF9tDgNpdWTHnjDqjRst2gYuoQ=
+	s=default; t=1588702035;
+	bh=5h810mR8CKCzrD5h5VcTUi9vqdAt+W4THYouu9LhP7A=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=NUGtCvCFYBnSHw5K+ZZ+3ampmoYUAZ/OMQRAusJmoRv2vB8qFBOQqRpX2dWE0SOFA
+	 oU3WshwLsQTLE+Q5XFJa/zg27vpycQzA7DN8HqjJYYSrJS8xMsbHitA63aZeJ6JQZE
+	 Q341LBlm45CvPLdA8apIoE3gXoifh3hVhCVQ8gxA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730679AbgEESEv (ORCPT
+        id S1730644AbgEESHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 14:04:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55040 "EHLO mail.kernel.org"
+        Tue, 5 May 2020 14:07:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730093AbgEESEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 14:04:51 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
+        id S1729315AbgEESHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 14:07:14 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D052C206FA;
-        Tue,  5 May 2020 18:04:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FD3D206B8;
+        Tue,  5 May 2020 18:07:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588701890;
-        bh=gxQ9X4QqLM4ifn43Epi1xaqmsSAjK08ljpO1RMYITFA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=xMhGv+FIQKSRyxGwUiJ/AsRgse+wPElZYeTjqa7uJjSd6RYitHwXt7qkr1Lty6+TN
-         /lSppEHghJ7X8pJhajXeQR+bP6XEDHSOGnolzpfBR3Sz8lqKXTOL1eQqY3pAdjxmLj
-         DY3NaZqP2B5dpznzKE/mwncbic5KUnoURX5rWoKY=
-Date:   Tue, 5 May 2020 11:04:47 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Felix Fietkau <nbd@openwrt.org>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Fabien Parent <fparent@baylibre.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 06/11] net: ethernet: mtk-eth-mac: new driver
-Message-ID: <20200505110447.2404985c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200505140231.16600-7-brgl@bgdev.pl>
-References: <20200505140231.16600-1-brgl@bgdev.pl>
-        <20200505140231.16600-7-brgl@bgdev.pl>
+        s=default; t=1588702033;
+        bh=5h810mR8CKCzrD5h5VcTUi9vqdAt+W4THYouu9LhP7A=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=a4JPqCqJTdAGdLCcm7ArhN6Uf76uoU3hmKw2cgnFzp3eTnuhNeqB4L2/k77jP6zwx
+         BSILzZymYmls5ey5nZ2zR0KPvp8xYepkYxqeI9qQRMe3qVN1soXcXWECOUJ0O4ICSQ
+         nWyo9cWw61egMB4weMqwSt//10np684KAQaleSnE=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id E114A3523039; Tue,  5 May 2020 11:07:12 -0700 (PDT)
+Date:   Tue, 5 May 2020 11:07:12 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [patch V4 part 1 25/36] rcu/tree: Mark the idle relevant
+ functions noinstr
+Message-ID: <20200505180712.GH2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200505131602.633487962@linutronix.de>
+ <20200505134100.575356107@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505134100.575356107@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  5 May 2020 16:02:26 +0200 Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Tue, May 05, 2020 at 03:16:27PM +0200, Thomas Gleixner wrote:
+> These functions are invoked from context tracking and other places in the
+> low level entry code. Move them into the .noinstr.text section to exclude
+> them from instrumentation.
 > 
-> This adds the driver for the MediaTek Ethernet MAC used on the MT8* SoC
-> family. For now we only support full-duplex.
+> Mark the places which are safe to invoke traceable functions with
+> instr_begin/end() so objtool won't complain.
 > 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-> +#define MTK_MAC_VERSION				"1.0"
+Acked-by: Paul E. McKenney <paulmck@kernel.org>
 
-Please don't add driver versions, we're removing those from networking
-drivers.
+> ---
+>  kernel/rcu/tree.c        |   85 +++++++++++++++++++++++++----------------------
+>  kernel/rcu/tree_plugin.h |    4 +-
+>  kernel/rcu/update.c      |    7 +--
+>  3 files changed, 52 insertions(+), 44 deletions(-)
+> 
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -75,9 +75,6 @@
+>   */
+>  #define RCU_DYNTICK_CTRL_MASK 0x1
+>  #define RCU_DYNTICK_CTRL_CTR  (RCU_DYNTICK_CTRL_MASK + 1)
+> -#ifndef rcu_eqs_special_exit
+> -#define rcu_eqs_special_exit() do { } while (0)
+> -#endif
 
-> +/* Represents the actual structure of descriptors used by the MAC. We can
-> + * reuse the same structure for both TX and RX - the layout is the same, only
-> + * the flags differ slightly.
-> + */
-> +struct mtk_mac_ring_desc {
-> +	/* Contains both the status flags as well as packet length. */
-> +	u32 status;
-> +	u32 data_ptr;
-> +	u32 vtag;
-> +	u32 reserved;
-> +} __aligned(4) __packed;
+Joel has a patch series doing a more thorough removal of this function,
+but sometimes it is necessary to remove the function twice, just to
+be sure.  ;-)
 
-It will be aligned to 4, because the members are all 4B. And there is
-no possibility of holes. You can safely remove those attrs.
-
-> +static int mtk_mac_ring_pop_tail(struct mtk_mac_ring *ring,
-> +				 struct mtk_mac_ring_desc_data *desc_data)
-> +{
-> +	struct mtk_mac_ring_desc *desc = &ring->descs[ring->tail];
-> +	unsigned int status;
-> +
-> +	dma_rmb();
-
-This should be after desc->status read, probably.
-
-> +	status = desc->status;
-> +
-> +	if (!(status & MTK_MAC_DESC_BIT_COWN))
-> +		return -1;
-> +
-> +	desc_data->len = status & MTK_MAC_DESC_MSK_LEN;
-> +	desc_data->flags = status & ~MTK_MAC_DESC_MSK_LEN;
-> +	desc_data->dma_addr = desc->data_ptr;
-> +	desc_data->skb = ring->skbs[ring->tail];
-> +
-> +	desc->data_ptr = 0;
-> +	desc->status = MTK_MAC_DESC_BIT_COWN;
-> +	if (status & MTK_MAC_DESC_BIT_EOR)
-> +		desc->status |= MTK_MAC_DESC_BIT_EOR;
-> +
-> +	dma_wmb();
-
-What is this separating?
-
-> +	ring->tail = (ring->tail + 1) % MTK_MAC_RING_NUM_DESCS;
-> +	ring->count--;
-> +
-> +	return 0;
-> +}
-> +
-> +static void mtk_mac_ring_push_head(struct mtk_mac_ring *ring,
-> +				   struct mtk_mac_ring_desc_data *desc_data,
-> +				   unsigned int flags)
-> +{
-> +	struct mtk_mac_ring_desc *desc = &ring->descs[ring->head];
-> +	unsigned int status;
-> +
-> +	dma_rmb();
-
-What's this barrier separating?
-
-> +	status = desc->status;
-> +
-> +	ring->skbs[ring->head] = desc_data->skb;
-> +	desc->data_ptr = desc_data->dma_addr;
-> +
-> +	status |= desc_data->len;
-> +	if (flags)
-> +		status |= flags;
-> +	desc->status = status;
-> +
-> +	dma_wmb();
-> +	desc->status &= ~MTK_MAC_DESC_BIT_COWN;
-> +
-> +	ring->head = (ring->head + 1) % MTK_MAC_RING_NUM_DESCS;
-> +	ring->count++;
-> +}
-
-> +/* All processing for TX and RX happens in the napi poll callback. */
-> +static irqreturn_t mtk_mac_handle_irq(int irq, void *data)
-> +{
-> +	struct mtk_mac_priv *priv;
-> +	struct net_device *ndev;
-> +	unsigned int status;
-> +
-> +	ndev = data;
-> +	priv = netdev_priv(ndev);
-> +
-> +	if (netif_running(ndev)) {
-> +		mtk_mac_intr_mask_all(priv);
-> +		status = mtk_mac_intr_read_and_clear(priv);
-> +
-> +		/* RX Complete */
-> +		if (status & MTK_MAC_BIT_INT_STS_FNRC)
-> +			napi_schedule(&priv->napi);
-> +
-> +		/* TX Complete */
-> +		if (status & MTK_MAC_BIT_INT_STS_TNTC)
-> +			schedule_work(&priv->tx_work);
-> +
-> +		/* One of the counter reached 0x8000000 */
-> +		if (status & MTK_MAC_REG_INT_STS_MIB_CNT_TH) {
-> +			mtk_mac_update_stats(priv);
-> +			mtk_mac_reset_counters(priv);
-> +		}
-> +
-> +		mtk_mac_intr_unmask_all(priv);
-
-Why do you unmask all IRQs here? The usual way to operate is to leave
-TX and RX IRQs masked until NAPI finishes.
-
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-
-> +static int mtk_mac_enable(struct net_device *ndev)
-> +{
-> +	/* Reset all counters */
-> +	mtk_mac_reset_counters(priv);
-
-This doesn't reset the counters to zero, right?
-
-> +	/* Enable Hash Table BIST and reset it */
-> +	regmap_update_bits(priv->regs, MTK_MAC_REG_HASH_CTRL,
-> +			   MTK_MAC_BIT_HASH_CTRL_BIST_EN,
-> +			   MTK_MAC_BIT_HASH_CTRL_BIST_EN);
-
-> +}
-> +
-> +static void mtk_mac_disable(struct net_device *ndev)
-> +{
-> +	struct mtk_mac_priv *priv = netdev_priv(ndev);
-> +
-> +	netif_stop_queue(ndev);
-> +	napi_disable(&priv->napi);
-> +	mtk_mac_intr_mask_all(priv);
-> +	mtk_mac_dma_disable(priv);
-> +	mtk_mac_intr_read_and_clear(priv);
-> +	phy_stop(priv->phydev);
-> +	phy_disconnect(priv->phydev);
-> +	free_irq(ndev->irq, ndev);
-> +	mtk_mac_free_rx_skbs(ndev);
-> +	mtk_mac_free_tx_skbs(ndev);
-> +}
-
-> +static int mtk_mac_netdev_start_xmit(struct sk_buff *skb,
-> +				     struct net_device *ndev)
-> +{
-> +	struct mtk_mac_priv *priv = netdev_priv(ndev);
-> +	struct mtk_mac_ring *ring = &priv->tx_ring;
-> +	struct device *dev = mtk_mac_get_dev(priv);
-> +	struct mtk_mac_ring_desc_data desc_data;
-> +
-> +	if (skb->len > MTK_MAC_MAX_FRAME_SIZE)
-> +		goto err_drop_packet;
-
-This should never happen if you set mtu right, you can drop it.
-
-> +	desc_data.dma_addr = mtk_mac_dma_map_tx(priv, skb);
-> +	if (dma_mapping_error(dev, desc_data.dma_addr))
-> +		goto err_drop_packet;
-> +
-> +	desc_data.skb = skb;
-> +	desc_data.len = skb->len;
-> +
-> +	mtk_mac_lock(priv);
-> +	mtk_mac_ring_push_head_tx(ring, &desc_data);
-> +
-> +	if (mtk_mac_ring_full(ring))
-> +		netif_stop_queue(ndev);
-> +	mtk_mac_unlock(priv);
-> +
-> +	mtk_mac_dma_resume_tx(priv);
-> +
-> +	return NETDEV_TX_OK;
-> +
-> +err_drop_packet:
-> +	dev_kfree_skb(skb);
-> +	ndev->stats.tx_dropped++;
-> +	return NETDEV_TX_BUSY;
-> +}
-
-> +static void mtk_mac_tx_work(struct work_struct *work)
-> +{
-> +	struct mtk_mac_priv *priv;
-> +	struct mtk_mac_ring *ring;
-> +	struct net_device *ndev;
-> +	bool wake = false;
-> +	int ret;
-> +
-> +	priv = container_of(work, struct mtk_mac_priv, tx_work);
-> +	ndev = mtk_mac_get_netdev(priv);
-> +	ring = &priv->tx_ring;
-> +
-> +	for (;;) {
-> +		mtk_mac_lock(priv);
-> +
-> +		if (!mtk_mac_ring_descs_available(ring)) {
-> +			mtk_mac_unlock(priv);
-> +			break;
-> +		}
-> +
-> +		ret = mtk_mac_tx_complete(priv);
-> +		mtk_mac_unlock(priv);
-> +		if (ret)
-> +			break;
-> +
-> +		wake = true;
-> +	}
-> +
-> +	if (wake)
-> +		netif_wake_queue(ndev);
-
-This looks racy, if the TX path runs in parallel the queue may have
-already been filled up at the point you wake it up.
-
-> +}
-
-Why do you clean the TX ring from a work rather than from the NAPI
-context?
-
-> +static void mtk_mac_set_rx_mode(struct net_device *ndev)
-> +{
-> +	struct mtk_mac_priv *priv = netdev_priv(ndev);
-> +	struct netdev_hw_addr *hw_addr;
-> +	unsigned int hash_addr, i;
-> +
-> +	if (ndev->flags & IFF_PROMISC) {
-> +		regmap_update_bits(priv->regs, MTK_MAC_REG_ARL_CFG,
-> +				   MTK_MAC_BIT_ARL_CFG_MISC_MODE,
-> +				   MTK_MAC_BIT_ARL_CFG_MISC_MODE);
-> +	} else if (netdev_mc_count(ndev) > MTK_MAC_HASHTABLE_MC_LIMIT ||
-> +		   ndev->flags & IFF_ALLMULTI) {
-> +		for (i = 0; i < MTK_MAC_HASHTABLE_SIZE_MAX; i++)
-> +			mtk_mac_set_hashbit(priv, i);
-> +	} else {
-> +		netdev_for_each_mc_addr(hw_addr, ndev) {
-> +			hash_addr = (hw_addr->addr[0] & 0x01) << 8;
-> +			hash_addr += hw_addr->addr[5];
-> +			mtk_mac_set_hashbit(priv, hash_addr);
-
-Hm, are the hash bits cleared when address is removed?
-
-> +		}
-> +	}
-> +}
-
-> +static int mtk_mac_receive_packet(struct mtk_mac_priv *priv)
-> +{
-> +	struct net_device *ndev = mtk_mac_get_netdev(priv);
-> +	struct mtk_mac_ring *ring = &priv->rx_ring;
-> +	struct device *dev = mtk_mac_get_dev(priv);
-> +	struct mtk_mac_ring_desc_data desc_data;
-> +	struct sk_buff *new_skb;
-> +	int ret;
-> +
-> +	mtk_mac_lock(priv);
-> +	ret = mtk_mac_ring_pop_tail(ring, &desc_data);
-> +	mtk_mac_unlock(priv);
-> +	if (ret)
-> +		return -1;
-> +
-> +	mtk_mac_dma_unmap_rx(priv, &desc_data);
-> +
-> +	if ((desc_data.flags & MTK_MAC_DESC_BIT_RX_CRCE) ||
-> +	    (desc_data.flags & MTK_MAC_DESC_BIT_RX_OSIZE)) {
-> +		/* Error packet -> drop and reuse skb. */
-> +		new_skb = desc_data.skb;
-> +		goto map_skb;
-> +	}
-> +
-> +	new_skb = mtk_mac_alloc_skb(ndev);
-> +	if (!new_skb) {
-> +		netdev_err(ndev, "out of memory for skb\n");
-
-No need for printing, kernel will complain loudly about oom.
-
-> +		ndev->stats.rx_dropped++;
-> +		new_skb = desc_data.skb;
-> +		goto map_skb;
-> +	}
-> +
-> +	skb_put(desc_data.skb, desc_data.len);
-> +	desc_data.skb->ip_summed = CHECKSUM_NONE;
-> +	desc_data.skb->protocol = eth_type_trans(desc_data.skb, ndev);
-> +	desc_data.skb->dev = ndev;
-> +	netif_receive_skb(desc_data.skb);
-> +
-> +map_skb:
-> +	desc_data.dma_addr = mtk_mac_dma_map_rx(priv, new_skb);
-> +	if (dma_mapping_error(dev, desc_data.dma_addr)) {
-> +		dev_kfree_skb(new_skb);
-> +		netdev_err(ndev, "DMA mapping error of RX descriptor\n");
-> +		return -ENOMEM;
-
-In this case nothing will ever replenish the RX ring right? If we hit
-this condition 128 times the ring will be empty?
-
-> +	}
-> +
-> +	desc_data.len = skb_tailroom(new_skb);
-> +	desc_data.skb = new_skb;
-> +
-> +	mtk_mac_lock(priv);
-> +	mtk_mac_ring_push_head_rx(ring, &desc_data);
-> +	mtk_mac_unlock(priv);
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk_mac_process_rx(struct mtk_mac_priv *priv, int budget)
-> +{
-> +	int received, ret;
-> +
-> +	for (received = 0, ret = 0; received < budget && ret == 0; received++)
-> +		ret = mtk_mac_receive_packet(priv);
-> +
-> +	mtk_mac_dma_resume_rx(priv);
-> +
-> +	return received;
-> +}
-
-> +static int mtk_mac_probe(struct platform_device *pdev)
-> +{
-
-> +	mtk_mac_set_mode_rmii(priv);
-> +
-> +	dev->coherent_dma_mask = DMA_BIT_MASK(32);
-> +	dev->dma_mask = &dev->coherent_dma_mask;
-
-Why set this manually and no thru dma_set_mask_and_coherent()?
-
-> +	priv->ring_base = dmam_alloc_coherent(dev, MTK_MAC_DMA_SIZE,
-> +					      &priv->dma_addr,
-> +					      GFP_KERNEL | GFP_DMA);
-> +	if (!priv->ring_base)
-> +		return -ENOMEM;
-> +
-> +	mtk_mac_nic_disable_pd(priv);
-> +	mtk_mac_init_config(priv);
-> +
-> +	ret = mtk_mac_mdio_init(ndev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = eth_platform_get_mac_address(dev, ndev->dev_addr);
-> +	if (ret || !is_valid_ether_addr(ndev->dev_addr)) {
-> +		random_ether_addr(ndev->dev_addr);
-> +		ndev->addr_assign_type = NET_ADDR_RANDOM;
-
-eth_hw_addr_random()
-
-> +	}
-> +
-> +	ndev->netdev_ops = &mtk_mac_netdev_ops;
-> +	ndev->ethtool_ops = &mtk_mac_ethtool_ops;
-> +
-> +	netif_napi_add(ndev, &priv->napi, mtk_mac_poll, MTK_MAC_NAPI_WEIGHT);
-> +
-> +	return devm_register_netdev(ndev);
-> +}
-
+>  static DEFINE_PER_CPU_SHARED_ALIGNED(struct rcu_data, rcu_data) = {
+>  	.dynticks_nesting = 1,
+> @@ -229,7 +226,7 @@ void rcu_softirq_qs(void)
+>   * RCU is watching prior to the call to this function and is no longer
+>   * watching upon return.
+>   */
+> -static void rcu_dynticks_eqs_enter(void)
+> +static noinstr void rcu_dynticks_eqs_enter(void)
+>  {
+>  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+>  	int seq;
+> @@ -253,7 +250,7 @@ static void rcu_dynticks_eqs_enter(void)
+>   * called from an extended quiescent state, that is, RCU is not watching
+>   * prior to the call to this function and is watching upon return.
+>   */
+> -static void rcu_dynticks_eqs_exit(void)
+> +static noinstr void rcu_dynticks_eqs_exit(void)
+>  {
+>  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+>  	int seq;
+> @@ -270,8 +267,6 @@ static void rcu_dynticks_eqs_exit(void)
+>  	if (seq & RCU_DYNTICK_CTRL_MASK) {
+>  		atomic_andnot(RCU_DYNTICK_CTRL_MASK, &rdp->dynticks);
+>  		smp_mb__after_atomic(); /* _exit after clearing mask. */
+> -		/* Prefer duplicate flushes to losing a flush. */
+> -		rcu_eqs_special_exit();
+>  	}
+>  }
+>  
+> @@ -299,7 +294,7 @@ static void rcu_dynticks_eqs_online(void
+>   *
+>   * No ordering, as we are sampling CPU-local information.
+>   */
+> -static bool rcu_dynticks_curr_cpu_in_eqs(void)
+> +static __always_inline bool rcu_dynticks_curr_cpu_in_eqs(void)
+>  {
+>  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+>  
+> @@ -566,7 +561,7 @@ EXPORT_SYMBOL_GPL(rcutorture_get_gp_data
+>   * the possibility of usermode upcalls having messed up our count
+>   * of interrupt nesting level during the prior busy period.
+>   */
+> -static void rcu_eqs_enter(bool user)
+> +static noinstr void rcu_eqs_enter(bool user)
+>  {
+>  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+>  
+> @@ -581,12 +576,14 @@ static void rcu_eqs_enter(bool user)
+>  	}
+>  
+>  	lockdep_assert_irqs_disabled();
+> +	instr_begin();
+>  	trace_rcu_dyntick(TPS("Start"), rdp->dynticks_nesting, 0, atomic_read(&rdp->dynticks));
+>  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
+>  	rdp = this_cpu_ptr(&rcu_data);
+>  	do_nocb_deferred_wakeup(rdp);
+>  	rcu_prepare_for_idle();
+>  	rcu_preempt_deferred_qs(current);
+> +	instr_end();
+>  	WRITE_ONCE(rdp->dynticks_nesting, 0); /* Avoid irq-access tearing. */
+>  	// RCU is watching here ...
+>  	rcu_dynticks_eqs_enter();
+> @@ -623,7 +620,7 @@ void rcu_idle_enter(void)
+>   * If you add or remove a call to rcu_user_enter(), be sure to test with
+>   * CONFIG_RCU_EQS_DEBUG=y.
+>   */
+> -void rcu_user_enter(void)
+> +noinstr void rcu_user_enter(void)
+>  {
+>  	lockdep_assert_irqs_disabled();
+>  	rcu_eqs_enter(true);
+> @@ -656,19 +653,23 @@ static __always_inline void rcu_nmi_exit
+>  	 * leave it in non-RCU-idle state.
+>  	 */
+>  	if (rdp->dynticks_nmi_nesting != 1) {
+> +		instr_begin();
+>  		trace_rcu_dyntick(TPS("--="), rdp->dynticks_nmi_nesting, rdp->dynticks_nmi_nesting - 2,
+>  				  atomic_read(&rdp->dynticks));
+>  		WRITE_ONCE(rdp->dynticks_nmi_nesting, /* No store tearing. */
+>  			   rdp->dynticks_nmi_nesting - 2);
+> +		instr_end();
+>  		return;
+>  	}
+>  
+> +	instr_begin();
+>  	/* This NMI interrupted an RCU-idle CPU, restore RCU-idleness. */
+>  	trace_rcu_dyntick(TPS("Startirq"), rdp->dynticks_nmi_nesting, 0, atomic_read(&rdp->dynticks));
+>  	WRITE_ONCE(rdp->dynticks_nmi_nesting, 0); /* Avoid store tearing. */
+>  
+>  	if (irq)
+>  		rcu_prepare_for_idle();
+> +	instr_end();
+>  
+>  	// RCU is watching here ...
+>  	rcu_dynticks_eqs_enter();
+> @@ -684,7 +685,7 @@ static __always_inline void rcu_nmi_exit
+>   * If you add or remove a call to rcu_nmi_exit(), be sure to test
+>   * with CONFIG_RCU_EQS_DEBUG=y.
+>   */
+> -void rcu_nmi_exit(void)
+> +void noinstr rcu_nmi_exit(void)
+>  {
+>  	rcu_nmi_exit_common(false);
+>  }
+> @@ -708,7 +709,7 @@ void rcu_nmi_exit(void)
+>   * If you add or remove a call to rcu_irq_exit(), be sure to test with
+>   * CONFIG_RCU_EQS_DEBUG=y.
+>   */
+> -void rcu_irq_exit(void)
+> +void noinstr rcu_irq_exit(void)
+>  {
+>  	lockdep_assert_irqs_disabled();
+>  	rcu_nmi_exit_common(true);
+> @@ -737,7 +738,7 @@ void rcu_irq_exit_irqson(void)
+>   * allow for the possibility of usermode upcalls messing up our count of
+>   * interrupt nesting level during the busy period that is just now starting.
+>   */
+> -static void rcu_eqs_exit(bool user)
+> +static void noinstr rcu_eqs_exit(bool user)
+>  {
+>  	struct rcu_data *rdp;
+>  	long oldval;
+> @@ -755,12 +756,14 @@ static void rcu_eqs_exit(bool user)
+>  	// RCU is not watching here ...
+>  	rcu_dynticks_eqs_exit();
+>  	// ... but is watching here.
+> +	instr_begin();
+>  	rcu_cleanup_after_idle();
+>  	trace_rcu_dyntick(TPS("End"), rdp->dynticks_nesting, 1, atomic_read(&rdp->dynticks));
+>  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
+>  	WRITE_ONCE(rdp->dynticks_nesting, 1);
+>  	WARN_ON_ONCE(rdp->dynticks_nmi_nesting);
+>  	WRITE_ONCE(rdp->dynticks_nmi_nesting, DYNTICK_IRQ_NONIDLE);
+> +	instr_end();
+>  }
+>  
+>  /**
+> @@ -791,7 +794,7 @@ void rcu_idle_exit(void)
+>   * If you add or remove a call to rcu_user_exit(), be sure to test with
+>   * CONFIG_RCU_EQS_DEBUG=y.
+>   */
+> -void rcu_user_exit(void)
+> +void noinstr rcu_user_exit(void)
+>  {
+>  	rcu_eqs_exit(1);
+>  }
+> @@ -839,28 +842,35 @@ static __always_inline void rcu_nmi_ente
+>  			rcu_cleanup_after_idle();
+>  
+>  		incby = 1;
+> -	} else if (irq && tick_nohz_full_cpu(rdp->cpu) &&
+> -		   rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
+> -		   READ_ONCE(rdp->rcu_urgent_qs) &&
+> -		   !READ_ONCE(rdp->rcu_forced_tick)) {
+> -		// We get here only if we had already exited the extended
+> -		// quiescent state and this was an interrupt (not an NMI).
+> -		// Therefore, (1) RCU is already watching and (2) The fact
+> -		// that we are in an interrupt handler and that the rcu_node
+> -		// lock is an irq-disabled lock prevents self-deadlock.
+> -		// So we can safely recheck under the lock.
+> -		raw_spin_lock_rcu_node(rdp->mynode);
+> -		if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
+> -			// A nohz_full CPU is in the kernel and RCU
+> -			// needs a quiescent state.  Turn on the tick!
+> -			WRITE_ONCE(rdp->rcu_forced_tick, true);
+> -			tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
+> +	} else if (irq) {
+> +		instr_begin();
+> +		if (tick_nohz_full_cpu(rdp->cpu) &&
+> +		    rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
+> +		    READ_ONCE(rdp->rcu_urgent_qs) &&
+> +		    !READ_ONCE(rdp->rcu_forced_tick)) {
+> +			// We get here only if we had already exited the
+> +			// extended quiescent state and this was an
+> +			// interrupt (not an NMI).  Therefore, (1) RCU is
+> +			// already watching and (2) The fact that we are in
+> +			// an interrupt handler and that the rcu_node lock
+> +			// is an irq-disabled lock prevents self-deadlock.
+> +			// So we can safely recheck under the lock.
+> +			raw_spin_lock_rcu_node(rdp->mynode);
+> +			if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
+> +				// A nohz_full CPU is in the kernel and RCU
+> +				// needs a quiescent state.  Turn on the tick!
+> +				WRITE_ONCE(rdp->rcu_forced_tick, true);
+> +				tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
+> +			}
+> +			raw_spin_unlock_rcu_node(rdp->mynode);
+>  		}
+> -		raw_spin_unlock_rcu_node(rdp->mynode);
+> +		instr_end();
+>  	}
+> +	instr_begin();
+>  	trace_rcu_dyntick(incby == 1 ? TPS("Endirq") : TPS("++="),
+>  			  rdp->dynticks_nmi_nesting,
+>  			  rdp->dynticks_nmi_nesting + incby, atomic_read(&rdp->dynticks));
+> +	instr_end();
+>  	WRITE_ONCE(rdp->dynticks_nmi_nesting, /* Prevent store tearing. */
+>  		   rdp->dynticks_nmi_nesting + incby);
+>  	barrier();
+> @@ -869,11 +879,10 @@ static __always_inline void rcu_nmi_ente
+>  /**
+>   * rcu_nmi_enter - inform RCU of entry to NMI context
+>   */
+> -void rcu_nmi_enter(void)
+> +noinstr void rcu_nmi_enter(void)
+>  {
+>  	rcu_nmi_enter_common(false);
+>  }
+> -NOKPROBE_SYMBOL(rcu_nmi_enter);
+>  
+>  /**
+>   * rcu_irq_enter - inform RCU that current CPU is entering irq away from idle
+> @@ -897,7 +906,7 @@ NOKPROBE_SYMBOL(rcu_nmi_enter);
+>   * If you add or remove a call to rcu_irq_enter(), be sure to test with
+>   * CONFIG_RCU_EQS_DEBUG=y.
+>   */
+> -void rcu_irq_enter(void)
+> +noinstr void rcu_irq_enter(void)
+>  {
+>  	lockdep_assert_irqs_disabled();
+>  	rcu_nmi_enter_common(true);
+> @@ -942,7 +951,7 @@ static void rcu_disable_urgency_upon_qs(
+>   * if the current CPU is not in its idle loop or is in an interrupt or
+>   * NMI handler, return true.
+>   */
+> -bool notrace rcu_is_watching(void)
+> +noinstr bool rcu_is_watching(void)
+>  {
+>  	bool ret;
+>  
+> @@ -986,7 +995,7 @@ void rcu_request_urgent_qs_task(struct t
+>   * RCU on an offline processor during initial boot, hence the check for
+>   * rcu_scheduler_fully_active.
+>   */
+> -bool rcu_lockdep_current_cpu_online(void)
+> +noinstr bool rcu_lockdep_current_cpu_online(void)
+>  {
+>  	struct rcu_data *rdp;
+>  	struct rcu_node *rnp;
+> @@ -994,12 +1003,12 @@ bool rcu_lockdep_current_cpu_online(void
+>  
+>  	if (in_nmi() || !rcu_scheduler_fully_active)
+>  		return true;
+> -	preempt_disable();
+> +	preempt_disable_notrace();
+>  	rdp = this_cpu_ptr(&rcu_data);
+>  	rnp = rdp->mynode;
+>  	if (rdp->grpmask & rcu_rnp_online_cpus(rnp))
+>  		ret = true;
+> -	preempt_enable();
+> +	preempt_enable_notrace();
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(rcu_lockdep_current_cpu_online);
+> --- a/kernel/rcu/tree_plugin.h
+> +++ b/kernel/rcu/tree_plugin.h
+> @@ -2553,7 +2553,7 @@ static void rcu_bind_gp_kthread(void)
+>  }
+>  
+>  /* Record the current task on dyntick-idle entry. */
+> -static void rcu_dynticks_task_enter(void)
+> +static void noinstr rcu_dynticks_task_enter(void)
+>  {
+>  #if defined(CONFIG_TASKS_RCU) && defined(CONFIG_NO_HZ_FULL)
+>  	WRITE_ONCE(current->rcu_tasks_idle_cpu, smp_processor_id());
+> @@ -2561,7 +2561,7 @@ static void rcu_dynticks_task_enter(void
+>  }
+>  
+>  /* Record no current task on dyntick-idle exit. */
+> -static void rcu_dynticks_task_exit(void)
+> +static void noinstr rcu_dynticks_task_exit(void)
+>  {
+>  #if defined(CONFIG_TASKS_RCU) && defined(CONFIG_NO_HZ_FULL)
+>  	WRITE_ONCE(current->rcu_tasks_idle_cpu, -1);
+> --- a/kernel/rcu/update.c
+> +++ b/kernel/rcu/update.c
+> @@ -95,7 +95,7 @@ module_param(rcu_normal_after_boot, int,
+>   * Similarly, we avoid claiming an RCU read lock held if the current
+>   * CPU is offline.
+>   */
+> -static bool rcu_read_lock_held_common(bool *ret)
+> +static noinstr bool rcu_read_lock_held_common(bool *ret)
+>  {
+>  	if (!debug_lockdep_rcu_enabled()) {
+>  		*ret = 1;
+> @@ -112,7 +112,7 @@ static bool rcu_read_lock_held_common(bo
+>  	return false;
+>  }
+>  
+> -int rcu_read_lock_sched_held(void)
+> +noinstr int rcu_read_lock_sched_held(void)
+>  {
+>  	bool ret;
+>  
+> @@ -270,13 +270,12 @@ struct lockdep_map rcu_callback_map =
+>  	STATIC_LOCKDEP_MAP_INIT("rcu_callback", &rcu_callback_key);
+>  EXPORT_SYMBOL_GPL(rcu_callback_map);
+>  
+> -int notrace debug_lockdep_rcu_enabled(void)
+> +noinstr int notrace debug_lockdep_rcu_enabled(void)
+>  {
+>  	return rcu_scheduler_active != RCU_SCHEDULER_INACTIVE && debug_locks &&
+>  	       current->lockdep_recursion == 0;
+>  }
+>  EXPORT_SYMBOL_GPL(debug_lockdep_rcu_enabled);
+> -NOKPROBE_SYMBOL(debug_lockdep_rcu_enabled);
+>  
+>  /**
+>   * rcu_read_lock_held() - might we be in RCU read-side critical section?
+> 
