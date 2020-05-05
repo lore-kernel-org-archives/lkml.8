@@ -2,101 +2,104 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 534DCC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BC8C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2901720675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A983520675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:01:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="WzXRH7om"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aDXKeHOf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729666AbgEEPAz (ORCPT
+        id S1729697AbgEEPBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:00:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56204 "EHLO
+        Tue, 5 May 2020 11:01:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729235AbgEEPAz (ORCPT
+        by vger.kernel.org with ESMTP id S1729667AbgEEPBO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:00:55 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3EC8C061A0F;
-        Tue,  5 May 2020 08:00:54 -0700 (PDT)
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 94D3423E80;
-        Tue,  5 May 2020 17:00:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1588690853;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=T8QHJzdQsqxKUorxv0i84+q/jnRbNR+waUrdwg8sxko=;
-        b=WzXRH7omIgdod2GwSr7P7NftvohR0t4Z6U/E+DQhKjCkTzaBB6v013s/9EAZW8xkJrpOCB
-        5LH8ly/cRqlGucUBJr3oqx/91F/JiXnHp0IaLASdw83rbiHODqxxEmFDqoPURkXME2DpDw
-        p7Ylps13Qk4orZFSTsF0mxPa6AnlrNY=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH] arm64: dts: freescale: sl28: enable LPUART1
-Date:   Tue,  5 May 2020 17:00:37 +0200
-Message-Id: <20200505150037.32573-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam: Yes
+        Tue, 5 May 2020 11:01:14 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A881AC061A0F;
+        Tue,  5 May 2020 08:01:14 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id mq3so1268056pjb.1;
+        Tue, 05 May 2020 08:01:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=9Wez+z5lCI0hS4teojmRNn9oUej07xsC5ZAyPPM7jFw=;
+        b=aDXKeHOfSlo2rCfHADtT4Q9TjUr+Ag9sUEzdm27UQPz6km3DVswbPcQsXkSIsXAG1c
+         xPaPYTpqAyMbhth2rciiELDkH75JsEtyeeghzKUgkCNLQfOwKx3KbdoLvkHmyKvbgxT5
+         Z4HxlBVwDBZVYdr0H3oAQHO0pAi8XmtaAOiEZ6gkbXuME5vhTyOcztrsYp4U6sXEGhpj
+         wePIwTVuQC1FH1o3hvYmX5K5+1NzMWeKZoNJfAdarz6s4T89efpih7e8JDO3tZJOkF5V
+         S/M2dZhxvKQfHcprkmxMAe+b9zL3kH0cP9dMo64gZ3lckOTsRwAbQH8lp1b0zGUhqgtt
+         VLNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=9Wez+z5lCI0hS4teojmRNn9oUej07xsC5ZAyPPM7jFw=;
+        b=taYI+7agvqSuVEqgu2vLSPe/Yo3lxL8GvKHeWc5Mb8/35he8425Z5WHIpHtzgLL2kW
+         HukkVjfl213dXZ3V5XbHYjuRkAAK7RRknYqfmf3Io3hkHJmKiNNHrWmtlCj/pKfkiZA6
+         Xkt22LXJTdOv0qnCfUm1LDZb/1W54wcA2xRb+y45nvuRMzaXvl1OGp8fysNzWYahy6p3
+         rC0paoEWQwEa1+yUW+POO6STWYpwFV8mqS55UHqNiSe2i01OaIK0LB3e9KATwO3lYSYn
+         M0PPsyvzbAvbazgqZfeGw+Lu1Vx8KNF3pnioJpHLDfKHypC3Ndfp6NG7sL6yJw22exwQ
+         HYdg==
+X-Gm-Message-State: AGi0PuYENiBPjXhm6Gc/f5v2QMNAxGMac4HV1I2NOcju9VXZZVHpeBP3
+        uyBXzsRAkxVBPnUHYC8U3mI=
+X-Google-Smtp-Source: APiQypKzA24AprFbdvl7cKbfXxFljMkzCLaOOlg46OaMd9qXV1YnzY2Ud71/6w5xZSMVuUBnksX4Ow==
+X-Received: by 2002:a17:90a:d56:: with SMTP id 22mr3425448pju.187.1588690874256;
+        Tue, 05 May 2020 08:01:14 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:60b:fcd9:7c28:bcca:10e4:5523])
+        by smtp.gmail.com with ESMTPSA id t188sm2186681pfb.185.2020.05.05.08.01.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 08:01:13 -0700 (PDT)
+From:   Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH] phy: tegra: Use PTR_ERR_OR_ZERO() to simplify code
+Date:   Tue,  5 May 2020 20:30:49 +0530
+Message-Id: <20200505150058.17674-1-aishwaryarj100@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the LPUART has support for the LS1028A SoC, also enable it on
-our board.
+PTR_ERR_OR_ZERO contains if(IS_ERR(...)) + PTR_ERR.
 
-Signed-off-by: Michael Walle <michael@walle.cc>
+Generated by: scripts/coccinelle/api/ptr_ret.cocci
+
+Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
 ---
+ drivers/phy/tegra/phy-tegra194-p2u.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-Hi Shawn,
-
-After adding/fixing the LPUART support for the LS1028A I've forgot to send
-this patch to actually enable the LPUART on our boards. It would be great
-if this could make it into the fixes queue for the -rc. If not its also ok.
-
-Thanks,
--michael
-
- arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
-index 5eac8a6ab46f..360b3a168c10 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
-@@ -17,6 +17,7 @@
- 		crypto = &crypto;
- 		serial0 = &duart0;
- 		serial1 = &duart1;
-+		serial2 = &lpuart1;
- 		spi0 = &fspi;
- 		spi1 = &dspi2;
- 	};
-@@ -189,3 +190,7 @@
- 		pagesize = <32>;
- 	};
- };
-+
-+&lpuart1 {
-+	status = "okay";
-+};
+diff --git a/drivers/phy/tegra/phy-tegra194-p2u.c b/drivers/phy/tegra/phy-tegra194-p2u.c
+index 7042bed9feaa..42394d27f4cb 100644
+--- a/drivers/phy/tegra/phy-tegra194-p2u.c
++++ b/drivers/phy/tegra/phy-tegra194-p2u.c
+@@ -92,10 +92,7 @@ static int tegra_p2u_probe(struct platform_device *pdev)
+ 	phy_set_drvdata(generic_phy, phy);
+ 
+ 	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+-	if (IS_ERR(phy_provider))
+-		return PTR_ERR(phy_provider);
+-
+-	return 0;
++	return PTR_ERR_OR_ZERO(phy_provider);
+ }
+ 
+ static const struct of_device_id tegra_p2u_id_table[] = {
 -- 
-2.20.1
+2.17.1
 
