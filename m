@@ -2,67 +2,64 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 245EEC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D35A5C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0617B206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:27:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B479520721
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:28:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588706891;
+	bh=usynuOR1E69N5AJk67ILaNhdKMo/Dyy/RKGLkmis1xo=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=wRtrsacN7otjAwLN3b90kUN9QpnBpg8CFyU+k6P0G6fQu0vXNEm2vsq0dREg5f6LV
+	 lGsVJ67NIQ08FL6x/W17aWPWMXW6V1A/zd6RLMk3MeNnQ+y+UwGnB7fXukaErBjOds
+	 zbx7wXzn08ACnIZFxu3VnJ5is08QfqJuhHr0Z8Vg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbgEET1M (ORCPT
+        id S1728898AbgEET2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 15:27:12 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:56385
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726350AbgEET1L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 15:27:11 -0400
-X-IronPort-AV: E=Sophos;i="5.73,356,1583190000"; 
-   d="scan'208";a="347819655"
-Received: from palace.rsr.lip6.fr (HELO palace.lip6.fr) ([132.227.105.202])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/AES256-SHA256; 05 May 2020 21:27:09 +0200
-From:   Julia Lawall <Julia.Lawall@inria.fr>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     kernel-janitors@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-        virtualization@lists.linux-foundation.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        eugene.volanschi@inria.fr
-Subject: [PATCH] iommu/virtio: reverse arguments to list_add
-Date:   Tue,  5 May 2020 20:47:47 +0200
-Message-Id: <1588704467-13431-1-git-send-email-Julia.Lawall@inria.fr>
-X-Mailer: git-send-email 1.9.1
+        Tue, 5 May 2020 15:28:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40300 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726350AbgEET2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 15:28:10 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E7E0206B9;
+        Tue,  5 May 2020 19:28:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588706890;
+        bh=usynuOR1E69N5AJk67ILaNhdKMo/Dyy/RKGLkmis1xo=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=Avl9qAu9qsa4YCgPnESVnktkOzDptTWX6NQHwh9lYOc2aJ7DhJG17FctXiT2JyEvW
+         9zFKeFyDYRgQcaA9Bn9KYPyLAIkzocXgfD4eJVo33wK2MLz0WqtTiaAKbte0UIWMt+
+         4T0CI5y6LNp7WKc+rFZtFesD+36ygm8Gf0YWc1Qo=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200505083001.52564-1-yuehaibing@huawei.com>
+References: <20200505083001.52564-1-yuehaibing@huawei.com>
+Subject: Re: [PATCH -next] clk: Remove unused inline function clk_debug_reparent
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        YueHaibing <yuehaibing@huawei.com>
+To:     YueHaibing <yuehaibing@huawei.com>, mturquette@baylibre.com
+Date:   Tue, 05 May 2020 12:28:09 -0700
+Message-ID: <158870688968.26370.16781214256369290362@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Elsewhere in the file, there is a list_for_each_entry with
-&vdev->resv_regions as the second argument, suggesting that
-&vdev->resv_regions is the list head.  So exchange the
-arguments on the list_add call to put the list head in the
-second argument.
+Quoting YueHaibing (2020-05-05 01:30:01)
+> There's no callers in-tree anymore.
+>=20
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
 
-Fixes: 2a5a31487445 ("iommu/virtio: Add probe request")
-Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
-
----
- drivers/iommu/virtio-iommu.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
-index d5cac4f46ca5..4e1d11af23c8 100644
---- a/drivers/iommu/virtio-iommu.c
-+++ b/drivers/iommu/virtio-iommu.c
-@@ -453,7 +453,7 @@ static int viommu_add_resv_mem(struct viommu_endpoint *vdev,
- 	if (!region)
- 		return -ENOMEM;
- 
--	list_add(&vdev->resv_regions, &region->list);
-+	list_add(&region->list, &vdev->resv_regions);
- 	return 0;
- }
- 
-
+Applied to clk-next
