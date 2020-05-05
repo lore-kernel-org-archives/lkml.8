@@ -2,114 +2,120 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687CFC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6BEC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4003821973
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C323620752
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:39:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jtd/LmV6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RuljQ/OX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729031AbgEEUib (ORCPT
+        id S1729096AbgEEUjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 16:38:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52646 "EHLO
+        Tue, 5 May 2020 16:39:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728135AbgEEUia (ORCPT
+        by vger.kernel.org with ESMTP id S1726350AbgEEUjN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 16:38:30 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55B02C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 13:38:30 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id v22so558429ejg.10
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 13:38:30 -0700 (PDT)
+        Tue, 5 May 2020 16:39:13 -0400
+Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F41A5C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 13:39:12 -0700 (PDT)
+Received: by mail-io1-xd29.google.com with SMTP id k6so3061132iob.3
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 13:39:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=lM3p30680+HO4LTTBTaxc/ptA4SjZgldh/owLfue8tM=;
-        b=Jtd/LmV6s/1ld7ZPQFm9bu0nUCz61SDqUP3XVhPzu7Q+HsUOsLyanOXrAbn1enT6Um
-         ABghwjMDsztWe3Xvp+YkOStgfG7+E3KWN4qSdOVX8p4PCz/qAp6EXSfshSt9IcpyFA3V
-         mqEKU0VtrhMupc1QsApzSC5dw9OZLQmiVauoxTPP8KWrY5Vuxq7kENvphhHH0AAY/XVg
-         uENHDQiogdyHP6j31fZv7G3i0VfnMOix4ECPcMX+4KpIQBuVC1bJqozDCDVmaEG6PgEm
-         rfBYIzPZZKpEV8jrEhk9sdU9j+KVM9rujvgmZyEY+J6s2YINdFPWgKZxnT8JRpMLl9VZ
-         kh7Q==
+        bh=U45TDLYumc2/K0rnmrk5/wRM/urCIpyQBeo6bZOouHs=;
+        b=RuljQ/OXfBBYKN9lpJ8XXeJiYlk1FhYn9x6V4lz4W1KkSG3Msg/Hj1FE8vRSUrQR8I
+         hwctAfVQNnCkhN0nSW+x3PBdUbVh8w5S0GF1oOVChy8I/tl89l0FtOoHi8RcYGoHq6BI
+         WbPMQ+kuqqyx2neS5AOouOSK5bU5O0OvTfSEQL7WesJmzVPGo98hEaJgcQmDOFPz2it7
+         kDTNTULXLeB84GDsFfVHVQ1WfUAOFEr/WVRr9eN8+7MTZRHvx8Ojwn0s8JEjQoHYZ/P0
+         O0lT6C1UOxBXWTg7BZe/YdU7tYB1U0pjCJCNCpsDvPbJ2EzcFADz2keanNQl0QT3vsKx
+         NjCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lM3p30680+HO4LTTBTaxc/ptA4SjZgldh/owLfue8tM=;
-        b=bats3rFamPNejq/67QvbYmYRgCx4UMv164bdq+DsGkiTc5CEks/CFJ+1SeXjBB0KHg
-         xwfzEGjmXpuWKXNMV8jesjckKIa+pVcN0NKtqPluw3PQlvdy2HgsuuI+IGkHAzNEL8hp
-         ddFYv50HHSLULF7Gdhxpjz27Xm73MMAYjfO7bL9CzDwTeKkDKzfajkhy55bBoR89X3es
-         jiMDywPjedyA/KvsRrWn4jo6ALDBEkS1fB2h9keDiwITT5+KBFqU54PLCe6xdC8sPHIq
-         n83ALOXfnh+QBVv8pcmt1PLYuuA/mKlL7JFnAuJq8IJlCq4FncV+UiJ1ZJSiNZq2VKJk
-         qiKA==
-X-Gm-Message-State: AGi0PuZwpuJWY+jNWhsNNoa90hUMq0FH61cn7BA/wKtWka/u8aYTif5n
-        +Q/OY+5oMroRiXk7Kz927Wz3TxO/tNaEdeEa0oc=
-X-Google-Smtp-Source: APiQypIP5gxyYlW+70VuICA6vZwe1QWzSLDOaE+j3XrbmcsdRkjxr+4mFzQ9qekUWG27/3fVLCK5FHPRmRIV7qtCKps=
-X-Received: by 2002:a17:906:748c:: with SMTP id e12mr4254088ejl.375.1588711108870;
- Tue, 05 May 2020 13:38:28 -0700 (PDT)
+        bh=U45TDLYumc2/K0rnmrk5/wRM/urCIpyQBeo6bZOouHs=;
+        b=IaCxA9PiHf34M0YbNqHQuq2NaO7J57Ztpb5hTHlFrffut5rS6kI0YlqXHLPxOd1YWv
+         0JycscQ4EoaLB4OCxLZddIeSIrjTeM3ew/qVRYWLDDu0rRppnzwYsej3K9T/2yRvdrGZ
+         QXdpUfSQ1kr8aMBA1Ik1pM5DmnScUS/qRHmn0tIIRHsHhvoCmjStWM8/wmTV1a2iLHnR
+         Wfm1Co7HE2wkJKn7KITy/pLsUt9oPVb4dYjdqUKIRuPNR+snwsXqqvgAx5SJp7YFs0cE
+         1P8CV4K57UyXmN8HBiAOTL9zOTN0De7KHti7Oz+xXewVlE+WHBd6KekUp5FadZxYCSbx
+         r99A==
+X-Gm-Message-State: AGi0PuYjmeo/kfYGDi67wxXUmSBW6hMEaQ/ecfJlAJzhy9kMb4F48J/h
+        8mU1bG9xksiEiESVayQ/drHYG4jn6nRceG0OwQ==
+X-Google-Smtp-Source: APiQypIk0WCHK9kEO+y8L1VfUzkH9XXDLuobjN6N2h7Z1cHDypNLP1MtLtTic9XWU3qTWIA3DoD4nCWJ9BkKtjd54lU=
+X-Received: by 2002:a02:415:: with SMTP id 21mr5516935jab.126.1588711152291;
+ Tue, 05 May 2020 13:39:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <a0ed6b56-33b1-b5ab-00d1-268fcd61b754@prevas.dk> <20200505200744.GV34497@piout.net>
-In-Reply-To: <20200505200744.GV34497@piout.net>
-From:   Bruno Thomsen <bruno.thomsen@gmail.com>
-Date:   Tue, 5 May 2020 22:38:13 +0200
-Message-ID: <CAH+2xPB7LJSxsr1vYhc=u+Qweu6_-S5oEQETUVZSVu1ATW=BYw@mail.gmail.com>
-Subject: Re: battery switch-over detection on pcf2127
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        =?UTF-8?Q?Per_N=C3=B8rgaard_Christensen?= 
-        <per.christensen@prevas.dk>, LKML <linux-kernel@vger.kernel.org>
+References: <20200505131602.633487962@linutronix.de> <20200505134059.970057117@linutronix.de>
+In-Reply-To: <20200505134059.970057117@linutronix.de>
+From:   Brian Gerst <brgerst@gmail.com>
+Date:   Tue, 5 May 2020 16:39:01 -0400
+Message-ID: <CAMzpN2i9bZhxagk1dNhHpZmYyHjNiPQU_yRmwY9y85LemkNFNw@mail.gmail.com>
+Subject: Re: [patch V4 part 1 19/36] x86/entry: Exclude low level entry code
+ from sanitizing
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rasmus
-
-Den tir. 5. maj 2020 kl. 22.07 skrev Alexandre Belloni
-<alexandre.belloni@bootlin.com>:
+On Tue, May 5, 2020 at 10:13 AM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-> On 05/05/2020 21:54:47+0200, Rasmus Villemoes wrote:
-> > Hi Bruno
-> >
-> > I just noticed your "rtc: pcf2127: add tamper detection support"
-> > (03623b4b04) from 5.4. Unfortunately, clearing the BTSE bit breaks a use
-> > case of ours:
-> >
-> > We rely on the battery switch-over detection to distinguish a powerfail
-> > during boot from a PORESET by the external watchdog (in the latter case,
-> > the RTC is still powered throughout, meaning there is no battery
-> > switch-over event). OTOH, we do not use the tamper detection - in fact,
-> > the TS signal is unconnected on our board.
-> >
-> > We're currently still on 4.19, but we will eventually upgrade to a
-> > kernel containing the above commit. So I was wondering if we could
-> > figure out a way that would work for both of us - either some CONFIG
-> > knob, or perhaps something in the device-tree. Any ideas?
-> >
+> The sanitizers are not really applicable to the fragile low level entry
+> code. code. Entry code needs to carefully setup a normal 'runtime'
+> environment.
 >
-> Yes, I was working on a patch series last week allowing to read BF. I'm
-> not sure clearing BTSE is your issue but clearing BF is.
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  arch/x86/entry/Makefile |    8 ++++++++
+>  1 file changed, 8 insertions(+)
 >
-> I'm going to send it tonight, I'll copy you, let me now if that works
-> for you. You can then read BF using the RTC_VL_READ ioctl. The
-> RTC_VL_BACKUP_SWITCH flag will be set if a switchover happened.
-> The RTC_VL_CLR ioctl can be used to clear the flag.
+> --- a/arch/x86/entry/Makefile
+> +++ b/arch/x86/entry/Makefile
+> @@ -3,6 +3,14 @@
+>  # Makefile for the x86 low level entry code
+>  #
 >
-> I think clearing BTSE is still the right thing to do.
+> +KASAN_SANITIZE := n
+> +UBSAN_SANITIZE := n
+> +KCOV_INSTRUMENT := n
+> +
+> +CFLAGS_REMOVE_common.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
+> +CFLAGS_REMOVE_syscall_32.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
+> +CFLAGS_REMOVE_syscall_64.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
 
-I think your use case is valid and it sounds like Alexandre solution will
-solve it as you just need to know if a battery switch-over has happened
-not when exactly it happened.
+Is this necessary for syscall_*.o?  They just contain the syscall
+tables (ie. data).
 
-I can help test the patches too. Now without google auto html..
-
-Bruno
+--
+Brian Gerst
