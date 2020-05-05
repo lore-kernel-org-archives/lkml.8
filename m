@@ -2,110 +2,158 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF891C47256
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40027C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE34E206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:40:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588668003;
-	bh=+lAoCLRT0+FEtavrhvzvewEUxnz1O4jXBxyoaAJzyTU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=nwdkoirNeXYvzfCSUcJFt34HkprxSCoZj+aBEa2OZQo+7iAXLWXJR0yGYcQkFGu7u
-	 Ru7+Cw67hMKguFlDdWHp9VIDa3YsY65UNxL08F3fhByZ8OBTjzhgN3mF6xc6jIWfTd
-	 EPSNrSd5ty86+XSQlvZwe30V5FDKdD07TKMpq+Z8=
+	by mail.kernel.org (Postfix) with ESMTP id 27F0B2068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:41:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728575AbgEEIkD (ORCPT
+        id S1728580AbgEEIlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 04:40:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39340 "EHLO mail.kernel.org"
+        Tue, 5 May 2020 04:41:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39200 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725915AbgEEIkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 04:40:02 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 541FE2068E;
-        Tue,  5 May 2020 08:40:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588668001;
-        bh=+lAoCLRT0+FEtavrhvzvewEUxnz1O4jXBxyoaAJzyTU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TojqmxZ51MAKtNII0QJTZkHZV54vQs0dYCqdZzSyLZY69CtmzXEUlGOedXp492lYB
-         Pb+hXuyVYXaBcWe++5qpKHqNYkLddxXfK29FC3Zy/SVXmLHj6vHNpjYSjFgPHssfM9
-         tJSpqFDEEFagx/s4/AinWjXsVVXozQpESISSAN6Q=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jVt7P-009L2s-N3; Tue, 05 May 2020 09:39:59 +0100
+        id S1725915AbgEEIlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 04:41:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C6BE0AFF3;
+        Tue,  5 May 2020 08:41:00 +0000 (UTC)
+From:   Roman Penyaev <rpenyaev@suse.de>
+Cc:     Roman Penyaev <rpenyaev@suse.de>, Jason Baron <jbaron@akamai.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Khazhismel Kumykov <khazhy@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH 1/1] epoll: call final ep_events_available() check under the lock
+Date:   Tue,  5 May 2020 10:40:49 +0200
+Message-Id: <20200505084049.1779243-1-rpenyaev@suse.de>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 05 May 2020 09:39:59 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Cc:     pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org,
-        mpe@ellerman.id.au, benh@kernel.crashing.org,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        cohuck@redhat.com, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, james.morse@arm.com, julien.thierry.kdev@gmail.com,
-        suzuki.poulose@arm.com, christoffer.dall@arm.com,
-        peterx@redhat.com, thuth@redhat.com, chenhuacai@gmail.com,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/7] KVM: arm64: clean up redundant 'kvm_run'
- parameters
-In-Reply-To: <20200427043514.16144-3-tianjia.zhang@linux.alibaba.com>
-References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
- <20200427043514.16144-3-tianjia.zhang@linux.alibaba.com>
-User-Agent: Roundcube Webmail/1.4.3
-Message-ID: <35eb095a344b4192b912385bc02c54e6@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: tianjia.zhang@linux.alibaba.com, pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org, mpe@ellerman.id.au, benh@kernel.crashing.org, borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com, heiko.carstens@de.ibm.com, gor@linux.ibm.com, sean.j.christopherson@intel.com, vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com, chenhuacai@gmail.com, kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tianjia,
+The original problem was described here:
+   https://lkml.org/lkml/2020/4/27/1121
 
-On 2020-04-27 05:35, Tianjia Zhang wrote:
-> In the current kvm version, 'kvm_run' has been included in the 
-> 'kvm_vcpu'
-> structure. For historical reasons, many kvm-related function parameters
-> retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time. This
-> patch does a unified cleanup of these remaining redundant parameters.
-> 
-> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+There is a possible race when ep_scan_ready_list() leaves ->rdllist
+and ->obflist empty for a short period of time although some events
+are pending. It is quite likely that ep_events_available() observes
+empty lists and goes to sleep. Since 339ddb53d373 ("fs/epoll: remove
+unnecessary wakeups of nested epoll") we are conservative in wakeups
+(there is only one place for wakeup and this is ep_poll_callback()),
+thus ep_events_available() must always observe correct state of
+two lists. The easiest and correct way is to do the final check
+under the lock. This does not impact the performance, since lock
+is taken anyway for adding a wait entry to the wait queue.
 
-On the face of it, this looks OK, but I haven't tried to run the
-resulting kernel. I'm not opposed to taking this patch *if* there
-is an agreement across architectures to take the series (I value
-consistency over the janitorial exercise).
+In this patch barrierless __set_current_state() is used. This is
+safe since waitqueue_active() is called under the same lock on wakeup
+side.
 
-Another thing is that this is going to conflict with the set of
-patches that move the KVM/arm code back where it belongs 
-(arch/arm64/kvm),
-so I'd probably cherry-pick that one directly.
+Short-circuit for fatal signals (i.e. fatal_signal_pending() check)
+is moved to the line just before actual events harvesting routine.
+This is fully compliant to what is said in the comment of the patch
+where the actual fatal_signal_pending() check was added:
+c257a340ede0 ("fs, epoll: short circuit fetching events if thread
+has been killed").
 
-Thanks,
+Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
+Reported-by: Jason Baron <jbaron@akamai.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Khazhismel Kumykov <khazhy@google.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+---
+ fs/eventpoll.c | 48 ++++++++++++++++++++++++++++--------------------
+ 1 file changed, 28 insertions(+), 20 deletions(-)
 
-         M.
-
-
+diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+index aba03ee749f8..8453e5403283 100644
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -1879,34 +1879,33 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
+ 		 * event delivery.
+ 		 */
+ 		init_wait(&wait);
+-		write_lock_irq(&ep->lock);
+-		__add_wait_queue_exclusive(&ep->wq, &wait);
+-		write_unlock_irq(&ep->lock);
+ 
++		write_lock_irq(&ep->lock);
+ 		/*
+-		 * We don't want to sleep if the ep_poll_callback() sends us
+-		 * a wakeup in between. That's why we set the task state
+-		 * to TASK_INTERRUPTIBLE before doing the checks.
++		 * Barrierless variant, waitqueue_active() is called under
++		 * the same lock on wakeup ep_poll_callback() side, so it
++		 * is safe to avoid an explicit barrier.
+ 		 */
+-		set_current_state(TASK_INTERRUPTIBLE);
++		__set_current_state(TASK_INTERRUPTIBLE);
++
+ 		/*
+-		 * Always short-circuit for fatal signals to allow
+-		 * threads to make a timely exit without the chance of
+-		 * finding more events available and fetching
+-		 * repeatedly.
++		 * Do the final check under the lock. ep_scan_ready_list()
++		 * plays with two lists (->rdllist and ->ovflist) and there
++		 * is always a race when both lists are empty for short
++		 * period of time although events are pending, so lock is
++		 * important.
+ 		 */
+-		if (fatal_signal_pending(current)) {
+-			res = -EINTR;
+-			break;
++		eavail = ep_events_available(ep);
++		if (!eavail) {
++			if (signal_pending(current))
++				res = -EINTR;
++			else
++				__add_wait_queue_exclusive(&ep->wq, &wait);
+ 		}
++		write_unlock_irq(&ep->lock);
+ 
+-		eavail = ep_events_available(ep);
+-		if (eavail)
+-			break;
+-		if (signal_pending(current)) {
+-			res = -EINTR;
++		if (eavail || res)
+ 			break;
+-		}
+ 
+ 		if (!schedule_hrtimeout_range(to, slack, HRTIMER_MODE_ABS)) {
+ 			timed_out = 1;
+@@ -1927,6 +1926,15 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
+ 	}
+ 
+ send_events:
++	if (fatal_signal_pending(current))
++		/*
++		 * Always short-circuit for fatal signals to allow
++		 * threads to make a timely exit without the chance of
++		 * finding more events available and fetching
++		 * repeatedly.
++		 */
++		res = -EINTR;
++
+ 	/*
+ 	 * Try to transfer events to user space. In case we get 0 events and
+ 	 * there's still timeout left over, we go trying again in search of
 -- 
-Jazz is not dead. It just smells funny...
+2.24.1
+
