@@ -2,44 +2,56 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 888B8C47259
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7E9C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC5320836
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2698E20836
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:13:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588695237;
+	bh=dpXPFwKuVMrPa7413QY+1yJ7/pkzBpNiSnMEv+1die4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YhDfCqv3YFA6DGm/PzmQgMf/zNmzQUYeKVduPkIaiBlhQdq99hjA+jsGn280xTGgp
+	 MYIELH8xMuzJnHsNKAim+xReYudaXr94DiAHBce9zD0sZW5ldTRtfnb09Wed209Uvp
+	 PlgsMJwc5l3wZaV63m36sB+gfUL2HiJmaauvNfFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730648AbgEEQNw (ORCPT
+        id S1730666AbgEEQN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:13:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53008 "EHLO mx2.suse.de"
+        Tue, 5 May 2020 12:13:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730171AbgEEQN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:13:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4B6EDAF5D;
-        Tue,  5 May 2020 16:13:29 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        helgaas@kernel.org, linux-kernel@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v8 2/4] firmware: raspberrypi: Introduce vl805 init routine
-Date:   Tue,  5 May 2020 18:13:15 +0200
-Message-Id: <20200505161318.26200-3-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200505161318.26200-1-nsaenzjulienne@suse.de>
-References: <20200505161318.26200-1-nsaenzjulienne@suse.de>
+        id S1728807AbgEEQNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 12:13:51 -0400
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75F6D206A4;
+        Tue,  5 May 2020 16:13:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588695230;
+        bh=dpXPFwKuVMrPa7413QY+1yJ7/pkzBpNiSnMEv+1die4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YMruXtbwRLDiFtaSuq49ZBOGAUPM520/Z9wz5f24Zvyj55NVRs57wCT7bIIr9epPJ
+         MN6iiyCoC+MWBt+bCoJImrZ5O06KJ9UN5+NBbB+5xYeQ0a2RtMSXZUCXHXGNrYM+Im
+         QUSZiMN0CryEfhf6eFAFwD5DGN046UE6m+oBJFlI=
+From:   Will Deacon <will@kernel.org>
+To:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        patches@linaro.org, Douglas Anderson <dianders@chromium.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Jason Wessel <jason.wessel@windriver.com>
+Subject: Re: [PATCH v2] arm64: cacheflush: Fix KGDB trap detection
+Date:   Tue,  5 May 2020 17:13:45 +0100
+Message-Id: <158869137087.244424.4260224460496540281.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200504170518.2959478-1-daniel.thompson@linaro.org>
+References: <20200504170518.2959478-1-daniel.thompson@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,158 +59,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Raspberry Pi 4 gets its USB functionality from VL805, a PCIe chip
-that implements xHCI. After a PCI reset, VL805's firmware may either be
-loaded directly from an EEPROM or, if not present, by the SoC's
-co-processor, VideoCore. RPi4's VideoCore OS contains both the non public
-firmware load logic and the VL805 firmware blob. The function this patch
-introduces triggers the aforementioned process.
+On Mon, 4 May 2020 18:05:18 +0100, Daniel Thompson wrote:
+> flush_icache_range() contains a bodge to avoid issuing IPIs when the kgdb
+> trap handler is running because issuing IPIs is unsafe (and not needed)
+> in this execution context. However the current test, based on
+> kgdb_connected is flawed: it both over-matches and under-matches.
+> 
+> The over match occurs because kgdb_connected is set when gdb attaches
+> to the stub and remains set during normal running. This is relatively
+> harmelss because in almost all cases irq_disabled() will be false.
+> 
+> [...]
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Applied to arm64 (for-next/misc), thanks!
 
----
+[1/1] arm64: cacheflush: Fix KGDB trap detection
+      https://git.kernel.org/arm64/c/ab8ad279ceac
 
-Change since v7:
-- Use usleep_delay()
-- Add comment about PCI errors
-- Don't wait on error
-- Typos
-
-Change since v6:
-- Add test to avoid loading the firmware when not needed
-- Since we have it around, print VL805's firmware version, it'll make
-debugging easier in the future
-- Correct typos
-- Add a clearer view of HW topology in patch description
-
-Changes since v4:
-- Inline function definition when RASPBERRYPI_FIRMWARE is not defined
-
-Changes since v1:
-- Move include into .c file and add forward declaration to .h
-
- drivers/firmware/raspberrypi.c             | 61 ++++++++++++++++++++++
- include/soc/bcm2835/raspberrypi-firmware.h |  7 +++
- 2 files changed, 68 insertions(+)
-
-diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberrypi.c
-index da26a584dca0..a166ad0cec2c 100644
---- a/drivers/firmware/raspberrypi.c
-+++ b/drivers/firmware/raspberrypi.c
-@@ -12,6 +12,8 @@
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
-+#include <linux/pci.h>
-+#include <linux/delay.h>
- #include <soc/bcm2835/raspberrypi-firmware.h>
- 
- #define MBOX_MSG(chan, data28)		(((data28) & ~0xf) | ((chan) & 0xf))
-@@ -19,6 +21,8 @@
- #define MBOX_DATA28(msg)		((msg) & ~0xf)
- #define MBOX_CHAN_PROPERTY		8
- 
-+#define VL805_PCI_CONFIG_VERSION_OFFSET		0x50
-+
- static struct platform_device *rpi_hwmon;
- static struct platform_device *rpi_clk;
- 
-@@ -286,6 +290,63 @@ struct rpi_firmware *rpi_firmware_get(struct device_node *firmware_node)
- }
- EXPORT_SYMBOL_GPL(rpi_firmware_get);
- 
-+/*
-+ * The Raspberry Pi 4 gets its USB functionality from VL805, a PCIe chip that
-+ * implements xHCI. After a PCI reset, VL805's firmware may either be loaded
-+ * directly from an EEPROM or, if not present, by the SoC's co-processor,
-+ * VideoCore. RPi4's VideoCore OS contains both the non public firmware load
-+ * logic and the VL805 firmware blob. This function triggers the aforementioned
-+ * process.
-+ */
-+int rpi_firmware_init_vl805(struct pci_dev *pdev)
-+{
-+	struct device_node *fw_np;
-+	struct rpi_firmware *fw;
-+	u32 dev_addr, version;
-+	int ret;
-+
-+	fw_np = of_find_compatible_node(NULL, NULL,
-+					"raspberrypi,bcm2835-firmware");
-+	if (!fw_np)
-+		return 0;
-+
-+	fw = rpi_firmware_get(fw_np);
-+	of_node_put(fw_np);
-+	if (!fw)
-+		return -ENODEV;
-+
-+	/*
-+	 * Make sure we don't trigger a firmware load unnecessarily.
-+	 *
-+	 * If something went wrong with PCI, this whole exercise would be
-+	 * futile as VideoCore expects from us a configured PCI bus. Just take
-+	 * the faulty version (likely ~0) and let xHCI's registration fail
-+	 * further down the line.
-+	 */
-+	pci_read_config_dword(pdev, VL805_PCI_CONFIG_VERSION_OFFSET, &version);
-+	if (version)
-+		goto exit;
-+
-+	dev_addr = pdev->bus->number << 20 | PCI_SLOT(pdev->devfn) << 15 |
-+		   PCI_FUNC(pdev->devfn) << 12;
-+
-+	ret = rpi_firmware_property(fw, RPI_FIRMWARE_NOTIFY_XHCI_RESET,
-+				    &dev_addr, sizeof(dev_addr));
-+	if (ret)
-+		return ret;
-+
-+	/* Wait for vl805 to startup */
-+	usleep_range(200, 1000);
-+
-+	pci_read_config_dword(pdev, VL805_PCI_CONFIG_VERSION_OFFSET,
-+			      &version);
-+exit:
-+	pci_info(pdev, "VL805 firmware version %08x\n", version);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(rpi_firmware_init_vl805);
-+
- static const struct of_device_id rpi_firmware_of_match[] = {
- 	{ .compatible = "raspberrypi,bcm2835-firmware", },
- 	{},
-diff --git a/include/soc/bcm2835/raspberrypi-firmware.h b/include/soc/bcm2835/raspberrypi-firmware.h
-index cc9cdbc66403..3025aca3c358 100644
---- a/include/soc/bcm2835/raspberrypi-firmware.h
-+++ b/include/soc/bcm2835/raspberrypi-firmware.h
-@@ -10,6 +10,7 @@
- #include <linux/of_device.h>
- 
- struct rpi_firmware;
-+struct pci_dev;
- 
- enum rpi_firmware_property_status {
- 	RPI_FIRMWARE_STATUS_REQUEST = 0,
-@@ -141,6 +142,7 @@ int rpi_firmware_property(struct rpi_firmware *fw,
- int rpi_firmware_property_list(struct rpi_firmware *fw,
- 			       void *data, size_t tag_size);
- struct rpi_firmware *rpi_firmware_get(struct device_node *firmware_node);
-+int rpi_firmware_init_vl805(struct pci_dev *pdev);
- #else
- static inline int rpi_firmware_property(struct rpi_firmware *fw, u32 tag,
- 					void *data, size_t len)
-@@ -158,6 +160,11 @@ static inline struct rpi_firmware *rpi_firmware_get(struct device_node *firmware
- {
- 	return NULL;
- }
-+
-+static inline int rpi_firmware_init_vl805(struct pci_dev *pdev)
-+{
-+	return 0;
-+}
- #endif
- 
- #endif /* __SOC_RASPBERRY_FIRMWARE_H__ */
+Cheers,
 -- 
-2.26.2
+Will
 
+https://fixes.arm64.dev
+https://next.arm64.dev
