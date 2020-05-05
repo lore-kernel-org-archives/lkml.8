@@ -2,136 +2,119 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04504C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3799C47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBA6B206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:37:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rtChuStS"
+	by mail.kernel.org (Postfix) with ESMTP id 8B5D7207DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:37:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729647AbgEEOhZ (ORCPT
+        id S1729805AbgEEOhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:37:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52532 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729259AbgEEOhY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:37:24 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 629CDC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:37:24 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id b8so1407883ybn.0
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 07:37:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ygxrlI0ZSekRzDHkF8rXsRVkEZqYITgYVQ/ZzppaEPU=;
-        b=rtChuStS101uVJbD+PVVcFgQk+MLAj3cK1UlxOoqBrlpJrXpeSqxbHR7lare2rZC+0
-         i792GYo63axXaEOZq3jkqtZgNzdJAoSezIKAUcMUx83PkqgUrmay/6uaMS7Ym2Ayynlh
-         UPzZl2M0SRKEjkThkXZXpSLW5GRKYc1dofxAOkdM4Xog0WxodwvvWNUi8zphh6RNITLj
-         S7wDM5OpQ/aVrD2myve31QApPRHB8zQMJhaHDUgzF3w+l14ceqtSGXAKZldqGcMjFmqR
-         usbvO/F5AMyouCq2a/GG3BjqEOfJl9sxhYa5vs0UFf18w9OWNzSMK7lmOeKpDygsyvtU
-         xj1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ygxrlI0ZSekRzDHkF8rXsRVkEZqYITgYVQ/ZzppaEPU=;
-        b=qF2dBDDrcdgkqKDUoSi4DLizQz8lDJNJct0sC8x6XitpRiCxHvN/BA0IB/HBDG3QqS
-         jt5AL/nkPwcoZ1wd0Md//XL5ulVKxSPsRIHMpEh/fY5Q/nNAFgxvQbfZrozYlVlpo8cy
-         CMI375X7jDWlQM9CL51utnxpOHvf9Mcam2MY00nEPX8Rh5xnSKdScHAXZcChiGt/fbrK
-         oM5R/iQMZsTi+96L9H626FTh3NKQvfadp6kdQVtF5HHh3Q+He+z2H6m7dlPRtTcoccNd
-         dNqPf8enG1tAnW3VWJVZJkwDF1UtYzahTCdSMPQadpiiVcF/dsIRTFSa5MocO/kM0u0/
-         HimQ==
-X-Gm-Message-State: AGi0PuYhc+d6kbOiLhiCWywCudOrhYABFPt4zd36IZ81S+1QxKMeXsv+
-        11Zi25KoJEQqUspafVHKmJ9Q76ZY8IOeHjPsFB/QlA==
-X-Google-Smtp-Source: APiQypKAO2flllDOx1A0V5NpXh5GeEyfLGJYDkXddJkMTMPPspMtvv9/NARPO9CdlDHhZ2beclInWPkvwa/kaejG9Ck=
-X-Received: by 2002:a25:6b06:: with SMTP id g6mr3032933ybc.383.1588689443267;
- Tue, 05 May 2020 07:37:23 -0700 (PDT)
+        Tue, 5 May 2020 10:37:39 -0400
+Received: from mga01.intel.com ([192.55.52.88]:10359 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729655AbgEEOhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 10:37:38 -0400
+IronPort-SDR: c7mVXymgyCuTT3yEx3yfApVcnpA64Gb8ifxR28Hc6rDLg8ktitS3lh9b/g2JYWAgMs5DfeXgR9
+ 2drt0ukraPdg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 07:37:38 -0700
+IronPort-SDR: 8cr/r1XXx9rKSwajuR49YSmVXs3JrR9O09d+1PzA4Qu0PZcL89JViUrxAK5XnvZiQI9m5NJQcW
+ 5KdLYetjy5oQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,355,1583222400"; 
+   d="scan'208";a="369432314"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga001.fm.intel.com with ESMTP; 05 May 2020 07:37:37 -0700
+Date:   Tue, 5 May 2020 07:37:37 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     stable@vger.kernel.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        Sasha Levin <sashal@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Tobias Urdin <tobias.urdin@binero.com>
+Subject: Re: [PATCH 4.19 STABLE 2/2] KVM: VMX: Mark RCX, RDX and RSI as
+ clobbered in vmx_vcpu_run()'s asm blob
+Message-ID: <20200505143737.GA18282@linux.intel.com>
+References: <20200505012348.17099-1-sean.j.christopherson@intel.com>
+ <20200505012348.17099-3-sean.j.christopherson@intel.com>
+ <20200505061502.GA3874653@kroah.com>
+ <20200505062731.GA17313@linux.intel.com>
+ <20200505070259.GA3946129@kroah.com>
 MIME-Version: 1.0
-References: <20200501221315.54715-1-irogers@google.com> <20200501221315.54715-3-irogers@google.com>
- <20200505142521.GD2041406@krava>
-In-Reply-To: <20200505142521.GD2041406@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 5 May 2020 07:37:11 -0700
-Message-ID: <CAP-5=fWp9Tt27FPcE=QZriMSpM3qO+vE3jk=u=o0298HYvW2mw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] lib kallsyms: parse using io api
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505070259.GA3946129@kroah.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 7:25 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Fri, May 01, 2020 at 03:13:14PM -0700, Ian Rogers wrote:
->
-> SNIP
->
-> > diff --git a/tools/lib/symbol/kallsyms.c b/tools/lib/symbol/kallsyms.c
-> > index 1a7a9f877095..e335ac2b9e19 100644
-> > --- a/tools/lib/symbol/kallsyms.c
-> > +++ b/tools/lib/symbol/kallsyms.c
-> > @@ -1,7 +1,9 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >  #include "symbol/kallsyms.h"
-> > +#include "api/io.h"
-> >  #include <stdio.h>
-> > -#include <stdlib.h>
-> > +#include <sys/stat.h>
-> > +#include <fcntl.h>
-> >
-> >  u8 kallsyms2elf_type(char type)
-> >  {
-> > @@ -15,74 +17,62 @@ bool kallsyms__is_function(char symbol_type)
-> >       return symbol_type == 'T' || symbol_type == 'W';
-> >  }
-> >
-> > -/*
-> > - * While we find nice hex chars, build a long_val.
-> > - * Return number of chars processed.
-> > - */
-> > -int hex2u64(const char *ptr, u64 *long_val)
->
-> hi,
-> when you remove in here hex2u64, you'll break the compile:
->
->           LINK     perf
->         /usr/bin/ld: perf-in.o: in function `modules__parse':
->         /home/jolsa/linux-perf/tools/perf/util/symbol.c:607: undefined reference to `hex2u64'
->         /usr/bin/ld: /home/jolsa/linux-perf/tools/perf/util/symbol.c:607: undefined reference to `hex2u64'
->         /usr/bin/ld: perf-in.o: in function `dso__load_perf_map':
->         /home/jolsa/linux-perf/tools/perf/util/symbol.c:1477: undefined reference to `hex2u64'
->         /usr/bin/ld: /home/jolsa/linux-perf/tools/perf/util/symbol.c:1483: undefined reference to `hex2u64'
->         collect2: error: ld returned 1 exit status
->         make[2]: *** [Makefile.perf:629: perf] Error 1
->         make[1]: *** [Makefile.perf:225: sub-make] Error 2
->         make: *** [Makefile:70: all] Error 2
->
-> that hex2u64 move needs to come before this change
+On Tue, May 05, 2020 at 09:02:59AM +0200, Greg Kroah-Hartman wrote:
+> On Mon, May 04, 2020 at 11:27:31PM -0700, Sean Christopherson wrote:
+> > On Tue, May 05, 2020 at 08:15:02AM +0200, Greg Kroah-Hartman wrote:
+> > > On Mon, May 04, 2020 at 06:23:48PM -0700, Sean Christopherson wrote:
+> > > > Save RCX, RDX and RSI to fake outputs to coerce the compiler into
+> > > > treating them as clobbered.  RCX in particular is likely to be reused by
+> > > > the compiler to dereference the 'struct vcpu_vmx' pointer, which will
+> > > > result in a null pointer dereference now that RCX is zeroed by the asm
+> > > > blob.
+> > > > 
+> > > > Add ASM_CALL_CONSTRAINT to fudge around an issue where <something>
+> > > > during modpost can't find vmx_return when specifying output constraints.
+> > > > 
+> > > > Reported-by: Tobias Urdin <tobias.urdin@binero.com>
+> > > > Fixes: b4be98039a92 ("KVM: VMX: Zero out *all* general purpose registers after VM-Exit")
+> > > > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > > > ---
+> > > >  arch/x86/kvm/vmx.c | 3 ++-
+> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+> > > > index 5b06a98ffd4c..54c8b4dc750d 100644
+> > > > --- a/arch/x86/kvm/vmx.c
+> > > > +++ b/arch/x86/kvm/vmx.c
+> > > > @@ -10882,7 +10882,8 @@ static void __noclone vmx_vcpu_run(struct kvm_vcpu *vcpu)
+> > > >  		".global vmx_return \n\t"
+> > > >  		"vmx_return: " _ASM_PTR " 2b \n\t"
+> > > >  		".popsection"
+> > > > -	      : : "c"(vmx), "d"((unsigned long)HOST_RSP), "S"(evmcs_rsp),
+> > > > +	      : ASM_CALL_CONSTRAINT, "=c"((int){0}), "=d"((int){0}), "=S"((int){0})
+> > > > +	      : "c"(vmx), "d"((unsigned long)HOST_RSP), "S"(evmcs_rsp),
+> > > >  		[launched]"i"(offsetof(struct vcpu_vmx, __launched)),
+> > > >  		[fail]"i"(offsetof(struct vcpu_vmx, fail)),
+> > > >  		[host_rsp]"i"(offsetof(struct vcpu_vmx, host_rsp)),
+> > > > -- 
+> > > > 2.26.0
+> > > > 
+> > > 
+> > > What is the git commit id of this patch in Linus's tree?
+> > 
+> > There is none.  In upstream at the time of the offending commit (b4be98039a92
+> > in 4.19, 0e0ab73c9a024 upstream), the inline asm blob had previously been
+> > moved to a dedicated helper, __vmx_vcpu_run(), that was intentionally put
+> > into a separate compilation unit, i.e. consuming the clobbered register
+> > was effectively impossible because %rcx is volatile and __vmx_vcpu_run()
+> > couldn't itself be inlined.
+> > 
+> > To make things more confusing, the inline asm blob got moved into a proper
+> > asm subroutine shortly thereafter.  Things really start to diverge from
+> > current upstream right around the time of this commit.
+> 
+> Then you need to document the heck out of the fact that this is not
+> upstream, why it is different from upstream, and why we can't just take
+> what upstream did instead in the changelog.  That way, when this patch
+> turns out to be buggy (hint, 90% of the times they are), we know why
+> this was done the way it was so we can revert it and know who to
+> complain to :)
 
-Good catch. Fixed in v3.
-https://lore.kernel.org/lkml/20200505143625.147832-1-irogers@google.com/T/#t
-
-Thanks,
-Ian
-
-> jirka
->
+Will do.
