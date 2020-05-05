@@ -2,43 +2,43 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 727A9C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77616C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39CD5206CC
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F8C3206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:13:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jfrd54Of"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mplopeTS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728732AbgEEKN2 (ORCPT
+        id S1728754AbgEEKNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 06:13:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39020 "EHLO
+        Tue, 5 May 2020 06:13:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728672AbgEEKNS (ORCPT
+        by vger.kernel.org with ESMTP id S1728727AbgEEKN1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 06:13:18 -0400
+        Tue, 5 May 2020 06:13:27 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66ED2C061A0F;
-        Tue,  5 May 2020 03:13:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11D9EC061A0F;
+        Tue,  5 May 2020 03:13:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=BF0GXDFF3qwWO18GQH0xrC+A/HHBITe3cDdcV9qUSf0=; b=jfrd54OfO4eIHUORLgDrmiU3Xt
-        VHM8gf/0hxX5BJIEF2FS8mNupTpwZFPkYoa6Bk5ekrm0w7RZwl/NkJdv/3X+UK3EVLqkFQkl1C94z
-        /sp0eiDwHV+fmDJd7716beKLevAt5J32TGf1VKH+lgsIvntOl4yzlhmSNfRkDy7rYwGlJIADMwsau
-        oR66OvOQgXJbFDApmEsW9mFiIfapqD0g8wGrbbsrGhRd0OyjbObHBvk3EoxNe7OGjvD9Hr6R5K0Ye
-        1xfazIV0QZ1LT3TwxSR8OGGaEZeQzTabrnn/MsaBMM3AHAeeTAmvnDhNru7JD0Baq/HkcnbTVugAU
-        5V6GmxAg==;
+        bh=0bHppblaPmDxTAjn3jOg5XHlDLubZOOc/MJ2gG3CZzc=; b=mplopeTSiFGW6qyoJEY67/74uJ
+        B4c0b6qCTqcztRxwKqid7gyrWJ/1xrJuFYoYH6BkxSg4qxCkEBwPlbyDX4D4H9vQ1XKnEMrMeQuQd
+        sRE4dVtLTSxs4CsQibco9O6uyr2agdhZomhHmwhoTwXEu2VRYKJba7+WfxFUyenCkTqldLFAGc0bW
+        SAjxUzWvs9Dxmi4SlCIrFx0aAd/yWFTxfy95XTfOgx/tpibtmlLsSUnHjYB9dAU7vfy3tbrugr1QJ
+        1vfhONYSuTiDGGrd4kV4+WPOTiUei9+b9UVljXpESqX//frFBxaJnVMIzE6xEMuN04E7peMK6Qx5h
+        1S6/Dcaw==;
 Received: from [2001:4bb8:191:66b6:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jVuZX-0006uH-8e; Tue, 05 May 2020 10:13:07 +0000
+        id 1jVuZf-0006wC-RN; Tue, 05 May 2020 10:13:16 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>
@@ -48,9 +48,9 @@ Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         "Eric W . Biederman" <ebiederm@xmission.com>, x86@kernel.org,
         linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/7] powerpc/spufs: simplify spufs core dumping
-Date:   Tue,  5 May 2020 12:12:52 +0200
-Message-Id: <20200505101256.3121270-4-hch@lst.de>
+Subject: [PATCH 6/7] binfmt_elf: remove the set_fs(KERNEL_DS) in elf_core_dump
+Date:   Tue,  5 May 2020 12:12:55 +0200
+Message-Id: <20200505101256.3121270-7-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200505101256.3121270-1-hch@lst.de>
 References: <20200505101256.3121270-1-hch@lst.de>
@@ -62,522 +62,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the coredump ->read method with a ->dump method that must call
-dump_emit itself.  That way we avoid a buffer allocation an messing with
-set_fs() to call into code that is intended to deal with user buffers.
-For the ->get case we can now use a small on-stack buffer and avoid
-memory allocations as well.
+There is no logic in elf_core_dump itself or in the various arch helpers
+called from it which use uaccess routines on kernel pointers except for
+the file writes thate are nicely encapsulated by using __kernel_write in
+dump_emit.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Jeremy Kerr <jk@ozlabs.org>
 ---
- arch/powerpc/platforms/cell/spufs/coredump.c |  87 +++-----
- arch/powerpc/platforms/cell/spufs/file.c     | 203 ++++++++-----------
- arch/powerpc/platforms/cell/spufs/spufs.h    |   3 +-
- 3 files changed, 117 insertions(+), 176 deletions(-)
+ fs/binfmt_elf.c | 16 +---------------
+ 1 file changed, 1 insertion(+), 15 deletions(-)
 
-diff --git a/arch/powerpc/platforms/cell/spufs/coredump.c b/arch/powerpc/platforms/cell/spufs/coredump.c
-index 8b3296b62f651..3b75e8f60609c 100644
---- a/arch/powerpc/platforms/cell/spufs/coredump.c
-+++ b/arch/powerpc/platforms/cell/spufs/coredump.c
-@@ -21,22 +21,6 @@
- 
- #include "spufs.h"
- 
--static ssize_t do_coredump_read(int num, struct spu_context *ctx, void *buffer,
--				size_t size, loff_t *off)
--{
--	u64 data;
--	int ret;
--
--	if (spufs_coredump_read[num].read)
--		return spufs_coredump_read[num].read(ctx, buffer, size, off);
--
--	data = spufs_coredump_read[num].get(ctx);
--	ret = snprintf(buffer, size, "0x%.16llx", data);
--	if (ret >= size)
--		return size;
--	return ++ret; /* count trailing NULL */
--}
--
- static int spufs_ctx_note_size(struct spu_context *ctx, int dfd)
- {
- 	int i, sz, total = 0;
-@@ -118,58 +102,43 @@ int spufs_coredump_extra_notes_size(void)
- static int spufs_arch_write_note(struct spu_context *ctx, int i,
- 				  struct coredump_params *cprm, int dfd)
- {
--	loff_t pos = 0;
--	int sz, rc, total = 0;
--	const int bufsz = PAGE_SIZE;
--	char *name;
--	char fullname[80], *buf;
-+	size_t sz = spufs_coredump_read[i].size;
-+	char fullname[80];
- 	struct elf_note en;
--	size_t skip;
--
--	buf = (void *)get_zeroed_page(GFP_KERNEL);
--	if (!buf)
--		return -ENOMEM;
-+	size_t ret;
- 
--	name = spufs_coredump_read[i].name;
--	sz = spufs_coredump_read[i].size;
--
--	sprintf(fullname, "SPU/%d/%s", dfd, name);
-+	sprintf(fullname, "SPU/%d/%s", dfd, spufs_coredump_read[i].name);
- 	en.n_namesz = strlen(fullname) + 1;
- 	en.n_descsz = sz;
- 	en.n_type = NT_SPU;
- 
- 	if (!dump_emit(cprm, &en, sizeof(en)))
--		goto Eio;
--
-+		return -EIO;
- 	if (!dump_emit(cprm, fullname, en.n_namesz))
--		goto Eio;
--
-+		return -EIO;
- 	if (!dump_align(cprm, 4))
--		goto Eio;
--
--	do {
--		rc = do_coredump_read(i, ctx, buf, bufsz, &pos);
--		if (rc > 0) {
--			if (!dump_emit(cprm, buf, rc))
--				goto Eio;
--			total += rc;
--		}
--	} while (rc == bufsz && total < sz);
--
--	if (rc < 0)
--		goto out;
--
--	skip = roundup(cprm->pos - total + sz, 4) - cprm->pos;
--	if (!dump_skip(cprm, skip))
--		goto Eio;
--
--	rc = 0;
--out:
--	free_page((unsigned long)buf);
--	return rc;
--Eio:
--	free_page((unsigned long)buf);
--	return -EIO;
-+		return -EIO;
-+
-+	if (spufs_coredump_read[i].dump) {
-+		ret = spufs_coredump_read[i].dump(ctx, cprm);
-+		if (ret < 0)
-+			return ret;
-+	} else {
-+		char buf[32];
-+
-+		ret = snprintf(buf, sizeof(buf), "0x%.16llx",
-+			       spufs_coredump_read[i].get(ctx));
-+		if (ret >= sizeof(buf))
-+			return sizeof(buf);
-+
-+		/* count trailing the NULL: */
-+		if (!dump_emit(cprm, buf, ret + 1))
-+			return -EIO;
-+	}
-+
-+	if (!dump_skip(cprm, roundup(cprm->pos - ret + sz, 4) - cprm->pos))
-+		return -EIO;
-+	return 0;
- }
- 
- int spufs_coredump_extra_notes_write(struct coredump_params *cprm)
-diff --git a/arch/powerpc/platforms/cell/spufs/file.c b/arch/powerpc/platforms/cell/spufs/file.c
-index bd30b5e0c4c37..e44427c245850 100644
---- a/arch/powerpc/platforms/cell/spufs/file.c
-+++ b/arch/powerpc/platforms/cell/spufs/file.c
-@@ -9,6 +9,7 @@
- 
- #undef DEBUG
- 
-+#include <linux/coredump.h>
- #include <linux/fs.h>
- #include <linux/ioctl.h>
- #include <linux/export.h>
-@@ -129,6 +130,14 @@ static ssize_t spufs_attr_write(struct file *file, const char __user *buf,
- 	return ret;
- }
- 
-+static ssize_t spufs_dump_emit(struct coredump_params *cprm, void *buf,
-+		size_t size)
-+{
-+	if (!dump_emit(cprm, buf, size))
-+		return -EIO;
-+	return size;
-+}
-+
- #define DEFINE_SPUFS_SIMPLE_ATTRIBUTE(__fops, __get, __set, __fmt)	\
- static int __fops ## _open(struct inode *inode, struct file *file)	\
- {									\
-@@ -172,12 +181,9 @@ spufs_mem_release(struct inode *inode, struct file *file)
- }
- 
- static ssize_t
--__spufs_mem_read(struct spu_context *ctx, char __user *buffer,
--			size_t size, loff_t *pos)
-+spufs_mem_dump(struct spu_context *ctx, struct coredump_params *cprm)
- {
--	char *local_store = ctx->ops->get_ls(ctx);
--	return simple_read_from_buffer(buffer, size, pos, local_store,
--					LS_SIZE);
-+	return spufs_dump_emit(cprm, ctx->ops->get_ls(ctx), LS_SIZE);
- }
- 
- static ssize_t
-@@ -190,7 +196,8 @@ spufs_mem_read(struct file *file, char __user *buffer,
- 	ret = spu_acquire(ctx);
- 	if (ret)
- 		return ret;
--	ret = __spufs_mem_read(ctx, buffer, size, pos);
-+	ret = simple_read_from_buffer(buffer, size, pos, ctx->ops->get_ls(ctx),
-+				      LS_SIZE);
- 	spu_release(ctx);
- 
- 	return ret;
-@@ -459,12 +466,10 @@ spufs_regs_open(struct inode *inode, struct file *file)
- }
- 
- static ssize_t
--__spufs_regs_read(struct spu_context *ctx, char __user *buffer,
--			size_t size, loff_t *pos)
-+spufs_regs_dump(struct spu_context *ctx, struct coredump_params *cprm)
- {
--	struct spu_lscsa *lscsa = ctx->csa.lscsa;
--	return simple_read_from_buffer(buffer, size, pos,
--				      lscsa->gprs, sizeof lscsa->gprs);
-+	return spufs_dump_emit(cprm, ctx->csa.lscsa->gprs,
-+			       sizeof(ctx->csa.lscsa->gprs));
- }
- 
- static ssize_t
-@@ -482,7 +487,8 @@ spufs_regs_read(struct file *file, char __user *buffer,
- 	ret = spu_acquire_saved(ctx);
- 	if (ret)
- 		return ret;
--	ret = __spufs_regs_read(ctx, buffer, size, pos);
-+	ret = simple_read_from_buffer(buffer, size, pos, ctx->csa.lscsa->gprs,
-+				      sizeof(ctx->csa.lscsa->gprs));
- 	spu_release_saved(ctx);
- 	return ret;
- }
-@@ -517,12 +523,10 @@ static const struct file_operations spufs_regs_fops = {
- };
- 
- static ssize_t
--__spufs_fpcr_read(struct spu_context *ctx, char __user * buffer,
--			size_t size, loff_t * pos)
-+spufs_fpcr_dump(struct spu_context *ctx, struct coredump_params *cprm)
- {
--	struct spu_lscsa *lscsa = ctx->csa.lscsa;
--	return simple_read_from_buffer(buffer, size, pos,
--				      &lscsa->fpcr, sizeof(lscsa->fpcr));
-+	return spufs_dump_emit(cprm, &ctx->csa.lscsa->fpcr,
-+			       sizeof(ctx->csa.lscsa->fpcr));
- }
- 
- static ssize_t
-@@ -535,7 +539,8 @@ spufs_fpcr_read(struct file *file, char __user * buffer,
- 	ret = spu_acquire_saved(ctx);
- 	if (ret)
- 		return ret;
--	ret = __spufs_fpcr_read(ctx, buffer, size, pos);
-+	ret = simple_read_from_buffer(buffer, size, pos, &ctx->csa.lscsa->fpcr,
-+				      sizeof(ctx->csa.lscsa->fpcr));
- 	spu_release_saved(ctx);
- 	return ret;
- }
-@@ -953,28 +958,26 @@ spufs_signal1_release(struct inode *inode, struct file *file)
- 	return 0;
- }
- 
--static ssize_t __spufs_signal1_read(struct spu_context *ctx, char __user *buf,
--			size_t len, loff_t *pos)
-+static ssize_t spufs_signal1_dump(struct spu_context *ctx,
-+		struct coredump_params *cprm)
- {
--	int ret = 0;
--	u32 data;
-+	if (!ctx->csa.spu_chnlcnt_RW[3])
-+		return 0;
-+	return spufs_dump_emit(cprm, &ctx->csa.spu_chnldata_RW[3],
-+			       sizeof(ctx->csa.spu_chnldata_RW[3]));
-+}
- 
--	if (len < 4)
-+static ssize_t __spufs_signal1_read(struct spu_context *ctx, char __user *buf,
-+			size_t len)
-+{
-+	if (len < sizeof(ctx->csa.spu_chnldata_RW[3]))
- 		return -EINVAL;
--
--	if (ctx->csa.spu_chnlcnt_RW[3]) {
--		data = ctx->csa.spu_chnldata_RW[3];
--		ret = 4;
--	}
--
--	if (!ret)
--		goto out;
--
--	if (copy_to_user(buf, &data, 4))
-+	if (!ctx->csa.spu_chnlcnt_RW[3])
-+		return 0;
-+	if (copy_to_user(buf, &ctx->csa.spu_chnldata_RW[3],
-+			 sizeof(ctx->csa.spu_chnldata_RW[3])))
- 		return -EFAULT;
--
--out:
--	return ret;
-+	return sizeof(ctx->csa.spu_chnldata_RW[3]);
- }
- 
- static ssize_t spufs_signal1_read(struct file *file, char __user *buf,
-@@ -986,7 +989,7 @@ static ssize_t spufs_signal1_read(struct file *file, char __user *buf,
- 	ret = spu_acquire_saved(ctx);
- 	if (ret)
- 		return ret;
--	ret = __spufs_signal1_read(ctx, buf, len, pos);
-+	ret = __spufs_signal1_read(ctx, buf, len);
- 	spu_release_saved(ctx);
- 
- 	return ret;
-@@ -1090,28 +1093,26 @@ spufs_signal2_release(struct inode *inode, struct file *file)
- 	return 0;
- }
- 
--static ssize_t __spufs_signal2_read(struct spu_context *ctx, char __user *buf,
--			size_t len, loff_t *pos)
-+static ssize_t spufs_signal2_dump(struct spu_context *ctx,
-+		struct coredump_params *cprm)
- {
--	int ret = 0;
--	u32 data;
-+	if (!ctx->csa.spu_chnlcnt_RW[4])
-+		return 0;
-+	return spufs_dump_emit(cprm, &ctx->csa.spu_chnldata_RW[4],
-+			       sizeof(ctx->csa.spu_chnldata_RW[4]));
-+}
- 
--	if (len < 4)
-+static ssize_t __spufs_signal2_read(struct spu_context *ctx, char __user *buf,
-+			size_t len)
-+{
-+	if (len < sizeof(ctx->csa.spu_chnldata_RW[4]))
- 		return -EINVAL;
--
--	if (ctx->csa.spu_chnlcnt_RW[4]) {
--		data =  ctx->csa.spu_chnldata_RW[4];
--		ret = 4;
--	}
--
--	if (!ret)
--		goto out;
--
--	if (copy_to_user(buf, &data, 4))
-+	if (!ctx->csa.spu_chnlcnt_RW[4])
-+		return 0;
-+	if (copy_to_user(buf, &ctx->csa.spu_chnldata_RW[4],
-+			 sizeof(ctx->csa.spu_chnldata_RW[4])))
- 		return -EFAULT;
--
--out:
--	return ret;
-+	return sizeof(ctx->csa.spu_chnldata_RW[4]);
- }
- 
- static ssize_t spufs_signal2_read(struct file *file, char __user *buf,
-@@ -1123,7 +1124,7 @@ static ssize_t spufs_signal2_read(struct file *file, char __user *buf,
- 	ret = spu_acquire_saved(ctx);
- 	if (ret)
- 		return ret;
--	ret = __spufs_signal2_read(ctx, buf, len, pos);
-+	ret = __spufs_signal2_read(ctx, buf, len);
- 	spu_release_saved(ctx);
- 
- 	return ret;
-@@ -1947,18 +1948,13 @@ static const struct file_operations spufs_caps_fops = {
- 	.release	= single_release,
- };
- 
--static ssize_t __spufs_mbox_info_read(struct spu_context *ctx,
--			char __user *buf, size_t len, loff_t *pos)
-+static ssize_t spufs_mbox_info_dump(struct spu_context *ctx,
-+		struct coredump_params *cprm)
- {
--	u32 data;
--
--	/* EOF if there's no entry in the mbox */
- 	if (!(ctx->csa.prob.mb_stat_R & 0x0000ff))
- 		return 0;
--
--	data = ctx->csa.prob.pu_mb_R;
--
--	return simple_read_from_buffer(buf, len, pos, &data, sizeof data);
-+	return spufs_dump_emit(cprm, &ctx->csa.prob.pu_mb_R,
-+			       sizeof(ctx->csa.prob.pu_mb_R));
- }
- 
- static ssize_t spufs_mbox_info_read(struct file *file, char __user *buf,
-@@ -1990,18 +1986,13 @@ static const struct file_operations spufs_mbox_info_fops = {
- 	.llseek  = generic_file_llseek,
- };
- 
--static ssize_t __spufs_ibox_info_read(struct spu_context *ctx,
--				char __user *buf, size_t len, loff_t *pos)
-+static ssize_t spufs_ibox_info_dump(struct spu_context *ctx,
-+		struct coredump_params *cprm)
- {
--	u32 data;
--
--	/* EOF if there's no entry in the ibox */
- 	if (!(ctx->csa.prob.mb_stat_R & 0xff0000))
- 		return 0;
--
--	data = ctx->csa.priv2.puint_mb_R;
--
--	return simple_read_from_buffer(buf, len, pos, &data, sizeof data);
-+	return spufs_dump_emit(cprm, &ctx->csa.priv2.puint_mb_R,
-+			       sizeof(ctx->csa.priv2.puint_mb_R));
- }
- 
- static ssize_t spufs_ibox_info_read(struct file *file, char __user *buf,
-@@ -2038,21 +2029,11 @@ static size_t spufs_wbox_info_cnt(struct spu_context *ctx)
- 	return (4 - ((ctx->csa.prob.mb_stat_R & 0x00ff00) >> 8)) * sizeof(u32);
- }
- 
--static ssize_t __spufs_wbox_info_read(struct spu_context *ctx,
--			char __user *buf, size_t len, loff_t *pos)
-+static ssize_t spufs_wbox_info_dump(struct spu_context *ctx,
-+		struct coredump_params *cprm)
- {
--	int i, cnt;
--	u32 data[4];
--	u32 wbox_stat;
--
--	wbox_stat = ctx->csa.prob.mb_stat_R;
--	cnt = spufs_wbox_info_cnt(ctx);
--	for (i = 0; i < cnt; i++) {
--		data[i] = ctx->csa.spu_mailbox_data[i];
--	}
--
--	return simple_read_from_buffer(buf, len, pos, &data,
--				cnt * sizeof(u32));
-+	return spufs_dump_emit(cprm, &ctx->csa.spu_mailbox_data,
-+			spufs_wbox_info_cnt(ctx));
- }
- 
- static ssize_t spufs_wbox_info_read(struct file *file, char __user *buf,
-@@ -2102,15 +2083,13 @@ static void spufs_get_dma_info(struct spu_context *ctx,
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index a1f57e20c3cf2..ba6f87ba029a7 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -1355,7 +1355,6 @@ static unsigned long vma_dump_size(struct vm_area_struct *vma,
+ 	    vma->vm_pgoff == 0 && (vma->vm_flags & VM_READ)) {
+ 		u32 __user *header = (u32 __user *) vma->vm_start;
+ 		u32 word;
+-		mm_segment_t fs = get_fs();
+ 		/*
+ 		 * Doing it this way gets the constant folded by GCC.
+ 		 */
+@@ -1368,14 +1367,8 @@ static unsigned long vma_dump_size(struct vm_area_struct *vma,
+ 		magic.elfmag[EI_MAG1] = ELFMAG1;
+ 		magic.elfmag[EI_MAG2] = ELFMAG2;
+ 		magic.elfmag[EI_MAG3] = ELFMAG3;
+-		/*
+-		 * Switch to the user "segment" for get_user(),
+-		 * then put back what elf_core_dump() had in place.
+-		 */
+-		set_fs(USER_DS);
+ 		if (unlikely(get_user(word, header)))
+ 			word = 0;
+-		set_fs(fs);
+ 		if (word == magic.cmp)
+ 			return PAGE_SIZE;
  	}
- }
- 
--static ssize_t __spufs_dma_info_read(struct spu_context *ctx,
--			char __user *buf, size_t len, loff_t *pos)
-+static ssize_t spufs_dma_info_dump(struct spu_context *ctx,
-+		struct coredump_params *cprm)
+@@ -2183,7 +2176,6 @@ static void fill_extnum_info(struct elfhdr *elf, struct elf_shdr *shdr4extnum,
+ static int elf_core_dump(struct coredump_params *cprm)
  {
- 	struct spu_dma_info info;
+ 	int has_dumped = 0;
+-	mm_segment_t fs;
+ 	int segs, i;
+ 	size_t vma_data_size = 0;
+ 	struct vm_area_struct *vma, *gate_vma;
+@@ -2232,13 +2224,10 @@ static int elf_core_dump(struct coredump_params *cprm)
+ 	 * notes.  This also sets up the file header.
+ 	 */
+ 	if (!fill_note_info(&elf, e_phnum, &info, cprm->siginfo, cprm->regs))
+-		goto cleanup;
++		goto end_coredump;
  
- 	spufs_get_dma_info(ctx, &info);
+ 	has_dumped = 1;
+ 
+-	fs = get_fs();
+-	set_fs(KERNEL_DS);
 -
--	return simple_read_from_buffer(buf, len, pos, &info,
--				sizeof info);
-+	return spufs_dump_emit(cprm, &info, sizeof(info));
- }
+ 	offset += sizeof(elf);				/* Elf header */
+ 	offset += segs * sizeof(struct elf_phdr);	/* Program headers */
  
- static ssize_t spufs_dma_info_read(struct file *file, char __user *buf,
-@@ -2158,22 +2137,13 @@ static void spufs_get_proxydma_info(struct spu_context *ctx,
+@@ -2366,9 +2355,6 @@ static int elf_core_dump(struct coredump_params *cprm)
  	}
- }
  
--static ssize_t __spufs_proxydma_info_read(struct spu_context *ctx,
--			char __user *buf, size_t len, loff_t *pos)
-+static ssize_t spufs_proxydma_info_dump(struct spu_context *ctx,
-+		struct coredump_params *cprm)
- {
- 	struct spu_proxydma_info info;
--	int ret = sizeof info;
+ end_coredump:
+-	set_fs(fs);
 -
--	if (len < ret)
--		return -EINVAL;
--
--	if (!access_ok(buf, len))
--		return -EFAULT;
- 
- 	spufs_get_proxydma_info(ctx, &info);
--
--	return simple_read_from_buffer(buf, len, pos, &info,
--				sizeof info);
-+	return spufs_dump_emit(cprm, &info, sizeof(info));
- }
- 
- static ssize_t spufs_proxydma_info_read(struct file *file, char __user *buf,
-@@ -2183,6 +2153,9 @@ static ssize_t spufs_proxydma_info_read(struct file *file, char __user *buf,
- 	struct spu_proxydma_info info;
- 	int ret;
- 
-+	if (len < sizeof(info))
-+		return -EINVAL;
-+
- 	ret = spu_acquire_saved(ctx);
- 	if (ret)
- 		return ret;
-@@ -2636,23 +2609,23 @@ const struct spufs_tree_descr spufs_dir_debug_contents[] = {
- };
- 
- const struct spufs_coredump_reader spufs_coredump_read[] = {
--	{ "regs", __spufs_regs_read, NULL, sizeof(struct spu_reg128[128])},
--	{ "fpcr", __spufs_fpcr_read, NULL, sizeof(struct spu_reg128) },
-+	{ "regs", spufs_regs_dump, NULL, sizeof(struct spu_reg128[128])},
-+	{ "fpcr", spufs_fpcr_dump, NULL, sizeof(struct spu_reg128) },
- 	{ "lslr", NULL, spufs_lslr_get, 19 },
- 	{ "decr", NULL, spufs_decr_get, 19 },
- 	{ "decr_status", NULL, spufs_decr_status_get, 19 },
--	{ "mem", __spufs_mem_read, NULL, LS_SIZE, },
--	{ "signal1", __spufs_signal1_read, NULL, sizeof(u32) },
-+	{ "mem", spufs_mem_dump, NULL, LS_SIZE, },
-+	{ "signal1", spufs_signal1_dump, NULL, sizeof(u32) },
- 	{ "signal1_type", NULL, spufs_signal1_type_get, 19 },
--	{ "signal2", __spufs_signal2_read, NULL, sizeof(u32) },
-+	{ "signal2", spufs_signal2_dump, NULL, sizeof(u32) },
- 	{ "signal2_type", NULL, spufs_signal2_type_get, 19 },
- 	{ "event_mask", NULL, spufs_event_mask_get, 19 },
- 	{ "event_status", NULL, spufs_event_status_get, 19 },
--	{ "mbox_info", __spufs_mbox_info_read, NULL, sizeof(u32) },
--	{ "ibox_info", __spufs_ibox_info_read, NULL, sizeof(u32) },
--	{ "wbox_info", __spufs_wbox_info_read, NULL, 4 * sizeof(u32)},
--	{ "dma_info", __spufs_dma_info_read, NULL, sizeof(struct spu_dma_info)},
--	{ "proxydma_info", __spufs_proxydma_info_read,
-+	{ "mbox_info", spufs_mbox_info_dump, NULL, sizeof(u32) },
-+	{ "ibox_info", spufs_ibox_info_dump, NULL, sizeof(u32) },
-+	{ "wbox_info", spufs_wbox_info_dump, NULL, 4 * sizeof(u32)},
-+	{ "dma_info", spufs_dma_info_dump, NULL, sizeof(struct spu_dma_info)},
-+	{ "proxydma_info", spufs_proxydma_info_dump,
- 			   NULL, sizeof(struct spu_proxydma_info)},
- 	{ "object-id", NULL, spufs_object_id_get, 19 },
- 	{ "npc", NULL, spufs_npc_get, 19 },
-diff --git a/arch/powerpc/platforms/cell/spufs/spufs.h b/arch/powerpc/platforms/cell/spufs/spufs.h
-index 413c89afe1126..1ba4d884febfa 100644
---- a/arch/powerpc/platforms/cell/spufs/spufs.h
-+++ b/arch/powerpc/platforms/cell/spufs/spufs.h
-@@ -337,8 +337,7 @@ void spufs_dma_callback(struct spu *spu, int type);
- extern struct spu_coredump_calls spufs_coredump_calls;
- struct spufs_coredump_reader {
- 	char *name;
--	ssize_t (*read)(struct spu_context *ctx,
--			char __user *buffer, size_t size, loff_t *pos);
-+	ssize_t (*dump)(struct spu_context *ctx, struct coredump_params *cprm);
- 	u64 (*get)(struct spu_context *ctx);
- 	size_t size;
- };
+-cleanup:
+ 	free_note_info(&info);
+ 	kfree(shdr4extnum);
+ 	kvfree(vma_filesz);
 -- 
 2.26.2
 
