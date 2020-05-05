@@ -2,149 +2,105 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C3FC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 689C0C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0A9E20735
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:20:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WU/xSzDR"
+	by mail.kernel.org (Postfix) with ESMTP id 2B40A20746
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:22:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588681370;
+	bh=fJLPF1B84qgnQ44zWI2Ou20CmHcAw3Np9P7BmOuy1EA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HWWICYfdObzAkvDQDMaM/brYHd/sdQFP/HcnjqXwT54OJ8Kpyh1vlLB2ZIKkandIV
+	 ZlyRoz0kOuumoGUvDt/S9xfhSl9yEsMgBMleOsDWGZ6hCmxB2Rk/jK8+DAguFYhN3E
+	 ivhtA45aBxXMKJlYEjNTCjO44Wo1R2woyHvLOE88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728737AbgEEMUW (ORCPT
+        id S1728713AbgEEMWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 08:20:22 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:46578 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727090AbgEEMUV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 08:20:21 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 045CKC1d091262;
-        Tue, 5 May 2020 07:20:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588681212;
-        bh=33urkOujjL8eDQqLN/MMIk9++M7FiWab7tR7NHM+1C0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=WU/xSzDRKiMWoIZl6UWuffzuHpkfOvdCh6Y3DXwDOWiXZlIXtr/D5CaznKuHQgHnm
-         jlmaeanMLpur4FCZnp8CnrJkwTd71CUhBx9R+0iNNTeNqMQiyYaBWQS3EqLGlGGRwy
-         16PvEiMps7CVR1mDG3PqsWF1vDCGfViAzDjaEfF8=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 045CKCwJ040109;
-        Tue, 5 May 2020 07:20:12 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 5 May
- 2020 07:20:11 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 5 May 2020 07:20:11 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 045CK7qD102805;
-        Tue, 5 May 2020 07:20:08 -0500
-Subject: Re: [PATCH net-next 3/7] net: ethernet: ti: am65-cpsw-nuss: enable
- packet timestamping support
-To:     Anders Roxell <anders.roxell@linaro.org>
-CC:     Richard Cochran <richardcochran@gmail.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Networking <netdev@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Clay McClure <clay@daemons.net>
-References: <20200501205011.14899-1-grygorii.strashko@ti.com>
- <20200501205011.14899-4-grygorii.strashko@ti.com>
- <CADYN=9L+RtruRYKah0Bomh7UaPGQ==N9trd0ZoVQ3GTc-VY8Dg@mail.gmail.com>
- <1bf51157-9fee-1948-f9ff-116799d12731@ti.com>
- <CADYN=9LfqLLmKNHPfXEiQbaX8ELF78BL-vWUcX-VP3aQ86csNg@mail.gmail.com>
- <CADYN=9LDCE2sQca12D4ow3BkaxXi1_bnc4Apu7pP4vnA=5AOKA@mail.gmail.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <5f338763-b35b-e2b4-7f15-df3a5bcbb799@ti.com>
-Date:   Tue, 5 May 2020 15:20:06 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 08:22:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49238 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727090AbgEEMWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 08:22:49 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2108420735;
+        Tue,  5 May 2020 12:22:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588681368;
+        bh=fJLPF1B84qgnQ44zWI2Ou20CmHcAw3Np9P7BmOuy1EA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ksv8mqPT1MaAXmpgZcjclfcgnuDxL+fif4Y59dh56w0vvUcfTb+3O6upXL9TbMEX9
+         GJM+Pq3kZdgH7WbDQrCZ/RB7FNIfdWxKFh6jmiBcEwRY2fFqpaW3MzXWyfszT+imss
+         DAPh3UEF+kAUcFRp0GmKVeGr1JqDy9ztRISFS9dk=
+Date:   Tue, 5 May 2020 13:22:46 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     "RAVULAPATI, VISHNU VARDHAN RAO" 
+        <Vishnuvardhanrao.Ravulapati@amd.com>
+Cc:     "Agrawal, Akshu" <Akshu.Agrawal@amd.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "Mukunda, Vijendar" <Vijendar.Mukunda@amd.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: amd :High hw_level while simultaneous capture
+Message-ID: <20200505122246.GF5377@sirena.org.uk>
+References: <20200505114023.251409-1-akshu.agrawal@amd.com>
+ <20200505115107.GD5377@sirena.org.uk>
+ <CY4PR12MB182949DC53DCCCDAC02112E7E7A70@CY4PR12MB1829.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <CADYN=9LDCE2sQca12D4ow3BkaxXi1_bnc4Apu7pP4vnA=5AOKA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="TU+u6i6jrDPzmlWF"
+Content-Disposition: inline
+In-Reply-To: <CY4PR12MB182949DC53DCCCDAC02112E7E7A70@CY4PR12MB1829.namprd12.prod.outlook.com>
+X-Cookie: Poverty begins at home.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anders,
 
-On 05/05/2020 14:59, Anders Roxell wrote:
-> On Tue, 5 May 2020 at 13:16, Anders Roxell <anders.roxell@linaro.org> wrote:
->> On Tue, 5 May 2020 at 13:05, Grygorii Strashko <grygorii.strashko@ti.com> wrote:
->>> On 05/05/2020 13:17, Anders Roxell wrote:
->>>> On Fri, 1 May 2020 at 22:50, Grygorii Strashko <grygorii.strashko@ti.com> wrote:
->>>>>
->>>>> The MCU CPSW Common Platform Time Sync (CPTS) provides possibility to
->>>>> timestamp TX PTP packets and all RX packets.
->>>>>
->>>>> This enables corresponding support in TI AM65x/J721E MCU CPSW driver.
->>>>>
->>>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->>>>> ---
->>>>>    drivers/net/ethernet/ti/Kconfig             |   1 +
->>>>>    drivers/net/ethernet/ti/am65-cpsw-ethtool.c |  24 ++-
->>>>>    drivers/net/ethernet/ti/am65-cpsw-nuss.c    | 172 ++++++++++++++++++++
->>>>>    drivers/net/ethernet/ti/am65-cpsw-nuss.h    |   6 +-
->>>>>    4 files changed, 201 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
->>>>> index 1f4e5b6dc686..2c7bd1ccaaec 100644
->>>>> --- a/drivers/net/ethernet/ti/Kconfig
->>>>> +++ b/drivers/net/ethernet/ti/Kconfig
->>>>> @@ -100,6 +100,7 @@ config TI_K3_AM65_CPSW_NUSS
->>>>>           depends on ARCH_K3 && OF && TI_K3_UDMA_GLUE_LAYER
->>>>>           select TI_DAVINCI_MDIO
->>>>>           imply PHY_TI_GMII_SEL
->>>>> +       imply TI_AM65_CPTS
->>>>
->>>> Should this be TI_K3_AM65_CPTS ?
-> 
-> instead of 'imply TI_K3_AM65_CPTS' don't you want to do this:
-> 'depends on TI_K3_AM65_CPTS || !TI_K3_AM65_CPTS'
-> 
-> 
+--TU+u6i6jrDPzmlWF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Right, I'll try. It seems your defconfig is produced by randconfig as
-I can't get broken cfg TI_AM65_CPTS=m and TI_K3_AM65_CPSW_NUSS=y
-with neither one below:
+On Tue, May 05, 2020 at 12:18:45PM +0000, RAVULAPATI, VISHNU VARDHAN RAO wr=
+ote:
 
-  make ARCH=arm64 O=k3-arm64 defconfig
-  make ARCH=arm64 O=k3-arm64 allnoconfig
-  make ARCH=arm64 O=k3-arm64 allyesconfig
-  make ARCH=arm64 O=k3-arm64 allmodconfig
-  make ARCH=arm64 O=k3-arm64 alldefconfig
-  make ARCH=arm64 O=k3-arm64 yes2modconfig
-  make ARCH=arm64 O=k3-arm64 mod2yesconfig
+> > Simultaneous capture on dmic and headset mic is having issue with high=
+=20
+> > hw_level being reported.
 
-Related legacy TI CPTS threads:
-  https://lkml.org/lkml/2020/5/2/344
-  https://lkml.org/lkml/2020/5/1/1348
+> Actual issue is :
 
-I'd try summarize goal
-  TI_K3_AM65_CPSW_NUSS	TI_AM65_CPTS
-  Y			Y/N
-  M			Y/M/N
-  N			Y/M/N
+OK, this is information that should be in the changelog so someone
+looking at git history in future can understand what the change was
+doing.
 
+--TU+u6i6jrDPzmlWF
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Best regards,
-grygorii
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6xWpUACgkQJNaLcl1U
+h9DPwwf/e+0pjKHNtp9v5sem2RW277rv77fuAh4hmF0Egqfd1N2SaCixeSX8Jjpb
+8LC3fQCexbSIOlQY4V6W9/lylqyL+jq+8XKPS37FR4KWbtHWFqFIGzIxO5ySfFZr
+8zLQlLcHJftxlgWfdoE1gPzueigS+S5SsAvRmcQmPvF1Kp+LO5/l5YLTm5zEvNBa
+jYvem3tZBfKpc7UzolX009RJj1iiP4PUeMpJ69yYs6B0anwW40EQ6yAAS/jl0EXS
+gP8kTeWiFg5Ww9aO3RnmgW6gOvNhQI45vNIp09qr/GXyEBbrRvV22/A8eJhQNDpu
+pfYnRWvirdDNyeTyKP132njYtiYOgg==
+=EL4P
+-----END PGP SIGNATURE-----
+
+--TU+u6i6jrDPzmlWF--
