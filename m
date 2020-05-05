@@ -2,70 +2,115 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81ED1C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CB0C47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FDC72192A
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:16:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588691763;
-	bh=hNsGZR3Bkm7w/yrDlOV47G33od9URXWYyfDUInUwyiY=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GViU6atPr4qH4Ol/IJ4qq248Da26W0hUlgepS+knf6Vyuxhmvmpe8CyqiK2uB+80k
-	 39aJKHKHNa6V1tJFjxlCW1lhloIfXwY4dINBC0cANqqptbWkhJzGPiY6frk6dUBBI3
-	 grSccNIrcYRbRqNUJtMugOA5Wa0W8v589tqVBTKs=
+	by mail.kernel.org (Postfix) with ESMTP id 052A324955
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:16:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dJA0WZPS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729993AbgEEPQC (ORCPT
+        id S1729998AbgEEPQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:16:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43010 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729335AbgEEPQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:16:02 -0400
-Received: from pobox.suse.cz (unknown [195.250.132.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 5 May 2020 11:16:31 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52717 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729335AbgEEPQb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 11:16:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588691789;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=S5jSjNSt3FRjAMpv+BM9fPdmFYdsgn8Mgeukut02z3U=;
+        b=dJA0WZPSLtq9RjEf2CZ/+5ArQPRe12nne3v8jRz8g89o97LJk1q4cfoh2MjSRlU3QbwN9E
+        w8yh0ZdciH/xBoQkQIiFwtk70aK5BUdxaE7uTJQgZRiqLV41qp9SAX5b87XK+smccf4Qce
+        I7jHTCWffU5uyn/WBQzppMbmYcbOWTg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-509-S9YBJx5ROTuOY7H7iHjFCw-1; Tue, 05 May 2020 11:16:27 -0400
+X-MC-Unique: S9YBJx5ROTuOY7H7iHjFCw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA65A206A5;
-        Tue,  5 May 2020 15:16:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588691762;
-        bh=hNsGZR3Bkm7w/yrDlOV47G33od9URXWYyfDUInUwyiY=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=Y4rLc9F7Po5YbLHFiPKtcMaSZ5W6lRaQDqRdybA2qvQ/7EV7753kjKoam0JqwxW1c
-         8GofSkHYu5zxIu7S5dL/KZCyFHgwLr2071rqZ9L60mwIMdb6XPF526u9eGp4a1ELui
-         ZqynbJwsl0BZ+3xsPKZ0YI2XHJfuxAdCOxatp/fU=
-Date:   Tue, 5 May 2020 17:15:58 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Julian Sax <jsbc@gmx.de>
-cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] HID: i2c-hid: add Schneider SCL142ALM to descriptor
- override
-In-Reply-To: <20200505151042.122157-1-jsbc@gmx.de>
-Message-ID: <nycvar.YFH.7.76.2005051715490.25812@cbobk.fhfr.pm>
-References: <20200505151042.122157-1-jsbc@gmx.de>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6A7F2835B44;
+        Tue,  5 May 2020 15:16:26 +0000 (UTC)
+Received: from localhost (ovpn-113-143.ams2.redhat.com [10.36.113.143])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E9B91053B00;
+        Tue,  5 May 2020 15:16:22 +0000 (UTC)
+Date:   Tue, 5 May 2020 16:16:21 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Fixes tag needs some work in the vhost tree
+Message-ID: <20200505151621.GE381978@stefanha-x1.localdomain>
+References: <20200502103018.07774059@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200502103018.07774059@canb.auug.org.au>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vmttodhTwj0NAgWp"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 May 2020, Julian Sax wrote:
+--vmttodhTwj0NAgWp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> This device uses the SIPODEV SP1064 touchpad, which does not
-> supply descriptors, so it has to be added to the override list.
+On Sat, May 02, 2020 at 10:30:18AM +1000, Stephen Rothwell wrote:
+> Hi all,
+>=20
+> In commit
+>=20
+>   ab8be610c87d ("virtio-blk: handle block_device_operations callbacks aft=
+er hot unplug")
+>=20
+> Fixes tag
+>=20
+>   Fixes: 48e4043d4529523cbc7fa8dd745bd8e2c45ce1d3
+>=20
+> has these problem(s):
+>=20
+>   - missing subject
+>=20
+> Should be
+>=20
+> Fixes: 48e4043d4529 ("virtio: add virtio disk geometry feature")
+>=20
+> Please don't split Fixes tags over more than one line.
 
-Applied, thanks.
+Got it, thanks for letting me know. I'll keep the tag on one line in the
+future.
 
--- 
-Jiri Kosina
-SUSE Labs
+Stefan
+
+--vmttodhTwj0NAgWp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl6xg0UACgkQnKSrs4Gr
+c8hQnggAgGQiqAqlgbDL2GudaR9leWkOqIdxAdFLgjaNmzqd1LtsPGhjxs9JAA42
+lsOSk/AFa7TBhg47bVj70gu9G4d5dCYIxs3ojqJDB0GJ0hWxd+pghi2O0UpY3QKZ
+8kRlAAyj25zfZbZtqlew9aCw3ShUd9a7Tc1uVSpyHoIL2OyW6zcMN7/8Szta8YUW
+amZqA1zUc+lmgg1u7ctMTrcIFV+Hmd1frnebEZlJjAWOw5djJR18CpJaWBMece8R
+XA8IOWHPiA+jBQdP8E/+MVE7x2kjXmvDCrA/XRT6283KeHasFzWyaznpWpaUuLvh
+nZs6GIuCFnz8dejuRS2FEkYUmFIfwQ==
+=3nCS
+-----END PGP SIGNATURE-----
+
+--vmttodhTwj0NAgWp--
 
