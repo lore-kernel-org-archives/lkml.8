@@ -2,130 +2,132 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19235C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FFA1C47259
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6964206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:37:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FmIiMP1U"
+	by mail.kernel.org (Postfix) with ESMTP id 1757A206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:37:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729083AbgEENhJ (ORCPT
+        id S1729113AbgEENh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 09:37:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42682 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728993AbgEENhI (ORCPT
+        Tue, 5 May 2020 09:37:29 -0400
+Received: from www62.your-server.de ([213.133.104.62]:53756 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728608AbgEENh2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 09:37:08 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D73CC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 06:37:07 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id h12so1169073pjz.1
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 06:37:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=6DxkBtXBsRjhDSSt5bpda9bBdLdSPYMqKL2JOYrqLyA=;
-        b=FmIiMP1UrVnSztbbKw3HZJ10u19Ocye85lgZ/wBOpNCZsYUgKIQ5IWz+LRho31l73D
-         jHOBgcVl9Nc87EibSBZOJFrq3n1E/QHgRkDvqVnRWG7OOOkvMb3MCPpVEHyphy4Iorzz
-         6tSO4qSudgq2nOR1/RWngDiZ6tyHbq1uqf3T4qZK/W7uH+/mvfmFkX7ul4qro4vjefFa
-         vzao3OIUv0QV5W3Ine1fo2PCRLO3nC2pUtx3SSxV4gsSf4OGq6ReWTBPoojl2sbEhNL5
-         ovfiDalwxNI3iw1OQSkN2vaSk7tQpNx24HnWwqvVs8kMHG8RXdIB006F1ULBjam+gTZq
-         gHhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=6DxkBtXBsRjhDSSt5bpda9bBdLdSPYMqKL2JOYrqLyA=;
-        b=Aj29pyydqa/oz27ZT+m5Pt6XZsTi4uEt/4LOUyxYiLuARDAt8XF+EFcbd8Bz6842on
-         FEcJ/+qG2iPq9NKAnbnS2JQXKWxs07lRNia5RSf9Q64axrhOaL/5JG4u5EapbaOizU0K
-         M9Nts3jYxg0Cjx7+Uec56yBvDXj2cVLP1OM8kR1LyR3I6OJ426DJbsxFMShjUREyc24P
-         a0DcTTALNLOh2n62k9xyxWNCbNKHqE1rTYBf74yl0wB5ZEGuhQASKpfNk7i6y6j1sFY+
-         BmmToyR6cveWPzWDOIjet/eJ0ZJNmQrgWSZz36ZdpQ8P9Rn+k11FnYjKj3Ed0/Mwtexm
-         lF1w==
-X-Gm-Message-State: AGi0PuZgnhzILp5xRUMQcVNKixA8mqlbWfFkVtWGqeHSHnXqFTwpLAb7
-        wRqdJBs+Ff896iJLpZtTl19RyQ==
-X-Google-Smtp-Source: APiQypKk5N1JogeWsMMibegsVTghCE8uN86ssgVDs3UVsbQlfg5lphbt3V+rSFAO2pEmg+JafdyVfg==
-X-Received: by 2002:a17:902:fe06:: with SMTP id g6mr3272478plj.105.1588685826838;
-        Tue, 05 May 2020 06:37:06 -0700 (PDT)
-Received: from localhost ([2400:8904::f03c:91ff:fe8a:bbe4])
-        by smtp.gmail.com with ESMTPSA id j5sm1561737pgi.5.2020.05.05.06.37.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 05 May 2020 06:37:06 -0700 (PDT)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Tor Jeremiassen <tor@ti.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH] perf cs-etm: Move defined of traceid_list
-Date:   Tue,  5 May 2020 21:36:42 +0800
-Message-Id: <20200505133642.4756-1-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 5 May 2020 09:37:28 -0400
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jVxlF-0005Bf-8A; Tue, 05 May 2020 15:37:25 +0200
+Received: from [178.195.186.98] (helo=pc-9.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jVxlE-000FC1-Su; Tue, 05 May 2020 15:37:24 +0200
+Subject: Re: [PATCH 1/1] selftests/bpf: add cls_redirect classifier
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Lorenz Bauer <lmb@cloudflare.com>, Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Theo Julienne <theojulienne@github.com>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+References: <20200424185556.7358-1-lmb@cloudflare.com>
+ <20200424185556.7358-2-lmb@cloudflare.com>
+ <20200426173324.5zg7isugereb5ert@ast-mbp.dhcp.thefacebook.com>
+ <CACAyw98nK_Vkstp-vEqNwKXtoCRnTOPr7Eh+ziH56tJGbnPsig@mail.gmail.com>
+ <185417b8-0d50-f8a3-7a09-949066579732@iogearbox.net>
+ <20200504234827.6mrogryxk73jc6x2@ast-mbp.dhcp.thefacebook.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <a5829cb4-3759-6cd8-c9de-62e9813f00d6@iogearbox.net>
+Date:   Tue, 5 May 2020 15:37:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <20200504234827.6mrogryxk73jc6x2@ast-mbp.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25803/Tue May  5 14:19:25 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The variable 'traceid_list' is defined in the header file cs-etm.h,
-if multiple C files include cs-etm.h the compiler might complaint for
-multiple definition of 'traceid_list'.
+On 5/5/20 1:48 AM, Alexei Starovoitov wrote:
+> On Sat, May 02, 2020 at 01:48:51AM +0200, Daniel Borkmann wrote:
+>> On 4/27/20 11:45 AM, Lorenz Bauer wrote:
+>>> On Sun, 26 Apr 2020 at 18:33, Alexei Starovoitov
+>>> <alexei.starovoitov@gmail.com> wrote:
+>> [...]
+>>>>> +/* Linux packet pointers are either aligned to NET_IP_ALIGN (aka 2 bytes),
+>>>>> + * or not aligned if the arch supports efficient unaligned access.
+>>>>> + *
+>>>>> + * Since the verifier ensures that eBPF packet accesses follow these rules,
+>>>>> + * we can tell LLVM to emit code as if we always had a larger alignment.
+>>>>> + * It will yell at us if we end up on a platform where this is not valid.
+>>>>> + */
+>>>>> +typedef uint8_t *net_ptr __attribute__((align_value(8)));
+>>>>
+>>>> Wow. I didn't know about this attribute.
+>>>> I wonder whether it can help Daniel's memcpy hack.
+>>>
+>>> Yes, I think so.
+>>
+>> Just for some more context [0]. I think the problem is a bit more complex in
+>> general. Generally, _any_ kind of pointer to some data (except for the stack)
+>> is currently treated as byte-by-byte copy from __builtin_memcpy() and other
+>> similarly available __builtin_*() helpers on BPF backend since the backend
+>> cannot make any assumptions about the data's alignment and whether unaligned
+>> access from the underlying arch is ok & efficient (the latter the verifier
+>> does judge for us however). So it's definitely not just limited to xdp->data.
+>> There is also the issue that while access to any non-stack data can be
+>> unaligned, access to the stack however cannot. I've discussed a while back
+>> with Yonghong about potential solutions. One would be to add a small patch
+>> to the BPF backend to enable __builtin_*() helpers to allow for unaligned
+>> access which could then be opt-ed in e.g. via -mattr from llc for the case
+>> when we know that the compiled program only runs on archs with efficient
+>> unaligned access anyway. However, this still potentially breaks with the BPF
+>> stack for the case when objects are, for example, larger than size 8 but with
+>> a natural alignment smaller than 8 where __builtin_memcpy() would then decide
+>> to emit dw-typed load/stores. But for these cases could then be annotated via
+>> __aligned(8) on stack. So this is basically what we do right now as a generic
+>> workaround in Cilium [0], meaning, our own memcpy/memset with optimal number
+>> of instructions and __aligned(8) where needed; most of the time this __aligned(8)
+>> is not needed, so it's really just a few places, and we also have a cocci
+>> scripts to catch these during development if needed. Anyway, real thing would
+>> be to allow the BPF stack for unaligned access as well and then BPF backend
+>> could nicely solve this in a native way w/o any workarounds, but that is tbd.
+>>
+>> Thanks,
+>> Daniel
+>>
+>>    [0] https://github.com/cilium/cilium/blob/master/bpf/include/bpf/builtins.h
+> 
+> Daniel,
+> do you mind adding such memcpy to libbpf ?
 
-To fix multiple definition error, move the definition of 'traceid_list'
-into cs-etm.c.
+We could do that, yeah. Is there a way from BPF C code when compiling with clang to
+get to the actual underlying architecture (x86-64, arm64, ppc, etc) when compiling
+with `-target bpf` so that we can always fall back to __builtin_*() for those where
+verifier would bail out on unaligned access? Keep in mind the __bpf_memcpy() and
+__bpf_memzero() from [0] are fully compile time resolved and I did the implementation
+for sizes of 1,2,4,..., 96 where the latter is in two' increments, so no odd buffer
+sizes as we don't need them in our code. If someone does hit such an odd case, then
+I'm currently throwing a compilation error via __throw_build_bug(). Latter is a nice
+way to be able to guarantee that a switch/case or if condition is never hit during
+compilation time. It resolves to __builtin_trap() which is not implemented in the
+BPF backend and therefore yells to the developer when built into the code (this has
+a nice property which wouldn't work with BUILD_BUG_ON() for example). Anyway, what
+I'm saying is that either we'd need the full thing with all sizes or document that
+unsupported size would be hit when __builtin_trap() assertion is seen.
 
-Fixes: cd8bfd8c973e ("perf tools: Add processing of coresight metadata")
-Reported-by: Thomas Backlund <tmb@mageia.org>
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: Mike Leach <mike.leach@linaro.org>
-Tested-by: Mike Leach <mike.leach@linaro.org>
-Tested-by: Thomas Backlund <tmb@mageia.org>
----
- tools/perf/util/cs-etm.c | 3 +++
- tools/perf/util/cs-etm.h | 3 ---
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 62d2f9b9ce1b..381d9708e9bd 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -94,6 +94,9 @@ struct cs_etm_queue {
- 	struct cs_etm_traceid_queue **traceid_queues;
- };
- 
-+/* RB tree for quick conversion between traceID and metadata pointers */
-+static struct intlist *traceid_list;
-+
- static int cs_etm__update_queues(struct cs_etm_auxtrace *etm);
- static int cs_etm__process_queues(struct cs_etm_auxtrace *etm);
- static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
-diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
-index 650ecc2a6349..4ad925d6d799 100644
---- a/tools/perf/util/cs-etm.h
-+++ b/tools/perf/util/cs-etm.h
-@@ -114,9 +114,6 @@ enum cs_etm_isa {
- 	CS_ETM_ISA_T32,
- };
- 
--/* RB tree for quick conversion between traceID and metadata pointers */
--struct intlist *traceid_list;
--
- struct cs_etm_queue;
- 
- struct cs_etm_packet {
--- 
-2.17.1
-
+Thanks,
+Daniel
