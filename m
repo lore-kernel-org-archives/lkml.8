@@ -2,99 +2,133 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D99C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 028EAC47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24698206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7260206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:45:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZinHeuD1"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="iBJKRHaS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730654AbgEEPoz (ORCPT
+        id S1730684AbgEEPpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:44:55 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:64380 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730520AbgEEPox (ORCPT
+        Tue, 5 May 2020 11:45:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34996 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730307AbgEEPpN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:44:53 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588693492; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=S242E4d9Q+x3WazT0LfEblmsx0Y/I8PQEL3G5k/rxP8=; b=ZinHeuD1v+4jTK72AWc67vFygYv5mwimVc7ANG6FwW2UYSYs0WrF7pTZgYNy6OY0Eu4d8H7B
- UrnijSiKWS+8lZu+duTcoLlq/wPQiZl62V2XYdBi+QglMbDy+KiwgqO+hZdHU/3RfdP0Y4vv
- WTNsXvto6EF/sU5CXxiu9pdRvGU=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb189e5.7fcd01fa8c38-smtp-out-n03;
- Tue, 05 May 2020 15:44:37 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 03FD1C44788; Tue,  5 May 2020 15:44:36 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6992FC433F2;
-        Tue,  5 May 2020 15:44:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6992FC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Maya Erez <merez@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dedy Lansky <dlansky@codeaurora.org>,
-        Ahmad Masri <amasri@codeaurora.org>,
-        Alexei Avshalom Lazar <ailizaro@codeaurora.org>,
-        Tzahi Sabo <stzahi@codeaurora.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Lior David <liord@codeaurora.org>,
-        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] wil6210: avoid gcc-10 zero-length-bounds warning
-References: <20200505143332.1398524-1-arnd@arndb.de>
-Date:   Tue, 05 May 2020 18:44:31 +0300
-In-Reply-To: <20200505143332.1398524-1-arnd@arndb.de> (Arnd Bergmann's message
-        of "Tue, 5 May 2020 16:33:24 +0200")
-Message-ID: <877dxqcrog.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Tue, 5 May 2020 11:45:13 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 799DAC0610D5
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 08:45:13 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id b6so2712356qkh.11
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 08:45:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iMmFoNfXYuSj6Qt050Es4e1yzInoELShzYaFIRCBs0E=;
+        b=iBJKRHaSbh+OQFNjGqU4rN6pd6hBER3oQdogcX0Ir8S1YSsdS75epglNZCctPu8paR
+         PmB6GBMokAs1Hf9vcX8A+ClfNGdJjhSKYHanfdoihgdeaDmLkkkSv/EuO+BTkqjAP3oS
+         LgJU+QEqSSpMaS2Wwjpo2DYXOMDyqIi78ibmzahHYXv2wE4WejTNBTIDz+xfozXPf3Cw
+         2y29g2uk2yDKPrb7Mv+9qNmg33sACR/nhRXS9CXjlpIFE8Ew23b35Wbi0mRSYo7yhzdK
+         coRg3VA18H4WNup3chKxebqQd1qIYbwIaRXryhm+AN5O7x0AgQIbA/qS32BhVcI3Es1F
+         9hRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iMmFoNfXYuSj6Qt050Es4e1yzInoELShzYaFIRCBs0E=;
+        b=Txl54GFvEypgMe1ceO5Tohv2OHkuw8YFHr6ExUI2epdmravkWv/npjaTOp4cy/2im7
+         zTJ9iX7SPrebuMn7nYkrKC+Xz0VX5dQ6svAI8Vq/a8OA9wrcc4HOaJ2iHAHexLjMUMUf
+         ylW4YscoBRIwF/FoEhuO5i5jrlnn1ZByhhr0KldGludvsnJsz/f6ml4dsRDPHnInzA0f
+         RfbjYFQ37hoVM6Aeq3zv5pqGn+7mRQsibxNbcnVGG84Cd7YGsTDsHHJXA3HYb8/yeiIF
+         yOvOHZvpLgRf8fPsmgR1W1SiR3U70qUOfUm4qJFiTUZRhuF7BGPWyRH8LsdRb7pNjwod
+         xlsw==
+X-Gm-Message-State: AGi0PuY440Xn60e7MAHCLGB3NhIIcLwiXMMmJcQVYwJZCA9sXLV4X8rt
+        9KHfWkOeCtpaYyqc8zFdTLxCJg==
+X-Google-Smtp-Source: APiQypKP+bgpF8ht21oVH7rGLUkGkGtifesHS0oFmm8qZ17AgYqECPhd2o8bIfiWwyerTtKIqyqsoA==
+X-Received: by 2002:a37:3d7:: with SMTP id 206mr3831180qkd.89.1588693512610;
+        Tue, 05 May 2020 08:45:12 -0700 (PDT)
+Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
+        by smtp.gmail.com with ESMTPSA id x7sm2122407qkx.36.2020.05.05.08.45.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 08:45:11 -0700 (PDT)
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
+        linux-kernel@vger.kernel.org, pmladek@suse.com,
+        sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
+        keescook@chromium.org, anton@enomsg.org, ccross@android.com,
+        tony.luck@intel.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v2 0/5] allow ramoops to collect all kmesg_dump events
+Date:   Tue,  5 May 2020 11:45:05 -0400
+Message-Id: <20200505154510.93506-1-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd Bergmann <arnd@arndb.de> writes:
+pstore /mnt/console-ramoops-0 outputs only messages below the console
+loglevel, and our console loglevel is set to 3 due to slowness of
+serial console. Which means only errors and worse types of messages
+are recorded. There is no way to have different log levels for
+different consoles.
 
-> gcc-10 warns about accesses inside of a zero-length array:
->
-> drivers/net/wireless/ath/wil6210/cfg80211.c: In function 'wil_cfg80211_scan':
-> drivers/net/wireless/ath/wil6210/cfg80211.c:970:23: error: array
-> subscript 255 is outside the bounds of an interior zero-length array
-> 'struct <anonymous>[0]' [-Werror=zero-length-bounds]
->   970 |   cmd.cmd.channel_list[cmd.cmd.num_channels++].channel = ch - 1;
->       |   ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
-> In file included from drivers/net/wireless/ath/wil6210/wil6210.h:17,
->                  from drivers/net/wireless/ath/wil6210/cfg80211.c:11:
-> drivers/net/wireless/ath/wil6210/wmi.h:477:4: note: while referencing 'channel_list'
->   477 |  } channel_list[0];
->       |    ^~~~~~~~~~~~
->
-> Turn this into a flexible array to avoid the warning.
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> Gustavo has a patch to do it for all arrays in this file, and that
-> should get merged as well, but this simpler patch is sufficient
-> to shut up the warning.
+This patch series adds a new option to ramoops: max_reason that enables
+it to collect kmdesg dumps for other reasons beside oops and panics.
 
-I don't see Gustavo's patch yet so I'll take this one first.
+How to quickly test:
+
+virtme-run --mods=auto --kdir --mods=auto --kdir . \
+	-a memmap=1G$8G -a ramoops.mem_address=0x200000000 \
+	-a ramoops.mem_size=0x100000 -a ramoops.record_size=32768 \
+	-a ramoops.max_reason=5 -a quiet --qemu-opts -m 8G
+..
+# reboot -f
+
+After VM is back:
+
+# mount -t pstore pstore /mnt
+# head /mnt/dmesg-ramoops-0 
+Restart#1 Part1
+...
+
+Changelog:
+
+v1:
+https://lore.kernel.org/lkml/20200502143555.543636-1-pasha.tatashin@soleen.com
+
+v2:
+Addressed comments from Kees Cook, Steven Rostedt, and Sergey Senozhatsky
+ - Replaced dump_all with max_reason
+ - removed duplicated enum value
+ - moved always_kmsg_dump logic back to kmsg_dump().
+
+Pavel Tatashin (5):
+  printk: honor the max_reason field in kmsg_dumper
+  pstore/platform: pass max_reason to kmesg dump
+  pstore/ram: in ramoops_platform_data convert dump_oops to max_reason
+  pstore/ram: allow to dump kmesg during regular reboot
+  ramoops: add max_reason optional field to ramoops DT node
+
+ Documentation/admin-guide/ramoops.rst         | 11 +++---
+ .../bindings/reserved-memory/ramoops.txt      | 10 ++++--
+ drivers/platform/chrome/chromeos_pstore.c     |  2 +-
+ fs/pstore/platform.c                          |  4 ++-
+ fs/pstore/ram.c                               | 35 +++++++++----------
+ include/linux/kmsg_dump.h                     |  1 +
+ include/linux/pstore.h                        |  3 ++
+ include/linux/pstore_ram.h                    |  2 +-
+ kernel/printk/printk.c                        | 15 +++++---
+ 9 files changed, 51 insertions(+), 32 deletions(-)
 
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.25.1
+
