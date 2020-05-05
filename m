@@ -2,171 +2,102 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B88FBC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF64C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A116C20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A17C220675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:17:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=asem.it header.i=@asem.it header.b="d2Ch/eJK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728736AbgEEKRh (ORCPT
+        id S1728763AbgEEKRj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 5 May 2020 06:17:39 -0400
+Received: from smtp.asem.it ([151.1.184.197]:56537 "EHLO smtp.asem.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728622AbgEEKRh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 5 May 2020 06:17:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39702 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728608AbgEEKRg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 06:17:36 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CAAFC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 03:17:35 -0700 (PDT)
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jVudl-0006U8-R3; Tue, 05 May 2020 12:17:29 +0200
-Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jVudl-0000fG-DQ; Tue, 05 May 2020 12:17:29 +0200
-Date:   Tue, 5 May 2020 12:17:29 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Robert Foss <robert.foss@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Maxime Ripard <maxime@cerno.tech>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Tomasz Figa <tfiga@chromium.org>, Ben Kao <ben.kao@intel.com>
-Subject: Re: [PATCH v7 3/3] media: ov8856: Implement sensor module revision
- identification
-Message-ID: <20200505101729.GF18755@pengutronix.de>
-References: <20200505100129.104673-1-robert.foss@linaro.org>
- <20200505100129.104673-4-robert.foss@linaro.org>
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 6.5.2)
+        with ESMTP id SG000235779.MSG 
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 12:17:30 +0200S
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+    s=s1024; d=asem.it;
+    h=from:to:cc:subject:date:message-id:mime-version:content-type;
+    bh=ZBqSxXgUivAUuVAsclHkHDsGUwkmsuduKBzLS0rYu9k=;
+    b=d2Ch/eJK8f93bLolHFlz9MnrvlcW7aQarLA3anN5xYlq2Iw7xhbVE1tyY0pPmd
+      cKwpDhnM3+b3modLyGgpvHgmcvRwyrwDsxAx3gYwqxBHXrdAiKPNuCQWubmSBP
+      u5xrrT0hwxVK0A4qyALG1XAianu1YAKPcaQozGP7X7vwcOs=
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1261.35; Tue, 5
+ May 2020 12:17:29 +0200
+Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server id 15.1.1261.35 via Frontend
+ Transport; Tue, 5 May 2020 12:17:29 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH 1/2] docs: filesystems: add info about efivars content
+Date:   Tue, 5 May 2020 12:17:15 +0200
+Message-ID: <1588673836-9954-1-git-send-email-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505100129.104673-4-robert.foss@linaro.org>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 12:16:56 up 73 days, 21:33, 142 users,  load average: 0.19, 1.60,
- 15.64
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A09020E.5EB13D39.005C,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robert,
+When an EFI variable is reading from:
 
-On 20-05-05 12:01, Robert Foss wrote:
-> Query the sensor for its module revision, and compare it
-> to known revisions.
-> 
-> Currently 2A and 1B revision indentification is supported.
-> 
-> Signed-off-by: Robert Foss <robert.foss@linaro.org>
-> ---
-> 
-> - Changes since v3:
->   * Actually add module revision 2A
-> 
-> - Changes since v2:
->   * Add module revision 2A
->   * Sakari: Remove ov8856_check_revision()
->   * Sakari: Stop EEPROM streaming mode
-> 
->  drivers/media/i2c/ov8856.c | 53 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
-> 
-> diff --git a/drivers/media/i2c/ov8856.c b/drivers/media/i2c/ov8856.c
-> index e6418a79801e..3c82c3e588d7 100644
-> --- a/drivers/media/i2c/ov8856.c
-> +++ b/drivers/media/i2c/ov8856.c
-> @@ -32,6 +32,19 @@
->  #define OV8856_MODE_STANDBY		0x00
->  #define OV8856_MODE_STREAMING		0x01
->  
-> +/* module revisions */
-> +#define OV8856_2A_MODULE		0x01
-> +#define OV8856_1B_MODULE		0x02
-> +
-> +/* the OTP read-out buffer is at 0x7000 and 0xf is the offset
-> + * of the byte in the OTP that means the module revision
-> + */
-> +#define OV8856_MODULE_REVISION		0x700f
-> +#define OV8856_OTP_MODE_CTRL		0x3d84
-> +#define OV8856_OTP_LOAD_CTRL		0x3d81
-> +#define OV8856_OTP_MODE_AUTO		0x00
-> +#define OV8856_OTP_LOAD_CTRL_ENABLE	BIT(0)
-> +
->  /* vertical-timings from sensor */
->  #define OV8856_REG_VTS			0x380e
->  #define OV8856_VTS_MAX			0x7fff
-> @@ -1152,6 +1165,46 @@ static int ov8856_identify_module(struct ov8856 *ov8856)
->  		return -ENXIO;
->  	}
->  
-> +	ret = ov8856_write_reg(ov8856, OV8856_REG_MODE_SELECT,
-> +			       OV8856_REG_VALUE_08BIT, OV8856_MODE_STREAMING);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ov8856_write_reg(ov8856, OV8856_OTP_MODE_CTRL,
-> +			       OV8856_REG_VALUE_08BIT, OV8856_OTP_MODE_AUTO);
-> +	if (ret) {
-> +		dev_err(&client->dev, "failed to set otp mode");
-> +		return ret;
-> +	}
-> +
-> +	ret = ov8856_write_reg(ov8856, OV8856_OTP_LOAD_CTRL,
-> +			       OV8856_REG_VALUE_08BIT,
-> +			       OV8856_OTP_LOAD_CTRL_ENABLE);
-> +	if (ret) {
-> +		dev_err(&client->dev, "failed to enable load control");
-> +		return ret;
-> +	}
-> +
-> +	ret = ov8856_read_reg(ov8856, OV8856_MODULE_REVISION,
-> +			      OV8856_REG_VALUE_08BIT, &val);
-> +	if (ret) {
-> +		dev_err(&client->dev, "failed to read module revision");
-> +		return ret;
-> +	}
-> +
-> +	dev_info(&client->dev, "OV8856 revision %x (%s) at address 0x%02x\n",
-> +		val,
-> +		val == OV8856_2A_MODULE ? "2A" :
-> +		val == OV8856_1B_MODULE ? "1B" : "unknown revision",
-> +		client->addr);
+/sys/firmware/efi/efivars
 
-Pls check the alignment here too.
+(for example using "hexdump"), the first 4 bytes of the
+output are not the real EFI variable data, but the variable
+attributes (in little-endian format).
 
-Regards,
-  Marco
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+---
+ Documentation/filesystems/efivarfs.rst | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-> +
-> +	ret = ov8856_write_reg(ov8856, OV8856_REG_MODE_SELECT,
-> +			       OV8856_REG_VALUE_08BIT, OV8856_MODE_STANDBY);
-> +	if (ret) {
-> +		dev_err(&client->dev, "failed to exit streaming mode");
-> +		return ret;
-> +	}
-> +
->  	return 0;
->  }
->  
-> -- 
-> 2.25.1
+diff --git a/Documentation/filesystems/efivarfs.rst b/Documentation/filesystems/efivarfs.rst
+index 90ac656..6380336 100644
+--- a/Documentation/filesystems/efivarfs.rst
++++ b/Documentation/filesystems/efivarfs.rst
+@@ -24,3 +24,20 @@ files that are not well-known standardized variables are created
+ as immutable files.  This doesn't prevent removal - "chattr -i" will work -
+ but it does prevent this kind of failure from being accomplished
+ accidentally.
++
++.. warning ::
++      When a content of an UEFI variable in ``/sys/firmware/efi/efivars`` is
++      displayed, for example using ``hexdump``, pay attention that the first
++      4 bytes of the output represent the UEFI variable attributes,
++      in little-endian format.
++
++      Practically the output of each ``efivar`` is composed of:
++
++          +-----------------------------------+
++          |4_bytes_of_attributes + efivar_data|
++          +-----------------------------------+
++
++*See also:*
++
++- ``Documentation/admin-guide/acpi/ssdt-overlays.rst``
++- ``Documentation/ABI/stable/sysfs-firmware-efi-vars``
+-- 
+2.7.4
+
