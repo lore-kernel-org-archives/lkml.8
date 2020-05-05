@@ -2,297 +2,155 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFB3C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D63C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CFEB20746
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC6552084D
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:28:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ns9BAO8Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730039AbgEEP1u (ORCPT
+        id S1730076AbgEEP2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:27:50 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:39397 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729403AbgEEP1u (ORCPT
+        Tue, 5 May 2020 11:28:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60458 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729403AbgEEP2E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:27:50 -0400
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 051DDFF81C;
-        Tue,  5 May 2020 15:27:06 +0000 (UTC)
-Date:   Tue, 5 May 2020 17:27:06 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 1/3] clk: at91: optimize pmc data allocation
-Message-ID: <20200505152706.GS34497@piout.net>
-References: <cover.1588630999.git.mirq-linux@rere.qmqm.pl>
- <fc6f6d67b8cee0beace4a9d9cca7431e5efa769d.1588630999.git.mirq-linux@rere.qmqm.pl>
+        Tue, 5 May 2020 11:28:04 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E036C061A0F;
+        Tue,  5 May 2020 08:28:04 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id w4so2363324ioc.6;
+        Tue, 05 May 2020 08:28:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b//WyoKMoOWyknzMDwAntqpnlFg9r6X0WW+350J/1yI=;
+        b=ns9BAO8YqpS1sAuldx8uWARkY5qyrGWrAOpg6uCV3k+MLyCqop9mCBaHHj89E4v0N+
+         6XSAEH4CgAV1naXoyGmgRPnxurfKpXb/oGlkGKHWtS6WxFdqDtU8owmyzzgtUhO9crJ0
+         Wah7omW86KzoFYxgbiKJ182JNj0OCAtEq2lVQ8QPzqSIMbygjkwBUz8whHphk66EsyTH
+         gc5mBj7UyJ+8nCBrHdLB+g0RkeC4aVOADiHCHBp0CvmjYghZ1QESa61mOfNSD1Htw3NG
+         HLZtaCh0qTka3kXfeEW2Qq+rFyxqOIjYpx4bn9xl6ld0OY9X7Pb8H47piuNFQUa5bDYG
+         /jVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b//WyoKMoOWyknzMDwAntqpnlFg9r6X0WW+350J/1yI=;
+        b=MrFrDXujMdIZ8m/ZdWrUZKrHsmEmoNKvjDI9p2FXen80Py2DpprJUphibC34+MY0FF
+         bKMj6siwBCWJMRAqH5IDIO52sZq4UzXsux9IePJ52X7ft/vYswEAJv4TKngTMDQlxd/R
+         AE2OluSbliROxQKXVHMaOKvmGFjAEWu+IKoJ9+vrREzW7oY5Hm458Y9LK1xdwiccvdvF
+         RDjbf0v/Zu3XbBMC0ALa54KmCd864Ru7HTCi2GXNeXrZrLPM9fuHEESDEueNGxlfsh1+
+         MAhsporBIB5fbUM9osRsql4HNNvJ0QU8VCV2JvJo8yp+boH5YH3zeZzbUDDilraZr80O
+         svmA==
+X-Gm-Message-State: AGi0PubsaTz4GqZMA8FE0i87N8FBlMtuYuLAA/ekEpFi7iBMQRzd89e2
+        fpJBAMUITyLnJzOd+Q1gUG8jfGddtIqWdAakyWg=
+X-Google-Smtp-Source: APiQypICZLOIAWPDMlYJr/jbilaov2atkz+fIoCy6F3ev9oqNozYB3WFgJcfcMdbAQytemQqFANXBtFhBCKd5m+hzUA=
+X-Received: by 2002:a6b:b9d5:: with SMTP id j204mr3962700iof.38.1588692483399;
+ Tue, 05 May 2020 08:28:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fc6f6d67b8cee0beace4a9d9cca7431e5efa769d.1588630999.git.mirq-linux@rere.qmqm.pl>
+References: <20200430201125.532129-1-daniel.m.jordan@oracle.com>
+ <20200430201125.532129-6-daniel.m.jordan@oracle.com> <deadac9a-fbef-6c66-207c-83d251d2ef50@linux.intel.com>
+ <20200501024539.tnjuybydwe3r4u2x@ca-dmjordan1.us.oracle.com>
+ <CAKgT0Uctro3+PWeJTi=O3Yc2qUF8Oy+HrypzCUzkaCt=XH0Lkg@mail.gmail.com> <20200505005432.bohmaa6zeffhdkgn@ca-dmjordan1.us.oracle.com>
+In-Reply-To: <20200505005432.bohmaa6zeffhdkgn@ca-dmjordan1.us.oracle.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 5 May 2020 08:27:52 -0700
+Message-ID: <CAKgT0Uegw2vFSCOcsCMATfDu0Q8NP2ZVi-2Fgm8P2RwU_B2c3A@mail.gmail.com>
+Subject: Re: [PATCH 5/7] mm: move zone iterator outside of deferred_init_maxorder()
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Tejun Heo <tj@kernel.org>, Zi Yan <ziy@nvidia.com>,
+        linux-crypto@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/05/2020 00:37:56+0200, Michał Mirosław wrote:
-> Alloc whole data structure in one block. This makes the code shorter,
-> more efficient and easier to extend in following patch.
-> 
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+On Mon, May 4, 2020 at 5:54 PM Daniel Jordan <daniel.m.jordan@oracle.com> wrote:
+>
+> On Mon, May 04, 2020 at 03:10:46PM -0700, Alexander Duyck wrote:
+> > So we cannot stop in the middle of a max order block. That shouldn't
+> > be possible as part of the issue is that the buddy allocator will
+> > attempt to access the buddy for the page which could cause issues if
+> > it tries to merge the page with one that is not initialized. So if
+> > your code supports that then it is definitely broken. That was one of
+> > the reasons for all of the variable weirdness in
+> > deferred_init_maxorder. I was going through and making certain that
+> > while we were initializing the range we were freeing the pages in
+> > MAX_ORDER aligned blocks and skipping over whatever reserved blocks
+> > were there. Basically it was handling the case where a single
+> > MAX_ORDER block could span multiple ranges.
+> >
+> > On x86 this was all pretty straightforward and I don't believe we
+> > needed the code, but I seem to recall there were some other
+> > architectures that had more complex memory layouts at the time and
+> > that was one of the reasons why I had to be careful to wait until I
+> > had processed the full MAX_ORDER block before I could start freeing
+> > the pages, otherwise it would start triggering memory corruptions.
+>
+> Yes, thanks, I missed the case where deferred_grow_zone could stop
+> mid-max-order-block.
 
-> ---
-> v2: rebase and update to clk/clk-at91 branch
-> v3: use struct_size() and C99 trailing array
->     as suggested by Stephen Boyd
-> v4: fixed sign-off
-> v5: no changes
-> v6: no changes
-> v7: pull all pmc_data_free() from second patch (a rebase artifact)
-> ---
->  drivers/clk/at91/at91rm9200.c  |  2 +-
->  drivers/clk/at91/at91sam9260.c |  2 +-
->  drivers/clk/at91/at91sam9g45.c |  2 +-
->  drivers/clk/at91/at91sam9n12.c |  2 +-
->  drivers/clk/at91/at91sam9rl.c  |  2 +-
->  drivers/clk/at91/at91sam9x5.c  |  2 +-
->  drivers/clk/at91/pmc.c         | 34 ++++++++--------------------------
->  drivers/clk/at91/pmc.h         |  3 ++-
->  drivers/clk/at91/sam9x60.c     |  2 +-
->  drivers/clk/at91/sama5d2.c     |  2 +-
->  drivers/clk/at91/sama5d3.c     |  2 +-
->  drivers/clk/at91/sama5d4.c     |  2 +-
->  12 files changed, 20 insertions(+), 37 deletions(-)
-> 
-> diff --git a/drivers/clk/at91/at91rm9200.c b/drivers/clk/at91/at91rm9200.c
-> index c44a431b6c97..6f4e1151553d 100644
-> --- a/drivers/clk/at91/at91rm9200.c
-> +++ b/drivers/clk/at91/at91rm9200.c
-> @@ -187,7 +187,7 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
->  	return;
->  
->  err_free:
-> -	pmc_data_free(at91rm9200_pmc);
-> +	kfree(at91rm9200_pmc);
->  }
->  /*
->   * While the TCB can be used as the clocksource, the system timer is most likely
-> diff --git a/drivers/clk/at91/at91sam9260.c b/drivers/clk/at91/at91sam9260.c
-> index a9d4234758d7..946f03a09858 100644
-> --- a/drivers/clk/at91/at91sam9260.c
-> +++ b/drivers/clk/at91/at91sam9260.c
-> @@ -462,7 +462,7 @@ static void __init at91sam926x_pmc_setup(struct device_node *np,
->  	return;
->  
->  err_free:
-> -	pmc_data_free(at91sam9260_pmc);
-> +	kfree(at91sam9260_pmc);
->  }
->  
->  static void __init at91sam9260_pmc_setup(struct device_node *np)
-> diff --git a/drivers/clk/at91/at91sam9g45.c b/drivers/clk/at91/at91sam9g45.c
-> index 38a7d2d2df0c..53e8252b8a63 100644
-> --- a/drivers/clk/at91/at91sam9g45.c
-> +++ b/drivers/clk/at91/at91sam9g45.c
-> @@ -210,7 +210,7 @@ static void __init at91sam9g45_pmc_setup(struct device_node *np)
->  	return;
->  
->  err_free:
-> -	pmc_data_free(at91sam9g45_pmc);
-> +	kfree(at91sam9g45_pmc);
->  }
->  /*
->   * The TCB is used as the clocksource so its clock is needed early. This means
-> diff --git a/drivers/clk/at91/at91sam9n12.c b/drivers/clk/at91/at91sam9n12.c
-> index 8bb39d2ba84b..f3ae1cd3cb8d 100644
-> --- a/drivers/clk/at91/at91sam9n12.c
-> +++ b/drivers/clk/at91/at91sam9n12.c
-> @@ -228,7 +228,7 @@ static void __init at91sam9n12_pmc_setup(struct device_node *np)
->  	return;
->  
->  err_free:
-> -	pmc_data_free(at91sam9n12_pmc);
-> +	kfree(at91sam9n12_pmc);
->  }
->  /*
->   * The TCB is used as the clocksource so its clock is needed early. This means
-> diff --git a/drivers/clk/at91/at91sam9rl.c b/drivers/clk/at91/at91sam9rl.c
-> index 77fe83a73bf4..cc739d214ae3 100644
-> --- a/drivers/clk/at91/at91sam9rl.c
-> +++ b/drivers/clk/at91/at91sam9rl.c
-> @@ -166,6 +166,6 @@ static void __init at91sam9rl_pmc_setup(struct device_node *np)
->  	return;
->  
->  err_free:
-> -	pmc_data_free(at91sam9rl_pmc);
-> +	kfree(at91sam9rl_pmc);
->  }
->  CLK_OF_DECLARE_DRIVER(at91sam9rl_pmc, "atmel,at91sam9rl-pmc", at91sam9rl_pmc_setup);
-> diff --git a/drivers/clk/at91/at91sam9x5.c b/drivers/clk/at91/at91sam9x5.c
-> index 086cf0b4955c..aac99d699568 100644
-> --- a/drivers/clk/at91/at91sam9x5.c
-> +++ b/drivers/clk/at91/at91sam9x5.c
-> @@ -278,7 +278,7 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
->  	return;
->  
->  err_free:
-> -	pmc_data_free(at91sam9x5_pmc);
-> +	kfree(at91sam9x5_pmc);
->  }
->  
->  static void __init at91sam9g15_pmc_setup(struct device_node *np)
-> diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
-> index b71515acdec1..ac46ea1b9fda 100644
-> --- a/drivers/clk/at91/pmc.c
-> +++ b/drivers/clk/at91/pmc.c
-> @@ -76,48 +76,30 @@ struct clk_hw *of_clk_hw_pmc_get(struct of_phandle_args *clkspec, void *data)
->  	return ERR_PTR(-EINVAL);
->  }
->  
-> -void pmc_data_free(struct pmc_data *pmc_data)
-> -{
-> -	kfree(pmc_data->chws);
-> -	kfree(pmc_data->shws);
-> -	kfree(pmc_data->phws);
-> -	kfree(pmc_data->ghws);
-> -}
-> -
->  struct pmc_data *pmc_data_allocate(unsigned int ncore, unsigned int nsystem,
->  				   unsigned int nperiph, unsigned int ngck)
->  {
-> -	struct pmc_data *pmc_data = kzalloc(sizeof(*pmc_data), GFP_KERNEL);
-> +	unsigned int num_clks = ncore + nsystem + nperiph + ngck;
-> +	struct pmc_data *pmc_data;
->  
-> +	pmc_data = kzalloc(struct_size(pmc_data, hwtable, num_clks),
-> +			   GFP_KERNEL);
->  	if (!pmc_data)
->  		return NULL;
->  
->  	pmc_data->ncore = ncore;
-> -	pmc_data->chws = kcalloc(ncore, sizeof(struct clk_hw *), GFP_KERNEL);
-> -	if (!pmc_data->chws)
-> -		goto err;
-> +	pmc_data->chws = pmc_data->hwtable;
->  
->  	pmc_data->nsystem = nsystem;
-> -	pmc_data->shws = kcalloc(nsystem, sizeof(struct clk_hw *), GFP_KERNEL);
-> -	if (!pmc_data->shws)
-> -		goto err;
-> +	pmc_data->shws = pmc_data->chws + ncore;
->  
->  	pmc_data->nperiph = nperiph;
-> -	pmc_data->phws = kcalloc(nperiph, sizeof(struct clk_hw *), GFP_KERNEL);
-> -	if (!pmc_data->phws)
-> -		goto err;
-> +	pmc_data->phws = pmc_data->shws + nsystem;
->  
->  	pmc_data->ngck = ngck;
-> -	pmc_data->ghws = kcalloc(ngck, sizeof(struct clk_hw *), GFP_KERNEL);
-> -	if (!pmc_data->ghws)
-> -		goto err;
-> +	pmc_data->ghws = pmc_data->phws + nperiph;
->  
->  	return pmc_data;
-> -
-> -err:
-> -	pmc_data_free(pmc_data);
-> -
-> -	return NULL;
->  }
->  
->  #ifdef CONFIG_PM
-> diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-> index 9b8db9cdcda5..fc3ef772b9d9 100644
-> --- a/drivers/clk/at91/pmc.h
-> +++ b/drivers/clk/at91/pmc.h
-> @@ -24,6 +24,8 @@ struct pmc_data {
->  	struct clk_hw **phws;
->  	unsigned int ngck;
->  	struct clk_hw **ghws;
-> +
-> +	struct clk_hw *hwtable[];
->  };
->  
->  struct clk_range {
-> @@ -95,7 +97,6 @@ struct clk_pcr_layout {
->  #define nck(a) (a[ARRAY_SIZE(a) - 1].id + 1)
->  struct pmc_data *pmc_data_allocate(unsigned int ncore, unsigned int nsystem,
->  				   unsigned int nperiph, unsigned int ngck);
-> -void pmc_data_free(struct pmc_data *pmc_data);
->  
->  int of_at91_get_clk_range(struct device_node *np, const char *propname,
->  			  struct clk_range *range);
-> diff --git a/drivers/clk/at91/sam9x60.c b/drivers/clk/at91/sam9x60.c
-> index cc19e8fb83be..a7d4f648db26 100644
-> --- a/drivers/clk/at91/sam9x60.c
-> +++ b/drivers/clk/at91/sam9x60.c
-> @@ -299,7 +299,7 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
->  	return;
->  
->  err_free:
-> -	pmc_data_free(sam9x60_pmc);
-> +	kfree(sam9x60_pmc);
->  }
->  /* Some clks are used for a clocksource */
->  CLK_OF_DECLARE(sam9x60_pmc, "microchip,sam9x60-pmc", sam9x60_pmc_setup);
-> diff --git a/drivers/clk/at91/sama5d2.c b/drivers/clk/at91/sama5d2.c
-> index ff7e3f727082..b2560670e5af 100644
-> --- a/drivers/clk/at91/sama5d2.c
-> +++ b/drivers/clk/at91/sama5d2.c
-> @@ -350,6 +350,6 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
->  	return;
->  
->  err_free:
-> -	pmc_data_free(sama5d2_pmc);
-> +	kfree(sama5d2_pmc);
->  }
->  CLK_OF_DECLARE_DRIVER(sama5d2_pmc, "atmel,sama5d2-pmc", sama5d2_pmc_setup);
-> diff --git a/drivers/clk/at91/sama5d3.c b/drivers/clk/at91/sama5d3.c
-> index 88506f909c08..914e6f225510 100644
-> --- a/drivers/clk/at91/sama5d3.c
-> +++ b/drivers/clk/at91/sama5d3.c
-> @@ -231,7 +231,7 @@ static void __init sama5d3_pmc_setup(struct device_node *np)
->  	return;
->  
->  err_free:
-> -	pmc_data_free(sama5d3_pmc);
-> +	kfree(sama5d3_pmc);
->  }
->  /*
->   * The TCB is used as the clocksource so its clock is needed early. This means
-> diff --git a/drivers/clk/at91/sama5d4.c b/drivers/clk/at91/sama5d4.c
-> index a6dee4a3b6e4..4ca9a4619500 100644
-> --- a/drivers/clk/at91/sama5d4.c
-> +++ b/drivers/clk/at91/sama5d4.c
-> @@ -267,6 +267,6 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
->  	return;
->  
->  err_free:
-> -	pmc_data_free(sama5d4_pmc);
-> +	kfree(sama5d4_pmc);
->  }
->  CLK_OF_DECLARE_DRIVER(sama5d4_pmc, "atmel,sama5d4-pmc", sama5d4_pmc_setup);
-> -- 
-> 2.20.1
-> 
+As it turns out that deferred_free_range will be setting the
+migratetype for the page. In a sparse config the migratetype bits are
+stored in the section bitmap. So to avoid cacheline bouncing it would
+make sense to section align the tasks so that they only have one
+thread touching one section rather than having the pageblock_flags
+getting bounced between threads. It should also reduce the overhead
+for having to parallelize the work in the first place since a section
+is several times larger than a MAX_ORDER page and allows for more
+batching of the work.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> Maybe it's better to leave deferred_init_maxorder alone and adapt the
+> multithreading to the existing implementation.  That'd mean dealing with the
+> pesky opaque index somehow, so deferred_init_mem_pfn_range_in_zone() could be
+> generalized to find it in the thread function based on the start/end range, or
+> it could be maintained as part of the range that padata passes to the thread
+> function.
+
+You may be better off just implementing your threads to operate like
+deferred_grow_zone does. All your worker thread really needs then is
+to know where to start performing the page initialization and then it
+could go through and process an entire section worth of pages. The
+other bit that would have to be changed is patch 6 so that you combine
+any ranges that might span a single section instead of just splitting
+the work up based on the ranges.
+
+If you are referring to the mo_pfn you shouldn't even need to think
+about it. All it is doing is guaranteeing you are processing at least
+a full max order worth of pages. Without that the logic before was
+either process a whole section, or just process all of memory
+initializing it before it started freeing it. I found it made things
+much more efficient to process only up to MAX_ORDER at a time as you
+could squeeze that into the L2 cache for most x86 processors at least
+and it reduced the memory bandwidth by quite a bit. If you update the
+code to only provide section aligned/sized ranges of of PFNs to
+initialize then it can pretty much be ignored since all it is doing is
+defining the break point for single MAX_ORDER chunks which would be
+smaller than a section anyway.
