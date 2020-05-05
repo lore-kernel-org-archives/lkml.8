@@ -2,135 +2,147 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A98C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF37C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 512032084D
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:17:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rdomWIn1"
+	by mail.kernel.org (Postfix) with ESMTP id 369ED20675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:17:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730403AbgEEORt (ORCPT
+        id S1730391AbgEEORs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:17:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49440 "EHLO
+        Tue, 5 May 2020 10:17:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730381AbgEEORq (ORCPT
+        by vger.kernel.org with ESMTP id S1730286AbgEEORQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:17:46 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0324C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:17:45 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id j4so1720485otr.11
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 07:17:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Oozv1CurdVXPxFbon25FvYaSVZOel7H+M9qpgBithxw=;
-        b=rdomWIn1lx0/14x1MrCZ44PAia88FO1u5WiBJV0lCL873DmYOIw1RkG7EOjGN3DOcI
-         BKnHqtLr5kIvTVt+46Qu6hkXUOFnxvrhJa4EE0BzJtBnyA6Li55vvUoguCqcceZsJErm
-         391RDdGHZfcGrEiWCMc3cskTgI8jYOjW5gIgD1G+/tWjpRsya6AqsC+cCYxYQ7SsdB56
-         tKXvgfRvmAXc3U64n7QaJ5BfrnxR2AVH0SulUJFFUX2ihfgEL0QS1jGLwMkTXtvdqcRs
-         Ah5dfdU1SE40c+empSqBBAv6y4lhwPzQj8IfW4meGF3R74kI5zSC7IWGBB1/41Z+QkB5
-         zb1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Oozv1CurdVXPxFbon25FvYaSVZOel7H+M9qpgBithxw=;
-        b=DxpkA6FPdJN2pWlHhYN6A9bH7goEfnNQI3ouBI2iheu8JPYv+cVtUqmzUXstmis6Cs
-         FYrlJZkNzRZrTKsQjvkEI/njoJUsYKcb93QIdtR1a94Je1WsOmuQUm5nOpLtuo5sIgLf
-         NbOIvcZY+Nn3Pe3j5AzGqzMWHaK/Qk+RCqJ2gImABU+uTMFwXFXjg5UIDY4WYJDCJDMm
-         auR1nKg2V/ReqjYpAV2XDzfHWvpys6YvNwLOVK7PcabVP8Ww0YO4CMn/ADETO3fErtqG
-         QD6OiTkCbM4ZCCBfN4NkbweGMkFbFruF7fl2//VWLaym/EflOCVsb/djNSckIAETklGR
-         JT8w==
-X-Gm-Message-State: AGi0PuaBxzetkQj2dHOTMJFvcwCojvKBFhgmhkzmTgive/N4lIEXIGKx
-        9Ih204TCoKXFSxsM2yfDZWQl/h3xtdevfsWxMsaMsw==
-X-Google-Smtp-Source: APiQypKP35cQMElCXBeZ5zJhY0UyGhdCjBVmM/UfrXTaWR6qP6RM1rUh4lKu6tJwIpg3MUPBoQtobiEDYF6hoC0mYGs=
-X-Received: by 2002:a9d:7589:: with SMTP id s9mr2210194otk.251.1588688264613;
- Tue, 05 May 2020 07:17:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200505141137.665940-1-arnd@arndb.de>
-In-Reply-To: <20200505141137.665940-1-arnd@arndb.de>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 5 May 2020 16:17:33 +0200
-Message-ID: <CANpmjNNwgkVR6kjFudrR4ga--PigU5Mx69HZ1mhCAQ0GCLqQGg@mail.gmail.com>
-Subject: Re: [PATCH] kcsan: fix section mismatch for __write_once_size/blacklisted_initcalls
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Tue, 5 May 2020 10:17:16 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B81EC061A10
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:17:16 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jVyNX-0002gB-DZ; Tue, 05 May 2020 16:16:59 +0200
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id E92111001F5;
+        Tue,  5 May 2020 16:16:58 +0200 (CEST)
+Message-Id: <20200505135831.175237951@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Tue, 05 May 2020 15:54:12 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Alexander Potapenko <glider@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com, Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Subject: [patch V4 part 5 31/31] x86/entry: Remove the TRACE_IRQS cruft
+References: <20200505135341.730586321@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-transfer-encoding: 8-bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 May 2020 at 16:11, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> Moving __write_once_size out of line causes a section mismatch warning
-> with clang in one instance:
->
-> WARNING: modpost: vmlinux.o(.text+0x8dc): Section mismatch in reference from the function __write_once_size() to the variable .init.data:blacklisted_initcalls
-> The function __write_once_size() references
-> the variable __initdata blacklisted_initcalls.
-> This is often because __write_once_size lacks a __initdata
-> annotation or the annotation of blacklisted_initcalls is wrong.
->
-> Remove the __init_or_module annotation from the variable as a workaround.
->
-> Fixes: dfd402a4c4ba ("kcsan: Add Kernel Concurrency Sanitizer infrastructure")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> So far, my randconfig checks found two such instances, one for read_once
-> and one for write_once. There are probably a couple more in random
-> configurations, but I guess they are rare enough that we can just work
-> around them like this.
+No more users.
 
-[+Cc Will]
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/entry/entry_64.S       |   13 -------------
+ arch/x86/entry/thunk_64.S       |    9 +--------
+ arch/x86/include/asm/irqflags.h |   10 ----------
+ 3 files changed, 1 insertion(+), 31 deletions(-)
 
-Thanks for testing and fixing this. Note that this may no longer be
-necessary once Will's patches land. Also noted here:
-https://lkml.kernel.org/r/CANpmjNNw6M9Gqj6WGTHH4Cegu8roTVu5x6Vqs_tCBxX3gPwL4A@mail.gmail.com
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -53,19 +53,6 @@ SYM_CODE_START(native_usergs_sysret64)
+ SYM_CODE_END(native_usergs_sysret64)
+ #endif /* CONFIG_PARAVIRT */
+ 
+-.macro TRACE_IRQS_FLAGS flags:req
+-#ifdef CONFIG_TRACE_IRQFLAGS
+-	btl	$9, \flags		/* interrupts off? */
+-	jnc	1f
+-	TRACE_IRQS_ON
+-1:
+-#endif
+-.endm
+-
+-.macro TRACE_IRQS_IRETQ
+-	TRACE_IRQS_FLAGS EFLAGS(%rsp)
+-.endm
+-
+ /*
+  * 64-bit SYSCALL instruction entry. Up to 6 arguments in registers.
+  *
+--- a/arch/x86/entry/thunk_64.S
++++ b/arch/x86/entry/thunk_64.S
+@@ -3,7 +3,6 @@
+  * Save registers before calling assembly functions. This avoids
+  * disturbance of register allocation in some inline assembly constructs.
+  * Copyright 2001,2002 by Andi Kleen, SuSE Labs.
+- * Added trace_hardirqs callers - Copyright 2007 Steven Rostedt, Red Hat, Inc.
+  */
+ #include <linux/linkage.h>
+ #include "calling.h"
+@@ -70,11 +69,6 @@ SYM_FUNC_START_NOALIGN(\name)
+ SYM_FUNC_END(\name)
+ 	.endm
+ 
+-#ifdef CONFIG_TRACE_IRQFLAGS
+-	THUNK trace_hardirqs_on_thunk,trace_hardirqs_on_caller, put_ret_addr_in_rdi=1
+-	THUNK trace_hardirqs_off_thunk,trace_hardirqs_off_caller, put_ret_addr_in_rdi=1
+-#endif
+-
+ #ifdef CONFIG_PREEMPTION
+ 	THUNK preempt_schedule_thunk, preempt_schedule
+ 	EXPORT_SYMBOL(preempt_schedule_thunk)
+@@ -83,8 +77,7 @@ SYM_FUNC_END(\name)
+ 	EXPORT_SYMBOL(preempt_schedule_notrace_thunk)
+ #endif
+ 
+-#if defined(CONFIG_TRACE_IRQFLAGS) \
+- || defined(CONFIG_PREEMPTION)
++#ifdef CONFIG_PREEMPTION
+ SYM_CODE_START_LOCAL_NOALIGN(.L_restore)
+ 	popq %r11
+ 	popq %r10
+--- a/arch/x86/include/asm/irqflags.h
++++ b/arch/x86/include/asm/irqflags.h
+@@ -171,14 +171,4 @@ static inline int arch_irqs_disabled(voi
+ }
+ #endif /* !__ASSEMBLY__ */
+ 
+-#ifdef __ASSEMBLY__
+-#ifdef CONFIG_TRACE_IRQFLAGS
+-#  define TRACE_IRQS_ON		call trace_hardirqs_on_thunk;
+-#  define TRACE_IRQS_OFF	call trace_hardirqs_off_thunk;
+-#else
+-#  define TRACE_IRQS_ON
+-#  define TRACE_IRQS_OFF
+-#endif
+-#endif /* __ASSEMBLY__ */
+-
+ #endif
 
-For reference, Will's series:
-https://lore.kernel.org/lkml/20200421151537.19241-1-will@kernel.org/
-
-Thanks,
--- Marco
-
-
-> ---
->  init/main.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/init/main.c b/init/main.c
-> index 8f78399697e3..441c384a73cd 100644
-> --- a/init/main.c
-> +++ b/init/main.c
-> @@ -1020,7 +1020,7 @@ struct blacklist_entry {
->         char *buf;
->  };
->
-> -static __initdata_or_module LIST_HEAD(blacklisted_initcalls);
-> +static LIST_HEAD(blacklisted_initcalls);
->
->  static int __init initcall_blacklist(char *str)
->  {
-> --
-> 2.26.0
->
