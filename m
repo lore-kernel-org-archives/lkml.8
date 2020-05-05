@@ -2,111 +2,128 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EDBC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D66C47259
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6FAA20752
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE6B720721
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:59:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D/CUUgV+"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="e6NNOj7b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729051AbgEET5v (ORCPT
+        id S1729067AbgEET7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 15:57:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46290 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726350AbgEET5v (ORCPT
+        Tue, 5 May 2020 15:59:47 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:48395 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728356AbgEET7r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 15:57:51 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21E43C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 12:57:51 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id f8so1288136plt.2
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 12:57:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+jBR7bx06JBk3b0Box7GE19GyYRN4IAfI1SXCDy+ZVs=;
-        b=D/CUUgV+4QUr72gT1aXLHHu9Kd+oRs7SqSXsIFWGpsYW1trbgyX4otdQnlkn9W+m3W
-         tsGjCncvtWcszh2yfgrMJDHI2YKZmFxGcpugbH5Pyu/d0ptqy6Cnpukh0MQ3R76D2uo6
-         NzIZKFfRgoO1tLM4+aOrznPaVGQ6tiYi45YCKbVAYZglUp2ucfTfAZNWtKcJLnXCczhD
-         y2+7zjuLHjqZUiqfCa89nny8eSv12f5/SOAj4to3t0oJGE7IBcnwRzYHp8DnbaEOG5Og
-         26VKkB2hLRfi0Wg05uhTUGg9ySNaKgr8KQHH4/h8Pw60Ci07YicM4FMNcayt4hK6hsyl
-         32EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+jBR7bx06JBk3b0Box7GE19GyYRN4IAfI1SXCDy+ZVs=;
-        b=W7C17LN0eyu8/ZR49x/sVNGKoHbsk7qgbDAfZfC3HppJKflbMQ1fcyFyNk6yWq0zRy
-         X8INxt6uR7YadiLQrk5u1qJHI9ZGTALQHLaIN4vTvO4j26mD6+VY6hdc6s9T7zepr7pl
-         kozk42p4SuKrC5LS9EVgxRkiFhnMYMxrswX4SrXqmFaz/2bctaMwlgw6Rve121Uk09gH
-         ReR0eFqErLH2tB4sYOVOjGJ/c14IH0NhvlMuBaHNLeKdZdxAKohPhc+IzTE2mJGexwmk
-         v5WN390ZKivwbf21JV6QgMpGXph3kKx3a++X3ukEZde2CFOlTRUSE1eFVo6bpHRsNbHJ
-         Lyzg==
-X-Gm-Message-State: AGi0Pua+430ZdC+WYkTqIpTkP7vumFYDyrxaorCKFGqrymYkpAlbCEqK
-        j6fUclfAG8eBuYUT22Rs8YqrjKKbbJTcliFRH+h4nbTByxw=
-X-Google-Smtp-Source: APiQypLSG+qS3SzQAnHi3qMXZk1rnABm6T4db+mHV8vCmFHO1+gIBvWnBRFmcRuqOif4K1BHGOvNCYp2DEcoxBgOtKs=
-X-Received: by 2002:a17:902:eb54:: with SMTP id i20mr2500038pli.179.1588708670198;
- Tue, 05 May 2020 12:57:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200501202849.647891881@infradead.org> <20200503125813.GL3762@hirez.programming.kicks-ass.net>
- <a53369f3-665a-af0e-efad-09ae456af847@rasmusvillemoes.dk> <20200504201445.GQ3762@hirez.programming.kicks-ass.net>
- <20200505093625.GE5298@hirez.programming.kicks-ass.net> <CAKwvOd=cP8UCX0+5pZ3AqzvOM8LKzLJJ_heDhrghqJdOnHoGMg@mail.gmail.com>
- <CAKwvOdkL+2Gvn2mkZ8cdHN=1F5cHQHii57ocD0RFeLJxEt=TUQ@mail.gmail.com>
- <CAHk-=wiUd=fcpegFLK4VK9iFfrO5BmpGKDszGpuyJkDdz4JaoQ@mail.gmail.com> <656098739.766.1588705237442.JavaMail.zimbra@efficios.com>
-In-Reply-To: <656098739.766.1588705237442.JavaMail.zimbra@efficios.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 5 May 2020 12:57:39 -0700
-Message-ID: <CAKwvOdnLze0e3Vwmb1Xdqwcwe9h6gnAwGnt3ksiNX7ENb_3Y9w@mail.gmail.com>
-Subject: Re: [PATCH v4 14/18] static_call: Add static_cond_call()
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        x86 <x86@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        bristot <bristot@redhat.com>, jbaron <jbaron@akamai.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Nadav Amit <namit@vmware.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 5 May 2020 15:59:47 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588708786; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=kvItYongzdU+2DxidH+Naeor8fjYwxIXps7J9ycM/y8=; b=e6NNOj7buDbzpBNfDVs0oeAS/MvZiqTL1eNGEX2+6Nr3yFoyoGFgWK+R2FVtdVYqsHLASryQ
+ u8G9g0VbmCTdQZScLQPOuXl1qqcy4IXFFDDw2A4hZwU5Zm35advX9QUsoeEW7n0IYB+n5gbx
+ XGe1IWgL4XRLNn2Y2HEWgvM0bDY=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb1c5b2.7f0f8db1a4c8-smtp-out-n01;
+ Tue, 05 May 2020 19:59:46 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1E5EAC44792; Tue,  5 May 2020 19:59:45 +0000 (UTC)
+Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CBDB4C432C2;
+        Tue,  5 May 2020 19:59:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CBDB4C432C2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+From:   Wesley Cheng <wcheng@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
+        mgautam@codeaurora.org, vkoul@kernel.org, sboyd@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, jackp@codeaurora.org,
+        Wesley Cheng <wcheng@codeaurora.org>
+Subject: [PATCH v9 0/5] Add SS/HS-USB changes for Qualcomm SM8150 chipset
+Date:   Tue,  5 May 2020 12:59:31 -0700
+Message-Id: <1588708776-16774-1-git-send-email-wcheng@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 12:00 PM Mathieu Desnoyers
-<mathieu.desnoyers@efficios.com> wrote:
->
-> ----- On May 5, 2020, at 2:48 PM, Linus Torvalds torvalds@linux-foundation.org wrote:
-> [...]
-> >
-> > Your initial reaction that "you can't compile away the read and the
-> > test of NULL" was correct, I think.
->
-> I suspect this pattern of "if (func != NULL) func(...)" could be semantically
-> changed to just invoking an empty function which effectively does nothing.
-> This would remove the need to do a pointer check in the first place. But maybe
-> I'm missing something subtle about why it has not been done in this context.
+This series adds support for the Synopsis 7nm HSPHY USB driver being
+used in QCOM chipsets.  The HSPHY register map differs compared to 
+other PHY revisions.  In addition, modifications and updates are done
+to the QMP driver to add new registers/offsets, and to update the
+initialization sequence for enabling the SSUSB path on SM8150.
 
-Good idea, this eliminates the check: https://godbolt.org/z/Xugo9w
-but you still have an indirect tail call (I think a direct tail call
-is the desired solution?)
+Changes in v9:
+ - Fixed missing required regulators in DT bindings file
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+Changes in v8:
+ - Fix checkpatch warnings about characters per line.
+ - Rebase to linux-phy/next branch
+
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+
+Changes in v7:
+ - Use _relaxed() variants for writel/readl calls in
+   phy-qcom-snps-femto-v2.c
+ - Remove comments in the phy init function
+ - Use devm_platform_ioremap_resource instead of devm_ioremap_resource
+ - Fix chipset naming in Kconfig
+ - Address minor fixups in the YAML file (remove status in example, fix
+   "Hi-speed" to "High-speed", add a newline at the end)
+
+Changes in v6:
+ - Addressed coding style errors in phy-qcom-snps-femto-v2.c
+
+Changes in v5:
+ - Reorganize IF check for when to use the proper PWRDOWN CTRL offset
+ - Rename UFS specific offset definitions in the QMP PHY driver to clearly
+   denote they are UFS specific
+ - Rename the phy-qcom-snps-7nm driver to phy-qcom-snps-femto-v2
+
+Changes in v4:
+ - Fix POWERDOWN offset for QMP PHY exit routine, and check for
+   has_phy_dp_com_ctrl instead of !has_phy_com_ctrl
+
+Changes in v3:
+ - Use devm_reset_control_get_exclusive instead of referencing index for
+   reset handle
+
+Changes in v2:
+ - Fixed YAML errors caught by dt_binding_check
+
+Jack Pham (1):
+  phy: qcom-qmp: Add SM8150 QMP USB3 PHY support
+
+Wesley Cheng (4):
+  dt-bindings: phy: Add binding for qcom,usb-snps-femto-v2
+  phy: qcom-snps: Add SNPS USB PHY driver for QCOM based SOCs
+  phy: qcom-qmp: Use proper PWRDOWN offset for sm8150 USB
+  phy: qcom-qmp: Rename UFS PCS QMP v4 registers
+
+ .../bindings/phy/qcom,usb-snps-femto-v2.yaml       |  80 ++++++
+ drivers/phy/qualcomm/Kconfig                       |  10 +
+ drivers/phy/qualcomm/Makefile                      |   1 +
+ drivers/phy/qualcomm/phy-qcom-qmp.c                | 196 +++++++++++++-
+ drivers/phy/qualcomm/phy-qcom-qmp.h                | 238 +++++++++++++++--
+ drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c      | 287 +++++++++++++++++++++
+ 6 files changed, 776 insertions(+), 36 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
+
 -- 
-Thanks,
-~Nick Desaulniers
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
