@@ -2,254 +2,155 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF93C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5457C47259
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4018520661
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:02:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nr75qpnb"
+	by mail.kernel.org (Postfix) with ESMTP id 93C932084D
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:02:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729289AbgEEOCP (ORCPT
+        id S1729299AbgEEOCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:02:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46658 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728135AbgEEOCO (ORCPT
+        Tue, 5 May 2020 10:02:20 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:42471 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728135AbgEEOCT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:02:14 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F056FC061A0F;
-        Tue,  5 May 2020 07:02:13 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id hi11so1158167pjb.3;
-        Tue, 05 May 2020 07:02:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rKlq8O3c5copcC32HAW1rjhWIMxme3uga6U+C7OGHJ0=;
-        b=nr75qpnbNkPUaCzRZXdBcogDFrvnmc2gSoGUQLRIWPcHDRFpqgOUQiyXUIAI4VQBGA
-         fxBEVZm80tAQexmeaLuN3K/ZjE0jRWJlBvE/T9LluVyhXbFILCyLa3ElLczTstkf4qdq
-         FW2QwsqjOuV6aKl8VfhURQSYuP5iFEx3alG3IlA9LV9hqWkxGpECOjppWlhgLREwMTL8
-         qPzfErRdmyrJRVIk8IhYGP5V3jZ8mqP9zXhUfJ/jFi34sQ59h4O95x0PT0mfkZvTEQk6
-         WQilx5P7R6GDv1OWidyHE+QOMviQwoGyX51kvDIZlm5TNhyAqsg31TIKFJO3j+hnjoxz
-         zgLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rKlq8O3c5copcC32HAW1rjhWIMxme3uga6U+C7OGHJ0=;
-        b=TKAlm4dQZ1AYiBlvxAZeONRAYRL+7IbcYim1QYNgVRzbDrtlm22uBSxHVdb2098jHu
-         vNFIStEu/HJiVqmetbrRii+4NSpmTKDFxOh0Fa/LxeI2Gcsa2dvTZCUsQP49Kza7iGT6
-         0ey/EXX0ZR9Vemx1YTNNte0TN0K5OE04IflqJmz0/ct6dFtueyLib8ycEs5o8GPnSNCE
-         5diWkXVtsznhUFTKHgFabChTusvSwlwc6CTYAFHQA9wsr3QTq40YQ84/eWOOSxTIkpp/
-         MwzH0OCqJcYAsP5OdzyDVjlLHwokvasn4YtKk9YOvsURo6WdF2FLVUg3c14YAc6MmD8p
-         RYLg==
-X-Gm-Message-State: AGi0PubK7jbWV1zmm/QVsZv4fIV6Lr5pvw5Rcou41v2dq96JKFUG3LSt
-        gPv0Gv+GpSyw67cn8ELhPWoTkeUbiU/pd0Mr+2A=
-X-Google-Smtp-Source: APiQypKPV25wPEZiONVtHiRM7MahgM9v51nz1yL9Frz3wKlrqfbdtZcP4Z7e/ybhH8pb45Ec99hS4Ho9FQh/pG3xLF8=
-X-Received: by 2002:a17:90a:fa81:: with SMTP id cu1mr3291971pjb.25.1588687333205;
- Tue, 05 May 2020 07:02:13 -0700 (PDT)
+        Tue, 5 May 2020 10:02:19 -0400
+Received: from localhost.localdomain ([149.172.19.189]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1N49Qd-1j5KPS3F33-0107Nn; Tue, 05 May 2020 16:02:11 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Hawking Zhang <Hawking.Zhang@amd.com>,
+        John Clements <john.clements@amd.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Tao Zhou <tao.zhou1@amd.com>,
+        Guchun Chen <guchun.chen@amd.com>,
+        Dennis Li <Dennis.Li@amd.com>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/amdgpu: allocate large structures dynamically
+Date:   Tue,  5 May 2020 16:01:52 +0200
+Message-Id: <20200505140208.284473-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-References: <20200425133939.3508912-0-mholenko@antmicro.com>
- <20200425133939.3508912-5-mholenko@antmicro.com> <CAHp75VfsiAaZez7nv7Z7E-5NL0_xObzi_LZsiWbms54jNcyv6A@mail.gmail.com>
- <CAPk366R7ty-KAtnaTyqOH6rUewRd7Wvt6GSoB3bYpS+X_xT1CQ@mail.gmail.com>
-In-Reply-To: <CAPk366R7ty-KAtnaTyqOH6rUewRd7Wvt6GSoB3bYpS+X_xT1CQ@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 5 May 2020 17:02:06 +0300
-Message-ID: <CAHp75Ve+dJWMH722vsTQG92Y7nW8Ap+HKc2v_DV9JWquExp61Q@mail.gmail.com>
-Subject: Re: [PATCH v5 5/5] drivers/tty/serial: add LiteUART driver
-To:     Mateusz Holenko <mholenko@antmicro.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Filip Kokosinski <fkokosinski@antmicro.com>,
-        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:TSc6c1YhMkCs/1m6SAPJGzLtfTJo7NH6Kjg0A5Q4anVbFFYTPN5
+ 1czvuDksXTPHuVVr43jFu9sB5c2K9U6ytyW55vWyZ4r7H0ZUmFKe76IuD5mBKMJUf1MmwPe
+ tlZvkffxNQkE68Ei2SmM2ddGqT4IuwdBy7H+4QdwPa2l1iB61k6gKOkn+y+Hiaa/z4D32XR
+ 4c8iHqP3q0nR2voq6Q9XQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ehOmyu1YHYk=:YfokoQK8msooNpbn1YmqWu
+ OB8R4hZYKfau7q9kunjemn98+cEQ83JLib4NTIyyi7SXBQlM2UwbtF7lmaC91tJHHITRe5swG
+ 39aHpP4h60fJDMPo35ysmZ6bQqiJrrkbkNj6GQoczvZhNtnWmPQ9/pZMIuF1Bxx+0GX1t5H9V
+ 8soeOvbfWOjDrUEibO3tHcSEWbm+Yu8BUP1vMp6yalpadQuXwhXMjwvivJX0XJabCEGNG/qRl
+ er9HM3fbhZb5zRNfqBcY3pqmhSJv+2rf4T90SL45KksdW7L7oQ9FldpwfArZBmsJUznZxUHbh
+ 9hXQs5mn49vQXjB4gY499V168K/8gLQdHAUxp4Sxf2PSoZbWjags0nn8FT2SSm1R+7W9Ac63Y
+ 2+qgAspf/KnaaLRYw0AxOd+8qxbj+IFtRRUyFyHGu0uQHrOgyn19q1zdkc2H6rt4BhQDqyqh2
+ HxLHQCLBlmD7mQ9HUtmUSXSwnYAnN5faU7rK7drwpq6yHla8i7dvl6IE30adDSJ6OYK47rDq6
+ zEZZZCBYrNMjF808LpJIalmU1GLyIaHsrdkp0kzUR3yGEr8p3xRuWh7LnWa+5juk5dpB/rJM9
+ yuiJ4ZT6hsyAsFyN2/bemmwsaEqDEZVpXAm+vpvVP99ZJSDCwE47tX6UDuL4VUDK6gRlDBVTq
+ xhpfMP+/EbAm5WjojLeJQo5eHGE7EbAUm1A7RkounGFSYdRFmaUSZAUf57MbYcWmIm8Hu7FeH
+ uA9rLOi0+w1T6PGTl4QgcW3lurPeHQIxVMfMiZzZwJb+KCUnQbNYpp0UdfuBib7a4L44eBtFC
+ kn0PlqTfzUUwHMjku0boUq9b2pW5q8tkPyqqbXi3JkkTbTWn+c=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 4, 2020 at 4:44 PM Mateusz Holenko <mholenko@antmicro.com> wrote:
-> On Tue, Apr 28, 2020 at 5:50 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Sat, Apr 25, 2020 at 2:45 PM Mateusz Holenko <mholenko@antmicro.com> wrote:
+After the structure was padded to 1024 bytes, it is no longer
+suitable for being a local variable, as the function surpasses
+the warning limit for 32-bit architectures:
 
-...
+drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:587:5: error: stack frame size of 1072 bytes in function 'amdgpu_ras_feature_enable' [-Werror,-Wframe-larger-than=]
+int amdgpu_ras_feature_enable(struct amdgpu_device *adev,
+    ^
 
-> > > Signed-off-by: Filip Kokosinski <fkokosinski@antmicro.com>
-> > > Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
-> >
-> > Co-developed-by?
->
-> Most of the coding here is done by Filip Kokosinski - I'm responsible
-> for managing the patches and sending to LKML so I don't think I
-> qualify as a co-developer :)
+Use kzalloc() instead to get it from the heap.
 
-I see.
+Fixes: a0d254820f43 ("drm/amdgpu: update RAS TA to Host interface")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c | 31 +++++++++++++++++--------
+ 1 file changed, 21 insertions(+), 10 deletions(-)
 
-...
-
-> > > +#define OFF_RXTX       0x00
-> > > +#define SIZE_RXTX      1
-> > > +#define OFF_TXFULL     0x04
-> > > +#define SIZE_TXFULL    1
-> > > +#define OFF_RXEMPTY    0x08
-> > > +#define SIZE_RXEMPTY   1
-> > > +#define OFF_EV_STATUS  0x0c
-> > > +#define SIZE_EV_STATUS 1
-> > > +#define OFF_EV_PENDING 0x10
-> > > +#define SIZE_EV_PENDING        1
-> > > +#define OFF_EV_ENABLE  0x14
-> > > +#define SIZE_EV_ENABLE 1
-> >
-> > Why do you need all those SIZE_*?
-
-> This is related to how LiteX peripherals (LiteUART being one of them)
-> handle register access.
-> The LiteX HW splits a classic 32-bit register into 4 32-bit registers,
-> each one containing only 8-bit part of it.
->
-> SIZE in this context means how many of those "subregisters" (still
-> 32-bit wide, but with only 8-bit of meaningful data) to read/write.
-> The "litex.h" header (patch 3 of this patchset) provides common
-> functions for doing it, but it must know the size for each register.
-
-So, can't you simple use them as is? I still didn't get how SIZE helps here.
-
-...
-
-> > > +static struct uart_driver liteuart_driver = {
-> > > +       .owner = THIS_MODULE,
-> > > +       .driver_name = DRIVER_NAME,
-> > > +       .dev_name = DEV_NAME,
-> >
-> > Much easier to see if any name collisions are happen by grepping
-> > similar struct definitions, but these macros are making life harder.
->
-> Do you mean to avoid indirection caused by defines and write e.g.,
-> `.driver_name = "liteuart"`?
->
-> OK, but the reason we have defines in the first place is because we
-> use the same name in many places and we want to avoid inconsistencies
-> (typos, partial rename, etc.).
-> What's more, looking at other serial drivers I see the notation is not
-> consistent - many of them use defines for name/major/minor as well.
-
-The problem here that .driver_name is a part of user visible
-interface, so, when you rename it it will affect the module alias.
-How DEV_NAME is shared? It should not be, otherwise it will collide
-with other drivers.
-
-> > > +       .major = DRIVER_MAJOR,
-> > > +       .minor = DRIVER_MINOR,
-> >
-> > Ditto.
-
-Ditto.
-
-> > > +};
-
-...
-
-> > > +static const char *liteuart_type(struct uart_port *port)
-> > > +{
-> > > +       return (port->type == PORT_LITEUART) ? DRIVER_NAME : NULL;
-> > > +}
-> >
-> > Do we need this check? Do we need a port type at all?
-
-> This is inspired by serial_core.c and other serial drivers.
-> We don't support any alternative `port->types` values so it's probably
-> not necessary for us, but it seems that this is how other serial
-> drivers are written too.
-
-Legacy drivers are not the best example to take. So, if you can
-survive without UART type, please go with it. Otherwise commit message
-should point out why it's needed so eagerly.
-
-...
-
-> > > +       /* look for aliases; auto-enumerate for free index if not found */
-> > > +       dev_id = of_alias_get_id(np, "serial");
-> > > +       if (dev_id < 0)
-> > > +               dev_id = find_first_zero_bit(liteuart_ports_in_use,
-> > > +                                            CONFIG_SERIAL_LITEUART_MAX_PORTS);
-> >
-> > Racy.
->
-> We'll protect it with a mutex to avoid race conditions.
-
-Rather consider to use xArray API.
-
-...
-
-> > > +               .of_match_table = of_match_ptr(liteuart_of_match),
-> >
-> > of_match_ptr() makes no sense (you have depends on OF).
->
-> You mean that `of_match_ptr(X)` resolves simply to `X` when
-> `CONFIG_OF` is defined?
-> In this context it surely can be simplified.
-
-Yes.
-
-...
-
-> > > +static int __init liteuart_console_init(void)
-> > > +{
-
-> > > +}
-> >
-> > > +
-> >
-> > Extra blank line.
->
-> You mean we should remove an empty line between the definition of
-> liteuart_console_init() and the call to console_initcall()? It seems
-> to be inconsistent across different drivers, but sure - no problem.
-
-Less LOCs is good (but keep common sense applied).
-
-...
-
-> > > +/* LiteUART */
-> > > +#define PORT_LITEUART  123
-> >
-> > We have holes in the list, use them.
-> >
-> > And again why we need this?
->
-> This is inspired by other serial drivers that also reserves
-> identifiers in this file and handles them the same way we do. We
-> simply followed the convention.
-
-See above. This ID is a part of UAPI which is kinda redundant nowadays.
-You need to provide a good argument for that. Otherwise, get rid of it.
-
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
+index 538895cfd862..7348619253c7 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
+@@ -588,19 +588,23 @@ int amdgpu_ras_feature_enable(struct amdgpu_device *adev,
+ 		struct ras_common_if *head, bool enable)
+ {
+ 	struct amdgpu_ras *con = amdgpu_ras_get_context(adev);
+-	union ta_ras_cmd_input info;
++	union ta_ras_cmd_input *info;
+ 	int ret;
+ 
+ 	if (!con)
+ 		return -EINVAL;
+ 
++        info = kzalloc(sizeof(union ta_ras_cmd_input), GFP_KERNEL);
++	if (!info)
++		return -ENOMEM;
++
+ 	if (!enable) {
+-		info.disable_features = (struct ta_ras_disable_features_input) {
++		info->disable_features = (struct ta_ras_disable_features_input) {
+ 			.block_id =  amdgpu_ras_block_to_ta(head->block),
+ 			.error_type = amdgpu_ras_error_to_ta(head->type),
+ 		};
+ 	} else {
+-		info.enable_features = (struct ta_ras_enable_features_input) {
++		info->enable_features = (struct ta_ras_enable_features_input) {
+ 			.block_id =  amdgpu_ras_block_to_ta(head->block),
+ 			.error_type = amdgpu_ras_error_to_ta(head->type),
+ 		};
+@@ -609,26 +613,33 @@ int amdgpu_ras_feature_enable(struct amdgpu_device *adev,
+ 	/* Do not enable if it is not allowed. */
+ 	WARN_ON(enable && !amdgpu_ras_is_feature_allowed(adev, head));
+ 	/* Are we alerady in that state we are going to set? */
+-	if (!(!!enable ^ !!amdgpu_ras_is_feature_enabled(adev, head)))
+-		return 0;
++	if (!(!!enable ^ !!amdgpu_ras_is_feature_enabled(adev, head))) {
++		ret = 0;
++		goto out;
++	}
+ 
+ 	if (!amdgpu_ras_intr_triggered()) {
+-		ret = psp_ras_enable_features(&adev->psp, &info, enable);
++		ret = psp_ras_enable_features(&adev->psp, info, enable);
+ 		if (ret) {
+ 			amdgpu_ras_parse_status_code(adev,
+ 						     enable ? "enable":"disable",
+ 						     ras_block_str(head->block),
+ 						    (enum ta_ras_status)ret);
+ 			if (ret == TA_RAS_STATUS__RESET_NEEDED)
+-				return -EAGAIN;
+-			return -EINVAL;
++				ret = -EAGAIN;
++			else
++				ret = -EINVAL;
++
++			goto out;
+ 		}
+ 	}
+ 
+ 	/* setup the obj */
+ 	__amdgpu_ras_feature_enable(adev, head, enable);
+-
+-	return 0;
++	ret = 0;
++out:
++	kfree(info);
++	return ret;
+ }
+ 
+ /* Only used in device probe stage and called only once. */
 -- 
-With Best Regards,
-Andy Shevchenko
+2.26.0
+
