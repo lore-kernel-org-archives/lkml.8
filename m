@@ -2,187 +2,136 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0BCAC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06106C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0D6C2078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D176A20746
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:45:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o75AfWlt"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="T00n5b+o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730694AbgEEPpQ (ORCPT
+        id S1730705AbgEEPpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:45:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34992 "EHLO
+        Tue, 5 May 2020 11:45:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729612AbgEEPpN (ORCPT
+        with ESMTP id S1730682AbgEEPpP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:45:13 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08D66C061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 08:45:13 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id t11so1751875lfe.4
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 08:45:12 -0700 (PDT)
+        Tue, 5 May 2020 11:45:15 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCEECC061A10
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 08:45:14 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id o10so2319693qtr.6
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 08:45:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=yF0rSv5G8dMiG2t0mZJS418QhuFNKXhIXOuNkoLggjA=;
-        b=o75AfWltUD9X/y2+TGKaVDgLD1U3ggtfbDawvA2uueQVC/Qb/RZaIz6B4+WW2k4Id0
-         LdT7tgHLS1cRyYtv0Ww64GCQfuiQSFOnTeYgN9FQHNqaxtmv+8pstfmAtPAcixCGziHG
-         rtNjp/zd3VQahq6R8KbEsrNgQpYJl2w0kI/stJu/L3FrqMweTpoHlNvyyKOY2yJCRdC7
-         bNazpewSsa4eJUPDeR/tG3Z0Q/0NtOGsDxkFC4ibE1GdjtpJe4FmNna034KjjN8tdq+I
-         sSnekhNkhp08qhC7Pj4aVz064GhT1W8kEIMBG4TTtibTf5k+tjODCbNyr3DQb/hp0JKo
-         ACNw==
+        d=soleen.com; s=google;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=F+4SVdWRlFJxnpjgzasS5JspfSz6j1yd8grF/PAppTQ=;
+        b=T00n5b+oSujUoVq9Z+LR8fGuvltBcys+J/cMjZ43GxX17HfOte90BRwC0yFHgeloy3
+         g33W9r3kpjfiEzl6XkZ6QbPSadqWfexzoHSKY5+3OTIIydoF6N3C9+fABrvRoK76orMY
+         dzMuRaIvGNLq6U7Q9x1esMQo+HwKM6Hr7KP75s1/W8mVOZXgh27RBt/sZQS+xOJobww/
+         Ge6yNUjO90b+9imM+W9uQnEJ93L5bAcmHgIyZrDT2kBnh21vlzD2pDW7VYBMGqrHvWkL
+         +eBsdRU8EL/Qu0ygBSlcxtVhubdqfa/Y5ngJc7GolQwHiRiPdPJCmTLZE3FOvoKebrGm
+         4nOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=yF0rSv5G8dMiG2t0mZJS418QhuFNKXhIXOuNkoLggjA=;
-        b=S3XxdIiyCTGEahG7XuHMZo5EqSRWenQDXQYLQOlyoQK51YT8ZIh/70xqCdrin+lF1Z
-         0sOQM29fIpuT+M/ZRNczkRxVIwbKbLY25oMHobb+xpN2ajs2D4ooTo56EIt5m+wfECWO
-         h2XY+8vRHF2rw00K01T/8/v/nIQ/7fsorMDEIg534fvd5eCLTHFblQ3jZtZmWVG2fK42
-         KUDDRbno3mEQGSyE5hEJwkuzkRKbH/Ja3PILwPcuvK6nioJJA5fdYjQYy0JLPWlsskOV
-         tMCpRn/Fy4ur5jr1TNuQOE6ND/67MzWQBfgnzJE5mbK+tbMsqV4g0hW4mHHEZ/3GYk69
-         Y/mQ==
-X-Gm-Message-State: AGi0PuahHPWFr44nCikN9G/F+U8Cp4BrKrkTguKLmCxmtooO2SIIH05i
-        xyugJvbBCeQ5XIlPVRrBKbzc8y029Z5RioaBfmjqRQ==
-X-Google-Smtp-Source: APiQypLzj3q2ckmPSuxHoT7j0Si2HArFLe4uE91Czny4cnljFLAreRe7/ipkVasASjQusjOm4Q23/VFvqYR/e1fvbGI=
-X-Received: by 2002:a19:4883:: with SMTP id v125mr2054645lfa.95.1588693511387;
- Tue, 05 May 2020 08:45:11 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=F+4SVdWRlFJxnpjgzasS5JspfSz6j1yd8grF/PAppTQ=;
+        b=ADz3IPc6JrsJa/m6j1nG7GrMPLq7BMIAjkpe5O8CPfW1im4dvJqpcTue9nP5tXx4G/
+         gss/7n2ynvmeFpNrlpezXV1KlM3mQzfkMEBpa7HoRgQrM9hYtYuDxuKHVTfS3uKmqnGh
+         B24BzjbewvB1Un4W2YDHQrFq9NpkQzYUeXU0FjOsYiWGXYNyF0K7Z0bFl4xOP+SrUqcr
+         Uhh4fofC2Kjn2mn4JPhIJmWGeMdlgM6uqm9s8EfccEGfzOd7YD4lSkze8JA6B1VLQHS1
+         PHMMmZExCA8AI1k8AHwasS/D40FlNb8S4x9UHCFm6p4305tBzVyVxchB/A2Ng6L60lss
+         Pf8w==
+X-Gm-Message-State: AGi0PuYEzRObVAdT09P2rjsz3G1QYb8jXNiMjaesTNxIRDJlZy46H3Bt
+        QNkpwl+4LdESVVz3cVOlsp0acA==
+X-Google-Smtp-Source: APiQypIYfkAPNj3MZ2vxjqvBSwGBRWN0NaGzZ5h6LwCTvoMZorwTkHaSbpnD+l7igUu8/0J3u8897w==
+X-Received: by 2002:ac8:6f03:: with SMTP id g3mr3220891qtv.10.1588693514106;
+        Tue, 05 May 2020 08:45:14 -0700 (PDT)
+Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
+        by smtp.gmail.com with ESMTPSA id x7sm2122407qkx.36.2020.05.05.08.45.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 08:45:13 -0700 (PDT)
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
+        linux-kernel@vger.kernel.org, pmladek@suse.com,
+        sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
+        keescook@chromium.org, anton@enomsg.org, ccross@android.com,
+        tony.luck@intel.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v2 1/5] printk: honor the max_reason field in kmsg_dumper
+Date:   Tue,  5 May 2020 11:45:06 -0400
+Message-Id: <20200505154510.93506-2-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200505154510.93506-1-pasha.tatashin@soleen.com>
+References: <20200505154510.93506-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
-References: <20200504165442.028485341@linuxfoundation.org>
-In-Reply-To: <20200504165442.028485341@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 5 May 2020 21:14:58 +0530
-Message-ID: <CA+G9fYvLpEwde0kaPcdvPW+FU=kmdyKYoGYhnD9OBirWtucmqg@mail.gmail.com>
-Subject: Re: [PATCH 4.9 00/18] 4.9.222-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 4 May 2020 at 23:30, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.9.222 release.
-> There are 18 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 06 May 2020 16:52:55 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.9.222-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.9.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+kmsg_dump() allows to dump kmesg buffer for various system events: oops,
+panic, reboot, etc. It provides an interface to register a callback call
+for clients, and in that callback interface there is a field "max_reason"
+which gets ignored unless always_kmsg_dump is passed as kernel parameter.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Allow clients to decide max_reason, and keep the current behavior when
+max_reason is not set.
 
-Summary
-------------------------------------------------------------------------
+Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+---
+ include/linux/kmsg_dump.h |  1 +
+ kernel/printk/printk.c    | 15 +++++++++++----
+ 2 files changed, 12 insertions(+), 4 deletions(-)
 
-kernel: 4.9.222-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.9.y
-git commit: f8abf65f20c5e9296d6aeb69c452160ab639d8be
-git describe: v4.9.221-19-gf8abf65f20c5
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
-ld/v4.9.221-19-gf8abf65f20c5
+diff --git a/include/linux/kmsg_dump.h b/include/linux/kmsg_dump.h
+index 2e7a1e032c71..cfc042066be7 100644
+--- a/include/linux/kmsg_dump.h
++++ b/include/linux/kmsg_dump.h
+@@ -28,6 +28,7 @@ enum kmsg_dump_reason {
+ 	KMSG_DUMP_RESTART,
+ 	KMSG_DUMP_HALT,
+ 	KMSG_DUMP_POWEROFF,
++	KMSG_DUMP_MAX
+ };
+ 
+ /**
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 9a9b6156270b..1aab69a8a2bf 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -3157,12 +3157,19 @@ void kmsg_dump(enum kmsg_dump_reason reason)
+ 	struct kmsg_dumper *dumper;
+ 	unsigned long flags;
+ 
+-	if ((reason > KMSG_DUMP_OOPS) && !always_kmsg_dump)
+-		return;
+-
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(dumper, &dump_list, list) {
+-		if (dumper->max_reason && reason > dumper->max_reason)
++		enum kmsg_dump_reason cur_reason = dumper->max_reason;
++
++		/*
++		 * If client has not provided a specific max_reason, default
++		 * to KMSG_DUMP_OOPS, unless always_kmsg_dump was set.
++		 */
++		if (cur_reason == KMSG_DUMP_UNDEF) {
++			cur_reason = always_kmsg_dump ? KMSG_DUMP_MAX :
++							KMSG_DUMP_OOPS;
++		}
++		if (reason > cur_reason)
+ 			continue;
+ 
+ 		/* initialize iterator with data about the stored records */
+-- 
+2.25.1
 
-No regressions (compared to build v4.9.221)
-
-No fixes (compared to build v4.9.221)
-
-Ran 26505 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- juno-r2-compat
-- juno-r2-kasan
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fs-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* v4l2-compliance
-* kvm-unit-tests
-* libhugetlbfs
-* ltp-hugetlb-tests
-* ltp-mm-tests
-* network-basic-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-open-posix-tests
-* kselftest/net
-* kselftest/networking
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
