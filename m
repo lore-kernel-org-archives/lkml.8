@@ -2,88 +2,111 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC123C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 640E3C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9CDE2495A
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:53:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4112B2495A
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588694020;
-	bh=p9Woo9z9n8xA+9kz94/h9Cdxg2sbFA84E5pUXLlkmCI=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=dxPCVLQ14tzZB5mB+nf/1loXOQGjJComkiQWKQyavsatRJ8qbS5a4dqDeOXtxqate
-	 7nSEI9DJWJkWKOC3TTeiv5/5yhgTLYy4rxmtJg+oPsvBkQbVTX+fsXoeVSKakllwjs
-	 PVphnZjyvJoCvxIS6hQFqjD4n3O24er7EHPXuy1Q=
+	s=default; t=1588694049;
+	bh=h7XJ5IEke0nE3YO8tGZYNwWJdf4LMHUJvgxmMzKZJlc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FfxnhH6LPTI+htIoUW0nGJHZ+CHE7myxcfVeXwdZySZHlDTdW78n4QL+bB+U4k4vR
+	 57H5Hufm+qO06oNWin87j2kul3QPH33h/uV1utXXXmS3VaEQRj4nWJwjY6/vaRi1bt
+	 eVLpEg52XTQKFzftQXJUbr7Hd/DCQX2qRY205Ys8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730165AbgEEPxk (ORCPT
+        id S1730203AbgEEPyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:53:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39374 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729317AbgEEPxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:53:39 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF73C20663;
-        Tue,  5 May 2020 15:53:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588694019;
-        bh=p9Woo9z9n8xA+9kz94/h9Cdxg2sbFA84E5pUXLlkmCI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=LOjMLRi+77aXP7Yv6CyDHZGZ0/KkTr9uxppBKEvWgLvsrAxH/yBXYrenLvWLikMvt
-         jUG5F9fCyJilVIHSNJBmJtkoU/bMfWFOe/U9zRLsNSFJ/EfqO1wzaLdTWuuDrCTmiQ
-         69d9yV1BbwQISE8RB73SG45G0v4Q3Ve/0b3NJcfg=
-Subject: Re: [PATCH 4.14 00/26] 4.14.179-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200504165442.494398840@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <20ccf168-6636-2032-a5ca-d5a2aacabdb5@kernel.org>
-Date:   Tue, 5 May 2020 09:53:38 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 11:54:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36430 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729150AbgEEPyI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 11:54:08 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E83BAC061A0F;
+        Tue,  5 May 2020 08:54:07 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id h26so2332799qtu.8;
+        Tue, 05 May 2020 08:54:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=v3uxQIYXEUSRnI5mMzO80Z7OA/WXwhyvyfvFB5PsW3M=;
+        b=bi5sRw5T4v8EMdNLYVF9CC8SVI8wAQojk6MdL1BCSvnn67T02STBZUpPDIBHvnZCcj
+         qgdLfBWVP5oOr1xw/TpNTSbFnbeJKl8zAVzdq7k+Q62ofw/xvXyuqy0+rMSJa55ebfyD
+         2hDA3zfCyMkFik+CS6+t8cdyLMKrIxruqMr2fhYuwGSOSJnzaBd/M12op0boJdKOTe/m
+         gxbA+vF5hc2qyc+9fVc9rBUM11bzyv3fXO1wS5dbKC6fgIpHHKX4eTQDtoCDGVm02EU2
+         Cq9rFx/fEcJ/nrU8AHAgvDCIT9EqKOuAkq1YJYcEJ7mpg0bdhnhUr1V7qP+4E6AZ6DdK
+         JCpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=v3uxQIYXEUSRnI5mMzO80Z7OA/WXwhyvyfvFB5PsW3M=;
+        b=kVzOthcKpuhOcALPO/fI9LGf1q26NCorXZQO6Jqn2eu9sQuDMRKyett8q4jXGKvUsk
+         ClQs4n0GnsYC7yARzZSfAJ5bwbrvJoGQwlrI2FQJ48aRPhNahNwtt19loGFhqPM4IaOy
+         s2RyJw3n9GupsuGKju5c3EQwbqgQFt/nJI1ntUuLt3Zs564hs/O8h+pIgLHXP1wE+I0e
+         tlEoSWGeP0XMVKw0pTIw049SjmZX0l6E2Cf+jk5M2f8EwpUpdw6vBdGyvZsEnPz69lMT
+         R0/6CfpDphbQsOF8FXOatNdIfvSBG+0yAlbCgxTbsNl6mXrn9w27f6ppvK7dXmeJn0fz
+         l2zA==
+X-Gm-Message-State: AGi0PuYMhEXP12oQxAh3laINrlyxbnllRZXyZe4s6HQ/nnMd3tWqBgs0
+        L0BMudB9H2R1RoFztHMCt6a+vNmJIEs=
+X-Google-Smtp-Source: APiQypJarG8TrXh/1uXdoQr9xHKdB5xbqE4LDytOnqLJJdhq9JAGkL2XlcLm36r5eeDId3XwYVyowg==
+X-Received: by 2002:ac8:19dd:: with SMTP id s29mr3417047qtk.164.1588694047013;
+        Tue, 05 May 2020 08:54:07 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:5ece])
+        by smtp.gmail.com with ESMTPSA id b11sm2092051qti.50.2020.05.05.08.54.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 08:54:06 -0700 (PDT)
+Date:   Tue, 5 May 2020 11:54:05 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        Jeff Layton <jlayton@redhat.com>,
+        David Howells <dhowells@redhat.com>, Shaohua Li <shli@fb.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/4] allow multiple kthreadd's
+Message-ID: <20200505155405.GD12217@mtj.thefacebook.com>
+References: <1588348912-24781-1-git-send-email-bfields@redhat.com>
+ <CAHk-=wiGhZ_5xCRyUN+yMFdneKMQ-S8fBvdBp8o-JWPV4v+nVw@mail.gmail.com>
+ <20200501182154.GG5462@mtj.thefacebook.com>
+ <20200505021514.GA43625@pick.fieldses.org>
 MIME-Version: 1.0
-In-Reply-To: <20200504165442.494398840@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505021514.GA43625@pick.fieldses.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/4/20 11:57 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.179 release.
-> There are 26 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 06 May 2020 16:52:55 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.179-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Hello, Bruce.
 
-Compiled and booted on my test system. No dmesg regressions.
+On Mon, May 04, 2020 at 10:15:14PM -0400, J. Bruce Fields wrote:
+> We're currently using it to pass the struct svc_rqst that a new nfsd
+> thread needs.  But once the new thread has gotten that, I guess it could
+> set kthread->data to some global value that it uses to say "I'm a knfsd
+> thread"?
+> 
+> I suppose that would work.
+> 
+> Though now I'm feeling greedy: it would be nice to have both some kind
+> of global flag, *and* keep kthread->data pointing to svc_rqst (as that
+> would give me a simpler and quicker way to figure out which client is
+> conflicting).  Could I take a flag bit in kthread->flags, maybe?
 
-thanks,
--- Shuah
+Hmm... that'd be solvable if kthread->data can point to a struct which does
+both things, right? Because it doesn't have free() callback, it's a bit
+awkward but the threadfn itself can unlink and RCU-free it before returning.
 
+Thanks.
+
+-- 
+tejun
