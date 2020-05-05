@@ -2,114 +2,169 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A538C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D4BC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76202206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42FDC20838
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:30:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588692610;
+	bh=eJrWG80ogV3Gj9Sbj3/SJNMeUIC26HQBDFVpeMaABME=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=nWrRlUZn1u+xkJX7KFHhACkL1DnT2lNddhKxbRx6gyTMC8sMdgw6IgXL2AM0RBK+F
+	 Mmm3mgVoqr2Lyxz/avJjU0jX0pGFQbTsJN1uvsPgCA4xxbV7NtDu+jjwi54feqfjCN
+	 5VTZs00Sy/PWJipdjMwz1M9C7g8gLdOpzI9g3ARA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729968AbgEEP3P (ORCPT
+        id S1729970AbgEEPaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:29:15 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:34801 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729392AbgEEP3O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:29:14 -0400
-Received: from mail-qk1-f171.google.com ([209.85.222.171]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1N4i3d-1j6vcM1OR5-011hLo for <linux-kernel@vger.kernel.org>; Tue, 05 May
- 2020 17:29:13 +0200
-Received: by mail-qk1-f171.google.com with SMTP id t3so2708313qkg.1
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 08:29:13 -0700 (PDT)
-X-Gm-Message-State: AGi0Pub9vNLVkkV5nOTNWRycAHBPZYj6sGmwid95hn5R0fdu2VbNCqei
-        TFIcpr++LXSUf5khJ+knt4Et0a+bb/kxE6kmTms=
-X-Google-Smtp-Source: APiQypKAatSudP8aUlQtpECyiIhS5dMTJTbNMrIUHmJFtKEtt151ryEXaQP5JMg42FXgb88XoxDiySGwQlzjdXW+i50=
-X-Received: by 2002:a37:aa82:: with SMTP id t124mr3905009qke.3.1588692552175;
- Tue, 05 May 2020 08:29:12 -0700 (PDT)
+        Tue, 5 May 2020 11:30:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57848 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729281AbgEEPaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 11:30:09 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 181F3206B9;
+        Tue,  5 May 2020 15:30:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588692608;
+        bh=eJrWG80ogV3Gj9Sbj3/SJNMeUIC26HQBDFVpeMaABME=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=r6SYV4TXkGkGFgh+h0Ie+vs060eXdhY7pLWbZM4RJEw8/ujHB0xqMVzkfDZHgeMFL
+         NjSbxocjsoyqJ0cNXvmQAeOSjkKzJy2KpyqGo4fk+x3+m8W6us4X52cu2lQk8qpKlb
+         yF1OAOLuzyPvmAEUStvjLvMRhtjh/GkQSpx9dfa4=
+Subject: Re: [PATCH 5.6 00/73] 5.6.11-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        torvalds@linux-foundation.org
+Cc:     akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        shuah <shuah@kernel.org>
+References: <20200504165501.781878940@linuxfoundation.org>
+ <3366716c-3a30-033d-4df6-4183eb262208@kernel.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <82eb8f25-4e15-001a-1c4f-5f59400d352b@kernel.org>
+Date:   Tue, 5 May 2020 09:30:07 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200505142341.1096942-1-arnd@arndb.de> <CANpmjNMtGy6YK8zuqf0dmkykZMt=qkxkZrZNEKde1nbw84ZLkg@mail.gmail.com>
- <CACT4Y+Zpp=+JJedhMpunuUh832eJFu+af-r8631Ar0kE2nv72A@mail.gmail.com>
- <CAK8P3a23XzLhZQNuFbeQhaSNru1abPwXV_mXR_P6N6Dvxm6jFw@mail.gmail.com> <CANpmjNOE+GUG7O=WaJKQg6rdUOn+YMBhdS8enNWkD_8mdtaSBQ@mail.gmail.com>
-In-Reply-To: <CANpmjNOE+GUG7O=WaJKQg6rdUOn+YMBhdS8enNWkD_8mdtaSBQ@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 5 May 2020 17:28:55 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a36w+QFqik_sHS3T5+_DZ7XP9Y5BYqT72pnjC67T9Sn3Q@mail.gmail.com>
-Message-ID: <CAK8P3a36w+QFqik_sHS3T5+_DZ7XP9Y5BYqT72pnjC67T9Sn3Q@mail.gmail.com>
-Subject: Re: [PATCH] ubsan, kcsan: don't combine sanitizer with kcov
-To:     Marco Elver <elver@google.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Smh/UD1h+RCatZUNh5fAt4NdOdRLO2xoRL8DVAvW2SR5yA27ihp
- wd95R9B7Q4grRRSt57pSWM2839NHsjnDFKpgd5/wTvqlL8XZf58ymUDUyEe97Jz1gFaYn3b
- z1s+pwCeuaMq4lEjCJl1/vMhP0ZoQcOuz0WQ07/VuZg74q+4skF35iutbiBsWL3Zp445nZ+
- iEbMi61YGB6k4/RcQveoQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:BsAAcAL5tts=:ZQhyVcdDkNSCeAYivkFOPj
- m089480LrJwsc2an4TYFDqh3Ujfa7EkEoRj7UlP/IXnHG8tMiCDxKk5cbHWKvNNZvIGrElk1a
- imQzrgu+311UKTjyaH9N6GCMKm48iyQAt0eD8vvhA1D/c76ZN3guwtUDiNmmPgcH2Nhw2LlDv
- xp7v2Yyxb4+CokhXrX1kTyBsOs46axbWG3UecsRUxRVV4PZg81Ncgy0pl6pXfS4RsDtXES1Am
- JP3Q7zN9Rgk5nMFVwPLzc7EZe8DXKNikhwcF9ncHCDirbMQPkrSlsox/U1L48f/pFFgFof+oO
- P26BuWp3h5lzkjsYz5mcIVI9ja5EoHwFLGVepwdcxrdx3LWfXze9iUPZLwHIrxiV9KUmk7dLC
- 5FJc+IxAwXRuZ4UKI2zkHeCIU5I/Naaro0XfOeCOEeLe9ZEx8bLcUHnF6sriUxrK0wPu5Itf7
- xZpYX4TS+jaHmaIN/R5h1ZtBRlsGeyzh71PFXxI3NeKDSMLyRb06YiSLDEUsiJj7Fn4uDzOIS
- owOKD96k85Oo4p1lBhkYe6LXmf/nwKfeerGarm7GCMcQOnIBb6/PIaA0cI3V6TYcNSFIgj97y
- Vbqz+8UpSrYFyKLvXJUMGBkGc3MQoYf/tdag4U4a4duG6NlKr8o9OZIsaAtJTU2SoTf7AnkN6
- aqj44Dta+LOPZqvE1FWfZrqr4kQu+AIKXvFxFECYowXwZeiy7HtYYLm9/XGg2jTYL4jDYeGfb
- BvP/M8NdhTzvY36b5paw4CDBm9UL3ZAfE9MQiP1Cv3QGBOVMm+IoLb5N8JNvNPzC/ub3ERHMy
- uTHHzaHVfr1oGMo+0DyocY0EPUQt0DJrLfuVhkVLe+ORAcBpvE=
+In-Reply-To: <3366716c-3a30-033d-4df6-4183eb262208@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 5:20 PM 'Marco Elver' via Clang Built Linux
-<clang-built-linux@googlegroups.com> wrote:
+On 5/5/20 9:25 AM, shuah wrote:
+> On 5/4/20 11:57 AM, Greg Kroah-Hartman wrote:
+>> This is the start of the stable review cycle for the 5.6.11 release.
+>> There are 73 patches in this series, all will be posted as a response
+>> to this one.  If anyone has any issues with these being applied, please
+>> let me know.
+>>
+>> Responses should be made by Wed, 06 May 2020 16:52:55 +0000.
+>> Anything received after that time might be too late.
+>>
+>> The whole patch series can be found in one patch at:
+>>     https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.11-rc1.gz 
+>>
+>> or in the git tree and branch at:
+>>     git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git 
+>> linux-5.6.y
+>> and the diffstat can be found below.
+>>
+>> thanks,
+>>
+>> greg k-h
+>>
+>> -------------
+>> Pseudo-Shortlog of commits:
+>>
+>> Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>      Linux 5.6.11-rc1
+>>
+> 
+>> Takashi Iwai <tiwai@suse.de>
+>>      ALSA: pcm: oss: Place the plugin buffer overflow checks correctly
+>>
+>> Vasily Khoruzhick <anarsoul@gmail.com>
+>>      ALSA: line6: Fix POD HD500 audio playback
+>>
+>> Wu Bo <wubo40@huawei.com>
+>>      ALSA: hda/hdmi: fix without unlocked before return
+>>
+>> Takashi Iwai <tiwai@suse.de>
+>>      ALSA: usb-audio: Correct a typo of NuPrime DAC-10 USB ID
+>>
+>> Hui Wang <hui.wang@canonical.com>
+>>      ALSA: hda/realtek - Two front mics on a Lenovo ThinkCenter
+>>
+> 
+>>   sound/core/oss/pcm_plugin.c                       | 20 ++++---
+>>   sound/isa/opti9xx/miro.c                          |  9 ++-
+>>   sound/isa/opti9xx/opti92x-ad1848.c                |  9 ++-
+>>   sound/pci/hda/patch_hdmi.c                        |  4 +-
+>>   sound/pci/hda/patch_realtek.c                     |  1 +
+>>   sound/usb/line6/podhd.c                           | 22 ++-----
+>>   sound/usb/quirks.c                                |  2 +-
+>>   78 files changed, 554 insertions(+), 297 deletions(-)
+>>
+>>
+>>
+> 
+> Compiled and booted on my test system. Tons of the of following
+> errors in dmesg
+> 
+> Adding Takashi Iwai
+> 
+> [   33.980302] usb 2-2.4: 1:1: cannot set freq 48000 to ep 0x1
+> [   49.340581] usb 2-2.4: 2:1: cannot set freq 48000 to ep 0x82
+> [   59.580511] usb 2-2.4: 13:0: cannot get min/max values for control 2 
+> (id 13)
+> [   64.700532] usb 2-2.4: 9:0: cannot get min/max values for control 2 
+> (id 9)
+> [   69.792257] usb 2-2.4: 10:0: cannot get min/max values for control 2 
+> (id 10)
+> [   69.792736] usbcore: registered new interface driver snd-usb-audio
+> [   74.871038] usb 2-2.4: 9:0: cannot get min/max values for control 2 
+> (id 9)
+> [   79.967099] usb 2-2.4: 9:0: cannot get min/max values for control 2 
+> (id 9)
+> [   85.076961] usb 2-2.4: 9:0: cannot get min/max values for control 2 
+> (id 9)
+> [   90.191415] usb 2-2.4: 9:0: cannot get min/max values for control 2 
+> (id 9)
+> [   95.308843] usb 2-2.4: 9:0: cannot get min/max values for control 2 
+> (id 9)
+> 
+> followed by
+> 
+> [  131.172280] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+> [  136.259909] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+> [  141.380345] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+> [  146.500227] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+> [  151.620227] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+> [  156.739899] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+> [  161.859999] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+> 
+> 
+> I have audio on that port. I haven't tried yet reverting these
+> sound patches yet. demsg is filling up with these messages for
+> sure.
+> 
 
-> > --- a/lib/Kconfig.kcsan
-> > +++ b/lib/Kconfig.kcsan
-> > @@ -5,7 +5,7 @@ config HAVE_ARCH_KCSAN
-> >
-> >  menuconfig KCSAN
-> >         bool "KCSAN: dynamic data race detector"
-> > -       depends on HAVE_ARCH_KCSAN && DEBUG_KERNEL && !KASAN && !KCOV
-> > +       depends on HAVE_ARCH_KCSAN && DEBUG_KERNEL && !KASAN && !(KCOV
-> > && CC_IS_CLANG)
->
-> I wonder if we can just add this:  depends on !(KCOV &&
-> !$(cc-option,-Werror -fsanitize=thread -fsanitize-coverage=trace-pc))
->
-> Similarly for UBSAN.
->
-> That way, once Clang supports this combination, we don't need another
-> patch to fix it.
+I just tried Linux 5.7-rc4 and it also has this problem. New in rc4 as
+far as I can tell.
 
-Good idea. It probably get a little more complicated because kcov uses
-different flags depending on other options:
+thanks,
+-- Shuah
 
-kcov-flags-$(CONFIG_CC_HAS_SANCOV_TRACE_PC)     += -fsanitize-coverage=trace-pc
-kcov-flags-$(CONFIG_KCOV_ENABLE_COMPARISONS)    += -fsanitize-coverage=trace-cmp
-kcov-flags-$(CONFIG_GCC_PLUGIN_SANCOV)          +=
--fplugin=$(objtree)/scripts/gcc-plugins/sancov_plugin.so
-
-Do you have any preference on whether we should make KCSAN or KCOV
-conditional in this case? It may be easier to move the compiletime check
-into CONFIG_KCOV_ENABLE_COMPARISONS and
-CONFIG_CC_HAS_SANCOV_TRACE_PC.
-
-      Arnd
