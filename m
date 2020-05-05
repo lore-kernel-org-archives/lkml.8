@@ -2,127 +2,142 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD04DC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A21C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C68C20735
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9B932073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:36:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QjNFeugv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LU+Rvd15"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728858AbgEEMf3 (ORCPT
+        id S1728900AbgEEMgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 08:35:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728233AbgEEMf3 (ORCPT
+        Tue, 5 May 2020 08:36:09 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43711 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728268AbgEEMgI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 08:35:29 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C4CFC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 05:35:27 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id z2so1707088iol.11
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 05:35:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xU2E5RWU+v/O63KwrznJs9ME6XQVHcJaNfzZd/NFGcU=;
-        b=QjNFeugvRO/sPhDqDLHDZlvfKXMUjn82ZrSh6In3OuK1a+nHKsJUQNeICDGu6XB5jM
-         t5k94Kwr37SVcgq3xxIyqrCTdbd5bLdIk9Qlhn+rJ6N101+nvnwI3M3Ru9eH1EYd53Ea
-         2UB+93FxjvS1LHT9AETdpUUugdYs745dt/KUoNrK7DJ4u/ISBVNCLR2q/7DkB70KuW6j
-         4sGtDI9S3DSdV0VirRhfGHPOMzuMOkwOtdZL+8V+WtSK+Z/yPyPKAkMW9IhoZfX9riyY
-         YeC8xX6mV3MFjTeP/xwvuBm1vIVb13sXd1jM5icwBiqAzDW3i80aYXmxWyrVHge9jbYY
-         lCVg==
+        Tue, 5 May 2020 08:36:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588682166;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bsccUuRQy2jvqaOH6LGPQ4vtE+LhlW8wtgFKVDHoZ34=;
+        b=LU+Rvd15uKQSTHbcaFxfzVWmON/lqrYVLnTjpiRH1A/lJn5Du87nqj2s0QLteNcmmno+yi
+        n25fUaaWQGxbPe1aWDcUprvqFsGeL7p8DT1vtgtFJnbkqD8kT93GMhRVcwxaoyLn6SBU3t
+        tOOIAYTcACEBnXqJdtycoV83zs+N+9A=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-249-ZavRA1WUPru4bHb-LiSSqw-1; Tue, 05 May 2020 08:36:05 -0400
+X-MC-Unique: ZavRA1WUPru4bHb-LiSSqw-1
+Received: by mail-wr1-f71.google.com with SMTP id q13so1125064wrn.14
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 05:36:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xU2E5RWU+v/O63KwrznJs9ME6XQVHcJaNfzZd/NFGcU=;
-        b=eGiqlUfONTzehBXnWPY6Pk/OLhg+FidzgS8yDYmD3O0qQkW4NpgQuFVZ7p8WcOxsZD
-         IjoLysaEBMAnOB8lBpEMGZLDosjA5ZI7Rx15Z6MvcETSkeMyrJELSpo6sKJmKByt2dxT
-         qcDLAIm4OYyobYca8jMfP7+78LakuxY2SOflAn0EWMA31dN8DcnAUNtZUmSX9T+LOhMQ
-         H+OjclOZUxS7Vgk4whG6kiuqQDSoZbMi2ITfdbv/pe05zploUHFkfWCMLgfsguvQCSIL
-         /+8odRpk35cJm5TIzxocnDxZQs3hxUSO4kfAXms+jNjoXnYOb0ePb/u8uq41IreaHuwi
-         sIdQ==
-X-Gm-Message-State: AGi0PubTTIeySWnm6nbkcnpLHCU2jW1gqafWEBFSfUFJzY/EWWnoQwDu
-        G9fA20dW6eZjpiM2VhdprTR2Acz/waRMDrMAnrE=
-X-Google-Smtp-Source: APiQypJ2oCsId1Lc2YIzI3C27X9rrLwWndm6CFuY13/7SoqY9rHXmxj4sbnrW5I7LDMSIsHjGk/F9RUxCQyKGjFH4OA=
-X-Received: by 2002:a5d:8613:: with SMTP id f19mr3075508iol.173.1588682126509;
- Tue, 05 May 2020 05:35:26 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bsccUuRQy2jvqaOH6LGPQ4vtE+LhlW8wtgFKVDHoZ34=;
+        b=cQ1GisUHGZMewtgPf/adCQhN8mIy6W07dYUyxY5nV6/6IYMK2K0F1dYhUHbdMpa+h3
+         ti6LvHXu9GGhSnK5CxERHa9+1GZqpIBFdavROmoWb8C/3LgV2SqS5t005SncTKX332TY
+         r645BczeA3rIF/GLHaekCGmfBxn1S5JO7LCnapaPeIelDUlku8ULKVr0GWB3vmpnLH4s
+         fhP1Boc9HhuwimLim15raLb3pinF31a9ClNla/4N959bIKEqXfdzBVC/G1g5GErAUm67
+         xnC03t9Hcj+xlrT1szLIaEbR/uaDygheNhIRaSYdI3KGi8BioDWr5kCjJVf/SpjE54Ah
+         Kp6Q==
+X-Gm-Message-State: AGi0PubA3Wgf2mhyuV0tHZkQaOZQjy1s7LSbPe6ASVAq8VIKFAFX5pGg
+        5ie00ddf0JxuKVRf9wVKh0wNyjTmm7sfJ561RxP20v0fjjd0SQ0EFqYtxeZTfGJCrHI1MSWHuxa
+        fqeNprKp9YbeE+wpH9iOOkl/I
+X-Received: by 2002:a1c:3884:: with SMTP id f126mr3489104wma.91.1588682164247;
+        Tue, 05 May 2020 05:36:04 -0700 (PDT)
+X-Google-Smtp-Source: APiQypK2yQysqNlaBNEYFJEQoeRAd/S5v9BFxPbGikdmb1C+ke6RMlOFyst7gVZvWv7bHJDRTKfFpw==
+X-Received: by 2002:a1c:3884:: with SMTP id f126mr3489080wma.91.1588682164010;
+        Tue, 05 May 2020 05:36:04 -0700 (PDT)
+Received: from [192.168.178.58] ([151.20.132.175])
+        by smtp.gmail.com with ESMTPSA id 17sm3507092wmo.2.2020.05.05.05.36.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2020 05:36:03 -0700 (PDT)
+Subject: Re: [PATCH] KVM: selftests: Fix build for evmcs.h
+To:     Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>
+References: <20200504220607.99627-1-peterx@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <aebe1f8a-8c58-7508-80ed-848d3143fcad@redhat.com>
+Date:   Tue, 5 May 2020 14:36:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200430130433.11248-1-nsaenzjulienne@suse.de>
- <20200430130433.11248-3-nsaenzjulienne@suse.de> <0958ece3-feda-65c0-b0e2-893e2dfeb508@suse.com>
-In-Reply-To: <0958ece3-feda-65c0-b0e2-893e2dfeb508@suse.com>
-From:   Peter Robinson <pbrobinson@gmail.com>
-Date:   Tue, 5 May 2020 13:35:14 +0100
-Message-ID: <CALeDE9NhcXUVG-ZyCw_qLvyeA18XhqmEEpgeXD5Wt2+WO93xCA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] usb: xhci: Load Raspberry Pi 4 VL805's firmware
-To:     Matthias Brugger <mbrugger@suse.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        u-boot@lists.denx.de, bmeng.cn@gmail.com, marex@denx.de,
-        linux-kernel@vger.kernel.org, Simon Glass <sjg@chromium.org>,
-        m.szyprowski@samsung.com, s.nawrocki@samsung.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200504220607.99627-1-peterx@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->
-> On 30/04/2020 15:04, Nicolas Saenz Julienne wrote:
-> > When needed, RPi4's co-processor (called VideoCore) has to be instructed
-> > to load VL805's firmware (the chip providing xHCI support). VideoCore's
-> > firmware expects the board's PCIe bus to be already configured in order
-> > for it to load the xHCI chip firmware. So we have to make sure this
-> > happens in between the PCIe configuration and xHCI startup.
-> >
-> > Introduce a callback in xhci_pci_probe() to run this platform specific
-> > routine.
-> >
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> >
-> > ---
-> >
-> > Changes since v1:
-> >  - Create callback
-> >
-> >  board/raspberrypi/rpi/rpi.c | 12 ++++++++++++
-> >  drivers/usb/host/xhci-pci.c |  6 ++++++
-> >  include/usb/xhci.h          |  3 +++
-> >  3 files changed, 21 insertions(+)
-> >
-> > diff --git a/board/raspberrypi/rpi/rpi.c b/board/raspberrypi/rpi/rpi.c
-> > index e367ba3092..8aa78d1f48 100644
-> > --- a/board/raspberrypi/rpi/rpi.c
-> > +++ b/board/raspberrypi/rpi/rpi.c
-> > @@ -14,6 +14,7 @@
-> >  #include <lcd.h>
-> >  #include <memalign.h>
-> >  #include <mmc.h>
-> > +#include <usb/xhci.h>
-> >  #include <asm/gpio.h>
-> >  #include <asm/arch/mbox.h>
-> >  #include <asm/arch/msg.h>
-> > @@ -494,3 +495,14 @@ int ft_board_setup(void *blob, bd_t *bd)
-> >
-> >       return 0;
-> >  }
-> > +
-> > +#ifdef CONFIG_BCM2711
->
-> This won't work with rpi_arm64_defconfig.
-> Can't we just evaluate at runtime if we need to do anything in xhci_pci_fixup.
->
-> I wonder if the newer RPi4 have also a newer revision ID (see get_board_rev). If
-> so we could add another bool to struct rpi_model which will indicate us if we
-> need to notify VideoCore about vl805's firmware.
+On 05/05/20 00:06, Peter Xu wrote:
+> I got this error when building kvm selftests:
+> 
+> /usr/bin/ld: /home/xz/git/linux/tools/testing/selftests/kvm/libkvm.a(vmx.o):/home/xz/git/linux/tools/testing/selftests/kvm/include/evmcs.h:222: multiple definition of `current_evmcs'; /tmp/cco1G48P.o:/home/xz/git/linux/tools/testing/selftests/kvm/include/evmcs.h:222: first defined here
+> /usr/bin/ld: /home/xz/git/linux/tools/testing/selftests/kvm/libkvm.a(vmx.o):/home/xz/git/linux/tools/testing/selftests/kvm/include/evmcs.h:223: multiple definition of `current_vp_assist'; /tmp/cco1G48P.o:/home/xz/git/linux/tools/testing/selftests/kvm/include/evmcs.h:223: first defined here
+> 
+> I think it's because evmcs.h is included both in a test file and a lib file so
+> the structs have multiple declarations when linking.  After all it's not a good
+> habit to declare structs in the header files.
+> 
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Signed-off-by: Peter Xu <peterx@redhat.com>
+> ---
+> 
+> I initially thought it was something about my GCC 10 upgrade that I recently
+> did to my laptop - gcc10 even fails the build of the latest kernel after
+> all (though it turns out to be a kernel bug on build system rather than a gcc
+> bug). but I'm not sure about this one...
+> ---
+>  tools/testing/selftests/kvm/include/evmcs.h  | 4 ++--
+>  tools/testing/selftests/kvm/lib/x86_64/vmx.c | 3 +++
+>  2 files changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/kvm/include/evmcs.h b/tools/testing/selftests/kvm/include/evmcs.h
+> index d8f4d6bfe05d..a034438b6266 100644
+> --- a/tools/testing/selftests/kvm/include/evmcs.h
+> +++ b/tools/testing/selftests/kvm/include/evmcs.h
+> @@ -219,8 +219,8 @@ struct hv_enlightened_vmcs {
+>  #define HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_MASK	\
+>  		(~((1ull << HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT) - 1))
+>  
+> -struct hv_enlightened_vmcs *current_evmcs;
+> -struct hv_vp_assist_page *current_vp_assist;
+> +extern struct hv_enlightened_vmcs *current_evmcs;
+> +extern struct hv_vp_assist_page *current_vp_assist;
+>  
+>  int vcpu_enable_evmcs(struct kvm_vm *vm, int vcpu_id);
+>  
+> diff --git a/tools/testing/selftests/kvm/lib/x86_64/vmx.c b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
+> index 6f17f69394be..4ae104f6ce69 100644
+> --- a/tools/testing/selftests/kvm/lib/x86_64/vmx.c
+> +++ b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
+> @@ -17,6 +17,9 @@
+>  
+>  bool enable_evmcs;
+>  
+> +struct hv_enlightened_vmcs *current_evmcs;
+> +struct hv_vp_assist_page *current_vp_assist;
+> +
+>  struct eptPageTableEntry {
+>  	uint64_t readable:1;
+>  	uint64_t writable:1;
+> 
 
-I believe they're ones ending in 03112:
-https://github.com/raspberrypi/documentation/tree/master/hardware/raspberrypi/revision-codes
+Queued, thanks.
+
+Paolo
+
