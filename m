@@ -2,101 +2,167 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4DCC47259
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0067C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51C622078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF268207DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:38:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588693104;
-	bh=vnZGTV0PFahJKuxybhCdgPOyDfTZu2dHlmXzSmZauCI=;
+	s=default; t=1588693120;
+	bh=3W26vIyawNWhQZ3IQGVthLbTU/RzTxftlZGZOraRRp8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l1gOQUevhvt5mdILPOMG8Ljepw6yer6a1Ainhm8GUnu1t6FaRx/O0iK4VY4jjYxJD
-	 jh2CimxpsAm8J7hjLfW+tVAbQoi/T4Ba4E8NuDmMcCnF5x58kgJnwJ9M/0c3hUMd9u
-	 QDKyU/LqftlL30k2EnslOdA6wf+OkeebHPizVwv8=
+	b=0OF7Lcjetwx5GJKCXhpySjRHalenFvOVs+GvIEyGJCjbGFljS/40zcv8OvhHdN2ub
+	 iqzy4wHv8wcbBoAeu63ZqP1FjG+cW0WSC3l3DBbRnLThL/kNk0nXF/u9sNqo6WSxBD
+	 qoznoKWCKQlNA8dw1ZyeJTolaQxOXRGeMrGdxM24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730146AbgEEPiX (ORCPT
+        id S1730270AbgEEPik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:38:23 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:37259 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729276AbgEEPiX (ORCPT
+        Tue, 5 May 2020 11:38:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33896 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729276AbgEEPij (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:38:23 -0400
-Received: by mail-oi1-f194.google.com with SMTP id r25so2335440oij.4;
-        Tue, 05 May 2020 08:38:22 -0700 (PDT)
+        Tue, 5 May 2020 11:38:39 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36230C061A0F;
+        Tue,  5 May 2020 08:38:39 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id fb4so1198841qvb.7;
+        Tue, 05 May 2020 08:38:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=BXdArichtJxJSpMdJATI60C/n/3lvsy1fL/KOG1aR0o=;
+        b=Qgxse7dVakSkufrx/Jt+udb+ymexH65VUMnEUWLtLKEfqRpwkmZlz5vI4O25vYATuy
+         VVaC5aOnEDpNMe0z4vb1MBK8RuTdKfE1z+9MXMsUa8Z7ppPI9jeLSH+Y8Hs6hSeLIt7Z
+         XdQeFLLxaDYlVJjnLRQT2fRAPqAx2+GxrlAFS5lYDNwWv5TZOo8aje30hyhqww7q5VgE
+         hFxkjqHOBiRON9nOAlxbQxTz+54tsN16QGn69GNDWSv9wEK3DmoNTZSaJqVrx9A7Mk8y
+         00VmVkyFxFDtx76koAUjHf4CeJ1KqeHm5lGGRIjrmR90TSFZ8z6JZKNkLs+fowxAlB76
+         0AAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kqQrkElLVWgKrW0ocIK6no1Eo72/15ji6o+a599XdUg=;
-        b=CfrW0kZs1N7xQV8YSJo4KJASPyM3oQVRbxwp7dA2dnXgoBSBlOU7YUlIS0xJc8LuPn
-         /u2WkdAJF0NhnLM1tjTvvzPxU623oE7kZveH8TCciBLIRe8q9bFz5wKwWqakiCLmujIX
-         nEXLwlIyvFhb1VEby7nld0ii9WUb+YfmhuwU4gzNwxli4LOorPvxweka8IIDDi2rFt8T
-         dyBpyl+FRLyvyI1Amso0EI+qE0b7isQVzUz9W3ijjDwxqYKFtxmsOjFba0NXcJDglQgU
-         apJIIXyMBdgmnh/k0pVrMqYcK5PSTVEftW+azO9kUWhaXgjlWzCOwzHNin3XzGNlATAS
-         Y6nQ==
-X-Gm-Message-State: AGi0Pubnz5beSXZjdv7yPFLZoCQSpYvjKaPt2feb1xjhFGYwsDu6UleQ
-        w6j6/4g08jFbVAi4/snOPw==
-X-Google-Smtp-Source: APiQypKYusD1gPoY+0joGmEA7TK8cSMo/0ZQO2nI0p43i7rGC3r3RtktHEbFfvgfs6RduoaUzLO7zg==
-X-Received: by 2002:aca:5806:: with SMTP id m6mr2830103oib.178.1588693102213;
-        Tue, 05 May 2020 08:38:22 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p17sm656724oot.17.2020.05.05.08.38.19
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=BXdArichtJxJSpMdJATI60C/n/3lvsy1fL/KOG1aR0o=;
+        b=uB/V30Cj7YoQf1AEnOguVgXUGjpsszGm5LVJ3F7+IN8zbdibi2WVeP9e9444Rd2pH0
+         ro8VB/suqlKhXvsR1ykUuDSWDP0HjJFLStniprmmBcsyY0IYtOA2ehnq5/snr775W7bY
+         J6nvr2WhH42k/3ka3LwPlYm4a1q52M7oycaRAcU+mSYghClHun5d8KVDwmMOkDraWdlB
+         ka/PwO6y9bAFJhMFC5PcFfIWvN6F74Z5DrevXJcu0MrR+lrFJMAZ2X5WY1n15kcVaz5x
+         8qXGAr4gqIf1xlv0UqeJQxdDtd+NwL5picZPxzNp8WV8MVBDK96APRkVX6gO+aNcyoYx
+         n74g==
+X-Gm-Message-State: AGi0PuayvpkTS0FEa5hpe3eIl1x6rKOnVnDNZkejbr9lvYYSBOf9tu7Y
+        BkpN1Zf5Yu5bXPiFPiApBDs=
+X-Google-Smtp-Source: APiQypIPmFzcysooPjiBb3SJnZHAzyV6pGruCekUBQbAVqyGjNBnCjfYXl4LmSQBc0QeZ7N4HNPQQA==
+X-Received: by 2002:ad4:434a:: with SMTP id q10mr3378243qvs.81.1588693118118;
+        Tue, 05 May 2020 08:38:38 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:5ece])
+        by smtp.gmail.com with ESMTPSA id q62sm2071319qke.22.2020.05.05.08.38.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 08:38:21 -0700 (PDT)
-Received: (nullmailer pid 28227 invoked by uid 1000);
-        Tue, 05 May 2020 15:38:19 -0000
-Date:   Tue, 5 May 2020 10:38:19 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
-Subject: Re: [PATCH 2/2] dt-bindings: thermal: tsens: Add zeroc interrupt
- support in yaml
-Message-ID: <20200505153819.GA19181@bogus>
-References: <20200505111204.963-1-manafm@codeaurora.org>
- <20200505111204.963-3-manafm@codeaurora.org>
+        Tue, 05 May 2020 08:38:37 -0700 (PDT)
+Date:   Tue, 5 May 2020 11:38:34 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Jan Kara <jack@suse.cz>, Dan Schatzberg <schatzberg.dan@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:FILESYSTEMS (VFS and infrastructure)" 
+        <linux-fsdevel@vger.kernel.org>,
+        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
+        <linux-mm@kvack.org>
+Subject: Re: [PATCH v5 0/4] Charge loop device i/o to issuing cgroup
+Message-ID: <20200505153834.GA12217@mtj.thefacebook.com>
+References: <20200428161355.6377-1-schatzberg.dan@gmail.com>
+ <20200428214653.GD2005@dread.disaster.area>
+ <20200429102540.GA12716@quack2.suse.cz>
+ <20200505064114.GI2005@dread.disaster.area>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200505111204.963-3-manafm@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200505064114.GI2005@dread.disaster.area>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  5 May 2020 16:42:04 +0530, Manaf Meethalavalappu Pallikunhi wrote:
-> Add 0C (zeroc) interrupt support for tsens in yaml.
+Hello, Dave.
+
+On Tue, May 05, 2020 at 04:41:14PM +1000, Dave Chinner wrote:
+> > OTOH I don't have a great idea how the generic infrastructure should look
+> > like...
 > 
-> Signed-off-by: Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+> I haven't given it any thought - it's not something I have any
+> bandwidth to spend time on.  I'll happily review a unified
+> generic cgroup-aware kthread-based IO dispatch mechanism, but I
+> don't have the time to design and implement that myself....
 > 
+> OTOH, I will make time to stop people screwing up filesystems and
+> block devices with questionable complexity and unique, storage
+> device dependent userspace visible error behaviour. This sort of
+> change is objectively worse for users than not supporting the
+> functionality in the first place.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+That probably is too strong a position to hold without spending at least
+some thoughts on a subject, whatever the subject may be, and it doesn't seem
+like your understanding of userspace implications is accurate.
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/qcom-tsens.example.dt.yaml: thermal-sensor@c263000: interrupt-names: ['uplow', 'critical', 'zeroc'] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/qcom-tsens.example.dt.yaml: thermal-sensor@c263000: interrupts: [[0, 506, 4], [0, 508, 4], [0, 510, 1]] is too long
+I don't necessarily disagree that it'd be nice to have a common
+infrastructure and there may be some part which can actually be factored
+out. However, there isn't gonna be a magic bullet which magically makes
+every IO thing in the kernel cgroup aware automatically. Please consider the
+followings.
 
-See https://patchwork.ozlabs.org/patch/1283470
+* Avoding IO priority inversions requires splitting IO channels according to
+  cgroups and working around (e.g. with backcharging) when they can't be.
+  It's a substantial feature which may require substantial changes. Each IO
+  subsystem has different constraints and existing structures and many of
+  them would require their own solutions. It's not different from different
+  filesystems needing their own solutions for similar problems.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
+* Because different filesystems and IO stacking layers already have their
+  own internal infrastructure, the right way to add cgroup support is
+  adapting to and modifying the existing infrastructure rather than trying
+  to restructure them to use the same cgroup mechanism, which I don't think
+  would be possible in many cases.
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+* Among the three IO stacking / redirecting mechanisms - md/dm, loop and
+  fuse - the requirements and what's possible vary quite a bit. md/dm
+  definitely need to support full-on IO channel splitting cgroup support.
+  loop can go either way, but given existing uses, full splitting makes a
+  sense. fuse, as it currently stands, can't support that because the
+  priority inversions extend all the way to userspace and the kernel API
+  isn't built for that. If it wants to support cgroup containment, each
+  instance would have to be assigned to a cgroup.
 
-Please check and re-submit.
+Between dm/md and loop, it's maybe possible that some of the sub-threading
+code can be reused, but I don't see a point in blocking loop updates given
+that it clearly fixes userspace visible malfunctions, is not that much code
+and how the shared code should look is unclear yet. We'll be able to answer
+the sharing question when we actually get to dm/md conversion.
+
+Thanks.
+
+-- 
+tejun
