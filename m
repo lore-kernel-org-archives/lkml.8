@@ -2,99 +2,99 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AAF1C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9066EC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DE18206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:30:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vz5o8n1c"
+	by mail.kernel.org (Postfix) with ESMTP id 6EB462073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:30:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729413AbgEEOaX (ORCPT
+        id S1729452AbgEEOav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:30:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51450 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727785AbgEEOaX (ORCPT
+        Tue, 5 May 2020 10:30:51 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:42439 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729148AbgEEOav (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:30:23 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0367FC061A0F;
-        Tue,  5 May 2020 07:30:23 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id r14so968320pfg.2;
-        Tue, 05 May 2020 07:30:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/8ydx1OQ+D7IiH04ZB0o6wh3QFLRJGOF1BFo03aMjE0=;
-        b=Vz5o8n1cIrMmoGP44Q46Zmp0HCKTGVL6iSF8j/jpP+jsAwG2FzRJOfqClcI3JFfmIL
-         VVD5IleJMQZXj13SdtF2r6cI0s13BqDa5RMBeC/I162mPJrW54BKbV9HSfCLMcDexZij
-         LeTo1mFhwp6asz6sKuuLUX8UP5WPTN6N6PkU3EFJkGN98n0Gi+xTTKLopwxSdxr+vOKE
-         HxBhiq8nV6SAvixOSrpMVtSDIaWDat6asa/2G7DxMbBy745Rv0Ccvfvgg8BbrPhKOLh7
-         OpPX+31VkVkC/LVUqL+18lYlS13egiSbwNvHYLzf6mYkRTlATOOT4keTyrvbgMmIQaDc
-         zHFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/8ydx1OQ+D7IiH04ZB0o6wh3QFLRJGOF1BFo03aMjE0=;
-        b=ThCEkcKctZuc+6cH5uRIuraFDwi2kiqmB6gHh6/hybUc5tA+8DLvt9BvDlS/FC2vBt
-         I7xPi+NiC/knWXOE13YlzYHd8zYGGKYguPuF+R0jXqUZks2SklpBpMwWIHy9oJJ+LOtG
-         ThEXSfQHo5nagX1ibeN32+IBwi07RrlzdZ364kPLEtD/bUiz7G1MdfOppLAVQSI6/EXZ
-         sj05IUCjLleS0XRWWheDQf3s7+uMfwQbZxZX0GabjvvgGD4DJRTYVtkgLT4OGYmnQdvP
-         Cl1WtohgH0ZgnJi8bHSpOIx0UOZ4DP1gm29oBDdYFU44KKnw9oQ6x9FvebubDWNO+vvO
-         v6+A==
-X-Gm-Message-State: AGi0PubX7sEJS2nNhh5f3iFB5mQ7PXVrSDBW5Gu9qcFlYM1uGA0BvOO0
-        RDEmRYwXLSERv/6f3I3z7vY=
-X-Google-Smtp-Source: APiQypJ9VDBm38O+rpfRbbRf4g5lKVbtUGdAU5GjiMUuycn6ou/4sv+IOjnuV2xTcLQTRwBKy1xcWQ==
-X-Received: by 2002:a62:6385:: with SMTP id x127mr3582714pfb.276.1588689022537;
-        Tue, 05 May 2020 07:30:22 -0700 (PDT)
-Received: from localhost ([49.207.51.154])
-        by smtp.gmail.com with ESMTPSA id j2sm2304373pfb.73.2020.05.05.07.30.18
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 05 May 2020 07:30:19 -0700 (PDT)
-Date:   Tue, 5 May 2020 20:00:17 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Kevin Hilman <khilman@kernel.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: omap1: fix irq setup
-Message-ID: <20200505143017.GA5263@afzalpc>
-References: <20200505141400.767312-1-arnd@arndb.de>
+        Tue, 5 May 2020 10:30:51 -0400
+Received: from localhost.localdomain ([149.172.19.189]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MekvT-1ixkId0Wnd-00alx9; Tue, 05 May 2020 16:30:30 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Jan Kara <jack@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] fsnotify: avoid gcc-10 zero-length-bounds warning
+Date:   Tue,  5 May 2020 16:30:09 +0200
+Message-Id: <20200505143028.1290686-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505141400.767312-1-arnd@arndb.de>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:9CGfPlqsG6O+oqtr6wXagl79sSxl+5NaR402II1ViR7OGlFLFXt
+ gDq2dWYsZe9jg0JqXfL2kkPQaQankYkttOr/wMmrFL1LXnFD0j9yv/ymgK4fjkFdSrl8rKb
+ fq8AZ10hG1w2k89O1s0Sx1KKiU0NDXM/Jsdwfi0RmT5VNEOvIqrYy9UlG3YJFn/bjt2nE0y
+ JYInF2O7ydt7/pKK/ABHQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lpl6YuOemig=:CEPjLM6gYwSsxt3gW2LLE5
+ iEspgsAILOPW2a0YSImo4XL582Kl1O58MX9Qnt+UJY4kGkV+qwBvmDnTBkylEP+gwwvcHDSl+
+ nzyOsyHbnivwh9msNSA8BTNCPHNEJe7q6ShgrAq3TUcLzVgB3fDzhYkT0ed9K5jP1ZXF9bPi4
+ ckTwcIo6dRDqUPt2FwG0hIcEFGCfFLPq7Ih+REQmcEQ/xmecWU0z4k43bqP4BOg+xArBfPE4I
+ lSgOyyIYkcb3IjNzRY/OQh1fOX/9fs3CADa3FDbDQuQ6DiSU9CWEIiRDSvU0UonhXESYHWf1n
+ 7GJ/3VR+rNAsd0RRT5Ixq298kKd9lDff9RxuWL8I9ilC2159YPOl6w3bnTB2h7pcumqvmhXFY
+ TAwCNKmE7EiUkDtbvCmovZj1X/+Ujysirbgw6Kl0lXsko415d97wQPUL7KjXUKfWs0EJYKwh+
+ jtP/8WgOV2dP5bz2VdLcjU/clPf7ComHYuda+2QyNCyJ8k3u+kyBkTfD5vUNpI60/MLDiMDPf
+ m6IGHWzzVjTYMiKLSdtBTAFLJu4zE7XVKecMUiPpbnB1xf56U7Rv+zf6VvJCocsWRyeL9+kTL
+ hOnyL/F+cchp4PiKDA431ig8W534gYFASQ0G74KxsL5yM4ALK8xVfgjSSOmvn0c5exwuhGfZM
+ NN+meiHg9+5S37ohizLgmVPaHju9iPb7sd0KgBFDuF5+qX0Y+zo0D/INbwCWOfj2J5lRpTZ1K
+ hHcmmtJ9p7Gy8QvQs9kJUksrS9ULFeR+vjr2jGNFSHjy5YsKbV5o8piRY07klN8MYXq+jauRG
+ B6Wdp4uhWu3TZuV2gvX7LqhobB5garPiziWq1fUAQ0le4/Dki0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+gcc-10 warns about accesses into the f_handle[] zero-length array.
 
-On Tue, May 05, 2020 at 04:13:48PM +0200, Arnd Bergmann wrote:
+fs/notify/fdinfo.c: In function 'show_mark_fhandle':
+fs/notify/fdinfo.c:66:47: error: array subscript 'i' is outside the bounds of an interior zero-length array 'unsigned char[0]' [-Werror=zero-length-bounds]
+   66 |   seq_printf(m, "%02x", (int)f.handle.f_handle[i]);
+      |                              ~~~~~~~~~~~~~~~~~^~~
+In file included from fs/notify/fdinfo.c:3:
+include/linux/fs.h:988:16: note: while referencing 'f_handle'
+  988 |  unsigned char f_handle[0];
+      |                ^~~~~~~~
 
-> A recent cleanup introduced a bug on any omap1 machine that has
-> no wakeup IRQ, i.e. omap15xx:
+This is solved by using a flexible array instead.
 
-> Move this code into a separate function to deal with it cleanly.
-> 
-> Fixes: b75ca5217743 ("ARM: OMAP: replace setup_irq() by request_irq()")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+Gustavo has done the same thing as part of a treewide change, but keeping
+this separate lets us backport it to stable kernels more easily later.
+---
+ include/linux/fs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Sorry for the mistake and thanks for the fix,
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 8690dc56e883..b229c55a8232 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -986,7 +986,7 @@ struct file_handle {
+ 	__u32 handle_bytes;
+ 	int handle_type;
+ 	/* file identifier */
+-	unsigned char f_handle[0];
++	unsigned char f_handle[];
+ };
+ 
+ static inline struct file *get_file(struct file *f)
+-- 
+2.26.0
 
-Acked-by: afzal mohammed <afzal.mohd.ma@gmail.com>
-
-Regards
-afzal
