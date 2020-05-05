@@ -2,97 +2,167 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54783C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2ED1C47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3446120735
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA44C2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:03:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729828AbgEEPDL (ORCPT
+        id S1729863AbgEEPDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:03:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:42624 "EHLO foss.arm.com"
+        Tue, 5 May 2020 11:03:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:42644 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729808AbgEEPDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:03:10 -0400
+        id S1729832AbgEEPDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 11:03:23 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC3901FB;
-        Tue,  5 May 2020 08:03:09 -0700 (PDT)
-Received: from [10.37.8.251] (unknown [10.37.8.251])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C824E3F68F;
-        Tue,  5 May 2020 08:03:08 -0700 (PDT)
-Subject: Re: [PATCH v2 0/4] kselftest: Extend vDSO tests
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>
-References: <20200429112834.24908-1-vincenzo.frascino@arm.com>
- <CAK8P3a3u05wF1DT3Wnvmapc0jixu+gp_YG=KTEN9-n4JedJ9BA@mail.gmail.com>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <b9b313b5-697e-b92e-1aca-7ad07a640a03@arm.com>
-Date:   Tue, 5 May 2020 16:04:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B10C01FB;
+        Tue,  5 May 2020 08:03:22 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2B4BB3F68F;
+        Tue,  5 May 2020 08:03:21 -0700 (PDT)
+Date:   Tue, 5 May 2020 16:03:15 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Wei Hu <weh@microsoft.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, robh@kernel.org, bhelgaas@google.com,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, decui@microsoft.com,
+        mikelley@microsoft.com
+Subject: Re: [PATCH v2 1/2] PCI: hv: Fix the PCI HyperV probe failure path to
+ release resource properly
+Message-ID: <20200505150315.GA16228@e121166-lin.cambridge.arm.com>
+References: <20200501053617.24689-1-weh@microsoft.com>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a3u05wF1DT3Wnvmapc0jixu+gp_YG=KTEN9-n4JedJ9BA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200501053617.24689-1-weh@microsoft.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+On Fri, May 01, 2020 at 01:36:17PM +0800, Wei Hu wrote:
+> Some error cases in hv_pci_probe() were not handled. Fix these error
+> paths to release the resourses and clean up the state properly.
 
-On 5/5/20 3:50 PM, Arnd Bergmann wrote:
-> On Wed, Apr 29, 2020 at 1:34 PM Vincenzo Frascino
-> <vincenzo.frascino@arm.com> wrote:
->>
->> This series extends the kselftests for the vDSO library making sure: that
->> they compile correctly on non x86 platforms, that they can be cross
->> compiled and introducing new tests that verify the correctness of the
->> library.
->>
->> The so extended vDSO kselftests have been verified on all the platforms
->> supported by the unified vDSO library [1].
->>
->> The only new patch that this series introduces is the first one, patch 2 and
->> patch 3 have already been reviewed in past as part of other series [2] [3].
->>
->> [1] https://lore.kernel.org/lkml/20190621095252.32307-1-vincenzo.frascino@arm.com
->> [2] https://lore.kernel.org/lkml/20190621095252.32307-26-vincenzo.frascino@arm.com
->> [3] https://lore.kernel.org/lkml/20190523112116.19233-4-vincenzo.frascino@arm.com
+This patch does more than that. It adds a variable to store the
+number of slots actually allocated - I presume to free only
+allocated on slots on the exit path.
+
+Two patches required I am afraid.
+
+> Signed-off-by: Wei Hu <weh@microsoft.com>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 20 ++++++++++++++++----
+>  1 file changed, 16 insertions(+), 4 deletions(-)
 > 
-> Hi Vincenzo,
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index e15022ff63e3..e6fac0187722 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -480,6 +480,9 @@ struct hv_pcibus_device {
+>  
+>  	struct workqueue_struct *wq;
+>  
+> +	/* Highest slot of child device with resources allocated */
+> +	int wslot_res_allocated;
+
+I don't understand why you need an int rather than a u32.
+
+Furthermore, I think a bitmap is more appropriate for what this
+variable is used for.
+
+> +
+>  	/* hypercall arg, must not cross page boundary */
+>  	struct hv_retarget_device_interrupt retarget_msi_interrupt_params;
+>  
+> @@ -2847,7 +2850,7 @@ static int hv_send_resources_allocated(struct hv_device *hdev)
+>  	struct hv_pci_dev *hpdev;
+>  	struct pci_packet *pkt;
+>  	size_t size_res;
+> -	u32 wslot;
+> +	int wslot;
+>  	int ret;
+>  
+>  	size_res = (hbus->protocol_version < PCI_PROTOCOL_VERSION_1_2)
+> @@ -2900,6 +2903,8 @@ static int hv_send_resources_allocated(struct hv_device *hdev)
+>  				comp_pkt.completion_status);
+>  			break;
+>  		}
+> +
+> +		hbus->wslot_res_allocated = wslot;
+>  	}
+>  
+>  	kfree(pkt);
+> @@ -2918,10 +2923,10 @@ static int hv_send_resources_released(struct hv_device *hdev)
+>  	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
+>  	struct pci_child_message pkt;
+>  	struct hv_pci_dev *hpdev;
+> -	u32 wslot;
+> +	int wslot;
+>  	int ret;
+>  
+> -	for (wslot = 0; wslot < 256; wslot++) {
+> +	for (wslot = hbus->wslot_res_allocated; wslot >= 0; wslot--) {
+>  		hpdev = get_pcichild_wslot(hbus, wslot);
+>  		if (!hpdev)
+>  			continue;
+> @@ -2936,8 +2941,12 @@ static int hv_send_resources_released(struct hv_device *hdev)
+>  				       VM_PKT_DATA_INBAND, 0);
+>  		if (ret)
+>  			return ret;
+> +
+> +		hbus->wslot_res_allocated = wslot - 1;
+
+Do you really need to set it at every loop iteration ?
+
+Moreover, I think a bitmap is better suited for what you are doing,
+given that you may skip some loop indexes on !hpdev.
+
+>  	}
+>  
+> +	hbus->wslot_res_allocated = -1;
+> +
+>  	return 0;
+>  }
+>  
+> @@ -3037,6 +3046,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  	if (!hbus)
+>  		return -ENOMEM;
+>  	hbus->state = hv_pcibus_init;
+> +	hbus->wslot_res_allocated = -1;
+>  
+>  	/*
+>  	 * The PCI bus "domain" is what is called "segment" in ACPI and other
+> @@ -3136,7 +3146,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  
+>  	ret = hv_pci_allocate_bridge_windows(hbus);
+>  	if (ret)
+> -		goto free_irq_domain;
+> +		goto exit_d0;
+>  
+>  	ret = hv_send_resources_allocated(hdev);
+>  	if (ret)
+> @@ -3154,6 +3164,8 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  
+>  free_windows:
+>  	hv_pci_free_bridge_windows(hbus);
+> +exit_d0:
+> +	(void) hv_pci_bus_exit(hdev, true);
+
+Remove the (void) cast.
+
+Lorenzo
+
+>  free_irq_domain:
+>  	irq_domain_remove(hbus->irq_domain);
+>  free_fwnode:
+> -- 
+> 2.20.1
 > 
-> Not sure if you are aware of the recent bug report about clock_gettime64()
-> returning invalid times on some arm32 kernels:
-> https://github.com/raspberrypi/linux/issues/3579
-> 
-
-No, I was not aware of the problem. There has been no mention on the arm list
-(unless I missed it). I can try to have a look at it as soon as I get some time.
-
-> Regardless of when that gets fixed or by whom, I wonder if kselftest should
-> also check for consistency, i.e. call both the vdso and the syscall version of
-> clock_gettime() and clock_gettime64() and check that the results are always
-> in sequence.
-> 
-
-The test #4 partially does that: it calls syscall-vdso-syscall and verifies that
-the sequencing is correct. I reused the x86 code for that. I could extend it to
-clock_gettime64() and make sure it builds on all the platforms.
-
->       Arnd
-> 
-
--- 
-Regards,
-Vincenzo
