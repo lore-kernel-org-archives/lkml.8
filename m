@@ -2,95 +2,136 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4512CC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1458C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19BA120752
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:29:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NVCV1RM5"
+	by mail.kernel.org (Postfix) with ESMTP id D28C720746
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:30:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588699838;
+	bh=MouvZdHsdnjyis+tScVss79YLBC0aL95s0sk0aJMFZI=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=IpkKmKRiUhe0MgTxP6d8Gm1XtLwgvmQ1gTcaHhkn1ZjVteZpQw5xVtzntNarReeFz
+	 FyBDzfT873WKr/RbO6rc2URvuTlJ3FoVC8uuwC0LMRRNLL1aOaXfNRZgImVAvkV2bS
+	 N6jUN6InHDTVbEECMu8yWqxCBAohb5PTkjRgHMDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730323AbgEER3S (ORCPT
+        id S1730431AbgEERai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 13:29:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51396 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726350AbgEER3R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 13:29:17 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B3CAC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 10:29:17 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id n11so2684384ilj.4
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 10:29:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xy0GdGgxyPD00QqDkyUEiOPwjQ3So7k/pckviAaq4FE=;
-        b=NVCV1RM5ClAIH/6mqNJ7trrSjA5zx7rqNmi1XAPBnUwH3G84JzpFtbYEhIS1TxN+Nh
-         ZvBbY6NXJMbQUQyw5h7dUQ4HYy0dAKwUqNy4VxrOltngn/CwJWwyu1Lay3aCoVaHMbJS
-         zx+guv1/Av6Z+kVoiQOO+cuj9PXoEMG1/W5BZh45EcYWL6/aFmmuLFyKbsnhylrBuH9Z
-         PsHBYYEZZOXF3Puv5guv58xdg8/9xQmU2wWKhXQG0Szv9o3uOFLJuNAPpgxvV5LSusSF
-         MenQ8NxLweqZS4NvxVqAlhDxGVmzYhllAA0Y+ndyzOX2qIRNHJC4zoQjISeDKsxWKSTP
-         3AcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xy0GdGgxyPD00QqDkyUEiOPwjQ3So7k/pckviAaq4FE=;
-        b=jY4aHam9aolYIurJSiVW/O5fhxnokAyb3+TTxvOHysus9nGSGuh/XrGgWvwI35OcDI
-         IVzcBAAuzSFR85uFOdyxR0EkTKDtPtqntcftykZ1hBd6kv2DLy1rMUk6Y8VOYbPfq0Xx
-         oxGRWXpTYeGe1gTbmOOjIAc0ML5AiHVRcTr39vlzk4+pFrI45bzkGCYPlJ2e1IWc2m++
-         0reW2TesXdc0qynX99l3hFKgdNMgXcIscv0iPse414SXzpAfB7uHWTiD0m8n4Qm105BO
-         oEPaRJpouBvSMicjQ2jUXtjvR0CgvQY5CO/v/KutqkS6+aaL+1OMgRXt6+bozqp5ebZV
-         LU3Q==
-X-Gm-Message-State: AGi0PuY4PklWqhmp3UXalYg/6ceWDadO4A8Xu/qlg8epuqxRPSshWofL
-        WMk6IBQ1inYqU4GGMcRyAj4wsXsAqQabflbKMQ2ni/F7
-X-Google-Smtp-Source: APiQypI4jYvugc4TUYQVRke+ITxljwe+0qzc+gd6lvUOSCwaOtsQ6YyqzZd+izTlmcgOBXehrSe2YaYjXxtYVldeJa8=
-X-Received: by 2002:a92:1944:: with SMTP id e4mr5031740ilm.46.1588699756509;
- Tue, 05 May 2020 10:29:16 -0700 (PDT)
+        Tue, 5 May 2020 13:30:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35174 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729654AbgEERah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 13:30:37 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DD13206CC;
+        Tue,  5 May 2020 17:30:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588699837;
+        bh=MouvZdHsdnjyis+tScVss79YLBC0aL95s0sk0aJMFZI=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=fm3MM3+NNfbcyRavzlXSx/Pw2qaXkwRr1YZ96Xvb+3a7EFCTzLxkAutGjtD19No4Y
+         P1BQ1Fy12LLVUAmG2vdeq2ENsdUefItrE8mD/lLpXPBi6Htx9KdI+mfTSFG/vW3YCW
+         zJMV/+9ALDR30YQuZRLaUsbWPZeqWtYzxvRT3rdA=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id E1D4E3522F5F; Tue,  5 May 2020 10:30:36 -0700 (PDT)
+Date:   Tue, 5 May 2020 10:30:36 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     SeongJae Park <sjpark@amazon.com>
+Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        David Miller <davem@davemloft.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        sj38.park@gmail.com, netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        SeongJae Park <sjpark@amazon.de>, snu@amazon.com,
+        amit@kernel.org, stable@vger.kernel.org
+Subject: Re: Re: [PATCH net v2 0/2] Revert the 'socket_alloc' life cycle
+ change
+Message-ID: <20200505173036.GE2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <67bdfac9-0d7d-0bbe-dc7a-d73979fd8ed9@gmail.com>
+ <20200505170553.24056-1-sjpark@amazon.com>
 MIME-Version: 1.0
-References: <20200504232132.23570-1-daniel.kiper@oracle.com> <20200504232132.23570-13-daniel.kiper@oracle.com>
-In-Reply-To: <20200504232132.23570-13-daniel.kiper@oracle.com>
-From:   Matthew Garrett <mjg59@google.com>
-Date:   Tue, 5 May 2020 10:29:05 -0700
-Message-ID: <CACdnJuszO1_aNXdgKt0_5XigC-AeuBT=gKkECszk7xX2p2TpkA@mail.gmail.com>
-Subject: Re: [GRUB PATCH RFC 12/18] i386/efi: Report UEFI Secure Boot status
- to the Linux kernel
-To:     Daniel Kiper <daniel.kiper@oracle.com>
-Cc:     The development of GNU GRUB <grub-devel@gnu.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        trenchboot-devel@googlegroups.com,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        alexander.burmashev@oracle.com,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        "Daniel P. Smith" <dpsmith@apertussolutions.com>,
-        eric.snowberg@oracle.com,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        kanth.ghatraju@oracle.com, konrad.wilk@oracle.com,
-        krystian.hebel@3mdeb.com, lukasz.hawrylko@linux.intel.com,
-        michal.zygowski@3mdeb.com,
-        "Vladimir 'phcoder' Serbinenko" <phcoder@gmail.com>,
-        pirot.krol@3mdeb.com, Peter Jones <pjones@redhat.com>,
-        Ross Philipson <ross.philipson@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505170553.24056-1-sjpark@amazon.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 4, 2020 at 4:25 PM Daniel Kiper <daniel.kiper@oracle.com> wrote:
->
-> Otherwise the kernel does not know its state and cannot enable various
-> security features depending on UEFI Secure Boot.
+On Tue, May 05, 2020 at 07:05:53PM +0200, SeongJae Park wrote:
+> On Tue, 5 May 2020 09:37:42 -0700 Eric Dumazet <eric.dumazet@gmail.com> wrote:
+> 
+> > 
+> > 
+> > On 5/5/20 9:31 AM, Eric Dumazet wrote:
+> > > 
+> > > 
+> > > On 5/5/20 9:25 AM, Eric Dumazet wrote:
+> > >>
+> > >>
+> > >> On 5/5/20 9:13 AM, SeongJae Park wrote:
+> > >>> On Tue, 5 May 2020 09:00:44 -0700 Eric Dumazet <edumazet@google.com> wrote:
+> > >>>
+> > >>>> On Tue, May 5, 2020 at 8:47 AM SeongJae Park <sjpark@amazon.com> wrote:
+> > >>>>>
+> > >>>>> On Tue, 5 May 2020 08:20:50 -0700 Eric Dumazet <eric.dumazet@gmail.com> wrote:
+> > >>>>>
+> > >>>>>>
+> > >>>>>>
+> > >>>>>> On 5/5/20 8:07 AM, SeongJae Park wrote:
+> > >>>>>>> On Tue, 5 May 2020 07:53:39 -0700 Eric Dumazet <edumazet@google.com> wrote:
+> > >>>>>>>
+> > >>>>>>
+> [...]
+> > >>
+> > >> I would ask Paul opinion on this issue, because we have many objects
+> > >> being freed after RCU grace periods.
+> > >>
+> > >> If RCU subsystem can not keep-up, I guess other workloads will also suffer.
+> > >>
+> > >> Sure, we can revert patches there and there trying to work around the issue,
+> > >> but for objects allocated from process context, we should not have these problems.
+> > >>
+> > > 
+> > > I wonder if simply adjusting rcu_divisor to 6 or 5 would help 
+> > > 
+> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > index d9a49cd6065a20936edbda1b334136ab597cde52..fde833bac0f9f81e8536211b4dad6e7575c1219a 100644
+> > > --- a/kernel/rcu/tree.c
+> > > +++ b/kernel/rcu/tree.c
+> > > @@ -427,7 +427,7 @@ module_param(qovld, long, 0444);
+> > >  static ulong jiffies_till_first_fqs = ULONG_MAX;
+> > >  static ulong jiffies_till_next_fqs = ULONG_MAX;
+> > >  static bool rcu_kick_kthreads;
+> > > -static int rcu_divisor = 7;
+> > > +static int rcu_divisor = 6;
+> > >  module_param(rcu_divisor, int, 0644);
+> > >  
+> > >  /* Force an exit from rcu_do_batch() after 3 milliseconds. */
+> > > 
+> > 
+> > To be clear, you can adjust the value without building a new kernel.
+> > 
+> > echo 6 >/sys/module/rcutree/parameters/rcu_divisor
+> 
+> I tried value 6, 5, and 4, but none of those removed the problem.
 
-I think this needs more context. If the kernel is loaded via the EFI
-boot stub, the kernel is aware of the UEFI secure boot state. Why
-duplicate this functionality in order to avoid the EFI stub?
+Thank you for checking this!
+
+Was your earlier discussion on long RCU readers speculation, or do you
+have measurements?
+
+							Thanx, Paul
