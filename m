@@ -2,163 +2,108 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E09A5C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4CCC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB04D20735
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:40:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B3F2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:40:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H+4VVqsO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PbRweIMk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbgEELkx (ORCPT
+        id S1728798AbgEELk4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 07:40:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47704 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728233AbgEELkw (ORCPT
+        Tue, 5 May 2020 07:40:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728737AbgEELkz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 07:40:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588678850;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OlAdU6/nOacYHUCLOD5Zi1nKBtXm6BwKAesECeCW+3s=;
-        b=H+4VVqsO1F5z84GTqlaJXrIMF7UvnB6NWcm9vXEp7sspp2sBekLyB0kEUrDNDhLZ9mhdvC
-        ZMJsG4UupX+L5553mYgjO6tJOXuyBgLMuS5TDGw9UaCfCMDyxQoWR4IYLvFVk05zru0lhS
-        +SvPDNCBqqdGfZ8awq795D7evklb13E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-148-GmWvodbxNKSrZrkiXB3jvQ-1; Tue, 05 May 2020 07:40:47 -0400
-X-MC-Unique: GmWvodbxNKSrZrkiXB3jvQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 09C51835B40;
-        Tue,  5 May 2020 11:40:46 +0000 (UTC)
-Received: from maximlenovopc.usersys.redhat.com (unknown [10.35.206.34])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C03B219C4F;
-        Tue,  5 May 2020 11:40:44 +0000 (UTC)
-Message-ID: <bec5e02f456a1be682e680c06326afd183c23318.camel@redhat.com>
-Subject: Re: AVIC related warning in enable_irq_window
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Date:   Tue, 05 May 2020 14:40:43 +0300
-In-Reply-To: <efbe933a-3ab6-fa57-37fb-affc87369948@amd.com>
-References: <9ce7bb5c4fb8bcc4ac21103f7534a6edfcbe195d.camel@redhat.com>
-         <758b27a8-74c0-087d-d90b-d95faee2f561@redhat.com>
-         <c5c32371-4b4e-1382-c616-3830ba46bf85@amd.com>
-         <159382e7fdf0f9b50d79e29554842289e92e1ed7.camel@redhat.com>
-         <d22d32de-5d91-662a-bf53-8cfb115dbe8d@redhat.com>
-         <c81cf9bb-840a-d076-bc0e-496916621bdd@amd.com>
-         <23b0dfe5-eba4-136b-0d4a-79f57f8a03ff@redhat.com>
-         <efbe933a-3ab6-fa57-37fb-affc87369948@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
+        Tue, 5 May 2020 07:40:55 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E82DBC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 04:40:54 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id e16so2341163wra.7
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 04:40:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Zw8AGAHFXGrv2iacmWJVrfWvZyG12y22YZaRvl3DEfA=;
+        b=PbRweIMky5ZkEGXsQqcS5VVBKvjdLKoF8NN6LUtUo0feNkVWNzQuUOP5PfSeNqV7gT
+         kbvVbm8O+vdW5duJm/STuZRMkIMNbwmfX2jKC+yDQzEuoQJ4BUC2IG98/RQmxlTJeo2r
+         fPHppnLpZ6vuzLtSAqWylv3JHkvCuRMmQfevQDwjFf0AZTVy+9HXcYDhNTx2ujb8G6r5
+         H6Im1v94r3puCJFVDfWkYbQHn1SwK9bZzaTWZgun5/zYcI1qw/fPeQmHFuOlRAI7VMQ2
+         sD0JBD/IaldKNgfmuS1Qzbo5inQpZakELaG9LsLWYPKN9Eaa6uA4QTbwIEF1HSmA5wUG
+         tQiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Zw8AGAHFXGrv2iacmWJVrfWvZyG12y22YZaRvl3DEfA=;
+        b=gEKrl1wiwhJt5bU/K7BunPC4xarlYcELheUFw9PF5Ex4aWy56Qz5VsDxZZaC+TG4hc
+         QCEgMQkgqMxzxpaEe41951BPfGWy5miQ5AgshCHr7LEHL6jno8bqyCFgPgogn0aK6P4K
+         UUsGZohfcGwyPfBP0J7HifA6Z6fja1eP/l5BlpoSWpCp8CihESIgT3CdxHfryH4T/Vdg
+         nqXAj1UsOR621kaoBXnW80cNBZZRojThllDycyrqyfFotfrzRzk8n1BwOePYjv5WjCdV
+         WYawiN7/zVBhrR6jFAkWYXqtxxXah+xe7gRCn9q6VH74BC7kUANUkvE8P+gI+nHAbUft
+         9PpA==
+X-Gm-Message-State: AGi0PubsWMckDEUwXPrmvFwnr0yPWPFoldVoNUqz66Dy6zjmAMXdF7EL
+        KHh/v+Jhfm4raix7GYbM9Qi0zZbLrbatTw==
+X-Google-Smtp-Source: APiQypI0HqhUGc3uoEMdVOIh5K+2MJBbCn7ght4cbnf28YDmBZyywJZ1Sw8z06C+sb1meRqW7pVeXg==
+X-Received: by 2002:a5d:4092:: with SMTP id o18mr3239554wrp.227.1588678853373;
+        Tue, 05 May 2020 04:40:53 -0700 (PDT)
+Received: from [192.168.1.3] (212-5-158-166.ip.btc-net.bg. [212.5.158.166])
+        by smtp.googlemail.com with ESMTPSA id e2sm2729863wrv.89.2020.05.05.04.40.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2020 04:40:52 -0700 (PDT)
+Subject: Re: [PATCH 0/2] Add support for venus on msm8939
+To:     Konrad Dybcio <konradybcio@gmail.com>, skrzynka@konradybcio.pl
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200501203505.144362-1-konradybcio@gmail.com>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <1bd1e0ea-0be3-340c-9c2a-0e7a03017cc4@linaro.org>
+Date:   Tue, 5 May 2020 14:40:50 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200501203505.144362-1-konradybcio@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-05-05 at 14:55 +0700, Suravee Suthikulpanit wrote:
-> Paolo / Maxim,
-> 
-> On 5/4/20 5:49 PM, Paolo Bonzini wrote:
-> > On 04/05/20 12:37, Suravee Suthikulpanit wrote:
-> > > On 5/4/20 4:25 PM, Paolo Bonzini wrote:
-> > > > On 04/05/20 11:13, Maxim Levitsky wrote:
-> > > > > On Mon, 2020-05-04 at 15:46 +0700, Suravee Suthikulpanit wrote:
-> > > > > > On 5/2/20 11:42 PM, Paolo Bonzini wrote:
-> > > > > > > On 02/05/20 15:58, Maxim Levitsky wrote:
-> > > > > > > > The AVIC is disabled by svm_toggle_avic_for_irq_window, which calls
-> > > > > > > > kvm_request_apicv_update, which broadcasts the
-> > > > > > > > KVM_REQ_APICV_UPDATE vcpu request,
-> > > > > > > > however it doesn't broadcast it to CPU on which now we are
-> > > > > > > > running, which seems OK,
-> > > > > > > > because the code that handles that broadcast runs on each VCPU
-> > > > > > > > entry, thus when this CPU will enter guest mode it will notice 
-> > > > > > > > and disable the AVIC. >>>>>>>
-> > > > > > > > However later in svm_enable_vintr, there is test
-> > > > > > > > 'WARN_ON(kvm_vcpu_apicv_active(&svm->vcpu));'
-> > > > > > > > which is still true on current CPU because of the above.
-> > > > > > > 
-> > > > > > > Good point!  We can just remove the WARN_ON I think.  Can you send
-> > > > > > > a patch?
-> > > > > > > 
-> > > > > > 
-> > > > > > Instead, as an alternative to remove the WARN_ON(), would it be
-> > > > > > better to just explicitly calling kvm_vcpu_update_apicv(vcpu) 
-> > > > > > to update the apicv_active flag right after kvm_request_apicv_update()?
-> > > > > > 
-> > > > > 
-> > > > > This should work IMHO, other that the fact kvm_vcpu_update_apicv will
-> > > > > be called again, when this vcpu is entered since the KVM_REQ_APICV_UPDATE
-> > > > > will still be pending on it.
-> > > > > It shoudn't be a problem, and we can even add a check to do nothing
-> > > > > when it is called while avic is already in target enable state.
-> > > > 
-> > > > I thought about that but I think it's a bit confusing.  If we want to
-> > > > keep the WARN_ON, Maxim can add an equivalent one to svm_vcpu_run, which
-> > > > is even better because the invariant is clearer.
-> > > > 
-> > > > WARN_ON((vmcb->control.int_ctl & (AVIC_ENABLE_MASK | V_IRQ_MASK))
-> > > >      == (AVIC_ENABLE_MASK | V_IRQ_MASK));
-> > > > 
-> 
-> Based on my experiment, it seems that the hardware sets the V_IRQ_MASK bit
-> when #VMEXIT despite this bit being ignored when AVIC is enabled.
-> (I'll double check w/ HW team on this.) In this case, I don't think we can
-> use the WARN_ON() as suggested above.
-> 
-> I think we should keep the warning in the svm_set_vintr() since we want to know
-> if the V_IRQ, V_INTR_PRIO, V_IGN_TPR, and V_INTR_VECTOR are ignored when calling
-> svm_set_vintr().
-> 
-> Instead, I would consider explicitly call kvm_vcpu_update_apicv() since it would
-> be benefit from not having to wait for the next vcpu_enter_guest for this vcpu to process
-> the request. This is less confusing to me. In this case, we would need to
-> kvm_clear_request(KVM_REQ_APICV_UPDATE) for this vcpu as well.
-> 
-> On the other hand, would be it useful to implement kvm_make_all_cpus_request_but_self(),
-> which sends request to all other corpus excluding itself?
-> 
-> > By the way, there is another possible cleanup: the clearing
-> > of V_IRQ_MASK can be removed from interrupt_window_interception since it
-> > has already called svm_clear_vintr.
-> 
-> Maxim, I can help with the clean up patches if you would prefer.
+Hi Konrad,
 
-I currently am waiting for the decision on how to we are going to fix this.
-I don't have a strong opinion on how to fix this, but at least I think that we know
-what is going on. 
+Thanks for the patches!
 
-Initially I was thinking that something was broken in AVIC, especially when I noticed
-that guest would hang when I did LatencyMon benchmark in it.
-Luckily the other fix that I tested and reviewed seems to fix those hangs.
+Could you describe hear what is the status of the new added SoC. Is
+Venus driver tested on this new platform or that will happen at some
+later point in time.
 
-In a few days I plan to do some nvme passthrough stress testing as I used to do when I was
-developing my nvme-mdev driver with AVIC. I am very curios on how this will turn out.
+Also, in both patches the description is missing, please add something.
 
-Best regards,
-	Maxim Levitsky
-
+On 5/1/20 11:35 PM, Konrad Dybcio wrote:
+> Konrad Dybcio (2):
+>   media: venus: Add support for MSM8939
+>   dt-bindings: media: Document MSM8939 Venus
 > 
-> Thanks,
-> Suravee
-> 
-> 
-> > Paolo
-> > 
-> 
+>  .../bindings/media/qcom,msm8939-venus.yaml    | 119 ++++++++++++++++++
+>  drivers/media/platform/qcom/venus/core.c      |  33 +++++
+>  2 files changed, 152 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/qcom,msm8939-venus.yaml
 > 
 
-
+-- 
+regards,
+Stan
