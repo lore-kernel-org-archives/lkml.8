@@ -2,92 +2,120 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC1FC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AE0C47256
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F31FE206CC
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:37:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29726206CC
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:41:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="jdx2GA1k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728323AbgEEGhw (ORCPT
+        id S1728121AbgEEGlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 02:37:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33782 "EHLO
+        Tue, 5 May 2020 02:41:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726065AbgEEGhw (ORCPT
+        by vger.kernel.org with ESMTP id S1725766AbgEEGlT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 02:37:52 -0400
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [IPv6:2a01:5b40:0:3005::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1A94C061A0F
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 23:37:51 -0700 (PDT)
-Received: from [2a02:fe0:c700:2:984c:ac0d:3200:67f3] (port=50298)
-        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <Ywe_C4rlyn@sn-parti.eu>)
-        id 1jVrDB-0004qc-Q6
-        for linux-kernel@vger.kernel.org; Tue, 05 May 2020 08:37:49 +0200
-Subject: Re: iT X - the fair pay initiative - cursive, bold latin script
- examples
-From:   =?UTF-8?Q?Ywe_C=c3=a6rlyn?= <Ywe_C4rlyn@sn-parti.eu>
-To:     linux-kernel@vger.kernel.org
-References: <7351c7c2-7864-babe-3030-816bb8db0998@sn-parti.eu>
- <b7052493-6d72-e796-06ae-2b0a038971c4@sn-parti.eu>
- <4c9e839d-aeff-7638-8f46-71a952af2b2a@sn-parti.eu>
-Message-ID: <01e85977-106f-a738-a6cd-909de852bccf@sn-parti.eu>
-Date:   Tue, 5 May 2020 08:37:42 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 02:41:19 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA7E4C061A0F
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 23:41:18 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id q124so582749pgq.13
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 23:41:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=b0cSV3VIHWOti9hEY160GUxOocjb2RCw+0GAblBav28=;
+        b=jdx2GA1koza677xbRvZximfAf3eGqC7089PhpVhfCaxhySIm3yOjCP9QXvpRhy04F3
+         oG7tyrbqfcEr32erEqjE7Z4UoG3MR3xAF+S8B3PPxGYNWfOndefMsxQYIbPQX9dRyIgv
+         xTCuzdHkr2Yr6X1CewqQeGNwmj+HA2xEB/y9O27sQZMIi80o6k0nPFd8qZ8Gc9PYMs4P
+         sI2G9wE1tO6OMvUE4KxQtmYL0ACqocC8upwIDbEr6kqrIpiTV6gbqH1AQ3w/3UdZPwyX
+         QFuBgyKLJgXrGF27aCnZHVzGUmPuIa717pzkI8uXOMGX5Q1D6/AnnEYexa0gavRMcLKM
+         4iLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=b0cSV3VIHWOti9hEY160GUxOocjb2RCw+0GAblBav28=;
+        b=mIgv9cfvSp+AVYxkkeMgDGRTAOPv3EhyGRABJGvaSeuUAhx/r1R1zGgl5XxKMEucLB
+         vNe2EeExf1NcK7psAiFOc/NVTtf1pVg3lm9PdyyQxuB67JGjgUuIfOC+luZLw7FD8avw
+         0GqvM7r4Cj2fIW3TC/cjSXFDmmtG/jrGI5V5uLcau5GTncuyfxlcgycW+POU6jiDBZtW
+         SMAWbo3YXZIMyvN4Hhd+cojoYk3V3P+0/Ccu++BGxFxj0wJv5ykvy138xNIanpxQVkAI
+         bHCcF3RRdmwA62beZ8mlCnhnaVK8MQ/JpB3U7L/j7QOb0b5+H50kTQ3T+pkvtxucTEQV
+         7D3A==
+X-Gm-Message-State: AGi0Pub8WAfXUrjmLS4rFHocz6lqwqeKpCiWFz+ML9vOpNuYWQE+VOVH
+        0LkHu4seVlBRGq8BBtt8REbNLA==
+X-Google-Smtp-Source: APiQypKGKEIRzYStVQ9WNqw/QSkSxDNZxHPjYla+bZdF1kI2qQtde6vSpCmlnwhpGdMfNCdr9rBAlw==
+X-Received: by 2002:a63:4f08:: with SMTP id d8mr1796556pgb.308.1588660878274;
+        Mon, 04 May 2020 23:41:18 -0700 (PDT)
+Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
+        by smtp.gmail.com with ESMTPSA id t188sm822858pgc.3.2020.05.04.23.41.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 23:41:17 -0700 (PDT)
+From:   Zong Li <zong.li@sifive.com>
+To:     palmer@dabbelt.com, paul.walmsley@sifive.com,
+        atishp@atishpatra.org, anup@brainfault.org, schwab@linux-m68k.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Zong Li <zong.li@sifive.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Atish Patra <atish.patra@wdc.com>
+Subject: [PATCH v3] riscv: force __cpu_up_ variables to put in data section
+Date:   Tue,  5 May 2020 14:41:13 +0800
+Message-Id: <20200505064113.3455-1-zong.li@sifive.com>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-In-Reply-To: <4c9e839d-aeff-7638-8f46-71a952af2b2a@sn-parti.eu>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some examples of cursive and bold features of the latin script here.
+Put __cpu_up_stack_pointer and __cpu_up_task_pointer in data section.
+Currently, these two variables are put in bss section, there is a
+potential risk that secondary harts get the uninitialized value before
+main hart finishing the bss clearing. In this case, all secondary
+harts would pass the waiting loop and enable the MMU before main hart
+set up the page table.
 
-https://www.youtube.com/watch?v=-r3GLmUzuds
+This issue happened on random booting of multiple harts, which means
+it will manifest for BBL and OpenSBI which older than v0.6. In OpenSBI
+v0.7 (or higher version), we have HSM extension so all the secondary
+harts are brought-up by Linux kernel in an orderly fashion. This means
+we don't need this change for OpenSBI v0.7 (or higher version).
 
-Den 02.05.2020 18:00, skrev Ywe Cærlyn:
-> So peeps, I think I have the best system ever here.
-> 
-> Gather industry support, and we can finally have the success it deserves.
-> 
-> Serene Greetings,
-> Ywe Cærlyn.
-> iT X project lead.
-> https://www.youtube.com/channel/UCR3gmLVjHS5A702wo4bol_Q
-> 
-> Den 02.05.2020 05:02, skrev Ywe Cærlyn:
->> Update: Calibri should be the standard font for this fair pay 
->> initiative, which fits this "OS", or hardware/software interface 
->> system. Then one can also use cursive for direct arabic words like 
->> 𝐴𝐿𝐿𝐴𝐻, and it mixes well with already established monotheism. For 
->> instance: 𝐴𝐿𝐿𝐴𝐻 is boss of the cosmoses and the earth. For direct 
->> chinese words, one can use bold. for instance, 𝐂𝐡𝐚𝐧 philosophy. 
->> And I do believe scientific monotheism, 𝐴𝐿𝐿𝐴𝐻 and 𝐂𝐡𝐚𝐧 is all 
->> really compatible when done well.
->>
->> Den 01.05.2020 11:02, skrev Ywe Cærlyn:
->>> There has at times been a certain spirituality in the *nix community.
->>>
->>> We support scientific monotheism, good interpretation of Islam, and 
->>> good chan philosophy.
->>>
->>> I have just called this iT-Transcendence.
->>>
->>> I think actually "uni" in unix might be a referrance to this. Calling 
->>> it iT-Transcendence instead, we universalize it, and include a 
->>> broader group, strengthening this, and the fair pay background in 
->>> monotheism.
->>>
->>> Serene Greetings!
->>> Ywe Cærlyn
->>> Researcher, Multi-Artist.
->>> iT X & Mascot Projects.
->>>
+Changes in v2 and v3:
+  - Add commit description about random booting.
+
+Signed-off-by: Zong Li <zong.li@sifive.com>
+Reviewed-by: Greentime Hu <greentime.hu@sifive.com>
+Reviewed-by: Anup Patel <anup@brainfault.org>
+Reviewed-by: Atish Patra <atish.patra@wdc.com>
+---
+ arch/riscv/kernel/cpu_ops.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/riscv/kernel/cpu_ops.c b/arch/riscv/kernel/cpu_ops.c
+index c4c33bf02369..0ec22354018c 100644
+--- a/arch/riscv/kernel/cpu_ops.c
++++ b/arch/riscv/kernel/cpu_ops.c
+@@ -15,8 +15,8 @@
+ 
+ const struct cpu_operations *cpu_ops[NR_CPUS] __ro_after_init;
+ 
+-void *__cpu_up_stack_pointer[NR_CPUS];
+-void *__cpu_up_task_pointer[NR_CPUS];
++void *__cpu_up_stack_pointer[NR_CPUS] __section(.data);
++void *__cpu_up_task_pointer[NR_CPUS] __section(.data);
+ 
+ extern const struct cpu_operations cpu_ops_sbi;
+ extern const struct cpu_operations cpu_ops_spinwait;
+-- 
+2.26.1
+
