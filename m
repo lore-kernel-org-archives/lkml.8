@@ -2,87 +2,118 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B2BC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 449C3C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38BEC206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F55C206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:54:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fl8nSvJh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728822AbgEELxR (ORCPT
+        id S1728727AbgEELy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 07:53:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:38182 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725766AbgEELxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 07:53:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4E61A30E;
-        Tue,  5 May 2020 04:53:16 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4EE683F68F;
-        Tue,  5 May 2020 04:53:15 -0700 (PDT)
-Date:   Tue, 5 May 2020 12:53:13 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] PCI: dwc: Fix inner MSI IRQ domain registration
-Message-ID: <20200505115313.GF12543@e121166-lin.cambridge.arm.com>
-References: <20200501113921.366597-1-maz@kernel.org>
+        Tue, 5 May 2020 07:54:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725766AbgEELy0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 07:54:26 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61F2AC061A10
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 04:54:26 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id w20so1307860ljj.0
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 04:54:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uml5U42DUBDTh4vmv37IC5qSO5nYUkK5/4LFg2c0Ji8=;
+        b=fl8nSvJhFZ0g5sbLGBqmv9Jt5aq4btP+PN321WfcrkM1oPwxWcTa24dNUSPmmEeocb
+         M0/kSkMgncARzOWJNF+ASfjXvhDkxi5QGZY7PJtVL3qvrKD24k8UYRPNSUhXOhx6J564
+         6k+wAnULsYQvmYYLLUG+B+55gLYS9gBe3VPBKld7R5+AIl5f/A4p+QslqkAz+xtEKx6b
+         3Mg1s/iKCRjUPBqxFxk4UJ13JkOEoTN7XfrNXQqTj4epqqN0zc28k7zscqYo5iFaSLFm
+         5ZiehNIJSLslbol7hT9Y8z4SG1W8hcrNV3UiPsT4bwssIssZaqS0KJLhzaOr6JdK6VKX
+         8+Dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uml5U42DUBDTh4vmv37IC5qSO5nYUkK5/4LFg2c0Ji8=;
+        b=GEJQmpIeXU6HQkGPB5Na8/HMAUOvhiMLWOzeRJY0OngDCwUrIjsVO28zgYYNHd7PTn
+         CD44Tw2qi7U4EPXGUy9iMqvLl41P0r5sG0zfBwCICu1Qoo6M+Lzyu5WcIcH1WUkdXx75
+         wLnGsVkOfUPDllx3AMWGnRU/pMUsVfwYahM6W7RHY4eR+HL9rg2bHcyBcYn02PH9gceJ
+         HtnPkcbaCSswKdvjOiY5guCDBLHrJsrwToZXig5Qb8/4qwonckoTuBhUZq18sE3PP2r6
+         yfTiVvYyovex4JKYyStueowB6+l/QpwGzbLHOiXd0TzO3Hu0HRZl+20DYmqkXz+M0y6K
+         ioCg==
+X-Gm-Message-State: AGi0PuYNYbSkJYEuSzQyTyDAUbP2lAn6H2Lq/sxNlTH40UwMDHH/tgTE
+        1vuhqzfBKMx29ee4YxGN0Kz8DA==
+X-Google-Smtp-Source: APiQypJnwDsbvj52jO1SlptQqc2ppigC6TLoB6HZ7LPx7W3OJyppghiHk6hhdd4a8VsxqxOW+U2HXA==
+X-Received: by 2002:a2e:2201:: with SMTP id i1mr1584565lji.31.1588679664636;
+        Tue, 05 May 2020 04:54:24 -0700 (PDT)
+Received: from localhost (c-8c28e555.07-21-73746f28.bbcust.telenor.se. [85.229.40.140])
+        by smtp.gmail.com with ESMTPSA id q26sm1612347ljg.47.2020.05.05.04.54.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 04:54:24 -0700 (PDT)
+From:   Anders Roxell <anders.roxell@linaro.org>
+To:     masahiroy@kernel.org, michal.lkml@markovi.net
+Cc:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: [PATCH] scripts: fix deprecated always and hostprogs-y
+Date:   Tue,  5 May 2020 13:54:20 +0200
+Message-Id: <20200505115420.18765-1-anders.roxell@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501113921.366597-1-maz@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 12:39:21PM +0100, Marc Zyngier wrote:
-> On a system that uses the internal DWC MSI widget, I get this
-> warning from debugfs when CONFIG_GENERIC_IRQ_DEBUGFS is selected:
-> 
->   debugfs: File ':soc:pcie@fc000000' in directory 'domains' already present!
-> 
-> This is due to the fact that the DWC MSI code tries to register two
-> IRQ domains for the same firmware node, without telling the low
-> level code how to distinguish them (by setting a bus token). This
-> further confuses debugfs which tries to create corresponding
-> files for each domain.
-> 
-> Fix it by tagging the inner domain as DOMAIN_BUS_NEXUS, which is
-> the closest thing we have as to "generic MSI".
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
->  drivers/pci/controller/dwc/pcie-designware-host.c | 2 ++
->  1 file changed, 2 insertions(+)
+When I did an allmodconfig build the following warning showed up:
 
-Applied to pci/dwc, thanks !
+scripts/Makefile.lib:8: 'always' is deprecated. Please use 'always-y' instead
+scripts/Makefile.lib:12: 'hostprogs-y' and 'hostprogs-m' are deprecated. Please use 'hostprogs' instead
 
-Lorenzo
+Rework to use the new 'always-y' and 'hostprogs'.
 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 395feb8ca051..3c43311bb95c 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -264,6 +264,8 @@ int dw_pcie_allocate_domains(struct pcie_port *pp)
->  		return -ENOMEM;
->  	}
->  
-> +	irq_domain_update_bus_token(pp->irq_domain, DOMAIN_BUS_NEXUS);
-> +
->  	pp->msi_domain = pci_msi_create_irq_domain(fwnode,
->  						   &dw_pcie_msi_domain_info,
->  						   pp->irq_domain);
-> -- 
-> 2.26.2
-> 
+Fixes: ee066c3ddf7b ("kbuild: warn if always, hostprogs-y, or hostprogs-m is used")
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+---
+ samples/watch_queue/Makefile | 4 ++--
+ scripts/Makefile.build       | 1 -
+ 2 files changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/samples/watch_queue/Makefile b/samples/watch_queue/Makefile
+index eec00dd0a8df..8511fb6c53d2 100644
+--- a/samples/watch_queue/Makefile
++++ b/samples/watch_queue/Makefile
+@@ -1,7 +1,7 @@
+ # List of programs to build
+-hostprogs-y := watch_test
++hostprogs := watch_test
+ 
+ # Tell kbuild to always build the programs
+-always := $(hostprogs-y)
++always-y := $(hostprogs)
+ 
+ HOSTCFLAGS_watch_test.o += -I$(objtree)/usr/include
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index 3665b1a0bc8e..abdba70f33a1 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -15,7 +15,6 @@ obj-y :=
+ obj-m :=
+ lib-y :=
+ lib-m :=
+-always :=
+ always-y :=
+ always-m :=
+ targets :=
+-- 
+2.20.1
+
