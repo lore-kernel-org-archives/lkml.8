@@ -2,109 +2,247 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0844DC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3531CC47256
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D56B6206CC
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C994206CC
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:36:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MXlahRmF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbgEEGfV (ORCPT
+        id S1728386AbgEEGgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 02:35:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33388 "EHLO
+        Tue, 5 May 2020 02:36:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725320AbgEEGfV (ORCPT
+        by vger.kernel.org with ESMTP id S1726598AbgEEGgt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 02:35:21 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA025C061A0F
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 23:35:20 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jVrAe-0003kw-01; Tue, 05 May 2020 08:35:12 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jVrAa-0001QN-BM; Tue, 05 May 2020 08:35:08 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Kubecek <mkubecek@suse.cz>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        David Jander <david@protonic.nl>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
-        Marek Vasut <marex@denx.de>,
-        Christian Herber <christian.herber@nxp.com>
-Subject: [PATCH net-next v6 0/2] provide support for PHY master/slave configuration
-Date:   Tue,  5 May 2020 08:35:04 +0200
-Message-Id: <20200505063506.3848-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.26.2
+        Tue, 5 May 2020 02:36:49 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D703C061A10
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 23:36:49 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id d184so420066pfd.4
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 23:36:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=RR/vhBqlhu+RGuetMeS8N4Mh6CkNHNI8psQed/aUbaM=;
+        b=MXlahRmFSg5EHVs4lwduOyL4oUG6gPIPonkzFJsNoVfK1F+xRSZ5mSGHBeVNC0uLWQ
+         wag4V8VwHrHAjpECEtEiunANMvZyML8PzW+v2RNHlvoukhOcnm78Nbw8sO60hN2tu0Rc
+         J5nFX7IlQKaRIxNspZPMHzX5UUrZqRhlNjWu0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=RR/vhBqlhu+RGuetMeS8N4Mh6CkNHNI8psQed/aUbaM=;
+        b=KhrwQF7Bu30NM/iXR2cOYYaAIBbU29j8bO8R/Q4+z46bb4guMFVbh/OJ1pNh7fbrLq
+         D9CiZWDX00pnhUoEglqnIxlAVLMEdgCLH1d6Y4Do1Yyaxu1lAtzufw3kBn+Zz6hjpcJU
+         r9xpegqhzqgHem6m2LwIVi+ObfTMDqD4qAiy0fVe97SlBXXTOpXYnCTc9IgRXWYAZhT+
+         kKWynDPvq7gMEfCi2N4w7N0HIr43fNmOcnIguCpJHPhZn9N/1eHBNhiJ8BLU3hXgTEXK
+         HsRW0Nt5Xbn21XOcke3b8IgAF7FM4Fso6r/r3y4WtwMw1c9yQgxA7GsQFb1TSrV/+tBk
+         lF3A==
+X-Gm-Message-State: AGi0PublsPC/wNiEb5r/RjlS1x8QuqVyJLXdstRd8y8XeqvaOTI42l4D
+        f1Q7cN2+fDceSgOcbjRWdpI2UQ==
+X-Google-Smtp-Source: APiQypL3760bnwtsxGcOaXtj9eoDRY8e90fhW068Ru6dqxQcx7UT5XF5CddEuXt2gWg/bzxtbwYN+w==
+X-Received: by 2002:a62:1dd8:: with SMTP id d207mr1755297pfd.3.1588660608820;
+        Mon, 04 May 2020 23:36:48 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id p10sm984560pff.210.2020.05.04.23.36.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 23:36:47 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAD=FV=WDmk9+e+ZXaUdhegwLCszCZXCQaiMQa_vkKsE+s6XZ0Q@mail.gmail.com>
+References: <20200425175312.124892-1-swboyd@chromium.org> <20200425175312.124892-2-swboyd@chromium.org> <CAD=FV=WDmk9+e+ZXaUdhegwLCszCZXCQaiMQa_vkKsE+s6XZ0Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] soc: qcom: rpmh-rsc: Remove tcs_is_free() and find_free_tcs() APIs
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Maulik Shah <mkshah@codeaurora.org>
+To:     Doug Anderson <dianders@chromium.org>
+Date:   Mon, 04 May 2020 23:36:47 -0700
+Message-ID: <158866060708.24786.3695568539661593702@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-changes v6:
-- use NL_SET_ERR_MSG_ATTR in ethnl_update_linkmodes
-- add sanity checks in the ioctl interface
-- use bool for ethnl_validate_master_slave_cfg()
+Quoting Doug Anderson (2020-04-27 17:13:04)
+> On Sat, Apr 25, 2020 at 10:53 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+> > index 571aa1012f23..3f4951840365 100644
+> > --- a/drivers/soc/qcom/rpmh-rsc.c
+> > +++ b/drivers/soc/qcom/rpmh-rsc.c
+> > @@ -492,33 +476,37 @@ static void __tcs_buffer_write(struct rsc_drv *dr=
+v, int tcs_id, int cmd_id,
+> >   *
+> >   * This will walk through the TCSes in the group and check if any of t=
+hem
+> >   * appear to be sending to addresses referenced in the message. If it =
+finds
+> > - * one it'll return -EBUSY.
+> > + * one it'll return -EBUSY because the hardware can't handle more than
+> > + * one of the same address being changed at the same time.
+> >   *
+> > - * Only for use for active-only transfers.
+> > + * Only for use with active-only transfers.
+> >   *
+> >   * Must be called with the drv->lock held since that protects tcs_in_u=
+se.
+> >   *
+> > - * Return: 0 if nothing in flight or -EBUSY if we should try again lat=
+er.
+> > + * Return: offset` of free slot if nothing in flight and a free slot i=
+s found
+>=20
+> Why the back tick after "offset"?
 
-changes v5:
-- set MASTER_SLAVE_CFG_UNSUPPORTED as default value
-- send a netlink error message on validation error
-- more code fixes
+Must be some copy/paste bug!
 
-changes v4:
-- rename port_mode to master_slave 
-- move validation code to net/ethtool/linkmodes.c 
-- add UNSUPPORTED state and avoid sending unsupported fields
-- more formatting and naming fixes
-- tja11xx: support only force mode
-- tja11xx: mark state as unsupported
+>=20
+>=20
+> > + *         or -EBUSY if we should try again later.
+> >   *         The caller must re-enable interrupts between tries since th=
+at's
+> > - *         the only way tcs_is_free() will ever return true and the on=
+ly way
+> > + *         the only way tcs_in_use will ever be updated and the only w=
+ay
+> >   *         RSC_DRV_CMD_ENABLE will ever be cleared.
+> >   */
+> > -static int check_for_req_inflight(struct rsc_drv *drv, struct tcs_grou=
+p *tcs,
+> > -                                 const struct tcs_request *msg)
+> > +static int check_for_req_inflight_and_find_free(struct rsc_drv *drv,
+> > +       const struct tcs_group *tcs, const struct tcs_request *msg)
+> >  {
+> >         unsigned long curr_enabled;
+> >         u32 addr;
+> > -       int i, j, k;
+> > -       int tcs_id =3D tcs->offset;
+> > -
+> > -       for (i =3D 0; i < tcs->num_tcs; i++, tcs_id++) {
+> > -               if (tcs_is_free(drv, tcs_id))
+> > -                       continue;
+> > +       int j, k;
+> > +       int i =3D tcs->offset;
+> > +       unsigned long max =3D tcs->offset + tcs->num_tcs;
+> > +       int first_free =3D i;
+>=20
+> The way "first_free" is calculated definitely adds complexity to this
+> function.  Are we sure it's justified compared to just calling
+> find_next_zero_bit() if the function doesn't return -EBUSY?  If you
+> really like it this way I won't object too strongly, but I'm not
+> convinced that it makes the code size smaller (vs. jumping to a common
+> implementation in the kernel) and it seems unlikely to have any
+> real-world speed impact.
 
-changes v3:
-- provide separate field for config and state.
-- make state rejected on set
-- add validation
+I was trying to coalesce the double loop over the free bits here by
+adding a couple more lines to keep track of the first free bit and to
+set the bit when it's found. It almost feels like it would be better to
+inline this whole function into the one call site too.
 
-changes v2:
-- change names. Use MASTER_PREFERRED instead of MULTIPORT
-- configure master/slave only on request. Default configuration can be
-  provided by PHY or eeprom
-- status and configuration to the user space.
+>=20
+>=20
+> > -               curr_enabled =3D read_tcs_reg(drv, RSC_DRV_CMD_ENABLE, =
+tcs_id);
+> > +       for_each_set_bit_from(i, drv->tcs_in_use, max) {
+> > +               /* Find a free tcs to use in this group */
+> > +               if (first_free =3D=3D i)
+> > +                       first_free =3D i + 1; /* Maybe the next one is =
+free? */
+> >
+> > +               curr_enabled =3D read_tcs_reg(drv, RSC_DRV_CMD_ENABLE, =
+i);
+> >                 for_each_set_bit(j, &curr_enabled, MAX_CMDS_PER_TCS) {
+> > -                       addr =3D read_tcs_cmd(drv, RSC_DRV_CMD_ADDR, tc=
+s_id, j);
+> > +                       addr =3D read_tcs_cmd(drv, RSC_DRV_CMD_ADDR, i,=
+ j);
+> >                         for (k =3D 0; k < msg->num_cmds; k++) {
+> >                                 if (addr =3D=3D msg->cmds[k].addr)
+> >                                         return -EBUSY;
+> > @@ -526,28 +514,11 @@ static int check_for_req_inflight(struct rsc_drv =
+*drv, struct tcs_group *tcs,
+> >                 }
+> >         }
+> >
+> > -       return 0;
+> > -}
+> > +       if (first_free >=3D max)
+> > +               return -EBUSY;
+> >
+> > -/**
+> > - * find_free_tcs() - Find free tcs in the given tcs_group; only for ac=
+tive.
+> > - * @tcs: A pointer to the active-only tcs_group (or the wake tcs_group=
+ if
+> > - *       we borrowed it because there are zero active-only ones).
+> > - *
+> > - * Must be called with the drv->lock held since that protects tcs_in_u=
+se.
+> > - *
+> > - * Return: The first tcs that's free.
+> > - */
+> > -static int find_free_tcs(struct tcs_group *tcs)
+> > -{
+> > -       int i;
+> > -
+> > -       for (i =3D 0; i < tcs->num_tcs; i++) {
+> > -               if (tcs_is_free(tcs->drv, tcs->offset + i))
+> > -                       return tcs->offset + i;
+> > -       }
+> > -
+> > -       return -EBUSY;
+> > +       set_bit(first_free, drv->tcs_in_use);
+>=20
+> Function is not documented to also set the bit.  Do we really gain
+> anything by setting it in this function, or can it just stay with the
+> caller?  I'd hate to call this function
+> check_for_req_inflight_and_find_free_and_claim_it().
 
-Oleksij Rempel (2):
-  ethtool: provide UAPI for PHY master/slave configuration.
-  net: phy: tja11xx: add support for master-slave configuration
+Maybe the function can be named claim_tcs_for_req() or something like
+that. Anything to make it shorter would be good!
 
- Documentation/networking/ethtool-netlink.rst | 35 ++++----
- drivers/net/phy/nxp-tja11xx.c                | 43 +++++++++
- drivers/net/phy/phy.c                        |  4 +-
- drivers/net/phy/phy_device.c                 | 94 ++++++++++++++++++++
- include/linux/phy.h                          |  3 +
- include/uapi/linux/ethtool.h                 | 16 +++-
- include/uapi/linux/ethtool_netlink.h         |  2 +
- include/uapi/linux/mii.h                     |  2 +
- net/ethtool/ioctl.c                          |  6 ++
- net/ethtool/linkmodes.c                      | 53 +++++++++++
- 10 files changed, 240 insertions(+), 18 deletions(-)
+>=20
+>=20
+> > +       return first_free;
+> >  }
+> >
+> >  /**
+> > @@ -580,17 +551,14 @@ static int tcs_write(struct rsc_drv *drv, const s=
+truct tcs_request *msg)
+> >          * The h/w does not like if we send a request to the same addre=
+ss,
+> >          * when one is already in-flight or being processed.
+> >          */
+> > -       ret =3D check_for_req_inflight(drv, tcs, msg);
+> > -       if (ret)
+> > -               goto unlock;
+> > -
+> > -       ret =3D find_free_tcs(tcs);
+> > -       if (ret < 0)
+> > +       tcs_id =3D check_for_req_inflight_and_find_free(drv, tcs, msg);
+> > +       if (tcs_id < 0) {
+> > +               ret =3D tcs_id;
+> >                 goto unlock;
+> > -       tcs_id =3D ret;
+> > +       }
+> >
+> > +       ret =3D 0;
+>=20
+> nit: Cleaner to just init to 0 when the function is declared now?
+>=20
 
--- 
-2.26.2
-
+Ok.
