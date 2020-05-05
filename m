@@ -2,143 +2,75 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBEDAC47259
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C8B1C4725A
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9E39206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:44:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aDgjCnQ8"
+	by mail.kernel.org (Postfix) with ESMTP id 06E012073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:44:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730514AbgEEPon (ORCPT
+        id S1730622AbgEEPos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:44:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34900 "EHLO
+        Tue, 5 May 2020 11:44:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729510AbgEEPom (ORCPT
+        with ESMTP id S1729510AbgEEPor (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:44:42 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41F6DC061A0F;
-        Tue,  5 May 2020 08:44:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=4pG9Q3mxGfQII0zN/KiOtZT4U+FTy9kLkMvMkZu6fuA=; b=aDgjCnQ88jQ8GWFdgLyeqhtywg
-        4RPASZALdwfDM4GEFmKBqGjztwc5XP2UhxJQ4+jaUW9tf6+iQklDSbXlEDQayXqxCOiWMpxtilwdA
-        qp5fykFBHZVnEqCXoKwGlpmPY9ZWatL+x47eD0VMek2+hRum8YLdbmR0a2Iyqi3M2nRUbRoaQqIlP
-        jsZladMw2HtoZURiCgQsp/MwTnPYCsFnoE4TLRv+s9p+GYNhWayJPcsnIm0MxlP2fGRWP2lWct/uo
-        oHca+LId/MCvpFZSlrm3j1tjVqMkj42sniuYrbHH/nWWF0D1RfTSFI3Hs29hcwIOnq1v7hwdGeZ94
-        Ibk/A2Ng==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jVzkM-0004EJ-PU; Tue, 05 May 2020 15:44:38 +0000
-Subject: Re: [PATCH v5 3/6] fs: Enable to enforce noexec mounts or file exec
- through O_MAYEXEC
-To:     =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
-        linux-kernel@vger.kernel.org
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20200505153156.925111-1-mic@digikod.net>
- <20200505153156.925111-4-mic@digikod.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <fb6e2d7d-a372-3e79-214d-3ac9a451cd0a@infradead.org>
-Date:   Tue, 5 May 2020 08:44:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 11:44:47 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73655C061A0F;
+        Tue,  5 May 2020 08:44:47 -0700 (PDT)
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id E518A31A;
+        Tue,  5 May 2020 15:44:46 +0000 (UTC)
+Date:   Tue, 5 May 2020 09:44:45 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Vitor Massaru Iha <vitor@massaru.org>
+Cc:     linux-doc@vger.kernel.org, mchehab@kernel.org,
+        linux-kernel@vger.kernel.org, brendanhiggins@google.com,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] docs: coresight: fix `make htmldocs` warning
+Message-ID: <20200505094445.77248c5c@lwn.net>
+In-Reply-To: <20200430203612.90404-1-vitor@massaru.org>
+References: <20200430203612.90404-1-vitor@massaru.org>
+Organization: LWN.net
 MIME-Version: 1.0
-In-Reply-To: <20200505153156.925111-4-mic@digikod.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/5/20 8:31 AM, Mickaël Salaün wrote:
-> diff --git a/security/Kconfig b/security/Kconfig
-> index cd3cc7da3a55..d8fac9240d14 100644
-> --- a/security/Kconfig
-> +++ b/security/Kconfig
-> @@ -230,6 +230,32 @@ config STATIC_USERMODEHELPER_PATH
->  	  If you wish for all usermode helper programs to be disabled,
->  	  specify an empty string here (i.e. "").
->  
-> +menuconfig OMAYEXEC_STATIC
-> +	tristate "Configure O_MAYEXEC behavior at build time"
-> +	---help---
-> +	  Enable to enforce O_MAYEXEC at build time, and disable the dedicated
-> +	  fs.open_mayexec_enforce sysctl.
+On Thu, 30 Apr 2020 17:36:12 -0300
+Vitor Massaru Iha <vitor@massaru.org> wrote:
 
-That help message is a bit confusing IMO.  Does setting/enabling OMAYEXEC_STATIC
-both enforce O_MAYEXEC at build time and also disable the dedicated sysctl?
+> Fix `make htmldocs` warning:
+> 
+> Documentation/trace/coresight/coresight-ect.rst:2: WARNING: Explicit markup ends without a blank line; unexpected unindent.
+> 
+> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+> ---
+>  Documentation/trace/coresight/coresight-ect.rst | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/trace/coresight/coresight-ect.rst b/Documentation/trace/coresight/coresight-ect.rst
+> index ecc1e57012ef..a93e52abcf46 100644
+> --- a/Documentation/trace/coresight/coresight-ect.rst
+> +++ b/Documentation/trace/coresight/coresight-ect.rst
+> @@ -1,4 +1,5 @@
+>  .. SPDX-License-Identifier: GPL-2.0
+> +
+>  =============================================
+>  CoreSight Embedded Cross Trigger (CTI & CTM).
+>  =============================================
 
-Or are these meant to be alternatives, one for what Enabling this kconfig symbol
-does and the other for what Disabling this symbol does?  If so, it doesn't
-say that.
+Applied, thanks.
 
-> +
-> +	  See Documentation/admin-guide/sysctl/fs.rst for more details.
-> +
-> +if OMAYEXEC_STATIC
-> +
-> +config OMAYEXEC_ENFORCE_MOUNT
-> +	bool "Mount restriction"
-> +	default y
-> +	---help---
-> +	  Forbid opening files with the O_MAYEXEC option if their underlying VFS is
-> +	  mounted with the noexec option or if their superblock forbids execution
-> +	  of its content (e.g., /proc).
-> +
-> +config OMAYEXEC_ENFORCE_FILE
-> +	bool "File permission restriction"
-> +	---help---
-> +	  Forbid opening files with the O_MAYEXEC option if they are not marked as
-> +	  executable for the current process (e.g., POSIX permissions).
-> +
-> +endif # OMAYEXEC_STATIC
-> +
->  source "security/selinux/Kconfig"
->  source "security/smack/Kconfig"
->  source "security/tomoyo/Kconfig"
-
-
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+jon
