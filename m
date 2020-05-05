@@ -2,124 +2,114 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422D0C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 207B2C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29D8C20838
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04F6E20838
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:26:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729101AbgEENZN (ORCPT
+        id S1729111AbgEEN0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 09:25:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46738 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728934AbgEENZN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 09:25:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 55C02AB89;
-        Tue,  5 May 2020 13:25:13 +0000 (UTC)
-Message-ID: <a23de9954ffca762bdcd075c4ed02b1a17af3eb5.camel@suse.de>
-Subject: Re: [PATCH v2 2/4] PCI: brcmstb: Fix window register offset from 4
- to 8
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Tue, 05 May 2020 15:25:07 +0200
-In-Reply-To: <20200501142831.35174-3-james.quinlan@broadcom.com>
-References: <20200501142831.35174-1-james.quinlan@broadcom.com>
-         <20200501142831.35174-3-james.quinlan@broadcom.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-WdhCVQQ77luNuTrwjynR"
-User-Agent: Evolution 3.36.2 
-MIME-Version: 1.0
+        Tue, 5 May 2020 09:26:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40986 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729011AbgEEN0U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 09:26:20 -0400
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80DCEC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 06:26:19 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:bd97:8453:3b10:1832])
+        by xavier.telenet-ops.be with bizsmtp
+        id b1SE2200B3VwRR3011SECU; Tue, 05 May 2020 15:26:15 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jVxaQ-0007wb-Hl; Tue, 05 May 2020 15:26:14 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jVxaQ-0004YE-ET; Tue, 05 May 2020 15:26:14 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>
+Cc:     Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, users@linux.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2] checkpatch: use patch subject when reading from stdin
+Date:   Tue,  5 May 2020 15:26:13 +0200
+Message-Id: <20200505132613.17452-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+While "git am" can apply an mbox file containing multiple patches (e.g.
+as created by b4[1], or a patch bundle downloaded from patchwork),
+checkpatch does not have proper support for that.  When operating on an
+mbox, checkpatch will merge all detected tags, and complain falsely
+about duplicates:
 
---=-WdhCVQQ77luNuTrwjynR
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+    WARNING: Duplicate signature
 
-On Fri, 2020-05-01 at 10:28 -0400, Jim Quinlan wrote:
-> From: Jim Quinlan <jquinlan@broadcom.com>
->=20
-> The outbound memory window registers were being referenced
-> with an incorrect stride offset.  This probably wasn't noticed
-> previously as there was likely only one such window employed.
->=20
-> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
->=20
-> Fixes: c0452137034b ("PCI: brcmstb: Add Broadcom STB PCIe host controller
-> driver")
-> ---
+As modifying checkpatch to reset state in between each patch is a lot of
+work, a simple solution is splitting the mbox into individual patches,
+and invoking checkpatch for each of them.  Fortunately checkpatch can read
+a patch from stdin, so the classic "formail" tool can be used to split
+the mbox, and pipe all individual patches to checkpatch:
 
-Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+    formail -s scripts/checkpatch.pl < my-mbox
 
-Regards,
-Nicolas
+However, when reading a patch file from standard input, checkpatch calls
+it "Your patch", and reports its state as:
 
->  drivers/pci/controller/pcie-brcmstb.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c
-> b/drivers/pci/controller/pcie-brcmstb.c
-> index 454917ee9241..5b0dec5971b8 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -54,11 +54,11 @@
-> =20
->  #define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO		0x400c
->  #define PCIE_MEM_WIN0_LO(win)	\
-> -		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO + ((win) * 4)
-> +		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO + ((win) * 8)
-> =20
->  #define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_HI		0x4010
->  #define PCIE_MEM_WIN0_HI(win)	\
-> -		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_HI + ((win) * 4)
-> +		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_HI + ((win) * 8)
-> =20
->  #define PCIE_MISC_RC_BAR1_CONFIG_LO			0x402c
->  #define  PCIE_MISC_RC_BAR1_CONFIG_LO_SIZE_MASK		0x1f
+    Your patch has style problems, please review.
 
+or:
 
---=-WdhCVQQ77luNuTrwjynR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+    Your patch has no obvious style problems and is ready for submission.
 
------BEGIN PGP SIGNATURE-----
+Hence it can be difficult to identify which patches need to be reviewed
+and improved.
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6xaTMACgkQlfZmHno8
-x/7l/wgAqNRIM6mZcLbEIafYCYznZMUminRZvoGWDMa0AwR/Ei3ngd3/mhph4nuA
-lsn6NfNF2SbIpz7gE+UslD9UW6L8MWG9M0cAfMKPyJQuqkGjYa/0cTBJIr+VVTfc
-fsbKn/xCa5Dku8sbKXAvjxMh3hzgFrZrYIlnJwdLPvD4oxUHkDoXLJyowalp4scx
-MELFQgm2NyYvznpYRhKwnbIYZNqQis9RpZgimsrLpjOTXYFeARKZAY+p63cn4c8u
-kiANyMwcDyNARBa4B5cjg7gxT20kwIQDMPGj63lp8wknIuIkwf9mKuhiglcrjlHF
-bNmX73xmfHGy7qSbCisqETc6qyxKsA==
-=PUO0
------END PGP SIGNATURE-----
+Fix this by replacing "Your patch" by (the first line of) the email
+subject, if present.
 
---=-WdhCVQQ77luNuTrwjynR--
+Note that "git mailsplit" can also be used to split an mbox, but it will
+create individual files for each patch, thus requiring cleanup
+afterwards.  Formail does not have this disadvantage.
+
+[1] https://git.kernel.org/pub/scm/utils/b4/b4.git
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v2:
+  - Add more rationale,
+  - Refer to the new b4 tool.
+---
+ scripts/checkpatch.pl | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index eac40f0abd56a9f4..3355358697d9e790 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -1057,6 +1057,10 @@ for my $filename (@ARGV) {
+ 	}
+ 	while (<$FILE>) {
+ 		chomp;
++		if ($vname eq 'Your patch') {
++			my ($subject) = $_ =~ /^Subject:\s*(.*)/;
++			$vname = '"' . $subject . '"' if $subject;
++		}
+ 		push(@rawlines, $_);
+ 	}
+ 	close($FILE);
+-- 
+2.17.1
 
