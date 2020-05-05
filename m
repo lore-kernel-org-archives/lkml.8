@@ -2,94 +2,142 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C86C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E08C47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6881206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:54:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32C33206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:56:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rgFe5dJ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbgEEEyU (ORCPT
+        id S1727784AbgEEE4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 00:54:20 -0400
-Received: from foss.arm.com ([217.140.110.172]:59304 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725766AbgEEEyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 00:54:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E0FD730E;
-        Mon,  4 May 2020 21:54:18 -0700 (PDT)
-Received: from [10.37.12.10] (unknown [10.37.12.10])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B6EE03F68F;
-        Mon,  4 May 2020 21:54:11 -0700 (PDT)
-Subject: Re: [PATCH V3 10/16] arm64/cpufeature: Add remaining feature bits in
- ID_AA64PFR0 register
-To:     anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org
-Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org
-References: <1588426445-24344-1-git-send-email-anshuman.khandual@arm.com>
- <1588426445-24344-11-git-send-email-anshuman.khandual@arm.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <f5e8b407-c731-7ff9-df47-fc54182f2d25@arm.com>
-Date:   Tue, 5 May 2020 05:59:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Tue, 5 May 2020 00:56:22 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:21001 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725915AbgEEE4V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 00:56:21 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588654580; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=PV7sEq8EmjCcuJpfW06q3OmdCQ5IpxPI2EjjZQwRIPw=; b=rgFe5dJ+dkpvCdcLwJLdPk3BJuQTuZ5qYzcYqJySGTtHvob4imSnFE78yXlMNmYvCEiN3UF8
+ CFOW1/EuPSMrWp8lPIFNfJmoYfh9El7Y/LkW8Ob9dQG24ZEcXKHFnDJ6Rvo+yhJTRk55bfhw
+ /apZg5Z+Rim28Lq7HmYvaMB495Q=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb0f1ea.7f3176e90500-smtp-out-n05;
+ Tue, 05 May 2020 04:56:10 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 56675C433F2; Tue,  5 May 2020 04:56:10 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9D601C433D2;
+        Tue,  5 May 2020 04:56:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9D601C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Michal Kazior <michal.kazior@tieto.com>,
+        Maharaja Kennadyrajan <mkenna@codeaurora.org>,
+        Wen Gong <wgong@codeaurora.org>,
+        Erik Stromdahl <erik.stromdahl@gmail.com>,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH 04/15] ath10k: fix gcc-10 zero-length-bounds warnings
+References: <20200430213101.135134-1-arnd@arndb.de>
+        <20200430213101.135134-5-arnd@arndb.de>
+        <49831bca-b9cf-4b9a-1a60-f4289e9c83c0@embeddedor.com>
+        <87368flxui.fsf@codeaurora.org>
+        <69f5c551-01ab-3b90-01a1-42514cd58f60@embeddedor.com>
+Date:   Tue, 05 May 2020 07:56:03 +0300
+In-Reply-To: <69f5c551-01ab-3b90-01a1-42514cd58f60@embeddedor.com> (Gustavo A.
+        R. Silva's message of "Mon, 4 May 2020 11:09:21 -0500")
+Message-ID: <87d07jdlp8.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <1588426445-24344-11-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/02/2020 02:33 PM, Anshuman Khandual wrote:
-> Enable MPAM and SEL2 features bits in ID_AA64PFR0 register as per ARM DDI
-> 0487F.a specification.
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> 
-> Suggested-by: Will Deacon <will@kernel.org>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->   arch/arm64/include/asm/sysreg.h | 2 ++
->   arch/arm64/kernel/cpufeature.c  | 2 ++
->   2 files changed, 4 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-> index 40eaf89f1032..c93ea6613f51 100644
-> --- a/arch/arm64/include/asm/sysreg.h
-> +++ b/arch/arm64/include/asm/sysreg.h
-> @@ -641,6 +641,8 @@
->   #define ID_AA64PFR0_CSV2_SHIFT		56
->   #define ID_AA64PFR0_DIT_SHIFT		48
->   #define ID_AA64PFR0_AMU_SHIFT		44
-> +#define ID_AA64PFR0_MPAM_SHIFT		40
-> +#define ID_AA64PFR0_SEL2_SHIFT		36
->   #define ID_AA64PFR0_SVE_SHIFT		32
->   #define ID_AA64PFR0_RAS_SHIFT		28
->   #define ID_AA64PFR0_GIC_SHIFT		24
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index dbedcae28061..f5a39e040804 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -217,6 +217,8 @@ static const struct arm64_ftr_bits ftr_id_aa64pfr0[] = {
->   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64PFR0_CSV2_SHIFT, 4, 0),
->   	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR0_DIT_SHIFT, 4, 0),
->   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64PFR0_AMU_SHIFT, 4, 0),
-> +	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR0_MPAM_SHIFT, 4, 0),
-> +	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR0_SEL2_SHIFT, 4, 0),
+"Gustavo A. R. Silva" <gustavo@embeddedor.com> writes:
 
-Both of them must be hidden. And also need to check the impact of 
-exposing this to the guests, especially MPAM.
+> On 5/4/20 06:54, Kalle Valo wrote:
+>> "Gustavo A. R. Silva" <gustavo@embeddedor.com> writes:
+>> 
+>>> Hi Arnd,
+>>>
+>>> On 4/30/20 16:30, Arnd Bergmann wrote:
+>>>> gcc-10 started warning about out-of-bounds access for zero-length
+>>>> arrays:
+>>>>
+>>>> In file included from drivers/net/wireless/ath/ath10k/core.h:18,
+>>>>                  from drivers/net/wireless/ath/ath10k/htt_rx.c:8:
+>>>> drivers/net/wireless/ath/ath10k/htt_rx.c: In function 'ath10k_htt_rx_tx_fetch_ind':
+>>>> drivers/net/wireless/ath/ath10k/htt.h:1683:17: warning: array subscript 65535 is outside the bounds of an interior zero-length array 'struct htt_tx_fetch_record[0]' [-Wzero-length-bounds]
+>>>>  1683 |  return (void *)&ind->records[le16_to_cpu(ind->num_records)];
+>>>>       |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>> drivers/net/wireless/ath/ath10k/htt.h:1676:29: note: while referencing 'records'
+>>>>  1676 |  struct htt_tx_fetch_record records[0];
+>>>>       |                             ^~~~~~~
+>>>>
+>>>> The structure was already converted to have a flexible-array member in
+>>>> the past, but there are two zero-length members in the end and only
+>>>> one of them can be a flexible-array member.
+>>>>
+>>>> Swap the two around to avoid the warning, as 'resp_ids' is not accessed
+>>>> in a way that causes a warning.
+>>>>
+>>>> Fixes: 3ba225b506a2 ("treewide: Replace zero-length array with flexible-array member")
+>>>> Fixes: 22e6b3bc5d96 ("ath10k: add new htt definitions")
+>>>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>>>> ---
+>>>>  drivers/net/wireless/ath/ath10k/htt.h | 4 ++--
+>>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/drivers/net/wireless/ath/ath10k/htt.h b/drivers/net/wireless/ath/ath10k/htt.h
+>>>> index e7096a73c6ca..7621f0a3dc77 100644
+>>>> --- a/drivers/net/wireless/ath/ath10k/htt.h
+>>>> +++ b/drivers/net/wireless/ath/ath10k/htt.h
+>>>> @@ -1673,8 +1673,8 @@ struct htt_tx_fetch_ind {
+>>>>  	__le32 token;
+>>>>  	__le16 num_resp_ids;
+>>>>  	__le16 num_records;
+>>>> -	struct htt_tx_fetch_record records[0];
+>>>> -	__le32 resp_ids[]; /* ath10k_htt_get_tx_fetch_ind_resp_ids() */
+>>>> +	__le32 resp_ids[0]; /* ath10k_htt_get_tx_fetch_ind_resp_ids() */
+>>>> +	struct htt_tx_fetch_record records[];
+>>>>  } __packed;
+>>>>  
+>>>>  static inline void *
+>>>>
+>>>
+>>> The treewide patch is an experimental change and, as this change only applies
+>>> to my -next tree, I will carry this patch in it, so other people don't have
+>>> to worry about this at all.
+>> 
+>> Gustavo, why do you have ath10k patches in your tree? I prefer that
+>> ath10k patches go through my ath.git tree so that they are reviewed and
+>> tested.
+>> 
+>
+> I just wanted to test out a mechanical change. I will remove it from my tree
+> now and will send a patch to you so you can apply it to your ath.git tree.
 
-Suzuki
+Great, thanks.
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
