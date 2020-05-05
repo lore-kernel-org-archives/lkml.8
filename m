@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F50C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AB3C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA892078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:14:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F92D21974
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:14:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729479AbgEEON7 (ORCPT
+        id S1729486AbgEEOOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:13:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48556 "EHLO
+        Tue, 5 May 2020 10:14:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729450AbgEEONx (ORCPT
+        by vger.kernel.org with ESMTP id S1729453AbgEEONz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:13:53 -0400
+        Tue, 5 May 2020 10:13:55 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DF77C061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:13:53 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E03EEC061A10
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:13:54 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jVyKG-0000Wg-ON; Tue, 05 May 2020 16:13:36 +0200
+        id 1jVyK6-0000PP-MM; Tue, 05 May 2020 16:13:26 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 3C0B8FFC8D;
-        Tue,  5 May 2020 16:13:36 +0200 (CEST)
-Message-Id: <20200505134059.878578033@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 3704BFFC8D;
+        Tue,  5 May 2020 16:13:26 +0200 (CEST)
+Message-Id: <20200505134059.061301403@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:16:20 +0200
+Date:   Tue, 05 May 2020 15:16:12 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -52,8 +52,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Will Deacon <will@kernel.org>
-Subject: [patch V4 part 1 18/36] samples/kprobes: Add __kprobes and
- NOKPROBE_SYMBOL() for handlers.
+Subject: [patch V4 part 1 10/36] x86/entry: Remove the unused LOCKDEP_SYSEXIT cruft
 References: <20200505131602.633487962@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -66,64 +65,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+No users left since two years due to commit 21d375b6b34f ("x86/entry/64:
+Remove the SYSCALL64 fast path")
 
-Add __kprobes and NOKPROBE_SYMBOL() for sample kprobe handlers.
-
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/158523421177.24735.16273975317343670204.stgit@devnote2
-
 ---
- samples/kprobes/kprobe_example.c    |    6 ++++--
- samples/kprobes/kretprobe_example.c |    2 ++
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ arch/x86/entry/thunk_64.S       |    5 -----
+ arch/x86/include/asm/irqflags.h |   24 ------------------------
+ 2 files changed, 29 deletions(-)
 
---- a/samples/kprobes/kprobe_example.c
-+++ b/samples/kprobes/kprobe_example.c
-@@ -25,7 +25,7 @@ static struct kprobe kp = {
- };
+--- a/arch/x86/entry/thunk_64.S
++++ b/arch/x86/entry/thunk_64.S
+@@ -42,10 +42,6 @@ SYM_FUNC_END(\name)
+ 	THUNK trace_hardirqs_off_thunk,trace_hardirqs_off_caller,1
+ #endif
  
- /* kprobe pre_handler: called just before the probed instruction is executed */
--static int handler_pre(struct kprobe *p, struct pt_regs *regs)
-+static int __kprobes handler_pre(struct kprobe *p, struct pt_regs *regs)
- {
- #ifdef CONFIG_X86
- 	pr_info("<%s> pre_handler: p->addr = 0x%p, ip = %lx, flags = 0x%lx\n",
-@@ -54,7 +54,7 @@ static int handler_pre(struct kprobe *p,
- }
+-#ifdef CONFIG_DEBUG_LOCK_ALLOC
+-	THUNK lockdep_sys_exit_thunk,lockdep_sys_exit
+-#endif
+-
+ #ifdef CONFIG_PREEMPTION
+ 	THUNK preempt_schedule_thunk, preempt_schedule
+ 	THUNK preempt_schedule_notrace_thunk, preempt_schedule_notrace
+@@ -54,7 +50,6 @@ SYM_FUNC_END(\name)
+ #endif
  
- /* kprobe post_handler: called after the probed instruction is executed */
--static void handler_post(struct kprobe *p, struct pt_regs *regs,
-+static void __kprobes handler_post(struct kprobe *p, struct pt_regs *regs,
- 				unsigned long flags)
- {
- #ifdef CONFIG_X86
-@@ -90,6 +90,8 @@ static int handler_fault(struct kprobe *
- 	/* Return 0 because we don't handle the fault. */
- 	return 0;
- }
-+/* NOKPROBE_SYMBOL() is also available */
-+NOKPROBE_SYMBOL(handler_fault);
+ #if defined(CONFIG_TRACE_IRQFLAGS) \
+- || defined(CONFIG_DEBUG_LOCK_ALLOC) \
+  || defined(CONFIG_PREEMPTION)
+ SYM_CODE_START_LOCAL_NOALIGN(.L_restore)
+ 	popq %r11
+--- a/arch/x86/include/asm/irqflags.h
++++ b/arch/x86/include/asm/irqflags.h
+@@ -180,30 +180,6 @@ static inline int arch_irqs_disabled(voi
+ #  define TRACE_IRQS_ON
+ #  define TRACE_IRQS_OFF
+ #endif
+-#ifdef CONFIG_DEBUG_LOCK_ALLOC
+-#  ifdef CONFIG_X86_64
+-#    define LOCKDEP_SYS_EXIT		call lockdep_sys_exit_thunk
+-#    define LOCKDEP_SYS_EXIT_IRQ \
+-	TRACE_IRQS_ON; \
+-	sti; \
+-	call lockdep_sys_exit_thunk; \
+-	cli; \
+-	TRACE_IRQS_OFF;
+-#  else
+-#    define LOCKDEP_SYS_EXIT \
+-	pushl %eax;				\
+-	pushl %ecx;				\
+-	pushl %edx;				\
+-	call lockdep_sys_exit;			\
+-	popl %edx;				\
+-	popl %ecx;				\
+-	popl %eax;
+-#    define LOCKDEP_SYS_EXIT_IRQ
+-#  endif
+-#else
+-#  define LOCKDEP_SYS_EXIT
+-#  define LOCKDEP_SYS_EXIT_IRQ
+-#endif
+ #endif /* __ASSEMBLY__ */
  
- static int __init kprobe_init(void)
- {
---- a/samples/kprobes/kretprobe_example.c
-+++ b/samples/kprobes/kretprobe_example.c
-@@ -48,6 +48,7 @@ static int entry_handler(struct kretprob
- 	data->entry_stamp = ktime_get();
- 	return 0;
- }
-+NOKPROBE_SYMBOL(entry_handler);
- 
- /*
-  * Return-probe handler: Log the return value and duration. Duration may turn
-@@ -67,6 +68,7 @@ static int ret_handler(struct kretprobe_
- 			func_name, retval, (long long)delta);
- 	return 0;
- }
-+NOKPROBE_SYMBOL(ret_handler);
- 
- static struct kretprobe my_kretprobe = {
- 	.handler		= ret_handler,
+ #endif
 
