@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B0F9C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9364CC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B080206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7168720675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:18:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729697AbgEEOSM (ORCPT
+        id S1730247AbgEEORK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:18:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49350 "EHLO
+        Tue, 5 May 2020 10:17:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730283AbgEEORP (ORCPT
+        by vger.kernel.org with ESMTP id S1730217AbgEEORB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:17:15 -0400
+        Tue, 5 May 2020 10:17:01 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1E25C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:17:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCCACC061A10
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:17:00 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jVyNW-0002g0-69; Tue, 05 May 2020 16:16:59 +0200
+        id 1jVyN9-0002Oy-Sh; Tue, 05 May 2020 16:16:36 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id ADA54FFC8D;
-        Tue,  5 May 2020 16:16:57 +0200 (CEST)
-Message-Id: <20200505135831.067006961@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 63586FFC8D;
+        Tue,  5 May 2020 16:16:35 +0200 (CEST)
+Message-Id: <20200505135829.292468287@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:54:11 +0200
+Date:   Tue, 05 May 2020 15:53:53 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -52,7 +52,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Will Deacon <will@kernel.org>
-Subject: [patch V4 part 5 30/31] x86/entry: Move paranoid irq tracing out of ASM code
+Subject: [patch V4 part 5 12/31] x86/entry/32: Remove common_exception
 References: <20200505135341.730586321@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -65,108 +65,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+No more users.
+
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/entry/entry_64.S |   13 -------------
- arch/x86/kernel/nmi.c     |   11 +++++++----
- 2 files changed, 7 insertions(+), 17 deletions(-)
+ arch/x86/entry/entry_32.S |   21 ---------------------
+ 1 file changed, 21 deletions(-)
 
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -16,7 +16,6 @@
-  *
-  * Some macro usage:
-  * - SYM_FUNC_START/END:Define functions in the symbol table.
-- * - TRACE_IRQ_*:	Trace hardirq state for lock debugging.
-  * - idtentry:		Define exception entry points.
-  */
- #include <linux/linkage.h>
-@@ -107,11 +106,6 @@ SYM_CODE_END(native_usergs_sysret64)
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -1394,27 +1394,6 @@ BUILD_INTERRUPT3(hv_stimer0_callback_vec
  
- SYM_CODE_START(entry_SYSCALL_64)
- 	UNWIND_HINT_EMPTY
--	/*
--	 * Interrupts are off on entry.
--	 * We do not frame this tiny irq-off block with TRACE_IRQS_OFF/ON,
--	 * it is too small to ever cause noticeable irq latency.
--	 */
+ #endif /* CONFIG_HYPERV */
  
- 	swapgs
- 	/* tss.sp2 is scratch space. */
-@@ -463,8 +457,6 @@ SYM_CODE_START(\asmsym)
- 
- 	UNWIND_HINT_REGS
- 
--	TRACE_IRQS_OFF
+-SYM_CODE_START_LOCAL_NOALIGN(common_exception)
+-	/* the function address is in %gs's slot on the stack */
+-	SAVE_ALL switch_stacks=1 skip_gs=1 unwind_espfix=1
+-	ENCODE_FRAME_POINTER
 -
- 	movq	%rsp, %rdi		/* pt_regs pointer */
- 
- 	.if \vector == X86_TRAP_DB
-@@ -842,17 +834,13 @@ SYM_CODE_END(paranoid_entry)
-  */
- SYM_CODE_START_LOCAL(paranoid_exit)
- 	UNWIND_HINT_REGS
--	DISABLE_INTERRUPTS(CLBR_ANY)
+-	/* fixup %gs */
+-	GS_TO_REG %ecx
+-	movl	PT_GS(%esp), %edi		# get the function address
+-	REG_TO_PTGS %ecx
+-	SET_KERNEL_GS %ecx
+-
+-	/* fixup orig %eax */
+-	movl	PT_ORIG_EAX(%esp), %edx		# get the error code
+-	movl	$-1, PT_ORIG_EAX(%esp)		# no syscall to restart
+-
 -	TRACE_IRQS_OFF
- 	testl	%ebx, %ebx			/* swapgs needed? */
- 	jnz	.Lparanoid_exit_no_swapgs
--	TRACE_IRQS_IRETQ
- 	/* Always restore stashed CR3 value (see paranoid_entry) */
- 	RESTORE_CR3	scratch_reg=%rbx save_reg=%r14
- 	SWAPGS_UNSAFE_STACK
- 	jmp	restore_regs_and_return_to_kernel
- .Lparanoid_exit_no_swapgs:
--	TRACE_IRQS_IRETQ
- 	/* Always restore stashed CR3 value (see paranoid_entry) */
- 	RESTORE_CR3	scratch_reg=%rbx save_reg=%r14
- 	jmp restore_regs_and_return_to_kernel
-@@ -1254,7 +1242,6 @@ SYM_CODE_START(asm_exc_nmi)
- 	call	paranoid_entry
- 	UNWIND_HINT_REGS
- 
--	/* paranoidentry exc_nmi(), 0; without TRACE_IRQS_OFF */
- 	movq	%rsp, %rdi
- 	movq	$-1, %rsi
- 	call	exc_nmi
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -334,6 +334,8 @@ static noinstr void default_do_nmi(struc
- 	__this_cpu_write(last_nmi_rip, regs->ip);
- 
- 	instr_begin();
-+	trace_hardirqs_off_prepare();
-+
- 	handled = nmi_handle(NMI_LOCAL, regs);
- 	__this_cpu_add(nmi_stats.normal, handled);
- 	if (handled) {
-@@ -347,8 +349,7 @@ static noinstr void default_do_nmi(struc
- 		 */
- 		if (handled > 1)
- 			__this_cpu_write(swallow_nmi, true);
--		instr_end();
--		return;
-+		goto out;
- 	}
- 
- 	/*
-@@ -380,8 +381,7 @@ static noinstr void default_do_nmi(struc
- #endif
- 		__this_cpu_add(nmi_stats.external, 1);
- 		raw_spin_unlock(&nmi_reason_lock);
--		instr_end();
--		return;
-+		goto out;
- 	}
- 	raw_spin_unlock(&nmi_reason_lock);
- 
-@@ -419,6 +419,9 @@ static noinstr void default_do_nmi(struc
- 		__this_cpu_add(nmi_stats.swallow, 1);
- 	else
- 		unknown_nmi_error(reason, regs);
-+out:
-+	if (regs->flags & X86_EFLAGS_IF)
-+		trace_hardirqs_on_prepare();
- 	instr_end();
- }
- 
+-	movl	%esp, %eax			# pt_regs pointer
+-	CALL_NOSPEC edi
+-	jmp	ret_from_exception
+-SYM_CODE_END(common_exception)
+-
+ SYM_CODE_START_LOCAL_NOALIGN(handle_exception)
+ 	/* the function address is in %gs's slot on the stack */
+ 	SAVE_ALL switch_stacks=1 skip_gs=1 unwind_espfix=1
 
