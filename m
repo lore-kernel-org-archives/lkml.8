@@ -2,363 +2,108 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FD7C4724C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 02:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23242C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 02:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A04D206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 02:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F286C206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 02:32:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cZvRbE58"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbgEECcH (ORCPT
+        id S1728422AbgEECcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 22:32:07 -0400
-Received: from mga05.intel.com ([192.55.52.43]:57048 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726550AbgEECcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 22:32:06 -0400
-IronPort-SDR: S/eUHMmZdrb3/rxTBFyoDfKKVZKqBehczdx/3XEh8ZtgsL5lnC3cCoiombAEMCMAeGTr7oNT7b
- TDDepbVOPwMA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 19:32:05 -0700
-IronPort-SDR: IfdmrP2wfQf8Lx5BTI5+eXhZ4uw5o1DT6e/G6FaqZxw159+6/n4OgW+v59p8v38chH3331c+6W
- gALjvXY1X9Ag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,354,1583222400"; 
-   d="scan'208";a="277726366"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 04 May 2020 19:32:04 -0700
-Received: from debox1-hc.jf.intel.com (debox1-hc.jf.intel.com [10.54.75.159])
-        by linux.intel.com (Postfix) with ESMTP id 36C35580609;
-        Mon,  4 May 2020 19:32:05 -0700 (PDT)
-From:   "David E. Box" <david.e.box@linux.intel.com>
-To:     bhelgaas@google.com, andy@infradead.org,
-        alexander.h.duyck@intel.com
-Cc:     "David E. Box" <david.e.box@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Subject: [PATCH 2/3] mfd: Intel Platform Monitoring Technology support
-Date:   Mon,  4 May 2020 19:31:48 -0700
-Message-Id: <20200505023149.11630-1-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200505013206.11223-1-david.e.box@linux.intel.com>
-References: <20200505013206.11223-1-david.e.box@linux.intel.com>
+        Mon, 4 May 2020 22:32:53 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:15051 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726926AbgEECcx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 22:32:53 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588645972; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=aWsP1jrgv5VOaBcGYPLjJDNZ7GM9ZWmCxTTYgdbAIYY=;
+ b=cZvRbE58igWDnlPdPtJqq7I1aOuqoNOq+mGkXiBcm2evBXA0CRlnHHW2OQ3a0Ttq6LikAgn6
+ sHHp4PYGuEUKKMyHyfym2glzgRgzU01ZT2OdFQ41WFKFxgvKyENBI05rE99F2vORGKrKZcpt
+ nuug/0MQOJqkg4k/HT7VGMZ5F1I=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3A4F5C433BA; Tue,  5 May 2020 02:32:42 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbhatt)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id ACAD7C433D2;
+        Tue,  5 May 2020 02:32:41 +0000 (UTC)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 04 May 2020 19:32:41 -0700
+From:   bbhatt@codeaurora.org
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     mani@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hemantk@codeaurora.org
+Subject: Re: [PATCH v4 8/8] bus: mhi: core: Ensure non-zero session or
+ sequence ID values are used
+In-Reply-To: <2a249d99-b1e7-7943-0ed4-d5529f7abc33@codeaurora.org>
+References: <1588386725-1165-1-git-send-email-bbhatt@codeaurora.org>
+ <1588386725-1165-9-git-send-email-bbhatt@codeaurora.org>
+ <2a249d99-b1e7-7943-0ed4-d5529f7abc33@codeaurora.org>
+Message-ID: <623c100dc1850c8d8f9a6412d7153fd1@codeaurora.org>
+X-Sender: bbhatt@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Intel Platform Monitoring Technology (PMT) is an architecture for
-enumerating and accessing hardware monitoring facilities. PMT supports
-multiple types of monitoring capabilities. Capabilities are discovered
-using PCIe DVSEC with the Intel VID. Each capability is discovered as a
-separate DVSEC instance in a device's config space. This driver uses MFD to
-manage the creation of platform devices for each type so that they may be
-controlled by their own drivers (to be introduced).  Support is included
-for the 3 current capability types, Telemetry, Watcher, and Crashlog. The
-features are available on new Intel platforms starting from Tiger Lake for
-which support is added. Tiger Lake however will not support Watcher and
-Crashlog even though the capabilities appear on the device. So add a quirk
-facility and use it to disable them.
+On 2020-05-04 07:33, Jeffrey Hugo wrote:
+> On 5/1/2020 8:32 PM, Bhaumik Bhatt wrote:
+>> While writing any sequence or session identifiers, it is possible that
+>> the host could write a zero value, whereas only non-zero values should
+>> be supported writes to those registers. Ensure that the host does not
+>> write a non-zero value for them and also log them in debug messages.
+>> 
+>> Suggested-by: Jeffrey Hugo <jhugo@codeaurora.org>
+>> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+>> ---
+>>   drivers/bus/mhi/core/boot.c     | 15 +++++++--------
+>>   drivers/bus/mhi/core/internal.h |  1 +
+>>   2 files changed, 8 insertions(+), 8 deletions(-)
+>> 
+>> diff --git a/drivers/bus/mhi/core/boot.c b/drivers/bus/mhi/core/boot.c
+>> index e5fcde1..9fe9c59 100644
+>> --- a/drivers/bus/mhi/core/boot.c
+>> +++ b/drivers/bus/mhi/core/boot.c
+>> @@ -43,10 +43,7 @@ void mhi_rddm_prepare(struct mhi_controller 
+>> *mhi_cntrl,
+>>   		      lower_32_bits(mhi_buf->dma_addr));
+>>     	mhi_write_reg(mhi_cntrl, base, BHIE_RXVECSIZE_OFFS, 
+>> mhi_buf->len);
+>> -	sequence_id = prandom_u32() & BHIE_RXVECSTATUS_SEQNUM_BMSK;
+>> -
+>> -	if (unlikely(!sequence_id))
+>> -		sequence_id = 1;
+>> +	sequence_id = (MHI_RANDOM_U32_NONZERO & 
+>> BHIE_RXVECSTATUS_SEQNUM_BMSK);
+> 
+> I don't think this math works.  For example, if MHI_RANDOM_U32_NONZERO
+> is 0x0FF0, and BHIE_RXVECSTATUS_SEQNUM_BMSK is 0xF, then sequence_id
+> will end up being 0.
 
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
----
- MAINTAINERS                 |   5 ++
- drivers/mfd/Kconfig         |  10 +++
- drivers/mfd/Makefile        |   1 +
- drivers/mfd/intel_pmt.c     | 174 ++++++++++++++++++++++++++++++++++++
- include/linux/intel-dvsec.h |  44 +++++++++
- 5 files changed, 234 insertions(+)
- create mode 100644 drivers/mfd/intel_pmt.c
- create mode 100644 include/linux/intel-dvsec.h
+In this case, SEQNUM BMSK is set to 0x3FFFFFFF so this change will still 
+work as
+we only supplied a non-zero number macro to AND with the mask.
+However, I agree that may not be the case always that we would know the 
+bitmask
+in advance so it is better to fix it for good.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e64e5db31497..bacf7ecd4d21 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8783,6 +8783,11 @@ S:	Maintained
- F:	arch/x86/include/asm/intel_telemetry.h
- F:	drivers/platform/x86/intel_telemetry*
- 
-+INTEL PMT DRIVER
-+M:	"David E. Box" <david.e.box@linux.intel.com>
-+S:	Maintained
-+F:	drivers/mfd/intel_pmt.c
-+
- INTEL UNCORE FREQUENCY CONTROL
- M:	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
- L:	platform-driver-x86@vger.kernel.org
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 0a59249198d3..c673031acdf1 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -632,6 +632,16 @@ config MFD_INTEL_MSIC
- 	  Passage) chip. This chip embeds audio, battery, GPIO, etc.
- 	  devices used in Intel Medfield platforms.
- 
-+config MFD_INTEL_PMT
-+	tristate "Intel Platform Monitoring Technology support"
-+	depends on PCI
-+	select MFD_CORE
-+	help
-+	  The Intel Platform Monitoring Technology (PMT) is an interface that
-+	  provides access to hardware monitor registers. This driver supports
-+	  Telemetry, Watcher, and Crashlog PTM capabilities/devices for
-+	  platforms starting from Tiger Lake.
-+
- config MFD_IPAQ_MICRO
- 	bool "Atmel Micro ASIC (iPAQ h3100/h3600/h3700) Support"
- 	depends on SA1100_H3100 || SA1100_H3600
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index f935d10cbf0f..0041f673faa1 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -212,6 +212,7 @@ obj-$(CONFIG_MFD_INTEL_LPSS)	+= intel-lpss.o
- obj-$(CONFIG_MFD_INTEL_LPSS_PCI)	+= intel-lpss-pci.o
- obj-$(CONFIG_MFD_INTEL_LPSS_ACPI)	+= intel-lpss-acpi.o
- obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
-+obj-$(CONFIG_MFD_INTEL_PMT)	+= intel_pmt.o
- obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
- obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
- obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
-diff --git a/drivers/mfd/intel_pmt.c b/drivers/mfd/intel_pmt.c
-new file mode 100644
-index 000000000000..c48a2b82ca99
---- /dev/null
-+++ b/drivers/mfd/intel_pmt.c
-@@ -0,0 +1,174 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel Platform Monitoring Technology MFD driver
-+ *
-+ * Copyright (c) 2020, Intel Corporation.
-+ * All Rights Reserved.
-+ *
-+ * Authors: David E. Box <david.e.box@linux.intel.com>
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/mfd/core.h>
-+#include <linux/intel-dvsec.h>
-+
-+#define TELEM_DEV_NAME		"pmt_telemetry"
-+#define WATCHER_DEV_NAME	"pmt_watcher"
-+#define CRASHLOG_DEV_NAME	"pmt_crashlog"
-+
-+static const struct pmt_platform_info tgl_info = {
-+	.quirks = PMT_QUIRK_NO_WATCHER | PMT_QUIRK_NO_CRASHLOG,
-+};
-+
-+static int
-+pmt_add_dev(struct pci_dev *pdev, struct intel_dvsec_header *header,
-+	    struct pmt_platform_info *info)
-+{
-+	struct mfd_cell *cell, *tmp;
-+	const char *name;
-+	int i;
-+
-+	switch (header->id) {
-+	case DVSEC_INTEL_ID_TELEM:
-+		name = TELEM_DEV_NAME;
-+		break;
-+	case DVSEC_INTEL_ID_WATCHER:
-+		if (info->quirks && PMT_QUIRK_NO_WATCHER) {
-+			dev_info(&pdev->dev, "Watcher not supported\n");
-+			return 0;
-+		}
-+		name = WATCHER_DEV_NAME;
-+		break;
-+	case DVSEC_INTEL_ID_CRASHLOG:
-+		if (info->quirks && PMT_QUIRK_NO_WATCHER) {
-+			dev_info(&pdev->dev, "Crashlog not supported\n");
-+			return 0;
-+		}
-+		name = CRASHLOG_DEV_NAME;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	cell = devm_kcalloc(&pdev->dev, header->num_entries,
-+			    sizeof(*cell), GFP_KERNEL);
-+	if (!cell)
-+		return -ENOMEM;
-+
-+	/* Create a platform device for each entry. */
-+	for (i = 0, tmp = cell; i < header->num_entries; i++, tmp++) {
-+		struct resource *res;
-+
-+		res = devm_kzalloc(&pdev->dev, sizeof(*res), GFP_KERNEL);
-+		if (!res)
-+			return -ENOMEM;
-+
-+		tmp->name = name;
-+
-+		res->start = pdev->resource[header->tbir].start +
-+			     header->offset +
-+			     (i * (INTEL_DVSEC_ENTRY_SIZE << 2));
-+		res->end = res->start + (header->entry_size << 2) - 1;
-+		res->flags = IORESOURCE_MEM;
-+
-+		tmp->resources = res;
-+		tmp->num_resources = 1;
-+		tmp->platform_data = header;
-+		tmp->pdata_size = sizeof(*header);
-+
-+	}
-+
-+	return devm_mfd_add_devices(&pdev->dev, PLATFORM_DEVID_AUTO, cell,
-+				    header->num_entries, NULL, 0, NULL);
-+}
-+
-+static int
-+pmt_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-+{
-+	u16 vid;
-+	u32 table;
-+	int ret, pos = 0, last_pos = 0;
-+	struct pmt_platform_info *info;
-+	struct intel_dvsec_header header;
-+
-+	ret = pcim_enable_device(pdev);
-+	if (ret)
-+		return ret;
-+
-+	info = devm_kmemdup(&pdev->dev, (void *)id->driver_data, sizeof(*info),
-+			    GFP_KERNEL);
-+
-+	if (!info)
-+		return -ENOMEM;
-+
-+	while ((pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DVSEC))) {
-+		pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER1, &vid);
-+		if (vid != PCI_VENDOR_ID_INTEL)
-+			continue;
-+
-+		pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER2,
-+				     &header.id);
-+
-+		pci_read_config_byte(pdev, pos + INTEL_DVSEC_ENTRIES,
-+				     &header.num_entries);
-+
-+		pci_read_config_byte(pdev, pos + INTEL_DVSEC_SIZE,
-+				     &header.entry_size);
-+
-+		if (!header.num_entries || !header.entry_size)
-+			return -EINVAL;
-+
-+		pci_read_config_dword(pdev, pos + INTEL_DVSEC_TABLE,
-+				      &table);
-+
-+		header.tbir = INTEL_DVSEC_TABLE_BAR(table);
-+		header.offset = INTEL_DVSEC_TABLE_OFFSET(table);
-+		ret = pmt_add_dev(pdev, &header, info);
-+		if (ret)
-+			dev_warn(&pdev->dev,
-+				 "Failed to add devices for DVSEC id %d\n",
-+				 header.id);
-+		last_pos = pos;
-+	}
-+
-+	if (!last_pos) {
-+		dev_err(&pdev->dev, "No supported PMT capabilities found.\n");
-+		return -ENODEV;
-+	}
-+
-+	pm_runtime_put(&pdev->dev);
-+	pm_runtime_allow(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+static void pmt_pci_remove(struct pci_dev *pdev)
-+{
-+	pm_runtime_forbid(&pdev->dev);
-+	pm_runtime_get_sync(&pdev->dev);
-+}
-+
-+static const struct pci_device_id pmt_pci_ids[] = {
-+	/* TGL */
-+	{ PCI_VDEVICE(INTEL, 0x9a0d), (kernel_ulong_t)&tgl_info },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(pci, pmt_pci_ids);
-+
-+static struct pci_driver pmt_pci_driver = {
-+	.name = "intel-pmt",
-+	.id_table = pmt_pci_ids,
-+	.probe = pmt_pci_probe,
-+	.remove = pmt_pci_remove,
-+};
-+
-+module_pci_driver(pmt_pci_driver);
-+
-+MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.com>");
-+MODULE_DESCRIPTION("Intel Platform Monitoring Technology MFD driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/intel-dvsec.h b/include/linux/intel-dvsec.h
-new file mode 100644
-index 000000000000..94f606bf8eae
---- /dev/null
-+++ b/include/linux/intel-dvsec.h
-@@ -0,0 +1,44 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef INTEL_DVSEC_H
-+#define INTEL_DVSEC_H
-+
-+#include <linux/types.h>
-+
-+#define DVSEC_INTEL_ID_TELEM	2
-+#define DVSEC_INTEL_ID_WATCHER	3
-+#define DVSEC_INTEL_ID_CRASHLOG	4
-+
-+/* Intel DVSEC capability vendor space offsets */
-+#define INTEL_DVSEC_ENTRIES		0xA
-+#define INTEL_DVSEC_SIZE		0xB
-+#define INTEL_DVSEC_TABLE		0xC
-+#define INTEL_DVSEC_TABLE_BAR(x)	((x) & GENMASK(2, 0))
-+#define INTEL_DVSEC_TABLE_OFFSET(x)	((x) >> 3)
-+
-+#define INTEL_DVSEC_ENTRY_SIZE		4
-+
-+/* DVSEC header */
-+struct intel_dvsec_header {
-+	u16	length;
-+	u16	id;
-+	u8	num_entries;
-+	u8	entry_size;
-+	u8	entry_max;
-+	u8	tbir;
-+	u32	offset;
-+};
-+
-+enum pmt_quirks {
-+	/* Watcher capability not supported */
-+	PMT_QUIRK_NO_WATCHER	= (1 << 0),
-+
-+	/* Crashlog capability not supported */
-+	PMT_QUIRK_NO_CRASHLOG	= (1 << 1),
-+};
-+
-+struct pmt_platform_info {
-+	unsigned long quirks;
-+	struct intel_dvsec_header **capabilities;
-+};
-+
-+#endif
--- 
-2.20.1
-
+Thanks for the catch! I have updated the change to have the macro take 
+the
+bitmask as a parameter and output a non-zero value.
