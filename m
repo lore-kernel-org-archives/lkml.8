@@ -4,36 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B98C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3545C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADFC220663
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD71A20721
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:14:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729181AbgEEUOB (ORCPT
+        id S1729198AbgEEUOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 16:14:01 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:60273 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727785AbgEEUOA (ORCPT
+        Tue, 5 May 2020 16:14:04 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:40763 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727785AbgEEUOC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 16:14:00 -0400
+        Tue, 5 May 2020 16:14:02 -0400
+X-Originating-IP: 86.202.105.35
 Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 72AAE200003;
-        Tue,  5 May 2020 20:13:45 +0000 (UTC)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id B9075FF806;
+        Tue,  5 May 2020 20:13:59 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     linux-rtc@vger.kernel.org
 Cc:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
         =?UTF-8?q?Per=20N=C3=B8rgaard=20Christensen?= 
         <per.christensen@prevas.dk>, linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 3/5] rtc: pcf2127: remove unnecessary #ifdef
-Date:   Tue,  5 May 2020 22:13:08 +0200
-Message-Id: <20200505201310.255145-3-alexandre.belloni@bootlin.com>
+Subject: [PATCH 4/5] rtc: pcf2127: set regmap max_register
+Date:   Tue,  5 May 2020 22:13:09 +0200
+Message-Id: <20200505201310.255145-4-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200505201310.255145-1-alexandre.belloni@bootlin.com>
 References: <20200505201310.255145-1-alexandre.belloni@bootlin.com>
@@ -44,36 +44,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is not point in setting .ioctl to NULL when CONFIG_RTC_INTF_DEV is
-not defined because it would not be called anyway.
+Set regmap max_register to ease debugging and enforce the register range.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-pcf2127.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/rtc/rtc-pcf2127.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/rtc/rtc-pcf2127.c b/drivers/rtc/rtc-pcf2127.c
-index 136709baaa88..5ac996578523 100644
+index 5ac996578523..039078029bd4 100644
 --- a/drivers/rtc/rtc-pcf2127.c
 +++ b/drivers/rtc/rtc-pcf2127.c
-@@ -184,7 +184,6 @@ static int pcf2127_rtc_set_time(struct device *dev, struct rtc_time *tm)
- 	return 0;
- }
+@@ -634,6 +634,7 @@ static int pcf2127_i2c_probe(struct i2c_client *client,
+ 	static const struct regmap_config config = {
+ 		.reg_bits = 8,
+ 		.val_bits = 8,
++		.max_register = 0x1d,
+ 	};
  
--#ifdef CONFIG_RTC_INTF_DEV
- static int pcf2127_rtc_ioctl(struct device *dev,
- 				unsigned int cmd, unsigned long arg)
- {
-@@ -205,9 +204,6 @@ static int pcf2127_rtc_ioctl(struct device *dev,
- 		return -ENOIOCTLCMD;
- 	}
- }
--#else
--#define pcf2127_rtc_ioctl NULL
--#endif
+ 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
+@@ -701,6 +702,7 @@ static int pcf2127_spi_probe(struct spi_device *spi)
+ 		.val_bits = 8,
+ 		.read_flag_mask = 0xa0,
+ 		.write_flag_mask = 0x20,
++		.max_register = 0x1d,
+ 	};
+ 	struct regmap *regmap;
  
- static const struct rtc_class_ops pcf2127_rtc_ops = {
- 	.ioctl		= pcf2127_rtc_ioctl,
 -- 
 2.26.2
 
