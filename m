@@ -2,197 +2,105 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1461CC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3B8C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E43FE2073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D3DC206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:26:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729982AbgEEOZl (ORCPT
+        id S1729489AbgEEO0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:25:41 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:43169 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729310AbgEEOZk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:25:40 -0400
-Received: from localhost.localdomain ([149.172.19.189]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MJVU0-1jpiHq2SC0-00Jpo7; Tue, 05 May 2020 16:25:22 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Timothy Pearson <tpearson@raptorengineering.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Tue, 5 May 2020 10:26:05 -0400
+Received: from foss.arm.com ([217.140.110.172]:41716 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729142AbgEEO0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 10:26:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CAEE01FB;
+        Tue,  5 May 2020 07:26:03 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.25.241])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 456BF3F68F;
+        Tue,  5 May 2020 07:25:59 -0700 (PDT)
+Date:   Tue, 5 May 2020 15:25:56 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Torsten Duwe <duwe@lst.de>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        Torsten Duwe <duwe@suse.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Julien Thierry <jthierry@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Marc Zyngier <maz@kernel.org>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Charlene Liu <charlene.liu@amd.com>,
-        Anthony Koo <Anthony.Koo@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH] drm/amdgpu/dc: don't pass -mhard-float to clang
-Date:   Tue,  5 May 2020 16:24:56 +0200
-Message-Id: <20200505142519.1138945-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
+        Kees Cook <keescook@chromium.org>,
+        Alexandre Ghiti <alex@ghiti.fr>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Ionela Voinescu <ionela.voinescu@arm.com>,
+        Steve Capper <steve.capper@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] arm64: disable patchable function entry on big-endian
+ clang builds
+Message-ID: <20200505142556.GF82823@C02TD0UTHF1T.local>
+References: <20200505141257.707945-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:kyuCbCEFYOcHR9DitYTjAbdHsjMrBAl6tRD/hASI8cLhgsKb51z
- 4SM5jXD33rd9/xC4Ev/039yaCDjFmF940iPtDNjHpkoyNLksYCThRDq3NxoD5XAj9b56A+N
- Wn1FMJsGA+XcWsm8tu1gT6IJamHNPqS//MWiN5SJg/G/fHJknT72vtObM6aOgfGAKtrJpXy
- 2uj8DD9Q4oJPQ0wB4c8yg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zuXYTAazwNE=:PutM/bcLCGJjXJnOuEuYkH
- ZYpn4w7i2HwOMEBxnl8nED8rAiamNiwCxhrgA18hTQyg/lkPUp39/qIPXLPi3Z0xE83px2DKu
- ktQ86tTo2g5qB588P9fOBUEiVXI0iu3VX9yzyocfYCaCB0fz+MHFjKeiSV1q55BtLzDGOqWG1
- 9VoJ+D3p5nhYeRUyWS4H8XoojR+X2Ne3OfTL5pPuTW8NMIfF7twoyVo+L897h7mmku9BKWJqR
- ahqfIzW13oTTMA3W/PoKXRtWxpzNEQ0HEbYykyVAoQbGdVJq30sfAiXLGaFUw6MyGjPfLqBxv
- EN9q2TxRx+wyFVulikYVOaduHdAwjG6FU1maMCdzIcNP5rE1OLjQLywYBBCziS46+obh9J4dV
- K1cdjItfVQUFOoKzmZTEpHcdS0xkbPRQARihqQcuYmI0qug3JwpQo/Si19/NoVYvUZNHdL+Z7
- ksMqzvtFiE74x5kMdFAAmDTvCqY/7X3hq8T6kR9aCFNN2giRR909dKlMC76msaQFcdfggubY1
- yIBDsnLNXTQPcr3pIPWbxt1Mo6rY6j4kaoEJjXQ2AWEq7z06KQNGV87ooVcyi2Wag3NcUDcmK
- SQ+AvWrCQ4spBhCBt+RawkuBvWH4emWNZ//soISOPpuCipnlu+XkdidFfYhfCTYx/5LdPPUo4
- JK1mGkJAe4P7+JEqTKlxn8bwSv7eGO+a0OvJKK2nsrv/aOSvUd7UYH/0T7i2dt3RmkjGKRyzA
- Q00x5Iezmpf4ojKXOh+y7MBF9RbadJpAEiStCnqyCN7juVfsCadGE2d+BXgkE/FmZmpyZ2B2t
- avuyqPcFNOJpGaZHCb1llcI/0ZQQm3FbIKEJqyQXc7iUb5dP9s=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505141257.707945-1-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang does not appear to care, and instead prints a warning:
+On Tue, May 05, 2020 at 04:12:36PM +0200, Arnd Bergmann wrote:
+> Clang only supports the patchable_function_entry attribute on
+> little-endian arm64 builds, but not on big-endian:
+> 
+> include/linux/kasan-checks.h:16:8: error: unknown attribute 'patchable_function_entry' ignored [-Werror,-Wunknown-attributes]
+> 
+> Disable that configuration with another dependency. Unfortunately
+> the existing check is not enough, as $(cc-option) at this point does
+> not pass the -mbig-endian flag.
 
-clang: warning: argument unused during compilation: '-mhard-float' [-Wunused-command-line-argument]
+Well that's unfortunate. :(
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/gpu/drm/amd/display/dc/calcs/Makefile | 5 +++--
- drivers/gpu/drm/amd/display/dc/dcn20/Makefile | 5 +++--
- drivers/gpu/drm/amd/display/dc/dcn21/Makefile | 5 +++--
- drivers/gpu/drm/amd/display/dc/dml/Makefile   | 5 +++--
- drivers/gpu/drm/amd/display/dc/dsc/Makefile   | 5 +++--
- 5 files changed, 15 insertions(+), 10 deletions(-)
+Do we know if this is deliberate and/or likely to change in future? This
+practically rules out a BE distro kernel with things like PAC, which
+isn't ideal.
 
-diff --git a/drivers/gpu/drm/amd/display/dc/calcs/Makefile b/drivers/gpu/drm/amd/display/dc/calcs/Makefile
-index 4674aca8f206..64195cacf6fc 100644
---- a/drivers/gpu/drm/amd/display/dc/calcs/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/calcs/Makefile
-@@ -26,14 +26,15 @@
- #
- 
- ifdef CONFIG_X86
--calcs_ccflags := -mhard-float -msse
-+calcs_ccflags := -msse
- endif
- 
- ifdef CONFIG_PPC64
--calcs_ccflags := -mhard-float -maltivec
-+calcs_ccflags := -maltivec
- endif
- 
- ifdef CONFIG_CC_IS_GCC
-+calcs_ccflags += -mhard-float
- ifeq ($(call cc-ifversion, -lt, 0701, y), y)
- IS_OLD_GCC = 1
- endif
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/Makefile b/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
-index 5fcaf78334ff..0d3ce716c753 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
-@@ -10,14 +10,15 @@ DCN20 = dcn20_resource.o dcn20_init.o dcn20_hwseq.o dcn20_dpp.o dcn20_dpp_cm.o d
- DCN20 += dcn20_dsc.o
- 
- ifdef CONFIG_X86
--CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o := -mhard-float -msse
-+CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o := -msse
- endif
- 
- ifdef CONFIG_PPC64
--CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o := -mhard-float -maltivec
-+CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o := -maltivec
- endif
- 
- ifdef CONFIG_CC_IS_GCC
-+CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o += -mhard-float
- ifeq ($(call cc-ifversion, -lt, 0701, y), y)
- IS_OLD_GCC = 1
- endif
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/Makefile b/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
-index 07684d3e375a..fd209d1cf6bb 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
-@@ -6,14 +6,15 @@ DCN21 = dcn21_init.o dcn21_hubp.o dcn21_hubbub.o dcn21_resource.o \
- 	 dcn21_hwseq.o dcn21_link_encoder.o
- 
- ifdef CONFIG_X86
--CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o := -mhard-float -msse
-+CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o := -msse
- endif
- 
- ifdef CONFIG_PPC64
--CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o := -mhard-float -maltivec
-+CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o := -maltivec
- endif
- 
- ifdef CONFIG_CC_IS_GCC
-+CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o += -mhard-float
- ifeq ($(call cc-ifversion, -lt, 0701, y), y)
- IS_OLD_GCC = 1
- endif
-diff --git a/drivers/gpu/drm/amd/display/dc/dml/Makefile b/drivers/gpu/drm/amd/display/dc/dml/Makefile
-index 7ee8b8460a9b..fb74e79e15a2 100644
---- a/drivers/gpu/drm/amd/display/dc/dml/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/dml/Makefile
-@@ -26,14 +26,15 @@
- # subcomponents.
- 
- ifdef CONFIG_X86
--dml_ccflags := -mhard-float -msse
-+dml_ccflags := -msse
- endif
- 
- ifdef CONFIG_PPC64
--dml_ccflags := -mhard-float -maltivec
-+dml_ccflags := -maltivec
- endif
- 
- ifdef CONFIG_CC_IS_GCC
-+dml_ccflags += -mhard-float
- ifeq ($(call cc-ifversion, -lt, 0701, y), y)
- IS_OLD_GCC = 1
- endif
-diff --git a/drivers/gpu/drm/amd/display/dc/dsc/Makefile b/drivers/gpu/drm/amd/display/dc/dsc/Makefile
-index 3f66868df171..b0077f5c318d 100644
---- a/drivers/gpu/drm/amd/display/dc/dsc/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/dsc/Makefile
-@@ -3,14 +3,15 @@
- # Makefile for the 'dsc' sub-component of DAL.
- 
- ifdef CONFIG_X86
--dsc_ccflags := -mhard-float -msse
-+dsc_ccflags := -msse
- endif
- 
- ifdef CONFIG_PPC64
--dsc_ccflags := -mhard-float -maltivec
-+dsc_ccflags := -maltivec
- endif
- 
- ifdef CONFIG_CC_IS_GCC
-+dsc_ccflags += -mhard-float
- ifeq ($(call cc-ifversion, -lt, 0701, y), y)
- IS_OLD_GCC = 1
- endif
--- 
-2.26.0
+> Fixes: 3b23e4991fb6 ("arm64: implement ftrace with regs")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
+This looks fine for now, and we can add a version check in future, so:
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+Mark.
+
+> ---
+>  arch/arm64/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 4b256fa6db7a..a33d6402b934 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -151,7 +151,7 @@ config ARM64
+>  	select HAVE_DMA_CONTIGUOUS
+>  	select HAVE_DYNAMIC_FTRACE
+>  	select HAVE_DYNAMIC_FTRACE_WITH_REGS \
+> -		if $(cc-option,-fpatchable-function-entry=2)
+> +		if $(cc-option,-fpatchable-function-entry=2) && !(CC_IS_CLANG && CPU_BIG_ENDIAN)
+>  	select HAVE_EFFICIENT_UNALIGNED_ACCESS
+>  	select HAVE_FAST_GUP
+>  	select HAVE_FTRACE_MCOUNT_RECORD
+> -- 
+> 2.26.0
+> 
