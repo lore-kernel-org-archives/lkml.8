@@ -2,162 +2,229 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E69CC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5819DC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6478E24976
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:30:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="guBzv5p5"
+	by mail.kernel.org (Postfix) with ESMTP id 2F5A520661
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:30:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729164AbgEEUag (ORCPT
+        id S1729224AbgEEUal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 16:30:36 -0400
-Received: from mail-eopbgr20083.outbound.protection.outlook.com ([40.107.2.83]:3079
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726350AbgEEUaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 16:30:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DxKnusg7SxJ0ojMbQ7DjCAxv5OJoCEhMTpizHGS5MKNqbqOxlgfY+EWXy77Rxfl8byR4kHETh4tv9KDPc0gFfXC2DOUAi0Sg4AYN3sPr8j0835EIS5t4nypS4lr4SoRVwZjj+4KIY4izWLTawH+PLrnTSL8cubY2FlgVEtDmd0g/CyAe2VxvqX4wRD8iHZiPwHsMrS5BkPbjUpKp1CpkuLf5QHRue6h6hoWSb6YrLMu6EmkZ/B+0bPiwbalFKFUwpeoCJ1yPuqgCtCv+PW/hqxKsK8FlYBe7jqlR1Ada/mEEORyY1BaM63jzA5oIZt613Rv5+Ggs4Xv1Gmb0Jgosvw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TQcTYS0tvs8l6+Bcw2969g5h6EQJQDTsaiu8DB7+R1w=;
- b=YGIT178uVuDLlxlHG+XbHrQOQMKgMUP1snqvkfilzSMJb1sMLKSzhkFr7Sfj8UUNDW6dbOm7yN2qgYPlbPsVzJ258as3S9BjFuCsw3lSQwk88Eu1pviFRxmDT++cbBO+k0frEhuQF+U0rXuS1GPNIapkoEPiNw7YBi0N+UR9ZRgWiQrQkp2WISQKHXM31f2N8ka1fK2Yjnyadd/COlFBWKN60vsXCp+PKNJvJ8XarTYPw4oIfsK7T+VF1pYmghNeZ48+3tfnPyoE7nETXUKktUnXofLuIx/3K+D5EUyxqeOPzDrL37Oe6qR8n9tIickXS7OO3k+FcCmmT0+iXEnFKw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TQcTYS0tvs8l6+Bcw2969g5h6EQJQDTsaiu8DB7+R1w=;
- b=guBzv5p57hfbR0XmBhKYVvGOcY309kFqCE1pSPOGomvNAwPEddw8VQWtA9Ct8+Fn1hMluWe/w3zJDICcFQBBrIzjbngDemzBTBhEXztjk+ruVUjbiBLqk+/DGtmOErMhnpximyecYR4wXdffOYbiLFKIKSS1mkfVwVWahbabmmI=
-Received: from DB8PR04MB6828.eurprd04.prod.outlook.com (2603:10a6:10:113::21)
- by DB8PR04MB6380.eurprd04.prod.outlook.com (2603:10a6:10:10c::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26; Tue, 5 May
- 2020 20:30:29 +0000
-Received: from DB8PR04MB6828.eurprd04.prod.outlook.com
- ([fe80::58e6:c037:d476:da0d]) by DB8PR04MB6828.eurprd04.prod.outlook.com
- ([fe80::58e6:c037:d476:da0d%9]) with mapi id 15.20.2958.030; Tue, 5 May 2020
- 20:30:29 +0000
-From:   Ioana Ciornei <ioana.ciornei@nxp.com>
-To:     Leo Li <leoyang.li@nxp.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Youri Querry <youri.querry_1@nxp.com>
-Subject: RE: [PATCH net] soc: fsl: dpio: properly compute the consumer index
-Thread-Topic: [PATCH net] soc: fsl: dpio: properly compute the consumer index
-Thread-Index: AQHWIxnwftGr9QjI3EaSI/Mop7aGF6iZ8TmAgAAAJpA=
-Date:   Tue, 5 May 2020 20:30:29 +0000
-Message-ID: <DB8PR04MB682898FB5705B70B1A54A661E0A70@DB8PR04MB6828.eurprd04.prod.outlook.com>
-References: <20200505201429.24360-1-ioana.ciornei@nxp.com>
- <VE1PR04MB668714A83CC2EB638BC273208FA70@VE1PR04MB6687.eurprd04.prod.outlook.com>
-In-Reply-To: <VE1PR04MB668714A83CC2EB638BC273208FA70@VE1PR04MB6687.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [86.121.118.29]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 75e1389d-085f-48e0-5283-08d7f13326c8
-x-ms-traffictypediagnostic: DB8PR04MB6380:|DB8PR04MB6380:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB6380D0BCAA5DF86F944B78C9E0A70@DB8PR04MB6380.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 0394259C80
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +Yz8w00UMw6HikZWRrhMzlWMkBjQIuX48zZUre7dNIbMCB+1jMAQQ1xfILOWdf++KLe8VskR6/kriWie+AtFZkKdUbCKx3YS14voElOCsbCINi7eAf/vdHiNkqyHUVUo4wbUeL1DYGkVZOuXJ8eXIWAWzwEdVp+tPX7j99lQKLmwapdEFg9x9jJSw/3jF1V9mxFDaWvrp3x7dCOgObAFL4WTKMPtgUhmBCj+Vf+DMKVFtBlCqSyx9en29iuK/gybo/ZeRGzK9DHBr5IxMlA7SE/14L+K2itsmoqkW1TaTFdqc/BfBL3F0sshjJLsPAaMqlNyPyidYeUb/c82SPPZRAVTaF7+kVzniDkTKRl3xVlBBOP63IM49j0jTLhjHXXGUCHHfRYg3VT8W9XSg2WwQYrGfzCozuQekwCrvM58Hme7CqJDlBY11Id/X9NHjd7P9hxiUki/IlMDrviCxIcLhw0YUTDb3nCPeIpsc1GbW7dHNgox8eOOIm8XxQEz/r1dBNTiRLElBJ6uNu0BQ0YX6g==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6828.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(346002)(376002)(366004)(136003)(39840400004)(33430700001)(9686003)(55016002)(33656002)(2906002)(33440700001)(26005)(44832011)(71200400001)(4326008)(52536014)(186003)(53546011)(6506007)(7696005)(478600001)(66556008)(8936002)(8676002)(76116006)(5660300002)(64756008)(66446008)(66476007)(66946007)(86362001)(316002)(110136005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: BVN9/JZBaWojuHagAWKgFl5A5aLv0GuFAJX5fyl8H1nx7OiMDONBK+mxs2yKF5Bs8Lw8oy7TRXSVval2OaEzEEMC+JLFmlZVt0LbtZy3w4/TksunpoijgeDrblu/RDdFocyuyjCt7tod69Rwoo65KERj84zChoAVxeSuL57oMtTX15mLwkzS7x1MJy/I/zZaZk6zgNbu5+KlWX7DJYHw3gNZfbC+Rbp7gLkdzIGpo4BLTNj8MoP29dWLZh+f/0JDk4vuRrfNn/Kx4BaVxHCVbCHXOgCRhNUYEbkjfujjBBXwobpRatLXWaSmuNJAq6JmhOdILJ2a1jkMjCSDk/SKKVbKDsUfSlE4Za8wRtbeebUrA+4EE/R35SQU1k4GXVCieavRKp/MEpUC/ta8RI9ZJYPDbOpv4MwSziQPEF8tLw8zAMB35ovm4hbKH8e6otc4TCvIFR+NnSHEjMLbY/92Z3MuS38ma/V70r+IXw1YAtatGben5siIu5DCzvjDMkiDwRIKZ4GIL7HqmoIPQKiKah8DaxV5PiLk0LDZjCXur++OwkGJrPTa97tr9MT540OKJvn/J1PqWtE5OCsx4RLILQomFSfwbmYJM/QkhHD3SZhGRlv9c3djzXnjHmngT/8kEUdYWY4zyM4iXkOldNa7oPbVVbTHumDqhCFiqSr6JYn6jzNEw0zqxyi0GdgTdENNeTqQzqBLEhtTvsY/Du+QmJj9+M1uDYfLuD/d0RcQExMPnonzODq0cSLK8DZ7X/9sDIaq9fhydjM6tFNbmu3XFu/DPMNiB/9jGygKIaCFEgM=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 5 May 2020 16:30:41 -0400
+Received: from mga04.intel.com ([192.55.52.120]:19441 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726350AbgEEUaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 16:30:39 -0400
+IronPort-SDR: DiVctmsuo6NFfq3aiMN8ovntNLRdZh6oylGmuTB5pq1G4w54GiSSJHE65Tf+pvGp457sj0I4nx
+ M+GGVKzON4iA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 13:30:38 -0700
+IronPort-SDR: LTsLVNynuMvupe9F5TehduwJoPxwdqrtMZVAWE+7Uy2iFi5W70dMqgZuwgNSfksT8JlSUYyIlc
+ WYocCaVaStag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,356,1583222400"; 
+   d="scan'208";a="304596938"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 05 May 2020 13:30:37 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jW4D7-0003Fa-2K; Wed, 06 May 2020 04:30:37 +0800
+Date:   Wed, 06 May 2020 04:29:44 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ b08c5abac814d5838fdf8f1a8685e7dd95afd004
+Message-ID: <5eb1ccb8.hQC2R8CV37o6CsTk%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 75e1389d-085f-48e0-5283-08d7f13326c8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 May 2020 20:30:29.1462
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Mzsmf//4XZ/FaEam/Ev09/OFOHJyKuja85PakWO5OW8YEcAVJhq2hTnVIdR2pyPoc5q5ccaq+VjKRQgXP0OY7A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6380
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: RE: [PATCH net] soc: fsl: dpio: properly compute the consumer in=
-dex
->=20
->=20
->=20
-> > -----Original Message-----
-> > From: Ioana Ciornei <ioana.ciornei@nxp.com>
-> > Sent: Tuesday, May 5, 2020 3:14 PM
-> > To: davem@davemloft.net; netdev@vger.kernel.org; linux-
-> > kernel@vger.kernel.org
-> > Cc: Youri Querry <youri.querry_1@nxp.com>; Leo Li
-> > <leoyang.li@nxp.com>; Ioana Ciornei <ioana.ciornei@nxp.com>
-> > Subject: [PATCH net] soc: fsl: dpio: properly compute the consumer
-> > index
-> >
-> > Mask the consumer index before using it. Without this, we would be
-> > writing frame descriptors beyond the ring size supported by the QBMAN b=
-lock.
-> >
-> > Fixes: 3b2abda7d28c ("soc: fsl: dpio: Replace QMAN array mode with
-> > ring mode enqueue")
-> > Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
->=20
-> If you would like it go through net tree.
->=20
-> Acked-by: Li Yang <leoyang.li@nxp.com>
->=20
-> > ---
-> >
-> > I am sending this fix through the net tree since the bug manifests
-> > itself only on net-next and not the soc trees. This way it would be
-> > easier to integrate this sooner rather than later.
->=20
-> Since the description of the patch says it fixes a patch included from so=
-c tree, it
-> is not very clear why this problem only exists on net-next.
->=20
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
+branch HEAD: b08c5abac814d5838fdf8f1a8685e7dd95afd004  Merge branch 'x86/boot'
 
-The problem is only observed when we enqueue multiple frame descriptors at =
-once, which is happening only with my latest patch set on net-next that add=
-s this for the XDP_REDIRECT path.=20
+elapsed time: 485m
 
-> >
-> >  drivers/soc/fsl/dpio/qbman-portal.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/soc/fsl/dpio/qbman-portal.c
-> > b/drivers/soc/fsl/dpio/qbman-portal.c
-> > index 804b8ba9bf5c..23a1377971f4 100644
-> > --- a/drivers/soc/fsl/dpio/qbman-portal.c
-> > +++ b/drivers/soc/fsl/dpio/qbman-portal.c
-> > @@ -669,6 +669,7 @@ int qbman_swp_enqueue_multiple_direct(struct
-> > qbman_swp *s,
-> >  		eqcr_ci =3D s->eqcr.ci;
-> >  		p =3D s->addr_cena + QBMAN_CENA_SWP_EQCR_CI;
-> >  		s->eqcr.ci =3D qbman_read_register(s,
-> QBMAN_CINH_SWP_EQCR_CI);
-> > +		s->eqcr.ci &=3D full_mask;
-> >
-> >  		s->eqcr.available =3D qm_cyc_diff(s->eqcr.pi_ring_size,
-> >  					eqcr_ci, s->eqcr.ci);
-> > --
-> > 2.17.1
+configs tested: 162
+configs skipped: 0
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm                              allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+sparc                            allyesconfig
+nds32                             allnoconfig
+powerpc                          g5_defconfig
+powerpc                           allnoconfig
+i386                             allyesconfig
+i386                             alldefconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                        generic_defconfig
+ia64                          tiger_defconfig
+ia64                         bigsur_defconfig
+ia64                             allyesconfig
+ia64                             alldefconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+m68k                       bvme6000_defconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+c6x                              allyesconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+nds32                               defconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+xtensa                          iss_defconfig
+h8300                    h8300h-sim_defconfig
+xtensa                       common_defconfig
+arc                                 defconfig
+arc                              allyesconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+mips                            ar7_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+mips                malta_kvm_guest_defconfig
+mips                         tb0287_defconfig
+mips                       capcella_defconfig
+mips                           ip32_defconfig
+mips                  decstation_64_defconfig
+mips                      loongson3_defconfig
+mips                          ath79_defconfig
+mips                        bcm63xx_defconfig
+parisc                            allnoconfig
+parisc                generic-64bit_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                      chrp32_defconfig
+powerpc                             defconfig
+powerpc                       holly_defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+powerpc                  mpc866_ads_defconfig
+powerpc                    amigaone_defconfig
+powerpc                    adder875_defconfig
+powerpc                     ep8248e_defconfig
+powerpc                     mpc512x_defconfig
+m68k                 randconfig-a001-20200502
+mips                 randconfig-a001-20200502
+nds32                randconfig-a001-20200502
+alpha                randconfig-a001-20200502
+parisc               randconfig-a001-20200502
+riscv                randconfig-a001-20200502
+xtensa               randconfig-a001-20200503
+openrisc             randconfig-a001-20200503
+csky                 randconfig-a001-20200503
+i386                 randconfig-b003-20200503
+x86_64               randconfig-b002-20200503
+i386                 randconfig-b001-20200503
+x86_64               randconfig-b003-20200503
+x86_64               randconfig-b001-20200503
+i386                 randconfig-b002-20200503
+x86_64               randconfig-d001-20200505
+i386                 randconfig-d003-20200505
+i386                 randconfig-d001-20200505
+x86_64               randconfig-d003-20200505
+x86_64               randconfig-d002-20200505
+i386                 randconfig-d002-20200505
+i386                 randconfig-e003-20200505
+x86_64               randconfig-e002-20200505
+x86_64               randconfig-e003-20200505
+x86_64               randconfig-e001-20200505
+i386                 randconfig-e002-20200505
+i386                 randconfig-e001-20200505
+i386                 randconfig-f003-20200505
+x86_64               randconfig-f001-20200505
+x86_64               randconfig-f003-20200505
+i386                 randconfig-f001-20200505
+i386                 randconfig-f002-20200505
+x86_64               randconfig-a003-20200505
+x86_64               randconfig-a001-20200505
+i386                 randconfig-a001-20200505
+i386                 randconfig-a003-20200505
+i386                 randconfig-a002-20200505
+i386                 randconfig-g003-20200505
+i386                 randconfig-g002-20200505
+i386                 randconfig-g001-20200505
+x86_64               randconfig-g002-20200505
+ia64                 randconfig-a001-20200505
+powerpc              randconfig-a001-20200505
+arm                  randconfig-a001-20200505
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                       zfcpdump_defconfig
+s390                          debug_defconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                             alldefconfig
+s390                                defconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
