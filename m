@@ -2,174 +2,184 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3A1C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBB3C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1784220746
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA47E20746
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:38:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PJ+S5nHN"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MAyGVAMZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730443AbgEEQiB (ORCPT
+        id S1730523AbgEEQiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:38:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43392 "EHLO
+        Tue, 5 May 2020 12:38:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728804AbgEEQiB (ORCPT
+        with ESMTP id S1730457AbgEEQiO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:38:01 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2173AC061A0F;
-        Tue,  5 May 2020 09:38:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=y7yq0XdDHvHmtj9MaLNUjkmFFQ9+bgFTYTDYA/E7uGw=; b=PJ+S5nHNXYFjBh5XG85gs5Xg5W
-        bbI4vxmLMkxJBdXvmEygmrSzaliEsK1es2k/y0l9+u2YMdCjYeHWPcCLxSg7Tii9fePSmYIyww8wm
-        rbEvi+XorLY5GHz8uv2/8/krcL3mEj5THMW03gQlfDV6tR2NTWWhyJB6FcLYOC1qU4peqFrSry8gm
-        RF9xy5u1RSgxyI7jRl5APpxmR6JdtTVZa+QPT6FJamZsY8OV7zBOfb5/VI+X3cyggAVVps/Q8cPWf
-        y6wKzqOAkMbYsfucq8JUrVWjCqrciJcFF5ABvQirYBzeGZbQWTtMXAkyHspTqETkqO9Un4k+BcPj3
-        vvGhN+rQ==;
-Received: from [179.97.37.151] (helo=sandy.ghostprotocols.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jW0Zp-0006h8-Nd; Tue, 05 May 2020 16:37:50 +0000
-Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
-        id B04241B0; Tue,  5 May 2020 13:37:45 -0300 (BRT)
-Date:   Tue, 5 May 2020 13:37:45 -0300
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-To:     Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>
-Cc:     Andreas Gerstmayr <agerstmayr@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        He Zhe <zhe.he@windriver.com>, Ian Rogers <irogers@google.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Konstantin Kharlamov <hi-angel@yandex.ru>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        lkft-triage@lists.linaro.org
-Subject: Re: [GIT PULL] perf/core improvements and fixes
-Message-ID: <20200505163745.GD3777@redhat.com>
-References: <20200420115316.18781-1-acme@kernel.org>
- <20200422120943.GA110748@gmail.com>
- <CAEUSe7_wmKS361mKLTB1eYbzYXcKkXdU26BX5BojdKRz8MfPCw@mail.gmail.com>
- <20200424130722.GK19437@kernel.org>
- <0f6403ec-36cd-f43f-b3a6-b87e628f3789@redhat.com>
- <CAEUSe7_Ybp=7XC-2xMSEGYmCHvEMff0YbZq1f6akvxLVcS_ePA@mail.gmail.com>
+        Tue, 5 May 2020 12:38:14 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16B10C061A10
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 09:38:14 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id a32so1406615pje.5
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 09:38:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=luCcYzibiHAqsrwgIRj3POtmDDa35yugcUIsAAOot40=;
+        b=MAyGVAMZyJo/oMcQG84PQl4YbqtAG2c7SWxWjvlORg+zAKlaMVkPh6jZcKqjxiiqkU
+         j1EpVWllG9hKR0QcAtWtOnnDl6jHvEDz8IvUsJp+pNyztK/bEj93JS0MtKNqcbf8rnA8
+         TdQN3YzhjTKjkOKPPsrx9bObDHOZ9LsGAto+k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=luCcYzibiHAqsrwgIRj3POtmDDa35yugcUIsAAOot40=;
+        b=RJZoQ2VfmI23Tujzh55Cl8eeK0HvTjlVATmNMuC1uJKOKrrvOdTC2CSyUd607i1hCC
+         X4W4smaT4DMXvyaNszetASRx0Q7xPC0ja6QE926yZ5xistx837n0NYNA6SvsSDbyX6LD
+         89rLI2tAWaBTcD7dSZ40F8dn6aIajvv35wxkquqhAVGUoL7SGqpEtlFV8JBt/M7H8PpE
+         l+WKbze4StzVzJrSKSA4WE+3kzMYibrLAJZ/f8ln11+g+TLlBQtDimTYEmZvgn1VV/F+
+         eAQ3eCoee9p94TcBoNlOHKCH+JlawniTUAXo3+5G1sx/wE0KPX0e+Azf6pBMG1QYyynK
+         v3sQ==
+X-Gm-Message-State: AGi0PuaLAAGCGtwYKBjQComZ2MetcNcoQFmyTMIAyXzLOoiHJfVYKiYr
+        drZrBKfzE8wSk1Zu1tDkpIeN4Q==
+X-Google-Smtp-Source: APiQypLHwVgFzIc6p5rvaNU2w6BbNNq4RXORPRe2429s/tVbdXYceAvmwdEyYfv4yP/+tX8H/T5eCA==
+X-Received: by 2002:a17:90b:1111:: with SMTP id gi17mr4096115pjb.121.1588696693595;
+        Tue, 05 May 2020 09:38:13 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id p190sm2522949pfp.207.2020.05.05.09.38.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2020 09:38:12 -0700 (PDT)
+Date:   Tue, 5 May 2020 09:38:11 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Alok Chauhan <alokc@codeaurora.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH v4 6/6] spi: spi-qcom-qspi: Use OPP API to set clk/perf
+ state
+Message-ID: <20200505163811.GW4525@google.com>
+References: <1588507469-31889-1-git-send-email-rnayak@codeaurora.org>
+ <1588507469-31889-7-git-send-email-rnayak@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEUSe7_Ybp=7XC-2xMSEGYmCHvEMff0YbZq1f6akvxLVcS_ePA@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.5.20 (2009-12-10)
+In-Reply-To: <1588507469-31889-7-git-send-email-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, May 04, 2020 at 02:07:56PM -0500, Daniel Díaz escreveu:
-> Hello!
+Hi Rajendra,
+
+On Sun, May 03, 2020 at 05:34:29PM +0530, Rajendra Nayak wrote:
+> QSPI needs to vote on a performance state of a power domain depending on
+> the clock rate. Add support for it by specifying the perf state/clock rate
+> as an OPP table in device tree.
 > 
-> On Fri, 24 Apr 2020 at 09:10, Andreas Gerstmayr <agerstmayr@redhat.com> wrote:
-> >
-> > On 24.04.20 15:07, Arnaldo Carvalho de Melo wrote:
-> > > Em Thu, Apr 23, 2020 at 04:28:46PM -0500, Daniel Díaz escreveu:
-> > >> On Wed, 22 Apr 2020 at 07:09, Ingo Molnar <mingo@kernel.org> wrote:
-> > >>>>   85 files changed, 1851 insertions(+), 513 deletions(-)
-> > >
-> > >>> Pulled, thanks a lot Arnaldo!
-> > >
-> > >> Our OpenEmbedded builds detected an issue with 5287f9269206 ("perf
-> > >> script: Add flamegraph.py script"):
-> > >>    ERROR: perf-1.0-r9 do_package_qa: QA Issue:
-> > >> /usr/libexec/perf-core/scripts/python/bin/flamegraph-report contained
-> > >> in package perf-python requires /usr/bin/sh, but no providers found in
-> > >> RDEPENDS_perf-python? [file-rdeps]
-> > >
-> > >
-> > > yeah, the flamegraph scripts are the outliers, there, everything else is
-> > > using /bin/bash, so I'll switch to that, ok Andreas?
-> >
-> > Sure, no problem. Thanks!
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Alok Chauhan <alokc@codeaurora.org>
+> Cc: Akash Asthana <akashast@codeaurora.org>
+> Cc: linux-spi@vger.kernel.org
+> ---
+>  drivers/spi/spi-qcom-qspi.c | 29 ++++++++++++++++++++++++++++-
+>  1 file changed, 28 insertions(+), 1 deletion(-)
 > 
-> Just a gentle reminder that this can still be fixed in today's
-> linux-next tree (next-20200504).
+> diff --git a/drivers/spi/spi-qcom-qspi.c b/drivers/spi/spi-qcom-qspi.c
+> index 3c4f83b..eb53c00 100644
+> --- a/drivers/spi/spi-qcom-qspi.c
+> +++ b/drivers/spi/spi-qcom-qspi.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/of.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/pm_opp.h>
+>  #include <linux/spi/spi.h>
+>  #include <linux/spi/spi-mem.h>
+>  
+> @@ -139,6 +140,8 @@ struct qcom_qspi {
+>  	struct device *dev;
+>  	struct clk_bulk_data *clks;
+>  	struct qspi_xfer xfer;
+> +	struct opp_table *opp_table;
+> +	bool has_opp_table;
+>  	/* Lock to protect xfer and IRQ accessed registers */
+>  	spinlock_t lock;
+>  };
+> @@ -235,7 +238,7 @@ static int qcom_qspi_transfer_one(struct spi_master *master,
+>  		speed_hz = xfer->speed_hz;
+>  
+>  	/* In regular operation (SBL_EN=1) core must be 4x transfer clock */
+> -	ret = clk_set_rate(ctrl->clks[QSPI_CLK_CORE].clk, speed_hz * 4);
+> +	ret = dev_pm_opp_set_rate(ctrl->dev, speed_hz * 4);
+>  	if (ret) {
+>  		dev_err(ctrl->dev, "Failed to set core clk %d\n", ret);
+>  		return ret;
+> @@ -481,6 +484,20 @@ static int qcom_qspi_probe(struct platform_device *pdev)
+>  	master->handle_err = qcom_qspi_handle_err;
+>  	master->auto_runtime_pm = true;
+>  
+> +	ctrl->opp_table = dev_pm_opp_set_clkname(&pdev->dev, "core");
+> +	if (IS_ERR(ctrl->opp_table)) {
+> +		ret = PTR_ERR(ctrl->opp_table);
+> +		goto exit_probe_master_put;
+> +	}
+> +	/* OPP table is optional */
+> +	ret = dev_pm_opp_of_add_table(&pdev->dev);
+> +	if (!ret) {
+> +		ctrl->has_opp_table = true;
+> +	} else if (ret != -ENODEV) {
+> +		dev_err(&pdev->dev, "invalid OPP table in device tree\n");
+> +		goto exit_probe_master_put;
+> +	}
+> +
+>  	pm_runtime_enable(dev);
+>  
+>  	ret = spi_register_master(master);
+> @@ -488,6 +505,9 @@ static int qcom_qspi_probe(struct platform_device *pdev)
+>  		return 0;
+>  
+>  	pm_runtime_disable(dev);
+> +	if (ctrl->has_opp_table)
+> +		dev_pm_opp_of_remove_table(&pdev->dev);
+> +	dev_pm_opp_put_clkname(ctrl->opp_table);
+>  
+>  exit_probe_master_put:
+>  	spi_master_put(master);
+> @@ -498,6 +518,11 @@ static int qcom_qspi_probe(struct platform_device *pdev)
+>  static int qcom_qspi_remove(struct platform_device *pdev)
+>  {
+>  	struct spi_master *master = platform_get_drvdata(pdev);
+> +	struct qcom_qspi *ctrl = spi_master_get_devdata(master);
+> +
+> +	if (ctrl->has_opp_table)
+> +		dev_pm_opp_of_remove_table(&pdev->dev);
+> +	dev_pm_opp_put_clkname(ctrl->opp_table);
 
-Thanks for the reminder, I've just added this to my tree:
+IIUC there can still be active transfers before the controller is
+unregistered. If that is correct the above should be done after the
+spi_unregister_master() call below.
 
-commit c74ab13a30d3bec443c116e25b611255c58f32c0
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date:   Tue May 5 13:33:12 2020 -0300
-
-    perf flamegraph: Use /bin/bash for report script
-    
-    As all the other tools/perf/scripts/python/bin/*-report scripts, fixing
-    the this problem reported by Daniel Diaz:
-    
-      Our OpenEmbedded builds detected an issue with 5287f9269206 ("perf
-      script: Add flamegraph.py script"):
-        ERROR: perf-1.0-r9 do_package_qa: QA Issue:
-      /usr/libexec/perf-core/scripts/python/bin/flamegraph-report contained
-      in package perf-python requires /usr/bin/sh, but no providers found in
-      RDEPENDS_perf-python? [file-rdeps]
-    
-      This means that there is a new binary pulled in in the shebang line
-      which was unaccounted for: `/usr/bin/sh`. I don't see any other usage
-      of /usr/bin/sh in the kernel tree (does not even exist on my Ubuntu
-      dev machine) but plenty of /bin/sh. This patch is needed:
-      -----8<----------8<----------8<-----
-      diff --git a/tools/perf/scripts/python/bin/flamegraph-record
-      b/tools/perf/scripts/python/bin/flamegraph-record
-      index 725d66e71570..a2f3fa25ef81 100755
-      --- a/tools/perf/scripts/python/bin/flamegraph-record
-      +++ b/tools/perf/scripts/python/bin/flamegraph-record
-      @@ -1,2 +1,2 @@
-      -#!/usr/bin/sh
-      +#!/bin/sh
-       perf record -g "$@"
-      diff --git a/tools/perf/scripts/python/bin/flamegraph-report
-      b/tools/perf/scripts/python/bin/flamegraph-report
-      index b1a79afd903b..b0177355619b 100755
-      --- a/tools/perf/scripts/python/bin/flamegraph-report
-      +++ b/tools/perf/scripts/python/bin/flamegraph-report
-      @@ -1,3 +1,3 @@
-      -#!/usr/bin/sh
-      +#!/bin/sh
-       # description: create flame graphs
-       perf script -s "$PERF_EXEC_PATH"/scripts/python/flamegraph.py -- "$@"
-      ----->8---------->8---------->8-----
-    
-    Fixes: 5287f9269206 ("perf script: Add flamegraph.py script")
-    Reported-by: Daniel Díaz <daniel.diaz@linaro.org>
-    Cc: Adrian Hunter <adrian.hunter@intel.com>
-    Cc: Andreas Gerstmayr <agerstmayr@redhat.com>
-    Cc: Jiri Olsa <jolsa@kernel.org>
-    Cc: lkft-triage@lists.linaro.org
-    Cc: Namhyung Kim <namhyung@kernel.org>
-    Link: http://lore.kernel.org/lkml/CAEUSe7_wmKS361mKLTB1eYbzYXcKkXdU26BX5BojdKRz8MfPCw@mail.gmail.com
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-diff --git a/tools/perf/scripts/python/bin/flamegraph-report b/tools/perf/scripts/python/bin/flamegraph-report
-index b1a79afd903b..53c5dc90c87e 100755
---- a/tools/perf/scripts/python/bin/flamegraph-report
-+++ b/tools/perf/scripts/python/bin/flamegraph-report
-@@ -1,3 +1,3 @@
--#!/usr/bin/sh
-+#!/bin/bash
- # description: create flame graphs
- perf script -s "$PERF_EXEC_PATH"/scripts/python/flamegraph.py -- "$@"
+>  
+>  	/* Unregister _before_ disabling pm_runtime() so we stop transfers */
+>  	spi_unregister_master(master);
+> @@ -512,6 +537,8 @@ static int __maybe_unused qcom_qspi_runtime_suspend(struct device *dev)
+>  	struct spi_master *master = dev_get_drvdata(dev);
+>  	struct qcom_qspi *ctrl = spi_master_get_devdata(master);
+>  
+> +	/* Drop the performance state vote */
+> +	dev_pm_opp_set_rate(dev, 0);
+>  	clk_bulk_disable_unprepare(QSPI_NUM_CLKS, ctrl->clks);
+>  
+>  	return 0;
