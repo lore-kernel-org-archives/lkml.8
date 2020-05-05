@@ -2,191 +2,114 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95AB7C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEDCC47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CBEF206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5441206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:56:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbgEEL4V (ORCPT
+        id S1728934AbgEEL42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 5 May 2020 07:56:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57368 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728900AbgEEL4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 5 May 2020 07:56:21 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3800 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728664AbgEEL4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 07:56:07 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id BFF33195B7D63AF9828D;
-        Tue,  5 May 2020 19:56:03 +0800 (CST)
-Received: from DESKTOP-C3MD9UG.china.huawei.com (10.166.215.55) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 5 May 2020 19:55:57 +0800
-From:   Zhen Lei <thunder.leizhen@huawei.com>
-To:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
-        "Sergey Senozhatsky" <sergey.senozhatsky.work@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>, Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        dm-devel <dm-devel@redhat.com>, Song Liu <song@kernel.org>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-CC:     Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH 4/4] mtd: eliminate SECTOR related magic numbers
-Date:   Tue, 5 May 2020 19:55:43 +0800
-Message-ID: <20200505115543.1660-5-thunder.leizhen@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
-In-Reply-To: <20200505115543.1660-1-thunder.leizhen@huawei.com>
-References: <20200505115543.1660-1-thunder.leizhen@huawei.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.166.215.55]
-X-CFilter-Loop: Reflected
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 44235AC37;
+        Tue,  5 May 2020 11:56:21 +0000 (UTC)
+Message-ID: <1588679748.13662.8.camel@suse.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in hfa384x_usbin_callback
+From:   Oliver Neukum <oneukum@suse.com>
+To:     syzbot <syzbot+7d42d68643a35f71ac8a@syzkaller.appspotmail.com>,
+        andreyknvl@google.com, devel@driverdev.osuosl.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, nishkadg.linux@gmail.com,
+        syzkaller-bugs@googlegroups.com
+Date:   Tue, 05 May 2020 13:55:48 +0200
+In-Reply-To: <00000000000039420505a14e4951@google.com>
+References: <00000000000039420505a14e4951@google.com>
+Content-Type: multipart/mixed; boundary="=-L0cX0s0IEEouwFjJ7n/w"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. Replace "1 << (PAGE_SHIFT - 9)" or similar with SECTORS_PER_PAGE
-2. Replace "PAGE_SHIFT - 9" with SECTORS_PER_PAGE_SHIFT
-3. Replace "9" with SECTOR_SHIFT
-4. Replace "512" with SECTOR_SIZE
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
----
- drivers/md/dm-table.c    |  2 +-
- drivers/md/raid1.c       |  4 ++--
- drivers/md/raid10.c      | 10 +++++-----
- drivers/md/raid5-cache.c | 10 +++++-----
- 4 files changed, 13 insertions(+), 13 deletions(-)
+--=-L0cX0s0IEEouwFjJ7n/w
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
-index 0a2cc197f62b..cf9d85ec66fd 100644
---- a/drivers/md/dm-table.c
-+++ b/drivers/md/dm-table.c
-@@ -1964,7 +1964,7 @@ void dm_table_set_restrictions(struct dm_table *t, struct request_queue *q,
- #endif
- 
- 	/* Allow reads to exceed readahead limits */
--	q->backing_dev_info->io_pages = limits->max_sectors >> (PAGE_SHIFT - 9);
-+	q->backing_dev_info->io_pages = limits->max_sectors >> SECTORS_PER_PAGE_SHIFT;
- }
- 
- unsigned int dm_table_get_num_targets(struct dm_table *t)
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index cd810e195086..35d3fa22dd54 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -2129,7 +2129,7 @@ static void process_checks(struct r1bio *r1_bio)
- 	int vcnt;
- 
- 	/* Fix variable parts of all bios */
--	vcnt = (r1_bio->sectors + PAGE_SIZE / 512 - 1) >> (PAGE_SHIFT - 9);
-+	vcnt = (r1_bio->sectors + SECTORS_PER_PAGE - 1) >> SECTORS_PER_PAGE_SHIFT;
- 	for (i = 0; i < conf->raid_disks * 2; i++) {
- 		blk_status_t status;
- 		struct bio *b = r1_bio->bios[i];
-@@ -2148,7 +2148,7 @@ static void process_checks(struct r1bio *r1_bio)
- 		b->bi_private = rp;
- 
- 		/* initialize bvec table again */
--		md_bio_reset_resync_pages(b, rp, r1_bio->sectors << 9);
-+		md_bio_reset_resync_pages(b, rp, r1_bio->sectors << SECTOR_SHIFT);
- 	}
- 	for (primary = 0; primary < conf->raid_disks * 2; primary++)
- 		if (r1_bio->bios[primary]->bi_end_io == end_sync_read &&
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index ec136e44aef7..3202953a800d 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -2025,11 +2025,11 @@ static void sync_request_write(struct mddev *mddev, struct r10bio *r10_bio)
- 
- 	first = i;
- 	fbio = r10_bio->devs[i].bio;
--	fbio->bi_iter.bi_size = r10_bio->sectors << 9;
-+	fbio->bi_iter.bi_size = r10_bio->sectors << SECTOR_SHIFT;
- 	fbio->bi_iter.bi_idx = 0;
- 	fpages = get_resync_pages(fbio)->pages;
- 
--	vcnt = (r10_bio->sectors + (PAGE_SIZE >> 9) - 1) >> (PAGE_SHIFT - 9);
-+	vcnt = (r10_bio->sectors + SECTORS_PER_PAGE - 1) >> SECTORS_PER_PAGE_SHIFT;
- 	/* now find blocks with errors */
- 	for (i=0 ; i < conf->copies ; i++) {
- 		int  j, d;
-@@ -2054,13 +2054,13 @@ static void sync_request_write(struct mddev *mddev, struct r10bio *r10_bio)
- 			int sectors = r10_bio->sectors;
- 			for (j = 0; j < vcnt; j++) {
- 				int len = PAGE_SIZE;
--				if (sectors < (len / 512))
--					len = sectors * 512;
-+				if (sectors < (len / SECTOR_SIZE))
-+					len = sectors * SECTOR_SIZE;
- 				if (memcmp(page_address(fpages[j]),
- 					   page_address(tpages[j]),
- 					   len))
- 					break;
--				sectors -= len/512;
-+				sectors -= len / SECTOR_SIZE;
- 			}
- 			if (j == vcnt)
- 				continue;
-diff --git a/drivers/md/raid5-cache.c b/drivers/md/raid5-cache.c
-index 9b6da759dca2..5bd8e2b51341 100644
---- a/drivers/md/raid5-cache.c
-+++ b/drivers/md/raid5-cache.c
-@@ -833,7 +833,7 @@ static void r5l_append_payload_meta(struct r5l_log *log, u16 type,
- 	payload->header.type = cpu_to_le16(type);
- 	payload->header.flags = cpu_to_le16(0);
- 	payload->size = cpu_to_le32((1 + !!checksum2_valid) <<
--				    (PAGE_SHIFT - 9));
-+				    SECTORS_PER_PAGE_SHIFT);
- 	payload->location = cpu_to_le64(location);
- 	payload->checksum[0] = cpu_to_le32(checksum1);
- 	if (checksum2_valid)
-@@ -1042,7 +1042,7 @@ int r5l_write_stripe(struct r5l_log *log, struct stripe_head *sh)
- 
- 	mutex_lock(&log->io_mutex);
- 	/* meta + data */
--	reserve = (1 + write_disks) << (PAGE_SHIFT - 9);
-+	reserve = (1 + write_disks) << SECTORS_PER_PAGE_SHIFT;
- 
- 	if (log->r5c_journal_mode == R5C_JOURNAL_MODE_WRITE_THROUGH) {
- 		if (!r5l_has_free_space(log, reserve)) {
-@@ -2053,7 +2053,7 @@ r5l_recovery_verify_data_checksum_for_mb(struct r5l_log *log,
- 						  le32_to_cpu(payload->size));
- 			mb_offset += sizeof(struct r5l_payload_data_parity) +
- 				sizeof(__le32) *
--				(le32_to_cpu(payload->size) >> (PAGE_SHIFT - 9));
-+				(le32_to_cpu(payload->size) >> SECTORS_PER_PAGE_SHIFT);
- 		}
- 
- 	}
-@@ -2199,7 +2199,7 @@ r5c_recovery_analyze_meta_block(struct r5l_log *log,
- 
- 		mb_offset += sizeof(struct r5l_payload_data_parity) +
- 			sizeof(__le32) *
--			(le32_to_cpu(payload->size) >> (PAGE_SHIFT - 9));
-+			(le32_to_cpu(payload->size) >> SECTORS_PER_PAGE_SHIFT);
- 	}
- 
- 	return 0;
-@@ -2916,7 +2916,7 @@ int r5c_cache_data(struct r5l_log *log, struct stripe_head *sh)
- 
- 	mutex_lock(&log->io_mutex);
- 	/* meta + data */
--	reserve = (1 + pages) << (PAGE_SHIFT - 9);
-+	reserve = (1 + pages) << SECTORS_PER_PAGE_SHIFT;
- 
- 	if (test_bit(R5C_LOG_CRITICAL, &conf->cache_state) &&
- 	    sh->log_start == MaxSector)
--- 
-2.26.0.106.g9fadedd
+Am Freitag, den 20.03.2020, 12:28 -0700 schrieb syzbot:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    e17994d1 usb: core: kcov: collect coverage from usb comple..
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=11d74573e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=5d64370c438bc60
+> dashboard link: https://syzkaller.appspot.com/bug?extid=7d42d68643a35f71ac8a
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15fa561de00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15d74573e00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+7d42d68643a35f71ac8a@syzkaller.appspotmail.com
+> 
+> ==================================================================
+> BUG: KASAN: slab-out-of-bounds in memcpy include/linux/string.h:381 [inline]
+> BUG: KASAN: slab-out-of-bounds in skb_put_data include/linux/skbuff.h:2284 [inline]
+> BUG: KASAN: slab-out-of-bounds in hfa384x_int_rxmonitor drivers/staging/wlan-ng/hfa384x_usb.c:3412 [inline]
+> BUG: KASAN: slab-out-of-bounds in hfa384x_usbin_rx drivers/staging/wlan-ng/hfa384x_usb.c:3312 [inline]
+> BUG: KASAN: slab-out-of-bounds in hfa384x_usbin_callback+0x1993/0x2360 drivers/staging/wlan-ng/hfa384x_usb.c:3026
+> Read of size 19671 at addr ffff8881d226413c by task swapper/0/0
 
+#syz test: https://github.com/google/kasan.git e17994d1
+--=-L0cX0s0IEEouwFjJ7n/w
+Content-Disposition: attachment; filename="0001-hfa384x_usb-fix-buffer-overflow.patch"
+Content-Type: text/x-patch; name="0001-hfa384x_usb-fix-buffer-overflow.patch";
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+RnJvbSA2ZGJjYWM4YzRiNjQ1NjAwMTYxZmVhZmM1NTc2NjU3OTA1ZjE1ZDY1IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBPbGl2ZXIgTmV1a3VtIDxvbmV1a3VtQHN1c2UuY29tPgpEYXRl
+OiBUdWUsIDUgTWF5IDIwMjAgMTM6NDY6MjYgKzAyMDAKU3ViamVjdDogW1BBVENIXSBoZmEzODR4
+X3VzYjogZml4IGJ1ZmZlciBvdmVyZmxvdwoKVGhlIGRyaXZlciB0cnVzdHMgdGhlIGRhdGFfbGVu
+IGNvbWluZyBmcm9tIHRoZSBoYXJkd2FyZQp3aXRob3V0IHZlcmlmaWNhdGlvbi4gVGhhdCBtZWFu
+cyB0aGF0IHRoaXMgb3BlbnMKYSB2ZWN0b3IgYnkgd2hpY2ggYW4gYXR0YWNrZXIgY2FuIHNtYXNo
+IDY0SyBvZiB0aGUgaGVhcC4KClNpZ25lZC1vZmYtYnk6IE9saXZlciBOZXVrdW0gPG9uZXVrdW1A
+c3VzZS5jb20+Ci0tLQogZHJpdmVycy9zdGFnaW5nL3dsYW4tbmcvaGZhMzg0eF91c2IuYyB8IDEy
+ICsrKysrKystLS0tLQogMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlv
+bnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL3N0YWdpbmcvd2xhbi1uZy9oZmEzODR4X3VzYi5j
+IGIvZHJpdmVycy9zdGFnaW5nL3dsYW4tbmcvaGZhMzg0eF91c2IuYwppbmRleCBmYTFiZjhiMDY5
+ZmQuLjViNjQ5N2Q4YzllMiAxMDA2NDQKLS0tIGEvZHJpdmVycy9zdGFnaW5nL3dsYW4tbmcvaGZh
+Mzg0eF91c2IuYworKysgYi9kcml2ZXJzL3N0YWdpbmcvd2xhbi1uZy9oZmEzODR4X3VzYi5jCkBA
+IC0zMzUzLDkgKzMzNTMsOSBAQCBzdGF0aWMgdm9pZCBoZmEzODR4X2ludF9yeG1vbml0b3Ioc3Ry
+dWN0IHdsYW5kZXZpY2UgKndsYW5kZXYsCiAJCQkJICBzdHJ1Y3QgaGZhMzg0eF91c2Jfcnhmcm0g
+KnJ4ZnJtKQogewogCXN0cnVjdCBoZmEzODR4X3J4X2ZyYW1lICpyeGRlc2MgPSAmcnhmcm0tPmRl
+c2M7Ci0JdW5zaWduZWQgaW50IGhkcmxlbiA9IDA7Ci0JdW5zaWduZWQgaW50IGRhdGFsZW4gPSAw
+OwotCXVuc2lnbmVkIGludCBza2JsZW4gPSAwOworCXVuc2lnbmVkIGludCBoZHJsZW47CisJdW5z
+aWduZWQgaW50IGRhdGFsZW47CisJdW5zaWduZWQgaW50IHNrYmxlbjsKIAl1OCAqZGF0YXA7CiAJ
+dTE2IGZjOwogCXN0cnVjdCBza19idWZmICpza2I7CkBAIC0zNDEzLDggKzM0MTMsMTAgQEAgc3Rh
+dGljIHZvaWQgaGZhMzg0eF9pbnRfcnhtb25pdG9yKHN0cnVjdCB3bGFuZGV2aWNlICp3bGFuZGV2
+LAogCSAqLwogCXNrYl9wdXRfZGF0YShza2IsICZyeGRlc2MtPmZyYW1lX2NvbnRyb2wsIGhkcmxl
+bik7CiAKLQkvKiBJZiBhbnksIGNvcHkgdGhlIGRhdGEgZnJvbSB0aGUgY2FyZCB0byB0aGUgc2ti
+ICovCi0JaWYgKGRhdGFsZW4gPiAwKSB7CisJLyogSWYgYW55LCBjb3B5IHRoZSBkYXRhIGZyb20g
+dGhlIGNhcmQgdG8gdGhlIHNrYiwKKwkgKiBhcyBsb25nIGFzIGl0IGZpdHMsIGxlc3Qgd2Ugc21h
+c2ggYSBidWZmZXIKKwkgKi8KKwlpZiAoZGF0YWxlbiA+IDAgJiYgZGF0YWxlbiA8PSBza2JsZW4g
+LSBoZHJsZW4pIHsKIAkJZGF0YXAgPSBza2JfcHV0X2RhdGEoc2tiLCByeGZybS0+ZGF0YSwgZGF0
+YWxlbik7CiAKIAkJLyogY2hlY2sgZm9yIHVuZW5jcnlwdGVkIHN0dWZmIGlmIFdFUCBiaXQgc2V0
+LiAqLwotLSAKMi4xNi40Cgo=
+
+
+--=-L0cX0s0IEEouwFjJ7n/w--
 
