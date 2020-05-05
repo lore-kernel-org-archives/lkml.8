@@ -2,104 +2,201 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DB7C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D94D2C47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B52DB20746
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8C9A2078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:59:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588697958;
-	bh=+0LpHcS2seDAe0VjmVPzK+KDfF5yEHrIvNddgRwfVLI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PCtthglsKaf4HCrUUJ+XDQj66U1hPAuwWIasbvc7WcOZKRt92pmq6NxgPXgfq/9dq
-	 4n27qWEw4Uo4QcewTsoLn7eCQr2IfVJLxKHdrfdqHG6VT80YlT0gRsqA3Ym3KNz/Yh
-	 JHXeGDf8Hd8mkvyD96giNZW1ij4W+I/8stnZFsEg=
+	s=default; t=1588697975;
+	bh=um6UNX9+jOMlyvBzN0ZJZJ+wG/sI8Y+cz3tgOpWpop8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=X4n8IgsYlIy0HLvWGGsfEqs09bunn+wpnp2JgKNqr8xt9hM+LPkXLXrb2VJbtonFd
+	 FxE/+GxSR6MSccEcwT3h/2ERrGPYjoojhdjVBpkacmFkTTorgGmDeFiDV8p9PSHaDy
+	 J5CBnXPXosLOFbp02o54PLmSDlBz0+Nj8nfing80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730798AbgEEQ7S (ORCPT
+        id S1730824AbgEEQ7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:59:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46762 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729720AbgEEQ7R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:59:17 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEEB8C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 09:59:16 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id y4so2381883ljn.7
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 09:59:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dtzYgCuKkt/bmV036ncd6lENxrdBs3w2AEjDTg4Jym8=;
-        b=BvfMU4FkK4+TYSxq8r2HYJ1G6i+Kwe+It8iHrrdCrMNdjvKKRvhcIByeRqpEBOhvR2
-         z1Rngg1akXbqNshURhLPyo3W/aYzamFcP368MXvOl5NWCPy2QD7LKh8VVBEx+hd6Yb06
-         EFAluQBX7GxsusBdl6NXz6lGmArzuIOnv0zsc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dtzYgCuKkt/bmV036ncd6lENxrdBs3w2AEjDTg4Jym8=;
-        b=W30e18g7+J7b0E6u78gNFXNXVGiTMwl3JrVFcpTm7z6UWoZLyVsfAeB1YTv3y5c+wx
-         5jDyUgkNvF2nUYuaKWDZ42ST4jBv+e8kAXGRUmNr2cal5/LqankrtbH31xcL4s17uSTp
-         IsVZG+QrQ2dxajDoTfMayOtevAKS7nBgnrf7p8x9snYeUcfY6dDhUz2orcfXeh4uM9re
-         RPfjvLVfbnwwwW25VRUYxBNB/brVu0UHZOlb3LTthqUXGJDo90FE9dZxOrfVo5y4Rd80
-         fjUC59nPka+D6QW/F1edkH2aiPdnvq/MKH4cXIIuHed12m1lgo8Ohl6A0IZC57K1qq+3
-         VRFA==
-X-Gm-Message-State: AGi0PuZ0f3I4UJv4KFPtND/xabm8Lr5+4+E2P8M8DcvVppYZadsLasMI
-        rEUKC6bto3X/wdQs6+YlX54ZNVfbl6c=
-X-Google-Smtp-Source: APiQypLqIy++d/rxAXGaYO2z9GQz0moGb5wbUz9zfWrzYjfZ8T7j3jr3oMlAs9oDsv2Gi2Nz8Ez+gw==
-X-Received: by 2002:a2e:994a:: with SMTP id r10mr2373959ljj.105.1588697954018;
-        Tue, 05 May 2020 09:59:14 -0700 (PDT)
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
-        by smtp.gmail.com with ESMTPSA id v18sm3136723lfd.0.2020.05.05.09.59.12
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2020 09:59:12 -0700 (PDT)
-Received: by mail-lf1-f54.google.com with SMTP id t11so1956598lfe.4
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 09:59:12 -0700 (PDT)
-X-Received: by 2002:a19:6e4e:: with SMTP id q14mr2226121lfk.192.1588697952227;
- Tue, 05 May 2020 09:59:12 -0700 (PDT)
+        Tue, 5 May 2020 12:59:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40116 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729553AbgEEQ7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 12:59:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C88F20746;
+        Tue,  5 May 2020 16:59:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588697972;
+        bh=um6UNX9+jOMlyvBzN0ZJZJ+wG/sI8Y+cz3tgOpWpop8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=a0vCNLJqkDinFm5b2Jp9DwKGH4IJ/sY2wiqiDminSTFmEFWUDgve9imF7jkWCpm3i
+         B3u5hPyRKVMPeA9Jw8loS3V1z01Jtmn1Hx991Q6FDGiJavGJEVZmK3t/IyCwMq1HMb
+         wF+sHsCglfaH/eQdu+Era1o099tDEaivJeF7V3EI=
+Date:   Tue, 5 May 2020 18:59:29 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     shuah <shuah@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.6 00/73] 5.6.11-rc1 review
+Message-ID: <20200505165929.GA1110961@kroah.com>
+References: <20200504165501.781878940@linuxfoundation.org>
+ <3366716c-3a30-033d-4df6-4183eb262208@kernel.org>
+ <82eb8f25-4e15-001a-1c4f-5f59400d352b@kernel.org>
+ <s5h4ksubdh8.wl-tiwai@suse.de>
+ <e7326300-faad-df0e-1918-a36b5be4b078@kernel.org>
+ <9871eac6-29b7-2f0e-f383-2358b5a245d8@kernel.org>
 MIME-Version: 1.0
-References: <20200505143028.1290686-1-arnd@arndb.de> <b287bb2f-28e2-7a41-e015-aa5a0cb3b5d7@embeddedor.com>
- <CAK8P3a0v-hK+Ury86-1D2_jfOFgR8ZTEFKVQZBWJq3dW=MuSzw@mail.gmail.com>
- <1f33eec3-4851-e423-2d04-e02da25e2e6e@embeddedor.com> <CAK8P3a3wd2DxnUFFOBCC_SVsZCGTYO3ZBU9amMtK_uR+kvQXFA@mail.gmail.com>
-In-Reply-To: <CAK8P3a3wd2DxnUFFOBCC_SVsZCGTYO3ZBU9amMtK_uR+kvQXFA@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 5 May 2020 09:58:56 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whv7ummbSN1H_jFxLJtZbCD4JKAbb3XRf9xFYK54T-=nw@mail.gmail.com>
-Message-ID: <CAHk-=whv7ummbSN1H_jFxLJtZbCD4JKAbb3XRf9xFYK54T-=nw@mail.gmail.com>
-Subject: Re: [PATCH] fsnotify: avoid gcc-10 zero-length-bounds warning
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Jan Kara <jack@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9871eac6-29b7-2f0e-f383-2358b5a245d8@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 8:24 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> Linus, let me know if you would like me to Cc you on the other gcc-10
-> warning fixes I have and possibly apply some directly.
+On Tue, May 05, 2020 at 10:19:31AM -0600, shuah wrote:
+> On 5/5/20 9:43 AM, shuah wrote:
+> > On 5/5/20 9:36 AM, Takashi Iwai wrote:
+> > > On Tue, 05 May 2020 17:30:07 +0200,
+> > > shuah wrote:
+> > > > 
+> > > > On 5/5/20 9:25 AM, shuah wrote:
+> > > > > On 5/4/20 11:57 AM, Greg Kroah-Hartman wrote:
+> > > > > > This is the start of the stable review cycle for the 5.6.11 release.
+> > > > > > There are 73 patches in this series, all will be posted as a response
+> > > > > > to this one.  If anyone has any issues with these being
+> > > > > > applied, please
+> > > > > > let me know.
+> > > > > > 
+> > > > > > Responses should be made by Wed, 06 May 2020 16:52:55 +0000.
+> > > > > > Anything received after that time might be too late.
+> > > > > > 
+> > > > > > The whole patch series can be found in one patch at:
+> > > > > >      https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.11-rc1.gz
+> > > > > > 
+> > > > > > 
+> > > > > > or in the git tree and branch at:
+> > > > > >      git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+> > > > > > 
+> > > > > > linux-5.6.y
+> > > > > > and the diffstat can be found below.
+> > > > > > 
+> > > > > > thanks,
+> > > > > > 
+> > > > > > greg k-h
+> > > > > > 
+> > > > > > -------------
+> > > > > > Pseudo-Shortlog of commits:
+> > > > > > 
+> > > > > > Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > > >       Linux 5.6.11-rc1
+> > > > > > 
+> > > > > 
+> > > > > > Takashi Iwai <tiwai@suse.de>
+> > > > > >       ALSA: pcm: oss: Place the plugin buffer overflow
+> > > > > > checks correctly
+> > > > > > 
+> > > > > > Vasily Khoruzhick <anarsoul@gmail.com>
+> > > > > >       ALSA: line6: Fix POD HD500 audio playback
+> > > > > > 
+> > > > > > Wu Bo <wubo40@huawei.com>
+> > > > > >       ALSA: hda/hdmi: fix without unlocked before return
+> > > > > > 
+> > > > > > Takashi Iwai <tiwai@suse.de>
+> > > > > >       ALSA: usb-audio: Correct a typo of NuPrime DAC-10 USB ID
+> > > > > > 
+> > > > > > Hui Wang <hui.wang@canonical.com>
+> > > > > >       ALSA: hda/realtek - Two front mics on a Lenovo ThinkCenter
+> > > > > > 
+> > > > > 
+> > > > > >    sound/core/oss/pcm_plugin.c                       | 20 ++++---
+> > > > > >    sound/isa/opti9xx/miro.c                          |  9 ++-
+> > > > > >    sound/isa/opti9xx/opti92x-ad1848.c                |  9 ++-
+> > > > > >    sound/pci/hda/patch_hdmi.c                        |  4 +-
+> > > > > >    sound/pci/hda/patch_realtek.c                     |  1 +
+> > > > > >    sound/usb/line6/podhd.c                           | 22 ++-----
+> > > > > >    sound/usb/quirks.c                                |  2 +-
+> > > > > >    78 files changed, 554 insertions(+), 297 deletions(-)
+> > > > > > 
+> > > > > > 
+> > > > > > 
+> > > > > 
+> > > > > Compiled and booted on my test system. Tons of the of following
+> > > > > errors in dmesg
+> > > > > 
+> > > > > Adding Takashi Iwai
+> > > > > 
+> > > > > [   33.980302] usb 2-2.4: 1:1: cannot set freq 48000 to ep 0x1
+> > > > > [   49.340581] usb 2-2.4: 2:1: cannot set freq 48000 to ep 0x82
+> > > > > [   59.580511] usb 2-2.4: 13:0: cannot get min/max values for
+> > > > > control 2 (id 13)
+> > > > > [   64.700532] usb 2-2.4: 9:0: cannot get min/max values for control
+> > > > > 2 (id 9)
+> > > > > [   69.792257] usb 2-2.4: 10:0: cannot get min/max values for
+> > > > > control 2 (id 10)
+> > > > > [   69.792736] usbcore: registered new interface driver snd-usb-audio
+> > > > > [   74.871038] usb 2-2.4: 9:0: cannot get min/max values for control
+> > > > > 2 (id 9)
+> > > > > [   79.967099] usb 2-2.4: 9:0: cannot get min/max values for control
+> > > > > 2 (id 9)
+> > > > > [   85.076961] usb 2-2.4: 9:0: cannot get min/max values for control
+> > > > > 2 (id 9)
+> > > > > [   90.191415] usb 2-2.4: 9:0: cannot get min/max values for control
+> > > > > 2 (id 9)
+> > > > > [   95.308843] usb 2-2.4: 9:0: cannot get min/max values for control
+> > > > > 2 (id 9)
+> > > > > 
+> > > > > followed by
+> > > > > 
+> > > > > [  131.172280] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+> > > > > [  136.259909] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+> > > > > [  141.380345] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+> > > > > [  146.500227] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+> > > > > [  151.620227] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+> > > > > [  156.739899] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+> > > > > [  161.859999] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+> > > > > 
+> > > > > 
+> > > > > I have audio on that port. I haven't tried yet reverting these
+> > > > > sound patches yet. demsg is filling up with these messages for
+> > > > > sure.
+> > > > > 
+> > > > 
+> > > > I just tried Linux 5.7-rc4 and it also has this problem. New in rc4 as
+> > > > far as I can tell.
+> > > 
+> > > Then it's unlikely from the changes in sound/*, but I'd suspect rather
+> > > USB core side.  There is only one change for USB-audio driver and it's
+> > > a correction of USB device ID.
+> > > 
+> > > 
+> > 
+> > For what its worth not seeing this on 5.4.39-rc1 with the same set of
+> > sound changes. I will start bisect on 5.6.11-rc1
+> > 
+> 
+> I can't reproduce this problem on 5.7-rc1 and 5.6.11-rc1 after seeing
+> it once on both.
+> 
+> Tried powerdown vs reboot to see if it is tied to hardware init
+> sequence. Doesn't seem to make a difference. Oh well. I will
+> update if I see it again.
 
-Sure. If you have any of the "trivially correct, and doesn't make code
-look worse", push them my way.
+Thanks for the report, and for testing all of these.  Looks like your
+USB device got "stuck" in an odd state, if it shows up again, please let
+us know on linux-usb@vger.
 
-I only did the ones that looked trivial and fairly core - didn't want
-to step on any driver toes etc.
+thanks,
 
-                  Linus
+greg k-h
