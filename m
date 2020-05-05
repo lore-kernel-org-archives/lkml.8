@@ -2,208 +2,152 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9CE0C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 05:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7CAC47259
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 05:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDB8B206CC
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 05:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3E33206CC
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 05:46:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fqcQe4nT"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="Zt0TKXNZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbgEEFoV (ORCPT
+        id S1727784AbgEEFqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 01:44:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53718 "EHLO
+        Tue, 5 May 2020 01:46:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725320AbgEEFoV (ORCPT
+        with ESMTP id S1725535AbgEEFqx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 01:44:21 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10555C061A0F
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 22:44:20 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id z6so370386plk.10
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 22:44:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=OFyVgPW92xjeHjZOe3d3BTj75xEysQbpF9I3kxPup5I=;
-        b=fqcQe4nTEPPqqUKFm8/irKkoCtCZhv5uz7tbiq6X/lrL0rbErtDlV6Z9fIJnnyHTbb
-         WXKN028/CTSLOnK0pv+DU+ZH1xDdlXzRTO0xHKOYyaPVcyLAmhwH7TLcqE+vzRbU65K9
-         /vOyhR7ZIDYOv8AzmWW2hfJjjb5ukdnp6PLbA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=OFyVgPW92xjeHjZOe3d3BTj75xEysQbpF9I3kxPup5I=;
-        b=MCDtx8GnLUwD0wd2mTRzb0avkqMrnAP9wIhRZ4EqkQRiEShEtVkL7zzWmNEZhuoq6V
-         l81VPVdczogAZdXnG6BfmPBD8VyrAkqpbzxp+0UGb9LANIogFg0rprWlzefagz51Whts
-         A2FwkmcW7jC+QkDWKTr1+sJYu8D8oelmTaux/ZCFh97m9Cid6bksx2qA2RmvMUYcJFLL
-         ZmLtzY679xQHbTTaR35V1dQbHJ0pBSS4aSp6rhnF6V3/spGuo9SXl1mwT62+SsBqKtr/
-         vdiy8NGj2yEHfVEH/O3SPBsU79RaI0k1RVWrdtuTxNwnJIVZXv/WwkEseNoAlkgB+sNd
-         9fLQ==
-X-Gm-Message-State: AGi0PuawJjUIAzyjSiAUyAWVOWVvvy08PMaq2f2JJ+OQGLGkx0RJHZK6
-        ukC2KBw17+Bpisi6jNzB6Pm6Pg==
-X-Google-Smtp-Source: APiQypKOZu4YMMmeSCWuV0yt1TPUe1gyOAOvbQ/KrM0zsU6tN1ZsiYm3L3tqll+HXgbuCJ3zsKE3YA==
-X-Received: by 2002:a17:902:8641:: with SMTP id y1mr1649408plt.14.1588657459376;
-        Mon, 04 May 2020 22:44:19 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id b29sm862082pfp.68.2020.05.04.22.44.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 22:44:18 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 5 May 2020 01:46:53 -0400
+Received: from forwardcorp1p.mail.yandex.net (forwardcorp1p.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b6:217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C27B7C061A0F
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 22:46:52 -0700 (PDT)
+Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
+        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id E54E92E152C;
+        Tue,  5 May 2020 08:46:47 +0300 (MSK)
+Received: from iva8-88b7aa9dc799.qloud-c.yandex.net (iva8-88b7aa9dc799.qloud-c.yandex.net [2a02:6b8:c0c:77a0:0:640:88b7:aa9d])
+        by mxbackcorp1o.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id J8LnfxHcLB-kkbWnYJJ;
+        Tue, 05 May 2020 08:46:47 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1588657607; bh=jvG490rWGc5GqhUhuA0SKysCR0pmXtiZsNTw6qj5OqI=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=Zt0TKXNZozq14mw3t2u5RzNa9xJ/1yboSHfqSOzTozGCAafpIZaPvTjwK4fUHA69c
+         z9VmelD979LLg2waFsb/pZ8YPJpv5+jRfY0B1PoYDa6k5lfAa0j6H9AhZdEdqdpdSH
+         Uyf554/AAUywEOgBa3c3Hpq84NaqWuGPZOIm1Le4=
+Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b080:7201::1:2])
+        by iva8-88b7aa9dc799.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id 4YTxxCJg1p-kkWeViGx;
+        Tue, 05 May 2020 08:46:46 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH] slub: limit count of partial slabs scanned to gather
+ statistics
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <158860845968.33385.4165926113074799048.stgit@buzz>
+ <20200504125656.e3d04b350c807aba8a2a7271@linux-foundation.org>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <fa0a6e28-0b68-c6d0-eb5d-8b180b86230f@yandex-team.ru>
+Date:   Tue, 5 May 2020 08:46:41 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200504213624.1.Ibc8eeddcee94984a608d6900b46f9ffde4045da4@changeid>
-References: <20200504213624.1.Ibc8eeddcee94984a608d6900b46f9ffde4045da4@changeid>
-Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: Implement lane reordering + polarity
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     robdclark@chromium.org, seanpaul@chromium.org,
-        linux-arm-msm@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-To:     Andrzej Hajda <a.hajda@samsung.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Date:   Mon, 04 May 2020 22:44:17 -0700
-Message-ID: <158865745768.11125.12003632060774071567@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+In-Reply-To: <20200504125656.e3d04b350c807aba8a2a7271@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Douglas Anderson (2020-05-04 21:36:31)
-> The ti-sn65dsi86 MIPI DSI to eDP bridge chip supports arbitrary
-> remapping of eDP lanes and also polarity inversion.  Both of these
-> features have been described in the device tree bindings for the
-> device since the beginning but were never implemented in the driver.
-> Implement both of them.
->=20
-> Part of this change also allows you to (via the same device tree
-> bindings) specify to use fewer than the max number of DP lanes that
-> the panel reports.  This could be useful if your display supports more
-> lanes but only a few are hooked up on your board.
->=20
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
+On 04/05/2020 22.56, Andrew Morton wrote:
+> On Mon, 04 May 2020 19:07:39 +0300 Konstantin Khlebnikov <khlebnikov@yandex-team.ru> wrote:
+> 
+>> To get exact count of free and used objects slub have to scan list of
+>> partial slabs. This may take at long time. Scanning holds spinlock and
+>> blocks allocations which move partial slabs to per-cpu lists and back.
+>>
+>> Example found in the wild:
+>>
+>> # cat /sys/kernel/slab/dentry/partial
+>> 14478538 N0=7329569 N1=7148969
+>> # time cat /sys/kernel/slab/dentry/objects
+>> 286225471 N0=136967768 N1=149257703
+>>
+>> real	0m1.722s
+>> user	0m0.001s
+>> sys	0m1.721s
+> 
+> I assume this could trigger the softlockup detector or even NMI
+> watchdog in some situations?
 
-Except for one thing below:
+Yes, irqs are disabled here. But loop itself is pretty fast.
+It requires terabytes of ram to reach common thresholds for watchdogs.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> 
+>> The same problem in slab was addressed in commit f728b0a5d72a ("mm, slab:
+>> faster active and free stats") by adding more kmem cache statistics.
+>> For slub same approach requires atomic op on fast path when object frees.
+>>
+>> Let's simply limit count of scanned slabs and print warning.
+>> Limit set in /sys/module/slub/parameters/max_partial_to_count.
+>> Default is 10000 which should be enough for most sane cases.
+>>
+>> Return linear approximation if list of partials is longer than limit.
+>> Nobody should notice difference.
+> 
+> That's a pretty sad "solution" :(
+> 
+> But I guess it's better than nothing at all, unless there are
+> alternative ideas?
 
-> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/brid=
-ge/ti-sn65dsi86.c
-> index 1a125423eb07..52cca54b525f 100644
-> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> @@ -707,26 +716,20 @@ static void ti_sn_bridge_enable(struct drm_bridge *=
-bridge)
->         int dp_rate_idx;
->         unsigned int val;
->         int ret =3D -EINVAL;
-> +       int max_dp_lanes;
-> =20
-> -       /*
-> -        * Run with the maximum number of lanes that the DP sink supports.
-> -        *
-> -        * Depending use cases, we might want to revisit this later becau=
-se:
-> -        * - It's plausible that someone may have run fewer lines to the
-> -        *   sink than the sink actually supports, assuming that the lines
-> -        *   will just be driven at a higher rate.
-> -        * - The DP spec seems to indicate that it's more important to mi=
-nimize
-> -        *   the number of lanes than the link rate.
-> -        *
-> -        * If we do revisit, it would be important to measure the power i=
-mpact.
-> -        */
-> -       pdata->dp_lanes =3D ti_sn_get_max_lanes(pdata);
-> +       max_dp_lanes =3D ti_sn_get_max_lanes(pdata);
-> +       pdata->dp_lanes =3D min(pdata->dp_lanes, max_dp_lanes);
-> =20
->         /* DSI_A lane config */
->         val =3D CHA_DSI_LANES(4 - pdata->dsi->lanes);
+Running this loop till the end adds more problems than gives information.
+Adding new  percpu or atomic counters to fast paths seems redundant even for debugging.
 
-Not a problem in this patch, but maybe this can be SN_MAX_DP_LANES -
-pdata->dsi->lanes now.
+Actually there is no much sense in accurate statistics for count of objects,
+when there are millions of them.
 
->         regmap_update_bits(pdata->regmap, SN_DSI_LANES_REG,
->                            CHA_DSI_LANES_MASK, val);
-> =20
-> +       regmap_write(pdata->regmap, SN_LN_ASSIGN_REG, pdata->ln_assign);
-> +       regmap_update_bits(pdata->regmap, SN_ENH_FRAME_REG, LN_POLRS_MASK,
-> +                          pdata->ln_polrs << LN_POLRS_OFFSET);
-> +
->         /* set dsi clk frequency value */
->         ti_sn_bridge_set_dsi_rate(pdata);
-> =20
-> @@ -1063,6 +1066,50 @@ static int ti_sn_setup_gpio_controller(struct ti_s=
-n_bridge *pdata)
->         return ret;
->  }
-> =20
-> +static void ti_sn_bridge_parse_lanes(struct ti_sn_bridge *pdata,
-> +                                    struct device_node *np)
-> +{
-> +       u32 lane_assignments[SN_MAX_DP_LANES] =3D { 0, 1, 2, 3 };
-> +       u32 lane_polarities[SN_MAX_DP_LANES] =3D { };
-> +       struct device_node *endpoint;
-> +       u8 ln_assign =3D 0;
-> +       u8 ln_polrs =3D 0;
+Memory consumption here is defined by count and size of slabs.
 
-Do we need to assign to 0 to start? Seems like no?
-
-> +       int dp_lanes;
-> +       int i;
-> +
-> +       /*
-> +        * Read config from the device tree about lane remapping and lane
-> +        * polarities.  These are optional and we assume identity map and
-> +        * normal polarity if nothing is specified.  It's OK to specify j=
-ust
-> +        * data-lanes but not lane-polarities but not vice versa.
-> +        */
-> +       endpoint =3D of_graph_get_endpoint_by_regs(np, 1, -1);
-> +       dp_lanes =3D of_property_count_u32_elems(endpoint, "data-lanes");
-> +       if (dp_lanes > 0) {
-> +               of_property_read_u32_array(endpoint, "data-lanes",
-> +                                          lane_assignments, dp_lanes);
-> +               of_property_read_u32_array(endpoint, "lane-polarities",
-> +                                          lane_polarities, dp_lanes);
-> +       } else {
-> +               dp_lanes =3D SN_MAX_DP_LANES;
-> +       }
-
-Needs an of_node_put(endpoint) here for the
-of_graph_get_endpoint_by_regs() above.
-
-> +
-> +       /*
-> +        * Convert into register format.  Loop over all lanes even if
-> +        * data-lanes had fewer elements so that we nicely initialize
-> +        * the LN_ASSIGN register.
-> +        */
-> +       for (i =3D SN_MAX_DP_LANES - 1; i >=3D 0; i--) {
-> +               ln_assign =3D ln_assign << LN_ASSIGN_WIDTH | lane_assignm=
-ents[i];
-> +               ln_polrs =3D ln_polrs << 1 | lane_polarities[i];
-> +       }
-> +
-> +       /* Stash in our struct for when we power on */
-> +       pdata->dp_lanes =3D dp_lanes;
-> +       pdata->ln_assign =3D ln_assign;
-> +       pdata->ln_polrs =3D ln_polrs;
-> +}
+> 
+>> --- a/mm/slub.c
+>> +++ b/mm/slub.c
+>> @@ -2407,16 +2407,29 @@ static inline unsigned long node_nr_objs(struct kmem_cache_node *n)
+>>   #endif /* CONFIG_SLUB_DEBUG */
+>>   
+>>   #if defined(CONFIG_SLUB_DEBUG) || defined(CONFIG_SYSFS)
+>> +
+>> +static unsigned long max_partial_to_count __read_mostly = 10000;
+>> +module_param(max_partial_to_count, ulong, 0644);
+>> +
+>>   static unsigned long count_partial(struct kmem_cache_node *n,
+>>   					int (*get_count)(struct page *))
+>>   {
+>> +	unsigned long counted = 0;
+>>   	unsigned long flags;
+>>   	unsigned long x = 0;
+>>   	struct page *page;
+>>   
+>>   	spin_lock_irqsave(&n->list_lock, flags);
+>> -	list_for_each_entry(page, &n->partial, slab_list)
+>> +	list_for_each_entry(page, &n->partial, slab_list) {
+>>   		x += get_count(page);
+>> +
+>> +		if (++counted > max_partial_to_count) {
+>> +			pr_warn_once("SLUB: too much partial slabs to count all objects, increase max_partial_to_count.\n");
+>> +			/* Approximate total count of objects */
+>> +			x = mult_frac(x, n->nr_partial, counted);
+>> +			break;
+>> +		}
+>> +	}
+>>   	spin_unlock_irqrestore(&n->list_lock, flags);
+>>   	return x;
+>>   }
