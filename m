@@ -2,114 +2,67 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2777FC47258
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FE4C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0775A20746
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:12:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588709531;
-	bh=iCXbhk1z7F/kDs/nVraqaeYgCyIHXWPhAh8/VhmA1Xc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=k6bnCKN4W6v3MvJFVy4yhq+u/3+sox8H6DD3kXKrTTRogeykBljJcxn6eze7fF18M
-	 Wkny3G+FOUziEwDON98Jz5jOMn1VhYDuOwwEwmC/PRFhkIJ4arj9mcvzsk5mcAu0t+
-	 WgADxp4VJsgJqD6pkRu8iY+nDKb7OM8kWB2o3Rxc=
+	by mail.kernel.org (Postfix) with ESMTP id 30A5220735
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:13:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729119AbgEEUMK (ORCPT
+        id S1729026AbgEEUNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 16:12:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35598 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727785AbgEEUMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 16:12:09 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 619D920721;
-        Tue,  5 May 2020 20:12:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588709528;
-        bh=iCXbhk1z7F/kDs/nVraqaeYgCyIHXWPhAh8/VhmA1Xc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Pqbqjcp4PnFOmgqIDXj+8Bjl6/5/ohqBUkYxBuWzwlincpqWy3FQ0xkMGyVHwccvX
-         WM2WCc/TBYfgYOWauIGtOhNuO3kK/yFKTFM/3sVIa4qR6GQIMPYaJ7YCqa0w6CoXwz
-         sir6b1/N/Bs7N2CIGHNBpBp9fd/ysavQ6VdHSk/Y=
-Date:   Tue, 5 May 2020 13:12:06 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] mm/hugetlb: Introduce
- HAVE_ARCH_CLEAR_HUGEPAGE_FLAGS
-Message-Id: <20200505131206.bee7b103431bff077c2ca0cf@linux-foundation.org>
-In-Reply-To: <21460cbc-8e9a-b956-5797-57b2e1df9fb1@arm.com>
-References: <1586864670-21799-1-git-send-email-anshuman.khandual@arm.com>
-        <1586864670-21799-4-git-send-email-anshuman.khandual@arm.com>
-        <20200425175511.7a68efb5e2f4436fe0328c1d@linux-foundation.org>
-        <87d37591-caa2-b82b-392a-3a29b2c7e9a6@arm.com>
-        <20200425200124.20d0c75fcaef05d062d3667c@linux-foundation.org>
-        <21460cbc-8e9a-b956-5797-57b2e1df9fb1@arm.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 5 May 2020 16:13:21 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:44353 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727785AbgEEUNV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 16:13:21 -0400
+X-Originating-IP: 86.202.105.35
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id C2C55240002;
+        Tue,  5 May 2020 20:13:18 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     linux-rtc@vger.kernel.org
+Cc:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        =?UTF-8?q?Per=20N=C3=B8rgaard=20Christensen?= 
+        <per.christensen@prevas.dk>, linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 1/5] rtc: add new VL flag for backup switchover
+Date:   Tue,  5 May 2020 22:13:06 +0200
+Message-Id: <20200505201310.255145-1-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 May 2020 08:21:34 +0530 Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+A new flag RTC_VL_BACKUP_SWITCH means that a backup switchover happened
+since last flag clear.
 
-> >>> static inline void arch_clear_hugepage_flags(struct page *page)
-> >>> {
-> >>> 	<some implementation>
-> >>> }
-> >>> #define arch_clear_hugepage_flags arch_clear_hugepage_flags
-> >>>
-> >>> It's a small difference - mainly to avoid adding two variables to the
-> >>> overall namespace where one would do.
-> >>
-> >> Understood, will change and resend.
-> > 
-> > That's OK - I've queued up that fix.
-> >
-> 
-> Hello Andrew,
-> 
-> I might not have searched all the relevant trees or might have just searched
-> earlier than required. But I dont see these patches (or your proposed fixes)
-> either in mmotm (2020-04-29-23-04) or in next-20200504. Wondering if you are
-> waiting on a V2 for this series accommodating the changes you had proposed.
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ include/uapi/linux/rtc.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-hm.  I think I must have got confused and thought you were referring to
-a different patch.  Yes please, let's have v2.
+diff --git a/include/uapi/linux/rtc.h b/include/uapi/linux/rtc.h
+index 83bba58d47f4..fa9aff91cbf2 100644
+--- a/include/uapi/linux/rtc.h
++++ b/include/uapi/linux/rtc.h
+@@ -99,6 +99,7 @@ struct rtc_pll_info {
+ #define RTC_VL_BACKUP_LOW	_BITUL(1) /* Backup voltage is low */
+ #define RTC_VL_BACKUP_EMPTY	_BITUL(2) /* Backup empty or not present */
+ #define RTC_VL_ACCURACY_LOW	_BITUL(3) /* Voltage is low, RTC accuracy is reduced */
++#define RTC_VL_BACKUP_SWITCH	_BITUL(4) /* Backup switchover happened */
+ 
+ #define RTC_VL_READ	_IOR('p', 0x13, unsigned int)	/* Voltage low detection */
+ #define RTC_VL_CLR	_IO('p', 0x14)		/* Clear voltage low information */
+-- 
+2.26.2
+
