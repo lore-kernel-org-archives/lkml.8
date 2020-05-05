@@ -2,149 +2,444 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C071C47256
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A85C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75ABF206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7427220721
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:04:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588701892;
+	bh=gxQ9X4QqLM4ifn43Epi1xaqmsSAjK08ljpO1RMYITFA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=t+lva8N3YsETpt6HSMTge8S3q17ET8PtWQKxv3BDSwGNGBMkN1kFgUJc2xR/aB7NT
+	 fsUcjJsiGwLdvxEDDGi9tGb5E4DwOSeNFelOq7SD7/D/Pi1aWS0eAE1RwFMjMvWAWI
+	 6QF1ILBUIZrg00AF9tDgNpdWTHnjDqjRst2gYuoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730673AbgEESCT (ORCPT
+        id S1730679AbgEESEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 14:02:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:46898 "EHLO foss.arm.com"
+        Tue, 5 May 2020 14:04:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730069AbgEESCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 14:02:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 871F71FB;
-        Tue,  5 May 2020 11:02:12 -0700 (PDT)
-Received: from [192.168.0.7] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B0DF3F305;
-        Tue,  5 May 2020 11:02:09 -0700 (PDT)
-Subject: Re: [PATCH v2 5/6] sched/deadline: Make DL capacity-aware
-To:     Pavan Kondeti <pkondeti@codeaurora.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Luca Abeni <luca.abeni@santannapisa.it>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
-        Alessio Balsini <balsini@google.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Qais Yousef <qais.yousef@arm.com>, linux-kernel@vger.kernel.org
-References: <20200427083709.30262-1-dietmar.eggemann@arm.com>
- <20200427083709.30262-6-dietmar.eggemann@arm.com>
- <20200430131036.GE19464@codeaurora.org>
- <aa00aee6-2adb-569b-825b-781da12ad8d3@arm.com>
- <20200504035842.GF19464@codeaurora.org>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <55fed70f-b64f-36a7-326d-70859bfdd315@arm.com>
-Date:   Tue, 5 May 2020 20:02:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1730093AbgEESEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 14:04:51 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D052C206FA;
+        Tue,  5 May 2020 18:04:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588701890;
+        bh=gxQ9X4QqLM4ifn43Epi1xaqmsSAjK08ljpO1RMYITFA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=xMhGv+FIQKSRyxGwUiJ/AsRgse+wPElZYeTjqa7uJjSd6RYitHwXt7qkr1Lty6+TN
+         /lSppEHghJ7X8pJhajXeQR+bP6XEDHSOGnolzpfBR3Sz8lqKXTOL1eQqY3pAdjxmLj
+         DY3NaZqP2B5dpznzKE/mwncbic5KUnoURX5rWoKY=
+Date:   Tue, 5 May 2020 11:04:47 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Felix Fietkau <nbd@openwrt.org>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 06/11] net: ethernet: mtk-eth-mac: new driver
+Message-ID: <20200505110447.2404985c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200505140231.16600-7-brgl@bgdev.pl>
+References: <20200505140231.16600-1-brgl@bgdev.pl>
+        <20200505140231.16600-7-brgl@bgdev.pl>
 MIME-Version: 1.0
-In-Reply-To: <20200504035842.GF19464@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/05/2020 05:58, Pavan Kondeti wrote:
-> On Fri, May 01, 2020 at 06:12:07PM +0200, Dietmar Eggemann wrote:
->> On 30/04/2020 15:10, Pavan Kondeti wrote:
->>> On Mon, Apr 27, 2020 at 10:37:08AM +0200, Dietmar Eggemann wrote:
->>>> From: Luca Abeni <luca.abeni@santannapisa.it>
->>
->> [...]
->>
->>>> @@ -1653,10 +1654,19 @@ select_task_rq_dl(struct task_struct *p, int cpu, int sd_flag, int flags)
->>>>  	 * other hand, if it has a shorter deadline, we
->>>>  	 * try to make it stay here, it might be important.
->>>>  	 */
->>>> -	if (unlikely(dl_task(curr)) &&
->>>> -	    (curr->nr_cpus_allowed < 2 ||
->>>> -	     !dl_entity_preempt(&p->dl, &curr->dl)) &&
->>>> -	    (p->nr_cpus_allowed > 1)) {
->>>> +	select_rq = unlikely(dl_task(curr)) &&
->>>> +		    (curr->nr_cpus_allowed < 2 ||
->>>> +		     !dl_entity_preempt(&p->dl, &curr->dl)) &&
->>>> +		    p->nr_cpus_allowed > 1;
->>>> +
->>>> +	/*
->>>> +	 * Take the capacity of the CPU into account to
->>>> +	 * ensure it fits the requirement of the task.
->>>> +	 */
->>>> +	if (static_branch_unlikely(&sched_asym_cpucapacity))
->>>> +		select_rq |= !dl_task_fits_capacity(p, cpu);
->>>> +
->>>> +	if (select_rq) {
->>>>  		int target = find_later_rq(p);
->>>
->>> I see that find_later_rq() checks if the previous CPU is part of
->>> later_mask and returns it immediately. So we don't migrate the
->>> task in the case where there previous CPU can't fit the task and
->>> there are no idle CPUs on which the task can fit. LGTM.
->>
->> Hope I understand you here. I don't think that [patch 6/6] provides this
->> already.
->>
->> In case 'later_mask' has no fitting CPUs, 'max_cpu' is set in the
->> otherwise empty 'later_mask'. But 'max_cpu' is not necessary task_cpu(p).
->>
->> Example on Juno [L b b L L L] with thread0-0 (big task)
->>
->>      cpudl_find [thread0-0 2117] orig later_mask=0,3-4 later_mask=0
->>   find_later_rq [thread0-0 2117] task_cpu=2 later_mask=0
->>
->> A tweak could be added favor task_cpu(p) in case it is amongst the CPUs
->> with the maximum capacity in cpudl_find() for the !fit case.
->>
+On Tue,  5 May 2020 16:02:26 +0200 Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> You are right. max_cpu can be other than task_cpu(p) in which case we
-> migrate the task though it won't fit on the new CPU. While introducing
-> capacity awareness in RT, Quais made the below change to avoid the
-> migration. We can do something similar here also.
+> This adds the driver for the MediaTek Ethernet MAC used on the MT8* SoC
+> family. For now we only support full-duplex.
 > 
-> commit b28bc1e002c2 (sched/rt: Re-instate old behavior in select_task_rq_rt())
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-I'm not sure something like this is necessary here.
+> +#define MTK_MAC_VERSION				"1.0"
 
-With DL capacity awareness we reduce the later_mask returned by
-cpudl_find() in find_later_rq() to those idle CPUs which can handle p
-or in case there is none to (the/a) 'non-fitting CPU w/ max capacity'.
+Please don't add driver versions, we're removing those from networking
+drivers.
 
-We just have to favor task_cpu(p) in [patch 6/6] in case it is part
-of the initial later_mask and among these 'non-fitting CPUs w/ max
-capacity'.
+> +/* Represents the actual structure of descriptors used by the MAC. We can
+> + * reuse the same structure for both TX and RX - the layout is the same, only
+> + * the flags differ slightly.
+> + */
+> +struct mtk_mac_ring_desc {
+> +	/* Contains both the status flags as well as packet length. */
+> +	u32 status;
+> +	u32 data_ptr;
+> +	u32 vtag;
+> +	u32 reserved;
+> +} __aligned(4) __packed;
 
-This will make sure that it gets chosen so find_later_rq() returns it
-before the 'for_each_domain()' loop.
+It will be aligned to 4, because the members are all 4B. And there is
+no possibility of holes. You can safely remove those attrs.
 
-And I guess we still want to migrate if there is a non-fitting CPU w/ a
-higher CPU capacity than task_cpu() (tri-gear).
+> +static int mtk_mac_ring_pop_tail(struct mtk_mac_ring *ring,
+> +				 struct mtk_mac_ring_desc_data *desc_data)
+> +{
+> +	struct mtk_mac_ring_desc *desc = &ring->descs[ring->tail];
+> +	unsigned int status;
+> +
+> +	dma_rmb();
 
-@@ -137,7 +137,8 @@ int cpudl_find(struct cpudl *cp, struct task_struct *p,
- 
-                                cap = capacity_orig_of(cpu);
- 
--                               if (cap > max_cap) {
-+                               if (cap > max_cap ||
-+                                   (cpu == task_cpu(p) && cap == max_cap)) {
-                                        max_cap = cap;
-                                        max_cpu = cpu;
+This should be after desc->status read, probably.
 
-In case task_cpu() is not part of later_cpu, the 'max CPU capacity CPU' is
-returned as 'best_cpu'. 
+> +	status = desc->status;
+> +
+> +	if (!(status & MTK_MAC_DESC_BIT_COWN))
+> +		return -1;
+> +
+> +	desc_data->len = status & MTK_MAC_DESC_MSK_LEN;
+> +	desc_data->flags = status & ~MTK_MAC_DESC_MSK_LEN;
+> +	desc_data->dma_addr = desc->data_ptr;
+> +	desc_data->skb = ring->skbs[ring->tail];
+> +
+> +	desc->data_ptr = 0;
+> +	desc->status = MTK_MAC_DESC_BIT_COWN;
+> +	if (status & MTK_MAC_DESC_BIT_EOR)
+> +		desc->status |= MTK_MAC_DESC_BIT_EOR;
+> +
+> +	dma_wmb();
 
-[...]
+What is this separating?
+
+> +	ring->tail = (ring->tail + 1) % MTK_MAC_RING_NUM_DESCS;
+> +	ring->count--;
+> +
+> +	return 0;
+> +}
+> +
+> +static void mtk_mac_ring_push_head(struct mtk_mac_ring *ring,
+> +				   struct mtk_mac_ring_desc_data *desc_data,
+> +				   unsigned int flags)
+> +{
+> +	struct mtk_mac_ring_desc *desc = &ring->descs[ring->head];
+> +	unsigned int status;
+> +
+> +	dma_rmb();
+
+What's this barrier separating?
+
+> +	status = desc->status;
+> +
+> +	ring->skbs[ring->head] = desc_data->skb;
+> +	desc->data_ptr = desc_data->dma_addr;
+> +
+> +	status |= desc_data->len;
+> +	if (flags)
+> +		status |= flags;
+> +	desc->status = status;
+> +
+> +	dma_wmb();
+> +	desc->status &= ~MTK_MAC_DESC_BIT_COWN;
+> +
+> +	ring->head = (ring->head + 1) % MTK_MAC_RING_NUM_DESCS;
+> +	ring->count++;
+> +}
+
+> +/* All processing for TX and RX happens in the napi poll callback. */
+> +static irqreturn_t mtk_mac_handle_irq(int irq, void *data)
+> +{
+> +	struct mtk_mac_priv *priv;
+> +	struct net_device *ndev;
+> +	unsigned int status;
+> +
+> +	ndev = data;
+> +	priv = netdev_priv(ndev);
+> +
+> +	if (netif_running(ndev)) {
+> +		mtk_mac_intr_mask_all(priv);
+> +		status = mtk_mac_intr_read_and_clear(priv);
+> +
+> +		/* RX Complete */
+> +		if (status & MTK_MAC_BIT_INT_STS_FNRC)
+> +			napi_schedule(&priv->napi);
+> +
+> +		/* TX Complete */
+> +		if (status & MTK_MAC_BIT_INT_STS_TNTC)
+> +			schedule_work(&priv->tx_work);
+> +
+> +		/* One of the counter reached 0x8000000 */
+> +		if (status & MTK_MAC_REG_INT_STS_MIB_CNT_TH) {
+> +			mtk_mac_update_stats(priv);
+> +			mtk_mac_reset_counters(priv);
+> +		}
+> +
+> +		mtk_mac_intr_unmask_all(priv);
+
+Why do you unmask all IRQs here? The usual way to operate is to leave
+TX and RX IRQs masked until NAPI finishes.
+
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+
+> +static int mtk_mac_enable(struct net_device *ndev)
+> +{
+> +	/* Reset all counters */
+> +	mtk_mac_reset_counters(priv);
+
+This doesn't reset the counters to zero, right?
+
+> +	/* Enable Hash Table BIST and reset it */
+> +	regmap_update_bits(priv->regs, MTK_MAC_REG_HASH_CTRL,
+> +			   MTK_MAC_BIT_HASH_CTRL_BIST_EN,
+> +			   MTK_MAC_BIT_HASH_CTRL_BIST_EN);
+
+> +}
+> +
+> +static void mtk_mac_disable(struct net_device *ndev)
+> +{
+> +	struct mtk_mac_priv *priv = netdev_priv(ndev);
+> +
+> +	netif_stop_queue(ndev);
+> +	napi_disable(&priv->napi);
+> +	mtk_mac_intr_mask_all(priv);
+> +	mtk_mac_dma_disable(priv);
+> +	mtk_mac_intr_read_and_clear(priv);
+> +	phy_stop(priv->phydev);
+> +	phy_disconnect(priv->phydev);
+> +	free_irq(ndev->irq, ndev);
+> +	mtk_mac_free_rx_skbs(ndev);
+> +	mtk_mac_free_tx_skbs(ndev);
+> +}
+
+> +static int mtk_mac_netdev_start_xmit(struct sk_buff *skb,
+> +				     struct net_device *ndev)
+> +{
+> +	struct mtk_mac_priv *priv = netdev_priv(ndev);
+> +	struct mtk_mac_ring *ring = &priv->tx_ring;
+> +	struct device *dev = mtk_mac_get_dev(priv);
+> +	struct mtk_mac_ring_desc_data desc_data;
+> +
+> +	if (skb->len > MTK_MAC_MAX_FRAME_SIZE)
+> +		goto err_drop_packet;
+
+This should never happen if you set mtu right, you can drop it.
+
+> +	desc_data.dma_addr = mtk_mac_dma_map_tx(priv, skb);
+> +	if (dma_mapping_error(dev, desc_data.dma_addr))
+> +		goto err_drop_packet;
+> +
+> +	desc_data.skb = skb;
+> +	desc_data.len = skb->len;
+> +
+> +	mtk_mac_lock(priv);
+> +	mtk_mac_ring_push_head_tx(ring, &desc_data);
+> +
+> +	if (mtk_mac_ring_full(ring))
+> +		netif_stop_queue(ndev);
+> +	mtk_mac_unlock(priv);
+> +
+> +	mtk_mac_dma_resume_tx(priv);
+> +
+> +	return NETDEV_TX_OK;
+> +
+> +err_drop_packet:
+> +	dev_kfree_skb(skb);
+> +	ndev->stats.tx_dropped++;
+> +	return NETDEV_TX_BUSY;
+> +}
+
+> +static void mtk_mac_tx_work(struct work_struct *work)
+> +{
+> +	struct mtk_mac_priv *priv;
+> +	struct mtk_mac_ring *ring;
+> +	struct net_device *ndev;
+> +	bool wake = false;
+> +	int ret;
+> +
+> +	priv = container_of(work, struct mtk_mac_priv, tx_work);
+> +	ndev = mtk_mac_get_netdev(priv);
+> +	ring = &priv->tx_ring;
+> +
+> +	for (;;) {
+> +		mtk_mac_lock(priv);
+> +
+> +		if (!mtk_mac_ring_descs_available(ring)) {
+> +			mtk_mac_unlock(priv);
+> +			break;
+> +		}
+> +
+> +		ret = mtk_mac_tx_complete(priv);
+> +		mtk_mac_unlock(priv);
+> +		if (ret)
+> +			break;
+> +
+> +		wake = true;
+> +	}
+> +
+> +	if (wake)
+> +		netif_wake_queue(ndev);
+
+This looks racy, if the TX path runs in parallel the queue may have
+already been filled up at the point you wake it up.
+
+> +}
+
+Why do you clean the TX ring from a work rather than from the NAPI
+context?
+
+> +static void mtk_mac_set_rx_mode(struct net_device *ndev)
+> +{
+> +	struct mtk_mac_priv *priv = netdev_priv(ndev);
+> +	struct netdev_hw_addr *hw_addr;
+> +	unsigned int hash_addr, i;
+> +
+> +	if (ndev->flags & IFF_PROMISC) {
+> +		regmap_update_bits(priv->regs, MTK_MAC_REG_ARL_CFG,
+> +				   MTK_MAC_BIT_ARL_CFG_MISC_MODE,
+> +				   MTK_MAC_BIT_ARL_CFG_MISC_MODE);
+> +	} else if (netdev_mc_count(ndev) > MTK_MAC_HASHTABLE_MC_LIMIT ||
+> +		   ndev->flags & IFF_ALLMULTI) {
+> +		for (i = 0; i < MTK_MAC_HASHTABLE_SIZE_MAX; i++)
+> +			mtk_mac_set_hashbit(priv, i);
+> +	} else {
+> +		netdev_for_each_mc_addr(hw_addr, ndev) {
+> +			hash_addr = (hw_addr->addr[0] & 0x01) << 8;
+> +			hash_addr += hw_addr->addr[5];
+> +			mtk_mac_set_hashbit(priv, hash_addr);
+
+Hm, are the hash bits cleared when address is removed?
+
+> +		}
+> +	}
+> +}
+
+> +static int mtk_mac_receive_packet(struct mtk_mac_priv *priv)
+> +{
+> +	struct net_device *ndev = mtk_mac_get_netdev(priv);
+> +	struct mtk_mac_ring *ring = &priv->rx_ring;
+> +	struct device *dev = mtk_mac_get_dev(priv);
+> +	struct mtk_mac_ring_desc_data desc_data;
+> +	struct sk_buff *new_skb;
+> +	int ret;
+> +
+> +	mtk_mac_lock(priv);
+> +	ret = mtk_mac_ring_pop_tail(ring, &desc_data);
+> +	mtk_mac_unlock(priv);
+> +	if (ret)
+> +		return -1;
+> +
+> +	mtk_mac_dma_unmap_rx(priv, &desc_data);
+> +
+> +	if ((desc_data.flags & MTK_MAC_DESC_BIT_RX_CRCE) ||
+> +	    (desc_data.flags & MTK_MAC_DESC_BIT_RX_OSIZE)) {
+> +		/* Error packet -> drop and reuse skb. */
+> +		new_skb = desc_data.skb;
+> +		goto map_skb;
+> +	}
+> +
+> +	new_skb = mtk_mac_alloc_skb(ndev);
+> +	if (!new_skb) {
+> +		netdev_err(ndev, "out of memory for skb\n");
+
+No need for printing, kernel will complain loudly about oom.
+
+> +		ndev->stats.rx_dropped++;
+> +		new_skb = desc_data.skb;
+> +		goto map_skb;
+> +	}
+> +
+> +	skb_put(desc_data.skb, desc_data.len);
+> +	desc_data.skb->ip_summed = CHECKSUM_NONE;
+> +	desc_data.skb->protocol = eth_type_trans(desc_data.skb, ndev);
+> +	desc_data.skb->dev = ndev;
+> +	netif_receive_skb(desc_data.skb);
+> +
+> +map_skb:
+> +	desc_data.dma_addr = mtk_mac_dma_map_rx(priv, new_skb);
+> +	if (dma_mapping_error(dev, desc_data.dma_addr)) {
+> +		dev_kfree_skb(new_skb);
+> +		netdev_err(ndev, "DMA mapping error of RX descriptor\n");
+> +		return -ENOMEM;
+
+In this case nothing will ever replenish the RX ring right? If we hit
+this condition 128 times the ring will be empty?
+
+> +	}
+> +
+> +	desc_data.len = skb_tailroom(new_skb);
+> +	desc_data.skb = new_skb;
+> +
+> +	mtk_mac_lock(priv);
+> +	mtk_mac_ring_push_head_rx(ring, &desc_data);
+> +	mtk_mac_unlock(priv);
+> +
+> +	return 0;
+> +}
+> +
+> +static int mtk_mac_process_rx(struct mtk_mac_priv *priv, int budget)
+> +{
+> +	int received, ret;
+> +
+> +	for (received = 0, ret = 0; received < budget && ret == 0; received++)
+> +		ret = mtk_mac_receive_packet(priv);
+> +
+> +	mtk_mac_dma_resume_rx(priv);
+> +
+> +	return received;
+> +}
+
+> +static int mtk_mac_probe(struct platform_device *pdev)
+> +{
+
+> +	mtk_mac_set_mode_rmii(priv);
+> +
+> +	dev->coherent_dma_mask = DMA_BIT_MASK(32);
+> +	dev->dma_mask = &dev->coherent_dma_mask;
+
+Why set this manually and no thru dma_set_mask_and_coherent()?
+
+> +	priv->ring_base = dmam_alloc_coherent(dev, MTK_MAC_DMA_SIZE,
+> +					      &priv->dma_addr,
+> +					      GFP_KERNEL | GFP_DMA);
+> +	if (!priv->ring_base)
+> +		return -ENOMEM;
+> +
+> +	mtk_mac_nic_disable_pd(priv);
+> +	mtk_mac_init_config(priv);
+> +
+> +	ret = mtk_mac_mdio_init(ndev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = eth_platform_get_mac_address(dev, ndev->dev_addr);
+> +	if (ret || !is_valid_ether_addr(ndev->dev_addr)) {
+> +		random_ether_addr(ndev->dev_addr);
+> +		ndev->addr_assign_type = NET_ADDR_RANDOM;
+
+eth_hw_addr_random()
+
+> +	}
+> +
+> +	ndev->netdev_ops = &mtk_mac_netdev_ops;
+> +	ndev->ethtool_ops = &mtk_mac_ethtool_ops;
+> +
+> +	netif_napi_add(ndev, &priv->napi, mtk_mac_poll, MTK_MAC_NAPI_WEIGHT);
+> +
+> +	return devm_register_netdev(ndev);
+> +}
+
