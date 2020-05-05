@@ -2,120 +2,158 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F96C4724C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 02:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE744C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 02:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BDD6206D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 02:45:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SPXLR/qc"
+	by mail.kernel.org (Postfix) with ESMTP id A3055206D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 02:52:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728317AbgEECpG (ORCPT
+        id S1728006AbgEECwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 22:45:06 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:44379 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726482AbgEECog (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 22:44:36 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588646676; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=XRUBzTkZMzt3B80yri5EKdFwcdzexhuzoTj3qdX2z3s=; b=SPXLR/qcjk+trg6/7jLhbS7PXi8tRs/CFNYrG72BdHUgnxABvmkArLJNhAqM7A+nnK2smx33
- AI+8vhSo74/Pw+LK/hxOvSYzrpylPSeGs32q4ELZSAhG9xM+ANAawPuBpcNuZLhy7f4ZqA9h
- zKv+r8AjaAeSU3qv3TjGOgJXz74=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb0d313.7ff100f0f768-smtp-out-n01;
- Tue, 05 May 2020 02:44:35 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 51E9FC433F2; Tue,  5 May 2020 02:44:35 +0000 (UTC)
-Received: from bbhatt-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9F1C9C433BA;
-        Tue,  5 May 2020 02:44:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9F1C9C433BA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
-From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
-To:     mani@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hemantk@codeaurora.org, jhugo@codeaurora.org,
-        Bhaumik Bhatt <bbhatt@codeaurora.org>
-Subject: [PATCH v5 3/8] bus: mhi: core: Add range check for channel id received in event ring
-Date:   Mon,  4 May 2020 19:44:17 -0700
-Message-Id: <1588646662-25785-4-git-send-email-bbhatt@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1588646662-25785-1-git-send-email-bbhatt@codeaurora.org>
-References: <1588646662-25785-1-git-send-email-bbhatt@codeaurora.org>
+        Mon, 4 May 2020 22:52:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:57846 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726516AbgEECwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 22:52:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3D5C41FB;
+        Mon,  4 May 2020 19:52:17 -0700 (PDT)
+Received: from [192.168.0.129] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 20A803F71F;
+        Mon,  4 May 2020 19:52:04 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH 3/3] mm/hugetlb: Introduce HAVE_ARCH_CLEAR_HUGEPAGE_FLAGS
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1586864670-21799-1-git-send-email-anshuman.khandual@arm.com>
+ <1586864670-21799-4-git-send-email-anshuman.khandual@arm.com>
+ <20200425175511.7a68efb5e2f4436fe0328c1d@linux-foundation.org>
+ <87d37591-caa2-b82b-392a-3a29b2c7e9a6@arm.com>
+ <20200425200124.20d0c75fcaef05d062d3667c@linux-foundation.org>
+Message-ID: <21460cbc-8e9a-b956-5797-57b2e1df9fb1@arm.com>
+Date:   Tue, 5 May 2020 08:21:34 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20200425200124.20d0c75fcaef05d062d3667c@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hemant Kumar <hemantk@codeaurora.org>
 
-MHI data completion handler function reads channel id from event
-ring element. Value is under the control of MHI devices and can be
-any value between 0 and 255. In order to prevent out of bound access
-add a bound check against the max channel supported by controller
-and skip processing of that event ring element.
 
-Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
-Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
-Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
----
- drivers/bus/mhi/core/main.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+On 04/26/2020 08:31 AM, Andrew Morton wrote:
+> On Sun, 26 Apr 2020 08:13:17 +0530 Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> 
+>>
+>>
+>> On 04/26/2020 06:25 AM, Andrew Morton wrote:
+>>> On Tue, 14 Apr 2020 17:14:30 +0530 Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+>>>
+>>>> There are multiple similar definitions for arch_clear_hugepage_flags() on
+>>>> various platforms. This introduces HAVE_ARCH_CLEAR_HUGEPAGE_FLAGS for those
+>>>> platforms that need to define their own arch_clear_hugepage_flags() while
+>>>> also providing a generic fallback definition for others to use. This help
+>>>> reduce code duplication.
+>>>>
+>>>> ...
+>>>>
+>>>> --- a/include/linux/hugetlb.h
+>>>> +++ b/include/linux/hugetlb.h
+>>>> @@ -544,6 +544,10 @@ static inline int is_hugepage_only_range(struct mm_struct *mm,
+>>>>  }
+>>>>  #endif
+>>>>  
+>>>> +#ifndef HAVE_ARCH_CLEAR_HUGEPAGE_FLAGS
+>>>> +static inline void arch_clear_hugepage_flags(struct page *page) { }
+>>>> +#endif
+>>>> +
+>>>>  #ifndef arch_make_huge_pte
+>>>>  static inline pte_t arch_make_huge_pte(pte_t entry, struct vm_area_struct *vma,
+>>>>  				       struct page *page, int writable)
+>>>
+>>> This is the rather old-school way of doing it.  The Linus-suggested way is
+>>>
+>>> #ifndef arch_clear_hugepage_flags
+>>> static inline void arch_clear_hugepage_flags(struct page *page)
+>>> {
+>>> }
+>>> #define arch_clear_hugepage_flags arch_clear_hugepage_flags
+>>
+>> Do we need that above line here ? Is not that implicit.
+> 
+> It depends if other header files want to test whether
+> arch_clear_hugepage_flags is already defined.  If the header heorarchy
+> is well-defined and working properly, they shouldn't need to, because
+> we're reliably indluding the relevant arch header before (or early
+> within) include/linux/hugetlb.h.
+> 
+> It would be nice if
+> 
+> #define arch_clear_hugepage_flags arch_clear_hugepage_flags
+> #define arch_clear_hugepage_flags arch_clear_hugepage_flags
+> 
+> were to generate an compiler error but it doesn't.  If it did we could
+> detect these incorrect inclusion orders.
+> 
+>>> #endif
+>>>
+>>> And the various arch headers do
+>>>
+>>> static inline void arch_clear_hugepage_flags(struct page *page)
+>>> {
+>>> 	<some implementation>
+>>> }
+>>> #define arch_clear_hugepage_flags arch_clear_hugepage_flags
+>>>
+>>> It's a small difference - mainly to avoid adding two variables to the
+>>> overall namespace where one would do.
+>>
+>> Understood, will change and resend.
+> 
+> That's OK - I've queued up that fix.
+>
 
-diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
-index 605640c..e60ab21 100644
---- a/drivers/bus/mhi/core/main.c
-+++ b/drivers/bus/mhi/core/main.c
-@@ -776,6 +776,9 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
- 		case MHI_PKT_TYPE_TX_EVENT:
- 			chan = MHI_TRE_GET_EV_CHID(local_rp);
- 			mhi_chan = &mhi_cntrl->mhi_chan[chan];
-+			if (WARN_ON(chan >= mhi_cntrl->max_chan))
-+				goto next_event;
-+
- 			parse_xfer_event(mhi_cntrl, local_rp, mhi_chan);
- 			event_quota--;
- 			break;
-@@ -784,6 +787,7 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
- 			break;
- 		}
- 
-+next_event:
- 		mhi_recycle_ev_ring_element(mhi_cntrl, ev_ring);
- 		local_rp = ev_ring->rp;
- 		dev_rp = mhi_to_virtual(ev_ring, er_ctxt->rp);
-@@ -820,6 +824,9 @@ int mhi_process_data_event_ring(struct mhi_controller *mhi_cntrl,
- 		enum mhi_pkt_type type = MHI_TRE_GET_EV_TYPE(local_rp);
- 
- 		chan = MHI_TRE_GET_EV_CHID(local_rp);
-+		if (WARN_ON(chan >= mhi_cntrl->max_chan))
-+			goto next_event;
-+
- 		mhi_chan = &mhi_cntrl->mhi_chan[chan];
- 
- 		if (likely(type == MHI_PKT_TYPE_TX_EVENT)) {
-@@ -830,6 +837,7 @@ int mhi_process_data_event_ring(struct mhi_controller *mhi_cntrl,
- 			event_quota--;
- 		}
- 
-+next_event:
- 		mhi_recycle_ev_ring_element(mhi_cntrl, ev_ring);
- 		local_rp = ev_ring->rp;
- 		dev_rp = mhi_to_virtual(ev_ring, er_ctxt->rp);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Hello Andrew,
+
+I might not have searched all the relevant trees or might have just searched
+earlier than required. But I dont see these patches (or your proposed fixes)
+either in mmotm (2020-04-29-23-04) or in next-20200504. Wondering if you are
+waiting on a V2 for this series accommodating the changes you had proposed.
+
+- Anshuman
