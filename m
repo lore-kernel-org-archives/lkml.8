@@ -2,303 +2,158 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45FABC47258
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FA0C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 263CF2068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F9A52068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:01:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b="RQRm8VGZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbgEEVBU (ORCPT
+        id S1729170AbgEEVB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 17:01:20 -0400
-Received: from fieldses.org ([173.255.197.46]:46964 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726593AbgEEVBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 17:01:19 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 484BD150A; Tue,  5 May 2020 17:01:18 -0400 (EDT)
-Date:   Tue, 5 May 2020 17:01:18 -0400
-To:     "J. Bruce Fields" <bfields@redhat.com>
-Cc:     Tejun Heo <tj@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        Jeff Layton <jlayton@redhat.com>,
-        David Howells <dhowells@redhat.com>, Shaohua Li <shli@fb.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/4] allow multiple kthreadd's
-Message-ID: <20200505210118.GC27966@fieldses.org>
-References: <1588348912-24781-1-git-send-email-bfields@redhat.com>
- <CAHk-=wiGhZ_5xCRyUN+yMFdneKMQ-S8fBvdBp8o-JWPV4v+nVw@mail.gmail.com>
- <20200501182154.GG5462@mtj.thefacebook.com>
- <20200505021514.GA43625@pick.fieldses.org>
+        Tue, 5 May 2020 17:01:28 -0400
+Received: from mail-am6eur05on2138.outbound.protection.outlook.com ([40.107.22.138]:31841
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729011AbgEEVB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 17:01:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GgeCLFfLbP90QPy9l43jQ1PDMDT/uWRHyKIHQmPBOPZEYXal8iJMMQTKkUFOV5/qB2QwkyXamDrdYYevsRuNEBhP1J+LbLTdvKv5Z15M9Tj1hbugQBSskAtGOM99lDQOGXRJbThqn3DJMiOBIz3vm3gXq60PLQHPvx6BgsnffYa30/uw4DU6W7N+AN/UR7IjOAbbgQFrwSNwPtXJ03ISnoACiWTV/440CK8n9WqaaO2o/nFN/TJqeN36ya6PuXd0cjkO0emE4Q+a7aroJy4GE+GeBww9CzABfod4c/jpIy2q35vx5+yNVMBcQlEPwSyrxRw0XXYg4TarrrJAB+IBBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sUgyGKWvN7TT6GoRPQD/nbQkg45ryrDZoEEKiCH+Leg=;
+ b=oSyyKflcExVxRJoZ9RkPa3Dm+Ha9eTbEfC1gNmHAfUTPorcy6EUJFICLsGIPqpI3U8nCIBhJAlSLcSVUV0EYeN1uF5mbvdWumg7AxOJ6JxbhquYu8EsAF1PsnwZiBNr4XHFDk73yEDVntbwd3k/lEL6wDzpBFoDc5mTsNZbfgjzMFEDtveQ40AtWmCQQDABgoav/wBZZuG3UIDDpOem+d9bpDZsiogjJ5RLV9f1jfWkDEUiERmoQYhXKNWkTRk/klK18ykvSXxnzU9iAt2YzfAzA32k8d5xVEObUNA0JR5ESfkKt4gQaLWQOM6JLHS8WpjI/+I5O+R9dkVCVTLIrWg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=prevas.dk; dmarc=pass action=none header.from=prevas.dk;
+ dkim=pass header.d=prevas.dk; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.dk;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sUgyGKWvN7TT6GoRPQD/nbQkg45ryrDZoEEKiCH+Leg=;
+ b=RQRm8VGZJwh4BN3ADWYFZhS4kGhkWq/bK5lx2+WNoogDoesMQ/3ijDyvtfVqGv4yEB2h4k0ntBvNTFRwoCnZJbMIWtV6zsSeq6bKsSCnZT9cudep7dUAlX9cH0j5o6B+dueur8tP437EPGdSzDr9lXyzfIryiUk4UvTjSRnocv0=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=prevas.dk;
+Received: from VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:803:e1::21)
+ by VI1PR10MB3534.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:800:136::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Tue, 5 May
+ 2020 21:01:22 +0000
+Received: from VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::f0ac:4e97:2536:faa]) by VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::f0ac:4e97:2536:faa%7]) with mapi id 15.20.2958.030; Tue, 5 May 2020
+ 21:01:22 +0000
+Subject: Re: battery switch-over detection on pcf2127
+To:     Bruno Thomsen <bruno.thomsen@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     =?UTF-8?Q?Per_N=c3=b8rgaard_Christensen?= 
+        <per.christensen@prevas.dk>, LKML <linux-kernel@vger.kernel.org>
+References: <a0ed6b56-33b1-b5ab-00d1-268fcd61b754@prevas.dk>
+ <20200505200744.GV34497@piout.net>
+ <CAH+2xPB7LJSxsr1vYhc=u+Qweu6_-S5oEQETUVZSVu1ATW=BYw@mail.gmail.com>
+From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Message-ID: <62944a2d-f593-5a98-34be-f1f86ac6111c@prevas.dk>
+Date:   Tue, 5 May 2020 23:01:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+In-Reply-To: <CAH+2xPB7LJSxsr1vYhc=u+Qweu6_-S5oEQETUVZSVu1ATW=BYw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM5PR0202CA0016.eurprd02.prod.outlook.com
+ (2603:10a6:203:69::26) To VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:803:e1::21)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505021514.GA43625@pick.fieldses.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.149] (5.186.116.45) by AM5PR0202CA0016.eurprd02.prod.outlook.com (2603:10a6:203:69::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27 via Frontend Transport; Tue, 5 May 2020 21:01:20 +0000
+X-Originating-IP: [5.186.116.45]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1aa82fe0-1b18-44e1-8ffa-08d7f137768e
+X-MS-TrafficTypeDiagnostic: VI1PR10MB3534:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR10MB3534C0AC3178C71F253B550093A70@VI1PR10MB3534.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0394259C80
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: eJ/HMBVRe8MyMi6UKwcDp9FsEjy6+laPCnq7BIGMZyNzChgmTC+Udx9QAQqQ6/nvAnmtNAoRMV6Ibcdsj+ySY80dInR7NaDxopMRFTazztdNSaRbc6VoX0q2/hcqkj+1CrcS0QFSPOEF9D0f2U19y0n11vNsG5rBjyD7T53cyWKR358iAq93KPHAltPH5bKzWP0/9SvO8B+9Sv8g/Uge5vA2GZit48bWSD6+87rkf92Vpackcwc8JnDZuBb1tH3uTSTYSHyKDOEcHzrW60zdsUbTRe24fATTzXOpveklfcaf9zanJBbi/Y+iKE/p5BKP1BndzlrSIm5YubuHZ8c26kL5JV8B2qSc7yqNuPLQZes6rgXwhR9acfwShyReEUwX298Bm9nv+e3Al9kwjHQCyojSOEyoR2oP0+G8Q26yQXWNAOnBOCkVTOmqbTRvCU3Dp88AXzObs0gvLMYCsbwhoGtkkr8ULIM9L/gxEVTMcKRou0/XBJoMNLQTgX7x+mr35rkImEuzvYt8TCJ5C0RYDoFMvxoc1aaJgazA/E70jEdAiHBA4zZA498Z9BwTuym/
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(346002)(396003)(376002)(39850400004)(136003)(366004)(33430700001)(110136005)(31696002)(8936002)(16576012)(31686004)(52116002)(5660300002)(86362001)(8976002)(16526019)(44832011)(2616005)(186003)(8676002)(26005)(4326008)(316002)(956004)(66476007)(2906002)(36756003)(54906003)(478600001)(33440700001)(6486002)(66946007)(66556008)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: IP6OCLmDy+mIJSMdgZdzuSBTuY/sEyBH9rSHKb8mOicrJ6eUSHt9fyetvSR1qklT+84WUFyxEEzJwkLNvQOYwiqr5jJa1il1o/l6UPr4dgHKT4jKKzYlRNbuvhwVQqKeRpai7P2wujXDzLKI3/xFQMbaIiKh2UN0MvW+C3ia1jJ6dSL0jswNQmJCFYhnr76j9VesoxuN4lLSaBkTeM8eru3tN4mPKecPNy0DRe8V0huIHT/hJ933reWLLQQzMMT9R04T430ZpDB9zVMN4eC+iScn1t1vA3AB2vsjUfPZt97TTafvvSY4m560Xx+U0A4jUWU6ToQIba71CuA+KB/QMUF9K+lOvufK6R7RCTydmoYAIR4GyodQfXaWTGTbUpw7Z/PzW0j6C9VqZddanAN2Wl7zMbXkMtykrORRGBEdMqzKyefzi+uqOPbHwDqti6Zsx73EMSNAO80lKWW8xoQQ3TPMksXNKpO2C083fXtjaOiNby0Ia33CkEng6/4VxtcotW5zWZUFnpSF2PDYdkWb/Ra4Gc2JShYrzWb8eP9eH0lvyDj7YMCbuhbq77DGsbE+5E4A7TX74QhwZZXiNPzofnFeOIZz4aXYLljzfq47secJsurptJUDPGTwWLnuTP3m3hgp6DYh3+8gsy4ccyUkxUvuxKH5TJbxoCO2JjVJx8G3u+KECN4rloZ+dEXv7U9ZPt1FHZSVI1ohNB0Plj+YLOhZpGgEmlHC5BjrRlDXnphjlL3Un/CtWcqwSJTVlhsuhrT0VMviJbs6wcZF4n01ux/we2v7aTVUvZtMAmrSeP0=
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1aa82fe0-1b18-44e1-8ffa-08d7f137768e
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2020 21:01:22.2787
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d350cf71-778d-4780-88f5-071a4cb1ed61
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0btnCyfb6gmzyXH+auvcJa8meSzGsfFWPnbNOf0aBUBv6nvwe5yMcX92Wb253afOBtC1oMhUrEbK+9Yaw4mBkb5BIJVOdf/Bc5Hjl1XDBWQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB3534
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 10:15:14PM -0400, J. Bruce Fields wrote:
-> Though now I'm feeling greedy: it would be nice to have both some kind
-> of global flag, *and* keep kthread->data pointing to svc_rqst (as that
-> would give me a simpler and quicker way to figure out which client is
-> conflicting).  Could I take a flag bit in kthread->flags, maybe?
+On 05/05/2020 22.38, Bruno Thomsen wrote:
+> Hi Rasmus
+> 
+> Den tir. 5. maj 2020 kl. 22.07 skrev Alexandre Belloni
+> <alexandre.belloni@bootlin.com>:
+>>
+>> On 05/05/2020 21:54:47+0200, Rasmus Villemoes wrote:
+>>> Hi Bruno
+>>>
+>>> I just noticed your "rtc: pcf2127: add tamper detection support"
+>>> (03623b4b04) from 5.4. Unfortunately, clearing the BTSE bit breaks a use
+>>> case of ours:
+>>>
+>>> We rely on the battery switch-over detection to distinguish a powerfail
+>>> during boot from a PORESET by the external watchdog (in the latter case,
+>>> the RTC is still powered throughout, meaning there is no battery
+>>> switch-over event). OTOH, we do not use the tamper detection - in fact,
+>>> the TS signal is unconnected on our board.
+>>>
+>>> We're currently still on 4.19, but we will eventually upgrade to a
+>>> kernel containing the above commit. So I was wondering if we could
+>>> figure out a way that would work for both of us - either some CONFIG
+>>> knob, or perhaps something in the device-tree. Any ideas?
+>>>
+>>
+>> Yes, I was working on a patch series last week allowing to read BF. I'm
+>> not sure clearing BTSE is your issue but clearing BF is.
+>>
+>> I'm going to send it tonight, I'll copy you, let me now if that works
+>> for you. You can then read BF using the RTC_VL_READ ioctl. The
+>> RTC_VL_BACKUP_SWITCH flag will be set if a switchover happened.
+>> The RTC_VL_CLR ioctl can be used to clear the flag.
+>>
+>> I think clearing BTSE is still the right thing to do.
+> 
+> I think your use case is valid and it sounds like Alexandre solution will
+> solve it as you just need to know if a battery switch-over has happened
+> not when exactly it happened.
+> 
+> I can help test the patches too.
 
-Would something like this be too hacky?:
+Thanks for the quick replies, both. Unfortunately, being able to read BF
+from linux is not relevant to us - all the handling happens early in the
+bootloader (including clearing BF, so that we can detect that the
+previous boot failed only because of power fail - hence whether the
+linux driver clears BF or not is not relevant). We really just want
+linux to not touch the bits in CTRL3 at all.
 
-	--- a/kernel/kthread.c
-	+++ b/kernel/kthread.c
-	@@ -58,6 +58,7 @@ enum KTHREAD_BITS {
-	 	KTHREAD_IS_PER_CPU = 0,
-	 	KTHREAD_SHOULD_STOP,
-	 	KTHREAD_SHOULD_PARK,
-	+	KTHREAD_IS_NFSD,
-	 };
-	 
-	 static inline void set_kthread_struct(void *kthread)
-	@@ -164,6 +165,25 @@ void *kthread_data(struct task_struct *task)
-	 	return to_kthread(task)->data;
-	 }
-	 
-	+void kthread_set_nfsd()
-	+{
-	+	set_bit(KTHREAD_IS_NFSD, &to_kthread(current)->flags);
-	+}
-	+EXPORT_SYMBOL_GPL(kthread_set_nfsd);
-	+
-	+void *kthread_nfsd_data()
-	+{
-	+	struct kthread *k;
-	+
-	+	if (!(current->flags & PF_KTHREAD))
-	+		return NULL;
-	+	k = to_kthread(current);
-	+	if (test_bit(KTHREAD_IS_NFSD, &k->flags))
-	+		return k->data;
-	+	return NULL;
-	+}
-	+EXPORT_SYMBOL_GPL(kthread_nfsd_data);
-	+
-	 /**
-	  * kthread_probe_data - speculative version of kthread_data()
-	  * @task: possible kthread task in question
+Hm, wait. Re-reading the above suggests that BF can get set even if BTSE
+is not, and a quick experiment shows that is true - I must have misread
+the data sheet. While I think that's fine for now (currently I only
+print the time of last switch-over as a diagnostic), I did have some use
+case in mind for comparing that timestamp to the current time and make
+decisions based on that. But until I figure out exactly what I want to
+use it for, and until we actually upgrade to 5.4+, there's no rush.
 
-It feels weird to make such a special case for nfsd, but it makes this
-all very easy for me; complete patch below.
-
---b.
-
-commit 8b0a2e86dafa
-Author: J. Bruce Fields <bfields@redhat.com>
-Date:   Fri Jul 28 16:35:15 2017 -0400
-
-    nfsd: clients don't need to break their own delegations
-    
-    We currently revoke read delegations on any write open or any operation
-    that modifies file data or metadata (including rename, link, and
-    unlink).  But if the delegation in question is the only read delegation
-    and is held by the client performing the operation, that's not really
-    necessary.
-    
-    It's not always possible to prevent this in the NFSv4.0 case, because
-    there's not always a way to determine which client an NFSv4.0 delegation
-    came from.  (In theory we could try to guess this from the transport
-    layer, e.g., by assuming all traffic on a given TCP connection comes
-    from the same client.  But that's not really correct.)
-    
-    In the NFSv4.1 case the session layer always tells us the client.
-    
-    This patch should remove such self-conflicts in all cases where we can
-    reliably determine the client from the compound.
-    
-    To do that we need to track "who" is performing a given (possibly
-    lease-breaking) file operation.  We're doing that by storing the
-    information in the svc_rqst and using kthread_data() to map the current
-    task back to a svc_rqst.
-    
-    Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-
-diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
-index 5057e4d9dcd1..9fdcec416614 100644
---- a/Documentation/filesystems/locking.rst
-+++ b/Documentation/filesystems/locking.rst
-@@ -425,6 +425,7 @@ prototypes::
- 	int (*lm_grant)(struct file_lock *, struct file_lock *, int);
- 	void (*lm_break)(struct file_lock *); /* break_lease callback */
- 	int (*lm_change)(struct file_lock **, int);
-+	bool (*lm_breaker_owns_lease)(struct file_lock *);
- 
- locking rules:
- 
-@@ -435,6 +436,7 @@ lm_notify:		yes		yes			no
- lm_grant:		no		no			no
- lm_break:		yes		no			no
- lm_change		yes		no			no
-+lm_breaker_owns_lease:	no		no			no
- ==========		=============	=================	=========
- 
- buffer_head
-diff --git a/fs/locks.c b/fs/locks.c
-index b8a31c1c4fff..a3f186846e93 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -1557,6 +1557,9 @@ static bool leases_conflict(struct file_lock *lease, struct file_lock *breaker)
- {
- 	bool rc;
- 
-+	if (lease->fl_lmops->lm_breaker_owns_lease
-+			&& lease->fl_lmops->lm_breaker_owns_lease(lease))
-+		return false;
- 	if ((breaker->fl_flags & FL_LAYOUT) != (lease->fl_flags & FL_LAYOUT)) {
- 		rc = false;
- 		goto trace;
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 0e75f7fb5fec..a6d73aa51ce4 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -2302,6 +2302,8 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
- 	}
- 	check_if_stalefh_allowed(args);
- 
-+	rqstp->rq_lease_breaker = (void **)&cstate->clp;
-+
- 	trace_nfsd_compound(rqstp, args->opcnt);
- 	while (!status && resp->opcnt < args->opcnt) {
- 		op = &args->ops[resp->opcnt++];
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index e32ecedece0f..2368051bbef3 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -4520,6 +4520,19 @@ nfsd_break_deleg_cb(struct file_lock *fl)
- 	return ret;
- }
- 
-+static bool nfsd_breaker_owns_lease(struct file_lock *fl)
-+{
-+	struct nfs4_delegation *dl = fl->fl_owner;
-+	struct svc_rqst *rqst;
-+	struct nfs4_client *clp;
-+
-+	rqst = kthread_nfsd_data();
-+	if (!rqst)
-+		return false;
-+	clp = *(rqst->rq_lease_breaker);
-+	return dl->dl_stid.sc_client == clp;
-+}
-+
- static int
- nfsd_change_deleg_cb(struct file_lock *onlist, int arg,
- 		     struct list_head *dispose)
-@@ -4531,6 +4544,7 @@ nfsd_change_deleg_cb(struct file_lock *onlist, int arg,
- }
- 
- static const struct lock_manager_operations nfsd_lease_mng_ops = {
-+	.lm_breaker_owns_lease = nfsd_breaker_owns_lease,
- 	.lm_break = nfsd_break_deleg_cb,
- 	.lm_change = nfsd_change_deleg_cb,
- };
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index ca9fd348548b..9c15b77a726f 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -888,6 +888,8 @@ nfsd(void *vrqstp)
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 	int err;
- 
-+	kthread_set_nfsd();
-+
- 	/* Lock module and set up kernel thread */
- 	mutex_lock(&nfsd_mutex);
- 
-@@ -1011,6 +1013,7 @@ nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
- 		*statp = rpc_garbage_args;
- 		return 1;
- 	}
-+	rqstp->rq_lease_breaker = NULL;
- 	/*
- 	 * Give the xdr decoder a chance to change this if it wants
- 	 * (necessary in the NFSv4.0 compound case)
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 4f6f59b4f22a..4b784560ffaf 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1045,6 +1045,7 @@ struct lock_manager_operations {
- 	bool (*lm_break)(struct file_lock *);
- 	int (*lm_change)(struct file_lock *, int, struct list_head *);
- 	void (*lm_setup)(struct file_lock *, void **);
-+	bool (*lm_breaker_owns_lease)(struct file_lock *);
- };
- 
- struct lock_manager {
-diff --git a/include/linux/kthread.h b/include/linux/kthread.h
-index 8bbcaad7ef0f..d374cad65931 100644
---- a/include/linux/kthread.h
-+++ b/include/linux/kthread.h
-@@ -58,6 +58,8 @@ bool kthread_should_park(void);
- bool __kthread_should_park(struct task_struct *k);
- bool kthread_freezable_should_stop(bool *was_frozen);
- void *kthread_data(struct task_struct *k);
-+void kthread_set_nfsd(void);
-+void *kthread_nfsd_data(void);
- void *kthread_probe_data(struct task_struct *k);
- int kthread_park(struct task_struct *k);
- void kthread_unpark(struct task_struct *k);
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index fd390894a584..abf4a57ce4a7 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -299,6 +299,7 @@ struct svc_rqst {
- 	struct net		*rq_bc_net;	/* pointer to backchannel's
- 						 * net namespace
- 						 */
-+	void **			rq_lease_breaker; /* The v4 client breaking a lease */
- };
- 
- #define SVC_NET(rqst) (rqst->rq_xprt ? rqst->rq_xprt->xpt_net : rqst->rq_bc_net)
-diff --git a/kernel/kthread.c b/kernel/kthread.c
-index 09b103b92c5a..54d83f329b85 100644
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -58,6 +58,7 @@ enum KTHREAD_BITS {
- 	KTHREAD_IS_PER_CPU = 0,
- 	KTHREAD_SHOULD_STOP,
- 	KTHREAD_SHOULD_PARK,
-+	KTHREAD_IS_NFSD,
- };
- 
- static inline void set_kthread_struct(void *kthread)
-@@ -164,6 +165,25 @@ void *kthread_data(struct task_struct *task)
- 	return to_kthread(task)->data;
- }
- 
-+void kthread_set_nfsd()
-+{
-+	set_bit(KTHREAD_IS_NFSD, &to_kthread(current)->flags);
-+}
-+EXPORT_SYMBOL_GPL(kthread_set_nfsd);
-+
-+void *kthread_nfsd_data()
-+{
-+	struct kthread *k;
-+
-+	if (!(current->flags & PF_KTHREAD))
-+		return NULL;
-+	k = to_kthread(current);
-+	if (test_bit(KTHREAD_IS_NFSD, &k->flags))
-+		return k->data;
-+	return NULL;
-+}
-+EXPORT_SYMBOL_GPL(kthread_nfsd_data);
-+
- /**
-  * kthread_probe_data - speculative version of kthread_data()
-  * @task: possible kthread task in question
+Thanks,
+Rasmus
