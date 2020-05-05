@@ -6,90 +6,70 @@ X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9179DC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B973C47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 749C7206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:57:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6560820735
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:58:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728914AbgEEU5e convert rfc822-to-8bit (ORCPT
+        id S1729142AbgEEU6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 16:57:34 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:58167 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbgEEU5d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 16:57:33 -0400
-Received: from mail-qv1-f49.google.com ([209.85.219.49]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MDhpZ-1jOgV11f6N-00Apkm for <linux-kernel@vger.kernel.org>; Tue, 05 May
- 2020 22:57:32 +0200
-Received: by mail-qv1-f49.google.com with SMTP id h6so1773026qvz.8
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 13:57:32 -0700 (PDT)
-X-Gm-Message-State: AGi0PuabuCGV0xfIwfAB4IKfMrtwCfapv4AN2wjq5mWVTPc3qEj7h2mp
-        eCB0SmgjmuJ/Poh5SgMGKXNILtsn21HpgBdsr5I=
-X-Google-Smtp-Source: APiQypJrgFYMvWYQxR3/H4be6yfzqH6LIElWNTCfGS8MCkKF2CDVLP6zcvtTKAL/xjFld7TVJiEQt5NIfuQ2sfTN1L0=
-X-Received: by 2002:ad4:4a8b:: with SMTP id h11mr4439312qvx.210.1588712251082;
- Tue, 05 May 2020 13:57:31 -0700 (PDT)
+        Tue, 5 May 2020 16:58:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44922 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726593AbgEEU6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 16:58:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 067EAACB8;
+        Tue,  5 May 2020 20:58:03 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200505141546.824573-1-arnd@arndb.de> <30d49e6d-570b-f6fd-3a6f-628abcc8b127@suse.com>
- <CAK8P3a0mWH=Zcq180+cTRMpqOkGt05xDP1+kCTP6yc9grAg2VQ@mail.gmail.com> <48893239-dde9-4e94-040d-859f4348816d@suse.com>
-In-Reply-To: <48893239-dde9-4e94-040d-859f4348816d@suse.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 5 May 2020 22:57:15 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2_7+_a_cwDK1cwfrJX4azQJhd_Y0xB18cCUn6=p7fVsg@mail.gmail.com>
-Message-ID: <CAK8P3a2_7+_a_cwDK1cwfrJX4azQJhd_Y0xB18cCUn6=p7fVsg@mail.gmail.com>
-Subject: Re: [PATCH] xenbus: avoid stack overflow warning
-To:     =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Yan Yankovskyi <yyankovskyi@gmail.com>, Wei Liu <wl@xen.org>,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:4ulp0f5K9CPkflqn5Kg/msj90NrX+jG/SnIimflwT4UXEAWrwpw
- yas2Cc9AYHLUTlAgZawxedYfFhn94aPHlljlfYHQ98h14iCc65fHdbsK9e4lXIe896We8IP
- V4kPnTJpmUK3kS9DR9MeLpyZ4HBuCYxNg/OpwuXwJ0M/rH6n71FRFYaTaOHtybd06A8hA/X
- oRBZH7VI/gARXXtMrNTAA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1bzlBjUMUrM=:TMLIdk8FkoQ56njjAu3Z5X
- DSIPLnbwlichn9tOx7iCzV3Seyo+RZzJQ26KV+DmBXAavMWLkgnoaTL9GLxcHwNduyuvwH5z4
- QDXxGdkgSYOM/6F41oqJZfdWfhcsAPxcy3pqL0s05N9Hit0OIpVKXWGhpUyD+gVro/MsYzdLq
- lKOaYFtsie1pfeWVR51cQf8hjnQGteh4ZVLUMPf1srd0R2EUTKqR750Q+oaYd44pIQbbfcN+V
- rQEGf1And3U0oPGtunSj6MmzQg/2NO0sQFZ6wVElRdxliZsuBNo8h78m9+Fj//mV6bTJSmFOY
- fPsSLY8neLCgq+xr4DnSp/92qDRKrRmEPisRO1zRt/yhEabT8qvMeCHwmsj7vQbyeyomY2bee
- MVTsOspatAPjkBzO6Bt6RU+0pV1mY+FjaC5Ak84t3KCBidB8Kb3yJRnxFeoRNtntlp/uU7RHN
- woNkyB3g1q4hs14fqhzsK7CcCAtrvS4LbcFXMhEeELAIj899PQ1XCf2uR4wPlrukRdYdwhYt6
- gY36pdYK8fdY5uI07RVVb8EBEFDmaEIUoQYcrXuBnRWsFKG7K6FJ5z1glCfzky+ZbRwuzfJMb
- rutSNawfpWDPkWMXA/SnTmHqd43lekWMvPNZID+rqkdCZppMX3oDgPnsmHVaH+QShcHaX0hXp
- n+6/Mi9fIOsDbPzW1s7e20h6+3pdnsrE0EIA7cJrz1o2xvCronWHYL2wzi63xMqCjfC6N9GZ+
- 69hw8vUnjVbryZQnkOILszXTkDwrpeCSUTVqKkEXs5D5Y49CTf5YZpP8oMAdVSDf0eS0/LRDI
- jdgDvjQsGoUH5LwdFer+C7fuNOxmS2Uh0ed4IiUJW5j/SGgGGo=
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 05 May 2020 22:58:01 +0200
+From:   Roman Penyaev <rpenyaev@suse.de>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jason Baron <jbaron@akamai.com>,
+        Khazhismel Kumykov <khazhy@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 1/1] epoll: call final ep_events_available() check under
+ the lock
+In-Reply-To: <20200505130357.04566dee5501c3787105376f@linux-foundation.org>
+References: <20200505084049.1779243-1-rpenyaev@suse.de>
+ <a9898eaefa85fa9c85e179ff162d5e8d@suse.de>
+ <20200505130357.04566dee5501c3787105376f@linux-foundation.org>
+Message-ID: <35b7d79b5cc7ee5befb1e632043701a7@suse.de>
+X-Sender: rpenyaev@suse.de
+User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 6:02 PM Jürgen Groß <jgross@suse.com> wrote:
-> On 05.05.20 17:01, Arnd Bergmann wrote:
-> > On Tue, May 5, 2020 at 4:34 PM Jürgen Groß <jgross@suse.com> wrote:
-> >> On 05.05.20 16:15, Arnd Bergmann wrote:
-> >
-> > I considered that as well, and don't really mind either way. I think it does
-> > get a bit ugly whatever we do. If you prefer the union, I can respin the
-> > patch that way.
->
-> Hmm, thinking more about it I think the real clean solution would be to
-> extend struct map_ring_valloc_hvm to cover the pv case, too, to add the
-> map and unmap arrays (possibly as a union) to it and to allocate it
-> dynamically instead of having it on the stack.
->
-> Would you be fine doing this?
+On 2020-05-05 22:03, Andrew Morton wrote:
+> On Tue, 05 May 2020 10:42:05 +0200 Roman Penyaev <rpenyaev@suse.de> 
+> wrote:
+> 
+>> May I ask you to remove "epoll: ensure ep_poll() doesn't miss wakeup
+>> events" from your -mm queue? Jason lately found out that the patch
+>> does not fully solve the problem and this one patch is a second
+>> attempt to do things correctly in a different way (namely to do
+>> the final check under the lock). Previous changes are not needed.
+> 
+> Where do we stand with Khazhismel's "eventpoll: fix missing wakeup for
+> ovflist in ep_poll_callback"?
+> 
+> http://lkml.kernel.org/r/20200424190039.192373-1-khazhy@google.com
 
-This is a little more complex than I'd want to do without doing any testing
-(and no, I don't want to do the testing either) ;-)
+This one from Khazhismel is needed. Others are complementary to the
+Khazhismel's, except the "epoll: ensure ep_poll() doesn't miss
+wakeup events", which you've already removed.
 
-It does sound like a better approach though.
+Thanks.
 
-      Arnd
+--
+Roman
+
