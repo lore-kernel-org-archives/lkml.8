@@ -2,101 +2,213 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18094C47259
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A37B2C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDEC2206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DC7C206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:34:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DdR1dvS5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BVgkpwES"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730399AbgEEPdi (ORCPT
+        id S1729604AbgEEPeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:33:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33100 "EHLO
+        Tue, 5 May 2020 11:34:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729250AbgEEPdh (ORCPT
+        by vger.kernel.org with ESMTP id S1729250AbgEEPeN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:33:37 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAE67C061A0F;
-        Tue,  5 May 2020 08:33:37 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id t40so1250824pjb.3;
-        Tue, 05 May 2020 08:33:37 -0700 (PDT)
+        Tue, 5 May 2020 11:34:13 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ABF8C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 08:34:13 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id k1so3242144wro.12
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 08:34:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=K45WauttThvvJZYIBOgON+J2UV9mJIBfT5/f4RIS0HA=;
-        b=DdR1dvS5/ImeMjt8XY4oGRVkc+pac6cXfU8CQHQaQB8a05i2g+Iti/jKndedRkkrgf
-         KnBS0K06302+iRQNVFI/yxA+C99XDRulMqeH5R/4N1m1BLczLGZJtjMFs8Jy8WRyTwm8
-         2+9HTOUrlXblAC7JrolcSn51LBR5n91xjT98wAbZpMHI9Y3FJN2LkZKoZPfHcF15BjSy
-         kmo+d5kImY8mzeTYnSMvpNdQJGFl0n2i/PW6SDGl/b5CEqu/NuuHJhqWxHRXb6ZP7+6r
-         +bhCgbDvjp7hfOV5y9V9V3vd9pGaJ6cMTVjQ6pQ7mJSfcKNTZvsTyb2eG5s5r6fY3vdV
-         KsZg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=yua9ORL9JEGiU2wcfBVEpb+8JppevaATHo200kp3UOY=;
+        b=BVgkpwESB721jk0UhzYkl1Pz9S/4BrEnvzmCmJmdSLVz37QnDe8ziP2lw49ZzSYs5o
+         3hlzQ2wpEz4MvjKCDbTvVXR/pC09koAuDiTcPBGoUPfyAYjuXbwrlJEmxWjMkwZx/Mdk
+         +WAhJDD4WG2xXzIAlkDrqr4dYUb2EgrPeIgEijM+DTfiWIWgwWhKKYrJ7EW94VpQENLb
+         K5OaXaHjXIR2Gj7BkflF0Fc/c0jSc55mtFTYk5OK69+XiVJjzeoI/9kRX/brLzYJcn9j
+         UdRWLxCcU1n9pIXAho4i0Lyr10a3lWkFI5MJE/j4FaQlseCDLt1n8PUJ1IOik9VGSLNC
+         W8MQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=K45WauttThvvJZYIBOgON+J2UV9mJIBfT5/f4RIS0HA=;
-        b=qEzb5gSKVaNfWtj46zv2zj3iQYspy06+AADRdHyzR/Ixr/3aD0/HeYDRfakZm5NpOC
-         U4al36p8f3eQro1iTXe1l/dDZ8dLQRji0AkwL2kWo9MtqUHBZIWisH7kDDCQ7wRyYqPX
-         PwOrH7DdHB+DC86ZCEJY6Hnr3J6ReAGGlGFFLjJMuw7sCV7juiaaMwtN4bz+hUwlqM+S
-         F/zA1opdr9f7kMtqcy3tgBleu9jX627nHnQT9ZmNdj9XPqWP+G7MTi35cV2USxce6QfI
-         Ol1tXjRkcOazBj28TUGOCXThfdLzXjcgPW6T0+UbgfwshtPwtzjUocu+PHcjdlUJm35a
-         /VDw==
-X-Gm-Message-State: AGi0PubMD3D/AhOXIiAE579NxIHCXrNrpwES0t5X5CxsJBPMAt5V3tOt
-        yOvpZPpPEa7uGPPEFQhXQY0=
-X-Google-Smtp-Source: APiQypIc3+DX9p4fb8nDlwCpu7fJA9hacLoAULqXEpwjWIEDmZXFZaf0bjy1gLs78Dlxczs7z649Zw==
-X-Received: by 2002:a17:902:bd07:: with SMTP id p7mr3233441pls.293.1588692817311;
-        Tue, 05 May 2020 08:33:37 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:60b:fcd9:7c28:bcca:10e4:5523])
-        by smtp.gmail.com with ESMTPSA id w126sm2323033pfb.117.2020.05.05.08.33.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 08:33:36 -0700 (PDT)
-From:   Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     aishwaryarj100@gmail.com
-Subject: [PATCH] Input: edt-ft5x06: Use DEFINE_DEBUGFS_ATTRIBUTE to define debugfs fops
-Date:   Tue,  5 May 2020 21:03:24 +0530
-Message-Id: <20200505153325.20113-1-aishwaryarj100@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=yua9ORL9JEGiU2wcfBVEpb+8JppevaATHo200kp3UOY=;
+        b=lm+5e+qod5RBl3V2KBp9E0G5ezsNO4F2ydYpUzPsPzpEauaMnVlY8Yvf1uzWZC5Ays
+         NtZRRK40yRRBFlwYybmmFm028aF4GLpHfFdRo2h48OSJm229Q+gdOjUj4490qG4cjc6f
+         Fw4zd+6sLhfwutH3dlNrKGDHss4aAEauPI71MiR6a6YlcOe/RDK3LGtyd8kQiIBG95Ke
+         b2anVbm7nlr1vYeHIdMgH47z7fmckHSOHAtcjzj1Ho4/X0NbzEsvb31TRbRAAEIgV+kn
+         3rZEmVajS0lVbhya/ofmaxDlmVOUn/MBziC2wvO4vEbP6PbSY4MR6Ej4tS4mlwfFVPeT
+         GL8g==
+X-Gm-Message-State: AGi0PuYU7sDPKEaRj9ZUFKHGyPT4ydmA3xKOjhU0RNDfmPf3Bttptbl6
+        SmNnT40GznITB2IXXboCCSTNiHIvioFw2wB0yi0=
+X-Google-Smtp-Source: APiQypIZyv1/Gdd4zGKaVEPh2LmFuvaSQUbaQwu4n8wF6Du5nkdo3jFXTcxXLrVijJ7Q1XAWZN1GliuXMHOBc1KMb3U=
+X-Received: by 2002:a5d:4151:: with SMTP id c17mr4242249wrq.111.1588692851695;
+ Tue, 05 May 2020 08:34:11 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200505140208.284473-1-arnd@arndb.de> <6bbd0f78-6f42-968e-2269-0a6279753267@amd.com>
+In-Reply-To: <6bbd0f78-6f42-968e-2269-0a6279753267@amd.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Tue, 5 May 2020 11:34:00 -0400
+Message-ID: <CADnq5_ObAv11hmNd_2rksCSYZN2BYV=7qKFr=EMyP5Mqb=vRrQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/amdgpu: allocate large structures dynamically
+To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Hawking Zhang <Hawking.Zhang@amd.com>,
+        John Clements <john.clements@amd.com>,
+        Guchun Chen <guchun.chen@amd.com>,
+        Tao Zhou <tao.zhou1@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, Dennis Li <Dennis.Li@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is more clear to use DEFINE_DEBUGFS_ATTRIBUTE to define debugfs file
-operation rather than DEFINE_SIMPLE_ATTRIBUTE.
+On Tue, May 5, 2020 at 10:07 AM Christian K=C3=B6nig
+<christian.koenig@amd.com> wrote:
+>
+> Am 05.05.20 um 16:01 schrieb Arnd Bergmann:
+> > After the structure was padded to 1024 bytes, it is no longer
+> > suitable for being a local variable, as the function surpasses
+> > the warning limit for 32-bit architectures:
+> >
+> > drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:587:5: error: stack frame size =
+of 1072 bytes in function 'amdgpu_ras_feature_enable' [-Werror,-Wframe-larg=
+er-than=3D]
+> > int amdgpu_ras_feature_enable(struct amdgpu_device *adev,
+> >      ^
+> >
+> > Use kzalloc() instead to get it from the heap.
+> >
+> > Fixes: a0d254820f43 ("drm/amdgpu: update RAS TA to Host interface")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>
+> Acked-by: Christian K=C3=B6nig <christian.koenig@amd.com>
 
-Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
----
- drivers/input/touchscreen/edt-ft5x06.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Applied.  Thanks!
 
-diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-index d2587724c52a..7f2070fde2ae 100644
---- a/drivers/input/touchscreen/edt-ft5x06.c
-+++ b/drivers/input/touchscreen/edt-ft5x06.c
-@@ -676,7 +676,7 @@ static int edt_ft5x06_debugfs_mode_set(void *data, u64 mode)
- 	return retval;
- };
- 
--DEFINE_SIMPLE_ATTRIBUTE(debugfs_mode_fops, edt_ft5x06_debugfs_mode_get,
-+DEFINE_DEBUGFS_ATTRIBUTE(debugfs_mode_fops, edt_ft5x06_debugfs_mode_get,
- 			edt_ft5x06_debugfs_mode_set, "%llu\n");
- 
- static ssize_t edt_ft5x06_debugfs_raw_data_read(struct file *file,
--- 
-2.17.1
+Alex
 
+>
+> We have a bunch of those warnings in the DAL code as well.
+>
+> Christian.
+>
+> > ---
+> >   drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c | 31 +++++++++++++++++-------=
+-
+> >   1 file changed, 21 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c b/drivers/gpu/drm/=
+amd/amdgpu/amdgpu_ras.c
+> > index 538895cfd862..7348619253c7 100644
+> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
+> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
+> > @@ -588,19 +588,23 @@ int amdgpu_ras_feature_enable(struct amdgpu_devic=
+e *adev,
+> >               struct ras_common_if *head, bool enable)
+> >   {
+> >       struct amdgpu_ras *con =3D amdgpu_ras_get_context(adev);
+> > -     union ta_ras_cmd_input info;
+> > +     union ta_ras_cmd_input *info;
+> >       int ret;
+> >
+> >       if (!con)
+> >               return -EINVAL;
+> >
+> > +        info =3D kzalloc(sizeof(union ta_ras_cmd_input), GFP_KERNEL);
+> > +     if (!info)
+> > +             return -ENOMEM;
+> > +
+> >       if (!enable) {
+> > -             info.disable_features =3D (struct ta_ras_disable_features=
+_input) {
+> > +             info->disable_features =3D (struct ta_ras_disable_feature=
+s_input) {
+> >                       .block_id =3D  amdgpu_ras_block_to_ta(head->block=
+),
+> >                       .error_type =3D amdgpu_ras_error_to_ta(head->type=
+),
+> >               };
+> >       } else {
+> > -             info.enable_features =3D (struct ta_ras_enable_features_i=
+nput) {
+> > +             info->enable_features =3D (struct ta_ras_enable_features_=
+input) {
+> >                       .block_id =3D  amdgpu_ras_block_to_ta(head->block=
+),
+> >                       .error_type =3D amdgpu_ras_error_to_ta(head->type=
+),
+> >               };
+> > @@ -609,26 +613,33 @@ int amdgpu_ras_feature_enable(struct amdgpu_devic=
+e *adev,
+> >       /* Do not enable if it is not allowed. */
+> >       WARN_ON(enable && !amdgpu_ras_is_feature_allowed(adev, head));
+> >       /* Are we alerady in that state we are going to set? */
+> > -     if (!(!!enable ^ !!amdgpu_ras_is_feature_enabled(adev, head)))
+> > -             return 0;
+> > +     if (!(!!enable ^ !!amdgpu_ras_is_feature_enabled(adev, head))) {
+> > +             ret =3D 0;
+> > +             goto out;
+> > +     }
+> >
+> >       if (!amdgpu_ras_intr_triggered()) {
+> > -             ret =3D psp_ras_enable_features(&adev->psp, &info, enable=
+);
+> > +             ret =3D psp_ras_enable_features(&adev->psp, info, enable)=
+;
+> >               if (ret) {
+> >                       amdgpu_ras_parse_status_code(adev,
+> >                                                    enable ? "enable":"d=
+isable",
+> >                                                    ras_block_str(head->=
+block),
+> >                                                   (enum ta_ras_status)r=
+et);
+> >                       if (ret =3D=3D TA_RAS_STATUS__RESET_NEEDED)
+> > -                             return -EAGAIN;
+> > -                     return -EINVAL;
+> > +                             ret =3D -EAGAIN;
+> > +                     else
+> > +                             ret =3D -EINVAL;
+> > +
+> > +                     goto out;
+> >               }
+> >       }
+> >
+> >       /* setup the obj */
+> >       __amdgpu_ras_feature_enable(adev, head, enable);
+> > -
+> > -     return 0;
+> > +     ret =3D 0;
+> > +out:
+> > +     kfree(info);
+> > +     return ret;
+> >   }
+> >
+> >   /* Only used in device probe stage and called only once. */
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
