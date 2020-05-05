@@ -2,77 +2,76 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 416BBC47256
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 645F6C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E66D2075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:45:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588664739;
-	bh=KabGD4ekn5YE4Pzx/iZDYkiL8RHInKLJTdo36GuGiug=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j1+FwdNMjllTUNR+kbWKvzKOMsdbuF/IBOLawecjAOv7snY55fF5E+EUL3xlmcS45
-	 81U4a09yVZ9AQjdR72mvDZDggSw2jVKGGOz+t3gtP4gVZKW2PoTlgugstOy2ljEk+c
-	 UGMSiQ0hDT3BP1t8gIliFr8sMngly/8zZiWcFyi0=
+	by mail.kernel.org (Postfix) with ESMTP id 4D92520721
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:46:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728599AbgEEHpi (ORCPT
+        id S1728486AbgEEHq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 03:45:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40892 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727938AbgEEHpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 03:45:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 404F2206CC;
-        Tue,  5 May 2020 07:45:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588664737;
-        bh=KabGD4ekn5YE4Pzx/iZDYkiL8RHInKLJTdo36GuGiug=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MB5J6NxaWPPdA49yOdcc3E0eCCKZGUoGTno53CYL4PpBBM0d82eJK4gHwBkshuHOX
-         acn3ntKp+HFX7GBsVFTTyEahgRy8Ldhw5p+P6HNpnUcIHFYJuN1FH+uQ/d7qKDZ6LW
-         IHK/pe2cHDJg0yQK4VwxjS3h9fF3c91V442WA26o=
-Date:   Tue, 5 May 2020 09:45:35 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     SeongJae Park <sjpark@amazon.com>
-Cc:     davem@davemloft.net, viro@zeniv.linux.org.uk, kuba@kernel.org,
-        edumazet@google.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, SeongJae Park <sjpark@amazon.de>
-Subject: Re: [PATCH net 2/2] Revert "sockfs: switch to ->free_inode()"
-Message-ID: <20200505074535.GB4054974@kroah.com>
-References: <20200505072841.25365-1-sjpark@amazon.com>
- <20200505072841.25365-3-sjpark@amazon.com>
+        Tue, 5 May 2020 03:46:26 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56748 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725320AbgEEHq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 03:46:26 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 229104EBF276A91F6063;
+        Tue,  5 May 2020 15:46:24 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Tue, 5 May 2020
+ 15:46:16 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <aelior@marvell.com>, <GR-everest-linux-l2@marvell.com>,
+        <davem@davemloft.net>, <ast@kernel.org>, <daniel@iogearbox.net>,
+        <kuba@kernel.org>, <hawk@kernel.org>, <john.fastabend@gmail.com>,
+        <kafai@fb.com>, <songliubraving@fb.com>, <yhs@fb.com>,
+        <andriin@fb.com>, <kpsingh@chromium.org>, <skalluru@marvell.com>,
+        <pablo@netfilter.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>
+CC:     Jason Yan <yanaijie@huawei.com>
+Subject: [PATCH net-next] net: qede: Use true for bool variable in qede_init_fp()
+Date:   Tue, 5 May 2020 15:45:39 +0800
+Message-ID: <20200505074539.22161-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505072841.25365-3-sjpark@amazon.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 09:28:41AM +0200, SeongJae Park wrote:
-> From: SeongJae Park <sjpark@amazon.de>
-> 
-> This reverts commit 6d7855c54e1e269275d7c504f8f62a0b7a5b3f18.
-> 
-> The commit 6d7855c54e1e ("sockfs: switch to ->free_inode()") made the
-> deallocation of 'socket_alloc' to be done asynchronously using RCU, as
-> same to 'sock.wq'.
-> 
-> The change made 'socket_alloc' live longer than before.  As a result,
-> user programs intensively repeating allocations and deallocations of
-> sockets could cause memory pressure on recent kernels.
-> 
-> To avoid the problem, this commit reverts the change.
-> ---
->  net/socket.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+Fix the following coccicheck warning:
 
-Same problems here as in patch 1/2 :(
+drivers/net/ethernet/qlogic/qede/qede_main.c:1717:5-19: WARNING:
+Assignment of 0/1 to bool variable
+
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+---
+ drivers/net/ethernet/qlogic/qede/qede_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/ethernet/qlogic/qede/qede_main.c
+index 9b456198cb50..256506024b88 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_main.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
+@@ -1714,7 +1714,7 @@ static void qede_init_fp(struct qede_dev *edev)
+ 				txq->ndev_txq_id = ndev_tx_id;
+ 
+ 				if (edev->dev_info.is_legacy)
+-					txq->is_legacy = 1;
++					txq->is_legacy = true;
+ 				txq->dev = &edev->pdev->dev;
+ 			}
+ 
+-- 
+2.21.1
+
