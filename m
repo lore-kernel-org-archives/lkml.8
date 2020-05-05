@@ -2,113 +2,120 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C34C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2183BC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD568206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:13:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 063EE20836
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:13:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729996AbgEEQNM (ORCPT
+        id S1730093AbgEEQN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:13:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52784 "EHLO mx2.suse.de"
+        Tue, 5 May 2020 12:13:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52932 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729171AbgEEQNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:13:11 -0400
+        id S1729171AbgEEQNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 12:13:25 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 380E5ABF4;
-        Tue,  5 May 2020 16:13:12 +0000 (UTC)
-From:   Andreas Schwab <schwab@suse.de>
-To:     Vasily Averin <vvs@virtuozzo.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        NeilBrown <neilb@suse.com>, Waiman Long <longman@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>
-Subject: Re: [PATCH 7/7] sysvipc_find_ipc should increase position index
-References: <b7a20945-e315-8bb0-21e6-3875c14a8494@virtuozzo.com>
-X-Yow:  C'MON, everybody!!  I've flown in LESLIE GORE and two dozen KOSHER
- BUTCHERS!  They'll be doing intricate MILITARY MANEUVERS to the
- soundtrack from "OKLAHOMA"!!
-Date:   Tue, 05 May 2020 18:13:08 +0200
-In-Reply-To: <b7a20945-e315-8bb0-21e6-3875c14a8494@virtuozzo.com> (Vasily
-        Averin's message of "Fri, 24 Jan 2020 10:03:12 +0300")
-Message-ID: <mvm4ksupdgr.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.0.91 (gnu/linux)
+        by mx2.suse.de (Postfix) with ESMTP id C1738AF55;
+        Tue,  5 May 2020 16:13:26 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
+        helgaas@kernel.org, linux-kernel@vger.kernel.org
+Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v8 0/4] USB: pci-quirks: Add Raspberry Pi 4 quirk
+Date:   Tue,  5 May 2020 18:13:13 +0200
+Message-Id: <20200505161318.26200-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I think this is causing this bug (seen on 5.6.8):
+On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
+loaded directly from an EEPROM or, if not present, by the SoC's
+co-processor, VideoCore. This series adds support for the later.
 
-# ipcs -q
+Note that there are a set of constraints we have to consider:
+ - We need to make sure the VideoCore firmware interface is up and
+   running before running the VL805 firmware load call.
 
------- Message Queues --------
-key        msqid      owner      perms      used-bytes   messages    
+ - There is no way to discern RPi4's VL805 chip from other platforms',
+   so we need the firmware load to happen *before* running
+   quirk_usb_handoff_xhci(). Failure to do so results in an unwarranted
+   5 second wait while the fixup code polls xHC's non-existing state.
 
-# ipcmk -Q
-Message queue id: 0
-# ipcs -q
+By Florian's suggestion I've been spending some time exploring the device
+link[1] API in order to see if that could save us from explicitly creating
+probe dependencies between pcie-brcmstb and firmware/raspberrypi (patch #3).
+Technically these dependencies could be inferred from DT. It turns out Saravana
+Kannan has been looking at this already. A new boot mechanism, activated with
+fw_devlink=on takes care of the device probe ordering on devices with
+consumer/supplier relationships. For now this relationship is created based on
+the usage of generic DT properties, but has no support for vendor-specifc DT
+properties, which we'd be forced to use in order to create a relationship
+between our two devices since our setup is highly non generic. There will
+probably be at some point support for such properties, and we will then be able
+to revisit some of this code.
 
------- Message Queues --------
-key        msqid      owner      perms      used-bytes   messages    
-0x82db8127 0          root       644        0            0           
+All this is based on the work by Tim Gover in RPi's downstream
+kernel[2].
 
-# ipcmk -Q
-Message queue id: 1
-# ipcs -q
+[1] https://www.kernel.org/doc/html/v4.13/driver-api/device_link.html
+[2] https://github.com/raspberrypi/linux/commit/9935b4c7e360b4494b4cb6e3ce797238a1ab78bd
 
------- Message Queues --------
-key        msqid      owner      perms      used-bytes   messages    
-0x82db8127 0          root       644        0            0           
-0x76d1fb2a 1          root       644        0            0           
+---
 
-# ipcrm -q 0
-# ipcs -q
+Changes since v7:
+ - Address Stefan's comments
 
------- Message Queues --------
-key        msqid      owner      perms      used-bytes   messages    
-0x76d1fb2a 1          root       644        0            0           
-0x76d1fb2a 1          root       644        0            0           
+Changes since v6:
+ - Make rpi_firmware_init_vl805() more robust
+ - Rewrite comments and patch descriptions to be more accessible to non RPi
+   fluent people
+ - Removed Florian's Reviewed-by in patch #2 as function changed
+   substantially
+ - Tested with/witout u-boot
 
-# ipcmk -Q
-Message queue id: 2
-# ipcrm -q 2
-# ipcs -q
+Changes since v5:
+ - Fix issues reported by Kbuild test robot
 
------- Message Queues --------
-key        msqid      owner      perms      used-bytes   messages    
-0x76d1fb2a 1          root       644        0            0           
-0x76d1fb2a 1          root       644        0            0           
+Changes since v4:
+ - Addressed Sergei's comments
+ - Fix potential warning in patch #2
 
-# ipcmk -Q
-Message queue id: 3
-# ipcrm -q 1
-# ipcs -q
+Changes since v3:
+ - Addressed Greg's comments
 
------- Message Queues --------
-key        msqid      owner      perms      used-bytes   messages    
-0x7c982867 3          root       644        0            0           
-0x7c982867 3          root       644        0            0           
-0x7c982867 3          root       644        0            0           
-0x7c982867 3          root       644        0            0           
+There was no v2, my bad.
 
+Changes since v1:
+ - Addressed Floarians comments
 
-As you can see, whenever an IPC item with a low id is deleted, the items
-with higher ids are duplicated, as if filling a hole.
+Nicolas Saenz Julienne (4):
+  soc: bcm2835: Add notify xHCI reset property
+  firmware: raspberrypi: Introduce vl805 init routine
+  PCI: brcmstb: Wait for Raspberry Pi's firmware when present
+  USB: pci-quirks: Add Raspberry Pi 4 quirk
 
-Andreas.
+ drivers/firmware/Kconfig                   |  3 +-
+ drivers/firmware/raspberrypi.c             | 61 ++++++++++++++++++++++
+ drivers/pci/controller/pcie-brcmstb.c      | 17 ++++++
+ drivers/usb/host/pci-quirks.c              | 16 ++++++
+ include/soc/bcm2835/raspberrypi-firmware.h |  9 +++-
+ 5 files changed, 104 insertions(+), 2 deletions(-)
 
 -- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
+2.26.2
+
