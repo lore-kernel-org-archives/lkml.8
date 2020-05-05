@@ -2,119 +2,123 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96411C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A66C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70A1320663
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:29:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE9B120663
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:33:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="p8d81vvP"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="EnZBydwF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728370AbgEEH32 (ORCPT
+        id S1727931AbgEEHdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 03:29:28 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:51258 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725320AbgEEH31 (ORCPT
+        Tue, 5 May 2020 03:33:38 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:25898 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725320AbgEEHdi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 03:29:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1588663766; x=1620199766;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=Dy5GnfEjGnJjJR9G7/r4lahXKQYYs/PILtEzR0YenFs=;
-  b=p8d81vvPmILMDDDJWCeejpWnszuZBZKj8XUapdaD6vHEaFb3Udl1yATM
-   PMZrV2eZ2PvhRUPQmrYBLdRIQCQAx6utEdKLBVqzE935X0U71AwTRjAMU
-   ashB/SdHMTHqjfYgcV5KB3If/QWcJdJaeUA4vR/hdvdK7unOgVcjvbtwR
-   Q=;
-IronPort-SDR: wiFJuqrdmzV+svAi58Tshev5UQb3eCtzreDDcALkcPEXaMHn2+5Rw/TWukgwUi9CXW1XE0Ztou
- tYxNj/pStu2Q==
-X-IronPort-AV: E=Sophos;i="5.73,354,1583193600"; 
-   d="scan'208";a="28646179"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 05 May 2020 07:29:13 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com (Postfix) with ESMTPS id 8B250C5D95;
-        Tue,  5 May 2020 07:29:12 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 5 May 2020 07:29:11 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.180) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 5 May 2020 07:29:07 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <davem@davemloft.net>
-CC:     <viro@zeniv.linux.org.uk>, <kuba@kernel.org>,
-        <gregkh@linuxfoundation.org>, <edumazet@google.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>
-Subject: [PATCH net 2/2] Revert "sockfs: switch to ->free_inode()"
-Date:   Tue, 5 May 2020 09:28:41 +0200
-Message-ID: <20200505072841.25365-3-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200505072841.25365-1-sjpark@amazon.com>
-References: <20200505072841.25365-1-sjpark@amazon.com>
+        Tue, 5 May 2020 03:33:38 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0457XAhh004115;
+        Tue, 5 May 2020 09:33:25 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=0rDxJMTTj6STEhB4ZRJ2M8Lot9vO0d8RML+Y0Wg+4Fs=;
+ b=EnZBydwFWdLSaXw0UjFA2QTDeJ3UbIogQFm9cnfED8s9xBPxr0emLyhc9it8a5Ke6f2l
+ 1DbnnttiAylS1Jm/BzBTdF0ZLvYhMv1j/kQtI+DfUmpyAuPCRwU9EnQRMF0FbahsU2yF
+ Jhk4sTOlKmr2DmEQ5MlQJ7ZF4C8eBmng9uQAjpmePbVp6QhI8RrIxSHuJLSd8Om4mJGc
+ k+FRoWBYVm+Q9bsjdovfLG6ovZtgdfEJfFPqPGBtXUKl6MHgAo3SIk0xq6xqecBUynzU
+ wZFDAzHWHcDXOTpdogT4bwWVhH6BN6b3I7SeULXJJ3Hxf74kO8gBEB/11FkMq4oyvIa1 pA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30rxb1xgq8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 May 2020 09:33:25 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E54D710002A;
+        Tue,  5 May 2020 09:33:24 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D60162A4929;
+        Tue,  5 May 2020 09:33:24 +0200 (CEST)
+Received: from localhost (10.75.127.50) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 5 May 2020 09:33:24
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <gregkh@linuxfoundation.org>,
+        <loic.pallardy@st.com>, <linus.walleij@linaro.org>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH v3 0/5] STM32 ETZPC bus controller
+Date:   Tue, 5 May 2020 09:33:03 +0200
+Message-ID: <20200505073308.22914-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.43.160.180]
-X-ClientProxiedBy: EX13D20UWC003.ant.amazon.com (10.43.162.18) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-05_04:2020-05-04,2020-05-05 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+STM32 Extended TrustZone Protection controller act like a firewall on the
+platform bus. Depending of its configuration devices could be accessible
+by the TrustZone, the co-processor or the non-secure world. ETZPC
+configuration could evolve at runtime for example to switch a device from
+non-secure world to co-processor.
 
-This reverts commit 6d7855c54e1e269275d7c504f8f62a0b7a5b3f18.
+The series introduce 'firewall' helpers to handle the new devices-tree
+properties. These properties are not dedicated to ETZPC and will be reused
+for STM32 next generation of bus controller.
 
-The commit 6d7855c54e1e ("sockfs: switch to ->free_inode()") made the
-deallocation of 'socket_alloc' to be done asynchronously using RCU, as
-same to 'sock.wq'.
+version 3:
+- add description in firewall consumer bindings
+- add Linus reviewed-by tag
 
-The change made 'socket_alloc' live longer than before.  As a result,
-user programs intensively repeating allocations and deallocations of
-sockets could cause memory pressure on recent kernels.
+version 2:
+- fix unit name into st,stm32-etzpc.yaml example and DT
 
-To avoid the problem, this commit reverts the change.
----
- net/socket.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/net/socket.c b/net/socket.c
-index e274ae4b45e4..27174021f47f 100644
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -273,12 +273,12 @@ static struct inode *sock_alloc_inode(struct super_block *sb)
- 	return &ei->vfs_inode;
- }
- 
--static void sock_free_inode(struct inode *inode)
-+static void sock_destroy_inode(struct inode *inode)
- {
- 	struct socket_alloc *ei;
- 
- 	ei = container_of(inode, struct socket_alloc, vfs_inode);
--	kfree(ei->socket.wq);
-+	kfree_rcu(ei->socket.wq, rcu);
- 	kmem_cache_free(sock_inode_cachep, ei);
- }
- 
-@@ -303,7 +303,7 @@ static void init_inodecache(void)
- 
- static const struct super_operations sockfs_ops = {
- 	.alloc_inode	= sock_alloc_inode,
--	.free_inode	= sock_free_inode,
-+	.destroy_inode	= sock_destroy_inode,
- 	.statfs		= simple_statfs,
- };
- 
+Benjamin Gaignard (5):
+  dt-bindings: bus: Add firewall bindings
+  bus: stm32: Introduce firewall controller helpers
+  dt-bindings: bus: Add STM32 ETZPC firewall controller
+  bus: stm32: Add stm32 ETZPC firewall bus controller
+  ARM: dts: stm32: Use ETZPC firewall bus
+
+ .../bindings/bus/stm32/firewall-consumer.yaml      |  36 +++
+ .../bindings/bus/stm32/firewall-provider.yaml      |  18 ++
+ .../bindings/bus/stm32/st,stm32-etzpc.yaml         |  46 ++++
+ arch/arm/boot/dts/stm32mp151.dtsi                  |   7 +-
+ drivers/bus/Kconfig                                |   2 +
+ drivers/bus/Makefile                               |   2 +
+ drivers/bus/stm32/Kconfig                          |  11 +
+ drivers/bus/stm32/Makefile                         |   2 +
+ drivers/bus/stm32/firewall.c                       | 266 +++++++++++++++++++++
+ drivers/bus/stm32/firewall.h                       |  75 ++++++
+ drivers/bus/stm32/stm32-etzpc.c                    | 160 +++++++++++++
+ include/dt-bindings/bus/stm32/stm32-etzpc.h        |  90 +++++++
+ 12 files changed, 713 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml
+ create mode 100644 Documentation/devicetree/bindings/bus/stm32/firewall-provider.yaml
+ create mode 100644 Documentation/devicetree/bindings/bus/stm32/st,stm32-etzpc.yaml
+ create mode 100644 drivers/bus/stm32/Kconfig
+ create mode 100644 drivers/bus/stm32/Makefile
+ create mode 100644 drivers/bus/stm32/firewall.c
+ create mode 100644 drivers/bus/stm32/firewall.h
+ create mode 100644 drivers/bus/stm32/stm32-etzpc.c
+ create mode 100644 include/dt-bindings/bus/stm32/stm32-etzpc.h
+
 -- 
-2.17.1
+2.15.0
 
