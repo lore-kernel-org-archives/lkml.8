@@ -2,205 +2,137 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C91C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5493FC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C809E20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3748420675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:22:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730188AbgEEOWi (ORCPT
+        id S1729588AbgEEOOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:22:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48720 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729613AbgEEOOh (ORCPT
+        Tue, 5 May 2020 10:14:32 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:36381 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729559AbgEEOOW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:14:37 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6449EC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:14:37 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jVyKx-0000zS-JQ; Tue, 05 May 2020 16:14:19 +0200
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 0E56AFFC8D;
-        Tue,  5 May 2020 16:14:19 +0200 (CEST)
-Message-Id: <20200505134340.611961721@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:41:17 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: [patch V4 part 2 05/18] x86/entry: Move irq tracing on syscall entry
- to C-code
-References: <20200505134112.272268764@linutronix.de>
+        Tue, 5 May 2020 10:14:22 -0400
+Received: from localhost.localdomain ([149.172.19.189]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MBDrM-1jQzi83buY-00CePX; Tue, 05 May 2020 16:14:02 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Kevin Hilman <khilman@kernel.org>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Tony Lindgren <tony@atomide.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: omap1: fix irq setup
+Date:   Tue,  5 May 2020 16:13:48 +0200
+Message-Id: <20200505141400.767312-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-transfer-encoding: 8-bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:LvLPepcWVA3cOq/dneR4EUFbqygTCx28UhrDXt4MYSPcNJ4mrgn
+ +QPxmj7Yxy4NuRDL2I3gKatumDNFanxLYw86EEXLQeaxf2uHxTPjdRxsZ0nyaJR+ncJanxy
+ 4nbOjM2H44/xEfwf5IKaHiR31MSIY7ePR1EXQ4Pd0jnyhEqjx5026Ue0/bycDgRv8VJvbSE
+ z15LpjYn+K1X0KpouEG5A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:HMPeHO7MWj0=:QCVLcwagAi7moRTbEI8t4o
+ uzWUr479RSv5Yd9emDprIzlpJRBuT53YlMq5+Ph3I8BO22ZitbEGM7a0XAZV1RVBCFf25N678
+ TSSXd/DZRqPeNA1XgKo27ZE4YfC4aoy7CMpcWIcubWLSwahc2Xd649/RRCJ1m2OeQSpcVNUVy
+ 0S4sfhFaScwVX+oUmWSX3LSejHiSqhMTHxBHagCNqDQkYUgvY7Lk1ZLRLLfo5qI9Tgegs8PwV
+ kV18Qh/OM9PwyUWsjmUIMGZZdeyBpHb7wox2LZZQ/jMUiOLhxzFzpIn3U0Vd/3+pBq1tSf40P
+ ijm0zpuP258+KqWNNf26tgKSlX70j7WNSfTQw5lEjoGpNy0LG3ZHY2lDnbNHOrzrGDkVma1ZW
+ QAUaXOEPlSk2TUXpiNbWsdDdJRKkkz6tSZFsz+tcZa1mCrVp06VXvlpZCDUqidndoJUdqcqTR
+ tTRJSfP9TXKy9QTHkPTSZVr8WxIrcvil34FhEJeiuF0CYUXDWOQLlegPiXAfQ7qD7AHXkTvKh
+ KU3SyvnFld/2S3Ux5n9p6oUgmDcLzE+N+w34hvIMfikZPCamItyAGjJX08clxNMQae1cg+qed
+ 2mMf1XNBAplayot4r50g5EN56RUtCME/8OHkIuIDeQa8l75/AnBimnkj6cz1aPm+9W2i1Pw2N
+ CaQwxqyVNrY45q70PsMqbGXLktumgD0UiY3EMai9x6tPj3+vvsDz+XHg9FtGCe2SDKjL/V6UJ
+ xSbQ3spM4NH7kQgc9kGalLumeO36TZI2qKqiV1K/BSrh2/DKj2yWD0pmUoP6MYOEwQAs1t/cO
+ nDRnVmQi9zqpnZnWAibQPwqWUIJdJXK6XyLcf6VORR8tpPigNQ=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the C entry points are safe, move the irq flags tracing code into
-the entry helper:
+A recent cleanup introduced a bug on any omap1 machine that has
+no wakeup IRQ, i.e. omap15xx:
 
-    - Invoke lockdep before calling into context tracking
+arch/arm/mach-omap1/pm.c:656:11: error: variable 'irq' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
+        else if (cpu_is_omap16xx())
+                 ^~~~~~~~~~~~~~~~~
+include/linux/soc/ti/omap1-soc.h:115:30: note: expanded from macro 'cpu_is_omap16xx'
+ #  define cpu_is_omap16xx()             is_omap16xx()
+                                        ^~~~~~~~~~~~~
+arch/arm/mach-omap1/pm.c:658:18: note: uninitialized use occurs here
+        if (request_irq(irq, omap_wakeup_interrupt, 0, "peripheral wakeup",
+                        ^~~
+arch/arm/mach-omap1/pm.c:656:7: note: remove the 'if' if its condition is always true
+        else if (cpu_is_omap16xx())
+             ^~~~~~~~~~~~~~~~~~~~~~
+arch/arm/mach-omap1/pm.c:611:9: note: initialize the variable 'irq' to silence this warning
+        int irq;
+               ^
 
-    - Use the safe trace_hardirqs_on_prepare() trace function after context
-      tracking established state and RCU is watching.
+Move this code into a separate function to deal with it cleanly.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Fixes: b75ca5217743 ("ARM: OMAP: replace setup_irq() by request_irq()")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/x86/entry/common.c          |   21 +++++++++++++++++++--
- arch/x86/entry/entry_32.S        |   12 ------------
- arch/x86/entry/entry_64.S        |    2 --
- arch/x86/entry/entry_64_compat.S |   18 ------------------
- 4 files changed, 19 insertions(+), 34 deletions(-)
+ arch/arm/mach-omap1/pm.c | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -40,19 +40,36 @@
- #include <trace/events/syscalls.h>
+diff --git a/arch/arm/mach-omap1/pm.c b/arch/arm/mach-omap1/pm.c
+index 0f8064bd40ae..266aa08aa8ed 100644
+--- a/arch/arm/mach-omap1/pm.c
++++ b/arch/arm/mach-omap1/pm.c
+@@ -605,10 +605,25 @@ static const struct platform_suspend_ops omap_pm_ops = {
+ 	.valid		= suspend_valid_only_mem,
+ };
  
- #ifdef CONFIG_CONTEXT_TRACKING
--/* Called on entry from user mode with IRQs off. */
-+/**
-+ * enter_from_user_mode - Establish state when coming from user mode
-+ *
-+ * Syscall entry disables interrupts, but user mode is traced as interrupts
-+ * enabled. Also with NO_HZ_FULL RCU might be idle.
-+ *
-+ * 1) Tell lockdep that interrupts are disabled
-+ * 2) Invoke context tracking if enabled to reactivate RCU
-+ * 3) Trace interrupts off state
-+ */
- __visible noinstr void enter_from_user_mode(void)
- {
- 	enum ctx_state state = ct_state();
- 
-+	lockdep_hardirqs_off(CALLER_ADDR0);
- 	user_exit_irqoff();
- 
- 	instr_begin();
- 	CT_WARN_ON(state != CONTEXT_USER);
-+	trace_hardirqs_off_prepare();
- 	instr_end();
- }
- #else
--static inline void enter_from_user_mode(void) {}
-+static __always_inline void enter_from_user_mode(void)
++static void omap_wakeup_init(void)
 +{
-+	lockdep_hardirqs_off(CALLER_ADDR0);
-+	instr_begin();
-+	trace_hardirqs_off_prepare();
-+	instr_end();
++	int irq;
++
++	if (cpu_is_omap7xx())
++		irq = INT_7XX_WAKE_UP_REQ;
++	else if (cpu_is_omap16xx())
++		irq = INT_1610_WAKE_UP_REQ;
++	else
++		return;
++
++	if (request_irq(irq, omap_wakeup_interrupt, 0, "peripheral wakeup",
++			NULL))
++		pr_err("Failed to request irq %d (peripheral wakeup)\n", irq);
 +}
- #endif
++
+ static int __init omap_pm_init(void)
+ {
+ 	int error = 0;
+-	int irq;
  
- static noinstr void exit_to_user_mode(void)
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -967,12 +967,6 @@ SYM_FUNC_START(entry_SYSENTER_32)
- 	jnz	.Lsysenter_fix_flags
- .Lsysenter_flags_fixed:
+ 	if (!cpu_class_is_omap1())
+ 		return -ENODEV;
+@@ -651,13 +666,7 @@ static int __init omap_pm_init(void)
  
--	/*
--	 * User mode is traced as though IRQs are on, and SYSENTER
--	 * turned them off.
--	 */
--	TRACE_IRQS_OFF
--
- 	movl	%esp, %eax
- 	call	do_fast_syscall_32
- 	/* XEN PV guests always use IRET path */
-@@ -1082,12 +1076,6 @@ SYM_FUNC_START(entry_INT80_32)
+ 	arm_pm_idle = omap1_pm_idle;
  
- 	SAVE_ALL pt_regs_ax=$-ENOSYS switch_stacks=1	/* save rest */
+-	if (cpu_is_omap7xx())
+-		irq = INT_7XX_WAKE_UP_REQ;
+-	else if (cpu_is_omap16xx())
+-		irq = INT_1610_WAKE_UP_REQ;
+-	if (request_irq(irq, omap_wakeup_interrupt, 0, "peripheral wakeup",
+-			NULL))
+-		pr_err("Failed to request irq %d (peripheral wakeup)\n", irq);
++	omap_wakeup_init();
  
--	/*
--	 * User mode is traced as though IRQs are on, and the interrupt gate
--	 * turned them off.
--	 */
--	TRACE_IRQS_OFF
--
- 	movl	%esp, %eax
- 	call	do_int80_syscall_32
- .Lsyscall_32_done:
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -167,8 +167,6 @@ SYM_INNER_LABEL(entry_SYSCALL_64_after_h
- 
- 	PUSH_AND_CLEAR_REGS rax=$-ENOSYS
- 
--	TRACE_IRQS_OFF
--
- 	/* IRQs are off. */
- 	movq	%rax, %rdi
- 	movq	%rsp, %rsi
---- a/arch/x86/entry/entry_64_compat.S
-+++ b/arch/x86/entry/entry_64_compat.S
-@@ -129,12 +129,6 @@ SYM_FUNC_START(entry_SYSENTER_compat)
- 	jnz	.Lsysenter_fix_flags
- .Lsysenter_flags_fixed:
- 
--	/*
--	 * User mode is traced as though IRQs are on, and SYSENTER
--	 * turned them off.
--	 */
--	TRACE_IRQS_OFF
--
- 	movq	%rsp, %rdi
- 	call	do_fast_syscall_32
- 	/* XEN PV guests always use IRET path */
-@@ -247,12 +241,6 @@ SYM_INNER_LABEL(entry_SYSCALL_compat_aft
- 	pushq   $0			/* pt_regs->r15 = 0 */
- 	xorl	%r15d, %r15d		/* nospec   r15 */
- 
--	/*
--	 * User mode is traced as though IRQs are on, and SYSENTER
--	 * turned them off.
--	 */
--	TRACE_IRQS_OFF
--
- 	movq	%rsp, %rdi
- 	call	do_fast_syscall_32
- 	/* XEN PV guests always use IRET path */
-@@ -403,12 +391,6 @@ SYM_CODE_START(entry_INT80_compat)
- 	xorl	%r15d, %r15d		/* nospec   r15 */
- 	cld
- 
--	/*
--	 * User mode is traced as though IRQs are on, and the interrupt
--	 * gate turned them off.
--	 */
--	TRACE_IRQS_OFF
--
- 	movq	%rsp, %rdi
- 	call	do_int80_syscall_32
- .Lsyscall_32_done:
+ 	/* Program new power ramp-up time
+ 	 * (0 for most boards since we don't lower voltage when in deep sleep)
+-- 
+2.26.0
 
