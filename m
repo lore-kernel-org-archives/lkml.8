@@ -2,101 +2,153 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B11C47259
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C8C1C4725A
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FCCE20836
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8DDC2078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:33:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730372AbgEEPdS (ORCPT
+        id S1730381AbgEEPdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:33:18 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:37727 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730294AbgEEPdO (ORCPT
+        Tue, 5 May 2020 11:33:24 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3206 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730347AbgEEPdQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:33:14 -0400
-Received: from mail-qv1-f52.google.com ([209.85.219.52]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MWzXj-1jcRci1Yvh-00XKoM for <linux-kernel@vger.kernel.org>; Tue, 05 May
- 2020 17:33:09 +0200
-Received: by mail-qv1-f52.google.com with SMTP id h6so1186196qvz.8
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 08:33:09 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYgEdWF7KwXpLIp/Dzcu8VUrynE5k3/bss2pHCzZX8bY0J2sBGw
-        EQNTdaEDWKglLTCqRsKbuLJ5NlXs0/7kPHnzuM8=
-X-Google-Smtp-Source: APiQypKi+Ro1FkVr8aZ7R5oobwEjqddqyrwqKnkhiPYFwQe3BVEOGTB2p+wgr4EGsrM1IFrKfwx/lMZ7RhrsGa/pl/I=
-X-Received: by 2002:a0c:ea43:: with SMTP id u3mr3087685qvp.211.1588692788292;
- Tue, 05 May 2020 08:33:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200505135513.65265-1-arnd@arndb.de> <CAHp75VfmvXotH+NRt_YnNQW8O38Gas+ZfLH00jfhytM8w7ka3w@mail.gmail.com>
-In-Reply-To: <CAHp75VfmvXotH+NRt_YnNQW8O38Gas+ZfLH00jfhytM8w7ka3w@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 5 May 2020 17:32:52 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2pXZGbFvXpD5D4trGjxaie_NYi4hhUyYmKmv9A_HfRdA@mail.gmail.com>
-Message-ID: <CAK8P3a2pXZGbFvXpD5D4trGjxaie_NYi4hhUyYmKmv9A_HfRdA@mail.gmail.com>
-Subject: Re: [PATCH] bitops: avoid clang shift-count-overflow warnings
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+        Tue, 5 May 2020 11:33:16 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 045FV0Vs191030;
+        Tue, 5 May 2020 11:33:12 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30u9aybp9w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 May 2020 11:33:12 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 045FVenr193308;
+        Tue, 5 May 2020 11:33:11 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30u9aybp8r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 May 2020 11:33:10 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 045FUr9J031283;
+        Tue, 5 May 2020 15:33:08 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma03ams.nl.ibm.com with ESMTP id 30s0g5q982-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 May 2020 15:33:08 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 045FX6Do55967892
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 5 May 2020 15:33:06 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6B9EFA405B;
+        Tue,  5 May 2020 15:33:06 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8D7BFA405C;
+        Tue,  5 May 2020 15:33:05 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.200.227])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  5 May 2020 15:33:05 +0000 (GMT)
+Message-ID: <1588692785.5157.11.camel@linux.ibm.com>
+Subject: Re: [RFC PATCH] ima: verify mprotect change is consistent with mmap
+ policy
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org
+Cc:     Jann Horn <jannh@google.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 05 May 2020 11:33:05 -0400
+In-Reply-To: <7812a3a7-f47d-c924-c12e-f417bb6f43dc@linux.microsoft.com>
+References: <1588627060-7399-1-git-send-email-zohar@linux.ibm.com>
+         <7812a3a7-f47d-c924-c12e-f417bb6f43dc@linux.microsoft.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:LeKvahs+0QPEYPHY+LX9T6yukbxEy+4e8gezUfPOtOTJQDGlRdt
- hEpqFbgCT3EppHmXwM/XYtvbrVi2iPDIKIazHMALxvvkrDks2XwmXvhx5k6sFlAXWB14usR
- 8tMK6l1iOVTwINs7d8svJxNK6Ys86pYHVK3VC6EeLYQAvDTFLrAWlftwe0VNSMXd0UT/l2E
- Av4sx8uYF6tiKN3+M4sfQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0KrKmJxOtJk=:0NfnL/z9P2v4dDW1EBFrkr
- cOYkG9tIQ8hjhthh//OQY8cEb5tdXcQdYX6mbhmum8+uzhEeg/QjdTKIn0o3Rpu/0/cwcgXqP
- 3OyVgYrSp19B465gCjtgJetdDVuM1ko/lWdgkcalNvtgzKEaTElfi+D8NN6FJ6LMX7VYxRQjT
- qSRsODXWLnTTytx8zymD/p9jECdYVjSoJey8O8hk5SAJh2s/6v3WHfVcMaPpJID9xcnX04KH1
- 5mXvqN63R1nEIPkGT7kng83vHve24Sb72N6aWEGK2dsVGjUGHTnJEr6lf7v/eWmjhmsXyQFeM
- qqFdqDTfnU4GScG51g0c82URB6g1WzB9dC5aVj/9rwip0pNssGDMLrFe8khkuJnE1v08T7hNO
- AH8CMwju+P7Cjc422vwoqIA6T8fhAhJ4ByoVilm/vPZrEwVvJBhU7+LpDNzdUE+8CpkNip1Y1
- zkThna/bdSXwUot6i7FqvAI+gzS2CBwXZJBGL9sn6A9aPNUDhQbmnGvA9AcvQD7QnOS/s1aFd
- TRCg8ZWQ+36qxC6FxNkh3x9jZH9/riMs2L43j1mhNI8dDwm5xV0yqKvCG4LAEIZS/MR6yUP90
- V1cCVCuhvXSgyoM3xvIqJ9AeN/M31irxF4u3rFTFZF+frsJnyX1Ve3TWK3UPqF/H+s5vOW4rv
- cPHwpeCZJzH1hpksmaD4RHWyE23oJHHA4psrI7SDoEplWxISej5332ureXd4Zgw+hKjf99OTY
- ZqYVgxqNA4ZiyQjcXfSpg5U13pdV1E/OwghDW4Jg+jjgWfY5SoQIEb0/gW7Xp49QxwuUADG6m
- WMvlhee1AQ68LeMaZKJCnstSjpX0cWv4bC2CSSMJlW9H02zDeg=
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-05_08:2020-05-04,2020-05-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
+ lowpriorityscore=0 adultscore=0 mlxlogscore=999 suspectscore=0 bulkscore=0
+ malwarescore=0 clxscore=1015 mlxscore=0 phishscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005050121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 4:08 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Tue, May 5, 2020 at 4:58 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > Clang normally does not warn about certain issues in inline functions when
-> > it only happens in an eliminated code path. However if something else
-> > goes wrong, it does tend to complain about the definition of hweight_long()
-> > on 32-bit targets:
->
-> Shouldn't it be fixed in CLang?
->
-> > include/linux/bitops.h:75:41: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
-> >         return sizeof(w) == 4 ? hweight32(w) : hweight64(w);
-> >                                                ^~~~~~~~~~~~
->
-> sizeof(w) is compile-time constant. It can easily drop the second part
-> without even looking at it.
->
-> > Adding an explicit cast to __u64 avoids that warning and makes it easier
-> > to read other output.
->
-> Looks like papering over the real issue.
+On Mon, 2020-05-04 at 15:51 -0700, Lakshmi Ramasubramanian wrote:
+> On 5/4/20 2:17 PM, Mimi Zohar wrote:
+> 
+> Hi Mimi,
+> 
+> > +int ima_file_mprotect(struct vm_area_struct *vma, unsigned long prot)
+> > +{
+> > +	struct ima_template_desc *template;
+> > +	struct inode *inode;
+> > +	int result = 0;
+> > +	int action;
+> > +	u32 secid;
+> > +	int pcr;
+> > +
+> > +	if (vma->vm_file && (prot & PROT_EXEC) && !(vma->vm_flags & VM_EXEC)) {
+> 
+> Just a suggestion:
+> Maybe you could do the negative of the above check and return, so that 
+> the block within the if statement doesn't have to be indented.
 
-I'm not sure if there is anything to be done about it in clang, since it
-always does syntactic analysis before dead-code elimination by design.
+Good suggestion.
 
-It is a bit odd though that it only prints the warning sometimes, but
-I suspect this is also something that works as designed. Maybe someone
-on the clang-built-linux list knows more about the background.
+> 
+> > +		inode = file_inode(vma->vm_file);
+> > +
+> > +		security_task_getsecid(current, &secid);
+> > +		action = ima_get_action(inode, current_cred(), secid, MAY_EXEC,
+> > +					MMAP_CHECK, &pcr, &template, 0);
+> > +
+> > +		if (action & IMA_APPRAISE_SUBMASK)
+> > +			result = -EPERM;
+> > +
+> > +		if ((action & IMA_APPRAISE_SUBMASK) || (action & IMA_MEASURE)) {
+> 
+> action is checked for IMA_APPRAISE_SUBMASK bits in the previous if 
+> statement. Does it need to be checked again in the above if statement?
 
-         Arnd
+Agreed, the code should be cleaned up here too.  In either the
+measurement or the appraisal case, mprotect modifying the execute mmap
+flag should be audited, but only in the appraisal case is the request
+denied.
+
+Mimi
+
+> 
+> > +			struct file *file = vma->vm_file;
+> > +			char *pathbuf = NULL;
+> > +			const char *pathname;
+> > +			char filename[NAME_MAX];
+> > +
+> > +			pathname = ima_d_path(&file->f_path, &pathbuf,
+> > +					      filename);
+> > +			integrity_audit_msg(AUDIT_INTEGRITY_DATA, inode,
+> > +					    pathname, "collect_data",
+> > +					    "failed-mprotect", result, 0);
+> > +
+> > +			if (pathbuf)
+> > +				__putname(pathbuf);
+> > +		}
+> > +	}
+> > +	return result;
+> > +}
+> 
+> thanks,
+>   -lakshmi
+> 
+
