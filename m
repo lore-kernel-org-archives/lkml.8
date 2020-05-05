@@ -2,119 +2,169 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3941C47258
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB547C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3BAE206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:15:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="RGkX2pJy"
+	by mail.kernel.org (Postfix) with ESMTP id 8AC5720836
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:15:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588677346;
+	bh=vtu5GHsCjBoB2Bedh5aRks/mxahJYgZlfE34xp2wlIw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uHEk7y77jdel7eGy2N4qvwMZJg6FMFL1HKOCNS2cdQ8sVcFvXfQRljQ4mpw96JJXG
+	 xKjv8tjvktfxJlVmdY6zCS+Ogz9qdDl6iSOV9LSSQrjvUTKQXwXQi3nJhnAVaw/0KS
+	 kOPHf9LZswxpJ6LCC2dwXtNEzj3IvIp7CypjRMZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728886AbgEELP3 (ORCPT
+        id S1728947AbgEELPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 07:15:29 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:4397 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728422AbgEELP2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 07:15:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1588677328; x=1620213328;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=+0kzseOEO2Wgx77lNa15u7+p1olXeh9q9Qu05DxPffM=;
-  b=RGkX2pJyG2AXbJl+r4rqUOIqM+0a6/cj2x5RWLZwUmaWwY02GDR9Y3cg
-   RtqSlfMoV0NXnNv6Ox3oM8yYhGRIt6WzOncgo9o4uHjxLyXSC/uyrpSL4
-   kSLkw/MerEji4KREZuPH4EWY6r968sy+1JYR7LIQRg4BfXLD4t+KMXCFv
-   A=;
-IronPort-SDR: No0CUbMedha5eif+Nmx5eqxMxA+noc6CUfqJsg+ucwieIbQTBQ8bS3d3+NKYQ5qrT8m4BoISCV
- NjM5YkjtCWeg==
-X-IronPort-AV: E=Sophos;i="5.73,354,1583193600"; 
-   d="scan'208";a="28932520"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 05 May 2020 11:15:24 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com (Postfix) with ESMTPS id DD425A182A;
-        Tue,  5 May 2020 11:15:21 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 5 May 2020 11:15:21 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.92) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 5 May 2020 11:15:05 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
-        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v10 16/16] MAINTAINERS: Update for DAMON
-Date:   Tue, 5 May 2020 13:08:15 +0200
-Message-ID: <20200505110815.10532-17-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200505110815.10532-1-sjpark@amazon.com>
-References: <20200505110815.10532-1-sjpark@amazon.com>
+        Tue, 5 May 2020 07:15:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55494 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727090AbgEELPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 07:15:45 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 128C8206B9;
+        Tue,  5 May 2020 11:15:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588677344;
+        bh=vtu5GHsCjBoB2Bedh5aRks/mxahJYgZlfE34xp2wlIw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kfNfW74SAPPvuZBiqOh+oyuxA4W7PhgS2sqto2isWgf0GkDP1HvE12vOqBpdEDTH3
+         3JJKJiWRsEAkqIDxdPRivgstpfyHjirzHSB7dkmBQSNF5EuU2KV/ETkeyaHa5C1GDy
+         lJ1XykGskWnkg2UXe9KQec/8WX+KB06Cy70oPhtY=
+Date:   Tue, 5 May 2020 12:15:41 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Leslie =?utf-8?B?SHNpYSjlpI/pgqbpgLJfUGVnYXRyb24p?= 
+        <Leslie_Hsia@pegatroncorp.com>
+Cc:     "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hermes =?utf-8?B?SHNpZWgo6Kyd5pe75YqtX1BlZ2F0cm9uKQ==?= 
+        <Hermes_Hsieh@pegatroncorp.com>,
+        "jesse.sung@canonical.com" <jesse.sung@canonical.com>,
+        "jic23@kernel.org" <jic23@kernel.org>
+Subject: Re: [PATCH] ASoC: tas5805m: Add TAS5805M amplifier driver
+Message-ID: <20200505111541.GB5377@sirena.org.uk>
+References: <754706C925201D4896E92CCAD6B38E4401F0F7B98A@PTW-EX-38.PEGA.CORP.PEGATRON>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.92]
-X-ClientProxiedBy: EX13D35UWB004.ant.amazon.com (10.43.161.230) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="JP+T4n/bALQSJXh8"
+Content-Disposition: inline
+In-Reply-To: <754706C925201D4896E92CCAD6B38E4401F0F7B98A@PTW-EX-38.PEGA.CORP.PEGATRON>
+X-Cookie: Poverty begins at home.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
 
-This commit updates MAINTAINERS file for DAMON related files.
+--JP+T4n/bALQSJXh8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- MAINTAINERS | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+On Tue, May 05, 2020 at 10:36:29AM +0000, Leslie Hsia(=E5=A4=8F=E9=82=A6=E9=
+=80=B2_Pegatron) wrote:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5a5332b3591d..cb4a7fa3cdfe 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4661,6 +4661,18 @@ F:	net/ax25/ax25_out.c
- F:	net/ax25/ax25_timer.c
- F:	net/ax25/sysctl_net_ax25.c
- 
-+DATA ACCESS MONITOR
-+M:	SeongJae Park <sjpark@amazon.de>
-+L:	linux-mm@kvack.org
-+S:	Maintained
-+F:	Documentation/admin-guide/mm/data_access_monitor.rst
-+F:	include/linux/damon.h
-+F:	include/trace/events/damon.h
-+F:	mm/damon-test.h
-+F:	mm/damon.c
-+F:	tools/damon/*
-+F:	tools/testing/selftests/damon/*
-+
- DAVICOM FAST ETHERNET (DMFE) NETWORK DRIVER
- L:	netdev@vger.kernel.org
- S:	Orphan
--- 
-2.17.1
+> +struct tas5805m_priv {
+> +       struct regmap *regmap;
+> +       /* mutex for getting the mutex and release */
+> +       struct mutex lock;
+> +};
 
+This actually appears to be for device initialization somehow - the
+comment isn't super enlightening.  It's not clear to me that there are
+any potential races here - the PM stuff and device probe and removal are
+already locked further up the stack.
+
+> +/* Initialize the TAS5805M and set the volume to -6.5db,
+> + * and set it to Play mode.
+> + */
+> +static const struct reg_sequence tas5805m_init_dsp[] =3D {
+> +       { TAS5805M_REG_DEV_CTL2, TAS5805M_DEV_STAT_DSLEEP },
+> +       { TAS5805M_REG_DEV_CTL2, TAS5805M_DEV_STAT_HIZ },
+> +       { TAS5805M_REG_DEV_CTL2, TAS5805M_DEV_STAT_DSLEEP },
+> +       /* set volume to -6.5dB */
+> +       { TAS5805M_REG_VOL_CTL,  TAS5805M_DIG_VOL_DB },
+> +       { TAS5805M_REG_DEV_CTL2, TAS5805M_DEV_STAT_PLAY },
+> +};
+
+You should use the chip defaults unless the configuration is so obvious
+that almost all users would want the same setting.  This avoids the
+kernel having to take decisions about which use case to support, a
+volume that makes sense for one system may not make sense for others.
+
+> +/* Setting the TAS5805M state and save the config in the default page. */
+> +static int tas5805m_set_device_state(struct tas5805m_priv *tas5805m,
+> +                                       int state)
+> +{
+> +       int ret =3D 0;
+> +
+> +       ret =3D regmap_write(tas5805m->regmap, TAS5805M_REG_DEV_RESET,
+> +                               TAS5805M_DEV_STAT_RESET);
+> +       if (ret !=3D 0)
+> +               return -EINVAL;
+> +
+> +       /* Saving the config to the default page of the default book */
+> +       ret =3D regmap_write(tas5805m->regmap,
+> +                       TAS5805M_REG_DEV_BOOK,
+> +                       TAS5805M_DEV_BOOK_DEFAULT_PAGE);
+
+regmap has support for paging, you should probably describe the pages in
+the regmap config.  Right now I don't think things are going to work
+well since there are no pages described but caching is enabled which
+means that regmap will cache values that are getting paged out.
+
+> +static int tas5805m_i2c_remove(struct i2c_client *i2c)
+> +{
+> +       return 0;
+> +}
+
+You can just delete empty functions like this, if things can safely be
+left empty then they can just be removed entirely.
+
+> +MODULE_DEVICE_TABLE(acpi, tas5805m_acpi_match);
+> +#else
+> +#define st_accel_acpi_match NULL
+> +#endif
+
+This is redundant, ACPI_PTR() won't reference the value unless ACPI is
+enabled.
+
+> +#else
+> +#define tas5805m_dsp_power_pm_ops NULL
+> +#endif
+> +
+> +static struct i2c_driver tas5805m_i2c_driver =3D {
+> +       .driver =3D {
+> +               .name =3D TAS5805M_DRV_NAME,
+> +               .acpi_match_table =3D ACPI_PTR(tas5805m_acpi_match),
+> +               .pm =3D tas5805m_dsp_power_pm_ops,
+
+Use SET_SYSTEM_SLEEP_PM_OPS() and remove the else case above.
+
+--JP+T4n/bALQSJXh8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6xSt0ACgkQJNaLcl1U
+h9CiMAf/ZKvO/0B6pAjUy/yQVw4VWZBx6OHrixkNWwV7g1HLaYngtK6Tp3mbn5bE
+k6pUrhlRYfcY0djwIAxjfnEn/ZWSaHXkz35ihcxewxtd2BTMvekDsoIDjoFEfRFe
+qsYiiNXB9s//7rt88m2oZdKhFPEC/rqIjZJhN5LLlEcfctfDFoOWMQIOIPyMFf7C
+Ee7xV7i6H9+HwseTQBXUjME/m4yJBmUnQTgmuNp1BJwaPpNHi6qXcKnNx7KASo++
+n566C4jap0vQ0eFERtUkdOEp4tR5Lm2rbMnxMmrj6lynAJNOzhqe30yhxKvmZBfi
+ggBxKBnsLSnFN67EhYFw24Gr7qOJgA==
+=cB/8
+-----END PGP SIGNATURE-----
+
+--JP+T4n/bALQSJXh8--
