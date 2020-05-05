@@ -2,126 +2,114 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C99B3C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B3FC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6D912078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:47:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="feHImZwB"
+	by mail.kernel.org (Postfix) with ESMTP id EC66B2078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:52:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588697547;
+	bh=juvGSHZ59LWg55H0/g10X6Ke5hXipdAxrYX3JGvA05Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=aFeCTJXSAF3di7RI1eiNvqd652BkJmTLflaD0tlKYRObumFiCfLlU2P/XDW77wrkW
+	 OaPhz6cOvp/MBydB+SY/3+48vwOwfBTGlcyRzawof4dLnqnyIykdM9oHtv+QvJQx5h
+	 mI0hjduDrTibSqnmDi7MBk98Nje0C2kqwTuwQwbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730173AbgEEQrs (ORCPT
+        id S1729998AbgEEQw0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:47:48 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:50541 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729119AbgEEQrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:47:47 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 49GlyR4vq7z8r;
-        Tue,  5 May 2020 18:47:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1588697264; bh=oCn7NSg9d6nqzdxyBMya4kTgYYy3wc8KZHz57zKjUA0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=feHImZwBebwT2JOXshwt48eFj/hpxPen9F55a1uXUEhjDPJsuik91Ihynvqttb1rw
-         5C6nfQXKqwr+OA1lB0W5iy5E/DqU3f0WLOWMon1ddrCQv4n/ErLooNEZfDm+SXKbV3
-         eEm1YBd6Et5iPrkC97jaNREkjyp2DPhQ6Yj+GWLH3oUIwGXhsRaTO+efrFsZOkJoGT
-         0B+bYSpUgwoOije7iWCpR7kEC3Vacy1/Y/8xJ70lhOj7gzGgddTwAJ2qJIvlm6SLEm
-         ZIsrglxgKtXkdjGdNkwX+TusH7j8MHpkcRRF9Vm5zoiytN26hKti8Hy/P6MqU3t1nL
-         4uPkrzXUA/BJQ==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Tue, 5 May 2020 18:47:39 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Stefan Lengfeld <contact@stefanchrist.eu>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] i2c: at91: support atomic write xfer
-Message-ID: <20200505164739.GA5476@qmqm.qmqm.pl>
-References: <55613934b7d14ae4122b648c20351b63b03a1385.1584851536.git.mirq-linux@rere.qmqm.pl>
- <20200322143004.GB1091@ninjato>
- <20200322163013.GA25488@qmqm.qmqm.pl>
- <20200505155228.GG2468@ninjato>
+        Tue, 5 May 2020 12:52:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45654 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729747AbgEEQwZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 12:52:25 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59C51C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 09:52:25 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id u15so2374357ljd.3
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 09:52:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9hFXujfAx2/iHidBrnKhRaNUObDjx6hbclJAooxUbFo=;
+        b=eb7GI2X/XrhuAn2Vm+U9831w2ibE6cHnWF7F9S99pPGIKJ581y9sIjG0fOlnKnr8XU
+         3l3RpH6pJHtIm3ZTaZWOJ1vg4eqLgQyIQUJKPk6h3hKYNOZAM/NKILDQePeV8IKRtcTz
+         txmKNoel5w65lmX1pdFQXgC+9b7bhZqgRSUAI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9hFXujfAx2/iHidBrnKhRaNUObDjx6hbclJAooxUbFo=;
+        b=OQ28oLqCjl2y6Ar7RLSQOWBjDmltWWVTrrZ7uslDNgLTTcxEb0x+MZWaQyyTJ8Jn7Y
+         QRw/v+tDfWcIpDyLHxSMvWZbnVo9Z2sv2zoYnBfV4byHwPcxEj2pBrTc6Pt2oVMzQNbb
+         FTMWURaqAlxG4xtw1m68us+ETKDAw5L894PqQnERxrHJ/9M+Eid+Yd5KwAxnChiyscC4
+         EFkZ9TEDTuSkI8DPapKUNLkkvmqK4qAF+BZlzOKkSjBLu9FLuDjLjw2Xcx8OXl/LbxDu
+         Adbubg9c2TAJz/ph2vQ+eJTYw+dwpxVcle8dsN+v0Cdq8QPA1ge8dQmUvDKqFZjeZvE6
+         AeHg==
+X-Gm-Message-State: AGi0PuYRkO1ImR2yNrRWRo+QKATel7Sj5gktI0SnJLFDqSsM97c+Cq4h
+        4Bx4MSt7psYFjGyqOJGJ9Au8+YtUezA=
+X-Google-Smtp-Source: APiQypIedb5mOT0y5ACJZsVZdI+/Hf1/R6WwSNLnLp93Wa1VDRI/rRiwrrNhQUmY5a2rFpL7n5YMqg==
+X-Received: by 2002:a2e:88d8:: with SMTP id a24mr2397500ljk.224.1588697543143;
+        Tue, 05 May 2020 09:52:23 -0700 (PDT)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
+        by smtp.gmail.com with ESMTPSA id l2sm2134420ljg.89.2020.05.05.09.52.21
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2020 09:52:21 -0700 (PDT)
+Received: by mail-lj1-f182.google.com with SMTP id a21so2346971ljj.11
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 09:52:21 -0700 (PDT)
+X-Received: by 2002:a2e:87d9:: with SMTP id v25mr2307697ljj.241.1588697540733;
+ Tue, 05 May 2020 09:52:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200505155228.GG2468@ninjato>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200505101256.3121270-1-hch@lst.de>
+In-Reply-To: <20200505101256.3121270-1-hch@lst.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 5 May 2020 09:52:04 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgrHhaM1XCB=E3Zp2Br8E5c_kmVUTd5y06xh5sev5nRMA@mail.gmail.com>
+Message-ID: <CAHk-=wgrHhaM1XCB=E3Zp2Br8E5c_kmVUTd5y06xh5sev5nRMA@mail.gmail.com>
+Subject: Re: remove set_fs calls from the coredump code v6
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeremy Kerr <jk@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 05:52:28PM +0200, Wolfram Sang wrote:
-> Hi,
-> 
-> > I don't expect this to be used for much more than a simple write to PMIC
-> > to kill the power. So this patch is tailor made for exactly this purpose.
-> 
-> Frankly, I don't like it much. The atomic callbacks are supposed to be
-> drop-in replacements of the non-atomic contexts. There may be a need to
-> read a PMIC register before writing something. I considered checking in
-> the core if we can fall back to non-atomic calls if the the atomic ones
-> return -EOPNOTSUPP, though,  but I still don't like the idea. I expect
-> that people send me minimal versions then which are extended over time
-> by very personal use cases. Having a proper implementation
-> once-and-for-all (despite bugfixes) sounds much more maintainable to me.
+On Tue, May 5, 2020 at 3:13 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> this series gets rid of playing with the address limit in the exec and
+> coredump code.  Most of this was fairly trivial, the biggest changes are
+> those to the spufs coredump code.
 
-Is it really possible to fall back to non-atomic calls? If that would be
-possible, then I would actually want to use it in this case instead of
-writing another implementation.
+Ack, nice, and looks good.
 
-I must say, that I'm reluctant in investing a lot of time in doing
-full-blown implementation for a feature that has only a very limited
-use. I do understand your point about a proper implementation being
-better than a special-cased-only one, but I really don't have a use
-for the extension. The few PMICs I worked with just need a single
-write to power off.
+The only part I dislike is how we have that 'struct compat_siginfo' on
+the stack, which is a huge waste (most of it is the nasty padding to
+128 bytes).
 
-> > Though, if you would go for full support of atomic transfers, then
-> > I would suggest to hack the non-atomic path to be usable in atomic mode
-> > instead (some I2C drivers do just that, eg. i2c-tegra).
-> 
-> Yes, that is what I am aiming for.
-> 
-> > BTW, I found this comment in i2c-core.h:
-> > 
-> >  * We only allow atomic transfers for very late communication, e.g. to send
-> >  * the powerdown command to a PMIC. Atomic transfers are a corner case and not
-> >  * for generic use! 
-> > 
-> > I think this covers the idea.
-> 
-> Well, since I implemented the atomic_xfer mechanism, I think I am the
-> primary authority of what "covers the idea", so I will fix the comment
-> above :) Note, there is also this comment in the way more user-visible
-> include/linux/i2c.h:
-> 
->  509  * @master_xfer_atomic: same as @master_xfer. Yet, only using atomic context
->  510  *   so e.g. PMICs can be accessed very late before shutdown. Optional.
+But that's not new, I only reacted to it because the code moved a bit.
+We cleaned up the regular siginfo to not have the padding in the
+kernel (and by "we" I mean "Eric Biederman did it after some prodding
+as part of his siginfo cleanups" - see commit 4ce5f9c9e754 "signal:
+Use a smaller struct siginfo in the kernel"),  and I wonder if we
+could do something similar with that compat thing.
 
-So, we don't have to wonder what the author had in mind. Lets expand
-the idea then. :-) 
+128 bytes of wasted kernel stack isn't the end of the world, but it's
+sad when the *actual* data is only 32 bytes or so.
 
-Shutdown is kind of special atomic context in that it is ok to do long
-waits (as I2C requires) because nothing else is there to do. This is
-very unlike normal atomic context. Do you plan to have it work in other
-contexts? What are the idea and use cases for atomic-context transfers?
-
-I guess we might want it for suspend/resume, but I think there is an
-early stage (with all non-atomic stuff working) and NOIRQ stage (when
-most everything is already shutdown). When a PMIC needs a read, I would
-actually do it ("prepare" the PMIC) in the early stage if possible.
-
-Best Regards,
-Micha³ Miros³aw
+                Linus
