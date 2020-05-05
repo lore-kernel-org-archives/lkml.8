@@ -2,130 +2,209 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D90FEC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67739C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFCC5206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47522206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:31:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728705AbgEEK3i (ORCPT
+        id S1728740AbgEEKbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 06:29:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:36652 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725766AbgEEK3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 06:29:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D081A30E;
-        Tue,  5 May 2020 03:29:36 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 982673F305;
-        Tue,  5 May 2020 03:29:35 -0700 (PDT)
-Date:   Tue, 5 May 2020 11:29:33 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Alan Mikhak <alan.mikhak@sifive.com>, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        amurray@thegoodpenguin.co.uk, bhelgaas@google.com, kishon@ti.com,
-        paul.walmsley@sifive.com
-Subject: Re: [PATCH] PCI: dwc: Program outbound ATU upper limit register
-Message-ID: <20200505102933.GD12543@e121166-lin.cambridge.arm.com>
-References: <1585785493-23210-1-git-send-email-alan.mikhak@sifive.com>
+        Tue, 5 May 2020 06:31:44 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30148 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728430AbgEEKbo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 06:31:44 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 045A3UFm084062;
+        Tue, 5 May 2020 06:31:32 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30s2g2r1da-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 May 2020 06:31:31 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 045AUDvl011177;
+        Tue, 5 May 2020 10:31:30 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma02fra.de.ibm.com with ESMTP id 30s0g5ara0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 May 2020 10:31:29 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 045AVRnq39125240
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 5 May 2020 10:31:27 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 708E511C05B;
+        Tue,  5 May 2020 10:31:27 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9407311C04A;
+        Tue,  5 May 2020 10:31:17 +0000 (GMT)
+Received: from [9.199.55.23] (unknown [9.199.55.23])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  5 May 2020 10:31:16 +0000 (GMT)
+Subject: Re: [PATCH 2/2] powerpc/perf: Add support for outputting extended
+ regs in perf intr_regs
+To:     Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, acme@kernel.org,
+        linux-kernel@vger.kernel.org, maddy@linux.vnet.ibm.com,
+        jolsa@kernel.org, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20200429060415.25930-1-anju@linux.vnet.ibm.com>
+ <20200429060415.25930-3-anju@linux.vnet.ibm.com>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Message-ID: <3d8b3e54-8294-c5c1-f1ad-33e64a738ea7@linux.ibm.com>
+Date:   Tue, 5 May 2020 16:01:15 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585785493-23210-1-git-send-email-alan.mikhak@sifive.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200429060415.25930-3-anju@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-05_06:2020-05-04,2020-05-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ suspectscore=0 bulkscore=0 priorityscore=1501 spamscore=0
+ lowpriorityscore=0 adultscore=0 phishscore=0 mlxlogscore=999 clxscore=1015
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005050076
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 04:58:13PM -0700, Alan Mikhak wrote:
-> From: Alan Mikhak <alan.mikhak@sifive.com>
-> 
-> Function dw_pcie_prog_outbound_atu_unroll() does not program the upper
-> 32-bit ATU limit register. Since ATU programming functions limit the
-> size of the translated region to 4GB by using a u32 size parameter,
-> these issues may combine into undefined behavior for resource sizes
-> with non-zero upper 32-bits.
-> 
-> For example, a 128GB address space starting at physical CPU address of
-> 0x2000000000 with size of 0x2000000000 needs the following values
-> programmed into the lower and upper 32-bit limit registers:
->  0x3fffffff in the upper 32-bit limit register
->  0xffffffff in the lower 32-bit limit register
-> 
-> Currently, only the lower 32-bit limit register is programmed with a
-> value of 0xffffffff but the upper 32-bit limit register is not being
-> programmed. As a result, the upper 32-bit limit register remains at its
-> default value after reset of 0x0.
-> 
-> These issues may combine to produce undefined behavior since the ATU
-> limit address may be lower than the ATU base address. Programming the
-> upper ATU limit address register prevents such undefined behavior despite
-> the region size getting truncated due to the 32-bit size limit.
-> 
-> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 7 +++++--
->  drivers/pci/controller/dwc/pcie-designware.h | 3 ++-
->  2 files changed, 7 insertions(+), 3 deletions(-)
+Hi Anju,
 
-I would appreciate some feedback and possibly and ACK from DWC
-maintainers. Should this go to stable kernels ? It seems so,
-let me know if we want to add a stable tag.
+Minor neats...
 
-I will merge it, along with:
+>   /*
+> diff --git a/arch/powerpc/include/uapi/asm/perf_regs.h b/arch/powerpc/include/uapi/asm/perf_regs.h
+> index f599064dd8dc..604b831378fe 100644
+> --- a/arch/powerpc/include/uapi/asm/perf_regs.h
+> +++ b/arch/powerpc/include/uapi/asm/perf_regs.h
+> @@ -48,6 +48,17 @@ enum perf_event_powerpc_regs {
+>   	PERF_REG_POWERPC_DSISR,
+>   	PERF_REG_POWERPC_SIER,
+>   	PERF_REG_POWERPC_MMCRA,
+> -	PERF_REG_POWERPC_MAX,
+> +	/* Extended registers */
+> +	PERF_REG_POWERPC_MMCR0,
+> +	PERF_REG_POWERPC_MMCR1,
+> +	PERF_REG_POWERPC_MMCR2,
+> +	PERF_REG_EXTENDED_MAX,
+> +	/* Max regs without the extended regs */
+> +	PERF_REG_POWERPC_MAX = PERF_REG_POWERPC_MMCRA + 1,
+>   };
+> +
+> +#define PERF_REG_PMU_MASK	((1ULL << PERF_REG_POWERPC_MAX) - 1)
 
-https://patchwork.kernel.org/patch/11468465/
+Would it make sense to reuse PERF_REG_MASK? Userspace code already uses
+that name for the same expression.
 
-Lorenzo
+> +#define PERF_REG_EXTENDED_MASK  (((1ULL << (PERF_REG_EXTENDED_MAX))	\
+> +			- 1) - PERF_REG_PMU_MASK)
 
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 681548c88282..c92496e36fd5 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -244,13 +244,16 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, int index,
->  					     u64 pci_addr, u32 size)
->  {
->  	u32 retries, val;
-> +	u64 limit_addr = cpu_addr + size - 1;
->  
->  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_LOWER_BASE,
->  				 lower_32_bits(cpu_addr));
->  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_BASE,
->  				 upper_32_bits(cpu_addr));
-> -	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_LIMIT,
-> -				 lower_32_bits(cpu_addr + size - 1));
-> +	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_LOWER_LIMIT,
-> +				 lower_32_bits(limit_addr));
-> +	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_LIMIT,
-> +				 upper_32_bits(limit_addr));
->  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_LOWER_TARGET,
->  				 lower_32_bits(pci_addr));
->  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index a22ea5982817..5ce1aef706c5 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -112,9 +112,10 @@
->  #define PCIE_ATU_UNR_REGION_CTRL2	0x04
->  #define PCIE_ATU_UNR_LOWER_BASE		0x08
->  #define PCIE_ATU_UNR_UPPER_BASE		0x0C
-> -#define PCIE_ATU_UNR_LIMIT		0x10
-> +#define PCIE_ATU_UNR_LOWER_LIMIT	0x10
->  #define PCIE_ATU_UNR_LOWER_TARGET	0x14
->  #define PCIE_ATU_UNR_UPPER_TARGET	0x18
-> +#define PCIE_ATU_UNR_UPPER_LIMIT	0x20
->  
->  /*
->   * The default address offset between dbi_base and atu_base. Root controller
-> -- 
-> 2.7.4
-> 
+You don't need parenthesis in (PERF_REG_EXTENDED_MAX). Also, better to
+keep that `- 1)` in first line.
+
+> +
+>   #endif /* _UAPI_ASM_POWERPC_PERF_REGS_H */
+> diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
+> index 3dcfecf858f3..f56b77800a7b 100644
+> --- a/arch/powerpc/perf/core-book3s.c
+> +++ b/arch/powerpc/perf/core-book3s.c
+> @@ -2276,6 +2276,7 @@ int register_power_pmu(struct power_pmu *pmu)
+>   
+>   	power_pmu.attr_groups = ppmu->attr_groups;
+>   
+> +	power_pmu.capabilities |= (ppmu->capabilities & PERF_PMU_CAP_EXTENDED_REGS);
+>   #ifdef MSR_HV
+>   	/*
+>   	 * Use FCHV to ignore kernel events if MSR.HV is set.
+> diff --git a/arch/powerpc/perf/perf_regs.c b/arch/powerpc/perf/perf_regs.c
+> index a213a0aa5d25..57aa02568caf 100644
+> --- a/arch/powerpc/perf/perf_regs.c
+> +++ b/arch/powerpc/perf/perf_regs.c
+> @@ -15,7 +15,8 @@
+>   
+>   #define PT_REGS_OFFSET(id, r) [id] = offsetof(struct pt_regs, r)
+>   
+> -#define REG_RESERVED (~((1ULL << PERF_REG_POWERPC_MAX) - 1))
+> +#define REG_RESERVED (~(PERF_REG_EXTENDED_MASK) &	\
+> +			(~((1ULL << PERF_REG_POWERPC_MAX) - 1)))
+
+Can we reuse PERF_REG_PMU_MASK here and simplify it to:
+   #define REG_RESERVED (~(PERF_REG_EXTENDED_MASK | PERF_REG_PMU_MASK))
+
+>   
+>   static unsigned int pt_regs_offset[PERF_REG_POWERPC_MAX] = {
+>   	PT_REGS_OFFSET(PERF_REG_POWERPC_R0,  gpr[0]),
+> @@ -69,10 +70,22 @@ static unsigned int pt_regs_offset[PERF_REG_POWERPC_MAX] = {
+>   	PT_REGS_OFFSET(PERF_REG_POWERPC_MMCRA, dsisr),
+>   };
+>   
+> +/* Function to return the extended register values */
+> +static u64 get_ext_regs_value(int idx)
+> +{
+> +	switch (idx) {
+> +	case PERF_REG_POWERPC_MMCR0:
+> +				    return mfspr(SPRN_MMCR0);
+> +	case PERF_REG_POWERPC_MMCR1:
+> +				    return mfspr(SPRN_MMCR1);
+> +	case PERF_REG_POWERPC_MMCR2:
+> +				    return mfspr(SPRN_MMCR2);
+
+Unnecessary tabs.
+
+[...]
+
+> diff --git a/tools/arch/powerpc/include/uapi/asm/perf_regs.h b/tools/arch/powerpc/include/uapi/asm/perf_regs.h
+> index f599064dd8dc..d66953294c73 100644
+> --- a/tools/arch/powerpc/include/uapi/asm/perf_regs.h
+> +++ b/tools/arch/powerpc/include/uapi/asm/perf_regs.h
+> @@ -48,6 +48,17 @@ enum perf_event_powerpc_regs {
+>   	PERF_REG_POWERPC_DSISR,
+>   	PERF_REG_POWERPC_SIER,
+>   	PERF_REG_POWERPC_MMCRA,
+> -	PERF_REG_POWERPC_MAX,
+> +	/* Extended arch registers */
+> +	PERF_REG_POWERPC_MMCR0,
+> +	PERF_REG_POWERPC_MMCR1,
+> +	PERF_REG_POWERPC_MMCR2,
+> +	PERF_REG_EXTENDED_MAX,
+> +	/* Max regs without extended arch regs */
+> +	PERF_REG_POWERPC_MAX = PERF_REG_POWERPC_MMCRA + 1,
+> +
+
+Unnecesasy line.
+
+>   };
+> +#define PERF_REG_PMU_MASK	((1ULL << PERF_REG_POWERPC_MAX) - 1)
+> +#define PERF_REG_EXTENDED_MASK  (((1ULL << (PERF_REG_EXTENDED_MAX))\
+> +			- 1) - PERF_REG_PMU_MASK)
+> +
+>   #endif /* _UAPI_ASM_POWERPC_PERF_REGS_H */
+> diff --git a/tools/perf/arch/powerpc/include/perf_regs.h b/tools/perf/arch/powerpc/include/perf_regs.h
+> index e18a3556f5e3..f7bbdb816f88 100644
+> --- a/tools/perf/arch/powerpc/include/perf_regs.h
+> +++ b/tools/perf/arch/powerpc/include/perf_regs.h
+> @@ -64,7 +64,11 @@ static const char *reg_names[] = {
+>   	[PERF_REG_POWERPC_DAR] = "dar",
+>   	[PERF_REG_POWERPC_DSISR] = "dsisr",
+>   	[PERF_REG_POWERPC_SIER] = "sier",
+> -	[PERF_REG_POWERPC_MMCRA] = "mmcra"
+> +	[PERF_REG_POWERPC_MMCRA] = "mmcra",
+> +	[PERF_REG_POWERPC_MMCR0] = "mmcr0",
+> +	[PERF_REG_POWERPC_MMCR1] = "mmcr1",
+> +	[PERF_REG_POWERPC_MMCR2] = "mmcr2",
+> +
+
+Unnecesasy line.
+
+Apart from those, for the series:
+Reviewed-and-Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
