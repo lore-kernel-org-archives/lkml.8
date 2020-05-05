@@ -2,178 +2,104 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E48C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D01C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25BB7206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7891D206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:34:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729576AbgEEOeC (ORCPT
+        id S1729663AbgEEOeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:34:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57200 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727857AbgEEOeB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:34:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 003A9AB3D;
-        Tue,  5 May 2020 14:34:01 +0000 (UTC)
-Subject: Re: [PATCH] xenbus: avoid stack overflow warning
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc:     Stefano Stabellini <sstabellini@kernel.org>,
-        Yan Yankovskyi <yyankovskyi@gmail.com>, Wei Liu <wl@xen.org>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-References: <20200505141546.824573-1-arnd@arndb.de>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <30d49e6d-570b-f6fd-3a6f-628abcc8b127@suse.com>
-Date:   Tue, 5 May 2020 16:33:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 10:34:11 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:46673 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727857AbgEEOeL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 10:34:11 -0400
+Received: from localhost.localdomain ([149.172.19.189]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1Mof1D-1ila9N3wWf-00p29q; Tue, 05 May 2020 16:33:41 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Maya Erez <merez@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Dedy Lansky <dlansky@codeaurora.org>,
+        Ahmad Masri <amasri@codeaurora.org>,
+        Alexei Avshalom Lazar <ailizaro@codeaurora.org>,
+        Tzahi Sabo <stzahi@codeaurora.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Lior David <liord@codeaurora.org>,
+        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] wil6210: avoid gcc-10 zero-length-bounds warning
+Date:   Tue,  5 May 2020 16:33:24 +0200
+Message-Id: <20200505143332.1398524-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-In-Reply-To: <20200505141546.824573-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:zDD9bs6aW0JYGWHkwYbnevv//40lQsm3jQwPwrI1bBnlk/bFmpk
+ kZ7UaQ0Fyi+SxjBcJf1zuSa0Sz3irK8/KXdIuShUrvRKkFNI9G4bvKnkf2cMEqIsjTTsWGc
+ iK24LCQ46DyASUuYCv6y4tJNO6BTxcEh+qtZzobf576RokNG5ZI0uC1W75wjZTJqMq7GEme
+ Uo4NzDp2i0EOhyU1cZHVg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:d7gL+ZdLOB4=:eXPbZb3icMUiHmpRvU3P0f
+ M/j7WeQ1Fe2vADPBhdEhyXAjOsnX7OVDvoWLybK1PrWEsAkAstoJPvhZM+RCmdRV3lv/1EsT+
+ 44/Z+e+X+Da8UKYza5hXGqw/ZPGO7V4fLMakWwFuCbiXlkPQIDBT2/bqgXPimuR5d5fJC6mVP
+ g9uQckF06ya8J9h4IvE9HKDN/kHNrf31RATZ5Y7xn51ELYjDvjxI6h2U/E8TcXTnS5LiUEb5/
+ aDd+IdzrTqIrn0DfIhw7cYg5nsLHp/18eSWzLVcfB4Z0sD+LEOop8WnAN4zi5H/JVXQx6+lKE
+ 9LQjWTnPxM+y9bZz36gnKnp0LxyPTF+H3HqKdwPnRfgWCaSjRRso7GDZfIXUeLLWN5l2djs6N
+ ifckdjTpXQZ/tb1vSjeb2a0yCZlx/Tft5hB1Xpg2EDf3QVwtoVA2Y4bzT8G77zMYQAXbpo6kd
+ V69z9mJgSDwSAdjeIVlsDSWI0UY/auf0jLRrIU+xpqsddEtPGchSVvGKSnsf91tP8yfhxvW4h
+ jhgfu1ZAXXwd7yXViQzRgS/tj5tnBv2jk6XdmuHJjV6oZf4nrci4d65prswmwZbqF9Ix0WJAe
+ D09TT3ksA0HDEGb/+OmuUsWReSvYjFdpWQIjSY/ufPnu3YW4OvUkxo0e2CLLTuIO3Q8dCSxUg
+ CgMkfvEUzgMq9hhFKob5FNd02ssBqNbOf2vUpf0u0HPPPxWzilNtRh6Jm2sWxld/uy+dQpi7i
+ wW7YUvshuEd78jav7rBxdQ9+Pa6RmFVEY81D1Rt8ebKSWR4+xQNb8BPOOGdxzKr1u3mpIIHoa
+ ukyeR0YuBwbIWhdNrvfxDYx86WvWYTBaH24UoFOhAqbFfP8UPQ=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05.05.20 16:15, Arnd Bergmann wrote:
-> The __xenbus_map_ring() function has two large arrays, 'map' and
-> 'unmap' on its stack. When clang decides to inline it into its caller,
-> xenbus_map_ring_valloc_hvm(), the total stack usage exceeds the warning
-> limit for stack size on 32-bit architectures.
-> 
-> drivers/xen/xenbus/xenbus_client.c:592:12: error: stack frame size of 1104 bytes in function 'xenbus_map_ring_valloc_hvm' [-Werror,-Wframe-larger-than=]
-> 
-> As far as I can tell, other compilers don't inline it here, so we get
-> no warning, but the stack usage is actually the same. It is possible
-> for both arrays to use the same location on the stack, but the compiler
-> cannot prove that this is safe because they get passed to external
-> functions that may end up using them until they go out of scope.
-> 
-> Move the two arrays into separate basic blocks to limit the scope
-> and force them to occupy less stack in total, regardless of the
-> inlining decision.
+gcc-10 warns about accesses inside of a zero-length array:
 
-Why don't you put both arrays into a union?
+drivers/net/wireless/ath/wil6210/cfg80211.c: In function 'wil_cfg80211_scan':
+drivers/net/wireless/ath/wil6210/cfg80211.c:970:23: error: array subscript 255 is outside the bounds of an interior zero-length array 'struct <anonymous>[0]' [-Werror=zero-length-bounds]
+  970 |   cmd.cmd.channel_list[cmd.cmd.num_channels++].channel = ch - 1;
+      |   ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
+In file included from drivers/net/wireless/ath/wil6210/wil6210.h:17,
+                 from drivers/net/wireless/ath/wil6210/cfg80211.c:11:
+drivers/net/wireless/ath/wil6210/wmi.h:477:4: note: while referencing 'channel_list'
+  477 |  } channel_list[0];
+      |    ^~~~~~~~~~~~
 
+Turn this into a flexible array to avoid the warning.
 
-Juergen
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+Gustavo has a patch to do it for all arrays in this file, and that
+should get merged as well, but this simpler patch is sufficient
+to shut up the warning.
+---
+ drivers/net/wireless/ath/wil6210/wmi.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->   drivers/xen/xenbus/xenbus_client.c | 74 +++++++++++++++++-------------
->   1 file changed, 41 insertions(+), 33 deletions(-)
-> 
-> diff --git a/drivers/xen/xenbus/xenbus_client.c b/drivers/xen/xenbus/xenbus_client.c
-> index 040d2a43e8e3..23ca70378e36 100644
-> --- a/drivers/xen/xenbus/xenbus_client.c
-> +++ b/drivers/xen/xenbus/xenbus_client.c
-> @@ -470,54 +470,62 @@ static int __xenbus_map_ring(struct xenbus_device *dev,
->   			     unsigned int flags,
->   			     bool *leaked)
->   {
-> -	struct gnttab_map_grant_ref map[XENBUS_MAX_RING_GRANTS];
-> -	struct gnttab_unmap_grant_ref unmap[XENBUS_MAX_RING_GRANTS];
->   	int i, j;
->   	int err = GNTST_okay;
->   
-> -	if (nr_grefs > XENBUS_MAX_RING_GRANTS)
-> -		return -EINVAL;
-> +	{
-> +		struct gnttab_map_grant_ref map[XENBUS_MAX_RING_GRANTS];
->   
-> -	for (i = 0; i < nr_grefs; i++) {
-> -		memset(&map[i], 0, sizeof(map[i]));
-> -		gnttab_set_map_op(&map[i], addrs[i], flags, gnt_refs[i],
-> -				  dev->otherend_id);
-> -		handles[i] = INVALID_GRANT_HANDLE;
-> -	}
-> +		if (nr_grefs > XENBUS_MAX_RING_GRANTS)
-> +			return -EINVAL;
->   
-> -	gnttab_batch_map(map, i);
-> +		for (i = 0; i < nr_grefs; i++) {
-> +			memset(&map[i], 0, sizeof(map[i]));
-> +			gnttab_set_map_op(&map[i], addrs[i], flags,
-> +					  gnt_refs[i], dev->otherend_id);
-> +			handles[i] = INVALID_GRANT_HANDLE;
-> +		}
-> +
-> +		gnttab_batch_map(map, i);
->   
-> -	for (i = 0; i < nr_grefs; i++) {
-> -		if (map[i].status != GNTST_okay) {
-> -			err = map[i].status;
-> -			xenbus_dev_fatal(dev, map[i].status,
-> +		for (i = 0; i < nr_grefs; i++) {
-> +			if (map[i].status != GNTST_okay) {
-> +				err = map[i].status;
-> +				xenbus_dev_fatal(dev, map[i].status,
->   					 "mapping in shared page %d from domain %d",
->   					 gnt_refs[i], dev->otherend_id);
-> -			goto fail;
-> -		} else
-> -			handles[i] = map[i].handle;
-> +				goto fail;
-> +			} else
-> +				handles[i] = map[i].handle;
-> +		}
->   	}
-> -
->   	return GNTST_okay;
->   
->    fail:
-> -	for (i = j = 0; i < nr_grefs; i++) {
-> -		if (handles[i] != INVALID_GRANT_HANDLE) {
-> -			memset(&unmap[j], 0, sizeof(unmap[j]));
-> -			gnttab_set_unmap_op(&unmap[j], (phys_addr_t)addrs[i],
-> -					    GNTMAP_host_map, handles[i]);
-> -			j++;
-> +	{
-> +		struct gnttab_unmap_grant_ref unmap[XENBUS_MAX_RING_GRANTS];
-> +
-> +		for (i = j = 0; i < nr_grefs; i++) {
-> +			if (handles[i] != INVALID_GRANT_HANDLE) {
-> +				memset(&unmap[j], 0, sizeof(unmap[j]));
-> +				gnttab_set_unmap_op(&unmap[j],
-> +						    (phys_addr_t)addrs[i],
-> +						    GNTMAP_host_map,
-> +						    handles[i]);
-> +				j++;
-> +			}
->   		}
-> -	}
->   
-> -	if (HYPERVISOR_grant_table_op(GNTTABOP_unmap_grant_ref, unmap, j))
-> -		BUG();
-> +		if (HYPERVISOR_grant_table_op(GNTTABOP_unmap_grant_ref,
-> +					      unmap, j))
-> +			BUG();
->   
-> -	*leaked = false;
-> -	for (i = 0; i < j; i++) {
-> -		if (unmap[i].status != GNTST_okay) {
-> -			*leaked = true;
-> -			break;
-> +		*leaked = false;
-> +		for (i = 0; i < j; i++) {
-> +			if (unmap[i].status != GNTST_okay) {
-> +				*leaked = true;
-> +				break;
-> +			}
->   		}
->   	}
->   
-> 
+diff --git a/drivers/net/wireless/ath/wil6210/wmi.h b/drivers/net/wireless/ath/wil6210/wmi.h
+index e3558136e0c4..5bba45c1de48 100644
+--- a/drivers/net/wireless/ath/wil6210/wmi.h
++++ b/drivers/net/wireless/ath/wil6210/wmi.h
+@@ -474,7 +474,7 @@ struct wmi_start_scan_cmd {
+ 	struct {
+ 		u8 channel;
+ 		u8 reserved;
+-	} channel_list[0];
++	} channel_list[];
+ } __packed;
+ 
+ #define WMI_MAX_PNO_SSID_NUM	(16)
+-- 
+2.26.0
 
