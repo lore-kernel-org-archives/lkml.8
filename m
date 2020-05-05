@@ -2,132 +2,162 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79BB4C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB5FC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ECF9206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18CF2206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:36:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730226AbgEEPgS (ORCPT
+        id S1730274AbgEEPgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:36:18 -0400
-Received: from smtp-42a8.mail.infomaniak.ch ([84.16.66.168]:46965 "EHLO
-        smtp-42a8.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729250AbgEEPgR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:36:17 -0400
-Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49GkMz6zCDzlhnlg;
-        Tue,  5 May 2020 17:36:15 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 49GkMy4bmmzlvfCB;
-        Tue,  5 May 2020 17:36:14 +0200 (CEST)
-Subject: Re: [PATCH v5 0/6] Add support for O_MAYEXEC
-To:     linux-kernel@vger.kernel.org
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20200505153156.925111-1-mic@digikod.net>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <d4616bc0-39df-5d6c-9f5b-d84cf6e65960@digikod.net>
-Date:   Tue, 5 May 2020 17:36:14 +0200
-User-Agent: 
-MIME-Version: 1.0
-In-Reply-To: <20200505153156.925111-1-mic@digikod.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: fr
+        Tue, 5 May 2020 11:36:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33424 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729250AbgEEPgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 11:36:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 5E422AE37;
+        Tue,  5 May 2020 15:36:38 +0000 (UTC)
+Date:   Tue, 05 May 2020 17:36:35 +0200
+Message-ID: <s5h4ksubdh8.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     shuah <shuah@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.6 00/73] 5.6.11-rc1 review
+In-Reply-To: <82eb8f25-4e15-001a-1c4f-5f59400d352b@kernel.org>
+References: <20200504165501.781878940@linuxfoundation.org>
+        <3366716c-3a30-033d-4df6-4183eb262208@kernel.org>
+        <82eb8f25-4e15-001a-1c4f-5f59400d352b@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 05 May 2020 17:30:07 +0200,
+shuah wrote:
+> 
+> On 5/5/20 9:25 AM, shuah wrote:
+> > On 5/4/20 11:57 AM, Greg Kroah-Hartman wrote:
+> >> This is the start of the stable review cycle for the 5.6.11 release.
+> >> There are 73 patches in this series, all will be posted as a response
+> >> to this one.  If anyone has any issues with these being applied, please
+> >> let me know.
+> >>
+> >> Responses should be made by Wed, 06 May 2020 16:52:55 +0000.
+> >> Anything received after that time might be too late.
+> >>
+> >> The whole patch series can be found in one patch at:
+> >>     https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.11-rc1.gz 
+> >>
+> >> or in the git tree and branch at:
+> >>     git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+> >> linux-5.6.y
+> >> and the diffstat can be found below.
+> >>
+> >> thanks,
+> >>
+> >> greg k-h
+> >>
+> >> -------------
+> >> Pseudo-Shortlog of commits:
+> >>
+> >> Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >>      Linux 5.6.11-rc1
+> >>
+> >
+> >> Takashi Iwai <tiwai@suse.de>
+> >>      ALSA: pcm: oss: Place the plugin buffer overflow checks correctly
+> >>
+> >> Vasily Khoruzhick <anarsoul@gmail.com>
+> >>      ALSA: line6: Fix POD HD500 audio playback
+> >>
+> >> Wu Bo <wubo40@huawei.com>
+> >>      ALSA: hda/hdmi: fix without unlocked before return
+> >>
+> >> Takashi Iwai <tiwai@suse.de>
+> >>      ALSA: usb-audio: Correct a typo of NuPrime DAC-10 USB ID
+> >>
+> >> Hui Wang <hui.wang@canonical.com>
+> >>      ALSA: hda/realtek - Two front mics on a Lenovo ThinkCenter
+> >>
+> >
+> >>   sound/core/oss/pcm_plugin.c                       | 20 ++++---
+> >>   sound/isa/opti9xx/miro.c                          |  9 ++-
+> >>   sound/isa/opti9xx/opti92x-ad1848.c                |  9 ++-
+> >>   sound/pci/hda/patch_hdmi.c                        |  4 +-
+> >>   sound/pci/hda/patch_realtek.c                     |  1 +
+> >>   sound/usb/line6/podhd.c                           | 22 ++-----
+> >>   sound/usb/quirks.c                                |  2 +-
+> >>   78 files changed, 554 insertions(+), 297 deletions(-)
+> >>
+> >>
+> >>
+> >
+> > Compiled and booted on my test system. Tons of the of following
+> > errors in dmesg
+> >
+> > Adding Takashi Iwai
+> >
+> > [   33.980302] usb 2-2.4: 1:1: cannot set freq 48000 to ep 0x1
+> > [   49.340581] usb 2-2.4: 2:1: cannot set freq 48000 to ep 0x82
+> > [   59.580511] usb 2-2.4: 13:0: cannot get min/max values for
+> > control 2 (id 13)
+> > [   64.700532] usb 2-2.4: 9:0: cannot get min/max values for control
+> > 2 (id 9)
+> > [   69.792257] usb 2-2.4: 10:0: cannot get min/max values for
+> > control 2 (id 10)
+> > [   69.792736] usbcore: registered new interface driver snd-usb-audio
+> > [   74.871038] usb 2-2.4: 9:0: cannot get min/max values for control
+> > 2 (id 9)
+> > [   79.967099] usb 2-2.4: 9:0: cannot get min/max values for control
+> > 2 (id 9)
+> > [   85.076961] usb 2-2.4: 9:0: cannot get min/max values for control
+> > 2 (id 9)
+> > [   90.191415] usb 2-2.4: 9:0: cannot get min/max values for control
+> > 2 (id 9)
+> > [   95.308843] usb 2-2.4: 9:0: cannot get min/max values for control
+> > 2 (id 9)
+> >
+> > followed by
+> >
+> > [  131.172280] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+> > [  136.259909] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+> > [  141.380345] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+> > [  146.500227] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+> > [  151.620227] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+> > [  156.739899] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+> > [  161.859999] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+> >
+> >
+> > I have audio on that port. I haven't tried yet reverting these
+> > sound patches yet. demsg is filling up with these messages for
+> > sure.
+> >
+> 
+> I just tried Linux 5.7-rc4 and it also has this problem. New in rc4 as
+> far as I can tell.
 
-On 05/05/2020 17:31, Mickaël Salaün wrote:
-> Hi,
-> 
-> This fifth patch series add new kernel configurations (OMAYEXEC_STATIC,
-> OMAYEXEC_ENFORCE_MOUNT, and OMAYEXEC_ENFORCE_FILE) to enable to
-> configure the security policy at kernel build time.  As requested by
-> Mimi Zohar, I completed the series with one of her patches for IMA.
-> 
-> The goal of this patch series is to enable to control script execution
-> with interpreters help.  A new O_MAYEXEC flag, usable through
-> openat2(2), is added to enable userspace script interpreter to delegate
-> to the kernel (and thus the system security policy) the permission to
-> interpret/execute scripts or other files containing what can be seen as
-> commands.
-> 
-> A simple system-wide security policy can be enforced by the system
-> administrator through a sysctl configuration consistent with the mount
-> points or the file access rights.  The documentation patch explains the
-> prerequisites.
-> 
-> Furthermore, the security policy can also be delegated to an LSM, either
-> a MAC system or an integrity system.  For instance, the new kernel
-> MAY_OPENEXEC flag closes a major IMA measurement/appraisal interpreter
-> integrity gap by bringing the ability to check the use of scripts [1].
-> Other uses are expected, such as for openat2(2) [2], SGX integration
-> [3], bpffs [4] or IPE [5].
-> 
-> Userspace needs to adapt to take advantage of this new feature.  For
-> example, the PEP 578 [6] (Runtime Audit Hooks) enables Python 3.8 to be
-> extended with policy enforcement points related to code interpretation,
-> which can be used to align with the PowerShell audit features.
-> Additional Python security improvements (e.g. a limited interpreter
-> withou -c, stdin piping of code) are on their way.
-> 
-> The initial idea come from CLIP OS 4 and the original implementation has
-> been used for more than 12 years:
-> https://github.com/clipos-archive/clipos4_doc
-> 
-> An introduction to O_MAYEXEC was given at the Linux Security Summit
-> Europe 2018 - Linux Kernel Security Contributions by ANSSI:
-> https://www.youtube.com/watch?v=chNjCRtPKQY&t=17m15s
-> The "write xor execute" principle was explained at Kernel Recipes 2018 -
-> CLIP OS: a defense-in-depth OS:
-> https://www.youtube.com/watch?v=PjRE0uBtkHU&t=11m14s
-> 
-> This patch series can be applied on top of v5.7-rc4.  This can be tested
-> with CONFIG_SYSCTL.  I would really appreciate constructive comments on
-> this patch series.
-> 
-> Previous version:
-> https://lore.kernel.org/lkml/20200428175129.634352-1-mic@digikod.net/
+Then it's unlikely from the changes in sound/*, but I'd suspect rather
+USB core side.  There is only one change for USB-audio driver and it's
+a correction of USB device ID.
 
-The previous version (v4) is
-https://lore.kernel.org/lkml/20200430132320.699508-1-mic@digikod.net/
+
+thanks,
+
+Takashi
