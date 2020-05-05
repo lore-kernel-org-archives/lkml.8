@@ -2,200 +2,104 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D94D2C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F17C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8C9A2078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 015AB20721
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:02:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588697975;
-	bh=um6UNX9+jOMlyvBzN0ZJZJ+wG/sI8Y+cz3tgOpWpop8=;
+	s=default; t=1588698159;
+	bh=cxzc4n0fji3iIZXUSpJT8FlBbG2oT5ou/HugO3IFL9w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=X4n8IgsYlIy0HLvWGGsfEqs09bunn+wpnp2JgKNqr8xt9hM+LPkXLXrb2VJbtonFd
-	 FxE/+GxSR6MSccEcwT3h/2ERrGPYjoojhdjVBpkacmFkTTorgGmDeFiDV8p9PSHaDy
-	 J5CBnXPXosLOFbp02o54PLmSDlBz0+Nj8nfing80=
+	b=myhwV2VFakie/S6ZPe08LIlW+KsmE5wf4yMXfFIKKPkW3IK45fkA48wTa8XXSyBrx
+	 ntY1dCS/nBHxk0UA9ihKeXV1aA7KjcQAfXbhovO3mjoNAAxc9fJGXbeSAg+4tV2FQS
+	 NzAPxiIy6F6cipz4X3Qh6gU8d/ma//hS1GqiEhO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730824AbgEEQ7f (ORCPT
+        id S1730415AbgEERCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:59:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40116 "EHLO mail.kernel.org"
+        Tue, 5 May 2020 13:02:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729553AbgEEQ7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:59:33 -0400
+        id S1728804AbgEERCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 13:02:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C88F20746;
-        Tue,  5 May 2020 16:59:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAB0D206B9;
+        Tue,  5 May 2020 17:02:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588697972;
-        bh=um6UNX9+jOMlyvBzN0ZJZJ+wG/sI8Y+cz3tgOpWpop8=;
+        s=default; t=1588698156;
+        bh=cxzc4n0fji3iIZXUSpJT8FlBbG2oT5ou/HugO3IFL9w=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=a0vCNLJqkDinFm5b2Jp9DwKGH4IJ/sY2wiqiDminSTFmEFWUDgve9imF7jkWCpm3i
-         B3u5hPyRKVMPeA9Jw8loS3V1z01Jtmn1Hx991Q6FDGiJavGJEVZmK3t/IyCwMq1HMb
-         wF+sHsCglfaH/eQdu+Era1o099tDEaivJeF7V3EI=
-Date:   Tue, 5 May 2020 18:59:29 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     shuah <shuah@kernel.org>
-Cc:     Takashi Iwai <tiwai@suse.de>, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.6 00/73] 5.6.11-rc1 review
-Message-ID: <20200505165929.GA1110961@kroah.com>
-References: <20200504165501.781878940@linuxfoundation.org>
- <3366716c-3a30-033d-4df6-4183eb262208@kernel.org>
- <82eb8f25-4e15-001a-1c4f-5f59400d352b@kernel.org>
- <s5h4ksubdh8.wl-tiwai@suse.de>
- <e7326300-faad-df0e-1918-a36b5be4b078@kernel.org>
- <9871eac6-29b7-2f0e-f383-2358b5a245d8@kernel.org>
+        b=fhTuRrhcO2Ldh4lczhpT1QtZVQEdgb33E18i5NNzuYuIscbaFJwpJUK3opT7LVKmr
+         4yivgMGz4teB8Of4NtZMAdtvDcyN2GNKt/NPa/bCUTgOmBrN10N86BB02Gncoot3MY
+         g7j+7Z1P0AKRyKCFF84JFSnbo8L6C6sZVDrEr5vM=
+Date:   Tue, 5 May 2020 19:02:33 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc:     davem@davemloft.net, kuba@kernel.org,
+        christophe.jaillet@wanadoo.fr, leon@kernel.org, tglx@linutronix.de,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [BUG] net: chelsio: Possible buffer overflow caused by DMA
+ failures/attacks
+Message-ID: <20200505170233.GA1114580@kroah.com>
+References: <95e19362-b9c9-faf9-3f9e-f6f4c65a6aff@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9871eac6-29b7-2f0e-f383-2358b5a245d8@kernel.org>
+In-Reply-To: <95e19362-b9c9-faf9-3f9e-f6f4c65a6aff@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 10:19:31AM -0600, shuah wrote:
-> On 5/5/20 9:43 AM, shuah wrote:
-> > On 5/5/20 9:36 AM, Takashi Iwai wrote:
-> > > On Tue, 05 May 2020 17:30:07 +0200,
-> > > shuah wrote:
-> > > > 
-> > > > On 5/5/20 9:25 AM, shuah wrote:
-> > > > > On 5/4/20 11:57 AM, Greg Kroah-Hartman wrote:
-> > > > > > This is the start of the stable review cycle for the 5.6.11 release.
-> > > > > > There are 73 patches in this series, all will be posted as a response
-> > > > > > to this one.  If anyone has any issues with these being
-> > > > > > applied, please
-> > > > > > let me know.
-> > > > > > 
-> > > > > > Responses should be made by Wed, 06 May 2020 16:52:55 +0000.
-> > > > > > Anything received after that time might be too late.
-> > > > > > 
-> > > > > > The whole patch series can be found in one patch at:
-> > > > > >      https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.11-rc1.gz
-> > > > > > 
-> > > > > > 
-> > > > > > or in the git tree and branch at:
-> > > > > >      git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-> > > > > > 
-> > > > > > linux-5.6.y
-> > > > > > and the diffstat can be found below.
-> > > > > > 
-> > > > > > thanks,
-> > > > > > 
-> > > > > > greg k-h
-> > > > > > 
-> > > > > > -------------
-> > > > > > Pseudo-Shortlog of commits:
-> > > > > > 
-> > > > > > Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > > >       Linux 5.6.11-rc1
-> > > > > > 
-> > > > > 
-> > > > > > Takashi Iwai <tiwai@suse.de>
-> > > > > >       ALSA: pcm: oss: Place the plugin buffer overflow
-> > > > > > checks correctly
-> > > > > > 
-> > > > > > Vasily Khoruzhick <anarsoul@gmail.com>
-> > > > > >       ALSA: line6: Fix POD HD500 audio playback
-> > > > > > 
-> > > > > > Wu Bo <wubo40@huawei.com>
-> > > > > >       ALSA: hda/hdmi: fix without unlocked before return
-> > > > > > 
-> > > > > > Takashi Iwai <tiwai@suse.de>
-> > > > > >       ALSA: usb-audio: Correct a typo of NuPrime DAC-10 USB ID
-> > > > > > 
-> > > > > > Hui Wang <hui.wang@canonical.com>
-> > > > > >       ALSA: hda/realtek - Two front mics on a Lenovo ThinkCenter
-> > > > > > 
-> > > > > 
-> > > > > >    sound/core/oss/pcm_plugin.c                       | 20 ++++---
-> > > > > >    sound/isa/opti9xx/miro.c                          |  9 ++-
-> > > > > >    sound/isa/opti9xx/opti92x-ad1848.c                |  9 ++-
-> > > > > >    sound/pci/hda/patch_hdmi.c                        |  4 +-
-> > > > > >    sound/pci/hda/patch_realtek.c                     |  1 +
-> > > > > >    sound/usb/line6/podhd.c                           | 22 ++-----
-> > > > > >    sound/usb/quirks.c                                |  2 +-
-> > > > > >    78 files changed, 554 insertions(+), 297 deletions(-)
-> > > > > > 
-> > > > > > 
-> > > > > > 
-> > > > > 
-> > > > > Compiled and booted on my test system. Tons of the of following
-> > > > > errors in dmesg
-> > > > > 
-> > > > > Adding Takashi Iwai
-> > > > > 
-> > > > > [   33.980302] usb 2-2.4: 1:1: cannot set freq 48000 to ep 0x1
-> > > > > [   49.340581] usb 2-2.4: 2:1: cannot set freq 48000 to ep 0x82
-> > > > > [   59.580511] usb 2-2.4: 13:0: cannot get min/max values for
-> > > > > control 2 (id 13)
-> > > > > [   64.700532] usb 2-2.4: 9:0: cannot get min/max values for control
-> > > > > 2 (id 9)
-> > > > > [   69.792257] usb 2-2.4: 10:0: cannot get min/max values for
-> > > > > control 2 (id 10)
-> > > > > [   69.792736] usbcore: registered new interface driver snd-usb-audio
-> > > > > [   74.871038] usb 2-2.4: 9:0: cannot get min/max values for control
-> > > > > 2 (id 9)
-> > > > > [   79.967099] usb 2-2.4: 9:0: cannot get min/max values for control
-> > > > > 2 (id 9)
-> > > > > [   85.076961] usb 2-2.4: 9:0: cannot get min/max values for control
-> > > > > 2 (id 9)
-> > > > > [   90.191415] usb 2-2.4: 9:0: cannot get min/max values for control
-> > > > > 2 (id 9)
-> > > > > [   95.308843] usb 2-2.4: 9:0: cannot get min/max values for control
-> > > > > 2 (id 9)
-> > > > > 
-> > > > > followed by
-> > > > > 
-> > > > > [  131.172280] usb 2-2.4: 1:1: usb_set_interface failed (-110)
-> > > > > [  136.259909] usb 2-2.4: 1:1: usb_set_interface failed (-110)
-> > > > > [  141.380345] usb 2-2.4: 1:1: usb_set_interface failed (-110)
-> > > > > [  146.500227] usb 2-2.4: 1:1: usb_set_interface failed (-110)
-> > > > > [  151.620227] usb 2-2.4: 1:1: usb_set_interface failed (-110)
-> > > > > [  156.739899] usb 2-2.4: 1:1: usb_set_interface failed (-110)
-> > > > > [  161.859999] usb 2-2.4: 1:1: usb_set_interface failed (-110)
-> > > > > 
-> > > > > 
-> > > > > I have audio on that port. I haven't tried yet reverting these
-> > > > > sound patches yet. demsg is filling up with these messages for
-> > > > > sure.
-> > > > > 
-> > > > 
-> > > > I just tried Linux 5.7-rc4 and it also has this problem. New in rc4 as
-> > > > far as I can tell.
-> > > 
-> > > Then it's unlikely from the changes in sound/*, but I'd suspect rather
-> > > USB core side.  There is only one change for USB-audio driver and it's
-> > > a correction of USB device ID.
-> > > 
-> > > 
-> > 
-> > For what its worth not seeing this on 5.4.39-rc1 with the same set of
-> > sound changes. I will start bisect on 5.6.11-rc1
-> > 
+On Tue, May 05, 2020 at 11:50:28PM +0800, Jia-Ju Bai wrote:
+> In alloc_rx_resources():
+>     sge->respQ.entries =
+>         pci_alloc_consistent(pdev, size, &sge->respQ.dma_addr);
 > 
-> I can't reproduce this problem on 5.7-rc1 and 5.6.11-rc1 after seeing
-> it once on both.
+> Thus, "sge->respQ.entries" is a DMA value, and it is assigned to
+> "e" in process_pure_responses():
+>     struct sge *sge = adapter->sge;
+>     struct respQ *q = &sge->respQ;
+>     struct respQ_e *e = &q->entries[q->cidx];
 > 
-> Tried powerdown vs reboot to see if it is tied to hardware init
-> sequence. Doesn't seem to make a difference. Oh well. I will
-> update if I see it again.
+> When DMA failures or attacks occur, the data stored in "e" can be
+> changed at any time. In this case, the value of "e->FreelistQid"
+> can be a large number to cause buffer overflow when the
+> following code is executed:
+>     const struct freelQ *fl = &sge->freelQ[e->FreelistQid];
+> 
+> Similarly, "sge->respQ.entries" is also assigned to "e" in
+> process_responses():
+>     struct sge *sge = adapter->sge;
+>     struct respQ *q = &sge->respQ;
+>     struct respQ_e *e = &q->entries[q->cidx];
+> 
+> When DMA failures or attacks occur, the data stored in "e" can be
+> changed at any time. In this case, the value of "e->FreelistQid"
+> can be a large number to cause buffer overflow when the
+> following code is executed:
+>     struct freelQ *fl = &sge->freelQ[e->FreelistQid];
+> 
+> Considering that DMA can fail or be attacked, I think that it is dangerous
+> to
+> use a DMA value (or any value tainted by it) as an array index or a
+> control-flow
+> condition. However, I have found many such dangerous cases in Linux device
+> drivers
+> through my static-analysis tool and code review.
+> I am not sure whether my opinion is correct, so I want to listen to your
+> points of view.
 
-Thanks for the report, and for testing all of these.  Looks like your
-USB device got "stuck" in an odd state, if it shows up again, please let
-us know on linux-usb@vger.
+Can you create a patch to show what you think needs to be fixed?  That's
+the best way to get feedback, reports like this are usually very
+infrequently replied to.
 
 thanks,
 
