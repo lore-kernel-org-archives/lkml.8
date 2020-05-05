@@ -2,142 +2,91 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1AA8C47256
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F34DC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD8792068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:17:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A98F2068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:18:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lizeE891"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aCwFA4fB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728487AbgEEIRz (ORCPT
+        id S1728520AbgEEISh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 04:17:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49266 "EHLO
+        Tue, 5 May 2020 04:18:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725833AbgEEIRy (ORCPT
+        by vger.kernel.org with ESMTP id S1725833AbgEEISg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 04:17:54 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00AF4C061A41
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 01:17:53 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id v192so276194vkd.3
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 01:17:52 -0700 (PDT)
+        Tue, 5 May 2020 04:18:36 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92A79C061A0F;
+        Tue,  5 May 2020 01:18:36 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z8so669886wrw.3;
+        Tue, 05 May 2020 01:18:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TbQ/NUsTl64Wiv4a1ipzIuD3CBdf0yc6n6AHT0AzX6s=;
-        b=lizeE8913OsCMHce51oPvAyEnSr00jzla8Wj9ZJX8Yj4J1Psb7aJ12HDbUuxzEASuV
-         CJOcUf/1RPpJ18db073V2gTXAgZrhjOiqKsFQTtxkRjpOYi7p+8iPI6IgM2MLiGzaKLy
-         cLIvq0bhk4yEFz1lkPgzduKThkyI9/FNNBUECjt00MMWx/SmSy1QyuQ90mKXKVovzmJ9
-         4fKGh0hJnh1TGnDmYd/ZhNdLxC+6X+tPCtAfmgDvTlLfG9iZKYS2tw377gR8NwBlvma+
-         N8uaPL/HAJq4slF/CQIAr93/bDUWK4Xy5o9CeYh1dInheigK6z+mx2xsFNL4I2ItVIiH
-         Sw4w==
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=EIFxKxmFxgre3FE3hg4SRgHwf8DPj6vfKEDfHM3CKiQ=;
+        b=aCwFA4fBfDssQEipU83E5gLSF3r7zaHJkvIXCb1dXejB+cc5emDmQQMCF1Bi/lYHyZ
+         nogOXWKOoZM/FD7DzRznqlJy+RmjRdLlqHw+ma20qkCd37GaMOEOCs5pCoa6HDlOPvwY
+         aNzpdCgtSsm/36rWPoRXXtbO6adDsKSBefbLYrCdhvj/3N78si+y0B38O7uyYtRpV6UH
+         6WpH5Whq1hRLNf4xHm406O/KAO4uiQLntUvF4h8ShoQ0Eu+5S9MoKKwvYRJhkwmOL+7V
+         9IA3KknRRwfbgrFhe9ArlwfwZYbbrQqvNYIH2GogYwseHxxpit/74c3WD5SsoG4/9qQW
+         hQXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TbQ/NUsTl64Wiv4a1ipzIuD3CBdf0yc6n6AHT0AzX6s=;
-        b=UBU+MXW4cyeGOR3Kvg3TakdfF+VrYRoC7vuWeINlA7D7rF2XDiDW0A0Ag9H2dGJTdE
-         7bRkdOTcgB+JO6XDvRu8FTpoqH9StYtnrlNnYXLdHe4DM4xPjpTxZNh7z21hljgBQnLB
-         xX6mIB9xXykP3x6O/EFhpa1QKI6WHFSCVO9eGMCgAlwLF91MXIHyftVYlrJGSoUTjCCH
-         PdbbHp0cf2T+q0djMLgXV/EFKLfCiF/mwR8OMmsfXfp4jzFM8c+0IrIoT+hqh+IxkoY+
-         vBI5zscO1YspDyAr2lW6ZyaRstc7hPi+0mKfNE9psBuWRbo8p3ES89J58MPjaY/43m7M
-         Gosw==
-X-Gm-Message-State: AGi0PuaSUoYNvNg2W//9y7AtJbaXNocHAukQhoHhY4BFDzVDUnogOaMS
-        fSliS+lFRVxvqAWopO0NXLFS9sT4Jdu8NG0VFjhANg==
-X-Google-Smtp-Source: APiQypJn4YPdoD6blL7gFwU0ijM52tdeLzBf7tlSaUAOwu8rfRRQ9Nd8hu+SfYhQA6qyrUO32C4i1Xcp+YT+RFkLY84=
-X-Received: by 2002:a1f:a60b:: with SMTP id p11mr1325157vke.43.1588666671822;
- Tue, 05 May 2020 01:17:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200428210229.703309-1-martin.blumenstingl@googlemail.com>
- <20200428210229.703309-3-martin.blumenstingl@googlemail.com>
- <1jlfmdi9uw.fsf@starbuckisacylon.baylibre.com> <CAPDyKFoEh8qKYFONo1SHnvwhDwjUa5bMnnT1Kbu8=4rd=T-8Kg@mail.gmail.com>
- <1jh7x1i3hj.fsf@starbuckisacylon.baylibre.com>
-In-Reply-To: <1jh7x1i3hj.fsf@starbuckisacylon.baylibre.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 5 May 2020 10:17:15 +0200
-Message-ID: <CAPDyKFq_USCNNps3s4+C_1hriycrxtRMKJvnPFcP59CZmLXbGw@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] mmc: host: meson-mx-sdhc: new driver for the
- Amlogic Meson SDHC host
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        yinxin_1989@aliyun.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        lnykww@gmail.com, Anand Moon <linux.amoon@gmail.com>
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=EIFxKxmFxgre3FE3hg4SRgHwf8DPj6vfKEDfHM3CKiQ=;
+        b=azwid+64/LE3kPq+g23cvHHtXI6q5fvps5DaocoT9IqvaKKN66Mvpqd+YxWH0/MHhQ
+         9itDXmDNJiqiC0a3F51C0qbHGPslomK6n/YHtInPEAJ9zVy2JtXh6lgJI6RzrLfS1dOW
+         YEkO5NzBZdEY8dswrygbGU9dY+depwHyP6k2NR+TKE/XEPboQZKCV56I3wC4U/em0R7s
+         8rBF3S/VqR5eMCmDUMmfEAZY9ZMM6vk4qNmHCmI0lpnGYh99YJolg1HccOJ3A/xsg6TE
+         b3MeQCk0guiDFA4SRSbTDuWVcCPzgGdEJ1ItXfxYeZnSPe5SYuHktF1L9di487rTVImd
+         a1Ew==
+X-Gm-Message-State: AGi0Pub69V+igEe1XTiXO6DyVAGBaN09NH1izu/lnVheCqrZQX88c+OE
+        nIfKKtSUptvpqSzFJ68f+/E=
+X-Google-Smtp-Source: APiQypKehcY7YzCDA1Wjt8XeBeLTP04ZFxaXOXH4V8yBBNrHkagzoD8d7KOQ77V0q2W6OMvwd6k8gg==
+X-Received: by 2002:a5d:51c9:: with SMTP id n9mr2257856wrv.84.1588666715387;
+        Tue, 05 May 2020 01:18:35 -0700 (PDT)
+Received: from user-8.122.vpn.cf.ac.uk (vpn-users-dip-pool162.dip.cf.ac.uk. [131.251.253.162])
+        by smtp.googlemail.com with ESMTPSA id f83sm2453308wmf.42.2020.05.05.01.18.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 01:18:34 -0700 (PDT)
+Message-ID: <c654c9f6707a40eb32908e6cd90cca0df8a9cdd4.camel@gmail.com>
+Subject: Re: [PATCH net-next] net: agere: use true,false for bool variable
+From:   Mark Einon <mark.einon@gmail.com>
+To:     Jason Yan <yanaijie@huawei.com>, davem@davemloft.net,
+        hkallweit1@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 05 May 2020 09:18:28 +0100
+In-Reply-To: <20200505074556.22331-1-yanaijie@huawei.com>
+References: <20200505074556.22331-1-yanaijie@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[...]
 
-> >> > +
-> >> > +     return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
-> >> > +                                        onecell_data);
-> >>
-> >> I think registering a provider for a module that does not provide clocks
-> >> to any other device is a bit overkill.
-> >>
-> >> I understand the matter is getting the per-user clk* pointer.
-> >> Since this is the module registering the clock, you can use clk_hw->clk
-> >> to get it.
-> >>
-> >> Once you have the clk* of the leaf clocks, you don't even need to keep
-> >> track of the clk_hw* since you are using devm_
-> >>
-> >> Afterward, we should propably discuss with Stephen if something should
-> >> be added in CCF to get a struct clk* from struct clk_hw*.
-> >>
-> >
-> > [...]
-> >
-> > Hmm.
-> >
-> > I am not sure the above is a good idea, at all. Unless, I am
-> > misunderstanding your point, which may be the case.
-> >
-> > I think above "shortcuts" could lead to abuse of the clock framework
-> > and its internal data structures. When going forward, this could make
-> > it unnecessary harder to maintain the clock framework.
-> >
-> > I know, it's not my responsibility, but from my experience with MMC
-> > and SDIO interfaces, is that those have been too easy abuse - since
-> > most of the data structures and interfaces have been exported. Now,
-> > it's hard to roll back that, if you see what I mean.
->
-> Indeed, it worth clarifying this first.
->
-> With clk_register deprecated in favor of clk_hw_register, we are likely
-> to see that case rise elsewhere.
->
+On Tue, 2020-05-05 at 15:45 +0800, Jason Yan wrote:
+> Fix the following coccicheck warning:
+> 
+> drivers/net/ethernet/agere/et131x.c:717:3-22: WARNING: Assignment of
+> 0/1 to bool variable
+> drivers/net/ethernet/agere/et131x.c:721:1-20: WARNING: Assignment of
+> 0/1 to bool variable
+> 
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
 
-So, according to the separate discussion [1], I think we can let
-Martin decide what option to implement at this point.
+Acked-by: Mark Einon <mark.einon@gmail.com>
 
-1. Implement the "clk_hw_get_clk()" approach. The preferred option,
-but requires wider changes of the clock subsystem as well.
-
-2. Keep the existing approach, with devm_clk_get(). I am fine with
-this as well, we can always switch to 1) later on.
-
-[...]
-
-Kind regards
-Uffe
-
-[1]
-https://www.spinics.net/lists/linux-clk/msg48373.html
