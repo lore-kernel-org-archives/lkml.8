@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A298C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6519C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74B58207DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:14:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD54C2085B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:15:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729686AbgEEOOx (ORCPT
+        id S1729714AbgEEOO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:14:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48748 "EHLO
+        Tue, 5 May 2020 10:14:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729651AbgEEOOp (ORCPT
+        by vger.kernel.org with ESMTP id S1729135AbgEEOOw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:14:45 -0400
+        Tue, 5 May 2020 10:14:52 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A250C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:14:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F343C061A41
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:14:52 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jVyL5-00014K-8h; Tue, 05 May 2020 16:14:27 +0200
+        id 1jVyL8-00017D-PA; Tue, 05 May 2020 16:14:30 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 87C22FFC8D;
-        Tue,  5 May 2020 16:14:26 +0200 (CEST)
-Message-Id: <20200505134341.180329835@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 49E24FFC8D;
+        Tue,  5 May 2020 16:14:30 +0200 (CEST)
+Message-Id: <20200505134341.471542318@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:41:23 +0200
+Date:   Tue, 05 May 2020 15:41:26 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -52,8 +52,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Will Deacon <will@kernel.org>
-Subject: [patch V4 part 2 11/18] x86/entry/64: Mark
- ___preempt_schedule_notrace() thunk noinstr
+Subject: [patch V4 part 2 14/18] x86/kvm/vmx: Add hardirq tracing to guest enter/exit
 References: <20200505134112.272268764@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -66,57 +65,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Code calling this from noinstr sections, e.g. entry code, has interrupts
-disabled, so the actual call into the scheduler code does not happen.
-
-The objtool section check complains nevertheless, so mark the call "safe".
+Add hardirq tracing to guest enter/exit functions in the same way as it
+is done in the user mode enter/exit code.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/entry/thunk_64.S |   18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+ arch/x86/kvm/vmx/vmx.c |   25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
 
---- a/arch/x86/entry/thunk_64.S
-+++ b/arch/x86/entry/thunk_64.S
-@@ -12,6 +12,7 @@
- #include <asm/irqflags.h>
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6604,9 +6604,19 @@ static void vmx_vcpu_run(struct kvm_vcpu
+ 	x86_spec_ctrl_set_guest(vmx->spec_ctrl, 0);
  
- .code64
-+.section .noinstr.text, "ax"
+ 	/*
+-	 * Tell context tracking that this CPU is about to enter guest mode.
++	 * VMENTER enables interrupts (host state), but the kernel state is
++	 * interrupts disabled when this is invoked. Also tell RCU about
++	 * it. This is the same logic as for exit_to_user_mode().
++	 *
++	 * 1) Trace interrupts on state
++	 * 2) Prepare lockdep with RCU on
++	 * 3) Invoke context tracking if enabled to adjust RCU state
++	 * 4) Tell lockdep that interrupts are enabled
+ 	 */
++	trace_hardirqs_on_prepare();
++	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
+ 	guest_enter_irqoff();
++	lockdep_hardirqs_on(CALLER_ADDR0);
  
- 	/* rdi:	arg1 ... normal C conventions. rax is saved/restored. */
- 	.macro THUNK name, func, put_ret_addr_in_rdi=0, check_if=0
-@@ -49,10 +50,24 @@ SYM_FUNC_START_NOALIGN(\name)
- 	movq 8(%rbp), %rdi
- 	.endif
+ 	/* L1D Flush includes CPU buffer clear to mitigate MDS */
+ 	if (static_branch_unlikely(&vmx_l1d_should_flush))
+@@ -6623,9 +6633,20 @@ static void vmx_vcpu_run(struct kvm_vcpu
+ 	vcpu->arch.cr2 = read_cr2();
  
-+	/*
-+	 * noinstr callers will have interrupts disabled and will thus
-+	 * not get here. Annotate the call as objtool does not know about
-+	 * this and would complain about leaving the noinstr section.
-+	 */
-+1:
-+	.pushsection .discard.instr_begin
-+	.long 1b - .
-+	.popsection
-+
- 	call \func
-+2:
-+	.pushsection .discard.instr_end
-+	.long 2b - .
-+	.popsection
-+
- 	jmp  .L_restore
- SYM_FUNC_END(\name)
--	_ASM_NOKPROBE(\name)
- 	.endm
+ 	/*
+-	 * Tell context tracking that this CPU is back.
++	 * VMEXIT disables interrupts (host state), but tracing and lockdep
++	 * have them in state 'on'. Same as enter_from_user_mode().
++	 *
++	 * 1) Tell lockdep that interrupts are disabled
++	 * 2) Invoke context tracking if enabled to reactivate RCU
++	 * 3) Trace interrupts off state
++	 *
++	 * This needs to be done before the below as native_read_msr()
++	 * contains a tracepoint and x86_spec_ctrl_restore_host() calls
++	 * into world and some more.
+ 	 */
++	lockdep_hardirqs_off(CALLER_ADDR0);
+ 	guest_exit_irqoff();
++	trace_hardirqs_off_prepare();
  
- #ifdef CONFIG_TRACE_IRQFLAGS
-@@ -82,6 +97,5 @@ SYM_CODE_START_LOCAL_NOALIGN(.L_restore)
- 	popq %rdi
- 	popq %rbp
- 	ret
--	_ASM_NOKPROBE(.L_restore)
- SYM_CODE_END(.L_restore)
- #endif
+ 	/*
+ 	 * We do not use IBRS in the kernel. If this vCPU has used the
 
