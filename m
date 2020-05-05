@@ -5,72 +5,72 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E04DC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA22C4725E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F01020721
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9F0B20721
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:27:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ogl9bS0z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jCg5rc4f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728834AbgEEK1c (ORCPT
+        id S1728810AbgEEK12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 06:27:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41284 "EHLO
+        Tue, 5 May 2020 06:27:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728821AbgEEK1a (ORCPT
+        by vger.kernel.org with ESMTP id S1728716AbgEEK1V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 06:27:30 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D892FC061A41
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 03:27:29 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id 188so910598lfa.10
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 03:27:29 -0700 (PDT)
+        Tue, 5 May 2020 06:27:21 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97742C061A41
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 03:27:20 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id t11so923661lfe.4
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 03:27:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=1n6Cfn9T8YCEV6dpjNIVgTHrosueglFJqXjbboo9a8g=;
-        b=Ogl9bS0ze7bvZClDL882hNRrW4mzKPxFGP2s0fltIPLqv9XaBJNvVnuXpwJfGQH/6a
-         kkjxls2iJijFrKE2K6SSEveB/q4gKUDs4/TMxreRYN6KTkgwCIbINZBvboXv2fFOOzRU
-         f4K9Qu8ek8smsPpbIRHKa3bFN7zgNUBouxESS7JkrluwMwJFsaEr4BfYrF16/VT0iVgr
-         xpBKAHORARUj+lFmoOOgh7b7bdvzcG6qWvkLzrHH9661/fbSKnCTddzEKmWoUpihIxI0
-         Y1mJycyBwQLzDLmH1OP/NPEoHDNe0GMmWeif9/x4M559YJPQ/5C7E2wMZMJfT6iBRbY1
-         fLNg==
+        bh=bgXGdUpeDA6S2n2bWfsapxIox2ARona/I5hdI1ZbAMo=;
+        b=jCg5rc4fzbUcTEW82gMx4stI32yZ+9/AL2EMw+SxTScb0kgtBp4gy01prld/ovKhlg
+         phUMh+Ol9Lsoue6wcRVA1f9S4Mp0nNf9LIyJD0VUiNMN9jjgp68FD4GZcb4/pEHlzZ0g
+         BYQvsJx7Kn6Ufa6bJPwUgnVYZ8liUKU3W4dejF5TTBCCSKY7jx22+P2uLRGMRiNz3W9s
+         MpX46xaYG/zR/6xFfjjF3xWx7XMXSPz56wxgMrF289Hpp3/TKC3vkhKq2rdMcjRvszH0
+         /W1p009a5oG+az6+pK9gkFpq65lLB3lBHgN/H3c9DCYMGdm2Apx5WNVmjhi7OMXfyj04
+         gPdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=1n6Cfn9T8YCEV6dpjNIVgTHrosueglFJqXjbboo9a8g=;
-        b=dBN3SL4lqhHdlAZvaLdJV2F8joRgjl8aYziQtuXLlfwkXSd08WAA/eB5aZkxyYfTZC
-         7Fh5tmTNx5PP+5kCqGi2RFKxQkoairyY9d36nOsewgBLPiCtv6wgkxDmyiaAZCHSSqJb
-         Zs7OHcCL0+6er38cjGcpuDgl8DoltP5IPu4tOJrBJ1fFGYayD1bMSSYAKxizTJOcstdj
-         VZv9rRrjQFkk5RUjQRfi/zTXISoBYGefy9ofN+umxy2/WmHe5MbWNUamCLTgc3CPg1aP
-         pbfE4M8j6mVdMMqk6MSJb2HiYOv+4kinfof5cZ3Prap3SE6VLoRjuRUoZnIb2zQsefWc
-         usNA==
-X-Gm-Message-State: AGi0PuYcs8LGwfUTz1Ci1xQFVh/tf4A1dbG6gENLaXQLxAE6XiYW9skK
-        gG/Q3ZRbdRarvGKmRjTrKqeXzQ==
-X-Google-Smtp-Source: APiQypJ05S+8D6hCUKWWxXYjCtPUKhk7oai+ye/tyDqNidiPXly4f7vFf1vHOjA/N1XK92kKFf4bfw==
-X-Received: by 2002:ac2:43c7:: with SMTP id u7mr1256634lfl.50.1588674448320;
-        Tue, 05 May 2020 03:27:28 -0700 (PDT)
+        bh=bgXGdUpeDA6S2n2bWfsapxIox2ARona/I5hdI1ZbAMo=;
+        b=Op1Hq6VZ9cX61NMgvWnGy2FB7R4MlNtHmfk8DUD0c2ALd/Xb1iEksYqSPLzAz2QBjx
+         97kl8lef1CEc6GG+BUI9WkVy42Q/yw9ps81PIiyal4zvxu2+pd3RIDFL2bmzD2QZG7OY
+         tRK8BXkq9JpZuzx6AaaI/PXTUoAYe8hIDDR53ZYE/0Qel81bcPw6pl3uMvL44thjF30X
+         MTmcFm0psKj43QGgDj/AqVqJGeV/DHeo3K5pEziQALaD0iYvHjTH7d1H7nkQaZ5wDVx9
+         q3mv7b5ftcWfzNGZIiqOOsE8d9ZJon0y++65pWWlQjei2ELGa3kfCVFiHv+blro2zAVB
+         1v/g==
+X-Gm-Message-State: AGi0PuZal0JVxZ0wUQSepTjdTbXJKtyUnv8s+YRP21L0ccswWmaxyKWl
+        j/z5zEHSY/ppkniVPaOQLkXyAg==
+X-Google-Smtp-Source: APiQypJSHpXephHI+itU620IH4y5WRHndCkK56pPYq/1X0jg21roe+fznpAa9iZ47D7i1WwwUxIP8g==
+X-Received: by 2002:a19:5f04:: with SMTP id t4mr1255915lfb.208.1588674439039;
+        Tue, 05 May 2020 03:27:19 -0700 (PDT)
 Received: from localhost (c-8c28e555.07-21-73746f28.bbcust.telenor.se. [85.229.40.140])
-        by smtp.gmail.com with ESMTPSA id 7sm1592575lfr.52.2020.05.05.03.27.27
+        by smtp.gmail.com with ESMTPSA id g20sm1649058lfj.1.2020.05.05.03.27.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 03:27:27 -0700 (PDT)
+        Tue, 05 May 2020 03:27:18 -0700 (PDT)
 From:   Anders Roxell <anders.roxell@linaro.org>
-To:     tytso@mit.edu, adilger.kernel@dilger.ca
+To:     akpm@linux-foundation.org
 Cc:     john.johansen@canonical.com, jmorris@namei.org, serge@hallyn.com,
-        gregkh@linuxfoundation.org, akpm@linux-foundation.org,
-        brendanhiggins@google.com, =linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-security-module@vger.kernel.org,
-        elver@google.com, davidgow@google.com,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH v2 5/6] fs: ext4: default KUNIT_* fragments to KUNIT_RUN_ALL
-Date:   Tue,  5 May 2020 12:27:23 +0200
-Message-Id: <20200505102723.8120-1-anders.roxell@linaro.org>
+        tytso@mit.edu, adilger.kernel@dilger.ca,
+        gregkh@linuxfoundation.org, brendanhiggins@google.com,
+        =linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-security-module@vger.kernel.org, elver@google.com,
+        davidgow@google.com, Anders Roxell <anders.roxell@linaro.org>
+Subject: [PATCH v2 3/6] lib: Kconfig.debug: default KUNIT_* fragments to KUNIT_RUN_ALL
+Date:   Tue,  5 May 2020 12:27:14 +0200
+Message-Id: <20200505102714.8023-1-anders.roxell@linaro.org>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -86,25 +86,35 @@ someone wants that even though KUNIT_RUN_ALL is enabled.
 
 Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 ---
- fs/ext4/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ lib/Kconfig.debug | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ext4/Kconfig b/fs/ext4/Kconfig
-index 2a592e38cdfe..76785143259d 100644
---- a/fs/ext4/Kconfig
-+++ b/fs/ext4/Kconfig
-@@ -103,9 +103,10 @@ config EXT4_DEBUG
- 		echo 1 > /sys/module/ext4/parameters/mballoc_debug
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 21d9c5f6e7ec..d1a94ff56a87 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -2064,8 +2064,9 @@ config TEST_SYSCTL
+ 	  If unsure, say N.
  
- config EXT4_KUNIT_TESTS
--	tristate "KUnit tests for ext4"
-+	tristate "KUnit tests for ext4" if !KUNIT_RUN_ALL
- 	select EXT4_FS
+ config SYSCTL_KUNIT_TEST
+-	tristate "KUnit test for sysctl"
++	tristate "KUnit test for sysctl" if !KUNIT_RUN_ALL
  	depends on KUNIT
 +	default KUNIT_RUN_ALL
  	help
- 	  This builds the ext4 KUnit tests.
+ 	  This builds the proc sysctl unit test, which runs on boot.
+ 	  Tests the API contract and implementation correctness of sysctl.
+@@ -2075,8 +2076,9 @@ config SYSCTL_KUNIT_TEST
+ 	  If unsure, say N.
  
+ config LIST_KUNIT_TEST
+-	tristate "KUnit Test for Kernel Linked-list structures"
++	tristate "KUnit Test for Kernel Linked-list structures" if !KUNIT_RUN_ALL
+ 	depends on KUNIT
++	default KUNIT_RUN_ALL
+ 	help
+ 	  This builds the linked list KUnit test suite.
+ 	  It tests that the API and basic functionality of the list_head type
 -- 
 2.20.1
 
