@@ -2,201 +2,186 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 596E1C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DB6C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D53A20661
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D65520721
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:16:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=claycon.org header.i=@claycon.org header.b="GG+21uGO"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="BLcSK0hg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729403AbgEEVQW (ORCPT
+        id S1729414AbgEEVQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 17:16:22 -0400
-Received: from azure.elm.relay.mailchannels.net ([23.83.212.7]:21897 "EHLO
-        azure.elm.relay.mailchannels.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726593AbgEEVQW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 17:16:22 -0400
-X-Greylist: delayed 347 seconds by postgrey-1.27 at vger.kernel.org; Tue, 05 May 2020 17:16:20 EDT
-X-Sender-Id: dreamhost|x-authsender|cosmos@claycon.org
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id E4934217C5;
-        Tue,  5 May 2020 21:10:32 +0000 (UTC)
-Received: from pdx1-sub0-mail-a81.g.dreamhost.com (100-96-14-72.trex.outbound.svc.cluster.local [100.96.14.72])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id D2E4121571;
-        Tue,  5 May 2020 21:10:31 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|cosmos@claycon.org
-Received: from pdx1-sub0-mail-a81.g.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-        by 0.0.0.0:2500 (trex/5.18.8);
-        Tue, 05 May 2020 21:10:32 +0000
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|cosmos@claycon.org
-X-MailChannels-Auth-Id: dreamhost
-X-Dime-Belong: 0e93ce12409d9a2c_1588713032364_388507154
-X-MC-Loop-Signature: 1588713032363:3409722952
-X-MC-Ingress-Time: 1588713032363
-Received: from pdx1-sub0-mail-a81.g.dreamhost.com (localhost [127.0.0.1])
-        by pdx1-sub0-mail-a81.g.dreamhost.com (Postfix) with ESMTP id 772E97F54F;
-        Tue,  5 May 2020 14:10:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=claycon.org; h=date:from
-        :to:cc:subject:message-id:references:mime-version:content-type
-        :in-reply-to; s=claycon.org; bh=STzotpNkYuoHScArrDXLcdtc0xg=; b=
-        GG+21uGOy/pgyKuWGO4rQksDL8rwHBhH9Pc7xd1fHyenhBcRa2Sdq9skbUrz7crV
-        JGAIRUyQ0e/sv9xrNWP+r64HR1WQ9soDr8KbgOsZ/nElw5q/ko/DZM4bGEnrLt9v
-        KRLwATBTJRYS6gsdqfVIVUYSLmT4qDMvzP0fzw9jG8M=
-Received: from ps29521.dreamhostps.com (ps29521.dreamhostps.com [69.163.186.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cosmos@claycon.org)
-        by pdx1-sub0-mail-a81.g.dreamhost.com (Postfix) with ESMTPSA id 8D7E87F0EF;
-        Tue,  5 May 2020 14:10:29 -0700 (PDT)
-Date:   Tue, 5 May 2020 16:10:29 -0500
-X-DH-BACKEND: pdx1-sub0-mail-a81
-From:   Clay Harris <bugs@claycon.org>
-To:     Pavel Begunkov <asml.silence@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jann Horn <jannh@google.com>, io-uring@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH for-5.7] splice: move f_mode checks to do_{splice,tee}()
-Message-ID: <20200505211029.azfj2c4scoh6x2kx@ps29521.dreamhostps.com>
-References: <51b4370ef70eebf941f6cef503943d7f7de3ea4d.1588621153.git.asml.silence@gmail.com>
+        Tue, 5 May 2020 17:16:43 -0400
+Received: from mail-bn8nam12on2048.outbound.protection.outlook.com ([40.107.237.48]:6110
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728642AbgEEVQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 17:16:43 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gscxq+tK8PSPykGMVY9fIU1JSFb2HGIZ1MEexLUwMMks1hfXYtH/tWjw14hWLyB4gagVU7rOCupk+9dXZfvDxXIKkAOf0bS1wjWplD3xSyxCkhMmGmbDJhbqj8ZIqutNxu3aAHmL7vleohECBRqtZZBAarwpG8MVqSXs2PpqQQkWmS+5bEpMRuGAS+3AoDjY2PaV5rnOm4GlesLy+ahRZK4sJ8IygdnjX/u0EnrS+EqHjxg0W3Cy+WxQxJ+EzD2UZgLBCjTCp0tQszzJHouPoitbSMtYMtH5WdjWeT/XHEHRci7KlF2X8F6pCNpLnfrNFRYlbEUhRbUbgFW/s9rIlg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=shPMzEfRG/xoJ/stMxk05l3wKT5pzEhKGN8GTUgE4P0=;
+ b=gPXJdHm+8OYcEWuvj6eMKjlBX99uv4AQsOr2djUn2ud6PLjiCyFtfQfJjAUITlQ9bsQp5t6E1F2K4MFyBikUpXM5sip5pZyY1vyuVMwvoEY82Ed7hrHnn2bfRQTUnVAGcSOYNJCrgJ0usESRYDTnlrSmp0TzjB4NWdYwroVpeeNjG6ULh0pfW44McaOE/M30nWG+pAwtVo8+8mj3kyJkMVvYgmRGn+sx68sDgXUy+/PDFc9iEAr8Y9rN8XWNL5mRvm2MTTZwYm+/e/2pqikKmH6Dwrp3HdV3dbMkqC9dr1K6Q19GM+frcw/grO561LWyWrlisWjkZ0vQRMQXO9dYcQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=shPMzEfRG/xoJ/stMxk05l3wKT5pzEhKGN8GTUgE4P0=;
+ b=BLcSK0hg1FxwtlHf2tD9zUjUrRUOwQ52/ts/DgRcmebJu72goxRkYMTyEqQRYiC9zzQjucSb55BQ430y6xjIAsDZQZLE+WVKI/gli8zMdi9Q9AMM62ns4HB01v07HHqlCwZXsBCh6mk4JCxQ4x6x7lS7aCqETWn1YBS9K6uvK1w=
+Authentication-Results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=amd.com;
+Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
+ DM5PR12MB2518.namprd12.prod.outlook.com (2603:10b6:4:b0::33) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2958.20; Tue, 5 May 2020 21:16:39 +0000
+Received: from DM5PR12MB1386.namprd12.prod.outlook.com
+ ([fe80::6962:a808:3fd5:7adb]) by DM5PR12MB1386.namprd12.prod.outlook.com
+ ([fe80::6962:a808:3fd5:7adb%3]) with mapi id 15.20.2958.030; Tue, 5 May 2020
+ 21:16:39 +0000
+From:   Ashish Kalra <Ashish.Kalra@amd.com>
+To:     pbonzini@redhat.com
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        joro@8bytes.org, bp@suse.de, Thomas.Lendacky@amd.com,
+        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        srutherford@google.com, rientjes@google.com,
+        venu.busireddy@oracle.com, brijesh.singh@amd.com
+Subject: [PATCH v8 06/18] KVM: SVM: Add KVM_SEV_RECEIVE_FINISH command
+Date:   Tue,  5 May 2020 21:16:29 +0000
+Message-Id: <9df744ad5d7f8056362b04f34198d7fdaeb8db72.1588711355.git.ashish.kalra@amd.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1588711355.git.ashish.kalra@amd.com>
+References: <cover.1588711355.git.ashish.kalra@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: DM5PR1401CA0006.namprd14.prod.outlook.com
+ (2603:10b6:4:4a::16) To DM5PR12MB1386.namprd12.prod.outlook.com
+ (2603:10b6:3:77::9)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <51b4370ef70eebf941f6cef503943d7f7de3ea4d.1588621153.git.asml.silence@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-VR-OUT-STATUS: OK
-X-VR-OUT-SCORE: -100
-X-VR-OUT-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrjeejgddvvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucggtfgfnhhsuhgsshgtrhhisggvpdfftffgtefojffquffvnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpeevlhgrhicujfgrrhhrihhsuceosghughhssegtlhgrhigtohhnrdhorhhgqeenucggtffrrghtthgvrhhnpefgtdekjeehffefvdfhhedttdehkeejgfegiedtjedthfeuvdfgieevkeekvdfhvdenucfkphepieelrdduieefrddukeeirdejgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdphhgvlhhopehpshdvleehvddurdgurhgvrghmhhhoshhtphhsrdgtohhmpdhinhgvthepieelrdduieefrddukeeirdejgedprhgvthhurhhnqdhprghthhepvehlrgihucfjrghrrhhishcuoegsuhhgshestghlrgihtghonhdrohhrgheqpdhmrghilhhfrhhomhepsghughhssegtlhgrhigtohhnrdhorhhgpdhnrhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ashkalra_ubuntu_server.amd.com (165.204.77.1) by DM5PR1401CA0006.namprd14.prod.outlook.com (2603:10b6:4:4a::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27 via Frontend Transport; Tue, 5 May 2020 21:16:38 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 5b249a6e-558c-4148-904a-08d7f13999af
+X-MS-TrafficTypeDiagnostic: DM5PR12MB2518:|DM5PR12MB2518:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR12MB2518CB24B31833F910062AC78EA70@DM5PR12MB2518.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 0394259C80
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: udDPhcebMabbmAILKfH5wLtWuXaTymZU0tWRJXDnOBSnVFstrhmTB8pJxkeLiFfZ1Ne1o9HAwKiOhALn3kyHFAhqnPH5HEG2YMClpVQQqZSSvbrxajVlzo76CYjtE3UiRKlm0d6IZYng/DGp9eGuvcZiLDAAI0rwgfmuodiwO60+sUDZkR+0Ra7CIPba20t5S6S+f62cXWaZ+EmmIb8lN/i5HV17iYwchOssBFipLUvWHsACj88hJE3GYPBd/v1bgZu2Oj1EYA5hgdZq5fr26NK5R2+IHv+0M38sRTsOA6X+Y4+BulIoPKTCYMadTZcBQb/+9aUCx8GK9gkWr4CrEk0sgCEAjbYjP8xdIcc+cdH9A4pJkmA4FE/YqK4s4n1tHxU2UdQtjauU7o89UOs9P0pHHsADdMAufqkQymtuk/hqPQXHCL/6AIsrwPv5UdVC8CdWOeaTaVBDCt8NWil5XCIZfYG0O0v6y+2PwuxzSatAqcaQvwfJBcBHJBgwaYLzYcgti+F92QVHztu8FLdpBY6XA1xYCCJR6qA7+AOwExp2hkq763bF8jEm5QCv9CAz
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1386.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(33430700001)(6916009)(26005)(36756003)(956004)(16526019)(6486002)(498600001)(2906002)(5660300002)(6666004)(2616005)(66574013)(186003)(66476007)(7416002)(52116002)(8936002)(86362001)(7696005)(8676002)(66556008)(66946007)(4326008)(33440700001)(136400200001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 8TVtXgV0r5crcKzUlhvEBOE9c1YGfwT2EkApZEcT4pMaZqSQY+IchAIFQcbGLyy21rlHXQLwgUrYbXK6Yv4pzs/gneLt1POeet8gohh4YyFVKrvHVkctLMTHW231XO5zRcCEWsCHoIXSGxXISWmTXU/hHD9G6Wnz0fsM5slBnSvpPeFBtGPOncaWT+ikcDnn0Ras55Ic3VW6viUBc52PqpFB/aRnoJccsdC4W2HIxvDXfyhFrXEBRbikwAzuG7zgLumI6lZXM1hC2EII+xXyOtfxdBanvyuK4pxO4OkLmFsGPsnidnu2pVH0EQMxm4a03nHYWa9xifEtBPMws4Lsu5doD6nn7RpXFuNxcorUvvUe9LDQYVOPmp3fiQ+YGFxLhUrXuOPgVqoHSltAl5xfahrV7yjHf+q8w40lvFkfVWv26pNdDjnzVAo0/u/f9qH2Cb/NZ+kYarRD6wfPdW47Ax3gmJMRa7GTkQ9O2Huu5r2iJTjOfy+oELJngPqOvitA5XYwnHaYz3FRxEPc/ZxhmQ/AQRABByKjA9xDFHkpM/iq7QKL4+8XpggFRaAEGzpc4kZ6D6s4LLwfaXBOySlvuVwHm7pLMOvH1hI6X5shB0E0CfHJiSw1QrL3UrW8NxfJzBT5YLU8Z3+RqkXICLLmfgge0NZhNPLLZNqHFhsW3lMeu9/t+axJ7TqauMKe4iLVx8oETllZgI25d1SDKpf1IQIhx7IgO5ameUP37drsp8TiWnQaYBh46OYX+HvM4UZPgDyy5YB2Wcl8as8uwiZ+J36bbNOhcGSZc1jtlL0iGgs=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5b249a6e-558c-4148-904a-08d7f13999af
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2020 21:16:39.2533
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5REqI6Q528azz3tqBUEgURmvPEG/946pFuxVDQc7khJtgC61ucLknojg9tsGKKDNB8tWmebSh4up4R8Zpnzeww==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2518
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04 2020 at 22:39:35 +0300, Pavel Begunkov quoth thus:
+From: Brijesh Singh <Brijesh.Singh@amd.com>
 
-> do_splice() is used by io_uring, as will be do_tee(). Move f_mode
-> checks from sys_{splice,tee}() to do_{splice,tee}(), so they're
-> enforced for io_uring as well.
+The command finalize the guest receiving process and make the SEV guest
+ready for the execution.
 
-I'm not seeing any check against splicing a pipe to itself in the
-io_uring path, although maybe I just missed it.  As the comment
-below says: /* Splicing to self would be fun, but... */ .
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: x86@kernel.org
+Cc: kvm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Reviewed-by: Steve Rutherford <srutherford@google.com>
+Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+---
+ .../virt/kvm/amd-memory-encryption.rst        |  8 +++++++
+ arch/x86/kvm/svm/sev.c                        | 23 +++++++++++++++++++
+ 2 files changed, 31 insertions(+)
 
-> Fixes: 7d67af2c0134 ("io_uring: add splice(2) support")
-> Reported-by: Jann Horn <jannh@google.com>
-> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-> ---
->  fs/splice.c | 45 ++++++++++++++++++---------------------------
->  1 file changed, 18 insertions(+), 27 deletions(-)
-> 
-> diff --git a/fs/splice.c b/fs/splice.c
-> index 4735defc46ee..fd0a1e7e5959 100644
-> --- a/fs/splice.c
-> +++ b/fs/splice.c
-> @@ -1118,6 +1118,10 @@ long do_splice(struct file *in, loff_t __user *off_in,
->  	loff_t offset;
->  	long ret;
->  
-> +	if (unlikely(!(in->f_mode & FMODE_READ) ||
-> +		     !(out->f_mode & FMODE_WRITE)))
-> +		return -EBADF;
-> +
->  	ipipe = get_pipe_info(in);
->  	opipe = get_pipe_info(out);
->  
-> @@ -1125,12 +1129,6 @@ long do_splice(struct file *in, loff_t __user *off_in,
->  		if (off_in || off_out)
->  			return -ESPIPE;
->  
-> -		if (!(in->f_mode & FMODE_READ))
-> -			return -EBADF;
-> -
-> -		if (!(out->f_mode & FMODE_WRITE))
-> -			return -EBADF;
-> -
->  		/* Splicing to self would be fun, but... */
->  		if (ipipe == opipe)
->  			return -EINVAL;
-> @@ -1153,9 +1151,6 @@ long do_splice(struct file *in, loff_t __user *off_in,
->  			offset = out->f_pos;
->  		}
->  
-> -		if (unlikely(!(out->f_mode & FMODE_WRITE)))
-> -			return -EBADF;
-> -
->  		if (unlikely(out->f_flags & O_APPEND))
->  			return -EINVAL;
->  
-> @@ -1440,15 +1435,11 @@ SYSCALL_DEFINE6(splice, int, fd_in, loff_t __user *, off_in,
->  	error = -EBADF;
->  	in = fdget(fd_in);
->  	if (in.file) {
-> -		if (in.file->f_mode & FMODE_READ) {
-> -			out = fdget(fd_out);
-> -			if (out.file) {
-> -				if (out.file->f_mode & FMODE_WRITE)
-> -					error = do_splice(in.file, off_in,
-> -							  out.file, off_out,
-> -							  len, flags);
-> -				fdput(out);
-> -			}
-> +		out = fdget(fd_out);
-> +		if (out.file) {
-> +			error = do_splice(in.file, off_in, out.file, off_out,
-> +					  len, flags);
-> +			fdput(out);
->  		}
->  		fdput(in);
->  	}
-> @@ -1770,6 +1761,10 @@ static long do_tee(struct file *in, struct file *out, size_t len,
->  	struct pipe_inode_info *opipe = get_pipe_info(out);
->  	int ret = -EINVAL;
->  
-> +	if (unlikely(!(in->f_mode & FMODE_READ) ||
-> +		     !(out->f_mode & FMODE_WRITE)))
-> +		return -EBADF;
-> +
->  	/*
->  	 * Duplicate the contents of ipipe to opipe without actually
->  	 * copying the data.
-> @@ -1795,7 +1790,7 @@ static long do_tee(struct file *in, struct file *out, size_t len,
->  
->  SYSCALL_DEFINE4(tee, int, fdin, int, fdout, size_t, len, unsigned int, flags)
->  {
-> -	struct fd in;
-> +	struct fd in, out;
->  	int error;
->  
->  	if (unlikely(flags & ~SPLICE_F_ALL))
-> @@ -1807,14 +1802,10 @@ SYSCALL_DEFINE4(tee, int, fdin, int, fdout, size_t, len, unsigned int, flags)
->  	error = -EBADF;
->  	in = fdget(fdin);
->  	if (in.file) {
-> -		if (in.file->f_mode & FMODE_READ) {
-> -			struct fd out = fdget(fdout);
-> -			if (out.file) {
-> -				if (out.file->f_mode & FMODE_WRITE)
-> -					error = do_tee(in.file, out.file,
-> -							len, flags);
-> -				fdput(out);
-> -			}
-> +		out = fdget(fdout);
-> +		if (out.file) {
-> +			error = do_tee(in.file, out.file, len, flags);
-> +			fdput(out);
->  		}
->   		fdput(in);
->   	}
-> -- 
-> 2.24.0
+diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documentation/virt/kvm/amd-memory-encryption.rst
+index 04333ec1b001..de5a00d86506 100644
+--- a/Documentation/virt/kvm/amd-memory-encryption.rst
++++ b/Documentation/virt/kvm/amd-memory-encryption.rst
+@@ -375,6 +375,14 @@ Returns: 0 on success, -negative on error
+                 __u32 trans_len;
+         };
+ 
++15. KVM_SEV_RECEIVE_FINISH
++------------------------
++
++After completion of the migration flow, the KVM_SEV_RECEIVE_FINISH command can be
++issued by the hypervisor to make the guest ready for execution.
++
++Returns: 0 on success, -negative on error
++
+ References
+ ==========
+ 
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index 165a612f317a..698704defbcd 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -1327,6 +1327,26 @@ static int sev_receive_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
+ 	return ret;
+ }
+ 
++static int sev_receive_finish(struct kvm *kvm, struct kvm_sev_cmd *argp)
++{
++	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
++	struct sev_data_receive_finish *data;
++	int ret;
++
++	if (!sev_guest(kvm))
++		return -ENOTTY;
++
++	data = kzalloc(sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	data->handle = sev->handle;
++	ret = sev_issue_cmd(kvm, SEV_CMD_RECEIVE_FINISH, data, &argp->error);
++
++	kfree(data);
++	return ret;
++}
++
+ int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+ {
+ 	struct kvm_sev_cmd sev_cmd;
+@@ -1386,6 +1406,9 @@ int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+ 	case KVM_SEV_RECEIVE_UPDATE_DATA:
+ 		r = sev_receive_update_data(kvm, &sev_cmd);
+ 		break;
++	case KVM_SEV_RECEIVE_FINISH:
++		r = sev_receive_finish(kvm, &sev_cmd);
++		break;
+ 	default:
+ 		r = -EINVAL;
+ 		goto out;
+-- 
+2.17.1
+
