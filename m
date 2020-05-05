@@ -2,104 +2,104 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE39C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 09:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 141EAC47256
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 09:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0C97206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 09:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1ADE206CC
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 09:24:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbgEEJUH (ORCPT
+        id S1728583AbgEEJYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 05:20:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:35376 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728650AbgEEJUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 05:20:07 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A5F2A30E;
-        Tue,  5 May 2020 02:20:06 -0700 (PDT)
-Received: from [10.37.12.10] (unknown [10.37.12.10])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC9973F305;
-        Tue,  5 May 2020 02:20:02 -0700 (PDT)
-Subject: Re: [PATCH V3 11/16] arm64/cpufeature: Add remaining feature bits in
- ID_AA64PFR1 register
-To:     anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org
-Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org
-References: <1588426445-24344-1-git-send-email-anshuman.khandual@arm.com>
- <1588426445-24344-12-git-send-email-anshuman.khandual@arm.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <4c6e9f6e-fffa-8fdf-ad1a-f0c6514c3571@arm.com>
-Date:   Tue, 5 May 2020 10:24:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Tue, 5 May 2020 05:24:51 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:38374 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbgEEJYu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 05:24:50 -0400
+Received: by mail-oi1-f193.google.com with SMTP id r66so1396581oie.5;
+        Tue, 05 May 2020 02:24:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fA6tjdmApvG0BpsjkTdWv9/ZTQZ9vjPp82obp9l863E=;
+        b=KuMdbSTevVVyIcYYwphkz89h1ykWQxiWyG2eWWDmtjnV+yzVc4tt2q8+BeaOpzjM1U
+         yCoOgzHHy2BrTq5b3au0LHxkOhhw4Z9k4bLPrwuO/lytRpt6mL2+haUmOV1DQFjy4VXY
+         1zNA43sIG/9b81RppTbGgEmH5N581W6CE9EUyScqWgQDE38GaloJ9gt4wTnypxmoQDsX
+         W+EQyre3gBrosnxRDrqg2St+AdOSbKgPKyhqcbTzAvNrNJSivm/xbeBfql/gQdM9KVsk
+         5WZzmCaE6u3AfXJXu/yrUHpSwZrvhJLLQ1magehi2GgProOFXFZOm/8Ymn6xRHF42yyh
+         iMdw==
+X-Gm-Message-State: AGi0PuarmqkJr6sohlcUqKgki7AcwsDBScsPOP4hlxLXa1y4giZPspff
+        9/bcY/NHnL9l35nLVGTQwfX7b/e+jS736vysKlk=
+X-Google-Smtp-Source: APiQypKOjAo7caYTLLrvaP2LfYH11Xj01QYaa+uBtqm/9mZJ41Mdkz0F6pXJ47B38HgwsYDHPLvoSnLN/Mh8S4elUzU=
+X-Received: by 2002:aca:f541:: with SMTP id t62mr1674694oih.148.1588670688206;
+ Tue, 05 May 2020 02:24:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1588426445-24344-12-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200505083926.28503-1-m.szyprowski@samsung.com>
+ <CGME20200505084634eucas1p1e0ea160dd77afbf6d2f7e6154ded40d0@eucas1p1.samsung.com>
+ <20200505084614.30424-1-m.szyprowski@samsung.com> <20200505084614.30424-18-m.szyprowski@samsung.com>
+In-Reply-To: <20200505084614.30424-18-m.szyprowski@samsung.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 5 May 2020 11:24:37 +0200
+Message-ID: <CAMuHMdVisnijasoxazj+6kUFM3UrTYkVo6kC1dxZv5zK0yD7TQ@mail.gmail.com>
+Subject: Re: [PATCH v3 18/25] drm: rcar-du: fix common struct sg_table related issues
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        linaro-mm-sig@lists.linaro.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/02/2020 02:34 PM, Anshuman Khandual wrote:
-> Enable the following features bits in ID_AA64PFR1 register as per ARM DDI
-> 0487F.a specification.
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> 
-> Suggested-by: Will Deacon <will@kernel.org>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Hi Marek,
+
+On Tue, May 5, 2020 at 10:48 AM Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
+> The Documentation/DMA-API-HOWTO.txt states that dma_map_sg returns the
+> numer of the created entries in the DMA address space. However the
+> subsequent calls to dma_sync_sg_for_{device,cpu} and dma_unmap_sg must be
+> called with the original number of the entries passed to dma_map_sg. The
+> sg_table->nents in turn holds the result of the dma_map_sg call as stated
+> in include/linux/scatterlist.h. A common mistake was to ignore a result
+> of the dma_map_sg function and don't use the sg_table->orig_nents at all.
+>
+> To avoid such issues, lets use common dma-mapping wrappers operating
+> directly on the struct sg_table objects and adjust references to the
+> nents and orig_nents respectively.
+>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 > ---
->   arch/arm64/include/asm/sysreg.h | 4 ++++
->   arch/arm64/kernel/cpufeature.c  | 4 ++++
->   2 files changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-> index c93ea6613f51..f1c0d874220a 100644
-> --- a/arch/arm64/include/asm/sysreg.h
-> +++ b/arch/arm64/include/asm/sysreg.h
-> @@ -666,7 +666,11 @@
->   #define ID_AA64PFR0_EL0_32BIT_64BIT	0x2
->   
->   /* id_aa64pfr1 */
-> +#define ID_AA64PFR1_MPAMFRAC_SHIFT	16
-> +#define ID_AA64PFR1_RASFRAC_SHIFT	12
-> +#define ID_AA64PFR1_MTE_SHIFT		8
->   #define ID_AA64PFR1_SSBS_SHIFT		4
-> +#define ID_AA64PFR1_BT_SHIFT		0
->   
->   #define ID_AA64PFR1_SSBS_PSTATE_NI	0
->   #define ID_AA64PFR1_SSBS_PSTATE_ONLY	1
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index f5a39e040804..181e09d62147 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -233,7 +233,11 @@ static const struct arm64_ftr_bits ftr_id_aa64pfr0[] = {
->   };
->   
->   static const struct arm64_ftr_bits ftr_id_aa64pfr1[] = {
-> +	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR1_MPAMFRAC_SHIFT, 4, 0),
-> +	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR1_RASFRAC_SHIFT, 4, 0),
+> For more information, see '[PATCH v3 00/25] DRM: fix struct sg_table nents
+> vs. orig_nents misuse' thread: https://lkml.org/lkml/2020/5/5/187
 
-These should be hidden as well.
+For the modern lore-users:
+https://lore.kernel.org/r/20200505083926.28503-1-m.szyprowski@samsung.com/
 
-> +	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR1_MTE_SHIFT, 4, 0),
->   	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR1_SSBS_SHIFT, 4, ID_AA64PFR1_SSBS_PSTATE_NI),
-> +	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR1_BT_SHIFT, 4, 0),
+Gr{oetje,eeting}s,
 
-I would say remove the MTE, BTI fields for now. As they must be VISIBLE, 
-but with the kernel support for these merged. They will be added with 
-their respective series.
+                        Geert
 
-Suzuki
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
