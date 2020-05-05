@@ -2,111 +2,163 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E6E8C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA102C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 576092078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B11632078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:08:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="UIWX9Qri"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729690AbgEEPIK (ORCPT
+        id S1730135AbgEEPIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:08:10 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:47293 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729571AbgEEPIF (ORCPT
+        Tue, 5 May 2020 11:08:17 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:45492 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729571AbgEEPIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:08:05 -0400
-Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MPXta-1jjp3o3yQk-00Mbmc; Tue, 05 May 2020 17:08:03 +0200
-Received: by mail-qk1-f172.google.com with SMTP id b6so2556130qkh.11;
-        Tue, 05 May 2020 08:08:02 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaHRj7c61J2D3gee3do4LzrNLt4GBcAIWegL+1BigBEQUl2due+
-        GcqPt9fFRM4+CimTZRfxik9eBUWm6dA7l1nVNeE=
-X-Google-Smtp-Source: APiQypLiOT+7IwI9rxENX6COgKMKWkszRH1A8ioRyBipPnDvFINtZDeTAFba6U/nOjaK75OsthpNiD3Px61PZ644fKk=
-X-Received: by 2002:a37:b543:: with SMTP id e64mr3963064qkf.394.1588691281639;
- Tue, 05 May 2020 08:08:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200505140407.373983-1-arnd@arndb.de> <CANpmjNNw6M9Gqj6WGTHH4Cegu8roTVu5x6Vqs_tCBxX3gPwL4A@mail.gmail.com>
-In-Reply-To: <CANpmjNNw6M9Gqj6WGTHH4Cegu8roTVu5x6Vqs_tCBxX3gPwL4A@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 5 May 2020 17:07:45 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a01jV71_EzaCkaZgG51vnJ+x1c192dZ9efEKTawF6noDQ@mail.gmail.com>
-Message-ID: <CAK8P3a01jV71_EzaCkaZgG51vnJ+x1c192dZ9efEKTawF6noDQ@mail.gmail.com>
-Subject: Re: [PATCH] omapfb: don't annotate dss_conv_list as __initdata
-To:     Marco Elver <elver@google.com>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
+        Tue, 5 May 2020 11:08:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1588691295; x=1620227295;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=IAgZZDQAgmaOCAEF+gMgVxcblMlmWcnuMZ5A1KV3daA=;
+  b=UIWX9QriVhXaUgff+rXR8CA9p3BYxPpUa+3orOtDkb6FXERDofUChTKC
+   8MUSyAGmNNqx4e362Ei3lvfT5hIds/3aVLJVM9f6g/2h3xKC2V+KhEaIz
+   ivDgJKOUSjafjb7ELC0Gws+PdjFwiEyBfNvWkQUC7kzCCxOajjI9ZcNow
+   w=;
+IronPort-SDR: kyd4994nfXuQCwn5F4nNpODgpRWvzpQJ2KEhGPjS9GIDWdfh2joXL/vSHZCx1BE9ajvdBjCf9k
+ VpSuB92/uMKw==
+X-IronPort-AV: E=Sophos;i="5.73,355,1583193600"; 
+   d="scan'208";a="28970664"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 05 May 2020 15:08:00 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com (Postfix) with ESMTPS id 994FBA1F77;
+        Tue,  5 May 2020 15:07:59 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 5 May 2020 15:07:59 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.38) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 5 May 2020 15:07:50 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     Eric Dumazet <edumazet@google.com>
+CC:     SeongJae Park <sjpark@amazon.com>,
+        David Miller <davem@davemloft.net>,
+        "Al Viro" <viro@zeniv.linux.org.uk>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        <sj38.park@gmail.com>, netdev <netdev@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:RIhLFUld2n1YiAdQx3NtguCuLNbWfAjWzdULgSVJ5EkvYCX0P0A
- /ydrh3vQeelhJZMTtC0rRnKepQFiX/3yetcgIw3mylemQxxnxGs6EhQ5o23zoW97Slg2EAr
- K+EGgiaOZUFbitGLUwyqlRMF5aLRmO6pmBduK+3XlRdMjgQjlF6QFXlVvGnMjoe1TgT6X84
- Vn5UtkRkeJm6QqfHhlwOQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:fkGi9xr/u8Y=:vfZhLEmKFMMmAFrPB+I6BB
- hO5W1PdOmgFomDohsdIyUp7MlshNUx+No36igSz3cUPnZkS0mOp89nxBzEjfmLnXc7oawsAKW
- N0CIr4iU8y1LBYE4KsSsctE4VcevKg+fPK3hnhljuD+22Dvl1v6B8Arf8cuiYAT8KcoMATF9j
- OW5flkXe3q8joTEfWZ4AWLZz5xJ0f/62iOAspK1vtj8MrtF8rMOflyWXHuplaLhmGbNJgayPz
- 4R/CaPH65UQ1f39v0FTuQOB3hu/pjBNmkjS7CeeCqXLbuG7J7q+TAZZU1VJvXPDYdCwNIQ7E0
- gnI72b/39dNkD1XSavInHhF4zYYBQJUJ/Lve0cYc7pZcPDIbXvCTZAAaG2GOpQnJg0dH9s3CL
- vHzD2nY2LrC/ySYdVQ0coeSwtbIgMBQ7bw2L0AJu0+41iDrHHO/Wh70oIE9muRovBw+lk6+N9
- Sf/6BalDyGQcu8cjFbI9EF3KZXh7mRBilbg+p+TZi9C5YvYKqd6kkQVXDFJPskbCmvndSr8gc
- qK9XKTqcr494J2wOGb+fyS1AtP3PgXffOYA/AAZJ4AliaHaeYRhlZ7G2RYMjM2fqAAYJTD/ca
- QGZownEJr5wVS89TNCY9yiiNgcr3YZZB74qpEdVXKtoDmEmWnb/rzMujPb5h/aIDwAyAwCwNY
- rIgqgiFoDZwijX99bFgwimOR6KR8mBzZ7A63SHqOK+QaftQr9eEsJCXVzJTPEuz87CqmN1H46
- GcXp/aZvM7y7EzLV4MUgj3TEFokGCz+7ahLqDo2MD2E5QiXAxPtsKIMPG9m7oc6PCS/qTyTAA
- zRhoczbjmaS0uNhRilGBbH96Lf2xIBFzboBLNr0/sBm6h7B6g8=
+        SeongJae Park <sjpark@amazon.de>, <snu@amazon.com>,
+        <amit@kernel.org>, <stable@vger.kernel.org>
+Subject: Re: Re: [PATCH net v2 0/2] Revert the 'socket_alloc' life cycle change
+Date:   Tue, 5 May 2020 17:07:17 +0200
+Message-ID: <20200505150717.5688-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <CANn89iJ6f=x9XSfjSCFc0KNcjSXop3QMEgAfh9PLJ6khTbXrnQ@mail.gmail.com> (raw)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.38]
+X-ClientProxiedBy: EX13D28UWB004.ant.amazon.com (10.43.161.56) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 4:12 PM 'Marco Elver' via Clang Built Linux
-<clang-built-linux@googlegroups.com> wrote:
-> On Tue, 5 May 2020 at 16:04, Arnd Bergmann <arnd@arndb.de> wrote:
-> > With the kcsan changes, __read_once_size() is not inlined, but
-> > clang can decide to emit a version that hardcodes the address, which
-> > in turn triggers a warning for dss_conv_list being __initdata but
-> > __read_once_size() not being __init:
-> >
-> > WARNING: modpost: vmlinux.o(.text+0x6e4d7a): Section mismatch in
-> > reference from the function __read_once_size() to the variable
-> > .init.data:dss_conv_list
-> > The function __read_once_size() references
-> > the variable __initdata dss_conv_list.
-> > This is often because __read_once_size lacks a __initdata
-> > annotation or the annotation of dss_conv_list is wrong.
-> >
-> > This is clearly a false positive warning, but it's hard to tell
-> > who is to blame for it. Work around it by removing the __initdata
-> > annotation, wasting the space of two pointers in return for getting
-> > rid of the warning.
-> >
-> > Fixes: dfd402a4c4ba ("kcsan: Add Kernel Concurrency Sanitizer infrastructure")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> [+Cc Will]
->
-> I think Will is working on a series that completely overhauls
-> READ_ONCE/WRITE_ONCE, also getting rid of __read_once_size() in the
-> process, which would make this patch redundant. If we can live with
-> this warning until the new READ_ONCE/WRITE_ONCE gets merged, we can
-> probably keep things as-is for now.
+On Tue, 5 May 2020 07:53:39 -0700 Eric Dumazet <edumazet@google.com> wrote:
 
-Ok, let's drop this one for now.
+> On Tue, May 5, 2020 at 4:54 AM SeongJae Park <sjpark@amazon.com> wrote:
+> >
+> > CC-ing stable@vger.kernel.org and adding some more explanations.
+> >
+> > On Tue, 5 May 2020 10:10:33 +0200 SeongJae Park <sjpark@amazon.com> wrote:
+> >
+> > > From: SeongJae Park <sjpark@amazon.de>
+> > >
+> > > The commit 6d7855c54e1e ("sockfs: switch to ->free_inode()") made the
+> > > deallocation of 'socket_alloc' to be done asynchronously using RCU, as
+> > > same to 'sock.wq'.  And the following commit 333f7909a857 ("coallocate
+> > > socket_sq with socket itself") made those to have same life cycle.
+> > >
+> > > The changes made the code much more simple, but also made 'socket_alloc'
+> > > live longer than before.  For the reason, user programs intensively
+> > > repeating allocations and deallocations of sockets could cause memory
+> > > pressure on recent kernels.
+> >
+> > I found this problem on a production virtual machine utilizing 4GB memory while
+> > running lebench[1].  The 'poll big' test of lebench opens 1000 sockets, polls
+> > and closes those.  This test is repeated 10,000 times.  Therefore it should
+> > consume only 1000 'socket_alloc' objects at once.  As size of socket_alloc is
+> > about 800 Bytes, it's only 800 KiB.  However, on the recent kernels, it could
+> > consume up to 10,000,000 objects (about 8 GiB).  On the test machine, I
+> > confirmed it consuming about 4GB of the system memory and results in OOM.
+> >
+> > [1] https://github.com/LinuxPerfStudy/LEBench
+> 
+> To be fair, I have not backported Al patches to Google production
+> kernels, nor I have tried this benchmark.
+> 
+> Why do we have 10,000,000 objects around ? Could this be because of
+> some RCU problem ?
 
-        Arnd
+Mainly because of a long RCU grace period, as you guess.  I have no idea how
+the grace period became so long in this case.
+
+As my test machine was a virtual machine instance, I guess RCU readers
+preemption[1] like problem might affected this.
+
+[1] https://www.usenix.org/system/files/conference/atc17/atc17-prasad.pdf
+
+> 
+> Once Al patches reverted, do you have 10,000,000 sock_alloc around ?
+
+Yes, both the old kernel that prior to Al's patches and the recent kernel
+reverting the Al's patches didn't reproduce the problem.
+
+
+Thanks,
+SeongJae Park
+
+> 
+> Thanks.
+> 
+> >
+> > >
+> > > To avoid the problem, this commit reverts the changes.
+> >
+> > I also tried to make fixup rather than reverts, but I couldn't easily find
+> > simple fixup.  As the commits 6d7855c54e1e and 333f7909a857 were for code
+> > refactoring rather than performance optimization, I thought introducing complex
+> > fixup for this problem would make no sense.  Meanwhile, the memory pressure
+> > regression could affect real machines.  To this end, I decided to quickly
+> > revert the commits first and consider better refactoring later.
+> >
+> >
+> > Thanks,
+> > SeongJae Park
+> >
+> > >
+> > > SeongJae Park (2):
+> > >   Revert "coallocate socket_wq with socket itself"
+> > >   Revert "sockfs: switch to ->free_inode()"
+> > >
+> > >  drivers/net/tap.c      |  5 +++--
+> > >  drivers/net/tun.c      |  8 +++++---
+> > >  include/linux/if_tap.h |  1 +
+> > >  include/linux/net.h    |  4 ++--
+> > >  include/net/sock.h     |  4 ++--
+> > >  net/core/sock.c        |  2 +-
+> > >  net/socket.c           | 23 ++++++++++++++++-------
+> > >  7 files changed, 30 insertions(+), 17 deletions(-)
+> > >
+> > > --
+> > > 2.17.1
