@@ -2,183 +2,198 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C032C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EED5C47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A55720721
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07910206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:59:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="GcCRqF0r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ey0SjiuG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729474AbgEEX6I (ORCPT
+        id S1729561AbgEEX7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 19:58:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55640 "EHLO
+        Tue, 5 May 2020 19:59:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbgEEX6I (ORCPT
+        with ESMTP id S1728875AbgEEX7n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 19:58:08 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CF8DC061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 16:58:08 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id x77so105475pfc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 16:58:07 -0700 (PDT)
+        Tue, 5 May 2020 19:59:43 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 923D6C061A0F;
+        Tue,  5 May 2020 16:59:43 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id o18so1776820pgg.8;
+        Tue, 05 May 2020 16:59:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=JzaMwZpjc8kiyvkXAl8SC5OdIZko9B1uAdjf5EokFQA=;
-        b=GcCRqF0rng+bDWT+XXGpRMzlhC2e6WqRpie++FCTYazS0pzx+X/KrFcQezY41N8Bqo
-         L29pS/NkKaT2NqRgus6tqpdexXorGt7AUV+kFahU2b1GCiXg75mTfXKtntElnpIKDADf
-         HGKWtD5DBrBDh7IcgMYYf2RgdPMDDROgrQGmw=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=szYwvsdRj79cRVT2Gpz1TxpVJP8+RjL1MmVEYqGKUlE=;
+        b=Ey0SjiuGIH690bTUnJEKx76RYYLMSN5gUCW45Ao9FuptWCljoMUo1ENHwK48dzx8SO
+         tL2NafaLrLA0zQqKx2bT8fq2WcOtgfJUie9BxogGClxQcAZHFplLBF6nBCEnQkcjx1ju
+         TMX9YaCqc25GbwZ06zryFnHP9+6s/38Ps7+SHCQsgyrvdr/y3YI8mHZ62JryC+Wv8t+k
+         V38+8PNMjlcVkpajGGET3xHU1M1NIN2RjotDGj7VJ2DA2o4HIyYepPNaI6FXOJpKPPp5
+         g50FYlb752kscX0JYBSrfq1KHzZkj1DuqFDJwtMuoYpith1EENigueWQ3bmXit33sEmb
+         UBJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=JzaMwZpjc8kiyvkXAl8SC5OdIZko9B1uAdjf5EokFQA=;
-        b=s5yVg3ZNhznYVkVe7i1hX2hp91bypisF0wsTLVP0cudV83WxG1CSZXKVZHLcmE8ePw
-         eVN4L7d3scUg825+jkQcvK2zyu75gpHyvybIuNRj7j/6wshRPUbkeuWJU3KhtjJTrsJW
-         2okLMphymESb0f8tap9vf2/UL46G1Y0QAr1oahHUzIbaQPSXGCPak9/0ewTTojcasIoa
-         27sbmxws10/iRXtiCIeXzINUpRy2E60je3oD8oM5Tb6YXq44qJjULbTg3x2amLByU1XK
-         tHU+Yhqo8RYC4Pvgeqn0fbzEniC4UMrxIgkf6TQrp6lfZ+/1b44QzY7yqROzuWmLrbLC
-         kYww==
-X-Gm-Message-State: AGi0PuY/imhcJ5rfJ9wLK+dd57cQwcQF8e1I4BiqfjHJ3SPE9Ls9kNBX
-        UiZowZG8Lt9BYS8PWfzynRBSeQ==
-X-Google-Smtp-Source: APiQypIqzHj2k/gz4IlPISOypaTNQykNBBmbQbErw1/2L6sk4p7yd0/jxv3gmS3o6U9qQVXKSF+LKg==
-X-Received: by 2002:a63:e62:: with SMTP id 34mr4290017pgo.300.1588723087207;
-        Tue, 05 May 2020 16:58:07 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id b13sm42170pfo.67.2020.05.05.16.58.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2020 16:58:06 -0700 (PDT)
-Subject: Re: [PATCH v3 6/7] misc: bcm-vk: add Broadcom VK driver
-To:     kbuild test robot <lkp@intel.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        bjorn.andersson@linaro.org, Arnd Bergmann <arnd@arndb.de>
-Cc:     kbuild-all@lists.01.org, "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Dan Carpenter <error27@gmail.com>
-References: <20200420162809.17529-7-scott.branden@broadcom.com>
- <202004221945.LY6x0DQD%lkp@intel.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <b3e0c534-9e6a-f270-b6af-3658dca1bd42@broadcom.com>
-Date:   Tue, 5 May 2020 16:58:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=szYwvsdRj79cRVT2Gpz1TxpVJP8+RjL1MmVEYqGKUlE=;
+        b=Anyc/EMlh9gsOtXXsnIlIKJUQ7OTyyntoDIvxf+5xrdQhQf17h58piV48iNy/aVjcP
+         ogWW6au0NrrJLd7uPRXuEkju7JhOabipW2qktNDlyXXxzrvpBhA+0gq/3stTmbY2RAEn
+         NzRjaLlZ4/l+tuYMMj5ETSBhudm6lTSMrurdGAWK6/ZHxQl3ltl6rKWyyAdIsrjdS2it
+         D2OBcOP5pGyy8W+Tn8xayX6lXP/4Qehr3lGCZniSkoEjmwsWJ5DHIipwHgaAqrdAHSDD
+         Ym56o5locHFjyiYOrczx90aXUZsXhw9nGl7UFJQPgbwqMlOk4HAoV5/2nt/s3DlNfQfV
+         Jzhg==
+X-Gm-Message-State: AGi0PuYRN501QLb+qKqjKknAuSqXPuHD2eF2ZRdeRrdN+7cmzWCLtBKl
+        aRhANAeI2cHABA0cyOaHzcJFyabN
+X-Google-Smtp-Source: APiQypJ+cPtvi0KmYvnPzMJohCS6FYIqzTsTupo9R0dBKgjN+LZRimGxRIFLz7nSaEmc0u0UsqnQcQ==
+X-Received: by 2002:aa7:8619:: with SMTP id p25mr5406755pfn.105.1588723183002;
+        Tue, 05 May 2020 16:59:43 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:62d5])
+        by smtp.gmail.com with ESMTPSA id c2sm119863pfp.118.2020.05.05.16.59.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 16:59:42 -0700 (PDT)
+Date:   Tue, 5 May 2020 16:59:39 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] bpf: Tweak BPF jump table optimizations for objtool
+ compatibility
+Message-ID: <20200505235939.utnmzqsn22cec643@ast-mbp.dhcp.thefacebook.com>
+References: <20200501190930.ptxyml5o4rviyo26@ast-mbp.dhcp.thefacebook.com>
+ <20200501192204.cepwymj3fln2ngpi@treble>
+ <20200501194053.xyahhknjjdu3gqix@ast-mbp.dhcp.thefacebook.com>
+ <20200501195617.czrnfqqcxfnliz3k@treble>
+ <20200502030622.yrszsm54r6s6k6gq@ast-mbp.dhcp.thefacebook.com>
+ <20200502192105.xp2osi5z354rh4sm@treble>
+ <20200505174300.gech3wr5v6kkho35@ast-mbp.dhcp.thefacebook.com>
+ <20200505181108.hwcqanvw3qf5qyxk@treble>
+ <20200505195320.lyphpnprn3sjijf6@ast-mbp.dhcp.thefacebook.com>
+ <20200505202823.zkmq6t55fxspqazk@treble>
 MIME-Version: 1.0
-In-Reply-To: <202004221945.LY6x0DQD%lkp@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505202823.zkmq6t55fxspqazk@treble>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All the kbuild and sparse issues should be resolved in PATCH v4.
+On Tue, May 05, 2020 at 03:28:23PM -0500, Josh Poimboeuf wrote:
+> On Tue, May 05, 2020 at 12:53:20PM -0700, Alexei Starovoitov wrote:
+> > On Tue, May 05, 2020 at 01:11:08PM -0500, Josh Poimboeuf wrote:
+> > > On Tue, May 05, 2020 at 10:43:00AM -0700, Alexei Starovoitov wrote:
+> > > > > Or, if you want to minimize the patch's impact on other arches, and keep
+> > > > > the current patch the way it is (with bug fixed and changed patch
+> > > > > description), that's fine too.  I can change the patch description
+> > > > > accordingly.
+> > > > > 
+> > > > > Or if you want me to measure the performance impact of the +40% code
+> > > > > growth, and *then* decide what to do, that's also fine.  But you'd need
+> > > > > to tell me what tests to run.
+> > > > 
+> > > > I'd like to minimize the risk and avoid code churn,
+> > > > so how about we step back and debug it first?
+> > > > Which version of gcc are you using and what .config?
+> > > > I've tried:
+> > > > Linux version 5.7.0-rc2 (gcc version 10.0.1 20200505 (prerelease) (GCC)
+> > > > CONFIG_UNWINDER_ORC=y
+> > > > # CONFIG_RETPOLINE is not set
+> > > > 
+> > > > and objtool didn't complain.
+> > > > I would like to reproduce it first before making any changes.
+> > > 
+> > > Revert
+> > > 
+> > >   3193c0836f20 ("bpf: Disable GCC -fgcse optimization for ___bpf_prog_run()")
+> > > 
+> > > and compile with retpolines off (and either ORC or FP, doesn't matter).
+> > > 
+> > > I'm using GCC 9.3.1:
+> > > 
+> > >   kernel/bpf/core.o: warning: objtool: ___bpf_prog_run()+0x8dc: sibling call from callable instruction with modified stack frame
+> > > 
+> > > That's the original issue described in that commit.
+> > 
+> > I see something different.
+> > With gcc 8, 9, and 10 and CCONFIG_UNWINDER_FRAME_POINTER=y
+> > I see:
+> > kernel/bpf/core.o: warning: objtool: ___bpf_prog_run()+0x4837: call without frame pointer save/setup
+> > and sure enough assembly code for ___bpf_prog_run does not countain frame setup
+> > though -fno-omit-frame-pointer flag was passed at command line.
+> > Then I did:
+> > static u64 /*__no_fgcse*/ ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+> > and the assembly had proper frame, but objtool wasn't happy:
+> > kernel/bpf/core.o: warning: objtool: ___bpf_prog_run()+0x480a: sibling call from callable instruction with modified stack frame
+> > 
+> > gcc 6.3 doesn't have objtool warning with and without -fno-gcse.
+> > 
+> > Looks like we have two issues here.
+> > First gcc 8, 9 and 10 have a severe bug with __attribute__((optimize("")))
+> > In this particular case passing -fno-gcse somehow overruled -fno-omit-frame-pointer
+> > which is serious issue. powerpc is using __nostackprotector. I don't understand
+> > how it can keep working with newer gcc-s. May be got lucky.
+> > Plenty of other projects use various __attribute__((optimize("")))
+> > they all have to double check that their vesion of GCC produces correct code.
+> > Can somebody reach out to gcc folks for explanation?
+> 
+> Right.  I've mentioned this several times now.  That's why my patch
+> reverts 3193c0836f20.  I don't see any other way around it.  The GCC
+> manual even says this attribute should not be used in production code.
 
-On 2020-04-22 4:17 a.m., kbuild test robot wrote:
-> Hi Scott,
->
-> I love your patch! Perhaps something to improve:
->
-> [auto build test WARNING on driver-core/driver-core-testing]
-> [also build test WARNING on next-20200421]
-> [cannot apply to char-misc/char-misc-testing kselftest/next linus/master v5.7-rc2]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
->
-> url:    https://github.com/0day-ci/linux/commits/Scott-Branden/firmware-add-partial-read-support-in-request_firmware_into_buf/20200422-114528
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git 55623260bb33e2ab849af76edf2253bc04cb241f
-> reproduce:
->          # apt-get install sparse
->          # sparse version: v0.6.1-191-gc51a0382-dirty
->          make ARCH=x86_64 allmodconfig
->          make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kbuild test robot <lkp@intel.com>
->
->
-> sparse warnings: (new ones prefixed by >>)
->
->>> drivers/misc/bcm-vk/bcm_vk_dev.c:189:15: sparse: sparse: incorrect type in assignment (different address spaces) @@    expected struct bcm_vk_peer_log *p_ctl @@    got struct bcm_vk_peer_log *p_ctl @@
->>> drivers/misc/bcm-vk/bcm_vk_dev.c:189:15: sparse:    expected struct bcm_vk_peer_log *p_ctl
->>> drivers/misc/bcm-vk/bcm_vk_dev.c:189:15: sparse:    got void [noderef] <asn:2> *
->>> drivers/misc/bcm-vk/bcm_vk_dev.c:685:36: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void const [noderef] <asn:1> *from @@    got oderef] <asn:1> *from @@
->>> drivers/misc/bcm-vk/bcm_vk_dev.c:685:36: sparse:    expected void const [noderef] <asn:1> *from
->>> drivers/misc/bcm-vk/bcm_vk_dev.c:685:36: sparse:    got struct vk_image *arg
->     drivers/misc/bcm-vk/bcm_vk_dev.c:780:36: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void const [noderef] <asn:1> *from @@    got oderef] <asn:1> *from @@
->     drivers/misc/bcm-vk/bcm_vk_dev.c:780:36: sparse:    expected void const [noderef] <asn:1> *from
->>> drivers/misc/bcm-vk/bcm_vk_dev.c:780:36: sparse:    got struct vk_reset *arg
->>> drivers/misc/bcm-vk/bcm_vk_dev.c:858:45: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected struct vk_image *arg @@    got void [nstruct vk_image *arg @@
->>> drivers/misc/bcm-vk/bcm_vk_dev.c:858:45: sparse:    expected struct vk_image *arg
->>> drivers/misc/bcm-vk/bcm_vk_dev.c:858:45: sparse:    got void [noderef] <asn:1> *argp
->>> drivers/misc/bcm-vk/bcm_vk_dev.c:862:40: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected struct vk_reset *arg @@    got void [nstruct vk_reset *arg @@
->>> drivers/misc/bcm-vk/bcm_vk_dev.c:862:40: sparse:    expected struct vk_reset *arg
->     drivers/misc/bcm-vk/bcm_vk_dev.c:862:40: sparse:    got void [noderef] <asn:1> *argp
-> --
->>> drivers/misc/bcm-vk/bcm_vk_msg.c:507:17: sparse: sparse: cast removes address space '<asn:2>' of expression
->     drivers/misc/bcm-vk/bcm_vk_msg.c:707:15: sparse: sparse: cast removes address space '<asn:2>' of expression
->     drivers/misc/bcm-vk/bcm_vk_msg.c:715:23: sparse: sparse: cast removes address space '<asn:2>' of expression
->     drivers/misc/bcm-vk/bcm_vk_msg.c:871:31: sparse: sparse: cast removes address space '<asn:2>' of expression
->     drivers/misc/bcm-vk/bcm_vk_msg.c:899:47: sparse: sparse: cast removes address space '<asn:2>' of expression
->
-> vim +189 drivers/misc/bcm-vk/bcm_vk_dev.c
->
->     180	
->     181	static void bcm_vk_dump_peer_log(struct bcm_vk *vk)
->     182	{
->     183		struct bcm_vk_peer_log log, *p_ctl;
->     184		char loc_buf[BCM_VK_PEER_LOG_LINE_MAX];
->     185		int cnt;
->     186		struct device *dev = &vk->pdev->dev;
->     187		uint data_offset;
->     188	
->   > 189		p_ctl = vk->bar[BAR_2] + vk->peerlog_off;
->     190		log = *p_ctl;
->     191		/* do a rmb() to make sure log is updated */
->     192		rmb();
->     193	
->     194		dev_dbg(dev, "Peer PANIC: Size 0x%x(0x%x), [Rd Wr] = [%d %d]\n",
->     195			log.buf_size, log.mask, log.rd_idx, log.wr_idx);
->     196	
->     197		cnt = 0;
->     198		data_offset = vk->peerlog_off + sizeof(struct bcm_vk_peer_log);
->     199		while (log.rd_idx != log.wr_idx) {
->     200			loc_buf[cnt] = vkread8(vk, BAR_2, data_offset + log.rd_idx);
->     201	
->     202			if ((loc_buf[cnt] == '\0') ||
->     203			    (cnt == (BCM_VK_PEER_LOG_LINE_MAX - 1))) {
->     204				dev_err(dev, "%s", loc_buf);
->     205				cnt = 0;
->     206			} else {
->     207				cnt++;
->     208			}
->     209			log.rd_idx = (log.rd_idx + 1) & log.mask;
->     210		}
->     211		/* update rd idx at the end */
->     212		vkwrite32(vk, log.rd_idx, BAR_2, vk->peerlog_off);
->     213	}
->     214	
->
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+What you mentioned in commit log is:
+"It doesn't append options to the command-line arguments.  Instead
+it starts from a blank slate.  And according to recent GCC documentation
+it's not recommended for production use."
 
+I don't think anyone could have guessed from such description that it kills
+-fno-omit-frame-pointer but it doesn't reduce optimization level to -O0
+and it doesn't kill -D, -m, -I, -std= and other flags.
+
+As far as workaround I prefer the following:
+From 94bbc27c5a70d78846a5cb675df4cf8732883564 Mon Sep 17 00:00:00 2001
+From: Alexei Starovoitov <ast@kernel.org>
+Date: Tue, 5 May 2020 16:52:41 -0700
+Subject: [PATCH] bpf,objtool: tweak interpreter compilation flags to help objtool
+
+tbd
+
+Fixes: 3193c0836f20 ("bpf: Disable GCC -fgcse optimization for ___bpf_prog_run()")
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+---
+ include/linux/compiler-gcc.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
+index d7ee4c6bad48..05104c3cc033 100644
+--- a/include/linux/compiler-gcc.h
++++ b/include/linux/compiler-gcc.h
+@@ -171,4 +171,4 @@
+ #define __diag_GCC_8(s)
+ #endif
+
+-#define __no_fgcse __attribute__((optimize("-fno-gcse")))
++#define __no_fgcse __attribute__((optimize("-fno-gcse,-fno-omit-frame-pointer")))
+--
+2.23.0
+
+I've tested it with gcc 8,9,10 and clang 11 with FP=y and with ORC=y.
+All works.
+I think it's safer to go with frame pointers even for ORC=y considering
+all the pain this issue had caused. Even if objtool gets confused again
+in the future __bpf_prog_run() will have frame pointers and kernel stack
+unwinding can fall back from ORC to FP for that frame.
+wdyt?
