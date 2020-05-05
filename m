@@ -2,127 +2,187 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88656C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC767C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 655E7206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:22:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cQe6rtuY"
+	by mail.kernel.org (Postfix) with ESMTP id C1C7D206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:22:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730388AbgEEOV7 (ORCPT
+        id S1730399AbgEEOWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:21:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50124 "EHLO
+        Tue, 5 May 2020 10:22:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729256AbgEEOV4 (ORCPT
+        by vger.kernel.org with ESMTP id S1729657AbgEEOOq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:21:56 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13B45C061A0F;
-        Tue,  5 May 2020 07:21:56 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id 207so1086068pgc.6;
-        Tue, 05 May 2020 07:21:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=cPehjVZlHj3aHIpwlaH11wYRizkllSVBKTyEpG1u9o8=;
-        b=cQe6rtuYwQupTWb2O+AmXwy/AngOD5Gs7e004xd9rHZ8q0lFfYjREUPKhrReYPNq+y
-         Y+LFSx278dRQWd4kuh6dz9PX70JoD+PBkFrX6cAgBKSl4eIl8dSUWj6XCkiKYL3aa9bC
-         Bcxyclf2McA4goDo32h13h1kKMPxHbcRadw7TI9B2ynWCS8Jn2urb3BxH0ZiShuakOh0
-         M0NZgA9Ejv2g1rHRUcvXf+CSBa16TUnzfCJeOOGNoqOPgvMAOb1ry/qz6qOe9fa45sDl
-         9LNqnq714nyPQ17T8yZ4QlvQRvh7rb5qewA3WdIXi01mf/9V7W/X1Vs3HopzbBLiKtrn
-         2baA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=cPehjVZlHj3aHIpwlaH11wYRizkllSVBKTyEpG1u9o8=;
-        b=QK82PuiXB3KVWcJwb8IbpPerj0OO0ragzm8yRVGpaBDy6QzJ7Fzche4GGlpy7kbteV
-         mqSE2E9hIahwu0UZFttXozbjEEEzXU2wG/2mcIRwDd5hAjuvHK/53HUswmxYoOJfnPu9
-         AHz/JCUbeHgYsj27APY/UhrxLCcGN0v6JI+5UB4KdimOgUPKM+anrW4aFQRC449s+ziM
-         CSQIbg0P+ofVMkelzWe1cCltP+iBMIDxejO0/0kB1rs/ns4lpCbEkw3cV8wT9Rf84RE6
-         ogE2jQpZ/xiC3boW7FmH/f/UGaqNDecrRROqoOuq6p1TeLDAMhQoUpdnPSrCEEESuCWy
-         LTKw==
-X-Gm-Message-State: AGi0PubosorSy67EL2Kp7o5ldTMDPR7RnVTN5dymRZlgGY3MF3JQWQ1D
-        LwslKdI5SR+zvL2vZSlsfuc=
-X-Google-Smtp-Source: APiQypLEf1iEWLOIV3zKy//l6iBpXlZXz4d2EO3uWFl2oLEiwZOq4ELIBlobuJS0yMohcdO7rPPZow==
-X-Received: by 2002:a63:8d4b:: with SMTP id z72mr2992726pgd.376.1588688515628;
-        Tue, 05 May 2020 07:21:55 -0700 (PDT)
-Received: from localhost.localdomain ([120.244.110.63])
-        by smtp.gmail.com with ESMTPSA id o63sm2235060pjb.40.2020.05.05.07.21.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 07:21:55 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     mchehab@kernel.org, kstewart@linuxfoundation.org,
-        tomasbortoli@gmail.com, gregkh@linuxfoundation.org, sean@mess.org,
-        allison@lohutok.net, tglx@linutronix.de
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] media: usb: ttusb-dec: avoid buffer overflow in ttusb_dec_handle_irq() when DMA failures/attacks occur
-Date:   Tue,  5 May 2020 22:21:10 +0800
-Message-Id: <20200505142110.7620-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 5 May 2020 10:14:46 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BFCDC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:14:46 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jVyL6-00015T-BN; Tue, 05 May 2020 16:14:28 +0200
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id C63931001F5;
+        Tue,  5 May 2020 16:14:27 +0200 (CEST)
+Message-Id: <20200505134341.272248024@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Tue, 05 May 2020 15:41:24 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [patch V4 part 2 12/18] x86,objtool: Make entry_64_compat.S objtool clean
+References: <20200505134112.272268764@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-transfer-encoding: 8-bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In ttusb_dec_init_usb():
-  dec->irq_buffer = usb_alloc_coherent(...)
+Currently entry_64_compat is exempt from objtool, but with vmlinux
+mode there is no hiding it.
 
-Thus, "dec->irq_buffer" is a DMA value, and it is assigned to "buffer"
-in ttusb_dec_handle_irq():
-  char *buffer = dec->irq_buffer;
+Make the following changes to make it pass:
 
-When DMA failures or attacks occur, the value of buffer[4] can be
-changed at any time. In this case, "buffer[4] - 1 < ARRAY_SIZE(rc_keys)"
-can be first satisfied, and then the value of buffer[4] can be changed
-to a large number, causing a buffer-overflow vulnerability.
+ - change entry_SYSENTER_compat to STT_NOTYPE; it's not a function
+   and doesn't have function type stack setup.
 
-To avoid the risk of this vulnerability, buffer[4] is assigned to a
-non-DMA local variable "index" at the beginning of
-ttusb_dec_handle_irq(), and then this variable replaces each use of
-buffer[4] in the function.
+ - mark all STT_NOTYPE symbols with UNWIND_HINT_EMPTY; so we do
+   validate them and don't treat them as unreachable.
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+ - don't abuse RSP as a temp register, this confuses objtool
+   mightily as it (rightfully) thinks we're doing unspeakable
+   things to the stack.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- drivers/media/usb/ttusb-dec/ttusb_dec.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/x86/entry/Makefile          |    2 --
+ arch/x86/entry/entry_64_compat.S |   25 ++++++++++++++++++++-----
+ 2 files changed, 20 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/media/usb/ttusb-dec/ttusb_dec.c b/drivers/media/usb/ttusb-dec/ttusb_dec.c
-index 3198f9624b7c..8543c552515b 100644
---- a/drivers/media/usb/ttusb-dec/ttusb_dec.c
-+++ b/drivers/media/usb/ttusb-dec/ttusb_dec.c
-@@ -250,6 +250,7 @@ static void ttusb_dec_handle_irq( struct urb *urb)
- 	struct ttusb_dec *dec = urb->context;
- 	char *buffer = dec->irq_buffer;
- 	int retval;
-+	u8 index = buffer[4];
+--- a/arch/x86/entry/Makefile
++++ b/arch/x86/entry/Makefile
+@@ -11,8 +11,6 @@ CFLAGS_REMOVE_common.o = $(CC_FLAGS_FTRA
+ CFLAGS_REMOVE_syscall_32.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
+ CFLAGS_REMOVE_syscall_64.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
  
- 	switch(urb->status) {
- 		case 0: /*success*/
-@@ -281,11 +282,11 @@ static void ttusb_dec_handle_irq( struct urb *urb)
- 		 * this should/could be added later ...
- 		 * for now lets report each signal as a key down and up
- 		 */
--		if (buffer[4] - 1 < ARRAY_SIZE(rc_keys)) {
--			dprintk("%s:rc signal:%d\n", __func__, buffer[4]);
--			input_report_key(dec->rc_input_dev, rc_keys[buffer[4] - 1], 1);
-+		if (index - 1 < ARRAY_SIZE(rc_keys)) {
-+			dprintk("%s:rc signal:%d\n", __func__, index);
-+			input_report_key(dec->rc_input_dev, rc_keys[index - 1], 1);
- 			input_sync(dec->rc_input_dev);
--			input_report_key(dec->rc_input_dev, rc_keys[buffer[4] - 1], 0);
-+			input_report_key(dec->rc_input_dev, rc_keys[index - 1], 0);
- 			input_sync(dec->rc_input_dev);
- 		}
- 	}
--- 
-2.17.1
+-OBJECT_FILES_NON_STANDARD_entry_64_compat.o := y
+-
+ CFLAGS_syscall_64.o		+= $(call cc-option,-Wno-override-init,)
+ CFLAGS_syscall_32.o		+= $(call cc-option,-Wno-override-init,)
+ obj-y				:= entry_$(BITS).o thunk_$(BITS).o syscall_$(BITS).o
+--- a/arch/x86/entry/entry_64_compat.S
++++ b/arch/x86/entry/entry_64_compat.S
+@@ -46,12 +46,14 @@
+  * ebp  user stack
+  * 0(%ebp) arg6
+  */
+-SYM_FUNC_START(entry_SYSENTER_compat)
++SYM_CODE_START(entry_SYSENTER_compat)
++	UNWIND_HINT_EMPTY
+ 	/* Interrupts are off on entry. */
+ 	SWAPGS
+ 
+-	/* We are about to clobber %rsp anyway, clobbering here is OK */
+-	SWITCH_TO_KERNEL_CR3 scratch_reg=%rsp
++	pushq	%rax
++	SWITCH_TO_KERNEL_CR3 scratch_reg=%rax
++	popq	%rax
+ 
+ 	movq	PER_CPU_VAR(cpu_current_top_of_stack), %rsp
+ 
+@@ -104,6 +106,9 @@ SYM_FUNC_START(entry_SYSENTER_compat)
+ 	xorl	%r14d, %r14d		/* nospec   r14 */
+ 	pushq   $0			/* pt_regs->r15 = 0 */
+ 	xorl	%r15d, %r15d		/* nospec   r15 */
++
++	UNWIND_HINT_REGS
++
+ 	cld
+ 
+ 	/*
+@@ -141,7 +146,7 @@ SYM_FUNC_START(entry_SYSENTER_compat)
+ 	popfq
+ 	jmp	.Lsysenter_flags_fixed
+ SYM_INNER_LABEL(__end_entry_SYSENTER_compat, SYM_L_GLOBAL)
+-SYM_FUNC_END(entry_SYSENTER_compat)
++SYM_CODE_END(entry_SYSENTER_compat)
+ 
+ /*
+  * 32-bit SYSCALL entry.
+@@ -191,6 +196,7 @@ SYM_FUNC_END(entry_SYSENTER_compat)
+  * 0(%esp) arg6
+  */
+ SYM_CODE_START(entry_SYSCALL_compat)
++	UNWIND_HINT_EMPTY
+ 	/* Interrupts are off on entry. */
+ 	swapgs
+ 
+@@ -241,6 +247,8 @@ SYM_INNER_LABEL(entry_SYSCALL_compat_aft
+ 	pushq   $0			/* pt_regs->r15 = 0 */
+ 	xorl	%r15d, %r15d		/* nospec   r15 */
+ 
++	UNWIND_HINT_REGS
++
+ 	movq	%rsp, %rdi
+ 	call	do_fast_syscall_32
+ 	/* XEN PV guests always use IRET path */
+@@ -328,6 +336,7 @@ SYM_CODE_END(entry_SYSCALL_compat)
+  * ebp  arg6
+  */
+ SYM_CODE_START(entry_INT80_compat)
++	UNWIND_HINT_EMPTY
+ 	/*
+ 	 * Interrupts are off on entry.
+ 	 */
+@@ -349,8 +358,11 @@ SYM_CODE_START(entry_INT80_compat)
+ 
+ 	/* Need to switch before accessing the thread stack. */
+ 	SWITCH_TO_KERNEL_CR3 scratch_reg=%rdi
++
+ 	/* In the Xen PV case we already run on the thread stack. */
+-	ALTERNATIVE "movq %rsp, %rdi", "jmp .Lint80_keep_stack", X86_FEATURE_XENPV
++	ALTERNATIVE "", "jmp .Lint80_keep_stack", X86_FEATURE_XENPV
++
++	movq	%rsp, %rdi
+ 	movq	PER_CPU_VAR(cpu_current_top_of_stack), %rsp
+ 
+ 	pushq	6*8(%rdi)		/* regs->ss */
+@@ -389,6 +401,9 @@ SYM_CODE_START(entry_INT80_compat)
+ 	xorl	%r14d, %r14d		/* nospec   r14 */
+ 	pushq   %r15                    /* pt_regs->r15 */
+ 	xorl	%r15d, %r15d		/* nospec   r15 */
++
++	UNWIND_HINT_REGS
++
+ 	cld
+ 
+ 	movq	%rsp, %rdi
 
