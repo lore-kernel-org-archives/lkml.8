@@ -2,98 +2,176 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DFFC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB07C47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 675E720675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:05:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D02720735
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:07:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="VrBeeNu9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729643AbgEEPF4 (ORCPT
+        id S1729682AbgEEPHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:05:56 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:45737 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729289AbgEEPF4 (ORCPT
+        Tue, 5 May 2020 11:07:17 -0400
+Received: from gateway23.websitewelcome.com ([192.185.50.161]:47235 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729261AbgEEPHQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:05:56 -0400
-Received: from mail-qt1-f174.google.com ([209.85.160.174]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MeTwY-1ixkms2AE8-00aVVb for <linux-kernel@vger.kernel.org>; Tue, 05 May
- 2020 17:05:54 +0200
-Received: by mail-qt1-f174.google.com with SMTP id o10so2182114qtr.6
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 08:05:54 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYgI5VMGcYjoyYUHQGFUh7MRgyK7S4cUYgO7QHvX2U999PO4Lhw
-        QUqHftBFOqHMi5Abq1hdMCXRHzaUKvm2/9M1s84=
-X-Google-Smtp-Source: APiQypIR7vH0WXUp0OPhxznI7N9wD6FLnsemn1PKoTpVnTbO51oR7Xi+pKQllQDLJGgGte/T9jjh0J1jEWOgAOxSrWk=
-X-Received: by 2002:ac8:4e2c:: with SMTP id d12mr3185805qtw.204.1588691153393;
- Tue, 05 May 2020 08:05:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200505141137.665940-1-arnd@arndb.de> <CANpmjNNwgkVR6kjFudrR4ga--PigU5Mx69HZ1mhCAQ0GCLqQGg@mail.gmail.com>
-In-Reply-To: <CANpmjNNwgkVR6kjFudrR4ga--PigU5Mx69HZ1mhCAQ0GCLqQGg@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 5 May 2020 17:05:36 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3r35VrKVfpn_q2YYhxkvH9j0+3MnMqgRM6R=QOcsE96Q@mail.gmail.com>
-Message-ID: <CAK8P3a3r35VrKVfpn_q2YYhxkvH9j0+3MnMqgRM6R=QOcsE96Q@mail.gmail.com>
-Subject: Re: [PATCH] kcsan: fix section mismatch for __write_once_size/blacklisted_initcalls
-To:     Marco Elver <elver@google.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Tue, 5 May 2020 11:07:16 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id A874E8DF1
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 10:07:13 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id VzA9jerRySl8qVzA9j2IZJ; Tue, 05 May 2020 10:07:13 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=i10UKpu+latxTERjGIjpUZFA6kbJgtsejTkhoLLGdPA=; b=VrBeeNu9Hy+ddzY2YyoP4ZFFPO
+        a5RnxdoCiF9QicAo3E/PRCBaZr2DFfw30Re9QAFeZG3fqoSZNVusOyH1HGDhnuGlAxsBQH1R+M1k6
+        svLXTzSOm96wqI24QIG7o78LdCLB7IR4mg9qKVdBFPpRwgDiQV5kRSxvFLKZKXEwBlHpRLiIaGwrs
+        jfTBsHDbQXtUj8ENbAzyi+Qf44hKvQkCZIt+ipK9g/azNoZ++6wz28fishReJQIrpEQiOAQAXcXbu
+        lfaxV89k9srLyUFLcii76D7T23S1DmsMuJu7I2ykPSdu7g9qE4aPE7z7tONGDRpjJXyw++Eusvesl
+        tGQ7eoGA==;
+Received: from [189.207.59.248] (port=47056 helo=[192.168.15.4])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jVzA9-003Ep6-7M; Tue, 05 May 2020 10:07:13 -0500
+Subject: Re: [PATCH] fsnotify: avoid gcc-10 zero-length-bounds warning
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Jan Kara <jack@suse.cz>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Alexander Potapenko <glider@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:wHaPXKqqLF8BrOpibOskofyczDCHi+EE2KBbTlMy29ECZjXUFpY
- KBUMkojGDA+yTK12F/E1mvlhAkC+qwnDpPk3FXFz1Lh+L8pXny5dshocvDsgWEv06YsWuTP
- gw1dttnyA7VtmfDl4UICxzOiEIiE8igtF1sNikn1W41JYuLEopV1dab4LQX6tTk7Y/+e5RX
- M7QUF8U4OLJmZ2JGOQQrA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/J0Xbigm78M=:j0cHlhev7jkoVp9TRG+zKC
- XIDSmOF3ztOR/e9zJ4GuPySw5dBF8JU5SQ1JYsxpIJ+L7fGLVHFqW3yGdG1HOBYUX2z+rvfqC
- QRBa3TqzZY+PmJANv9QoG1LYLHYUuVc52FYqs/I5Uls6Eyy8BhGti8w/Jwb9rxMxhQuXQ0RKT
- rJ9Jhpzxz3t3wrOgjusT9PKM7ZOrwurPzYKwe1qAvbR+r47twAxnN01LJnPvOlSrkGiVi676a
- LUKKKrZVDhJSW2OaoGnjKTSuuww/CJtbVeSUJkSfrkxrFbOU/HbbTQxRK2olTz77HaeQ88NV2
- FiOE0XF6ZuK1RB1R36kMog1sZpdIW6QnV+5CQyTwAJeq/iNPzr7i3md6sUeQ/txUbKeYMG1ns
- LYZCFHRpZit3lnE2cLW9eUpo2lonxbGtKk6WTAVyvDgPonk2CvXYTOPafZDDL7KcrCkbyQpoF
- gsVrRsE0cbd2KrzRlJdXOpG0Dfp17Z0BBbi3ZpAKwHWM0b3HOKB9vTkh1csB264pkEhkjPJra
- mWFlqpNyjto3x2IiGbYrsJzH56mEbyxhhuU8WaNfx71EERdQy9izdY+kaENbXyNPeAY6SYJsw
- CAkwWUJRcPwjUpfH26nK9r0K47NYE+K7nV5R2aSmZSSQvRZ3KveYRt1vM13aLKwA2qgixqsvM
- NCjbZlhcBanUGnBVpubd864ZmJDYbddTkRB32u16gw0Abi01YklU1SwOw/4XpLDuTuL74/QVe
- qtWaj0xXwbSaAL+RYsnziRb+0Ly2PELH/OzGX3/Y3dtNA/eiK3k9yoysreuz1Ti28AEHVSdID
- ogq5JDggZEong6SiQx8/YPV0WkRUPU3Ys1cOsFFVOCzf096PW0=
+        Amir Goldstein <amir73il@gmail.com>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200505143028.1290686-1-arnd@arndb.de>
+ <b287bb2f-28e2-7a41-e015-aa5a0cb3b5d7@embeddedor.com>
+ <CAK8P3a0v-hK+Ury86-1D2_jfOFgR8ZTEFKVQZBWJq3dW=MuSzw@mail.gmail.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <1f33eec3-4851-e423-2d04-e02da25e2e6e@embeddedor.com>
+Date:   Tue, 5 May 2020 10:11:39 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <CAK8P3a0v-hK+Ury86-1D2_jfOFgR8ZTEFKVQZBWJq3dW=MuSzw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.207.59.248
+X-Source-L: No
+X-Exim-ID: 1jVzA9-003Ep6-7M
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.4]) [189.207.59.248]:47056
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 8
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 4:17 PM 'Marco Elver' via Clang Built Linux
-<clang-built-linux@googlegroups.com> wrote:
-> On Tue, 5 May 2020 at 16:11, Arnd Bergmann <arnd@arndb.de> wrote:
-> > So far, my randconfig checks found two such instances, one for read_once
-> > and one for write_once. There are probably a couple more in random
-> > configurations, but I guess they are rare enough that we can just work
-> > around them like this.
->
-> [+Cc Will]
->
-> Thanks for testing and fixing this. Note that this may no longer be
-> necessary once Will's patches land. Also noted here:
-> https://lkml.kernel.org/r/CANpmjNNw6M9Gqj6WGTHH4Cegu8roTVu5x6Vqs_tCBxX3gPwL4A@mail.gmail.com
->
-> For reference, Will's series:
-> https://lore.kernel.org/lkml/20200421151537.19241-1-will@kernel.org/
 
-Right, good point. If that is going to get merged for the same release, we don't
-need my workarounds and I'll just keep them applied locally in my linux-next
-randconfig tree for the moment.
 
-      Arnd
+On 5/5/20 10:00, Arnd Bergmann wrote:
+> On Tue, May 5, 2020 at 4:35 PM Gustavo A. R. Silva
+> <gustavo@embeddedor.com> wrote:
+>> On 5/5/20 09:30, Arnd Bergmann wrote:
+>>> gcc-10 warns about accesses into the f_handle[] zero-length array.
+>>>
+>>> fs/notify/fdinfo.c: In function 'show_mark_fhandle':
+>>> fs/notify/fdinfo.c:66:47: error: array subscript 'i' is outside the bounds of an interior zero-length array 'unsigned char[0]' [-Werror=zero-length-bounds]
+>>>    66 |   seq_printf(m, "%02x", (int)f.handle.f_handle[i]);
+>>>       |                              ~~~~~~~~~~~~~~~~~^~~
+>>> In file included from fs/notify/fdinfo.c:3:
+>>> include/linux/fs.h:988:16: note: while referencing 'f_handle'
+>>>   988 |  unsigned char f_handle[0];
+>>>       |                ^~~~~~~~
+>>>
+>>> This is solved by using a flexible array instead.
+>>>
+>>> Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>>> ---
+>>> Gustavo has done the same thing as part of a treewide change, but keeping
+>>> this separate lets us backport it to stable kernels more easily later.
+>>
+>> Arnd,
+>>
+>> I wonder why would we need to backport these changes to -stable... merely
+>> because of the use of a new version of GCC?
+> 
+> Yes, we usually backport trivial warning fixes to stable kernels to allow
+> building those with any modern compiler version.
+> 
+
+OK. So, if you anticipate that this is going to happen, I can split up my
+treewide patch into separate per-subsystem patches.  I can replace the
+treewide patch in my tree today, so the changes are reflected in tomorrow's
+linux-next.
+
+--
+Gustavo
