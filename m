@@ -2,126 +2,149 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E003DC47258
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC2DC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE2DB20746
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F70820746
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:58:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="jAfetrHu"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OAJCUqL6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729451AbgEEVzS (ORCPT
+        id S1729054AbgEEV6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 17:55:18 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:42207 "EHLO mail.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728642AbgEEVzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 17:55:16 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id bd6ce752;
-        Tue, 5 May 2020 21:42:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=from:to:cc
-        :subject:date:message-id:in-reply-to:references:mime-version
-        :content-transfer-encoding; s=mail; bh=u7+BpfoX6KW/0eplcukpa4yaY
-        Ng=; b=jAfetrHuBFqgKxqGGvEtEM8adtJR3HtdBTd+L5GqQSVP43QPkUr/E0TOW
-        YuQWbIVRCYRygt4kL9j6WuG3kUmfUdAz6+RvLHAvzJSrDAVL8ONy/ifurjGq04r4
-        mIe2EDVPDzTSu0dvIdMhonttNCPVw12+jHPEiAlQVaU7MRA9OIAISAHVuJtOzFvO
-        dC1JSlvswbfrHkTeh3C3XoYsk3CU+XQfN1JQvHIyyDydLSSIeA1TOmzODQUOs/cb
-        TxxpKYCdUxQCFqoahNcG6Zr4HqvAvtOMu+NzsOCPKboL0PXQj2MxC+5Ehgx7WTZy
-        WVV9mJB8ZqEeHnNgSxl5XUnMEsnLA==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 6efe512b (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Tue, 5 May 2020 21:42:39 +0000 (UTC)
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-To:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com, arnd@arndb.de
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Kees Cook <keescook@chromium.org>,
-        George Burgess <gbiv@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: [PATCH] Kbuild: disable FORTIFY_SOURCE on clang-10
-Date:   Tue,  5 May 2020 15:55:03 -0600
-Message-Id: <20200505215503.691205-1-Jason@zx2c4.com>
-In-Reply-To: <CAHmME9oMcfY4nwkknwN9c4rB-O7xD4GCAOFPoZCbdnq=034=Vw@mail.gmail.com>
-References: <CAHmME9oMcfY4nwkknwN9c4rB-O7xD4GCAOFPoZCbdnq=034=Vw@mail.gmail.com>
+        Tue, 5 May 2020 17:58:13 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:10549 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727089AbgEEV6M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 17:58:12 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eb1e12d0002>; Tue, 05 May 2020 14:57:01 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 05 May 2020 14:58:11 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 05 May 2020 14:58:11 -0700
+Received: from nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com (172.20.187.13)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 5 May 2020 21:58:11
+ +0000
+Date:   Tue, 5 May 2020 14:58:10 -0700
+From:   Neo Jia <cjia@nvidia.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+CC:     Alex Williamson <alex.williamson@redhat.com>,
+        <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] vfio-pci: Mask cap zero
+Message-ID: <20200505215810.GB7633@nvidia.com>
+References: <158836927527.9272.16785800801999547009.stgit@gimli.home>
+ <20200504180916.0e90cad9.cohuck@redhat.com>
+ <20200504125253.3d5f9cbf@x1.home>
+ <20200504220804.GA22939@nvidia.com>
+ <20200504170354.3b49d07b@x1.home>
+ <20200505080939.1e5a224a.cohuck@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200505080939.1e5a224a.cohuck@redhat.com>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.6.2 (2016-07-01)
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588715821; bh=P41elko9IrlOm144HCO8E+rJooi/jmvfumqPzFrywJ4=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
+        b=OAJCUqL6qHSYb+ULNtTgItqmX+75YAnB0BsliYNfheCY0vfZ9yJ2LzZ1acvoFji6V
+         t42thWvwtd2/epCaf5Oc22e3YSBVKMxZOfHHE1sALj8AINJIqlmnM/V1REzcPjqcH1
+         wjtWp1C40Fkrm/yqXbGzu0rK5szvDyf80HDgoovmnIY03M0fOpTaj+7Sa1A1eQGOHG
+         7SHpIarvW8YpT0x5NieVYz6erHUkE2/+JwPMzX5ELqtdWIe/41WYdcNp6WSDOflOzU
+         u6R0oECRwHAtbi7FUrB3Cl4i8aPqNFgGxH3BROxbrWnTa7a71UEnK7Z79Q4i58bKGV
+         5T+krrl39Um7A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang-10 has a broken optimization stage that doesn't enable the
-compiler to prove at compile time that certain memcpys are within
-bounds, and thus the outline memcpy is always called, resulting in
-horrific performance, and in some cases, excessive stack frame growth.
-Here's a simple reproducer:
+On Tue, May 05, 2020 at 08:09:39AM +0200, Cornelia Huck wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> On Mon, 4 May 2020 17:03:54 -0600
+> Alex Williamson <alex.williamson@redhat.com> wrote:
+> 
+> > On Mon, 4 May 2020 15:08:08 -0700
+> > Neo Jia <cjia@nvidia.com> wrote:
+> >
+> > > On Mon, May 04, 2020 at 12:52:53PM -0600, Alex Williamson wrote:
+> > > > External email: Use caution opening links or attachments
+> > > >
+> > > >
+> > > > On Mon, 4 May 2020 18:09:16 +0200
+> > > > Cornelia Huck <cohuck@redhat.com> wrote:
+> > > >
+> > > > > On Fri, 01 May 2020 15:41:24 -0600
+> > > > > Alex Williamson <alex.williamson@redhat.com> wrote:
+> > > > >
+> > > > > > There is no PCI spec defined capability with ID 0, therefore we don't
+> > > > > > expect to find it in a capability chain and we use this index in an
+> > > > > > internal array for tracking the sizes of various capabilities to handle
+> > > > > > standard config space.  Therefore if a device does present us with a
+> > > > > > capability ID 0, we mark our capability map with nonsense that can
+> > > > > > trigger conflicts with other capabilities in the chain.  Ignore ID 0
+> > > > > > when walking the capability chain, handling it as a hidden capability.
+> > > > > >
+> > > > > > Seen on an NVIDIA Tesla T4.
+> > > > > >
+> > > > > > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> > > > > > ---
+> > > > > >  drivers/vfio/pci/vfio_pci_config.c |    2 +-
+> > > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > >
+> > > > > > diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+> > > > > > index 87d0cc8c86ad..5935a804cb88 100644
+> > > > > > --- a/drivers/vfio/pci/vfio_pci_config.c
+> > > > > > +++ b/drivers/vfio/pci/vfio_pci_config.c
+> > > > > > @@ -1487,7 +1487,7 @@ static int vfio_cap_init(struct vfio_pci_device *vdev)
+> > > > > >             if (ret)
+> > > > > >                     return ret;
+> > > > > >
+> > > > > > -           if (cap <= PCI_CAP_ID_MAX) {
+> > > > >
+> > > > > Maybe add a comment:
+> > > > >
+> > > > > /* no PCI spec defined capability with ID 0: hide it */
+> > >
+> > > Hi Alex,
+> > >
+> > > I think this is NULL Capability defined in Codes and IDs spec, probably we
+> > > should just add a new enum to represent that?
+> >
+> > Yes, it looks like the 1.1 version of that specification from June 2015
+> > changed ID 0 from reserved to a NULL capability.  So my description and
+> > this comment are wrong, but I wonder if we should did anything
+> > different with the handling of this capability.  It's specified to
+> > contain only the ID and next pointer, so I'd expect it's primarily a
+> > mechanism for hardware vendors to blow fuses in config space to
+> > maintain a capability chain while maybe hiding a feature not supported
+> > by the product sku.  Hiding the capability in vfio is trivial, exposing
+> > it implies some changes to our config space map that might be more
+> > subtle.  I'm inclined to stick with this solution for now.  Thanks,
+> >
+> > Alex
+> 
+> From this description, I also think that we should simply hide these
+> NULL capabilities.
 
-    typedef unsigned long size_t;
-    void *c(void *dest, const void *src, size_t n) __asm__("memcpy");
-    extern inline __attribute__((gnu_inline)) void *memcpy(void *dest, const void *src, size_t n) { return c(dest, src, n); }
-    void blah(char *a)
-    {
-      unsigned long long b[10], c[10];
-      int i;
+I don't have a strong preference either way, the current implementation looks
+fine.
 
-      memcpy(b, a, sizeof(b));
-      for (i = 0; i < 10; ++i)
-        c[i] = b[i] ^ b[9 - i];
-      for (i = 0; i < 10; ++i)
-        b[i] = c[i] ^ a[i];
-      memcpy(a, b, sizeof(b));
-    }
+Thanks,
+Neo
 
-Compile this with clang-9 and clang-10 and observe:
-
-zx2c4@thinkpad /tmp/curve25519-hacl64-stack-frame-size-test $ clang-10 -Wframe-larger-than=0 -O3 -c b.c -o c10.o
-b.c:5:6: warning: stack frame size of 104 bytes in function 'blah' [-Wframe-larger-than=]
-void blah(char *a)
-     ^
-1 warning generated.
-zx2c4@thinkpad /tmp/curve25519-hacl64-stack-frame-size-test $ clang-9 -Wframe-larger-than=0 -O3 -c b.c -o c9.o
-
-Looking at the disassembly of c10.o and c9.o, one can see that c9.o is
-properly optimized in the obvious way one would expect, while c10.o has
-blown up and includes extern calls to memcpy.
-
-This is present on the most trivial bits of code. Thus, for clang-10, we
-just set __NO_FORTIFY globally, so that this issue won't be incurred.
-
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Cc: clang-built-linux <clang-built-linux@googlegroups.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: George Burgess <gbiv@google.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Link: https://bugs.llvm.org/show_bug.cgi?id=45802
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
----
- Makefile | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/Makefile b/Makefile
-index 49b2709ff44e..f022f077591d 100644
---- a/Makefile
-+++ b/Makefile
-@@ -768,6 +768,13 @@ KBUILD_CFLAGS += -Wno-gnu
- # source of a reference will be _MergedGlobals and not on of the whitelisted names.
- # See modpost pattern 2
- KBUILD_CFLAGS += -mno-global-merge
-+
-+# clang-10 has a broken optimization stage that causes memcpy to always be
-+# outline, resulting in excessive stack frame growth and poor performance.
-+ifeq ($(shell test $(CONFIG_CLANG_VERSION) -ge 100000 && test $(CONFIG_CLANG_VERSION) -lt 110000; echo $$?),0)
-+KBUILD_CFLAGS += -D__NO_FORTIFY
-+endif
-+
- else
- 
- # These warnings generated too much noise in a regular build.
--- 
-2.26.2
-
+> 
