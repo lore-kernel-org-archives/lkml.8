@@ -2,133 +2,202 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25933C47259
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 097ABC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F30F2206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1A432078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:33:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="iQZywJur"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TOyRiw6r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729495AbgEEOco (ORCPT
+        id S1729578AbgEEOdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:32:44 -0400
-Received: from mout.web.de ([217.72.192.78]:53823 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727857AbgEEOcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:32:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1588689134;
-        bh=eiN/8jcvXd/3eR7H/z4x5tDGR9+h/Kfp5pAzuCFyIT4=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=iQZywJur2D0eX9NAzFFowq9XvdvBnadZW/aqJFRhTegUyC5CpQjkq/N1PzmafOJIC
-         cjBhxQ1hulRv3dO5ER6jOW+be036z2nywTDlkisLvgGX4ct3kqjXzEEk9AcNj4C3xB
-         Ny99Y2WusSLuw/HgSwy3LZOAIE7PtiredI+PmPY0=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.48.132.123]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1Md6y1-1ixC611B9n-00aHWn; Tue, 05
- May 2020 16:32:14 +0200
-Subject: Re: [v2] fs: jfs: fix a possible data race in metapage_writepage()
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        jfs-discussion@lists.sourceforge.net
-Cc:     Dave Kleikamp <shaggy@kernel.org>, linux-kernel@vger.kernel.org
-References: <20200505135313.28793-1-baijiaju1990@gmail.com>
- <d3e126df-e7f6-00bd-aa3c-ea39fcd1582e@web.de>
- <05f9211d-6f57-b613-b584-a6d84b163645@gmail.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <074b3682-054a-d2ec-8142-1d87e1e97ed6@web.de>
-Date:   Tue, 5 May 2020 16:32:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 10:33:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727857AbgEEOdJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 10:33:09 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 851E3C061A0F;
+        Tue,  5 May 2020 07:33:09 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id a21so1828074ljj.11;
+        Tue, 05 May 2020 07:33:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3yyBCAEOtVSPbMrEm7lYVHsTzxI11co2b75HQs0mAhQ=;
+        b=TOyRiw6rXYpPTg0x9FbRVPwKTrrQLmYeIAjAV1WDFOkGQecgEOc4i3gfWDnrXUY9wg
+         pyeGjfvYtPmFLNYi2zP+BW0cEdv95IAn1Ay/o/oblaLO9TbLtAh+O3vpftkixE+UD6H2
+         M0yYlMWbHXo1VAu5Ruz1JlMetHNpRnxQ3D92NPS8RxWhJOByD4UbHcO/ldKtqiVSUYc3
+         nVhXbJsZiiZFtv1S41CqiUey6nnP3TCEyx19VVmpi3uuxfYPB040Vc9jleeiMkjyIwhj
+         oJRN7vtt7z6ifG4mEZjOkPGYa/kXorAg+d0npunBVcCgQqA6rngOa0wscOVoyVl0tIgE
+         mxGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3yyBCAEOtVSPbMrEm7lYVHsTzxI11co2b75HQs0mAhQ=;
+        b=a1CeLV8HFI8AnhqdBmP0T/rdkE90dWMeVG+bq1cmaHJdWk4ZG2KEFR/CIfllW6dkaY
+         45dBNGqND3UjWXYdrrwWC+9t0W60anzIDjYMyMjmUa9RlaBOsys55TXtRnH6z6jIL0DQ
+         b/jE4OKIxEYp2CosNml5gm5WuHiX0Kf5wFaRpExDOccRYqIHSus3ceE4w1WSpp0Socjb
+         si/x6eTz3HesLCs9x7IDTF9gAsu6zueIyEy7TQYFE6uTDMwZY3zGs3AbMUacoFVvmhkH
+         iCcoYVpolT/gjC0XnvJ2fkG7vZdiPxvlVZuB1KX7cnbuZ2sVphbrGlLslGg/bg0EWXPX
+         oRSA==
+X-Gm-Message-State: AGi0PuZdlrGcRqFM4bETN6s88zVFJKLIilrOwTETRlWa7SJRlnInjkzL
+        Hb+xhZi3loRVJMGHCOFWW/zJQ8ulCmvvMuA9y38=
+X-Google-Smtp-Source: APiQypJDS6+xmYuy7ShucmxpoBa526M7IUnx2+GIok6Qd+RrQDQOkfiwZm+S6OVLYr/fG+tbj2BxgC2iXyF2OS+CoxI=
+X-Received: by 2002:a2e:9a93:: with SMTP id p19mr1861345lji.77.1588689187806;
+ Tue, 05 May 2020 07:33:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <05f9211d-6f57-b613-b584-a6d84b163645@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:HEzblqaHxK5qRM/SOxgAaO9AMJbHBSzUS3DoNDekGx9qS3LmNhU
- kk0Qu31jJ/IbWxic13Oo/LrRwLNgeWT7CUQIofVe7D/5qXysOPvMFXfRAZecKMr3X1d9yzG
- 0WxPb9i09J11M93K6YDXbJDGDsIkHpGJJx+2qP7OAL9ZrLHeEyy4Ux5e5e6vIQSnb1AH34V
- ThYBmZco1ZTUFt0sriDOA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:c/EJrkYG0Q8=:wEsFMfzOSmcvcgizF5Pcz4
- 8cBwCsQshgnBgyvDZWvSdLoYLwH0gLrlH3Q6P8bLggas2X90DGlbePpsgJpvKJeYW6b8cVMrb
- j0FiWLDysHBHkRDHH+JGhvwvdnHpinY6EzzeqMx49SI0YRZW8GgUiM1LM9SLikR1ZBgOU/J1D
- IK2QhYWr6XjwxFgh4qO35YFxuqG7zy7FSpNEeLZ9Np8oOnsejaOAMeJveLS+akOS6bk1EnCxe
- ryjFJSLCrZ3cg+14mNwQVb8EFjruCDIi8LgP44d4V6bZF1fjMCBVALPfr24kPBfhOZb6aUFOf
- JYky/zoY1+lmcZwR4ZuflY1iQFPuovdesqVVtcdh22o68r8ZPSV+/yynaUFLSZd1RJRgNNhl6
- HeL8cpsygDvviNuoJPvdCYvKh2g7Lq+IlUhAh+vfhJlPRTF1dFuinzctZCh+Dg7M/Cm/aeWqO
- 9r54WBWnGdtXPZZxy7CszIaRp3tQ3qOWlKNT/Wilv7ufc5sMrkKNW5qrg5DEIIhS13yBO9H+L
- 0L1iholXvdyvUAvbfzTd3VaQNVFKUuarjR9KSaUITuMlk0XpssqZe5Afdee+8FUPH1MRv+lSd
- 3kp3nrBYFLs+0q44X0trzK8Ml4+zEPFGUxZnYWhe/aKyB3zo7xFB5Ih8fpG0GJ6dos+wMunft
- q+fs3cKyzhTEeb6N2TEMC66IGSxTeoT1us4qMGdXOVDjp9h908SDcO73hk6FiHIjax4nvcy9n
- SOA6hWVXRjr0s3BAri+saqWtNPrYT5778IGFQqafjmTcTU3WlMibkHKYJPax7SL6bLI+tBFP1
- nJ/i8vDLeOmIBiLFoKesB/Y3+doiRAWEarAmZPpcHygRl8wCgTBbsdMfp7mA6Q/IzAZmExg20
- sMg2CTlDbZa0hqK1NPoMB8Kt80ZeOn4F53UNGD3ZSojnNOxNTH6jCMlTOlCvoimFV2n6V3qno
- nSTFw/HCeT8+VKtqiSeLMjyzXq0KiK6HCEgi3AzicQTCzk0ICz50FJTCzJL4H0lhMAJO5ZfLu
- hyRBclOnjpnJI3jUPNpBScibPDmHNKxYizWyw87yMEdQTdcbAnXyN0QtWA5Q3Vq8rW0XCtwy2
- vyMRRB5mVNnPxhtCgnSofHnCf2voQFzm5IZeCm3RxP6n7eMpBbvzj3ph1WOCV+3JCD05a7z1l
- yBYne5FREvHQwCv0mF4JpldUCwBwLDbTL1sCOpQxeOOLzMUTlc8J80TMuLKo49m2UpiVZOBzc
- +vqgjSgyZt9xLN1Yp
+References: <000000000000ea641705a350d2ee@google.com>
+In-Reply-To: <000000000000ea641705a350d2ee@google.com>
+From:   Taehee Yoo <ap420073@gmail.com>
+Date:   Tue, 5 May 2020 23:32:56 +0900
+Message-ID: <CAMArcTVqHzX94rDYds75MQL-h8h3zTZjt7ocv+nWhOOrR4cKMQ@mail.gmail.com>
+Subject: Re: WARNING: proc registration bug in snmp6_register_dev
+To:     syzbot <syzbot+1d51c8b74efa4c44adeb@syzkaller.appspotmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, kuznet@ms2.inr.ac.ru,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>> This data race is found by our concurrency fuzzer.
->> * How do you think about to replace the word =E2=80=9Cis=E2=80=9D by =
-=E2=80=9Cwas=E2=80=9D?
+On Thu, 16 Apr 2020 at 07:46, syzbot
+<syzbot+1d51c8b74efa4c44adeb@syzkaller.appspotmail.com> wrote:
 >
-> Okay.
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    ab6f762f printk: queue wake_up_klogd irq_work only if per-..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1395613fe00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3010ccb0f380f660
+> dashboard link: https://syzkaller.appspot.com/bug?extid=1d51c8b74efa4c44adeb
+> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+>
+> Unfortunately, I don't have any reproducer for this crash yet.
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+1d51c8b74efa4c44adeb@syzkaller.appspotmail.com
+>
+> ------------[ cut here ]------------
+> proc_dir_entry 'dev_snmp6/hsr1' already registered
+> WARNING: CPU: 0 PID: 22141 at fs/proc/generic.c:363 proc_register+0x2bc/0x4e0 fs/proc/generic.c:362
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 0 PID: 22141 Comm: syz-executor.2 Not tainted 5.6.0-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x1e9/0x30e lib/dump_stack.c:118
+>  panic+0x264/0x7a0 kernel/panic.c:221
+>  __warn+0x209/0x210 kernel/panic.c:582
+>  report_bug+0x1ac/0x2d0 lib/bug.c:195
+>  fixup_bug arch/x86/kernel/traps.c:175 [inline]
+>  do_error_trap+0xca/0x1c0 arch/x86/kernel/traps.c:267
+>  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+>  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+> RIP: 0010:proc_register+0x2bc/0x4e0 fs/proc/generic.c:362
+> Code: 08 4c 8b 74 24 28 48 8b 6c 24 20 74 08 48 89 ef e8 99 29 d1 ff 48 8b 55 00 48 c7 c7 24 4e e9 88 48 89 de 31 c0 e8 e4 7c 65 ff <0f> 0b 48 c7 c7 20 e6 32 89 e8 66 41 2a 06 48 8b 44 24 30 42 8a 04
+> RSP: 0000:ffffc900088feec0 EFLAGS: 00010246
+> RAX: f20851673ab1bb00 RBX: ffff8880908a5264 RCX: 0000000000040000
+> RDX: ffffc9000df22000 RSI: 00000000000150b4 RDI: 00000000000150b5
+> RBP: ffff88808981bc18 R08: ffffffff815cac69 R09: ffffed1015d06660
+> R10: ffffed1015d06660 R11: 0000000000000000 R12: dffffc0000000000
+> R13: 0000000000000004 R14: ffff88808981bbd4 R15: ffff88808981bb40
+>  proc_create_single_data+0x18e/0x1e0 fs/proc/generic.c:631
+>  snmp6_register_dev+0xa1/0x110 net/ipv6/proc.c:254
+>  ipv6_add_dev+0x509/0x1430 net/ipv6/addrconf.c:408
+>  addrconf_notify+0x5f8/0x3ad0 net/ipv6/addrconf.c:3503
+>  notifier_call_chain kernel/notifier.c:83 [inline]
+>  __raw_notifier_call_chain kernel/notifier.c:361 [inline]
+>  raw_notifier_call_chain+0xd4/0x170 kernel/notifier.c:368
+>  call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+>  call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+>  call_netdevice_notifiers net/core/dev.c:1974 [inline]
+>  register_netdevice+0x14a4/0x1a50 net/core/dev.c:9421
+>  hsr_dev_finalize+0x425/0x6d0 net/hsr/hsr_device.c:486
+>  hsr_newlink+0x3b5/0x460 net/hsr/hsr_netlink.c:77
+>  __rtnl_newlink net/core/rtnetlink.c:3333 [inline]
+>  rtnl_newlink+0x143e/0x1c00 net/core/rtnetlink.c:3391
+>  rtnetlink_rcv_msg+0x889/0xd40 net/core/rtnetlink.c:5454
+>  netlink_rcv_skb+0x190/0x3a0 net/netlink/af_netlink.c:2469
+>  netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+>  netlink_unicast+0x786/0x940 net/netlink/af_netlink.c:1329
+>  netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1918
+>  sock_sendmsg_nosec net/socket.c:652 [inline]
+>  sock_sendmsg net/socket.c:672 [inline]
+>  ____sys_sendmsg+0x4f9/0x7c0 net/socket.c:2362
+>  ___sys_sendmsg net/socket.c:2416 [inline]
+>  __sys_sendmsg+0x2a6/0x360 net/socket.c:2449
+>  do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+>  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> RIP: 0033:0x45c889
+> Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007f007299ac78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+> RAX: ffffffffffffffda RBX: 00007f007299b6d4 RCX: 000000000045c889
+> RDX: 0000000000000000 RSI: 00000000200000c0 RDI: 0000000000000006
+> RBP: 000000000076c180 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+> R13: 00000000000009fc R14: 00000000004ccb7c R15: 000000000076c18c
+> Kernel Offset: disabled
+> Rebooting in 86400 seconds..
+>
 
-Can such a positive feedback influence the change descriptions
-for any of your other patches?
+This is hsr module bug.
+When a hsr interface is being removed,
+"/proc/net/dev_snmp6/<interface name>" is removed and it is created again
+because of NETDEV_CHANGEMTU after NETDEV_UNREGISTER.
+So, this resource can't be released in the RTNL mutex critical section.
+This remained resources will be released by netdev_run_todo() but it is
+not protected by RTNL mutex. So that creating a new interface
+routine(rtnl_newlink()) can be executed concurrently.
+This routine would try to create the same proc entry
+("/proc/net/dev_snmp6/<interface name>")
+At this point, this warning could occur.
+In order to fix this problem, ->dellink() can be used.
+But the patch would cause conflict with 34a9c361dd48
+("hsr: remove hsr interface if all slaves are removed").
+That commit is not merged into "net" branch yet.
+So, I will send fix patch after the merge.
 
-Regards,
-Markus
+Test commands:
+#SHELL1
+ip link add dummy0 type dummy
+ip link add dummy1 type dummy
+ip link set dummy0 mtu 1300
+while :
+do
+    ip link add hsr0 type hsr slave1 dummy0 slave2 dummy1
+done
+#SHELL2
+while :
+do
+    ip link del hsr0
+done
+
+Thank you,
+Taehee Yoo
+
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
