@@ -2,104 +2,211 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8688EC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EEEEC47256
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59FB720746
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:18:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588706287;
-	bh=B1klzDQVK7YKyYcQEg165w2ZvInxV5HQ5ljlSWKecVk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=vzsW23aZ0pfYxchaFCxTAkiwbP4QK1GGoTj9i5Pgqmn/6oSjQrH71yFFAkzHG+loW
-	 aPWYfSUdCtf4L4apGXGIKEmFOKeKRnXPxHGY0ak66yZbfeUe6wtlUsUFYrZLYa39RD
-	 Dmxg+Z1gE+1TKsS+EsP1LTgOeCT8MIry/q/rF36s=
+	by mail.kernel.org (Postfix) with ESMTP id 2D6482075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:25:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="SJdtgGTW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728660AbgEETSG (ORCPT
+        id S1728773AbgEETZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 15:18:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36402 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726350AbgEETSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 15:18:06 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A27C6206B9;
-        Tue,  5 May 2020 19:18:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588706285;
-        bh=B1klzDQVK7YKyYcQEg165w2ZvInxV5HQ5ljlSWKecVk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=O2A12MGWgReI6iEWxxcspGQtX8FpUPNjN7J8Pk0Ieua87xfoREq3FfJ8qAjU9Y7SO
-         47dT4uSZ0ruchymZPRXe0I5NIRFtTstGelbOyOpFwB3gtvrYGh2wSNLUoNeSTDkwh7
-         JGi55cTemT/vKgMGvTCu254ZRU19qED6/Wmnx8Bg=
-Date:   Tue, 5 May 2020 12:18:05 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, users@linux.kernel.org
-Subject: Re: [PATCH v2] checkpatch: use patch subject when reading from
- stdin
-Message-Id: <20200505121805.cb29ea992ec3e3b445f4b707@linux-foundation.org>
-In-Reply-To: <20200505132613.17452-1-geert+renesas@glider.be>
-References: <20200505132613.17452-1-geert+renesas@glider.be>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 5 May 2020 15:25:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41284 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727785AbgEETZl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 15:25:41 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6E85C061A10
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 12:25:40 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id k133so2852712oih.12
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 12:25:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RKLj+Bvazx+0GBaDeiW8XR54CzGKY4AHaP4cILqovw8=;
+        b=SJdtgGTW5rf7rigkvrS0mGJrpwJvn5sAzRAkkSYrU2yWA/lI6TmCZF0sq1SvNFwlg1
+         kREVUdbiAPDNjSfxcJ7oIXu434wnGVlmGdtL6WbnnD9hbqTKUgJpUSsrG2XH0oFtkDpS
+         blRYXGrjL79B5wOO2fnZ53Ph/JTysPZXNngkk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RKLj+Bvazx+0GBaDeiW8XR54CzGKY4AHaP4cILqovw8=;
+        b=SP9iu/gNxacJUYlhtgQicjHmbwyx2amok7FH3ZgD4Ch1OCEhVpQPs0x3GDLhup+Bkw
+         UpSwPs/EUsCXnntcHwj76SeyfaW1TFbjwIuMSVjnn91mtHWm4FhK+hILHHKcrJ5L4BHW
+         e9VuRzMrGBe2e68BmEodJWMdCeA96ClPAReuI/pfiBorxIMcLzaXXPTSWbYOflcMZeRW
+         aiS7noQDLRpoAlYL1AdLDluVK/u/TT4JdPSVl86uYjYpLI8IVVQStBM3PTHLNOmax6yN
+         kJuqpSlLjI0OuVCSasHVqX4Gzx/QhlT8RVqKLia43K+QWi/0rMN9rnGMJQ789XN5AVoz
+         421g==
+X-Gm-Message-State: AGi0PuazG49SxivEqIEjHWw8GjqdcfcYU4GsW/lPAy/QjHV9I4WJW0IB
+        wLrv9qsYeGiixoIdOKgX7GTg/um/yByqC9aY6aMTzkpz
+X-Google-Smtp-Source: APiQypJj1DkGUZt7VIZXosUiRMoBR0Hk5xmD/ibsZ1474R2bICyoP6W/sR5eJX+NBmdVffk3jmYWOAdQstorpI7Bi6g=
+X-Received: by 2002:aca:403:: with SMTP id 3mr227565oie.166.1588706739870;
+ Tue, 05 May 2020 12:25:39 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200505140231.16600-1-brgl@bgdev.pl> <20200505140231.16600-6-brgl@bgdev.pl>
+In-Reply-To: <20200505140231.16600-6-brgl@bgdev.pl>
+From:   Edwin Peer <edwin.peer@broadcom.com>
+Date:   Tue, 5 May 2020 12:25:03 -0700
+Message-ID: <CAKOOJTzcNr7mc9xusQm3nCzkq5P=ha-si3fizeEL2_KJUOC3-Q@mail.gmail.com>
+Subject: Re: [PATCH 05/11] net: core: provide devm_register_netdev()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Felix Fietkau <nbd@openwrt.org>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  5 May 2020 15:26:13 +0200 Geert Uytterhoeven <geert+renesas@glider.be> wrote:
+On Tue, May 5, 2020 at 7:05 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Provide devm_register_netdev() - a device resource managed variant
+> of register_netdev(). This new helper will only work for net_device
+> structs that have a parent device assigned and are devres managed too.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  include/linux/netdevice.h |  4 ++++
+>  net/core/dev.c            | 48 +++++++++++++++++++++++++++++++++++++++
+>  net/ethernet/eth.c        |  1 +
+>  3 files changed, 53 insertions(+)
+>
+> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+> index 130a668049ab..433bd5ca2efc 100644
+> --- a/include/linux/netdevice.h
+> +++ b/include/linux/netdevice.h
+> @@ -1515,6 +1515,8 @@ struct net_device_ops {
+>   * @IFF_FAILOVER_SLAVE: device is lower dev of a failover master device
+>   * @IFF_L3MDEV_RX_HANDLER: only invoke the rx handler of L3 master device
+>   * @IFF_LIVE_RENAME_OK: rename is allowed while device is up and running
+> + * @IFF_IS_DEVRES: this structure was allocated dynamically and is managed by
+> + *     devres
+>   */
+>  enum netdev_priv_flags {
+>         IFF_802_1Q_VLAN                 = 1<<0,
+> @@ -1548,6 +1550,7 @@ enum netdev_priv_flags {
+>         IFF_FAILOVER_SLAVE              = 1<<28,
+>         IFF_L3MDEV_RX_HANDLER           = 1<<29,
+>         IFF_LIVE_RENAME_OK              = 1<<30,
+> +       IFF_IS_DEVRES                   = 1<<31,
+>  };
+>
+>  #define IFF_802_1Q_VLAN                        IFF_802_1Q_VLAN
+> @@ -4206,6 +4209,7 @@ struct net_device *alloc_netdev_mqs(int sizeof_priv, const char *name,
+>                          count)
+>
+>  int register_netdev(struct net_device *dev);
+> +int devm_register_netdev(struct net_device *ndev);
+>  void unregister_netdev(struct net_device *dev);
+>
+>  /* General hardware address lists handling functions */
+> diff --git a/net/core/dev.c b/net/core/dev.c
+> index 522288177bbd..99db537c9468 100644
+> --- a/net/core/dev.c
+> +++ b/net/core/dev.c
+> @@ -9519,6 +9519,54 @@ int register_netdev(struct net_device *dev)
+>  }
+>  EXPORT_SYMBOL(register_netdev);
+>
+> +struct netdevice_devres {
+> +       struct net_device *ndev;
+> +};
+> +
+> +static void devm_netdev_release(struct device *dev, void *this)
+> +{
+> +       struct netdevice_devres *res = this;
+> +
+> +       unregister_netdev(res->ndev);
+> +}
+> +
+> +/**
+> + *     devm_register_netdev - resource managed variant of register_netdev()
+> + *     @ndev: device to register
+> + *
+> + *     This is a devres variant of register_netdev() for which the unregister
+> + *     function will be call automatically when the parent device of ndev
+> + *     is detached.
+> + */
+> +int devm_register_netdev(struct net_device *ndev)
+> +{
+> +       struct netdevice_devres *dr;
+> +       int ret;
+> +
+> +       /* struct net_device itself must be devres managed. */
+> +       BUG_ON(!(ndev->priv_flags & IFF_IS_DEVRES));
+> +       /* struct net_device must have a parent device - it will be the device
+> +        * managing this resource.
+> +        */
 
-> While "git am" can apply an mbox file containing multiple patches (e.g.
-> as created by b4[1], or a patch bundle downloaded from patchwork),
-> checkpatch does not have proper support for that.  When operating on an
-> mbox, checkpatch will merge all detected tags, and complain falsely
-> about duplicates:
-> 
->     WARNING: Duplicate signature
-> 
-> As modifying checkpatch to reset state in between each patch is a lot of
-> work, a simple solution is splitting the mbox into individual patches,
-> and invoking checkpatch for each of them.  Fortunately checkpatch can read
-> a patch from stdin, so the classic "formail" tool can be used to split
-> the mbox, and pipe all individual patches to checkpatch:
-> 
->     formail -s scripts/checkpatch.pl < my-mbox
-> 
-> However, when reading a patch file from standard input, checkpatch calls
-> it "Your patch", and reports its state as:
-> 
->     Your patch has style problems, please review.
-> 
-> or:
-> 
->     Your patch has no obvious style problems and is ready for submission.
+Catching static programming errors seems like an expensive use of the
+last runtime flag in the enum. It would be weird to devres manage the
+unregister and not also choose to manage the underlying memory in the
+same fashion, so it wouldn't be an obvious mistake to make. If it must
+be enforced, one could also iterate over the registered release
+functions and check for the presence of devm_free_netdev without
+burning the flag.
 
-Showing the proposed "after patch" output would be helpful.  It seems
-that it will be
+> +       BUG_ON(!ndev->dev.parent);
+> +
+> +       dr = devres_alloc(devm_netdev_release, sizeof(*dr), GFP_KERNEL);
+> +       if (!dr)
+> +               return -ENOMEM;
+> +
+> +       ret = register_netdev(ndev);
+> +       if (ret) {
+> +               devres_free(dr);
+> +               return ret;
+> +       }
+> +
+> +       dr->ndev = ndev;
+> +       devres_add(ndev->dev.parent, dr);
+> +
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL(devm_register_netdev);
+> +
+>  int netdev_refcnt_read(const struct net_device *dev)
+>  {
+>         int i, refcnt = 0;
+> diff --git a/net/ethernet/eth.c b/net/ethernet/eth.c
+> index c8b903302ff2..ce9b5e576f20 100644
+> --- a/net/ethernet/eth.c
+> +++ b/net/ethernet/eth.c
+> @@ -423,6 +423,7 @@ struct net_device *devm_alloc_etherdev_mqs(struct device *dev, int sizeof_priv,
+>
+>         *dr = netdev;
+>         devres_add(dev, dr);
+> +       netdev->priv_flags |= IFF_IS_DEVRES;
+>
+>         return netdev;
+>  }
+> --
+> 2.25.0
+>
 
-	"checkpatch: use patch subject when reading from stdin" has no obvious style problems and is ready for submission.
-
-yes?
-
-> Hence it can be difficult to identify which patches need to be reviewed
-> and improved.
-> 
-> Fix this by replacing "Your patch" by (the first line of) the email
-> subject, if present.
-> 
-> Note that "git mailsplit" can also be used to split an mbox, but it will
-> create individual files for each patch, thus requiring cleanup
-> afterwards.  Formail does not have this disadvantage.
-> 
-
+Regards,
+Edwin Peer
