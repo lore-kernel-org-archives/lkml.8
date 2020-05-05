@@ -2,93 +2,72 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 167DFC47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F3EC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF23520746
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:48:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pexb9f2U"
+	by mail.kernel.org (Postfix) with ESMTP id 45712206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:48:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730559AbgEEPsY (ORCPT
+        id S1730611AbgEEPsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:48:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35534 "EHLO
+        Tue, 5 May 2020 11:48:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729510AbgEEPsX (ORCPT
+        with ESMTP id S1730537AbgEEPsh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:48:23 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97F1EC061A0F;
-        Tue,  5 May 2020 08:48:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=OusNCOqemtoO4geSkrjF3iyDZazZu9c7fA42HGUJsLA=; b=pexb9f2UBa1sTSKB+3uC1VGFed
-        ccq0bPqD/XU4okEaJLLyeYAXzZf1T4lyxVGzb8NBxRvfKga8SVd1emR4PGIh2xelx+5K1leFfqvCg
-        WyZAIUxkeJrdI5PbCOU0qpviOJsx7v8IHFP57w2gk78YAPtBeoOFm1UJj3NnWfZJLEuwMiCz3zQVp
-        iS+t/ZSU+DX1cdPtLB2ZbqAnergroRMXA6//1AqzAH9qki0MuobmApf2rOMpc9Kz7j9euh7NncnUI
-        PZy/KEbdOeW90aCrkwGl/nnt0fORL9AOpe8moBrixx80s1m36DOdaAGwuQeDqsDc7tUDosDBJiVsG
-        mEgLoGEA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jVzns-0000ON-QN; Tue, 05 May 2020 15:48:17 +0000
-Date:   Tue, 5 May 2020 08:48:16 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, Tony Luck <tony.luck@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        linux-edac@vger.kernel.org, linux-doc@vger.kernel.org,
+        Tue, 5 May 2020 11:48:37 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 022E0C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 08:48:37 -0700 (PDT)
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 7F04C737;
+        Tue,  5 May 2020 15:48:36 +0000 (UTC)
+Date:   Tue, 5 May 2020 09:48:35 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian@brauner.io>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] doc: Fix some typo errors in ras.rst
-Message-ID: <20200505154816.GH16070@bombadil.infradead.org>
-References: <20200505151049.11134-1-longman@redhat.com>
+Subject: Re: [PATCH] samples: fix binderfs sample
+Message-ID: <20200505094835.47cc2d53@lwn.net>
+In-Reply-To: <20200429080113.wetsjwkfxfrarfvf@wittgenstein>
+References: <20200428212555.2806258-1-arnd@arndb.de>
+        <20200429080113.wetsjwkfxfrarfvf@wittgenstein>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505151049.11134-1-longman@redhat.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 11:10:49AM -0400, Waiman Long wrote:
-> Fix typo errors.
+On Wed, 29 Apr 2020 10:01:13 +0200
+Christian Brauner <christian.brauner@ubuntu.com> wrote:
 
-By reformatting it, you've successfully obscured what typos you've fixed.
-As a result I read the whole paragraph, and ...
+> On Tue, Apr 28, 2020 at 11:25:33PM +0200, Arnd Bergmann wrote:
+> > A routine check for misspelled Kconfig symbols showed on instance
+> > from last year, the correct symbol name is CONFIG_ANDROID_BINDERFS,
+> > not CONFIG_CONFIG_ANDROID_BINDERFS, so the extra prefix must
+> > be removed in the Kconfig file to allow enabling the sample.
+> > 
+> > As the actual sample fails to build as a kernel module, change the
+> > Makefile enough to get to build as a hostprog instead.
+> > 
+> > Fixes: 9762dc1432e1 ("samples: add binderfs sample program")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>  
+> 
+> Thanks for fixing this Arnd!
+> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+> 
+I've applied this, thanks.
 
->  ECC memory
->  ----------
->  
-> -As mentioned on the previous section, ECC memory has extra bits to be
-> -used for error correction. So, on 64 bit systems, a memory module
-> -has 64 bits of *data width*, and 74 bits of *total width*. So, there are
-> -8 bits extra bits to be used for the error detection and correction
-> +As mentioned on the previous section, ECC memory has extra bits to
-
-s/on/in/
-
-> +be used for error correction. So, on 64 bit systems, a memory module
-> +has 64 bits of *data width*, and 72 bits of *total width*.
-
-Usually a 64-bit system refers to the width of a pointer.  Here, it's
-referring to the width of the memory system, which is rather confusing.
-How about "In the above example" instead of "So, on 64 bit systems".
-
-> So, there
-> +are 8 extra bits to be used for the error detection and correction
->  mechanisms. Those extra bits are called *syndrome*\ [#f1]_\ [#f2]_.
-
-This would read better as:
-
-The extra 8 bits which are used for error detection and correction
-are referred to as the *syndrome*\ [#f1]_\ [#f2]_.
-
+jon
