@@ -2,70 +2,145 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 079C3C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE957C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7099206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E6B4206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:08:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Nhf5+JWv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730712AbgEESHj (ORCPT
+        id S1730734AbgEESIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 14:07:39 -0400
-Received: from muru.com ([72.249.23.125]:52916 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729315AbgEESHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 14:07:39 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id C3AD880A5;
-        Tue,  5 May 2020 18:08:26 +0000 (UTC)
-Date:   Tue, 5 May 2020 11:07:34 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     daniel.lezcano@linaro.org, Tero Kristo <t-kristo@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>, Suman Anna <s-anna@ti.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Do one override clock
- parent in prepare()
-Message-ID: <20200505180734.GN37466@atomide.com>
-References: <20200427172831.16546-1-lokeshvutla@ti.com>
- <20200428182209.GT37466@atomide.com>
+        Tue, 5 May 2020 14:08:12 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:57697 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729315AbgEESIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 14:08:11 -0400
+Received: from [172.27.9.0] (c-73-231-201-241.hsd1.ca.comcast.net [73.231.201.241])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 045I7QkG2666886
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Tue, 5 May 2020 11:07:27 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 045I7QkG2666886
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2020042201; t=1588702047;
+        bh=4cVMSAo5+1hI6OdDCminTspOqusfTES7OMmVmqp4XjQ=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=Nhf5+JWvcVJBl3eGfQramD8sznodcvqRcLHWQ0zVAir5IoZp+WIZPnToDoDHsX//n
+         SsX499ThiXg4yy82lq+kfDM5g/TOw+rMstw1/3So72et/eB1Y698rxsg85FJ8Xt+KA
+         0rmUPKiYleJp4G4EUCJq0EbQbYQtjnioah8uauPjrrhCy1lw53QU9NFgpvA5aOGcqc
+         o7r6z6jh9H49TzsFT1P7VRnDP/5aBzkcu7CCAwWcZPGCAc56Fc54R8AlHYtq/QhA+h
+         SnPob6TTm7PQsUen9kZJSMVkhc8mMlnpz89ymMzf0xc5zPGrNOkuueiQLhobKEPiMD
+         B15Jhs20yU7AA==
+Date:   Tue, 05 May 2020 11:07:24 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20200505174423.199985-1-ndesaulniers@google.com>
+References: <20200505174423.199985-1-ndesaulniers@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428182209.GT37466@atomide.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] x86: bitops: fix build regression
+To:     Nick Desaulniers <ndesaulniers@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+CC:     Sedat Dilek <sedat.dilek@gmail.com>, stable@vger.kernel.org,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        "kernelci . org bot" <bot@kernelci.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Ilie Halip <ilie.halip@gmail.com>, x86@kernel.org,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+From:   hpa@zytor.com
+Message-ID: <8A776DBC-03AF-485B-9AA6-5920E3C4ACB2@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [200428 18:23]:
-> * Lokesh Vutla <lokeshvutla@ti.com> [200427 17:29]:
-> > omap_dm_timer_prepare() is setting up the parent 32KHz clock. This
-> > prepare() gets called by request_timer in the client's driver. Because of
-> > this, the timer clock parent that is set with assigned-clock-parent is being
-> > overwritten. So drop this default setting of parent in prepare().
-> > 
-> > Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> 
-> This works just fine for me but depends on the dts changes.
-> 
-> Daniel, for merging, do you want to set up an immutable branch
-> for the related dts change and this? I'm afraid it will conflict
-> with the related systimer changes for the dts otherwise.
+On May 5, 2020 10:44:22 AM PDT, Nick Desaulniers <ndesaulniers@google=2Ecom=
+> wrote:
+>From: Sedat Dilek <sedat=2Edilek@gmail=2Ecom>
+>
+>It turns out that if your config tickles __builtin_constant_p via
+>differences in choices to inline or not, this now produces invalid
+>assembly:
+>
+>$ cat foo=2Ec
+>long a(long b, long c) {
+>  asm("orb\t%1, %0" : "+q"(c): "r"(b));
+>  return c;
+>}
+>$ gcc foo=2Ec
+>foo=2Ec: Assembler messages:
+>foo=2Ec:2: Error: `%rax' not allowed with `orb'
+>
+>The "q" constraint only has meanting on -m32 otherwise is treated as
+>"r"=2E
+>
+>This is easily reproducible via Clang+CONFIG_STAGING=3Dy+CONFIG_VT6656=3D=
+m,
+>or Clang+allyesconfig=2E
+>
+>Keep the masking operation to appease sparse (`make C=3D1`), add back the
+>cast in order to properly select the proper 8b register alias=2E
+>
+> [Nick: reworded]
+>
+>Cc: stable@vger=2Ekernel=2Eorg
+>Cc: Jesse Brandeburg <jesse=2Ebrandeburg@intel=2Ecom>
+>Link: https://github=2Ecom/ClangBuiltLinux/linux/issues/961
+>Link: https://lore=2Ekernel=2Eorg/lkml/20200504193524=2EGA221287@google=
+=2Ecom/
+>Fixes: 1651e700664b4 ("x86: Fix bitops=2Eh warning with a moved cast")
+>Reported-by: Sedat Dilek <sedat=2Edilek@gmail=2Ecom>
+>Reported-by: kernelci=2Eorg bot <bot@kernelci=2Eorg>
+>Suggested-by: Andy Shevchenko <andriy=2Eshevchenko@intel=2Ecom>
+>Suggested-by: Ilie Halip <ilie=2Ehalip@gmail=2Ecom>
+>Tested-by: Sedat Dilek <sedat=2Edilek@gmail=2Ecom>
+>Signed-off-by: Sedat Dilek <sedat=2Edilek@gmail=2Ecom>
+>Signed-off-by: Nick Desaulniers <ndesaulniers@google=2Ecom>
+>---
+> arch/x86/include/asm/bitops=2Eh | 4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
+>
+>diff --git a/arch/x86/include/asm/bitops=2Eh
+>b/arch/x86/include/asm/bitops=2Eh
+>index b392571c1f1d=2E=2E139122e5b25b 100644
+>--- a/arch/x86/include/asm/bitops=2Eh
+>+++ b/arch/x86/include/asm/bitops=2Eh
+>@@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long *addr)
+> 	if (__builtin_constant_p(nr)) {
+> 		asm volatile(LOCK_PREFIX "orb %1,%0"
+> 			: CONST_MASK_ADDR(nr, addr)
+>-			: "iq" (CONST_MASK(nr) & 0xff)
+>+			: "iq" ((u8)(CONST_MASK(nr) & 0xff))
+> 			: "memory");
+> 	} else {
+> 		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
+>@@ -74,7 +74,7 @@ arch_clear_bit(long nr, volatile unsigned long *addr)
+> 	if (__builtin_constant_p(nr)) {
+> 		asm volatile(LOCK_PREFIX "andb %1,%0"
+> 			: CONST_MASK_ADDR(nr, addr)
+>-			: "iq" (CONST_MASK(nr) ^ 0xff));
+>+			: "iq" ((u8)(CONST_MASK(nr) ^ 0xff)));
+> 	} else {
+> 		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
+> 			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
 
-So I've pushed out an immutable branch for the dts changes
-this patch depends on against v5.7-rc1 as omap-for-v5.8/dt-timer
-[0][1].
+Drop & 0xff and change ^ 0xff to ~=2E
 
-Daniel feel free to merge it in to apply this clocksource patch if
-no more comments:
-
-Acked-by: Tony Lindgren <tony@atomide.com>
-
-[0] git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git omap-for-v5.8/dt-timer
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git/log/?h=omap-for-v5.8/dt-timer
+The redundancy is confusing=2E
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
