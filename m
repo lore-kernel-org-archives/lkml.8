@@ -2,107 +2,163 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 269E1C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E09A5C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFCD7206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB04D20735
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:40:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L9mXACcr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H+4VVqsO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728754AbgEELgV (ORCPT
+        id S1728699AbgEELkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 07:36:21 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35913 "EHLO
+        Tue, 5 May 2020 07:40:53 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47704 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725766AbgEELgU (ORCPT
+        with ESMTP id S1728233AbgEELkw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 07:36:20 -0400
+        Tue, 5 May 2020 07:40:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588678579;
+        s=mimecast20190719; t=1588678850;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=x2FjQAZY3rz08zRV+CTT5963v5ngAxHKCBr7Wo/WiIQ=;
-        b=L9mXACcrHHgeMQitfRYzNJm9ZUCrDW6KJkhLP4OOAQ1LPS3WDmFjBcLaTI4FNpZDTceGH2
-        MJ3RybjPPm3klNH2q9BbnzabrRldLX4h1da6KQX1hzoP3Dw/shQgfxENUHUUqcyZASjlPw
-        gEMQ+n7KgQk5E6yZIdE9X2SEEvkmkpg=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-363-FmW_YfCEPiSnfCkK8GoHag-1; Tue, 05 May 2020 07:36:18 -0400
-X-MC-Unique: FmW_YfCEPiSnfCkK8GoHag-1
-Received: by mail-wr1-f70.google.com with SMTP id h12so1056469wrr.19
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 04:36:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=x2FjQAZY3rz08zRV+CTT5963v5ngAxHKCBr7Wo/WiIQ=;
-        b=d8ZLoiClPREh9QHKcHKzx3R/c0FIN9xZHLEEBAYe7/Yn4KlcIcgH4QlMeHh08uOuHc
-         uTiln2BvIJ1MHBqRQSAlON320C0hvWHXRhHM3jvFi/FLWAceFm5K8itsE6rNWIMOVavl
-         tDiA/Ft5Ld5+w8kenpX9sHFAYlwZxJPwCcw2VOabFHMHXLxFSgPhr5pJPX0HBh7ubQH4
-         ivLjnkWD3UUHuDa8Umb3HmPwjVEjx8WXWzJcWyiA0NzkKQNtManb/9EAA2jQEmFS19Ta
-         LWYdWa8uGI6DlBvPdYAIqCaP7xpNPRqah9PZjAcJmqUzJFj3TCMEK0iaaq8fPza8JHP6
-         72Pg==
-X-Gm-Message-State: AGi0PuaXIqJftUTCLFsNt7BSTs3aaDe1nwu/tPYFyxityeLbiEesWfu7
-        VUKCyCpXwBjpr1K+aG1cvRVKXVLukUqugEriBqPCUmN9qNYmG3QfBYrxd9AzbuOgZRhEnCZVkIH
-        qRlhutE5r+sX1MyBrHXX38Vsj
-X-Received: by 2002:a5d:5112:: with SMTP id s18mr3415013wrt.426.1588678576954;
-        Tue, 05 May 2020 04:36:16 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJl60n9MQpiFkNCbieDx9axKTRmRnusJD4ycTvR5+jsKe4L9ARtHDkdV2u7AzEdxcAHwg3gog==
-X-Received: by 2002:a5d:5112:: with SMTP id s18mr3414988wrt.426.1588678576724;
-        Tue, 05 May 2020 04:36:16 -0700 (PDT)
-Received: from [192.168.178.58] ([151.20.132.175])
-        by smtp.gmail.com with ESMTPSA id t16sm3262550wmi.27.2020.05.05.04.36.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2020 04:36:16 -0700 (PDT)
-Subject: Re: [PATCH 0/3] KVM: x86: cleanup and fixes for debug register
- accesses
-To:     Peter Xu <peterx@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-References: <20200504155558.401468-1-pbonzini@redhat.com>
- <20200504185530.GE6299@xz-x1>
- <06dcafe8-8278-a818-ad76-36f3bbbcc0a2@redhat.com>
- <20200504234904.GG6299@xz-x1>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <d09671ef-0a9d-c854-7715-d3077e09e734@redhat.com>
-Date:   Tue, 5 May 2020 13:36:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200504234904.GG6299@xz-x1>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        bh=OlAdU6/nOacYHUCLOD5Zi1nKBtXm6BwKAesECeCW+3s=;
+        b=H+4VVqsO1F5z84GTqlaJXrIMF7UvnB6NWcm9vXEp7sspp2sBekLyB0kEUrDNDhLZ9mhdvC
+        ZMJsG4UupX+L5553mYgjO6tJOXuyBgLMuS5TDGw9UaCfCMDyxQoWR4IYLvFVk05zru0lhS
+        +SvPDNCBqqdGfZ8awq795D7evklb13E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-148-GmWvodbxNKSrZrkiXB3jvQ-1; Tue, 05 May 2020 07:40:47 -0400
+X-MC-Unique: GmWvodbxNKSrZrkiXB3jvQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 09C51835B40;
+        Tue,  5 May 2020 11:40:46 +0000 (UTC)
+Received: from maximlenovopc.usersys.redhat.com (unknown [10.35.206.34])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C03B219C4F;
+        Tue,  5 May 2020 11:40:44 +0000 (UTC)
+Message-ID: <bec5e02f456a1be682e680c06326afd183c23318.camel@redhat.com>
+Subject: Re: AVIC related warning in enable_irq_window
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Date:   Tue, 05 May 2020 14:40:43 +0300
+In-Reply-To: <efbe933a-3ab6-fa57-37fb-affc87369948@amd.com>
+References: <9ce7bb5c4fb8bcc4ac21103f7534a6edfcbe195d.camel@redhat.com>
+         <758b27a8-74c0-087d-d90b-d95faee2f561@redhat.com>
+         <c5c32371-4b4e-1382-c616-3830ba46bf85@amd.com>
+         <159382e7fdf0f9b50d79e29554842289e92e1ed7.camel@redhat.com>
+         <d22d32de-5d91-662a-bf53-8cfb115dbe8d@redhat.com>
+         <c81cf9bb-840a-d076-bc0e-496916621bdd@amd.com>
+         <23b0dfe5-eba4-136b-0d4a-79f57f8a03ff@redhat.com>
+         <efbe933a-3ab6-fa57-37fb-affc87369948@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/05/20 01:49, Peter Xu wrote:
->> The guest debugging test would basically cover the gdbstub case, which
->> is different from kvm-unit-tests.  It would run similar tests to
->> kvm-unit-tests, but #DB and #BP exceptions would be replaced by
->> KVM_EXIT_DEBUG, and MOVs to DR would be replaced by KVM_SET_GUEST_DEBUG.
->>
->> It could also cover exception payload support in KVM_GET_VCPU_EVENTS,
->> but that is more complicated because it would require support for
->> exceptions in the selftests.
->
-> Yep, I guess the in-guest debug test will still need the exception support,
-> though I also guess we don't need that when we have the kvm unit test
+On Tue, 2020-05-05 at 14:55 +0700, Suravee Suthikulpanit wrote:
+> Paolo / Maxim,
+> 
+> On 5/4/20 5:49 PM, Paolo Bonzini wrote:
+> > On 04/05/20 12:37, Suravee Suthikulpanit wrote:
+> > > On 5/4/20 4:25 PM, Paolo Bonzini wrote:
+> > > > On 04/05/20 11:13, Maxim Levitsky wrote:
+> > > > > On Mon, 2020-05-04 at 15:46 +0700, Suravee Suthikulpanit wrote:
+> > > > > > On 5/2/20 11:42 PM, Paolo Bonzini wrote:
+> > > > > > > On 02/05/20 15:58, Maxim Levitsky wrote:
+> > > > > > > > The AVIC is disabled by svm_toggle_avic_for_irq_window, which calls
+> > > > > > > > kvm_request_apicv_update, which broadcasts the
+> > > > > > > > KVM_REQ_APICV_UPDATE vcpu request,
+> > > > > > > > however it doesn't broadcast it to CPU on which now we are
+> > > > > > > > running, which seems OK,
+> > > > > > > > because the code that handles that broadcast runs on each VCPU
+> > > > > > > > entry, thus when this CPU will enter guest mode it will notice 
+> > > > > > > > and disable the AVIC. >>>>>>>
+> > > > > > > > However later in svm_enable_vintr, there is test
+> > > > > > > > 'WARN_ON(kvm_vcpu_apicv_active(&svm->vcpu));'
+> > > > > > > > which is still true on current CPU because of the above.
+> > > > > > > 
+> > > > > > > Good point!  We can just remove the WARN_ON I think.  Can you send
+> > > > > > > a patch?
+> > > > > > > 
+> > > > > > 
+> > > > > > Instead, as an alternative to remove the WARN_ON(), would it be
+> > > > > > better to just explicitly calling kvm_vcpu_update_apicv(vcpu) 
+> > > > > > to update the apicv_active flag right after kvm_request_apicv_update()?
+> > > > > > 
+> > > > > 
+> > > > > This should work IMHO, other that the fact kvm_vcpu_update_apicv will
+> > > > > be called again, when this vcpu is entered since the KVM_REQ_APICV_UPDATE
+> > > > > will still be pending on it.
+> > > > > It shoudn't be a problem, and we can even add a check to do nothing
+> > > > > when it is called while avic is already in target enable state.
+> > > > 
+> > > > I thought about that but I think it's a bit confusing.  If we want to
+> > > > keep the WARN_ON, Maxim can add an equivalent one to svm_vcpu_run, which
+> > > > is even better because the invariant is clearer.
+> > > > 
+> > > > WARN_ON((vmcb->control.int_ctl & (AVIC_ENABLE_MASK | V_IRQ_MASK))
+> > > >      == (AVIC_ENABLE_MASK | V_IRQ_MASK));
+> > > > 
+> 
+> Based on my experiment, it seems that the hardware sets the V_IRQ_MASK bit
+> when #VMEXIT despite this bit being ignored when AVIC is enabled.
+> (I'll double check w/ HW team on this.) In this case, I don't think we can
+> use the WARN_ON() as suggested above.
+> 
+> I think we should keep the warning in the svm_set_vintr() since we want to know
+> if the V_IRQ, V_INTR_PRIO, V_IGN_TPR, and V_INTR_VECTOR are ignored when calling
+> svm_set_vintr().
+> 
+> Instead, I would consider explicitly call kvm_vcpu_update_apicv() since it would
+> be benefit from not having to wait for the next vcpu_enter_guest for this vcpu to process
+> the request. This is less confusing to me. In this case, we would need to
+> kvm_clear_request(KVM_REQ_APICV_UPDATE) for this vcpu as well.
+> 
+> On the other hand, would be it useful to implement kvm_make_all_cpus_request_but_self(),
+> which sends request to all other corpus excluding itself?
+> 
+> > By the way, there is another possible cleanup: the clearing
+> > of V_IRQ_MASK can be removed from interrupt_window_interception since it
+> > has already called svm_clear_vintr.
+> 
+> Maxim, I can help with the clean up patches if you would prefer.
 
-We can still use it in order to test for example live migration with
-pending debug exceptions (KVM_GET_VCPU_EVENTS), but it's less important
-indeed.
+I currently am waiting for the decision on how to we are going to fix this.
+I don't have a strong opinion on how to fix this, but at least I think that we know
+what is going on. 
 
-Paolo
+Initially I was thinking that something was broken in AVIC, especially when I noticed
+that guest would hang when I did LatencyMon benchmark in it.
+Luckily the other fix that I tested and reviewed seems to fix those hangs.
+
+In a few days I plan to do some nvme passthrough stress testing as I used to do when I was
+developing my nvme-mdev driver with AVIC. I am very curios on how this will turn out.
+
+Best regards,
+	Maxim Levitsky
+
+> 
+> Thanks,
+> Suravee
+> 
+> 
+> > Paolo
+> > 
+> 
+> 
+
 
