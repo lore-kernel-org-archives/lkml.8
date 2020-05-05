@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C39A3C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF920C47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A011A206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:14:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D66420746
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:14:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="p6nnifR4"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="W6mNMQCd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730381AbgEEROQ (ORCPT
+        id S1730472AbgEEROW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 13:14:16 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:13388 "EHLO
+        Tue, 5 May 2020 13:14:22 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:56404 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729647AbgEEROO (ORCPT
+        by vger.kernel.org with ESMTP id S1729209AbgEEROG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 13:14:14 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 045GvHfS002732;
-        Tue, 5 May 2020 19:14:01 +0200
+        Tue, 5 May 2020 13:14:06 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 045GvZBx012960;
+        Tue, 5 May 2020 19:13:43 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=ELImG/KZ21ZmINUzXocTq1UfGpbeAi7O5VA5zgJo2H8=;
- b=p6nnifR4gtdz3Gkl+AXO/m9O/mRwIoazMXpFjjmUOcJu4islFppEURfhxbO73BgEQ+4c
- d/1RrRbkNxBqBZbLsTEqKAmSw5Qt19jXS1/Ah+AcPyjUCQEGGZFWCSBTnOoN63Qvqa4e
- zzGZHfxcYiJG2RRWwOIfrjGDoJbwu0C0MtRBQ5InYxCpR+BjBlnKQXnnjAm/2pLRLchP
- sNJCLztc5+855sLq8yFiVKwm97jGA+kw+6H09Ts6LKy4WBUIBSh6ZDfZdEdJr3XZo3J7
- MiQh0o61y4yNYsBFUDACAlDyDADYeL16Mxhyysbuc2WYJ5xslJoCPOXQ97hAj0tXpcz8 nw== 
+ bh=P+DYjJ1GrlLPWPS5TfKbJgOvt9CYy26/DlrQnU+Di10=;
+ b=W6mNMQCdIJRf33+gh9d+cXNdNjuyibvk6X5ws2pPtPEdjX1tBF2pN2g+IHiZfg3CDoqd
+ 84Rp5sAiAsIyfcluUtXeHEkeRaGMeV2O5Td/f8ZB3azYQt8ovQ4Q6gMwijsfyIK7HHya
+ u1ZVQ/zYc3TCZO5ArutMN6IUnnR4O2WsOBh+pFNZXfjFSqhUCqlOx4TUvsh8wd4Wvkk1
+ vXkdLNq5/6jMc3e46m3VoYqwagGY2ILQPTU4FlpjCbHJ6TEzbch/eG5g7Qu/tbvTAnab
+ vh++B7s3y0L6EJp5+KdY96ZyS7psJxO24SBqXEA8ZCmg/2ukM3Hdh0WXfyUsTTKYhYHR 2w== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30rx08hrbx-1
+        by mx07-00178001.pphosted.com with ESMTP id 30ryrj9ded-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 19:14:01 +0200
+        Tue, 05 May 2020 19:13:43 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id F1CBB10002A;
-        Tue,  5 May 2020 19:14:00 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C41C410002A;
+        Tue,  5 May 2020 19:13:42 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DF0832B5A7A;
-        Tue,  5 May 2020 19:14:00 +0200 (CEST)
-Received: from localhost (10.75.127.47) by SFHDAG6NODE2.st.com (10.75.127.17)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 5 May 2020 19:14:00
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id ACCC52B5A78;
+        Tue,  5 May 2020 19:13:42 +0200 (CEST)
+Received: from localhost (10.75.127.45) by SFHDAG6NODE2.st.com (10.75.127.17)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 5 May 2020 19:13:41
  +0200
 From:   Christophe Kerello <christophe.kerello@st.com>
 To:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
@@ -56,16 +56,16 @@ CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <devicetree@vger.kernel.org>, <marex@denx.de>,
         Christophe Kerello <christophe.kerello@st.com>
-Subject: [PATCH v3 06/10] dt-bindings: mtd: update STM32 FMC2 NAND controller documentation
-Date:   Tue, 5 May 2020 19:11:04 +0200
-Message-ID: <1588698668-25288-7-git-send-email-christophe.kerello@st.com>
+Subject: [PATCH v3 01/10] mtd: rawnand: stm32_fmc2: manage all errors cases at probe time
+Date:   Tue, 5 May 2020 19:10:59 +0200
+Message-ID: <1588698668-25288-2-git-send-email-christophe.kerello@st.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1588698668-25288-1-git-send-email-christophe.kerello@st.com>
 References: <1588698668-25288-1-git-send-email-christophe.kerello@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG6NODE2.st.com
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG6NODE2.st.com
  (10.75.127.17)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-05-05_09:2020-05-04,2020-05-05 signatures=0
@@ -74,67 +74,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These bindings can be used on SOCs where the FMC2 NAND controller is
-in standalone. In case that the FMC2 embeds 2 controllers (an external
-bus controller and a raw NAND controller), the register base and the
-clock will be defined in the parent node. It is the reason why the
-register base address and the clock are now optional.
+This patch defers its probe when the expected reset control is not
+yet ready. This patch also handles properly all errors cases at probe
+time.
 
 Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
 ---
- .../devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml   | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+Changes in v3:
+ - rename labels used on errors
 
-diff --git a/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml b/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
-index b059267..68fac1a 100644
---- a/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
-+++ b/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
-@@ -18,13 +18,15 @@ properties:
+ drivers/mtd/nand/raw/stm32_fmc2_nand.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+index b6d45cd..50a6377 100644
+--- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
++++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+@@ -1967,7 +1967,11 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+ 	}
  
-   reg:
-     items:
--      - description: Registers
-+      - description: Registers (optional)
-       - description: Chip select 0 data
-       - description: Chip select 0 command
-       - description: Chip select 0 address space
-       - description: Chip select 1 data
-       - description: Chip select 1 command
-       - description: Chip select 1 address space
-+    minItems: 6
-+    maxItems: 7
+ 	rstc = devm_reset_control_get(dev, NULL);
+-	if (!IS_ERR(rstc)) {
++	if (IS_ERR(rstc)) {
++		ret = PTR_ERR(rstc);
++		if (ret == -EPROBE_DEFER)
++			goto err_clk_disable;
++	} else {
+ 		reset_control_assert(rstc);
+ 		reset_control_deassert(rstc);
+ 	}
+@@ -1975,7 +1979,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+ 	/* DMA setup */
+ 	ret = stm32_fmc2_dma_setup(fmc2);
+ 	if (ret)
+-		return ret;
++		goto err_release_dma;
  
-   interrupts:
-     maxItems: 1
-@@ -61,7 +63,6 @@ required:
-   - compatible
-   - reg
-   - interrupts
--  - clocks
+ 	/* FMC2 init routine */
+ 	stm32_fmc2_init(fmc2);
+@@ -1997,20 +2001,20 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+ 	/* Scan to find existence of the device */
+ 	ret = nand_scan(chip, nand->ncs);
+ 	if (ret)
+-		goto err_scan;
++		goto err_release_dma;
  
- examples:
-   - |
-@@ -77,13 +78,13 @@ examples:
-             <0x81000000 0x1000>,
-             <0x89010000 0x1000>,
-             <0x89020000 0x1000>;
--            interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
--            dmas = <&mdma1 20 0x10 0x12000a02 0x0 0x0>,
--                   <&mdma1 20 0x10 0x12000a08 0x0 0x0>,
--                   <&mdma1 21 0x10 0x12000a0a 0x0 0x0>;
--            dma-names = "tx", "rx", "ecc";
--            clocks = <&rcc FMC_K>;
--            resets = <&rcc FMC_R>;
-+      interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+      dmas = <&mdma1 20 0x2 0x12000a02 0x0 0x0>,
-+             <&mdma1 20 0x2 0x12000a08 0x0 0x0>,
-+             <&mdma1 21 0x2 0x12000a0a 0x0 0x0>;
-+      dma-names = "tx", "rx", "ecc";
-+      clocks = <&rcc FMC_K>;
-+      resets = <&rcc FMC_R>;
-       #address-cells = <1>;
-       #size-cells = <0>;
+ 	ret = mtd_device_register(mtd, NULL, 0);
+ 	if (ret)
+-		goto err_device_register;
++		goto err_nand_cleanup;
  
+ 	platform_set_drvdata(pdev, fmc2);
+ 
+ 	return 0;
+ 
+-err_device_register:
++err_nand_cleanup:
+ 	nand_cleanup(chip);
+ 
+-err_scan:
++err_release_dma:
+ 	if (fmc2->dma_ecc_ch)
+ 		dma_release_channel(fmc2->dma_ecc_ch);
+ 	if (fmc2->dma_tx_ch)
+@@ -2021,6 +2025,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+ 	sg_free_table(&fmc2->dma_data_sg);
+ 	sg_free_table(&fmc2->dma_ecc_sg);
+ 
++err_clk_disable:
+ 	clk_disable_unprepare(fmc2->clk);
+ 
+ 	return ret;
 -- 
 1.9.1
 
