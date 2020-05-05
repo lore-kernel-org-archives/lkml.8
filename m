@@ -2,135 +2,85 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC874C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0686C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCBFC206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7EAA206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:26:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730608AbgEEQ00 (ORCPT
+        id S1730809AbgEEQ0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:26:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57832 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730701AbgEEQ0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:26:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id EB82AAF5D;
-        Tue,  5 May 2020 16:26:21 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     mbrugger@suse.com, u-boot@lists.denx.de, bmeng.cn@gmail.com,
-        marex@denx.de, linux-kernel@vger.kernel.org
-Cc:     sjg@chromium.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com,
-        mark.kettenis@xs4all.nl,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v3 2/2] usb: xhci: Load Raspberry Pi 4 VL805's firmware
-Date:   Tue,  5 May 2020 18:26:07 +0200
-Message-Id: <20200505162607.334-3-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200505162607.334-1-nsaenzjulienne@suse.de>
-References: <20200505162607.334-1-nsaenzjulienne@suse.de>
+        Tue, 5 May 2020 12:26:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41618 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730282AbgEEQ0o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 12:26:44 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54901C061A0F;
+        Tue,  5 May 2020 09:26:44 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jW0Ou-001bTK-0E; Tue, 05 May 2020 16:26:32 +0000
+Date:   Tue, 5 May 2020 17:26:31 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     SeongJae Park <sjpark@amazon.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        sj38.park@gmail.com, netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        SeongJae Park <sjpark@amazon.de>, snu@amazon.com,
+        amit@kernel.org, stable@vger.kernel.org
+Subject: Re: Re: [PATCH net v2 0/2] Revert the 'socket_alloc' life cycle
+ change
+Message-ID: <20200505162631.GY23230@ZenIV.linux.org.uk>
+References: <a8510327-d4f0-1207-1342-d688e9d5b8c3@gmail.com>
+ <20200505154644.18997-1-sjpark@amazon.com>
+ <CANn89iLHV2wyhk6-d6j_4=Ns01AEE5HSA4Qu3LO0gqKgcG81vQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANn89iLHV2wyhk6-d6j_4=Ns01AEE5HSA4Qu3LO0gqKgcG81vQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When needed, RPi4's co-processor (called VideoCore) has to be instructed
-to load VL805's firmware (the chip providing xHCI support). VideCore's
-firmware expects the board's PCIe bus to be already configured in order
-for it to load the xHCI chip firmware. So we have to make sure this
-happens in between the PCIe configuration and xHCI startup.
+On Tue, May 05, 2020 at 09:00:44AM -0700, Eric Dumazet wrote:
 
-Introduce a callback in xhci_pci_probe() to run this platform specific
-routine.
+> > Not exactly the 10,000,000, as it is only the possible highest number, but I
+> > was able to observe clear exponential increase of the number of the objects
+> > using slabtop.  Before the start of the problematic workload, the number of
+> > objects of 'kmalloc-64' was 5760, but I was able to observe the number increase
+> > to 1,136,576.
+> >
+> >           OBJS ACTIVE  USE OBJ SIZE  SLABS OBJ/SLAB CACHE SIZE NAME
+> > before:   5760   5088  88%    0.06K     90       64       360K kmalloc-64
+> > after:  1136576 1136576 100%    0.06K  17759       64     71036K kmalloc-64
+> >
+> 
+> Great, thanks.
+> 
+> How recent is the kernel you are running for your experiment ?
+> 
+> Let's make sure the bug is not in RCU.
+> 
+> After Al changes, RCU got slightly better under stress.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+The thing that worries me here is that this is far from being the only
+source of RCU-delayed freeing of objects.  If we really see bogus OOM
+kills due to that (IRL, not in an artificial microbenchmark), we'd
+better do something that would help with all those sources, not just
+paper over the contributions from one of those.  Because there's no
+chance in hell to get rid of RCU-delayed freeing in general...
 
----
-
-Changes since v2:
- - Get rid of #ifdef CONFIG_BCM2711
- - Get rid of redundant error message
-
-Changes since v1:
- - Create callback
-
- board/raspberrypi/rpi/rpi.c | 6 ++++++
- drivers/usb/host/xhci-pci.c | 6 ++++++
- include/usb/xhci.h          | 3 +++
- 3 files changed, 15 insertions(+)
-
-diff --git a/board/raspberrypi/rpi/rpi.c b/board/raspberrypi/rpi/rpi.c
-index e367ba3092..dcaf45fbf2 100644
---- a/board/raspberrypi/rpi/rpi.c
-+++ b/board/raspberrypi/rpi/rpi.c
-@@ -14,6 +14,7 @@
- #include <lcd.h>
- #include <memalign.h>
- #include <mmc.h>
-+#include <usb/xhci.h>
- #include <asm/gpio.h>
- #include <asm/arch/mbox.h>
- #include <asm/arch/msg.h>
-@@ -494,3 +495,8 @@ int ft_board_setup(void *blob, bd_t *bd)
- 
- 	return 0;
- }
-+
-+void xhci_pci_fixup(struct udevice *dev)
-+{
-+	bcm2711_notify_vl805_reset();
-+}
-diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-index c1f60da541..1285dde1ef 100644
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -11,6 +11,10 @@
- #include <usb.h>
- #include <usb/xhci.h>
- 
-+__weak void xhci_pci_fixup(struct udevice *dev)
-+{
-+}
-+
- static void xhci_pci_init(struct udevice *dev, struct xhci_hccr **ret_hccr,
- 			  struct xhci_hcor **ret_hcor)
- {
-@@ -40,6 +44,8 @@ static int xhci_pci_probe(struct udevice *dev)
- 	struct xhci_hccr *hccr;
- 	struct xhci_hcor *hcor;
- 
-+	xhci_pci_fixup(dev);
-+
- 	xhci_pci_init(dev, &hccr, &hcor);
- 
- 	return xhci_register(dev, hccr, hcor);
-diff --git a/include/usb/xhci.h b/include/usb/xhci.h
-index c16106a2fc..57feed7603 100644
---- a/include/usb/xhci.h
-+++ b/include/usb/xhci.h
-@@ -16,6 +16,7 @@
- #ifndef HOST_XHCI_H_
- #define HOST_XHCI_H_
- 
-+#include <usb.h>
- #include <asm/types.h>
- #include <asm/cache.h>
- #include <asm/io.h>
-@@ -1281,4 +1282,6 @@ extern struct dm_usb_ops xhci_usb_ops;
- 
- struct xhci_ctrl *xhci_get_ctrl(struct usb_device *udev);
- 
-+extern void xhci_pci_fixup(struct udevice *dev);
-+
- #endif /* HOST_XHCI_H_ */
--- 
-2.26.2
-
+Does the problem extend to kfree_rcu()?  And there's a lot of RCU
+callbacks that boil down to kmem_cache_free(); those really look like
+they should have exact same issue - sock_free_inode() is one of those,
+after all.
