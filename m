@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E16DC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9270C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F20DA20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F90420675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:18:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729725AbgEEOSU (ORCPT
+        id S1730267AbgEEOSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:18:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49300 "EHLO
+        Tue, 5 May 2020 10:18:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730224AbgEEORF (ORCPT
+        by vger.kernel.org with ESMTP id S1730205AbgEEOQ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:17:05 -0400
+        Tue, 5 May 2020 10:16:57 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C59DC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:17:05 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61A2BC0610D5
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:16:57 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jVyNH-0002Ue-Ap; Tue, 05 May 2020 16:16:43 +0200
+        id 1jVyN6-0002MN-SW; Tue, 05 May 2020 16:16:33 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id CF2EBFFC8D;
-        Tue,  5 May 2020 16:16:42 +0200 (CEST)
-Message-Id: <20200505135829.882055589@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id AD7A11001F5;
+        Tue,  5 May 2020 16:16:31 +0200 (CEST)
+Message-Id: <20200505135829.018447955@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:53:59 +0200
+Date:   Tue, 05 May 2020 15:53:50 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -52,7 +52,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Will Deacon <will@kernel.org>
-Subject: [patch V4 part 5 18/31] x86/entry: Convert APIC interrupts to IDTENTRY_SYSVEC
+Subject: [patch V4 part 5 09/31] x86/entry: Remove the transition leftovers
 References: <20200505135341.730586321@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -65,247 +65,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert APIC interrupts to IDTENTRY_SYSVEC
-  - Implement the C entry point with DEFINE_IDTENTRY_SYSVEC
-  - Emit the ASM stub with DECLARE_IDTENTRY_SYSVEC
-  - Remove the ASM idtentries in 64bit
-  - Remove the BUILD_INTERRUPT entries in 32bit
-  - Remove the old prototypes
-
-No functional change.
+Now that all exceptions are converted over the sane flag is not longer
+needed. Also the vector argument of idtentry_body on 64 bit is pointless
+now.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/entry/entry_64.S         |    6 ------
- arch/x86/include/asm/entry_arch.h |    5 -----
- arch/x86/include/asm/hw_irq.h     |    4 ----
- arch/x86/include/asm/idtentry.h   |    8 ++++++++
- arch/x86/include/asm/irq.h        |    1 -
- arch/x86/include/asm/traps.h      |    3 ---
- arch/x86/kernel/apic/apic.c       |   23 +++++------------------
- arch/x86/kernel/idt.c             |    8 ++++----
- arch/x86/kernel/irq.c             |    6 +++---
- 9 files changed, 20 insertions(+), 44 deletions(-)
+ arch/x86/entry/entry_32.S       |    3 +--
+ arch/x86/entry/entry_64.S       |   26 ++++----------------------
+ arch/x86/include/asm/idtentry.h |    6 +++---
+ 3 files changed, 8 insertions(+), 27 deletions(-)
 
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -734,9 +734,8 @@
+  * @asmsym:		ASM symbol for the entry point
+  * @cfunc:		C function to be called
+  * @has_error_code:	Hardware pushed error code on stack
+- * @sane:		Compatibility flag with 64bit
+  */
+-.macro idtentry vector asmsym cfunc has_error_code:req sane=0
++.macro idtentry vector asmsym cfunc has_error_code:req
+ SYM_CODE_START(\asmsym)
+ 	ASM_CLAC
+ 	cld
 --- a/arch/x86/entry/entry_64.S
 +++ b/arch/x86/entry/entry_64.S
-@@ -966,9 +966,6 @@ apicinterrupt3 REBOOT_VECTOR			reboot_in
- apicinterrupt3 UV_BAU_MESSAGE			uv_bau_message_intr1		uv_bau_message_interrupt
- #endif
- 
--apicinterrupt LOCAL_TIMER_VECTOR		apic_timer_interrupt		smp_apic_timer_interrupt
--apicinterrupt X86_PLATFORM_IPI_VECTOR		x86_platform_ipi		smp_x86_platform_ipi
--
- #ifdef CONFIG_HAVE_KVM
- apicinterrupt3 POSTED_INTR_VECTOR		kvm_posted_intr_ipi		smp_kvm_posted_intr_ipi
- apicinterrupt3 POSTED_INTR_WAKEUP_VECTOR	kvm_posted_intr_wakeup_ipi	smp_kvm_posted_intr_wakeup_ipi
-@@ -993,9 +990,6 @@ apicinterrupt CALL_FUNCTION_VECTOR		call
- apicinterrupt RESCHEDULE_VECTOR			reschedule_interrupt		smp_reschedule_interrupt
- #endif
- 
--apicinterrupt ERROR_APIC_VECTOR			error_interrupt			smp_error_interrupt
--apicinterrupt SPURIOUS_APIC_VECTOR		spurious_apic_interrupt		smp_spurious_apic_interrupt
--
- #ifdef CONFIG_IRQ_WORK
- apicinterrupt IRQ_WORK_VECTOR			irq_work_interrupt		smp_irq_work_interrupt
- #endif
---- a/arch/x86/include/asm/entry_arch.h
-+++ b/arch/x86/include/asm/entry_arch.h
-@@ -33,11 +33,6 @@ BUILD_INTERRUPT(kvm_posted_intr_nested_i
-  */
- #ifdef CONFIG_X86_LOCAL_APIC
- 
--BUILD_INTERRUPT(apic_timer_interrupt,LOCAL_TIMER_VECTOR)
--BUILD_INTERRUPT(error_interrupt,ERROR_APIC_VECTOR)
--BUILD_INTERRUPT(spurious_apic_interrupt,SPURIOUS_APIC_VECTOR)
--BUILD_INTERRUPT(x86_platform_ipi, X86_PLATFORM_IPI_VECTOR)
--
- #ifdef CONFIG_IRQ_WORK
- BUILD_INTERRUPT(irq_work_interrupt, IRQ_WORK_VECTOR)
- #endif
---- a/arch/x86/include/asm/hw_irq.h
-+++ b/arch/x86/include/asm/hw_irq.h
-@@ -29,16 +29,12 @@
- #include <asm/sections.h>
- 
- /* Interrupt handlers registered during init_IRQ */
--extern asmlinkage void apic_timer_interrupt(void);
--extern asmlinkage void x86_platform_ipi(void);
- extern asmlinkage void kvm_posted_intr_ipi(void);
- extern asmlinkage void kvm_posted_intr_wakeup_ipi(void);
- extern asmlinkage void kvm_posted_intr_nested_ipi(void);
--extern asmlinkage void error_interrupt(void);
- extern asmlinkage void irq_work_interrupt(void);
- extern asmlinkage void uv_bau_message_intr1(void);
- 
--extern asmlinkage void spurious_apic_interrupt(void);
- extern asmlinkage void thermal_interrupt(void);
- extern asmlinkage void reschedule_interrupt(void);
- 
---- a/arch/x86/include/asm/idtentry.h
-+++ b/arch/x86/include/asm/idtentry.h
-@@ -565,6 +565,14 @@ DECLARE_IDTENTRY_IRQ(X86_TRAP_OTHER,	com
- DECLARE_IDTENTRY_IRQ(X86_TRAP_OTHER,	spurious_interrupt);
- #endif
- 
-+/* System vector entry points */
-+#ifdef CONFIG_X86_LOCAL_APIC
-+DECLARE_IDTENTRY_SYSVEC(ERROR_APIC_VECTOR,		sysvec_error_interrupt);
-+DECLARE_IDTENTRY_SYSVEC(SPURIOUS_APIC_VECTOR,		sysvec_spurious_apic_interrupt);
-+DECLARE_IDTENTRY_SYSVEC(LOCAL_TIMER_VECTOR,		sysvec_apic_timer_interrupt);
-+DECLARE_IDTENTRY_SYSVEC(X86_PLATFORM_IPI_VECTOR,	sysvec_x86_platform_ipi);
-+#endif
-+
- #undef X86_TRAP_OTHER
- 
- #endif
---- a/arch/x86/include/asm/irq.h
-+++ b/arch/x86/include/asm/irq.h
-@@ -44,7 +44,6 @@ extern void __init init_IRQ(void);
- void arch_trigger_cpumask_backtrace(const struct cpumask *mask,
- 				    bool exclude_self);
- 
--extern __visible void smp_x86_platform_ipi(struct pt_regs *regs);
- #define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
- #endif
- 
---- a/arch/x86/include/asm/traps.h
-+++ b/arch/x86/include/asm/traps.h
-@@ -40,9 +40,6 @@ asmlinkage void smp_threshold_interrupt(
- asmlinkage void smp_deferred_error_interrupt(struct pt_regs *regs);
- #endif
- 
--void smp_apic_timer_interrupt(struct pt_regs *regs);
--void smp_error_interrupt(struct pt_regs *regs);
--void smp_spurious_apic_interrupt(struct pt_regs *regs);
- asmlinkage void smp_irq_move_cleanup_interrupt(void);
- 
- #ifdef CONFIG_VMAP_STACK
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1121,23 +1121,14 @@ static void local_apic_timer_interrupt(v
-  * [ if a single-CPU system runs an SMP kernel then we call the local
-  *   interrupt as well. Thus we cannot inline the local irq ... ]
-  */
--__visible void __irq_entry smp_apic_timer_interrupt(struct pt_regs *regs)
-+DEFINE_IDTENTRY_SYSVEC(sysvec_apic_timer_interrupt)
- {
- 	struct pt_regs *old_regs = set_irq_regs(regs);
- 
--	/*
--	 * NOTE! We'd better ACK the irq immediately,
--	 * because timer handling can be slow.
--	 *
--	 * update_process_times() expects us to have done irq_enter().
--	 * Besides, if we don't timer interrupts ignore the global
--	 * interrupt lock, which is the WrongThing (tm) to do.
--	 */
--	entering_ack_irq();
-+	ack_APIC_irq();
- 	trace_local_timer_entry(LOCAL_TIMER_VECTOR);
- 	local_apic_timer_interrupt();
- 	trace_local_timer_exit(LOCAL_TIMER_VECTOR);
--	exiting_irq();
- 
- 	set_irq_regs(old_regs);
- }
-@@ -2161,7 +2152,7 @@ void __init register_lapic_address(unsig
-  * trigger on an entry which is routed to the common_spurious idtentry
-  * point.
-  *
-- * Also called from smp_spurious_apic_interrupt().
-+ * Also called from sysvec_spurious_apic_interrupt().
-  */
- DEFINE_IDTENTRY_IRQ(spurious_interrupt)
- {
-@@ -2198,17 +2189,15 @@ DEFINE_IDTENTRY_IRQ(spurious_interrupt)
- 	trace_spurious_apic_exit(vector);
- }
- 
--__visible void smp_spurious_apic_interrupt(struct pt_regs *regs)
-+DEFINE_IDTENTRY_SYSVEC(sysvec_spurious_apic_interrupt)
- {
--	entering_irq();
- 	__spurious_interrupt(regs, SPURIOUS_APIC_VECTOR);
--	exiting_irq();
- }
- 
- /*
-  * This interrupt should never happen with our APIC/SMP architecture
-  */
--__visible void __irq_entry smp_error_interrupt(struct pt_regs *regs)
-+DEFINE_IDTENTRY_SYSVEC(sysvec_error_interrupt)
- {
- 	static const char * const error_interrupt_reason[] = {
- 		"Send CS error",		/* APIC Error Bit 0 */
-@@ -2222,7 +2211,6 @@ DEFINE_IDTENTRY_IRQ(spurious_interrupt)
- 	};
- 	u32 v, i = 0;
- 
--	entering_irq();
- 	trace_error_apic_entry(ERROR_APIC_VECTOR);
- 
- 	/* First tickle the hardware, only then report what went on. -- REW */
-@@ -2246,7 +2234,6 @@ DEFINE_IDTENTRY_IRQ(spurious_interrupt)
- 	apic_printk(APIC_DEBUG, KERN_CONT "\n");
- 
- 	trace_error_apic_exit(ERROR_APIC_VECTOR);
--	exiting_irq();
- }
+@@ -497,27 +497,14 @@ SYM_CODE_END(spurious_entries_start)
  
  /**
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -129,8 +129,8 @@ static const __initconst struct idt_data
- #endif
- 
- #ifdef CONFIG_X86_LOCAL_APIC
--	INTG(LOCAL_TIMER_VECTOR,	apic_timer_interrupt),
--	INTG(X86_PLATFORM_IPI_VECTOR,	x86_platform_ipi),
-+	INTG(LOCAL_TIMER_VECTOR,	asm_sysvec_apic_timer_interrupt),
-+	INTG(X86_PLATFORM_IPI_VECTOR,	asm_sysvec_x86_platform_ipi),
- # ifdef CONFIG_HAVE_KVM
- 	INTG(POSTED_INTR_VECTOR,	kvm_posted_intr_ipi),
- 	INTG(POSTED_INTR_WAKEUP_VECTOR, kvm_posted_intr_wakeup_ipi),
-@@ -142,8 +142,8 @@ static const __initconst struct idt_data
- #ifdef CONFIG_X86_UV
- 	INTG(UV_BAU_MESSAGE,		uv_bau_message_intr1),
- #endif
--	INTG(SPURIOUS_APIC_VECTOR,	spurious_apic_interrupt),
--	INTG(ERROR_APIC_VECTOR,		error_interrupt),
-+	INTG(SPURIOUS_APIC_VECTOR,	asm_sysvec_spurious_apic_interrupt),
-+	INTG(ERROR_APIC_VECTOR,		asm_sysvec_error_interrupt),
- #endif
- };
- 
---- a/arch/x86/kernel/irq.c
-+++ b/arch/x86/kernel/irq.c
-@@ -14,6 +14,7 @@
- #include <linux/irq.h>
- 
- #include <asm/apic.h>
-+#include <asm/traps.h>
- #include <asm/io_apic.h>
- #include <asm/irq.h>
- #include <asm/mce.h>
-@@ -262,17 +263,16 @@ void (*x86_platform_ipi_callback)(void)
- /*
-  * Handler for X86_PLATFORM_IPI_VECTOR.
+  * idtentry_body - Macro to emit code calling the C function
+- * @vector:		Vector number
+  * @cfunc:		C function to be called
+  * @has_error_code:	Hardware pushed error code on stack
+- * @sane:		Sane variant which handles irq tracing, context tracking in C
   */
--__visible void __irq_entry smp_x86_platform_ipi(struct pt_regs *regs)
-+DEFINE_IDTENTRY_SYSVEC(sysvec_x86_platform_ipi)
- {
- 	struct pt_regs *old_regs = set_irq_regs(regs);
+-.macro idtentry_body vector cfunc has_error_code:req sane=0
++.macro idtentry_body cfunc has_error_code:req
  
--	entering_ack_irq();
-+	ack_APIC_irq();
- 	trace_x86_platform_ipi_entry(X86_PLATFORM_IPI_VECTOR);
- 	inc_irq_stat(x86_platform_ipis);
- 	if (x86_platform_ipi_callback)
- 		x86_platform_ipi_callback();
- 	trace_x86_platform_ipi_exit(X86_PLATFORM_IPI_VECTOR);
--	exiting_irq();
- 	set_irq_regs(old_regs);
- }
- #endif
+ 	call	error_entry
+ 	UNWIND_HINT_REGS
+ 
+-	.if \sane == 0
+-	TRACE_IRQS_OFF
+-
+-#ifdef CONFIG_CONTEXT_TRACKING
+-	testb	$3, CS(%rsp)
+-	jz	.Lfrom_kernel_no_ctxt_tracking_\@
+-	CALL_enter_from_user_mode
+-.Lfrom_kernel_no_ctxt_tracking_\@:
+-#endif
+-	.endif
+-
+ 	movq	%rsp, %rdi			/* pt_regs pointer into 1st argument*/
+ 
+ 	.if \has_error_code == 1
+@@ -527,11 +514,7 @@ SYM_CODE_END(spurious_entries_start)
+ 
+ 	call	\cfunc
+ 
+-	.if \sane == 0
+-	jmp	error_exit
+-	.else
+ 	jmp	error_return
+-	.endif
+ .endm
+ 
+ /**
+@@ -540,12 +523,11 @@ SYM_CODE_END(spurious_entries_start)
+  * @asmsym:		ASM symbol for the entry point
+  * @cfunc:		C function to be called
+  * @has_error_code:	Hardware pushed error code on stack
+- * @sane:		Sane variant which handles irq tracing, context tracking in C
+  *
+  * The macro emits code to set up the kernel context for straight forward
+  * and simple IDT entries. No IST stack, no paranoid entry checks.
+  */
+-.macro idtentry vector asmsym cfunc has_error_code:req sane=0
++.macro idtentry vector asmsym cfunc has_error_code:req
+ SYM_CODE_START(\asmsym)
+ 	UNWIND_HINT_IRET_REGS offset=\has_error_code*8
+ 	ASM_CLAC
+@@ -568,7 +550,7 @@ SYM_CODE_START(\asmsym)
+ .Lfrom_usermode_no_gap_\@:
+ 	.endif
+ 
+-	idtentry_body \vector \cfunc \has_error_code \sane
++	idtentry_body \cfunc \has_error_code
+ 
+ _ASM_NOKPROBE(\asmsym)
+ SYM_CODE_END(\asmsym)
+@@ -643,7 +625,7 @@ SYM_CODE_START(\asmsym)
+ 
+ 	/* Switch to the regular task stack and use the noist entry point */
+ .Lfrom_usermode_switch_stack_\@:
+-	idtentry_body vector noist_\cfunc, has_error_code=0 sane=1
++	idtentry_body noist_\cfunc, has_error_code=0
+ 
+ _ASM_NOKPROBE(\asmsym)
+ SYM_CODE_END(\asmsym)
+--- a/arch/x86/include/asm/idtentry.h
++++ b/arch/x86/include/asm/idtentry.h
+@@ -293,10 +293,10 @@ static __always_inline void __##func(str
+  * The ASM variants for DECLARE_IDTENTRY*() which emit the ASM entry stubs.
+  */
+ #define DECLARE_IDTENTRY(vector, func)					\
+-	idtentry vector asm_##func func has_error_code=0 sane=1
++	idtentry vector asm_##func func has_error_code=0
+ 
+ #define DECLARE_IDTENTRY_ERRORCODE(vector, func)			\
+-	idtentry vector asm_##func func has_error_code=1 sane=1
++	idtentry vector asm_##func func has_error_code=1
+ 
+ /* Special case for 32bit IRET 'trap'. Do not emit ASM code */
+ #define DECLARE_IDTENTRY_SW(vector, func)
+@@ -334,7 +334,7 @@ static __always_inline void __##func(str
+ 
+ /* XEN NMI and DB wrapper */
+ #define DECLARE_IDTENTRY_XEN(vector, func)				\
+-	idtentry vector asm_exc_xen##func exc_##func has_error_code=0 sane=1
++	idtentry vector asm_exc_xen##func exc_##func has_error_code=0
+ 
+ #endif /* __ASSEMBLY__ */
+ 
 
