@@ -2,105 +2,141 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3025DC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F0AC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08BF4206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:04:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hgK6KdCe"
+	by mail.kernel.org (Postfix) with ESMTP id 9A96C206D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:05:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588683958;
+	bh=dvbRX7EeM06dsl2ZOfOT5WBgv/T4PM2ppoNNZuX4hm8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KmWT3uIblS5nqWQUls3hLui6GJ2Cep5tR/ojO67/rM/72ZhUM/ViKoboXas//bQYy
+	 6U/5nVu8NHkcDZPDDn8GkDiDsV+jrrW0bG78vFfqh6xGIgbZ4Vi0NLyS1Ue9is93K3
+	 N8URbMCKuTLlifggDLHAZZJSeiEgg8bfcCNkUIJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728969AbgEENE2 (ORCPT
+        id S1729009AbgEENF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 09:04:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37604 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728268AbgEENE1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 09:04:27 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11CD5C061A0F;
-        Tue,  5 May 2020 06:04:27 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id 18so845724pfv.8;
-        Tue, 05 May 2020 06:04:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=tY2Tzay3CtpKrgEwP5AMH50BGKklVo94Ad6zROIjzd4=;
-        b=hgK6KdCe1MUlx2uapDcoAkSv8U6euhMHtQyQLqeUl+c5XDoAzf6gXknvLILCI25g16
-         iK4YR89e3F4MKtdDHWeY6tcQR28GzqMMOX6fn7Mbq9FYgojY+XNJuB0N2262dx+Url70
-         4PAwzESvGxgPCQfytGGsrQv8Lt+j0roH+KFc1LdCQLLmCG0Vp6UDNpd/UP+YRp3nXVwv
-         QUp0bJos+4P5PMicYhfEXhqmZWyn9UT9cGGgFnT9O5TFYX0uZgEzh2yRJX5D9dGkdeRj
-         rLrwHViuhzyGZhrMEkqwNZlUHYnZ68ulDJX7DwkDwmTQ+zWxA0rRyzueNon/WjoO3ePP
-         Hbwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=tY2Tzay3CtpKrgEwP5AMH50BGKklVo94Ad6zROIjzd4=;
-        b=jSYAkqrlkW18NNr+w/FfPRUxgD0itR4rPNGlmgwEBRrvzuherK1SO5UVoJ+aWblz+F
-         hYdUDbmVQ6v7TYP96mRn49FSEeSGFH1D789BM4pm3ihnAbDNRAsIGYQEBnXR2h7ndzY0
-         0cXQzNFqNahSpgU0NzBZLj720r6FXzlNiJ+E1V61M1uSQnPuW9ZIpGB9sSN5GbSrfqUc
-         VhnBs/7uLTS6wCsD8+HnD3gTbLDM548BE/58yhi6xTq4rBDUmBglCmSR4YU5DuvhfY5a
-         1PjpJSpHjVyx8bK0MNeTYY8J2wKGnfa2eAWN9KnHWb24NZ3ulWzBsCnh4qMH9dqIyQND
-         yGfA==
-X-Gm-Message-State: AGi0PuYBnkiOOug/p8xrQiiv+8wsyFd34Kf7qnYjB0+3JasjyJW2qJc4
-        CR3dj8ZFMY9FsStU+xXJYB8=
-X-Google-Smtp-Source: APiQypIkmjaLT9hLhrdtgGzDP78a4P++lfdDp873GTeMiiFe/EbuahrP7N0IemUKzf2G7LGjNZu+4w==
-X-Received: by 2002:a62:1c89:: with SMTP id c131mr2903107pfc.164.1588683866499;
-        Tue, 05 May 2020 06:04:26 -0700 (PDT)
-Received: from [192.168.1.7] ([120.244.110.63])
-        by smtp.gmail.com with ESMTPSA id b12sm1953307pfd.165.2020.05.05.06.04.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2020 06:04:25 -0700 (PDT)
-Subject: Re: fs: jfs: fix a possible data race in txBegin()
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        jfs-discussion@lists.sourceforge.net
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Dave Kleikamp <shaggy@kernel.org>
-References: <5ef374a5-0e2e-5c74-a827-0148c384f6e3@web.de>
- <abbb03ec-7ce3-08b6-7d08-420743067f19@gmail.com>
- <fa6fabec-8cc5-fc62-657f-3794e9405fac@web.de>
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-Message-ID: <e6ec72e5-e1d8-cf15-ddfd-2e335c5de962@gmail.com>
-Date:   Tue, 5 May 2020 21:04:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 5 May 2020 09:05:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46962 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728268AbgEENF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 09:05:57 -0400
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E76620757
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 13:05:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588683956;
+        bh=dvbRX7EeM06dsl2ZOfOT5WBgv/T4PM2ppoNNZuX4hm8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=neqboCczN+Cdz09ZuDmJ5SDMNim2FB9HO7s1Q9yYJ3/NilYj5E454ePytgS+Asq6w
+         aoC5r10DK1ND17IpN/vWZNpYfjligx54R/u3Wiew9ALEj/kS/uW1r59UOgv5Ivm9AI
+         xbI9Syh3SVWVXuDtwl2GIBYcVCLcnkR2I632xPaI=
+Received: by mail-ed1-f54.google.com with SMTP id a8so1787282edv.2
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 06:05:56 -0700 (PDT)
+X-Gm-Message-State: AGi0Pub8/BLBaMw13mHy7iW5MGdvupkDmHklQAxs4mKLt+41TWajy8z7
+        M/8eHzUypAVySxsRUekp6/FqXtCo+pnlGQ9b2w==
+X-Google-Smtp-Source: APiQypIQFhovoglRSXHegx9gEyfNNxTtVpJjyKZpJgiRmyVTk2jNz+plbrT0C7AXa4PJSMiG3lL/djzaOe3llc15X/Y=
+X-Received: by 2002:aa7:dcd7:: with SMTP id w23mr2569139edu.300.1588683954729;
+ Tue, 05 May 2020 06:05:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <fa6fabec-8cc5-fc62-657f-3794e9405fac@web.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200504141408.60877-1-enric.balletbo@collabora.com> <20200504141408.60877-2-enric.balletbo@collabora.com>
+In-Reply-To: <20200504141408.60877-2-enric.balletbo@collabora.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Tue, 5 May 2020 21:05:41 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_8bOAW-8-8v-=S2qBrdG-dSAjf9WMWON+VHk4EKrQG7XQ@mail.gmail.com>
+Message-ID: <CAAOTY_8bOAW-8-8v-=S2qBrdG-dSAjf9WMWON+VHk4EKrQG7XQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] drm/mediatek: mtk_dpi: Rename bridge to next_bridge
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi, Enric:
 
-
-On 2020/5/5 13:12, Markus Elfring wrote:
->> I am not sure how to add the tag "Fixes"...
-> How helpful do you find the available software documentation?
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=47cf1b422e6093aee2a3e55d5e162112a2c69870#n183
+Enric Balletbo i Serra <enric.balletbo@collabora.com> =E6=96=BC 2020=E5=B9=
+=B45=E6=9C=884=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=8810:14=E5=AF=AB=
+=E9=81=93=EF=BC=9A
 >
+> This is really a cosmetic change just to make a bit more readable the
+> code after convert the driver to drm_bridge. The bridge variable name
+> will be used by the encoder drm_bridge, and the chained bridge will be
+> named next_bridge.
+
+Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+
 >
->> I need to find which previous commit add the code about txBegin()?
-> I suggest to take another look at corresponding source code places
-> by a command like “git blame”.
-> https://git-scm.com/book/en/v2/Git-Tools-Debugging-with-Gits
-
-Thanks a lot, Markus.
-I have used "git blame" to find the last change on the related source code.
-I will send V2 patches, thanks again :)
-
-
-Best wishes,
-Jia-Ju Bai
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+>
+>  drivers/gpu/drm/mediatek/mtk_dpi.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediate=
+k/mtk_dpi.c
+> index 7fbfa95bab09..7112125dc3d1 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
+> @@ -61,7 +61,7 @@ enum mtk_dpi_out_color_format {
+>  struct mtk_dpi {
+>         struct mtk_ddp_comp ddp_comp;
+>         struct drm_encoder encoder;
+> -       struct drm_bridge *bridge;
+> +       struct drm_bridge *next_bridge;
+>         void __iomem *regs;
+>         struct device *dev;
+>         struct clk *engine_clk;
+> @@ -607,7 +607,7 @@ static int mtk_dpi_bind(struct device *dev, struct de=
+vice *master, void *data)
+>         /* Currently DPI0 is fixed to be driven by OVL1 */
+>         dpi->encoder.possible_crtcs =3D BIT(1);
+>
+> -       ret =3D drm_bridge_attach(&dpi->encoder, dpi->bridge, NULL, 0);
+> +       ret =3D drm_bridge_attach(&dpi->encoder, dpi->next_bridge, NULL, =
+0);
+>         if (ret) {
+>                 dev_err(dev, "Failed to attach bridge: %d\n", ret);
+>                 goto err_cleanup;
+> @@ -747,11 +747,11 @@ static int mtk_dpi_probe(struct platform_device *pd=
+ev)
+>         }
+>
+>         ret =3D drm_of_find_panel_or_bridge(dev->of_node, 0, 0,
+> -                                         NULL, &dpi->bridge);
+> +                                         NULL, &dpi->next_bridge);
+>         if (ret)
+>                 return ret;
+>
+> -       dev_info(dev, "Found bridge node: %pOF\n", dpi->bridge->of_node);
+> +       dev_info(dev, "Found bridge node: %pOF\n", dpi->next_bridge->of_n=
+ode);
+>
+>         comp_id =3D mtk_ddp_comp_get_id(dev->of_node, MTK_DPI);
+>         if (comp_id < 0) {
+> --
+> 2.26.2
+>
