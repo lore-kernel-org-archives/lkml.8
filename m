@@ -2,201 +2,177 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C16E4C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 01:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56296C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 01:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F536206D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 01:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32462206D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 01:26:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CMoXkt2f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbgEEBX4 (ORCPT
+        id S1727820AbgEEB0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 21:23:56 -0400
-Received: from mga07.intel.com ([134.134.136.100]:22407 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726449AbgEEBXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 21:23:51 -0400
-IronPort-SDR: Fsg5d56X0KLiEcNqhZdidXSh1Gl7k8SaHUcwAOnqqzf529rrU9ej9+9iWvZC87bh8S2AuGOcb5
- agrMjzaJ56PA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 18:23:50 -0700
-IronPort-SDR: hvHTab6HWhKVa/K1wnn99uu0iRukuvOYaaS2dEM5FyGTjIUx0G3aQZsc906lP5Zch8nGJyM1az
- vOUFdqbNszJA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,354,1583222400"; 
-   d="scan'208";a="406663376"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by orsmga004.jf.intel.com with ESMTP; 04 May 2020 18:23:49 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Sasha Levin <sashal@kernel.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        Tobias Urdin <tobias.urdin@binero.com>
-Subject: [PATCH 4.19 STABLE 1/2] KVM: VMX: Explicitly reference RCX as the vmx_vcpu pointer in asm blobs
-Date:   Mon,  4 May 2020 18:23:47 -0700
-Message-Id: <20200505012348.17099-2-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200505012348.17099-1-sean.j.christopherson@intel.com>
-References: <20200505012348.17099-1-sean.j.christopherson@intel.com>
+        Mon, 4 May 2020 21:26:19 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:45406 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726449AbgEEB0T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 21:26:19 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0451N6ko079996;
+        Tue, 5 May 2020 01:25:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=4+6154vKJTABEfgUtxKwWoHbT6y+LuZVgaWdQCoeaJ0=;
+ b=CMoXkt2fWDkIg5JZiKjYVOxo/ricHIVKH25HA0ij33TZMT+wY45jvCYQ1I0ncaq/h1NB
+ qTGq4sVubLO8srgRcnGcuaxePZrsKCdi/YRLHoAogCQU9kqPMpJhSqAnGf2eYzr33VSZ
+ EZL17sihTk9pDALvtp5ha5AuhPBJO4DDIZcSa+LIFGJzQV4FZsdYIT8M8Lbv2xrXjg25
+ 1u/utotOj/a1j5IPSo5O9g2wgmHJgrrqWtoQoV3FvI17KAcAGtoPsN21YTr4/BUpuxsG
+ HnwQGsW2kh+uKh1shg3txe0iI5CNb5AO2yfpfEzsIJ40bQLlfWNro/WjgAMU003Wphux Vg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 30s0tma20x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 05 May 2020 01:25:48 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0451Lidr101980;
+        Tue, 5 May 2020 01:25:48 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 30t1r3revy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 05 May 2020 01:25:47 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0451PdNR022088;
+        Tue, 5 May 2020 01:25:39 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 04 May 2020 18:25:39 -0700
+Date:   Mon, 4 May 2020 21:26:01 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Tejun Heo <tj@kernel.org>, Zi Yan <ziy@nvidia.com>,
+        linux-crypto@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 6/7] mm: parallelize deferred_init_memmap()
+Message-ID: <20200505012601.b7pdwbcc2v6gkghf@ca-dmjordan1.us.oracle.com>
+References: <20200430201125.532129-1-daniel.m.jordan@oracle.com>
+ <20200430201125.532129-7-daniel.m.jordan@oracle.com>
+ <CAKgT0Uf7e5514SOi8dmkB5oXUK9bwqD_z-5KJ_F3MUn3CAQyPQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKgT0Uf7e5514SOi8dmkB5oXUK9bwqD_z-5KJ_F3MUn3CAQyPQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=2
+ spamscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005050006
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 spamscore=0 suspectscore=2
+ phishscore=0 clxscore=1015 bulkscore=0 mlxlogscore=999 adultscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005050006
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Upstream commit 051a2d3e59e51ae49fd56aef34e472832897ce46.
+On Mon, May 04, 2020 at 03:33:58PM -0700, Alexander Duyck wrote:
+> On Thu, Apr 30, 2020 at 1:12 PM Daniel Jordan
+> > @@ -1778,15 +1798,25 @@ static int __init deferred_init_memmap(void *data)
+> >                 goto zone_empty;
+> >
+> >         /*
+> > -        * Initialize and free pages in MAX_ORDER sized increments so
+> > -        * that we can avoid introducing any issues with the buddy
+> > -        * allocator.
+> > +        * More CPUs always led to greater speedups on tested systems, up to
+> > +        * all the nodes' CPUs.  Use all since the system is otherwise idle now.
+> >          */
+> 
+> I would be curious about your data. That isn't what I have seen in the
+> past. Typically only up to about 8 or 10 CPUs gives you any benefit,
+> beyond that I was usually cache/memory bandwidth bound.
 
-Use '%% " _ASM_CX"' instead of '%0' to dereference RCX, i.e. the
-'struct vcpu_vmx' pointer, in the VM-Enter asm blobs of vmx_vcpu_run()
-and nested_vmx_check_vmentry_hw().  Using the symbolic name means that
-adding/removing an output parameter(s) requires "rewriting" almost all
-of the asm blob, which makes it nearly impossible to understand what's
-being changed in even the most minor patches.
+I was surprised too!  For most of its development, this set had an interface to
+get the number of cores on the theory that this was about where the bandwidth
+got saturated, but the data showed otherwise.
 
-Opportunistically improve the code comments.
+There were diminishing returns, but they were more apparent on Haswell than
+Skylake for instance.  I'll post some more data later in the thread where you
+guys are talking about it.
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/vmx.c | 86 +++++++++++++++++++++++++---------------------
- 1 file changed, 47 insertions(+), 39 deletions(-)
+> 
+> > +       max_threads = max(cpumask_weight(cpumask), 1u);
+> > +
+> 
+> We will need to gather data on if having a ton of threads works for
+> all architectures.
 
-diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-index fe5036641c59..5b06a98ffd4c 100644
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -10776,9 +10776,9 @@ static void __noclone vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 		"push %%" _ASM_DX "; push %%" _ASM_BP ";"
- 		"push %%" _ASM_CX " \n\t" /* placeholder for guest rcx */
- 		"push %%" _ASM_CX " \n\t"
--		"cmp %%" _ASM_SP ", %c[host_rsp](%0) \n\t"
-+		"cmp %%" _ASM_SP ", %c[host_rsp](%%" _ASM_CX ") \n\t"
- 		"je 1f \n\t"
--		"mov %%" _ASM_SP ", %c[host_rsp](%0) \n\t"
-+		"mov %%" _ASM_SP ", %c[host_rsp](%%" _ASM_CX ") \n\t"
- 		/* Avoid VMWRITE when Enlightened VMCS is in use */
- 		"test %%" _ASM_SI ", %%" _ASM_SI " \n\t"
- 		"jz 2f \n\t"
-@@ -10788,32 +10788,33 @@ static void __noclone vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 		__ex(ASM_VMX_VMWRITE_RSP_RDX) "\n\t"
- 		"1: \n\t"
- 		/* Reload cr2 if changed */
--		"mov %c[cr2](%0), %%" _ASM_AX " \n\t"
-+		"mov %c[cr2](%%" _ASM_CX "), %%" _ASM_AX " \n\t"
- 		"mov %%cr2, %%" _ASM_DX " \n\t"
- 		"cmp %%" _ASM_AX ", %%" _ASM_DX " \n\t"
- 		"je 3f \n\t"
- 		"mov %%" _ASM_AX", %%cr2 \n\t"
- 		"3: \n\t"
- 		/* Check if vmlaunch of vmresume is needed */
--		"cmpb $0, %c[launched](%0) \n\t"
-+		"cmpb $0, %c[launched](%%" _ASM_CX ") \n\t"
- 		/* Load guest registers.  Don't clobber flags. */
--		"mov %c[rax](%0), %%" _ASM_AX " \n\t"
--		"mov %c[rbx](%0), %%" _ASM_BX " \n\t"
--		"mov %c[rdx](%0), %%" _ASM_DX " \n\t"
--		"mov %c[rsi](%0), %%" _ASM_SI " \n\t"
--		"mov %c[rdi](%0), %%" _ASM_DI " \n\t"
--		"mov %c[rbp](%0), %%" _ASM_BP " \n\t"
-+		"mov %c[rax](%%" _ASM_CX "), %%" _ASM_AX " \n\t"
-+		"mov %c[rbx](%%" _ASM_CX "), %%" _ASM_BX " \n\t"
-+		"mov %c[rdx](%%" _ASM_CX "), %%" _ASM_DX " \n\t"
-+		"mov %c[rsi](%%" _ASM_CX "), %%" _ASM_SI " \n\t"
-+		"mov %c[rdi](%%" _ASM_CX "), %%" _ASM_DI " \n\t"
-+		"mov %c[rbp](%%" _ASM_CX "), %%" _ASM_BP " \n\t"
- #ifdef CONFIG_X86_64
--		"mov %c[r8](%0),  %%r8  \n\t"
--		"mov %c[r9](%0),  %%r9  \n\t"
--		"mov %c[r10](%0), %%r10 \n\t"
--		"mov %c[r11](%0), %%r11 \n\t"
--		"mov %c[r12](%0), %%r12 \n\t"
--		"mov %c[r13](%0), %%r13 \n\t"
--		"mov %c[r14](%0), %%r14 \n\t"
--		"mov %c[r15](%0), %%r15 \n\t"
-+		"mov %c[r8](%%" _ASM_CX "),  %%r8  \n\t"
-+		"mov %c[r9](%%" _ASM_CX "),  %%r9  \n\t"
-+		"mov %c[r10](%%" _ASM_CX "), %%r10 \n\t"
-+		"mov %c[r11](%%" _ASM_CX "), %%r11 \n\t"
-+		"mov %c[r12](%%" _ASM_CX "), %%r12 \n\t"
-+		"mov %c[r13](%%" _ASM_CX "), %%r13 \n\t"
-+		"mov %c[r14](%%" _ASM_CX "), %%r14 \n\t"
-+		"mov %c[r15](%%" _ASM_CX "), %%r15 \n\t"
- #endif
--		"mov %c[rcx](%0), %%" _ASM_CX " \n\t" /* kills %0 (ecx) */
-+		/* Load guest RCX.  This kills the vmx_vcpu pointer! */
-+		"mov %c[rcx](%%" _ASM_CX "), %%" _ASM_CX " \n\t"
- 
- 		/* Enter guest mode */
- 		"jne 1f \n\t"
-@@ -10821,26 +10822,33 @@ static void __noclone vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 		"jmp 2f \n\t"
- 		"1: " __ex(ASM_VMX_VMRESUME) "\n\t"
- 		"2: "
--		/* Save guest registers, load host registers, keep flags */
--		"mov %0, %c[wordsize](%%" _ASM_SP ") \n\t"
--		"pop %0 \n\t"
--		"setbe %c[fail](%0)\n\t"
--		"mov %%" _ASM_AX ", %c[rax](%0) \n\t"
--		"mov %%" _ASM_BX ", %c[rbx](%0) \n\t"
--		__ASM_SIZE(pop) " %c[rcx](%0) \n\t"
--		"mov %%" _ASM_DX ", %c[rdx](%0) \n\t"
--		"mov %%" _ASM_SI ", %c[rsi](%0) \n\t"
--		"mov %%" _ASM_DI ", %c[rdi](%0) \n\t"
--		"mov %%" _ASM_BP ", %c[rbp](%0) \n\t"
-+
-+		/* Save guest's RCX to the stack placeholder (see above) */
-+		"mov %%" _ASM_CX ", %c[wordsize](%%" _ASM_SP ") \n\t"
-+
-+		/* Load host's RCX, i.e. the vmx_vcpu pointer */
-+		"pop %%" _ASM_CX " \n\t"
-+
-+		/* Set vmx->fail based on EFLAGS.{CF,ZF} */
-+		"setbe %c[fail](%%" _ASM_CX ")\n\t"
-+
-+		/* Save all guest registers, including RCX from the stack */
-+		"mov %%" _ASM_AX ", %c[rax](%%" _ASM_CX ") \n\t"
-+		"mov %%" _ASM_BX ", %c[rbx](%%" _ASM_CX ") \n\t"
-+		__ASM_SIZE(pop) " %c[rcx](%%" _ASM_CX ") \n\t"
-+		"mov %%" _ASM_DX ", %c[rdx](%%" _ASM_CX ") \n\t"
-+		"mov %%" _ASM_SI ", %c[rsi](%%" _ASM_CX ") \n\t"
-+		"mov %%" _ASM_DI ", %c[rdi](%%" _ASM_CX ") \n\t"
-+		"mov %%" _ASM_BP ", %c[rbp](%%" _ASM_CX ") \n\t"
- #ifdef CONFIG_X86_64
--		"mov %%r8,  %c[r8](%0) \n\t"
--		"mov %%r9,  %c[r9](%0) \n\t"
--		"mov %%r10, %c[r10](%0) \n\t"
--		"mov %%r11, %c[r11](%0) \n\t"
--		"mov %%r12, %c[r12](%0) \n\t"
--		"mov %%r13, %c[r13](%0) \n\t"
--		"mov %%r14, %c[r14](%0) \n\t"
--		"mov %%r15, %c[r15](%0) \n\t"
-+		"mov %%r8,  %c[r8](%%" _ASM_CX ") \n\t"
-+		"mov %%r9,  %c[r9](%%" _ASM_CX ") \n\t"
-+		"mov %%r10, %c[r10](%%" _ASM_CX ") \n\t"
-+		"mov %%r11, %c[r11](%%" _ASM_CX ") \n\t"
-+		"mov %%r12, %c[r12](%%" _ASM_CX ") \n\t"
-+		"mov %%r13, %c[r13](%%" _ASM_CX ") \n\t"
-+		"mov %%r14, %c[r14](%%" _ASM_CX ") \n\t"
-+		"mov %%r15, %c[r15](%%" _ASM_CX ") \n\t"
- 
- 		/*
- 		 * Clear all general purpose registers (except RSP, which is loaded by
-@@ -10860,7 +10868,7 @@ static void __noclone vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 		"xor %%r15d, %%r15d \n\t"
- #endif
- 		"mov %%cr2, %%" _ASM_AX "   \n\t"
--		"mov %%" _ASM_AX ", %c[cr2](%0) \n\t"
-+		"mov %%" _ASM_AX ", %c[cr2](%%" _ASM_CX ") \n\t"
- 
- 		"xor %%eax, %%eax \n\t"
- 		"xor %%ebx, %%ebx \n\t"
--- 
-2.26.0
+Agreed.  I'll rope in some of the arch lists in the next version and include
+the debugging knob to vary the thread count.
 
+> For x86 I think we are freeing back pages in
+> pageblock_order sized chunks so we only have to touch them once in
+> initialize and then free the two pageblock_order chunks into the buddy
+> allocator.
+> 
+> >         for_each_free_mem_pfn_range_in_zone_from(i, zone, &spfn, &epfn) {
+> > -               while (spfn < epfn) {
+> > -                       nr_pages += deferred_init_maxorder(zone, &spfn, epfn);
+> > -                       cond_resched();
+> > -               }
+> > +               struct def_init_args args = { zone, ATOMIC_LONG_INIT(0) };
+> > +               struct padata_mt_job job = {
+> > +                       .thread_fn   = deferred_init_memmap_chunk,
+> > +                       .fn_arg      = &args,
+> > +                       .start       = spfn,
+> > +                       .size        = epfn - spfn,
+> > +                       .align       = MAX_ORDER_NR_PAGES,
+> > +                       .min_chunk   = MAX_ORDER_NR_PAGES,
+> > +                       .max_threads = max_threads,
+> > +               };
+> > +
+> > +               padata_do_multithreaded(&job);
+> > +               nr_pages += atomic_long_read(&args.nr_pages);
+> >         }
+> >  zone_empty:
+> >         /* Sanity check that the next zone really is unpopulated */
+> 
+> Okay so looking at this I can see why you wanted to structure the
+> other patch the way you did. However I am not sure that is the best
+> way to go about doing it. It might make more sense to go through and
+> accumulate sections. If you hit the end of a range and the start of
+> the next range is in another section, then you split it as a new job,
+> otherwise I would just accumulate it into the current job. You then
+> could section align the work and be more or less guaranteed that each
+> worker thread should be generating finished work products, and not
+> incomplete max order pages.
+
+This guarantee holds now with the max-order alignment passed to padata, so I
+don't see what more doing it on section boundaries buys us.
