@@ -2,123 +2,122 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9F6C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2808C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3CFD206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:06:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588694804;
-	bh=yXBy4PpJ8ZOzFULpTar52yzsr2A/dQrKwz7gB8kTsIQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nn1mMp2l2mhmhfG1nSF2A+N0dQ8Tt02WOoPpjSV8jRaxnuHrMF33DQ9HIuzqWHhFJ
-	 CphiopS0gNDRLnxlzyj73QMAwhNAAC+WgRFUhLHLYy6IDbLG1e1Tt+QNGP1yaymTi0
-	 Opikw4Tv78KmnJ1djEHz1MQrFIy+pPl7Tt08c9cc=
+	by mail.kernel.org (Postfix) with ESMTP id D180621841
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:07:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wab09UpR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730046AbgEEQGo (ORCPT
+        id S1730122AbgEEQHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:06:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38416 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729171AbgEEQGn (ORCPT
+        Tue, 5 May 2020 12:07:39 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:49210 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728804AbgEEQHi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:06:43 -0400
-Received: from mail-qk1-x729.google.com (mail-qk1-x729.google.com [IPv6:2607:f8b0:4864:20::729])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FDFDC061A0F;
-        Tue,  5 May 2020 09:06:43 -0700 (PDT)
-Received: by mail-qk1-x729.google.com with SMTP id c10so2843267qka.4;
-        Tue, 05 May 2020 09:06:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=bv8d5auwv8WPKBW85dEhvwg9llp+d9U+MUHdBWxQ/AA=;
-        b=YXZUrR/FBzuSZDfpKyddp1h4Q3IEai/+synGatezI1urLNAo/GqDaNbGAM9LoDkeJA
-         gzaObuXQxJdC3rrvG/FR/5EeiUTZlK6odsPf1p2j4udJUVYqoD/ixxWPQ3wlnh6Ugoj0
-         vYy2wGt9ujB5Jsvwcbjm+GoiqKD2A2/exauGq8LvJ2S4UBZhS+fXlOwif5kPyc9klZmB
-         9pp6rHNVpVcYYqLKhsd8OLFqIo0pi5jKkzudk8kKoFvPirFDS9eZPbtzFjaqUlvibmD1
-         zA1nh/SEvZlB/pAWTKki+2g6j2zyhskCgHDaHXMFDI2s+KdFCtrcgdJ2wtHFQf42tAqX
-         W3kQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=bv8d5auwv8WPKBW85dEhvwg9llp+d9U+MUHdBWxQ/AA=;
-        b=EA0Fb44EaAqRz1NnMYOLAHJzhMFSRw2FtCfgtH7FH70IkeW7Yc2yqNvlUZewtvLefb
-         2AR2dGMVVgJoevVzidxd8oB5/VA6q50/xEXiZKZzidt8gFK5gG5gx4P3dLnf3iDQ4hqC
-         7ZXTiZWiBWF57xlF5xpVlAF/Uo1kdnbBousP6fwhH9jUMNA02uvdfBT09SweWWLsPrLf
-         6FMWwsAT5k9Esstmj4riG5RhZeluWqZzH5fBJj47mJxpjLWigU60Z/44INWjiwFus4WL
-         TyqxlgzBnEGNad576yFBc9Z9/+DXZUrWXVQDXI67jhVd1nHmetnlbjuoGoDDLs4mFnQl
-         uyGQ==
-X-Gm-Message-State: AGi0PuafDBCMejXuKKZEXwypOHQyoUzE4omgAAu1b/diCvHAoki7lDHc
-        m2Cjht7ViVO2cQz1au7gQBsRVxNvdzU=
-X-Google-Smtp-Source: APiQypL5/C35QYYNodlbdp+B4QZRwv17VqFw+9s44HXXYSewnnFddcstPi/LKf8jnUN7YSzyi3YHSA==
-X-Received: by 2002:a05:620a:16aa:: with SMTP id s10mr4277450qkj.216.1588694802205;
-        Tue, 05 May 2020 09:06:42 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:5ece])
-        by smtp.gmail.com with ESMTPSA id w69sm2087380qka.75.2020.05.05.09.06.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 09:06:41 -0700 (PDT)
-Date:   Tue, 5 May 2020 12:06:39 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Yang Yingliang <yangyingliang@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        netdev@vger.kernel.org, "Libin (Huawei)" <huawei.libin@huawei.com>,
-        guofan5@huawei.com, wangkefeng.wang@huawei.com
-Subject: Re: cgroup pointed by sock is leaked on mode switch
-Message-ID: <20200505160639.GG12217@mtj.thefacebook.com>
-References: <03dab6ab-0ffe-3cae-193f-a7f84e9b14c5@huawei.com>
+        Tue, 5 May 2020 12:07:38 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 045G7ZVq109971;
+        Tue, 5 May 2020 11:07:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588694855;
+        bh=/9N3G9C2xhTejXamNfnIlUPcSnUWuTXain9fNX8Ll3U=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=wab09UpRo+cQKtvtuSgwFAhZbLCbDQjwF/JuNHjOAAfgoIy8fPRYMTZsWGZHmmXUr
+         nCpKd1ppA3ZQg9/t4H6MA1th1oRNwfhVYag6lgKhRWpnO+bTSpYUQeqnVWsBjSWv1R
+         0DkpLAdse1eCwL+Ndb+t/WO6yAOWBlSz6cyGo8mk=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 045G7ZFn068156
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 5 May 2020 11:07:35 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 5 May
+ 2020 11:07:35 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 5 May 2020 11:07:35 -0500
+Received: from [10.250.70.56] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 045G7YZc013196;
+        Tue, 5 May 2020 11:07:35 -0500
+Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Do one override clock
+ parent in prepare()
+To:     Tony Lindgren <tony@atomide.com>, Lokesh Vutla <lokeshvutla@ti.com>
+CC:     <daniel.lezcano@linaro.org>, Tero Kristo <t-kristo@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200427172831.16546-1-lokeshvutla@ti.com>
+ <20200428182209.GT37466@atomide.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <85caf769-08c5-7199-df46-5086428a6bf6@ti.com>
+Date:   Tue, 5 May 2020 11:07:34 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <03dab6ab-0ffe-3cae-193f-a7f84e9b14c5@huawei.com>
+In-Reply-To: <20200428182209.GT37466@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Yang.
+On 4/28/20 1:22 PM, Tony Lindgren wrote:
+> * Lokesh Vutla <lokeshvutla@ti.com> [200427 17:29]:
+>> omap_dm_timer_prepare() is setting up the parent 32KHz clock. This
+>> prepare() gets called by request_timer in the client's driver. Because of
+>> this, the timer clock parent that is set with assigned-clock-parent is being
+>> overwritten. So drop this default setting of parent in prepare().
+>>
+>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 
-On Sat, May 02, 2020 at 06:27:21PM +0800, Yang Yingliang wrote:
-> I find the number nr_dying_descendants is increasing:
-> linux-dVpNUK:~ # find /sys/fs/cgroup/ -name cgroup.stat -exec grep
-> '^nr_dying_descendants [^0]'  {} +
-> /sys/fs/cgroup/unified/cgroup.stat:nr_dying_descendants 80
-> /sys/fs/cgroup/unified/system.slice/cgroup.stat:nr_dying_descendants 1
-> /sys/fs/cgroup/unified/system.slice/system-hostos.slice/cgroup.stat:nr_dying_descendants
-> 1
-> /sys/fs/cgroup/unified/lxc/cgroup.stat:nr_dying_descendants 79
-> /sys/fs/cgroup/unified/lxc/5f1fdb8c54fa40c3e599613dab6e4815058b76ebada8a27bc1fe80c0d4801764/cgroup.stat:nr_dying_descendants
-> 78
-> /sys/fs/cgroup/unified/lxc/5f1fdb8c54fa40c3e599613dab6e4815058b76ebada8a27bc1fe80c0d4801764/system.slice/cgroup.stat:nr_dying_descendants
-> 78
+Reviewed-by: Suman Anna <s-anna@ti.com>
 
-Those numbers are nowhere close to causing oom issues. There are some
-aspects of page and other cache draining which is being improved but unless
-you're seeing numbers multiple orders of magnitude higher, this isn't the
-source of your problem.
+> 
+> This works just fine for me but depends on the dts changes.
+> 
+> Daniel, for merging, do you want to set up an immutable branch
+> for the related dts change and this? I'm afraid it will conflict
+> with the related systimer changes for the dts otherwise.
+> 
+> Regards,
+> 
+> Tony
+> 
+>> ---
+>> - As per the discussion happened here[0], dropping the default setting.
+>> [0] https://patchwork.kernel.org/patch/11379875/#23309493
+>>
+>>   drivers/clocksource/timer-ti-dm.c | 4 +---
+>>   1 file changed, 1 insertion(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
+>> index 2531eab3d6d7..60aff087947a 100644
+>> --- a/drivers/clocksource/timer-ti-dm.c
+>> +++ b/drivers/clocksource/timer-ti-dm.c
+>> @@ -258,9 +258,7 @@ static int omap_dm_timer_prepare(struct omap_dm_timer *timer)
+>>   	__omap_dm_timer_enable_posted(timer);
+>>   	omap_dm_timer_disable(timer);
+>>   
+>> -	rc = omap_dm_timer_set_source(timer, OMAP_TIMER_SRC_32_KHZ);
+>> -
+>> -	return rc;
+>> +	return 0;
+>>   }
+>>   
+>>   static inline u32 omap_dm_timer_reserved_systimer(int id)
+>> -- 
+>> 2.23.0
+>>
 
-> The situation is as same as the commit bd1060a1d671 ("sock, cgroup: add
-> sock->sk_cgroup") describes.
-> "On mode switch, cgroup references which are already being pointed to by
-> socks may be leaked."
-
-I'm doubtful that you're hitting that issue. Mode switching means memcg
-being switched between cgroup1 and cgroup2 hierarchies, which is unlikely to
-be what's happening when you're launching docker containers.
-
-The first step would be identifying where memory is going and finding out
-whether memcg is actually being switched between cgroup1 and 2 - look at the
-hierarchy number in /proc/cgroups, if that's switching between 0 and
-someting not zero, it is switching.
-
-Thanks.
-
--- 
-tejun
