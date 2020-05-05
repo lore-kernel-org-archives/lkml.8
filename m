@@ -2,143 +2,121 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3343C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B723C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B384D206D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:55:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OPSd7s7E"
+	by mail.kernel.org (Postfix) with ESMTP id 5BB11206D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:58:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728969AbgEEMzs (ORCPT
+        id S1728963AbgEEM6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 08:55:48 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50544 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728497AbgEEMzs (ORCPT
+        Tue, 5 May 2020 08:58:20 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:49274 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728268AbgEEM6U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 08:55:48 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 045CtgJd100492;
-        Tue, 5 May 2020 07:55:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588683342;
-        bh=TFx+viVGB1RJAgHDimKDlop7ZpZlSmdHvKAad8iYbGk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=OPSd7s7EyQGGbbs6oMhwkXOkxxVubFW4Hn6fLa9Mcm1djjT7WC5J6yQ4wCiTQzipJ
-         e3zo/AellZ4yCplWQYc0fAPnM2yz9L4m/7BgsvCMGDTnbrWelqUHJ1xYpGlXHtaWxx
-         OUBjKPr7UrAEt+R2bv5ZxIjMOVJlMWtU+3yd2V9A=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 045Ctgmi031790
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 5 May 2020 07:55:42 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 5 May
- 2020 07:55:42 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 5 May 2020 07:55:42 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 045Ctchu036626;
-        Tue, 5 May 2020 07:55:39 -0500
-Subject: Re: [PATCH net-next 3/7] net: ethernet: ti: am65-cpsw-nuss: enable
- packet timestamping support
-To:     Anders Roxell <anders.roxell@linaro.org>
-CC:     Richard Cochran <richardcochran@gmail.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Networking <netdev@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>,
+        Tue, 5 May 2020 08:58:20 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id A55421C0225; Tue,  5 May 2020 14:58:18 +0200 (CEST)
+Date:   Tue, 5 May 2020 14:58:18 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Nishanth Menon <nm@ti.com>
-References: <20200501205011.14899-1-grygorii.strashko@ti.com>
- <20200501205011.14899-4-grygorii.strashko@ti.com>
- <CADYN=9L+RtruRYKah0Bomh7UaPGQ==N9trd0ZoVQ3GTc-VY8Dg@mail.gmail.com>
- <1bf51157-9fee-1948-f9ff-116799d12731@ti.com>
- <CADYN=9LfqLLmKNHPfXEiQbaX8ELF78BL-vWUcX-VP3aQ86csNg@mail.gmail.com>
- <CADYN=9LDCE2sQca12D4ow3BkaxXi1_bnc4Apu7pP4vnA=5AOKA@mail.gmail.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <7c32cb2f-e0f3-8861-3cdc-ef3f922aa044@ti.com>
-Date:   Tue, 5 May 2020 15:55:37 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Stable <stable@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH 4.19 28/37] dmaengine: dmatest: Fix iteration non-stop
+ logic
+Message-ID: <20200505125818.GA31126@amd>
+References: <20200504165448.264746645@linuxfoundation.org>
+ <20200504165451.307643203@linuxfoundation.org>
+ <20200505123159.GC28722@amd>
+ <CAHp75VeM+qwh5rHL7RDdacru0jPSB9me2aTs__jdy749dTKRng@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CADYN=9LDCE2sQca12D4ow3BkaxXi1_bnc4Apu7pP4vnA=5AOKA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="IS0zKkzwUGydFO0o"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeM+qwh5rHL7RDdacru0jPSB9me2aTs__jdy749dTKRng@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--IS0zKkzwUGydFO0o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 05/05/2020 14:59, Anders Roxell wrote:
-> On Tue, 5 May 2020 at 13:16, Anders Roxell <anders.roxell@linaro.org> wrote:
->>
->> On Tue, 5 May 2020 at 13:05, Grygorii Strashko <grygorii.strashko@ti.com> wrote:
->>>
->>> hi Anders,
->>
->> Hi Grygorii,
-> 
-> Hi again,
-> 
->>
->>>
->>> On 05/05/2020 13:17, Anders Roxell wrote:
->>>> On Fri, 1 May 2020 at 22:50, Grygorii Strashko <grygorii.strashko@ti.com> wrote:
->>>>>
->>>>> The MCU CPSW Common Platform Time Sync (CPTS) provides possibility to
->>>>> timestamp TX PTP packets and all RX packets.
->>>>>
->>>>> This enables corresponding support in TI AM65x/J721E MCU CPSW driver.
->>>>>
->>>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->>>>> ---
->>>>>    drivers/net/ethernet/ti/Kconfig             |   1 +
->>>>>    drivers/net/ethernet/ti/am65-cpsw-ethtool.c |  24 ++-
->>>>>    drivers/net/ethernet/ti/am65-cpsw-nuss.c    | 172 ++++++++++++++++++++
->>>>>    drivers/net/ethernet/ti/am65-cpsw-nuss.h    |   6 +-
->>>>>    4 files changed, 201 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
->>>>> index 1f4e5b6dc686..2c7bd1ccaaec 100644
->>>>> --- a/drivers/net/ethernet/ti/Kconfig
->>>>> +++ b/drivers/net/ethernet/ti/Kconfig
->>>>> @@ -100,6 +100,7 @@ config TI_K3_AM65_CPSW_NUSS
->>>>>           depends on ARCH_K3 && OF && TI_K3_UDMA_GLUE_LAYER
->>>>>           select TI_DAVINCI_MDIO
->>>>>           imply PHY_TI_GMII_SEL
->>>>> +       imply TI_AM65_CPTS
->>>>
->>>> Should this be TI_K3_AM65_CPTS ?
-> 
-> instead of 'imply TI_K3_AM65_CPTS' don't you want to do this:
-> 'depends on TI_K3_AM65_CPTS || !TI_K3_AM65_CPTS'
-> 
-> 
+On Tue 2020-05-05 15:51:16, Andy Shevchenko wrote:
+> On Tue, May 5, 2020 at 3:37 PM Pavel Machek <pavel@denx.de> wrote:
+> > > So, to the point, the conditional of checking the thread to be stoppe=
+d being
+> > > first part of conjunction logic prevents to check iterations. Thus, w=
+e have to
+> > > always check both conditions to be able to stop after given
+> > > iterations.
+> >
+> > I ... don't understand. AFAICT the code is equivalent. Both && and ||
+> > operators permit "short" execution... but second part of expression
+> > has no sideeffects, so...
+>=20
+> ..
+>=20
+> > You are changing !a & !b into !(a | b). But that's equivalent
+> > expression. I hate to admit, but I had to draw truth table to prove
+> > that.
+=2E..
+> > What am I missing?
+>=20
+> Basic stuff. Compiler doesn't consider second part of conjunction when
+> first one (see operator precedence) is already false, so, it means:
+>=20
+> a & b
+> 0   x -> false
+> 1   0 -> false
+> 1   1 -> true
+>=20
+> x is not being considered at all. So, logically it's equivalent,
+> run-time it's not.
 
-this seems will do the trick.
-Dependencies:
-PTP_1588_CLOCK -> TI_K3_AM65_CPTS -> TI_K3_AM65_CPSW_NUSS
+Yeah, I pointed that out above. Both && and || permit short
+execution. But that does not matter, as neither "params->iterations"
+nor "total_tests >=3D params->iterations" have side effects.
 
-I'll send patch.
+Where is the runtime difference?
 
--- 
-Best regards,
-grygorii
+-       while (!kthread_should_stop()
+-              && !(params->iterations && total_tests >=3D
+-              params->iterations)) {
++       while (!(kthread_should_stop() ||
++              (params->iterations && total_tests >=3D params->iterations))=
+) {
+
+	       			      		     		Pavel
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--IS0zKkzwUGydFO0o
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl6xYuoACgkQMOfwapXb+vI9nACdG6J5BueP0xQ4IixsWoJuSMWx
+Lz0AoIgx0oZmwgzHY4dL23sPBfxZ28rY
+=6Wpq
+-----END PGP SIGNATURE-----
+
+--IS0zKkzwUGydFO0o--
