@@ -2,103 +2,110 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1839FC47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B03C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF4BA20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92E38206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:19:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730536AbgEEOTo (ORCPT
+        id S1729988AbgEEOTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:19:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730050AbgEEOQO (ORCPT
+        Tue, 5 May 2020 10:19:46 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:35865 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730509AbgEEOTh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:16:14 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56B9AC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:16:14 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jVyMY-0001zI-Bf; Tue, 05 May 2020 16:15:58 +0200
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id D7539FFC8D;
-        Tue,  5 May 2020 16:15:57 +0200 (CEST)
-Message-Id: <20200505135314.426347351@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:49:37 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: [patch V4 part 4 11/24] x86/mce: Use untraced rd/wrmsr in the MCE
- offline/crash check
-References: <20200505134926.578885807@linutronix.de>
+        Tue, 5 May 2020 10:19:37 -0400
+Received: from localhost.localdomain ([149.172.19.189]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MQ5f4-1jj5Pt12Lw-00M5Po; Tue, 05 May 2020 16:19:29 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Bryan Wu <bryan.wu@canonical.com>,
+        "G.Shark Jeong" <gshark.jeong@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Dan Murphy <dmurphy@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH] leds: lm355x: avoid enum conversion warning
+Date:   Tue,  5 May 2020 16:19:17 +0200
+Message-Id: <20200505141928.923428-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-transfer-encoding: 8-bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:8c1rln3Kq+ivHGqkg2GjteXs+tFwdFKG9L+pvtz20Yvkk7lUTum
+ M25UzVJbdYcq7ohrTpNLAOZIqHtFWqtgc3b4hHiXfauZKeANowG6k+QyVNQCY+5FK+K78S1
+ 05XCV16fA34XPdn3Tyb+A98U77hSgYpBI2oZoWVL/Y0jR7y7+ntFJicuzGD1mXJiN+Zb7fu
+ Xo5eiu66cDyuihcvKu7iw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:phYNzzBjcXE=:Iave2708yJSgJvBUtn6/KT
+ JMWiFu6p/CXzgogeRhk5DQyieZ70JW+4w5IF02TuOpm7BcNZjy4W95XrC4i87emqDQf5G4DOS
+ kHJh36T96za4u797haipn31pTZZWD++i3ZuvEHcbqEi/O4Lj1CBgaa9bA+xdpZ2FEsTgLZXgb
+ l43uRks07wGNsPminHbnhGKPvhi+ta0Tsqb55S1ga6pcb3UIT7PGbpu6bffJtgkSCwUleF2qv
+ SZXEdRvLSFLFjwj4bqgAELaDU9bPdB/By4V4urKx3ZGy1NVpVQJ7+XfLK5E8eVsSPdh00h9MA
+ TGbID6OUFHeT50i5Zl9SydaoLIhNx2r6kjldIGrsawjoP9shYpcVOMJOGsoUL+XOQxo822uSW
+ vRtG0qcvHWGwGoW2cQ6yYd20HCoVPnY1+31GHg5gfPfBsca6zInZOvAsofXJ2RxvKje3yQW/o
+ N17AM1PkvKsBye0G9QkCb105cX1FW2y4MrTXPn30bfW8Ntdbt3BJaBVdLWHjNxrR0myOmWOOR
+ 8H+kx8Xub90nt8dFDf0lIGdnoE/UPQZs0y3n9fNY0JARdaSPnFwvVQVXsNZgziqZBK8DjgSud
+ 8YA9NgHvz5RRi/jpdbyy5O0eSPEkaO7AQCHVfKBT4AujsNK7MX87KbPOvRC2Ce+30L7luPj8b
+ P/U/5WsaLH09Ao69hgPH33YJ3Dt9TXOhwlPV4UTQrWvOtn8GjYAcmZSGlTXiy3IeDQ3zTOAqV
+ rRxPf9XbUeaq5uouAzA60SIvdVc5TuLM3sRpPUMotR0rakXgOFQQL5txcTeX/SxzHtiFZz5gF
+ 617u+Owhm28e42do5nQ2qaBvYfrX9C5YY64zWFIKF9aan8H5KA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mce_check_crashing_cpu() is called right at the entry of the MCE
-handler. It uses mce_rdmsr() and mce_wrmsr() which are wrappers around
-rdmsr() and wrmsr() to handle the MCE error injection mechanism, which is
-pointless in this context, i.e. when the MCE hits an offline CPU or the
-system is already marked crashing.
+clang points out that doing arithmetic between diffent enums is usually
+a mistake:
 
-The MSR access can also be traced, so use the untraceable variants. This
-is also safe vs. XEN paravirt as these MSRs are not affected by XEN PV
-modifications.
+drivers/leds/leds-lm355x.c:167:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
+                reg_val = pdata->pin_tx2 | pdata->ntc_pin;
+                          ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
+drivers/leds/leds-lm355x.c:178:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
+                reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
+                          ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+In this driver, it is intentional, so add a cast to hide the false-positive
+warning. It appears to be the only instance of this warning at the moment.
+
+Fixes: b98d13c72592 ("leds: Add new LED driver for lm355x chips")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/x86/kernel/cpu/mce/core.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/leds/leds-lm355x.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -1108,7 +1108,7 @@ static noinstr bool mce_check_crashing_c
- 	    (crashing_cpu != -1 && crashing_cpu != cpu)) {
- 		u64 mcgstatus;
+diff --git a/drivers/leds/leds-lm355x.c b/drivers/leds/leds-lm355x.c
+index 11ce05249751..b2eb2e1e9c04 100644
+--- a/drivers/leds/leds-lm355x.c
++++ b/drivers/leds/leds-lm355x.c
+@@ -164,18 +164,19 @@ static int lm355x_chip_init(struct lm355x_chip_data *chip)
+ 	/* input and output pins configuration */
+ 	switch (chip->type) {
+ 	case CHIP_LM3554:
+-		reg_val = pdata->pin_tx2 | pdata->ntc_pin;
++		reg_val = (u32)pdata->pin_tx2 | (u32)pdata->ntc_pin;
+ 		ret = regmap_update_bits(chip->regmap, 0xE0, 0x28, reg_val);
+ 		if (ret < 0)
+ 			goto out;
+-		reg_val = pdata->pass_mode;
++		reg_val = (u32)pdata->pass_mode;
+ 		ret = regmap_update_bits(chip->regmap, 0xA0, 0x04, reg_val);
+ 		if (ret < 0)
+ 			goto out;
+ 		break;
  
--		mcgstatus = mce_rdmsrl(MSR_IA32_MCG_STATUS);
-+		mcgstatus = __rdmsr(MSR_IA32_MCG_STATUS);
- 
- 		if (boot_cpu_data.x86_vendor == X86_VENDOR_ZHAOXIN) {
- 			if (mcgstatus & MCG_STATUS_LMCES)
-@@ -1116,7 +1116,7 @@ static noinstr bool mce_check_crashing_c
- 		}
- 
- 		if (mcgstatus & MCG_STATUS_RIPV) {
--			mce_wrmsrl(MSR_IA32_MCG_STATUS, 0);
-+			__wrmsr(MSR_IA32_MCG_STATUS, 0, 0);
- 			return true;
- 		}
- 	}
+ 	case CHIP_LM3556:
+-		reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
++		reg_val = (u32)pdata->pin_tx2 | (u32)pdata->ntc_pin |
++		          (u32)pdata->pass_mode;
+ 		ret = regmap_update_bits(chip->regmap, 0x0A, 0xC4, reg_val);
+ 		if (ret < 0)
+ 			goto out;
+-- 
+2.26.0
 
