@@ -2,97 +2,130 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0ABC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22942C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11BE320735
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBD1F206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nfmE75xA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730579AbgEEOVK (ORCPT
+        id S1730324AbgEEOVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:21:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48902 "EHLO
+        Tue, 5 May 2020 10:21:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729823AbgEEOPZ (ORCPT
+        by vger.kernel.org with ESMTP id S1729797AbgEEOPX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:15:25 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73F1EC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:15:25 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jVyLj-0001P8-Eb; Tue, 05 May 2020 16:15:07 +0200
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id E7E20FFC8D;
-        Tue,  5 May 2020 16:15:06 +0200 (CEST)
-Message-Id: <20200505134904.556327833@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:44:07 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: [patch V4 part 3 13/29] x86/traps: Prepare for using DEFINE_IDTENTRY
-References: <20200505134354.774943181@linutronix.de>
+        Tue, 5 May 2020 10:15:23 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FC5DC061A0F;
+        Tue,  5 May 2020 07:15:23 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id s8so1135687pgq.1;
+        Tue, 05 May 2020 07:15:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0nX/PJie6N8ENA2Zvbm0yQ+G3ZDyBTfdd9KJ7MPuSj4=;
+        b=nfmE75xAk2mRtYELliGHUe/ax/6qkgrPatqmkxJZ/4QQY+o+lMk11CjpG4sAQ3FVBV
+         WzncbHPCgbdKwNdc+0McksELLJMYnMAiR59i9RiNpkJ1wTWQvRjMj/LOf+Xb5oeK3q9X
+         8VD8zvXA45j3xTucUWd8a6+SrLV7AXDs8dsNgTmPYadNJvCSJY3+9yk+3FG9cqznsAn1
+         Ayjs9sTijBSlXb0wCaoDlmLuPkX19TLs6CSO8ttbuzlrxO+xpFQbVBsTgFRVP0zVj4wd
+         QyMxU4d3tVal6fMMXpNV6WOxd3TZfCk2bsV8QT8ybu6iLP/OmMTw0MsgxUT8NrAH2Rv+
+         1Ceg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0nX/PJie6N8ENA2Zvbm0yQ+G3ZDyBTfdd9KJ7MPuSj4=;
+        b=L303mJpbVSMNy1ExethZrn1BrbfB9EogsM9HridS/D8+4WcZiXGqoWk7vWF6GPZiwo
+         ShmaWWFGJ/lyaH7gqfTXYghTHub9QlUO9yz7cn1laBMCOMwbudx9/lUWLuGL5xuJsNPo
+         CI2/0YQ5F4AV4a4lCye0DXUkXVIqhJBIFeqaCZIeyjXJz25GoUDcSbduNuFXuXG1N0Il
+         aR7+eG5H1tpsAUtCeJAVMMxvj//QmYLwQnhRPokCYQg8i4fnhrU8bTRoi60H2Z/K8kVY
+         OqMOUi1o1U6nMLpn3D1XnMCvtKo15MO15T8WFUGIHH+dzfcK0X1j6BB+qCz34GA751PF
+         AJMw==
+X-Gm-Message-State: AGi0PuamiyE38pwwZG5ADwgsmkPDl8yYZxVtl5QOKKVlbSCLmL/w7NJm
+        BnWthRIaovLTx4nmjYGsV71Mz904+ktKfu2m3T4=
+X-Google-Smtp-Source: APiQypLc7JWdA097hNwo8eG2GAZy8/3FtlTIfHPPFCBF9V0wjqm7rU8EeIuNboUNOrlwwMtxJqnfA7pV8Mn60TSZrt8=
+X-Received: by 2002:a62:5ec7:: with SMTP id s190mr3257831pfb.130.1588688122575;
+ Tue, 05 May 2020 07:15:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-transfer-encoding: 8-bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200505132905.10276-1-calvin.johnson@oss.nxp.com> <20200505132905.10276-5-calvin.johnson@oss.nxp.com>
+In-Reply-To: <20200505132905.10276-5-calvin.johnson@oss.nxp.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 5 May 2020 17:15:16 +0300
+Message-ID: <CAHp75VfQ_ueABUcgUUirQ7kK60CR6vMi1gP-UsdDd+UmsSE4Sw@mail.gmail.com>
+Subject: Re: [net-next PATCH v3 4/5] net: phy: Introduce fwnode_get_phy_id()
+To:     Calvin Johnson <calvin.johnson@oss.nxp.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        linux.cj@gmail.com, Jeremy Linton <jeremy.linton@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        netdev <netdev@vger.kernel.org>, Marcin Wojtas <mw@semihalf.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+On Tue, May 5, 2020 at 4:29 PM Calvin Johnson
+<calvin.johnson@oss.nxp.com> wrote:
+>
+> Extract phy_id from compatible string. This will be used by
+> fwnode_mdiobus_register_phy() to create phy device using the
+> phy_id.
 
-Prepare for using IDTENTRY to define the C exception/trap entry points. It
-would be possible to glue this into the existing macro maze, but it's
-simpler and better to read at the end to just make them distinct. Provide
-a trivial inline helper to read the trap address.
+> +int fwnode_get_phy_id(struct fwnode_handle *fwnode, u32 *phy_id)
+> +{
+> +       const char *cp;
+> +       unsigned int upper, lower;
+> +       int ret;
+> +
+> +       ret = fwnode_property_read_string(fwnode, "compatible", &cp);
+> +       if (!ret) {
 
-The existing macros will be removed once all instances are converted.
+if (ret)
+ return ret;
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+will help a lot with readability of this.
 
----
- arch/x86/kernel/traps.c |    5 +++++
- 1 file changed, 5 insertions(+)
+> +               if (sscanf(cp, "ethernet-phy-id%4x.%4x",
+> +                          &upper, &lower) == 2) {
 
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -205,6 +205,11 @@ static void do_error_trap(struct pt_regs
- 	}
- }
- 
-+static __always_inline void __user *error_get_trap_addr(struct pt_regs *regs)
-+{
-+	return (void __user *)uprobe_get_trap_addr(regs);
-+}
-+
- #define IP ((void __user *)uprobe_get_trap_addr(regs))
- #define DO_ERROR(trapnr, signr, sicode, addr, str, name)		   \
- dotraplinkage void do_##name(struct pt_regs *regs, long error_code)	   \
+> +                       *phy_id = ((upper & 0xFFFF) << 16) | (lower & 0xFFFF);
 
+How upper can be bigger than 0xfff? Same for lower.
+
+> +                       return 0;
+> +               }
+> +       }
+> +       return -EINVAL;
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
