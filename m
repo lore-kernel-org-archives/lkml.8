@@ -2,169 +2,115 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D099BC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D726C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A305A20721
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5207A20721
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:54:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lD4ywxWa"
+	dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b="Gv6/+MbP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729040AbgEETxZ (ORCPT
+        id S1729164AbgEETyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 15:53:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45572 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726350AbgEETxZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 15:53:25 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 157AAC061A0F;
-        Tue,  5 May 2020 12:53:25 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id t16so1276028plo.7;
-        Tue, 05 May 2020 12:53:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=IypnnQBGuIXnhQzcC4uwCcgachLRDQLArvlBeVJnyNA=;
-        b=lD4ywxWa6zeKoZ3Kj3uc3z2UQk+S6vsm7JQF/xZOwv2TnuARyEDKQ5B77dAe5UR0bg
-         33JP6kBaZosM5y+dJZc2vyGRgAdqeSeBSM2ISrxyzc8zHnXBFdW01J0snzqKHyG5TeUN
-         MpbKS4DlG3Y4z0fzpXO2e8LHs0vFn8CyUddZGdeVMOmMqt7uyZWJQ1R3ljB+4ZMiZI9l
-         gydM9BFe1t0NiDnXwLsKFfSSB3ZQUtwVa46EQLviRJ9dxHi3D0mRu0zWKTsJo42v36Ds
-         7xQrvWPechXfigIXLyYtFgrT6oG4MQwxUTS4P1Kqs5yk28edp3DQwCSe/B5l6TDbU9vX
-         tw9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IypnnQBGuIXnhQzcC4uwCcgachLRDQLArvlBeVJnyNA=;
-        b=WSyjqYtN0zAgXgVdE2p4IaZ+mqvLK3iKu9b+PM5yjDThLkY9qYGn+k1fDAC3wg83su
-         S5n+3cVYconYFza8u3J9ZsJz296ONaW9qYROIybMTFxkjfzoJplTHkdSrwSb0IOJ07ly
-         ZsZqPWUC5UpoSdQx/e93ETQwPNXnFfq/W/LGgGpYi2bCxZ76byxM1zy7K3NSNZ1denvf
-         i0CmKm9NmKrwf4JzfQgsL6IJwC6/7VrsZOnLvLw0HPtgRwJnaWmeh/zjvMO2nYv6jOa1
-         PAz/w2WXecvPQcyup0XcbPffvK20CYWh0U0y42UV95nI5w2nKYOYS9R8awIY3lfAJuZC
-         fzgQ==
-X-Gm-Message-State: AGi0PubiftBjjXeo8MS6MLvpxGKNjUoK7C98xorNlXA7L4JEat2eBwBe
-        EXzYz/G6BuXumvTtsR9eaaM=
-X-Google-Smtp-Source: APiQypL8q8LwGyybfhE8UQPvvleTYO6XllaxSllnF9wLyCJ8TbP17xuNLJeUlD1A8GdvaK8M0VoP3w==
-X-Received: by 2002:a17:902:7c12:: with SMTP id x18mr4371447pll.230.1588708404444;
-        Tue, 05 May 2020 12:53:24 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:e28e])
-        by smtp.gmail.com with ESMTPSA id x63sm2764601pfc.56.2020.05.05.12.53.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 12:53:23 -0700 (PDT)
-Date:   Tue, 5 May 2020 12:53:20 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] bpf: Tweak BPF jump table optimizations for objtool
- compatibility
-Message-ID: <20200505195320.lyphpnprn3sjijf6@ast-mbp.dhcp.thefacebook.com>
-References: <b581438a16e78559b4cea28cf8bc74158791a9b3.1588273491.git.jpoimboe@redhat.com>
- <20200501190930.ptxyml5o4rviyo26@ast-mbp.dhcp.thefacebook.com>
- <20200501192204.cepwymj3fln2ngpi@treble>
- <20200501194053.xyahhknjjdu3gqix@ast-mbp.dhcp.thefacebook.com>
- <20200501195617.czrnfqqcxfnliz3k@treble>
- <20200502030622.yrszsm54r6s6k6gq@ast-mbp.dhcp.thefacebook.com>
- <20200502192105.xp2osi5z354rh4sm@treble>
- <20200505174300.gech3wr5v6kkho35@ast-mbp.dhcp.thefacebook.com>
- <20200505181108.hwcqanvw3qf5qyxk@treble>
+        Tue, 5 May 2020 15:54:53 -0400
+Received: from mail-vi1eur05on2092.outbound.protection.outlook.com ([40.107.21.92]:34497
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726350AbgEETyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 15:54:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gJtSZVvypyuiQmQcnLGHy5x61w2uiKUPSe5eHgMvSFf4ZqcCaLIXdta20hjyW/UaACJU89IOo/o12da+mLFT41m9WNenZPaJ69m94mxhu1LcIIJCeqcQekrilQ7tVTIEPmZNUbDW60lm8kmBLQiGaNTPrS0L5pTZjfsZ295OVjjlMsIiFn27mzDZN6uu0KFSU1bRPajG/XL6IuRwT9TbtZC7kwh66XusTMZenEJCGPKXlD1MgTNaPcSdBpkigUoJ2XkVSie6ktGiUarUsYIhTy7jEYDRjqTzMHI3NO0twXSXZpHVrUBhEc0RhjptsWg2Sg2dmTKfNGtdtmrdYDFILg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PIxS3KDEdcgFwgGhOxnKznXKZ3bE1TMguHH5+jBMkIE=;
+ b=O756ns8RUBSW3KH3WQeigIOWSqVoHkykDny9g2+/nSlSPhi2hjAeYVhZNAgPB7wGhJ2wZ5jWtEG9O8FRu4FBKpLYJmaL0qS5WFqHZmCxUeJHfgWpwGDDrcqji8yOwJTUu+LvFX1uIqo0GP3JYcjtJ6lU5wOfqF50UX+4Be9N7wsRdNqQVstLRsC9cHoK8sR9Cun4yC+ldev/U8JP1fBn0NUFX6hlAr8irmzozTwseJbPD8QgcZdwssDJfER8u9AEZW9ddzC+WTMzuih1hWN3aupLCBP8EdYBSPoYbe71i+MSS6lCSMJa4Gq3QgeVZyThnVqyn1FbN6RDtz+EkRNorA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=prevas.dk; dmarc=pass action=none header.from=prevas.dk;
+ dkim=pass header.d=prevas.dk; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.dk;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PIxS3KDEdcgFwgGhOxnKznXKZ3bE1TMguHH5+jBMkIE=;
+ b=Gv6/+MbPuiyRWhhkJ2QCngtk62Ui8RBW8FMwDyDsgw680na2UISiCIdxKFoGM1xRD5CzmeSZkeJEAu8wYXQg8Om1QviQREK4iaqqxulRHPQcQUvda5WshaSfgWn33bYrDJKArcJRYtfhLP4siO/tk61p2AMxc6XvFlJh45phT4k=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=prevas.dk;
+Received: from VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:803:e1::21)
+ by VI1PR10MB2189.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:803:80::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.27; Tue, 5 May
+ 2020 19:54:49 +0000
+Received: from VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::f0ac:4e97:2536:faa]) by VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::f0ac:4e97:2536:faa%7]) with mapi id 15.20.2958.030; Tue, 5 May 2020
+ 19:54:49 +0000
+To:     Bruno Thomsen <bruno.thomsen@gmail.com>
+Cc:     =?UTF-8?Q?Per_N=c3=b8rgaard_Christensen?= 
+        <per.christensen@prevas.dk>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        LKML <linux-kernel@vger.kernel.org>
+From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Subject: battery switch-over detection on pcf2127
+Message-ID: <a0ed6b56-33b1-b5ab-00d1-268fcd61b754@prevas.dk>
+Date:   Tue, 5 May 2020 21:54:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM6PR08CA0017.eurprd08.prod.outlook.com
+ (2603:10a6:20b:b2::29) To VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:803:e1::21)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505181108.hwcqanvw3qf5qyxk@treble>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.149] (5.186.116.45) by AM6PR08CA0017.eurprd08.prod.outlook.com (2603:10a6:20b:b2::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Tue, 5 May 2020 19:54:49 +0000
+X-Originating-IP: [5.186.116.45]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 67dcf186-a968-457b-c178-08d7f12e2b56
+X-MS-TrafficTypeDiagnostic: VI1PR10MB2189:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR10MB2189BE315284E5A94850556793A70@VI1PR10MB2189.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0394259C80
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: zJIYMlQ/e7DumUPi2YPd3YQWqTj8tbuw0Js2ny7BrfDv6kNIE+IgfoMuRnaD5VpJcG9i/X3xxQj/dW+VMvmVr1gGyaPgSgGzLDSvEEpSr4nhmfAN17Nq2r3pGFKGyECOrVUtWqZb2Y/TCPOO2jcRL/TWSN6mjSc3vzz31y0FCOqatkSF2IkyIHARoDAAbPTKUqfgBcoKA5BMPw/i17T9N+5zQoyG7vkiQUWdXDJ8enw0SublDAE0Tp9s0nyX6sX2a16ClgRYSB7vdQ/7augkiRpZR64OaIMHyRAQkZyGGCewOQO77tE3gqUysqwY5JdFrzxaiQIQ52v8RpKU/8C62ro+itCL9Yu4/n3aD1Iuk0yJN0ivTykpkYC2CTVrkTmzV2VeBJc34edX8l8uOdjNiXPkJk8ZbN3oz0Cf6ksft2iPyVNPTyQPkWw4havjelEWx3z045ysdpp+W9wIpCT9MjCFRyzBEyE2kJW3vSzABaQzKOnF9p2BTsGI1+uQy74gqNXmNVhsFWK/A0Jh7meZJj3rJG5Rm3huztlZpaX6jxz+DYdGKiVCB0aT+Sui6Nu/
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(136003)(346002)(376002)(396003)(39850400004)(366004)(33430700001)(4744005)(2906002)(16576012)(54906003)(8976002)(8936002)(316002)(16526019)(186003)(8676002)(52116002)(31686004)(33440700001)(6916009)(26005)(36756003)(86362001)(66946007)(6486002)(66556008)(66476007)(5660300002)(4326008)(478600001)(44832011)(31696002)(956004)(2616005)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: tMN5Z1Kr1qs7ywE++EJbiYEQs9grO91OHJ97WBiEPUn7m+5NpcjXshYz2iVXOxoiet142SsFISRgPq1ZDBxTVEZsGo/hoyrY80iJw29m+wPRFoxI4gap4MpBEKz/gQUmJs6X9gaA7CGPE46cMlSo5nkIA4Rd8+t+KONUwlrNbet0kTrUKZ+ND1h67btg9lqVSTUoC1/9EH6qhGkr7vFAjLTg1WAbKws8L4Xg/GShhdpAFEwMUC0881iDTBNIWWrbg/IHtVLJi5reR6iVSuVUdPRLCaRm401RZ2AxgcVQ+NiMxOpIlfJ3stLGF01wKoXlMQvrUnIh/4rksVViFuRTYDNrnRRWfMfv5BUyOG/mkb34QAjUj6+8OxX6nJJE1dkFvI9e9whob+06fuG5hl3QlhD6Vg+Svmw3nuzI3B4ml0GUM2WRfMSe23Yad7qmC+xfGGkQZrkWZ320PfJYdYnoHYNBQAbyemVDadlzu9s3cqr7YOVzqJT6YqZuynjju3QC5bCmRgG0nvGYvrxNRQPrUD6ahQcxTnCFWd08TFq1Akm0bUJkpSbE+SmdUoS9kU+a0t40A9HtJtd/eFbE5jdyiIKvwpmTqgRY9eJY9DXLsPuP1B9a7eYdJfXWPjE9dX9T+nGYlRi8E7JsnlB0rhkDEifoPBwrRTrRkuaF0KTPLwhmrDenuKjIxKfBt88C5E84SH5a6q8Ef7GPt6Rz2j+xZV0d5HweOtND+GbQHPBx18o//D/seVz9/GA+aWFGWBBQqnomRaxL2KJQPWiZuYR67Xmilbb9+dyO2SUT59KGzXs=
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: 67dcf186-a968-457b-c178-08d7f12e2b56
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2020 19:54:49.5699
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d350cf71-778d-4780-88f5-071a4cb1ed61
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mNymY9RRfTJewj4cZ03gQ0+g29KG8hSa8Of+dO+1VzoWchov2PN+2JTYwm5q5p6bRVIrhrTk13uxzCAokHQHCHvVIANflCQvgPTPhxgpW98=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB2189
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 01:11:08PM -0500, Josh Poimboeuf wrote:
-> On Tue, May 05, 2020 at 10:43:00AM -0700, Alexei Starovoitov wrote:
-> > > Or, if you want to minimize the patch's impact on other arches, and keep
-> > > the current patch the way it is (with bug fixed and changed patch
-> > > description), that's fine too.  I can change the patch description
-> > > accordingly.
-> > > 
-> > > Or if you want me to measure the performance impact of the +40% code
-> > > growth, and *then* decide what to do, that's also fine.  But you'd need
-> > > to tell me what tests to run.
-> > 
-> > I'd like to minimize the risk and avoid code churn,
-> > so how about we step back and debug it first?
-> > Which version of gcc are you using and what .config?
-> > I've tried:
-> > Linux version 5.7.0-rc2 (gcc version 10.0.1 20200505 (prerelease) (GCC)
-> > CONFIG_UNWINDER_ORC=y
-> > # CONFIG_RETPOLINE is not set
-> > 
-> > and objtool didn't complain.
-> > I would like to reproduce it first before making any changes.
-> 
-> Revert
-> 
->   3193c0836f20 ("bpf: Disable GCC -fgcse optimization for ___bpf_prog_run()")
-> 
-> and compile with retpolines off (and either ORC or FP, doesn't matter).
-> 
-> I'm using GCC 9.3.1:
-> 
->   kernel/bpf/core.o: warning: objtool: ___bpf_prog_run()+0x8dc: sibling call from callable instruction with modified stack frame
-> 
-> That's the original issue described in that commit.
+Hi Bruno
 
-I see something different.
-With gcc 8, 9, and 10 and CCONFIG_UNWINDER_FRAME_POINTER=y
-I see:
-kernel/bpf/core.o: warning: objtool: ___bpf_prog_run()+0x4837: call without frame pointer save/setup
-and sure enough assembly code for ___bpf_prog_run does not countain frame setup
-though -fno-omit-frame-pointer flag was passed at command line.
-Then I did:
-static u64 /*__no_fgcse*/ ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
-and the assembly had proper frame, but objtool wasn't happy:
-kernel/bpf/core.o: warning: objtool: ___bpf_prog_run()+0x480a: sibling call from callable instruction with modified stack frame
+I just noticed your "rtc: pcf2127: add tamper detection support"
+(03623b4b04) from 5.4. Unfortunately, clearing the BTSE bit breaks a use
+case of ours:
 
-gcc 6.3 doesn't have objtool warning with and without -fno-gcse.
+We rely on the battery switch-over detection to distinguish a powerfail
+during boot from a PORESET by the external watchdog (in the latter case,
+the RTC is still powered throughout, meaning there is no battery
+switch-over event). OTOH, we do not use the tamper detection - in fact,
+the TS signal is unconnected on our board.
 
-Looks like we have two issues here.
-First gcc 8, 9 and 10 have a severe bug with __attribute__((optimize("")))
-In this particular case passing -fno-gcse somehow overruled -fno-omit-frame-pointer
-which is serious issue. powerpc is using __nostackprotector. I don't understand
-how it can keep working with newer gcc-s. May be got lucky.
-Plenty of other projects use various __attribute__((optimize("")))
-they all have to double check that their vesion of GCC produces correct code.
-Can somebody reach out to gcc folks for explanation?
+We're currently still on 4.19, but we will eventually upgrade to a
+kernel containing the above commit. So I was wondering if we could
+figure out a way that would work for both of us - either some CONFIG
+knob, or perhaps something in the device-tree. Any ideas?
 
-The second objtool issue is imo minor one. It can be worked around for now
-and fixed for real later.
-
-> > Also since objtool cannot follow the optimizations compiler is doing
-> > how about admit the design failure and teach objtool to build ORC
-> > (and whatever else it needs to build) based on dwarf for the functions where
-> > it cannot understand the assembly code ?
-> > Otherwise objtool will forever be playing whackamole with compilers.
-> 
-> I agree it's not a good long term approach.  But DWARF has its own
-> issues and we can't rely on it for live patching.
-
-Curious what is the issue with dwarf and live patching ?
-I'm sure dwarf is enough to build ORC tables.
-
-> As I mentioned we have a plan to use a compiler plugin to annotate jump
-> tables (including GCC switch tables).  But the approach taken by this
-> patch should be good enough for now.
-
-I don't have gcc 7 around. Could you please test the workaround with gcc 7,8,9,10
-and several clang versions? With ORC and with FP ? and retpoline on/off ?
-I don't see any issues with ORC=y. objtool complains with FP=y only for my configs.
-I want to make sure the workaround is actually effective.
+Rasmus
