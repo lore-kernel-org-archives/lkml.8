@@ -2,154 +2,100 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED159C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1DBC47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEB9D20836
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:40:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="HGTZoh4K"
+	by mail.kernel.org (Postfix) with ESMTP id 945702078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:46:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730431AbgEEQkt (ORCPT
+        id S1730065AbgEEQqG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:40:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43832 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729998AbgEEQks (ORCPT
+        Tue, 5 May 2020 12:46:06 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45215 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729717AbgEEQqG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:40:48 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9062C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 09:40:47 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id t8so1325120qvw.5
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 09:40:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=l2bZJQmx2yOdyRWXMcVA9Hr5m54Y4Z+/y8vz43EAX8c=;
-        b=HGTZoh4KeqX6Uji51n5Dqfk0eq1uWiMkwpLlCbtNM2ptuSoknJ3SJokShT9RddkiiA
-         dyCYk+AJUScVGogd3LbtB5qGZ7TArY1dddPKiSFnpH2cT1Er1UBaOgmvSOKhQwwtxgU7
-         An/Xfou2A/jLmU+WaypU/qBQLQ9I0Lwq3cDA60/Pk0qRhkEN6COva+m26DdvjqiwoqG8
-         omVIPq8k/FOSepfH7rvaBuy3OYeTlxnsee55DCHQ2VjVtOHDuqUv+Vdtppv0fnaFmxUE
-         rjObgvGNPkng+b4UO4ikBvcvtv6Y+HXUE9neG4LXYuvRdX1LjY30KRhklHfrHkFnsIwa
-         vqTg==
+        Tue, 5 May 2020 12:46:06 -0400
+Received: by mail-ot1-f65.google.com with SMTP id e20so2190974otk.12
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 09:46:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=l2bZJQmx2yOdyRWXMcVA9Hr5m54Y4Z+/y8vz43EAX8c=;
-        b=BlQP1rZKH8fAHEjjbkjSs+M8Gr0QDBGrKMuDo6ZbCksGAKdyT9/IV6dk0SNEorOHS9
-         jU3Am/8W2jHkqFjQ7p1COWvAPEFmeqPi3TFAt1nd/8rcopo4Qup9KtTiJhZ1wYSR1fYb
-         R3tH32zeXUP6+AkLuUgPVtfa/JwXKvTUB4PWelj4R5RmiE5a289BxLRLqn8kQ93uwyo5
-         cNHPstJO+0B2YyVi86qJzxC22WLEqjPNFLd9wrSzob32U0JTq7MTGWu6HBfgcp2+bCDm
-         +RrIF0AxAU3ovOR2hUbOqf/hMunpcuUDwYHB94D11b9u4RV/ZGkogapphxWb1yh4OveE
-         ICYg==
-X-Gm-Message-State: AGi0PuY1hPxuQOj/JLD7sz7Mzx6yIXF+4pQI/66MqiK11mv4lMLtqIgp
-        AUJ5k1ZjlZa/ulFjyX6qUnlRxA==
-X-Google-Smtp-Source: APiQypJBI1Iddc2SwERK37fLTH83IVhbEuz4QyGiAEOV6UK9VOcqk/apxzVDX7wNDl531Nz60OWwpw==
-X-Received: by 2002:a05:6214:54d:: with SMTP id ci13mr3591929qvb.131.1588696846971;
-        Tue, 05 May 2020 09:40:46 -0700 (PDT)
-Received: from localhost (70.44.39.90.res-cmts.bus.ptd.net. [70.44.39.90])
-        by smtp.gmail.com with ESMTPSA id s4sm789531qth.61.2020.05.05.09.40.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 09:40:46 -0700 (PDT)
-Date:   Tue, 5 May 2020 12:40:31 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] memcg: oom: ignore oom warnings from memory.max
-Message-ID: <20200505164031.GC58018@cmpxchg.org>
-References: <20200504065600.GA22838@dhcp22.suse.cz>
- <CALvZod5Ao2PEFPEOckW6URBfxisp9nNpNeon1GuctuHehqk_6Q@mail.gmail.com>
- <20200504141136.GR22838@dhcp22.suse.cz>
- <CALvZod7Ls7rTDOr5vXwEiPneLqbq3JoxfFBxZZ71YWgvLkNr5A@mail.gmail.com>
- <20200504150052.GT22838@dhcp22.suse.cz>
- <CALvZod7EeQm-T4dsBddfMY_szYw3m8gRh5R5GfjQiuQAtCocug@mail.gmail.com>
- <20200504160613.GU22838@dhcp22.suse.cz>
- <CALvZod79hWns9366B+8ZK2Roz8c+vkdA80HqFNMep56_pumdRQ@mail.gmail.com>
- <20200505152712.GB58018@cmpxchg.org>
- <CALvZod48mu1w=fjpD=GXqCMdNq_8rExQ177_EP+Lx+TvR6fw+w@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=z6UHvy2bHC+nGKEgleyx66e5s4xYSM4ddKdZ92ukujI=;
+        b=siK8bPzfROX0AjrH1UleE6OS55wpdhfE8IUETg4oP8MG7M8cFx+D/tw7DOokqnUObo
+         gZmaahIH0tGA/npUxU6NztaBVvTyfGsLHwRPevZZIiHD13qOnrtr7YiF3nCzwrLMN4ac
+         5J9Zw42khdSbZvjw0UV4tvuTmEFTtLLZ6t29YD+yZ0o8QtKzOZcGEFvOx01PGx8iO+TY
+         iFLqXdFFA8mkFWZyCfixTchN+3rjAu1AiLtg6Mdxhk8ExZhwlcv1ACywZiSPMMTMZ82B
+         NKz3rX9+H9r1Ddxk+s2NooxwtdDEOcaRhO7ygSVY3loZfipqRXwCELkSyjRTf7cymVua
+         dfrw==
+X-Gm-Message-State: AGi0Pub1KKreePHLuCwYMVIXjc6hrnI9qiwVoYAvZMQH0oNpbO2g+cF7
+        Pad1wHBJtuNFzngICmi0j4POehgfoqUPR19nKKU=
+X-Google-Smtp-Source: APiQypKn5MJKeov3FJiyGU/+h6MprJimE68UiK/y9uNzlvdl+FAS/+uz04/AP2C7f04oGFlgotwushGAOdc5bpFUhLY=
+X-Received: by 2002:a9d:7d85:: with SMTP id j5mr2786941otn.107.1588697164048;
+ Tue, 05 May 2020 09:46:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALvZod48mu1w=fjpD=GXqCMdNq_8rExQ177_EP+Lx+TvR6fw+w@mail.gmail.com>
+References: <20200505150722.1575-1-geert+renesas@glider.be>
+ <20200505150722.1575-3-geert+renesas@glider.be> <89ad77c9-4bc8-039e-1ba5-e8eb67734597@suse.de>
+In-Reply-To: <89ad77c9-4bc8-039e-1ba5-e8eb67734597@suse.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 5 May 2020 18:45:52 +0200
+Message-ID: <CAMuHMdV=+J0_d0bUSKtfhkAqDy02aGZwm9fgO2rMpF1rVBTPiA@mail.gmail.com>
+Subject: Re: [PATCH v2 02/15] ARM: actions: Drop unneeded select of COMMON_CLK
+To:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+List-Id: <soc.lore.kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        arm-soc <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Kevin Hilman <khilman@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 08:35:45AM -0700, Shakeel Butt wrote:
-> On Tue, May 5, 2020 at 8:27 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
-> >
-> > On Mon, May 04, 2020 at 12:23:51PM -0700, Shakeel Butt wrote:
-> > > On Mon, May 4, 2020 at 9:06 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > > > I really hate to repeat myself but this is no different from a regular
-> > > > oom situation.
-> > >
-> > > Conceptually yes there is no difference but there is no *divine
-> > > restriction* to not make a difference if there is a real world
-> > > use-case which would benefit from it.
-> >
-> > I would wholeheartedly agree with this in general.
-> >
-> > However, we're talking about the very semantics that set memory.max
-> > apart from memory.high: triggering OOM kills to enforce the limit.
-> >
-> > > > when the kernel cannot act and mentions that along with the
-> > > > oom report so that whoever consumes that information can debug or act on
-> > > > that fact.
-> > > >
-> > > > Silencing the oom report is simply removing a potentially useful
-> > > > aid to debug further a potential problem.
-> > >
-> > > *Potentially* useful for debugging versus actually beneficial for
-> > > "sweep before tear down" use-case. Also I am not saying to make "no
-> > > dumps for memory.max when no eligible tasks" a set in stone rule. We
-> > > can always reevaluate when such information will actually be useful.
-> > >
-> > > Johannes/Andrew, what's your opinion?
-> >
-> > I still think that if you want to sweep without triggering OOMs,
-> > memory.high has the matching semantics.
-> >
-> > As you pointed out, it doesn't work well for foreign charges, but that
-> > is more of a limitation in the implementation than in the semantics:
-> >
-> >         /*
-> >          * If the hierarchy is above the normal consumption range, schedule
-> >          * reclaim on returning to userland.  We can perform reclaim here
-> >          * if __GFP_RECLAIM but let's always punt for simplicity and so that
-> >          * GFP_KERNEL can consistently be used during reclaim.  @memcg is
-> >          * not recorded as it most likely matches current's and won't
-> >          * change in the meantime.  As high limit is checked again before
-> >          * reclaim, the cost of mismatch is negligible.
-> >          */
-> >
-> > Wouldn't it be more useful to fix that instead? It shouldn't be much
-> > of a code change to do sync reclaim in try_charge().
-> 
-> Sync reclaim would really simplify the remote charging case. Though
-> should sync reclaim only be done for remote charging or for all?
+Hi Andreas,
 
-I would do it for all __GFP_RECLAIM callers, no need to special case
-remote charging unnecessarily IMO.
+On Tue, May 5, 2020 at 6:04 PM Andreas Färber <afaerber@suse.de> wrote:
+> Am 05.05.20 um 17:07 schrieb Geert Uytterhoeven:
+> > Support for Actions Semi SoCs depends on ARCH_MULTI_V7, and thus on
+> > ARCH_MULTIPLATFORM.
+> > As the latter selects COMMON_CLK, there is no need for ARCH_ACTIONS to
+> > select COMMON_CLK.
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > Cc: Andreas Färber <afaerber@suse.de>
+> > Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Acked-by: Arnd Bergmann <arnd@arndb.de>
+> > Reviewed-by: Andreas Färber <afaerber@suse.de>
+> > ---
+> > v2:
+> >    - Add Acked-by, Reviewed-by.
+> > ---
+> >   arch/arm/mach-actions/Kconfig | 1 -
+> >   1 file changed, 1 deletion(-)
+>
+> Do you intend to apply the whole series through soc (my assumption due
+> to soc in To), or should I pick this one up as maintainer?
 
-We can do both the reclaim as well as the penalty throttling
-synchronously, i.e. all of mem_cgroup_handle_over_high(). And then
-punt to the userspace resume when we either didn't reclaim or are
-still over the threshold after reclaim.
+Through soc.  This series contains all the patches from v1 that weren't
+picked up.
 
-Btw we should probably kick off high_work rather than set userspace
-resume on foreign charges, right? Otherwise we may not reclaim at all
-when we push a group over its limit from outside (and in a
-!__GFP_RECLAIM context).
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
