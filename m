@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FB8C4724C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 02:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C1BCC47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 02:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68DA821655
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 02:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C75A206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 02:27:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EUz6WAE6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="psAcBgJJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbgEEC0s (ORCPT
+        id S1728323AbgEEC1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 22:26:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51334 "EHLO
+        Mon, 4 May 2020 22:27:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726531AbgEEC0q (ORCPT
+        by vger.kernel.org with ESMTP id S1728083AbgEEC0r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 22:26:46 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06D49C061A0F;
-        Mon,  4 May 2020 19:26:44 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id y4so2987ljn.7;
-        Mon, 04 May 2020 19:26:43 -0700 (PDT)
+        Mon, 4 May 2020 22:26:47 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C905C061A10;
+        Mon,  4 May 2020 19:26:45 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id j14so56162lfg.9;
+        Mon, 04 May 2020 19:26:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=m9CKxoX3R4VL1qczwAlQ4ga6/LfMmIE5f4hAj1BcgSk=;
-        b=EUz6WAE6FThA8JuXidyLGq3c52gfuuapJxxrWfeHPN2ILUQZqVXArqEO2w9lgJHkZN
-         SqITtnRXkxPX/ODCXReR20AcDpS+UIs1MUXvJilv8/aoZCZfa9h/EQ6N4EUeQ3CBoog2
-         LYKunJOSIG1mkTlGu66FeQDU2sj5m+vpRAKX3RZiJXj/2kpKle3/KOd0ay67VXk5ySti
-         gOAUUxB97pIo3dUHi0Jbx2uIx5AtYf/RhNSlRChp3glA8U2HJCjcq0AiQifjPvufySdg
-         jXP44wONEKqpIbPlJis/FKXsxcHFkAXORM9eulAYX4INXEDaoXzRlWj+veIRF0PeDBHx
-         D6AQ==
+        bh=OfLJDvn4sng9LQ1KYp5DYLq5wE1uw3pjJq2NCuM+efQ=;
+        b=psAcBgJJ/PJK+oEhSDJ0YvpiQpVRVv9ouy2vWh65y9UAVm2xtCP6dj9igvk8PbW8wE
+         MMyngFXCBul1g3eu3qKhfQJ9P4oB+ofCQR+6zfhfm7blOjXejZz5nCQLY5B0ND46xMZn
+         nJeKWdbrBv3a7BkwOeeBgDv9/Jym1j3FqzbgNeJ6VGpPhv+1zYv5FS+QTFvA3BFP3XJ0
+         oiOOuNvbgs45/zetW9cd19uP9qH12/PeQX1jjOgrGrbctlLBorhew+gq+lclLkUIOEwl
+         f4OtrjnNk7Pl1IAuWwLBoSCHW5QJE6Dpofs0J10u43q8F3gox/4Fd0Rzb2pD/kGXp6RO
+         J1Rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=m9CKxoX3R4VL1qczwAlQ4ga6/LfMmIE5f4hAj1BcgSk=;
-        b=I5E81KKp0yavJEWdawTSeCVstnH3tVa1aO4BKKkzfrimRhK5hdu/tK30jSlxVWzNzh
-         Y3ni6RobuXoFRhpxHaV7DJ3rDq0zRjwL9JT4ZNXZHGVa+ChMiaaBcK0BPQNFgiFFaCkJ
-         OlSXQ29QiTpfIe8vCUmcg/lC/zB6znrD/FjE11innukst4iIEj58aFlWH+jI+dKKwN2g
-         OKJ8ebKUFooUyjjgUx6Bqrc7A38WxvvwiH5VjcbhSSCyoubGx9dHq9ws89cQwsJMXmDf
-         wZ59WgkjwYTLjVgXLJ6vAgro4kRvCwTDCggGGEk8giuuQW8Fngnmy0kf5rPs/qUPbiTe
-         4KNg==
-X-Gm-Message-State: AGi0PubthtO+G+EZKQR/SAlHoPhuIqqyyuH90sx7m4wZDwVqI9ramnd3
-        KSKkaE+AqGfkGSnXIF7a7kU=
-X-Google-Smtp-Source: APiQypJpNdt7hJrFn6+aK06nocYEfHeIE6TysCnni+gACkRnL3eYa+hkxCnyxUzAxdGD5Ugqdsz5AQ==
-X-Received: by 2002:a2e:3813:: with SMTP id f19mr380258lja.216.1588645600386;
-        Mon, 04 May 2020 19:26:40 -0700 (PDT)
+        bh=OfLJDvn4sng9LQ1KYp5DYLq5wE1uw3pjJq2NCuM+efQ=;
+        b=tJhuBTEoUXiZgfjWTp+xsndELU3L1gKc36yr1z7mCyGUCopehO87eceF7DOmX5JpR3
+         8Jp5adkUxp09rTqAYqyAOv7ljap3SH7/AMgYdvfnETJfiW6UvF9nZDy0itHBp0Ci2UN/
+         it3Yi85ghgfDDI5u7bgoy8IarPyR2Chfp05BrEEPaf+lO3hqfk8Ry3n3SGQSfsnbMmy9
+         E799fTEwqnY6lqzBn7E2pPN7mwMGRQUsp7kxOaLRY/3VxQHstiTpVnMGms5oB/Lbz5Qn
+         9bmbYq6tcM2krFhPaVN4vOrjPau9smvos4EHMiL5if1ozzTEN9V5HlmW9b7UnVFIM9Lw
+         +8wQ==
+X-Gm-Message-State: AGi0PubsyhkwHdbuvjJ2Fp2ddBE2SxjIlp62CaRwap2w2KIFiJnghzwT
+        AYprE15O0dULV2Vwaq359wI=
+X-Google-Smtp-Source: APiQypI+VJSUFreJ9H4MJfFJIJfvzjarxlSw2c2BUiT49Kzug9I5vwAa0gRtexBWo7AHSuV8g+BaSA==
+X-Received: by 2002:a19:550a:: with SMTP id n10mr61017lfe.143.1588645601780;
+        Mon, 04 May 2020 19:26:41 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id l25sm449251lfh.71.2020.05.04.19.26.39
+        by smtp.gmail.com with ESMTPSA id l25sm449251lfh.71.2020.05.04.19.26.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 19:26:39 -0700 (PDT)
+        Mon, 04 May 2020 19:26:41 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -74,67 +74,120 @@ To:     Rob Herring <robh+dt@kernel.org>,
         Zack Pearsall <zpearsall@yahoo.com>
 Cc:     linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v7 1/6] ARM: tegra: Add device-tree for Acer Iconia Tab A500
-Date:   Tue,  5 May 2020 05:25:12 +0300
-Message-Id: <20200505022517.30523-2-digetx@gmail.com>
+Subject: [PATCH v7 2/6] ARM: tegra: Add device-tree for ASUS Google Nexus 7
+Date:   Tue,  5 May 2020 05:25:13 +0300
+Message-Id: <20200505022517.30523-3-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200505022517.30523-1-digetx@gmail.com>
 References: <20200505022517.30523-1-digetx@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device-tree for Acer Iconia Tab A500, which is NVIDIA Tegra20-based
-tablet device.
+There are few hardware variants of NVIDIA Tegra30-based Nexus 7 device:
 
+1. WiFi-only (named Grouper)
+2. GSM (named Tilapia)
+3. Using Maxim PMIC (E1565 board ID)
+4. Using Ti PMIC (PM269 board ID)
+
+This patch adds device-trees for known and tested variants.
+
+Link: https://wiki.postmarketos.org/wiki/Google_Nexus_7_2012_(asus-grouper)
+Tested-by: Pedro Ângelo <pangelo@void.io>
+Tested-by: Matt Merhar <mattmerhar@protonmail.com>
+Tested-by: Zack Pearsall <zpearsall@yahoo.com>
+Signed-off-by: David Heidelberg <david@ixit.cz>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm/boot/dts/Makefile                    |    1 +
- .../boot/dts/tegra20-acer-a500-picasso.dts    | 1457 +++++++++++++++++
- 2 files changed, 1458 insertions(+)
- create mode 100644 arch/arm/boot/dts/tegra20-acer-a500-picasso.dts
+ arch/arm/boot/dts/Makefile                    |    3 +
+ .../dts/tegra30-asus-nexus7-grouper-E1565.dts |    9 +
+ .../dts/tegra30-asus-nexus7-grouper-PM269.dts |    9 +
+ .../tegra30-asus-nexus7-grouper-common.dtsi   | 2503 +++++++++++++++++
+ ...egra30-asus-nexus7-grouper-maxim-pmic.dtsi |  187 ++
+ .../tegra30-asus-nexus7-grouper-ti-pmic.dtsi  |  150 +
+ .../boot/dts/tegra30-asus-nexus7-grouper.dtsi |  462 +++
+ .../dts/tegra30-asus-nexus7-tilapia-E1565.dts |    9 +
+ .../boot/dts/tegra30-asus-nexus7-tilapia.dtsi |  548 ++++
+ 9 files changed, 3880 insertions(+)
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper-E1565.dts
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper-PM269.dts
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper-common.dtsi
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper-maxim-pmic.dtsi
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper-ti-pmic.dtsi
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper.dtsi
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-tilapia-E1565.dts
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-tilapia.dtsi
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b9eff9be935e..79f5e04559e6 100644
+index 79f5e04559e6..e9c4c903b309 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -1189,6 +1189,7 @@ dtb-$(CONFIG_MACH_SUNIV) += \
- dtb-$(CONFIG_ARCH_TANGO) += \
- 	tango4-vantage-1172.dtb
- dtb-$(CONFIG_ARCH_TEGRA_2x_SOC) += \
-+	tegra20-acer-a500-picasso.dtb \
- 	tegra20-harmony.dtb \
- 	tegra20-colibri-eval-v3.dtb \
- 	tegra20-colibri-iris.dtb \
-diff --git a/arch/arm/boot/dts/tegra20-acer-a500-picasso.dts b/arch/arm/boot/dts/tegra20-acer-a500-picasso.dts
+@@ -1203,6 +1203,9 @@ dtb-$(CONFIG_ARCH_TEGRA_2x_SOC) += \
+ dtb-$(CONFIG_ARCH_TEGRA_3x_SOC) += \
+ 	tegra30-apalis-eval.dtb \
+ 	tegra30-apalis-v1.1-eval.dtb \
++	tegra30-asus-nexus7-grouper-PM269.dtb \
++	tegra30-asus-nexus7-grouper-E1565.dtb \
++	tegra30-asus-nexus7-tilapia-E1565.dtb \
+ 	tegra30-beaver.dtb \
+ 	tegra30-cardhu-a02.dtb \
+ 	tegra30-cardhu-a04.dtb \
+diff --git a/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-E1565.dts b/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-E1565.dts
 new file mode 100644
-index 000000000000..e64f00ce8028
+index 000000000000..a25b8560b0cd
 --- /dev/null
-+++ b/arch/arm/boot/dts/tegra20-acer-a500-picasso.dts
-@@ -0,0 +1,1457 @@
++++ b/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-E1565.dts
+@@ -0,0 +1,9 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/dts-v1/;
++
++#include "tegra30-asus-nexus7-grouper-maxim-pmic.dtsi"
++#include "tegra30-asus-nexus7-grouper.dtsi"
++
++/ {
++	model = "ASUS Google Nexus 7 (Project Nakasi / ME370T) E1565";
++};
+diff --git a/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-PM269.dts b/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-PM269.dts
+new file mode 100644
+index 000000000000..06ef13ea5df8
+--- /dev/null
++++ b/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-PM269.dts
+@@ -0,0 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0
++/dts-v1/;
++
++#include "tegra30-asus-nexus7-grouper-ti-pmic.dtsi"
++#include "tegra30-asus-nexus7-grouper.dtsi"
++
++/ {
++	model = "ASUS Google Nexus 7 (Project Nakasi / ME370T) PM269";
++};
+diff --git a/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-common.dtsi b/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-common.dtsi
+new file mode 100644
+index 000000000000..3c43bc5d8c74
+--- /dev/null
++++ b/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-common.dtsi
+@@ -0,0 +1,2503 @@
++// SPDX-License-Identifier: GPL-2.0
 +
 +#include <dt-bindings/input/gpio-keys.h>
 +#include <dt-bindings/input/input.h>
 +#include <dt-bindings/thermal/thermal.h>
 +
-+#include "tegra20.dtsi"
-+#include "tegra20-cpu-opp.dtsi"
-+#include "tegra20-cpu-opp-microvolt.dtsi"
++#include "tegra30.dtsi"
++#include "tegra30-cpu-opp.dtsi"
++#include "tegra30-cpu-opp-microvolt.dtsi"
 +
 +/ {
-+	model = "Acer Iconia Tab A500";
-+	compatible = "acer,picasso", "nvidia,tegra20";
-+
 +	aliases {
 +		rtc0 = &pmic;
 +		rtc1 = "/rtc@7000e000";
 +
-+		serial0 = &uartd; /* Docking station */
 +		serial1 = &uartc; /* Bluetooth */
 +		serial2 = &uartb; /* GPS */
 +	};
@@ -146,8 +199,8 @@ index 000000000000..e64f00ce8028
 +	 */
 +	chosen {};
 +
-+	memory@0 {
-+		reg = <0x00000000 0x40000000>;
++	memory@80000000 {
++		reg = <0x80000000 0x40000000>;
 +	};
 +
 +	reserved-memory {
@@ -155,20 +208,25 @@ index 000000000000..e64f00ce8028
 +		#size-cells = <1>;
 +		ranges;
 +
-+		ramoops@2ffe0000 {
++		linux,cma@80000000 {
++			compatible = "shared-dma-pool";
++			alloc-ranges = <0x80000000 0x30000000>;
++			size = <0x10000000>; /* 256MiB */
++			linux,cma-default;
++			reusable;
++		};
++
++		ramoops@bfdf0000 {
 +			compatible = "ramoops";
-+			reg = <0x2ffe0000 0x10000>;	/* 64kB */
++			reg = <0xbfdf0000 0x10000>;	/* 64kB */
 +			console-size = <0x8000>;	/* 32kB */
 +			record-size = <0x400>;		/*  1kB */
 +			ecc-size = <16>;
 +		};
 +
-+		linux,cma@30000000 {
-+			compatible = "shared-dma-pool";
-+			alloc-ranges = <0x30000000 0x10000000>;
-+			size = <0x10000000>; /* 256MiB */
-+			linux,cma-default;
-+			reusable;
++		trustzone@bfe00000 {
++			reg = <0xbfe00000 0x200000>;
++			no-map;
 +		};
 +	};
 +
@@ -180,331 +238,765 @@ index 000000000000..e64f00ce8028
 +				port@0 {
 +					lvds_output: endpoint {
 +						remote-endpoint = <&lvds_encoder_input>;
-+						bus-width = <18>;
++						bus-width = <24>;
 +					};
 +				};
 +			};
 +		};
++	};
 +
-+		hdmi@54280000 {
-+			status = "okay";
++	gpio@6000d000 {
++		init-mode {
++			gpio-hog;
++			gpios =	<TEGRA_GPIO(DD, 7) GPIO_ACTIVE_HIGH>,
++				<TEGRA_GPIO(CC, 6) GPIO_ACTIVE_HIGH>,
++				<TEGRA_GPIO(R, 0) GPIO_ACTIVE_HIGH>;
++			output-low;
++		};
 +
-+			vdd-supply = <&hdmi_vdd_reg>;
-+			pll-supply = <&hdmi_pll_reg>;
-+			hdmi-supply = <&vdd_5v0_sys>;
-+
-+			nvidia,ddc-i2c-bus = <&hdmi_ddc>;
-+			nvidia,hpd-gpio = <&gpio TEGRA_GPIO(N, 7)
-+				GPIO_ACTIVE_HIGH>;
++		init-low-power-mode {
++			gpio-hog;
++			gpios = <TEGRA_GPIO(I, 6) GPIO_ACTIVE_HIGH>;
++			input;
 +		};
 +	};
 +
-+	pinmux@70000014 {
++	pinmux@70000868 {
 +		pinctrl-names = "default";
 +		pinctrl-0 = <&state_default>;
 +
 +		state_default: pinmux {
-+			ata {
-+				nvidia,pins = "ata";
-+				nvidia,function = "ide";
++			clk_32k_out_pa0 {
++				nvidia,pins = "clk_32k_out_pa0";
++				nvidia,function = "blink";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
 +			};
-+			atb {
-+				nvidia,pins = "atb", "gma", "gme";
-+				nvidia,function = "sdio4";
-+			};
-+			atc {
-+				nvidia,pins = "atc";
-+				nvidia,function = "nand";
-+			};
-+			atd {
-+				nvidia,pins = "atd", "ate", "gmb", "spia",
-+					"spib", "spic";
-+				nvidia,function = "gmi";
-+			};
-+			cdev1 {
-+				nvidia,pins = "cdev1";
-+				nvidia,function = "plla_out";
-+			};
-+			cdev2 {
-+				nvidia,pins = "cdev2";
-+				nvidia,function = "pllp_out4";
-+			};
-+			crtp {
-+				nvidia,pins = "crtp", "lm1";
-+				nvidia,function = "crt";
-+			};
-+			csus {
-+				nvidia,pins = "csus";
-+				nvidia,function = "vi_sensor_clk";
-+			};
-+			dap1 {
-+				nvidia,pins = "dap1";
-+				nvidia,function = "dap1";
-+			};
-+			dap2 {
-+				nvidia,pins = "dap2";
-+				nvidia,function = "dap2";
-+			};
-+			dap3 {
-+				nvidia,pins = "dap3";
-+				nvidia,function = "dap3";
-+			};
-+			dap4 {
-+				nvidia,pins = "dap4";
-+				nvidia,function = "dap4";
-+			};
-+			dta {
-+				nvidia,pins = "dta", "dtb", "dtc", "dtd", "dte";
-+				nvidia,function = "vi";
-+			};
-+			dtf {
-+				nvidia,pins = "dtf";
-+				nvidia,function = "i2c3";
-+			};
-+			gmc {
-+				nvidia,pins = "gmc";
-+				nvidia,function = "uartd";
-+			};
-+			gmd {
-+				nvidia,pins = "gmd";
-+				nvidia,function = "sflash";
-+			};
-+			gpu {
-+				nvidia,pins = "gpu";
-+				nvidia,function = "pwm";
-+			};
-+			gpu7 {
-+				nvidia,pins = "gpu7";
-+				nvidia,function = "rtck";
-+			};
-+			gpv {
-+				nvidia,pins = "gpv", "slxa";
-+				nvidia,function = "pcie";
-+			};
-+			hdint {
-+				nvidia,pins = "hdint";
-+				nvidia,function = "hdmi";
-+			};
-+			i2cp {
-+				nvidia,pins = "i2cp";
-+				nvidia,function = "i2cp";
-+			};
-+			irrx {
-+				nvidia,pins = "irrx", "irtx";
-+				nvidia,function = "uartb";
-+			};
-+			kbca {
-+				nvidia,pins = "kbca", "kbcb", "kbcc", "kbcd",
-+					"kbce", "kbcf";
-+				nvidia,function = "kbc";
-+			};
-+			lcsn {
-+				nvidia,pins = "lcsn", "ldc", "lm0", "lpw1",
-+					"lsdi", "lvp0";
-+				nvidia,function = "rsvd4";
-+			};
-+			ld0 {
-+				nvidia,pins = "ld0", "ld1", "ld2", "ld3", "ld4",
-+					"ld5", "ld6", "ld7", "ld8", "ld9",
-+					"ld10", "ld11", "ld12", "ld13", "ld14",
-+					"ld15", "ld16", "ld17", "ldi", "lhp0",
-+					"lhp1", "lhp2", "lhs", "lpp", "lsc0",
-+					"lsc1", "lsck", "lsda", "lspi", "lvp1",
-+					"lvs";
-+				nvidia,function = "displaya";
-+			};
-+			owc {
-+				nvidia,pins = "owc", "spdi", "spdo", "uac";
-+				nvidia,function = "rsvd2";
-+			};
-+			pmc {
-+				nvidia,pins = "pmc";
-+				nvidia,function = "pwr_on";
-+			};
-+			rm {
-+				nvidia,pins = "rm";
-+				nvidia,function = "i2c1";
-+			};
-+			sdb {
-+				nvidia,pins = "sdb", "sdc", "sdd", "slxc", "slxk";
-+				nvidia,function = "sdio3";
-+			};
-+			sdio1 {
-+				nvidia,pins = "sdio1";
-+				nvidia,function = "sdio1";
-+			};
-+			slxd {
-+				nvidia,pins = "slxd";
-+				nvidia,function = "spdif";
-+			};
-+			spid {
-+				nvidia,pins = "spid", "spie", "spif";
-+				nvidia,function = "spi1";
-+			};
-+			spig {
-+				nvidia,pins = "spig", "spih";
-+				nvidia,function = "spi2_alt";
-+			};
-+			uaa {
-+				nvidia,pins = "uaa", "uab", "uda";
-+				nvidia,function = "ulpi";
-+			};
-+			uad {
-+				nvidia,pins = "uad";
-+				nvidia,function = "irda";
-+			};
-+			uca {
-+				nvidia,pins = "uca", "ucb";
++			uart3_cts_n_pa1 {
++				nvidia,pins = "uart3_cts_n_pa1",
++						"uart3_rxd_pw7";
 +				nvidia,function = "uartc";
-+			};
-+			conf_ata {
-+				nvidia,pins = "ata", "atb", "atc", "atd",
-+					"cdev1", "cdev2", "csus", "dap1",
-+					"dap4", "dte", "dtf", "gma", "gmc",
-+					"gme", "gpu", "gpu7", "gpv", "i2cp",
-+					"irrx", "irtx", "pta", "rm",
-+					"sdc", "sdd", "slxc", "slxd", "slxk",
-+					"spdi", "spdo", "uac", "uad", "uda";
 +				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
 +				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
 +			};
-+			conf_ate {
-+				nvidia,pins = "ate", "dap2", "dap3",
-+					"gmd", "owc", "spia", "spib", "spic",
-+					"spid", "spie";
++			dap2_fs_pa2 {
++				nvidia,pins = "dap2_fs_pa2",
++						"dap2_sclk_pa3",
++						"dap2_din_pa4",
++						"dap2_dout_pa5";
++				nvidia,function = "i2s1";
 +				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
-+				nvidia,tristate = <TEGRA_PIN_ENABLE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
 +			};
-+			conf_ck32 {
-+				nvidia,pins = "ck32", "ddrc", "pmca", "pmcb",
-+					"pmcc", "pmcd", "pmce", "xm2c", "xm2d";
++			sdmmc3_clk_pa6 {
++				nvidia,pins = "sdmmc3_clk_pa6";
++				nvidia,function = "sdmmc3";
 +				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
 +			};
-+			conf_crtp {
-+				nvidia,pins = "crtp", "gmb", "slxa", "spig",
-+					"spih";
++			sdmmc3_cmd_pa7 {
++				nvidia,pins = "sdmmc3_cmd_pa7",
++						"sdmmc3_dat3_pb4",
++						"sdmmc3_dat2_pb5",
++						"sdmmc3_dat1_pb6",
++						"sdmmc3_dat0_pb7",
++						"sdmmc3_dat4_pd1",
++						"sdmmc3_dat6_pd3",
++						"sdmmc3_dat7_pd4";
++				nvidia,function = "sdmmc3";
 +				nvidia,pull = <TEGRA_PIN_PULL_UP>;
-+				nvidia,tristate = <TEGRA_PIN_ENABLE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
 +			};
-+			conf_dta {
-+				nvidia,pins = "dta", "dtb", "dtc", "dtd", "kbcb";
++			gmi_a17_pb0 {
++				nvidia,pins = "gmi_a17_pb0",
++						"gmi_a18_pb1";
++				nvidia,function = "uartd";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			lcd_pwr0_pb2 {
++				nvidia,pins = "lcd_pwr0_pb2",
++						"lcd_pwr1_pc1",
++						"lcd_m1_pw1";
++				nvidia,function = "displaya";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			lcd_pclk_pb3 {
++				nvidia,pins = "lcd_pclk_pb3",
++						"lcd_d0_pe0",
++						"lcd_d1_pe1",
++						"lcd_d2_pe2",
++						"lcd_d3_pe3",
++						"lcd_d4_pe4",
++						"lcd_d5_pe5",
++						"lcd_d6_pe6",
++						"lcd_d7_pe7",
++						"lcd_d8_pf0",
++						"lcd_d9_pf1",
++						"lcd_d10_pf2",
++						"lcd_d11_pf3",
++						"lcd_d12_pf4",
++						"lcd_d13_pf5",
++						"lcd_d14_pf6",
++						"lcd_d15_pf7",
++						"lcd_de_pj1",
++						"lcd_hsync_pj3",
++						"lcd_vsync_pj4",
++						"lcd_d16_pm0",
++						"lcd_d17_pm1",
++						"lcd_d18_pm2",
++						"lcd_d19_pm3",
++						"lcd_d20_pm4",
++						"lcd_d21_pm5",
++						"lcd_d22_pm6",
++						"lcd_d23_pm7",
++						"lcd_cs0_n_pn4",
++						"lcd_sdout_pn5",
++						"lcd_dc0_pn6",
++						"lcd_cs1_n_pw0",
++						"lcd_sdin_pz2",
++						"lcd_sck_pz4";
++				nvidia,function = "displaya";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			uart3_rts_n_pc0 {
++				nvidia,pins = "uart3_rts_n_pc0",
++						"uart3_txd_pw6";
++				nvidia,function = "uartc";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			uart2_txd_pc2 {
++				nvidia,pins = "uart2_txd_pc2",
++						"uart2_rts_n_pj6";
++				nvidia,function = "uartb";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			uart2_rxd_pc3 {
++				nvidia,pins = "uart2_rxd_pc3",
++						"uart2_cts_n_pj5";
++				nvidia,function = "uartb";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			gen1_i2c_scl_pc4 {
++				nvidia,pins = "gen1_i2c_scl_pc4",
++						"gen1_i2c_sda_pc5";
++				nvidia,function = "i2c1";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++				nvidia,open-drain = <TEGRA_PIN_ENABLE>;
++			};
++			gmi_wp_n_pc7 {
++				nvidia,pins = "gmi_wp_n_pc7",
++						"gmi_wait_pi7",
++						"gmi_cs4_n_pk2",
++						"gmi_cs3_n_pk4";
++				nvidia,function = "rsvd1";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_ENABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			gmi_ad12_ph4 {
++				nvidia,pins = "gmi_ad12_ph4",
++						"gmi_cs0_n_pj0",
++						"gmi_cs1_n_pj2",
++						"gmi_cs2_n_pk3";
++				nvidia,function = "rsvd1";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_ENABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			sdmmc3_dat5_pd0 {
++				nvidia,pins = "sdmmc3_dat5_pd0";
++				nvidia,function = "sdmmc3";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			gmi_ad0_pg0 {
++				nvidia,pins = "gmi_ad0_pg0",
++						"gmi_ad1_pg1",
++						"gmi_ad14_ph6",
++						"pu1";
++				nvidia,function = "rsvd1";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			gmi_ad2_pg2 {
++				nvidia,pins = "gmi_ad2_pg2",
++						"gmi_ad3_pg3",
++						"gmi_ad6_pg6",
++						"gmi_ad7_pg7";
++				nvidia,function = "rsvd1";
 +				nvidia,pull = <TEGRA_PIN_PULL_DOWN>;
 +				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
 +			};
-+			conf_dte {
-+				nvidia,pins = "spif";
-+				nvidia,pull = <TEGRA_PIN_PULL_DOWN>;
-+				nvidia,tristate = <TEGRA_PIN_ENABLE>;
-+			};
-+			conf_hdint {
-+				nvidia,pins = "hdint", "lcsn", "ldc", "lm1",
-+					"lpw1", "lsck", "lsda", "lsdi",
-+					"lvp0";
-+				nvidia,tristate = <TEGRA_PIN_ENABLE>;
-+			};
-+			conf_kbca {
-+				nvidia,pins = "kbca", "kbcc", "kbcd",
-+					"kbce", "kbcf", "sdio1", "uaa",
-+					"uab", "uca", "ucb";
-+				nvidia,pull = <TEGRA_PIN_PULL_UP>;
-+				nvidia,tristate = <TEGRA_PIN_DISABLE>;
-+			};
-+			conf_lc {
-+				nvidia,pins = "lc", "ls";
-+				nvidia,pull = <TEGRA_PIN_PULL_UP>;
-+			};
-+			conf_ld0 {
-+				nvidia,pins = "ld0", "ld1", "ld2", "ld3", "ld4",
-+					"ld5", "ld6", "ld7", "ld8", "ld9",
-+					"ld10", "ld11", "ld12", "ld13", "ld14",
-+					"ld15", "ld16", "ld17", "ldi", "lhp0",
-+					"lhp1", "lhp2", "lhs", "lm0", "lpp",
-+					"lpw0", "lpw2", "lsc0", "lsc1", "lspi",
-+					"lvp1", "lvs", "pmc", "sdb";
-+				nvidia,tristate = <TEGRA_PIN_DISABLE>;
-+			};
-+			conf_ld17_0 {
-+				nvidia,pins = "ld17_0";
++			gmi_ad4_pg4 {
++				nvidia,pins = "gmi_ad4_pg4",
++						"gmi_ad5_pg5";
++				nvidia,function = "nand";
 +				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
 +			};
-+			drive_ddc {
-+				nvidia,pins = "drive_ddc",
-+						"drive_vi1",
-+						"drive_sdio1";
-+				nvidia,schmitt = <TEGRA_PIN_ENABLE>;
-+				nvidia,low-power-mode = <TEGRA_PIN_LP_DRIVE_DIV_4>;
++			gmi_ad8_ph0 {
++				nvidia,pins = "gmi_ad8_ph0";
++				nvidia,function = "pwm0";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
 +			};
-+			drive_dbg {
-+				nvidia,pins = "drive_dbg",
-+						"drive_vi2",
-+						"drive_at1",
-+						"drive_ao1";
++			gmi_ad9_ph1 {
++				nvidia,pins = "gmi_ad9_ph1";
++				nvidia,function = "rsvd4";
++				nvidia,pull = <TEGRA_PIN_PULL_DOWN>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			gmi_ad10_ph2 {
++				nvidia,pins = "gmi_ad10_ph2";
++				nvidia,function = "pwm2";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_ENABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			gmi_ad11_ph3 {
++				nvidia,pins = "gmi_ad11_ph3";
++				nvidia,function = "pwm3";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			gmi_ad13_ph5 {
++				nvidia,pins = "gmi_ad13_ph5",
++						"gmi_wr_n_pi0",
++						"gmi_oe_n_pi1",
++						"gmi_adv_n_pk0";
++				nvidia,function = "rsvd1";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_ENABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			gmi_ad15_ph7 {
++				nvidia,pins = "gmi_ad15_ph7";
++				nvidia,function = "rsvd1";
++				nvidia,pull = <TEGRA_PIN_PULL_UP>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			gmi_dqs_pi2 {
++				nvidia,pins = "gmi_dqs_pi2",
++						"pu2",
++						"pv1";
++				nvidia,function = "rsvd1";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			gmi_rst_n_pi4 {
++				nvidia,pins = "gmi_rst_n_pi4";
++				nvidia,function = "nand";
++				nvidia,pull = <TEGRA_PIN_PULL_UP>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			gmi_iordy_pi5 {
++				nvidia,pins = "gmi_iordy_pi5";
++				nvidia,function = "rsvd1";
++				nvidia,pull = <TEGRA_PIN_PULL_UP>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			gmi_cs7_n_pi6 {
++				nvidia,pins = "gmi_cs7_n_pi6",
++						"gmi_clk_pk1";
++				nvidia,function = "nand";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_ENABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			gmi_a16_pj7 {
++				nvidia,pins = "gmi_a16_pj7",
++						"gmi_a19_pk7";
++				nvidia,function = "uartd";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			spdif_out_pk5 {
++				nvidia,pins = "spdif_out_pk5";
++				nvidia,function = "spdif";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			spdif_in_pk6 {
++				nvidia,pins = "spdif_in_pk6";
++				nvidia,function = "spdif";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			dap1_fs_pn0 {
++				nvidia,pins = "dap1_fs_pn0",
++						"dap1_din_pn1",
++						"dap1_dout_pn2",
++						"dap1_sclk_pn3";
++				nvidia,function = "i2s0";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			hdmi_int_pn7 {
++				nvidia,pins = "hdmi_int_pn7";
++				nvidia,function = "hdmi";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_ENABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			ulpi_data7_po0 {
++				nvidia,pins = "ulpi_data7_po0";
++				nvidia,function = "uarta";
++				nvidia,pull = <TEGRA_PIN_PULL_UP>;
++				nvidia,tristate = <TEGRA_PIN_ENABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			ulpi_data3_po4 {
++				nvidia,pins = "ulpi_data3_po4";
++				nvidia,function = "ulpi";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			dap3_fs_pp0 {
++				nvidia,pins = "dap3_fs_pp0";
++				nvidia,function = "i2s2";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			dap4_fs_pp4 {
++				nvidia,pins = "dap4_fs_pp4",
++						"dap4_din_pp5",
++						"dap4_dout_pp6",
++						"dap4_sclk_pp7";
++				nvidia,function = "i2s3";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			kb_col0_pq0 {
++				nvidia,pins = "kb_col0_pq0",
++						"kb_col1_pq1",
++						"kb_row1_pr1";
++				nvidia,function = "kbc";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_ENABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			kb_col2_pq2 {
++				nvidia,pins = "kb_col2_pq2",
++						"kb_col3_pq3";
++				nvidia,function = "rsvd4";
++				nvidia,pull = <TEGRA_PIN_PULL_UP>;
++				nvidia,tristate = <TEGRA_PIN_ENABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			kb_col4_pq4 {
++				nvidia,pins = "kb_col4_pq4",
++						"kb_col5_pq5",
++						"kb_col7_pq7",
++						"kb_row2_pr2",
++						"kb_row4_pr4",
++						"kb_row5_pr5",
++						"kb_row14_ps6";
++				nvidia,function = "kbc";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_ENABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			kb_row0_pr0 {
++				nvidia,pins = "kb_row0_pr0";
++				nvidia,function = "rsvd4";
++				nvidia,pull = <TEGRA_PIN_PULL_UP>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			kb_row6_pr6 {
++				nvidia,pins = "kb_row6_pr6",
++						"kb_row8_ps0",
++						"kb_row9_ps1",
++						"kb_row10_ps2";
++				nvidia,function = "kbc";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			kb_row11_ps3 {
++				nvidia,pins = "kb_row11_ps3",
++						"kb_row12_ps4";
++				nvidia,function = "kbc";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			gen2_i2c_scl_pt5 {
++				nvidia,pins = "gen2_i2c_scl_pt5",
++						"gen2_i2c_sda_pt6";
++				nvidia,function = "i2c2";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++				nvidia,open-drain = <TEGRA_PIN_ENABLE>;
++			};
++			sdmmc4_cmd_pt7 {
++				nvidia,pins = "sdmmc4_cmd_pt7",
++						"sdmmc4_dat0_paa0",
++						"sdmmc4_dat1_paa1",
++						"sdmmc4_dat2_paa2",
++						"sdmmc4_dat3_paa3",
++						"sdmmc4_dat4_paa4",
++						"sdmmc4_dat5_paa5",
++						"sdmmc4_dat6_paa6",
++						"sdmmc4_dat7_paa7";
++				nvidia,function = "sdmmc4";
++				nvidia,pull = <TEGRA_PIN_PULL_UP>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			pu0 {
++				nvidia,pins = "pu0",
++						"pu6";
++				nvidia,function = "rsvd4";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			jtag_rtck_pu7 {
++				nvidia,pins = "jtag_rtck_pu7";
++				nvidia,function = "rtck";
++				nvidia,pull = <TEGRA_PIN_PULL_UP>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			pv0 {
++				nvidia,pins = "pv0";
++				nvidia,function = "rsvd1";
++				nvidia,pull = <TEGRA_PIN_PULL_UP>;
++				nvidia,tristate = <TEGRA_PIN_ENABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			ddc_scl_pv4 {
++				nvidia,pins = "ddc_scl_pv4",
++						"ddc_sda_pv5";
++				nvidia,function = "i2c4";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			crt_hsync_pv6 {
++				nvidia,pins = "crt_hsync_pv6",
++						"crt_vsync_pv7";
++				nvidia,function = "crt";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			spi2_cs1_n_pw2 {
++				nvidia,pins = "spi2_cs1_n_pw2",
++						"spi2_miso_px1",
++						"spi2_sck_px2";
++				nvidia,function = "spi2";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			clk1_out_pw4 {
++				nvidia,pins = "clk1_out_pw4";
++				nvidia,function = "extperiph1";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			clk2_out_pw5 {
++				nvidia,pins = "clk2_out_pw5";
++				nvidia,function = "extperiph2";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			spi2_cs0_n_px3 {
++				nvidia,pins = "spi2_cs0_n_px3";
++				nvidia,function = "spi6";
++				nvidia,pull = <TEGRA_PIN_PULL_UP>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			spi1_mosi_px4 {
++				nvidia,pins = "spi1_mosi_px4",
++						"spi1_cs0_n_px6";
++				nvidia,function = "spi1";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			ulpi_clk_py0 {
++				nvidia,pins = "ulpi_clk_py0",
++						"ulpi_dir_py1";
++				nvidia,function = "ulpi";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_ENABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			sdmmc1_dat3_py4 {
++				nvidia,pins = "sdmmc1_dat3_py4",
++						"sdmmc1_dat2_py5",
++						"sdmmc1_dat1_py6",
++						"sdmmc1_dat0_py7",
++						"sdmmc1_cmd_pz1";
++				nvidia,function = "sdmmc1";
++				nvidia,pull = <TEGRA_PIN_PULL_UP>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			sdmmc1_clk_pz0 {
++				nvidia,pins = "sdmmc1_clk_pz0";
++				nvidia,function = "sdmmc1";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			lcd_wr_n_pz3 {
++				nvidia,pins = "lcd_wr_n_pz3";
++				nvidia,function = "displaya";
++				nvidia,pull = <TEGRA_PIN_PULL_UP>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			sys_clk_req_pz5 {
++				nvidia,pins = "sys_clk_req_pz5";
++				nvidia,function = "sysclk";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			pwr_i2c_scl_pz6 {
++				nvidia,pins = "pwr_i2c_scl_pz6",
++						"pwr_i2c_sda_pz7";
++				nvidia,function = "i2cpwr";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++				nvidia,open-drain = <TEGRA_PIN_ENABLE>;
++			};
++			pbb0 {
++				nvidia,pins = "pbb0",
++						"pcc1";
++				nvidia,function = "rsvd2";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			cam_i2c_scl_pbb1 {
++				nvidia,pins = "cam_i2c_scl_pbb1",
++						"cam_i2c_sda_pbb2";
++				nvidia,function = "i2c3";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++				nvidia,open-drain = <TEGRA_PIN_ENABLE>;
++			};
++			pbb3 {
++				nvidia,pins = "pbb3";
++				nvidia,function = "vgp3";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			pbb4 {
++				nvidia,pins = "pbb4";
++				nvidia,function = "vgp4";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			pbb5 {
++				nvidia,pins = "pbb5";
++				nvidia,function = "vgp5";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			pbb6 {
++				nvidia,pins = "pbb6";
++				nvidia,function = "vgp6";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			pbb7 {
++				nvidia,pins = "pbb7",
++						"pcc2";
++				nvidia,function = "i2s4";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			cam_mclk_pcc0 {
++				nvidia,pins = "cam_mclk_pcc0";
++				nvidia,function = "vi_alt3";
++				nvidia,pull = <TEGRA_PIN_PULL_DOWN>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			sdmmc4_rst_n_pcc3 {
++				nvidia,pins = "sdmmc4_rst_n_pcc3";
++				nvidia,function = "rsvd2";
++				nvidia,pull = <TEGRA_PIN_PULL_DOWN>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			sdmmc4_clk_pcc4 {
++				nvidia,pins = "sdmmc4_clk_pcc4";
++				nvidia,function = "sdmmc4";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			clk2_req_pcc5 {
++				nvidia,pins = "clk2_req_pcc5";
++				nvidia,function = "dap";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			pex_l2_rst_n_pcc6 {
++				nvidia,pins = "pex_l2_rst_n_pcc6",
++						"pex_l2_clkreq_n_pcc7";
++				nvidia,function = "pcie";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			pex_wake_n_pdd3 {
++				nvidia,pins = "pex_wake_n_pdd3",
++						"pex_l2_prsnt_n_pdd7";
++				nvidia,function = "pcie";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			clk3_out_pee0 {
++				nvidia,pins = "clk3_out_pee0";
++				nvidia,function = "extperiph3";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			clk1_req_pee2 {
++				nvidia,pins = "clk1_req_pee2";
++				nvidia,function = "dap";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_ENABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			hdmi_cec_pee3 {
++				nvidia,pins = "hdmi_cec_pee3";
++				nvidia,function = "cec";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++				nvidia,open-drain = <TEGRA_PIN_DISABLE>;
++			};
++			owr {
++				nvidia,pins = "owr";
++				nvidia,function = "owr";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			drive_dap1 {
++				nvidia,pins = "drive_dap1",
++						"drive_dap2",
++						"drive_dbg",
++						"drive_at5",
++						"drive_gme",
++						"drive_ddc",
++						"drive_ao1",
++						"drive_uart3";
++				nvidia,high-speed-mode = <0>;
 +				nvidia,schmitt = <TEGRA_PIN_ENABLE>;
-+				nvidia,low-power-mode = <TEGRA_PIN_LP_DRIVE_DIV_4>;
++				nvidia,low-power-mode = <TEGRA_PIN_LP_DRIVE_DIV_1>;
++				nvidia,pull-down-strength = <31>;
++				nvidia,pull-up-strength = <31>;
 +				nvidia,slew-rate-rising = <TEGRA_PIN_SLEW_RATE_FASTEST>;
 +				nvidia,slew-rate-falling = <TEGRA_PIN_SLEW_RATE_FASTEST>;
 +			};
-+		};
-+
-+		state_i2cmux_ddc: pinmux_i2cmux_ddc {
-+			ddc {
-+				nvidia,pins = "ddc";
-+				nvidia,function = "i2c2";
++			drive_sdio1 {
++				nvidia,pins = "drive_sdio1",
++						"drive_sdio3";
++				nvidia,high-speed-mode = <0>;
++				nvidia,schmitt = <TEGRA_PIN_DISABLE>;
++				nvidia,pull-down-strength = <46>;
++				nvidia,pull-up-strength = <42>;
++				nvidia,slew-rate-rising = <TEGRA_PIN_SLEW_RATE_FAST>;
++				nvidia,slew-rate-falling = <TEGRA_PIN_SLEW_RATE_FAST>;
 +			};
-+			pta {
-+				nvidia,pins = "pta";
-+				nvidia,function = "rsvd4";
-+			};
-+		};
-+
-+		state_i2cmux_pta: pinmux_i2cmux_pta {
-+			ddc {
-+				nvidia,pins = "ddc";
-+				nvidia,function = "rsvd4";
-+			};
-+			pta {
-+				nvidia,pins = "pta";
-+				nvidia,function = "i2c2";
++			drive_gma {
++				nvidia,pins = "drive_gma",
++						"drive_gmb",
++						"drive_gmc",
++						"drive_gmd";
++				nvidia,pull-down-strength = <9>;
++				nvidia,pull-up-strength = <9>;
++				nvidia,slew-rate-rising = <TEGRA_PIN_SLEW_RATE_SLOWEST>;
++				nvidia,slew-rate-falling = <TEGRA_PIN_SLEW_RATE_SLOWEST>;
 +			};
 +		};
-+
-+		state_i2cmux_idle: pinmux_i2cmux_idle {
-+			ddc {
-+				nvidia,pins = "ddc";
-+				nvidia,function = "rsvd4";
-+			};
-+			pta {
-+				nvidia,pins = "pta";
-+				nvidia,function = "rsvd4";
-+			};
-+		};
-+	};
-+
-+	tegra_i2s1: i2s@70002800 {
-+		status = "okay";
 +	};
 +
 +	uartb: serial@70006040 {
-+		compatible = "nvidia,tegra20-hsuart";
++		compatible = "nvidia,tegra30-hsuart";
 +		/* GPS BCM4751 */
 +	};
 +
 +	uartc: serial@70006200 {
-+		compatible = "nvidia,tegra20-hsuart";
++		compatible = "nvidia,tegra30-hsuart";
 +		status = "okay";
 +
-+		/* Azurewave AW-NH665 BCM4329B1 */
++		nvidia,adjust-baud-rates = <0 9600 100>,
++					   <9600 115200 200>,
++					   <1000000 4000000 136>;
++
++		/* Azurewave AW-NH665 BCM4330B1 */
 +		bluetooth {
-+			compatible = "brcm,bcm4329-bt";
++			compatible = "brcm,bcm4330-bt";
 +
-+			/* PLLP 216MHz / 16 / 4 */
-+			max-speed = <3375000>;
++			max-speed = <4000000>;
 +
-+			clocks = <&rtc_32k_wifi>;
++			clocks = <&tegra_pmc TEGRA_PMC_CLK_BLINK>;
 +			clock-names = "txco";
 +
 +			vbat-supply  = <&vdd_3v3_sys>;
-+			vddio-supply = <&vdd_1v8_sys>;
++			vddio-supply = <&vdd_1v8>;
 +
 +			device-wakeup-gpios = <&gpio TEGRA_GPIO(U, 1) GPIO_ACTIVE_HIGH>;
 +			host-wakeup-gpios =   <&gpio TEGRA_GPIO(U, 6) GPIO_ACTIVE_HIGH>;
@@ -512,388 +1004,168 @@ index 000000000000..e64f00ce8028
 +		};
 +	};
 +
-+	uartd: serial@70006300 {
-+		/* Docking station */
-+	};
-+
-+	i2c@7000c000 {
-+		clock-frequency = <400000>;
++	pwm: pwm@7000a000 {
 +		status = "okay";
-+
-+		wm8903: audio-codec@1a {
-+			compatible = "wlf,wm8903";
-+			reg = <0x1a>;
-+
-+			interrupt-parent = <&gpio>;
-+			interrupts = <TEGRA_GPIO(X, 3) IRQ_TYPE_LEVEL_HIGH>;
-+
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+
-+			gpio-cfg = <
-+				0x0000 /* MIC_LR_OUT#    GPIO, output, low */
-+				0x0000 /* FM2018-enable  GPIO, output, low */
-+				0x0000 /* Speaker-enable GPIO, output, low */
-+				0x0200 /* Interrupt, output */
-+				0x01a0 /* BCLK, input, active high */
-+			>;
-+
-+			AVDD-supply  = <&vdd_1v8_sys>;
-+			CPVDD-supply = <&vdd_1v8_sys>;
-+			DBVDD-supply = <&vdd_1v8_sys>;
-+			DCVDD-supply = <&vdd_1v8_sys>;
-+		};
-+
-+		touchscreen@4c {
-+			compatible = "atmel,maxtouch";
-+			reg = <0x4c>;
-+
-+			atmel,cfg_name = "maxtouch-acer-iconia-tab-a500.cfg";
-+
-+			interrupt-parent = <&gpio>;
-+			interrupts = <TEGRA_GPIO(V, 6) IRQ_TYPE_LEVEL_LOW>;
-+
-+			reset-gpios = <&gpio TEGRA_GPIO(Q, 7) GPIO_ACTIVE_HIGH>;
-+
-+			avdd-supply = <&vdd_3v3_sys>;
-+			vdd-supply  = <&vdd_3v3_sys>;
-+		};
-+
-+		gyroscope@68 {
-+			compatible = "invensense,mpu3050";
-+			reg = <0x68>;
-+
-+			interrupt-parent = <&gpio>;
-+			interrupts = <TEGRA_GPIO(Z, 4) IRQ_TYPE_EDGE_RISING>;
-+
-+			vdd-supply    = <&vdd_3v3_sys>;
-+			vlogic-supply = <&vdd_1v8_sys>;
-+
-+			mount-matrix =	 "0",  "1",  "0",
-+					 "1",  "0",  "0",
-+					 "0",  "0", "-1";
-+
-+			i2c-gate {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				accelerometer@f {
-+					compatible = "kionix,kxtf9";
-+					reg = <0x0f>;
-+
-+					interrupt-parent = <&gpio>;
-+					interrupts = <TEGRA_GPIO(S, 7) IRQ_TYPE_EDGE_RISING>;
-+
-+					mount-matrix =	 "0",  "1",  "0",
-+							 "1",  "0",  "0",
-+							 "0",  "0", "-1";
-+				};
-+			};
-+		};
 +	};
 +
 +	i2c@7000c400 {
-+		clock-frequency = <10000>;
++		clock-frequency = <400000>;
 +		status = "okay";
 +	};
 +
-+	i2cmux {
-+		compatible = "i2c-mux-pinctrl";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		i2c-parent = <&{/i2c@7000c400}>;
-+
-+		pinctrl-names = "ddc", "pta", "idle";
-+		pinctrl-0 = <&state_i2cmux_ddc>;
-+		pinctrl-1 = <&state_i2cmux_pta>;
-+		pinctrl-2 = <&state_i2cmux_idle>;
-+
-+		hdmi_ddc: i2c@0 {
-+			reg = <0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		panel_ddc: i2c@1 {
-+			reg = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+	};
-+
-+	pwm: pwm@7000a000 {
++	i2c@7000c500 {
++		clock-frequency = <100000>;
 +		status = "okay";
++
++		compass@e {
++			compatible = "asahi-kasei,ak8974";
++			reg = <0x0e>;
++
++			interrupt-parent = <&gpio>;
++			interrupts = <TEGRA_GPIO(W, 0) IRQ_TYPE_EDGE_RISING>;
++
++			avdd-supply = <&vdd_3v3_sys>;
++			dvdd-supply = <&vdd_1v8>;
++
++			mount-matrix =	 "0", "-1",  "0",
++					"-1",  "0",  "0",
++					 "0",  "0", "-1";
++		};
++
++		light-sensor@1c {
++			compatible = "dynaimage,al3010";
++			reg = <0x1c>;
++
++			interrupt-parent = <&gpio>;
++			interrupts = <TEGRA_GPIO(Z, 2) IRQ_TYPE_LEVEL_HIGH>;
++
++			vdd-supply = <&vdd_3v3_sys>;
++		};
++
++		accelerometer@68 {
++			compatible = "invensense,mpu6050";
++			reg = <0x68>;
++
++			interrupt-parent = <&gpio>;
++			interrupts = <TEGRA_GPIO(X, 1) IRQ_TYPE_EDGE_RISING>;
++
++			vdd-supply   = <&vdd_3v3_sys>;
++			vddio-supply = <&vdd_1v8>;
++
++			mount-matrix =	 "0", "-1",  "0",
++					"-1",  "0",  "0",
++					 "0",  "0", "-1";
++		};
 +	};
 +
 +	i2c@7000d000 {
 +		clock-frequency = <100000>;
 +		status = "okay";
 +
-+		magnetometer@c {
-+			compatible = "ak,ak8975";
-+			reg = <0x0c>;
++		rt5640: audio-codec@1c {
++			compatible = "realtek,rt5640";
++			reg = <0x1c>;
 +
-+			interrupt-parent = <&gpio>;
-+			interrupts = <TEGRA_GPIO(N, 5) IRQ_TYPE_EDGE_RISING>;
-+
-+			vdd-supply = <&vdd_3v3_sys>;
-+			vid-supply = <&vdd_1v8_sys>;
-+
-+			mount-matrix =	"1",  "0",  "0",
-+					"0", "-1",  "0",
-+					"0",  "0", "-1";
++			realtek,dmic1-data-pin = <1>;
 +		};
 +
-+		pmic: pmic@34 {
-+			compatible = "ti,tps6586x";
-+			reg = <0x34>;
-+
-+			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+
-+			sys-supply       = <&vdd_5v0_sys>;
-+			vin-sm0-supply   = <&sys_reg>;
-+			vin-sm1-supply   = <&sys_reg>;
-+			vin-sm2-supply   = <&sys_reg>;
-+			vinldo01-supply  = <&sm2_reg>;
-+			vinldo23-supply  = <&sm2_reg>;
-+			vinldo4-supply   = <&sm2_reg>;
-+			vinldo678-supply = <&sm2_reg>;
-+			vinldo9-supply   = <&sm2_reg>;
-+
-+			regulators {
-+				sys_reg: sys {
-+					regulator-name = "vdd_sys";
-+					regulator-always-on;
-+				};
-+
-+				vdd_core: sm0 {
-+					regulator-name = "vdd_sm0,vdd_core";
-+					regulator-min-microvolt = <1200000>;
-+					regulator-max-microvolt = <1300000>;
-+					regulator-coupled-with = <&rtc_vdd &vdd_cpu>;
-+					regulator-coupled-max-spread = <170000 550000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+
-+					nvidia,tegra-core-regulator;
-+				};
-+
-+				vdd_cpu: sm1 {
-+					regulator-name = "vdd_sm1,vdd_cpu";
-+					regulator-min-microvolt = <750000>;
-+					regulator-max-microvolt = <1125000>;
-+					regulator-coupled-with = <&vdd_core &rtc_vdd>;
-+					regulator-coupled-max-spread = <550000 550000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+
-+					nvidia,tegra-cpu-regulator;
-+				};
-+
-+				sm2_reg: sm2 {
-+					regulator-name = "vdd_sm2,vin_ldo*";
-+					regulator-min-microvolt = <3700000>;
-+					regulator-max-microvolt = <3700000>;
-+					regulator-always-on;
-+				};
-+
-+				/* LDO0 is not connected to anything */
-+
-+				ldo1 {
-+					regulator-name = "vdd_ldo1,avdd_pll*";
-+					regulator-min-microvolt = <1100000>;
-+					regulator-max-microvolt = <1100000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				rtc_vdd: ldo2 {
-+					regulator-name = "vdd_ldo2,vdd_rtc";
-+					regulator-min-microvolt = <1200000>;
-+					regulator-max-microvolt = <1300000>;
-+					regulator-coupled-with = <&vdd_core &vdd_cpu>;
-+					regulator-coupled-max-spread = <170000 550000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+
-+					nvidia,tegra-rtc-regulator;
-+				};
-+
-+				ldo3 {
-+					regulator-name = "vdd_ldo3,avdd_usb*";
-+					regulator-min-microvolt = <3300000>;
-+					regulator-max-microvolt = <3300000>;
-+					regulator-always-on;
-+				};
-+
-+				ldo4 {
-+					regulator-name = "vdd_ldo4,avdd_osc,vddio_sys";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vcore_emmc: ldo5 {
-+					regulator-name = "vdd_ldo5,vcore_mmc";
-+					regulator-min-microvolt = <2850000>;
-+					regulator-max-microvolt = <2850000>;
-+				};
-+
-+				avdd_vdac_reg: ldo6 {
-+					regulator-name = "vdd_ldo6,avdd_vdac";
-+					regulator-min-microvolt = <2850000>;
-+					regulator-max-microvolt = <2850000>;
-+				};
-+
-+				hdmi_vdd_reg: ldo7 {
-+					regulator-name = "vdd_ldo7,avdd_hdmi";
-+					regulator-min-microvolt = <3300000>;
-+					regulator-max-microvolt = <3300000>;
-+				};
-+
-+				hdmi_pll_reg: ldo8 {
-+					regulator-name = "vdd_ldo8,avdd_hdmi_pll";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+				};
-+
-+				ldo9 {
-+					regulator-name = "vdd_ldo9,avdd_2v85,vdd_ddr_rx";
-+					regulator-min-microvolt = <2850000>;
-+					regulator-max-microvolt = <2850000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				ldo_rtc {
-+					regulator-name = "vdd_rtc_out,vdd_cell";
-+					regulator-min-microvolt = <3300000>;
-+					regulator-max-microvolt = <3300000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+			};
-+		};
-+
-+		nct1008: temperature-sensor@4c {
++		nct72: temperature-sensor@4c {
 +			compatible = "onnn,nct1008";
 +			reg = <0x4c>;
 +			vcc-supply = <&vdd_3v3_sys>;
 +			#thermal-sensor-cells = <1>;
 +		};
++
++		battery@55 {
++			compatible = "ti,bq27541";
++			reg = <0x55>;
++		};
 +	};
 +
 +	pmc@7000e400 {
++		status = "okay";
 +		nvidia,invert-interrupt;
 +		nvidia,suspend-mode = <1>;
 +		nvidia,cpu-pwr-good-time = <2000>;
-+		nvidia,cpu-pwr-off-time = <100>;
++		nvidia,cpu-pwr-off-time = <200>;
 +		nvidia,core-pwr-good-time = <3845 3845>;
-+		nvidia,core-pwr-off-time = <458>;
++		nvidia,core-pwr-off-time = <0>;
++		nvidia,core-power-req-active-high;
 +		nvidia,sys-clock-req-active-high;
 +	};
 +
-+	usb@c5000000 {
-+		compatible = "nvidia,tegra20-udc";
-+		status = "okay";
-+		dr_mode = "peripheral";
-+	};
-+
-+	usb-phy@c5000000 {
-+		status = "okay";
-+		dr_mode = "peripheral";
-+		nvidia,xcvr-setup-use-fuses;
-+		nvidia,xcvr-lsfslew = <2>;
-+		nvidia,xcvr-lsrslew = <2>;
-+		vbus-supply = <&vdd_vbus1>;
-+	};
-+
-+	usb@c5008000 {
-+		status = "okay";
-+	};
-+
-+	usb-phy@c5008000 {
-+		status = "okay";
-+		nvidia,xcvr-setup-use-fuses;
-+		nvidia,xcvr-lsfslew = <2>;
-+		nvidia,xcvr-lsrslew = <2>;
-+		vbus-supply = <&vdd_vbus3>;
++	ahub@70080000 {
++		i2s@70080400 {
++			status = "okay";
++		};
 +	};
 +
 +	brcm_wifi_pwrseq: wifi-pwrseq {
 +		compatible = "mmc-pwrseq-simple";
 +
-+		clocks = <&rtc_32k_wifi>;
++		clocks = <&tegra_pmc TEGRA_PMC_CLK_BLINK>;
 +		clock-names = "ext_clock";
 +
-+		reset-gpios = <&gpio TEGRA_GPIO(K, 6) GPIO_ACTIVE_LOW>;
++		reset-gpios = <&gpio TEGRA_GPIO(D, 4) GPIO_ACTIVE_LOW>;
 +		post-power-on-delay-ms = <300>;
 +		power-off-delay-us = <300>;
 +	};
 +
-+	sdhci@c8000000 {
++	sdhci@78000400 {
 +		status = "okay";
 +
 +		#address-cells = <1>;
 +		#size-cells = <0>;
 +
-+		max-frequency = <25000000>;
 +		keep-power-in-suspend;
 +		bus-width = <4>;
 +		non-removable;
 +
 +		mmc-pwrseq = <&brcm_wifi_pwrseq>;
 +		vmmc-supply = <&vdd_3v3_sys>;
-+		vqmmc-supply = <&vdd_3v3_sys>;
++		vqmmc-supply = <&vdd_1v8>;
 +
-+		/* Azurewave AW-NH611 BCM4329 */
++		/* Azurewave AW-NH665 BCM4330 */
 +		wifi@1 {
 +			reg = <1>;
 +			compatible = "brcm,bcm4329-fmac";
 +			interrupt-parent = <&gpio>;
-+			interrupts = <TEGRA_GPIO(S, 0) IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <TEGRA_GPIO(O, 4) IRQ_TYPE_LEVEL_HIGH>;
 +			interrupt-names = "host-wake";
 +		};
 +	};
 +
-+	sdhci@c8000400 {
-+		status = "okay";
-+		bus-width = <4>;
-+		cd-gpios = <&gpio TEGRA_GPIO(I, 5) GPIO_ACTIVE_LOW>;
-+		power-gpios = <&gpio TEGRA_GPIO(I, 6) GPIO_ACTIVE_HIGH>;
-+		vmmc-supply = <&vdd_3v3_sys>;
-+		vqmmc-supply = <&vdd_3v3_sys>;
-+	};
-+
-+	sdhci@c8000600 {
++	sdhci@78000600 {
 +		status = "okay";
 +		bus-width = <8>;
 +		vmmc-supply = <&vcore_emmc>;
-+		vqmmc-supply = <&vdd_3v3_sys>;
++		vqmmc-supply = <&vdd_1v8>;
 +		non-removable;
 +	};
 +
-+	mains: ac-adapter-detect {
-+		compatible = "gpio-charger";
-+		charger-type = "mains";
-+		gpios = <&gpio TEGRA_GPIO(V, 3) GPIO_ACTIVE_LOW>;
++	usb@7d000000 {
++		compatible = "nvidia,tegra30-udc";
++		status = "okay";
++		dr_mode = "peripheral";
++	};
++
++	usb-phy@7d000000 {
++		status = "okay";
++		dr_mode = "peripheral";
++		nvidia,hssync-start-delay = <0>;
++		nvidia,xcvr-lsfslew = <2>;
++		nvidia,xcvr-lsrslew = <2>;
 +	};
 +
 +	backlight: backlight {
 +		compatible = "pwm-backlight";
 +
-+		enable-gpios = <&gpio TEGRA_GPIO(D, 4) GPIO_ACTIVE_HIGH>;
-+		power-supply = <&vdd_3v3_sys>;
-+		pwms = <&pwm 2 41667>;
++		power-supply = <&vdd_5v0_sys>;
++		pwms = <&pwm 0 50000>;
 +
-+		brightness-levels = <7 255>;
-+		num-interpolated-steps = <248>;
-+		default-brightness-level = <20>;
++		brightness-levels = <1 255>;
++		num-interpolated-steps = <254>;
++		default-brightness-level = <15>;
 +	};
 +
 +	clocks {
@@ -907,20 +1179,7 @@ index 000000000000..e64f00ce8028
 +			reg = <0>;
 +			#clock-cells = <0>;
 +			clock-frequency = <32768>;
-+			clock-output-names = "tps658621-out32k";
-+		};
-+
-+		/*
-+		 * This standalone onboard fixed-clock always-ON 32KHz
-+		 * oscillator is used as a reference clock-source by the
-+		 * Azurewave WiFi/BT module.
-+		 */
-+		rtc_32k_wifi: clock@1 {
-+			compatible = "fixed-clock";
-+			reg = <1>;
-+			#clock-cells = <0>;
-+			clock-frequency = <32768>;
-+			clock-output-names = "kk3270032";
++			clock-output-names = "pmic-oscillator";
 +		};
 +	};
 +
@@ -935,31 +1194,30 @@ index 000000000000..e64f00ce8028
 +			cpu-supply = <&vdd_cpu>;
 +			operating-points-v2 = <&cpu0_opp_table>;
 +		};
++
++		cpu@2 {
++			cpu-supply = <&vdd_cpu>;
++			operating-points-v2 = <&cpu0_opp_table>;
++		};
++
++		cpu@3 {
++			cpu-supply = <&vdd_cpu>;
++			operating-points-v2 = <&cpu0_opp_table>;
++		};
 +	};
 +
 +	display-panel {
-+		compatible = "auo,b101ew05", "panel-lvds";
++		compatible = "hydis,hv070wx2-1e0", "chunghwa,claa070wp03xg",
++			     "panel-lvds";
 +
-+		ddc-i2c-bus = <&panel_ddc>;
 +		power-supply = <&vdd_pnl>;
 +		backlight = <&backlight>;
 +
-+		width-mm = <218>;
-+		height-mm = <135>;
++		width-mm = <94>;
++		height-mm = <150>;
++		rotation = <180>;
 +
-+		data-mapping = "jeida-18";
-+
-+		panel-timing {
-+			clock-frequency = <71200000>;
-+			hactive = <1280>;
-+			vactive = <800>;
-+			hfront-porch = <8>;
-+			hback-porch = <18>;
-+			hsync-len = <184>;
-+			vsync-len = <3>;
-+			vfront-porch = <4>;
-+			vback-porch = <8>;
-+		};
++		data-mapping = "jeida-24";
 +
 +		port {
 +			panel_input: endpoint {
@@ -968,29 +1226,39 @@ index 000000000000..e64f00ce8028
 +		};
 +	};
 +
++	firmware {
++		trusted-foundations {
++			compatible = "tlm,trusted-foundations";
++			tlm,version-major = <0x0>;
++			tlm,version-minor = <0x0>;
++		};
++	};
++
 +	gpio-keys {
 +		compatible = "gpio-keys";
 +
++		hall-sensor {
++			label = "Lid";
++			gpios = <&gpio TEGRA_GPIO(S, 6) GPIO_ACTIVE_LOW>;
++			linux,input-type = <EV_SW>;
++			linux,code = <SW_LID>;
++			debounce-interval = <500>;
++			wakeup-event-action = <EV_ACT_DEASSERTED>;
++			wakeup-source;
++		};
++
 +		power {
 +			label = "Power";
-+			gpios = <&gpio TEGRA_GPIO(I, 3) GPIO_ACTIVE_HIGH>;
++			gpios = <&gpio TEGRA_GPIO(V, 0) GPIO_ACTIVE_LOW>;
 +			linux,code = <KEY_POWER>;
 +			debounce-interval = <10>;
 +			wakeup-event-action = <EV_ACT_ASSERTED>;
 +			wakeup-source;
 +		};
 +
-+		rotation-lock {
-+			label = "Rotate-lock";
-+			gpios = <&gpio TEGRA_GPIO(Q, 2) GPIO_ACTIVE_HIGH>;
-+			linux,code = <SW_ROTATE_LOCK>;
-+			linux,input-type = <EV_SW>;
-+			debounce-interval = <10>;
-+		};
-+
 +		volume-up {
 +			label = "Volume Up";
-+			gpios = <&gpio TEGRA_GPIO(Q, 4) GPIO_ACTIVE_LOW>;
++			gpios = <&gpio TEGRA_GPIO(Q, 2) GPIO_ACTIVE_LOW>;
 +			linux,code = <KEY_VOLUMEUP>;
 +			debounce-interval = <10>;
 +			wakeup-event-action = <EV_ACT_ASSERTED>;
@@ -999,7 +1267,7 @@ index 000000000000..e64f00ce8028
 +
 +		volume-down {
 +			label = "Volume Down";
-+			gpios = <&gpio TEGRA_GPIO(Q, 5) GPIO_ACTIVE_LOW>;
++			gpios = <&gpio TEGRA_GPIO(Q, 3) GPIO_ACTIVE_LOW>;
 +			linux,code = <KEY_VOLUMEDOWN>;
 +			debounce-interval = <10>;
 +			wakeup-event-action = <EV_ACT_ASSERTED>;
@@ -1007,16 +1275,10 @@ index 000000000000..e64f00ce8028
 +		};
 +	};
 +
-+	haptic-feedback {
-+		compatible = "gpio-vibrator";
-+		enable-gpios = <&gpio TEGRA_GPIO(V, 5) GPIO_ACTIVE_HIGH>;
-+		vcc-supply = <&vdd_3v3_sys>;
-+	};
-+
 +	lvds-encoder {
 +		compatible = "ti,sn75lvds83", "lvds-encoder";
 +
-+		powerdown-gpios = <&gpio TEGRA_GPIO(B, 2) GPIO_ACTIVE_LOW>;
++		powerdown-gpios = <&gpio TEGRA_GPIO(N, 6) GPIO_ACTIVE_LOW>;
 +
 +		ports {
 +			#address-cells = <1>;
@@ -1052,108 +1314,88 @@ index 000000000000..e64f00ce8028
 +			regulator-min-microvolt = <5000000>;
 +			regulator-max-microvolt = <5000000>;
 +			regulator-always-on;
++			regulator-boot-on;
 +		};
 +
 +		vdd_3v3_sys: regulator@1 {
 +			compatible = "regulator-fixed";
 +			reg = <1>;
-+			regulator-name = "vdd_3v3_vs";
++			regulator-name = "vdd_3v3";
 +			regulator-min-microvolt = <3300000>;
 +			regulator-max-microvolt = <3300000>;
 +			regulator-always-on;
++			regulator-boot-on;
 +			vin-supply = <&vdd_5v0_sys>;
 +		};
 +
-+		vdd_1v8_sys: regulator@2 {
++		vdd_pnl: regulator@2 {
 +			compatible = "regulator-fixed";
 +			reg = <2>;
-+			regulator-name = "vdd_1v8_vs";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+			vin-supply = <&vdd_5v0_sys>;
-+		};
-+
-+		vdd_pnl: regulator@3 {
-+			compatible = "regulator-fixed";
-+			reg = <3>;
 +			regulator-name = "vdd_panel";
 +			regulator-min-microvolt = <3300000>;
 +			regulator-max-microvolt = <3300000>;
 +			regulator-enable-ramp-delay = <300000>;
-+			gpio = <&gpio TEGRA_GPIO(C, 6) GPIO_ACTIVE_HIGH>;
++			gpio = <&gpio TEGRA_GPIO(W, 1) GPIO_ACTIVE_HIGH>;
 +			enable-active-high;
-+			vin-supply = <&vdd_5v0_sys>;
++			vin-supply = <&vdd_3v3_sys>;
 +		};
 +
-+		vdd_vbus1: regulator@4 {
++		vcc_3v3_ts: regulator@3 {
 +			compatible = "regulator-fixed";
-+			reg = <4>;
-+			regulator-name = "vdd_usb1_vbus";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
++			reg = <3>;
++			regulator-name = "ldo_s-1167_3v3";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
 +			regulator-always-on;
-+			gpio = <&gpio TEGRA_GPIO(D, 0) GPIO_ACTIVE_HIGH>;
-+			enable-active-high;
-+			vin-supply = <&vdd_5v0_sys>;
-+		};
-+
-+		vdd_vbus3: regulator@5 {
-+			compatible = "regulator-fixed";
-+			reg = <5>;
-+			regulator-name = "vdd_usb3_vbus";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			regulator-always-on;
-+			gpio = <&gpio TEGRA_GPIO(D, 3) GPIO_ACTIVE_HIGH>;
-+			enable-active-high;
++			regulator-boot-on;
 +			vin-supply = <&vdd_5v0_sys>;
 +		};
 +	};
 +
 +	sound {
-+		compatible = "nvidia,tegra-audio-wm8903-picasso",
-+			     "nvidia,tegra-audio-wm8903";
-+		nvidia,model = "Acer Iconia Tab A500 WM8903";
++		compatible = "nvidia,tegra-audio-rt5640-grouper",
++			     "nvidia,tegra-audio-rt5640";
++		nvidia,model = "ASUS Google Nexus 7 ALC5642";
 +
 +		nvidia,audio-routing =
-+			"Headphone Jack", "HPOUTR",
-+			"Headphone Jack", "HPOUTL",
-+			"Int Spk", "LINEOUTL",
-+			"Int Spk", "LINEOUTR",
-+			"Mic Jack", "MICBIAS",
-+			"IN2L", "Mic Jack",
-+			"IN2R", "Mic Jack",
-+			"IN1L", "Int Mic",
-+			"IN1R", "Int Mic";
++			"Headphones", "HPOR",
++			"Headphones", "HPOL",
++			"Speakers", "SPORP",
++			"Speakers", "SPORN",
++			"Speakers", "SPOLP",
++			"Speakers", "SPOLN",
++			"DMIC1", "Mic Jack";
 +
 +		nvidia,i2s-controller = <&tegra_i2s1>;
-+		nvidia,audio-codec = <&wm8903>;
++		nvidia,audio-codec = <&rt5640>;
 +
-+		nvidia,spkr-en-gpios = <&wm8903 2 GPIO_ACTIVE_HIGH>;
-+		nvidia,hp-det-gpios = <&gpio TEGRA_GPIO(W, 2) GPIO_ACTIVE_HIGH>;
-+		nvidia,int-mic-en-gpios = <&wm8903 1 GPIO_ACTIVE_HIGH>;
-+		nvidia,headset;
++		nvidia,hp-det-gpios = <&gpio TEGRA_GPIO(W, 2) GPIO_ACTIVE_LOW>;
 +
-+		clocks = <&tegra_car TEGRA20_CLK_PLL_A>,
-+			 <&tegra_car TEGRA20_CLK_PLL_A_OUT0>,
-+			 <&tegra_car TEGRA20_CLK_CDEV1>;
++		clocks = <&tegra_car TEGRA30_CLK_PLL_A>,
++			 <&tegra_car TEGRA30_CLK_PLL_A_OUT0>,
++			 <&tegra_pmc TEGRA_PMC_CLK_OUT_1>;
 +		clock-names = "pll_a", "pll_a_out0", "mclk";
++
++		assigned-clocks = <&tegra_car TEGRA30_CLK_EXTERN1>,
++				  <&tegra_pmc TEGRA_PMC_CLK_OUT_1>;
++
++		assigned-clock-parents = <&tegra_car TEGRA30_CLK_PLL_A_OUT0>,
++					 <&tegra_car TEGRA30_CLK_EXTERN1>;
 +	};
 +
 +	thermal-zones {
-+		nct1008-local {
++		nct72-local {
 +			polling-delay-passive = <1000>; /* milliseconds */
 +			polling-delay = <0>; /* milliseconds */
 +
-+			thermal-sensors = <&nct1008 0>;
++			thermal-sensors = <&nct72 0>;
 +		};
 +
-+		nct1008-remote {
++		nct72-remote {
 +			polling-delay-passive = <1000>; /* milliseconds */
 +			polling-delay = <5000>; /* milliseconds */
 +
-+			thermal-sensors = <&nct1008 1>;
++			thermal-sensors = <&nct72 1>;
 +
 +			trips {
 +				trip0: cpu-alert0 {
@@ -1180,394 +1422,2642 @@ index 000000000000..e64f00ce8028
 +		};
 +	};
 +
++	memory-controller@7000f000 {
++		emc-timings-0 {
++			nvidia,ram-code = <0>; /* Elpida EDJ2108EDBG-DJL-F */
++
++			timing-25500000 {
++				clock-frequency = <25500000>;
++
++				nvidia,emem-configuration = <
++					0x00020001 /* MC_EMEM_ARB_CFG */
++					0xc0000020 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000000 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000001 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000001 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06020102 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0502 /* MC_EMEM_ARB_DA_COVERS */
++					0x74830303 /* MC_EMEM_ARB_MISC0 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-51000000 {
++				clock-frequency = <51000000>;
++
++				nvidia,emem-configuration = <
++					0x00010001 /* MC_EMEM_ARB_CFG */
++					0xc0000020 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000000 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000001 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000001 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06020102 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0502 /* MC_EMEM_ARB_DA_COVERS */
++					0x73430303 /* MC_EMEM_ARB_MISC0 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-102000000 {
++				clock-frequency = <102000000>;
++
++				nvidia,emem-configuration = <
++					0x00000001 /* MC_EMEM_ARB_CFG */
++					0xc0000030 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000000 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000001 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000001 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06020102 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0503 /* MC_EMEM_ARB_DA_COVERS */
++					0x72830504 /* MC_EMEM_ARB_MISC0 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-204000000 {
++				clock-frequency = <204000000>;
++
++				nvidia,emem-configuration = <
++					0x00000003 /* MC_EMEM_ARB_CFG */
++					0xc0000025 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000005 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000003 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000001 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06020102 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0505 /* MC_EMEM_ARB_DA_COVERS */
++					0x72440a06 /* MC_EMEM_ARB_MISC0 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-333500000 {
++				clock-frequency = <333500000>;
++
++				nvidia,emem-configuration = <
++					0x00000005 /* MC_EMEM_ARB_CFG */
++					0xc000003d /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000008 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000004 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000004 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000007 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06030202 /* MC_EMEM_ARB_DA_TURNS */
++					0x000b0608 /* MC_EMEM_ARB_DA_COVERS */
++					0x70850f09 /* MC_EMEM_ARB_MISC0 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-667000000 {
++				clock-frequency = <667000000>;
++
++				nvidia,emem-configuration = <
++					0x0000000a /* MC_EMEM_ARB_CFG */
++					0xc0000079 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000004 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000010 /* MC_EMEM_ARB_TIMING_RC */
++					0x0000000b /* MC_EMEM_ARB_TIMING_RAS */
++					0x0000000a /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x0000000b /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000004 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000008 /* MC_EMEM_ARB_TIMING_W2R */
++					0x08040202 /* MC_EMEM_ARB_DA_TURNS */
++					0x00130b10 /* MC_EMEM_ARB_DA_COVERS */
++					0x70ea1f11 /* MC_EMEM_ARB_MISC0 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++		};
++
++		emc-timings-1 {
++			nvidia,ram-code = <1>; /* Hynix H5TC2G83CFR */
++
++			timing-25500000 {
++				clock-frequency = <25500000>;
++
++				nvidia,emem-configuration = <
++					0x00020001 /* MC_EMEM_ARB_CFG */
++					0xc0000020 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000000 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000001 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000001 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06020102 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0502 /* MC_EMEM_ARB_DA_COVERS */
++					0x74830303 /* MC_EMEM_ARB_MISC0 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-51000000 {
++				clock-frequency = <51000000>;
++
++				nvidia,emem-configuration = <
++					0x00010001 /* MC_EMEM_ARB_CFG */
++					0xc0000020 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000000 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000001 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000001 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06020102 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0502 /* MC_EMEM_ARB_DA_COVERS */
++					0x73430303 /* MC_EMEM_ARB_MISC0 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-102000000 {
++				clock-frequency = <102000000>;
++
++				nvidia,emem-configuration = <
++					0x00000001 /* MC_EMEM_ARB_CFG */
++					0xc0000030 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000000 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000001 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000001 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06020102 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0503 /* MC_EMEM_ARB_DA_COVERS */
++					0x72830504 /* MC_EMEM_ARB_MISC0 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-204000000 {
++				clock-frequency = <204000000>;
++
++				nvidia,emem-configuration = <
++					0x00000003 /* MC_EMEM_ARB_CFG */
++					0xc0000025 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000005 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000003 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000001 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06020102 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0505 /* MC_EMEM_ARB_DA_COVERS */
++					0x72440a06 /* MC_EMEM_ARB_MISC0 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-333500000 {
++				clock-frequency = <333500000>;
++
++				nvidia,emem-configuration = <
++					0x00000005 /* MC_EMEM_ARB_CFG */
++					0xc000003d /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000008 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000004 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000004 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000007 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06030202 /* MC_EMEM_ARB_DA_TURNS */
++					0x000b0608 /* MC_EMEM_ARB_DA_COVERS */
++					0x70850f09 /* MC_EMEM_ARB_MISC0 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-667000000 {
++				clock-frequency = <667000000>;
++
++				nvidia,emem-configuration = <
++					0x0000000a /* MC_EMEM_ARB_CFG */
++					0xc0000079 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000004 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000010 /* MC_EMEM_ARB_TIMING_RC */
++					0x0000000b /* MC_EMEM_ARB_TIMING_RAS */
++					0x0000000a /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x0000000b /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000004 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000008 /* MC_EMEM_ARB_TIMING_W2R */
++					0x08040202 /* MC_EMEM_ARB_DA_TURNS */
++					0x00130b10 /* MC_EMEM_ARB_DA_COVERS */
++					0x70ea1f11 /* MC_EMEM_ARB_MISC0 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++		};
++	};
++
 +	memory-controller@7000f400 {
-+		nvidia,use-ram-code;
++		emc-timings-0 {
++			nvidia,ram-code = <0>; /* Elpida EDJ2108EDBG-DJL-F */
 +
-+		emc-tables@0 {
-+			nvidia,ram-code = <0>; /* elpida-8gb */
++			timing-25500000 {
++				clock-frequency = <25500000>;
 +
-+			#address-cells = <1>;
-+			#size-cells = <0>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-mode-1 = <0x80100003>;
++				nvidia,emc-mode-2 = <0x80200008>;
++				nvidia,emc-mode-reset = <0x80001221>;
++				nvidia,emc-zcal-cnt-long = <0x00000040>;
++				nvidia,emc-cfg-dyn-self-ref;
++				nvidia,emc-cfg-periodic-qrst;
 +
-+			emc-table@25000 {
-+				reg = <25000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <25000>;
-+				nvidia,emc-registers = <0x00000002 0x00000006
-+					0x00000003 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000004
-+					0x00000003 0x00000008 0x0000000b 0x0000004d
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x00000004
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x00000068 0x00000000 0x00000003
-+					0x00000000 0x00000000 0x00000282 0xa0ae04ae
-+					0x00070000 0x00000000 0x00000000 0x00000003
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
++				nvidia,emc-configuration = <
++					0x00000001 /* EMC_RC */
++					0x00000004 /* EMC_RFC */
++					0x00000000 /* EMC_RAS */
++					0x00000000 /* EMC_RP */
++					0x00000002 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000005 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000000 /* EMC_RD_RCD */
++					0x00000000 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000001 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000005 /* EMC_WDV */
++					0x00000005 /* EMC_QUSE */
++					0x00000004 /* EMC_QRST */
++					0x0000000a /* EMC_QSAFE */
++					0x0000000b /* EMC_RDV */
++					0x000000c0 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000030 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000007 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x00000005 /* EMC_TXSR */
++					0x00000005 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000001 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000004 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x000000c7 /* EMC_TREFBW */
++					0x00000006 /* EMC_QUSE_EXTRA */
++					0x00000004 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x00004288 /* EMC_FBIO_CFG5 */
++					0x007800a4 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x000fc000 /* EMC_DLL_XFORM_DQS0 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS1 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS2 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS3 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS4 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS5 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS6 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS7 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ0 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ1 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ2 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ3 */
++					0x000002a0 /* EMC_XM2CMDPADCTRL */
++					0x0800211c /* EMC_XM2DQSPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x77fff884 /* EMC_XM2CLKPADCTRL */
++					0x01f1f108 /* EMC_XM2COMPPADCTRL */
++					0x05057404 /* EMC_XM2VTTGENPADCTRL */
++					0x54000007 /* EMC_XM2VTTGENPADCTRL2 */
++					0x08000168 /* EMC_XM2QUSEPADCTRL */
++					0x08000000 /* EMC_XM2DQSPADCTRL3 */
++					0x00000802 /* EMC_CTT_TERM_CTRL */
++					0x00000000 /* EMC_ZCAL_INTERVAL */
++					0x00000040 /* EMC_ZCAL_WAIT_CNT */
++					0x000c000c /* EMC_MRS_WAIT_CNT */
++					0xa0f10000 /* EMC_AUTO_CAL_CONFIG */
++					0x00000000 /* EMC_CTT */
++					0x00000000 /* EMC_CTT_DURATION */
++					0x80000287 /* EMC_DYN_SELF_REF_CONTROL */
++					0xe8000000 /* EMC_FBIO_SPARE */
++					0xff00ff00 /* EMC_CFG_RSV */
++				>;
 +			};
 +
-+			emc-table@50000 {
-+				reg = <50000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <50000>;
-+				nvidia,emc-registers = <0x00000003 0x00000007
-+					0x00000003 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000005
-+					0x00000003 0x00000008 0x0000000b 0x0000009f
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x00000007
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x000000d0 0x00000000 0x00000000
-+					0x00000000 0x00000000 0x00000282 0xa0ae04ae
-+					0x00070000 0x00000000 0x00000000 0x00000005
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
++			timing-51000000 {
++				clock-frequency = <51000000>;
++
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-mode-1 = <0x80100003>;
++				nvidia,emc-mode-2 = <0x80200008>;
++				nvidia,emc-mode-reset = <0x80001221>;
++				nvidia,emc-zcal-cnt-long = <0x00000040>;
++				nvidia,emc-cfg-dyn-self-ref;
++				nvidia,emc-cfg-periodic-qrst;
++
++				nvidia,emc-configuration = <
++					0x00000002 /* EMC_RC */
++					0x00000008 /* EMC_RFC */
++					0x00000001 /* EMC_RAS */
++					0x00000000 /* EMC_RP */
++					0x00000002 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000005 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000000 /* EMC_RD_RCD */
++					0x00000000 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000001 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000005 /* EMC_WDV */
++					0x00000005 /* EMC_QUSE */
++					0x00000004 /* EMC_QRST */
++					0x0000000a /* EMC_QSAFE */
++					0x0000000b /* EMC_RDV */
++					0x00000181 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000060 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000007 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x00000009 /* EMC_TXSR */
++					0x00000009 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000002 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000004 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x0000018e /* EMC_TREFBW */
++					0x00000006 /* EMC_QUSE_EXTRA */
++					0x00000004 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x00004288 /* EMC_FBIO_CFG5 */
++					0x007800a4 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x000fc000 /* EMC_DLL_XFORM_DQS0 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS1 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS2 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS3 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS4 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS5 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS6 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS7 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ0 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ1 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ2 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ3 */
++					0x000002a0 /* EMC_XM2CMDPADCTRL */
++					0x0800211c /* EMC_XM2DQSPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x77fff884 /* EMC_XM2CLKPADCTRL */
++					0x01f1f108 /* EMC_XM2COMPPADCTRL */
++					0x05057404 /* EMC_XM2VTTGENPADCTRL */
++					0x54000007 /* EMC_XM2VTTGENPADCTRL2 */
++					0x08000168 /* EMC_XM2QUSEPADCTRL */
++					0x08000000 /* EMC_XM2DQSPADCTRL3 */
++					0x00000802 /* EMC_CTT_TERM_CTRL */
++					0x00000000 /* EMC_ZCAL_INTERVAL */
++					0x00000040 /* EMC_ZCAL_WAIT_CNT */
++					0x000c000c /* EMC_MRS_WAIT_CNT */
++					0xa0f10000 /* EMC_AUTO_CAL_CONFIG */
++					0x00000000 /* EMC_CTT */
++					0x00000000 /* EMC_CTT_DURATION */
++					0x8000040b /* EMC_DYN_SELF_REF_CONTROL */
++					0xe8000000 /* EMC_FBIO_SPARE */
++					0xff00ff00 /* EMC_CFG_RSV */
++				>;
 +			};
 +
-+			emc-table@75000 {
-+				reg = <75000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <75000>;
-+				nvidia,emc-registers = <0x00000005 0x0000000a
-+					0x00000004 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000005
-+					0x00000003 0x00000008 0x0000000b 0x000000ff
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x0000000b
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x00000138 0x00000000 0x00000000
-+					0x00000000 0x00000000 0x00000282 0xa0ae04ae
-+					0x00070000 0x00000000 0x00000000 0x00000007
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
++			timing-102000000 {
++				clock-frequency = <102000000>;
++
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-mode-1 = <0x80100003>;
++				nvidia,emc-mode-2 = <0x80200008>;
++				nvidia,emc-mode-reset = <0x80001221>;
++				nvidia,emc-zcal-cnt-long = <0x00000040>;
++				nvidia,emc-cfg-dyn-self-ref;
++				nvidia,emc-cfg-periodic-qrst;
++
++				nvidia,emc-configuration = <
++					0x00000005 /* EMC_RC */
++					0x00000010 /* EMC_RFC */
++					0x00000003 /* EMC_RAS */
++					0x00000001 /* EMC_RP */
++					0x00000002 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000005 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000001 /* EMC_RD_RCD */
++					0x00000001 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000001 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000005 /* EMC_WDV */
++					0x00000005 /* EMC_QUSE */
++					0x00000004 /* EMC_QRST */
++					0x0000000a /* EMC_QSAFE */
++					0x0000000b /* EMC_RDV */
++					0x00000303 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x000000c0 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000007 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x00000012 /* EMC_TXSR */
++					0x00000012 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000004 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000004 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x0000031c /* EMC_TREFBW */
++					0x00000006 /* EMC_QUSE_EXTRA */
++					0x00000004 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x00004288 /* EMC_FBIO_CFG5 */
++					0x007800a4 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x000fc000 /* EMC_DLL_XFORM_DQS0 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS1 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS2 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS3 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS4 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS5 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS6 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS7 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ0 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ1 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ2 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ3 */
++					0x000002a0 /* EMC_XM2CMDPADCTRL */
++					0x0800211c /* EMC_XM2DQSPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x77fff884 /* EMC_XM2CLKPADCTRL */
++					0x01f1f108 /* EMC_XM2COMPPADCTRL */
++					0x05057404 /* EMC_XM2VTTGENPADCTRL */
++					0x54000007 /* EMC_XM2VTTGENPADCTRL2 */
++					0x08000168 /* EMC_XM2QUSEPADCTRL */
++					0x08000000 /* EMC_XM2DQSPADCTRL3 */
++					0x00000802 /* EMC_CTT_TERM_CTRL */
++					0x00000000 /* EMC_ZCAL_INTERVAL */
++					0x00000040 /* EMC_ZCAL_WAIT_CNT */
++					0x000c000c /* EMC_MRS_WAIT_CNT */
++					0xa0f10000 /* EMC_AUTO_CAL_CONFIG */
++					0x00000000 /* EMC_CTT */
++					0x00000000 /* EMC_CTT_DURATION */
++					0x80000713 /* EMC_DYN_SELF_REF_CONTROL */
++					0xe8000000 /* EMC_FBIO_SPARE */
++					0xff00ff00 /* EMC_CFG_RSV */
++				>;
 +			};
 +
-+			emc-table@150000 {
-+				reg = <150000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <150000>;
-+				nvidia,emc-registers = <0x00000009 0x00000014
-+					0x00000007 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000005
-+					0x00000003 0x00000008 0x0000000b 0x0000021f
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x00000015
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x00000270 0x00000000 0x00000001
-+					0x00000000 0x00000000 0x00000282 0xa07c04ae
-+					0x007dd510 0x00000000 0x00000000 0x0000000e
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
++			timing-204000000 {
++				clock-frequency = <204000000>;
++
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-mode-1 = <0x80100003>;
++				nvidia,emc-mode-2 = <0x80200008>;
++				nvidia,emc-mode-reset = <0x80001221>;
++				nvidia,emc-zcal-cnt-long = <0x00000040>;
++				nvidia,emc-cfg-dyn-self-ref;
++				nvidia,emc-cfg-periodic-qrst;
++
++				nvidia,emc-configuration = <
++					0x0000000a /* EMC_RC */
++					0x00000020 /* EMC_RFC */
++					0x00000007 /* EMC_RAS */
++					0x00000002 /* EMC_RP */
++					0x00000002 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000005 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000002 /* EMC_RD_RCD */
++					0x00000002 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000001 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000005 /* EMC_WDV */
++					0x00000005 /* EMC_QUSE */
++					0x00000004 /* EMC_QRST */
++					0x0000000a /* EMC_QSAFE */
++					0x0000000b /* EMC_RDV */
++					0x00000607 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000181 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000007 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x00000023 /* EMC_TXSR */
++					0x00000023 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000007 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000004 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x00000638 /* EMC_TREFBW */
++					0x00000006 /* EMC_QUSE_EXTRA */
++					0x00000006 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x00004288 /* EMC_FBIO_CFG5 */
++					0x004400a4 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00080000 /* EMC_DLL_XFORM_DQS0 */
++					0x00080000 /* EMC_DLL_XFORM_DQS1 */
++					0x00080000 /* EMC_DLL_XFORM_DQS2 */
++					0x00080000 /* EMC_DLL_XFORM_DQS3 */
++					0x00080000 /* EMC_DLL_XFORM_DQS4 */
++					0x00080000 /* EMC_DLL_XFORM_DQS5 */
++					0x00080000 /* EMC_DLL_XFORM_DQS6 */
++					0x00080000 /* EMC_DLL_XFORM_DQS7 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00080000 /* EMC_DLL_XFORM_DQ0 */
++					0x00080000 /* EMC_DLL_XFORM_DQ1 */
++					0x00080000 /* EMC_DLL_XFORM_DQ2 */
++					0x00080000 /* EMC_DLL_XFORM_DQ3 */
++					0x000002a0 /* EMC_XM2CMDPADCTRL */
++					0x0800211c /* EMC_XM2DQSPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x77fff884 /* EMC_XM2CLKPADCTRL */
++					0x01f1f108 /* EMC_XM2COMPPADCTRL */
++					0x05057404 /* EMC_XM2VTTGENPADCTRL */
++					0x54000007 /* EMC_XM2VTTGENPADCTRL2 */
++					0x08000168 /* EMC_XM2QUSEPADCTRL */
++					0x08000000 /* EMC_XM2DQSPADCTRL3 */
++					0x00000802 /* EMC_CTT_TERM_CTRL */
++					0x00020000 /* EMC_ZCAL_INTERVAL */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x000c000c /* EMC_MRS_WAIT_CNT */
++					0xa0f10000 /* EMC_AUTO_CAL_CONFIG */
++					0x00000000 /* EMC_CTT */
++					0x00000000 /* EMC_CTT_DURATION */
++					0x80000d22 /* EMC_DYN_SELF_REF_CONTROL */
++					0xe8000000 /* EMC_FBIO_SPARE */
++					0xff00ff00 /* EMC_CFG_RSV */
++				>;
 +			};
 +
-+			emc-table@300000 {
-+				reg = <300000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <300000>;
-+				nvidia,emc-registers = <0x00000012 0x00000027
-+					0x0000000d 0x00000006 0x00000007 0x00000005
-+					0x00000003 0x00000009 0x00000006 0x00000006
-+					0x00000003 0x00000003 0x00000002 0x00000006
-+					0x00000003 0x00000009 0x0000000c 0x0000045f
-+					0x00000000 0x00000004 0x00000004 0x00000006
-+					0x00000008 0x00000001 0x0000000e 0x0000002a
-+					0x00000003 0x0000000f 0x00000007 0x00000005
-+					0x00000002 0x000004e1 0x00000005 0x00000002
-+					0x00000000 0x00000000 0x00000282 0xe059048b
-+					0x007e1510 0x00000000 0x00000000 0x0000001b
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
++			timing-333500000 {
++				clock-frequency = <333500000>;
++
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-mode-1 = <0x80100002>;
++				nvidia,emc-mode-2 = <0x80200000>;
++				nvidia,emc-mode-reset = <0x80000321>;
++				nvidia,emc-zcal-cnt-long = <0x00000040>;
++
++				nvidia,emc-configuration = <
++					0x0000000f /* EMC_RC */
++					0x00000034 /* EMC_RFC */
++					0x0000000a /* EMC_RAS */
++					0x00000003 /* EMC_RP */
++					0x00000003 /* EMC_R2W */
++					0x00000008 /* EMC_W2R */
++					0x00000002 /* EMC_R2P */
++					0x00000009 /* EMC_W2P */
++					0x00000003 /* EMC_RD_RCD */
++					0x00000003 /* EMC_WR_RCD */
++					0x00000002 /* EMC_RRD */
++					0x00000001 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000004 /* EMC_WDV */
++					0x00000006 /* EMC_QUSE */
++					0x00000004 /* EMC_QRST */
++					0x0000000a /* EMC_QSAFE */
++					0x0000000c /* EMC_RDV */
++					0x000009e9 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x0000027a /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000001 /* EMC_PDEX2WR */
++					0x00000008 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000007 /* EMC_AR2PDEN */
++					0x0000000e /* EMC_RW2PDEN */
++					0x00000039 /* EMC_TXSR */
++					0x00000200 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x0000000a /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000004 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x00000a2a /* EMC_TREFBW */
++					0x00000000 /* EMC_QUSE_EXTRA */
++					0x00000004 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x00007088 /* EMC_FBIO_CFG5 */
++					0x002600a4 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x0003c000 /* EMC_DLL_XFORM_DQS0 */
++					0x0003c000 /* EMC_DLL_XFORM_DQS1 */
++					0x0003c000 /* EMC_DLL_XFORM_DQS2 */
++					0x0003c000 /* EMC_DLL_XFORM_DQS3 */
++					0x00014000 /* EMC_DLL_XFORM_DQS4 */
++					0x00014000 /* EMC_DLL_XFORM_DQS5 */
++					0x00014000 /* EMC_DLL_XFORM_DQS6 */
++					0x00014000 /* EMC_DLL_XFORM_DQS7 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00048000 /* EMC_DLL_XFORM_DQ0 */
++					0x00048000 /* EMC_DLL_XFORM_DQ1 */
++					0x00048000 /* EMC_DLL_XFORM_DQ2 */
++					0x00048000 /* EMC_DLL_XFORM_DQ3 */
++					0x000002a0 /* EMC_XM2CMDPADCTRL */
++					0x0800013d /* EMC_XM2DQSPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x77fff884 /* EMC_XM2CLKPADCTRL */
++					0x01f1f508 /* EMC_XM2COMPPADCTRL */
++					0x05057404 /* EMC_XM2VTTGENPADCTRL */
++					0x54000007 /* EMC_XM2VTTGENPADCTRL2 */
++					0x080001e8 /* EMC_XM2QUSEPADCTRL */
++					0x08000021 /* EMC_XM2DQSPADCTRL3 */
++					0x00000802 /* EMC_CTT_TERM_CTRL */
++					0x00020000 /* EMC_ZCAL_INTERVAL */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x018b000c /* EMC_MRS_WAIT_CNT */
++					0xa0f10000 /* EMC_AUTO_CAL_CONFIG */
++					0x00000000 /* EMC_CTT */
++					0x00000000 /* EMC_CTT_DURATION */
++					0x800014d4 /* EMC_DYN_SELF_REF_CONTROL */
++					0xe8000000 /* EMC_FBIO_SPARE */
++					0xff00ff89 /* EMC_CFG_RSV */
++				>;
 +			};
 +		};
 +
-+		emc-tables@1 {
-+			nvidia,ram-code = <1>; /* elpida-4gb */
++		emc-timings-1 {
++			nvidia,ram-code = <1>; /* Hynix H5TC2G83CFR */
 +
-+			#address-cells = <1>;
-+			#size-cells = <0>;
++			timing-25500000 {
++				clock-frequency = <25500000>;
 +
-+			emc-table@25000 {
-+				reg = <25000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <25000>;
-+				nvidia,emc-registers = <0x00000002 0x00000006
-+					0x00000003 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000004
-+					0x00000003 0x00000008 0x0000000b 0x0000004d
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x00000004
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x00000068 0x00000000 0x00000003
-+					0x00000000 0x00000000 0x00000282 0xa0ae04ae
-+					0x0007c000 0x00000000 0x00000000 0x00000003
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-mode-1 = <0x80100003>;
++				nvidia,emc-mode-2 = <0x80200008>;
++				nvidia,emc-mode-reset = <0x80001221>;
++				nvidia,emc-zcal-cnt-long = <0x00000040>;
++				nvidia,emc-cfg-dyn-self-ref;
++				nvidia,emc-cfg-periodic-qrst;
++
++				nvidia,emc-configuration = <
++					0x00000001 /* EMC_RC */
++					0x00000004 /* EMC_RFC */
++					0x00000000 /* EMC_RAS */
++					0x00000000 /* EMC_RP */
++					0x00000002 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000005 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000000 /* EMC_RD_RCD */
++					0x00000000 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000001 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000005 /* EMC_WDV */
++					0x00000005 /* EMC_QUSE */
++					0x00000004 /* EMC_QRST */
++					0x0000000a /* EMC_QSAFE */
++					0x0000000b /* EMC_RDV */
++					0x000000c0 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000030 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000007 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x00000005 /* EMC_TXSR */
++					0x00000005 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000001 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000004 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x000000c7 /* EMC_TREFBW */
++					0x00000006 /* EMC_QUSE_EXTRA */
++					0x00000004 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x00004288 /* EMC_FBIO_CFG5 */
++					0x007800a4 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x000fc000 /* EMC_DLL_XFORM_DQS0 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS1 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS2 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS3 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS4 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS5 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS6 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS7 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ0 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ1 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ2 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ3 */
++					0x000002a0 /* EMC_XM2CMDPADCTRL */
++					0x0800211c /* EMC_XM2DQSPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x77fff884 /* EMC_XM2CLKPADCTRL */
++					0x01f1f108 /* EMC_XM2COMPPADCTRL */
++					0x05057404 /* EMC_XM2VTTGENPADCTRL */
++					0x54000007 /* EMC_XM2VTTGENPADCTRL2 */
++					0x08000168 /* EMC_XM2QUSEPADCTRL */
++					0x08000000 /* EMC_XM2DQSPADCTRL3 */
++					0x00000802 /* EMC_CTT_TERM_CTRL */
++					0x00000000 /* EMC_ZCAL_INTERVAL */
++					0x00000040 /* EMC_ZCAL_WAIT_CNT */
++					0x000c000c /* EMC_MRS_WAIT_CNT */
++					0xa0f10000 /* EMC_AUTO_CAL_CONFIG */
++					0x00000000 /* EMC_CTT */
++					0x00000000 /* EMC_CTT_DURATION */
++					0x80000287 /* EMC_DYN_SELF_REF_CONTROL */
++					0xe8000000 /* EMC_FBIO_SPARE */
++					0xff00ff00 /* EMC_CFG_RSV */
++				>;
 +			};
 +
-+			emc-table@50000 {
-+				reg = <50000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <50000>;
-+				nvidia,emc-registers = <0x00000003 0x00000007
-+					0x00000003 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000005
-+					0x00000003 0x00000008 0x0000000b 0x0000009f
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x00000007
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x000000d0 0x00000000 0x00000000
-+					0x00000000 0x00000000 0x00000282 0xa0ae04ae
-+					0x0007c000 0x00000000 0x00000000 0x00000005
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
++			timing-51000000 {
++				clock-frequency = <51000000>;
++
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-mode-1 = <0x80100003>;
++				nvidia,emc-mode-2 = <0x80200008>;
++				nvidia,emc-mode-reset = <0x80001221>;
++				nvidia,emc-zcal-cnt-long = <0x00000040>;
++				nvidia,emc-cfg-dyn-self-ref;
++				nvidia,emc-cfg-periodic-qrst;
++
++				nvidia,emc-configuration = <
++					0x00000002 /* EMC_RC */
++					0x00000008 /* EMC_RFC */
++					0x00000001 /* EMC_RAS */
++					0x00000000 /* EMC_RP */
++					0x00000002 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000005 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000000 /* EMC_RD_RCD */
++					0x00000000 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000001 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000005 /* EMC_WDV */
++					0x00000005 /* EMC_QUSE */
++					0x00000004 /* EMC_QRST */
++					0x0000000a /* EMC_QSAFE */
++					0x0000000b /* EMC_RDV */
++					0x00000181 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000060 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000007 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x00000009 /* EMC_TXSR */
++					0x00000009 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000002 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000004 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x0000018e /* EMC_TREFBW */
++					0x00000006 /* EMC_QUSE_EXTRA */
++					0x00000004 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x00004288 /* EMC_FBIO_CFG5 */
++					0x007800a4 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x000fc000 /* EMC_DLL_XFORM_DQS0 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS1 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS2 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS3 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS4 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS5 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS6 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS7 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ0 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ1 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ2 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ3 */
++					0x000002a0 /* EMC_XM2CMDPADCTRL */
++					0x0800211c /* EMC_XM2DQSPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x77fff884 /* EMC_XM2CLKPADCTRL */
++					0x01f1f108 /* EMC_XM2COMPPADCTRL */
++					0x05057404 /* EMC_XM2VTTGENPADCTRL */
++					0x54000007 /* EMC_XM2VTTGENPADCTRL2 */
++					0x08000168 /* EMC_XM2QUSEPADCTRL */
++					0x08000000 /* EMC_XM2DQSPADCTRL3 */
++					0x00000802 /* EMC_CTT_TERM_CTRL */
++					0x00000000 /* EMC_ZCAL_INTERVAL */
++					0x00000040 /* EMC_ZCAL_WAIT_CNT */
++					0x000c000c /* EMC_MRS_WAIT_CNT */
++					0xa0f10000 /* EMC_AUTO_CAL_CONFIG */
++					0x00000000 /* EMC_CTT */
++					0x00000000 /* EMC_CTT_DURATION */
++					0x8000040b /* EMC_DYN_SELF_REF_CONTROL */
++					0xe8000000 /* EMC_FBIO_SPARE */
++					0xff00ff00 /* EMC_CFG_RSV */
++				>;
 +			};
 +
-+			emc-table@75000 {
-+				reg = <75000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <75000>;
-+				nvidia,emc-registers = <0x00000005 0x0000000a
-+					0x00000004 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000005
-+					0x00000003 0x00000008 0x0000000b 0x000000ff
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x0000000b
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x00000138 0x00000000 0x00000000
-+					0x00000000 0x00000000 0x00000282 0xa0ae04ae
-+					0x0007c000 0x00000000 0x00000000 0x00000007
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
++			timing-102000000 {
++				clock-frequency = <102000000>;
++
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-mode-1 = <0x80100003>;
++				nvidia,emc-mode-2 = <0x80200008>;
++				nvidia,emc-mode-reset = <0x80001221>;
++				nvidia,emc-zcal-cnt-long = <0x00000040>;
++				nvidia,emc-cfg-dyn-self-ref;
++				nvidia,emc-cfg-periodic-qrst;
++
++				nvidia,emc-configuration = <
++					0x00000005 /* EMC_RC */
++					0x00000010 /* EMC_RFC */
++					0x00000003 /* EMC_RAS */
++					0x00000001 /* EMC_RP */
++					0x00000002 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000005 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000001 /* EMC_RD_RCD */
++					0x00000001 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000001 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000005 /* EMC_WDV */
++					0x00000005 /* EMC_QUSE */
++					0x00000004 /* EMC_QRST */
++					0x0000000a /* EMC_QSAFE */
++					0x0000000b /* EMC_RDV */
++					0x00000303 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x000000c0 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000007 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x00000012 /* EMC_TXSR */
++					0x00000012 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000004 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000004 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x0000031c /* EMC_TREFBW */
++					0x00000006 /* EMC_QUSE_EXTRA */
++					0x00000004 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x00004288 /* EMC_FBIO_CFG5 */
++					0x007800a4 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x000fc000 /* EMC_DLL_XFORM_DQS0 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS1 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS2 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS3 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS4 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS5 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS6 */
++					0x000fc000 /* EMC_DLL_XFORM_DQS7 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ0 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ1 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ2 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ3 */
++					0x000002a0 /* EMC_XM2CMDPADCTRL */
++					0x0800211c /* EMC_XM2DQSPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x77fff884 /* EMC_XM2CLKPADCTRL */
++					0x01f1f108 /* EMC_XM2COMPPADCTRL */
++					0x05057404 /* EMC_XM2VTTGENPADCTRL */
++					0x54000007 /* EMC_XM2VTTGENPADCTRL2 */
++					0x08000168 /* EMC_XM2QUSEPADCTRL */
++					0x08000000 /* EMC_XM2DQSPADCTRL3 */
++					0x00000802 /* EMC_CTT_TERM_CTRL */
++					0x00000000 /* EMC_ZCAL_INTERVAL */
++					0x00000040 /* EMC_ZCAL_WAIT_CNT */
++					0x000c000c /* EMC_MRS_WAIT_CNT */
++					0xa0f10000 /* EMC_AUTO_CAL_CONFIG */
++					0x00000000 /* EMC_CTT */
++					0x00000000 /* EMC_CTT_DURATION */
++					0x80000713 /* EMC_DYN_SELF_REF_CONTROL */
++					0xe8000000 /* EMC_FBIO_SPARE */
++					0xff00ff00 /* EMC_CFG_RSV */
++				>;
 +			};
 +
-+			emc-table@150000 {
-+				reg = <150000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <150000>;
-+				nvidia,emc-registers = <0x00000009 0x00000014
-+					0x00000007 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000005
-+					0x00000003 0x00000008 0x0000000b 0x0000021f
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x00000015
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x00000270 0x00000000 0x00000001
-+					0x00000000 0x00000000 0x00000282 0xa07c04ae
-+					0x007e4010 0x00000000 0x00000000 0x0000000e
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
++			timing-204000000 {
++				clock-frequency = <204000000>;
++
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-mode-1 = <0x80100003>;
++				nvidia,emc-mode-2 = <0x80200008>;
++				nvidia,emc-mode-reset = <0x80001221>;
++				nvidia,emc-zcal-cnt-long = <0x00000040>;
++				nvidia,emc-cfg-dyn-self-ref;
++				nvidia,emc-cfg-periodic-qrst;
++
++				nvidia,emc-configuration = <
++					0x0000000a /* EMC_RC */
++					0x00000020 /* EMC_RFC */
++					0x00000007 /* EMC_RAS */
++					0x00000002 /* EMC_RP */
++					0x00000002 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000005 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000002 /* EMC_RD_RCD */
++					0x00000002 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000001 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000005 /* EMC_WDV */
++					0x00000005 /* EMC_QUSE */
++					0x00000004 /* EMC_QRST */
++					0x0000000a /* EMC_QSAFE */
++					0x0000000b /* EMC_RDV */
++					0x00000607 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000181 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000007 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x00000023 /* EMC_TXSR */
++					0x00000023 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000007 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000004 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x00000638 /* EMC_TREFBW */
++					0x00000006 /* EMC_QUSE_EXTRA */
++					0x00000006 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x00004288 /* EMC_FBIO_CFG5 */
++					0x004400a4 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00080000 /* EMC_DLL_XFORM_DQS0 */
++					0x00080000 /* EMC_DLL_XFORM_DQS1 */
++					0x00080000 /* EMC_DLL_XFORM_DQS2 */
++					0x00080000 /* EMC_DLL_XFORM_DQS3 */
++					0x00080000 /* EMC_DLL_XFORM_DQS4 */
++					0x00080000 /* EMC_DLL_XFORM_DQS5 */
++					0x00080000 /* EMC_DLL_XFORM_DQS6 */
++					0x00080000 /* EMC_DLL_XFORM_DQS7 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00080000 /* EMC_DLL_XFORM_DQ0 */
++					0x00080000 /* EMC_DLL_XFORM_DQ1 */
++					0x00080000 /* EMC_DLL_XFORM_DQ2 */
++					0x00080000 /* EMC_DLL_XFORM_DQ3 */
++					0x000002a0 /* EMC_XM2CMDPADCTRL */
++					0x0800211c /* EMC_XM2DQSPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x77fff884 /* EMC_XM2CLKPADCTRL */
++					0x01f1f108 /* EMC_XM2COMPPADCTRL */
++					0x05057404 /* EMC_XM2VTTGENPADCTRL */
++					0x54000007 /* EMC_XM2VTTGENPADCTRL2 */
++					0x08000168 /* EMC_XM2QUSEPADCTRL */
++					0x08000000 /* EMC_XM2DQSPADCTRL3 */
++					0x00000802 /* EMC_CTT_TERM_CTRL */
++					0x00020000 /* EMC_ZCAL_INTERVAL */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x000c000c /* EMC_MRS_WAIT_CNT */
++					0xa0f10000 /* EMC_AUTO_CAL_CONFIG */
++					0x00000000 /* EMC_CTT */
++					0x00000000 /* EMC_CTT_DURATION */
++					0x80000d22 /* EMC_DYN_SELF_REF_CONTROL */
++					0xe8000000 /* EMC_FBIO_SPARE */
++					0xff00ff00 /* EMC_CFG_RSV */
++				>;
++			};
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-maxim-pmic.dtsi b/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-maxim-pmic.dtsi
+new file mode 100644
+index 000000000000..c0c2ba50ee8a
+--- /dev/null
++++ b/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-maxim-pmic.dtsi
+@@ -0,0 +1,187 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/mfd/max77620.h>
++
++/ {
++	i2c@7000d000 {
++		pmic: pmic@3c {
++			compatible = "maxim,max77663";
++			reg = <0x3c>;
++
++			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
++			#interrupt-cells = <2>;
++			interrupt-controller;
++
++			#gpio-cells = <2>;
++			gpio-controller;
++
++			system-power-controller;
++
++			pinctrl-names = "default";
++			pinctrl-0 = <&max77620_default>;
++
++			max77620_default: pinmux {
++				gpio4 {
++					pins = "gpio4";
++					function = "32k-out1";
++				};
 +			};
 +
-+			emc-table@300000 {
-+				reg = <300000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <300000>;
-+				nvidia,emc-registers = <0x00000012 0x00000027
-+					0x0000000d 0x00000006 0x00000007 0x00000005
-+					0x00000003 0x00000009 0x00000006 0x00000006
-+					0x00000003 0x00000003 0x00000002 0x00000006
-+					0x00000003 0x00000009 0x0000000c 0x0000045f
-+					0x00000000 0x00000004 0x00000004 0x00000006
-+					0x00000008 0x00000001 0x0000000e 0x0000002a
-+					0x00000003 0x0000000f 0x00000007 0x00000005
-+					0x00000002 0x000004e1 0x00000005 0x00000002
-+					0x00000000 0x00000000 0x00000282 0xe059048b
-+					0x007e0010 0x00000000 0x00000000 0x0000001b
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
++			cpu-pwr-req {
++				gpio-hog;
++				gpios = <6 GPIO_ACTIVE_HIGH>;
++				input;
++			};
++
++			fps {
++				fps0 {
++					maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_EN0>;
++				};
++
++				fps1 {
++					maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_EN1>;
++				};
++
++				fps2 {
++					maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_EN0>;
++				};
++			};
++
++			regulators {
++				in-sd0-supply = <&vdd_5v0_sys>;
++				in-sd1-supply = <&vdd_5v0_sys>;
++				in-sd2-supply = <&vdd_5v0_sys>;
++				in-sd3-supply = <&vdd_5v0_sys>;
++				in-sd4-supply = <&vdd_5v0_sys>;
++
++				in-ldo0-1-supply = <&vdd_1v35>;
++				in-ldo2-supply   = <&vdd_3v3_sys>;
++				in-ldo3-5-supply = <&vdd_3v3_sys>;
++				in-ldo4-6-supply = <&vdd_5v0_sys>;
++				in-ldo7-8-supply = <&vdd_1v35>;
++
++				vdd_cpu: sd0 {
++					regulator-name = "vdd_cpu";
++					regulator-min-microvolt = <800000>;
++					regulator-max-microvolt = <1250000>;
++					regulator-coupled-with = <&vdd_core>;
++					regulator-coupled-max-spread = <300000>;
++					regulator-max-step-microvolt = <100000>;
++					regulator-always-on;
++					regulator-boot-on;
++
++					nvidia,tegra-cpu-regulator;
++				};
++
++				vdd_core: sd1 {
++					regulator-name = "vdd_core";
++					regulator-min-microvolt = <950000>;
++					regulator-max-microvolt = <1350000>;
++					regulator-coupled-with = <&vdd_cpu>;
++					regulator-coupled-max-spread = <300000>;
++					regulator-max-step-microvolt = <100000>;
++					regulator-always-on;
++					regulator-boot-on;
++
++					nvidia,tegra-core-regulator;
++				};
++
++				vdd_1v8: sd2 {
++					regulator-name = "vdd_gen1v8";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				vdd_1v35: sd3 {
++					regulator-name = "vdd_ddr3l_1v35";
++					regulator-min-microvolt = <1350000>;
++					regulator-max-microvolt = <1350000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldo0 {
++					regulator-name = "vdd_ddr_hs";
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <1000000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldo2 {
++					regulator-name = "vdd_ddr_rx";
++					regulator-min-microvolt = <2800000>;
++					regulator-max-microvolt = <2800000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				vcore_emmc: ldo3 {
++					regulator-name = "vcore_emmc";
++					regulator-min-microvolt = <2850000>;
++					regulator-max-microvolt = <3100000>;
++				};
++
++				ldo4 {
++					regulator-name = "vdd_rtc";
++					regulator-min-microvolt = <1200000>;
++					regulator-max-microvolt = <1200000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldo5 {
++					regulator-name = "vdd_camera";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++				};
++
++				ldo6 {
++					regulator-name = "vddio_sdmmc";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <3300000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldo7 {
++					regulator-name = "avdd_dsi_csi";
++					regulator-min-microvolt = <1200000>;
++					regulator-max-microvolt = <1200000>;
++				};
++
++				ldo8 {
++					regulator-name = "avdd_pll";
++					regulator-min-microvolt = <1200000>;
++					regulator-max-microvolt = <1200000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++			};
++		};
++	};
++
++	regulators {
++		vdd_3v3_sys: regulator@1 {
++			gpio = <&pmic 3 GPIO_ACTIVE_HIGH>;
++			enable-active-high;
++		};
++
++		regulator@4 {
++			compatible = "regulator-fixed";
++			reg = <4>;
++			regulator-name = "avdd_usb";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-always-on;
++			regulator-boot-on;
++			gpio = <&pmic 2 GPIO_ACTIVE_HIGH>;
++			enable-active-high;
++			vin-supply = <&vdd_3v3_sys>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-ti-pmic.dtsi b/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-ti-pmic.dtsi
+new file mode 100644
+index 000000000000..2e1645ece18e
+--- /dev/null
++++ b/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-ti-pmic.dtsi
+@@ -0,0 +1,150 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	i2c@7000d000 {
++		pmic: pmic@2d {
++			compatible = "ti,tps65911";
++			reg = <0x2d>;
++
++			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
++			#interrupt-cells = <2>;
++			interrupt-controller;
++
++			ti,en-gpio-sleep = <0 0 1 0 0 0 0 0 0>;
++			ti,system-power-controller;
++			ti,sleep-keep-ck32k;
++			ti,sleep-enable;
++
++			#gpio-cells = <2>;
++			gpio-controller;
++
++			vcc1-supply = <&vdd_5v0_sys>;
++			vcc2-supply = <&vdd_5v0_sys>;
++			vcc3-supply = <&vdd_1v8>;
++			vcc4-supply = <&vdd_5v0_sys>;
++			vcc5-supply = <&vdd_5v0_sys>;
++			vcc6-supply = <&vdd2_reg>;
++			vcc7-supply = <&vdd_5v0_sys>;
++			vccio-supply = <&vdd_5v0_sys>;
++
++			regulators {
++				vdd1 {
++					regulator-name = "vddio_ddr_1v2";
++					regulator-min-microvolt = <600000>;
++					regulator-max-microvolt = <1500000>;
++					regulator-always-on;
++					regulator-boot-on;
++					ti,regulator-ext-sleep-control = <8>;
++				};
++
++				vdd2_reg: vdd2 {
++					regulator-name = "vdd2_1v2";
++					regulator-min-microvolt = <1200000>;
++					regulator-max-microvolt = <1200000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				vdd_cpu: vddctrl {
++					regulator-name = "vdd_cpu,vdd_sys";
++					regulator-min-microvolt = <800000>;
++					regulator-max-microvolt = <1250000>;
++					regulator-coupled-with = <&vdd_core>;
++					regulator-coupled-max-spread = <300000>;
++					regulator-max-step-microvolt = <100000>;
++					regulator-always-on;
++					ti,regulator-ext-sleep-control = <1>;
++
++					nvidia,tegra-cpu-regulator;
++				};
++
++				vdd_1v8: vio {
++					regulator-name = "vdd_1v8_gen";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				vcore_emmc: ldo1 {
++					regulator-name = "vdd_pexa,vdd_pexb";
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <3300000>;
++				};
++
++				ldo2 {
++					regulator-name = "vdd_sata,avdd_plle";
++					regulator-min-microvolt = <1050000>;
++					regulator-max-microvolt = <1050000>;
++				};
++
++				/* LDO3 is not connected to anything */
++
++				ldo4 {
++					regulator-name = "vdd_rtc";
++					regulator-min-microvolt = <1200000>;
++					regulator-max-microvolt = <1200000>;
++					regulator-always-on;
++				};
++
++				ldo5 {
++					regulator-name = "vddio_sdmmc,avdd_vdac";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++				};
++
++				ldo6 {
++					regulator-name = "avdd_dsi_csi,pwrdet_mipi";
++					regulator-min-microvolt = <1200000>;
++					regulator-max-microvolt = <1200000>;
++				};
++
++				ldo7 {
++					regulator-name = "vdd_pllm,x,u,a_p_c_s";
++					regulator-min-microvolt = <1200000>;
++					regulator-max-microvolt = <1200000>;
++					regulator-always-on;
++					regulator-boot-on;
++					ti,regulator-ext-sleep-control = <8>;
++				};
++
++				ldo8 {
++					regulator-name = "vdd_ddr_hs";
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <1000000>;
++					regulator-always-on;
++					ti,regulator-ext-sleep-control = <8>;
++				};
 +			};
 +		};
 +
-+		emc-tables@2 {
-+			nvidia,ram-code = <2>; /* hynix-8gb */
++		vdd_core: core-regulator@60 {
++			compatible = "ti,tps62361";
++			reg = <0x60>;
 +
-+			#address-cells = <1>;
-+			#size-cells = <0>;
++			regulator-name = "tps62361-vout";
++			regulator-min-microvolt = <500000>;
++			regulator-max-microvolt = <1500000>;
++			regulator-coupled-with = <&vdd_cpu>;
++			regulator-coupled-max-spread = <300000>;
++			regulator-max-step-microvolt = <100000>;
++			regulator-boot-on;
++			regulator-always-on;
++			ti,enable-vout-discharge;
++			ti,vsel0-state-high;
++			ti,vsel1-state-high;
 +
-+			emc-table@25000 {
-+				reg = <25000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <25000>;
-+				nvidia,emc-registers = <0x00000002 0x00000006
-+					0x00000003 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000004
-+					0x00000003 0x00000008 0x0000000b 0x0000004d
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x00000004
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x00000068 0x00000000 0x00000003
-+					0x00000000 0x00000000 0x00000282 0xa0ae04ae
-+					0x00070000 0x00000000 0x00000000 0x00000003
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
++			nvidia,tegra-core-regulator;
++		};
++	};
++
++	regulators {
++		vdd_3v3_sys: regulator@1 {
++			gpio = <&pmic 7 GPIO_ACTIVE_HIGH>;
++			enable-active-high;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/tegra30-asus-nexus7-grouper.dtsi b/arch/arm/boot/dts/tegra30-asus-nexus7-grouper.dtsi
+new file mode 100644
+index 000000000000..c00a620636f0
+--- /dev/null
++++ b/arch/arm/boot/dts/tegra30-asus-nexus7-grouper.dtsi
+@@ -0,0 +1,462 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include "tegra30-asus-nexus7-grouper-common.dtsi"
++
++/ {
++	compatible = "asus,grouper", "nvidia,tegra30";
++
++	display-panel {
++		panel-timing {
++			clock-frequency = <68000000>;
++			hactive = <800>;
++			vactive = <1280>;
++			hfront-porch = <24>;
++			hback-porch = <32>;
++			hsync-len = <24>;
++			vsync-len = <1>;
++			vfront-porch = <5>;
++			vback-porch = <32>;
++		};
++	};
++
++	pinmux@70000868 {
++		state_default: pinmux {
++			lcd_dc1_pd2 {
++				nvidia,pins = "lcd_dc1_pd2";
++				nvidia,function = "displaya";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
 +			};
-+
-+			emc-table@50000 {
-+				reg = <50000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <50000>;
-+				nvidia,emc-registers = <0x00000003 0x00000007
-+					0x00000003 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000005
-+					0x00000003 0x00000008 0x0000000b 0x0000009f
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x00000007
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x000000d0 0x00000000 0x00000000
-+					0x00000000 0x00000000 0x00000282 0xa0ae04ae
-+					0x00070000 0x00000000 0x00000000 0x00000005
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
++			lcd_pwr2_pc6 {
++				nvidia,pins = "lcd_pwr2_pc6";
++				nvidia,function = "displaya";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
 +			};
-+
-+			emc-table@75000 {
-+				reg = <75000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <75000>;
-+				nvidia,emc-registers = <0x00000005 0x0000000a
-+					0x00000004 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000005
-+					0x00000003 0x00000008 0x0000000b 0x000000ff
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x0000000b
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x00000138 0x00000000 0x00000000
-+					0x00000000 0x00000000 0x00000282 0xa0ae04ae
-+					0x00070000 0x00000000 0x00000000 0x00000007
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
++			spi2_cs2_n_pw3 {
++				nvidia,pins = "spi2_cs2_n_pw3";
++				nvidia,function = "spi2";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
 +			};
-+
-+			emc-table@150000 {
-+				reg = <150000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <150000>;
-+				nvidia,emc-registers = <0x00000009 0x00000014
-+					0x00000007 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000005
-+					0x00000003 0x00000008 0x0000000b 0x0000021f
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x00000015
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x00000270 0x00000000 0x00000001
-+					0x00000000 0x00000000 0x00000282 0xa07c04ae
-+					0x007dd010 0x00000000 0x00000000 0x0000000e
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
++			spi1_sck_px5 {
++				nvidia,pins = "spi1_sck_px5";
++				nvidia,function = "spi1";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
 +			};
++			pu5 {
++				nvidia,pins = "pu5";
++				nvidia,function = "pwm2";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			spi1_miso_px7 {
++				nvidia,pins = "spi1_miso_px7";
++				nvidia,function = "spi1";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			spi2_mosi_px0 {
++				nvidia,pins = "spi2_mosi_px0";
++				nvidia,function = "spi2";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			kb_row7_pr7 {
++				nvidia,pins = "kb_row7_pr7";
++				nvidia,function = "kbc";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			pu3 {
++				nvidia,pins = "pu3";
++				nvidia,function = "rsvd4";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			pu4 {
++				nvidia,pins = "pu4";
++				nvidia,function = "pwm1";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_ENABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			kb_row15_ps7 {
++				nvidia,pins = "kb_row15_ps7";
++				nvidia,function = "kbc";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			kb_row3_pr3 {
++				nvidia,pins = "kb_row3_pr3";
++				nvidia,function = "kbc";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			kb_row13_ps5 {
++				nvidia,pins = "kb_row13_ps5";
++				nvidia,function = "kbc";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_ENABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			gmi_wp_n_pc7 {
++				nvidia,pins = "gmi_wp_n_pc7",
++						"gmi_wait_pi7",
++						"gmi_cs4_n_pk2",
++						"gmi_cs3_n_pk4";
++				nvidia,function = "rsvd1";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_ENABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			gmi_cs6_n_pi3 {
++				nvidia,pins = "gmi_cs6_n_pi3";
++				nvidia,function = "gmi";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_ENABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++		};
++	};
 +
-+			emc-table@300000 {
-+				reg = <300000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <300000>;
-+				nvidia,emc-registers = <0x00000012 0x00000027
-+					0x0000000d 0x00000006 0x00000007 0x00000005
-+					0x00000003 0x00000009 0x00000006 0x00000006
-+					0x00000003 0x00000003 0x00000002 0x00000006
-+					0x00000003 0x00000009 0x0000000c 0x0000045f
-+					0x00000000 0x00000004 0x00000004 0x00000006
-+					0x00000008 0x00000001 0x0000000e 0x0000002a
-+					0x00000003 0x0000000f 0x00000007 0x00000005
-+					0x00000002 0x000004e1 0x00000005 0x00000002
-+					0x00000000 0x00000000 0x00000282 0xe059048b
-+					0x007e2010 0x00000000 0x00000000 0x0000001b
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
++	i2c@7000c500 {
++		nfc@28 {
++			compatible = "nxp,pn544-i2c";
++			reg = <0x28>;
++			clock-frequency = <100000>;
++
++			interrupt-parent = <&gpio>;
++			interrupts = <TEGRA_GPIO(X, 0) IRQ_TYPE_EDGE_RISING>;
++
++			enable-gpios   = <&gpio TEGRA_GPIO(S, 7) GPIO_ACTIVE_HIGH>;
++			firmware-gpios = <&gpio TEGRA_GPIO(R, 3) GPIO_ACTIVE_HIGH>;
++		};
++	};
++
++	memory-controller@7000f400 {
++		emc-timings-0 {
++			timing-667000000 {
++				clock-frequency = <667000000>;
++
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-mode-1 = <0x80100002>;
++				nvidia,emc-mode-2 = <0x80200018>;
++				nvidia,emc-mode-reset = <0x80000b71>;
++				nvidia,emc-zcal-cnt-long = <0x00000040>;
++				nvidia,emc-cfg-periodic-qrst;
++
++				nvidia,emc-configuration = <
++					0x0000001f /* EMC_RC */
++					0x00000069 /* EMC_RFC */
++					0x00000017 /* EMC_RAS */
++					0x00000007 /* EMC_RP */
++					0x00000005 /* EMC_R2W */
++					0x0000000c /* EMC_W2R */
++					0x00000003 /* EMC_R2P */
++					0x00000011 /* EMC_W2P */
++					0x00000007 /* EMC_RD_RCD */
++					0x00000007 /* EMC_WR_RCD */
++					0x00000002 /* EMC_RRD */
++					0x00000001 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000007 /* EMC_WDV */
++					0x0000000b /* EMC_QUSE */
++					0x00000009 /* EMC_QRST */
++					0x0000000b /* EMC_QSAFE */
++					0x00000011 /* EMC_RDV */
++					0x00001412 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000504 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x0000000e /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x0000000c /* EMC_AR2PDEN */
++					0x00000016 /* EMC_RW2PDEN */
++					0x00000072 /* EMC_TXSR */
++					0x00000200 /* EMC_TXSRDLL */
++					0x00000005 /* EMC_TCKE */
++					0x00000015 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000006 /* EMC_TCLKSTABLE */
++					0x00000007 /* EMC_TCLKSTOP */
++					0x00001453 /* EMC_TREFBW */
++					0x0000000c /* EMC_QUSE_EXTRA */
++					0x00000004 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x00005088 /* EMC_FBIO_CFG5 */
++					0xf00b0191 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00000008 /* EMC_DLL_XFORM_DQS0 */
++					0x00000008 /* EMC_DLL_XFORM_DQS1 */
++					0x00000008 /* EMC_DLL_XFORM_DQS2 */
++					0x00000008 /* EMC_DLL_XFORM_DQS3 */
++					0x0000000a /* EMC_DLL_XFORM_DQS4 */
++					0x0000000a /* EMC_DLL_XFORM_DQS5 */
++					0x0000000a /* EMC_DLL_XFORM_DQS6 */
++					0x0000000a /* EMC_DLL_XFORM_DQS7 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x0000000c /* EMC_DLL_XFORM_DQ0 */
++					0x0000000c /* EMC_DLL_XFORM_DQ1 */
++					0x0000000c /* EMC_DLL_XFORM_DQ2 */
++					0x0000000c /* EMC_DLL_XFORM_DQ3 */
++					0x000002a0 /* EMC_XM2CMDPADCTRL */
++					0x0600013d /* EMC_XM2DQSPADCTRL2 */
++					0x22220000 /* EMC_XM2DQPADCTRL2 */
++					0x77fff884 /* EMC_XM2CLKPADCTRL */
++					0x01f1f501 /* EMC_XM2COMPPADCTRL */
++					0x07077404 /* EMC_XM2VTTGENPADCTRL */
++					0x54000000 /* EMC_XM2VTTGENPADCTRL2 */
++					0x080001e8 /* EMC_XM2QUSEPADCTRL */
++					0x0a000021 /* EMC_XM2DQSPADCTRL3 */
++					0x00000802 /* EMC_CTT_TERM_CTRL */
++					0x00020000 /* EMC_ZCAL_INTERVAL */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x0156000c /* EMC_MRS_WAIT_CNT */
++					0xa0f10000 /* EMC_AUTO_CAL_CONFIG */
++					0x00000000 /* EMC_CTT */
++					0x00000000 /* EMC_CTT_DURATION */
++					0x800028a5 /* EMC_DYN_SELF_REF_CONTROL */
++					0xf8000000 /* EMC_FBIO_SPARE */
++					0xff00ff49 /* EMC_CFG_RSV */
++				>;
 +			};
 +		};
 +
-+		emc-tables@3 {
-+			nvidia,ram-code = <3>; /* hynix-4gb */
++		emc-timings-1 {
++			timing-333500000 {
++				clock-frequency = <333500000>;
 +
-+			#address-cells = <1>;
-+			#size-cells = <0>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-mode-1 = <0x80100002>;
++				nvidia,emc-mode-2 = <0x80200000>;
++				nvidia,emc-mode-reset = <0x80000321>;
++				nvidia,emc-zcal-cnt-long = <0x00000040>;
 +
-+			emc-table@25000 {
-+				reg = <25000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <25000>;
-+				nvidia,emc-registers = <0x00000002 0x00000006
-+					0x00000003 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000004
-+					0x00000003 0x00000008 0x0000000b 0x0000004d
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x00000004
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x00000068 0x00000000 0x00000003
-+					0x00000000 0x00000000 0x00000282 0xa0ae04ae
-+					0x0007c000 0x00000000 0x00000000 0x00000003
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
++				nvidia,emc-configuration = <
++					0x0000000f /* EMC_RC */
++					0x00000034 /* EMC_RFC */
++					0x0000000a /* EMC_RAS */
++					0x00000003 /* EMC_RP */
++					0x00000003 /* EMC_R2W */
++					0x00000008 /* EMC_W2R */
++					0x00000002 /* EMC_R2P */
++					0x00000009 /* EMC_W2P */
++					0x00000003 /* EMC_RD_RCD */
++					0x00000003 /* EMC_WR_RCD */
++					0x00000002 /* EMC_RRD */
++					0x00000001 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000004 /* EMC_WDV */
++					0x00000006 /* EMC_QUSE */
++					0x00000004 /* EMC_QRST */
++					0x0000000a /* EMC_QSAFE */
++					0x0000000c /* EMC_RDV */
++					0x000009e9 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x0000027a /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000001 /* EMC_PDEX2WR */
++					0x00000008 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000007 /* EMC_AR2PDEN */
++					0x0000000e /* EMC_RW2PDEN */
++					0x00000039 /* EMC_TXSR */
++					0x00000200 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x0000000a /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000004 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x00000a2a /* EMC_TREFBW */
++					0x00000000 /* EMC_QUSE_EXTRA */
++					0x00000004 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x00007088 /* EMC_FBIO_CFG5 */
++					0x002600a4 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x0003c000 /* EMC_DLL_XFORM_DQS0 */
++					0x0003c000 /* EMC_DLL_XFORM_DQS1 */
++					0x0003c000 /* EMC_DLL_XFORM_DQS2 */
++					0x0003c000 /* EMC_DLL_XFORM_DQS3 */
++					0x00014000 /* EMC_DLL_XFORM_DQS4 */
++					0x00014000 /* EMC_DLL_XFORM_DQS5 */
++					0x00014000 /* EMC_DLL_XFORM_DQS6 */
++					0x00014000 /* EMC_DLL_XFORM_DQS7 */
++					0x00018000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00018000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00018000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00018000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00048000 /* EMC_DLL_XFORM_DQ0 */
++					0x00048000 /* EMC_DLL_XFORM_DQ1 */
++					0x00048000 /* EMC_DLL_XFORM_DQ2 */
++					0x00048000 /* EMC_DLL_XFORM_DQ3 */
++					0x000002a0 /* EMC_XM2CMDPADCTRL */
++					0x0600013d /* EMC_XM2DQSPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x77fff884 /* EMC_XM2CLKPADCTRL */
++					0x01f1f508 /* EMC_XM2COMPPADCTRL */
++					0x05057404 /* EMC_XM2VTTGENPADCTRL */
++					0x54000007 /* EMC_XM2VTTGENPADCTRL2 */
++					0x080001e8 /* EMC_XM2QUSEPADCTRL */
++					0x08000021 /* EMC_XM2DQSPADCTRL3 */
++					0x00000802 /* EMC_CTT_TERM_CTRL */
++					0x00020000 /* EMC_ZCAL_INTERVAL */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x018b000c /* EMC_MRS_WAIT_CNT */
++					0xa0f10000 /* EMC_AUTO_CAL_CONFIG */
++					0x00000000 /* EMC_CTT */
++					0x00000000 /* EMC_CTT_DURATION */
++					0x800014d4 /* EMC_DYN_SELF_REF_CONTROL */
++					0xf8000000 /* EMC_FBIO_SPARE */
++					0xff00ff89 /* EMC_CFG_RSV */
++				>;
 +			};
 +
-+			emc-table@50000 {
-+				reg = <50000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <50000>;
-+				nvidia,emc-registers = <0x00000003 0x00000007
-+					0x00000003 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000005
-+					0x00000003 0x00000008 0x0000000b 0x0000009f
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x00000007
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x000000d0 0x00000000 0x00000000
-+					0x00000000 0x00000000 0x00000282 0xa0ae04ae
-+					0x0007c000 0x00078000 0x00000000 0x00000005
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
++			timing-667000000 {
++				clock-frequency = <667000000>;
++
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-mode-1 = <0x80100002>;
++				nvidia,emc-mode-2 = <0x80200018>;
++				nvidia,emc-mode-reset = <0x80000b71>;
++				nvidia,emc-zcal-cnt-long = <0x00000040>;
++				nvidia,emc-cfg-periodic-qrst;
++
++				nvidia,emc-configuration = <
++					0x00000020 /* EMC_RC */
++					0x0000006a /* EMC_RFC */
++					0x00000017 /* EMC_RAS */
++					0x00000007 /* EMC_RP */
++					0x00000005 /* EMC_R2W */
++					0x0000000c /* EMC_W2R */
++					0x00000003 /* EMC_R2P */
++					0x00000011 /* EMC_W2P */
++					0x00000007 /* EMC_RD_RCD */
++					0x00000007 /* EMC_WR_RCD */
++					0x00000002 /* EMC_RRD */
++					0x00000001 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000007 /* EMC_WDV */
++					0x0000000a /* EMC_QUSE */
++					0x00000009 /* EMC_QRST */
++					0x0000000b /* EMC_QSAFE */
++					0x00000011 /* EMC_RDV */
++					0x00001412 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000504 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x0000000e /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x0000000c /* EMC_AR2PDEN */
++					0x00000016 /* EMC_RW2PDEN */
++					0x00000072 /* EMC_TXSR */
++					0x00000200 /* EMC_TXSRDLL */
++					0x00000005 /* EMC_TCKE */
++					0x00000015 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000006 /* EMC_TCLKSTABLE */
++					0x00000007 /* EMC_TCLKSTOP */
++					0x00001453 /* EMC_TREFBW */
++					0x0000000b /* EMC_QUSE_EXTRA */
++					0x00000006 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x00005088 /* EMC_FBIO_CFG5 */
++					0xf00b0191 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x0000000a /* EMC_DLL_XFORM_DQS0 */
++					0x0000000a /* EMC_DLL_XFORM_DQS1 */
++					0x0000000a /* EMC_DLL_XFORM_DQS2 */
++					0x0000000a /* EMC_DLL_XFORM_DQS3 */
++					0x0000000a /* EMC_DLL_XFORM_DQS4 */
++					0x0000000a /* EMC_DLL_XFORM_DQS5 */
++					0x0000000a /* EMC_DLL_XFORM_DQS6 */
++					0x0000000a /* EMC_DLL_XFORM_DQS7 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x0000000c /* EMC_DLL_XFORM_DQ0 */
++					0x0000000c /* EMC_DLL_XFORM_DQ1 */
++					0x0000000c /* EMC_DLL_XFORM_DQ2 */
++					0x0000000c /* EMC_DLL_XFORM_DQ3 */
++					0x000002a0 /* EMC_XM2CMDPADCTRL */
++					0x0400013d /* EMC_XM2DQSPADCTRL2 */
++					0x22220000 /* EMC_XM2DQPADCTRL2 */
++					0x77fff884 /* EMC_XM2CLKPADCTRL */
++					0x01f1f501 /* EMC_XM2COMPPADCTRL */
++					0x07077404 /* EMC_XM2VTTGENPADCTRL */
++					0x54000000 /* EMC_XM2VTTGENPADCTRL2 */
++					0x080001e8 /* EMC_XM2QUSEPADCTRL */
++					0x0a000021 /* EMC_XM2DQSPADCTRL3 */
++					0x00000802 /* EMC_CTT_TERM_CTRL */
++					0x00020000 /* EMC_ZCAL_INTERVAL */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x0155000c /* EMC_MRS_WAIT_CNT */
++					0xa0f10000 /* EMC_AUTO_CAL_CONFIG */
++					0x00000000 /* EMC_CTT */
++					0x00000000 /* EMC_CTT_DURATION */
++					0x800028a5 /* EMC_DYN_SELF_REF_CONTROL */
++					0xe8000000 /* EMC_FBIO_SPARE */
++					0xff00ff49 /* EMC_CFG_RSV */
++				>;
++			};
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/tegra30-asus-nexus7-tilapia-E1565.dts b/arch/arm/boot/dts/tegra30-asus-nexus7-tilapia-E1565.dts
+new file mode 100644
+index 000000000000..f1c63feb4af9
+--- /dev/null
++++ b/arch/arm/boot/dts/tegra30-asus-nexus7-tilapia-E1565.dts
+@@ -0,0 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0
++/dts-v1/;
++
++#include "tegra30-asus-nexus7-grouper-maxim-pmic.dtsi"
++#include "tegra30-asus-nexus7-tilapia.dtsi"
++
++/ {
++	model = "ASUS Google Nexus 7 (Project Bach / ME370TG) E1565";
++};
+diff --git a/arch/arm/boot/dts/tegra30-asus-nexus7-tilapia.dtsi b/arch/arm/boot/dts/tegra30-asus-nexus7-tilapia.dtsi
+new file mode 100644
+index 000000000000..c83cc95dd83f
+--- /dev/null
++++ b/arch/arm/boot/dts/tegra30-asus-nexus7-tilapia.dtsi
+@@ -0,0 +1,548 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include "tegra30-asus-nexus7-grouper-common.dtsi"
++
++/ {
++	compatible = "asus,tilapia", "asus,grouper", "nvidia,tegra30";
++
++	display-panel {
++		enable-gpios = <&gpio TEGRA_GPIO(V, 6) GPIO_ACTIVE_HIGH>;
++
++		panel-timing {
++			clock-frequency = <81750000>;
++			hactive = <800>;
++			vactive = <1280>;
++			hfront-porch = <64>;
++			hback-porch = <128>;
++			hsync-len = <64>;
++			vsync-len = <1>;
++			vfront-porch = <5>;
++			vback-porch = <2>;
++		};
++	};
++
++	gpio@6000d000 {
++		init-mode-3g {
++			gpio-hog;
++			gpios =	<TEGRA_GPIO(D, 2) GPIO_ACTIVE_HIGH>,
++				<TEGRA_GPIO(C, 6) GPIO_ACTIVE_HIGH>,
++				<TEGRA_GPIO(W, 3) GPIO_ACTIVE_HIGH>,
++				<TEGRA_GPIO(P, 1) GPIO_ACTIVE_HIGH>,
++				<TEGRA_GPIO(X, 5) GPIO_ACTIVE_HIGH>,
++				<TEGRA_GPIO(U, 5) GPIO_ACTIVE_HIGH>,
++				<TEGRA_GPIO(X, 7) GPIO_ACTIVE_HIGH>,
++				<TEGRA_GPIO(X, 0) GPIO_ACTIVE_HIGH>,
++				<TEGRA_GPIO(EE, 1) GPIO_ACTIVE_HIGH>,
++				<TEGRA_GPIO(Y, 2) GPIO_ACTIVE_HIGH>,
++				<TEGRA_GPIO(Y, 3) GPIO_ACTIVE_HIGH>,
++				<TEGRA_GPIO(R, 7) GPIO_ACTIVE_HIGH>,
++				<TEGRA_GPIO(U, 4) GPIO_ACTIVE_HIGH>,
++				<TEGRA_GPIO(U, 3) GPIO_ACTIVE_HIGH>,
++				<TEGRA_GPIO(N, 1) GPIO_ACTIVE_HIGH>,
++				<TEGRA_GPIO(N, 2) GPIO_ACTIVE_HIGH>,
++				<TEGRA_GPIO(N, 0) GPIO_ACTIVE_HIGH>,
++				<TEGRA_GPIO(N, 3) GPIO_ACTIVE_HIGH>;
++			output-low;
++		};
++	};
++
++	pinmux@70000868 {
++		state_default: pinmux {
++			lcd_dc1_pd2 {
++				nvidia,pins = "lcd_dc1_pd2";
++				nvidia,function = "displaya";
++				nvidia,pull = <TEGRA_PIN_PULL_DOWN>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			lcd_pwr2_pc6 {
++				nvidia,pins = "lcd_pwr2_pc6";
++				nvidia,function = "displaya";
++				nvidia,pull = <TEGRA_PIN_PULL_DOWN>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			spi2_cs2_n_pw3 {
++				nvidia,pins = "spi2_cs2_n_pw3";
++				nvidia,function = "spi2";
++				nvidia,pull = <TEGRA_PIN_PULL_UP>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			dap3_din_pp1 {
++				nvidia,pins = "dap3_din_pp1";
++				nvidia,function = "i2s2";
++				nvidia,pull = <TEGRA_PIN_PULL_DOWN>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			spi1_sck_px5 {
++				nvidia,pins = "spi1_sck_px5";
++				nvidia,function = "spi1";
++				nvidia,pull = <TEGRA_PIN_PULL_UP>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			pu5 {
++				nvidia,pins = "pu5";
++				nvidia,function = "pwm2";
++				nvidia,pull = <TEGRA_PIN_PULL_DOWN>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			spi1_miso_px7 {
++				nvidia,pins = "spi1_miso_px7";
++				nvidia,function = "spi1";
++				nvidia,pull = <TEGRA_PIN_PULL_DOWN>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			spi2_mosi_px0 {
++				nvidia,pins = "spi2_mosi_px0";
++				nvidia,function = "spi2";
++				nvidia,pull = <TEGRA_PIN_PULL_DOWN>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			clk3_req_pee1 {
++				nvidia,pins = "clk3_req_pee1";
++				nvidia,function = "dev3";
++				nvidia,pull = <TEGRA_PIN_PULL_DOWN>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			ulpi_nxt_py2 {
++				nvidia,pins = "ulpi_nxt_py2";
++				nvidia,function = "uartd";
++				nvidia,pull = <TEGRA_PIN_PULL_DOWN>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			ulpi_stp_py3 {
++				nvidia,pins = "ulpi_stp_py3";
++				nvidia,function = "uartd";
++				nvidia,pull = <TEGRA_PIN_PULL_DOWN>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			kb_row7_pr7 {
++				nvidia,pins = "kb_row7_pr7";
++				nvidia,function = "kbc";
++				nvidia,pull = <TEGRA_PIN_PULL_DOWN>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			pu4 {
++				nvidia,pins = "pu4";
++				nvidia,function = "pwm1";
++				nvidia,pull = <TEGRA_PIN_PULL_DOWN>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			pu3 {
++				nvidia,pins = "pu3";
++				nvidia,function = "rsvd4";
++				nvidia,pull = <TEGRA_PIN_PULL_DOWN>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			kb_row15_ps7 {
++				nvidia,pins = "kb_row15_ps7";
++				nvidia,function = "kbc";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			dap3_sclk_pp3 {
++				nvidia,pins = "dap3_sclk_pp3";
++				nvidia,function = "i2s2";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++			};
++			kb_row3_pr3 {
++				nvidia,pins = "kb_row3_pr3",
++						"kb_row13_ps5";
++				nvidia,function = "kbc";
++				nvidia,pull = <TEGRA_PIN_PULL_UP>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			kb_row13_ps5 {
++				nvidia,pins = "kb_row13_ps5";
++				nvidia,function = "kbc";
++				nvidia,pull = <TEGRA_PIN_PULL_UP>;
++				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			gmi_wp_n_pc7 {
++				nvidia,pins = "gmi_wp_n_pc7",
++						"gmi_wait_pi7",
++						"gmi_cs4_n_pk2",
++						"gmi_cs3_n_pk4";
++				nvidia,function = "rsvd1";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_ENABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++			gmi_cs6_n_pi3 {
++				nvidia,pins = "gmi_cs6_n_pi3";
++				nvidia,function = "gmi";
++				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				nvidia,tristate = <TEGRA_PIN_ENABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
++			};
++		};
++	};
++
++	i2c@7000c500 {
++		proximity-sensor@28 {
++			compatible = "microchip,cap1106";
++			reg = <0x28>;
++
++			/*
++			 * Binding doesn't support specifying linux,input-type
++			 * and this results in unwanted key-presses handled by
++			 * applications, hence keep it disabled for now.
++			 */
++			status = "disabled";
++
++			interrupt-parent = <&gpio>;
++			interrupts = <TEGRA_GPIO(R, 3) IRQ_TYPE_LEVEL_HIGH>;
++
++			linux,keycodes = <KEY_RESERVED>,
++					 <KEY_RESERVED>,
++					 <KEY_RESERVED>,
++					 <KEY_RESERVED>,
++					 <KEY_RESERVED>,
++					 <SW_FRONT_PROXIMITY>;
++		};
++
++		nfc@2a {
++			compatible = "nxp,pn544-i2c";
++			reg = <0x2a>;
++
++			clock-frequency = <100000>;
++
++			interrupt-parent = <&gpio>;
++			interrupts = <TEGRA_GPIO(S, 7) IRQ_TYPE_EDGE_RISING>;
++
++			enable-gpios   = <&gpio TEGRA_GPIO(P, 0) GPIO_ACTIVE_HIGH>;
++			firmware-gpios = <&gpio TEGRA_GPIO(P, 3) GPIO_ACTIVE_HIGH>;
++		};
++	};
++
++	memory-controller@7000f400 {
++		emc-timings-0 {
++			timing-667000000 {
++				clock-frequency = <667000000>;
++
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-mode-1 = <0x80100002>;
++				nvidia,emc-mode-2 = <0x80200018>;
++				nvidia,emc-mode-reset = <0x80000b71>;
++				nvidia,emc-zcal-cnt-long = <0x00000040>;
++				nvidia,emc-cfg-periodic-qrst;
++
++				nvidia,emc-configuration = <
++					0x0000001f /* EMC_RC */
++					0x00000069 /* EMC_RFC */
++					0x00000017 /* EMC_RAS */
++					0x00000007 /* EMC_RP */
++					0x00000005 /* EMC_R2W */
++					0x0000000c /* EMC_W2R */
++					0x00000003 /* EMC_R2P */
++					0x00000011 /* EMC_W2P */
++					0x00000007 /* EMC_RD_RCD */
++					0x00000007 /* EMC_WR_RCD */
++					0x00000002 /* EMC_RRD */
++					0x00000001 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000007 /* EMC_WDV */
++					0x0000000b /* EMC_QUSE */
++					0x00000009 /* EMC_QRST */
++					0x0000000b /* EMC_QSAFE */
++					0x00000011 /* EMC_RDV */
++					0x00001412 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000504 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x0000000e /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x0000000c /* EMC_AR2PDEN */
++					0x00000016 /* EMC_RW2PDEN */
++					0x00000072 /* EMC_TXSR */
++					0x00000200 /* EMC_TXSRDLL */
++					0x00000005 /* EMC_TCKE */
++					0x00000015 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000006 /* EMC_TCLKSTABLE */
++					0x00000007 /* EMC_TCLKSTOP */
++					0x00001453 /* EMC_TREFBW */
++					0x0000000c /* EMC_QUSE_EXTRA */
++					0x00000004 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x00005088 /* EMC_FBIO_CFG5 */
++					0xf00b0191 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00000008 /* EMC_DLL_XFORM_DQS0 */
++					0x00000008 /* EMC_DLL_XFORM_DQS1 */
++					0x00000008 /* EMC_DLL_XFORM_DQS2 */
++					0x00000008 /* EMC_DLL_XFORM_DQS3 */
++					0x0000000a /* EMC_DLL_XFORM_DQS4 */
++					0x0000000a /* EMC_DLL_XFORM_DQS5 */
++					0x0000000a /* EMC_DLL_XFORM_DQS6 */
++					0x0000000a /* EMC_DLL_XFORM_DQS7 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x0000000c /* EMC_DLL_XFORM_DQ0 */
++					0x0000000c /* EMC_DLL_XFORM_DQ1 */
++					0x0000000c /* EMC_DLL_XFORM_DQ2 */
++					0x0000000c /* EMC_DLL_XFORM_DQ3 */
++					0x000002a0 /* EMC_XM2CMDPADCTRL */
++					0x0800013d /* EMC_XM2DQSPADCTRL2 */
++					0x22220000 /* EMC_XM2DQPADCTRL2 */
++					0x77fff884 /* EMC_XM2CLKPADCTRL */
++					0x01f1f501 /* EMC_XM2COMPPADCTRL */
++					0x07077404 /* EMC_XM2VTTGENPADCTRL */
++					0x54000000 /* EMC_XM2VTTGENPADCTRL2 */
++					0x080001e8 /* EMC_XM2QUSEPADCTRL */
++					0x08000021 /* EMC_XM2DQSPADCTRL3 */
++					0x00000802 /* EMC_CTT_TERM_CTRL */
++					0x00020000 /* EMC_ZCAL_INTERVAL */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x0156000c /* EMC_MRS_WAIT_CNT */
++					0xa0f10000 /* EMC_AUTO_CAL_CONFIG */
++					0x00000000 /* EMC_CTT */
++					0x00000000 /* EMC_CTT_DURATION */
++					0x800028a5 /* EMC_DYN_SELF_REF_CONTROL */
++					0xe8000000 /* EMC_FBIO_SPARE */
++					0xff00ff49 /* EMC_CFG_RSV */
++				>;
++			};
++		};
++
++		emc-timings-1 {
++			timing-333500000 {
++				clock-frequency = <333500000>;
++
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-mode-1 = <0x80100002>;
++				nvidia,emc-mode-2 = <0x80200000>;
++				nvidia,emc-mode-reset = <0x80000321>;
++				nvidia,emc-zcal-cnt-long = <0x00000040>;
++
++				nvidia,emc-configuration = <
++					0x0000000f /* EMC_RC */
++					0x00000034 /* EMC_RFC */
++					0x0000000a /* EMC_RAS */
++					0x00000003 /* EMC_RP */
++					0x00000003 /* EMC_R2W */
++					0x00000008 /* EMC_W2R */
++					0x00000002 /* EMC_R2P */
++					0x00000009 /* EMC_W2P */
++					0x00000003 /* EMC_RD_RCD */
++					0x00000003 /* EMC_WR_RCD */
++					0x00000002 /* EMC_RRD */
++					0x00000001 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000004 /* EMC_WDV */
++					0x00000006 /* EMC_QUSE */
++					0x00000004 /* EMC_QRST */
++					0x0000000a /* EMC_QSAFE */
++					0x0000000c /* EMC_RDV */
++					0x000009e9 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x0000027a /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000001 /* EMC_PDEX2WR */
++					0x00000008 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000007 /* EMC_AR2PDEN */
++					0x0000000e /* EMC_RW2PDEN */
++					0x00000039 /* EMC_TXSR */
++					0x00000200 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x0000000a /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000004 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x00000a2a /* EMC_TREFBW */
++					0x00000000 /* EMC_QUSE_EXTRA */
++					0x00000004 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x00007088 /* EMC_FBIO_CFG5 */
++					0x002600a4 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x0003c000 /* EMC_DLL_XFORM_DQS0 */
++					0x0003c000 /* EMC_DLL_XFORM_DQS1 */
++					0x0003c000 /* EMC_DLL_XFORM_DQS2 */
++					0x0003c000 /* EMC_DLL_XFORM_DQS3 */
++					0x00014000 /* EMC_DLL_XFORM_DQS4 */
++					0x00014000 /* EMC_DLL_XFORM_DQS5 */
++					0x00014000 /* EMC_DLL_XFORM_DQS6 */
++					0x00014000 /* EMC_DLL_XFORM_DQS7 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00048000 /* EMC_DLL_XFORM_DQ0 */
++					0x00048000 /* EMC_DLL_XFORM_DQ1 */
++					0x00048000 /* EMC_DLL_XFORM_DQ2 */
++					0x00048000 /* EMC_DLL_XFORM_DQ3 */
++					0x000002a0 /* EMC_XM2CMDPADCTRL */
++					0x0800013d /* EMC_XM2DQSPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x77fff884 /* EMC_XM2CLKPADCTRL */
++					0x01f1f508 /* EMC_XM2COMPPADCTRL */
++					0x05057404 /* EMC_XM2VTTGENPADCTRL */
++					0x54000007 /* EMC_XM2VTTGENPADCTRL2 */
++					0x080001e8 /* EMC_XM2QUSEPADCTRL */
++					0x08000021 /* EMC_XM2DQSPADCTRL3 */
++					0x00000802 /* EMC_CTT_TERM_CTRL */
++					0x00020000 /* EMC_ZCAL_INTERVAL */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x018b000c /* EMC_MRS_WAIT_CNT */
++					0xa0f10000 /* EMC_AUTO_CAL_CONFIG */
++					0x00000000 /* EMC_CTT */
++					0x00000000 /* EMC_CTT_DURATION */
++					0x800014d4 /* EMC_DYN_SELF_REF_CONTROL */
++					0xe8000000 /* EMC_FBIO_SPARE */
++					0xff00ff89 /* EMC_CFG_RSV */
++				>;
 +			};
 +
-+			emc-table@75000 {
-+				reg = <75000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <75000>;
-+				nvidia,emc-registers = <0x00000005 0x0000000a
-+					0x00000004 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000005
-+					0x00000003 0x00000008 0x0000000b 0x000000ff
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x0000000b
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x00000138 0x00000000 0x00000000
-+					0x00000000 0x00000000 0x00000282 0xa0ae04ae
-+					0x0007c000 0x00000000 0x00000000 0x00000007
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
-+			};
++			timing-667000000 {
++				clock-frequency = <667000000>;
 +
-+			emc-table@150000 {
-+				reg = <150000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <150000>;
-+				nvidia,emc-registers = <0x00000009 0x00000014
-+					0x00000007 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000005
-+					0x00000003 0x00000008 0x0000000b 0x0000021f
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x00000015
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x00000270 0x00000000 0x00000001
-+					0x00000000 0x00000000 0x00000282 0xa07c04ae
-+					0x007e4010 0x00000000 0x00000000 0x0000000e
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
-+			};
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-mode-1 = <0x80100002>;
++				nvidia,emc-mode-2 = <0x80200018>;
++				nvidia,emc-mode-reset = <0x80000b71>;
++				nvidia,emc-zcal-cnt-long = <0x00000040>;
++				nvidia,emc-cfg-periodic-qrst;
 +
-+			emc-table@300000 {
-+				reg = <300000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <300000>;
-+				nvidia,emc-registers = <0x00000012 0x00000027
-+					0x0000000d 0x00000006 0x00000007 0x00000005
-+					0x00000003 0x00000009 0x00000006 0x00000006
-+					0x00000003 0x00000003 0x00000002 0x00000006
-+					0x00000003 0x00000009 0x0000000c 0x0000045f
-+					0x00000000 0x00000004 0x00000004 0x00000006
-+					0x00000008 0x00000001 0x0000000e 0x0000002a
-+					0x00000003 0x0000000f 0x00000007 0x00000005
-+					0x00000002 0x000004e1 0x00000005 0x00000002
-+					0x00000000 0x00000000 0x00000282 0xe059048b
-+					0x007e0010 0x00000000 0x00000000 0x0000001b
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
++				nvidia,emc-configuration = <
++					0x00000020 /* EMC_RC */
++					0x0000006a /* EMC_RFC */
++					0x00000017 /* EMC_RAS */
++					0x00000007 /* EMC_RP */
++					0x00000005 /* EMC_R2W */
++					0x0000000c /* EMC_W2R */
++					0x00000003 /* EMC_R2P */
++					0x00000011 /* EMC_W2P */
++					0x00000007 /* EMC_RD_RCD */
++					0x00000007 /* EMC_WR_RCD */
++					0x00000002 /* EMC_RRD */
++					0x00000001 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000007 /* EMC_WDV */
++					0x0000000a /* EMC_QUSE */
++					0x00000009 /* EMC_QRST */
++					0x0000000b /* EMC_QSAFE */
++					0x00000011 /* EMC_RDV */
++					0x00001412 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000504 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x0000000e /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x0000000c /* EMC_AR2PDEN */
++					0x00000016 /* EMC_RW2PDEN */
++					0x00000072 /* EMC_TXSR */
++					0x00000200 /* EMC_TXSRDLL */
++					0x00000005 /* EMC_TCKE */
++					0x00000015 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000006 /* EMC_TCLKSTABLE */
++					0x00000007 /* EMC_TCLKSTOP */
++					0x00001453 /* EMC_TREFBW */
++					0x0000000b /* EMC_QUSE_EXTRA */
++					0x00000006 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x00005088 /* EMC_FBIO_CFG5 */
++					0xf00b0191 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00000008 /* EMC_DLL_XFORM_DQS0 */
++					0x00000008 /* EMC_DLL_XFORM_DQS1 */
++					0x00000008 /* EMC_DLL_XFORM_DQS2 */
++					0x00000008 /* EMC_DLL_XFORM_DQS3 */
++					0x0000000a /* EMC_DLL_XFORM_DQS4 */
++					0x0000000a /* EMC_DLL_XFORM_DQS5 */
++					0x0000000a /* EMC_DLL_XFORM_DQS6 */
++					0x0000000a /* EMC_DLL_XFORM_DQS7 */
++					0x00018000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00018000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00018000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00018000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x0000000a /* EMC_DLL_XFORM_DQ0 */
++					0x0000000a /* EMC_DLL_XFORM_DQ1 */
++					0x0000000a /* EMC_DLL_XFORM_DQ2 */
++					0x0000000a /* EMC_DLL_XFORM_DQ3 */
++					0x000002a0 /* EMC_XM2CMDPADCTRL */
++					0x0800013d /* EMC_XM2DQSPADCTRL2 */
++					0x22220000 /* EMC_XM2DQPADCTRL2 */
++					0x77fff884 /* EMC_XM2CLKPADCTRL */
++					0x01f1f501 /* EMC_XM2COMPPADCTRL */
++					0x07077404 /* EMC_XM2VTTGENPADCTRL */
++					0x54000000 /* EMC_XM2VTTGENPADCTRL2 */
++					0x080001e8 /* EMC_XM2QUSEPADCTRL */
++					0x0c000021 /* EMC_XM2DQSPADCTRL3 */
++					0x00000802 /* EMC_CTT_TERM_CTRL */
++					0x00020000 /* EMC_ZCAL_INTERVAL */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x0155000c /* EMC_MRS_WAIT_CNT */
++					0xa0f10000 /* EMC_AUTO_CAL_CONFIG */
++					0x00000000 /* EMC_CTT */
++					0x00000000 /* EMC_CTT_DURATION */
++					0x800028a5 /* EMC_DYN_SELF_REF_CONTROL */
++					0xe8000000 /* EMC_FBIO_SPARE */
++					0xff00ff49 /* EMC_CFG_RSV */
++				>;
 +			};
 +		};
 +	};
