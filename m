@@ -2,104 +2,136 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A210DC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFBCC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80327206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C665206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588685654;
-	bh=jJviMcp5DBoR3eNvhbgb5HS8okSTXwDDxd9C6+S54Rs=;
+	s=default; t=1588685759;
+	bh=27eegcfN4OCPFz8Eg3QszwZbxwkuazdL8Z4GFlVGgsc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Tj7Ma7GfBsewgqumb2JnrLgt7iH0bq927XaVYrdVW8/V5Unu+JqEqjkoscW6e88XS
-	 WLMhTUaPJR1T6q/G1JaWyw1wyzXAazjeNyrNrltZ26O5S6eoxFdZJLebovN6+PBxZc
-	 HOkKlTkPYpsP6sUVa/9/qoz1MwRpciAa3j09Au3U=
+	b=HKZOO0YEE4P+XVg0zby/oJ0GwWSbkIX4sCF6x2rR2eAM06xD4rRo/qBIZ2pHGDsyu
+	 s94JhxDDIVGdeERGjcuiXq3nt6qY/Lm5VumHupD0xRRbfTgWxIEqlK9jMj7u5Y///S
+	 QprReuZvaOAOx8l3+P+sveuf2sjMyrsd7COv/hV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbgEENeN (ORCPT
+        id S1729087AbgEENf7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 09:34:13 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41106 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728894AbgEENeM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 09:34:12 -0400
-Received: by mail-ot1-f65.google.com with SMTP id c3so1599227otp.8;
-        Tue, 05 May 2020 06:34:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PsjcTsG/gjBsqBJgHVlid+3Mm782eXV4Fl6ucMTeSJY=;
-        b=g0DMiLC3oTqOfJAIRYjC5H6I4dpZseKlwHFxXx/qUXM9eMOYjrpBfMmmKOQRILvIVV
-         9JnrAYWMF1E+RZRoum9jAsJ2ZwCxZgPBOkYbL1c3u6SNxHchdp517rBXpuEq/vYxaTLm
-         LXlfxlp98IqA5rJ1w5p+uaD7hkFdQg6GLuzBEcscfQOaj5pSynf/G8pN+SXfZoOA7Xrc
-         o32fHqnsqX+1uok/Kw0i9JhvCU1CYNvk/EFVTwM9Q2e8ev0D8665TfY064Tlydi/1kpD
-         VNBkHAHJLPA1xLMhvvtc+l+tPMjQAgakzPQTkkqLCtFAWbJf1jVEeXixl0o7/YCX+hV7
-         I9pg==
-X-Gm-Message-State: AGi0PubUjx4xseRr97MK/y/52Qg42/de0XMF+7+N2WT5RYuqQtNprB+c
-        X+Rj5JltFscZBAcPD2eEdA==
-X-Google-Smtp-Source: APiQypJhIFWNLw18Q+hIiasPVcWn91Fm5B/gR5rb3vMJKDZknTfScGx82vRxm9AubbYYAxYJ7/23iw==
-X-Received: by 2002:a05:6830:1b65:: with SMTP id d5mr2068968ote.141.1588685650099;
-        Tue, 05 May 2020 06:34:10 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e91sm610862otb.40.2020.05.05.06.34.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 06:34:09 -0700 (PDT)
-Received: (nullmailer pid 25501 invoked by uid 1000);
-        Tue, 05 May 2020 13:34:08 -0000
-Date:   Tue, 5 May 2020 08:34:08 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Wesley Cheng <wcheng@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
-        mgautam@codeaurora.org, vkoul@kernel.org, sboyd@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, jackp@codeaurora.org,
-        Wesley Cheng <wcheng@codeaurora.org>
-Subject: Re: [PATCH v8 1/5] dt-bindings: phy: Add binding for
- qcom,usb-snps-femto-v2
-Message-ID: <20200505133408.GA24731@bogus>
-References: <1588636467-23409-1-git-send-email-wcheng@codeaurora.org>
- <1588636467-23409-2-git-send-email-wcheng@codeaurora.org>
+        Tue, 5 May 2020 09:35:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52568 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728954AbgEENf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 09:35:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4E62206A5;
+        Tue,  5 May 2020 13:35:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588685758;
+        bh=27eegcfN4OCPFz8Eg3QszwZbxwkuazdL8Z4GFlVGgsc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vqtExeeaUnSviGJmZkNmbJ6Gn/s2RKKtdHtQdFsbPTHdXw+HyZ9OVK5RAdxltmRQG
+         jVJjsOGMfvCI/WGbVQ5zHdvfKgTgaX2fnfB2z5y9vZhl75mVcFbfArkyRk0aowa72w
+         jhu7JDiZmh5qT097JYnQM5NPjFPBnbFY2zULRZrc=
+Date:   Tue, 5 May 2020 15:35:55 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Aman Sharma <amanharitsh123@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2 1/2] driver core: platform: Clarify that IRQ 0 is
+ invalid
+Message-ID: <20200505133555.GA529259@kroah.com>
+References: <20200504190721.GA2810934@kroah.com>
+ <20200504222659.GA296947@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1588636467-23409-2-git-send-email-wcheng@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200504222659.GA296947@bjorn-Precision-5520>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  4 May 2020 16:54:23 -0700, Wesley Cheng wrote:
-> This binding shows the descriptions and properties for the
-> Synopsis Femto USB PHY V2 used on QCOM platforms.
+On Mon, May 04, 2020 at 05:26:59PM -0500, Bjorn Helgaas wrote:
+> On Mon, May 04, 2020 at 09:07:21PM +0200, Greg Kroah-Hartman wrote:
+> > On Mon, May 04, 2020 at 01:08:22PM -0500, Bjorn Helgaas wrote:
+> > > On Sat, May 02, 2020 at 08:15:37AM +0200, Greg Kroah-Hartman wrote:
+> > > > On Fri, May 01, 2020 at 05:40:41PM -0500, Bjorn Helgaas wrote:
+> > > > > From: Bjorn Helgaas <bhelgaas@google.com>
+> > > > > 
+> > > > > These interfaces return a negative error number or an IRQ:
+> > > > > 
+> > > > >   platform_get_irq()
+> > > > >   platform_get_irq_optional()
+> > > > >   platform_get_irq_byname()
+> > > > >   platform_get_irq_byname_optional()
+> > > > > 
+> > > > > The function comments suggest checking for error like this:
+> > > > > 
+> > > > >   irq = platform_get_irq(...);
+> > > > >   if (irq < 0)
+> > > > >     return irq;
+> > > > > 
+> > > > > which is what most callers (~900 of 1400) do, so it's implicit
+> > > > > that IRQ 0 is invalid.  But some callers check for "irq <= 0",
+> > > > > and it's not obvious from the source that we never return an
+> > > > > IRQ 0.
+> > > > > 
+> > > > > Make this more explicit by updating the comments to say that
+> > > > > an IRQ number is always non-zero and adding a WARN() if we
+> > > > > ever do return zero.  If we do return IRQ 0, it likely
+> > > > > indicates a bug in the arch-specific parts of
+> > > > > platform_get_irq().
+> > > > 
+> > > > I worry about adding WARN() as there are systems that do
+> > > > panic_on_warn() and syzbot trips over this as well.  I don't
+> > > > think that for this issue it would be a problem, but what really
+> > > > is this warning about that someone could do anything with?
+> > > > 
+> > > > Other than that minor thing, this looks good to me, thanks for
+> > > > finally clearing this up.
+> > > 
+> > > What I'm concerned about is an arch that returns 0.  Most drivers
+> > > don't check for 0 so they'll just try to use it, and things will
+> > > fail in some obscure way.  My assumption is that if there really
+> > > is no IRQ, we should return -ENOENT or similar instead of 0.
+> > > 
+> > > I could be convinced that it's not worth warning about at all, or
+> > > we could do something like the following:
+> > > 
+> > > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> > > index 084cf1d23d3f..4afa5875e14d 100644
+> > > --- a/drivers/base/platform.c
+> > > +++ b/drivers/base/platform.c
+> > > @@ -220,7 +220,11 @@ int platform_get_irq_optional(struct platform_device *dev, unsigned int num)
+> > >  	ret = -ENXIO;
+> > >  #endif
+> > >  out:
+> > > -	WARN(ret == 0, "0 is an invalid IRQ number\n");
+> > > +	/* Returning zero here is likely a bug in the arch IRQ code */
+> > > +	if (ret == 0) {
+> > > +		pr_warn("0 is an invalid IRQ number\n");
+> > > +		dump_stack();
+> > > +	}
+> > >  	return ret;
+> > >  }
+> > > ...
 > 
-> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> ---
->  .../bindings/phy/qcom,usb-snps-femto-v2.yaml       | 77 ++++++++++++++++++++++
->  1 file changed, 77 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
+> > I like that, but you said this is something that the platform people
+> > should only see when bringing up a new system, so maybe the WARN() is
+> > fine.  It's not user-triggerable, so your original is ok.
 > 
+> Is that an ack?  Thomas, any thoughts?
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Sorry, yes:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.example.dt.yaml: phy@88e2000: 'vdda-pll-supply' is a required property
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.example.dt.yaml: phy@88e2000: 'vdda18-supply' is a required property
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.example.dt.yaml: phy@88e2000: 'vdda33-supply' is a required property
-
-See https://patchwork.ozlabs.org/patch/1283143
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
