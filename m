@@ -2,146 +2,84 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,LOCALPART_IN_SUBJECT,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 999CCC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B5CC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77F6A206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 935FD206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:42:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D+lY/P9Q"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Y1drQe+0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729559AbgEEXki (ORCPT
+        id S1729526AbgEEXmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 19:40:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52948 "EHLO
+        Tue, 5 May 2020 19:42:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727895AbgEEXki (ORCPT
+        by vger.kernel.org with ESMTP id S1728717AbgEEXmN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 19:40:38 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2850DC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 16:40:38 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 18so67667pfv.8
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 16:40:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=4UsiQEJlpHvNjogsTjRtwbhweGbFHrJ8/i8ZZUfmC+w=;
-        b=D+lY/P9QNjNJywA54T1ZcFj3iJODBKhVN5RtyicD4nWTr4Q2phgjlsSKAxueTVo0Qc
-         PzVJAePs4v5jk0HhmK21d0FovIQ4gAYOws8PsNMC2+Y67uRorPwmHVSs4QnYpTC75W4U
-         vMRlsKEliNJNFNxvQzj94SnYglwufcwogLX2Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=4UsiQEJlpHvNjogsTjRtwbhweGbFHrJ8/i8ZZUfmC+w=;
-        b=Y9o3oxoXx602Eqges2zKlv1Ia94zV261bAdwvT81silMOBBCAgMtz5AXpktpkRAgaC
-         7ZDxDbX7scI3UKFuRfW84QZwtuiO2m6fMD8NJdInofRKZa4WTt+ieG3LDiK8LZ1y8MTr
-         dallt07Y2MHmftR0j+g8vAljxjex5pNpJHpXOlCB79AboojcMIHBhMpa7xuXw16tFiYk
-         gxvjD2W0+Bg/AfUc11lEZKaKXucffFs4hheClgSNrGJEriCx5SRWBV2EyDUjrvM598G2
-         A32+t1xr88qaSNlTn52uc+K5ZXUbd9VK52BvOsvEvzbAK/f3c0ouf5xHIXiuI3JFH0MP
-         u8pQ==
-X-Gm-Message-State: AGi0PuZVT6zZHIU1aB+h/VSwoFEOgc0Ifuduq6ch0qkagWfXRINDT5TU
-        n9rBLksI5b8l27n0OpPV3kMordsBqEg=
-X-Google-Smtp-Source: APiQypJgtWzUVi0Gq7Ko8Hj2XUWBKGf2u62N8+xeB16/nLRESC0J3TehMvK+QlU6UBeylr3nflUnCg==
-X-Received: by 2002:a62:6341:: with SMTP id x62mr5732071pfb.289.1588722037677;
-        Tue, 05 May 2020 16:40:37 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g6sm2940247pjx.48.2020.05.05.16.40.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 16:40:36 -0700 (PDT)
-Date:   Tue, 5 May 2020 16:40:35 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] securityfs: Add missing d_delete() call on removal
-Message-ID: <202005051626.7648DC65@keescook>
+        Tue, 5 May 2020 19:42:13 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1237CC061A0F;
+        Tue,  5 May 2020 16:42:11 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Gx8b6X6Sz9sPF;
+        Wed,  6 May 2020 09:42:07 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588722128;
+        bh=2Jo9lu7OdYZOI6iSc1tzaW0Em95vOIvzYJQDOhcl41o=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Y1drQe+0/h1DS94E51D3Sb8ha64u4YDEE7zzx4oDCRrfN+coHsCzxIiiTXRKZG2x9
+         ut0w40wnbVSrw79G6x5oh3jxUa9mIpJ/QoyPpO5Zr15ZUpDMqpjLnnsBk9TBk28pol
+         LRT7WIlOlC4vfd5sNca//r4oWW9NNziGb6ih+ESdcNKTanxldUwsQSJYaNOg1DtQd7
+         Ad/xI1JEtTw5IDUsuZMwQgwvTBbhkS0DzLbzj5TFw7dVn4VFOScv9JROMapqoVisCl
+         AA5+9HoaR/XFiwXY24k99i0hkryTUsxngE/i9dl535jDeLJLEcsoVRopt37aldqFYd
+         B/1u799ZXmHNA==
+Date:   Wed, 6 May 2020 09:42:06 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linux-Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux-kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: no release today
+Message-ID: <20200506094206.068977b6@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: multipart/signed; boundary="Sig_/V7Oyu_4b2KNfUO.v+lO9MJH";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After using simple_unlink(), a call to d_delete() is needed in addition
-to dput().
+--Sig_/V7Oyu_4b2KNfUO.v+lO9MJH
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Is this correct? I went looking around and there are a lot of variations
-on the simple_unlink() pattern...
+Normal service should resume tomorrow.
 
-Many using explicit locking and combinations of d_drop(), __d_drop(), etc.
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/V7Oyu_4b2KNfUO.v+lO9MJH
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Some missing d_delete()?
+-----BEGIN PGP SIGNATURE-----
 
-security/inode.c:			simple_unlink(dir, dentry);
-security/inode.c-		d_delete(dentry);
-security/inode.c-		dput(dentry);
---
-arch/powerpc/platforms/cell/spufs/inode.c:			simple_unlink(d_inode(dir), dentry);
-arch/powerpc/platforms/cell/spufs/inode.c-			/* XXX: what was dcache_lock protecting here? Other
-arch/powerpc/platforms/cell/spufs/inode.c-			 * filesystems (IB, configfs) release dcache_lock
-arch/powerpc/platforms/cell/spufs/inode.c-			 * before unlink */
-arch/powerpc/platforms/cell/spufs/inode.c-			dput(dentry);
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6x+c4ACgkQAVBC80lX
+0GwJWAgAgNTC7as6KeLcMjhctjwexT1xzCNQ1jHplfk0YInxZ+42zjLxlTEPfNNU
+JBcBGSKBtz30vahF1CooGV6LLbhVV22MMSxNs0MmyH1lYkaBvPdj/TTC/21fzwAd
+HZJJ9GUHcxJme5CBBfe8KHAsVMN516kB5iOCa/43WzCE3N3HEJnfnt4qpnIIWkqG
+bO1OEAspq12kT7D53Hpfr6JpGEVneDwQ82v3K/g+rZV31R5gkPgQjkGYLa1/IpMm
+J0nC1uVql9UBDU3s62LStKDy4Prf8qWMPbwBr5iISMR3GjtmnJtq7wXQ3iCxygpH
+g5MVTK30+rM0wQQIzPNj6fC8kYHS7w==
+=txAH
+-----END PGP SIGNATURE-----
 
-Should use d_delete() instead of d_drop()?
-
-arch/s390/hypfs/inode.c:			simple_unlink(d_inode(parent), dentry);
-arch/s390/hypfs/inode.c-	}
-arch/s390/hypfs/inode.c-	d_drop(dentry);
-arch/s390/hypfs/inode.c-	dput(dentry);
-arch/s390/hypfs/inode.c-	inode_unlock(d_inode(parent));
-arch/s390/hypfs/inode.c-}
-
-Correct?
-
-drivers/android/binderfs.c:		simple_unlink(parent_inode, dentry);
-drivers/android/binderfs.c-		d_delete(dentry);
-drivers/android/binderfs.c-		dput(dentry);
---
-fs/nfsd/nfsctl.c:	ret = simple_unlink(dir, dentry);
-fs/nfsd/nfsctl.c-	d_delete(dentry);
-fs/nfsd/nfsctl.c-	dput(dentry);
---
-net/sunrpc/rpc_pipe.c:	ret = simple_unlink(dir, dentry);
-net/sunrpc/rpc_pipe.c-	if (!ret)
-net/sunrpc/rpc_pipe.c-		fsnotify_unlink(dir, dentry);
-net/sunrpc/rpc_pipe.c-	d_delete(dentry);
-net/sunrpc/rpc_pipe.c-	dput(dentry);
---
-security/apparmor/apparmorfs.c:			simple_unlink(dir, dentry);
-security/apparmor/apparmorfs.c-		d_delete(dentry);
-security/apparmor/apparmorfs.c-		dput(dentry);
-
----
- security/inode.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/security/inode.c b/security/inode.c
-index 6c326939750d..606f390d21d2 100644
---- a/security/inode.c
-+++ b/security/inode.c
-@@ -306,6 +306,7 @@ void securityfs_remove(struct dentry *dentry)
- 			simple_rmdir(dir, dentry);
- 		else
- 			simple_unlink(dir, dentry);
-+		d_delete(dentry);
- 		dput(dentry);
- 	}
- 	inode_unlock(dir);
--- 
-2.20.1
-
-
--- 
-Kees Cook
+--Sig_/V7Oyu_4b2KNfUO.v+lO9MJH--
