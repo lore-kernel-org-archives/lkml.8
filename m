@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FFFC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 768E8C47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B5C120675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AE562085B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:23:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730426AbgEEOXH (ORCPT
+        id S1729507AbgEEOOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:23:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48616 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729509AbgEEOOH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 5 May 2020 10:14:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729475AbgEEON7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 10:13:59 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAD62C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:14:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDFA2C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:13:58 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jVyKR-0000gL-Rd; Tue, 05 May 2020 16:13:48 +0200
+        id 1jVyKL-0000aY-MG; Tue, 05 May 2020 16:13:41 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 5F41FFFC8D;
-        Tue,  5 May 2020 16:13:47 +0200 (CEST)
-Message-Id: <20200505134100.771491291@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 33338FFC8D;
+        Tue,  5 May 2020 16:13:41 +0200 (CEST)
+Message-Id: <20200505134100.270771162@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:16:29 +0200
+Date:   Tue, 05 May 2020 15:16:24 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -51,10 +51,9 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Brian Gerst <brgerst@gmail.com>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [patch V4 part 1 27/36] arm64: Prepare arch_nmi_enter() for recursion
+        Will Deacon <will@kernel.org>
+Subject: [patch V4 part 1 22/36] tracing: Provide lockdep less
+ trace_hardirqs_on/off() variants
 References: <20200505131602.633487962@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -67,107 +66,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frederic Weisbecker <frederic@kernel.org>
+trace_hardirqs_on/off() is only partially safe vs. RCU idle. The tracer
+core itself is safe, but the resulting tracepoints can be utilized by
+e.g. BPF which is unsafe.
 
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Provide variants which do not contain the lockdep invocation so the lockdep
+and tracer invocations can be split at the call site and placed properly.
+
+The new variants also do not use rcuidle as they are going to be called
+from entry code after/before context tracking.
+
+Name them so they match the lockdep counterparts.
+
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
 ---
- arch/arm64/include/asm/hardirq.h |   78 +++++++++++++++++++++++++++++----------
- 1 file changed, 59 insertions(+), 19 deletions(-)
+V3: Renamed to trace_hardirqs_on/off_prepare().
+V2: New patch
+---
+ include/linux/irqflags.h        |    4 ++++
+ kernel/trace/trace_preemptirq.c |   37 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 41 insertions(+)
 
---- a/arch/arm64/include/asm/hardirq.h
-+++ b/arch/arm64/include/asm/hardirq.h
-@@ -32,30 +32,70 @@ u64 smp_irq_stat_cpu(unsigned int cpu);
+--- a/include/linux/irqflags.h
++++ b/include/linux/irqflags.h
+@@ -29,6 +29,8 @@
+ #endif
  
- struct nmi_ctx {
- 	u64 hcr;
-+	unsigned int cnt;
- };
+ #ifdef CONFIG_TRACE_IRQFLAGS
++  extern void trace_hardirqs_on_prepare(void);
++  extern void trace_hardirqs_off_prepare(void);
+   extern void trace_hardirqs_on(void);
+   extern void trace_hardirqs_off(void);
+ # define lockdep_hardirq_context(p)	((p)->hardirq_context)
+@@ -96,6 +98,8 @@ do {						\
+ 	  } while (0)
  
- DECLARE_PER_CPU(struct nmi_ctx, nmi_contexts);
+ #else
++# define trace_hardirqs_on_prepare()		do { } while (0)
++# define trace_hardirqs_off_prepare()		do { } while (0)
+ # define trace_hardirqs_on()		do { } while (0)
+ # define trace_hardirqs_off()		do { } while (0)
+ # define lockdep_hardirq_context(p)	0
+--- a/kernel/trace/trace_preemptirq.c
++++ b/kernel/trace/trace_preemptirq.c
+@@ -19,6 +19,24 @@
+ /* Per-cpu variable to prevent redundant calls when IRQs already off */
+ static DEFINE_PER_CPU(int, tracing_irq_cpu);
  
--#define arch_nmi_enter()							\
--	do {									\
--		if (is_kernel_in_hyp_mode()) {					\
--			struct nmi_ctx *nmi_ctx = this_cpu_ptr(&nmi_contexts);	\
--			nmi_ctx->hcr = read_sysreg(hcr_el2);			\
--			if (!(nmi_ctx->hcr & HCR_TGE)) {			\
--				write_sysreg(nmi_ctx->hcr | HCR_TGE, hcr_el2);	\
--				isb();						\
--			}							\
--		}								\
--	} while (0)
-+#define arch_nmi_enter()						\
-+do {									\
-+	struct nmi_ctx *___ctx;						\
-+	u64 ___hcr;							\
-+									\
-+	if (!is_kernel_in_hyp_mode())					\
-+		break;							\
-+									\
-+	___ctx = this_cpu_ptr(&nmi_contexts);				\
-+	if (___ctx->cnt) {						\
-+		___ctx->cnt++;						\
-+		break;							\
-+	}								\
-+									\
-+	___hcr = read_sysreg(hcr_el2);					\
-+	if (!(___hcr & HCR_TGE)) {					\
-+		write_sysreg(___hcr | HCR_TGE, hcr_el2);		\
-+		isb();							\
-+	}								\
-+	/*								\
-+	 * Make sure the sysreg write is performed before ___ctx->cnt	\
-+	 * is set to 1. NMIs that see cnt == 1 will rely on us.		\
-+	 */								\
-+	barrier();							\
-+	___ctx->cnt = 1;                                                \
-+	/*								\
-+	 * Make sure ___ctx->cnt is set before we save ___hcr. We	\
-+	 * don't want ___ctx->hcr to be overwritten.			\
-+	 */								\
-+	barrier();							\
-+	___ctx->hcr = ___hcr;						\
-+} while (0)
- 
--#define arch_nmi_exit()								\
--	do {									\
--		if (is_kernel_in_hyp_mode()) {					\
--			struct nmi_ctx *nmi_ctx = this_cpu_ptr(&nmi_contexts);	\
--			if (!(nmi_ctx->hcr & HCR_TGE))				\
--				write_sysreg(nmi_ctx->hcr, hcr_el2);		\
--		}								\
--	} while (0)
-+#define arch_nmi_exit()							\
-+do {									\
-+	struct nmi_ctx *___ctx;						\
-+	u64 ___hcr;							\
-+									\
-+	if (!is_kernel_in_hyp_mode())					\
-+		break;							\
-+									\
-+	___ctx = this_cpu_ptr(&nmi_contexts);				\
-+	___hcr = ___ctx->hcr;						\
-+	/*								\
-+	 * Make sure we read ___ctx->hcr before we release		\
-+	 * ___ctx->cnt as it makes ___ctx->hcr updatable again.		\
-+	 */								\
-+	barrier();							\
-+	___ctx->cnt--;							\
-+	/*								\
-+	 * Make sure ___ctx->cnt release is visible before we		\
-+	 * restore the sysreg. Otherwise a new NMI occurring		\
-+	 * right after write_sysreg() can be fooled and think		\
-+	 * we secured things for it.					\
-+	 */								\
-+	barrier();							\
-+	if (!___ctx->cnt && !(___hcr & HCR_TGE))			\
-+		write_sysreg(___hcr, hcr_el2);				\
-+} while (0)
- 
- static inline void ack_bad_irq(unsigned int irq)
++/*
++ * Like trace_hardirqs_on() but without the lockdep invocation. This is
++ * used in the low level entry code where the ordering vs. RCU is important
++ * and lockdep uses a staged approach which splits the lockdep hardirq
++ * tracking into a RCU on and a RCU off section.
++ */
++void trace_hardirqs_on_prepare(void)
++{
++	if (this_cpu_read(tracing_irq_cpu)) {
++		if (!in_nmi())
++			trace_irq_enable(CALLER_ADDR0, CALLER_ADDR1);
++		tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
++		this_cpu_write(tracing_irq_cpu, 0);
++	}
++}
++EXPORT_SYMBOL(trace_hardirqs_on_prepare);
++NOKPROBE_SYMBOL(trace_hardirqs_on_prepare);
++
+ void trace_hardirqs_on(void)
  {
+ 	if (this_cpu_read(tracing_irq_cpu)) {
+@@ -33,6 +51,25 @@ void trace_hardirqs_on(void)
+ EXPORT_SYMBOL(trace_hardirqs_on);
+ NOKPROBE_SYMBOL(trace_hardirqs_on);
+ 
++/*
++ * Like trace_hardirqs_off() but without the lockdep invocation. This is
++ * used in the low level entry code where the ordering vs. RCU is important
++ * and lockdep uses a staged approach which splits the lockdep hardirq
++ * tracking into a RCU on and a RCU off section.
++ */
++void trace_hardirqs_off_prepare(void)
++{
++	if (!this_cpu_read(tracing_irq_cpu)) {
++		this_cpu_write(tracing_irq_cpu, 1);
++		tracer_hardirqs_off(CALLER_ADDR0, CALLER_ADDR1);
++		if (!in_nmi())
++			trace_irq_disable(CALLER_ADDR0, CALLER_ADDR1);
++	}
++
++}
++EXPORT_SYMBOL(trace_hardirqs_off_prepare);
++NOKPROBE_SYMBOL(trace_hardirqs_off_prepare);
++
+ void trace_hardirqs_off(void)
+ {
+ 	if (!this_cpu_read(tracing_irq_cpu)) {
 
