@@ -1,178 +1,121 @@
-Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA75AC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 693EEC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80BE120675
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40CC0206CC
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:04:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HoF+1DPH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbgEDX6B (ORCPT
+        id S1728524AbgEEAEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 19:58:01 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6564 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728297AbgEDX6B (ORCPT
+        Mon, 4 May 2020 20:04:05 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40919 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728223AbgEEAED (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 19:58:01 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 044NXW98126925;
-        Mon, 4 May 2020 19:57:59 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30s4r3epnp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 May 2020 19:57:59 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 044Nswgr168925;
-        Mon, 4 May 2020 19:57:59 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30s4r3epnm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 May 2020 19:57:59 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 044NnjZ2003723;
-        Mon, 4 May 2020 23:57:58 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma02dal.us.ibm.com with ESMTP id 30s0g69tdt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 May 2020 23:57:58 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 044Nvumw52691374
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 4 May 2020 23:57:56 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BDF00AC059;
-        Mon,  4 May 2020 23:57:56 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 63590AC05B;
-        Mon,  4 May 2020 23:57:56 +0000 (GMT)
-Received: from cpe-172-100-175-116.stny.res.rr.com (unknown [9.85.179.113])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  4 May 2020 23:57:56 +0000 (GMT)
-Subject: Re: s390 KVM warning in handle_pqap()
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Qian Cai <cailca@icloud.com>,
-        Pierre Morel <pmorel@linux.ibm.com>
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <ED53E46F-EF53-46F6-B88E-2035965AB20C@icloud.com>
- <57992d1f-434e-3900-1958-542cd830aad1@de.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Message-ID: <4edb5a70-f416-37c3-a233-c278d4c664ea@linux.ibm.com>
-Date:   Mon, 4 May 2020 19:57:56 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 4 May 2020 20:04:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588637042;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=HwVHFxYYjOkkdD9SX+7OmmC4/WqixEH8rx2g3a5Y1PE=;
+        b=HoF+1DPHuAsgQieOzoWsOKYHe/2zRXnF4oWxOAEgt3Q52ycA+DmMzflK6skLdRC0qcqFh0
+        sE7XjqOaYmE4DmcwquFJhzrVmxHEmx4Jc0sc3dbKXt3lvQJpTlC9lPFFZvJYMMjAe/RDy2
+        ikxDoSP5jiJbX3Zr/nM0AN7U/RWo80I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-503-7vmAu_pHMM2arvLjdhPsjQ-1; Mon, 04 May 2020 20:03:58 -0400
+X-MC-Unique: 7vmAu_pHMM2arvLjdhPsjQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F1877107ACCA;
+        Tue,  5 May 2020 00:03:56 +0000 (UTC)
+Received: from krava (unknown [10.40.192.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AD0AA66062;
+        Tue,  5 May 2020 00:03:54 +0000 (UTC)
+Date:   Tue, 5 May 2020 02:03:52 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     "Jin, Yao" <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH] perf evsel: Get group fd from CPU0 for system wide event
+Message-ID: <20200505000352.GH1916255@krava>
+References: <20200430013451.17196-1-yao.jin@linux.intel.com>
+ <20200501102337.GA1761222@krava>
+ <b799b66a-42aa-6c55-647e-7b718473632a@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <57992d1f-434e-3900-1958-542cd830aad1@de.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-04_13:2020-05-04,2020-05-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=700 clxscore=1015 priorityscore=1501 malwarescore=0
- impostorscore=0 bulkscore=0 suspectscore=0 adultscore=0 phishscore=0
- mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005040179
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b799b66a-42aa-6c55-647e-7b718473632a@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'll check with the z/VM folks.
+On Sat, May 02, 2020 at 10:33:59AM +0800, Jin, Yao wrote:
 
-On 5/4/20 4:59 AM, Christian Borntraeger wrote:
->
-> On 02.05.20 04:38, Qian Cai wrote:
->> This line,
->>
->> if (WARN_ON_ONCE(fc != 0x03))
->>
->> qemu-kvm-2.12.0-99.module+el8.2.0+5827+8c39933c with this kernel config,
->>
->> https://raw.githubusercontent.com/cailca/linux-mm/master/s390.config
->>
->> # /usr/libexec/qemu-kvm -name ubuntu-18.04-server-cloudimg -cpu host -smp 2 -m 2G -hda ubuntu-18.04-server-cloudimg.qcow2 -cdrom ubuntu-18.04-server-cloudimg.iso -nic user,hostfwd=tcp::2222-:22 -nographic
->>
->> 00: [  424.578896] WARNING: CPU: 0 PID: 1533 at arch/s390/kvm/priv.c:632 handle_
->> 00: pqap+0x2b6/0x468 [kvm]
->> 00: [  424.578934] Modules linked in: kvm ip_tables x_tables xfs dasd_fba_mod da
->> 00: sd_eckd_mod dm_mirror dm_region_hash dm_log dm_mod
->> 00: [  424.579026] CPU: 0 PID: 1533 Comm: qemu-kvm Not tainted 5.7.0-rc3-next-20
->> 00: 200501 #2
->> 00: [  424.579064] Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)
-> You run nested unter z/VM (under LPAR). So it looks like z/VM behaves different to
-> LPAR regarding the interception of the PQAP instruction.
-> Tony, can you talk to your z/VM colleagues about this? I guess we might need to
-> remove the WARN_ON_ONCE(fc != 0x03) and simply return EOPNOTSUPP if our assumption
-> is not right. I guess z/VM has its ECA field set to 0 so the effective ECA field
-> is also 0.
->
->
->
->> 00: [  424.579101] Krnl PSW : 0704d00180000000 000003ff80440dc2 (handle_pqap+0x2
->> 00: ba/0x468 [kvm])
->> 00: [  424.579239]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:1 PM:0
->> 00:  RI:0 EA:3
->> 00: [  424.579282] Krnl GPRS: 0000000000000000 0000030000000000 0000030000000000
->> 00:  00000000e1ca6148
->> 00: [  424.579320]            0000030000000000 000003ff80440c14 0000000000000000
->> 00:  00000000822e8520
->> 00: [  424.579359]            00000000e1ca6000 000000009c79a000 00000000822e8008
->> 00:  0000007c00877e70
->> 00: [  424.579399]            000003ff803f5000 000003ff80467528 000003ff80440c14
->> 00:  000003e0043bf2c8
->> 00: [  424.579461] Krnl Code: 000003ff80440db6: a774ff5a            brc     7,00
->> 00: 0003ff80440c6a
->> 00: [  424.579461]            000003ff80440dba: a7f4ff54            brc     15,0
->> 00: 00003ff80440c62
->> 00: [  424.579461]           #000003ff80440dbe: af000000            mc      0,0
->> 00: [  424.579461]           >000003ff80440dc2: a798ffa1            lhi     %r9,
->> 00: -95
->> 00: [  424.579461]            000003ff80440dc6: a51d0300            llihl   %r1,
->> 00: 768
->> 00: [  424.579461]            000003ff80440dca: b90800b1            agr     %r11
->> 00: ,%r1
->> 00: [  424.579461]            000003ff80440dce: d70bb000b000        xc      0(12
->> 00: ,%r11),0(%r11)
->> 00: [  424.579461]            000003ff80440dd4: b9140029            lgfr    %r2,
->> 00: %r9
->> 00: [  424.586765] Call Trace:
->> 00: [  424.586894]  [<000003ff80440dc2>] handle_pqap+0x2ba/0x468 [kvm]
->> 00: [  424.587026]  [<000003ff80446fa6>] kvm_s390_handle_b2+0x2f6/0x950 [kvm]
->> 00: [  424.587156]  [<000003ff8042d74c>] kvm_handle_sie_intercept+0x154/0x1db0 [
->> 00: kvm]
->> 00: [  424.587287]  [<000003ff80426950>] __vcpu_run+0x1040/0x2150 [kvm]
->> 00: [  424.587414]  [<000003ff8042941a>] kvm_arch_vcpu_ioctl_run+0x5fa/0x1338 [k
->> 00: vm]
->> 00: [  424.587540]  [<000003ff8040195e>] kvm_vcpu_ioctl+0x346/0xa10 [kvm]
->> 00: [  424.587590]  [<00000001433fbd16>] ksys_ioctl+0x276/0xbb8
->> 00: [  424.587630]  [<00000001433fc682>] __s390x_sys_ioctl+0x2a/0x38
->> 00: [  424.587674]  [<000000014393c880>] system_call+0xd8/0x2b4
->> 00: [  424.587715] 2 locks held by qemu-kvm/1533:
->> 00: [  424.587748]  #0: 00000000822e80d0 (&vcpu->mutex){+.+.}-{3:3}, at: kvm_vcp
->> 00: u_ioctl+0x170/0xa10 [kvm]
->> 00: [  424.587898]  #1: 0000000081fe3980 (&kvm->srcu){....}-{0:0}, at: __vcpu_ru
->> 00: n+0x60a/0x2150 [kvm]
->> 00: [  424.588045] Last Breaking-Event-Address:
->> 00: [  424.588169]  [<000003ff80440c1e>] handle_pqap+0x116/0x468 [kvm]
->> 00: [  424.588204] irq event stamp: 23141
->> 00: [  424.588246] hardirqs last  enabled at (23149): [<000000014308f3de>] conso
->> 00: le_unlock+0x766/0xa20
->> 00: [  424.588287] hardirqs last disabled at (23156): [<000000014308ee40>] conso
->> 00: le_unlock+0x1c8/0xa20
->> 00: [  424.588536] softirqs last  enabled at (22998): [<000000014393e162>] __do_
->> 00: softirq+0x6e2/0xa48
->> 00: [  424.588583] softirqs last disabled at (22983): [<0000000142f652dc>] do_so
->> 00: ftirq_own_stack+0xe4/0x100
->> 00: [  424.588625] ---[ end trace e420441aa7c001ac ]---
->>
+SNIP
+
+> > > @@ -1461,6 +1461,9 @@ static int get_group_fd(struct evsel *evsel, int cpu, int thread)
+> > >   	BUG_ON(!leader->core.fd);
+> > >   	fd = FD(leader, cpu, thread);
+> > > +	if (fd == -1 && leader->core.system_wide)
+> > 
+> > fd does not need to be -1 in here.. in my setup cstate_pkg/c2-residency/
+> > has cpumask 0, so other cpus never get open and are 0, and the whole thing
+> > ends up with:
+> > 
+> > 	sys_perf_event_open: pid -1  cpu 1  group_fd 0  flags 0
+> > 	sys_perf_event_open failed, error -9
+> > 
+> > I actualy thought we put -1 to fd array but couldn't find it.. perhaps we should od that
+> > 
+> > 
+> 
+> I have tested on two platforms. On KBL desktop fd is 0 for this case, but on
+> oncascadelakex server, fd is -1, so the BUG_ON(fd == -1) is triggered.
+> 
+> > > +		fd = FD(leader, 0, thread);
+> > > +
+> > 
+> > so how do we group following events?
+> > 
+> >    cstate_pkg/c2-residency/ - cpumask 0
+> >    msr/tsc/                 - all cpus
+> > 
+> 
+> Not sure if it's enough to only use cpumask 0 because
+> cstate_pkg/c2-residency/ should be per-socket.
+> 
+> > cpu 0 is fine.. the rest I have no idea ;-)
+> > 
+> 
+> Perhaps we directly remove the BUG_ON(fd == -1) assertion?
+
+I think we need to make clear how to deal with grouping over
+events that comes for different cpus
+
+	so how do we group following events?
+	
+	   cstate_pkg/c2-residency/ - cpumask 0
+	   msr/tsc/                 - all cpus
+
+
+what's the reason/expected output of groups with above events?
+seems to make sense only if we limit msr/tsc/ to cpumask 0 as well
+
+jirka
 
