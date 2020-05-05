@@ -2,207 +2,154 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D10FC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B81C47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:57:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47D6F206CC
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05BAE20746
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:57:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="INzcmJmz"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="PYFHb1OX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730405AbgEEQ5c (ORCPT
+        id S1730509AbgEEQ5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:57:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46484 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729791AbgEEQ5c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:57:32 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3D46C061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 09:57:31 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id s9so1963983lfp.1
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 09:57:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=HFM3yAkZb46xEygXrI+s20ep7bX7I+6v6zVkG9cjJ7Q=;
-        b=INzcmJmzMSLXCRwm1CmJMtQDnvsBF6s3cj7aoQM6Zv3E5SBH2jFBzw7ry/XrAHey5/
-         pVKlz6WC6OLPFIHALOJYelk9ZCdwX77Dd8WMlaaEhzwZfq5PaXKVtkrqgx69qoupxiqh
-         DLBP4wVsIKhZoAsFSu16tcChFVYpD1pxUe1OQhtmFxBbfYGMkNyBYPtJXNvfIqOpXKWF
-         cPJK9weGQ8alz2msZxseQNiGSZq4q1R9XZroSYO83jVHeFfPy3WQ7jFzQvwKibhemxjJ
-         ofgdybr62xu7pcM5O4AkkcY2I3WganfNw63Pcry0mMoMzlrEXunkQT1/Q4Sn/nYPJvHk
-         C3BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HFM3yAkZb46xEygXrI+s20ep7bX7I+6v6zVkG9cjJ7Q=;
-        b=ILPycxUDAZxK8P2LcKMbdjvLOrwe+c6xob5wNLqqCxqijV4jLqmt1C+L3x/KIXmzKi
-         fITNVB9Pwkyw+8TrwR6xKY/vicWiwB22fd1+CgJqx3fkDVE0YKrEGN7GRSEHI3U/dzHG
-         4nzwmh2bTLhZuL9afWAeo1pC4Q/g5y0jwl/w9UBaCh6fN55t/By4xkjlO782xQL9aOKA
-         F+tNdzxPOeEfAI5ewanWfYwcQv1d+5zykFxCYOJ3ob2bx/bVZVFGX5ee/jcsrSGwkiYb
-         SvJWXolBbrUJSc/xg+TAcUuq75QNzjtbh8bS0K5JpSPbrcNhujD1OTKg7ej+GRY88QTi
-         Q9Fw==
-X-Gm-Message-State: AGi0PuaMNlCu/QLHPlCPDFI3gY4OJzglOxb5ZunCKySqyLTBqJkDWpCE
-        g+QGAbP/uzpSyDfoJwH/Xst+mLz6/4rbCU6vhN5zoA==
-X-Google-Smtp-Source: APiQypIydTqFNd8ijO9FDu1OMphXddqsk686RAVqOaokW0pq/4IyK0aHzzYs+555k3I/Q+rK+dFaerRMeXp2Pzlpupg=
-X-Received: by 2002:a19:84b:: with SMTP id 72mr2289067lfi.133.1588697850287;
- Tue, 05 May 2020 09:57:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200420115316.18781-1-acme@kernel.org> <20200422120943.GA110748@gmail.com>
- <CAEUSe7_wmKS361mKLTB1eYbzYXcKkXdU26BX5BojdKRz8MfPCw@mail.gmail.com>
- <20200424130722.GK19437@kernel.org> <0f6403ec-36cd-f43f-b3a6-b87e628f3789@redhat.com>
- <CAEUSe7_Ybp=7XC-2xMSEGYmCHvEMff0YbZq1f6akvxLVcS_ePA@mail.gmail.com> <20200505163745.GD3777@redhat.com>
-In-Reply-To: <20200505163745.GD3777@redhat.com>
-From:   =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
-Date:   Tue, 5 May 2020 11:57:18 -0500
-Message-ID: <CAEUSe7-0gXZ4M+dK_ur7J9J01ParcqkkUw=aGE552fDGHcnjUw@mail.gmail.com>
-Subject: Re: [GIT PULL] perf/core improvements and fixes
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Andreas Gerstmayr <agerstmayr@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        He Zhe <zhe.he@windriver.com>, Ian Rogers <irogers@google.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Konstantin Kharlamov <hi-angel@yandex.ru>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 5 May 2020 12:57:36 -0400
+Received: from mail-eopbgr1300121.outbound.protection.outlook.com ([40.107.130.121]:22048
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729593AbgEEQ5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 12:57:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gcLHCgAE6+hkJ+yAFHd+IsKUQZVOriTwMww+Oc6hTTwk66lbvkeAd6QxU6r0l8koDXYNwAhuGgtNq7yANdqsr2WIZZazlhrO/D82oEWRMHlwncqQ7VvnVEsuBsgSxrO/0bRnTMib9PK5aNKsIftXSh2RYu00U9ktbpDcXl9xeWWpfLOPZdXtqknl8IKCRrk4k+KBSt+9c/LYl19JUgwQBAKt9ql4dL62NyGyGwp/fIfX8OOSmNqDlSmOvzMdgTU3OZV6okvKNW9rGlrCxXrIc2f6/TYj11engY6r7xKkwQLEZbtZrGBc+fkLJn8mCPHV5zncYEJZcLLX9k2cHgteyQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d+XvLmKtnHFngU0YVDOioPfO7C0J8oVFWi7eBFmbzdI=;
+ b=b2BM/QuIMkH+EOFL400LTfwUG4Ved2BC3n00hfDKPQb4+YayNsA+z7FXH9wU+khKZHuriJnUWPjbSzYgAvLAYdRPiRdBc48qVmnXM1Sn0lyAewm+xxaDHcwT8DsJx0IE7U2N8YqZTh4Xtxs4o2W83Js65zvvehQRUb7HVPhtI6dVlcDKkqaFKTyTEGcnctmft9wlcBg9cdZxWtuLLUMCBjoSVt1QbWDd5x2x46kYMVzZ56Ezz0OuEGm3espLMSDcpPFBLEmNtLFiLKiW1uqIBID1sFoOSocuUUGlv7PIibl7xV6Ujhaa9e6gk/OK8zVwrcMkhVq3vwiUnqT73LuG6w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d+XvLmKtnHFngU0YVDOioPfO7C0J8oVFWi7eBFmbzdI=;
+ b=PYFHb1OXyqfV4IFdiiyC3VJeedYumNjAzMWeDD3iSWjdvd+SmnDwZpiOWV92lERTv/c6B69sE7iIM3M6s6B0pIwNtT0a1uyY7dMBvh4FkBkKTlW8rEn8zu/i7+wlBEwp8KRec5VoB2llRCvVnJx9yHFp3A0Yfe00i6bjzgsb3Kg=
+Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b2::12)
+ by HK0P153MB0308.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b4::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.6; Tue, 5 May
+ 2020 16:57:29 +0000
+Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
+ ([fe80::2d07:e045:9d5b:898a]) by HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
+ ([fe80::2d07:e045:9d5b:898a%2]) with mapi id 15.20.3000.007; Tue, 5 May 2020
+ 16:57:29 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: RE: [PATCH 4.19 11/37] PM: hibernate: Freeze kernel threads in
+ software_resume()
+Thread-Topic: [PATCH 4.19 11/37] PM: hibernate: Freeze kernel threads in
+ software_resume()
+Thread-Index: AQHWItYczJvBU24xf0upt/fD9/XJlaiZsm/w
+Date:   Tue, 5 May 2020 16:57:29 +0000
+Message-ID: <HK0P153MB02735D98EC84BFA89CD86C57BFA70@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+References: <20200504165448.264746645@linuxfoundation.org>
+ <20200504165449.741334238@linuxfoundation.org> <20200505120956.GA28722@amd>
+In-Reply-To: <20200505120956.GA28722@amd>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-05-05T16:57:26.4714578Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f5356558-d1c5-47b8-8314-6624f85243e9;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: denx.de; dkim=none (message not signed)
+ header.d=none;denx.de; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [2601:600:a280:7f70:cd:5276:efe2:23fa]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: cd2d5060-3a8f-49ba-9894-08d7f1156585
+x-ms-traffictypediagnostic: HK0P153MB0308:
+x-microsoft-antispam-prvs: <HK0P153MB030866BD6CBFA56FAA6F54C8BFA70@HK0P153MB0308.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0394259C80
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Mta44fCgL3mK3eC/imIAWRuw94ULqVA9ummprDZNjK2vc+Tc6AruCPhPFM7qDuvcBAQVq1BkYrqyNBrCvOlaiGEre/WA3NVSD/1WdG4FCcbOOdWybNuqDldCtjCNhXauS9dp8V0snH2TrCHLb/Ma7SBfAd3+cMI8Kax0PDHOvh6s7Vwt9MgnDpEJCGqqCNKhBUaH+rCzhkDPPz3YsNL1Cgz1+2oMTSu3/eD8U05k8U7uZqomUeQOhEXY85iRF4XrooJP4ecPxyLw74VIsPXh9vEeYoCprZgUj9ACzJVqMqjUsrCeFUP/Wi9HtofdummxNuirQsY8pAmDbub+1GF384+kKGOufRByQ1JWtEivJi9iH2wOeATuPBGmTxyqOxSnhJqE928y4nWokd/jLWNb4HidxcoUoY7Cva35PuYclHGZJtJKgOfrwzMCY7Ge0CpnbUWAy0JKNI8oDOjXp6S9rXoq0FIoPLnN12wJdCEgmTx6Riwv+V+nxVTgCNrZ+a9Fa6k2ZpM/ydGzbcuMCwJD6zecs/r+tIBmaD6MAyVyVtlahgRGtAyiGJskiRvumNT21pzRZMbfas/pXg6Nic3T1OL8hzmOz/cmDbI1Lfh0zVCvjpxH2A4ZUZS+snK2uff3HvOFYXlqvkMdypp5naIqWg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0273.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(366004)(396003)(376002)(39860400002)(33430700001)(186003)(316002)(54906003)(10290500003)(33656002)(966005)(110136005)(86362001)(478600001)(2906002)(66946007)(64756008)(66476007)(7696005)(6506007)(76116006)(53546011)(52536014)(5660300002)(4326008)(66556008)(66446008)(8676002)(8936002)(9686003)(55016002)(82950400001)(82960400001)(8990500004)(71200400001)(33440700001)(30253002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: VTiFcuuojlsl2jIIhhDR8h7z2asldZHi+K8Nt4XP5Zl4V3rlre6z41LsJGy0x1h6PZK+bNiYfJvk3iAZ7Sv/Tyhk1Ve1OmS0l8lSOPWgSD2UKg2D/RJM9kMeWofvyUIqbCBJRo+7p6ii49lV/a4cHFUc//kCKGd5XefsmFtbOUoxvWjN5dGsFGYIN2U1SHrWlFEakJ/oOnPlpj/UL4uwNADz36G/srlFI8rcKKsjDJ/uxjzL+zHChZzrak5AHcBly+Xc52XD7dHQPIpl603+CwvjKzQ+IPoMSjJeTGpYUMVVJ1auFMO6rditzwk5c7/a+mUyF+GfJDuwksxXqysKSkydE+qzeDGm2J34PSoMl0Dg14PsDTAB/czPFPiG8bfyB2u8iECEHIntl+f4iYYL9NHYQKIugsobvljDZvZ5VLzmbXZ6de/jHDwyXJJFBXqCI27bsTKeJiVJcAPMdecRVIc9yrrlnR8s5pDp1in+RPjg2Cz4MgA+QX5J4jQYqPmnsvMmdYXNzoj0wlHuoGlAjUwuYr6a4QCMLXqf4MRFUSadQAytFLZzeLVUNq6dtA9gv4bDk8To78XOBtg7l76DVT7N/Q2qEL/jsJpwhDWfBgu9X0TxQy52VwkDO6Br4SIIgTYmTgfQNmllj70MwgUbYZFU0CbNPPjDQpEE+WbVj/5sk1s+86Ok4FJGSFoP0B9KLSUquD3HNPd0bO5URKMkNdIbeCSf3FsoxcmMeFOYJvpjPnuQnkAKBgj+AH5Og+Ru+y15FOF+3YSgEF8bGDyDL+cv9LyBMYELtPkjeg2pUDTzuIhfmuLV/tp1pe6hgrdB3CT7iLtWL6R4edWmRG3FkxIrqPL/2UjH2FVss2a/BHA=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd2d5060-3a8f-49ba-9894-08d7f1156585
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 May 2020 16:57:29.2378
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jUIw1x40UePviHcpyevF6JUzS+uX2B9fzGrApsBfQqcK8xvHoAQGu3JskqCDYfILGwfN8QksnWE5HYt63Rw+3Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0308
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-On Tue, 5 May 2020 at 11:37, Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
->
-> Em Mon, May 04, 2020 at 02:07:56PM -0500, Daniel D=C3=ADaz escreveu:
-> > Hello!
+> From: Pavel Machek <pavel@denx.de>
+> Sent: Tuesday, May 5, 2020 5:10 AM
+> To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: linux-kernel@vger.kernel.org; stable@vger.kernel.org; Dexuan Cui
+> <decui@microsoft.com>; Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Subject: Re: [PATCH 4.19 11/37] PM: hibernate: Freeze kernel threads in
+> software_resume()
+>=20
+> Hi!
+>=20
+> > commit 2351f8d295ed63393190e39c2f7c1fee1a80578f upstream.
 > >
-> > On Fri, 24 Apr 2020 at 09:10, Andreas Gerstmayr <agerstmayr@redhat.com>=
- wrote:
-> > >
-> > > On 24.04.20 15:07, Arnaldo Carvalho de Melo wrote:
-> > > > Em Thu, Apr 23, 2020 at 04:28:46PM -0500, Daniel D=C3=ADaz escreveu=
-:
-> > > >> On Wed, 22 Apr 2020 at 07:09, Ingo Molnar <mingo@kernel.org> wrote=
-:
-> > > >>>>   85 files changed, 1851 insertions(+), 513 deletions(-)
-> > > >
-> > > >>> Pulled, thanks a lot Arnaldo!
-> > > >
-> > > >> Our OpenEmbedded builds detected an issue with 5287f9269206 ("perf
-> > > >> script: Add flamegraph.py script"):
-> > > >>    ERROR: perf-1.0-r9 do_package_qa: QA Issue:
-> > > >> /usr/libexec/perf-core/scripts/python/bin/flamegraph-report contai=
-ned
-> > > >> in package perf-python requires /usr/bin/sh, but no providers foun=
-d in
-> > > >> RDEPENDS_perf-python? [file-rdeps]
-> > > >
-> > > >
-> > > > yeah, the flamegraph scripts are the outliers, there, everything el=
-se is
-> > > > using /bin/bash, so I'll switch to that, ok Andreas?
-> > >
-> > > Sure, no problem. Thanks!
+> > Currently the kernel threads are not frozen in software_resume(), so
+> > between dpm_suspend_start(PMSG_QUIESCE) and resume_target_kernel(),
+> > system_freezable_power_efficient_wq can still try to submit SCSI
+> > commands and this can cause a panic since the low level SCSI driver
+> > (e.g. hv_storvsc) has quiesced the SCSI adapter and can not accept
+> > any SCSI commands: https://lkml.org/lkml/2020/4/10/47
 > >
-> > Just a gentle reminder that this can still be fixed in today's
-> > linux-next tree (next-20200504).
->
-> Thanks for the reminder, I've just added this to my tree:
->
-> commit c74ab13a30d3bec443c116e25b611255c58f32c0
-> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Date:   Tue May 5 13:33:12 2020 -0300
->
->     perf flamegraph: Use /bin/bash for report script
->
->     As all the other tools/perf/scripts/python/bin/*-report scripts, fixi=
-ng
->     the this problem reported by Daniel Diaz:
->
->       Our OpenEmbedded builds detected an issue with 5287f9269206 ("perf
->       script: Add flamegraph.py script"):
->         ERROR: perf-1.0-r9 do_package_qa: QA Issue:
->       /usr/libexec/perf-core/scripts/python/bin/flamegraph-report contain=
-ed
->       in package perf-python requires /usr/bin/sh, but no providers found=
- in
->       RDEPENDS_perf-python? [file-rdeps]
->
->       This means that there is a new binary pulled in in the shebang line
->       which was unaccounted for: `/usr/bin/sh`. I don't see any other usa=
-ge
->       of /usr/bin/sh in the kernel tree (does not even exist on my Ubuntu
->       dev machine) but plenty of /bin/sh. This patch is needed:
->       -----8<----------8<----------8<-----
->       diff --git a/tools/perf/scripts/python/bin/flamegraph-record
->       b/tools/perf/scripts/python/bin/flamegraph-record
->       index 725d66e71570..a2f3fa25ef81 100755
->       --- a/tools/perf/scripts/python/bin/flamegraph-record
->       +++ b/tools/perf/scripts/python/bin/flamegraph-record
->       @@ -1,2 +1,2 @@
->       -#!/usr/bin/sh
->       +#!/bin/sh
->        perf record -g "$@"
->       diff --git a/tools/perf/scripts/python/bin/flamegraph-report
->       b/tools/perf/scripts/python/bin/flamegraph-report
->       index b1a79afd903b..b0177355619b 100755
->       --- a/tools/perf/scripts/python/bin/flamegraph-report
->       +++ b/tools/perf/scripts/python/bin/flamegraph-report
->       @@ -1,3 +1,3 @@
->       -#!/usr/bin/sh
->       +#!/bin/sh
->        # description: create flame graphs
->        perf script -s "$PERF_EXEC_PATH"/scripts/python/flamegraph.py -- "=
-$@"
->       ----->8---------->8---------->8-----
->
->     Fixes: 5287f9269206 ("perf script: Add flamegraph.py script")
->     Reported-by: Daniel D=C3=ADaz <daniel.diaz@linaro.org>
->     Cc: Adrian Hunter <adrian.hunter@intel.com>
->     Cc: Andreas Gerstmayr <agerstmayr@redhat.com>
->     Cc: Jiri Olsa <jolsa@kernel.org>
->     Cc: lkft-triage@lists.linaro.org
->     Cc: Namhyung Kim <namhyung@kernel.org>
->     Link: http://lore.kernel.org/lkml/CAEUSe7_wmKS361mKLTB1eYbzYXcKkXdU26=
-BX5BojdKRz8MfPCw@mail.gmail.com
->     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
->
-> diff --git a/tools/perf/scripts/python/bin/flamegraph-report b/tools/perf=
-/scripts/python/bin/flamegraph-report
-> index b1a79afd903b..53c5dc90c87e 100755
-> --- a/tools/perf/scripts/python/bin/flamegraph-report
-> +++ b/tools/perf/scripts/python/bin/flamegraph-report
-> @@ -1,3 +1,3 @@
-> -#!/usr/bin/sh
-> +#!/bin/bash
->  # description: create flame graphs
->  perf script -s "$PERF_EXEC_PATH"/scripts/python/flamegraph.py -- "$@"
+> > At first I posted a fix (https://lkml.org/lkml/2020/4/21/1318) trying
+> > to resolve the issue from hv_storvsc, but with the help of
+> > Bart Van Assche, I realized it's better to fix software_resume(),
+> > since this looks like a generic issue, not only pertaining to SCSI.
+>=20
+> I believe it is too soon to merge this into stable. It is rather big
+> hammer. Yes, it is right thing to do. But I'd wait for 5.7 to be
+> released before merging it to stable.
+>=20
+> It needs some testing and it did not get any.
+>=20
+> Best regards,
+> 							Pavel
 
-What about flamegraph-record?
+Hi,
+I did do some testing in a Linux VM running on Hyper-V:
+Without the patch, I can easily hit the panic I described in the first link
+above. With the patch, my Linux VM can hibernate >10K times without
+seeing the panic and I don't see any issue caused by the patch.
 
-Thanks and greetings!
+That being said, I don't mind waiting for 5.7 before we merge the patch
+to stable. It would be good for the patch to get more testing from others.
 
-Daniel D=C3=ADaz
-daniel.diaz@linaro.org
+Thanks,
+-- Dexuan
