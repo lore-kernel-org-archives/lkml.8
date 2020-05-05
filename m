@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED5CC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F373CC47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B0C12068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D78E5206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:24:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729433AbgEEONw (ORCPT
+        id S1730211AbgEEOYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:13:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48526 "EHLO
+        Tue, 5 May 2020 10:24:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729370AbgEEONt (ORCPT
+        by vger.kernel.org with ESMTP id S1729434AbgEEONw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:13:49 -0400
+        Tue, 5 May 2020 10:13:52 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2A96C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:13:48 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23754C061A10
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:13:52 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jVyKA-0000SA-GY; Tue, 05 May 2020 16:13:30 +0200
+        id 1jVyKE-0000Uv-7f; Tue, 05 May 2020 16:13:34 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id F0E33FFC8D;
-        Tue,  5 May 2020 16:13:29 +0200 (CEST)
-Message-Id: <20200505134059.369802541@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id B61D5FFC8D;
+        Tue,  5 May 2020 16:13:33 +0200 (CEST)
+Message-Id: <20200505134059.678201813@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:16:15 +0200
+Date:   Tue, 05 May 2020 15:16:18 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -52,7 +52,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Will Deacon <will@kernel.org>
-Subject: [patch V4 part 1 13/36] x86/kvm: Restrict ASYNC_PF to user space
+Subject: [patch V4 part 1 16/36] kprobes: Support __kprobes blacklist in modules
 References: <20200505131602.633487962@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -65,179 +65,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The async page fault injection into kernel space creates more problems than
-it solves. The host has absolutely no knowledge about the state of the
-guest if the fault happens in CPL0. The only restriction for the host is
-interrupt disabled state. If interrupts are enabled in the guest then the
-exception can hit arbitrary code. The HALT based wait in non-preemotible
-code is a hacky replacement for a proper hypercall.
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-For the ongoing work to restrict instrumentation and make the RCU idle
-interaction well defined the required extra work for supporting async
-pagefault in CPL0 is just not justified and creates complexity for a
-dubious benefit.
+Support __kprobes attribute for blacklist functions in modules.  The
+__kprobes attribute functions are stored in .kprobes.text section.
 
-The CPL3 injection is well defined and does not cause any issues as it is
-more or less the same as a regular page fault from CPL3.
-
-Suggested-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- arch/x86/kernel/kvm.c |  100 +++-----------------------------------------------
- 1 file changed, 7 insertions(+), 93 deletions(-)
+Link: https://lkml.kernel.org/r/158523418821.24735.15379873028352411526.stgit@devnote2
 
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -75,7 +75,6 @@ struct kvm_task_sleep_node {
- 	struct swait_queue_head wq;
- 	u32 token;
- 	int cpu;
--	bool use_halt;
- };
+---
+ include/linux/module.h |    4 ++++
+ kernel/kprobes.c       |   42 ++++++++++++++++++++++++++++++++++++++++++
+ kernel/module.c        |    4 ++++
+ 3 files changed, 50 insertions(+)
+
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -489,6 +489,10 @@ struct module {
+ 	unsigned int num_ftrace_callsites;
+ 	unsigned long *ftrace_callsites;
+ #endif
++#ifdef CONFIG_KPROBES
++	void *kprobes_text_start;
++	unsigned int kprobes_text_size;
++#endif
  
- static struct kvm_task_sleep_head {
-@@ -98,8 +97,7 @@ static struct kvm_task_sleep_node *_find
- 	return NULL;
+ #ifdef CONFIG_LIVEPATCH
+ 	bool klp; /* Is this a livepatch module? */
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -2179,6 +2179,19 @@ int kprobe_add_area_blacklist(unsigned l
+ 	return 0;
  }
  
--static bool kvm_async_pf_queue_task(u32 token, bool use_halt,
--				    struct kvm_task_sleep_node *n)
-+static bool kvm_async_pf_queue_task(u32 token, struct kvm_task_sleep_node *n)
++/* Remove all symbols in given area from kprobe blacklist */
++static void kprobe_remove_area_blacklist(unsigned long start, unsigned long end)
++{
++	struct kprobe_blacklist_entry *ent, *n;
++
++	list_for_each_entry_safe(ent, n, &kprobe_blacklist, list) {
++		if (ent->start_addr < start || ent->start_addr >= end)
++			continue;
++		list_del(&ent->list);
++		kfree(ent);
++	}
++}
++
+ int __init __weak arch_populate_kprobe_blacklist(void)
  {
- 	u32 key = hash_32(token, KVM_TASK_SLEEP_HASHBITS);
- 	struct kvm_task_sleep_head *b = &async_pf_sleepers[key];
-@@ -117,7 +115,6 @@ static bool kvm_async_pf_queue_task(u32
- 
- 	n->token = token;
- 	n->cpu = smp_processor_id();
--	n->use_halt = use_halt;
- 	init_swait_queue_head(&n->wq);
- 	hlist_add_head(&n->link, &b->list);
- 	raw_spin_unlock(&b->lock);
-@@ -138,7 +135,7 @@ void kvm_async_pf_task_wait_schedule(u32
- 
- 	lockdep_assert_irqs_disabled();
- 
--	if (!kvm_async_pf_queue_task(token, false, &n))
-+	if (!kvm_async_pf_queue_task(token, &n))
- 		return;
- 
- 	for (;;) {
-@@ -154,91 +151,10 @@ void kvm_async_pf_task_wait_schedule(u32
- }
- EXPORT_SYMBOL_GPL(kvm_async_pf_task_wait_schedule);
- 
--/*
-- * Invoked from the async page fault handler.
-- */
--static void kvm_async_pf_task_wait_halt(u32 token)
--{
--	struct kvm_task_sleep_node n;
--
--	if (!kvm_async_pf_queue_task(token, true, &n))
--		return;
--
--	for (;;) {
--		if (hlist_unhashed(&n.link))
--			break;
--		/*
--		 * No point in doing anything about RCU here. Any RCU read
--		 * side critical section or RCU watching section can be
--		 * interrupted by VMEXITs and the host is free to keep the
--		 * vCPU scheduled out as long as it sees fit. This is not
--		 * any different just because of the halt induced voluntary
--		 * VMEXIT.
--		 *
--		 * Also the async page fault could have interrupted any RCU
--		 * watching context, so invoking rcu_irq_exit()/enter()
--		 * around this is not gaining anything.
--		 */
--		native_safe_halt();
--		local_irq_disable();
--	}
--}
--
--/* Invoked from the async page fault handler */
--static void kvm_async_pf_task_wait(u32 token, bool usermode)
--{
--	bool can_schedule;
--
--	/*
--	 * No need to check whether interrupts were disabled because the
--	 * host will (hopefully) only inject an async page fault into
--	 * interrupt enabled regions.
--	 *
--	 * If CONFIG_PREEMPTION is enabled then check whether the code
--	 * which triggered the page fault is preemptible. This covers user
--	 * mode as well because preempt_count() is obviously 0 there.
--	 *
--	 * The check for rcu_preempt_depth() is also required because
--	 * voluntary scheduling inside a rcu read locked section is not
--	 * allowed.
--	 *
--	 * The idle task is already covered by this because idle always
--	 * has a preempt count > 0.
--	 *
--	 * If CONFIG_PREEMPTION is disabled only allow scheduling when
--	 * coming from user mode as there is no indication whether the
--	 * context which triggered the page fault could schedule or not.
--	 */
--	if (IS_ENABLED(CONFIG_PREEMPTION))
--		can_schedule = preempt_count() + rcu_preempt_depth() == 0;
--	else
--		can_schedule = usermode;
--
--	/*
--	 * If the kernel context is allowed to schedule then RCU is
--	 * watching because no preemptible code in the kernel is inside RCU
--	 * idle state. So it can be treated like user mode. User mode is
--	 * safe because the #PF entry invoked enter_from_user_mode().
--	 *
--	 * For the non schedulable case invoke rcu_irq_enter() for
--	 * now. This will be moved out to the pagefault entry code later
--	 * and only invoked when really needed.
--	 */
--	if (can_schedule) {
--		kvm_async_pf_task_wait_schedule(token);
--	} else {
--		rcu_irq_enter();
--		kvm_async_pf_task_wait_halt(token);
--		rcu_irq_exit();
--	}
--}
--
- static void apf_task_wake_one(struct kvm_task_sleep_node *n)
- {
- 	hlist_del_init(&n->link);
--	if (n->use_halt)
--		smp_send_reschedule(n->cpu);
--	else if (swq_has_sleeper(&n->wq))
-+	if (swq_has_sleeper(&n->wq))
- 		swake_up_one(&n->wq);
+ 	return 0;
+@@ -2215,6 +2228,28 @@ static int __init populate_kprobe_blackl
+ 	return ret ? : arch_populate_kprobe_blacklist();
  }
  
-@@ -337,8 +253,10 @@ bool __kvm_handle_async_pf(struct pt_reg
- 		panic("Host injected async #PF in interrupt disabled region\n");
++static void add_module_kprobe_blacklist(struct module *mod)
++{
++	unsigned long start, end;
++
++	start = (unsigned long)mod->kprobes_text_start;
++	if (start) {
++		end = start + mod->kprobes_text_size;
++		kprobe_add_area_blacklist(start, end);
++	}
++}
++
++static void remove_module_kprobe_blacklist(struct module *mod)
++{
++	unsigned long start, end;
++
++	start = (unsigned long)mod->kprobes_text_start;
++	if (start) {
++		end = start + mod->kprobes_text_size;
++		kprobe_remove_area_blacklist(start, end);
++	}
++}
++
+ /* Module notifier call back, checking kprobes on the module */
+ static int kprobes_module_callback(struct notifier_block *nb,
+ 				   unsigned long val, void *data)
+@@ -2225,6 +2260,11 @@ static int kprobes_module_callback(struc
+ 	unsigned int i;
+ 	int checkcore = (val == MODULE_STATE_GOING);
  
- 	if (reason == KVM_PV_REASON_PAGE_NOT_PRESENT) {
--		/* page is swapped out by the host. */
--		kvm_async_pf_task_wait(token, user_mode(regs));
-+		if (unlikely(!(user_mode(regs))))
-+			panic("Host injected async #PF in kernel mode\n");
-+		/* Page is swapped out by the host. */
-+		kvm_async_pf_task_wait_schedule(token);
- 	} else {
- 		rcu_irq_enter();
- 		kvm_async_pf_task_wake(token);
-@@ -397,10 +315,6 @@ static void kvm_guest_cpu_init(void)
- 		WARN_ON_ONCE(!static_branch_likely(&kvm_async_pf_enabled));
++	if (val == MODULE_STATE_COMING) {
++		mutex_lock(&kprobe_mutex);
++		add_module_kprobe_blacklist(mod);
++		mutex_unlock(&kprobe_mutex);
++	}
+ 	if (val != MODULE_STATE_GOING && val != MODULE_STATE_LIVE)
+ 		return NOTIFY_DONE;
  
- 		pa = slow_virt_to_phys(this_cpu_ptr(&apf_reason));
--
--#ifdef CONFIG_PREEMPTION
--		pa |= KVM_ASYNC_PF_SEND_ALWAYS;
--#endif
- 		pa |= KVM_ASYNC_PF_ENABLED;
+@@ -2255,6 +2295,8 @@ static int kprobes_module_callback(struc
+ 				kill_kprobe(p);
+ 			}
+ 	}
++	if (val == MODULE_STATE_GOING)
++		remove_module_kprobe_blacklist(mod);
+ 	mutex_unlock(&kprobe_mutex);
+ 	return NOTIFY_DONE;
+ }
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -3194,6 +3194,10 @@ static int find_module_sections(struct m
+ 					    sizeof(*mod->ei_funcs),
+ 					    &mod->num_ei_funcs);
+ #endif
++#ifdef CONFIG_KPROBES
++	mod->kprobes_text_start = section_objs(info, ".kprobes.text", 1,
++						&mod->kprobes_text_size);
++#endif
+ 	mod->extable = section_objs(info, "__ex_table",
+ 				    sizeof(*mod->extable), &mod->num_exentries);
  
- 		if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF_VMEXIT))
 
