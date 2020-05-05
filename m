@@ -6,177 +6,167 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69665C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE52C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54978206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8B51206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:57:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729665AbgEEO4o (ORCPT
+        id S1729412AbgEEO52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:56:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:42444 "EHLO foss.arm.com"
+        Tue, 5 May 2020 10:57:28 -0400
+Received: from mga05.intel.com ([192.55.52.43]:35924 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729123AbgEEO4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:56:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5C7AA1FB;
-        Tue,  5 May 2020 07:56:42 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB0CE3F68F;
-        Tue,  5 May 2020 07:56:39 -0700 (PDT)
-Date:   Tue, 5 May 2020 15:56:37 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Patrick Bellasi <derkling@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] Documentation/sysctl: Document uclamp sysctl knobs
-Message-ID: <20200505145637.5daqhatsm5bjsok7@e107158-lin.cambridge.arm.com>
-References: <20200501114927.15248-1-qais.yousef@arm.com>
- <20200501114927.15248-2-qais.yousef@arm.com>
- <87d07krjyk.derkling@matbug.com>
+        id S1729123AbgEEO51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 10:57:27 -0400
+IronPort-SDR: qS8db/hE/dCjHkKhqrukpwBlOvrxWJaIB1L0KbusT490ettfCqpuJlKV/nXZ+gzhCB/hUc695W
+ 1VPxoirZ3ujQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 07:57:26 -0700
+IronPort-SDR: DuqDAVhxHNW8gqntD4gKMkXTXL5FWpxbehcRd4/+qAd3kL4Ljk8mQpHrEVvTxBLAm+CnzLON1i
+ +gfwtyeqo9Pg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,355,1583222400"; 
+   d="scan'208";a="263192431"
+Received: from jmserbon-mobl1.amr.corp.intel.com (HELO [10.254.110.254]) ([10.254.110.254])
+  by orsmga006.jf.intel.com with ESMTP; 05 May 2020 07:57:25 -0700
+Subject: Re: [PATCH v2 1/1] fs/splice: add missing callback for inaccessible
+ pages
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ulrich Weigand <uweigand@de.ibm.com>
+Cc:     Claudio Imbrenda <imbrenda@linux.ibm.com>, viro@zeniv.linux.org.uk,
+        david@redhat.com, akpm@linux-foundation.org, aarcange@redhat.com,
+        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
+        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, jack@suse.cz, kirill@shutemov.name,
+        peterz@infradead.org, sean.j.christopherson@intel.com,
+        Ulrich.Weigand@de.ibm.com
+References: <20200430143825.3534128-1-imbrenda@linux.ibm.com>
+ <1a3f5107-9847-73d4-5059-c6ef9d293551@de.ibm.com>
+ <e3e95a35-b0e3-b733-92f4-98bcccbe7ca5@intel.com>
+ <3d379d9e-241c-ef3b-dcef-20fdd3b8740d@de.ibm.com>
+ <a10ec7ad-2648-950e-7f30-07c08e400e7b@intel.com>
+ <20200504134154.GA21001@oc3748833570.ibm.com>
+ <231da2f1-a6ef-0cf9-7f57-95e8b925997b@intel.com>
+ <20200505135556.GA9920@oc3748833570.ibm.com>
+ <fd300dca-f0b4-ce3b-4a97-244030624fbd@de.ibm.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <a6eb1246-0c9e-be8c-eeeb-e5a56b1d09b4@intel.com>
+Date:   Tue, 5 May 2020 07:57:25 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <fd300dca-f0b4-ce3b-4a97-244030624fbd@de.ibm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87d07krjyk.derkling@matbug.com>
-User-Agent: NeoMutt/20171215
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Patrick
-
-On 05/03/20 19:45, Patrick Bellasi wrote:
-> > +sched_util_clamp_min:
-> > +=====================
-> > +
-> > +Max allowed *minimum* utilization.
-> > +
-> > +Default value is SCHED_CAPACITY_SCALE (1024), which is the maximum possible
->                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+On 5/5/20 7:01 AM, Christian Borntraeger wrote:
+> On 05.05.20 15:55, Ulrich Weigand wrote:
+>> On Tue, May 05, 2020 at 05:34:45AM -0700, Dave Hansen wrote:
+>>>> static inline __must_check bool try_get_page(struct page *page)
+>>>> {
+>>>>         page = compound_head(page);
+>>>>         if (WARN_ON_ONCE(page_ref_count(page) <= 0))
+>>>>                 return false;
+>>>>         page_ref_inc(page);
+>>>>         return true;
+>>>> }
+>>>
+>>> If try_get_page() collides with a freeze_page_refs(), it'll hit the
+>>> WARN_ON_ONCE(), which is surely there for a good reason.  I'm not sure
+>>> that warning is _actually_ valid since freeze_page_refs() isn't truly a
+>>> 0 refcount.  But, the fact that this hasn't been encountered means that
+>>> the testing here is potentially lacking.
+>>
+>> This is indeed interesting.  In particular if you compare try_get_page
+>> with try_get_compound_head in gup.c, which does instead:
+>>
+>>         if (WARN_ON_ONCE(page_ref_count(head) < 0))
+>>                 return NULL;
+>>
+>> which seems more reasonable to me, given the presence of the
+>> page_ref_freeze method.  So I'm not sure why try_get_page has <= 0.
 > 
-> Mmm... I feel one of the two is an implementation detail which should
-> probably not be exposed?
+> Just looked at 
+> commit 88b1a17dfc3ed7728316478fae0f5ad508f50397  mm: add 'try_get_page()' helper function
 > 
-> The user perhaps needs to know the value (1024) but we don't need to
-> expose the internal representation.
-
-Okay.
-
+> which says:
+>     Also like 'get_page()', you can't use this function unless you already
+>     had a reference to the page.  The intent is that you can use this
+>     exactly like get_page(), but in situations where you want to limit the
+>     maximum reference count.
+>     
+>     The code currently does an unconditional WARN_ON_ONCE() if we ever hit
+>     the reference count issues (either zero or negative), as a notification
+>     that the conditional non-increment actually happened.
 > 
-> 
-> > +value.
-> > +
-> > +It means that any requested uclamp.min value cannot be greater than
-> > +sched_util_clamp_min, i.e., it is restricted to the range
-> > +[0:sched_util_clamp_min].
-> > +
-> > +sched_util_clamp_max:
-> > +=====================
-> > +
-> > +Max allowed *maximum* utilization.
-> > +
-> > +Default value is SCHED_CAPACITY_SCALE (1024), which is the maximum possible
-> > +value.
-> > +
-> > +It means that any requested uclamp.max value cannot be greater than
-> > +sched_util_clamp_max, i.e., it is restricted to the range
-> > +[0:sched_util_clamp_max].
-> > +
-> > +sched_util_clamp_min_rt_default:
-> > +================================
-> > +
-> > +By default Linux is tuned for performance. Which means that RT tasks always run
-> > +at the highest frequency and most capable (highest capacity) CPU (in
-> > +heterogeneous systems).
-> > +
-> > +Uclamp achieves this by setting the requested uclamp.min of all RT tasks to
-> > +SCHED_CAPACITY_SCALE (1024) by default, which effectively boosts the tasks to
-> > +run at the highest frequency and biases them to run on the biggest CPU.
-> > +
-> > +This knob allows admins to change the default behavior when uclamp is being
-> > +used. In battery powered devices particularly, running at the maximum
-> > +capacity and frequency will increase energy consumption and shorten the battery
-> > +life.
-> > +
-> > +This knob is only effective for RT tasks which the user hasn't modified their
-> > +requested uclamp.min value via sched_setattr() syscall.
-> > +
-> > +This knob will not escape the constraint imposed by sched_util_clamp_min
-> > +defined above.
-> 
-> Perhaps it's worth to specify that this value is going to be clamped by
-> the values above? Otherwise it's a bit ambiguous to know what happen
-> when it's bigger than schedu_util_clamp_min.
+> If try_get_page must be called with an existing reference, that means
+> that when we call it the page reference is already higher and our freeze
+> will never succeed. That would imply that we cannot trigger this. No?
 
-Hmm for me that sentence says exactly what you're asking for.
+For gup, we hold the page table lock over the try_grab_page().  That
+ensures that nobody can drop the reference while try_grab_page() is in
+progress.  The migration page_ref_freeze() code also never races with
+this because it first shoots down the PTEs before freezing refs.
 
-So what you want is
+My worry with the s390 code is that it leaves the PTEs in place while
+freezing refs.  This seems new, otherwise we would have been tripping
+the gup warning.
 
-	s/will not escape the constraint imposed by/will be clamped by/
+For the page cache, there's a reference taken because of the page's
+presence in the page cache xarray.  But, the page cache uses
+page_cache_get_speculative(), not try_grab_page().  It doesn't have the
+warning on the <=0 refcount.
 
-?
-
-I'm not sure if this will help if the above is already ambiguous. Maybe if
-I explicitly say
-
-	..will not escape the *range* constrained imposed by..
-
-sched_util_clamp_min is already defined as a range constraint, so hopefully it
-should hit the mark better now?
-
-> 
-> > +Any modification is applied lazily on the next opportunity the scheduler needs
-> > +to calculate the effective value of uclamp.min of the task.
->                     ^^^^^^^^^
-> 
-> This is also an implementation detail, I would remove it.
-
-The idea is that this value is not updated 'immediately'/synchronously. So
-currently RUNNING tasks will not see the effect, which could generate confusion
-when users trip over it. IMO giving an idea of how it's updated will help with
-expectation of the users. I doubt any will care, but I think it's an important
-behavior element that is worth conveying and documenting. I'd be happy to
-reword it if necessary.
-
-I have this now
-
-"""
- 984 This knob will not escape the range constraint imposed by sched_util_clamp_min
- 985 defined above.
- 986
- 987 For example if
- 988
- 989         sched_util_clamp_min_rt_default = 800
- 990         sched_util_clamp_min = 600
- 991
- 992 Then the boost will be clamped to 600 because 800 is outside of the permissible
- 993 range of [0:600]. This could happen for instance if a powersave mode will
- 994 restrict all boosts temporarily by modifying sched_util_clamp_min. As soon as
- 995 this restriction is lifted, the requested sched_util_clamp_min_rt_default
- 996 will take effect.
- 997
- 998 Any modification is applied lazily to currently running tasks and should be
- 999 visible by the next wakeup.
-"""
-
-Thanks
-
---
-Qais Yousef
+Either way, I agree that the try_get_page()
+WARN_ON_ONCE(page_ref_count(page) <= 0) is looking fishy.
