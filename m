@@ -2,175 +2,192 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39661C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E13F5C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1735E206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA5BC206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:40:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588689617;
+	bh=j/GqXoT+GQGssQ3rGRFGFL3Qfzj08wyd/Iyt+COdg2A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eWTCG3rkaPYhNE5jXOyN91HJWbipom83JPkBtGuShftEKIO4C8B19Hvfqm/FGS6NA
+	 PEyvINN7yFsPV4ocTvO2S5Y/5oENvBDsQV4v8Ndd1pqR88rOK89P3w4n3GVReElCVv
+	 ns49raLUQb45OShde2FvYpiM9/o7D7a4JlncJF5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729308AbgEEOkD (ORCPT
+        id S1729380AbgEEOkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:40:03 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40266 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727083AbgEEOkC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:40:02 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 045EYrsd039947;
-        Tue, 5 May 2020 10:39:48 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30u8sgu8hr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 10:39:48 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 045Eaf2g046540;
-        Tue, 5 May 2020 10:39:48 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30u8sgu8gb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 10:39:47 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 045EUj3a028193;
-        Tue, 5 May 2020 14:39:45 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma05fra.de.ibm.com with ESMTP id 30s0g5jw0n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 14:39:45 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 045EdeJF66191822
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 May 2020 14:39:40 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 24234A4051;
-        Tue,  5 May 2020 14:39:40 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9942EA4040;
-        Tue,  5 May 2020 14:39:38 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.49.139])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  5 May 2020 14:39:38 +0000 (GMT)
-Subject: Re: [PATCH v2 1/1] fs/splice: add missing callback for inaccessible
- pages
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Ulrich Weigand <uweigand@de.ibm.com>
-Cc:     Claudio Imbrenda <imbrenda@linux.ibm.com>, viro@zeniv.linux.org.uk,
-        david@redhat.com, akpm@linux-foundation.org, aarcange@redhat.com,
-        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
-        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, jack@suse.cz, kirill@shutemov.name,
-        peterz@infradead.org, sean.j.christopherson@intel.com,
-        Ulrich.Weigand@de.ibm.com
-References: <20200430143825.3534128-1-imbrenda@linux.ibm.com>
- <1a3f5107-9847-73d4-5059-c6ef9d293551@de.ibm.com>
- <e3e95a35-b0e3-b733-92f4-98bcccbe7ca5@intel.com>
- <3d379d9e-241c-ef3b-dcef-20fdd3b8740d@de.ibm.com>
- <a10ec7ad-2648-950e-7f30-07c08e400e7b@intel.com>
- <20200504134154.GA21001@oc3748833570.ibm.com>
- <231da2f1-a6ef-0cf9-7f57-95e8b925997b@intel.com>
- <45bc81bb-8765-ffff-6e47-8ee9702c8bcd@de.ibm.com>
- <6e97a4b0-df4f-90c7-a6f7-61ee52e0833e@intel.com>
- <da6bc7cb-ef13-08cd-f162-663b4a66043b@de.ibm.com>
- <fcc9adea-598f-f882-c3e3-09d190cd5d52@intel.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Message-ID: <d0a7970b-b7bf-c362-fc7e-1f5aaa8aef29@de.ibm.com>
-Date:   Tue, 5 May 2020 16:39:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 5 May 2020 10:40:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41766 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727083AbgEEOkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 10:40:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DB0A206B9;
+        Tue,  5 May 2020 14:40:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588689616;
+        bh=j/GqXoT+GQGssQ3rGRFGFL3Qfzj08wyd/Iyt+COdg2A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vQRX4RZsIX+qs0WE3rk0U3eOEH1uAOv+i+v2rDbwNKAFYykV6I37Zfaitx0oUXWwm
+         wtxPbEft1eIUz4BouINwCZusQpQ10+hcyUHJspFT+n8tfliHeVjyY4l+zIcs60Gf1f
+         /xBEITuUyoyNppCR7aSoddeDROW8aT33JQLYQlMU=
+Date:   Tue, 5 May 2020 16:40:13 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, loic.pallardy@st.com,
+        linus.walleij@linaro.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] bus: stm32: Introduce firewall controller helpers
+Message-ID: <20200505144013.GB838641@kroah.com>
+References: <20200505073308.22914-1-benjamin.gaignard@st.com>
+ <20200505073308.22914-3-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-In-Reply-To: <fcc9adea-598f-f882-c3e3-09d190cd5d52@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-05_08:2020-05-04,2020-05-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- priorityscore=1501 adultscore=0 malwarescore=0 bulkscore=0
- lowpriorityscore=0 mlxscore=0 impostorscore=0 phishscore=0 suspectscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005050119
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505073308.22914-3-benjamin.gaignard@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 05.05.20 16:34, Dave Hansen wrote:
-> On 5/5/20 7:31 AM, Christian Borntraeger wrote:
->>> So, the requirements are:
->>>
->>> 1. Allow host-side DMA and CPU access to shared pages
->>> 2. Stop host-side DMA and CPU access to encrypted pages
->>> 3. Allow pages to be converted between the states at the request of the
->>>    guest
->>>
->>> Stopping the DMA is pretty easy, even across the gazillions of drivers
->>> in the tree because even random ethernet drivers do stuff like:
->>>
->>>                 txdr->buffer_info[i].dma =
->>>                         dma_map_single(&pdev->dev, skb->data, skb->len,
->>>                                        DMA_TO_DEVICE);
->>>
->>> So the DMA can be stopped at the mapping layer.  It's a *LOT* easier to
->>> catch there since the IOMMUs already provide isolation between the I/O
->>> and CPU address spaces.
->> And your problem is that the guest could convert this after the dma_map?
->> So you looked into our code if this would help?
+On Tue, May 05, 2020 at 09:33:05AM +0200, Benjamin Gaignard wrote:
+> The goal of these helpers are to offer an interface for the
+> hardware blocks controlling bus accesses rights.
 > 
-> Yep, it seemed like a close-enough problem.
+> Bus firewall controllers are typically used to control if a
+> hardware block can perform read or write operations on bus.
+> 
+> Smarter firewall controllers could be able to define accesses
+> rights per hardware blocks to control where they can read
+> or write.
+> 
+> Firewall controller configurations are provided in device node,
+> parsed by the helpers and send to the driver to apply them.
+> Each controller may need different number and type of inputs
+> to configure the firewall so device-tree properties size have to
+> be define by using "#firewall-cells".
+> Firewall configurations properties have to be named "firewall-X"
+> on device node.
+> "firewall-names" keyword can also be used to give a name to
+> a specific configuration.
+> 
+> Example of device-tree:
+> ctrl0: firewall@0 {
+> 	#firewall-cells = <2>;
+>       };
+> 
+> foo: foo@0 {
+> 	firewall-names = "default", "setting1";
+> 	firewall-0 = <&ctrl0 1 2>;
+> 	firewall-1 = <&ctrl0 3 4>;
+> };
+> 
+> Configurations could be applied with functions like
+> firewall_set_config_by_index() or firewall_set_config_by_name().
+> 
+> firewall_set_default_config() function will apply the
+> configuration named "default" (if existing) or the configuration
+> with index 0 (i.e. firewall-0).
+> 
+> Drivers could register/unregister themselves be calling
+> firewall_register/firewall_unregister functions.
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  drivers/bus/Kconfig          |   2 +
+>  drivers/bus/Makefile         |   2 +
+>  drivers/bus/stm32/Kconfig    |   3 +
+>  drivers/bus/stm32/Makefile   |   1 +
+>  drivers/bus/stm32/firewall.c | 266 +++++++++++++++++++++++++++++++++++++++++++
+>  drivers/bus/stm32/firewall.h |  75 ++++++++++++
+>  6 files changed, 349 insertions(+)
+>  create mode 100644 drivers/bus/stm32/Kconfig
+>  create mode 100644 drivers/bus/stm32/Makefile
+>  create mode 100644 drivers/bus/stm32/firewall.c
+>  create mode 100644 drivers/bus/stm32/firewall.h
+> 
+> diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
+> index 6d4e4497b59b..843b356322d9 100644
+> --- a/drivers/bus/Kconfig
+> +++ b/drivers/bus/Kconfig
+> @@ -203,4 +203,6 @@ config DA8XX_MSTPRI
+>  source "drivers/bus/fsl-mc/Kconfig"
+>  source "drivers/bus/mhi/Kconfig"
+>  
+> +source "drivers/bus/stm32/Kconfig"
+> +
+>  endmenu
+> diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
+> index 05f32cd694a4..5e0e34b10235 100644
+> --- a/drivers/bus/Makefile
+> +++ b/drivers/bus/Makefile
+> @@ -37,3 +37,5 @@ obj-$(CONFIG_DA8XX_MSTPRI)	+= da8xx-mstpri.o
+>  
+>  # MHI
+>  obj-$(CONFIG_MHI_BUS)		+= mhi/
+> +
+> +obj-$(CONFIG_MACH_STM32MP157) 	+= stm32/
+> \ No newline at end of file
+> diff --git a/drivers/bus/stm32/Kconfig b/drivers/bus/stm32/Kconfig
+> new file mode 100644
+> index 000000000000..57221e833e2d
+> --- /dev/null
+> +++ b/drivers/bus/stm32/Kconfig
+> @@ -0,0 +1,3 @@
+> +config FIREWALL_CONTROLLERS
+> +	bool "Support of bus firewall controllers"
+> +	depends on OF
+> diff --git a/drivers/bus/stm32/Makefile b/drivers/bus/stm32/Makefile
+> new file mode 100644
+> index 000000000000..eb6b978d6450
+> --- /dev/null
+> +++ b/drivers/bus/stm32/Makefile
+> @@ -0,0 +1 @@
+> +obj-$(CONFIG_FIREWALL_CONTROLLERS) += firewall.o
+> diff --git a/drivers/bus/stm32/firewall.c b/drivers/bus/stm32/firewall.c
+> new file mode 100644
+> index 000000000000..95f716cf926f
+> --- /dev/null
+> +++ b/drivers/bus/stm32/firewall.c
+> @@ -0,0 +1,266 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) STMicroelectronics 2020 - All Rights Reserved
+> + * Author: Benjamin Gaignard <benjamin.gaignard@st.com> for STMicroelectronics.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/list.h>
+> +#include <linux/of.h>
+> +#include <linux/slab.h>
+> +
+> +#include "firewall.h"
+> +
+> +/* Mutex taken to protect firewall_list */
+> +static DEFINE_MUTEX(firewall_list_mutex);
+> +
+> +/* Global list of firewall control devices */
+> +static LIST_HEAD(firewall_list);
 
-Is there a way to prevent the guest from switching the state? We also have 2
-variants of secure pages
-1. those that are secure and when the host accesses them will be encrypted
-2. those that are marked by the guest as shared. When you look at 
-arch_make_page_accessible we first try to "pin" the shared state. So the guest
-trying to "unshare" such a page would trigger an exit that we can handle.
+Why is that needed?  Why can't you just walk the list of devices on this
+"bus/class" if you really wanted to?
+
+Along those lines, why is this going around the driver model and
+ignoring it?  Shouldn't this be a bus and you have devices attached to
+it of the specific type?
+
+
+greg k-h
