@@ -2,100 +2,152 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FE7C47258
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1ED1C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C24E8206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:45:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A73FD206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:49:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N4hxmyzj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y+FbbwF8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728836AbgEELpE (ORCPT
+        id S1728717AbgEELtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 07:45:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53422 "EHLO
+        Tue, 5 May 2020 07:49:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728608AbgEELpD (ORCPT
+        by vger.kernel.org with ESMTP id S1728497AbgEELtL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 07:45:03 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38392C061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 04:45:02 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id h4so1242762ljg.12
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 04:45:02 -0700 (PDT)
+        Tue, 5 May 2020 07:49:11 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50EC5C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 04:49:11 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id k133so1493793oih.12
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 04:49:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oIfWdRq9yyjwaPNLBB1WhcLPviYtpHs1y/6Em0UoQzc=;
-        b=N4hxmyzj9lyf6o8bph0ivG/R3yiX7+7av0Z3hbRgE3G1P9nJfWcbLP48L+DmBUPdRL
-         iS7tdHnci9lYc5jibCU27M9cIyiBouV3TGfHBxmomzZlTAA+K4jvmlfO+0PUY5gOJwWk
-         INzBNV9RdyU4hz+KA3qMcbJKjE4Nef1pYkIpykiFiNhgkJ8IjX1SCD4/KaX9gsrjw7UM
-         PqB5v5UISICWvKpUwJeHeWlT+kuUlYh2Fy7unW4FPr071vxBMvN/2bqL0KNaC/NHAxF/
-         T4cTLz3YQkpT0ozMLHkIMjfiTRUu5z91/BjdSvFzNbqdymSh9Jx5aHZO1PEyCLvLAOi3
-         ZMTQ==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GjKB5+P+lowciw8hYvavcWELEVof+DOw/wkBRXTnIl0=;
+        b=Y+FbbwF8AszDk+hX7j6caODIk2+tXo9cx0GEKnAvrEC1XU0hoQeG212yS6+Y31FpET
+         47hfcPoZ54v3U/0wiHFoLRfPKkYF+eG9HaLYO5Wp3JFRXPhG0wBunbmsVoVB7StKsRGg
+         CGMU+Ujxzmlc9qNAyF5U5fJHYukK7GLidxS8+7uh7R0ZmzGCfRdMWG2JVc502ZwH4TRy
+         fxY+mg0eBBQGVKYm2bSxJfNZey/ItSR0eHjsFW96YjVeD2dZOaSnwKbD5RNzINq+ScTW
+         NSkiNdlMTy2yxGjJZv4TZimZGuhB4IG6ZB1LJNYxj1XnzgyfLJ2qDAoybjpBsebBTC4q
+         bjrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oIfWdRq9yyjwaPNLBB1WhcLPviYtpHs1y/6Em0UoQzc=;
-        b=kaUu1gw55tQgeXXHEoe9TslmonO+AFp/BteoI9+lup4BcpAKzezXC2wpl4P+uxs54I
-         oGbqqHXalEly3HlPl1HdnuOUvIuv4bD+quuaYsGv/zN3aGKxaI9WEiUaxG3phlfn4IU7
-         pwDn8wDIrudtiEFvVNJ9guYNLq3a7bxyv5tgN+pGZyuBadqUS2ftfn2InqFGQHz6wNTo
-         +xHewvE+4pXem62K4zOOkGapKim8yI3nuudlhqGY2CIrMlsuTiJ4AZyPUlwJhjufajef
-         Jo0oAQqXg31+poA+2AVFsayzWk7PQDjJQkMrT4A6RPsI+ahuudfSFrjB4zuKgaXtTueA
-         kryg==
-X-Gm-Message-State: AGi0PubMxXhfOUNFHOkXyboOGml7bbWo/pyQ0nJr1YZFDh8S3qOL2GIr
-        1ggCBndtZ/s3ttt2cdrVynaVbJDWBDpfz2ID3qhhlA==
-X-Google-Smtp-Source: APiQypJYtnxQWEbjes9DIO+nQO7CpHNG6KYJaneU9CBZe2/UNds1SHP++W+raV03+mh53wSUVZj+nsFewgw6YpANntc=
-X-Received: by 2002:a2e:b17a:: with SMTP id a26mr1481524ljm.215.1588679100508;
- Tue, 05 May 2020 04:45:00 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition:in-reply-to
+         :user-agent;
+        bh=GjKB5+P+lowciw8hYvavcWELEVof+DOw/wkBRXTnIl0=;
+        b=tpBQVgJ8BMCZ/rB64EB32xa+iUTBeBJzGE2yc9Jt2joiStgX+pyDSXwhiF+Sxkf6Ze
+         AcWDQUB5+iCtTtQBjC3ZytoK2OyqXwh2fpPpyyU/s2DWi7+6Izlu55+FeWiNhcZILBdb
+         G7JxL/5PctS+1UocCdE8t+kKNQVeJ5/MrvRFZG5YFYVO9YxBe+69CVlY8iLzIfvVyvPu
+         0Ec9KNYtr9d0w849x1ZNiHZJR2KRByHQNVEvS2EUbRPnXt3146nfftFdWE2fDmB1QqIU
+         Wbv5y7vdf4/So+fsGgqvjJlTpx/8YgDhi4y0CZtUvxr2DieEL5Yt7m1vbT9a1YqftUVh
+         nUfw==
+X-Gm-Message-State: AGi0PuZZEXlzhpOT8znvlWYYb99Z5dRfeYBFW+Q2LlSgXK72PsG3uqSq
+        whQDfl2LmHtROmmsnWq9vcWRi1o=
+X-Google-Smtp-Source: APiQypKivc2n7zxKfx6n0Z2kIjLy5lMbbRxLMyWMZfJo/IvpuhNYfC98AC0OwQEN/Q/osS1xtthGTQ==
+X-Received: by 2002:aca:d485:: with SMTP id l127mr1936931oig.119.1588679350648;
+        Tue, 05 May 2020 04:49:10 -0700 (PDT)
+Received: from serve.minyard.net ([47.184.149.130])
+        by smtp.gmail.com with ESMTPSA id j137sm493737oih.23.2020.05.05.04.49.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 04:49:09 -0700 (PDT)
+Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:8b39:c3f3:f502:5c4e])
+        by serve.minyard.net (Postfix) with ESMTPSA id 252CB180050;
+        Tue,  5 May 2020 11:49:09 +0000 (UTC)
+Date:   Tue, 5 May 2020 06:49:07 -0500
+From:   Corey Minyard <minyard@acm.org>
+To:     Tang Bin <tangbin@cmss.chinamobile.com>
+Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org,
+        Shengju Zhang <zhangshengju@cmss.chinamobile.com>
+Subject: Re: [PATCH v3] ipmi:bt-bmc: Fix error handling and status check
+Message-ID: <20200505114907.GK9902@minyard.net>
+Reply-To: minyard@acm.org
+References: <20200505102906.17196-1-tangbin@cmss.chinamobile.com>
 MIME-Version: 1.0
-References: <20200429214954.44866-1-jannh@google.com> <20200429214954.44866-4-jannh@google.com>
- <20200505105023.GB17400@lst.de>
-In-Reply-To: <20200505105023.GB17400@lst.de>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 5 May 2020 13:44:34 +0200
-Message-ID: <CAG48ez26DT2v7QQEbbur8LL+tQskrTBLCW+eW__RTOpezte6rw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] coredump: Refactor page range dumping into common helper
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Mark Salter <msalter@redhat.com>,
-        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
-        linux-c6x-dev@linux-c6x.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505102906.17196-1-tangbin@cmss.chinamobile.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 12:50 PM Christoph Hellwig <hch@lst.de> wrote:
-> On Wed, Apr 29, 2020 at 11:49:52PM +0200, Jann Horn wrote:
-> > Both fs/binfmt_elf.c and fs/binfmt_elf_fdpic.c need to dump ranges of pages
-> > into the coredump file. Extract that logic into a common helper.
-> >
-> > Any other binfmt that actually wants to create coredumps will probably need
-> > the same function; so stop making get_dump_page() depend on
-> > CONFIG_ELF_CORE.
->
-> Why is the #ifdef CONFIG_ELF_CORE in gup.c removed when the only
-> remaining caller is under the same ifdef?
+On Tue, May 05, 2020 at 06:29:06PM +0800, Tang Bin wrote:
+> If the function platform_get_irq() failed, the negative value
+> returned will not be detected here. So fix error handling in
+> bt_bmc_config_irq(). And in the function bt_bmc_probe(),
+> when get irq failed, it will print error message. So use
+> platform_get_irq_optional() to simplify code. Finally in the
+> function bt_bmc_remove() should make the right status check
+> if get irq failed.
 
-Oh, whoops, good point - I should go put that back.
+Ok, this is included in my tree.
+
+Thanks,
+
+-corey
+
+> 
+> Signed-off-by: Shengju Zhang <zhangshengju@cmss.chinamobile.com>
+> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+> ---
+> Changes from v2
+>  - fix the commit message and the code of status check
+> Changes from v1
+>  - fix the code of status check
+> ---
+>  drivers/char/ipmi/bt-bmc.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/char/ipmi/bt-bmc.c b/drivers/char/ipmi/bt-bmc.c
+> index d36aeacb2..88ee54767 100644
+> --- a/drivers/char/ipmi/bt-bmc.c
+> +++ b/drivers/char/ipmi/bt-bmc.c
+> @@ -399,9 +399,9 @@ static int bt_bmc_config_irq(struct bt_bmc *bt_bmc,
+>  	struct device *dev = &pdev->dev;
+>  	int rc;
+>  
+> -	bt_bmc->irq = platform_get_irq(pdev, 0);
+> -	if (!bt_bmc->irq)
+> -		return -ENODEV;
+> +	bt_bmc->irq = platform_get_irq_optional(pdev, 0);
+> +	if (bt_bmc->irq < 0)
+> +		return bt_bmc->irq;
+>  
+>  	rc = devm_request_irq(dev, bt_bmc->irq, bt_bmc_irq, IRQF_SHARED,
+>  			      DEVICE_NAME, bt_bmc);
+> @@ -477,7 +477,7 @@ static int bt_bmc_probe(struct platform_device *pdev)
+>  
+>  	bt_bmc_config_irq(bt_bmc, pdev);
+>  
+> -	if (bt_bmc->irq) {
+> +	if (bt_bmc->irq >= 0) {
+>  		dev_info(dev, "Using IRQ %d\n", bt_bmc->irq);
+>  	} else {
+>  		dev_info(dev, "No IRQ; using timer\n");
+> @@ -503,7 +503,7 @@ static int bt_bmc_remove(struct platform_device *pdev)
+>  	struct bt_bmc *bt_bmc = dev_get_drvdata(&pdev->dev);
+>  
+>  	misc_deregister(&bt_bmc->miscdev);
+> -	if (!bt_bmc->irq)
+> +	if (bt_bmc->irq < 0)
+>  		del_timer_sync(&bt_bmc->poll_timer);
+>  	return 0;
+>  }
+> -- 
+> 2.20.1.windows.1
+> 
+> 
+> 
