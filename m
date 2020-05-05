@@ -2,119 +2,148 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29964C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D24C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D0AF2078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13FFD207DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:11:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbgEENKD (ORCPT
+        id S1729050AbgEENLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 09:10:03 -0400
-Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:51208 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728497AbgEENKD (ORCPT
+        Tue, 5 May 2020 09:11:19 -0400
+Received: from mx1.yrkesakademin.fi ([85.134.45.194]:30294 "EHLO
+        mx1.yrkesakademin.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728512AbgEENLT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 09:10:03 -0400
-Received: from localhost.localdomain ([93.23.13.215])
-        by mwinf5d18 with ME
-        id b19t220094ePWwV0319taG; Tue, 05 May 2020 15:10:02 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Tue, 05 May 2020 15:10:02 +0200
-X-ME-IP: 93.23.13.215
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     nsaenzjulienne@suse.de, f.fainelli@gmail.com, rjui@broadcom.com,
-        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-        wsa@the-dreams.de, wahrenst@gmx.net, nh6z@nh6z.net,
-        eric@anholt.net, andriy.shevchenko@linux.intel.com
-Cc:     linux-i2c@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] i2c: bcm2835: Fix an error handling path in 'bcm2835_i2c_probe()'
-Date:   Tue,  5 May 2020 15:09:52 +0200
-Message-Id: <20200505130952.176190-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Tue, 5 May 2020 09:11:19 -0400
+Subject: Re: perf build error with gcc 10 on arm and aarch64
+To:     Leo Yan <leo.yan@linaro.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+References: <2869c4f6-9adf-3d55-a41d-a42865ae56f2@mageia.org>
+ <EqtrWAkr-uZW90nfEH5i3KgHuQU8DLdDEXPSqRws1z9zrOixq2T0wt5uDhcFI5JVaIr_DGq7PP9Z-Q3B-LAaqQ==@protonmail.internalid>
+ <d_gtAu9vE4vjOEgey1diEg23nPoDIv-gc4ranvkRDMtmWycFo1uU_YHcJn5BNlrNVJA1y2zVbUvE8_Lf44bKDg==@protonmail.conversationid>
+ <20200505041050.GA8131@leoy-ThinkPad-X240s>
+From:   Thomas Backlund <tmb@mageia.org>
+Message-ID: <ed17a79e-81cd-8514-aaa7-13223bd1c789@mageia.org>
+Date:   Tue, 5 May 2020 16:11:14 +0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200505041050.GA8131@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A call to 'clk_set_rate_exclusive()' must be balanced in the error handling
-path.
-Add a corresponding 'clk_rate_exclusive_put()'.
+Den 05-05-2020 kl. 07:10, skrev Leo Yan:
+> 
+> Hi Thomas,
+> 
+> [ + Mathieu/Mike/Suzuki ]
+> 
+> On Mon, May 04, 2020 at 10:22:27PM +0300, Thomas Backlund wrote:
+>> This is building perf from kernel-5.6.10 on armv7hl and aarch64:
+>>
+>> Compiler is gcc 10.1.0-RC
+>>
+>>
+>>    LD       perf-in.o
+>> ld: arch/perf-in.o: in function `.LANCHOR0':
+>> /home/iurt/rpmbuild/BUILD/kernel-arm/linux-5.6/tools/perf/util/include/../../util/cs-etm.h:118:
+>> multiple definition of `traceid_list'; util/perf-in.o:/home/iurt/rpmbuild/BUILD/kernel-arm/linux-5.6/tools/perf/util/cs-etm.h:118:
+>> first defined here
+>> make[3]: *** [/home/iurt/rpmbuild/BUILD/kernel-arm/linux-5.6/tools/build/Makefile.build:145:
+>> perf-in.o] Error 1
+>>
+>>    LD       perf-in.o
+>> ld: arch/perf-in.o:/home/iurt/rpmbuild/BUILD/kernel-aarch64/linux-5.6/tools/perf/util/include/../../util/cs-etm.h:118:
+>> multiple definition of `traceid_list'; util/perf-in.o:/home/iurt/rpmbuild/BUILD/kernel-aarch64/linux-5.6/tools/perf/util/cs-etm.h:118:
+>> first defined here
+>> make[3]: *** [/home/iurt/rpmbuild/BUILD/kernel-aarch64/linux-5.6/tools/build/Makefile.build:145:
+>> perf-in.o] Error 1
+>> make[2]: *** [Makefile.perf:616: perf-in.o] Error 2
+>> make[1]: *** [Makefile.perf:225: sub-make] Error 2
+>> make: *** [Makefile:70: all] Error 2
+>>
+>>
+>> The same build succeeds with gcc 9.3.0
+> 
+> Thanks for reporting the issue.
+> 
+> Could you help confirm if below change can resolve this issue?
 
-While a it, also balance a 'clk_prepare_enable()' call with a
-'clk_disable_unprepare()' call and move a 'free_irq()' to the new error
-handling path.
+Yes,
 
-This has the side effect to propagate the error code returned by
-'request_irq()' instead of returning -ENODEV.
+fix confirmed on i586, x86_64, armv7hl and aarch64 builds
 
-This way, the error handling path of the probe function looks similar to
-the remove function.
+so I guess you can add:
 
-Fixes: bebff81fb8b9 ("i2c: bcm2835: Model Divider in CCF")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/i2c/busses/i2c-bcm2835.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+Reported-by: Thomas Backlund <tmb@mageia.org>
+Tested-by: Thomas Backlund <tmb@mageia.org>
 
-diff --git a/drivers/i2c/busses/i2c-bcm2835.c b/drivers/i2c/busses/i2c-bcm2835.c
-index d9b86fcc3825..7f403e07dff4 100644
---- a/drivers/i2c/busses/i2c-bcm2835.c
-+++ b/drivers/i2c/busses/i2c-bcm2835.c
-@@ -451,13 +451,14 @@ static int bcm2835_i2c_probe(struct platform_device *pdev)
- 	ret = clk_prepare_enable(i2c_dev->bus_clk);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Couldn't prepare clock");
--		return ret;
-+		goto err_unprotect_clk;
- 	}
- 
- 	irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
- 	if (!irq) {
- 		dev_err(&pdev->dev, "No IRQ resource\n");
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto err_unprepare_clk;
- 	}
- 	i2c_dev->irq = irq->start;
- 
-@@ -465,7 +466,7 @@ static int bcm2835_i2c_probe(struct platform_device *pdev)
- 			  dev_name(&pdev->dev), i2c_dev);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Could not request IRQ\n");
--		return -ENODEV;
-+		goto err_unprepare_clk;
- 	}
- 
- 	adap = &i2c_dev->adapter;
-@@ -483,7 +484,16 @@ static int bcm2835_i2c_probe(struct platform_device *pdev)
- 
- 	ret = i2c_add_adapter(adap);
- 	if (ret)
--		free_irq(i2c_dev->irq, i2c_dev);
-+		goto err_free_irq;
-+
-+	return 0;
-+
-+err_free_irq:
-+	free_irq(i2c_dev->irq, i2c_dev);
-+err_unprepare_clk:
-+	clk_disable_unprepare(i2c_dev->bus_clk);
-+err_unprotect_clk:
-+	clk_rate_exclusive_put(i2c_dev->bus_clk);
- 
- 	return ret;
- }
--- 
-2.25.1
+
+
+> 
+> Thanks,
+> Leo
+> 
+> ---8<---
+> 
+> Subject: [PATCH] perf cs-etm: Move defined of traceid_list
+> 
+> The variable 'traceid_list' is defined in the header file cs-etm.h,
+> if multiple C files include cs-etm.h the compiler might complaint for
+> multiple definition of 'traceid_list'.
+> 
+> To fix multiple definition error, move the definition of 'traceid_list'
+> into cs-etm.c.
+> 
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>   tools/perf/util/cs-etm.c | 3 +++
+>   tools/perf/util/cs-etm.h | 3 ---
+>   2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 62d2f9b9ce1b..381d9708e9bd 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -94,6 +94,9 @@ struct cs_etm_queue {
+>   	struct cs_etm_traceid_queue **traceid_queues;
+>   };
+> 
+> +/* RB tree for quick conversion between traceID and metadata pointers */
+> +static struct intlist *traceid_list;
+> +
+>   static int cs_etm__update_queues(struct cs_etm_auxtrace *etm);
+>   static int cs_etm__process_queues(struct cs_etm_auxtrace *etm);
+>   static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
+> diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
+> index 650ecc2a6349..4ad925d6d799 100644
+> --- a/tools/perf/util/cs-etm.h
+> +++ b/tools/perf/util/cs-etm.h
+> @@ -114,9 +114,6 @@ enum cs_etm_isa {
+>   	CS_ETM_ISA_T32,
+>   };
+> 
+> -/* RB tree for quick conversion between traceID and metadata pointers */
+> -struct intlist *traceid_list;
+> -
+>   struct cs_etm_queue;
+> 
+>   struct cs_etm_packet {
+> --
+> 2.17.1
+> 
 
