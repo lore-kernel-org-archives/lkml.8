@@ -2,176 +2,120 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B493C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA58C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0A3520658
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B31C020659
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:55:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="YkBgmP2m"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="LCUE+epO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729229AbgEEXrk (ORCPT
+        id S1729451AbgEEXzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 19:47:40 -0400
-Received: from gateway24.websitewelcome.com ([192.185.51.228]:40284 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728717AbgEEXrk (ORCPT
+        Tue, 5 May 2020 19:55:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55238 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728875AbgEEXza (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 19:47:40 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 06A2E77DD
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 18:47:39 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id W7Hmj2Oa6VQh0W7Hnj8acH; Tue, 05 May 2020 18:47:39 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=KOPjXpRAEDO9gDVQmxGovICcFiqsKOmDUl+JG+lNPqw=; b=YkBgmP2mcQEg2kn3TFnvNRqZON
-        KRE3srpQZuM58jSwKcE26UGT6J4v/6H5OGCZPeOPJHti8lOK/EXnx5hlb3xh5K2WN18GM6EcY2mXJ
-        aBmy/jjw2C22bdJr56JFSOIskhf9PuefI+j5jy+kGNdBdqc3UjkyZUjL3XC3qbDJA0cmQ9FtFesJJ
-        ortTHl9lbXEcU7AhkCJSG+/KaoYXcJw0XKEHnBN/VM8XHa6wZSRDy3kxZ8bKI5y/v0tYrncaMayGZ
-        UW+zyn19zNlqrIMLg/2RlePCiXmS30vn4kdnTSVDDQWKCX5Na5jb2aCu1G81cN9pBlJ9HJvu2vilV
-        Hgb57vuA==;
-Received: from [189.207.59.248] (port=57526 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jW7Hm-003MYG-Ki; Tue, 05 May 2020 18:47:38 -0500
-Date:   Tue, 5 May 2020 18:52:05 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Jussi Kivilinna <jussi.kivilinna@iki.fi>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] rndis_wlan: Remove logically dead code
-Message-ID: <20200505235205.GA18539@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.207.59.248
-X-Source-L: No
-X-Exim-ID: 1jW7Hm-003MYG-Ki
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.207.59.248]:57526
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 6
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        Tue, 5 May 2020 19:55:30 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49D35C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 16:55:30 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id s18so1768432pgl.12
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 16:55:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ATXIubCTTXOBHXzWhZxzF+Sp5JyKqEJFksQsf+OAlCg=;
+        b=LCUE+epOqJoR+Js3sGpG0U90X1zeIkkRcKpuwrTZTpRFnEKXfY5giOa0TSthpXBEVN
+         3p2yoVisoWm3Ql4CELeMvCLVV3zFKJO5Zb9KkLTcb9IlPfE0SpCg6hnmaBGuUwxNDzwc
+         85PgVaVDmb+KyOApTbH3RaSVKUhOF1ck8rMvupcZ8dQZqrseOXOd25uPak5H8kNy2zj3
+         RQgFpOiMOcRgjwhPkTdVUD3qYni7JIFID0WxVWai7Lln1CV+bLzop2GC4P2wYxixDO6X
+         FOou9ZBfpbxk8eXB0dj2oGB7ME+R8/4aiGr2NpmYjKbNEIhRM7O7tB6vm7MIt32nvEOD
+         1hKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=ATXIubCTTXOBHXzWhZxzF+Sp5JyKqEJFksQsf+OAlCg=;
+        b=hKKR6XVtqzVDvhzl9CQAQjaII0Yq+fNrFWlDqShTba6NKMm0bxjC3iU2EpWnnyNiAk
+         9Gjbuo2sIFcgafcwY72ozYzbTYhRBO15vVff4BbNeI4GJSG2f+0Q7mDTXdAcZAHm/8PY
+         pFSwazNGWm1J4sMUXZMZh85RQpaVnbpUkrLtZzGbOO0Wb/9CPFzTi7BQKiMUsTtDyx2e
+         1LQLxn+FzvV3+jD7ySJa6vtcUPRr1yPkQ6NIk6Bh/2ZkIvmRtSa/fYUrEXaI/Kf3xYIE
+         fLNxywJdvuKzyv3V8ZZw8m9yOBIt3lmR7yGGc/Sn1B6dHckMMrfGNGzNFw8K+4cPt83D
+         oKPQ==
+X-Gm-Message-State: AGi0PuZToikSs4QSmzfE2svD/JQ5uI0mrkbaal4fI/0+MQtC2lfs9Vv9
+        QhuFOaIVw6YHf/pWANtcV0C+847I050=
+X-Google-Smtp-Source: APiQypJQ7iVowzFYXtx5BFr6e1gDDwQs19amgIfj5WG5z8x8u0u5C7Ec+ncx0Sl9ZJzKU6sM6IdFMQ==
+X-Received: by 2002:a65:4107:: with SMTP id w7mr4619921pgp.438.1588722929163;
+        Tue, 05 May 2020 16:55:29 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id 188sm122789pfg.218.2020.05.05.16.55.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 16:55:28 -0700 (PDT)
+Date:   Tue, 05 May 2020 16:55:28 -0700 (PDT)
+X-Google-Original-Date: Tue, 05 May 2020 16:42:29 PDT (-0700)
+Subject:     Re: [PATCH] RISC-V: Remove unused code from STRICT_KERNEL_RWX
+In-Reply-To: <20200504040319.31423-1-atish.patra@wdc.com>
+CC:     linux-kernel@vger.kernel.org, Atish Patra <Atish.Patra@wdc.com>,
+        aou@eecs.berkeley.edu, Anup Patel <Anup.Patel@wdc.com>,
+        linux-riscv@lists.infradead.org,
+        Paul Walmsley <paul.walmsley@sifive.com>, zong.li@sifive.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     Atish Patra <Atish.Patra@wdc.com>
+Message-ID: <mhng-a3f16502-c8cd-46db-afa1-86df18b3778d@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-caps_buf is always of size sizeof(*caps) because
-sizeof(caps->auth_encr_pair) * 16 is always zero. Notice
-that when using zero-length arrays, sizeof evaluates to zero[1].
+On Sun, 03 May 2020 21:03:19 PDT (-0700), Atish Patra wrote:
+> This patch removes the unused functions set_kernel_text_rw/ro.
+> Currently, it is not being invoked from anywhere and no other architecture
+> (except arm) uses this code. Even in ARM, these functions are not invoked
+> from anywhere currently.
+>
+> Fixes: d27c3c90817e ("riscv: add STRICT_KERNEL_RWX support")
+>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  arch/riscv/mm/init.c | 16 ----------------
+>  1 file changed, 16 deletions(-)
+>
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index b55be44ff9bd..ba60a581e9b6 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -501,22 +501,6 @@ static inline void setup_vm_final(void)
+>  #endif /* CONFIG_MMU */
+>
+>  #ifdef CONFIG_STRICT_KERNEL_RWX
+> -void set_kernel_text_rw(void)
+> -{
+> -	unsigned long text_start = (unsigned long)_text;
+> -	unsigned long text_end = (unsigned long)_etext;
+> -
+> -	set_memory_rw(text_start, (text_end - text_start) >> PAGE_SHIFT);
+> -}
+> -
+> -void set_kernel_text_ro(void)
+> -{
+> -	unsigned long text_start = (unsigned long)_text;
+> -	unsigned long text_end = (unsigned long)_etext;
+> -
+> -	set_memory_ro(text_start, (text_end - text_start) >> PAGE_SHIFT);
+> -}
+> -
+>  void mark_rodata_ro(void)
+>  {
+>  	unsigned long text_start = (unsigned long)_text;
 
-So, the code introduced by 
-commit 0308383f9591 ("rndis_wlan: get max_num_pmkids from device")
-is logically dead, hence is never executed and can be removed. As a
-consequence, the rest of the related code can be refactored a bit.
-
-Notice that this code has been out there since March 2010.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
-In case this is actually a 10-year old bug, then we might want
-calculate the size of caps_buf through the use of the struct_size
-helper:
-
-struct_size(caps, auth_encr_pair, 16);
-
-and we might also want to allocate dynamic memory instead, as we
-cannot do u8 caps_buf[struct_size(caps, auth_encr_pair, 16)];
-due to -Wvla.
-
-Thanks
---
-Gustavo
-
- drivers/net/wireless/rndis_wlan.c | 24 ++++++++----------------
- 1 file changed, 8 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/net/wireless/rndis_wlan.c b/drivers/net/wireless/rndis_wlan.c
-index 52375f3e430a..8852a1832951 100644
---- a/drivers/net/wireless/rndis_wlan.c
-+++ b/drivers/net/wireless/rndis_wlan.c
-@@ -312,17 +312,11 @@ struct ndis_80211_assoc_info {
- 	__le32 offset_resp_ies;
- } __packed;
- 
--struct ndis_80211_auth_encr_pair {
--	__le32 auth_mode;
--	__le32 encr_mode;
--} __packed;
--
- struct ndis_80211_capability {
- 	__le32 length;
- 	__le32 version;
- 	__le32 num_pmkids;
- 	__le32 num_auth_encr_pair;
--	struct ndis_80211_auth_encr_pair auth_encr_pair[0];
- } __packed;
- 
- struct ndis_80211_bssid_info {
-@@ -3109,8 +3103,7 @@ static int rndis_wlan_get_caps(struct usbnet *usbdev, struct wiphy *wiphy)
- 		__le32	num_items;
- 		__le32	items[8];
- 	} networks_supported;
--	struct ndis_80211_capability *caps;
--	u8 caps_buf[sizeof(*caps) + sizeof(caps->auth_encr_pair) * 16];
-+	struct ndis_80211_capability caps;
- 	int len, retval, i, n;
- 	struct rndis_wlan_private *priv = get_rndis_wlan_priv(usbdev);
- 
-@@ -3140,19 +3133,18 @@ static int rndis_wlan_get_caps(struct usbnet *usbdev, struct wiphy *wiphy)
- 	}
- 
- 	/* get device 802.11 capabilities, number of PMKIDs */
--	caps = (struct ndis_80211_capability *)caps_buf;
--	len = sizeof(caps_buf);
-+	len = sizeof(caps);
- 	retval = rndis_query_oid(usbdev,
- 				 RNDIS_OID_802_11_CAPABILITY,
--				 caps, &len);
-+				 &caps, &len);
- 	if (retval >= 0) {
- 		netdev_dbg(usbdev->net, "RNDIS_OID_802_11_CAPABILITY -> len %d, "
- 				"ver %d, pmkids %d, auth-encr-pairs %d\n",
--				le32_to_cpu(caps->length),
--				le32_to_cpu(caps->version),
--				le32_to_cpu(caps->num_pmkids),
--				le32_to_cpu(caps->num_auth_encr_pair));
--		wiphy->max_num_pmkids = le32_to_cpu(caps->num_pmkids);
-+				le32_to_cpu(caps.length),
-+				le32_to_cpu(caps.version),
-+				le32_to_cpu(caps.num_pmkids),
-+				le32_to_cpu(caps.num_auth_encr_pair));
-+		wiphy->max_num_pmkids = le32_to_cpu(caps.num_pmkids);
- 	} else
- 		wiphy->max_num_pmkids = 0;
- 
--- 
-2.26.2
-
+Thanks, this is on fixes.  Are you going to remove the ARM code as well?
