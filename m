@@ -2,110 +2,110 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5535EC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF891C47256
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 264082068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:38:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="P7JA+siG"
+	by mail.kernel.org (Postfix) with ESMTP id CE34E206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:40:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588668003;
+	bh=+lAoCLRT0+FEtavrhvzvewEUxnz1O4jXBxyoaAJzyTU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=nwdkoirNeXYvzfCSUcJFt34HkprxSCoZj+aBEa2OZQo+7iAXLWXJR0yGYcQkFGu7u
+	 Ru7+Cw67hMKguFlDdWHp9VIDa3YsY65UNxL08F3fhByZ8OBTjzhgN3mF6xc6jIWfTd
+	 EPSNrSd5ty86+XSQlvZwe30V5FDKdD07TKMpq+Z8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728640AbgEEIit (ORCPT
+        id S1728575AbgEEIkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 04:38:49 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:14715 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbgEEIis (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 04:38:48 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eb1260b0000>; Tue, 05 May 2020 01:38:35 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 05 May 2020 01:38:47 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 05 May 2020 01:38:47 -0700
-Received: from [10.26.73.45] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 5 May
- 2020 08:38:45 +0000
-Subject: Re: [PATCH 5.6 00/73] 5.6.11-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200504165501.781878940@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <f3d40fc3-1c82-5395-e96b-65e7ba9cbfc9@nvidia.com>
-Date:   Tue, 5 May 2020 09:38:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 04:40:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39340 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725915AbgEEIkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 04:40:02 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 541FE2068E;
+        Tue,  5 May 2020 08:40:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588668001;
+        bh=+lAoCLRT0+FEtavrhvzvewEUxnz1O4jXBxyoaAJzyTU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TojqmxZ51MAKtNII0QJTZkHZV54vQs0dYCqdZzSyLZY69CtmzXEUlGOedXp492lYB
+         Pb+hXuyVYXaBcWe++5qpKHqNYkLddxXfK29FC3Zy/SVXmLHj6vHNpjYSjFgPHssfM9
+         tJSpqFDEEFagx/s4/AinWjXsVVXozQpESISSAN6Q=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jVt7P-009L2s-N3; Tue, 05 May 2020 09:39:59 +0100
 MIME-Version: 1.0
-In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588667915; bh=tMZxKaGe0Pl3+kmL3fWvWP0op4WZx/x9KIztE4nGmGM=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=P7JA+siGtS9BCXu79fhkervBDQA5yfI72wf5P/MQ44pU4+ozRE0FNOInXVjjW6Y6B
-         g3DoLrR1TwMOLtt4foxxH4FfmAQPoIBrkQspFjtY/J9UAPyby4+CmPi7Ze8F4oeJOF
-         u277LrdmdoAT+spV7l1RHWpkHbENZwLxBXIggGSOAfy+UDRgaSABTd46x0kxYuUf0X
-         jRnBQpNNYSM3mO7F2X570fOqjcEBHD/DajsrBFRJEuyUYOpxrNuVysbg79kuY9Rtul
-         9uv5Gn/CBunL3JNb5+8ZLG9t9hMEExl3tYnkkF2aGjKmWA4clhU97gjEW6xoF1zVuq
-         pRXK7NyHHXFUw==
+Date:   Tue, 05 May 2020 09:39:59 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Cc:     pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org,
+        mpe@ellerman.id.au, benh@kernel.crashing.org,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        cohuck@redhat.com, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, james.morse@arm.com, julien.thierry.kdev@gmail.com,
+        suzuki.poulose@arm.com, christoffer.dall@arm.com,
+        peterx@redhat.com, thuth@redhat.com, chenhuacai@gmail.com,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/7] KVM: arm64: clean up redundant 'kvm_run'
+ parameters
+In-Reply-To: <20200427043514.16144-3-tianjia.zhang@linux.alibaba.com>
+References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
+ <20200427043514.16144-3-tianjia.zhang@linux.alibaba.com>
+User-Agent: Roundcube Webmail/1.4.3
+Message-ID: <35eb095a344b4192b912385bc02c54e6@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: tianjia.zhang@linux.alibaba.com, pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org, mpe@ellerman.id.au, benh@kernel.crashing.org, borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com, heiko.carstens@de.ibm.com, gor@linux.ibm.com, sean.j.christopherson@intel.com, vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com, chenhuacai@gmail.com, kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Tianjia,
 
-On 04/05/2020 18:57, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.6.11 release.
-> There are 73 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 2020-04-27 05:35, Tianjia Zhang wrote:
+> In the current kvm version, 'kvm_run' has been included in the 
+> 'kvm_vcpu'
+> structure. For historical reasons, many kvm-related function parameters
+> retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time. This
+> patch does a unified cleanup of these remaining redundant parameters.
 > 
-> Responses should be made by Wed, 06 May 2020 16:52:55 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.11-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
 
-All tests are passing for Tegra ...
+On the face of it, this looks OK, but I haven't tried to run the
+resulting kernel. I'm not opposed to taking this patch *if* there
+is an agreement across architectures to take the series (I value
+consistency over the janitorial exercise).
 
-Test results for stable-v5.6:
-    13 builds:	13 pass, 0 fail
-    24 boots:	24 pass, 0 fail
-    40 tests:	40 pass, 0 fail
+Another thing is that this is going to conflict with the set of
+patches that move the KVM/arm code back where it belongs 
+(arch/arm64/kvm),
+so I'd probably cherry-pick that one directly.
 
-Linux version:	5.6.11-rc1-g6cd4bcd666cd
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra210-p3450-0000,
-                tegra30-cardhu-a04
+Thanks,
 
-Cheers
-Jon
+         M.
+
 
 -- 
-nvpublic
+Jazz is not dead. It just smells funny...
