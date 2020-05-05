@@ -2,128 +2,100 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE46FC47259
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5569C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA0A20735
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C456A20735
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:55:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="hH5li0cC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GlIkMwWt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728784AbgEEKzi (ORCPT
+        id S1728824AbgEEKzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 06:55:38 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:64406 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728180AbgEEKzh (ORCPT
+        Tue, 5 May 2020 06:55:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45756 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728180AbgEEKzr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 06:55:37 -0400
+        Tue, 5 May 2020 06:55:47 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1A9BC061A0F;
+        Tue,  5 May 2020 03:55:47 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id x10so684861plr.4;
+        Tue, 05 May 2020 03:55:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1588676137; x=1620212137;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=d+CEbn7A/FPIqL1jOQZTyvaEHjqgjmk+7wJrPTIxaDI=;
-  b=hH5li0cCQyA95pXCky4VHnK/DXKnbokYgcZYO7AGa4zn1JpeDQcyQLnb
-   iC/XyRxONchsGZQUicN0MNI2RLy5HehjsUdvBf9L8LK47vHrkozHjSGmF
-   InHn18BH0Nqtc/u8yb2uyuGCc+VjY6RUTwQv/GGy47jnponizGZLi8aod
-   4=;
-IronPort-SDR: tlE+amf1pNeoaJJ8vIvp5QLiqKx84kCjBNW5fwiQZiFwB3PSprJ4URmfFVjtexdLicbaDyD5MG
- PSMFi22s28ZQ==
-X-IronPort-AV: E=Sophos;i="5.73,354,1583193600"; 
-   d="scan'208";a="33009948"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-9ec21598.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 05 May 2020 10:55:34 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-9ec21598.us-east-1.amazon.com (Postfix) with ESMTPS id C645EA1F53;
-        Tue,  5 May 2020 10:55:28 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 5 May 2020 10:55:28 +0000
-Received: from [192.168.13.172] (10.43.162.38) by EX13D01EUB001.ant.amazon.com
- (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 5 May
- 2020 10:55:19 +0000
-Subject: Re: [PATCH v6 2/2] EDAC: al-mc-edac: Introduce Amazon's Annapurna
- Labs Memory Controller EDAC
-To:     Borislav Petkov <bp@alien8.de>
-CC:     <mchehab@kernel.org>, <james.morse@arm.com>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <nicolas.ferre@microchip.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linux-edac@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <dwmw@amazon.co.uk>,
-        <benh@kernel.crashing.org>, <hhhawa@amazon.com>,
-        <ronenk@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
-        <eitan@amazon.com>
-References: <20200224134132.23924-1-talel@amazon.com>
- <20200224134132.23924-3-talel@amazon.com> <20200428113950.GB11272@zn.tnic>
- <46ccdb47-f28d-63f7-e759-1ba34e98add8@amazon.com>
- <20200504183716.GJ15046@zn.tnic>
-From:   "Shenhar, Talel" <talel@amazon.com>
-Message-ID: <4d389169-89d1-4512-f6f0-c98477ab3623@amazon.com>
-Date:   Tue, 5 May 2020 13:55:14 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=l552h3OpGSpu9bHCOSxuHOrFd7pmj/Ri4f827xY1Ld8=;
+        b=GlIkMwWtO67a2x6+favOYVuU8Y0cXZu+b3zBeoPRzePS+PTGOXm+OYd5wGC/ZJ5GAz
+         MVbf1d5XRhFbYR4iGSgL9Ni/jkPAnrP8u15t+I3x5WBzgkThdxGLScIMH2MxkyA+cKZQ
+         Fv0iC9MPNCGcZf55OwxQBzewWFYQwTy1T3ujXfw5PUHshEq8GuP/+OQgX8m9CQpxFqHe
+         drFvhKZzMWT2ZF7OIVKzPYVayrols4MnMbUMflgfDMWZ33VkwyKxn90F8h4BQulOiSqG
+         H3R5XKthIAgu/T4U92V3XYLBrnjHbacRGlMt7GCLcOrVQrQc7HIN6M9Pf1SLq3uIdMe1
+         3EgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=l552h3OpGSpu9bHCOSxuHOrFd7pmj/Ri4f827xY1Ld8=;
+        b=cNNrtNn9Aprile1+FNfMACDDUxHNyhD6cUqpJ+dzq9Evv4MtcVI263wqBd0E0qcRah
+         wbbbB4A9heqSKuak60nFUIQAmleJrPanWvZ6PazROPsVgP5/2YZyg28Dr5wN1uyYhtEV
+         OHBdveyUGaHqG0DyMMd+fzRLDh8g6Ch0Ls5jMv+LeahPYmskpF6osnkPxf33uopyKI9z
+         Gg3lFnbrHah9aPSL3FI4D8BWs9WdJpv4tpNSIU8R/zohG557PZDMSiO7ujTy+XvwluVP
+         YpzzG0OFMvfrJ5NTLcElWAJdLYFIiUL32lTKl1xDAvVFEfIXdZHwWPyrX2WbmwfWHPfi
+         2AKw==
+X-Gm-Message-State: AGi0PuZNfBXKuJfXhwlUarvtzs9oKqGvcWbuUTTznmVX+SmJVa71hE/a
+        1sWLEvmRXxQnyZHNTwLSou0SPmeKKsdTvpvHkOk=
+X-Google-Smtp-Source: APiQypIdsG38zs1UHBnUOGTnHKZdpthGi5pt073UEizssUOHztCH1HgnvSbeT0x3ZSRTEaUrPGE/AznIkmNAz9PhwIY=
+X-Received: by 2002:a17:90a:364c:: with SMTP id s70mr2229270pjb.143.1588676147102;
+ Tue, 05 May 2020 03:55:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200504183716.GJ15046@zn.tnic>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-X-Originating-IP: [10.43.162.38]
-X-ClientProxiedBy: EX13D14UWC003.ant.amazon.com (10.43.162.19) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+References: <20200504164514.18641-1-a@dun.ai> <72bd44ab-98a8-0cdc-b7e6-104a69ca3643@infradead.org>
+ <f4aeeb2c-32c4-e2a8-193e-2b4d892da4db@redhat.com>
+In-Reply-To: <f4aeeb2c-32c4-e2a8-193e-2b4d892da4db@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 5 May 2020 13:55:40 +0300
+Message-ID: <CAHp75VfUUwGyM97Fzh+u1hAFmjdyYinrYE=a+eAwuCNjchq4Qw@mail.gmail.com>
+Subject: Re: [PATCH] Add support for Vinga Twizzle J116 Silead touchscreen
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, Andrew Dunai <a@dun.ai>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 5, 2020 at 12:02 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> On 5/4/20 8:20 PM, Randy Dunlap wrote:
 
-On 5/4/2020 9:37 PM, Borislav Petkov wrote:
+> > Usually you need to send patches to a maintainer who could then
+> > merge/apply them.
 >
-> On Mon, May 04, 2020 at 01:16:10PM +0300, Shenhar, Talel wrote:
->>>> +     mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
->>>> +                         sizeof(struct al_mc_edac));
->>> You can let that line stick out.
->> I rather avoid having this as a checkpatch warnning... (automation and
->> stuff...)
-> checkpatch.pl - while useful - should not be taken to the letter and
-> human brain should be applied to sanity check it what it warns about.
+>  From a code point-of-view this looks good to me.
 >
->> This line break does seems to my eye as too hard to read.
->>
->> Let me know if you feel strongly about it.
-> I'm just sayin' - in the end of the day you'll be staring at that code -
-> not me - so whatever *you* prefer. :-)
+> Andrew, if you can resend this to the proper folks (including me)
+> with a proper Signed-off-by (*), then this should be ready for merging.
 >
-> Just don't follow tools blindly.
-Thanks, I will leave it that way as it will make my life easier (with 
-automatic vim tools and automation) and doesn't really break code 
-understanding.
+> Regards,
 >
->>>> +     if (al_mc->irq_ue <= 0 || al_mc->irq_ce <= 0)
->>> Shouldn't this be && here?
->>>
->>> I mean, you want to poll when neither of the IRQs can be found. But then
->>> if you find one of them and not the other, what do you do? Poll and
->>> interrupt? Is that case even possible?
->> Correct.
->>
->> In case dt defined interrupt line only for one type and not for the other,
->> than the interrupt mode shall be used for one of them while polling mode for
->> the other.
-> That warrants a comment above it.
-Shall be part of v7.
+> Hans
 >
-> Thx.
 >
-> --
-> Regards/Gruss,
->      Boris.
->
-> https://people.kernel.org/tglx/notes-about-netiquette
+> *) that might have already been there, but it wasn't present in
+> the part quoted by Randy
+
+Luckily I see the original message. There is neither Sob nor commit
+message. They must to be present.
+
+-- 
+With Best Regards,
+Andy Shevchenko
