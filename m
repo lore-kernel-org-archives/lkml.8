@@ -2,100 +2,96 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5569C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6FCC47256
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C456A20735
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:55:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GlIkMwWt"
+	by mail.kernel.org (Postfix) with ESMTP id E3A50206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:58:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588676300;
+	bh=kGKEaMOGdWDAoVnU3rzjWdKoL2we/jTZgg/mglaLMyE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HDoebcn1G0tYvMbNqQ7oV5ygf7qGrC/f2Wb3FZPfQXOSdQHfIjZjuYT2yAGN0L2Sg
+	 v8PLF2Jl1bNmGqZWKbOiQSKwj85DkHv9lpDwakNioFWAd/Vjcjquj7WV23dJZ36ukG
+	 QVNUMf0t9HdKjb62w0zt5XiDXGFd7jX2ahVUtmVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728824AbgEEKzs (ORCPT
+        id S1728660AbgEEK6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 06:55:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45756 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728180AbgEEKzr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 06:55:47 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1A9BC061A0F;
-        Tue,  5 May 2020 03:55:47 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id x10so684861plr.4;
-        Tue, 05 May 2020 03:55:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=l552h3OpGSpu9bHCOSxuHOrFd7pmj/Ri4f827xY1Ld8=;
-        b=GlIkMwWtO67a2x6+favOYVuU8Y0cXZu+b3zBeoPRzePS+PTGOXm+OYd5wGC/ZJ5GAz
-         MVbf1d5XRhFbYR4iGSgL9Ni/jkPAnrP8u15t+I3x5WBzgkThdxGLScIMH2MxkyA+cKZQ
-         Fv0iC9MPNCGcZf55OwxQBzewWFYQwTy1T3ujXfw5PUHshEq8GuP/+OQgX8m9CQpxFqHe
-         drFvhKZzMWT2ZF7OIVKzPYVayrols4MnMbUMflgfDMWZ33VkwyKxn90F8h4BQulOiSqG
-         H3R5XKthIAgu/T4U92V3XYLBrnjHbacRGlMt7GCLcOrVQrQc7HIN6M9Pf1SLq3uIdMe1
-         3EgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=l552h3OpGSpu9bHCOSxuHOrFd7pmj/Ri4f827xY1Ld8=;
-        b=cNNrtNn9Aprile1+FNfMACDDUxHNyhD6cUqpJ+dzq9Evv4MtcVI263wqBd0E0qcRah
-         wbbbB4A9heqSKuak60nFUIQAmleJrPanWvZ6PazROPsVgP5/2YZyg28Dr5wN1uyYhtEV
-         OHBdveyUGaHqG0DyMMd+fzRLDh8g6Ch0Ls5jMv+LeahPYmskpF6osnkPxf33uopyKI9z
-         Gg3lFnbrHah9aPSL3FI4D8BWs9WdJpv4tpNSIU8R/zohG557PZDMSiO7ujTy+XvwluVP
-         YpzzG0OFMvfrJ5NTLcElWAJdLYFIiUL32lTKl1xDAvVFEfIXdZHwWPyrX2WbmwfWHPfi
-         2AKw==
-X-Gm-Message-State: AGi0PuZNfBXKuJfXhwlUarvtzs9oKqGvcWbuUTTznmVX+SmJVa71hE/a
-        1sWLEvmRXxQnyZHNTwLSou0SPmeKKsdTvpvHkOk=
-X-Google-Smtp-Source: APiQypIdsG38zs1UHBnUOGTnHKZdpthGi5pt073UEizssUOHztCH1HgnvSbeT0x3ZSRTEaUrPGE/AznIkmNAz9PhwIY=
-X-Received: by 2002:a17:90a:364c:: with SMTP id s70mr2229270pjb.143.1588676147102;
- Tue, 05 May 2020 03:55:47 -0700 (PDT)
+        Tue, 5 May 2020 06:58:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35926 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725766AbgEEK6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 06:58:18 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEDCC206A5;
+        Tue,  5 May 2020 10:58:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588676298;
+        bh=kGKEaMOGdWDAoVnU3rzjWdKoL2we/jTZgg/mglaLMyE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=io0hVQK3c32p7zo87nJ8WEyOmN8PemqN6FZgT184MWEXddcmIC016k5WG8coHZygZ
+         HnNb/gQoffmsmIVjR3DtHjQK10llOSRu3CQIKj00o0vKxbgaZlsMibJ2jN2sDRJP4s
+         Uug8qmab9BvwkBuiO1MKuzZaxwfIlnN4BeguisBs=
+Date:   Tue, 5 May 2020 11:58:13 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Wei Xu <xuwei5@hisilicon.com>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] arm64: Sort vendor-specific errata
+Message-ID: <20200505105811.GD19710@willie-the-truck>
+References: <20200416115658.20406-1-geert+renesas@glider.be>
+ <20200416115658.20406-2-geert+renesas@glider.be>
+ <CAK8P3a14Vk1JKRYZkkAhC9fAV4CMQzvux_FWdNkn39OwsYn4mA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200504164514.18641-1-a@dun.ai> <72bd44ab-98a8-0cdc-b7e6-104a69ca3643@infradead.org>
- <f4aeeb2c-32c4-e2a8-193e-2b4d892da4db@redhat.com>
-In-Reply-To: <f4aeeb2c-32c4-e2a8-193e-2b4d892da4db@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 5 May 2020 13:55:40 +0300
-Message-ID: <CAHp75VfUUwGyM97Fzh+u1hAFmjdyYinrYE=a+eAwuCNjchq4Qw@mail.gmail.com>
-Subject: Re: [PATCH] Add support for Vinga Twizzle J116 Silead touchscreen
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>, Andrew Dunai <a@dun.ai>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a14Vk1JKRYZkkAhC9fAV4CMQzvux_FWdNkn39OwsYn4mA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 12:02 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 5/4/20 8:20 PM, Randy Dunlap wrote:
+On Thu, Apr 16, 2020 at 03:06:55PM +0200, Arnd Bergmann wrote:
+> On Thu, Apr 16, 2020 at 1:57 PM Geert Uytterhoeven
+> <geert+renesas@glider.be> wrote:
+> >
+> > Sort configuration options for vendor-specific errata by vendor, to
+> > increase uniformity.
+> > Move ARM64_WORKAROUND_REPEAT_TLBI up, as it is also selected by
+> > ARM64_ERRATUM_1286807.
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> Looks fine to me, though I wonder if we should move the errata
+> menu to a separate Kconfig file, given that it's already longer than the
+> Kconfig.platforms and Kconfig.debug files at 500 lines.
+> 
+> Maybe a Kconfig.cpu with both the "ARMv8.x architectural features" and
+> errata menus?
+> 
+> Either way,
+> 
+> Acked-by: Arnd Bergmann <arnd@arndb.de
 
-> > Usually you need to send patches to a maintainer who could then
-> > merge/apply them.
->
->  From a code point-of-view this looks good to me.
->
-> Andrew, if you can resend this to the proper folks (including me)
-> with a proper Signed-off-by (*), then this should be ready for merging.
->
-> Regards,
->
-> Hans
->
->
-> *) that might have already been there, but it wasn't present in
-> the part quoted by Randy
+I've queued this patch as-is on for-next/kconfig [1]. Happy to take a
+follow-up moving things out into Kconfig.cpu.
 
-Luckily I see the original message. There is neither Sob nor commit
-message. They must to be present.
+Will
 
--- 
-With Best Regards,
-Andy Shevchenko
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=for-next/kconfig
+
