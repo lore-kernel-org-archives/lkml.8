@@ -2,657 +2,459 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BE2C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C7BC47259
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29BC9206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DE52206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:09:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ok4ncQBW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cI/VTDME"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbgEEMIo (ORCPT
+        id S1728850AbgEEMJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 08:08:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57108 "EHLO
+        Tue, 5 May 2020 08:09:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728233AbgEEMIn (ORCPT
+        by vger.kernel.org with ESMTP id S1728660AbgEEMJv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 08:08:43 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E715C061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 05:08:43 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id z6so738520plk.10
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 05:08:43 -0700 (PDT)
+        Tue, 5 May 2020 08:09:51 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65CC8C0610D5
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 05:09:49 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id a21so1319256ljj.11
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 05:09:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=KLqPj9OUYNYu57ztbNUIa4jiPZoIqPrF6hmdQjlgEZs=;
-        b=Ok4ncQBW9IIR7ufTzmwpdMdbc1bVrFVnYgVSZyF/3JkiM/IITuAt5M7F9LlvzPrZAO
-         LRbvhFDAdTQWLxu/l96JzDGh/JmFsV/sIQVIE4PaTz8cyqZQb3XJN1fTfDWOrBcN/omR
-         WrnIAkGqdzc1H1DPXR9ZvKr2cm124MemazGPGyX9OWz8Xehgic1nJVGp4vcUx0WpkVGZ
-         gsRmAXSI4FbJKmxMdjcgcRYS/dC+MNSo91Do6l4bRaNmlCyO+sa0bStwRVYAIehbQVqq
-         dv2ElrfhCVy30Y+Ee/tQ5BzHsWS0MszkXkSuG9zFrq6m7oJiOu10rQSLvKYCOpKyBk6T
-         3W8g==
+        bh=iOGlYy9uXhZHulZgQ0+V+pYl6SxONHQ8OrIB8ymK4ps=;
+        b=cI/VTDMEfFxsqqItuPTCMGNcbAOVoJT4cTNyAcRAS5tXYSR8gP0oUHRHKeQfegAM5a
+         NFEKi2ILQEBpj4zgt7b/vDfWdA8+Dm2YtgCP/Ll7kvSkXEqyMZt2nm/dyib4zSMuSQFe
+         yQv3P6MGoz8pYRF8ahCMrpvuUbOM0fDIBXaMSVQs7u+Myb43MZ7xE9ATu2Br8nk6ERmr
+         u9odYySxINwVlP+O1jkiieSth5OSr+FE/UIV4aSOWEXA5qG7mR30flSOFIwW3JBDG40M
+         6/HKjaaD9H8pFjJrz/r6UBfliRXA1xzCABBoPelzSXQ3LnOEPLSZuQ6HWPJ97TCDL7FN
+         lU3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=KLqPj9OUYNYu57ztbNUIa4jiPZoIqPrF6hmdQjlgEZs=;
-        b=tuBZUf6ub2+Yla93bpGrWr0IQDStdgPQ1wlfuBgMBXcu/2pzmFGnqSgNgqnCmM2HLU
-         Tb1hvi+n3HJ+rNqprvDlj+MAgRWMGQjRRbFZT09OmlCOs2UIre4ZZMj3upnXeA2ZcX2j
-         fc5yXUVf3DcOB0OuibzvSuZz0oVbH0DOkfK6W1naVzwY1cSJza1JlmjGiBNRmnDTaN0O
-         tnhOHiIAy3yUOrzqiAie894SxLdGjwvAozQSTuVHR15TWK36gygTQpe+ztHrn9IWIt57
-         6C8qiLHG5p9NvwC4UQ4hivzRrlOnNBhnLzdg4v85Laf3O2+zXJ1pDqOIOSrPJLCzoPvq
-         ZFjg==
-X-Gm-Message-State: AGi0PuYQ7+QtYLzQ1uQoPRWGGwmv1bnNwd0NVgXp9frGbmXq0z+sQDsf
-        hOXZeGOua/WxjcEmYfJ5slwMjlaxEgP0JJ4Nknsm9w==
-X-Google-Smtp-Source: APiQypLmmxW5CGCscQSRHPWSqxnWiDSaPwBQjOTOH+h4ci6IqsRU/WBVCt8H/+53K1A9Nc1RaODu2nmWTMNfnA/DBnI=
-X-Received: by 2002:a17:902:4c:: with SMTP id 70mr2799565pla.336.1588680521773;
- Tue, 05 May 2020 05:08:41 -0700 (PDT)
+        bh=iOGlYy9uXhZHulZgQ0+V+pYl6SxONHQ8OrIB8ymK4ps=;
+        b=ugoNa0sJ3/EyJrSP/+nhvNzPvMIwIVdNSKCG3h5yzYcH/mT8AW9eVVTujfL9nDwddN
+         oYHZI4jpZP7uiRYlk/ZGYhesJxJ/EvPyIERCO7AnbpJc7wCZImwHzjZVrmQX1z18/rRF
+         IWTHuj0D3S4gl5rfGTpu43dGd3e5n1aCTUuRNyEKx86W5RkUTTljWWKUKSx1jANpl6Mg
+         CL5HDg/Jz3HdOR3rs4OmOn79ns0CxwKdlwWYuxMaC4HTa6NyZXbDAq+2wslagyZ6H+6j
+         QW73zgM0Trw27DMKT6u655AYOc1fSMswVMYBgsh6JSSyxAVhuTNi/J6vzYt/1fk2m8w5
+         pcJA==
+X-Gm-Message-State: AGi0PuY8Gx1/+EayMyUIXqDoac2F/a11QPT3MNSJu/rM9cRs7dvENfH3
+        YmJ3p/X31o7fizm5Bcco26dPpeGM/2uK5+dLkubEVQ==
+X-Google-Smtp-Source: APiQypIsUpqg7P4EsnRmnk5zJcX42n/zqB9YCqBESh486eP4/FfbjcFgbgxE9/xBz3IGZ47zlAuEug6fE2dqWyglFpU=
+X-Received: by 2002:a2e:8658:: with SMTP id i24mr1529959ljj.287.1588680587262;
+ Tue, 05 May 2020 05:09:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <2f05fe9aa7e4bcb1bad3f6d11e48a411c901af68.1588197975.git.andreyknvl@google.com>
- <875zdabzs3.fsf@kernel.org>
-In-Reply-To: <875zdabzs3.fsf@kernel.org>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 5 May 2020 14:08:30 +0200
-Message-ID: <CAAeHK+yxoYigM7uWC3cpKmCjgMLXQ1pT=MkJ7XQYCVRgZ-DdTQ@mail.gmail.com>
-Subject: Re: [PATCH v2] usb: raw-gadget: fix gadget endpoint selection
-To:     Felipe Balbi <balbi@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Dmitry Vyukov <dvyukov@google.com>
+References: <20200505111204.963-1-manafm@codeaurora.org> <20200505111204.963-2-manafm@codeaurora.org>
+In-Reply-To: <20200505111204.963-2-manafm@codeaurora.org>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 5 May 2020 17:39:14 +0530
+Message-ID: <CAP245DV3-WXa1183tY=AzREAfzt3nXYugngG+zn6pEjXLc68cA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] drivers: thermal: tsens: Add 0C (zeorC) interrupt support
+To:     Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 9:34 AM Felipe Balbi <balbi@kernel.org> wrote:
->
->
-> Hi,
->
-> Andrey Konovalov <andreyknvl@google.com> writes:
->
-> > Currently automatic gadget endpoint selection based on required features
-> > doesn't work. Raw Gadget tries iterating over the list of available
-> > endpoints and finding one that has the right direction and transfer type.
-> > Unfortunately selecting arbitrary gadget endpoints (even if they satisfy
-> > feature requirements) doesn't work, as (depending on the UDC driver) they
-> > might have fixed addresses, and one also needs to provide matching
-> > endpoint addresses in the descriptors sent to the host.
-> >
-> > The composite framework deals with this by assigning endpoint addresses
-> > in usb_ep_autoconfig() before enumeration starts. This approach won't work
-> > with Raw Gadget as the endpoints are supposed to be enabled after a
-> > set_configuration/set_interface request from the host, so it's too late to
-> > patch the endpoint descriptors that had already been sent to the host.
-> >
-> > For Raw Gadget we take another approach. Similarly to GadgetFS, we allow
-> > the user to make the decision as to which gadget endpoints to use.
-> >
-> > This patch adds another Raw Gadget ioctl USB_RAW_IOCTL_EPS_INFO that
-> > exposes information about all non-control endpoints that a currently
-> > connected UDC has. This information includes endpoints addresses, as well
-> > as their capabilities and limits to allow the user to choose the most
-> > fitting gadget endpoint.
-> >
-> > The USB_RAW_IOCTL_EP_ENABLE ioctl is updated to use the proper endpoint
-> > validation routine usb_gadget_ep_match_desc() and also now accepts an
-> > optional usb_ss_ep_comp_descriptor argument.
-> >
-> > These changes affect the portability of the gadgets that use Raw Gadget
-> > when running on different UDCs. Nevertheless, as long as the user relies
-> > on the information provided by USB_RAW_IOCTL_EPS_INFO to dynamically
-> > choose endpoint addresses, UDC-agnostic gadgets can still be written with
-> > Raw Gadget.
-> >
-> > Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface")
-> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> > ---
-> >
-> > Changes v1 -> v2:
-> > - Validate endpoint number against dev->eps_num instead of
-> >   USB_RAW_EPS_NUM_MAX.
-> > - Dropped maxburst from struct usb_raw_ep_limits, added reserved field
-> >   instead.
-> > - Don't allocate struct usb_raw_eps_info on stack, it's too large.
-> > - Assign SuperSpeed endpoint companion descriptor to usb_ep when enabling
-> >   endpoints.
-> > - Fixed typos in commit message.
-> >
-> > ---
-> >  Documentation/usb/raw-gadget.rst       |   6 +-
-> >  drivers/usb/gadget/legacy/raw_gadget.c | 217 +++++++++++++++++--------
-> >  include/uapi/linux/usb/raw_gadget.h    |  88 +++++++++-
-> >  3 files changed, 231 insertions(+), 80 deletions(-)
-> >
-> > diff --git a/Documentation/usb/raw-gadget.rst b/Documentation/usb/raw-gadget.rst
-> > index 9e78cb858f86..42bd446d72b2 100644
-> > --- a/Documentation/usb/raw-gadget.rst
-> > +++ b/Documentation/usb/raw-gadget.rst
-> > @@ -27,11 +27,7 @@ differences are:
-> >  3. Raw Gadget provides a way to select a UDC device/driver to bind to,
-> >     while GadgetFS currently binds to the first available UDC.
-> >
-> > -4. Raw Gadget uses predictable endpoint names (handles) across different
-> > -   UDCs (as long as UDCs have enough endpoints of each required transfer
-> > -   type).
-> > -
-> > -5. Raw Gadget has ioctl-based interface instead of a filesystem-based one.
-> > +4. Raw Gadget has ioctl-based interface instead of a filesystem-based one.
-> >
-> >  Userspace interface
-> >  ~~~~~~~~~~~~~~~~~~~
-> > diff --git a/drivers/usb/gadget/legacy/raw_gadget.c b/drivers/usb/gadget/legacy/raw_gadget.c
-> > index 7b241992ad5a..e6abbc15341a 100644
-> > --- a/drivers/usb/gadget/legacy/raw_gadget.c
-> > +++ b/drivers/usb/gadget/legacy/raw_gadget.c
-> > @@ -7,6 +7,7 @@
-> >   */
-> >
-> >  #include <linux/compiler.h>
-> > +#include <linux/ctype.h>
-> >  #include <linux/debugfs.h>
-> >  #include <linux/delay.h>
-> >  #include <linux/kref.h>
-> > @@ -123,8 +124,6 @@ static void raw_event_queue_destroy(struct raw_event_queue *queue)
-> >
-> >  struct raw_dev;
-> >
-> > -#define USB_RAW_MAX_ENDPOINTS 32
-> > -
-> >  enum ep_state {
-> >       STATE_EP_DISABLED,
-> >       STATE_EP_ENABLED,
-> > @@ -134,6 +133,7 @@ struct raw_ep {
-> >       struct raw_dev          *dev;
-> >       enum ep_state           state;
-> >       struct usb_ep           *ep;
-> > +     u8                      addr;
-> >       struct usb_request      *req;
-> >       bool                    urb_queued;
-> >       bool                    disabling;
-> > @@ -168,7 +168,8 @@ struct raw_dev {
-> >       bool                            ep0_out_pending;
-> >       bool                            ep0_urb_queued;
-> >       ssize_t                         ep0_status;
-> > -     struct raw_ep                   eps[USB_RAW_MAX_ENDPOINTS];
-> > +     struct raw_ep                   eps[USB_RAW_EPS_NUM_MAX];
-> > +     int                             eps_num;
-> >
-> >       struct completion               ep0_done;
-> >       struct raw_event_queue          queue;
-> > @@ -202,7 +203,7 @@ static void dev_free(struct kref *kref)
-> >               usb_ep_free_request(dev->gadget->ep0, dev->req);
-> >       }
-> >       raw_event_queue_destroy(&dev->queue);
-> > -     for (i = 0; i < USB_RAW_MAX_ENDPOINTS; i++) {
-> > +     for (i = 0; i < dev->eps_num; i++) {
-> >               if (dev->eps[i].state != STATE_EP_ENABLED)
-> >                       continue;
-> >               usb_ep_disable(dev->eps[i].ep);
-> > @@ -249,12 +250,26 @@ static void gadget_ep0_complete(struct usb_ep *ep, struct usb_request *req)
-> >       complete(&dev->ep0_done);
-> >  }
-> >
-> > +static u8 get_ep_addr(const char *name)
-> > +{
-> > +     /* If the endpoint has fixed function (named as e.g. "ep12out-bulk"),
-> > +      * parse the endpoint address from its name. We deliberately use
-> > +      * deprecated simple_strtoul() function here, as the number isn't
-> > +      * followed by '\0' nor '\n'.
-> > +      */
-> > +     if (isdigit(name[2]))
-> > +             return simple_strtoul(&name[2], NULL, 10);
-> > +     /* Otherwise the endpoint is configurable (named as e.g. "ep-a"). */
-> > +     return USB_RAW_EP_ADDR_ANY;
-> > +}
-> > +
-> >  static int gadget_bind(struct usb_gadget *gadget,
-> >                       struct usb_gadget_driver *driver)
-> >  {
-> > -     int ret = 0;
-> > +     int ret = 0, i = 0;
-> >       struct raw_dev *dev = container_of(driver, struct raw_dev, driver);
-> >       struct usb_request *req;
-> > +     struct usb_ep *ep;
-> >       unsigned long flags;
-> >
-> >       if (strcmp(gadget->name, dev->udc_name) != 0)
-> > @@ -273,6 +288,13 @@ static int gadget_bind(struct usb_gadget *gadget,
-> >       dev->req->context = dev;
-> >       dev->req->complete = gadget_ep0_complete;
-> >       dev->gadget = gadget;
-> > +     gadget_for_each_ep(ep, dev->gadget) {
-> > +             dev->eps[i].ep = ep;
-> > +             dev->eps[i].addr = get_ep_addr(ep->name);
-> > +             dev->eps[i].state = STATE_EP_DISABLED;
-> > +             i++;
-> > +     }
-> > +     dev->eps_num = i;
-> >       spin_unlock_irqrestore(&dev->lock, flags);
-> >
-> >       /* Matches kref_put() in gadget_unbind(). */
-> > @@ -555,7 +577,7 @@ static void *raw_alloc_io_data(struct usb_raw_ep_io *io, void __user *ptr,
-> >
-> >       if (copy_from_user(io, ptr, sizeof(*io)))
-> >               return ERR_PTR(-EFAULT);
-> > -     if (io->ep >= USB_RAW_MAX_ENDPOINTS)
-> > +     if (io->ep >= USB_RAW_EPS_NUM_MAX)
-> >               return ERR_PTR(-EINVAL);
-> >       if (!usb_raw_io_flags_valid(io->flags))
-> >               return ERR_PTR(-EINVAL);
-> > @@ -682,52 +704,34 @@ static int raw_ioctl_ep0_read(struct raw_dev *dev, unsigned long value)
-> >       return ret;
-> >  }
-> >
-> > -static bool check_ep_caps(struct usb_ep *ep,
-> > -                             struct usb_endpoint_descriptor *desc)
-> > -{
-> > -     switch (usb_endpoint_type(desc)) {
-> > -     case USB_ENDPOINT_XFER_ISOC:
-> > -             if (!ep->caps.type_iso)
-> > -                     return false;
-> > -             break;
-> > -     case USB_ENDPOINT_XFER_BULK:
-> > -             if (!ep->caps.type_bulk)
-> > -                     return false;
-> > -             break;
-> > -     case USB_ENDPOINT_XFER_INT:
-> > -             if (!ep->caps.type_int)
-> > -                     return false;
-> > -             break;
-> > -     default:
-> > -             return false;
-> > -     }
-> > -
-> > -     if (usb_endpoint_dir_in(desc) && !ep->caps.dir_in)
-> > -             return false;
-> > -     if (usb_endpoint_dir_out(desc) && !ep->caps.dir_out)
-> > -             return false;
-> > -
-> > -     return true;
-> > -}
-> > -
-> >  static int raw_ioctl_ep_enable(struct raw_dev *dev, unsigned long value)
-> >  {
-> >       int ret = 0, i;
-> >       unsigned long flags;
-> > -     struct usb_endpoint_descriptor *desc;
-> > -     struct usb_ep *ep = NULL;
-> > +     struct usb_raw_ep_descs *descs;
-> > +     struct usb_endpoint_descriptor *ep_desc;
-> > +     struct usb_ss_ep_comp_descriptor *comp_desc = NULL;
-> > +     struct raw_ep *ep;
-> >
-> > -     desc = memdup_user((void __user *)value, sizeof(*desc));
-> > -     if (IS_ERR(desc))
-> > -             return PTR_ERR(desc);
-> > +     descs = memdup_user((void __user *)value, sizeof(*descs));
-> > +     if (IS_ERR(descs))
-> > +             return PTR_ERR(descs);
-> > +
-> > +     ep_desc = &descs->ep;
-> > +     /*
-> > +      * Assume that SuperSpeed endpoint companion descriptor is not present
-> > +      * if its length is 0.
-> > +      */
-> > +     if (descs->comp.bLength != 0)
-> > +             comp_desc = &descs->comp;
-> >
-> >       /*
-> >        * Endpoints with a maxpacket length of 0 can cause crashes in UDC
-> >        * drivers.
-> >        */
-> > -     if (usb_endpoint_maxp(desc) == 0) {
-> > +     if (usb_endpoint_maxp(ep_desc) == 0) {
-> >               dev_dbg(dev->dev, "fail, bad endpoint maxpacket\n");
-> > -             kfree(desc);
-> > +             kfree(descs);
-> >               return -EINVAL;
-> >       }
-> >
-> > @@ -743,41 +747,34 @@ static int raw_ioctl_ep_enable(struct raw_dev *dev, unsigned long value)
-> >               goto out_free;
-> >       }
-> >
-> > -     for (i = 0; i < USB_RAW_MAX_ENDPOINTS; i++) {
-> > -             if (dev->eps[i].state == STATE_EP_ENABLED)
-> > +     for (i = 0; i < dev->eps_num; i++) {
-> > +             ep = &dev->eps[i];
-> > +             if (ep->state != STATE_EP_DISABLED)
-> >                       continue;
-> > -             break;
-> > -     }
-> > -     if (i == USB_RAW_MAX_ENDPOINTS) {
-> > -             dev_dbg(&dev->gadget->dev,
-> > -                             "fail, no device endpoints available\n");
-> > -             ret = -EBUSY;
-> > -             goto out_free;
-> > -     }
-> > -
-> > -     gadget_for_each_ep(ep, dev->gadget) {
-> > -             if (ep->enabled)
-> > +             if (ep->addr != usb_endpoint_num(ep_desc) &&
-> > +                             ep->addr != USB_RAW_EP_ADDR_ANY)
-> >                       continue;
-> > -             if (!check_ep_caps(ep, desc))
-> > +             if (!usb_gadget_ep_match_desc(dev->gadget, ep->ep,
-> > +                                                     ep_desc, comp_desc))
-> >                       continue;
-> > -             ep->desc = desc;
-> > -             ret = usb_ep_enable(ep);
-> > +             ep->ep->desc = ep_desc;
-> > +             ep->ep->comp_desc = comp_desc;
-> > +             ret = usb_ep_enable(ep->ep);
-> >               if (ret < 0) {
-> >                       dev_err(&dev->gadget->dev,
-> >                               "fail, usb_ep_enable returned %d\n", ret);
-> >                       goto out_free;
-> >               }
-> > -             dev->eps[i].req = usb_ep_alloc_request(ep, GFP_ATOMIC);
-> > -             if (!dev->eps[i].req) {
-> > +             ep->req = usb_ep_alloc_request(ep->ep, GFP_ATOMIC);
-> > +             if (!ep->req) {
-> >                       dev_err(&dev->gadget->dev,
-> >                               "fail, usb_ep_alloc_request failed\n");
-> > -                     usb_ep_disable(ep);
-> > +                     usb_ep_disable(ep->ep);
-> >                       ret = -ENOMEM;
-> >                       goto out_free;
-> >               }
-> > -             dev->eps[i].ep = ep;
-> > -             dev->eps[i].state = STATE_EP_ENABLED;
-> > -             ep->driver_data = &dev->eps[i];
-> > +             ep->state = STATE_EP_ENABLED;
-> > +             ep->ep->driver_data = ep;
-> >               ret = i;
-> >               goto out_unlock;
-> >       }
-> > @@ -786,7 +783,7 @@ static int raw_ioctl_ep_enable(struct raw_dev *dev, unsigned long value)
-> >       ret = -EBUSY;
-> >
-> >  out_free:
-> > -     kfree(desc);
-> > +     kfree(descs);
-> >  out_unlock:
-> >       spin_unlock_irqrestore(&dev->lock, flags);
-> >       return ret;
-> > @@ -796,10 +793,6 @@ static int raw_ioctl_ep_disable(struct raw_dev *dev, unsigned long value)
-> >  {
-> >       int ret = 0, i = value;
-> >       unsigned long flags;
-> > -     const void *desc;
-> > -
-> > -     if (i < 0 || i >= USB_RAW_MAX_ENDPOINTS)
-> > -             return -EINVAL;
-> >
-> >       spin_lock_irqsave(&dev->lock, flags);
-> >       if (dev->state != STATE_DEV_RUNNING) {
-> > @@ -812,6 +805,11 @@ static int raw_ioctl_ep_disable(struct raw_dev *dev, unsigned long value)
-> >               ret = -EBUSY;
-> >               goto out_unlock;
-> >       }
-> > +     if (i < 0 || i >= dev->eps_num) {
-> > +             dev_dbg(dev->dev, "fail, invalid endpoint\n");
-> > +             ret = -EBUSY;
-> > +             goto out_unlock;
-> > +     }
-> >       if (dev->eps[i].state != STATE_EP_ENABLED) {
-> >               dev_dbg(&dev->gadget->dev, "fail, endpoint is not enabled\n");
-> >               ret = -EINVAL;
-> > @@ -836,10 +834,13 @@ static int raw_ioctl_ep_disable(struct raw_dev *dev, unsigned long value)
-> >
-> >       spin_lock_irqsave(&dev->lock, flags);
-> >       usb_ep_free_request(dev->eps[i].ep, dev->eps[i].req);
-> > -     desc = dev->eps[i].ep->desc;
-> > +     /*
-> > +      * This kfree() frees both endpoint and SuperSpeed
-> > +      * endpoint companion descriptors.
-> > +      */
-> > +     kfree(dev->eps[i].ep->desc);
-> >       dev->eps[i].ep = NULL;
-> >       dev->eps[i].state = STATE_EP_DISABLED;
-> > -     kfree(desc);
-> >       dev->eps[i].disabling = false;
-> >
-> >  out_unlock:
-> > @@ -868,7 +869,7 @@ static int raw_process_ep_io(struct raw_dev *dev, struct usb_raw_ep_io *io,
-> >  {
-> >       int ret = 0;
-> >       unsigned long flags;
-> > -     struct raw_ep *ep = &dev->eps[io->ep];
-> > +     struct raw_ep *ep;
-> >       DECLARE_COMPLETION_ONSTACK(done);
-> >
-> >       spin_lock_irqsave(&dev->lock, flags);
-> > @@ -882,6 +883,12 @@ static int raw_process_ep_io(struct raw_dev *dev, struct usb_raw_ep_io *io,
-> >               ret = -EBUSY;
-> >               goto out_unlock;
-> >       }
-> > +     if (io->ep >= dev->eps_num) {
-> > +             dev_dbg(&dev->gadget->dev, "fail, invalid endpoint\n");
-> > +             ret = -EINVAL;
-> > +             goto out_unlock;
-> > +     }
-> > +     ep = &dev->eps[io->ep];
-> >       if (ep->state != STATE_EP_ENABLED) {
-> >               dev_dbg(&dev->gadget->dev, "fail, endpoint is not enabled\n");
-> >               ret = -EBUSY;
-> > @@ -1027,6 +1034,71 @@ static int raw_ioctl_vbus_draw(struct raw_dev *dev, unsigned long value)
-> >       return ret;
-> >  }
-> >
-> > +static void fill_ep_caps(struct usb_ep_caps *caps,
-> > +                             struct usb_raw_ep_caps *raw_caps)
-> > +{
-> > +     raw_caps->type_control = caps->type_control;
-> > +     raw_caps->type_iso = caps->type_iso;
-> > +     raw_caps->type_bulk = caps->type_bulk;
-> > +     raw_caps->type_int = caps->type_int;
-> > +     raw_caps->dir_in = caps->dir_in;
-> > +     raw_caps->dir_out = caps->dir_out;
-> > +}
-> > +
-> > +static void fill_ep_limits(struct usb_ep *ep, struct usb_raw_ep_limits *limits)
-> > +{
-> > +     limits->maxpacket_limit = ep->maxpacket_limit;
-> > +     limits->max_streams = ep->max_streams;
-> > +}
-> > +
-> > +static int raw_ioctl_eps_info(struct raw_dev *dev, unsigned long value)
-> > +{
-> > +     int ret = 0, i;
-> > +     unsigned long flags;
-> > +     struct usb_raw_eps_info *info;
-> > +     struct raw_ep *ep;
-> > +
-> > +     info = kmalloc(sizeof(*info), GFP_KERNEL);
-> > +     if (!info) {
-> > +             ret = -ENOMEM;
-> > +             goto out;
-> > +     }
-> > +
-> > +     spin_lock_irqsave(&dev->lock, flags);
-> > +     if (dev->state != STATE_DEV_RUNNING) {
-> > +             dev_dbg(dev->dev, "fail, device is not running\n");
-> > +             ret = -EINVAL;
-> > +             spin_unlock_irqrestore(&dev->lock, flags);
-> > +             goto out_free;
-> > +     }
-> > +     if (!dev->gadget) {
-> > +             dev_dbg(dev->dev, "fail, gadget is not bound\n");
-> > +             ret = -EBUSY;
-> > +             spin_unlock_irqrestore(&dev->lock, flags);
-> > +             goto out_free;
-> > +     }
-> > +
-> > +     memset(info, 0, sizeof(*info));
-> > +     for (i = 0; i < dev->eps_num; i++) {
-> > +             ep = &dev->eps[i];
-> > +             strscpy(&info->eps[i].name[0], ep->ep->name,
-> > +                             USB_RAW_EP_NAME_MAX);
-> > +             info->eps[i].addr = ep->addr;
-> > +             fill_ep_caps(&ep->ep->caps, &info->eps[i].caps);
-> > +             fill_ep_limits(ep->ep, &info->eps[i].limits);
-> > +     }
-> > +     ret = dev->eps_num;
-> > +     spin_unlock_irqrestore(&dev->lock, flags);
-> > +
-> > +     if (copy_to_user((void __user *)value, info, sizeof(*info)))
-> > +             ret = -EFAULT;
-> > +
-> > +out_free:
-> > +     kfree(info);
-> > +out:
-> > +     return ret;
-> > +}
-> > +
-> >  static long raw_ioctl(struct file *fd, unsigned int cmd, unsigned long value)
-> >  {
-> >       struct raw_dev *dev = fd->private_data;
-> > @@ -1069,6 +1141,9 @@ static long raw_ioctl(struct file *fd, unsigned int cmd, unsigned long value)
-> >       case USB_RAW_IOCTL_VBUS_DRAW:
-> >               ret = raw_ioctl_vbus_draw(dev, value);
-> >               break;
-> > +     case USB_RAW_IOCTL_EPS_INFO:
-> > +             ret = raw_ioctl_eps_info(dev, value);
-> > +             break;
-> >       default:
-> >               ret = -EINVAL;
-> >       }
-> > diff --git a/include/uapi/linux/usb/raw_gadget.h b/include/uapi/linux/usb/raw_gadget.h
-> > index 8544802b25bd..722124fff290 100644
-> > --- a/include/uapi/linux/usb/raw_gadget.h
-> > +++ b/include/uapi/linux/usb/raw_gadget.h
-> > @@ -93,6 +93,79 @@ struct usb_raw_ep_io {
-> >       __u8            data[0];
-> >  };
-> >
-> > +/*
-> > + * struct usb_raw_ep_descs - argument for USB_RAW_IOCTL_EP_ENABLE ioctl.
-> > + * @ep: Endpoint descriptor.
-> > + * @comp: SuperSpeed Endpoint Companion descriptor.
-> > + *
-> > + * Both of these descriptors are only used by the gadget subsystem including
-> > + * the UDC driver and don't affect the descriptors that are sent to the host.
-> > + * However, the user must make sure that the host and the gadget sides agree
-> > + * on the used endpoint parameters (such as e.g. endpoint addresses).
-> > + */
-> > +struct usb_raw_ep_descs {
-> > +     struct usb_endpoint_descriptor          ep;
-> > +     struct usb_ss_ep_comp_descriptor        comp;
-> > +};
-> > +
-> > +/* Maximum number of non-control endpoints in struct usb_raw_eps_info. */
-> > +#define USB_RAW_EPS_NUM_MAX  30
-> > +
-> > +/* Maximum length of UDC endpoint name in struct usb_raw_ep_info. */
-> > +#define USB_RAW_EP_NAME_MAX  16
-> > +
-> > +/* Used as addr in struct usb_raw_ep_info if endpoint accepts any address. */
-> > +#define USB_RAW_EP_ADDR_ANY  0xff
-> > +
-> > +/*
-> > + * struct usb_raw_ep_caps - exposes endpoint capabilities from struct usb_ep
-> > + *     (technically from its member struct usb_ep_caps).
-> > + */
-> > +struct usb_raw_ep_caps {
-> > +     __u32   type_control    : 1;
-> > +     __u32   type_iso        : 1;
-> > +     __u32   type_bulk       : 1;
-> > +     __u32   type_int        : 1;
-> > +     __u32   dir_in          : 1;
-> > +     __u32   dir_out         : 1;
-> > +};
-> > +
-> > +/*
-> > + * struct usb_raw_ep_limits - exposes endpoint limits from struct usb_ep.
-> > + * @maxpacket_limit: Maximum packet size value supported by this endpoint.
-> > + * @max_streams: maximum number of streams supported by this endpoint
-> > + *     (actual number is 2^n).
-> > + * @reserved: Empty, reserved for potential future extensions.
-> > + */
-> > +struct usb_raw_ep_limits {
-> > +     __u16   maxpacket_limit;
-> > +     __u16   max_streams;
-> > +     __u32   reserved;
-> > +};
-> > +
-> > +/*
-> > + * struct usb_raw_ep_info - stores information about a gadget endpoint.
-> > + * @name: Name of the endpoint as it is defined in the UDC driver.
-> > + * @addr: Address of the endpoint that must be specified in the endpoint
-> > + *     descriptor passed to USB_RAW_IOCTL_EP_ENABLE ioctl.
-> > + * @caps: Endpoint capabilities.
-> > + * @limits: Endpoint limits.
-> > + */
-> > +struct usb_raw_ep_info {
-> > +     __u8                            name[USB_RAW_EP_NAME_MAX];
-> > +     __u32                           addr;
-> > +     struct usb_raw_ep_caps          caps;
-> > +     struct usb_raw_ep_limits        limits;
-> > +};
-> > +
-> > +/*
-> > + * struct usb_raw_eps_info - argument for USB_RAW_IOCTL_EPS_INFO ioctl.
-> > + * eps: Structures that store information about non-control endpoints.
-> > + */
-> > +struct usb_raw_eps_info {
-> > +     struct usb_raw_ep_info  eps[USB_RAW_EPS_NUM_MAX];
-> > +};
-> > +
-> >  /*
-> >   * Initializes a Raw Gadget instance.
-> >   * Accepts a pointer to the usb_raw_init struct as an argument.
-> > @@ -126,12 +199,12 @@ struct usb_raw_ep_io {
-> >  #define USB_RAW_IOCTL_EP0_READ               _IOWR('U', 4, struct usb_raw_ep_io)
-> >
-> >  /*
-> > - * Finds an endpoint that supports the transfer type specified in the
-> > - * descriptor and enables it.
-> > - * Accepts a pointer to the usb_endpoint_descriptor struct as an argument.
-> > + * Finds an endpoint that satisfies the parameters specified in the provided
-> > + * descriptors (address, transfer type, etc.) and enables it.
-> > + * Accepts a pointer to the usb_raw_ep_descs struct as an argument.
-> >   * Returns enabled endpoint handle on success or negative error code on failure.
-> >   */
-> > -#define USB_RAW_IOCTL_EP_ENABLE              _IOW('U', 5, struct usb_endpoint_descriptor)
-> > +#define USB_RAW_IOCTL_EP_ENABLE              _IOW('U', 5, struct usb_raw_ep_descs)
-> >
-> >  /* Disables specified endpoint.
-> >   * Accepts endpoint handle as an argument.
-> > @@ -164,4 +237,11 @@ struct usb_raw_ep_io {
-> >   */
-> >  #define USB_RAW_IOCTL_VBUS_DRAW              _IOW('U', 10, __u32)
-> >
-> > +/* Fills in the usb_raw_eps_info structure with information about non-control
-> > + * endpoints available for the currently connected UDC.
-> > + * Returns the number of available endpoints on success or negative error code
-> > + * on failure.
-> > + */
-> > +#define USB_RAW_IOCTL_EPS_INFO               _IOR('U', 11, struct usb_raw_eps_info)
-> > +
->
-> here you're changing userspace ABI. Aren't we going to possibly break
-> some existing applications?
+Hi Manaf,
 
-Hi Felipe,
+Typo: fix zeorC in subject line.
 
- I've been working on tests for Raw Gadget for the last few weeks [1],
-which revealed a few problems with the interface. This isn't yet
-included into any released kernel, so my hope that changing the ABI is
-OK during the rc stage.
+Please rebase this patch[1] on top of my patch merging tsens-common.c
+and tsens.c.
 
-[1] https://github.com/xairy/raw-gadget/tree/tests
+[1] https://lore.kernel.org/linux-arm-msm/e30e2ba6fa5c007983afd4d7d4e0311c0b57917a.1588183879.git.amit.kucheria@linaro.org/
 
-Thanks!
+On Tue, May 5, 2020 at 4:42 PM Manaf Meethalavalappu Pallikunhi
+<manafm@codeaurora.org> wrote:
+>
+> TSENS IP v2.6+ adds 0C interrupt support. It triggers set
+> interrupt when aggregated minimum temperature of all TSENS falls
+> below 0C preset threshold and triggers reset interrupt when aggregate
+> minimum temperature of all TSENS crosses above reset threshold.
+> Add support for this interrupt in the driver.
+>
+> It adds another sensor to the of-thermal along with all individual
+> TSENS. It enables to add any mitigation for 0C interrupt.
+>
+> Signed-off-by: Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
+> ---
+>  drivers/thermal/qcom/tsens-common.c | 72 ++++++++++++++++++++++++++++-
+>  drivers/thermal/qcom/tsens-v2.c     |  7 +++
+>  drivers/thermal/qcom/tsens.c        | 51 ++++++++++++++++++--
+>  drivers/thermal/qcom/tsens.h        | 11 +++++
+>  4 files changed, 135 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
+> index 172545366636..44e7edeb9a90 100644
+> --- a/drivers/thermal/qcom/tsens-common.c
+> +++ b/drivers/thermal/qcom/tsens-common.c
+> @@ -198,7 +198,8 @@ static void tsens_set_interrupt_v1(struct tsens_priv *priv, u32 hw_id,
+>                 index = LOW_INT_CLEAR_0 + hw_id;
+>                 break;
+>         case CRITICAL:
+> -               /* No critical interrupts before v2 */
+> +       case ZEROC:
+> +               /* No critical and 0c interrupts before v2 */
+>                 return;
+>         }
+>         regmap_field_write(priv->rf[index], enable ? 0 : 1);
+> @@ -229,6 +230,9 @@ static void tsens_set_interrupt_v2(struct tsens_priv *priv, u32 hw_id,
+>                 index_mask  = CRIT_INT_MASK_0 + hw_id;
+>                 index_clear = CRIT_INT_CLEAR_0 + hw_id;
+>                 break;
+> +       case ZEROC:
+> +               /* Nothing to handle for 0c interrupt */
+> +               return;
+>         }
+>
+>         if (enable) {
+> @@ -360,6 +364,34 @@ static inline u32 masked_irq(u32 hw_id, u32 mask, enum tsens_ver ver)
+>         return 0;
+>  }
+>
+> +/**
+> + * tsens_0c_irq_thread - Threaded interrupt handler for 0c interrupt
+
+Let's use zeroc instead of 0c in the function and variable names and
+comments everywhere. Easier to grep and better consistency too.
+
+> + * @irq: irq number
+> + * @data: tsens controller private data
+> + *
+> + * Whenever interrupt triggers notify thermal framework using
+> + * thermal_zone_device_update() to update cold temperature mitigation.
+
+How is this mitigation updated?
+
+> + *
+> + * Return: IRQ_HANDLED
+> + */
+> +irqreturn_t tsens_0c_irq_thread(int irq, void *data)
+> +{
+> +       struct tsens_priv *priv = data;
+> +       struct tsens_sensor *s = &priv->sensor[priv->num_sensors];
+> +       int temp, ret;
+> +
+> +       ret = regmap_field_read(priv->rf[TSENS_0C_STATUS], &temp);
+> +       if (ret)
+> +               return ret;
+> +
+> +       dev_dbg(priv->dev, "[%u] %s: 0c interrupt is %s\n",
+> +               s->hw_id, __func__, temp ? "triggered" : "cleared");
+
+So triggered is printed for non-zero (including negative) values?
+
+> +
+> +       thermal_zone_device_update(s->tzd, THERMAL_EVENT_UNSPECIFIED);
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+>  /**
+>   * tsens_critical_irq_thread() - Threaded handler for critical interrupts
+>   * @irq: irq number
+> @@ -566,6 +598,20 @@ void tsens_disable_irq(struct tsens_priv *priv)
+>         regmap_field_write(priv->rf[INT_EN], 0);
+>  }
+>
+> +int tsens_get_0c_int_status(const struct tsens_sensor *s, int *temp)
+> +{
+> +       struct tsens_priv *priv = s->priv;
+> +       int last_temp = 0, ret;
+> +
+> +       ret = regmap_field_read(priv->rf[TSENS_0C_STATUS], &last_temp);
+> +       if (ret)
+> +               return ret;
+> +
+> +       *temp = last_temp;
+> +
+> +       return 0;
+> +}
+> +
+>  int get_temp_tsens_valid(const struct tsens_sensor *s, int *temp)
+>  {
+>         struct tsens_priv *priv = s->priv;
+> @@ -833,6 +879,30 @@ int __init init_common(struct tsens_priv *priv)
+>                 regmap_field_write(priv->rf[CC_MON_MASK], 1);
+>         }
+>
+> +       if (tsens_version(priv) > VER_1_X &&  ver_minor > 5) {
+> +               /* 0C interrupt is present only on v2.6+ */
+> +               priv->rf[TSENS_0C_INT_EN] = devm_regmap_field_alloc(dev,
+> +                                               priv->srot_map,
+> +                                               priv->fields[TSENS_0C_INT_EN]);
+> +               if (IS_ERR(priv->rf[TSENS_0C_INT_EN])) {
+> +                       ret = PTR_ERR(priv->rf[TSENS_0C_INT_EN]);
+> +                       goto err_put_device;
+> +               }
+> +
+> +               /* Check whether 0C interrupt is enabled or not */
+> +               regmap_field_read(priv->rf[TSENS_0C_INT_EN], &enabled);
+> +               if (enabled) {
+> +                       priv->feat->zero_c_int = 1;
+
+This should be done at the beginning of the block where you check our
+version is > 2.6 since the flag only says whether the feature is
+present.
+
+> +                       priv->rf[TSENS_0C_STATUS] = devm_regmap_field_alloc(dev,
+> +                                               priv->tm_map,
+> +                                               priv->fields[TSENS_0C_STATUS]);
+> +                       if (IS_ERR(priv->rf[TSENS_0C_STATUS])) {
+> +                               ret = PTR_ERR(priv->rf[TSENS_0C_STATUS]);
+> +                               goto err_put_device;
+> +                       }
+> +               }
+> +       }
+> +
+>         spin_lock_init(&priv->ul_lock);
+>         tsens_enable_irq(priv);
+>         tsens_debug_init(op);
+> diff --git a/drivers/thermal/qcom/tsens-v2.c b/drivers/thermal/qcom/tsens-v2.c
+> index b293ed32174b..ce80d82c7255 100644
+> --- a/drivers/thermal/qcom/tsens-v2.c
+> +++ b/drivers/thermal/qcom/tsens-v2.c
+> @@ -11,6 +11,7 @@
+>  /* ----- SROT ------ */
+>  #define SROT_HW_VER_OFF        0x0000
+>  #define SROT_CTRL_OFF          0x0004
+> +#define SROT_OC_CTRL_OFF       0x0018
+>
+>  /* ----- TM ------ */
+>  #define TM_INT_EN_OFF                  0x0004
+> @@ -23,6 +24,7 @@
+>  #define TM_Sn_UPPER_LOWER_THRESHOLD_OFF 0x0020
+>  #define TM_Sn_CRITICAL_THRESHOLD_OFF   0x0060
+>  #define TM_Sn_STATUS_OFF               0x00a0
+> +#define TM_0C_INT_STATUS_OFF           0x00e0
+>  #define TM_TRDY_OFF                    0x00e4
+>  #define TM_WDOG_LOG_OFF                0x013c
+>
+> @@ -45,6 +47,7 @@ static const struct reg_field tsens_v2_regfields[MAX_REGFIELDS] = {
+>         /* CTRL_OFF */
+>         [TSENS_EN]     = REG_FIELD(SROT_CTRL_OFF,    0,  0),
+>         [TSENS_SW_RST] = REG_FIELD(SROT_CTRL_OFF,    1,  1),
+> +       [TSENS_0C_INT_EN] = REG_FIELD(SROT_OC_CTRL_OFF, 0,  0),
+>
+>         /* ----- TM ------ */
+>         /* INTERRUPT ENABLE */
+> @@ -86,6 +89,9 @@ static const struct reg_field tsens_v2_regfields[MAX_REGFIELDS] = {
+>         REG_FIELD_FOR_EACH_SENSOR16(CRITICAL_STATUS, TM_Sn_STATUS_OFF, 19,  19),
+>         REG_FIELD_FOR_EACH_SENSOR16(MAX_STATUS,      TM_Sn_STATUS_OFF, 20,  20),
+>
+> +       /* 0C INETRRUPT STATUS */
+
+Typo: Interrupt
+
+> +       [TSENS_0C_STATUS] = REG_FIELD(TM_0C_INT_STATUS_OFF, 0, 0),
+> +
+>         /* TRDY: 1=ready, 0=in progress */
+>         [TRDY] = REG_FIELD(TM_TRDY_OFF, 0, 0),
+>  };
+> @@ -93,6 +99,7 @@ static const struct reg_field tsens_v2_regfields[MAX_REGFIELDS] = {
+>  static const struct tsens_ops ops_generic_v2 = {
+>         .init           = init_common,
+>         .get_temp       = get_temp_tsens_valid,
+> +       .get_0c_status  = tsens_get_0c_int_status,
+>  };
+>
+>  struct tsens_plat_data data_tsens_v2 = {
+> diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+> index 2f77d235cf73..e60870c53383 100644
+> --- a/drivers/thermal/qcom/tsens.c
+> +++ b/drivers/thermal/qcom/tsens.c
+> @@ -14,6 +14,17 @@
+>  #include <linux/thermal.h>
+>  #include "tsens.h"
+>
+> +static int tsens_0c_get_temp(void *data, int *temp)
+> +{
+> +       struct tsens_sensor *s = data;
+> +       struct tsens_priv *priv = s->priv;
+> +
+> +       if (priv->ops->get_0c_status)
+> +               return priv->ops->get_0c_status(s, temp);
+> +
+> +       return -ENOTSUPP;
+> +}
+> +
+>  static int tsens_get_temp(void *data, int *temp)
+>  {
+>         struct tsens_sensor *s = data;
+> @@ -85,6 +96,10 @@ static const struct thermal_zone_of_device_ops tsens_of_ops = {
+>         .set_trips = tsens_set_trips,
+>  };
+>
+> +static const struct thermal_zone_of_device_ops tsens_0c_of_ops = {
+> +       .get_temp = tsens_0c_get_temp,
+> +};
+> +
+>  static int tsens_register_irq(struct tsens_priv *priv, char *irqname,
+>                               irq_handler_t thread_fn)
+>  {
+> @@ -142,6 +157,21 @@ static int tsens_register(struct tsens_priv *priv)
+>                 ret = tsens_register_irq(priv, "critical",
+>                                          tsens_critical_irq_thread);
+>
+> +       if (priv->feat->zero_c_int) {
+> +               priv->sensor[priv->num_sensors].priv = priv;
+> +               tzd = devm_thermal_zone_of_sensor_register(priv->dev,
+> +                                       priv->sensor[priv->num_sensors].hw_id,
+> +                                       &priv->sensor[priv->num_sensors],
+> +                                       &tsens_0c_of_ops);
+> +               if (IS_ERR(tzd)) {
+> +                       ret = 0;
+> +                       return ret;
+> +               }
+> +
+> +               priv->sensor[priv->num_sensors].tzd = tzd;
+
+Why can't this happen in the previous loop, but increase the loop to
+<= num_sensors? It is duplicated code.
+
+> +               ret = tsens_register_irq(priv, "zeroc", tsens_0c_irq_thread);
+> +       }
+> +
+>         return ret;
+>  }
+>
+> @@ -178,11 +208,22 @@ static int tsens_probe(struct platform_device *pdev)
+>                 return -EINVAL;
+>         }
+>
+> -       priv = devm_kzalloc(dev,
+> -                            struct_size(priv, sensor, num_sensors),
+> -                            GFP_KERNEL);
+> -       if (!priv)
+> -               return -ENOMEM;
+> +       /* Check for 0c interrupt is enabled or not */
+> +       if (platform_get_irq_byname(pdev, "zeroc") > 0) {
+> +               priv = devm_kzalloc(dev,
+> +                               struct_size(priv, sensor, num_sensors + 1),
+> +                               GFP_KERNEL);
+
+Instead of doing this, simply do the following,
+
+if (platform_get_irq_byname(pdev, "zeroc") > 0) {
+        num_sensors++;
+
+The kzalloc will just work then, no?
+
+> +               if (!priv)
+> +                       return -ENOMEM;
+> +               /* Use Max sensor index as 0c sensor hw_id */
+> +               priv->sensor[num_sensors].hw_id = data->feat->max_sensors;
+> +       } else {
+> +               priv = devm_kzalloc(dev,
+> +                               struct_size(priv, sensor, num_sensors),
+> +                               GFP_KERNEL);
+> +               if (!priv)
+> +                       return -ENOMEM;
+> +       }
+>
+>         priv->dev = dev;
+>         priv->num_sensors = num_sensors;
+> diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
+> index 502acf0e6828..5b53a0352b4d 100644
+> --- a/drivers/thermal/qcom/tsens.h
+> +++ b/drivers/thermal/qcom/tsens.h
+> @@ -34,6 +34,7 @@ enum tsens_irq_type {
+>         LOWER,
+>         UPPER,
+>         CRITICAL,
+> +       ZEROC,
+>  };
+>
+>  /**
+> @@ -64,6 +65,7 @@ struct tsens_sensor {
+>   * @suspend: Function to suspend the tsens device
+>   * @resume: Function to resume the tsens device
+>   * @get_trend: Function to get the thermal/temp trend
+> + * @get_0c_status: Function to get the 0c interrupt status
+>   */
+>  struct tsens_ops {
+>         /* mandatory callbacks */
+> @@ -76,6 +78,7 @@ struct tsens_ops {
+>         int (*suspend)(struct tsens_priv *priv);
+>         int (*resume)(struct tsens_priv *priv);
+>         int (*get_trend)(struct tsens_sensor *s, enum thermal_trend *trend);
+> +       int (*get_0c_status)(const struct tsens_sensor *s, int *temp);
+>  };
+>
+>  #define REG_FIELD_FOR_EACH_SENSOR11(_name, _offset, _startbit, _stopbit) \
+> @@ -161,6 +164,8 @@ enum regfield_ids {
+>         TSENS_SW_RST,
+>         SENSOR_EN,
+>         CODE_OR_TEMP,
+> +       /* 0C CTRL OFFSET */
+> +       TSENS_0C_INT_EN,
+>
+>         /* ----- TM ------ */
+>         /* TRDY */
+> @@ -485,6 +490,8 @@ enum regfield_ids {
+>         MAX_STATUS_14,
+>         MAX_STATUS_15,
+>
+> +       TSENS_0C_STATUS,        /* 0C INTERRUPT status */
+> +
+>         /* Keep last */
+>         MAX_REGFIELDS
+>  };
+> @@ -497,6 +504,7 @@ enum regfield_ids {
+>   * @srot_split: does the IP neatly splits the register space into SROT and TM,
+>   *              with SROT only being available to secure boot firmware?
+>   * @has_watchdog: does this IP support watchdog functionality?
+> + * @zero_c_int: does this IP support 0C interrupt ?
+>   * @max_sensors: maximum sensors supported by this version of the IP
+>   */
+>  struct tsens_features {
+> @@ -505,6 +513,7 @@ struct tsens_features {
+>         unsigned int adc:1;
+>         unsigned int srot_split:1;
+>         unsigned int has_watchdog:1;
+> +       unsigned int zero_c_int:1;
+
+zeroc_interrupt
+
+>         unsigned int max_sensors;
+>  };
+>
+> @@ -580,11 +589,13 @@ void compute_intercept_slope(struct tsens_priv *priv, u32 *pt1, u32 *pt2, u32 mo
+>  int init_common(struct tsens_priv *priv);
+>  int get_temp_tsens_valid(const struct tsens_sensor *s, int *temp);
+>  int get_temp_common(const struct tsens_sensor *s, int *temp);
+> +int tsens_get_0c_int_status(const struct tsens_sensor *s, int *temp);
+>  int tsens_enable_irq(struct tsens_priv *priv);
+>  void tsens_disable_irq(struct tsens_priv *priv);
+>  int tsens_set_trips(void *_sensor, int low, int high);
+>  irqreturn_t tsens_irq_thread(int irq, void *data);
+>  irqreturn_t tsens_critical_irq_thread(int irq, void *data);
+> +irqreturn_t tsens_0c_irq_thread(int irq, void *data);
+>
+>  /* TSENS target */
+>  extern struct tsens_plat_data data_8960;
+> --
+> 2.26.2
