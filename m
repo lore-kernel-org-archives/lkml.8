@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BF4C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0ABC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C76AE206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11BE320735
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730591AbgEEOVM (ORCPT
+        id S1730579AbgEEOVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:21:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48892 "EHLO
+        Tue, 5 May 2020 10:21:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729813AbgEEOPX (ORCPT
+        by vger.kernel.org with ESMTP id S1729823AbgEEOPZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:15:23 -0400
+        Tue, 5 May 2020 10:15:25 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D0C5C061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:15:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73F1EC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:15:25 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jVyLh-0001NI-0g; Tue, 05 May 2020 16:15:05 +0200
+        id 1jVyLj-0001P8-Eb; Tue, 05 May 2020 16:15:07 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 75102FFC8D;
-        Tue,  5 May 2020 16:15:04 +0200 (CEST)
-Message-Id: <20200505134904.364456424@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id E7E20FFC8D;
+        Tue,  5 May 2020 16:15:06 +0200 (CEST)
+Message-Id: <20200505134904.556327833@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:44:05 +0200
+Date:   Tue, 05 May 2020 15:44:07 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -52,7 +52,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Will Deacon <will@kernel.org>
-Subject: [patch V4 part 3 11/29] rcu: Provide rcu_irq_exit_preempt()
+Subject: [patch V4 part 3 13/29] x86/traps: Prepare for using DEFINE_IDTENTRY
 References: <20200505134354.774943181@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -65,80 +65,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Interrupts and exceptions invoke rcu_irq_enter() on entry and need to
-invoke rcu_irq_exit() before they either return to the interrupted code or
-invoke the scheduler due to preemption.
+From: Thomas Gleixner <tglx@linutronix.de>
 
-The general assumption is that RCU idle code has to have preemption
-disabled so that a return from interrupt cannot schedule. So the return
-from interrupt code invokes rcu_irq_exit() and preempt_schedule_irq().
+Prepare for using IDTENTRY to define the C exception/trap entry points. It
+would be possible to glue this into the existing macro maze, but it's
+simpler and better to read at the end to just make them distinct. Provide
+a trivial inline helper to read the trap address.
 
-If there is any imbalance in the rcu_irq/nmi* invocations or RCU idle code
-had preemption enabled then this goes unnoticed until the CPU goes idle or
-some other RCU check is executed.
-
-Provide rcu_irq_exit_preempt() which can be invoked from the
-interrupt/exception return code in case that preemption is enabled. It
-invokes rcu_irq_exit() and contains a few sanity checks in case that
-CONFIG_PROVE_RCU is enabled to catch such issues directly.
+The existing macros will be removed once all instances are converted.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Joel Fernandes <joel@joelfernandes.org>
----
- include/linux/rcutiny.h |    1 +
- include/linux/rcutree.h |    1 +
- kernel/rcu/tree.c       |   21 +++++++++++++++++++++
- 3 files changed, 23 insertions(+)
+Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 
---- a/include/linux/rcutiny.h
-+++ b/include/linux/rcutiny.h
-@@ -71,6 +71,7 @@ static inline void rcu_irq_enter(void) {
- static inline void rcu_irq_exit_irqson(void) { }
- static inline void rcu_irq_enter_irqson(void) { }
- static inline void rcu_irq_exit(void) { }
-+static inline void rcu_irq_exit_preempt(void) { }
- static inline void exit_rcu(void) { }
- static inline bool rcu_preempt_need_deferred_qs(struct task_struct *t)
- {
---- a/include/linux/rcutree.h
-+++ b/include/linux/rcutree.h
-@@ -46,6 +46,7 @@ void rcu_idle_enter(void);
- void rcu_idle_exit(void);
- void rcu_irq_enter(void);
- void rcu_irq_exit(void);
-+void rcu_irq_exit_preempt(void);
- void rcu_irq_enter_irqson(void);
- void rcu_irq_exit_irqson(void);
- 
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -706,6 +706,27 @@ void noinstr rcu_irq_exit(void)
- 	rcu_nmi_exit();
+---
+ arch/x86/kernel/traps.c |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -205,6 +205,11 @@ static void do_error_trap(struct pt_regs
+ 	}
  }
  
-+/**
-+ * rcu_irq_exit_preempt - Inform RCU that current CPU is exiting irq
-+ *			  towards in kernel preemption
-+ *
-+ * Same as rcu_irq_exit() but has a sanity check that scheduling is safe
-+ * from RCU point of view. Invoked from return from interrupt before kernel
-+ * preemption.
-+ */
-+void rcu_irq_exit_preempt(void)
++static __always_inline void __user *error_get_trap_addr(struct pt_regs *regs)
 +{
-+	lockdep_assert_irqs_disabled();
-+	rcu_nmi_exit();
-+
-+	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nesting) <= 0,
-+			 "RCU dynticks_nesting counter underflow/zero!");
-+	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nmi_nesting) <= 0,
-+			 "RCU dynticks_nmi_nesting counter underflow/zero!");
-+	RCU_LOCKDEP_WARN(rcu_dynticks_curr_cpu_in_eqs(),
-+			 "RCU in extended quiescent state!");
++	return (void __user *)uprobe_get_trap_addr(regs);
 +}
 +
- /*
-  * Wrapper for rcu_irq_exit() where interrupts are enabled.
-  *
+ #define IP ((void __user *)uprobe_get_trap_addr(regs))
+ #define DO_ERROR(trapnr, signr, sicode, addr, str, name)		   \
+ dotraplinkage void do_##name(struct pt_regs *regs, long error_code)	   \
 
