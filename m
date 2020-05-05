@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE4AC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 02:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC282C47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 02:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92A0C206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 02:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA652206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 02:44:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SgONACdV"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rC9/qLJz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbgEECoq (ORCPT
+        id S1728469AbgEECot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 22:44:46 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:25961 "EHLO
+        Mon, 4 May 2020 22:44:49 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:26553 "EHLO
         mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728284AbgEECoj (ORCPT
+        by vger.kernel.org with ESMTP id S1728297AbgEECoj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 4 May 2020 22:44:39 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
  s=smtp; t=1588646678; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=zuCj6VUZ7Z4nbGSBWN4B5AAwjSE2c+3zdW4v57uN9Uw=; b=SgONACdVwPO06OwHKj1UvnZOIHy1Z7Ma/S9YiSL/TMoQGveDIKNMGP3dmYERKL2hJAxXS8DI
- 3HgkNI2UXT+8BmsU+BzCyFY1B3E/i3MzHCKsCHICq9FXz/i6xO5jRNu/MOD43zeeZjZ9uLvJ
- H6mCsaRV4MO3IP1ovmlJ3MWZt3M=
+ bh=E7LIlu6idEggw0r6aWRRg+yA602dyGHPWItKfszpI10=; b=rC9/qLJzAmbY4Bxmip8x2HxiKekJoqCH0S74f6blgSVhr1TV6iW4f05LJ+RLebF8eEHQGhfC
+ x3MGlXrxcloWJO1YEglrJiu83napgVjKgZEBOqbHSIt18Uks06F4hDayA6w3kfZpvHYurcJT
+ bPxV5hMieW/yGVM/JsVnT7FehsM=
 X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb0d315.7fc76c689ea0-smtp-out-n03;
- Tue, 05 May 2020 02:44:37 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5eb0d316.7f93ab4fcc38-smtp-out-n04;
+ Tue, 05 May 2020 02:44:38 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 34386C433BA; Tue,  5 May 2020 02:44:37 +0000 (UTC)
+        id 00897C433BA; Tue,  5 May 2020 02:44:37 +0000 (UTC)
 Received: from bbhatt-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 51991C433F2;
-        Tue,  5 May 2020 02:44:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 51991C433F2
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7FE96C44788;
+        Tue,  5 May 2020 02:44:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7FE96C44788
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
 From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
@@ -50,9 +50,9 @@ To:     mani@kernel.org
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         hemantk@codeaurora.org, jhugo@codeaurora.org,
         Bhaumik Bhatt <bbhatt@codeaurora.org>
-Subject: [PATCH v5 7/8] bus: mhi: core: Improve debug logs for loading firmware
-Date:   Mon,  4 May 2020 19:44:21 -0700
-Message-Id: <1588646662-25785-8-git-send-email-bbhatt@codeaurora.org>
+Subject: [PATCH v5 5/8] bus: mhi: core: Handle firmware load using state worker
+Date:   Mon,  4 May 2020 19:44:19 -0700
+Message-Id: <1588646662-25785-6-git-send-email-bbhatt@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1588646662-25785-1-git-send-email-bbhatt@codeaurora.org>
 References: <1588646662-25785-1-git-send-email-bbhatt@codeaurora.org>
@@ -61,94 +61,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add log messages to track boot flow errors and timeouts in SBL or AMSS
-firmware loading to aid in debug.
+Upon power up, driver queues firmware worker thread if the execution
+environment is PBL. Firmware worker is blocked with a timeout until
+state worker gets a chance to run and unblock firmware worker. An
+endpoint power up failure can be seen if state worker gets a chance to
+run after firmware worker has timed out. Remove this dependency and
+handle firmware load directly using state worker thread.
 
 Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
 Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
 ---
- drivers/bus/mhi/core/boot.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ drivers/bus/mhi/core/boot.c     | 18 +++---------------
+ drivers/bus/mhi/core/init.c     |  1 -
+ drivers/bus/mhi/core/internal.h |  1 +
+ drivers/bus/mhi/core/pm.c       |  6 +-----
+ include/linux/mhi.h             |  2 --
+ 5 files changed, 5 insertions(+), 23 deletions(-)
 
 diff --git a/drivers/bus/mhi/core/boot.c b/drivers/bus/mhi/core/boot.c
-index 05627fe..e5fcde1 100644
+index ebad5eb..17c636b 100644
 --- a/drivers/bus/mhi/core/boot.c
 +++ b/drivers/bus/mhi/core/boot.c
-@@ -121,7 +121,8 @@ static int __mhi_download_rddm_in_panic(struct mhi_controller *mhi_cntrl)
- 		ee = mhi_get_exec_env(mhi_cntrl);
+@@ -377,30 +377,18 @@ static void mhi_firmware_copy(struct mhi_controller *mhi_cntrl,
  	}
+ }
  
--	dev_dbg(dev, "Waiting for image download completion, current EE: %s\n",
-+	dev_dbg(dev,
-+		"Waiting for RDDM image download via BHIe, current EE:%s\n",
- 		TO_MHI_EXEC_STR(ee));
- 
- 	while (retry--) {
-@@ -152,11 +153,14 @@ static int __mhi_download_rddm_in_panic(struct mhi_controller *mhi_cntrl)
- int mhi_download_rddm_img(struct mhi_controller *mhi_cntrl, bool in_panic)
+-void mhi_fw_load_worker(struct work_struct *work)
++void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
  {
- 	void __iomem *base = mhi_cntrl->bhie;
+-	struct mhi_controller *mhi_cntrl;
+ 	const struct firmware *firmware = NULL;
+ 	struct image_info *image_info;
+-	struct device *dev;
 +	struct device *dev = &mhi_cntrl->mhi_dev->dev;
- 	u32 rx_status;
- 
- 	if (in_panic)
- 		return __mhi_download_rddm_in_panic(mhi_cntrl);
- 
-+	dev_dbg(dev, "Waiting for RDDM image download via BHIe\n");
-+
- 	/* Wait for the image download to complete */
- 	wait_event_timeout(mhi_cntrl->state_event,
- 			   mhi_read_reg_field(mhi_cntrl, base,
-@@ -174,6 +178,7 @@ static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
- 			    const struct mhi_buf *mhi_buf)
- {
- 	void __iomem *base = mhi_cntrl->bhie;
-+	struct device *dev = &mhi_cntrl->mhi_dev->dev;
- 	rwlock_t *pm_lock = &mhi_cntrl->pm_lock;
- 	u32 tx_status, sequence_id;
+ 	const char *fw_name;
+ 	void *buf;
+ 	dma_addr_t dma_addr;
+ 	size_t size;
  	int ret;
-@@ -184,6 +189,7 @@ static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
- 		return -EIO;
+ 
+-	mhi_cntrl = container_of(work, struct mhi_controller, fw_worker);
+-	dev = &mhi_cntrl->mhi_dev->dev;
+-
+-	dev_dbg(dev, "Waiting for device to enter PBL from: %s\n",
+-		TO_MHI_EXEC_STR(mhi_cntrl->ee));
+-
+-	ret = wait_event_timeout(mhi_cntrl->state_event,
+-				 MHI_IN_PBL(mhi_cntrl->ee) ||
+-				 MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state),
+-				 msecs_to_jiffies(mhi_cntrl->timeout_ms));
+-
+-	if (!ret || MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state)) {
++	if (MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state)) {
+ 		dev_err(dev, "Device MHI is not in valid state\n");
+ 		return;
  	}
+diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
+index 1a93d24..6882206 100644
+--- a/drivers/bus/mhi/core/init.c
++++ b/drivers/bus/mhi/core/init.c
+@@ -835,7 +835,6 @@ int mhi_register_controller(struct mhi_controller *mhi_cntrl,
+ 	spin_lock_init(&mhi_cntrl->wlock);
+ 	INIT_WORK(&mhi_cntrl->st_worker, mhi_pm_st_worker);
+ 	INIT_WORK(&mhi_cntrl->syserr_worker, mhi_pm_sys_err_worker);
+-	INIT_WORK(&mhi_cntrl->fw_worker, mhi_fw_load_worker);
+ 	init_waitqueue_head(&mhi_cntrl->state_event);
  
-+	dev_dbg(dev, "Starting AMSS download via BHIe\n");
- 	mhi_write_reg(mhi_cntrl, base, BHIE_TXVECADDR_HIGH_OFFS,
- 		      upper_32_bits(mhi_buf->dma_addr));
+ 	mhi_cmd = mhi_cntrl->mhi_cmd;
+diff --git a/drivers/bus/mhi/core/internal.h b/drivers/bus/mhi/core/internal.h
+index 40c47f9..0965ca3 100644
+--- a/drivers/bus/mhi/core/internal.h
++++ b/drivers/bus/mhi/core/internal.h
+@@ -627,6 +627,7 @@ void mhi_ring_chan_db(struct mhi_controller *mhi_cntrl,
+ void mhi_deinit_free_irq(struct mhi_controller *mhi_cntrl);
+ void mhi_rddm_prepare(struct mhi_controller *mhi_cntrl,
+ 		      struct image_info *img_info);
++void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl);
+ int mhi_prepare_channel(struct mhi_controller *mhi_cntrl,
+ 			struct mhi_chan *mhi_chan);
+ int mhi_init_chan_ctxt(struct mhi_controller *mhi_cntrl,
+diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
+index e7c8318..3cc238a 100644
+--- a/drivers/bus/mhi/core/pm.c
++++ b/drivers/bus/mhi/core/pm.c
+@@ -528,7 +528,6 @@ static void mhi_pm_disable_transition(struct mhi_controller *mhi_cntrl,
+ 	dev_dbg(dev, "Waiting for all pending threads to complete\n");
+ 	wake_up_all(&mhi_cntrl->state_event);
+ 	flush_work(&mhi_cntrl->st_worker);
+-	flush_work(&mhi_cntrl->fw_worker);
  
-@@ -435,7 +441,12 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
- 		release_firmware(firmware);
+ 	dev_dbg(dev, "Reset all active channels and remove MHI devices\n");
+ 	device_for_each_child(mhi_cntrl->cntrl_dev, NULL, mhi_destroy_device);
+@@ -643,7 +642,7 @@ void mhi_pm_st_worker(struct work_struct *work)
+ 				mhi_cntrl->ee = mhi_get_exec_env(mhi_cntrl);
+ 			write_unlock_irq(&mhi_cntrl->pm_lock);
+ 			if (MHI_IN_PBL(mhi_cntrl->ee))
+-				wake_up_all(&mhi_cntrl->state_event);
++				mhi_fw_load_handler(mhi_cntrl);
+ 			break;
+ 		case DEV_ST_TRANSITION_SBL:
+ 			write_lock_irq(&mhi_cntrl->pm_lock);
+@@ -976,9 +975,6 @@ int mhi_async_power_up(struct mhi_controller *mhi_cntrl)
+ 	next_state = MHI_IN_PBL(current_ee) ?
+ 		DEV_ST_TRANSITION_PBL : DEV_ST_TRANSITION_READY;
  
- 	/* Error or in EDL mode, we're done */
--	if (ret || mhi_cntrl->ee == MHI_EE_EDL)
-+	if (ret) {
-+		dev_err(dev, "MHI did not load SBL, ret:%d\n", ret);
-+		return;
-+	}
-+
-+	if (mhi_cntrl->ee == MHI_EE_EDL)
- 		return;
+-	if (next_state == DEV_ST_TRANSITION_PBL)
+-		schedule_work(&mhi_cntrl->fw_worker);
+-
+ 	mhi_queue_state_transition(mhi_cntrl, next_state);
  
- 	write_lock_irq(&mhi_cntrl->pm_lock);
-@@ -463,8 +474,10 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
- 	if (!mhi_cntrl->fbc_download)
- 		return;
- 
--	if (ret)
-+	if (ret) {
-+		dev_err(dev, "MHI did not enter READY state\n");
- 		goto error_read;
-+	}
- 
- 	/* Wait for the SBL event */
- 	ret = wait_event_timeout(mhi_cntrl->state_event,
-@@ -482,6 +495,8 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
- 	ret = mhi_fw_load_amss(mhi_cntrl,
- 			       /* Vector table is the last entry */
- 			       &image_info->mhi_buf[image_info->entries - 1]);
-+	if (ret)
-+		dev_err(dev, "MHI did not load AMSS, ret:%d\n", ret);
- 
- 	release_firmware(firmware);
+ 	mutex_unlock(&mhi_cntrl->pm_mutex);
+diff --git a/include/linux/mhi.h b/include/linux/mhi.h
+index e909b8f..2b20b9c 100644
+--- a/include/linux/mhi.h
++++ b/include/linux/mhi.h
+@@ -331,7 +331,6 @@ struct mhi_controller_config {
+  * @wlock: Lock for protecting device wakeup
+  * @mhi_link_info: Device bandwidth info
+  * @st_worker: State transition worker
+- * @fw_worker: Firmware download worker
+  * @syserr_worker: System error worker
+  * @state_event: State change event
+  * @status_cb: CB function to notify power states of the device (required)
+@@ -412,7 +411,6 @@ struct mhi_controller {
+ 	spinlock_t wlock;
+ 	struct mhi_link_info mhi_link_info;
+ 	struct work_struct st_worker;
+-	struct work_struct fw_worker;
+ 	struct work_struct syserr_worker;
+ 	wait_queue_head_t state_event;
  
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
