@@ -2,164 +2,76 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F21F5C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1972C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB7DD20735
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:00:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nKTdk6wF"
+	by mail.kernel.org (Postfix) with ESMTP id 6A3AB20735
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:03:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588709039;
+	bh=pipuDpvfZfNEKvyznB3sFn0XZCEjfP3aGCbir969T00=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Y6ew3DqDfZbkNPQK6WkRLNEFFyJZSzntH68a8Bin06fdzZdLRttz1lCwQAyFfqLas
+	 i8pHLNudRqkedu7+VxA7cPKAHiXIA1oTtriTJLYhzTLVNsHraYl/ZPoPEd/EofMmBE
+	 nwPGLnLRpM43bMQGWgEs8Of8ApcwyWuwnIQkECio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729178AbgEET7t (ORCPT
+        id S1728850AbgEEUD6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 15:59:49 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:48395 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728898AbgEET7s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 15:59:48 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588708787; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=kd6wo7B9LgknuihDe5FEIjtKMZh037dhOhnOBjgpUoI=; b=nKTdk6wFal1HYAWIVoJ+yjQO5fSm3jV9vx+J5llydZsN9g6niaUTiNFsDo1SH6Qj3TwSmq1Y
- WLQsRbz3IQBxQP2qwWzMMf1Z4e/lTT4ALGhWw5SokLbzJW5vQDRTIVjW3TrnKv9paVzQt69U
- cxXcxrhw0WIa8KbN3nPmCThCTvA=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb1c5b3.7f04b837ba08-smtp-out-n04;
- Tue, 05 May 2020 19:59:47 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D24D4C44798; Tue,  5 May 2020 19:59:45 +0000 (UTC)
-Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Tue, 5 May 2020 16:03:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59622 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728076AbgEEUD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 16:03:58 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9313FC433F2;
-        Tue,  5 May 2020 19:59:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9313FC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-From:   Wesley Cheng <wcheng@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
-        mgautam@codeaurora.org, vkoul@kernel.org, sboyd@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, jackp@codeaurora.org,
-        Wesley Cheng <wcheng@codeaurora.org>
-Subject: [PATCH v9 1/5] dt-bindings: phy: Add binding for qcom,usb-snps-femto-v2
-Date:   Tue,  5 May 2020 12:59:32 -0700
-Message-Id: <1588708776-16774-2-git-send-email-wcheng@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1588708776-16774-1-git-send-email-wcheng@codeaurora.org>
-References: <1588708776-16774-1-git-send-email-wcheng@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id B8C4320721;
+        Tue,  5 May 2020 20:03:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588709038;
+        bh=pipuDpvfZfNEKvyznB3sFn0XZCEjfP3aGCbir969T00=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=WwvCor+TCXaNSHxEPhW+wZHOhGU+Y7VyxOCqaP0HoQ9AXGK9gf7EYBTVp1Gl5vtMQ
+         x7VV35YV/frw6TCrsjt61fsKtY6z2VpbO1pB5ElqAzjpZ+LanP65zXKuuqZD6BHnZv
+         uHTI3xf5cyzxpht7jsg74g2DGZ3VFLqSGeSUBCis=
+Date:   Tue, 5 May 2020 13:03:57 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Roman Penyaev <rpenyaev@suse.de>
+Cc:     Jason Baron <jbaron@akamai.com>,
+        Khazhismel Kumykov <khazhy@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 1/1] epoll: call final ep_events_available() check under
+ the lock
+Message-Id: <20200505130357.04566dee5501c3787105376f@linux-foundation.org>
+In-Reply-To: <a9898eaefa85fa9c85e179ff162d5e8d@suse.de>
+References: <20200505084049.1779243-1-rpenyaev@suse.de>
+        <a9898eaefa85fa9c85e179ff162d5e8d@suse.de>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This binding shows the descriptions and properties for the
-Synopsis Femto USB PHY V2 used on QCOM platforms.
+On Tue, 05 May 2020 10:42:05 +0200 Roman Penyaev <rpenyaev@suse.de> wrote:
 
-Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
----
- .../bindings/phy/qcom,usb-snps-femto-v2.yaml       | 80 ++++++++++++++++++++++
- 1 file changed, 80 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
+> May I ask you to remove "epoll: ensure ep_poll() doesn't miss wakeup
+> events" from your -mm queue? Jason lately found out that the patch
+> does not fully solve the problem and this one patch is a second
+> attempt to do things correctly in a different way (namely to do
+> the final check under the lock). Previous changes are not needed.
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml b/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
-new file mode 100644
-index 0000000..574f890
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
-@@ -0,0 +1,80 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/phy/qcom,usb-snps-femto-v2.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Qualcomm Synopsys Femto High-Speed USB PHY V2
-+
-+maintainers:
-+  - Wesley Cheng <wcheng@codeaurora.org>
-+
-+description: |
-+  Qualcomm High-Speed USB PHY
-+
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,usb-snps-hs-7nm-phy
-+      - qcom,sm8150-usb-hs-phy
-+      - qcom,usb-snps-femto-v2-phy
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  clocks:
-+    items:
-+      - description: rpmhcc ref clock
-+
-+  clock-names:
-+    items:
-+      - const: ref
-+
-+  resets:
-+    items:
-+      - description: PHY core reset
-+
-+  vdda-pll-supply:
-+    description: phandle to the regulator VDD supply node.
-+
-+  vdda18-supply:
-+    description: phandle to the regulator 1.8V supply node.
-+
-+  vdda33-supply:
-+    description: phandle to the regulator 3.3V supply node.
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#phy-cells"
-+  - clocks
-+  - clock-names
-+  - resets
-+  - vdda-pll-supply
-+  - vdda18-supply
-+  - vdda33-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,rpmh.h>
-+    #include <dt-bindings/clock/qcom,gcc-sm8150.h>
-+    phy@88e2000 {
-+        compatible = "qcom,sm8150-usb-hs-phy";
-+        reg = <0 0x088e2000 0 0x400>;
-+        #phy-cells = <0>;
-+
-+        clocks = <&rpmhcc RPMH_CXO_CLK>;
-+        clock-names = "ref";
-+
-+        resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
-+
-+        vdda-pll-supply = <&vdd_usb_hs_core>;
-+        vdda33-supply = <&vdda_usb_hs_3p1>;
-+        vdda18-supply = <&vdda_usb_hs_1p8>;
-+    };
-+...
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Where do we stand with Khazhismel's "eventpoll: fix missing wakeup for
+ovflist in ep_poll_callback"?
+
+http://lkml.kernel.org/r/20200424190039.192373-1-khazhy@google.com
+
+
