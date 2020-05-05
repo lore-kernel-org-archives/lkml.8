@@ -2,145 +2,104 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4F9C47258
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE7FC47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFAEA20735
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:33:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VH3NB1RZ"
+	by mail.kernel.org (Postfix) with ESMTP id 8F1482073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:34:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588678440;
+	bh=BIDNivoYYArr1mgNzZNlFHarjyA+1JxmkV0Pd9IfbtU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tNzWQuTZDtWywVwjMfILAij33TOf3ItmQ7mkbHNIMEcY59Ki6WukMjyXZRCQO/syu
+	 1q+Nl6UrVYcUq/0buvoClLwe1xsCjI3DceQUnGHR08NkXIhpFP07xZXgWQR7datI2P
+	 ll+iXEADMuEUDiZmnxF0vBI13YtWpbHqt57oSi9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbgEELdk (ORCPT
+        id S1728908AbgEELeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 07:33:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51616 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728855AbgEELdh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 07:33:37 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43736C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 04:33:37 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id s9so1074344lfp.1
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 04:33:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hupIsa73mYi5wqryxe4Qi42JysQkQpBvcd0iG3bDTIg=;
-        b=VH3NB1RZHEvs5K7gdOjwynz0XSk4hklChAwSnf9CBV0dqOMKufdJjyxgi+kZvX5uNZ
-         +oynGrV0QHSRGalM8tgG/rbkxVYT8F0cBFML/4yh0b8obwpoV2EwRk7T1x5Czne4EXu5
-         l5uw/K26uHeZS6VWJsGc7f5OjmRrmPWwevTr+TnDoyD2fSHoASkUOKfFhaclL3Oi3rfB
-         RBoM5NzMZSJtkRMwsAYIPgcAf6di6MPGj3PtIXwHnOQ0X3xLs1KYjdDogTLFWE5X/KBm
-         +m6A6Xe+SN8BnlU1uKncJpvfWoeRLE476mXu8gCUiXNZ4q+V+iA/qf7Mn3GUSl3H7h58
-         FI8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hupIsa73mYi5wqryxe4Qi42JysQkQpBvcd0iG3bDTIg=;
-        b=ZZT0ITnmqcztVvKh7UC/wPCHQBAZJqol7tn0rU1LhLLGKVOywV8XTZds9e5nyABU8w
-         /Ss6XQABV/2u7LBo+4/DlYxko1GGtPLqXomyixV/lpZaRZmcwqbnmY8j/hA9sSBfLuTR
-         6SBZVKWKcQMpfOtKLz2wKXH8TOJuk7c8ym7LnMvnFzvQUGviDnK2RvwpvwT0vF3otIY8
-         WKJyOAS03MPkPHuJzEpCSia6qyCiszEY9mnH6Knwow6Y1Jt2FHDJTCUnplwc7MEOpRzW
-         TQEMGVZdJjiXcEOQm8Wwv5kEkdvCJuxzzUyrwLftLr00WwcOo8X/a4KQkJS697/MCE6z
-         3WeQ==
-X-Gm-Message-State: AGi0Pubb9F6NsMCP8HbEuLo2fJYoR8Qfx7WN1I8ckB/wlIKRvJQUuqcj
-        fXrQEWqK85L04lyE2zFd5yz7L1Gv94q2k9DDeUdZpg==
-X-Google-Smtp-Source: APiQypLU2m/D7oJWk9It8mtjKBIlV1BpWKwlq9Nc3PajJn78yBAiMiIjgK7Faej/USSOYk2Wxlaz7fdud7Qz/+U/Wfg=
-X-Received: by 2002:a19:7418:: with SMTP id v24mr1403778lfe.15.1588678415695;
- Tue, 05 May 2020 04:33:35 -0700 (PDT)
+        Tue, 5 May 2020 07:34:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49238 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728664AbgEELd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 07:33:59 -0400
+Received: from localhost (unknown [122.181.213.114])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F82C20735;
+        Tue,  5 May 2020 11:33:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588678439;
+        bh=BIDNivoYYArr1mgNzZNlFHarjyA+1JxmkV0Pd9IfbtU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Hei2vThh3fDPJJe5S3ZSQeNuun9d/8uHbm3ksqhgvpfA+IF0olXgQ9b0u8FkhW7xG
+         kGappr474a7EgDcoD7MyXyWqmJDpdwzWS5WEHepav4d5I7wYvo7wTkuZn2Fumc3JWi
+         BufJSxUhnpt1nj3X4/CbkNR8POXcUA+hiCbChQBA=
+Date:   Tue, 5 May 2020 17:03:54 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andreas =?iso-8859-1?Q?B=F6hler?= <dev@aboehler.at>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v12 2/5] usb: renesas-xhci: Add the renesas xhci driver
+Message-ID: <20200505113354.GX1375924@vkoul-mobl>
+References: <20200430165920.1345409-1-vkoul@kernel.org>
+ <20200430165920.1345409-3-vkoul@kernel.org>
+ <81e0eff0-8b40-3c47-e39b-929e1dc07fd5@linux.intel.com>
+ <20200504143438.GT1375924@vkoul-mobl>
+ <20200505110438.GC93160@kroah.com>
 MIME-Version: 1.0
-References: <1587726554-32018-1-git-send-email-sumit.garg@linaro.org>
- <1587726554-32018-3-git-send-email-sumit.garg@linaro.org> <20200425112950.3a4815b6@why>
- <6fd3d96181ec53f735ef1b6a79d28da1@kernel.org> <CAFA6WYPNNNZeX5zpadayfiZ7P_mHmiREpUd5LZ3Jp+TjGVqoEw@mail.gmail.com>
- <ac57cb4bbb6507ee98f199d68a514503@kernel.org> <CAFA6WYMheJxeKVC_YWN9owNJhcWTBsaOCvZXxq=GVj5ROJ0cvg@mail.gmail.com>
- <20200430101322.420e4052@why> <CAFA6WYO+NGLfNkOah4YzXx5XuaDh=QtWHgnMBwwMFY1zRt15GQ@mail.gmail.com>
- <CAFA6WYPxiwxpJitX7fCSESUvQSa9Dq89GwL4e3w33ooetV=ysw@mail.gmail.com>
- <CAFA6WYOn+DLf77C1+e5bq-NdT+o4=o32oPu2b3bxD_U+mLQ3WQ@mail.gmail.com> <306aecc560a9503e500fbf1f512c6d30@kernel.org>
-In-Reply-To: <306aecc560a9503e500fbf1f512c6d30@kernel.org>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Tue, 5 May 2020 17:03:24 +0530
-Message-ID: <CAFA6WYPHWP46TY_XdxVVrTr6AChU_1ATXu+p32vXCjkaXWPWOQ@mail.gmail.com>
-Subject: Re: [RFC Patch v1 2/4] irqchip/gic-v3: Add support to handle SGI as
- pseudo NMI
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, julien.thierry.kdev@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505110438.GC93160@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 May 2020 at 15:38, Marc Zyngier <maz@kernel.org> wrote:
->
-> On 2020-05-05 05:09, Sumit Garg wrote:
-> > On Fri, 1 May 2020 at 18:33, Sumit Garg <sumit.garg@linaro.org> wrote:
->
-> [...]
->
-> > In case there are no major objections to this approach, I will post
-> > complete v2 patch-set (alongwith Marc's patches) for detailed review.
->
-> As this is still a work in progress (I'm currently wrestling with
-> the stupid RPi driver), whatever you have is unlikely to apply on
-> top of the final series.
->
-> I'm not going to stop you from posting the patches, it is just that
-> they will be obsolete by the end of the week...
+On 05-05-20, 13:04, Greg Kroah-Hartman wrote:
+> On Mon, May 04, 2020 at 08:04:38PM +0530, Vinod Koul wrote:
 
-Thanks for the heads up. Will wait for your final series.
+> > > > --- a/drivers/usb/host/Makefile
+> > > > +++ b/drivers/usb/host/Makefile
+> > > > @@ -70,7 +70,7 @@ obj-$(CONFIG_USB_OHCI_HCD_DAVINCI)	+= ohci-da8xx.o
+> > > >  obj-$(CONFIG_USB_UHCI_HCD)	+= uhci-hcd.o
+> > > >  obj-$(CONFIG_USB_FHCI_HCD)	+= fhci.o
+> > > >  obj-$(CONFIG_USB_XHCI_HCD)	+= xhci-hcd.o
+> > > > -obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o
+> > > > +obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o xhci-pci-renesas.o
+> > > 
+> > > Hmm, now we end up with two modules, xhci-pci and xhci-pci-renesas, even if
+> > > xhci-pci-renesas just includes helper functions to load firmware for renesas.
+> > 
+> > Right, these are two modules. Do you forsee an issue with two ko's
+> 
+> Two kos should be fine, but as you aren't giving people the option to
+> not select this, it's a bit harsh to add it.
+> 
+> Can this be a separate module/config option?  Why force everyone to need
+> this additional code if they do not have this hardware?
 
-But while working on an NMI request, I noticed a hack in common gic
-code [1] which basically enables all SGIs for every CPU by default.
-This hack is quite similar to mine initial hack to set priority for a
-particular SGI by default to act as pseudo NMI.
+Since the code is moved out and is based on PCI ID of the device, this
+wont be invoked at all for folks not having this hardware. But adding a
+config option would work too and avoid renaming file.
 
-Due to this hack I got following error message while configuring SGI as NMI:
+I think this looks as a better option to me atm. We no longer have load
+order issue with current approach so we dont care about that as well.
 
-[    0.000000] GICv3: Cannot set NMI property of enabled IRQ 8
-[    0.000000] genirq: Failed to setup NMI delivery: irq 8
+Mathias, let me know if you are okay with approach, I can respin this,
+or if you have better idea do let us know
 
-I think chained IRQs worked for you due to this hack only as it
-doesn't seem to enable SGIs per CPU.
-
-IMO, as we shift to SGIs being standard interrupts, we should also
-rely on standard interrupt framework to enable SGIs. So it seems the
-correct way would be to use "request_percpu_irq()" and
-"enable_percpu_irq()" for configuring SGIs as demonstrated in updated
-commit here [2].
-
-Also, we should get rid of this hack as demonstrated via commit [3].
-
-Apart from above changes, there was a minor update needed for commit
-"irqchip/gic-v3: Describe the SGI range" [4].
-
-I hope these updates are useful for you while preparing the final series.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/irqchip/irq-gic-common.c#n155
-[2] https://git.linaro.org/people/sumit.garg/linux.git/commit/?h=kgdb-nmi&id=e208979b5165d753d144db57e0cb8646fdedc495
-[3] https://git.linaro.org/people/sumit.garg/linux.git/commit/?h=kgdb-nmi&id=cd6d0d7cea14ac16156f0dbd297940df382f8cea
-[4] https://git.linaro.org/people/sumit.garg/linux.git/commit/?h=kgdb-nmi&id=1180e9c54547ec05d96cc6b36c26005059c90d9a
-
--Sumit
-
->
-> Thanks,
->
->          M.
-> --
-> Jazz is not dead. It just smells funny...
+Thanks
+-- 
+~Vinod
