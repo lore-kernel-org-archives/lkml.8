@@ -2,213 +2,290 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76081C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 09:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA61C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 09:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C8DF2078E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 09:30:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="f1G3mDXp"
+	by mail.kernel.org (Postfix) with ESMTP id A170420675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 09:32:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbgEEJaV (ORCPT
+        id S1728596AbgEEJcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 05:30:21 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:17172 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725766AbgEEJaU (ORCPT
+        Tue, 5 May 2020 05:32:50 -0400
+Received: from twhmllg4.macronix.com ([122.147.135.202]:21370 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727931AbgEEJct (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 05:30:20 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0459U3Mk007690;
-        Tue, 5 May 2020 02:30:12 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type; s=pfpt0818;
- bh=qLR97FpW5SzS4jbbK0Z8VGx3bL/TgT3yyQI+fufG2xU=;
- b=f1G3mDXpEBN01P1JgrM53qO13JquvwgFGYFZnBZNUzVbhktmoMkG6VX3ncGyRVp7VJEv
- KjkfjzOo5mAoaQNvcTa4GxfhNoy33SOasWM3Glu0BL+8ZUeoJh2wpCAAAYfWHyGcOyB0
- Q3BgJ0+DU+llmqhSsbVcaGUFTJDJmrthqZ5pN8LXAKr+hc8ism6pDXfeNN/izomxQYmj
- rou/r4B964+AxpxeXiyrbFVFstK1MMzN+iiV8WYhsA3aTsIkmnd5SG7hoX6sdtjr9OUS
- PtfVtBSoYZu9aus9UR7xV7hkpf+AM0RisxgYd+Fg9nG9/izlmg1otBdU9PGnjVOZk+8z gQ== 
-Received: from sc-exch04.marvell.com ([199.233.58.184])
-        by mx0a-0016f401.pphosted.com with ESMTP id 30s67qbdwe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 02:30:12 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH04.marvell.com
- (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 5 May
- 2020 02:30:10 -0700
-Received: from bbhushan2.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 5 May 2020 02:30:07 -0700
-From:   Bharat Bhushan <bbhushan2@marvell.com>
-To:     <jean-philippe@linaro.org>, <joro@8bytes.org>, <mst@redhat.com>,
-        <jasowang@redhat.com>, <virtualization@lists.linux-foundation.org>,
-        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-        <eric.auger.pro@gmail.com>, <eric.auger@redhat.com>
-CC:     Bharat Bhushan <bbhushan2@marvell.com>
-Subject: [PATCH v5] iommu/virtio: Use page size bitmap supported by endpoint
-Date:   Tue, 5 May 2020 15:00:04 +0530
-Message-ID: <20200505093004.1935-1-bbhushan2@marvell.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 5 May 2020 05:32:49 -0400
+Received: from twhfm1p2.macronix.com (twhfmlp2.macronix.com [172.17.20.92])
+        by TWHMLLG4.macronix.com with ESMTP id 0459VjeU090585;
+        Tue, 5 May 2020 17:31:45 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
+        by Forcepoint Email with ESMTP id 2E9C939369600D8DEBAD;
+        Tue,  5 May 2020 17:31:46 +0800 (CST)
+In-Reply-To: <20200429181856.kkavelcczylg4yxf@yadavpratyush.com>
+References: <1587451187-6889-1-git-send-email-masonccyang@mxic.com.tw> <20200421092328.129308f6@collabora.com> <20200427175536.2mmei2fy6f7bg6jm@yadavpratyush.com> <OF18214CA5.6A9B2B30-ON48258558.001D894C-48258558.002249E0@mxic.com.tw> <20200428085401.574wmo6qddmumd7q@yadavpratyush.com> <OF04289CE2.B346916F-ON48258559.002280BD-48258559.00295800@mxic.com.tw> <20200429181856.kkavelcczylg4yxf@yadavpratyush.com>
+To:     "Pratyush Yadav" <me@yadavpratyush.com>
+Cc:     "Boris Brezillon" <boris.brezillon@collabora.com>,
+        broonie@kernel.org, juliensu@mxic.com.tw,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-spi@vger.kernel.org, miquel.raynal@bootlin.com,
+        "Pratyush Yadav" <p.yadav@ti.com>, richard@nod.at,
+        tudor.ambarus@microchip.com, vigneshr@ti.com
+Subject: Re: [PATCH v2 0/5] mtd: spi-nor: Add support for Octal 8D-8D-8D mode
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-05_06:2020-05-04,2020-05-05 signatures=0
+X-KeepSent: 28AE0642:4F34D6BB-4825855F:002D6E58;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF28AE0642.4F34D6BB-ON4825855F.002D6E58-4825855F.003458C9@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Tue, 5 May 2020 17:31:45 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2020/05/05 PM 05:31:46,
+        Serialize complete at 2020/05/05 PM 05:31:46
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG4.macronix.com 0459VjeU090585
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Different endpoint can support different page size, probe
-endpoint if it supports specific page size otherwise use
-global page sizes.
 
-Signed-off-by: Bharat Bhushan <bbhushan2@marvell.com>
----
-v4->v5:
- - Rebase to Linux v5.7-rc4
+Hi Pratyush,
 
-v3->v4:
- - Fix whitespace error
+> > > > > 
+> > > > > I posted a re-roll of my series here [0]. Could you please base 
+your 
+> > 
+> > > > > changes on top of it? Let me know if the series is missing 
+something 
+> > you 
+> > > > 
+> > > > > need.
+> > > > > 
+> > > > > [0] 
+> > > > 
+> > 
+https://lore.kernel.org/linux-mtd/20200424184410.8578-1-p.yadav@ti.com/
+> > > > 
+> > > > 
+> > > > Our mx25uw51245g supports BFPT DWORD-18,19 and 20 data and xSPI 
+> > profile 
+> > > > 1.0,
+> > > > and it comply with BFPT DWORD-19, octal mode enable sequences by 
+write 
+> > CFG 
+> > > > Reg2 
+> > > > with instruction 0x72. Therefore, I can't apply your patches.
+> > > 
+> > > I didn't mean apply my patches directly. I meant more along the 
+lines of 
+> > 
+> > > edit your patches to work on top of my series. It should be as easy 
+as 
+> > > adding your flash's fixup hooks and its octal DTR enable hook, but 
+if my 
+> > 
+> > > series is missing something you need (like complete Profile 1.0 
+parsing, 
+> > 
+> > > which I left out because I wanted to be conservative and didn't see 
+any 
+> > > immediate use-case for us), let me know, and we can work together to 
 
-v2->v3:
- - Fixed error return for incompatible endpoint
- - __u64 changed to __le64 in header file
+> > > address it.
+> > 
+> > yes,sure!
+> > let's work together to upstream the Octal 8D-8D-8D driver to mainline.
+> > 
+> > The main concern is where and how to enable xSPI octal mode?
+> > 
+> > Vignesh don't agree to enable it in fixup hooks and that's why I 
+patched
+> > it to spi_nor_late_init_params() and confirmed the device support xSPI 
 
- drivers/iommu/virtio-iommu.c      | 48 ++++++++++++++++++++++++++++---
- include/uapi/linux/virtio_iommu.h |  7 +++++
- 2 files changed, 51 insertions(+), 4 deletions(-)
+> > Octal mode after BFPT DWORD-19 and xSPI pf 1.0 have been parsed.
+> 
+> My series does it in a octal_dtr_enable() hook, which is called from 
+> spi_nor_init(). Just like how it is done for quad_enable(). So, the 
+> expectation is that you populate the octal DTR hook for your flash in a 
+> flash-specific hook (like the default_init() fixup hook). Example of 
+> this can be seen in patches 15 and 16 of my series in 
+> spi_nor_cypress_octal_enable() and spi_nor_micron_octal_dtr_enable().
+> 
+> An alternative for this would be a generic way to enable these flashes, 
+> like from BFPT DWORD 19. That doesn't work for either of the flashes I 
+> had, so I didn't implement it because I wouldn't be able to test it. If 
+> it works for you, please implement it. I don't mind doing it myself, but 
 
-diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
-index d5cac4f46ca5..9513d2ab819e 100644
---- a/drivers/iommu/virtio-iommu.c
-+++ b/drivers/iommu/virtio-iommu.c
-@@ -78,6 +78,7 @@ struct viommu_endpoint {
- 	struct viommu_dev		*viommu;
- 	struct viommu_domain		*vdomain;
- 	struct list_head		resv_regions;
-+	u64				pgsize_bitmap;
- };
- 
- struct viommu_request {
-@@ -415,6 +416,19 @@ static int viommu_replay_mappings(struct viommu_domain *vdomain)
- 	return ret;
- }
- 
-+static int viommu_set_pgsize_bitmap(struct viommu_endpoint *vdev,
-+				    struct virtio_iommu_probe_pgsize_mask *mask,
-+				    size_t len)
-+{
-+	u64 pgsize_bitmap = le64_to_cpu(mask->pgsize_bitmap);
-+
-+	if (len < sizeof(*mask))
-+		return -EINVAL;
-+
-+	vdev->pgsize_bitmap = pgsize_bitmap;
-+	return 0;
-+}
-+
- static int viommu_add_resv_mem(struct viommu_endpoint *vdev,
- 			       struct virtio_iommu_probe_resv_mem *mem,
- 			       size_t len)
-@@ -499,6 +513,9 @@ static int viommu_probe_endpoint(struct viommu_dev *viommu, struct device *dev)
- 		case VIRTIO_IOMMU_PROBE_T_RESV_MEM:
- 			ret = viommu_add_resv_mem(vdev, (void *)prop, len);
- 			break;
-+		case VIRTIO_IOMMU_PROBE_T_PAGE_SIZE_MASK:
-+			ret = viommu_set_pgsize_bitmap(vdev, (void *)prop, len);
-+			break;
- 		default:
- 			dev_err(dev, "unknown viommu prop 0x%x\n", type);
- 		}
-@@ -630,7 +647,7 @@ static int viommu_domain_finalise(struct viommu_endpoint *vdev,
- 
- 	vdomain->id		= (unsigned int)ret;
- 
--	domain->pgsize_bitmap	= viommu->pgsize_bitmap;
-+	domain->pgsize_bitmap	= vdev->pgsize_bitmap;
- 	domain->geometry	= viommu->geometry;
- 
- 	vdomain->map_flags	= viommu->map_flags;
-@@ -654,6 +671,29 @@ static void viommu_domain_free(struct iommu_domain *domain)
- 	kfree(vdomain);
- }
- 
-+/*
-+ * Check whether the endpoint's capabilities are compatible with other
-+ * endpoints in the domain. Report any inconsistency.
-+ */
-+static bool viommu_endpoint_is_compatible(struct viommu_endpoint *vdev,
-+					  struct viommu_domain *vdomain)
-+{
-+	struct device *dev = vdev->dev;
-+
-+	if (vdomain->viommu != vdev->viommu) {
-+		dev_err(dev, "cannot attach to foreign vIOMMU\n");
-+		return false;
-+	}
-+
-+	if (vdomain->domain.pgsize_bitmap != vdev->pgsize_bitmap) {
-+		dev_err(dev, "incompatible domain bitmap 0x%lx != 0x%llx\n",
-+			vdomain->domain.pgsize_bitmap, vdev->pgsize_bitmap);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
- static int viommu_attach_dev(struct iommu_domain *domain, struct device *dev)
- {
- 	int i;
-@@ -670,9 +710,8 @@ static int viommu_attach_dev(struct iommu_domain *domain, struct device *dev)
- 		 * owns it.
- 		 */
- 		ret = viommu_domain_finalise(vdev, domain);
--	} else if (vdomain->viommu != vdev->viommu) {
--		dev_err(dev, "cannot attach to foreign vIOMMU\n");
--		ret = -EXDEV;
-+	} else if (!viommu_endpoint_is_compatible(vdev, vdomain)) {
-+		ret = -EINVAL;
- 	}
- 	mutex_unlock(&vdomain->mutex);
- 
-@@ -886,6 +925,7 @@ static int viommu_add_device(struct device *dev)
- 
- 	vdev->dev = dev;
- 	vdev->viommu = viommu;
-+	vdev->pgsize_bitmap = viommu->pgsize_bitmap;
- 	INIT_LIST_HEAD(&vdev->resv_regions);
- 	dev_iommu_priv_set(dev, vdev);
- 
-diff --git a/include/uapi/linux/virtio_iommu.h b/include/uapi/linux/virtio_iommu.h
-index 48e3c29223b5..2cced7accc99 100644
---- a/include/uapi/linux/virtio_iommu.h
-+++ b/include/uapi/linux/virtio_iommu.h
-@@ -111,6 +111,7 @@ struct virtio_iommu_req_unmap {
- 
- #define VIRTIO_IOMMU_PROBE_T_NONE		0
- #define VIRTIO_IOMMU_PROBE_T_RESV_MEM		1
-+#define VIRTIO_IOMMU_PROBE_T_PAGE_SIZE_MASK	2
- 
- #define VIRTIO_IOMMU_PROBE_T_MASK		0xfff
- 
-@@ -119,6 +120,12 @@ struct virtio_iommu_probe_property {
- 	__le16					length;
- };
- 
-+struct virtio_iommu_probe_pgsize_mask {
-+	struct virtio_iommu_probe_property	head;
-+	__u8					reserved[4];
-+	__le64					pgsize_bitmap;
-+};
-+
- #define VIRTIO_IOMMU_RESV_MEM_T_RESERVED	0
- #define VIRTIO_IOMMU_RESV_MEM_T_MSI		1
- 
--- 
-2.17.1
+> then you would need to help me test it.
+> 
+> > I can't apply your patches to enable xSPI Octal mode for mx25uw51245g 
+> > because your patches set up Octal protocol first and then using Octal 
+> > protocol to write Configuration Register 2(CFG Reg2). I think driver
+> > should write CFG Reg2 in SPI 1-1-1 mode (power on state) and make sure
+> > write CFG Reg 2 is success and then setup Octa protocol in the last.
+> 
+> Register writes should work in 1S mode, because nor->reg_proto is only 
+> set _after_ 8D mode is enabled (see spi_nor_octal_dtr_enable()). In 
+> fact, both patch 15 and 16 in my series use register writes in 1S mode.
+
+but I didn't see driver roll back "nor->read/write_proto = 1" 
+if xxx->octal_dtr_enable() return failed!
+
+> 
+> > As JESD216F description on BFPT DOWRD 19th, only two way to enable 
+> > xSPI Octal mode;
+> > one is by two instruction: issue instruction 06h(WREN) and then E8h.
+> > the other is issue instruction 06h, then issue instruction 72h (Write
+> > CFG Reg2), address 0h and data 02h (8D-8D-8D).
+> > 
+> > Let our patches comply with this. you may refer to my patches
+> > [v2,3/5] mtd: spi-nor: Parse BFPT DWORD-18, 19 and 20 for Octal 
+8D-8D-8D 
+> > mode
+> 
+> The Cypress Semper S28 flash family says that it does not have an Octal 
+> Enable bit (i.e, the Octal Enable Requirements field is 0), even though 
+> it does have an Octal Enable bit. That bit resides in CFG Reg 5. And the 
+
+> Micron MT35ABA family, doesn't have DWORD19 in their BFPT at all. So, 
+> the two flashes I need to support don't have this. At the very least, we 
+
+> need to provide a flash-specific way to enable Octal DTR mode, along 
+> with an xSPI compliant way.
+> 
+> So I suggest that we have two separate type of 8D enable functions. One 
+> type which is generic and works on any xSPI complint device, like the 
+> spi_nor_cfg_reg2_octal_enable() in your patch. The other would be 
+> flash-specific ones, which flashes can set in their fixup hooks.
+
+okay, sure.
+
+> 
+> >                  /* Octal mode enable sequences. */
+> >                  switch (bfpt.dwords[BFPT_DWORD(19)] & 
+> > BFPT_DWORD19_OCTAL_SEQ_MASK) {
+> >                  case BFPT_DWORD19_TWO_INST:
+> > +       ----> to patch here.
+> >                                  break;
+> >                  case BFPT_DWORD19_CFG_REG2:
+> >                                  params->xspi_enable = 
+> > spi_nor_cfg_reg2_octal_enable;
+> >                                  break;
+> >                  default:
+> >                                  break;
+> >                  }
+> > 
+> > 
+> > > 
+> > > > I quickly went through your patches but can't reply them in each 
+your 
+> > > > patches.
+> > > > 
+> > > > i.e,.
+> > > > 1) [v4,03/16] spi: spi-mem: allow specifying a command's extension
+> > > > 
+> > > > -                                u8 opcode;
+> > > > +                                u16 opcode;
+> > > > 
+> > > > big/little Endian issue, right? 
+> > > > why not just u8 ext_opcode;
+> > > > No any impact for exist code and actually only xSPI device use 
+> > extension 
+> > > > command.
+> > > 
+> > > Boris already explained the reasoning behind it.
+> > 
+> > yup, I got his point and please make sure CPU data access.
+> > 
+> > i.e,.
+> > Fix endianness of the BFPT DWORDs and xSPI in sfdp.c
+> > 
+> > and your patch,
+> > +                                ext = spi_nor_get_cmd_ext(nor, op);
+> > +                                op->cmd.opcode = (op->cmd.opcode << 
+8) | 
+> > ext;
+> > +                                op->cmd.nbytes = 2;
+> > 
+> > I think maybe using u8 opcode[2] could avoid endianness.
+> 
+> Again, thanks Boris for answering this. FWIW, I don't see anything wrong 
+
+> with his suggestion.
+> 
+> To clarify a bit more, the idea is that we transmit the opcode MSB 
+> first, just we do for the address. Assume we want to issue the command 
+> 0x05. In 1S mode, we set cmd.opcode to 0x05. Here cmd.nbytes == 1. Treat 
+
+> is as a 1-byte value, so the MSB is the same as the LSB. We directly 
+> send 0x5 on the bus.
+
+There are many SPI controllers driver use "op->cmd.opcode" directly,
+so is spi-mxic.c.
+
+i.e,.
+ret = mxic_spi_data_xfer(mxic, &op->cmd.opcode, NULL, op->cmd.nbytes);
+
+> 
+> If cmd.nbytes == 2, then the opcode would be 0x05FA (assuming extension 
+> is invert of command). So we send the MSB (0x05) first, and LSB (0xFA) 
+> next.
+
+My platform is Xilinx Zynq platform which CPU is ARMv7 processor.
+
+In 1-1-1 mode, it's OK to send 1 byte command by u16 opcode but
+in 8D-8D-8D mode, I need to patch
+
+i.e.,
+op->cmd.opcode = op->cmd.opcode | (ext << 8);
+
+rather than your patch.
+
+
+> 
+> In all this, I don't see where endianness comes into the picture. While 
+> the _location_ of the MSB in memory may change because of the 
+> endianness, the MSB of the _number_ will always be 0x05. So, regardless 
+> of the endianness, the operation (opcode >> 8) should always give 0x05 
+> and (opcode & F) should always give 0xFA. Endianness is just how you 
+> represent these values in memory.
+> 
+
+thanks & best regards,
+Mason
+
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
 
