@@ -2,81 +2,95 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA089C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 510E4C47259
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD3D20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:23:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588688615;
-	bh=btspPBgx+wVDD4t0Y6wDO3EI1PcWVHUnacBogaW1ocA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F4Bi1Aox+PBm5W7HhVaoqxvpH3TziprRnB3T+1rNsiQr4smgOjd8MRJ5EFeL63lHL
-	 XYPnHAr09MBZ6yfwwuEy+KlGLiAa+sSOH67H+94IWd8WQD+uALxVv3gFm4A/j9FpGy
-	 8Ti5xuGu5HbhpRuArWUfOo5sYDcl7ZAaRJMRr48E=
+	by mail.kernel.org (Postfix) with ESMTP id 2DA6320675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:23:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729890AbgEEOXe (ORCPT
+        id S1729463AbgEEON5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:23:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52988 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729471AbgEEOX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:23:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF38520675;
-        Tue,  5 May 2020 14:23:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588688607;
-        bh=btspPBgx+wVDD4t0Y6wDO3EI1PcWVHUnacBogaW1ocA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KoX6cbhl9KFl5qC+HaUXcuwpnBxYaKxiIaJZTANX5bGE2IngJcYpuvWr1QlhxXGlh
-         1R5dHIp1+d3GYw4NsCiD6U1UUsrifGaWTC1XxwmX2cWkQvoDoAWDQSCJh0IjO5NVXd
-         auv9NPi8x7CcnXfkAd456dhu0aKZLe2Is1LKPZnI=
-Date:   Tue, 5 May 2020 16:23:25 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Hyunki Koo <hyunki00.koo@samsung.com>
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 1/3] serial: samsung: Replace rd_regb/wr_regb with
- rd_reg/wr_reg
-Message-ID: <20200505142325.GA816056@kroah.com>
-References: <CGME20200420013322epcas2p263e72997dd4ebdaf00b095a83a6b6651@epcas2p2.samsung.com>
- <20200420013300.17249-1-hyunki00.koo@samsung.com>
+        Tue, 5 May 2020 10:13:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48538 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729421AbgEEONv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 10:13:51 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2400EC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:13:51 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jVyK1-0000MB-UN; Tue, 05 May 2020 16:13:22 +0200
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 2D109FFC8D;
+        Tue,  5 May 2020 16:13:21 +0200 (CEST)
+Message-Id: <20200505134058.651504242@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Tue, 05 May 2020 15:16:08 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [patch V4 part 1 06/36] compiler: Simple READ/WRITE_ONCE() implementations
+References: <20200505131602.633487962@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200420013300.17249-1-hyunki00.koo@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-transfer-encoding: 8-bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 10:32:56AM +0900, Hyunki Koo wrote:
-> This patch change the name of macro for general usage.
-> 
-> Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
+READ/WRITE_ONCE_NOCHECK() is required for atomics in code which cannot be
+instrumented like the x86 int3 text poke code. As READ/WRITE_ONCE() is
+undergoing a rewrite, provide __{READ,WRITE}_ONCE_SCALAR().
 
-This patch series creates the following build error, which is not
-allowed:
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ include/linux/compiler.h |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-  CC [M]  drivers/tty/serial/samsung_tty.o
-drivers/tty/serial/samsung_tty.c:186:13: warning: ‘wr_reg_barrier’ defined but not used [-Wunused-function]
-  186 | static void wr_reg_barrier(struct uart_port *port, u32 reg, u32 val)
-      |             ^~~~~~~~~~~~~~
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -313,6 +313,14 @@ unsigned long read_word_at_a_time(const
+ 	__u.__val;					\
+ })
+ 
++#define __READ_ONCE_SCALAR(x)				\
++	(*(const volatile typeof(x) *)&(x))
++
++#define __WRITE_ONCE_SCALAR(x, val)			\
++do {							\
++	*(volatile typeof(x) *)&(x) = val;		\
++} while (0)
++
+ /**
+  * data_race - mark an expression as containing intentional data races
+  *
 
-Please fix up and resend.  Always make sure you keep the reviewed-by
-tags from others as well.
-
-greg k-h
