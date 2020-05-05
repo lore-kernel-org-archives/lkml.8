@@ -2,90 +2,99 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D978C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BABC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 269B520735
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:09:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6177C20735
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:10:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588687804;
+	bh=+ZwqiwiMx8jxlKUZJYOMUJycGuiHRy7wNsvP4B07hlw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=DJFEwqMSYmo+Jq86syuHDjTSnJZEBrZNFcbEKCa9O7aL7iSpl2wGmNRW0ors2+uST
+	 xOiLnJLnYWUApIzrkiSenOMXxKEHm7VJZmUlTHx+Vu+fUfJ/3jaMmduDBuht03Q01I
+	 GphXldCUr/1w+nZpZ09Sm2PMOmajQ8IfYChG846g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbgEEOJW (ORCPT
+        id S1729246AbgEEOKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:09:22 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:42261 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727857AbgEEOJV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:09:21 -0400
-Received: from localhost.localdomain ([149.172.19.189]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MOAJt-1jl13t3uIr-00OWri; Tue, 05 May 2020 16:08:53 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Sean Wang <sean.wang@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Light Hsieh <light.hsieh@mediatek.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Sean Wang <sean.wang@mediatek.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: mediatek: add pinctrl-mtk-common-v2 module license
-Date:   Tue,  5 May 2020 16:08:40 +0200
-Message-Id: <20200505140848.554957-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
+        Tue, 5 May 2020 10:10:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59084 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727857AbgEEOKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 10:10:03 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D067320675;
+        Tue,  5 May 2020 14:10:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588687803;
+        bh=+ZwqiwiMx8jxlKUZJYOMUJycGuiHRy7wNsvP4B07hlw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Sco2qe2R6ULZ0SG6dvab5wjtqNs6aked0vMbvTuR+m+qIBsvXrCx9eJM9Q7C8h2MF
+         U/U3m9j/HYZ0Er5vmTzB97OsjuzpUTgrnjKnH8jDR7inGl3ndoVlq0e44jac6OefvM
+         mBWxHmrStp81eePzVALLr0ZM3qwU/Vh2jufHiV38=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jVyGm-009TGk-U9; Tue, 05 May 2020 15:10:01 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Subject: [PATCH] clk: Unlink clock if failed to prepare or enable
+Date:   Tue,  5 May 2020 15:09:53 +0100
+Message-Id: <20200505140953.409430-1-maz@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:8x+ElLntw4n38VdOKQUn1jKkUwp0cPhTkte/vCk9MXw5FBuRYzO
- aZCQhDaNInbB9duIFcVfR+IrIflB0RYYyOkVYS+7peR9ZqSuhIWA6dAu6Kmf7ot1i92NWvY
- g4FHlV3Nxs5+999B1PWHrMh56vUvgHX/CSR4cbVxkw/sSiBqgJtnIGYO7lq9SLmnrmL6//Z
- vY9Ixf3Ex6196kbCI/h3g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zcGuDdea3AI=:9gaJ956+e/S10zq8UOB7AR
- ZbUbesdyNXz+lmJ0cSTddlrcznHhOKalZ1lW/bayZKFtHepB5SJgtExFff1e8kaB+fmQTgOrV
- QYvRc1Wm0rfQgZBSGJZX2YOK9lXDjtny/xA8L153JTjJm/QvEStKSRCsXMUpMQGKmDbggABSJ
- 6neIeahH7BGIuHJs0Fir45FWoGg6/anKlb31ekSjm4pOStevMTmVC+lDMV0bP95Pd1mul7j59
- y/YryQKIyKKfsKuOTXQ6h+zaXUsgKXDofLkn6egv6vDfz+0RQZKGx/rAYHElCIXKpZMLmYL1S
- M/bObKTqpNgi19LZokBLdy1BveelcokBT0uTNFPaTMq1Mtk2D4A2uN1EkoYb2G4EaFLQj+TBI
- w2lbaF4Ihl80niu4bAyHI5gx6a+Wo+5mpV7GyxvT1XGLGBlZGSjwSVu451HDlRO4d+jHxSxfg
- B75g+s2zKXfUSuZ/1dAJGPd/IZZr2N+AbTI8qj+eBKv7bdOG0XB50FNFH0e8aNxzk8aNZf4dr
- zElEykIHEdaZba0MaFXH9ZTXmlFFcJjNLV7dlhUUiqieOOnfMZNMH8sPSoXTf+w9wMmgOw/W7
- c7+NQZqZgb3jIwNSsebo3NQ7GqujbDEQv1wHCFxWVzASUlFy6xAuf/vpb7z7MrflX32NZv4Qg
- GkpStsiq59TeUo3TyBesfD6QAsc4leX6g9tV83XTBOd7Quuk/Fe4e6GgJv0C9cqWZPNyjBaTf
- LLoqUYqdn6JVmbYkchP6+hbypYs0N858++nrLcQHQ40j1e1BPPjvvNSHtc1MiYm6mLy/7zVR0
- VakUMnxloNVNdH0eJnsGjvF/dgyYo2igsrU85G/lFPCccAnP4Q=
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux@roeck-us.net, sboyd@kernel.org, mturquette@baylibre.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kbuild warns when this file is built as a loadable module:
+On failing to prepare or enable a clock, remove the core structure
+from the list it has been inserted as it is about to be freed.
 
-WARNING: modpost: missing MODULE_LICENSE() in drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.o
-see include/linux/module.h for more information
+This otherwise leads to random crashes when subsequent clocks get
+registered, during which parsing of the clock tree becomes adventurous.
 
-Add the missing license/author/description tags.
+Observed with QEMU's RPi-3 emulation.
 
-Fixes: 8174a8512e3e ("pinctrl: mediatek: make MediaTek pinctrl v2 driver ready for buidling loadable module")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: 12ead77432f2 ("clk: Don't try to enable critical clocks if prepare failed")
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>
 ---
- drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/clk/clk.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-index 6ea40b501328..b77b18fe5adc 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-@@ -993,3 +993,7 @@ int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(mtk_pinconf_adv_drive_get);
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index b34fc1d3a594..752e8eef3f55 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -3522,6 +3522,9 @@ static int __clk_core_init(struct clk_core *core)
+ out:
+ 	clk_pm_runtime_put(core);
+ unlock:
++	if (ret)
++		hlist_del_init(&core->child_node);
 +
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Sean Wang <sean.wang@mediatek.com>");
-+MODULE_DESCRIPTION("Pin configuration library module for mediatek SoCs");
+ 	clk_prepare_unlock();
+ 
+ 	if (!ret)
 -- 
-2.26.0
+2.20.1
 
