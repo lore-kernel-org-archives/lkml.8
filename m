@@ -2,183 +2,104 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90436C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B63FC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 799DF206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCE5A20721
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:36:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="YxFtUSCK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728932AbgEESg0 convert rfc822-to-8bit (ORCPT
+        id S1728977AbgEESgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 14:36:26 -0400
-Received: from mailrelay4.webfaction.com ([185.20.51.6]:39276 "EHLO
-        mailrelay4.webfaction.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbgEESgZ (ORCPT
+        Tue, 5 May 2020 14:36:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33620 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728076AbgEESgc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 14:36:25 -0400
-X-Greylist: delayed 567 seconds by postgrey-1.27 at vger.kernel.org; Tue, 05 May 2020 14:36:22 EDT
-Received: from mailrelay3.webfaction.com (mailrelay3.webfaction.com [207.38.93.110])
-        by mailrelay4.webfaction.com (Postfix) with ESMTPS id BDA21A6CCF;
-        Tue,  5 May 2020 18:26:31 +0000 (UTC)
-Received: from mailrelay2.webfaction.com (mailrelay2.webfaction.com [185.20.50.247])
-        by mailrelay3.webfaction.com (Postfix) with ESMTPS id BD4652A4BD8;
-        Tue,  5 May 2020 18:26:29 +0000 (UTC)
-Received: from smtp.webfaction.com (mail6.webfaction.com [31.170.123.134])
-        by mailrelay2.webfaction.com (Postfix) with ESMTPS id 75E1A1018AD;
-        Tue,  5 May 2020 18:26:27 +0000 (UTC)
-Received: from jeremy.localnet (host-37-191-188-128.lynet.no [37.191.188.128])
-        by smtp.webfaction.com (Postfix) with ESMTPSA id 168686016ACF2;
-        Tue,  5 May 2020 18:26:27 +0000 (UTC)
-From:   Paul Boddie <paul@boddie.org.uk>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Yakir Yang <ykk@rock-chips.com>,
-        Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>,
-        linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        MIPS Creator CI20 Development 
-        <mips-creator-ci20-dev@googlegroups.com>
-Subject: Re: DRM interaction problems on Ingenic CI20 / jz4780 with dw-hdmi and ingenic-drm
-Date:   Tue, 05 May 2020 20:26:10 +0200
-Message-ID: <79437309.Fv5JZGVDrq@jeremy>
-User-Agent: KMail/4.14.1 (Linux/3.16.0-10-586; KDE/4.14.2; i686; ; )
-In-Reply-To: <YC8S9Q.M96AR8DWGF0F1@crapouillou.net>
-References: <ED77DCA8-FF50-4E9E-A4B8-688262774723@goldelico.com> <125Q8Q.9F49TXF6ZICX1@crapouillou.net> <YC8S9Q.M96AR8DWGF0F1@crapouillou.net>
+        Tue, 5 May 2020 14:36:32 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40962C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 11:36:32 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id n14so3377380qke.8
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 11:36:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=eqlnqG0Hw3VMrzuvRcCdGu4ewQLAPeQsUkr54n/Ba44=;
+        b=YxFtUSCKjaM3W/DhClEwL6MT2JsMzpVzLJW8cImgeavPLCOQmKCbaprWQUzSmTPxQt
+         TkhFaSHthPlrIfE7m7euz3TWtITCCv70E6r59bQT/fbfkij9Qm61XrWixDwS6hJcre2K
+         S0NhYhIAK1l0JSHO4yV4bsTJEynaLPmS9eVY9PkLpNN/lX1J38Psw3dkO3NQHPsKsBW3
+         ZxSArF7+ab99cqFBi7Bsddjcr3DhUX6TUUjztYWBQyOW2oaAl9VXNvFTlA1ggWSvakhR
+         eLXIR17oPrlMlKE/OjepKL2fjaxWqYGPxwOSkXs6D/dmOfSJINu+WIKyS5i7IZYdIGZq
+         Qs6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eqlnqG0Hw3VMrzuvRcCdGu4ewQLAPeQsUkr54n/Ba44=;
+        b=gktgwD2NItXB0B4ZNXY3X7RDcrSUYc95UsVLBG5IC2ZV17/zVeiHI4M2xIfgGV45v7
+         plNPWz4kZcSvMnw7genr74YNbjGLe+nQXEfUITf4jxpR9LlXXhCSQ5a2lr35EFNSR5cC
+         EJcLmHrRjk78wU5YOa0IYjbSb7y9WMwxOOes2UZ4EM9pfw9mWRG1m2v2h7CUKB/pQO+7
+         HNxyYiFM8C8jaIadT8amSSbOD4JkwFG6AJ8mLuBtb5kG3HRtyyVbTWk4nS0YfLPLPcil
+         IWnOj8J0JrRSAfp2DQy0/AF/KdnAXzs/2kKiZx9l3EyVNKYYBN/GrQ+eew6AmYt3j3yk
+         3XsQ==
+X-Gm-Message-State: AGi0PuZ1aMZ/vbhpViJmIBNv4jWSHhe9czxlaxhETXRZE6tMaVy2i4/+
+        25LE/w0PaLpjbqdCCd/mDy7i7A==
+X-Google-Smtp-Source: APiQypJ7O8355ctgKfdq6OC10TRz+pU+Ntr4Qbbn9r6Z9ZCC2YPs9LO4Kx0pmGe6yNVVy3N4mhJfNQ==
+X-Received: by 2002:a37:7904:: with SMTP id u4mr4789865qkc.297.1588703791311;
+        Tue, 05 May 2020 11:36:31 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id g12sm2312319qtu.69.2020.05.05.11.36.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 05 May 2020 11:36:30 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jW2Qf-0007Sj-HD; Tue, 05 May 2020 15:36:29 -0300
+Date:   Tue, 5 May 2020 15:36:29 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, peterx@redhat.com
+Subject: Re: [PATCH 3/3] vfio-pci: Invalidate mmaps and block MMIO access on
+ disabled memory
+Message-ID: <20200505183629.GF26002@ziepe.ca>
+References: <158836742096.8433.685478071796941103.stgit@gimli.home>
+ <158836917028.8433.13715345616117345453.stgit@gimli.home>
+ <20200501234849.GQ26002@ziepe.ca>
+ <20200504122643.52267e44@x1.home>
+ <20200504184436.GZ26002@ziepe.ca>
+ <20200504133552.3d00c77d@x1.home>
+ <20200504200123.GA26002@ziepe.ca>
+ <20200505111227.02ac9cee@w520.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505111227.02ac9cee@w520.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 4. May 2020 03.05.22 Paul Cercueil wrote:
+On Tue, May 05, 2020 at 11:12:27AM -0600, Alex Williamson wrote:
 > 
-> > Le sam. 11 avril 2020 à 16:14, H. Nikolaus Schaller <hns@goldelico.com> a
-> > écrit :
-> >> 
-> >> So far we have identified two issues.
-> >> 
-> >> The first is that HPD interrupts are not properly processed.
-> >> 
-> >> drm_helper_hpd_irq_event() is called by HPD events but
-> >> dev->mode_config.poll_enabled is false.
+> As noted in the comment, the fault handler can simply do:
 > 
-> This is to be used when there's no hardware interrupt. I believe you
-> have one, right? Then call drm_kms_helper_hotplug_event() from the
-> interrupt handler instead.
-
-What we have in drivers/gpu/drm/bridge/synopsys/dw-hdmi.c is a function called 
-dw_hdmi_irq which appears to be the thread_fn for HDMI interrupts (alongside 
-the dw_hdmi_hardirq which is the handler), initialised by a call to 
-devm_request_threaded_irq.
-
-In dw_hdmi_irq, a hotplug event seems to cause drm_helper_hpd_irq_event to be 
-called. However...
-
-[...]
-
-> >> The jz4780 hdmi subsystem (drm/bridge/dw-hdmi.c) uses
-> >> 
-> >> 	connector->polled = DRM_CONNECTOR_POLL_HPD;
-> >> 
-> >> but shouldn't this enable polling? Note that there seems to be
-> >> no (direct) call to drm_kms_helper_poll_init().
-> >> 
-> >> If we set dev->mode_config.poll_enabled = true in
-> >> drm_helper_hpd_irq_event() things start to work.
-> >> 
-> >> Please can you clarify what would be best practise here to
-> >> get HPD event handling working.
+> mutex_lock(&vdev->vma_lock);
+> down_read(&vdev->memory_lock);
 > 
-> Remove that - this stuff is for hardware without interrupts, where
-> everything has to be polled.
+> This should be deadlock free now, so we can drop the retry handling
 
-Yes, I think this must be a mistake in the driver. In 
-drm_helper_hpd_irq_event, the connector is tested for the 
-DRM_CONNECTOR_POLL_HPD flag and skips the connector. It isn't clear whether 
-this actually matters for the other hardware using this technology, 
-documentation being rather thin on the ground.
+That does look like the right direction, because the memory_lock can
+be done at the very end it means it doesn't need to be nested inside
+mmap_sem
 
-> >> The other issue is in dw-hdmi.c:
-> >> 
-> >> We found out that ingenic_drm_encoder_atomic_check() fails because
-> >> 
-> >> info->num_bus_formats == 0
-> >> 
-> >> and not 1. This blocks further initialization.
-> >> 
-> >> The reason seems to be that dw_hdmi_bridge_attach() does not call
-> >> drm_display_info_set_bus_formats() with a proper format like
-> >> other drivers (e.g. drm/bridge/ti-tfp410.c) are doing.
-> >> 
-> >> We have patched to set a single bus format MEDIA_BUS_FMT_RGB888_1X24
-> >> and then DRM setup seems to work (although we still have no valid
-> >> HDMI signal but that is likely something else).
-> >> 
-> >> Please can you explain how setting the bus format should be fixed
-> >> in dw-hdmi.c.
-> 
-> I'm not sure, but that information may come from EDID data. Are you
-> able to obtain video modes from the connected monitor?
+This is much cleaner!
 
-The modes are definitely received, or at least the list of modes given by 
-/sys/devices/platform/13050000.lcd/drm/card0/card0-HDMI-A-1/modes is viable.
-
-However, it rather looked like the bus format information wasn't being set and 
-that this inhibited the completion of the initialisation process which, if 
-completed, would ultimately cause the format to be set. (This being the short 
-version of the story as I remember it right now.) So, the problem presents 
-itself as an initialisation order problem.
-
-I removed the flag from the connector to see if it makes any difference, but 
-it doesn't look like it. Here is what /sys/kernel/debug/dri/0/state contains:
-
-plane[31]: plane-0
-        crtc=(null)
-        fb=0
-        crtc-pos=0x0+0+0
-        src-pos=0.000000x0.000000+0.000000+0.000000
-        rotation=1
-        normalized-zpos=0
-        color-encoding=ITU-R BT.601 YCbCr
-        color-range=YCbCr limited range
-crtc[32]: crtc-0
-        enable=0
-        active=0
-        self_refresh_active=0
-        planes_changed=0
-        mode_changed=0
-        active_changed=0
-        connectors_changed=0
-        color_mgmt_changed=0
-        plane_mask=0
-        connector_mask=0
-        encoder_mask=0
-        mode: "": 0 0 0 0 0 0 0 0 0 0 0x0 0x0
-connector[34]: HDMI-A-1
-        crtc=(null)
-        self_refresh_aware=0
-
-The crtc member values do not look encouraging. In fact, it just looks like 
-most structure members are uninitialised.
-
-Thanks for the advice: I spent some time the other day reviewing various 
-aspects of the Synopsys drivers of different vintages (Ingenic 3.0.8 non-DRM 
-driver for JZ4780, MIPS/Ingenic 3.18 DRM driver for JZ4780 based on Freescale 
-driver code, the recent generic DRM bridge driver), and so this information is 
-timely and valuable.
-
-Paul
-
-P.S. Sorry if this message goes to far too many people. I don't want to 
-"personalise" it by taking people off the recipients list, but I realise that 
-this is probably not interesting to most recipients, either. Feel free to trim 
-recipients if replying.
+Jason
