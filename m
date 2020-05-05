@@ -2,119 +2,84 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3799C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47107C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B5D7207DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24F9E206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:37:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729805AbgEEOhj (ORCPT
+        id S1729830AbgEEOhm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:37:39 -0400
-Received: from mga01.intel.com ([192.55.52.88]:10359 "EHLO mga01.intel.com"
+        Tue, 5 May 2020 10:37:42 -0400
+Received: from sauhun.de ([88.99.104.3]:33898 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729655AbgEEOhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:37:38 -0400
-IronPort-SDR: c7mVXymgyCuTT3yEx3yfApVcnpA64Gb8ifxR28Hc6rDLg8ktitS3lh9b/g2JYWAgMs5DfeXgR9
- 2drt0ukraPdg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 07:37:38 -0700
-IronPort-SDR: 8cr/r1XXx9rKSwajuR49YSmVXs3JrR9O09d+1PzA4Qu0PZcL89JViUrxAK5XnvZiQI9m5NJQcW
- 5KdLYetjy5oQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,355,1583222400"; 
-   d="scan'208";a="369432314"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga001.fm.intel.com with ESMTP; 05 May 2020 07:37:37 -0700
-Date:   Tue, 5 May 2020 07:37:37 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     stable@vger.kernel.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Sasha Levin <sashal@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Tobias Urdin <tobias.urdin@binero.com>
-Subject: Re: [PATCH 4.19 STABLE 2/2] KVM: VMX: Mark RCX, RDX and RSI as
- clobbered in vmx_vcpu_run()'s asm blob
-Message-ID: <20200505143737.GA18282@linux.intel.com>
-References: <20200505012348.17099-1-sean.j.christopherson@intel.com>
- <20200505012348.17099-3-sean.j.christopherson@intel.com>
- <20200505061502.GA3874653@kroah.com>
- <20200505062731.GA17313@linux.intel.com>
- <20200505070259.GA3946129@kroah.com>
+        id S1729259AbgEEOhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 10:37:42 -0400
+Received: from localhost (p54B335A1.dip0.t-ipconnect.de [84.179.53.161])
+        by pokefinder.org (Postfix) with ESMTPSA id 1C0DE2C0892;
+        Tue,  5 May 2020 16:37:40 +0200 (CEST)
+Date:   Tue, 5 May 2020 16:37:39 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        ludovic.desroches@microchip.com, nicolas.ferre@microchip.com,
+        alexandre.belloni@bootlin.com, robh+dt@kernel.org, peda@axentia.se,
+        linux@armlinux.org.uk
+Subject: Re: [PATCH v4 1/4] i2c: at91: Send bus clear command if SDA is down
+Message-ID: <20200505143739.GE2468@ninjato>
+References: <20200225155012.22764-1-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="J4XPiPrVK1ev6Sgr"
 Content-Disposition: inline
-In-Reply-To: <20200505070259.GA3946129@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200225155012.22764-1-codrin.ciubotariu@microchip.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 09:02:59AM +0200, Greg Kroah-Hartman wrote:
-> On Mon, May 04, 2020 at 11:27:31PM -0700, Sean Christopherson wrote:
-> > On Tue, May 05, 2020 at 08:15:02AM +0200, Greg Kroah-Hartman wrote:
-> > > On Mon, May 04, 2020 at 06:23:48PM -0700, Sean Christopherson wrote:
-> > > > Save RCX, RDX and RSI to fake outputs to coerce the compiler into
-> > > > treating them as clobbered.  RCX in particular is likely to be reused by
-> > > > the compiler to dereference the 'struct vcpu_vmx' pointer, which will
-> > > > result in a null pointer dereference now that RCX is zeroed by the asm
-> > > > blob.
-> > > > 
-> > > > Add ASM_CALL_CONSTRAINT to fudge around an issue where <something>
-> > > > during modpost can't find vmx_return when specifying output constraints.
-> > > > 
-> > > > Reported-by: Tobias Urdin <tobias.urdin@binero.com>
-> > > > Fixes: b4be98039a92 ("KVM: VMX: Zero out *all* general purpose registers after VM-Exit")
-> > > > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > > > ---
-> > > >  arch/x86/kvm/vmx.c | 3 ++-
-> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-> > > > index 5b06a98ffd4c..54c8b4dc750d 100644
-> > > > --- a/arch/x86/kvm/vmx.c
-> > > > +++ b/arch/x86/kvm/vmx.c
-> > > > @@ -10882,7 +10882,8 @@ static void __noclone vmx_vcpu_run(struct kvm_vcpu *vcpu)
-> > > >  		".global vmx_return \n\t"
-> > > >  		"vmx_return: " _ASM_PTR " 2b \n\t"
-> > > >  		".popsection"
-> > > > -	      : : "c"(vmx), "d"((unsigned long)HOST_RSP), "S"(evmcs_rsp),
-> > > > +	      : ASM_CALL_CONSTRAINT, "=c"((int){0}), "=d"((int){0}), "=S"((int){0})
-> > > > +	      : "c"(vmx), "d"((unsigned long)HOST_RSP), "S"(evmcs_rsp),
-> > > >  		[launched]"i"(offsetof(struct vcpu_vmx, __launched)),
-> > > >  		[fail]"i"(offsetof(struct vcpu_vmx, fail)),
-> > > >  		[host_rsp]"i"(offsetof(struct vcpu_vmx, host_rsp)),
-> > > > -- 
-> > > > 2.26.0
-> > > > 
-> > > 
-> > > What is the git commit id of this patch in Linus's tree?
-> > 
-> > There is none.  In upstream at the time of the offending commit (b4be98039a92
-> > in 4.19, 0e0ab73c9a024 upstream), the inline asm blob had previously been
-> > moved to a dedicated helper, __vmx_vcpu_run(), that was intentionally put
-> > into a separate compilation unit, i.e. consuming the clobbered register
-> > was effectively impossible because %rcx is volatile and __vmx_vcpu_run()
-> > couldn't itself be inlined.
-> > 
-> > To make things more confusing, the inline asm blob got moved into a proper
-> > asm subroutine shortly thereafter.  Things really start to diverge from
-> > current upstream right around the time of this commit.
-> 
-> Then you need to document the heck out of the fact that this is not
-> upstream, why it is different from upstream, and why we can't just take
-> what upstream did instead in the changelog.  That way, when this patch
-> turns out to be buggy (hint, 90% of the times they are), we know why
-> this was done the way it was so we can revert it and know who to
-> complain to :)
 
-Will do.
+--J4XPiPrVK1ev6Sgr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Feb 25, 2020 at 05:50:09PM +0200, Codrin Ciubotariu wrote:
+> After a transfer timeout, some faulty I2C slave devices might hold down
+> the SDA pin. We can generate a bus clear command, hoping that the slave
+> might release the pins.
+> If the CLEAR command is not supported, we will use gpio recovery, if
+> available, to reset the bus.
+>=20
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+
+Applied to for-next, thanks!
+
+
+--J4XPiPrVK1ev6Sgr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6xejMACgkQFA3kzBSg
+Kba7ng//aczcnwIHXEHGSAGdX7AjPZp/niO98R7pHZFfdm2mzqMTZ033SOgF6hSt
+dCiYvgUUkCfo5gnOaIgJgBX/l/H6JY8MsScJi/zZQKZJgj4RR1b0xJgtcxjIMbb0
+C/WHo29TSP7tutQph38nJa9S1T9hx9AulHgb0Xrmb2s7Qo3iLyame1VxP1pmWreO
+U7KID0sB34vmdXKI9aC9T8Uh9eA2xwkceqZedr3+Cp68S0ljLhYnir1p3jnXEb0P
+49+yIOBRDdTc5OImkGheeySqoIZ/pHl/6HtKkNXFpx9mrt/chhAWoDKMAb35tDtD
+ZrC/8lTTc19r6WxqrSg1LeI9SwXAlYCY8SHNNsx5vUZxKmOQWoTAdZbOz4v/+NRe
+LBlgO6BTKre2//N2qzgQm5ZeEqsDYeCLat5EK6l+EJQ0v4SyKHsC8UM2jyq0UY6g
+Uiu9ursq22CUDwuUOSDjeJEQ5BFJOjF3dgJCKq+L7FzdunQGVr5usvf6MtiX+Y7h
+bDP913w76vEvPvj7QhSwXK6qazZ3v3Q9Mz74cMmFXOczxe9GHgSouqBrbxYgjU3k
+kV4hEaDLfHUrsE4FwFkt/Suq4Cn9UHBpG4ZgTbnKIjIxNrYb6oQqT915kA1GjTRf
++KW8m5gpTU6zdVRHgHX9FYSBzYvG+BsYk+W2c88teSd1HBpzn8A=
+=vY/v
+-----END PGP SIGNATURE-----
+
+--J4XPiPrVK1ev6Sgr--
