@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3694FC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4DFC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B1BC2495E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3626820836
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:14:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729543AbgEEOOP (ORCPT
+        id S1729552AbgEEOOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:14:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48618 "EHLO
+        Tue, 5 May 2020 10:14:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729511AbgEEOOI (ORCPT
+        by vger.kernel.org with ESMTP id S1729324AbgEEOOP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:14:08 -0400
+        Tue, 5 May 2020 10:14:15 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 781BCC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:14:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D4DCC061A10
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:14:15 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jVyKU-0000iC-As; Tue, 05 May 2020 16:13:50 +0200
+        id 1jVyKV-0000jt-LI; Tue, 05 May 2020 16:13:51 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id D42831001F5;
-        Tue,  5 May 2020 16:13:49 +0200 (CEST)
-Message-Id: <20200505134100.957390899@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 192C0FFC8D;
+        Tue,  5 May 2020 16:13:51 +0200 (CEST)
+Message-Id: <20200505134101.048523500@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:16:31 +0200
+Date:   Tue, 05 May 2020 15:16:32 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -53,7 +53,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Will Deacon <will@kernel.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V4 part 1 29/36] x86/mce: Send #MC singal from task work
+Subject: [patch V4 part 1 30/36] lockdep: Always inline lockdep_{off,on}()
 References: <20200505131602.633487962@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -68,131 +68,75 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peter Zijlstra <peterz@infradead.org>
 
-Convert #MC over to using task_work_add(); it will run the same code
-slightly later, on the return to user path of the same exception.
+These functions are called {early,late} in nmi_{enter,exit} and should
+not be traced or probed. They are also puny, so 'inline' them.
 
+Reported-by: Steven Rostedt <rostedt@goodmis.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 ---
- arch/x86/kernel/cpu/mce/core.c |   56 ++++++++++++++++++++++-------------------
- include/linux/sched.h          |    6 ++++
- 2 files changed, 37 insertions(+), 25 deletions(-)
+ include/linux/lockdep.h  |   23 +++++++++++++++++++++--
+ kernel/locking/lockdep.c |   19 -------------------
+ 2 files changed, 21 insertions(+), 21 deletions(-)
 
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -42,6 +42,7 @@
- #include <linux/export.h>
- #include <linux/jump_label.h>
- #include <linux/set_memory.h>
-+#include <linux/task_work.h>
+--- a/include/linux/lockdep.h
++++ b/include/linux/lockdep.h
+@@ -308,8 +308,27 @@ extern void lockdep_set_selftest_task(st
  
- #include <asm/intel-family.h>
- #include <asm/processor.h>
-@@ -1086,23 +1087,6 @@ static void mce_clear_state(unsigned lon
- 	}
+ extern void lockdep_init_task(struct task_struct *task);
+ 
+-extern void lockdep_off(void);
+-extern void lockdep_on(void);
++/*
++ * Split the recrursion counter in two to readily detect 'off' vs recursion.
++ */
++#define LOCKDEP_RECURSION_BITS	16
++#define LOCKDEP_OFF		(1U << LOCKDEP_RECURSION_BITS)
++#define LOCKDEP_RECURSION_MASK	(LOCKDEP_OFF - 1)
++
++/*
++ * lockdep_{off,on}() are macros to avoid tracing and kprobes; not inlines due
++ * to header dependencies.
++ */
++
++#define lockdep_off()					\
++do {							\
++	current->lockdep_recursion += LOCKDEP_OFF;	\
++} while (0)
++
++#define lockdep_on()					\
++do {							\
++	current->lockdep_recursion -= LOCKDEP_OFF;	\
++} while (0)
+ 
+ extern void lockdep_register_key(struct lock_class_key *key);
+ extern void lockdep_unregister_key(struct lock_class_key *key);
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -393,25 +393,6 @@ void lockdep_init_task(struct task_struc
+ 	task->lockdep_recursion = 0;
  }
  
--static int do_memory_failure(struct mce *m)
+-/*
+- * Split the recrursion counter in two to readily detect 'off' vs recursion.
+- */
+-#define LOCKDEP_RECURSION_BITS	16
+-#define LOCKDEP_OFF		(1U << LOCKDEP_RECURSION_BITS)
+-#define LOCKDEP_RECURSION_MASK	(LOCKDEP_OFF - 1)
+-
+-void lockdep_off(void)
 -{
--	int flags = MF_ACTION_REQUIRED;
--	int ret;
--
--	pr_err("Uncorrected hardware memory error in user-access at %llx", m->addr);
--	if (!(m->mcgstatus & MCG_STATUS_RIPV))
--		flags |= MF_MUST_KILL;
--	ret = memory_failure(m->addr >> PAGE_SHIFT, flags);
--	if (ret)
--		pr_err("Memory error not recovered");
--	else
--		set_mce_nospec(m->addr >> PAGE_SHIFT);
--	return ret;
+-	current->lockdep_recursion += LOCKDEP_OFF;
 -}
+-EXPORT_SYMBOL(lockdep_off);
 -
+-void lockdep_on(void)
+-{
+-	current->lockdep_recursion -= LOCKDEP_OFF;
+-}
+-EXPORT_SYMBOL(lockdep_on);
 -
- /*
-  * Cases where we avoid rendezvous handler timeout:
-  * 1) If this CPU is offline.
-@@ -1204,6 +1188,29 @@ static void __mc_scan_banks(struct mce *
- 	*m = *final;
- }
- 
-+static void kill_me_now(struct callback_head *ch)
-+{
-+	force_sig(SIGBUS);
-+}
-+
-+static void kill_me_maybe(struct callback_head *cb)
-+{
-+	struct task_struct *p = container_of(cb, struct task_struct, mce_kill_me);
-+	int flags = MF_ACTION_REQUIRED;
-+
-+	pr_err("Uncorrected hardware memory error in user-access at %llx", p->mce_addr);
-+	if (!(p->mce_status & MCG_STATUS_RIPV))
-+		flags |= MF_MUST_KILL;
-+
-+	if (!memory_failure(p->mce_addr >> PAGE_SHIFT, flags)) {
-+		set_mce_nospec(p->mce_addr >> PAGE_SHIFT);
-+		return;
-+	}
-+
-+	pr_err("Memory error not recovered");
-+	kill_me_now(cb);
-+}
-+
- /*
-  * The actual machine check handler. This only handles real
-  * exceptions when something got corrupted coming in through int 18.
-@@ -1222,7 +1229,7 @@ static void __mc_scan_banks(struct mce *
-  * backing the user stack, tracing that reads the user stack will cause
-  * potentially infinite recursion.
-  */
--void notrace do_machine_check(struct pt_regs *regs, long error_code)
-+void noinstr do_machine_check(struct pt_regs *regs, long error_code)
+ static inline void lockdep_recursion_finish(void)
  {
- 	DECLARE_BITMAP(valid_banks, MAX_NR_BANKS);
- 	DECLARE_BITMAP(toclear, MAX_NR_BANKS);
-@@ -1354,13 +1361,13 @@ void notrace do_machine_check(struct pt_
- 	if ((m.cs & 3) == 3) {
- 		/* If this triggers there is no way to recover. Die hard. */
- 		BUG_ON(!on_thread_stack() || !user_mode(regs));
--		local_irq_enable();
--		preempt_enable();
- 
--		if (kill_it || do_memory_failure(&m))
--			force_sig(SIGBUS);
--		preempt_disable();
--		local_irq_disable();
-+		current->mce_addr = m.addr;
-+		current->mce_status = m.mcgstatus;
-+		current->mce_kill_me.func = kill_me_maybe;
-+		if (kill_it)
-+			current->mce_kill_me.func = kill_me_now;
-+		task_work_add(current, &current->mce_kill_me, true);
- 	} else {
- 		if (!fixup_exception(regs, X86_TRAP_MC, error_code, 0))
- 			mce_panic("Failed kernel mode recovery", &m, msg);
-@@ -1370,7 +1377,6 @@ void notrace do_machine_check(struct pt_
- 	ist_exit(regs);
- }
- EXPORT_SYMBOL_GPL(do_machine_check);
--NOKPROBE_SYMBOL(do_machine_check);
- 
- #ifndef CONFIG_MEMORY_FAILURE
- int memory_failure(unsigned long pfn, int flags)
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1290,6 +1290,12 @@ struct task_struct {
- 	unsigned long			prev_lowest_stack;
- #endif
- 
-+#ifdef CONFIG_X86_MCE
-+	u64				mce_addr;
-+	u64				mce_status;
-+	struct callback_head		mce_kill_me;
-+#endif
-+
- 	/*
- 	 * New fields for task_struct should be added above here, so that
- 	 * they are included in the randomized portion of task_struct.
+ 	if (WARN_ON_ONCE(--current->lockdep_recursion))
 
