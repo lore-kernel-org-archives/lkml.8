@@ -2,115 +2,207 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CB0C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EF4C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 052A324955
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9182321841
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:16:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dJA0WZPS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NHnItZos"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729998AbgEEPQb (ORCPT
+        id S1730014AbgEEPQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:16:31 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52717 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729335AbgEEPQb (ORCPT
+        Tue, 5 May 2020 11:16:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58694 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729335AbgEEPQr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:16:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588691789;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=S5jSjNSt3FRjAMpv+BM9fPdmFYdsgn8Mgeukut02z3U=;
-        b=dJA0WZPSLtq9RjEf2CZ/+5ArQPRe12nne3v8jRz8g89o97LJk1q4cfoh2MjSRlU3QbwN9E
-        w8yh0ZdciH/xBoQkQIiFwtk70aK5BUdxaE7uTJQgZRiqLV41qp9SAX5b87XK+smccf4Qce
-        I7jHTCWffU5uyn/WBQzppMbmYcbOWTg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-509-S9YBJx5ROTuOY7H7iHjFCw-1; Tue, 05 May 2020 11:16:27 -0400
-X-MC-Unique: S9YBJx5ROTuOY7H7iHjFCw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6A7F2835B44;
-        Tue,  5 May 2020 15:16:26 +0000 (UTC)
-Received: from localhost (ovpn-113-143.ams2.redhat.com [10.36.113.143])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E9B91053B00;
-        Tue,  5 May 2020 15:16:22 +0000 (UTC)
-Date:   Tue, 5 May 2020 16:16:21 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Fixes tag needs some work in the vhost tree
-Message-ID: <20200505151621.GE381978@stefanha-x1.localdomain>
-References: <20200502103018.07774059@canb.auug.org.au>
+        Tue, 5 May 2020 11:16:47 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FAD2C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 08:16:47 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id t9so1292472pjw.0
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 08:16:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=I95AgUGK2HTwBLhKoNouR4SV68uni2W02QR7jOjf5mQ=;
+        b=NHnItZosjDG3/CCSGAFPRvV7VAfSHrhSdZsSvPaARBPAV4FTKGMEmYF4/wTjOrU806
+         rCOqzjnqnIc+C7YRsaMm9Y3tNGv7BeAnU1RWoj3VvdzSy02GI7FPO0kOCCVzoUxsFDZF
+         gNXVqPWTAbjrxVKhi3WtivEas7sHrAt0FC4/g1PFRLI/8ZTVaWz3lie9R+WGvRlL3we7
+         D4Sr/Yf0jD/Oc/FNhti46tNXPpNBBzdAUtrVV+xzprsth36D9fDrQ8bB0AGnaP34q8sJ
+         56iYR/drw1v8TILvuC/ag0t25qSf20ZfVDNkbq39r6eKdTjLkBXVZgxx19e+8RzJMwhN
+         C8EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=I95AgUGK2HTwBLhKoNouR4SV68uni2W02QR7jOjf5mQ=;
+        b=RyShltXJttO6HrGg3XRagnnvS1Cp6plO2W+/EKAyMWazSchz7dQ94/vBeHoBPj0lyX
+         V+HGoY8iqu5hMtwXTAcot7EFdLgO3MPvg3kJ+0Q7ZzSlfDSdHtXrgtQ1Q8ozx7Nre/g5
+         nhUEtZB8IXCwpqpMZsXO+OYDu2M+9ne/By9tejWL25XKFDuqip+TupUBOBzaUvKR4Jgu
+         S9ZPHMjeCkQK5VaGRxA19EGolS/b/nTH39FK0wiioznjXsADUEMAghwzXpLtma4tWvqs
+         jqvrGvV4TlVaPtm7C9pzZcsB0K555ppf+f6ZqaNHhWdiAJ+9zp5tqAMpCCOZXkTzM7Ju
+         Ll3g==
+X-Gm-Message-State: AGi0PuZUqLa6K4Zw16S5wHmkqBJz9Esap4Nbvgmy3xFlVovdMFZG4nIb
+        o1d9tYWg8q8qLKhS3WzG31o=
+X-Google-Smtp-Source: APiQypIEzmjJZGTFHzfxoMOSOj2JnzxKlltMTwaiaJ5Q8HDcyYnApSMBjjYDDKvLM6LvSsNbneEuFA==
+X-Received: by 2002:a17:90a:5b:: with SMTP id 27mr3742896pjb.190.1588691806594;
+        Tue, 05 May 2020 08:16:46 -0700 (PDT)
+Received: from iZj6chx1xj0e0buvshuecpZ ([47.75.1.235])
+        by smtp.gmail.com with ESMTPSA id d18sm2259009pfq.177.2020.05.05.08.16.43
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 05 May 2020 08:16:45 -0700 (PDT)
+Date:   Tue, 5 May 2020 23:16:41 +0800
+From:   Peng Liu <iwtbavbm@gmail.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        iwtbavbm@gmail.com, linux-kernel@vger.kernel.org,
+        dietmar.eggemann@arm.com, valentin.schneider@arm.com
+Subject: Re: [PATCH] sched/fair: Fix nohz.next_balance update
+Message-ID: <20200505151641.GA31878@iZj6chx1xj0e0buvshuecpZ>
+References: <20200503083407.GA27766@iZj6chx1xj0e0buvshuecpZ>
+ <CAKfTPtCNG9Y4xNA-iLd+JRRsUCA1+SkkFFRbbzk5n7q6v401tw@mail.gmail.com>
+ <20200505134056.GA31680@iZj6chx1xj0e0buvshuecpZ>
+ <20200505142711.GA12952@vingu-book>
 MIME-Version: 1.0
-In-Reply-To: <20200502103018.07774059@canb.auug.org.au>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vmttodhTwj0NAgWp"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200505142711.GA12952@vingu-book>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---vmttodhTwj0NAgWp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, May 05, 2020 at 04:27:11PM +0200, Vincent Guittot wrote:
+> Le mardi 05 mai 2020 à 21:40:56 (+0800), Peng Liu a écrit :
+> > On Mon, May 04, 2020 at 05:17:11PM +0200, Vincent Guittot wrote:
+> > > On Sun, 3 May 2020 at 10:34, Peng Liu <iwtbavbm@gmail.com> wrote:
+> > > >
 
-On Sat, May 02, 2020 at 10:30:18AM +1000, Stephen Rothwell wrote:
-> Hi all,
->=20
-> In commit
->=20
->   ab8be610c87d ("virtio-blk: handle block_device_operations callbacks aft=
-er hot unplug")
->=20
-> Fixes tag
->=20
->   Fixes: 48e4043d4529523cbc7fa8dd745bd8e2c45ce1d3
->=20
-> has these problem(s):
->=20
->   - missing subject
->=20
-> Should be
->=20
-> Fixes: 48e4043d4529 ("virtio: add virtio disk geometry feature")
->=20
-> Please don't split Fixes tags over more than one line.
+[...]
 
-Got it, thanks for letting me know. I'll keep the tag on one line in the
-future.
+> > Yes, you're right. When need_resched() returns true, things become out
+> > of expectation. We haven't really got the earliest next_balance, abort
+> > the update immediately and let the successor to help. Doubtless this
+> > will incur some overhead due to the repeating work.
+> 
+> There should not be some repeating works because CPUs and sched_domain, which
+> have already been balanced, will not be rebalanced until the next load balance
+> interval.
+> 
+> Futhermore, there is in fact still work to do bcause not all the idle CPUs got
+> a chance to pull work
+> 
+> >
+> > 
+> > About the "tick is not stopped when entering idle" case, defer the
+> > update to nohz_balance_enter_idle() would be a choice too.
+> >
+> > 
+> > Of course, only update nohz.next_balance in rebalance_domains() is the
+> > simpliest way, but as @Valentin put, too many write to it may incur
+> > unnecessary overhead. If we can gather the earliest next_balance in
+> 
+> This is not really possible because we have to move it to the next interval.
+> 
+> > advance, then a single write is considered to be better.
+> > 
+> > By the way, remove the redundant check in nohz_idle_balance().
+> > 
+> > FWIW, how about the below?
+> 
+> Your proposal below looks quite complex. IMO, one solution would be to move the
+> update of nohz.next_balance before calling rebalance_domains(this_rq, CPU_IDLE)
+> so you are back to the previous behavior.
+> 
+> The only difference is that in case of an break because of need_resched, it
+> doesn't update nohz.next_balance. But on the other hand, we haven't yet
+> finished run rebalance_domains for all CPUs and some load_balance are still
+> pending. In fact, this will be done during next tick by an idle CPU.
+> 
+> So I would be in favor of something as simple as :
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 04098d678f3b..e028bc1c4744 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -10457,6 +10457,14 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
+>                 }
+>         }
+> 
+> +       /*
+> +        * next_balance will be updated only when there is a need.
+> +        * When the CPU is attached to null domain for ex, it will not be
+> +        * updated.
+> +        */
+> +       if (likely(update_next_balance))
+> +               nohz.next_balance = next_balance;
+> +
+>         /* Newly idle CPU doesn't need an update */
+>         if (idle != CPU_NEWLY_IDLE) {
+>                 update_blocked_averages(this_cpu);
+> @@ -10477,14 +10485,6 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
+>         if (has_blocked_load)
+>                 WRITE_ONCE(nohz.has_blocked, 1);
+> 
+> -       /*
+> -        * next_balance will be updated only when there is a need.
+> -        * When the CPU is attached to null domain for ex, it will not be
+> -        * updated.
+> -        */
+> -       if (likely(update_next_balance))
+> -               nohz.next_balance = next_balance;
+> -
+>         return ret;
+>  }
+> 
 
-Stefan
+Indeed, simple and straightforward, it's better.
 
---vmttodhTwj0NAgWp
-Content-Type: application/pgp-signature; name="signature.asc"
+> > ***********************************************
+> > * Below code is !!!ENTIRELY UNTESTED!!!, just *
 
------BEGIN PGP SIGNATURE-----
+[...]
 
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl6xg0UACgkQnKSrs4Gr
-c8hQnggAgGQiqAqlgbDL2GudaR9leWkOqIdxAdFLgjaNmzqd1LtsPGhjxs9JAA42
-lsOSk/AFa7TBhg47bVj70gu9G4d5dCYIxs3ojqJDB0GJ0hWxd+pghi2O0UpY3QKZ
-8kRlAAyj25zfZbZtqlew9aCw3ShUd9a7Tc1uVSpyHoIL2OyW6zcMN7/8Szta8YUW
-amZqA1zUc+lmgg1u7ctMTrcIFV+Hmd1frnebEZlJjAWOw5djJR18CpJaWBMece8R
-XA8IOWHPiA+jBQdP8E/+MVE7x2kjXmvDCrA/XRT6283KeHasFzWyaznpWpaUuLvh
-nZs6GIuCFnz8dejuRS2FEkYUmFIfwQ==
-=3nCS
------END PGP SIGNATURE-----
+> > @@ -10354,9 +10350,7 @@ static bool nohz_idle_balance(struct rq *this_rq, enum cpu_idle_type idle)
+> >  {
+> >  	int this_cpu = this_rq->cpu;
+> >  	unsigned int flags;
+> > -
+> > -	if (!(atomic_read(nohz_flags(this_cpu)) & NOHZ_KICK_MASK))
+> > -		return false;
+> 
+> why did you remove this ?
+> 
 
---vmttodhTwj0NAgWp--
+It seems that below 'if' do the same thing, isn't?
 
+/* could be _relaxed() */
+flags = atomic_fetch_andnot(NOHZ_KICK_MASK, nohz_flags(this_cpu));
+if (!(flags & NOHZ_KICK_MASK))
+        return false;
+
+> > +	bool done;
+> > 
+> >  	if (idle != CPU_IDLE) {
+> >  		atomic_andnot(NOHZ_KICK_MASK, nohz_flags(this_cpu));
+> > @@ -10368,9 +10362,16 @@ static bool nohz_idle_balance(struct rq *this_rq, enum cpu_idle_type idle)
+> >  	if (!(flags & NOHZ_KICK_MASK))
+> >  		return false;
+> > 
+
+[...]
+
+> >  static void nohz_newidle_balance(struct rq *this_rq)
