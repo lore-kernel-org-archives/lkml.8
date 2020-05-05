@@ -2,105 +2,174 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9751C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E761AC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84B8020735
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:17:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB65D20735
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:18:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="3ybAOoGi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728886AbgEEMRz (ORCPT
+        id S1728916AbgEEMSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 08:17:55 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:41262 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728819AbgEEMRy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 08:17:54 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 2D53C1C0225; Tue,  5 May 2020 14:17:53 +0200 (CEST)
-Date:   Tue, 5 May 2020 14:17:52 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-Subject: Re: [PATCH 4.19 21/37] vfio: avoid possible overflow in
- vfio_iommu_type1_pin_pages
-Message-ID: <20200505121752.GB28722@amd>
-References: <20200504165448.264746645@linuxfoundation.org>
- <20200504165450.604878640@linuxfoundation.org>
+        Tue, 5 May 2020 08:18:49 -0400
+Received: from mail-co1nam11on2072.outbound.protection.outlook.com ([40.107.220.72]:61153
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728512AbgEEMSs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 08:18:48 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YFVHKL8UYx2S3hdRMk8LduKkkpeoaWhXyV4WJAvpWFxBtahVe7a1VCyOrQH5GB3s5XHz5W35Hx4SpCvna9O9Ix6ktyCizv5214a2T/w8Glez6sIzPEPrjazoQvQVUi0mQsJ8GyrMfjM/1FR0PwQO/wy/T4hbiAyh4kqYqWK4Z9n16VcKBMMTCx1m9JCG/9xk/bUoJ+nXTXG+u5InuEw6OlLGBERHiazsqoCM0qq42QsTsd36n9s3VSdEL7jjxLQgRG4U4Q1tRpRUbQszmrzkvxMHO5h8ueagG94yiIqe5L2Be9l7ak/PUGVkdkVIpPDcpvfl4w6+Tau2sXHPqy05Wg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4nREDopNaHWqL64OJJJx2mFFQJVBF7jzjb9j4DVyXiQ=;
+ b=Sw20nY52KbD6oPdArtLv92WG/ahhkWgwRtpNnIPHtLLUan//7GcR5I7diGPUgYKzM31UonPP+Jz1pq+J/6kWowsHk+w7fs2nrc3PtPWdenkZ3XvvtVbOCSTQBkm0z89y/wQBcnrsBITXfRdXro0WMV64dVaaBZZg7X4dCH/IxZFwvJecIeZMDTZCQ5l3uWxYIKE73Mfh3OJI9yaZ/oDK3G4ztaiAKALJ/Q3uVTfyEs6e/9l9U842WEqoC9piOF+pf1sDPbfFYd4CGJVPp9sJVFKobJxz/CevXI9Do7rVyhB/E2YyUuSU0VcQAReNSfH3UK47lCXzxITGucA9o9xIGw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4nREDopNaHWqL64OJJJx2mFFQJVBF7jzjb9j4DVyXiQ=;
+ b=3ybAOoGisC/Gr+TGkpMfWlfLZ8rm+/XK7avvqAsk/Nsdtp9k5lKgE4WQ5RcpLtRDWLO9ejXpTg4GI1nxxq3gy6bn7OQ2VPZdRNnC2l0TmxsmUx0qu3QkoGuAUoZsLXrzwIRWnnMv8G5Ly5JPo2HvdY0o4OU2tOQGwiuUNOpnFsw=
+Received: from CY4PR12MB1829.namprd12.prod.outlook.com (2603:10b6:903:11d::14)
+ by CY4PR12MB1894.namprd12.prod.outlook.com (2603:10b6:903:128::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Tue, 5 May
+ 2020 12:18:45 +0000
+Received: from CY4PR12MB1829.namprd12.prod.outlook.com
+ ([fe80::19c9:13b7:be47:daf3]) by CY4PR12MB1829.namprd12.prod.outlook.com
+ ([fe80::19c9:13b7:be47:daf3%7]) with mapi id 15.20.2958.030; Tue, 5 May 2020
+ 12:18:45 +0000
+From:   "RAVULAPATI, VISHNU VARDHAN RAO" 
+        <Vishnuvardhanrao.Ravulapati@amd.com>
+To:     Mark Brown <broonie@kernel.org>,
+        "Agrawal, Akshu" <Akshu.Agrawal@amd.com>
+CC:     Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "Mukunda, Vijendar" <Vijendar.Mukunda@amd.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] ASoC: amd :High hw_level while simultaneous capture
+Thread-Topic: [PATCH] ASoC: amd :High hw_level while simultaneous capture
+Thread-Index: AQHWItIMWg9iRfPvy06tXk1BsqOHSKiZYUiAgAADqwA=
+Date:   Tue, 5 May 2020 12:18:45 +0000
+Message-ID: <CY4PR12MB182949DC53DCCCDAC02112E7E7A70@CY4PR12MB1829.namprd12.prod.outlook.com>
+References: <20200505114023.251409-1-akshu.agrawal@amd.com>
+ <20200505115107.GD5377@sirena.org.uk>
+In-Reply-To: <20200505115107.GD5377@sirena.org.uk>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Enabled=true;
+ MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_SetDate=2020-05-05T12:16:55Z;
+ MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Method=Standard;
+ MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Name=Internal Use Only -
+ Unrestricted;
+ MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
+ MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_ActionId=15f1766d-3ec5-473c-ae96-00005c6d12df;
+ MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_ContentBits=1
+msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_enabled: true
+msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_setdate: 2020-05-05T12:16:55Z
+msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_method: Standard
+msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_name: Internal Use Only -
+ Unrestricted
+msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_siteid: 3dd8961f-e488-4e60-8e11-a82d994e183d
+msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_actionid: 2cac40f8-684a-426c-8c07-00006ff0d09d
+msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_contentbits: 0
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=amd.com;
+x-originating-ip: [165.204.159.242]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 509a71bc-089b-4a36-5d57-08d7f0ee7524
+x-ms-traffictypediagnostic: CY4PR12MB1894:|CY4PR12MB1894:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR12MB18942E3896C18A4FE080E50EE7A70@CY4PR12MB1894.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0394259C80
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: WdZH0i3oT84f0McX8EsxBAfQxaLZo2eu0caKN6lL3cby3jYvK/5mnRh8Arm1ajLcvMCIlHGKcahueCWtPOgdzYubjIUGK6p3kgFmzbszSvaktrnjd8FS+NoWFFAgZ2dAa8SaVk7ngwYDGPfeajQDxmqmCNMfO3s8x93M2SrkGh+zMRfzb7W5f8rNu4BFNRuVlE3xWnWmjvQu/+RNBcsX+7Y1KhWbDggiZR2MnHJZqlF2Y6lKbzMNAEOCKG2uCkvu0qZhnYz+sgXBM8f8EOTM6prfa/yBwquLL9YqvNnZnmXjVN1g49H9Qh/oNkB20SwhzcThvYx5JkI6vQTEC82fqz+gSZBtgbcrKUupS/WpZNbW/0bYjpX853mYAtQgAJobYIQKwYtFCJR3LXA3vcoPlwkBos89sAbT1Ccxw11iHN+BKj9ZVRrxXaUyTm78Ckg9TxiME1xwx4Z2ZnAbgVL/pjRsejDBym6UrvAVbOssKAlboyjRLvGP5Hf7CMOL2w0k0JJKP8N6PMOzE2qo8ikTYw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR12MB1829.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(136003)(346002)(39860400002)(366004)(33430700001)(55016002)(6636002)(71200400001)(4326008)(478600001)(86362001)(33656002)(66446008)(66946007)(66556008)(9686003)(66476007)(64756008)(76116006)(7696005)(5660300002)(2906002)(110136005)(54906003)(53546011)(8676002)(6506007)(316002)(8936002)(26005)(52536014)(33440700001)(186003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: yFqFJz5OvstrqYB5BQok9/54eu+CMdKEBLdrH45zFT9TzlaWNm/LMvob1G1faDr3PJVBoAB2JQgfEp5DgEF3wjoANS+3Bst/AoaZQ3Ox4DRSCPvqNOtWeG8DKFmczgiAruG72UPMrIFCGQ+Z94R61RUIJ8mIRIKQUl3mdZ2jeDxJF4Vuo4NJDsskbelgaT//8edGBAidkS1cMJzxFu3sTQT3ezubx8g2h3C1vd1ysaC1vqeskfyopGJB+q0KxJNMsDCwcy8yvp3swwEOEEjdmeJokndf77qPqgU1Jj0FvzGVQLG+42byQnhqh8lt+8xctKlnXX4ixUHEWEFptMPPo+RZBYgKkJNQtthpuBuGcEODOGcxnfCKdlh5QIHuCf5VO/iGpETw46JRtbvTZFH408i9PQppuKfnt/32P+F8JjsI1Fs5RTltzilkMfuwlrusKmO9UsM4dJY0EUQKztNl88QK3Excpc6MQhprcjnRzrc9gGMCqrN9Xt++W2GVJeKkbkCGTBpUE1wCQhkT4W3tWTWRN3257XyRBuy9A7kO/L4jXKguI9RRLMMH3R+HKPv8nTg4+0MM/Usn3wvE//CVJDxnKlE4FP4vB/hpZir6drqvRxAJCzFSmhMTlfsGS4TL0m0fXKvsNR6brLeq5P0AZRIxc+p7dXkpQfSypNljB1yVFbXuXjr/V3nplVWGL3ni7Pzk+iQ/4FWE6u4N9l4RyAZCETIog7cDSLZF0rOC9xLy5Obms2v5c54jd+jbF7OcJIswHBAu3c5qMlRBAIRWLSGGu/hNfz5SlG9nLJ7wBSxtDL0O79t5GGEOueCe2PXS
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="CUfgB8w4ZwR/yMy5"
-Content-Disposition: inline
-In-Reply-To: <20200504165450.604878640@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 509a71bc-089b-4a36-5d57-08d7f0ee7524
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 May 2020 12:18:45.2455
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gZq96CCVLwzAYOJavwpo8yG+/LyF6whuQQ7A08RyvK7WmMPkiDPyY5aLIAUf7TSatcANsDOSV4+4VW/Hx1jBLQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1894
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[AMD Official Use Only - Internal Distribution Only]
 
---CUfgB8w4ZwR/yMy5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon 2020-05-04 19:57:34, Greg Kroah-Hartman wrote:
-> From: Yan Zhao <yan.y.zhao@intel.com>
->=20
-> commit 0ea971f8dcd6dee78a9a30ea70227cf305f11ff7 upstream.
->=20
-> add parentheses to avoid possible vaddr overflow.
 
-AFAICT the values are unsigned, so yes, this is nice cleanup, but it
-does not really fix any problem, right? IOW it overflows, then
-underflows, but the result is still correct...
+-----Original Message-----
+From: Mark Brown <broonie@kernel.org>
+Sent: Tuesday, May 5, 2020 5:21 PM
+To: Agrawal, Akshu <Akshu.Agrawal@amd.com>
+Cc: RAVULAPATI, VISHNU VARDHAN RAO <Vishnuvardhanrao.Ravulapati@amd.com>; L=
+iam Girdwood <lgirdwood@gmail.com>; Jaroslav Kysela <perex@perex.cz>; Takas=
+hi Iwai <tiwai@suse.com>; Mukunda, Vijendar <Vijendar.Mukunda@amd.com>; Col=
+in Ian King <colin.king@canonical.com>; Kuninori Morimoto <kuninori.morimot=
+o.gx@renesas.com>; moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER M=
+ANAGEM... <alsa-devel@alsa-project.org>; open list <linux-kernel@vger.kerne=
+l.org>
+Subject: Re: [PATCH] ASoC: amd :High hw_level while simultaneous capture
 
-Best regards,
-								Pavel
+On Tue, May 05, 2020 at 05:10:20PM +0530, Akshu Agrawal wrote:
 
-> Fixes: a54eb55045ae ("vfio iommu type1: Add support for mediated devices")
-> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->=20
-> ---
->  drivers/vfio/vfio_iommu_type1.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -598,7 +598,7 @@ static int vfio_iommu_type1_pin_pages(vo
->  			continue;
->  		}
-> =20
-> -		remote_vaddr =3D dma->vaddr + iova - dma->iova;
-> +		remote_vaddr =3D dma->vaddr + (iova - dma->iova);
->  		ret =3D vfio_pin_page_external(dma, remote_vaddr, &phys_pfn[i],
->  					     do_accounting);
->  		if (ret)
->=20
+> Simultaneous capture on dmic and headset mic is having issue with high=20
+> hw_level being reported.
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+> Issue Can be reproduced by:
+> arecord -D hw:2,0 -f dat -d 60 /tmp/test0 & arecord -D hw:2,2 -f dat=20
+> -d 60 /tmp/test1 & cat /proc/asound/card2/pcm?c/sub0/status
 
---CUfgB8w4ZwR/yMy5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+What is a "high hw_level" and how does this patch address it?  As far as I =
+can see this patch reorders some of the initialzation but it's not entirely=
+ obvious what the issue was or how this fixes it.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Actual issue is :
+When we open one capture stream on one instance lets say I2S_SP and then on=
+ce again if we open other capture on other instance lets say I2S_BT while f=
+irst capture is in progress and when we try to read the status of both runn=
+ing instances by below command cat /proc/asound/card2/pcm?c/sub0/status
+we observe that avail_max is being doubled on first opened capture(I2S_SP i=
+n the example).
 
-iEYEARECAAYFAl6xWXAACgkQMOfwapXb+vK7bQCbBvZQDzcjZdosrXP+fk2XRmmv
-dtoAoJtNLoHV7yoyx/gKlXEIwkLI2ehi
-=LUUN
------END PGP SIGNATURE-----
+This is because our previous implementation was like when any instance is o=
+pened it gets initialized in dma_open irrespective of on what instance it c=
+alled open.
+For example:
+First I2S_SP called opened it initializes both SP/BT capture streams irresp=
+ective of on which instance the stream opened.next time I2S_BT called opene=
+d and it initializes both SP/BT this corrupts the behaviour .
 
---CUfgB8w4ZwR/yMy5--
+So with this patch the stream gets initialized only on specific instance wh=
+en ever it gets opened calls hw_params.
+
+This rectifies the issue.
+
+Thanks,
+Vishnu
