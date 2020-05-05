@@ -2,77 +2,90 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3794C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D53CFC47259
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 976F3206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:01:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7408206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:02:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cbLyXUbn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728006AbgEEIBn (ORCPT
+        id S1728422AbgEEIC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 04:01:43 -0400
-Received: from smtprelay0165.hostedemail.com ([216.40.44.165]:42462 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725833AbgEEIBm (ORCPT
+        Tue, 5 May 2020 04:02:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46866 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725766AbgEEICW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 04:01:42 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 85AD5182D31F3;
-        Tue,  5 May 2020 08:01:41 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: roll80_65f027eb9442c
-X-Filterd-Recvd-Size: 1926
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf13.hostedemail.com (Postfix) with ESMTPA;
-        Tue,  5 May 2020 08:01:40 +0000 (UTC)
-Message-ID: <d0a6e679bc835d89a6b219f44dbbdcdcdea256bc.camel@perches.com>
-Subject: Re: [trivial PATCH] efi/libstub: Reduce efi_printk object size
-From:   Joe Perches <joe@perches.com>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>
-Date:   Tue, 05 May 2020 01:01:39 -0700
-In-Reply-To: <CAMj1kXGQ7dLNMnheWViBh7BnHd00kWw0AW2aF7i7S2wGti0qKg@mail.gmail.com>
-References: <091e3fc3bdbc5f480af7d3b3ac096d174a4480d0.1588273612.git.joe@perches.com>
-         <ec53e67b3ac928922807db3cb1585e911971dadc.1588273612.git.joe@perches.com>
-         <CAMj1kXHwdy3BTqt-q_qnezyz666BcqKiFxeumfsD+Qjy5qRzZA@mail.gmail.com>
-         <f1926d434cdeb091405ef8c01a90c0140d296bed.camel@perches.com>
-         <CAMj1kXGQ7dLNMnheWViBh7BnHd00kWw0AW2aF7i7S2wGti0qKg@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Tue, 5 May 2020 04:02:22 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0673C061A0F;
+        Tue,  5 May 2020 01:02:21 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id f12so1001909edn.12;
+        Tue, 05 May 2020 01:02:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZHJL/wGmA1GyknYa9LMPwyUmT5ntJmA/lvZzR1e4zDk=;
+        b=cbLyXUbnbqNHYqTiQjFmduESXf4qSe5tDFHsdxZZXZk/l62hp5Pgk+zqPkbPvIFzqk
+         amS3lkjHZuOoEWea/p+sm4wB2QLJ4WgjBjk5amoM04xJwgnbsuXq2/Ym5MuihL15/169
+         vOb4XfI9vcGlYFZcIZS6LMs2ekJScUhjxoWZ8iQAkWU4MyU3kLvKN2o9x+2g9VKp6Hz9
+         YbBtZJiyl+2UF8aHcB/ErrK0/tE8lWDESUdzH5nyd+5Qg8RI2NOkKCnK1/Uw0DwlD6xt
+         xICn3Nt9+D6KnW8L9dsUo3NZuXS6HywNOf3LrySnfjEFoqAaz92T+KzrQgDnQD25UoGw
+         ASQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZHJL/wGmA1GyknYa9LMPwyUmT5ntJmA/lvZzR1e4zDk=;
+        b=mJy1SM2engl6Db1qPe/HH3BEJEWjadHKsmLOXq+uPhl6Z5zZa3V2ywFNdFlpM6vGDp
+         v8Yavi/VjUbTFLvBDq7oapPF8gGA3xLAs11XAT4KWzXlghS090JQ/lBVATc69QNcHvsw
+         lnxeaRAFrWxexpyNWMD7yl9LwJ1/ThfW9xBBCQPyx2/p9UOWghAEsqh3a2HXa+WZsfgr
+         1UjDYYh0BBzdESad3HxhKCibcWKdCaAcOg6fynWU3TUH9x/zhyg7CqrkN7JuL4PyYeUh
+         yshqIqwShdBEc7YWjeSjXeDlAHjJEkS67CFOtWbwVLEIMFIU6M/NrvlrtLeYWmi2/Jsm
+         B+lQ==
+X-Gm-Message-State: AGi0PubwQt1/QQ86jzYoWnPtdwFw0tr/s40tRY378VV4f3wsytuLyZCh
+        4O3J27UvMmoVGKrixY5vviONZYlUf+PJPQlFymijtYp7
+X-Google-Smtp-Source: APiQypLAbEUiBKhR7J4oihPY5/Cw3SuGUar4Ny8CfFZU1JA3gTWXTGBKmn8SMdIoMJ1FxTfxf998ZFXhw5+I0wPhexs=
+X-Received: by 2002:a05:6402:22ea:: with SMTP id dn10mr1489129edb.70.1588665740372;
+ Tue, 05 May 2020 01:02:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200501203505.144362-1-konradybcio@gmail.com>
+ <20200501203505.144362-3-konradybcio@gmail.com> <20200505035543.GA5765@bogus>
+In-Reply-To: <20200505035543.GA5765@bogus>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Date:   Tue, 5 May 2020 10:01:44 +0200
+Message-ID: <CAMS8qEUF-M13Mn91DDWLqqPLwD=t6W4BqTd+BZ9q1oa7MCo8cg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: media: Document MSM8939 Venus
+To:     Rob Herring <robh@kernel.org>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-media@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-05-05 at 09:50 +0200, Ard Biesheuvel wrote:
-> On Mon, 4 May 2020 at 20:29, Joe Perches <joe@perches.com> wrote:
-> > Use a few more common kernel styles.
-> > 
-> > Trivially reduce efi_printk object size by using a dereference to
-> > a temporary instead of multiple dereferences of the same object.
-> > 
-> > Use efi_printk(const char *str) and static or static const for its
-> > internal variables.
-> > 
-> > Use the more common form of while instead of a for loop.
-> > 
-> > Change efi_char16_printk argument to const.
-> > 
-> > Signed-off-by: Joe Perches <joe@perches.com>
-> 
-> Thanks Joe.
+Ah, mea culpa!
 
-No worries, it's not worth applying if
-it's not good code.  Just ignore it.
+I completely forgot to mention that this depends on the MSM8939 GCC
+driver that has been sent a few days ago, sorry.. [1]
 
-cheers, Joe
+Have you found any additional mistakes in this patch that I should
+correct besides this one?
 
+
+[1] https://lwn.net/Articles/818486/
+
+Konrad
