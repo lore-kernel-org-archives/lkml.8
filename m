@@ -2,166 +2,163 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A95C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BDAC47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11DE1206D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 650AB206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:09:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="v2PIMyT/"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="XIpKJ2rL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728817AbgEELF1 (ORCPT
+        id S1728678AbgEELJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 07:05:27 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:55242 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728608AbgEELF1 (ORCPT
+        Tue, 5 May 2020 07:09:18 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:2267 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728584AbgEELJR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 07:05:27 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 045B5Ffc037803;
-        Tue, 5 May 2020 06:05:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588676715;
-        bh=umV3B0I90WivROOQuE1mue7ZnlXEBWCYNsNS60PidxE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=v2PIMyT/xLLLP77mLPoVDXUtJLvKbrHUxN72YgrIJCb8VvZoHp1l8WTXEz0FQQ14o
-         MHYEFMKOH6e3H/joIN/Vnddo7zlh1vIm1cGIOFU1C/cVCl73qbhfdmmwJUzUKtgRrf
-         K8AuRIPQulJ9XLRky3VX1rI5rt5PQVHU6eSzAenA=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 045B5FjQ073523;
-        Tue, 5 May 2020 06:05:15 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 5 May
- 2020 06:05:15 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 5 May 2020 06:05:14 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 045B5BKn127153;
-        Tue, 5 May 2020 06:05:12 -0500
-Subject: Re: [PATCH net-next 3/7] net: ethernet: ti: am65-cpsw-nuss: enable
- packet timestamping support
-To:     Anders Roxell <anders.roxell@linaro.org>
-CC:     Richard Cochran <richardcochran@gmail.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Networking <netdev@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Nishanth Menon <nm@ti.com>
-References: <20200501205011.14899-1-grygorii.strashko@ti.com>
- <20200501205011.14899-4-grygorii.strashko@ti.com>
- <CADYN=9L+RtruRYKah0Bomh7UaPGQ==N9trd0ZoVQ3GTc-VY8Dg@mail.gmail.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <1bf51157-9fee-1948-f9ff-116799d12731@ti.com>
-Date:   Tue, 5 May 2020 14:05:11 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 07:09:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1588676957; x=1620212957;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=iUKxsyy8EDqa4LYd6lWomJlLTmy2039pJ+ilYaUf9pk=;
+  b=XIpKJ2rLdc1Be6hOQ+Zi93U0jP6mJP0MTmCdyYd+NeipM2eDCV/RSVQL
+   BSOvBzl1RjEWQa7QzJnVGQTO/tFOJ7ymcuweluUXhwu3r8gKmET+XjDyq
+   ZWtwAsdvQe/ADzlCROLpZ52V1L7eFDcF1EryllLsca1JHd5xOhoeTD5II
+   A=;
+IronPort-SDR: PfAxMNMD/tn4hjaA4nnTVUT+SLwozyRxxH3gWbMPbWSedSZJPTUw3DWToGskf5iSTXm4Slkk0a
+ c4v6NMPiehVQ==
+X-IronPort-AV: E=Sophos;i="5.73,354,1583193600"; 
+   d="scan'208";a="33011899"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 05 May 2020 11:09:15 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com (Postfix) with ESMTPS id 7911EA218D;
+        Tue,  5 May 2020 11:09:12 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 5 May 2020 11:09:11 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.92) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 5 May 2020 11:08:56 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
+        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v10 01/16] scripts/spelling: Add a few more typos
+Date:   Tue, 5 May 2020 13:08:00 +0200
+Message-ID: <20200505110815.10532-2-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200505110815.10532-1-sjpark@amazon.com>
+References: <20200505110815.10532-1-sjpark@amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <CADYN=9L+RtruRYKah0Bomh7UaPGQ==N9trd0ZoVQ3GTc-VY8Dg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.92]
+X-ClientProxiedBy: EX13D35UWB004.ant.amazon.com (10.43.161.230) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Anders,
+From: SeongJae Park <sjpark@amazon.de>
 
-On 05/05/2020 13:17, Anders Roxell wrote:
-> On Fri, 1 May 2020 at 22:50, Grygorii Strashko <grygorii.strashko@ti.com> wrote:
->>
->> The MCU CPSW Common Platform Time Sync (CPTS) provides possibility to
->> timestamp TX PTP packets and all RX packets.
->>
->> This enables corresponding support in TI AM65x/J721E MCU CPSW driver.
->>
->> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->> ---
->>   drivers/net/ethernet/ti/Kconfig             |   1 +
->>   drivers/net/ethernet/ti/am65-cpsw-ethtool.c |  24 ++-
->>   drivers/net/ethernet/ti/am65-cpsw-nuss.c    | 172 ++++++++++++++++++++
->>   drivers/net/ethernet/ti/am65-cpsw-nuss.h    |   6 +-
->>   4 files changed, 201 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
->> index 1f4e5b6dc686..2c7bd1ccaaec 100644
->> --- a/drivers/net/ethernet/ti/Kconfig
->> +++ b/drivers/net/ethernet/ti/Kconfig
->> @@ -100,6 +100,7 @@ config TI_K3_AM65_CPSW_NUSS
->>          depends on ARCH_K3 && OF && TI_K3_UDMA_GLUE_LAYER
->>          select TI_DAVINCI_MDIO
->>          imply PHY_TI_GMII_SEL
->> +       imply TI_AM65_CPTS
-> 
-> Should this be TI_K3_AM65_CPTS ?
-> 
-> I did an arm64 allmodconfig build on todays next tag: next-20200505
-> and got this undefined symbol:
-> 
-> aarch64-linux-gnu-ld: drivers/net/ethernet/ti/am65-cpsw-nuss.o: in
-> function `am65_cpsw_init_cpts':
-> /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1685:
-> undefined reference to `am65_cpts_create'
-> aarch64-linux-gnu-ld:
-> /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1685:(.text+0x2e20):
-> relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol
-> `am65_cpts_create'
-> aarch64-linux-gnu-ld: drivers/net/ethernet/ti/am65-cpsw-nuss.o: in
-> function `am65_cpsw_nuss_tx_compl_packets':
-> /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:923:
-> undefined reference to `am65_cpts_tx_timestamp'
-> aarch64-linux-gnu-ld:
-> /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:923:(.text+0x4cf0):
-> relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol
-> `am65_cpts_tx_timestamp'
-> aarch64-linux-gnu-ld: drivers/net/ethernet/ti/am65-cpsw-nuss.o: in
-> function `am65_cpsw_nuss_ndo_slave_xmit':
-> /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1018:
-> undefined reference to `am65_cpts_prep_tx_timestamp'
-> aarch64-linux-gnu-ld:
-> /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1018:(.text+0x58fc):
-> relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol
-> `am65_cpts_prep_tx_timestamp'
-> aarch64-linux-gnu-ld: drivers/net/ethernet/ti/am65-cpsw-nuss.o: in
-> function `am65_cpsw_nuss_hwtstamp_set':
-> /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1265:
-> undefined reference to `am65_cpts_rx_enable'
-> aarch64-linux-gnu-ld:
-> /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1265:(.text+0x7564):
-> relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol
-> `am65_cpts_rx_enable'
-> aarch64-linux-gnu-ld: drivers/net/ethernet/ti/am65-cpsw-ethtool.o: in
-> function `am65_cpsw_get_ethtool_ts_info':
-> /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-ethtool.c:713:
-> undefined reference to `am65_cpts_phc_index'
-> aarch64-linux-gnu-ld:
-> /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-ethtool.c:713:(.text+0xbe8):
-> relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol
-> `am65_cpts_phc_index'
-> make[1]: *** [/srv/src/kernel/next/Makefile:1114: vmlinux] Error 1
-> make[1]: Target 'Image' not remade because of errors.
-> make: *** [Makefile:180: sub-make] Error 2
-> make: Target 'Image' not remade because of errors.
+This commit adds typos found from DAMON patchset.
 
-Sry, I can't reproduce it net-next. trying next...
-What's your config?
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+---
+ scripts/spelling.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
+diff --git a/scripts/spelling.txt b/scripts/spelling.txt
+index ffa838f3a2b5..a8214d8e8e4b 100644
+--- a/scripts/spelling.txt
++++ b/scripts/spelling.txt
+@@ -59,6 +59,7 @@ actualy||actually
+ acumulating||accumulating
+ acumulative||accumulative
+ acumulator||accumulator
++acutally||actually
+ adapater||adapter
+ addional||additional
+ additionaly||additionally
+@@ -245,6 +246,7 @@ calescing||coalescing
+ calle||called
+ callibration||calibration
+ callled||called
++callser||caller
+ calucate||calculate
+ calulate||calculate
+ cancelation||cancellation
+@@ -664,6 +666,7 @@ hanlde||handle
+ hanled||handled
+ happend||happened
+ harware||hardware
++havind||having
+ heirarchically||hierarchically
+ helpfull||helpful
+ hexdecimal||hexadecimal
+@@ -835,6 +838,7 @@ logile||logfile
+ loobpack||loopback
+ loosing||losing
+ losted||lost
++maangement||management
+ machinary||machinery
+ maibox||mailbox
+ maintainance||maintenance
+@@ -999,6 +1003,7 @@ partiton||partition
+ pased||passed
+ passin||passing
+ pathes||paths
++pattrns||patterns
+ pecularities||peculiarities
+ peformance||performance
+ peforming||performing
+@@ -1238,6 +1243,7 @@ shoule||should
+ shrinked||shrunk
+ siginificantly||significantly
+ signabl||signal
++significanly||significantly
+ similary||similarly
+ similiar||similar
+ simlar||similar
+@@ -1352,6 +1358,7 @@ thead||thread
+ therfore||therefore
+ thier||their
+ threds||threads
++threee||three
+ threshhold||threshold
+ thresold||threshold
+ throught||through
+@@ -1391,6 +1398,7 @@ tyep||type
+ udpate||update
+ uesd||used
+ uknown||unknown
++usccess||success
+ usupported||unsupported
+ uncommited||uncommitted
+ unconditionaly||unconditionally
 -- 
-Best regards,
-grygorii
+2.17.1
+
