@@ -2,151 +2,232 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 455FAC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94601C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21429206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:22:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WramJSl4"
+	by mail.kernel.org (Postfix) with ESMTP id 6F5B720675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:22:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730350AbgEEOWT (ORCPT
+        id S1729801AbgEEOWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:22:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50178 "EHLO
+        Tue, 5 May 2020 10:22:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729273AbgEEOWQ (ORCPT
+        by vger.kernel.org with ESMTP id S1729618AbgEEOOi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:22:16 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECEF4C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:22:15 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id v4so2614994wme.1
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 07:22:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YHnzzrHgTyHcjX/CeefsmIEudaBUoBiusDg0FK4q7VY=;
-        b=WramJSl4+uskKedIHN68dPfXwQ/JWF+7d43lGgSUtg9uMCjB27RieYVrxRNCiESioY
-         qQAjepPNqXaKLzvAd80rsaqCFeopkR4uGXt7IqAdCYXXu9pgquU5zI/UiGrDkc+yeh/T
-         1CIy4eJHsTlDiebyEJu6B7BpqUnS6SjguezbmKJ2iuKyjeroDCACh63Avjg6X/WKNq8y
-         VvJo8RcMTZPoZKGb1azBhV5ipKE7OtRG5tE93+24jqZG1M+GMUHOmPzJD/8cCntKFYMv
-         27h5azse6AypM9z9xYtJOUU9+W2RBvRcU/L3QRlt/mZnHnaqiWCBInSRYqf61knVPmLc
-         ApVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YHnzzrHgTyHcjX/CeefsmIEudaBUoBiusDg0FK4q7VY=;
-        b=BsErOsJnCFD/Cbv66rC1/fIJzPvkHZD6uGfyRWKSdbdxkO1WNkDhpt/vOwD0BERbIf
-         uQEECAjQcLu3clY5mcSpTYyvn9LNZeszQrFXv1+8NDlmKX5/lN459BSvIJxF9zVXn8U0
-         8SsBngfKIj8MkVapBg029FTb3W6zWVigNtfYpb5Rr+hPFE3wxwFzjyAFwN8vD0EMyQjV
-         HThn8AJpG9jAkliTUtBvtlm9r02g2cWk7Zayn59CNTbO/mQXgTKf7+sTTiXc35R+rPGn
-         SIdg0AUjuRoL6wz/4TlDNyr3nNgk3DSHAsQfxYRuzYPvR9lqdMVdVqYT0lyTvTKnYEUE
-         LJMQ==
-X-Gm-Message-State: AGi0PuZ3slKUZ4EQi45rDFrYpqhweuS29CcJ0Nq+S8AluLpZyEqeIsna
-        nseebHVhPdrnkXTMdUqSJJTCgLOPm3arng==
-X-Google-Smtp-Source: APiQypIYYxJUTLtY0WESmB6qxDcBGH0IJp2gBONDCsRvlDuzCDaiTDtCUBp5/jTtlYEeVlexqtQGJw==
-X-Received: by 2002:a7b:c250:: with SMTP id b16mr3771611wmj.100.1588688132584;
-        Tue, 05 May 2020 07:15:32 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id s6sm4023786wmh.17.2020.05.05.07.15.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 07:15:31 -0700 (PDT)
-Date:   Tue, 5 May 2020 15:15:29 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        patches@linaro.org
-Subject: Re: [PATCH v2] arm64: cacheflush: Fix KGDB trap detection
-Message-ID: <20200505141529.2qb35fbqudtac3ys@holly.lan>
-References: <20200504170518.2959478-1-daniel.thompson@linaro.org>
- <20200504204803.GA5657@willie-the-truck>
+        Tue, 5 May 2020 10:14:38 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B396CC061A41
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:14:38 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jVyL0-000110-1X; Tue, 05 May 2020 16:14:22 +0200
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 88168FFC8D;
+        Tue,  5 May 2020 16:14:21 +0200 (CEST)
+Message-Id: <20200505134340.811520478@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Tue, 05 May 2020 15:41:19 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Subject: [patch V4 part 2 07/18] context_tracking: Ensure that the critical
+ path cannot be instrumented
+References: <20200505134112.272268764@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504204803.GA5657@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8
+Content-transfer-encoding: 8-bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 09:48:04PM +0100, Will Deacon wrote:
-> On Mon, May 04, 2020 at 06:05:18PM +0100, Daniel Thompson wrote:
-> > flush_icache_range() contains a bodge to avoid issuing IPIs when the kgdb
-> > trap handler is running because issuing IPIs is unsafe (and not needed)
-> > in this execution context. However the current test, based on
-> > kgdb_connected is flawed: it both over-matches and under-matches.
-> > 
-> > The over match occurs because kgdb_connected is set when gdb attaches
-> > to the stub and remains set during normal running. This is relatively
-> > harmelss because in almost all cases irq_disabled() will be false.
-> > 
-> > The under match is more serious. When kdb is used instead of kgdb to access
-> > the debugger then kgdb_connected is not set in all the places that the
-> > debug core updates sw breakpoints (and hence flushes the icache). This
-> > can lead to deadlock.
-> > 
-> > Fix by replacing the ad-hoc check with the proper kgdb macro. This also
-> > allows us to drop the #ifdef wrapper.
-> > 
-> > Fixes: 3b8c9f1cdfc5 ("arm64: IPI each CPU after invalidating the I-cache for kernel mappings")
-> > Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-> > Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> > ---
-> > 
-> > Notes:
-> >     v2: Improve the commit message based based on feedback from Doug
-> >         Anderson
-> > 
-> >  arch/arm64/include/asm/cacheflush.h | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/arch/arm64/include/asm/cacheflush.h b/arch/arm64/include/asm/cacheflush.h
-> > index e6cca3d4acf7..ce50c1f1f1ea 100644
-> > --- a/arch/arm64/include/asm/cacheflush.h
-> > +++ b/arch/arm64/include/asm/cacheflush.h
-> > @@ -79,7 +79,7 @@ static inline void flush_icache_range(unsigned long start, unsigned long end)
-> >  	 * IPI all online CPUs so that they undergo a context synchronization
-> >  	 * event and are forced to refetch the new instructions.
-> >  	 */
-> > -#ifdef CONFIG_KGDB
-> > +
-> >  	/*
-> >  	 * KGDB performs cache maintenance with interrupts disabled, so we
-> >  	 * will deadlock trying to IPI the secondary CPUs. In theory, we can
-> > @@ -89,9 +89,9 @@ static inline void flush_icache_range(unsigned long start, unsigned long end)
-> >  	 * the patching operation, so we don't need extra IPIs here anyway.
-> >  	 * In which case, add a KGDB-specific bodge and return early.
-> >  	 */
-> > -	if (kgdb_connected && irqs_disabled())
-> > +	if (in_dbg_master())
-> 
-> Does this imply that irqs are disabled?
+context tracking lacks a few protection mechanisms against instrumentation:
 
-Yes.
+ - While the core functions are marked NOKPROBE they lack protection
+   against function tracing which is required as the function entry/exit
+   points can be utilized by BPF.
 
-Assuming CONFIG_KGDB is enabled then in_dbg_master() expands to:
+ - static functions invoked from the protected functions need to be marked
+   as well as they can be instrumented otherwise.
 
-    (raw_smp_processor_id() == atomic_read(&kgdb_active))
+ - using plain inline allows the compiler to emit traceable and probable
+   functions.
 
-kgdb_active is written to from exactly four locations in the kernel and
-all are within a single function, albeit a very big function with control
-flow the that could politely be called "quirky". I try not to think about
-what it might be impolitely called.
+Fix this by marking the functions noinstr and converting the plain inlines
+to __always_inline.
 
-kgdb_active is only ever set to a value other than -1 when we are
-executing the kgdb exception handler and interrupts have been
-explicitly disabled.
+The NOKPROBE_SYMBOL() annotations are removed as the .noinstr.text section
+is already excluded from being probed.
 
+Cures the following objtool warnings:
 
-Daniel.
+ vmlinux.o: warning: objtool: enter_from_user_mode()+0x34: call to __context_tracking_exit() leaves .noinstr.text section
+ vmlinux.o: warning: objtool: prepare_exit_to_usermode()+0x29: call to __context_tracking_enter() leaves .noinstr.text section
+ vmlinux.o: warning: objtool: syscall_return_slowpath()+0x29: call to __context_tracking_enter() leaves .noinstr.text section
+ vmlinux.o: warning: objtool: do_syscall_64()+0x7f: call to __context_tracking_enter() leaves .noinstr.text section
+ vmlinux.o: warning: objtool: do_int80_syscall_32()+0x3d: call to __context_tracking_enter() leaves .noinstr.text section
+ vmlinux.o: warning: objtool: do_fast_syscall_32()+0x9c: call to __context_tracking_enter() leaves .noinstr.text section
+
+and generates new ones...
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ include/linux/context_tracking.h       |    6 +++---
+ include/linux/context_tracking_state.h |    6 +++---
+ kernel/context_tracking.c              |   14 ++++++++------
+ 3 files changed, 14 insertions(+), 12 deletions(-)
+
+--- a/include/linux/context_tracking.h
++++ b/include/linux/context_tracking.h
+@@ -33,13 +33,13 @@ static inline void user_exit(void)
+ }
+ 
+ /* Called with interrupts disabled.  */
+-static inline void user_enter_irqoff(void)
++static __always_inline void user_enter_irqoff(void)
+ {
+ 	if (context_tracking_enabled())
+ 		__context_tracking_enter(CONTEXT_USER);
+ 
+ }
+-static inline void user_exit_irqoff(void)
++static __always_inline void user_exit_irqoff(void)
+ {
+ 	if (context_tracking_enabled())
+ 		__context_tracking_exit(CONTEXT_USER);
+@@ -75,7 +75,7 @@ static inline void exception_exit(enum c
+  * is enabled.  If context tracking is disabled, returns
+  * CONTEXT_DISABLED.  This should be used primarily for debugging.
+  */
+-static inline enum ctx_state ct_state(void)
++static __always_inline enum ctx_state ct_state(void)
+ {
+ 	return context_tracking_enabled() ?
+ 		this_cpu_read(context_tracking.state) : CONTEXT_DISABLED;
+--- a/include/linux/context_tracking_state.h
++++ b/include/linux/context_tracking_state.h
+@@ -26,12 +26,12 @@ struct context_tracking {
+ extern struct static_key_false context_tracking_key;
+ DECLARE_PER_CPU(struct context_tracking, context_tracking);
+ 
+-static inline bool context_tracking_enabled(void)
++static __always_inline bool context_tracking_enabled(void)
+ {
+ 	return static_branch_unlikely(&context_tracking_key);
+ }
+ 
+-static inline bool context_tracking_enabled_cpu(int cpu)
++static __always_inline bool context_tracking_enabled_cpu(int cpu)
+ {
+ 	return context_tracking_enabled() && per_cpu(context_tracking.active, cpu);
+ }
+@@ -41,7 +41,7 @@ static inline bool context_tracking_enab
+ 	return context_tracking_enabled() && __this_cpu_read(context_tracking.active);
+ }
+ 
+-static inline bool context_tracking_in_user(void)
++static __always_inline bool context_tracking_in_user(void)
+ {
+ 	return __this_cpu_read(context_tracking.state) == CONTEXT_USER;
+ }
+--- a/kernel/context_tracking.c
++++ b/kernel/context_tracking.c
+@@ -31,7 +31,7 @@ EXPORT_SYMBOL_GPL(context_tracking_key);
+ DEFINE_PER_CPU(struct context_tracking, context_tracking);
+ EXPORT_SYMBOL_GPL(context_tracking);
+ 
+-static bool context_tracking_recursion_enter(void)
++static noinstr bool context_tracking_recursion_enter(void)
+ {
+ 	int recursion;
+ 
+@@ -45,7 +45,7 @@ static bool context_tracking_recursion_e
+ 	return false;
+ }
+ 
+-static void context_tracking_recursion_exit(void)
++static __always_inline void context_tracking_recursion_exit(void)
+ {
+ 	__this_cpu_dec(context_tracking.recursion);
+ }
+@@ -59,7 +59,7 @@ static void context_tracking_recursion_e
+  * instructions to execute won't use any RCU read side critical section
+  * because this function sets RCU in extended quiescent state.
+  */
+-void __context_tracking_enter(enum ctx_state state)
++void noinstr __context_tracking_enter(enum ctx_state state)
+ {
+ 	/* Kernel threads aren't supposed to go to userspace */
+ 	WARN_ON_ONCE(!current->mm);
+@@ -77,8 +77,10 @@ void __context_tracking_enter(enum ctx_s
+ 			 * on the tick.
+ 			 */
+ 			if (state == CONTEXT_USER) {
++				instr_begin();
+ 				trace_user_enter(0);
+ 				vtime_user_enter(current);
++				instr_end();
+ 			}
+ 			rcu_user_enter();
+ 		}
+@@ -99,7 +101,6 @@ void __context_tracking_enter(enum ctx_s
+ 	}
+ 	context_tracking_recursion_exit();
+ }
+-NOKPROBE_SYMBOL(__context_tracking_enter);
+ EXPORT_SYMBOL_GPL(__context_tracking_enter);
+ 
+ void context_tracking_enter(enum ctx_state state)
+@@ -142,7 +143,7 @@ NOKPROBE_SYMBOL(context_tracking_user_en
+  * This call supports re-entrancy. This way it can be called from any exception
+  * handler without needing to know if we came from userspace or not.
+  */
+-void __context_tracking_exit(enum ctx_state state)
++void noinstr __context_tracking_exit(enum ctx_state state)
+ {
+ 	if (!context_tracking_recursion_enter())
+ 		return;
+@@ -155,15 +156,16 @@ void __context_tracking_exit(enum ctx_st
+ 			 */
+ 			rcu_user_exit();
+ 			if (state == CONTEXT_USER) {
++				instr_begin();
+ 				vtime_user_exit(current);
+ 				trace_user_exit(0);
++				instr_end();
+ 			}
+ 		}
+ 		__this_cpu_write(context_tracking.state, CONTEXT_KERNEL);
+ 	}
+ 	context_tracking_recursion_exit();
+ }
+-NOKPROBE_SYMBOL(__context_tracking_exit);
+ EXPORT_SYMBOL_GPL(__context_tracking_exit);
+ 
+ void context_tracking_exit(enum ctx_state state)
+
