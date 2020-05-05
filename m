@@ -2,113 +2,162 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E17C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E69CC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E2C620661
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6478E24976
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:30:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jWS2YE5/"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="guBzv5p5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729312AbgEEU3X (ORCPT
+        id S1729164AbgEEUag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 16:29:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728135AbgEEU3X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 16:29:23 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C616AC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 13:29:21 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b188so3789759qkd.9
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 13:29:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WwYjE2GWrCctkg5EjStPqPCb7vhBmi7tE/P9TjGv2ws=;
-        b=jWS2YE5/k4w9jAJiOHdnPf2vhCEK04lsSUmN/uqo6B6PuxZ9i97vhOmdGUOfVSzWdN
-         xv1oBs8lYqPB9/d3YhjguC+h7JIUWFNQhS2YcT4MrENkWgfFBTQfVOePVjatG1Gtzapq
-         XbAn3lQQLD1vOeUoyA9KHCPytRYPiL5K7H3tWI6RxBNn9Dc2xT+VwBFKIENzsXJWFbi4
-         xkLRUbpHt1O7QCjRxJL+fEt3p8dUFiAahZ9vUjyCmN0woJeSoFmtCE1Y3MWN1qvMGAqX
-         zJC50kYZv1JNr5uinJOuv1ZB7HjKRh8hR/94TDfXIiHougFONoTuhK/1fay8zMPd4oTp
-         ISlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WwYjE2GWrCctkg5EjStPqPCb7vhBmi7tE/P9TjGv2ws=;
-        b=B4fPNo8HsW9c0zJLQ9iGHikKPTxIfhipVTv1bexwZgny8yiyfNldstaO13oBCUNFsT
-         3dHjszJiZHpVyaK65JWLCsydsg7Sz1iruAALVMbv+zXBmLd+g2dDzKqsWCVHTm2xkSbz
-         MzCwyveSTbYm3ue3e/aNVpp+eKMtMN1lfjCJs2xky/SLsBR8tg0sJ9hW6DtZP19MY8MO
-         BPyTRhk3NWnPcFvDmdg8xpD6miam/zrR8Mkrww69zK78Nhbm3NJhum/L1rdcf0vAyo0J
-         WZ2QokVvBdE2NKxwH2fp5w6cCzEPC3drCHjMdVeHwnKDYV76LyGGqqIBChG1oWhfHJXh
-         UPxw==
-X-Gm-Message-State: AGi0PubFuviLPrV9ZexB6cu6Tqm8x3g6IuVPFcgmpZ8RGo035rf9MuYY
-        bDmlKoqk2sxexqqI77W2eQk=
-X-Google-Smtp-Source: APiQypLBsuL5EJrI4oViXGYALNZSAMkPrqKzEylAsSSsoTTEXj5JA53hZBhQj6y6TLXI2+4DtCIC3Q==
-X-Received: by 2002:ae9:c301:: with SMTP id n1mr5351742qkg.300.1588710560838;
-        Tue, 05 May 2020 13:29:20 -0700 (PDT)
-Received: from betazed.lan1 (cpe-142-255-49-197.nyc.res.rr.com. [142.255.49.197])
-        by smtp.gmail.com with ESMTPSA id p22sm2554582qtb.91.2020.05.05.13.29.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 13:29:20 -0700 (PDT)
-From:   Tony Fischetti <tony.fischetti@gmail.com>
-To:     tglx@linutronix.de, mingo@redhat.com
-Cc:     bp@alien8.de, x86@kernel.org, hpa@zytor.com, bhe@redhat.com,
-        dyoung@redhat.com, dave.hansen@linux.intel.com, linux@roeck-us.net,
-        keescook@chromium.org, dan.j.williams@intel.com,
-        linux-kernel@vger.kernel.org, tony.fischetti@gmail.com
-Subject: [PATCH v2] x86/setup: Add boot messages about cmdline builtins
-Date:   Tue,  5 May 2020 16:29:11 -0400
-Message-Id: <20200505202911.10254-1-tony.fischetti@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 5 May 2020 16:30:36 -0400
+Received: from mail-eopbgr20083.outbound.protection.outlook.com ([40.107.2.83]:3079
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726350AbgEEUaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 16:30:35 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DxKnusg7SxJ0ojMbQ7DjCAxv5OJoCEhMTpizHGS5MKNqbqOxlgfY+EWXy77Rxfl8byR4kHETh4tv9KDPc0gFfXC2DOUAi0Sg4AYN3sPr8j0835EIS5t4nypS4lr4SoRVwZjj+4KIY4izWLTawH+PLrnTSL8cubY2FlgVEtDmd0g/CyAe2VxvqX4wRD8iHZiPwHsMrS5BkPbjUpKp1CpkuLf5QHRue6h6hoWSb6YrLMu6EmkZ/B+0bPiwbalFKFUwpeoCJ1yPuqgCtCv+PW/hqxKsK8FlYBe7jqlR1Ada/mEEORyY1BaM63jzA5oIZt613Rv5+Ggs4Xv1Gmb0Jgosvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TQcTYS0tvs8l6+Bcw2969g5h6EQJQDTsaiu8DB7+R1w=;
+ b=YGIT178uVuDLlxlHG+XbHrQOQMKgMUP1snqvkfilzSMJb1sMLKSzhkFr7Sfj8UUNDW6dbOm7yN2qgYPlbPsVzJ258as3S9BjFuCsw3lSQwk88Eu1pviFRxmDT++cbBO+k0frEhuQF+U0rXuS1GPNIapkoEPiNw7YBi0N+UR9ZRgWiQrQkp2WISQKHXM31f2N8ka1fK2Yjnyadd/COlFBWKN60vsXCp+PKNJvJ8XarTYPw4oIfsK7T+VF1pYmghNeZ48+3tfnPyoE7nETXUKktUnXofLuIx/3K+D5EUyxqeOPzDrL37Oe6qR8n9tIickXS7OO3k+FcCmmT0+iXEnFKw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TQcTYS0tvs8l6+Bcw2969g5h6EQJQDTsaiu8DB7+R1w=;
+ b=guBzv5p57hfbR0XmBhKYVvGOcY309kFqCE1pSPOGomvNAwPEddw8VQWtA9Ct8+Fn1hMluWe/w3zJDICcFQBBrIzjbngDemzBTBhEXztjk+ruVUjbiBLqk+/DGtmOErMhnpximyecYR4wXdffOYbiLFKIKSS1mkfVwVWahbabmmI=
+Received: from DB8PR04MB6828.eurprd04.prod.outlook.com (2603:10a6:10:113::21)
+ by DB8PR04MB6380.eurprd04.prod.outlook.com (2603:10a6:10:10c::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26; Tue, 5 May
+ 2020 20:30:29 +0000
+Received: from DB8PR04MB6828.eurprd04.prod.outlook.com
+ ([fe80::58e6:c037:d476:da0d]) by DB8PR04MB6828.eurprd04.prod.outlook.com
+ ([fe80::58e6:c037:d476:da0d%9]) with mapi id 15.20.2958.030; Tue, 5 May 2020
+ 20:30:29 +0000
+From:   Ioana Ciornei <ioana.ciornei@nxp.com>
+To:     Leo Li <leoyang.li@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Youri Querry <youri.querry_1@nxp.com>
+Subject: RE: [PATCH net] soc: fsl: dpio: properly compute the consumer index
+Thread-Topic: [PATCH net] soc: fsl: dpio: properly compute the consumer index
+Thread-Index: AQHWIxnwftGr9QjI3EaSI/Mop7aGF6iZ8TmAgAAAJpA=
+Date:   Tue, 5 May 2020 20:30:29 +0000
+Message-ID: <DB8PR04MB682898FB5705B70B1A54A661E0A70@DB8PR04MB6828.eurprd04.prod.outlook.com>
+References: <20200505201429.24360-1-ioana.ciornei@nxp.com>
+ <VE1PR04MB668714A83CC2EB638BC273208FA70@VE1PR04MB6687.eurprd04.prod.outlook.com>
+In-Reply-To: <VE1PR04MB668714A83CC2EB638BC273208FA70@VE1PR04MB6687.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [86.121.118.29]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 75e1389d-085f-48e0-5283-08d7f13326c8
+x-ms-traffictypediagnostic: DB8PR04MB6380:|DB8PR04MB6380:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB6380D0BCAA5DF86F944B78C9E0A70@DB8PR04MB6380.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3826;
+x-forefront-prvs: 0394259C80
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +Yz8w00UMw6HikZWRrhMzlWMkBjQIuX48zZUre7dNIbMCB+1jMAQQ1xfILOWdf++KLe8VskR6/kriWie+AtFZkKdUbCKx3YS14voElOCsbCINi7eAf/vdHiNkqyHUVUo4wbUeL1DYGkVZOuXJ8eXIWAWzwEdVp+tPX7j99lQKLmwapdEFg9x9jJSw/3jF1V9mxFDaWvrp3x7dCOgObAFL4WTKMPtgUhmBCj+Vf+DMKVFtBlCqSyx9en29iuK/gybo/ZeRGzK9DHBr5IxMlA7SE/14L+K2itsmoqkW1TaTFdqc/BfBL3F0sshjJLsPAaMqlNyPyidYeUb/c82SPPZRAVTaF7+kVzniDkTKRl3xVlBBOP63IM49j0jTLhjHXXGUCHHfRYg3VT8W9XSg2WwQYrGfzCozuQekwCrvM58Hme7CqJDlBY11Id/X9NHjd7P9hxiUki/IlMDrviCxIcLhw0YUTDb3nCPeIpsc1GbW7dHNgox8eOOIm8XxQEz/r1dBNTiRLElBJ6uNu0BQ0YX6g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6828.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(346002)(376002)(366004)(136003)(39840400004)(33430700001)(9686003)(55016002)(33656002)(2906002)(33440700001)(26005)(44832011)(71200400001)(4326008)(52536014)(186003)(53546011)(6506007)(7696005)(478600001)(66556008)(8936002)(8676002)(76116006)(5660300002)(64756008)(66446008)(66476007)(66946007)(86362001)(316002)(110136005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: BVN9/JZBaWojuHagAWKgFl5A5aLv0GuFAJX5fyl8H1nx7OiMDONBK+mxs2yKF5Bs8Lw8oy7TRXSVval2OaEzEEMC+JLFmlZVt0LbtZy3w4/TksunpoijgeDrblu/RDdFocyuyjCt7tod69Rwoo65KERj84zChoAVxeSuL57oMtTX15mLwkzS7x1MJy/I/zZaZk6zgNbu5+KlWX7DJYHw3gNZfbC+Rbp7gLkdzIGpo4BLTNj8MoP29dWLZh+f/0JDk4vuRrfNn/Kx4BaVxHCVbCHXOgCRhNUYEbkjfujjBBXwobpRatLXWaSmuNJAq6JmhOdILJ2a1jkMjCSDk/SKKVbKDsUfSlE4Za8wRtbeebUrA+4EE/R35SQU1k4GXVCieavRKp/MEpUC/ta8RI9ZJYPDbOpv4MwSziQPEF8tLw8zAMB35ovm4hbKH8e6otc4TCvIFR+NnSHEjMLbY/92Z3MuS38ma/V70r+IXw1YAtatGben5siIu5DCzvjDMkiDwRIKZ4GIL7HqmoIPQKiKah8DaxV5PiLk0LDZjCXur++OwkGJrPTa97tr9MT540OKJvn/J1PqWtE5OCsx4RLILQomFSfwbmYJM/QkhHD3SZhGRlv9c3djzXnjHmngT/8kEUdYWY4zyM4iXkOldNa7oPbVVbTHumDqhCFiqSr6JYn6jzNEw0zqxyi0GdgTdENNeTqQzqBLEhtTvsY/Du+QmJj9+M1uDYfLuD/d0RcQExMPnonzODq0cSLK8DZ7X/9sDIaq9fhydjM6tFNbmu3XFu/DPMNiB/9jGygKIaCFEgM=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 75e1389d-085f-48e0-5283-08d7f13326c8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 May 2020 20:30:29.1462
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Mzsmf//4XZ/FaEam/Ev09/OFOHJyKuja85PakWO5OW8YEcAVJhq2hTnVIdR2pyPoc5q5ccaq+VjKRQgXP0OY7A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6380
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While the ability to override or append to the boot command line has
-been added, the boot messages contain no information as to whether the
-cmdline was manipulated by the build-time options. This patch, for x86,
-adds boot messages specifying the intital cmdline, and the final cmdline
-after possible manipulation via the kernel config.
+> Subject: RE: [PATCH net] soc: fsl: dpio: properly compute the consumer in=
+dex
+>=20
+>=20
+>=20
+> > -----Original Message-----
+> > From: Ioana Ciornei <ioana.ciornei@nxp.com>
+> > Sent: Tuesday, May 5, 2020 3:14 PM
+> > To: davem@davemloft.net; netdev@vger.kernel.org; linux-
+> > kernel@vger.kernel.org
+> > Cc: Youri Querry <youri.querry_1@nxp.com>; Leo Li
+> > <leoyang.li@nxp.com>; Ioana Ciornei <ioana.ciornei@nxp.com>
+> > Subject: [PATCH net] soc: fsl: dpio: properly compute the consumer
+> > index
+> >
+> > Mask the consumer index before using it. Without this, we would be
+> > writing frame descriptors beyond the ring size supported by the QBMAN b=
+lock.
+> >
+> > Fixes: 3b2abda7d28c ("soc: fsl: dpio: Replace QMAN array mode with
+> > ring mode enqueue")
+> > Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+>=20
+> If you would like it go through net tree.
+>=20
+> Acked-by: Li Yang <leoyang.li@nxp.com>
+>=20
+> > ---
+> >
+> > I am sending this fix through the net tree since the bug manifests
+> > itself only on net-next and not the soc trees. This way it would be
+> > easier to integrate this sooner rather than later.
+>=20
+> Since the description of the patch says it fixes a patch included from so=
+c tree, it
+> is not very clear why this problem only exists on net-next.
+>=20
 
-Signed-off-by: Tony Fischetti <tony.fischetti@gmail.com>
----
- arch/x86/kernel/setup.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+The problem is only observed when we enqueue multiple frame descriptors at =
+once, which is happening only with my latest patch set on net-next that add=
+s this for the XDP_REDIRECT path.=20
 
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 4b3fa6cd3106..ee90dffcfd79 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -828,7 +828,7 @@ void __init setup_arch(char **cmdline_p)
- 	 */
- 	__flush_tlb_all();
- #else
--	printk(KERN_INFO "Command line: %s\n", boot_command_line);
-+	pr_info("Initial command line: %s\n", boot_command_line);
- 	boot_cpu_data.x86_phys_bits = MAX_PHYSMEM_BITS;
- #endif
- 
-@@ -916,6 +916,7 @@ void __init setup_arch(char **cmdline_p)
- #endif
- 
- 	strlcpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
-+	pr_info("Final command line: %s\n", command_line);
- 	*cmdline_p = command_line;
- 
- 	/*
--- 
-2.20.1
+> >
+> >  drivers/soc/fsl/dpio/qbman-portal.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/soc/fsl/dpio/qbman-portal.c
+> > b/drivers/soc/fsl/dpio/qbman-portal.c
+> > index 804b8ba9bf5c..23a1377971f4 100644
+> > --- a/drivers/soc/fsl/dpio/qbman-portal.c
+> > +++ b/drivers/soc/fsl/dpio/qbman-portal.c
+> > @@ -669,6 +669,7 @@ int qbman_swp_enqueue_multiple_direct(struct
+> > qbman_swp *s,
+> >  		eqcr_ci =3D s->eqcr.ci;
+> >  		p =3D s->addr_cena + QBMAN_CENA_SWP_EQCR_CI;
+> >  		s->eqcr.ci =3D qbman_read_register(s,
+> QBMAN_CINH_SWP_EQCR_CI);
+> > +		s->eqcr.ci &=3D full_mask;
+> >
+> >  		s->eqcr.available =3D qm_cyc_diff(s->eqcr.pi_ring_size,
+> >  					eqcr_ci, s->eqcr.ci);
+> > --
+> > 2.17.1
 
