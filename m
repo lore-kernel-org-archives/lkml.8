@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A4DC47259
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9DCC47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDB7D206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:14:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E4CA206D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:14:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Lkbi6tax"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Fip2R3VW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728936AbgEELOk (ORCPT
+        id S1728942AbgEELO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 07:14:40 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:22684 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbgEELOi (ORCPT
+        Tue, 5 May 2020 07:14:57 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:4965 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbgEELO4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 07:14:38 -0400
+        Tue, 5 May 2020 07:14:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1588677274; x=1620213274;
+  t=1588677292; x=1620213292;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=CTH9AA+VYEb2vGAseszqNOCqfYNxbvQjsL0K+B1y1u4=;
-  b=Lkbi6taxV+AKkM2uSrfOuMkE/b1g94xSQipz2lqotAAX4h6thIdV8voc
-   PRb01uPv70Iip7hYNW+HIS/hEwmRIOx6rT8O4PXGEhXLa4vL6Aq5IG8yg
-   QHyNL7dBFhoOlKyb/rp8mMRy9tT/zOcnBsRVoGlW29z4IXx+k0/5db2Q5
-   4=;
-IronPort-SDR: 3DXUIM95pJg2YBj7y9hyqb2xVpHNWI6h1VAy3EhPxcIBlYrxJDar2jK/c0E791L+ZkVWJzBgHn
- II9gkSCWc5QA==
+  bh=go/UebcZ7wM6P0xd/6n7FU3Bh9bDmMYFl6+W+MbG5r4=;
+  b=Fip2R3VWpqWwNUZv+EULaYWTLdK7uoueO0HfH3ZT/Ca0xX00MUS6lIIc
+   hQj3tO2njUh1BTaCOQzhL1fbvNDidFc+DaB11nrocBEK0JZuvFz5T07TT
+   fx/Mc53534e5F2zdPmFc/TBkxvE3t07HUmcyRxzrt4jMNiiBDA/pDj+hj
+   w=;
+IronPort-SDR: VEKqgnVqMLYwtJVuWTIePEePHJYUFcy3yZ2W+1iWqk6yweFjsQQxORZ9sqy8hYKvLu/Yv1bhVy
+ 96hel0PZHong==
 X-IronPort-AV: E=Sophos;i="5.73,354,1583193600"; 
-   d="scan'208";a="41335506"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-c300ac87.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 05 May 2020 11:14:32 +0000
+   d="scan'208";a="28673712"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-87a10be6.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 05 May 2020 11:14:48 +0000
 Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-c300ac87.us-west-2.amazon.com (Postfix) with ESMTPS id CCF15A251F;
-        Tue,  5 May 2020 11:14:29 +0000 (UTC)
+        by email-inbound-relay-2c-87a10be6.us-west-2.amazon.com (Postfix) with ESMTPS id 7FD66A1E4C;
+        Tue,  5 May 2020 11:14:46 +0000 (UTC)
 Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
  EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 5 May 2020 11:14:29 +0000
+ id 15.0.1497.2; Tue, 5 May 2020 11:14:46 +0000
 Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.92) by
  EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 5 May 2020 11:14:13 +0000
+ id 15.0.1497.2; Tue, 5 May 2020 11:14:29 +0000
 From:   SeongJae Park <sjpark@amazon.com>
 To:     <akpm@linux-foundation.org>
 CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
@@ -66,9 +66,9 @@ CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
         <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
         <linux-damon@amazon.com>, <linux-mm@kvack.org>,
         <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v10 13/16] Documentation/admin-guide/mm: Add a document for DAMON
-Date:   Tue, 5 May 2020 13:08:12 +0200
-Message-ID: <20200505110815.10532-14-sjpark@amazon.com>
+Subject: [PATCH v10 14/16] mm/damon: Add kunit tests
+Date:   Tue, 5 May 2020 13:08:13 +0200
+Message-ID: <20200505110815.10532-15-sjpark@amazon.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200505110815.10532-1-sjpark@amazon.com>
 References: <20200505110815.10532-1-sjpark@amazon.com>
@@ -84,462 +84,687 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: SeongJae Park <sjpark@amazon.de>
 
-This commit adds a simple document for DAMON under
-`Documentation/admin-guide/mm`.
+This commit adds kunit based unit tests for DAMON.
 
 Signed-off-by: SeongJae Park <sjpark@amazon.de>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
 ---
- .../admin-guide/mm/data_access_monitor.rst    | 428 ++++++++++++++++++
- Documentation/admin-guide/mm/index.rst        |   1 +
- 2 files changed, 429 insertions(+)
- create mode 100644 Documentation/admin-guide/mm/data_access_monitor.rst
+ mm/Kconfig      |  11 +
+ mm/damon-test.h | 622 ++++++++++++++++++++++++++++++++++++++++++++++++
+ mm/damon.c      |   6 +
+ 3 files changed, 639 insertions(+)
+ create mode 100644 mm/damon-test.h
 
-diff --git a/Documentation/admin-guide/mm/data_access_monitor.rst b/Documentation/admin-guide/mm/data_access_monitor.rst
-new file mode 100644
-index 000000000000..1d5e18d6ab9e
---- /dev/null
-+++ b/Documentation/admin-guide/mm/data_access_monitor.rst
-@@ -0,0 +1,428 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==========================
-+DAMON: Data Access MONitor
-+==========================
-+
-+Introduction
-+============
-+
-+Memory management decisions can be improved if finer data access information is
-+available.  However, because such finer information usually comes with higher
-+overhead, most systems including Linux forgives the potential benefit and rely
-+on only coarse information or some light-weight heuristics.
-+
-+A number of data access pattern awared memory management optimizations
-+consistently say the potential benefit is not small (2.55x speedup).  However,
-+none of those has successfully adopted into into the Linux kernel mainly due to
-+the absence of a scalable and efficient data access monitoring mechanism.
-+
-+DAMON is a data access monitoring subsystem for the problem.  It is 1) accurate
-+enough to be used for the DRAM level memory management, 2) light-weight enough
-+to be applied online, and 3) keeps predefined upper-bound overhead
-+regardless of the size of target workloads (thus scalable).
-+
-+DAMON is implemented as a standalone kernel module and provides several simple
-+interfaces.  Owing to that, though it has mainly designed for the kernel's
-+memory management mechanisms, it can be also used for a wide range of user
-+space programs and people.
-+
-+
-+Frequently Asked Questions
-+==========================
-+
-+Q: Why not integrated with perf?
-+A: From the perspective of perf like profilers, DAMON can be thought of as a
-+data source in kernel, like tracepoints, pressure stall information (psi), or
-+idle page tracking.  Thus, it can be easily integrated with those.  However,
-+this patchset doesn't provide a fancy perf integration because current step of
-+DAMON development is focused on its core logic only.  That said, DAMON already
-+provides two interfaces for user space programs, which based on debugfs and
-+tracepoint, respectively.  Using the tracepoint interface, you can use DAMON
-+with perf.  This patchset also provides the debugfs interface based user space
-+tool for DAMON.  It can be used to record, visualize, and analyze data access
-+pattern of target processes in a convenient way.
-+
-+Q: Why a new module, instead of extending perf or other tools?
-+A: First, DAMON aims to be used by other programs including the kernel.
-+Therefore, having dependency to specific tools like perf is not desirable.
-+Second, because it need to be lightweight as much as possible so that it can be
-+used online, any unnecessary overhead such as kernel - user space context
-+switching cost should be avoided.  These are the two most biggest reasons why
-+DAMON is implemented in the kernel space.  The idle page tracking subsystem
-+would be the kernel module that most seems similar to DAMON.  However, it's own
-+interface is not compatible with DAMON.  Also, the internal implementation of
-+it has no common part to be reused by DAMON.
-+
-+Q: Can 'perf mem' provide the data required for DAMON?
-+A: On the systems supporting 'perf mem', yes.  DAMON is using the PTE Accessed
-+bits in low level.  Other H/W or S/W features that can be used for the purpose
-+could be used.  However, as explained with above question, DAMON need to be
-+implemented in the kernel space.
-+
-+
-+Expected Use-cases
-+==================
-+
-+A straightforward usecase of DAMON would be the program behavior analysis.
-+With the DAMON output, users can confirm whether the program is running as
-+intended or not.  This will be useful for debuggings and tests of design
-+points.
-+
-+The monitored results can also be useful for counting the dynamic working set
-+size of workloads.  For the administration of memory overcommitted systems or
-+selection of the environments (e.g., containers providing different amount of
-+memory) for your workloads, this will be useful.
-+
-+If you are a programmer, you can optimize your program by managing the memory
-+based on the actual data access pattern.  For example, you can identify the
-+dynamic hotness of your data using DAMON and call ``mlock()`` to keep your hot
-+data in DRAM, or call ``madvise()`` with ``MADV_PAGEOUT`` to proactively
-+reclaim cold data.  Even though your program is guaranteed to not encounter
-+memory pressure, you can still improve the performance by applying the DAMON
-+outputs for call of ``MADV_HUGEPAGE`` and ``MADV_NOHUGEPAGE``.  More creative
-+optimizations would be possible.  Our evaluations of DAMON includes a
-+straightforward optimization using the ``mlock()``.  Please refer to the below
-+Evaluation section for more detail.
-+
-+As DAMON incurs very low overhead, such optimizations can be applied not only
-+offline, but also online.  Also, there is no reason to limit such optimizations
-+to the user space.  Several parts of the kernel's memory management mechanisms
-+could be also optimized using DAMON. The reclamation, the THP (de)promotion
-+decisions, and the compaction would be such a candidates.
-+
-+
-+Mechanisms of DAMON
-+===================
-+
-+
-+Basic Access Check
-+------------------
-+
-+DAMON basically reports what pages are how frequently accessed.  The report is
-+passed to users in binary format via a ``result file`` which users can set it's
-+path.  Note that the frequency is not an absolute number of accesses, but a
-+relative frequency among the pages of the target workloads.
-+
-+Users can also control the resolution of the reports by setting two time
-+intervals, ``sampling interval`` and ``aggregation interval``.  In detail,
-+DAMON checks access to each page per ``sampling interval``, aggregates the
-+results (counts the number of the accesses to each page), and reports the
-+aggregated results per ``aggregation interval``.  For the access check of each
-+page, DAMON uses the Accessed bits of PTEs.
-+
-+This is thus similar to the previously mentioned periodic access checks based
-+mechanisms, which overhead is increasing as the size of the target process
-+grows.
-+
-+
-+Region Based Sampling
-+---------------------
-+
-+To avoid the unbounded increase of the overhead, DAMON groups a number of
-+adjacent pages that assumed to have same access frequencies into a region.  As
-+long as the assumption (pages in a region have same access frequencies) is
-+kept, only one page in the region is required to be checked.  Thus, for each
-+``sampling interval``, DAMON randomly picks one page in each region and clears
-+its Accessed bit.  After one more ``sampling interval``, DAMON reads the
-+Accessed bit of the page and increases the access frequency of the region if
-+the bit has set meanwhile.  Therefore, the monitoring overhead is controllable
-+by setting the number of regions.  DAMON allows users to set the minimal and
-+maximum number of regions for the trade-off.
-+
-+Except the assumption, this is almost same with the above-mentioned
-+miniature-like static region based sampling.  In other words, this scheme
-+cannot preserve the quality of the output if the assumption is not guaranteed.
-+
-+
-+Adaptive Regions Adjustment
-+---------------------------
-+
-+At the beginning of the monitoring, DAMON constructs the initial regions by
-+evenly splitting the memory mapped address space of the process into the
-+user-specified minimal number of regions.  In this initial state, the
-+assumption is normally not kept and thus the quality could be low.  To keep the
-+assumption as much as possible, DAMON adaptively merges and splits each region.
-+For each ``aggregation interval``, it compares the access frequencies of
-+adjacent regions and merges those if the frequency difference is small.  Then,
-+after it reports and clears the aggregated access frequency of each region, it
-+splits each region into two regions if the total number of regions is smaller
-+than the half of the user-specified maximum number of regions.
-+
-+In this way, DAMON provides its best-effort quality and minimal overhead while
-+keeping the bounds users set for their trade-off.
-+
-+
-+Applying Complex and Dynamic Memory Mappings
-+--------------------------------------------
-+
-+Only a number of small parts in the super-huge virtual address space of the
-+processes is mapped to physical memory and accessed.  Thus, tracking the
-+unmapped address regions is just wasteful.  However, because DAMON can deal
-+with some level of noises using the adaptive regions adjustment mechanism,
-+tracking every mapping is not strictly required but could even incur a high
-+overhead in somce cases.  That said, too huge unmapped areas inside the
-+monitoring target should be removed to not take the time for the adaptive
-+mechanism.
-+
-+For the reason, DAMON converts the complex mappings to three distinct regions
-+that cover every mapped areas of the address space.  Also the two gaps between
-+the three regions are the two biggest unmapped areas in the given address
-+space.  The two biggest unmapped areas might be the gap between the heap and
-+the uppermost mmap()-ed region, and the gap between the lowermost mmap()-ed
-+region and the stack will be two biggest unmapped regions.  Because these gaps
-+are exceptionally huge areas in usual address space, excluding these two
-+biggest unmapped regions will be sufficient to make a trade-off.
-+
-+To further minimize dynamic mapping changes applying overhead, DAMON check the
-+dynamic memory mapping changes and applies it to the abstracted target area
-+only for each of a user-specified time interval (``regions update interval``).
-+
-+
-+``debugfs`` Interface
-+=====================
-+
-+DAMON exports four files, ``attrs``, ``pids``, ``record``, and ``monitor_on``
-+under its debugfs directory, ``<debugfs>/damon/``.
-+
-+Attributes
-+----------
-+
-+Users can read and write the ``sampling interval``, ``aggregation interval``,
-+``regions update interval``, and min/max number of monitoring target regions by
-+reading from and writing to the ``attrs`` file.  For example, below commands
-+set those values to 5 ms, 100 ms, 1,000 ms, 10, 1000 and check it again::
-+
-+    # cd <debugfs>/damon
-+    # echo 5000 100000 1000000 10 1000 > attrs
-+    # cat attrs
-+    5000 100000 1000000 10 1000
-+
-+Target PIDs
-+-----------
-+
-+Users can read and write the pids of current monitoring target processes by
-+reading from and writing to the ``pids`` file.  For example, below commands set
-+processes having pids 42 and 4242 as the processes to be monitored and check it
-+again::
-+
-+    # cd <debugfs>/damon
-+    # echo 42 4242 > pids
-+    # cat pids
-+    42 4242
-+
-+Note that setting the pids doesn't start the monitoring.
-+
-+Record
-+------
-+
-+DAMON supports direct monitoring result record feature.  The recorded results
-+are first written to a buffer and flushed to a file in batch.  Users can set
-+the size of the buffer and the path to the result file by reading from and
-+writing to the ``record`` file.  For example, below commands set the buffer to
-+be 4 KiB and the result to be saved in ``/damon.data``.
-+
-+    # cd <debugfs>/damon
-+    # echo "4096 /damon.data" > record
-+    # cat record
-+    4096 /damon.data
-+
-+Turning On/Off
-+--------------
-+
-+You can check current status, start and stop the monitoring by reading from and
-+writing to the ``monitor_on`` file.  Writing ``on`` to the file starts DAMON to
-+monitor the target processes with the attributes.  Writing ``off`` to the file
-+stops DAMON.  DAMON also stops if every target processes is terminated.
-+Below example commands turn on, off, and check status of DAMON::
-+
-+    # cd <debugfs>/damon
-+    # echo on > monitor_on
-+    # echo off > monitor_on
-+    # cat monitor_on
-+    off
-+
-+Please note that you cannot write to the ``attrs`` and ``pids`` files while the
-+monitoring is turned on.  If you write to the files while DAMON is running, an
-+error code such as ``-EBUSY`` will be returned.
-+
-+
-+User Space Tool for DAMON
-+=========================
-+
-+There is a user space tool for DAMON, ``/tools/damon/damo``.  It provides
-+another user interface which more convenient than the debugfs interface.
-+Nevertheless, note that it is only aimed to be used for minimal reference of
-+the DAMON's debugfs interfaces and for tests of the DAMON itself.  Based on the
-+debugfs interface, you can create another cool and more convenient user space
-+tools.
-+
-+The interface of the tool is basically subcommand based.  You can almost always
-+use ``-h`` option to get help of the use of each subcommand.  Currently, it
-+supports two subcommands, ``record`` and ``report``.
-+
-+
-+Recording Data Access Pattern
-+-----------------------------
-+
-+The ``record`` subcommand records the data access pattern of target process in
-+a file (``./damon.data`` by default) using DAMON.  You can specifies the target
-+as either pid or a command for an execution of the process.  Below example
-+shows a command target usage::
-+
-+    # cd <kernel>/tools/damon/
-+    # ./damo record "sleep 5"
-+
-+The tool will execute ``sleep 5`` by itself and record the data access patterns
-+of the process.  Below example shows a pid target usage::
-+
-+    # sleep 5 &
-+    # ./damo record `pidof sleep`
-+
-+You can set more detailed attributes and path to the recorded data file using
-+optional arguments to the subcommand.  Use the ``-h`` option for more help.
-+
-+
-+Analyzing Data Access Pattern
-+-----------------------------
-+
-+The ``report`` subcommand reads a data access pattern record file (if not
-+explicitly specified, reads ``./damon.data`` file if exists) and generates
-+reports of various types.  You can specify what type of report you want using
-+sub-subcommand to ``report`` subcommand.  For supported types, pass the ``-h``
-+option to ``report`` subcommand.
-+
-+
-+raw
-+~~~
-+
-+``raw`` sub-subcommand simply transforms the record, which is storing the data
-+access patterns in binary format to human readable text.  For example::
-+
-+    $ ./damo report raw
-+    start_time:  193485829398
-+    rel time:                0
-+    nr_tasks:  1
-+    pid:  1348
-+    nr_regions:  4
-+    560189609000-56018abce000(  22827008):  0
-+    7fbdff59a000-7fbdffaf1a00(   5601792):  0
-+    7fbdffaf1a00-7fbdffbb5000(    800256):  1
-+    7ffea0dc0000-7ffea0dfd000(    249856):  0
-+
-+    rel time:        100000731
-+    nr_tasks:  1
-+    pid:  1348
-+    nr_regions:  6
-+    560189609000-56018abce000(  22827008):  0
-+    7fbdff59a000-7fbdff8ce933(   3361075):  0
-+    7fbdff8ce933-7fbdffaf1a00(   2240717):  1
-+    7fbdffaf1a00-7fbdffb66d99(    480153):  0
-+    7fbdffb66d99-7fbdffbb5000(    320103):  1
-+    7ffea0dc0000-7ffea0dfd000(    249856):  0
-+
-+The first line shows recording started timestamp (nanosecond).  Records of data
-+access patterns are following this.  Each record is sperated by a blank line.
-+Each record first specifies the recorded time (``rel time``), number of
-+monitored tasks in this record (``nr_tasks``).  Multiple number of records of
-+data access pattern for each task continue.  Each data access pattern for each
-+task shows first it's pid (``pid``) and number of monitored virtual address
-+regions in this access pattern (``nr_regions``).  After that, each line shows
-+start/end address, size, and number of monitored accesses to the region for
-+each of the regions.
-+
-+
-+heats
-+~~~~~
-+
-+The ``raw`` type shows detailed information but it is exhaustive to manually
-+read and analyzed.  For the reason, ``heats`` plots the data in heatmap form,
-+using time as x-axis, virtual address as y-axis, and access frequency as
-+z-axis.  Also, users set the resolution and start/end point of each axis via
-+optional arguments.  For example::
-+
-+    $ ./damo report heats --tres 3 --ares 3
-+    0               0               0.0
-+    0               7609002         0.0
-+    0               15218004        0.0
-+    66112620851     0               0.0
-+    66112620851     7609002         0.0
-+    66112620851     15218004        0.0
-+    132225241702    0               0.0
-+    132225241702    7609002         0.0
-+    132225241702    15218004        0.0
-+
-+This command shows the recorded access pattern of the ``sleep`` command using 3
-+data points for each of time axis and address axis.  Therefore, it shows 9 data
-+points in total.
-+
-+Users can easily converts this text output into heatmap image or other 3D
-+representation using various tools such as 'gnuplot'.  ``raw`` sub-subcommand
-+also provides 'gnuplot' based heatmap image creation.  For this, you can use
-+``--heatmap`` option.  Also, note that because it uses 'gnuplot' internally, it
-+will fail if 'gnuplot' is not installed on your system.  For example::
-+
-+    $ ./damo report heats --heatmap heatmap.png
-+
-+Creates ``heatmap.png`` file containing the heatmap image.  It supports
-+``pdf``, ``png``, ``jpeg``, and ``svg``.
-+
-+For proper zoom in / zoom out, you need to see the layout of the record.  For
-+that, use '--guide' option.  If the option is given, it will provide useful
-+information about the records in the record file.  For example::
-+
-+    $ ./damo report heats --guide
-+    pid:1348
-+    time: 193485829398-198337863555 (4852034157)
-+    region   0: 00000094564599762944-00000094564622589952 (22827008)
-+    region   1: 00000140454009610240-00000140454016012288 (6402048)
-+    region   2: 00000140731597193216-00000140731597443072 (249856)
-+
-+The output shows monitored regions (start and end addresses in byte) and
-+monitored time duration (start and end time in nanosecond) of each target task.
-+Therefore, it would be wise to plot only each region rather than plotting
-+entire address space in one heatmap because the gaps between the regions are so
-+huge in this case.
-+
-+
-+wss
-+~~~
-+
-+The ``wss`` type shows the distribution or time-varying working set sizes of
-+the recorded workload using the records.  For example::
-+
-+    $ ./damo report wss
-+    # <percentile> <wss>
-+    # pid   1348
-+    # avr:  66228
-+    0       0
-+    25      0
-+    50      0
-+    75      0
-+    100     1920615
-+
-+Without any option, it shows the distribution of the working set sizes as
-+above.  Basically it shows 0th, 25th, 50th, 75th, and 100th percentile and
-+average of the measured working set sizes in the access pattern records.  In
-+this case, the working set size was zero for 75th percentile but 1,920,615
-+bytes in max and 66,228 in average.
-+
-+By setting the sort key of the percentile using '--sortby', you can also see
-+how the working set size is chronologically changed.  For example::
-+
-+    $ ./damo report wss --sortby time
-+    # <percentile> <wss>
-+    # pid   1348
-+    # avr:  66228
-+    0       0
-+    25      0
-+    50      0
-+    75      0
-+    100     0
-+
-+The average is still 66,228.  And, because we sorted the working set using
-+recorded time and the access is very short, we cannot show when the access
-+made.
-+
-+Users can specify the resolution of the distribution (``--range``).  It also
-+supports 'gnuplot' based simple visualization (``--plot``) of the distribution.
-diff --git a/Documentation/admin-guide/mm/index.rst b/Documentation/admin-guide/mm/index.rst
-index 11db46448354..d3d0ba373eb6 100644
---- a/Documentation/admin-guide/mm/index.rst
-+++ b/Documentation/admin-guide/mm/index.rst
-@@ -27,6 +27,7 @@ the Linux memory management.
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 9ea49633a6df..81ace52f1c23 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -751,4 +751,15 @@ config DAMON
+ 	  and 2) sufficiently light-weight so that it can be applied online.
+ 	  If unsure, say N.
  
-    concepts
-    cma_debugfs
-+   data_access_monitor
-    hugetlbpage
-    idle_page_tracking
-    ksm
++config DAMON_KUNIT_TEST
++	bool "Test for damon"
++	depends on DAMON=y && KUNIT
++	help
++	  This builds the DAMON Kunit test suite.
++
++	  For more information on KUnit and unit tests in general, please refer
++	  to the KUnit documentation.
++
++	  If unsure, say N.
++
+ endmenu
+diff --git a/mm/damon-test.h b/mm/damon-test.h
+new file mode 100644
+index 000000000000..851c2062a480
+--- /dev/null
++++ b/mm/damon-test.h
+@@ -0,0 +1,622 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Data Access Monitor Unit Tests
++ *
++ * Copyright 2019 Amazon.com, Inc. or its affiliates.  All rights reserved.
++ *
++ * Author: SeongJae Park <sjpark@amazon.de>
++ */
++
++#ifdef CONFIG_DAMON_KUNIT_TEST
++
++#ifndef _DAMON_TEST_H
++#define _DAMON_TEST_H
++
++#include <kunit/test.h>
++
++static void damon_test_str_to_pids(struct kunit *test)
++{
++	char *question;
++	int *answers;
++	int expected[] = {12, 35, 46};
++	ssize_t nr_integers = 0, i;
++
++	question = "123";
++	answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
++	KUNIT_EXPECT_EQ(test, (ssize_t)1, nr_integers);
++	KUNIT_EXPECT_EQ(test, 123, answers[0]);
++	kfree(answers);
++
++	question = "123abc";
++	answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
++	KUNIT_EXPECT_EQ(test, (ssize_t)1, nr_integers);
++	KUNIT_EXPECT_EQ(test, 123, answers[0]);
++	kfree(answers);
++
++	question = "a123";
++	answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
++	KUNIT_EXPECT_EQ(test, (ssize_t)0, nr_integers);
++	KUNIT_EXPECT_PTR_EQ(test, answers, (int *)NULL);
++
++	question = "12 35";
++	answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
++	KUNIT_EXPECT_EQ(test, (ssize_t)2, nr_integers);
++	for (i = 0; i < nr_integers; i++)
++		KUNIT_EXPECT_EQ(test, expected[i], answers[i]);
++	kfree(answers);
++
++	question = "12 35 46";
++	answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
++	KUNIT_EXPECT_EQ(test, (ssize_t)3, nr_integers);
++	for (i = 0; i < nr_integers; i++)
++		KUNIT_EXPECT_EQ(test, expected[i], answers[i]);
++	kfree(answers);
++
++	question = "12 35 abc 46";
++	answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
++	KUNIT_EXPECT_EQ(test, (ssize_t)2, nr_integers);
++	for (i = 0; i < 2; i++)
++		KUNIT_EXPECT_EQ(test, expected[i], answers[i]);
++	kfree(answers);
++
++	question = "";
++	answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
++	KUNIT_EXPECT_EQ(test, (ssize_t)0, nr_integers);
++	KUNIT_EXPECT_PTR_EQ(test, (int *)NULL, answers);
++	kfree(answers);
++
++	question = "\n";
++	answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
++	KUNIT_EXPECT_EQ(test, (ssize_t)0, nr_integers);
++	KUNIT_EXPECT_PTR_EQ(test, (int *)NULL, answers);
++	kfree(answers);
++}
++
++static void damon_test_regions(struct kunit *test)
++{
++	struct damon_region *r;
++	struct damon_task *t;
++
++	r = damon_new_region(&damon_user_ctx, 1, 2);
++	KUNIT_EXPECT_EQ(test, 1ul, r->vm_start);
++	KUNIT_EXPECT_EQ(test, 2ul, r->vm_end);
++	KUNIT_EXPECT_EQ(test, 0u, r->nr_accesses);
++
++	t = damon_new_task(42);
++	KUNIT_EXPECT_EQ(test, 0u, nr_damon_regions(t));
++
++	damon_add_region(r, t);
++	KUNIT_EXPECT_EQ(test, 1u, nr_damon_regions(t));
++
++	damon_del_region(r);
++	KUNIT_EXPECT_EQ(test, 0u, nr_damon_regions(t));
++
++	damon_free_task(t);
++}
++
++static void damon_test_tasks(struct kunit *test)
++{
++	struct damon_ctx *c = &damon_user_ctx;
++	struct damon_task *t;
++
++	t = damon_new_task(42);
++	KUNIT_EXPECT_EQ(test, 42, t->pid);
++	KUNIT_EXPECT_EQ(test, 0u, nr_damon_tasks(c));
++
++	damon_add_task(&damon_user_ctx, t);
++	KUNIT_EXPECT_EQ(test, 1u, nr_damon_tasks(c));
++
++	damon_destroy_task(t);
++	KUNIT_EXPECT_EQ(test, 0u, nr_damon_tasks(c));
++}
++
++static void damon_test_set_pids(struct kunit *test)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	int pids[] = {1, 2, 3};
++	char buf[64];
++
++	damon_set_pids(ctx, pids, 3);
++	damon_sprint_pids(ctx, buf, 64);
++	KUNIT_EXPECT_STREQ(test, (char *)buf, "1 2 3\n");
++
++	damon_set_pids(ctx, NULL, 0);
++	damon_sprint_pids(ctx, buf, 64);
++	KUNIT_EXPECT_STREQ(test, (char *)buf, "\n");
++
++	damon_set_pids(ctx, (int []){1, 2}, 2);
++	damon_sprint_pids(ctx, buf, 64);
++	KUNIT_EXPECT_STREQ(test, (char *)buf, "1 2\n");
++
++	damon_set_pids(ctx, (int []){2}, 1);
++	damon_sprint_pids(ctx, buf, 64);
++	KUNIT_EXPECT_STREQ(test, (char *)buf, "2\n");
++
++	damon_set_pids(ctx, NULL, 0);
++	damon_sprint_pids(ctx, buf, 64);
++	KUNIT_EXPECT_STREQ(test, (char *)buf, "\n");
++}
++
++/*
++ * Test damon_three_regions_in_vmas() function
++ *
++ * DAMON converts the complex and dynamic memory mappings of each target task
++ * to three discontiguous regions which cover every mapped areas.  However, the
++ * three regions should not include the two biggest unmapped areas in the
++ * original mapping, because the two biggest areas are normally the areas
++ * between 1) heap and the mmap()-ed regions, and 2) the mmap()-ed regions and
++ * stack.  Because these two unmapped areas are very huge but obviously never
++ * accessed, covering the region is just a waste.
++ *
++ * 'damon_three_regions_in_vmas() receives an address space of a process.  It
++ * first identifies the start of mappings, end of mappings, and the two biggest
++ * unmapped areas.  After that, based on the information, it constructs the
++ * three regions and returns.  For more detail, refer to the comment of
++ * 'damon_init_regions_of()' function definition in 'mm/damon.c' file.
++ *
++ * For example, suppose virtual address ranges of 10-20, 20-25, 200-210,
++ * 210-220, 300-305, and 307-330 (Other comments represent this mappings in
++ * more short form: 10-20-25, 200-210-220, 300-305, 307-330) of a process are
++ * mapped.  To cover every mappings, the three regions should start with 10,
++ * and end with 305.  The process also has three unmapped areas, 25-200,
++ * 220-300, and 305-307.  Among those, 25-200 and 220-300 are the biggest two
++ * unmapped areas, and thus it should be converted to three regions of 10-25,
++ * 200-220, and 300-330.
++ */
++static void damon_test_three_regions_in_vmas(struct kunit *test)
++{
++	struct region regions[3] = {0,};
++	/* 10-20-25, 200-210-220, 300-305, 307-330 */
++	struct vm_area_struct vmas[] = {
++		(struct vm_area_struct) {.vm_start = 10, .vm_end = 20},
++		(struct vm_area_struct) {.vm_start = 20, .vm_end = 25},
++		(struct vm_area_struct) {.vm_start = 200, .vm_end = 210},
++		(struct vm_area_struct) {.vm_start = 210, .vm_end = 220},
++		(struct vm_area_struct) {.vm_start = 300, .vm_end = 305},
++		(struct vm_area_struct) {.vm_start = 307, .vm_end = 330},
++	};
++	vmas[0].vm_next = &vmas[1];
++	vmas[1].vm_next = &vmas[2];
++	vmas[2].vm_next = &vmas[3];
++	vmas[3].vm_next = &vmas[4];
++	vmas[4].vm_next = &vmas[5];
++	vmas[5].vm_next = NULL;
++
++	damon_three_regions_in_vmas(&vmas[0], regions);
++
++	KUNIT_EXPECT_EQ(test, 10ul, regions[0].start);
++	KUNIT_EXPECT_EQ(test, 25ul, regions[0].end);
++	KUNIT_EXPECT_EQ(test, 200ul, regions[1].start);
++	KUNIT_EXPECT_EQ(test, 220ul, regions[1].end);
++	KUNIT_EXPECT_EQ(test, 300ul, regions[2].start);
++	KUNIT_EXPECT_EQ(test, 330ul, regions[2].end);
++}
++
++/* Clean up global state of damon */
++static void damon_cleanup_global_state(void)
++{
++	struct damon_task *t, *next;
++
++	damon_for_each_task_safe(&damon_user_ctx, t, next)
++		damon_destroy_task(t);
++
++	damon_user_ctx.rbuf_offset = 0;
++}
++
++/*
++ * Test kdamond_reset_aggregated()
++ *
++ * DAMON checks access to each region and aggregates this information as the
++ * access frequency of each region.  In detail, it increases '->nr_accesses' of
++ * regions that an access has confirmed.  'kdamond_reset_aggregated()' flushes
++ * the aggregated information ('->nr_accesses' of each regions) to the result
++ * buffer.  As a result of the flushing, the '->nr_accesses' of regions are
++ * initialized to zero.
++ */
++static void damon_test_aggregate(struct kunit *test)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	int pids[] = {1, 2, 3};
++	unsigned long saddr[][3] = {{10, 20, 30}, {5, 42, 49}, {13, 33, 55} };
++	unsigned long eaddr[][3] = {{15, 27, 40}, {31, 45, 55}, {23, 44, 66} };
++	unsigned long accesses[][3] = {{42, 95, 84}, {10, 20, 30}, {0, 1, 2} };
++	struct damon_task *t;
++	struct damon_region *r;
++	int it, ir;
++	ssize_t sz, sr, sp;
++
++	damon_set_recording(ctx, 256, "damon.data");
++	damon_set_pids(ctx, pids, 3);
++
++	it = 0;
++	damon_for_each_task(ctx, t) {
++		for (ir = 0; ir < 3; ir++) {
++			r = damon_new_region(ctx,
++					saddr[it][ir], eaddr[it][ir]);
++			r->nr_accesses = accesses[it][ir];
++			damon_add_region(r, t);
++		}
++		it++;
++	}
++	kdamond_reset_aggregated(ctx);
++	it = 0;
++	damon_for_each_task(ctx, t) {
++		ir = 0;
++		/* '->nr_accesses' should be zeroed */
++		damon_for_each_region(r, t) {
++			KUNIT_EXPECT_EQ(test, 0u, r->nr_accesses);
++			ir++;
++		}
++		/* regions should be preserved */
++		KUNIT_EXPECT_EQ(test, 3, ir);
++		it++;
++	}
++	/* tasks also should be preserved */
++	KUNIT_EXPECT_EQ(test, 3, it);
++
++	/* The aggregated information should be written in the buffer */
++	sr = sizeof(r->vm_start) + sizeof(r->vm_end) + sizeof(r->nr_accesses);
++	sp = sizeof(t->pid) + sizeof(unsigned int) + 3 * sr;
++	sz = sizeof(struct timespec64) + sizeof(unsigned int) + 3 * sp;
++	KUNIT_EXPECT_EQ(test, (unsigned int)sz, ctx->rbuf_offset);
++
++	damon_set_recording(ctx, 0, "damon.data");
++	damon_cleanup_global_state();
++}
++
++static void damon_test_write_rbuf(struct kunit *test)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	char *data;
++
++	damon_set_recording(&damon_user_ctx, 256, "damon.data");
++
++	data = "hello";
++	damon_write_rbuf(ctx, data, strnlen(data, 256));
++	KUNIT_EXPECT_EQ(test, ctx->rbuf_offset, 5u);
++
++	damon_write_rbuf(ctx, data, 0);
++	KUNIT_EXPECT_EQ(test, ctx->rbuf_offset, 5u);
++
++	KUNIT_EXPECT_STREQ(test, (char *)ctx->rbuf, data);
++	damon_set_recording(&damon_user_ctx, 0, "damon.data");
++}
++
++static struct damon_region *__nth_region_of(struct damon_task *t, int idx)
++{
++	struct damon_region *r;
++	unsigned int i = 0;
++
++	damon_for_each_region(r, t) {
++		if (i++ == idx)
++			return r;
++	}
++
++	return NULL;
++}
++
++/*
++ * Test 'damon_apply_three_regions()'
++ *
++ * test			kunit object
++ * regions		an array containing start/end addresses of current
++ *			monitoring target regions
++ * nr_regions		the number of the addresses in 'regions'
++ * three_regions	The three regions that need to be applied now
++ * expected		start/end addresses of monitoring target regions that
++ *			'three_regions' are applied
++ * nr_expected		the number of addresses in 'expected'
++ *
++ * The memory mapping of the target processes changes dynamically.  To follow
++ * the change, DAMON periodically reads the mappings, simplifies it to the
++ * three regions, and updates the monitoring target regions to fit in the three
++ * regions.  The update of current target regions is the role of
++ * 'damon_apply_three_regions()'.
++ *
++ * This test passes the given target regions and the new three regions that
++ * need to be applied to the function and check whether it updates the regions
++ * as expected.
++ */
++static void damon_do_test_apply_three_regions(struct kunit *test,
++				unsigned long *regions, int nr_regions,
++				struct region *three_regions,
++				unsigned long *expected, int nr_expected)
++{
++	struct damon_task *t;
++	struct damon_region *r;
++	int i;
++
++	t = damon_new_task(42);
++	for (i = 0; i < nr_regions / 2; i++) {
++		r = damon_new_region(&damon_user_ctx,
++				regions[i * 2], regions[i * 2 + 1]);
++		damon_add_region(r, t);
++	}
++	damon_add_task(&damon_user_ctx, t);
++
++	damon_apply_three_regions(&damon_user_ctx, t, three_regions);
++
++	for (i = 0; i < nr_expected / 2; i++) {
++		r = __nth_region_of(t, i);
++		KUNIT_EXPECT_EQ(test, r->vm_start, expected[i * 2]);
++		KUNIT_EXPECT_EQ(test, r->vm_end, expected[i * 2 + 1]);
++	}
++
++	damon_cleanup_global_state();
++}
++
++/*
++ * This function test most common case where the three big regions are only
++ * slightly changed.  Target regions should adjust their boundary (10-20-30,
++ * 50-55, 70-80, 90-100) to fit with the new big regions or remove target
++ * regions (57-79) that now out of the three regions.
++ */
++static void damon_test_apply_three_regions1(struct kunit *test)
++{
++	/* 10-20-30, 50-55-57-59, 70-80-90-100 */
++	unsigned long regions[] = {10, 20, 20, 30, 50, 55, 55, 57, 57, 59,
++				70, 80, 80, 90, 90, 100};
++	/* 5-27, 45-55, 73-104 */
++	struct region new_three_regions[3] = {
++		(struct region){.start = 5, .end = 27},
++		(struct region){.start = 45, .end = 55},
++		(struct region){.start = 73, .end = 104} };
++	/* 5-20-27, 45-55, 73-80-90-104 */
++	unsigned long expected[] = {5, 20, 20, 27, 45, 55,
++				73, 80, 80, 90, 90, 104};
++
++	damon_do_test_apply_three_regions(test, regions, ARRAY_SIZE(regions),
++			new_three_regions, expected, ARRAY_SIZE(expected));
++}
++
++/*
++ * Test slightly bigger change.  Similar to above, but the second big region
++ * now require two target regions (50-55, 57-59) to be removed.
++ */
++static void damon_test_apply_three_regions2(struct kunit *test)
++{
++	/* 10-20-30, 50-55-57-59, 70-80-90-100 */
++	unsigned long regions[] = {10, 20, 20, 30, 50, 55, 55, 57, 57, 59,
++				70, 80, 80, 90, 90, 100};
++	/* 5-27, 56-57, 65-104 */
++	struct region new_three_regions[3] = {
++		(struct region){.start = 5, .end = 27},
++		(struct region){.start = 56, .end = 57},
++		(struct region){.start = 65, .end = 104} };
++	/* 5-20-27, 56-57, 65-80-90-104 */
++	unsigned long expected[] = {5, 20, 20, 27, 56, 57,
++				65, 80, 80, 90, 90, 104};
++
++	damon_do_test_apply_three_regions(test, regions, ARRAY_SIZE(regions),
++			new_three_regions, expected, ARRAY_SIZE(expected));
++}
++
++/*
++ * Test a big change.  The second big region has totally freed and mapped to
++ * different area (50-59 -> 61-63).  The target regions which were in the old
++ * second big region (50-55-57-59) should be removed and new target region
++ * covering the second big region (61-63) should be created.
++ */
++static void damon_test_apply_three_regions3(struct kunit *test)
++{
++	/* 10-20-30, 50-55-57-59, 70-80-90-100 */
++	unsigned long regions[] = {10, 20, 20, 30, 50, 55, 55, 57, 57, 59,
++				70, 80, 80, 90, 90, 100};
++	/* 5-27, 61-63, 65-104 */
++	struct region new_three_regions[3] = {
++		(struct region){.start = 5, .end = 27},
++		(struct region){.start = 61, .end = 63},
++		(struct region){.start = 65, .end = 104} };
++	/* 5-20-27, 61-63, 65-80-90-104 */
++	unsigned long expected[] = {5, 20, 20, 27, 61, 63,
++				65, 80, 80, 90, 90, 104};
++
++	damon_do_test_apply_three_regions(test, regions, ARRAY_SIZE(regions),
++			new_three_regions, expected, ARRAY_SIZE(expected));
++}
++
++/*
++ * Test another big change.  Both of the second and third big regions (50-59
++ * and 70-100) has totally freed and mapped to different area (30-32 and
++ * 65-68).  The target regions which were in the old second and third big
++ * regions should now be removed and new target regions covering the new second
++ * and third big regions should be crated.
++ */
++static void damon_test_apply_three_regions4(struct kunit *test)
++{
++	/* 10-20-30, 50-55-57-59, 70-80-90-100 */
++	unsigned long regions[] = {10, 20, 20, 30, 50, 55, 55, 57, 57, 59,
++				70, 80, 80, 90, 90, 100};
++	/* 5-7, 30-32, 65-68 */
++	struct region new_three_regions[3] = {
++		(struct region){.start = 5, .end = 7},
++		(struct region){.start = 30, .end = 32},
++		(struct region){.start = 65, .end = 68} };
++	/* expect 5-7, 30-32, 65-68 */
++	unsigned long expected[] = {5, 7, 30, 32, 65, 68};
++
++	damon_do_test_apply_three_regions(test, regions, ARRAY_SIZE(regions),
++			new_three_regions, expected, ARRAY_SIZE(expected));
++}
++
++static void damon_test_split_evenly(struct kunit *test)
++{
++	struct damon_ctx *c = &damon_user_ctx;
++	struct damon_task *t;
++	struct damon_region *r;
++	unsigned long i;
++
++	KUNIT_EXPECT_EQ(test, damon_split_region_evenly(c, NULL, 5), -EINVAL);
++
++	t = damon_new_task(42);
++	r = damon_new_region(&damon_user_ctx, 0, 100);
++	KUNIT_EXPECT_EQ(test, damon_split_region_evenly(c, r, 0), -EINVAL);
++
++	damon_add_region(r, t);
++	KUNIT_EXPECT_EQ(test, damon_split_region_evenly(c, r, 10), 0);
++	KUNIT_EXPECT_EQ(test, nr_damon_regions(t), 10u);
++
++	i = 0;
++	damon_for_each_region(r, t) {
++		KUNIT_EXPECT_EQ(test, r->vm_start, i++ * 10);
++		KUNIT_EXPECT_EQ(test, r->vm_end, i * 10);
++	}
++	damon_free_task(t);
++
++	t = damon_new_task(42);
++	r = damon_new_region(&damon_user_ctx, 5, 59);
++	damon_add_region(r, t);
++	KUNIT_EXPECT_EQ(test, damon_split_region_evenly(c, r, 5), 0);
++	KUNIT_EXPECT_EQ(test, nr_damon_regions(t), 5u);
++
++	i = 0;
++	damon_for_each_region(r, t) {
++		if (i == 4)
++			break;
++		KUNIT_EXPECT_EQ(test, r->vm_start, 5 + 10 * i++);
++		KUNIT_EXPECT_EQ(test, r->vm_end, 5 + 10 * i);
++	}
++	KUNIT_EXPECT_EQ(test, r->vm_start, 5 + 10 * i);
++	KUNIT_EXPECT_EQ(test, r->vm_end, 59ul);
++	damon_free_task(t);
++
++	t = damon_new_task(42);
++	r = damon_new_region(&damon_user_ctx, 5, 6);
++	damon_add_region(r, t);
++	KUNIT_EXPECT_EQ(test, damon_split_region_evenly(c, r, 2), -EINVAL);
++	KUNIT_EXPECT_EQ(test, nr_damon_regions(t), 1u);
++
++	damon_for_each_region(r, t) {
++		KUNIT_EXPECT_EQ(test, r->vm_start, 5ul);
++		KUNIT_EXPECT_EQ(test, r->vm_end, 6ul);
++	}
++	damon_free_task(t);
++}
++
++static void damon_test_split_at(struct kunit *test)
++{
++	struct damon_task *t;
++	struct damon_region *r;
++
++	t = damon_new_task(42);
++	r = damon_new_region(&damon_user_ctx, 0, 100);
++	damon_add_region(r, t);
++	damon_split_region_at(&damon_user_ctx, r, 25);
++	KUNIT_EXPECT_EQ(test, r->vm_start, 0ul);
++	KUNIT_EXPECT_EQ(test, r->vm_end, 25ul);
++
++	r = damon_next_region(r);
++	KUNIT_EXPECT_EQ(test, r->vm_start, 25ul);
++	KUNIT_EXPECT_EQ(test, r->vm_end, 100ul);
++
++	damon_free_task(t);
++}
++
++static void damon_test_merge_two(struct kunit *test)
++{
++	struct damon_task *t;
++	struct damon_region *r, *r2, *r3;
++	int i;
++
++	t = damon_new_task(42);
++	r = damon_new_region(&damon_user_ctx, 0, 100);
++	r->nr_accesses = 10;
++	damon_add_region(r, t);
++	r2 = damon_new_region(&damon_user_ctx, 100, 300);
++	r2->nr_accesses = 20;
++	damon_add_region(r2, t);
++
++	damon_merge_two_regions(r, r2);
++	KUNIT_EXPECT_EQ(test, r->vm_start, 0ul);
++	KUNIT_EXPECT_EQ(test, r->vm_end, 300ul);
++	KUNIT_EXPECT_EQ(test, r->nr_accesses, 16u);
++
++	i = 0;
++	damon_for_each_region(r3, t) {
++		KUNIT_EXPECT_PTR_EQ(test, r, r3);
++		i++;
++	}
++	KUNIT_EXPECT_EQ(test, i, 1);
++
++	damon_free_task(t);
++}
++
++static void damon_test_merge_regions_of(struct kunit *test)
++{
++	struct damon_task *t;
++	struct damon_region *r;
++	unsigned long sa[] = {0, 100, 114, 122, 130, 156, 170, 184};
++	unsigned long ea[] = {100, 112, 122, 130, 156, 170, 184, 230};
++	unsigned int nrs[] = {0, 0, 10, 10, 20, 30, 1, 2};
++
++	unsigned long saddrs[] = {0, 114, 130, 156, 170};
++	unsigned long eaddrs[] = {112, 130, 156, 170, 230};
++	int i;
++
++	t = damon_new_task(42);
++	for (i = 0; i < ARRAY_SIZE(sa); i++) {
++		r = damon_new_region(&damon_user_ctx, sa[i], ea[i]);
++		r->nr_accesses = nrs[i];
++		damon_add_region(r, t);
++	}
++
++	damon_merge_regions_of(t, 9);
++	/* 0-112, 114-130, 130-156, 156-170 */
++	KUNIT_EXPECT_EQ(test, nr_damon_regions(t), 5u);
++	for (i = 0; i < 5; i++) {
++		r = __nth_region_of(t, i);
++		KUNIT_EXPECT_EQ(test, r->vm_start, saddrs[i]);
++		KUNIT_EXPECT_EQ(test, r->vm_end, eaddrs[i]);
++	}
++	damon_free_task(t);
++}
++
++static void damon_test_split_regions_of(struct kunit *test)
++{
++	struct damon_task *t;
++	struct damon_region *r;
++
++	t = damon_new_task(42);
++	r = damon_new_region(&damon_user_ctx, 0, 22);
++	damon_add_region(r, t);
++	damon_split_regions_of(&damon_user_ctx, t, 2);
++	KUNIT_EXPECT_EQ(test, nr_damon_regions(t), 2u);
++	damon_free_task(t);
++
++	t = damon_new_task(42);
++	r = damon_new_region(&damon_user_ctx, 0, 220);
++	damon_add_region(r, t);
++	damon_split_regions_of(&damon_user_ctx, t, 4);
++	KUNIT_EXPECT_EQ(test, nr_damon_regions(t), 4u);
++	damon_free_task(t);
++}
++
++static struct kunit_case damon_test_cases[] = {
++	KUNIT_CASE(damon_test_str_to_pids),
++	KUNIT_CASE(damon_test_tasks),
++	KUNIT_CASE(damon_test_regions),
++	KUNIT_CASE(damon_test_set_pids),
++	KUNIT_CASE(damon_test_three_regions_in_vmas),
++	KUNIT_CASE(damon_test_aggregate),
++	KUNIT_CASE(damon_test_write_rbuf),
++	KUNIT_CASE(damon_test_apply_three_regions1),
++	KUNIT_CASE(damon_test_apply_three_regions2),
++	KUNIT_CASE(damon_test_apply_three_regions3),
++	KUNIT_CASE(damon_test_apply_three_regions4),
++	KUNIT_CASE(damon_test_split_evenly),
++	KUNIT_CASE(damon_test_split_at),
++	KUNIT_CASE(damon_test_merge_two),
++	KUNIT_CASE(damon_test_merge_regions_of),
++	KUNIT_CASE(damon_test_split_regions_of),
++	{},
++};
++
++static struct kunit_suite damon_test_suite = {
++	.name = "damon",
++	.test_cases = damon_test_cases,
++};
++kunit_test_suite(damon_test_suite);
++
++#endif /* _DAMON_TEST_H */
++
++#endif	/* CONFIG_DAMON_KUNIT_TEST */
+diff --git a/mm/damon.c b/mm/damon.c
+index 9f7d173eca3b..cff27cb9c0e0 100644
+--- a/mm/damon.c
++++ b/mm/damon.c
+@@ -25,7 +25,11 @@
+ #include <trace/events/damon.h>
+ 
+ /* Minimal region size.  Every damon_region is aligned by this. */
++#ifndef CONFIG_DAMON_KUNIT_TEST
+ #define MIN_REGION PAGE_SIZE
++#else
++#define MIN_REGION 1
++#endif
+ 
+ #define damon_get_task_struct(t) \
+ 	(get_pid_task(find_vpid(t->pid), PIDTYPE_PID))
+@@ -1496,3 +1500,5 @@ module_exit(damon_exit);
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("SeongJae Park <sjpark@amazon.de>");
+ MODULE_DESCRIPTION("DAMON: Data Access MONitor");
++
++#include "damon-test.h"
 -- 
 2.17.1
 
