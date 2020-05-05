@@ -2,180 +2,185 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F373CC47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C024CC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D78E5206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:24:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85D8C20735
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:24:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="x1AlWCzm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730211AbgEEOYA (ORCPT
+        id S1730036AbgEEOYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:24:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48546 "EHLO
+        Tue, 5 May 2020 10:24:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729434AbgEEONw (ORCPT
+        by vger.kernel.org with ESMTP id S1730134AbgEEOYA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:13:52 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23754C061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:13:52 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jVyKE-0000Uv-7f; Tue, 05 May 2020 16:13:34 +0200
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id B61D5FFC8D;
-        Tue,  5 May 2020 16:13:33 +0200 (CEST)
-Message-Id: <20200505134059.678201813@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:16:18 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: [patch V4 part 1 16/36] kprobes: Support __kprobes blacklist in modules
-References: <20200505131602.633487962@linutronix.de>
+        Tue, 5 May 2020 10:24:00 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6548C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:23:59 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id k1so2999813wrx.4
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 07:23:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1Y70Nah3FzhZidtus6gd4+NBEFZJBCSZiFmzmK0CZes=;
+        b=x1AlWCzm3i+12zcO6l4aukwQ6Aaof5MzjJECcmVMkipsGWsE3LSKZMf9m9jgofhDqk
+         JEP67rHJ/3IuCTnaK93uk3OOdXP03ypzlV3f7xKJPsGyOkFJxvTT6CFAOU0AX3bfS0vV
+         luvzHQ5DXTLwgApmTca8dEUYyqZFiqDGqhmQlkjjvRI97PPi4ru79qs3fCKOpSGNjzvM
+         T/AWvaVizbhmtLgUNVM+9P74+/nfqBOHSjtU77MMzNdwkJcYDJ2IRgX/HOksz7ybaQ5j
+         AgXz02KGCDDTyh+art+q9aNX9mTlNZ5lkOUxQWfKF4ZO6hvUjC9vUOldHWGNFS2LbZZg
+         zI5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1Y70Nah3FzhZidtus6gd4+NBEFZJBCSZiFmzmK0CZes=;
+        b=AdGMAVpbpQkHfaeMzWQsu0rFRrLyzkr2y/0gPVrZr6NTo+TQKd9dAzfBJHGmNsbX7F
+         rNbtEWGUnhaaLH+uOH73xK375gCkK8JgQ/Fjw45HXqxPSdm0SEirSUJDStjxKbUhZ/Hg
+         7trfyy7JgLqJxURpe7Zl9TNkwHwbdZCW/7cuxttvUHb/LS4G/pzkmvo9qg0Zun5BCBRd
+         rukP4XH6qZsm5PEvshkUMuQoCS0DAit+tjXQP5ePvn7YI+vMyJBC8ZCcD5syjgrxEidi
+         ubJFZQ4dexr1h/BNulu8Maw8wRtVoiBnqNQB2Uf4aOkKVuM2KhQVHTazEhFjERkJQmAQ
+         I3Jw==
+X-Gm-Message-State: AGi0PuaKQrkb16yz0d/eaRhpgS3B4FETj13s83szyAHzDm8ClATYCiDp
+        8fVdRhgJuVReCOXnlusuTX/pi3nOjM10yB+8MfielQ==
+X-Google-Smtp-Source: APiQypJJPTp1iDbmTwDsHL2WATyBtkqzx/L9mbhVjiLMShrO4SVgQQefa0T7Yi1gDN3MOa9ZBDvgUxE2/X3IZk4O0zs=
+X-Received: by 2002:adf:f1c6:: with SMTP id z6mr4004676wro.361.1588688638314;
+ Tue, 05 May 2020 07:23:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-transfer-encoding: 8-bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200501193141.30293-1-rad@semihalf.com> <3ad44b75-387f-da75-d7b2-3a16ed00550c@linux.intel.com>
+In-Reply-To: <3ad44b75-387f-da75-d7b2-3a16ed00550c@linux.intel.com>
+From:   =?UTF-8?Q?Rados=C5=82aw_Biernacki?= <rad@semihalf.com>
+Date:   Tue, 5 May 2020 16:23:41 +0200
+Message-ID: <CAOs-w0LPeKgooa_98x_Jkzus-Y5Kad7pDby0CriDGb6nTp_6sA@mail.gmail.com>
+Subject: Re: [PATCH V2] ASoC: Intel: boards: Use FS as nau8825 sysclk in
+ nau88125_* machine
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Lech Betlej <Lech.Betlej@intel.com>,
+        alsa-devel@alsa-project.org, Todd Broch <tbroch@google.com>,
+        Harshapriya <harshapriya.n@intel.com>,
+        John Hsu <KCHSU0@nuvoton.com>, linux-kernel@vger.kernel.org,
+        "Sienkiewicz, Michal" <michal.sienkiewicz@intel.com>,
+        Ben Zhang <benzh@chromium.org>,
+        Mac Chiang <mac.chiang@intel.com>,
+        Yong Zhi <yong.zhi@intel.com>, Marcin Wojtas <mw@semihalf.com>,
+        Vamshi Krishna <vamshi.krishna.gopal@intel.com>,
+        Alex Levin <levinale@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+Thank you Pierre for the review!
+answers inline
 
-Support __kprobes attribute for blacklist functions in modules.  The
-__kprobes attribute functions are stored in .kprobes.text section.
+pt., 1 maj 2020 o 22:16 Pierre-Louis Bossart
+<pierre-louis.bossart@linux.intel.com> wrote:
+>
+>
+>
+> On 5/1/20 2:31 PM, Radoslaw Biernacki wrote:
+> > This single fix address two issues on machines with nau88125:
+> > 1) Audio distortion, due to lack of required clock rate on MCLK line
+> > 2) Loud audible "pops" on headphones if there is no sysclk during nau8825
+> >     playback power up sequence
+> >
+> > Explanation for:
+> > 1) Due to Skylake HW limitation, MCLK pin can only output 24MHz clk
+> >     rate (it can be only connected to XTAL parent clk). The BCLK pin
+> >     can be driven by dividers and therefore FW is able to set it to rate
+> >     required by chosen audio format. According to nau8825 datasheet, 256*FS
+> >     sysclk gives the best audio quality and the only way to achieve this
+> >     (taking into account the above limitations) its to regenerate the MCLK
+> >     from BCLK on nau8825 side by FFL. Without required clk rate, audio is
+> >     distorted by added harmonics.
+>
+> The BCLK is going to be a multiple of 50 * Fs due to clocking
+> restrictions. Can the codec regenerate a good-enough sysclk from this?
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/158523418821.24735.15379873028352411526.stgit@devnote2
+According to Intel, silicon has a limitation, on SKL/KBL only clk_id =
+SKL_XTAL, .name = "xtal" is available for IO domain.
+As mentioned in the commit:
+MCLK is generated by using 24MHz Xtal directly or applying a divider
+(so no way of achieving the rate required by audio format).
+BCLK/FS is generated from 24MHz and uses dividers and additional
+padding bits are used to match the clock source.
+Next gen silicon has the possibility of using additional clock sources.
 
----
- include/linux/module.h |    4 ++++
- kernel/kprobes.c       |   42 ++++++++++++++++++++++++++++++++++++++++++
- kernel/module.c        |    4 ++++
- 3 files changed, 50 insertions(+)
+Summing up, using MCLK from SKL to NAU88L25 is not an option.
+The only option we found is to use BCLK and regen the required clock
+rate by FLL on the NAU88l25 side.
 
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -489,6 +489,10 @@ struct module {
- 	unsigned int num_ftrace_callsites;
- 	unsigned long *ftrace_callsites;
- #endif
-+#ifdef CONFIG_KPROBES
-+	void *kprobes_text_start;
-+	unsigned int kprobes_text_size;
-+#endif
- 
- #ifdef CONFIG_LIVEPATCH
- 	bool klp; /* Is this a livepatch module? */
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -2179,6 +2179,19 @@ int kprobe_add_area_blacklist(unsigned l
- 	return 0;
- }
- 
-+/* Remove all symbols in given area from kprobe blacklist */
-+static void kprobe_remove_area_blacklist(unsigned long start, unsigned long end)
-+{
-+	struct kprobe_blacklist_entry *ent, *n;
-+
-+	list_for_each_entry_safe(ent, n, &kprobe_blacklist, list) {
-+		if (ent->start_addr < start || ent->start_addr >= end)
-+			continue;
-+		list_del(&ent->list);
-+		kfree(ent);
-+	}
-+}
-+
- int __init __weak arch_populate_kprobe_blacklist(void)
- {
- 	return 0;
-@@ -2215,6 +2228,28 @@ static int __init populate_kprobe_blackl
- 	return ret ? : arch_populate_kprobe_blacklist();
- }
- 
-+static void add_module_kprobe_blacklist(struct module *mod)
-+{
-+	unsigned long start, end;
-+
-+	start = (unsigned long)mod->kprobes_text_start;
-+	if (start) {
-+		end = start + mod->kprobes_text_size;
-+		kprobe_add_area_blacklist(start, end);
-+	}
-+}
-+
-+static void remove_module_kprobe_blacklist(struct module *mod)
-+{
-+	unsigned long start, end;
-+
-+	start = (unsigned long)mod->kprobes_text_start;
-+	if (start) {
-+		end = start + mod->kprobes_text_size;
-+		kprobe_remove_area_blacklist(start, end);
-+	}
-+}
-+
- /* Module notifier call back, checking kprobes on the module */
- static int kprobes_module_callback(struct notifier_block *nb,
- 				   unsigned long val, void *data)
-@@ -2225,6 +2260,11 @@ static int kprobes_module_callback(struc
- 	unsigned int i;
- 	int checkcore = (val == MODULE_STATE_GOING);
- 
-+	if (val == MODULE_STATE_COMING) {
-+		mutex_lock(&kprobe_mutex);
-+		add_module_kprobe_blacklist(mod);
-+		mutex_unlock(&kprobe_mutex);
-+	}
- 	if (val != MODULE_STATE_GOING && val != MODULE_STATE_LIVE)
- 		return NOTIFY_DONE;
- 
-@@ -2255,6 +2295,8 @@ static int kprobes_module_callback(struc
- 				kill_kprobe(p);
- 			}
- 	}
-+	if (val == MODULE_STATE_GOING)
-+		remove_module_kprobe_blacklist(mod);
- 	mutex_unlock(&kprobe_mutex);
- 	return NOTIFY_DONE;
- }
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -3194,6 +3194,10 @@ static int find_module_sections(struct m
- 					    sizeof(*mod->ei_funcs),
- 					    &mod->num_ei_funcs);
- #endif
-+#ifdef CONFIG_KPROBES
-+	mod->kprobes_text_start = section_objs(info, ".kprobes.text", 1,
-+						&mod->kprobes_text_size);
-+#endif
- 	mod->extable = section_objs(info, "__ex_table",
- 				    sizeof(*mod->extable), &mod->num_exentries);
- 
+> >
+> > 2) Currently Skylake does not output MCLK/FS when the back-end DAI op
+> >     hw_param is called, so we cannot switch to MCLK/FS in hw_param.  This
+> >     patch reduces pop by letting nau8825 keep using its internal VCO clock
+> >     during widget power up sequence, until SNDRV_PCM_TRIGGER_START when
+> >     MCLK/FS is available. Once device resumes, the system will only enable
+> >     power sequence for playback without doing hardware parameter, audio
+> >     format, and PLL configure. In the mean time, the jack detecion sequence
+> >     has changed PLL parameters and switched to internal clock. Thus, the
+> >     playback signal distorted without correct PLL parameters.  That is why
+> >     we need to configure the PLL again in SNDRV_PCM_TRIGGER_RESUME case.
+>
+> IIRC the FS can be controlled with the clk_ api with the Skylake driver,
+> as done for some KBL platforms. Or is this not supported by the firmware
+> used by this machine?
 
+According to Ben, SKL had limitations in FW for managing the clk's
+back in the days.
+Can you point to the other driver you mention so we can cross check?
+
+>
+> > -static int skylake_nau8825_hw_params(struct snd_pcm_substream *substream,
+> > -     struct snd_pcm_hw_params *params)
+> > +static int skylake_nau8825_trigger(struct snd_pcm_substream *substream, int cmd)
+> >   {
+> >       struct snd_soc_pcm_runtime *rtd = substream->private_data;
+> > +     struct snd_pcm_runtime *runtime = substream->runtime;
+> >       struct snd_soc_dai *codec_dai = asoc_rtd_to_codec(rtd, 0);
+> > -     int ret;
+> > -
+> > -     ret = snd_soc_dai_set_sysclk(codec_dai,
+> > -                     NAU8825_CLK_MCLK, 24000000, SND_SOC_CLOCK_IN);
+> > +     int ret = 0;
+> >
+> > -     if (ret < 0)
+> > -             dev_err(rtd->dev, "snd_soc_dai_set_sysclk err = %d\n", ret);
+> > +     switch (cmd) {
+> > +     case SNDRV_PCM_TRIGGER_START:
+> > +             ret = snd_soc_dai_set_sysclk(codec_dai, NAU8825_CLK_FLL_FS, 0,
+> > +                                          SND_SOC_CLOCK_IN);
+> > +             if (ret < 0) {
+> > +                     dev_err(codec_dai->dev, "can't set FS clock %d\n", ret);
+> > +                     break;
+> > +             }
+> > +             ret = snd_soc_dai_set_pll(codec_dai, 0, 0, runtime->rate,
+> > +                                       runtime->rate * 256);
+> > +             if (ret < 0)
+> > +                     dev_err(codec_dai->dev, "can't set FLL: %d\n", ret);
+> > +             break;
+> > +     case SNDRV_PCM_TRIGGER_RESUME:
+> > +             ret = snd_soc_dai_set_pll(codec_dai, 0, 0, runtime->rate,
+> > +                                       runtime->rate * 256);
+> > +             if (ret < 0)
+> > +                     dev_err(codec_dai->dev, "can't set FLL: %d\n", ret);
+> > +             msleep(20);
+>
+> is there a reason why you'd need a msleep for resume and not for start?
+
+No. I think we missed this.
+msleep() is needed to stabilize FLL.
+Will fix in next rev.
