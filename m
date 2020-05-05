@@ -2,38 +2,38 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32301C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FA8C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17C3320836
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD3872083B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:14:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729567AbgEEOOW (ORCPT
+        id S1729599AbgEEOOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:14:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48656 "EHLO
+        Tue, 5 May 2020 10:14:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729550AbgEEOOS (ORCPT
+        by vger.kernel.org with ESMTP id S1729054AbgEEOOb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:14:18 -0400
+        Tue, 5 May 2020 10:14:31 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA967C061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:14:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F1C9C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:14:31 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jVyKa-0000oH-KS; Tue, 05 May 2020 16:13:56 +0200
+        id 1jVyKr-0000v9-9n; Tue, 05 May 2020 16:14:13 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 1B1E9FFC8D;
-        Tue,  5 May 2020 16:13:56 +0200 (CEST)
-Message-Id: <20200505134101.434193525@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id C4A7DFFC8D;
+        Tue,  5 May 2020 16:14:12 +0200 (CEST)
+Message-Id: <20200505134112.272268764@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:16:36 +0200
+Date:   Tue, 05 May 2020 15:41:12 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -51,14 +51,9 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Brian Gerst <brgerst@gmail.com>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        "Steven Rostedt (VMware)" <rosted@goodmis.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V4 part 1 34/36] sched,rcu,tracing: Avoid tracing before
- in_nmi() is correct
-References: <20200505131602.633487962@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Will Deacon <will@kernel.org>
+Subject: [patch V4 part 2 00/18] x86/entry: Entry/exception code rework,
+ syscall and KVM changes
 Content-transfer-encoding: 8-bit
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
@@ -68,61 +63,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+Folks!
 
-If a tracer is invoked before in_nmi() becomes true, the tracer can no
-longer detect it is called from NMI context and behave correctly.
+This is the second part of the rework series. Part 1 can be found here:
 
-Therefore change nmi_{enter,exit}() to use __preempt_count_{add,sub}()
-as the normal preempt_count_{add,sub}() have a (desired) function
-trace entry.
+ https://lore.kernel.org/r/20200505131602.633487962@linutronix.de
 
-This fixes a potential issue with the current code; when the function-tracer
-has stack-tracing enabled __trace_stack() will malfunction when it hits the
-preempt_count_add() function entry from NMI context.
+The series has a total of 138 patches and is split into 5 parts. The base
+for this series is:
 
-Suggested-by: Steven Rostedt (VMware) <rosted@goodmis.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- include/linux/hardirq.h |   13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+  git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git entry-v4-part-1
 
---- a/include/linux/hardirq.h
-+++ b/include/linux/hardirq.h
-@@ -66,6 +66,15 @@ extern void irq_exit(void);
- #endif
+The full series with all parts applied is available here:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git entry-v4-part-5
+
+The second part, i.e. this series is available from:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git entry-v4-part-2
  
- /*
-+ * NMI vs Tracing
-+ * --------------
-+ *
-+ * We must not land in a tracer until (or after) we've changed preempt_count
-+ * such that in_nmi() becomes true. To that effect all NMI C entry points must
-+ * be marked 'notrace' and call nmi_enter() as soon as possible.
-+ */
-+
-+/*
-  * nmi_enter() can nest up to 15 times; see NMI_BITS.
-  */
- #define nmi_enter()						\
-@@ -75,7 +84,7 @@ extern void irq_exit(void);
- 		lockdep_off();					\
- 		ftrace_nmi_enter();				\
- 		BUG_ON(in_nmi() == NMI_MASK);			\
--		preempt_count_add(NMI_OFFSET + HARDIRQ_OFFSET);	\
-+		__preempt_count_add(NMI_OFFSET + HARDIRQ_OFFSET);	\
- 		rcu_nmi_enter();				\
- 		lockdep_hardirq_enter();			\
- 	} while (0)
-@@ -85,7 +94,7 @@ extern void irq_exit(void);
- 		lockdep_hardirq_exit();				\
- 		rcu_nmi_exit();					\
- 		BUG_ON(!in_nmi());				\
--		preempt_count_sub(NMI_OFFSET + HARDIRQ_OFFSET);	\
-+		__preempt_count_sub(NMI_OFFSET + HARDIRQ_OFFSET);	\
- 		ftrace_nmi_exit();				\
- 		lockdep_on();					\
- 		printk_nmi_exit();				\
+This part contains the modifications for the syscall entry code and the
+adjustment of the KVM code:
+
+ - Move the non entry related ASM code into the regular text section so it
+   is not part of the protected section
+
+ - Move the low level entry C code into the .noinstr.text section
+
+ - Make the interaction with lockdep, RCU and tracing correct
+
+ - Move the KVM guest_enter/exit() handling strict vs. RCU and
+   instrumentation protection. It's more or less the same problem as the
+   syscall entry/exit and needs to be equally restrictive so that the
+   rules can be enforced with objtool.
+
+The objtool check for the noinstr.text correctness is not yet added to the
+build machinery and has to be invoked manually for now:
+
+   objtool check -fal vmlinux.o
+
+The checking only works for builtin code as objtool cannot do a combined
+analysis of vmlinux.o and a module.o
+
+Thanks,
+
+	tglx
+
+8<----------
+ arch/x86/entry/Makefile                |    2 
+ arch/x86/entry/common.c                |  173 ++++++++++++++++++++++++---------
+ arch/x86/entry/entry_32.S              |   35 ++----
+ arch/x86/entry/entry_64.S              |   16 +--
+ arch/x86/entry/entry_64_compat.S       |   55 ++++------
+ arch/x86/entry/thunk_64.S              |   45 +++++++-
+ arch/x86/include/asm/hardirq.h         |    4 
+ arch/x86/include/asm/irqflags.h        |    3 
+ arch/x86/include/asm/kvm_host.h        |    8 +
+ arch/x86/include/asm/nospec-branch.h   |    4 
+ arch/x86/include/asm/paravirt.h        |    3 
+ arch/x86/kernel/ftrace_64.S            |    2 
+ arch/x86/kvm/svm/svm.c                 |   66 ++++++++++--
+ arch/x86/kvm/svm/vmenter.S             |    2 
+ arch/x86/kvm/vmx/ops.h                 |    4 
+ arch/x86/kvm/vmx/vmenter.S             |    5 
+ arch/x86/kvm/vmx/vmx.c                 |   78 +++++++++++---
+ arch/x86/kvm/x86.c                     |    4 
+ include/linux/context_tracking.h       |   27 +++--
+ include/linux/context_tracking_state.h |    6 -
+ kernel/context_tracking.c              |   14 +-
+ lib/smp_processor_id.c                 |   10 -
+ 22 files changed, 391 insertions(+), 175 deletions(-)
 
