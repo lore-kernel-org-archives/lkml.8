@@ -2,77 +2,90 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D81C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7399CC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18599206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41433206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:37:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="TOAKhifQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o3lVQd9b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729977AbgEEQhA (ORCPT
+        id S1730372AbgEEQhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:37:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43234 "EHLO
+        Tue, 5 May 2020 12:37:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728687AbgEEQg7 (ORCPT
+        with ESMTP id S1729989AbgEEQhp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:36:59 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 978FDC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 09:36:59 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id h11so1027206plr.11
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 09:36:59 -0700 (PDT)
+        Tue, 5 May 2020 12:37:45 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96410C061A0F;
+        Tue,  5 May 2020 09:37:45 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id s20so1034757plp.6;
+        Tue, 05 May 2020 09:37:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=9Te4p8spYKXSVw3V0gfR6Oau5EFQ8EHhhEXqPtlU1vU=;
-        b=TOAKhifQdBJXG2aEA2zey/8m+ClFdssXfab1gdtgSAr1wSKueldA8YRrL8plVQM5yD
-         1rQbLL8hTP4IdRsbyqRZX6WuTSzB6arUXumeQ5r9MOn4BPug0gt5+ro2lzYyCJ1NReI5
-         T0XlOgV7SqDaWR75eDDMgcvQsk5ODuKTk4LPoV3/y1XvYVAkfCzY8gbbd7/YRtdbUPX9
-         3D3meKbsKHTCL15Ig0mAxEBOB4bk/8dxLFVPBn4PjlNJkwEx1FX4yAIBS+7hoIFbKyCe
-         DFs6K4e+KzFCu5M0lSDKIBWqvLIAQGLh9CmN68OEGLEFa7wvjxYtuLB3dQhsyMP+ij6D
-         q26g==
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=un2HqrYJeLi559EHQvGLp0mAi/PQdWiaf/DuAFbu8d4=;
+        b=o3lVQd9b0m+nhlAeQR7UtaMZ9mgLlAqgSwwkvq2DlNH9wvUqV9GoYqKPSVhnjcnO3Z
+         H7NCKxgckgYptCdu576Uc8hTI+iAvyowdiuk8PzJfxHwDjT02HUNDHBKo6sLVQP50NfB
+         X7NYFc1fh+N+4PWMxUUxVEfYq0tXEM9rsb2a5CF/0GgE5NcLbDy3+oJ3afAGgvyv03Nl
+         t8HGudY3f7Nm/MjnNW2wwQw+RECIm6YxivfqDoiAzzhcD6OovY3ZJ0W0t7/uFtv3yD1v
+         TpeUE4xbdZhW5nCXc1Gu6hDzXtrs1wpbMohaThWHnGwGjOHUFzySluc6QfolBSIzDKh9
+         U+8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=9Te4p8spYKXSVw3V0gfR6Oau5EFQ8EHhhEXqPtlU1vU=;
-        b=dn1qb8mG57STQMYrJ9f90oVFk9uPVBpjzGeQnyQKrUHJq9RRH0fzrFlnVmQAP6SolE
-         lQTh1RO7a4w68zwHOjBPR9TUSl3HmnxZFD29o65V/6XwhpSCTmdMrmUQlQEMnj8LjbmJ
-         pDeSk7LjJ1GUtBw4QgZTOaC+FA7c7GNHajH0b0tTvTQd8UvUY6+OoODbX2Qkuh938Cad
-         f3scEf0oj4ZIINF4G2ptqS7mHMxbvsgoU/OG4M7P40+r0dG7iHRTqr+j6ygRXTnPjxI0
-         4S7AGBUlowpULw8k7oWM4+EV0F9WbNErFIK1HqyPk3FSX/j1eiLi0qjs3gTpYlktPnsX
-         GIfw==
-X-Gm-Message-State: AGi0Pua/lGDf8WYjJ9nMr+P6EUTq8dLYLtB976Y3iHMLjMVh8vTPmhNq
-        aMJYwmqTzFpDa/SmBI/Td9Z9Lw==
-X-Google-Smtp-Source: APiQypLWETy/wRHMlEfeo9knRP1HXpMey8Jbww7QACcn1H57D4ThQPBDWwod73aIOlI8JARUZWEaTA==
-X-Received: by 2002:a17:90a:8d12:: with SMTP id c18mr4124887pjo.144.1588696618860;
-        Tue, 05 May 2020 09:36:58 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:cdd:7a71:a7ed:1085? ([2601:646:c200:1ef2:cdd:7a71:a7ed:1085])
-        by smtp.gmail.com with ESMTPSA id o9sm2424343pjp.4.2020.05.05.09.36.47
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=un2HqrYJeLi559EHQvGLp0mAi/PQdWiaf/DuAFbu8d4=;
+        b=j1ypOirTRTOnpzUk+7nV9SjGjCZJNcMwNmxSNmaDb7TX8JluxPwW8AvjG9O0OTUiJ7
+         bm0XWkbH1g4q02VQUO0HROFFoQgiszTNWQhcz9R5jfJobTqMCAjzWswf5JSUaJWtxgx2
+         z48lJ8A0kgpLjLDElCTBLtDkJ0h+0UXEBgJu7vglalfDgYgtxHObfwE2EpbzGpdPqEGn
+         YbrjwOR2/EEvgh58kO/6lGi2MV313oe0g6fwbpIA/yNP2nXs4P7AkqbgpsKEaDe/59XM
+         CNCuGL8SQG1EY4+dSaeU6VzvCU2b8L94LHidKPIjkopwkxj0NqGQJzzp3d97ftuoOgF2
+         eaIQ==
+X-Gm-Message-State: AGi0Puar8F43A8ThRQSETgsxH2yN5Tpqy+eq2ZI60iIbGwQvUegpi9fZ
+        v8d/O0MNhB3jky4fiYleX+o=
+X-Google-Smtp-Source: APiQypJmWfVc8acKWgsK+7Vqq+NzhGASqeuNjrDjhX+K56+evq1iWmMfx9oOweAvaLn6e6CaJKFEJg==
+X-Received: by 2002:a17:902:8a81:: with SMTP id p1mr3990217plo.104.1588696665108;
+        Tue, 05 May 2020 09:37:45 -0700 (PDT)
+Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id a129sm2459072pfb.102.2020.05.05.09.37.43
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2020 09:36:57 -0700 (PDT)
+        Tue, 05 May 2020 09:37:43 -0700 (PDT)
+Subject: Re: [PATCH net v2 0/2] Revert the 'socket_alloc' life cycle change
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+To:     SeongJae Park <sjpark@amazon.com>,
+        Eric Dumazet <edumazet@google.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        sj38.park@gmail.com, netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        SeongJae Park <sjpark@amazon.de>, snu@amazon.com,
+        amit@kernel.org, stable@vger.kernel.org,
+        Paul McKenney <paulmck@kernel.org>
+References: <20200505161302.547-1-sjpark@amazon.com>
+ <05843a3c-eb9d-3a0d-f992-7e4b97cc1f19@gmail.com>
+ <77124fc2-86b2-27f6-fd7c-4f1e86eb3fff@gmail.com>
+Message-ID: <67bdfac9-0d7d-0bbe-dc7a-d73979fd8ed9@gmail.com>
+Date:   Tue, 5 May 2020 09:37:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <77124fc2-86b2-27f6-fd7c-4f1e86eb3fff@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: x86/uv cleanups
-Date:   Tue, 5 May 2020 09:36:46 -0700
-Message-Id: <0EF76ADC-A842-4571-B964-B7A544E11FA3@amacapital.net>
-References: <20200505153944.GD2297@hpe.com>
-Cc:     Christoph Hellwig <hch@lst.de>, x86@kernel.org,
-        Mike Travis <mike.travis@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20200505153944.GD2297@hpe.com>
-To:     Dimitri Sivanich <sivanich@hpe.com>
-X-Mailer: iPhone Mail (17E262)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -80,34 +93,106 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-> On May 5, 2020, at 9:25 AM, Dimitri Sivanich <sivanich@hpe.com> wrote:
->=20
-> =EF=BB=BFYes, we do see a need to clean up old code where it exists, but w=
-e would like
-> to assume this responsibility ourselves in order to ensure functional cont=
-inuity
-> with externally available open-sourced modules that our customers rely on.=
-  This
-> code supports current Superdome Flex systems, as well as forthcoming platf=
-orms
-> based on Intel Cooper Lake and Sapphire Rapids processors.  Some cleanup i=
-s
-> already being included as part of a forthcoming patchset in support of the=
+On 5/5/20 9:31 AM, Eric Dumazet wrote:
+> 
+> 
+> On 5/5/20 9:25 AM, Eric Dumazet wrote:
+>>
+>>
+>> On 5/5/20 9:13 AM, SeongJae Park wrote:
+>>> On Tue, 5 May 2020 09:00:44 -0700 Eric Dumazet <edumazet@google.com> wrote:
+>>>
+>>>> On Tue, May 5, 2020 at 8:47 AM SeongJae Park <sjpark@amazon.com> wrote:
+>>>>>
+>>>>> On Tue, 5 May 2020 08:20:50 -0700 Eric Dumazet <eric.dumazet@gmail.com> wrote:
+>>>>>
+>>>>>>
+>>>>>>
+>>>>>> On 5/5/20 8:07 AM, SeongJae Park wrote:
+>>>>>>> On Tue, 5 May 2020 07:53:39 -0700 Eric Dumazet <edumazet@google.com> wrote:
+>>>>>>>
+>>>>>>
+>>>>>>>> Why do we have 10,000,000 objects around ? Could this be because of
+>>>>>>>> some RCU problem ?
+>>>>>>>
+>>>>>>> Mainly because of a long RCU grace period, as you guess.  I have no idea how
+>>>>>>> the grace period became so long in this case.
+>>>>>>>
+>>>>>>> As my test machine was a virtual machine instance, I guess RCU readers
+>>>>>>> preemption[1] like problem might affected this.
+>>>>>>>
+>>>>>>> [1] https://www.usenix.org/system/files/conference/atc17/atc17-prasad.pdf
+>>>>>>>
+>>>>>>>>
+>>>>>>>> Once Al patches reverted, do you have 10,000,000 sock_alloc around ?
+>>>>>>>
+>>>>>>> Yes, both the old kernel that prior to Al's patches and the recent kernel
+>>>>>>> reverting the Al's patches didn't reproduce the problem.
+>>>>>>>
+>>>>>>
+>>>>>> I repeat my question : Do you have 10,000,000 (smaller) objects kept in slab caches ?
+>>>>>>
+>>>>>> TCP sockets use the (very complex, error prone) SLAB_TYPESAFE_BY_RCU, but not the struct socket_wq
+>>>>>> object that was allocated in sock_alloc_inode() before Al patches.
+>>>>>>
+>>>>>> These objects should be visible in kmalloc-64 kmem cache.
+>>>>>
+>>>>> Not exactly the 10,000,000, as it is only the possible highest number, but I
+>>>>> was able to observe clear exponential increase of the number of the objects
+>>>>> using slabtop.  Before the start of the problematic workload, the number of
+>>>>> objects of 'kmalloc-64' was 5760, but I was able to observe the number increase
+>>>>> to 1,136,576.
+>>>>>
+>>>>>           OBJS ACTIVE  USE OBJ SIZE  SLABS OBJ/SLAB CACHE SIZE NAME
+>>>>> before:   5760   5088  88%    0.06K     90       64       360K kmalloc-64
+>>>>> after:  1136576 1136576 100%    0.06K  17759       64     71036K kmalloc-64
+>>>>>
+>>>>
+>>>> Great, thanks.
+>>>>
+>>>> How recent is the kernel you are running for your experiment ?
+>>>
+>>> It's based on 5.4.35.
+>>>
+>>>>
+>>>> Let's make sure the bug is not in RCU.
+>>>
+>>> One thing I can currently say is that the grace period passes at last.  I
+>>> modified the benchmark to repeat not 10,000 times but only 5,000 times to run
+>>> the test without OOM but easily observable memory pressure.  As soon as the
+>>> benchmark finishes, the memory were freed.
+>>>
+>>> If you need more tests, please let me know.
+>>>
+>>
+>> I would ask Paul opinion on this issue, because we have many objects
+>> being freed after RCU grace periods.
+>>
+>> If RCU subsystem can not keep-up, I guess other workloads will also suffer.
+>>
+>> Sure, we can revert patches there and there trying to work around the issue,
+>> but for objects allocated from process context, we should not have these problems.
+>>
+> 
+> I wonder if simply adjusting rcu_divisor to 6 or 5 would help 
+> 
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index d9a49cd6065a20936edbda1b334136ab597cde52..fde833bac0f9f81e8536211b4dad6e7575c1219a 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -427,7 +427,7 @@ module_param(qovld, long, 0444);
+>  static ulong jiffies_till_first_fqs = ULONG_MAX;
+>  static ulong jiffies_till_next_fqs = ULONG_MAX;
+>  static bool rcu_kick_kthreads;
+> -static int rcu_divisor = 7;
+> +static int rcu_divisor = 6;
+>  module_param(rcu_divisor, int, 0644);
+>  
+>  /* Force an exit from rcu_do_batch() after 3 milliseconds. */
+> 
 
-> upcoming Sapphire Rapids platform.
->=20
+To be clear, you can adjust the value without building a new kernel.
 
-What is =E2=80=9Cfunctional continuity=E2=80=9D?  How does unused code suppo=
-rt anything?
+echo 6 >/sys/module/rcutree/parameters/rcu_divisor
 
-> Nacked-by: Dimitri Sivanich <sivanich@hpe.com>
->=20
->> On Mon, May 04, 2020 at 07:15:16PM +0200, Christoph Hellwig wrote:
->> Hi x86 maintainers,
->>=20
->> this series removes various exports and sniplets of dead code
->> from the x86/uv code.
->>=20
->> Diffstat:
->>=20
->>  8 files changed, 21 insertions(+), 111 deletions(-)
+
