@@ -2,115 +2,116 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A15AC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 03:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FE0C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 03:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04920206CC
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 03:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D57DF20737
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 03:13:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="Gx+sD/aG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbgEEDHi (ORCPT
+        id S1727110AbgEEDNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 23:07:38 -0400
-Received: from mga05.intel.com ([192.55.52.43]:59066 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726286AbgEEDHh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 23:07:37 -0400
-IronPort-SDR: lBwvHkb6E58fXMTWZA+wEINjQ5bzZV8qOIWrlLnBbL/JnRYV70W+CmK9qOWMrp32x8r6jw42Dq
- lYsf8h9FVk/w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 20:07:36 -0700
-IronPort-SDR: SwhgkA8cwK89qvG3vWnOmOVOnFq6YT9L7YT83Qy8wMgzgXxlnIBVfG/BQSI0J13II96ttct2XF
- UgSBjsCQ/mZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,354,1583222400"; 
-   d="scan'208";a="263014770"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga006.jf.intel.com with ESMTP; 04 May 2020 20:07:36 -0700
-Date:   Mon, 4 May 2020 20:07:36 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>
-Subject: Re: [PATCH v8 4/4] kvm: vmx: virtualize split lock detection
-Message-ID: <20200505030736.GA20916@linux.intel.com>
-References: <20200414063129.133630-5-xiaoyao.li@intel.com>
- <871rooodad.fsf@nanos.tec.linutronix.de>
- <20200415191802.GE30627@linux.intel.com>
- <87tv1kmol8.fsf@nanos.tec.linutronix.de>
- <20200415214318.GH30627@linux.intel.com>
+        Mon, 4 May 2020 23:13:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58492 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726550AbgEEDNQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 23:13:16 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 128C6C061A0F
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 20:13:16 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id r16so590362edw.5
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 20:13:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Hb3vOvaxQWUZVlEGzKRze7rfk+t0axuGNcRjVwkD3j0=;
+        b=Gx+sD/aGknodR9LrZrAWAT5LsnNyPtk5ZMzq0bszMwNSMv+s9UkgohYx9BjAmr8/e+
+         whkKmBLxnTytujtwYo08LjvEoq4dvTxJ4xduLkgsJWLsb+Rth8vc2zkfNCZLy6b3rfWb
+         F2uHPfW2EcjiEkX1cTCnS9NIlKRlN90ZeoM0czBBEXYGWT1tB7XaI5QHOEjdXj73G6zO
+         kHD64fdJ1YAfqvQL7CoGzAurC113ptBE+0CXHJPYilJtQM5d7Cb6zlg31OqPIkkBJnYG
+         TtuZBjRL00+hPwMN87EkdXFT0QmNDwy93aJJjB9yDN7ah3EimaS0T17YdZ60DZDy/nS/
+         vZiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Hb3vOvaxQWUZVlEGzKRze7rfk+t0axuGNcRjVwkD3j0=;
+        b=tq2lTQzeWlvlnw+tRdfzZpe88DNqOWKv7oXl0OOyLCZvXqKo3/xgSHDxrxEfP5OPEY
+         i2y3aZnjV9owYAOI53oT57p6+JlqQzHhOBrUutryYWdOFG124lD4g19r9bsLD8y1fmSC
+         wwvcm1N36zUs/KruHlxmlKKNLqUyGLYG5jzvOxmZPSU7fJjrY+Xr75EgRQuOc3th4M+z
+         SP/Boo19F6MVVzuvZYRUL1D9JQY5g0fno5C50vWwEM2+BNsUwfEVUSX5gPXUZeGcG/yE
+         bzVH/Go/DJq82ftC4LEeOWCI4rroy9Rgs61pNHTUNOg5LBuFU2z1YiYI2wyqqPPUSlmT
+         jyHA==
+X-Gm-Message-State: AGi0PuawPNt7ipx9YctZ66KiKugaQ43W6rpmRrYi7LHRaXH3Mh/2Nlfm
+        1TAJWTQnkHCbZGZx7imwxla9qIpBtsVqTFOBW/z9Xg==
+X-Google-Smtp-Source: APiQypJZyCmhrc3iXu9oYM4b5u25pu1XHxWrGEIt6rB3xS8T/NsYMx1S8LVZl21yWSkocDZoxxo/TP9EiRq7FTAj9cM=
+X-Received: by 2002:a05:6402:14c1:: with SMTP id f1mr859825edx.221.1588648394738;
+ Mon, 04 May 2020 20:13:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415214318.GH30627@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200502143555.543636-1-pasha.tatashin@soleen.com>
+ <20200502143555.543636-2-pasha.tatashin@soleen.com> <20200505010219.GA2282345@jagdpanzerIV.localdomain>
+ <CA+CK2bASiWe=w07gsc-_fFZxPY0SSECSYh6femUCA8yugEpuRg@mail.gmail.com>
+In-Reply-To: <CA+CK2bASiWe=w07gsc-_fFZxPY0SSECSYh6femUCA8yugEpuRg@mail.gmail.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Mon, 4 May 2020 23:12:38 -0400
+Message-ID: <CA+CK2bAZAAzAK7G3bJ5dOHR__5+a8LgWPVBzwM+TnbHdVKDUgQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] printk: honor the max_reason field in kmsg_dumper
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kees Cook <keescook@chromium.org>, anton@enomsg.org,
+        ccross@android.com, Tony Luck <tony.luck@intel.com>,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 02:43:18PM -0700, Sean Christopherson wrote:
-> On Wed, Apr 15, 2020 at 11:22:11PM +0200, Thomas Gleixner wrote:
-> > Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> > > I don't see any way to avoid having KVM differentiate between sld_warn and
-> > > sld_fatal.  Even if KVM is able to virtualize SLD in sld_fatal mode, e.g.
-> > > by telling the guest it must not try to disable SLD, KVM would still need
-> > > to know the kernel is sld_fatal so that it can forward that information to
-> > > the guest.
-> > 
-> > Huch? There is absolutely zero code like that. The only place where
-> > sld_state is used is:
-> > 
-> > + static inline void vmx_update_sld(struct kvm_vcpu *vcpu, bool on)
-> > + {
-> > +	if (sld_state == sld_warn && guest_cpu_has_feature_sld(vcpu) &&
-> > +	    on == test_thread_flag(TIF_SLD)) {
-> > +		    sld_update_msr(on);
-> > +		    update_thread_flag(TIF_SLD, !on);
-> > +	}
-> > 
-> > You might have some faint memories from the previous trainwrecks :)
-> 
-> Yeah, I was thinking SLD was only being exposed if the host is sld_warn.
-> I'll work with Xiaoyao to figure out a cleaner interface for this code.
+On Mon, May 4, 2020 at 10:52 PM Pavel Tatashin
+<pasha.tatashin@soleen.com> wrote:
+>
+> > > @@ -3157,12 +3162,9 @@ void kmsg_dump(enum kmsg_dump_reason reason)
+> > >       struct kmsg_dumper *dumper;
+> > >       unsigned long flags;
+> > >
+> > > -     if ((reason > KMSG_DUMP_OOPS) && !always_kmsg_dump)
+> > > -             return;
+> > > -
+> > >       rcu_read_lock();
+> > >       list_for_each_entry_rcu(dumper, &dump_list, list) {
+> > > -             if (dumper->max_reason && reason > dumper->max_reason)
+> > > +             if (reason > dumper->max_reason)
+> > >                       continue;
+> >
+> > Why always_kmsg_dump check moved from the dumper loop entry point to the
+> > dumper registration code? What if the user change always_ksmsg_dump
+> > dynamically via sysfs?
+>
+> Hi Sergey,
+>
+> I changed it to make code cleaner:  for such basic operation there are
+> too many conditions if we will keep it inside the kmsg_dump().
+> However, if being able to set always_kmsg_dump dynamically during
+> runtime is deemed important, I can change it back to be checked in
+> kmsg_dump.
 
-...
+If you agree that we do not have to modify this variable dynamically,
+I will also change the permission here:
+module_param_named(always_kmsg_dump, always_kmsg_dump, bool, S_IRUGO | S_IWUSR);
 
-> > So we can go with the proposed mode of allowing the write but not
-> > propagating it. If the resulting split lock #AC originates from CPL != 3
-> > then the guest will be killed with SIGBUS. If it originates from CPL ==
-> > 3 and the guest has user #AC disabled then it will be killed as well.
-> 
-> An idea that's been floated around to avoid killing the guest on a CPL==3
-> split-lock #AC is to add a STICKY bit to MSR_TEST_CTRL that KVM can
-> virtualize to tell the guest that attempting to disable SLD is futile,
-> e.g. so that the guest can kill its misbehaving userspace apps instead of
-> trying to disable SLD and getting killed by the host.
-
-Circling back to this.  KVM needs access to sld_state in one form or another
-if we want to add a KVM hint when the host is in fatal mode.  Three options
-I've come up with:
-
-  1. Bite the bullet and export sld_state.  
-
-  2. Add an is_split_fatal_wrapper().  Ugly since it needs to be non-inline
-     to avoid triggering (1).
-
-  3. Add a synthetic feature flag, e.g. X86_FEATURE_SLD_FATAL, and drop
-     sld_state altogether.
-
-I like (3) because it requires the least amount of code when all is said
-and done, doesn't require more exports, and as a bonus it'd probably be nice
-for userspace to see sld_fatal in /proc/cpuinfo.
-
-Thoughts?
+>
+> Thank you,
+> Pasha
+>
+> >
+> >         -ss
