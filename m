@@ -2,208 +2,126 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5163C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B2AC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86AF2206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E59A20838
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="MlVY1pqC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730563AbgEEOU7 (ORCPT
+        id S1730575AbgEEOVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:20:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48910 "EHLO
+        Tue, 5 May 2020 10:21:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729835AbgEEOP2 (ORCPT
+        by vger.kernel.org with ESMTP id S1730559AbgEEOU7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:15:28 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33115C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:15:28 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jVyLm-0001RA-3u; Tue, 05 May 2020 16:15:10 +0200
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 6A450FFC8D;
-        Tue,  5 May 2020 16:15:09 +0200 (CEST)
-Message-Id: <20200505134904.771457898@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:44:09 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: [patch V4 part 3 15/29] x86/entry: Convert Overflow exception to IDTENTRY
-References: <20200505134354.774943181@linutronix.de>
+        Tue, 5 May 2020 10:20:59 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EC57C061A0F;
+        Tue,  5 May 2020 07:20:59 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 4345523E80;
+        Tue,  5 May 2020 16:20:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1588688457;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hN9heAe9nvYzjYtNDE8SqD4yGSnkgCfLMAsBpUZiufs=;
+        b=MlVY1pqCRINZzT3UE7EK05+wlTCqLm5hLyXTOO7pvnWZEFyJ1Hjw6ZViHh/C6qOFZW/c1e
+        ij0zOdNDDPAsMcw+63PcWcYuDXYuXlijC8S0BEiNDJbBhOk9Xpz4douoc05xQn/BYNxc/1
+        5hCUs+spNQgxlPqVZecpaZYfq04dtTk=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-transfer-encoding: 8-bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 05 May 2020 16:20:57 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [RFC net-next] net: phy: at803x: add cable diagnostics support
+In-Reply-To: <20200505130741.GD208718@lunn.ch>
+References: <20200503181517.4538-1-michael@walle.cc>
+ <20200505130741.GD208718@lunn.ch>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <7dcb92b092057d50b8f079fa8bf0bfeb@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+Am 2020-05-05 15:07, schrieb Andrew Lunn:
+>> +static int at803x_cable_test_get_status(struct phy_device *phydev,
+>> +					bool *finished)
+>> +{
+>> +	struct at803x_priv *priv = phydev->priv;
+>> +	static const int ethtool_pair[] = {
+>> +		ETHTOOL_A_CABLE_PAIR_0, ETHTOOL_A_CABLE_PAIR_1,
+>> +		ETHTOOL_A_CABLE_PAIR_2, ETHTOOL_A_CABLE_PAIR_3};
+> 
+> If you put one per line, you will keep the reverse christmas tree, and
+> David will be happy.
+> 
+>> +	int pair, val, ret;
+>> +	unsigned int delay_ms;
+> 
+> Well, David will be happy if you move this as well.
 
-Convert #OF to IDTENTRY:
-  - Implement the C entry point with DEFINE_IDTENTRY
-  - Emit the ASM stub with DECLARE_IDTENTRY
-  - Remove the ASM idtentry in 64bit
-  - Remove the open coded ASM entry code in 32bit
-  - Fixup the XEN/PV code
-  - Remove the old prototyoes
+Damn, this should really be a checkpatch.pl check ;) It was "int 
+delay_ms;"
+before, then it was changed to "unsigned int delay_ms;"..
 
-No functional change.
+> 
+>> +	*finished = false;
+>> +
+>> +	if (priv->cdt_start) {
+>> +		delay_ms = AT803X_CDT_DELAY_MS;
+>> +		delay_ms -= jiffies_delta_to_msecs(jiffies - priv->cdt_start);
+>> +		if (delay_ms > 0)
+>> +			msleep(delay_ms);
+>> +	}
+>> +
+>> +	for (pair = 0; pair < 4; pair++) {
+>> +		ret = at803x_cdt_start(phydev, pair);
+>> +		if (ret)
+>> +			return ret;
+>> +
+>> +		ret = at803x_cdt_wait_for_completion(phydev);
+>> +		if (ret)
+>> +			return ret;
+>> +
+>> +		val = phy_read(phydev, AT803X_CDT_STATUS);
+>> +		if (val < 0)
+>> +			return val;
+>> +
+>> +		ethnl_cable_test_result(phydev, ethtool_pair[pair],
+>> +					at803x_cdt_test_result(val));
+>> +
+>> +		if (at803x_cdt_fault_length_valid(val))
+>> +			continue;
+> 
+> The name is not very intuitive. It return false if it is valid?
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Mhh, this is actually wrong, it returns true if the length is
+valid. I need to double check that. what about
+at803x_cdt_fault_length_is_valid()
 
----
- arch/x86/entry/entry_32.S       |    7 -------
- arch/x86/entry/entry_64.S       |    1 -
- arch/x86/include/asm/idtentry.h |    1 +
- arch/x86/include/asm/traps.h    |    3 ---
- arch/x86/kernel/idt.c           |    2 +-
- arch/x86/kernel/traps.c         |    6 +++++-
- arch/x86/xen/enlighten_pv.c     |    2 +-
- arch/x86/xen/xen-asm_64.S       |    2 +-
- 8 files changed, 9 insertions(+), 15 deletions(-)
+> Otherwise, this looks good.
 
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -1325,13 +1325,6 @@ SYM_CODE_START(native_iret)
- SYM_CODE_END(native_iret)
- #endif
- 
--SYM_CODE_START(overflow)
--	ASM_CLAC
--	pushl	$0
--	pushl	$do_overflow
--	jmp	common_exception
--SYM_CODE_END(overflow)
--
- SYM_CODE_START(bounds)
- 	ASM_CLAC
- 	pushl	$0
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -1073,7 +1073,6 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work
-  * Exception entry points.
-  */
- 
--idtentry	X86_TRAP_OF		overflow		do_overflow			has_error_code=0
- idtentry	X86_TRAP_BP		int3			do_int3				has_error_code=0
- idtentry	X86_TRAP_BR		bounds			do_bounds			has_error_code=0
- idtentry	X86_TRAP_UD		invalid_op		do_invalid_op			has_error_code=0
---- a/arch/x86/include/asm/idtentry.h
-+++ b/arch/x86/include/asm/idtentry.h
-@@ -78,5 +78,6 @@ static __always_inline void __##func(str
- 
- /* Simple exception entry points. No hardware error code */
- DECLARE_IDTENTRY(X86_TRAP_DE,		exc_divide_error);
-+DECLARE_IDTENTRY(X86_TRAP_OF,		exc_overflow);
- 
- #endif
---- a/arch/x86/include/asm/traps.h
-+++ b/arch/x86/include/asm/traps.h
-@@ -14,7 +14,6 @@
- asmlinkage void debug(void);
- asmlinkage void nmi(void);
- asmlinkage void int3(void);
--asmlinkage void overflow(void);
- asmlinkage void bounds(void);
- asmlinkage void invalid_op(void);
- asmlinkage void device_not_available(void);
-@@ -40,7 +39,6 @@ asmlinkage void simd_coprocessor_error(v
- asmlinkage void xen_xennmi(void);
- asmlinkage void xen_xendebug(void);
- asmlinkage void xen_int3(void);
--asmlinkage void xen_overflow(void);
- asmlinkage void xen_bounds(void);
- asmlinkage void xen_invalid_op(void);
- asmlinkage void xen_device_not_available(void);
-@@ -63,7 +61,6 @@ asmlinkage void xen_simd_coprocessor_err
- dotraplinkage void do_debug(struct pt_regs *regs, long error_code);
- dotraplinkage void do_nmi(struct pt_regs *regs, long error_code);
- dotraplinkage void do_int3(struct pt_regs *regs, long error_code);
--dotraplinkage void do_overflow(struct pt_regs *regs, long error_code);
- dotraplinkage void do_bounds(struct pt_regs *regs, long error_code);
- dotraplinkage void do_invalid_op(struct pt_regs *regs, long error_code);
- dotraplinkage void do_device_not_available(struct pt_regs *regs, long error_code);
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -96,7 +96,7 @@ static const __initconst struct idt_data
- 	INTG(X86_TRAP_MC,		&machine_check),
- #endif
- 
--	SYSG(X86_TRAP_OF,		overflow),
-+	SYSG(X86_TRAP_OF,		asm_exc_overflow),
- #if defined(CONFIG_IA32_EMULATION)
- 	SYSG(IA32_SYSCALL_VECTOR,	entry_INT80_compat),
- #elif defined(CONFIG_X86_32)
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -216,6 +216,11 @@ DEFINE_IDTENTRY(exc_divide_error)
- 		      FPE_INTDIV, error_get_trap_addr(regs));
- }
- 
-+DEFINE_IDTENTRY(exc_overflow)
-+{
-+	do_error_trap(regs, 0, "overflow", X86_TRAP_OF, SIGSEGV, 0, NULL);
-+}
-+
- #define IP ((void __user *)uprobe_get_trap_addr(regs))
- #define DO_ERROR(trapnr, signr, sicode, addr, str, name)		   \
- dotraplinkage void do_##name(struct pt_regs *regs, long error_code)	   \
-@@ -223,7 +228,6 @@ dotraplinkage void do_##name(struct pt_r
- 	do_error_trap(regs, error_code, str, trapnr, signr, sicode, addr); \
- }
- 
--DO_ERROR(X86_TRAP_OF,     SIGSEGV,          0, NULL, "overflow",            overflow)
- DO_ERROR(X86_TRAP_UD,     SIGILL,  ILL_ILLOPN,   IP, "invalid opcode",      invalid_op)
- DO_ERROR(X86_TRAP_OLD_MF, SIGFPE,           0, NULL, "coprocessor segment overrun", coprocessor_segment_overrun)
- DO_ERROR(X86_TRAP_TS,     SIGSEGV,          0, NULL, "invalid TSS",         invalid_TSS)
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -618,7 +618,7 @@ static struct trap_array_entry trap_arra
- #endif
- 	{ nmi,                         xen_xennmi,                      true },
- 	{ int3,                        xen_int3,                        false },
--	{ overflow,                    xen_overflow,                    false },
-+	TRAP_ENTRY(exc_overflow,			false ),
- #ifdef CONFIG_IA32_EMULATION
- 	{ entry_INT80_compat,          xen_entry_INT80_compat,          false },
- #endif
---- a/arch/x86/xen/xen-asm_64.S
-+++ b/arch/x86/xen/xen-asm_64.S
-@@ -33,7 +33,7 @@ xen_pv_trap debug
- xen_pv_trap xendebug
- xen_pv_trap int3
- xen_pv_trap xennmi
--xen_pv_trap overflow
-+xen_pv_trap asm_exc_overflow
- xen_pv_trap bounds
- xen_pv_trap invalid_op
- xen_pv_trap device_not_available
+I'll wait for your v3 and then I'll rebase on that.
 
+-michael
