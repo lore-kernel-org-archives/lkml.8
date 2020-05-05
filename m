@@ -2,99 +2,121 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9AAFC47258
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9624EC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8BEC206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:32:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588685560;
-	bh=nOagl6uAd323E1GePcTCSBFA436BDC6z1ocoIZtcicE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wimBJfWDK6RRJUmvywdvNB3eW0Yl9TeAXdyl7f5UqmtSurSDZpMpvp5b3dkqnFLWq
-	 G1NjXxE//1aeX7ipI2wsjJfkOj+7DdIN+UforvgJW+oL1Nf0YWAFQ9RLu2MZ9GAYTK
-	 E68/k29j5PiLBwlZYSOCuh85ShOKP+lN5LvuER1o=
+	by mail.kernel.org (Postfix) with ESMTP id 71CE4206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:33:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mbsaJBq1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729083AbgEENck (ORCPT
+        id S1729104AbgEENdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 09:32:40 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43434 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729042AbgEENck (ORCPT
+        Tue, 5 May 2020 09:33:00 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:23410 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728990AbgEENc7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 09:32:40 -0400
-Received: by mail-oi1-f196.google.com with SMTP id j16so1751425oih.10;
-        Tue, 05 May 2020 06:32:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aGzwYdYfDeCBheVXdcJg3XhWuww2Jcj8IasjcEOMoV0=;
-        b=MR6I+DklNB4UWIma+YhYtDGiP/qik9dk5lDXhtsvBcl1ZZGYNS5sysTXpcCPRqm8GG
-         TInab9/NjZatkLiTSUlVW5TjxT7wiIQ4jtg8+H76xQ1zY9KoDgM77LjoCWPeXZzH11lM
-         PU7LLmJuIkt/1wDksXzahxHqKOKQOLXc/6ohjl0iL1rIehZL4B1eIQ7BXzRTr50pEa5O
-         /ZEoc4uLEbqRxGUjNa2RzMv20kvfrBM7/z+mZ0jJvez2bz7n/wyiKQ+siP2zBkBHMCYy
-         nlpA81DDB1DlCvnIJxnbpFV7CI/Gt6w2mRhi6FH7nYHtxh0svw5+R8MrcF94FAERvekW
-         p/Vg==
-X-Gm-Message-State: AGi0PuY+sgtv1pEGfs9uBWoUdRHO+UrO/NFQzdHmam9LMUoaewHDggIS
-        cZLy6lrgOwgElvpRMmzS2+wq4wM=
-X-Google-Smtp-Source: APiQypIAPbkEpcmAYhh8URn60kb6nxOuIrbrTxcDfwgGhqJijN2M8awvs8XkUUWZp//f+WPg20NRnA==
-X-Received: by 2002:aca:7209:: with SMTP id p9mr2407871oic.168.1588685559210;
-        Tue, 05 May 2020 06:32:39 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 1sm547503oir.5.2020.05.05.06.32.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 06:32:38 -0700 (PDT)
-Received: (nullmailer pid 22806 invoked by uid 1000);
-        Tue, 05 May 2020 13:32:37 -0000
-Date:   Tue, 5 May 2020 08:32:37 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [v3 PATCH 2/2] dt-bindings: display: Document ASUS Z00T TM5P5
- NT35596 panel compatible
-Message-ID: <20200505133237.GA22147@bogus>
-References: <20200504200102.129195-1-konradybcio@gmail.com>
- <20200504200102.129195-3-konradybcio@gmail.com>
+        Tue, 5 May 2020 09:32:59 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588685579; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=QcmfgsQD27LgfznHzlYFE46yv5/bgTnf9gu//wV7tH8=; b=mbsaJBq1LXoJFSgwkTE+yG5lZjnLfEEoquvNSn2A6TsV28X2euZPUjrobIHCjvl+K9B30Slb
+ TlZ+ga3CoyLwxh2D2bP22MlR6fWbN+NxKacIwyEcQLfcR2Y4QnXmhBxfOyhclKlmVcwYOtPg
+ dJPwGwdGS9c/KWitmVyt0eCK3p0=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb16b06.7f19bd6afc70-smtp-out-n04;
+ Tue, 05 May 2020 13:32:54 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2D324C433BA; Tue,  5 May 2020 13:32:54 +0000 (UTC)
+Received: from [10.131.199.84] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 68929C433F2;
+        Tue,  5 May 2020 13:32:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 68929C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v3 09/17] mmc: sdhci-msm: Fix error handling for
+ dev_pm_opp_of_add_table()
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Pradeep P V K <ppvk@codeaurora.org>,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
+ <1588080785-6812-10-git-send-email-rnayak@codeaurora.org>
+ <CAPDyKFrGQvcCB1wfv=iqk66uja3faMRF1gGMSE2VhB8gJcO=sg@mail.gmail.com>
+ <15efa375-cf1e-b793-1d3e-29ca0a547522@codeaurora.org>
+ <CAPDyKFoaJTXq2qN+HXoSUovun9+4gzLeVJ-88FKbZCSCKjByLw@mail.gmail.com>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <fae2c6ba-62f0-7f35-5f71-b690532963f3@codeaurora.org>
+Date:   Tue, 5 May 2020 19:02:47 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504200102.129195-3-konradybcio@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAPDyKFoaJTXq2qN+HXoSUovun9+4gzLeVJ-88FKbZCSCKjByLw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  4 May 2020 22:01:00 +0200, Konrad Dybcio wrote:
-> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-> ---
->  .../display/panel/asus,z00t-tm5p5-n35596.yaml | 56 +++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/asus,z00t-tm5p5-n35596.yaml
+
+On 5/5/2020 5:03 PM, Ulf Hansson wrote:
+> On Wed, 29 Apr 2020 at 16:09, Rajendra Nayak <rnayak@codeaurora.org> wrote:
+>>
+>>
+>> On 4/28/2020 11:59 PM, Ulf Hansson wrote:
+>>> On Tue, 28 Apr 2020 at 15:39, Rajendra Nayak <rnayak@codeaurora.org> wrote:
+>>>>
+>>>> Even though specifying OPP's in device tree is optional, ignoring all errors
+>>>> reported by dev_pm_opp_of_add_table() means we can't distinguish between a
+>>>> missing OPP table and a wrong/buggy OPP table. While missing OPP table
+>>>> (dev_pm_opp_of_add_table() returns a -ENODEV in such case) can be ignored,
+>>>> a wrong/buggy OPP table in device tree should make the driver error out.
+>>>>
+>>>> while we fix that, lets also fix the variable names for opp/opp_table to
+>>>> avoid confusion and name them opp_table/has_opp_table instead.
+>>>>
+>>>> Suggested-by: Matthias Kaehlcke <matthias@chromium.org>
+>>>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>>>> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+>>>> Cc: Pradeep P V K <ppvk@codeaurora.org>
+>>>> Cc: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+>>>> Cc: linux-mmc@vger.kernel.org
+>>>
+>>> Is this a standalone patch that I queue up via my mmc tree?
+>>
+>> Hi Ulf, yes, its a standalone patch which applies on top of the one
+>> you already have in your tree. No other dependencies.
 > 
+> Thanks for confirming! Perhaps next time you could add this
+> information as part of a description to the patch (where we usually
+> add patch version information).
+> 
+> Anyway, applied for next!
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Thanks Ulf, I should have sent this out as a standalone patch instead of including
+it with the reset of the series, which caused the confusion. Sorry about that :/
 
-Documentation/devicetree/bindings/display/panel/asus,z00t-tm5p5-n35596.yaml: $id: relative path/filename doesn't match actual path or filename
-	expected: http://devicetree.org/schemas/display/panel/asus,z00t-tm5p5-n35596.yaml#
-
-See https://patchwork.ozlabs.org/patch/1282986
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
