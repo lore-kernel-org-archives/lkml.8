@@ -2,89 +2,80 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6717BC47259
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE56C47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38230206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:46:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588693573;
-	bh=TBqRDwuy4LNsTxlX12Gx5YCWxR24WlCsQf6pTkBQFaY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Rd6gf7fMpXp3HKv9gUVM+jlKT4v4mlq3c9fZzB8X5jZpliewGMnmMEdzuzuJ5DJhv
-	 9hAeno5JNO+w3lNvjpHBe9tgGFvj/4iuJFDzZXt43lDBm3BVBGNy/4vmIp3Hqpv1Hv
-	 6/fCZUG+pfqVoEIBp+KMilkBrGMtV9jsByf1brcE=
+	by mail.kernel.org (Postfix) with ESMTP id B638D2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:46:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730819AbgEEPqM (ORCPT
+        id S1730616AbgEEPqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:46:12 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:42429 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730302AbgEEPqK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:46:10 -0400
-Received: by mail-ot1-f68.google.com with SMTP id m18so2011090otq.9;
-        Tue, 05 May 2020 08:46:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pC5ug4JkZ/Q1WpOKLw3JKlztM2npyZ3pEia8DpeRqCM=;
-        b=I63xafTwMnX4W9jxGF1o8zUIhO9qhDw/Ksb0PVNgkxjuYXKccTSExtvsEbRCVyjlR/
-         NPvBR/2PC3kOy0i//tyMkUxlDtve17oUjyXEz+TIo7S9ZzdxcAXBJWzUy0l1Ae4T+jFf
-         0PvdKkoGdLO7BlHyvZUCzXxBCipHUXfKkuZwv+CnJkZ5NQGLlYZqxsYn3NkIwM83hufP
-         1IFkS6UrtQIFtHEc4IqFP4fRWGEAia6jMDkO2U56MywTNwjHVvMk74P71q+qQgt1c71p
-         j58hPSk82hk3zAoyc83P7KRNDG6OFifa7NmqnMtOvlxKFd7NzoMJPvvz7uL9ab/9wP2g
-         iSFA==
-X-Gm-Message-State: AGi0Pua9ff4L6vqMa+l5/zs9kL4jSxBlXuUraBVyCC8/RWk8ElY0VQbE
-        m89qzuevykB0u+ZU8wJ+4g==
-X-Google-Smtp-Source: APiQypK8wD7ubhAL2Dzd24hZqNu9gr5fEROybj1HrCSj0giazCxA5YvV8rF/q4mgDhvkKDnmlBl5lA==
-X-Received: by 2002:a05:6830:1d62:: with SMTP id l2mr3132718oti.316.1588693569153;
-        Tue, 05 May 2020 08:46:09 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a93sm694156otc.12.2020.05.05.08.46.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 08:46:08 -0700 (PDT)
-Received: (nullmailer pid 12692 invoked by uid 1000);
-        Tue, 05 May 2020 15:46:07 -0000
-Date:   Tue, 5 May 2020 10:46:07 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
-        robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
-        Saravanan Sekar <sravanhome@gmail.com>
-Subject: Re: [PATCH v11 1/6] dt-bindings: mfd: add document bindings for
- mp2629
-Message-ID: <20200505154607.GA12636@bogus>
-References: <20200430155810.21383-1-sravanhome@gmail.com>
- <20200430155810.21383-2-sravanhome@gmail.com>
+        Tue, 5 May 2020 11:46:35 -0400
+Received: from ms.lwn.net ([45.79.88.28]:50200 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729666AbgEEPqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 11:46:34 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id A864E31A;
+        Tue,  5 May 2020 15:46:33 +0000 (UTC)
+Date:   Tue, 5 May 2020 09:46:32 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Vitor Massaru Iha <vitor@massaru.org>
+Cc:     linux-doc@vger.kernel.org, akrowiak@linux.ibm.com,
+        pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, linux-kernel@vger.kernel.org,
+        brendanhiggins@google.com, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] docs: s390: Fix wrong label Guest2 instead of Guest3
+Message-ID: <20200505094632.0d34f72b@lwn.net>
+In-Reply-To: <20200430221238.101838-1-vitor@massaru.org>
+References: <20200430221238.101838-1-vitor@massaru.org>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430155810.21383-2-sravanhome@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Apr 2020 17:58:05 +0200, Saravanan Sekar wrote:
-> Add device tree binding information for mp2629 mfd driver.
-> 
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> ---
->  .../devicetree/bindings/mfd/mps,mp2629.yaml   | 62 +++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> 
+On Thu, 30 Apr 2020 19:12:38 -0300
+Vitor Massaru Iha <vitor@massaru.org> wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> This fixes:
+> 
+> Documentation/s390/vfio-ap.rst:488: WARNING: duplicate label s390/vfio-ap:guest2, other instance in /home/iha/sdb/opensource/lkmp/linux_doc/Documentation/s390/vfio-ap.rst
+> 
+> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+> ---
+>  Documentation/s390/vfio-ap.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/s390/vfio-ap.rst b/Documentation/s390/vfio-ap.rst
+> index b5c51f7c748d..367e27ec3c50 100644
+> --- a/Documentation/s390/vfio-ap.rst
+> +++ b/Documentation/s390/vfio-ap.rst
+> @@ -484,7 +484,7 @@ CARD.DOMAIN TYPE  MODE
+>  05.00ff     CEX5A Accelerator
+>  =========== ===== ============
+>  
+> -Guest2
+> +Guest3
+>  ------
+>  =========== ===== ============
+>  CARD.DOMAIN TYPE  MODE
+
+Applied, thanks.
+
+Note, though, that while the patch does "fix" the warning, what it really
+fixes is (as suggested in the subject) an incorrect heading; the warning
+was just a symptom.
+
+jon
