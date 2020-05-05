@@ -2,67 +2,93 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 417D4C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A0DDC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C7AF206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A405206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:12:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588702355;
+	bh=cfXlHUhlmzsnbp3xF7JwuyNyI7Wa9u8sBDQfEmOeyaA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=f215sfsXnrtsNJe7RbFSdCCwsvsN0ZEoC8KLiikGDSRiaIS9j2vGe9QZkGwl7bLTs
+	 EKC+k9Vq0QL56NuTcPc+KXtweFZtthw9qUFEBGXI/Mwk0HMrvw5g4fsd4Vz/pqr2jP
+	 FYMjNiA2eO2TdWbPM61x1HAf7DTFodGHNTMa+K1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730819AbgEESMP (ORCPT
+        id S1730839AbgEESMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 14:12:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58026 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729663AbgEESMO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 14:12:14 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE456C061A0F;
-        Tue,  5 May 2020 11:12:14 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8D08A127EDD2C;
-        Tue,  5 May 2020 11:12:10 -0700 (PDT)
-Date:   Tue, 05 May 2020 11:12:06 -0700 (PDT)
-Message-Id: <20200505.111206.118627398774406136.davem@davemloft.net>
-To:     zhengdejin5@gmail.com
-Cc:     swboyd@chromium.org, ynezz@true.cz, netdev@vger.kernel.org,
-        jonathan.richardson@broadcom.com, linux-kernel@vger.kernel.org,
-        scott.branden@broadcom.com, ray.jui@broadcom.com,
-        f.fainelli@gmail.com
-Subject: Re: [PATCH net v1] net: broadcom: fix a mistake about ioremap
- resource
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200505020329.31638-1-zhengdejin5@gmail.com>
-References: <20200505020329.31638-1-zhengdejin5@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 05 May 2020 11:12:11 -0700 (PDT)
+        Tue, 5 May 2020 14:12:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57962 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730184AbgEESMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 14:12:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E16B206B8;
+        Tue,  5 May 2020 18:12:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588702353;
+        bh=cfXlHUhlmzsnbp3xF7JwuyNyI7Wa9u8sBDQfEmOeyaA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RyqF5+Lg1iiVjMeCf/WXQEowUJtq/smJx++54IgjL5ZF5PcGvlPXfm8Gj5k++IfDL
+         JHXg84yPl9TjggqZAJ8tiTAjuSra1fxZRfhuXxCV/XpfsSjf9D44DaIgTrJG+t8ezX
+         Whsn0yIUJgZEo4wgm06dulszFvNUS5GblhlHMURk=
+Date:   Tue, 5 May 2020 20:12:30 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 5.6 00/73] 5.6.11-rc1 review
+Message-ID: <20200505181230.GB1210667@kroah.com>
+References: <20200504165501.781878940@linuxfoundation.org>
+ <CA+G9fYtwpo01W30vF8PRNrDOxVgyVwyViC5RCmLvLu04t98u4Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYtwpo01W30vF8PRNrDOxVgyVwyViC5RCmLvLu04t98u4Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dejin Zheng <zhengdejin5@gmail.com>
-Date: Tue,  5 May 2020 10:03:29 +0800
-
-> Commit d7a5502b0bb8b ("net: broadcom: convert to
-> devm_platform_ioremap_resource_byname()") will broke this driver.
-> idm_base and nicpm_base were optional, after this change, they are
-> mandatory. it will probe fails with -22 when the dtb doesn't have them
-> defined. so revert part of this commit and make idm_base and nicpm_base
-> as optional.
+On Tue, May 05, 2020 at 07:57:55PM +0530, Naresh Kamboju wrote:
+> On Mon, 4 May 2020 at 23:36, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 5.6.11 release.
+> > There are 73 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Wed, 06 May 2020 16:52:55 +0000.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.11-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
 > 
-> Fixes: d7a5502b0bb8bde ("net: broadcom: convert to devm_platform_ioremap_resource_byname()")
-> Reported-by: Jonathan Richardson <jonathan.richardson@broadcom.com>
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> Results from Linaro’s test farm.
+> No regressions on arm64, arm, x86_64, and i386.
 
-Applied, thank you.
+Thanks for testing all of these and letting me know.
+
+greg k-h
