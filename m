@@ -2,140 +2,95 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F032C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35845C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB962073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:49:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588693789;
-	bh=hO+VVyR8uvhAlxa+oFKty82gFmzWNYuUFmI8OjoKx0c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xurn81oMtS1rSdOpxlGMN5JKjg6WPrS8wGjFBDwSdXB9Qt1xskQBXUhWnJiB3ZZ1s
-	 CgdJnoF0bl9B84dZLOup1UcOnHTvnOijn7IEWROVpKGRQzgjyOdhGnB0OccICykxeZ
-	 aL49Ix6LZ+Ec+IufRbHZhowSbbOZx6SWHEdlt84A=
+	by mail.kernel.org (Postfix) with ESMTP id 16348206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:50:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730065AbgEEPts (ORCPT
+        id S1729717AbgEEPuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:49:48 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38232 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729150AbgEEPts (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:49:48 -0400
-Received: by mail-wm1-f65.google.com with SMTP id g12so2885820wmh.3;
-        Tue, 05 May 2020 08:49:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xduNJNk72lfTzo2Qmvpc5OFvX5tJ6mFglpcx46T2q98=;
-        b=MeOG/1vgoXo2FyResWWECqKPJ3KLdcOAx7OwwgEr+Ysf/n7eYH1hwx+XVPsJwpbhk4
-         xrbXiAZcS52EU1ZapTBhsb+kHnf3sIVs+C1i/dnmxdMTdZsZ10W+D0C9FJgEgi3loTi/
-         ckvGR0yLtGGSciC+eHAsjCxbwObJmZ23405FZTL2qVfklVHDih3ZWvIobkRgkCWbTVqX
-         9czH1q+Ba4FpHvyIod7JrW6vCvbF8WTIkHU7/iVlowxoy5zq/1iJZB6GHrmj6eJf3J8s
-         9juSEBhOEKedGMbJze5faU5B84wqo0Iil+TP1teWoxxw/QfJH1ihp4t7t5zPHgx8p2im
-         OzUg==
-X-Gm-Message-State: AGi0PuY3YxTmSDv3CTbO5vZz1QQy57DPunBT/uR5w2BhnobPT8QN/LzL
-        7n/X1+sK3i59LayqbGkUP5pNS0mW
-X-Google-Smtp-Source: APiQypJjEcrRcBT3LAv7V6UcyX48IsZBqT8tBP0izJb0ESRiEEAZy28VRx0LO7yBVK/IWaJoVVZDeg==
-X-Received: by 2002:a1c:1dc3:: with SMTP id d186mr3955032wmd.90.1588693785850;
-        Tue, 05 May 2020 08:49:45 -0700 (PDT)
-Received: from localhost (ip-37-188-183-9.eurotel.cz. [37.188.183.9])
-        by smtp.gmail.com with ESMTPSA id h10sm3891154wrv.29.2020.05.05.08.49.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 08:49:44 -0700 (PDT)
-Date:   Tue, 5 May 2020 17:49:43 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] memcg: oom: ignore oom warnings from memory.max
-Message-ID: <20200505154943.GR16322@dhcp22.suse.cz>
-References: <20200504065600.GA22838@dhcp22.suse.cz>
- <CALvZod5Ao2PEFPEOckW6URBfxisp9nNpNeon1GuctuHehqk_6Q@mail.gmail.com>
- <20200504141136.GR22838@dhcp22.suse.cz>
- <CALvZod7Ls7rTDOr5vXwEiPneLqbq3JoxfFBxZZ71YWgvLkNr5A@mail.gmail.com>
- <20200504150052.GT22838@dhcp22.suse.cz>
- <CALvZod7EeQm-T4dsBddfMY_szYw3m8gRh5R5GfjQiuQAtCocug@mail.gmail.com>
- <20200504160613.GU22838@dhcp22.suse.cz>
- <CALvZod79hWns9366B+8ZK2Roz8c+vkdA80HqFNMep56_pumdRQ@mail.gmail.com>
- <20200505152712.GB58018@cmpxchg.org>
- <CALvZod48mu1w=fjpD=GXqCMdNq_8rExQ177_EP+Lx+TvR6fw+w@mail.gmail.com>
+        Tue, 5 May 2020 11:50:06 -0400
+Received: from v6.sk ([167.172.42.174]:40488 "EHLO v6.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729150AbgEEPuG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 11:50:06 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id 8809B610CA;
+        Tue,  5 May 2020 15:49:33 +0000 (UTC)
+Date:   Tue, 5 May 2020 17:49:30 +0200
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+List-Id: <soc.lore.kernel.org>
+Cc:     soc@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Kevin Hilman <khilman@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] ARM: mmp: Replace <linux/clk-provider.h> by
+ <linux/of_clk.h>
+Message-ID: <20200505154930.GC1997@furthur.local>
+References: <20200505154536.4099-1-geert+renesas@glider.be>
+ <20200505154536.4099-4-geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALvZod48mu1w=fjpD=GXqCMdNq_8rExQ177_EP+Lx+TvR6fw+w@mail.gmail.com>
+In-Reply-To: <20200505154536.4099-4-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 05-05-20 08:35:45, Shakeel Butt wrote:
-> On Tue, May 5, 2020 at 8:27 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
-> >
-> > On Mon, May 04, 2020 at 12:23:51PM -0700, Shakeel Butt wrote:
-> > > On Mon, May 4, 2020 at 9:06 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > > > I really hate to repeat myself but this is no different from a regular
-> > > > oom situation.
-> > >
-> > > Conceptually yes there is no difference but there is no *divine
-> > > restriction* to not make a difference if there is a real world
-> > > use-case which would benefit from it.
-> >
-> > I would wholeheartedly agree with this in general.
-> >
-> > However, we're talking about the very semantics that set memory.max
-> > apart from memory.high: triggering OOM kills to enforce the limit.
-> >
-> > > > when the kernel cannot act and mentions that along with the
-> > > > oom report so that whoever consumes that information can debug or act on
-> > > > that fact.
-> > > >
-> > > > Silencing the oom report is simply removing a potentially useful
-> > > > aid to debug further a potential problem.
-> > >
-> > > *Potentially* useful for debugging versus actually beneficial for
-> > > "sweep before tear down" use-case. Also I am not saying to make "no
-> > > dumps for memory.max when no eligible tasks" a set in stone rule. We
-> > > can always reevaluate when such information will actually be useful.
-> > >
-> > > Johannes/Andrew, what's your opinion?
-> >
-> > I still think that if you want to sweep without triggering OOMs,
-> > memory.high has the matching semantics.
-> >
-> > As you pointed out, it doesn't work well for foreign charges, but that
-> > is more of a limitation in the implementation than in the semantics:
-> >
-> >         /*
-> >          * If the hierarchy is above the normal consumption range, schedule
-> >          * reclaim on returning to userland.  We can perform reclaim here
-> >          * if __GFP_RECLAIM but let's always punt for simplicity and so that
-> >          * GFP_KERNEL can consistently be used during reclaim.  @memcg is
-> >          * not recorded as it most likely matches current's and won't
-> >          * change in the meantime.  As high limit is checked again before
-> >          * reclaim, the cost of mismatch is negligible.
-> >          */
-> >
-> > Wouldn't it be more useful to fix that instead? It shouldn't be much
-> > of a code change to do sync reclaim in try_charge().
+On Tue, May 05, 2020 at 05:45:36PM +0200, Geert Uytterhoeven wrote:
+> The Marvell MMP platform code is not a clock provider, and just needs to
+> call of_clk_init().
 > 
-> Sync reclaim would really simplify the remote charging case. Though
-> should sync reclaim only be done for remote charging or for all?
+> Hence it can include <linux/of_clk.h> instead of <linux/clk-provider.h>.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 
-The simplest way around that would be to always do sync reclaim for
-unpopulated memcgs because those do not have any user context to reclaim
-from and for restricted allocation contexts like atomic allocations
-maybe also for GFP_NO{IO,FS}.
--- 
-Michal Hocko
-SUSE Labs
+Acked-by: Lubomir Rintel <lkundrak@v3.sk>
+
+> ---
+> v2:
+>   - Add Reviewed-by.
+> ---
+>  arch/arm/mach-mmp/mmp-dt.c  | 2 +-
+>  arch/arm/mach-mmp/mmp2-dt.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/mach-mmp/mmp-dt.c b/arch/arm/mach-mmp/mmp-dt.c
+> index 91214996acecc9fb..3f43c0867dcae4ed 100644
+> --- a/arch/arm/mach-mmp/mmp-dt.c
+> +++ b/arch/arm/mach-mmp/mmp-dt.c
+> @@ -8,7 +8,7 @@
+>  
+>  #include <linux/irqchip.h>
+>  #include <linux/of_platform.h>
+> -#include <linux/clk-provider.h>
+> +#include <linux/of_clk.h>
+>  #include <linux/clocksource.h>
+>  #include <asm/mach/arch.h>
+>  #include <asm/mach/time.h>
+> diff --git a/arch/arm/mach-mmp/mmp2-dt.c b/arch/arm/mach-mmp/mmp2-dt.c
+> index 510c762ddc484c40..34a5fe4b3949167e 100644
+> --- a/arch/arm/mach-mmp/mmp2-dt.c
+> +++ b/arch/arm/mach-mmp/mmp2-dt.c
+> @@ -9,7 +9,7 @@
+>  #include <linux/io.h>
+>  #include <linux/irqchip.h>
+>  #include <linux/of_platform.h>
+> -#include <linux/clk-provider.h>
+> +#include <linux/of_clk.h>
+>  #include <linux/clocksource.h>
+>  #include <asm/mach/arch.h>
+>  #include <asm/mach/time.h>
+> -- 
+> 2.17.1
+> 
