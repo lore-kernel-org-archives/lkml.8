@@ -2,38 +2,38 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33592C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7EF1C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B634206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3D71206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:23:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jlUDA7Xe"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qw4J8O9R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728553AbgEEAVA (ORCPT
+        id S1728367AbgEEAXs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 20:21:00 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3656 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728336AbgEEAVA (ORCPT
+        Mon, 4 May 2020 20:23:48 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:7495 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727028AbgEEAXs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 20:21:00 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eb0b1260000>; Mon, 04 May 2020 17:19:50 -0700
+        Mon, 4 May 2020 20:23:48 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eb0b1940000>; Mon, 04 May 2020 17:21:40 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 04 May 2020 17:20:59 -0700
+  Mon, 04 May 2020 17:23:48 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 04 May 2020 17:20:59 -0700
+        by hqpgpgate101.nvidia.com on Mon, 04 May 2020 17:23:48 -0700
 Received: from [10.2.56.198] (172.20.13.39) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 5 May
- 2020 00:20:59 +0000
-Subject: Re: [PATCH hmm v2 2/5] mm/hmm: make hmm_range_fault return 0 or -1
+ 2020 00:23:47 +0000
+Subject: Re: [PATCH hmm v2 4/5] mm/hmm: remove HMM_PFN_SPECIAL
 To:     Jason Gunthorpe <jgg@ziepe.ca>, <linux-mm@kvack.org>,
         Ralph Campbell <rcampbell@nvidia.com>
 CC:     Alex Deucher <alexander.deucher@amd.com>,
@@ -49,15 +49,15 @@ CC:     Alex Deucher <alexander.deucher@amd.com>,
         Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
         <nouveau@lists.freedesktop.org>,
         "Yang, Philip" <Philip.Yang@amd.com>
-References: <2-v2-b4e84f444c7d+24f57-hmm_no_flags_jgg@mellanox.com>
+References: <4-v2-b4e84f444c7d+24f57-hmm_no_flags_jgg@mellanox.com>
 X-Nvconfidentiality: public
 From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <9cf9f4f0-58b7-1992-6c6e-eed226ba42c0@nvidia.com>
-Date:   Mon, 4 May 2020 17:20:58 -0700
+Message-ID: <11e39f2e-e244-a75f-15f4-83d2f5dd2f26@nvidia.com>
+Date:   Mon, 4 May 2020 17:23:46 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <2-v2-b4e84f444c7d+24f57-hmm_no_flags_jgg@mellanox.com>
+In-Reply-To: <4-v2-b4e84f444c7d+24f57-hmm_no_flags_jgg@mellanox.com>
 X-Originating-IP: [172.20.13.39]
 X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
  HQMAIL107.nvidia.com (172.20.187.13)
@@ -65,17 +65,17 @@ Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588637990; bh=IxP1FX28IvHHn1UJ333IIWhaZQbrlpthRJPkCq5tlOE=;
+        t=1588638100; bh=LbTFGAO939OtgC3J478q1/lLZNcOmbmZm/bb6JPA+3g=;
         h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
          Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
          X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
          Content-Transfer-Encoding;
-        b=jlUDA7Xe/cEVYvcoOLBLT9WxsiTxB4eaIcRkJbYt7sChT+skJNIVNGkwSxeX311N9
-         8Icf+Bb+N7FsISzQG4Ci4zeBXx95nSpEwUjZe7BytMfOd9TIqtDhoWdCDk3g2renix
-         JJp4862GZJKQrIMSPPWchAxpo2TL3LdIgZ1nciGXyRvtuaWnU7bnlRQkU6QhCIwddA
-         zZt1IUaeh+IgfHdHcJKHNaZAmd2XKaHg3iGk3SkLeBMTYoH9nYDLidjG4h/hxqZ6a6
-         Hae57Q5zwNGF0Ax1wOvaZcYkMzvipoDz/QPdM+7uCWP3VezcDvR1L7Kvdm3oMQaoTe
-         S2aJNC1fom1GQ==
+        b=qw4J8O9R40LD/qwoUcwvvA/9rtpnX8IImDRS9vHOyZrJtm90MVganf/mHpIZLk1G2
+         TAaZxWVsiQD4LfvXhom5hDALdA1n9rwzM/TX7FVswoGDDHCxrarRiboHsnvtRGwfaB
+         XKUfU9+NeTQ12kJUC1MpdFE2FpDUzqsBAAJ2qH76Gr+U2Wn+OGtNJBOQeTAFsxD7Xb
+         hzwEziNt+xMaVGWJ2xKZIj1gPJ5+BVHFfaGuaAaky5NcasEmrfLU4+U+l+TVi4bLUh
+         O7o5uuDV8EwCSq3Qst8WqzmyAaKwQMM7ipuSr9hNn9vnKmA4K1RyrTUleAA0KmoAm6
+         HX5++tYtaWNGw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -84,60 +84,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On 2020-05-01 11:20, Jason Gunthorpe wrote:
 > From: Jason Gunthorpe <jgg@mellanox.com>
 > 
-> hmm_vma_walk->last is supposed to be updated after every write to the
-> pfns, so that it can be returned by hmm_range_fault(). However, this is
-> not done consistently. Fortunately nothing checks the return code of
-> hmm_range_fault() for anything other than error.
-> 
-> More importantly last must be set before returning -EBUSY as it is used to
-> prevent reading an output pfn as an input flags when the loop restarts.
-> 
-> For clarity and simplicity make hmm_range_fault() return 0 or -ERRNO. Only
-> set last when returning -EBUSY.
+> This is just an alias for HMM_PFN_ERROR, nothing cares that the error was
+> because of a special page vs any other error case.
 
-Yes, this is also a nice simplification.
-
-> ...
-> @@ -590,10 +580,13 @@ long hmm_range_fault(struct hmm_range *range)
->   			return -EBUSY;
->   		ret = walk_page_range(mm, hmm_vma_walk.last, range->end,
->   				      &hmm_walk_ops, &hmm_vma_walk);
-> +		/*
-> +		 * When -EBUSY is returned the loop restarts with
-> +		 * hmm_vma_walk.last set to an address that has not been stored
-> +		 * in pfns. All entries < last in the pfn array are set to their
-> +		 * output, and all >= are still at their input values.
-> +		 */
-
-I'm glad you added that comment. This is much easier to figure out with
-that in place. After poking around this patch and eventually understanding the
-.last handling, I wondered if you might like this slightly tweaked wording
-instead:
-
-		/*
-		 * Each of the hmm_walk_ops routines returns -EBUSY if and only
-		 * hmm_vma_walk.last has been set to an address that has not yet
-		 * been stored in pfns. All entries < last in the pfn array are
-		 * set to their output, and all >= are still at their input
-		 * values.
-		 */
-
-Either way,
-
-     Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
 
 thanks,
 -- 
 John Hubbard
 NVIDIA
-
->   	} while (ret == -EBUSY);
-> -
-> -	if (ret)
-> -		return ret;
-> -	return (hmm_vma_walk.last - range->start) >> PAGE_SHIFT;
-> +	return ret;
->   }
->   EXPORT_SYMBOL(hmm_range_fault);
+> 
+> Acked-by: Felix Kuehling <Felix.Kuehling@amd.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+> ---
+>   drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c | 1 -
+>   drivers/gpu/drm/nouveau/nouveau_svm.c   | 1 -
+>   include/linux/hmm.h                     | 8 --------
+>   mm/hmm.c                                | 2 +-
+>   4 files changed, 1 insertion(+), 11 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
+> index 41ae7f96f48194..76b4a4fa39ed04 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
+> @@ -775,7 +775,6 @@ static const uint64_t hmm_range_flags[HMM_PFN_FLAG_MAX] = {
+>   static const uint64_t hmm_range_values[HMM_PFN_VALUE_MAX] = {
+>   	0xfffffffffffffffeUL, /* HMM_PFN_ERROR */
+>   	0, /* HMM_PFN_NONE */
+> -	0xfffffffffffffffcUL /* HMM_PFN_SPECIAL */
+>   };
+>   
+>   /**
+> diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
+> index c68e9317cf0740..cf0d9bd61bebf9 100644
+> --- a/drivers/gpu/drm/nouveau/nouveau_svm.c
+> +++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
+> @@ -379,7 +379,6 @@ static const u64
+>   nouveau_svm_pfn_values[HMM_PFN_VALUE_MAX] = {
+>   	[HMM_PFN_ERROR  ] = ~NVIF_VMM_PFNMAP_V0_V,
+>   	[HMM_PFN_NONE   ] =  NVIF_VMM_PFNMAP_V0_NONE,
+> -	[HMM_PFN_SPECIAL] = ~NVIF_VMM_PFNMAP_V0_V,
+>   };
+>   
+>   /* Issue fault replay for GPU to retry accesses that faulted previously. */
+> diff --git a/include/linux/hmm.h b/include/linux/hmm.h
+> index 0df27dd03d53d7..81c302c884c0e3 100644
+> --- a/include/linux/hmm.h
+> +++ b/include/linux/hmm.h
+> @@ -44,10 +44,6 @@ enum hmm_pfn_flag_e {
+>    * Flags:
+>    * HMM_PFN_ERROR: corresponding CPU page table entry points to poisoned memory
+>    * HMM_PFN_NONE: corresponding CPU page table entry is pte_none()
+> - * HMM_PFN_SPECIAL: corresponding CPU page table entry is special; i.e., the
+> - *      result of vmf_insert_pfn() or vm_insert_page(). Therefore, it should not
+> - *      be mirrored by a device, because the entry will never have HMM_PFN_VALID
+> - *      set and the pfn value is undefined.
+>    *
+>    * Driver provides values for none entry, error entry, and special entry.
+>    * Driver can alias (i.e., use same value) error and special, but
+> @@ -56,12 +52,10 @@ enum hmm_pfn_flag_e {
+>    * HMM pfn value returned by hmm_vma_get_pfns() or hmm_vma_fault() will be:
+>    * hmm_range.values[HMM_PFN_ERROR] if CPU page table entry is poisonous,
+>    * hmm_range.values[HMM_PFN_NONE] if there is no CPU page table entry,
+> - * hmm_range.values[HMM_PFN_SPECIAL] if CPU page table entry is a special one
+>    */
+>   enum hmm_pfn_value_e {
+>   	HMM_PFN_ERROR,
+>   	HMM_PFN_NONE,
+> -	HMM_PFN_SPECIAL,
+>   	HMM_PFN_VALUE_MAX
+>   };
+>   
+> @@ -110,8 +104,6 @@ static inline struct page *hmm_device_entry_to_page(const struct hmm_range *rang
+>   		return NULL;
+>   	if (entry == range->values[HMM_PFN_ERROR])
+>   		return NULL;
+> -	if (entry == range->values[HMM_PFN_SPECIAL])
+> -		return NULL;
+>   	if (!(entry & range->flags[HMM_PFN_VALID]))
+>   		return NULL;
+>   	return pfn_to_page(entry >> range->pfn_shift);
+> diff --git a/mm/hmm.c b/mm/hmm.c
+> index f06bcac948a79b..2e975eedb14f89 100644
+> --- a/mm/hmm.c
+> +++ b/mm/hmm.c
+> @@ -301,7 +301,7 @@ static int hmm_vma_handle_pte(struct mm_walk *walk, unsigned long addr,
+>   			pte_unmap(ptep);
+>   			return -EFAULT;
+>   		}
+> -		*pfn = range->values[HMM_PFN_SPECIAL];
+> +		*pfn = range->values[HMM_PFN_ERROR];
+>   		return 0;
+>   	}
+>   
 > 
 
