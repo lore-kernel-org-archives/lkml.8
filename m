@@ -6,109 +6,101 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C109DC47256
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C411C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B40B20663
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB41F20663
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:00:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="PLxoH++/"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="ayOAwVtM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbgEETAj (ORCPT
+        id S1729116AbgEETAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 15:00:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728707AbgEETAh (ORCPT
+        Tue, 5 May 2020 15:00:42 -0400
+Received: from mail.efficios.com ([167.114.26.124]:51972 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729088AbgEETAj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 15:00:37 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDDF8C061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 12:00:36 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id i14so3456750qka.10
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 12:00:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=GL8YJhagmr0tY88vQYg8nNJwc2RX2WgsOSH+iUm5Ykg=;
-        b=PLxoH++/yyfuORzgoSUMi8+9wHSL4/iBxLjFFQCziWAODruKOY8aWMCJ3PL63O01p6
-         25TvRIvBTL0olryOCHVe+rJDB+YKESxFqnzLRYdheZCWTBmQS65FAbJo/A5bNrcJMVQv
-         QQzx5+x4xfF/d6+LvRG8TE9Xa1Hv54kUYu4MicCAIpMjQahvcqXH1u0eyzSC3cKgSx3F
-         sXEQiZIomrwDrNCWwdF7BvnYl3TWqNWZjoLyULrJwJrksYIHaRh8ssyT8Ea41CJG5Wsy
-         Ry/9MZrQT0KIwKBBvYn74fNzfBhHkrqCqMUQvFyvNzQOQyzzeugg9I/zXseBfcma9J3e
-         xzUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=GL8YJhagmr0tY88vQYg8nNJwc2RX2WgsOSH+iUm5Ykg=;
-        b=Lm2lcKWIy/8dqp7kSesKnOyRZZFYAfq0bxf4ZAB8H73ogvA2/bVC4i7qkvP9WebWyw
-         W0lsNfYVbqTNgWbhERbw7kg9ID6BsGR80m9GKVTdTefncEpGM6h9AXw6EbkOcNaDWfTG
-         jGx3pY8VUC5NFnBHOdMXcP0li3H9R1pBd6fw4Pf0LL38moqiyBmMH3KF2GXRFBGsU3rV
-         4ddHMR+I9nU12v5C3iX18oOWx18ICJ5dtS0D8XEvLy8BJv2i8b06Mu1Zblcm1HCrkWPT
-         GKqD4W36nPXJ0EpXIvpwDfu/zP1dE19y1l+t4SaVVmWpx/o2NjSW0D5yuSDqXG2iiXqD
-         qKSA==
-X-Gm-Message-State: AGi0PuanFpFnZEftP2wbaEUbd5S+VBy87Foah643Ish8EYNLEL3Lxw0L
-        WBTMGmg2EYtehufiwHzE6wf9zA==
-X-Google-Smtp-Source: APiQypKlB2SJjOgo2QNo0+920N+E3iInb3Z7GmJ3C4z4rOKuQVKs3mtv8XHi42+Up8m6GIZeLEq4Bw==
-X-Received: by 2002:a37:6145:: with SMTP id v66mr5004657qkb.458.1588705235839;
-        Tue, 05 May 2020 12:00:35 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id z65sm2563832qka.60.2020.05.05.12.00.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 May 2020 12:00:35 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: splice() rcu_sched self-detected stall on CPU
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20200505185732.GP2869@paulmck-ThinkPad-P72>
-Date:   Tue, 5 May 2020 15:00:34 -0400
-Cc:     Al Viro <viro@ZenIV.linux.org.uk>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <8678900D-8D52-4195-A767-9E6923EE0AAF@lca.pw>
-References: <89F418A9-EB20-48CB-9AE0-52C700E6BB74@lca.pw>
- <20200505185732.GP2869@paulmck-ThinkPad-P72>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Tue, 5 May 2020 15:00:39 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id ED9C62A1541;
+        Tue,  5 May 2020 15:00:37 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id nv6F0bF46OsB; Tue,  5 May 2020 15:00:37 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id A03BB2A1540;
+        Tue,  5 May 2020 15:00:37 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com A03BB2A1540
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1588705237;
+        bh=Rjfz5xymzYaDcKUScYp/x3NNVUdXiC7q7LLU5PE9Yq4=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=ayOAwVtM4nE+ZDxaOO5eNAuu33/KbfNxDDp0x+j3OTv50a2by86tDlyHwyREqIsH1
+         fz2BPGF2dtJOwcULCxNlkmRqM1oy4a2fW/rmecuuXmGtPW1sNy7IfWMBbGl7b3vh5s
+         E500PXdbCAQWVwtm/MB55xjPtlHHyH/8Yb6F+1OhEQVCiMORxHaqCoWZPa+qC1yBkK
+         S35I0iJxPUnhqaZdnUsRymi8I0xAUCZ7JNN3DmdoMwOakXX2x2vGnJqnJnR31skm0/
+         dbif8G54c1HqUSYTkAJOI1dZmptNL0FDw4eM0Ie+zMpYWZ9RAGSbXXwFewI+zi7uzz
+         UTGx/j2RfK6TQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id mo_UgZ0kehgb; Tue,  5 May 2020 15:00:37 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 89D572A1819;
+        Tue,  5 May 2020 15:00:37 -0400 (EDT)
+Date:   Tue, 5 May 2020 15:00:37 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     ndesaulniers <ndesaulniers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        x86 <x86@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        bristot <bristot@redhat.com>, jbaron <jbaron@akamai.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Nadav Amit <namit@vmware.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Message-ID: <656098739.766.1588705237442.JavaMail.zimbra@efficios.com>
+In-Reply-To: <CAHk-=wiUd=fcpegFLK4VK9iFfrO5BmpGKDszGpuyJkDdz4JaoQ@mail.gmail.com>
+References: <20200501202849.647891881@infradead.org> <20200503125813.GL3762@hirez.programming.kicks-ass.net> <a53369f3-665a-af0e-efad-09ae456af847@rasmusvillemoes.dk> <20200504201445.GQ3762@hirez.programming.kicks-ass.net> <20200505093625.GE5298@hirez.programming.kicks-ass.net> <CAKwvOd=cP8UCX0+5pZ3AqzvOM8LKzLJJ_heDhrghqJdOnHoGMg@mail.gmail.com> <CAKwvOdkL+2Gvn2mkZ8cdHN=1F5cHQHii57ocD0RFeLJxEt=TUQ@mail.gmail.com> <CAHk-=wiUd=fcpegFLK4VK9iFfrO5BmpGKDszGpuyJkDdz4JaoQ@mail.gmail.com>
+Subject: Re: [PATCH v4 14/18] static_call: Add static_cond_call()
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3928 (ZimbraWebClient - FF75 (Linux)/8.8.15_GA_3928)
+Thread-Topic: static_call: Add static_cond_call()
+Thread-Index: TBBGZFVyha9Zhc3xVPg/xpFfwyTxwg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+----- On May 5, 2020, at 2:48 PM, Linus Torvalds torvalds@linux-foundation.org wrote:
+[...]
+> 
+> Your initial reaction that "you can't compile away the read and the
+> test of NULL" was correct, I think.
 
+I suspect this pattern of "if (func != NULL) func(...)" could be semantically
+changed to just invoking an empty function which effectively does nothing.
+This would remove the need to do a pointer check in the first place. But maybe
+I'm missing something subtle about why it has not been done in this context.
 
-> On May 5, 2020, at 2:57 PM, Paul E. McKenney <paulmck@kernel.org> =
-wrote:
->=20
-> On Mon, May 04, 2020 at 03:11:09PM -0400, Qian Cai wrote:
->> Running a syscall fuzzer inside a container on linux-next floods =
-systems with soft lockups. It looks like stuck in this line at =
-iov_iter_copy_from_user_atomic(), Thoughts?
->>=20
->> iterate_all_kinds(i, bytes, v,
->>                copyin((p +=3D v.iov_len) - v.iov_len, v.iov_base, =
-v.iov_len),
->>                memcpy_from_page((p +=3D v.bv_len) - v.bv_len, =
-v.bv_page,
->>                                 v.bv_offset, v.bv_len),
->>                memcpy((p +=3D v.iov_len) - v.iov_len, v.iov_base, =
-v.iov_len)
->>        )
->=20
-> If the size being copied is large enough, something like this might =
-happen.
->=20
-> Is this a CONFIG_PREEMPT=3Dn kernel?  And is the size passed in to
+Thanks,
 
-Yes, CONFIG_PREEMPT=3Dn.
+Mathieu
 
-> iov_iter_copy_from_user_atomic() quite large, given that this is =
-generated
-> by a fuzzer?  If so, one thing to try is to add cond_resched() in the
-> iterate_bvec(), iterate_kvec(), and iterate_iovec() macros.
-
-I=E2=80=99ll try that.=
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
