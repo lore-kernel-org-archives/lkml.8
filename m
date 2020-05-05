@@ -2,109 +2,104 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC3AC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1688AC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE1FD20735
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:31:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ACdEEFfL"
+	by mail.kernel.org (Postfix) with ESMTP id D5CC820746
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:34:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730349AbgEEQbe (ORCPT
+        id S1729970AbgEEQeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:31:34 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:33970 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729840AbgEEQbe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:31:34 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 045GVTWB119652;
-        Tue, 5 May 2020 11:31:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588696289;
-        bh=taYNfOw1PERNYYRNSf6RpqbmydDX/ba8q0uroLuaJ+A=;
-        h=From:To:CC:Subject:Date;
-        b=ACdEEFfLuoAHZtJh1cM1BSIgKLA4wfntKTjCv8fjI981M1UVDFnq7Jd3xPxJaUJbO
-         /1HomyBWx+8qMr/AWy6mX4CuhHmQcbf3+PFGG/xG8yP+3mRTHLP7+IiGIve870t3I1
-         GPZZI1tdE/va7R9+D8/23qGvKKIT+S5JH5+T98Ig=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 045GVTDq045409
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 5 May 2020 11:31:29 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 5 May
- 2020 11:31:29 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 5 May 2020 11:31:29 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 045GVRfw048550;
-        Tue, 5 May 2020 11:31:28 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     "David S. Miller" <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH] net: ethernet: ti: am65-cpsw-nuss: fix irqs type
-Date:   Tue, 5 May 2020 19:31:26 +0300
-Message-ID: <20200505163126.13942-1-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 5 May 2020 12:34:14 -0400
+Received: from mx2.suse.de ([195.135.220.15]:32944 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728687AbgEEQeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 12:34:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 34C5BAFB8;
+        Tue,  5 May 2020 16:34:14 +0000 (UTC)
+Subject: Re: [PATCH] xenbus: avoid stack overflow warning
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Stefano Stabellini <sstabellini@kernel.org>,
+        Yan Yankovskyi <yyankovskyi@gmail.com>, Wei Liu <wl@xen.org>,
+        xen-devel <xen-devel@lists.xenproject.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <20200505141546.824573-1-arnd@arndb.de>
+ <30d49e6d-570b-f6fd-3a6f-628abcc8b127@suse.com>
+ <CAK8P3a0mWH=Zcq180+cTRMpqOkGt05xDP1+kCTP6yc9grAg2VQ@mail.gmail.com>
+ <48893239-dde9-4e94-040d-859f4348816d@suse.com>
+ <656d0dc4-6c4f-29df-be7b-4cb70c2c0a5e@oracle.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <02dcf5df-f447-d29b-052e-c3fcd71a214f@suse.com>
+Date:   Tue, 5 May 2020 18:34:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <656d0dc4-6c4f-29df-be7b-4cb70c2c0a5e@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The K3 INTA driver, which is source TX/RX IRQs for CPSW NUSS, defines IRQs
-triggering type as EDGE by default, but triggering type for CPSW NUSS TX/RX
-IRQs has to be LEVEL as the EDGE triggering type may cause unnecessary IRQs
-triggering and NAPI scheduling for empty queues. It was discovered with
-RT-kernel.
+On 05.05.20 18:12, Boris Ostrovsky wrote:
+> 
+> On 5/5/20 12:02 PM, Jürgen Groß wrote:
+>> On 05.05.20 17:01, Arnd Bergmann wrote:
+>>> On Tue, May 5, 2020 at 4:34 PM Jürgen Groß <jgross@suse.com> wrote:
+>>>> On 05.05.20 16:15, Arnd Bergmann wrote:
+>>>>> The __xenbus_map_ring() function has two large arrays, 'map' and
+>>>>> 'unmap' on its stack. When clang decides to inline it into its caller,
+>>>>> xenbus_map_ring_valloc_hvm(), the total stack usage exceeds the
+>>>>> warning
+>>>>> limit for stack size on 32-bit architectures.
+>>>>>
+>>>>> drivers/xen/xenbus/xenbus_client.c:592:12: error: stack frame size
+>>>>> of 1104 bytes in function 'xenbus_map_ring_valloc_hvm'
+>>>>> [-Werror,-Wframe-larger-than=]
+>>>>>
+>>>>> As far as I can tell, other compilers don't inline it here, so we get
+>>>>> no warning, but the stack usage is actually the same. It is possible
+>>>>> for both arrays to use the same location on the stack, but the
+>>>>> compiler
+>>>>> cannot prove that this is safe because they get passed to external
+>>>>> functions that may end up using them until they go out of scope.
+>>>>>
+>>>>> Move the two arrays into separate basic blocks to limit the scope
+>>>>> and force them to occupy less stack in total, regardless of the
+>>>>> inlining decision.
+>>>>
+>>>> Why don't you put both arrays into a union?
+>>>
+>>> I considered that as well, and don't really mind either way. I think
+>>> it does
+>>> get a bit ugly whatever we do. If you prefer the union, I can respin the
+>>> patch that way.
+>>
+>> Hmm, thinking more about it I think the real clean solution would be to
+>> extend struct map_ring_valloc_hvm to cover the pv case, too, to add the
+>> map and unmap arrays (possibly as a union) to it and to allocate it
+>> dynamically instead of having it on the stack.
+>>
+>> Would you be fine doing this?
+> 
+> 
+> 
+> Another option might be to factor out/modify code from
+> xenbus_unmap_ring() and call the resulting code from
+> __xenbus_map_ring()'s fail path.
 
-Fix it by explicitly specifying CPSW NUSS TX/RX IRQ type as
-IRQF_TRIGGER_HIGH.
+This will still allocate large arrays on the stack. If we ever increase
+the max ring page order it will explode.
 
-Fixes: 93a76530316a ("net: ethernet: ti: introduce am65x/j721e gigabit eth subsystem driver")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- drivers/net/ethernet/ti/am65-cpsw-nuss.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-index 2bf56733ba94..2517ffba8178 100644
---- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-+++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-@@ -1719,7 +1719,8 @@ static int am65_cpsw_nuss_ndev_add_napi_2g(struct am65_cpsw_common *common)
- 
- 		ret = devm_request_irq(dev, tx_chn->irq,
- 				       am65_cpsw_nuss_tx_irq,
--				       0, tx_chn->tx_chn_name, tx_chn);
-+				       IRQF_TRIGGER_HIGH,
-+				       tx_chn->tx_chn_name, tx_chn);
- 		if (ret) {
- 			dev_err(dev, "failure requesting tx%u irq %u, %d\n",
- 				tx_chn->id, tx_chn->irq, ret);
-@@ -1744,7 +1745,7 @@ static int am65_cpsw_nuss_ndev_reg_2g(struct am65_cpsw_common *common)
- 
- 	ret = devm_request_irq(dev, common->rx_chns.irq,
- 			       am65_cpsw_nuss_rx_irq,
--			       0, dev_name(dev), common);
-+			       IRQF_TRIGGER_HIGH, dev_name(dev), common);
- 	if (ret) {
- 		dev_err(dev, "failure requesting rx irq %u, %d\n",
- 			common->rx_chns.irq, ret);
--- 
-2.17.1
-
+Juergen
