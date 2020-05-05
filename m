@@ -2,258 +2,113 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA93AC47258
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E17C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82CE824976
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E2C620661
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:29:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CejyCH2+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jWS2YE5/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbgEEU3F (ORCPT
+        id S1729312AbgEEU3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 16:29:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51152 "EHLO
+        Tue, 5 May 2020 16:29:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728135AbgEEU3D (ORCPT
+        by vger.kernel.org with ESMTP id S1728135AbgEEU3X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 16:29:03 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 158FAC061A0F;
-        Tue,  5 May 2020 13:29:03 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id a9so2475136lfb.8;
-        Tue, 05 May 2020 13:29:02 -0700 (PDT)
+        Tue, 5 May 2020 16:29:23 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C616AC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 13:29:21 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id b188so3789759qkd.9
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 13:29:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=83UCtPNkqDZBKGoRIazdaAZRxxGX8f38Okq8k7GA4pI=;
-        b=CejyCH2+i8WjwOb6iQSU/zjkgAjhZFS3kKbmAcGRM+1VtTGKGEU+WvbOY7x2voOPho
-         XLjfmulIDc05d7z63UFfBbfOwjtdaXNdU6aYilayzlrXcoKs2Scd/9SK20k+tLtbbMp6
-         n9nDQ3nkLOzgi5LtpjnS/IKdbwlyQQCsDCcNqYlzoRBaW4vZvEOnLbQUXDzHAGqefQGe
-         Q1AP1nacbWbmjUwWFXOiAHyZXwLAXI/sGF3FtUqGf+6nDIg6RIe8xlpo4X2jbPbPgjId
-         2m0DslzgGLGYJfe8SAGJ267eW+mbvJ4JEiIJQt7G2m+lSjdotbOCUzSYiGG6gAD7sGlY
-         1jBQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WwYjE2GWrCctkg5EjStPqPCb7vhBmi7tE/P9TjGv2ws=;
+        b=jWS2YE5/k4w9jAJiOHdnPf2vhCEK04lsSUmN/uqo6B6PuxZ9i97vhOmdGUOfVSzWdN
+         xv1oBs8lYqPB9/d3YhjguC+h7JIUWFNQhS2YcT4MrENkWgfFBTQfVOePVjatG1Gtzapq
+         XbAn3lQQLD1vOeUoyA9KHCPytRYPiL5K7H3tWI6RxBNn9Dc2xT+VwBFKIENzsXJWFbi4
+         xkLRUbpHt1O7QCjRxJL+fEt3p8dUFiAahZ9vUjyCmN0woJeSoFmtCE1Y3MWN1qvMGAqX
+         zJC50kYZv1JNr5uinJOuv1ZB7HjKRh8hR/94TDfXIiHougFONoTuhK/1fay8zMPd4oTp
+         ISlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=83UCtPNkqDZBKGoRIazdaAZRxxGX8f38Okq8k7GA4pI=;
-        b=SrWRSA6naDWClKDXGSjlB+VG8H59fTaPMMmO2+/oc09nrHwhOcWWpztCZh7V7woucU
-         nUhmL6foCtYqgX400a2gPhdnxP1RVeM98bicfqxf8Bsf6X86IQfdWd4Y0cJTupT2U3X4
-         C4FkVJprFqD/cWsUQWQhEgYc+X6LZ29WVchBF5pd5A54eQztaFfVE2dY/d1QOmt+oLK0
-         Q2/tvKovvE0YA6JV38rq5WkP0znUu2shTUwSeU3kUxN13lrBQYf3gFPxPotGvcIWHfXG
-         l/pafJ6KVwGFCfHuTxG86DCPlNv9NOoGzgNYMWvui8hWC+cnrJ5lxR0kgCilZyihWwvF
-         bQYA==
-X-Gm-Message-State: AGi0PuYtUspAyWUwQXQbqpEI5h3MP9kjUV4IBkqCalB1yBXdKRz1BIrK
-        8e4GeedE/N89gwyhsD7jbSdXRqez5IheacdccYg=
-X-Google-Smtp-Source: APiQypIN32pISCAGZuC8E0y4X/FTimjvo06gX0G57fdlSriZX05RtvQUHDYaxCoByWoKjEhFoEzhC0rF5wxgjntlPtc=
-X-Received: by 2002:a19:c349:: with SMTP id t70mr2736495lff.139.1588710541439;
- Tue, 05 May 2020 13:29:01 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WwYjE2GWrCctkg5EjStPqPCb7vhBmi7tE/P9TjGv2ws=;
+        b=B4fPNo8HsW9c0zJLQ9iGHikKPTxIfhipVTv1bexwZgny8yiyfNldstaO13oBCUNFsT
+         3dHjszJiZHpVyaK65JWLCsydsg7Sz1iruAALVMbv+zXBmLd+g2dDzKqsWCVHTm2xkSbz
+         MzCwyveSTbYm3ue3e/aNVpp+eKMtMN1lfjCJs2xky/SLsBR8tg0sJ9hW6DtZP19MY8MO
+         BPyTRhk3NWnPcFvDmdg8xpD6miam/zrR8Mkrww69zK78Nhbm3NJhum/L1rdcf0vAyo0J
+         WZ2QokVvBdE2NKxwH2fp5w6cCzEPC3drCHjMdVeHwnKDYV76LyGGqqIBChG1oWhfHJXh
+         UPxw==
+X-Gm-Message-State: AGi0PubFuviLPrV9ZexB6cu6Tqm8x3g6IuVPFcgmpZ8RGo035rf9MuYY
+        bDmlKoqk2sxexqqI77W2eQk=
+X-Google-Smtp-Source: APiQypLBsuL5EJrI4oViXGYALNZSAMkPrqKzEylAsSSsoTTEXj5JA53hZBhQj6y6TLXI2+4DtCIC3Q==
+X-Received: by 2002:ae9:c301:: with SMTP id n1mr5351742qkg.300.1588710560838;
+        Tue, 05 May 2020 13:29:20 -0700 (PDT)
+Received: from betazed.lan1 (cpe-142-255-49-197.nyc.res.rr.com. [142.255.49.197])
+        by smtp.gmail.com with ESMTPSA id p22sm2554582qtb.91.2020.05.05.13.29.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 13:29:20 -0700 (PDT)
+From:   Tony Fischetti <tony.fischetti@gmail.com>
+To:     tglx@linutronix.de, mingo@redhat.com
+Cc:     bp@alien8.de, x86@kernel.org, hpa@zytor.com, bhe@redhat.com,
+        dyoung@redhat.com, dave.hansen@linux.intel.com, linux@roeck-us.net,
+        keescook@chromium.org, dan.j.williams@intel.com,
+        linux-kernel@vger.kernel.org, tony.fischetti@gmail.com
+Subject: [PATCH v2] x86/setup: Add boot messages about cmdline builtins
+Date:   Tue,  5 May 2020 16:29:11 -0400
+Message-Id: <20200505202911.10254-1-tony.fischetti@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <1588706059-4208-1-git-send-email-jrdr.linux@gmail.com> <0bfe4a8a-0d91-ef9b-066f-2ea7c68571b3@nvidia.com>
-In-Reply-To: <0bfe4a8a-0d91-ef9b-066f-2ea7c68571b3@nvidia.com>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Wed, 6 May 2020 02:06:56 +0530
-Message-ID: <CAFqt6zZMsQkOdjAb2k1EjwX=DtZ8gKfbRzwvreHOX-0vJLngNg@mail.gmail.com>
-Subject: Re: [RFC] mm/gup.c: Updated return value of {get|pin}_user_pages_fast()
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Tony Luck <tony.luck@intel.com>, fenghua.yu@intel.com,
-        Rob Springer <rspringer@google.com>,
-        Todd Poynor <toddpoynor@google.com>, benchan@chromium.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        santosh.shilimkar@oracle.com,
-        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
-        Jan Kara <jack@suse.cz>, Ira Weiny <ira.weiny@intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        inux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        tee-dev@lists.linaro.org, Linux-MM <linux-mm@kvack.org>,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        rds-devel@oss.oracle.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 6, 2020 at 1:08 AM John Hubbard <jhubbard@nvidia.com> wrote:
->
-> On 2020-05-05 12:14, Souptick Joarder wrote:
-> > Currently {get|pin}_user_pages_fast() have 3 return value 0, -errno
-> > and no of pinned pages. The only case where these two functions will
-> > return 0, is for nr_pages <= 0, which doesn't find a valid use case.
-> > But if at all any, then a -ERRNO will be returned instead of 0, which
-> > means {get|pin}_user_pages_fast() will have 2 return values -errno &
-> > no of pinned pages.
-> >
-> > Update all the callers which deals with return value 0 accordingly.
->
-> Hmmm, seems a little shaky. In order to do this safely, I'd recommend
-> first changing gup_fast/pup_fast so so that they return -EINVAL if
-> the caller specified nr_pages==0, and of course auditing all callers,
-> to ensure that this won't cause problems.
+While the ability to override or append to the boot command line has
+been added, the boot messages contain no information as to whether the
+cmdline was manipulated by the build-time options. This patch, for x86,
+adds boot messages specifying the intital cmdline, and the final cmdline
+after possible manipulation via the kernel config.
 
-While auditing it was figured out, there are 5 callers which cares for
-return value
-0 of gup_fast/pup_fast. What problem it might cause if we change
-gup_fast/pup_fast
-to return -EINVAL and update all the callers in a single commit ?
+Signed-off-by: Tony Fischetti <tony.fischetti@gmail.com>
+---
+ arch/x86/kernel/setup.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
->
-> The gup.c documentation would also need updating in a couple of comment
-> blocks, above get_user_pages_remote(), and __get_user_pages(), because
-> those talk about a zero return value.
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 4b3fa6cd3106..ee90dffcfd79 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -828,7 +828,7 @@ void __init setup_arch(char **cmdline_p)
+ 	 */
+ 	__flush_tlb_all();
+ #else
+-	printk(KERN_INFO "Command line: %s\n", boot_command_line);
++	pr_info("Initial command line: %s\n", boot_command_line);
+ 	boot_cpu_data.x86_phys_bits = MAX_PHYSMEM_BITS;
+ #endif
+ 
+@@ -916,6 +916,7 @@ void __init setup_arch(char **cmdline_p)
+ #endif
+ 
+ 	strlcpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
++	pr_info("Final command line: %s\n", command_line);
+ 	*cmdline_p = command_line;
+ 
+ 	/*
+-- 
+2.20.1
 
-OK.
-
->
-> This might be practical without slowing down the existing code, because
-> there is already a check in place, so just tweaking it like this (untested)
-> won't change performance at all:
->
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 11fda538c9d9..708eed79ae29 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -2787,7 +2787,7 @@ static int internal_get_user_pages_fast(unsigned long start,
-> int nr_pages,
->          end = start + len;
->
->          if (end <= start)
-> -               return 0;
-> +               return -EINVAL;
->          if (unlikely(!access_ok((void __user *)start, len)))
->                  return -EFAULT;
->
-> ...although I might be missing some other things that need a similar change,
-> so you should look carefully for yourself.
-
-Do you refer to other gup APIs similar to gup_fast/pup_fast ?
-
->
->
-> Once that change (and anything I missed) is in place, then you could go
-> ahead and stop handling ret==0 cases at the call sites.
->
->
-> thanks,
-> --
-> John Hubbard
-> NVIDIA
->
-> >
-> > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-> > ---
-> >   arch/ia64/kernel/err_inject.c              | 2 +-
-> >   drivers/platform/goldfish/goldfish_pipe.c  | 2 +-
-> >   drivers/staging/gasket/gasket_page_table.c | 4 ++--
-> >   drivers/tee/tee_shm.c                      | 2 +-
-> >   mm/gup.c                                   | 6 +++---
-> >   net/rds/rdma.c                             | 2 +-
-> >   6 files changed, 9 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/arch/ia64/kernel/err_inject.c b/arch/ia64/kernel/err_inject.c
-> > index 8b5b8e6b..fd72218 100644
-> > --- a/arch/ia64/kernel/err_inject.c
-> > +++ b/arch/ia64/kernel/err_inject.c
-> > @@ -143,7 +143,7 @@ static DEVICE_ATTR(name, 0644, show_##name, store_##name)
-> >       int ret;
-> >
-> >       ret = get_user_pages_fast(virt_addr, 1, FOLL_WRITE, NULL);
-> > -     if (ret<=0) {
-> > +     if (ret < 0) {
-> >   #ifdef ERR_INJ_DEBUG
-> >               printk("Virtual address %lx is not existing.\n",virt_addr);
-> >   #endif
-> > diff --git a/drivers/platform/goldfish/goldfish_pipe.c b/drivers/platform/goldfish/goldfish_pipe.c
-> > index 1ab207e..831449d 100644
-> > --- a/drivers/platform/goldfish/goldfish_pipe.c
-> > +++ b/drivers/platform/goldfish/goldfish_pipe.c
-> > @@ -277,7 +277,7 @@ static int goldfish_pin_pages(unsigned long first_page,
-> >       ret = pin_user_pages_fast(first_page, requested_pages,
-> >                                 !is_write ? FOLL_WRITE : 0,
-> >                                 pages);
-> > -     if (ret <= 0)
-> > +     if (ret < 0)
-> >               return -EFAULT;
-> >       if (ret < requested_pages)
-> >               *iter_last_page_size = PAGE_SIZE;
-> > diff --git a/drivers/staging/gasket/gasket_page_table.c b/drivers/staging/gasket/gasket_page_table.c
-> > index f6d7157..1d08e1d 100644
-> > --- a/drivers/staging/gasket/gasket_page_table.c
-> > +++ b/drivers/staging/gasket/gasket_page_table.c
-> > @@ -489,11 +489,11 @@ static int gasket_perform_mapping(struct gasket_page_table *pg_tbl,
-> >                       ret = get_user_pages_fast(page_addr - offset, 1,
-> >                                                 FOLL_WRITE, &page);
-> >
-> > -                     if (ret <= 0) {
-> > +                     if (ret < 0) {
-> >                               dev_err(pg_tbl->device,
-> >                                       "get user pages failed for addr=0x%lx, offset=0x%lx [ret=%d]\n",
-> >                                       page_addr, offset, ret);
-> > -                             return ret ? ret : -ENOMEM;
-> > +                             return ret;
-> >                       }
-> >                       ++pg_tbl->num_active_pages;
-> >
-> > diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
-> > index bd679b7..2706a1f 100644
-> > --- a/drivers/tee/tee_shm.c
-> > +++ b/drivers/tee/tee_shm.c
-> > @@ -230,7 +230,7 @@ struct tee_shm *tee_shm_register(struct tee_context *ctx, unsigned long addr,
-> >       if (rc > 0)
-> >               shm->num_pages = rc;
-> >       if (rc != num_pages) {
-> > -             if (rc >= 0)
-> > +             if (rc > 0)
-> >                       rc = -ENOMEM;
-> >               ret = ERR_PTR(rc);
-> >               goto err;
-> > diff --git a/mm/gup.c b/mm/gup.c
-> > index 50681f0..8d293ed 100644
-> > --- a/mm/gup.c
-> > +++ b/mm/gup.c
-> > @@ -2760,7 +2760,7 @@ static int internal_get_user_pages_fast(unsigned long start, int nr_pages,
-> >       end = start + len;
-> >
-> >       if (end <= start)
-> > -             return 0;
-> > +             return -EINVAL;
-> >       if (unlikely(!access_ok((void __user *)start, len)))
-> >               return -EFAULT;
-> >
-> > @@ -2805,8 +2805,8 @@ static int internal_get_user_pages_fast(unsigned long start, int nr_pages,
-> >    * calling get_user_pages().
-> >    *
-> >    * Returns number of pages pinned. This may be fewer than the number requested.
-> > - * If nr_pages is 0 or negative, returns 0. If no pages were pinned, returns
-> > - * -errno.
-> > + * If nr_pages is 0 or negative, returns -errno. If no pages were pinned,
-> > + * returns -errno.
-> >    */
-> >   int get_user_pages_fast(unsigned long start, int nr_pages,
-> >                       unsigned int gup_flags, struct page **pages)
-> > diff --git a/net/rds/rdma.c b/net/rds/rdma.c
-> > index a7ae118..44b96e6 100644
-> > --- a/net/rds/rdma.c
-> > +++ b/net/rds/rdma.c
-> > @@ -161,7 +161,7 @@ static int rds_pin_pages(unsigned long user_addr, unsigned int nr_pages,
-> >               gup_flags |= FOLL_WRITE;
-> >
-> >       ret = pin_user_pages_fast(user_addr, nr_pages, gup_flags, pages);
-> > -     if (ret >= 0 && ret < nr_pages) {
-> > +     if (ret > 0 && ret < nr_pages) {
-> >               unpin_user_pages(pages, ret);
-> >               ret = -EFAULT;
-> >       }
-> >
->
