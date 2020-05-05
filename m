@@ -2,119 +2,137 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7375DC47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 942EFC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4682320675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F9B420675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:23:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b+4dZwe2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gXtkEw3I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730056AbgEEPUz (ORCPT
+        id S1729725AbgEEPXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:20:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59332 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729709AbgEEPUz (ORCPT
+        Tue, 5 May 2020 11:23:05 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28571 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729250AbgEEPXF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:20:55 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D841FC061A0F;
-        Tue,  5 May 2020 08:20:53 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id mq3so1296245pjb.1;
-        Tue, 05 May 2020 08:20:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ijPZh8B4iDN+Zy3Lbn8azz7wIkX6gQvepkatyf1Zg2U=;
-        b=b+4dZwe21myBqVCmmpmf7s/5B4GYvFeMaXPncR16D1Lwjgt/CG4navWP1THhFFdxVC
-         FrgwbB7pTbqozj2ncAaWSkhSgi0Ug8t/9UuE24ydi5dzzEDqROPx2pkGFpbnTiAi5pvX
-         ylLJOy/L4/wUd0Mk1LIjMvaqPbHjr6SC9XAgcoDmfxp1pbcqFkoOZ6LHtXAhkQNzDvEA
-         5UNQYdWphLOVit2+RO+P4RMMPzPtJ5gZuMwz1r4VlF47oB2L9mV44+gloqHUqpFKikla
-         hNOHDE0O2jTGV/X6tFT7i/e8nwvC1HS9HrBK2zoBw7Uw4NKSKpuwIXgjilVj1V58SHVP
-         Upcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ijPZh8B4iDN+Zy3Lbn8azz7wIkX6gQvepkatyf1Zg2U=;
-        b=sClHn0bjOd9q4gsuIOcRd+9RMFp/r9TNeilOBcFrqNlyKccJ5Q7AWuNhkW4fSyWLac
-         zBKCVAU7zp4xu7j7PfohWljFBOYHh4Kps1zVajxYHjt2jIBkYveG14SCvwHldKJSY/Qt
-         2DmPPBbWpoaRJ4cDQBGCxLiy3gQDtydJRlbfLf0IHEvECyRoXsh+BHKx53TOCAsKp/1I
-         2/54c+fX0nDANl5FGh2UJ+cxuxewQA+t57J4uWuOJKNpOoETrKCguCQHwYHZ4MhxBEgu
-         B6/zm99RACqVp+g+/NrG2ibByz6YZiVXGU32TRHF6TnlGkAtWf13hNhw5EI9kwZ1kn4Z
-         ocmQ==
-X-Gm-Message-State: AGi0Pubjz16f39ZrutkH+Dr5H87GQI5SYtfboIupRzHVeYIU5j4XZvRh
-        1UnBCxPSDxFIucJqSsPB26HZisEm
-X-Google-Smtp-Source: APiQypJvLcl/oSqUO8QDsnhtfE89l2uZcumGHsREzxjyjBFBrNG2uLvQZpDgGISs0bngBpVE6Nt2VQ==
-X-Received: by 2002:a17:90b:f11:: with SMTP id br17mr1361595pjb.222.1588692053003;
-        Tue, 05 May 2020 08:20:53 -0700 (PDT)
-Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
-        by smtp.gmail.com with ESMTPSA id 62sm2292222pfu.181.2020.05.05.08.20.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2020 08:20:51 -0700 (PDT)
-Subject: Re: [PATCH net v2 0/2] Revert the 'socket_alloc' life cycle change
-To:     SeongJae Park <sjpark@amazon.com>,
-        Eric Dumazet <edumazet@google.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        sj38.park@gmail.com, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>, snu@amazon.com,
-        amit@kernel.org, stable@vger.kernel.org
-References: <20200505150717.5688-1-sjpark@amazon.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <a8510327-d4f0-1207-1342-d688e9d5b8c3@gmail.com>
-Date:   Tue, 5 May 2020 08:20:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 5 May 2020 11:23:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588692183;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xGX2KJ9vX1ibQ6yn0wPSitM9s4UBDa59NfCH4/27h40=;
+        b=gXtkEw3I16R+xNoMTBEwMi7KxUF7CQ2Sl7EsOzkNqEB9FoRFuyST02h16r4EX/Nq5a3jO9
+        5iP7RdUxhClnJfsJjwZQlmHa0LgiB4rgCEfLLzcJaoEgbs+gP7FkA5ve+mDi+KuJxBG5qW
+        DMygMCp0JzWosqqfr0wnSw+4IpFGAY0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-113-CljtSOCiPW2IFU6WEmFjaw-1; Tue, 05 May 2020 11:23:01 -0400
+X-MC-Unique: CljtSOCiPW2IFU6WEmFjaw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 65205800687;
+        Tue,  5 May 2020 15:22:59 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-116-211.rdu2.redhat.com [10.10.116.211])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BD8431000327;
+        Tue,  5 May 2020 15:22:58 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 2620B222F75; Tue,  5 May 2020 11:22:58 -0400 (EDT)
+Date:   Tue, 5 May 2020 11:22:58 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH RFC 3/6] KVM: x86: interrupt based APF page-ready event
+ delivery
+Message-ID: <20200505152258.GB7155@redhat.com>
+References: <20200429093634.1514902-1-vkuznets@redhat.com>
+ <20200429093634.1514902-4-vkuznets@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200505150717.5688-1-sjpark@amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429093634.1514902-4-vkuznets@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/5/20 8:07 AM, SeongJae Park wrote:
-> On Tue, 5 May 2020 07:53:39 -0700 Eric Dumazet <edumazet@google.com> wrote:
+On Wed, Apr 29, 2020 at 11:36:31AM +0200, Vitaly Kuznetsov wrote:
+> Concerns were expressed around APF delivery via synthetic #PF exception as
+> in some cases such delivery may collide with real page fault. For type 2
+> (page ready) notifications we can easily switch to using an interrupt
+> instead. Introduce new MSR_KVM_ASYNC_PF2 mechanism.
 > 
+> One notable difference between the two mechanisms is that interrupt may not
+> get handled immediately so whenever we would like to deliver next event
+> (regardless of its type) we must be sure the guest had read and cleared
+> previous event in the slot.
+> 
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  Documentation/virt/kvm/msr.rst       | 38 +++++++++++---
+>  arch/x86/include/asm/kvm_host.h      |  5 +-
+>  arch/x86/include/uapi/asm/kvm_para.h |  6 +++
+>  arch/x86/kvm/x86.c                   | 77 ++++++++++++++++++++++++++--
+>  4 files changed, 113 insertions(+), 13 deletions(-)
+> 
+> diff --git a/Documentation/virt/kvm/msr.rst b/Documentation/virt/kvm/msr.rst
+> index 33892036672d..7433e55f7184 100644
+> --- a/Documentation/virt/kvm/msr.rst
+> +++ b/Documentation/virt/kvm/msr.rst
+> @@ -203,14 +203,21 @@ data:
+>  	the hypervisor at the time of asynchronous page fault (APF)
+>  	injection to indicate type of asynchronous page fault. Value
+>  	of 1 means that the page referred to by the page fault is not
+> -	present. Value 2 means that the page is now available. Disabling
+> -	interrupt inhibits APFs. Guest must not enable interrupt
+> -	before the reason is read, or it may be overwritten by another
+> -	APF. Since APF uses the same exception vector as regular page
+> -	fault guest must reset the reason to 0 before it does
+> -	something that can generate normal page fault.  If during page
+> -	fault APF reason is 0 it means that this is regular page
+> -	fault.
+> +	present. Value 2 means that the page is now available.
+> +
+> +	Type 1 page (page missing) events are currently always delivered as
+> +	synthetic #PF exception. Type 2 (page ready) are either delivered
+> +	by #PF exception (when bit 3 of MSR_KVM_ASYNC_PF_EN is clear) or
+> +	via an APIC interrupt (when bit 3 set). APIC interrupt delivery is
+> +	controlled by MSR_KVM_ASYNC_PF2.
+> +
+> +	For #PF delivery, disabling interrupt inhibits APFs. Guest must
+> +	not enable interrupt before the reason is read, or it may be
+> +	overwritten by another APF. Since APF uses the same exception
+> +	vector as regular page fault guest must reset the reason to 0
+> +	before it does something that can generate normal page fault.
+> +	If during pagefault APF reason is 0 it means that this is regular
+> +	page fault.
 
->> Why do we have 10,000,000 objects around ? Could this be because of
->> some RCU problem ?
-> 
-> Mainly because of a long RCU grace period, as you guess.  I have no idea how
-> the grace period became so long in this case.
-> 
-> As my test machine was a virtual machine instance, I guess RCU readers
-> preemption[1] like problem might affected this.
-> 
-> [1] https://www.usenix.org/system/files/conference/atc17/atc17-prasad.pdf
-> 
->>
->> Once Al patches reverted, do you have 10,000,000 sock_alloc around ?
-> 
-> Yes, both the old kernel that prior to Al's patches and the recent kernel
-> reverting the Al's patches didn't reproduce the problem.
->
+Hi Vitaly,
 
-I repeat my question : Do you have 10,000,000 (smaller) objects kept in slab caches ?
+Again, thinking about how errors will be delivered. Will these be using
+same interrupt path? 
 
-TCP sockets use the (very complex, error prone) SLAB_TYPESAFE_BY_RCU, but not the struct socket_wq
-object that was allocated in sock_alloc_inode() before Al patches.
+As you mentioned that if interrupts are disabled, APFs are blocked. That
+means host will fall back to synchronous fault? If yes, that means we
+will need a mechanism to report errors in synchronous path too.
 
-These objects should be visible in kmalloc-64 kmem cache.
+Thanks
+Vivek
 
