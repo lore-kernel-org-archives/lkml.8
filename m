@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C64DDC4724C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 02:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFA1C47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 02:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A17E3206D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 02:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 598EA206D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 02:44:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HyWjc7ko"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GdT4xJK4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728104AbgEECox (ORCPT
+        id S1728389AbgEECom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 22:44:53 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:44379 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728451AbgEECou (ORCPT
+        Mon, 4 May 2020 22:44:42 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:14337 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728223AbgEECoh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 22:44:50 -0400
+        Mon, 4 May 2020 22:44:37 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588646690; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1588646676; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=/XTRZZ2bPayY8twzyHVrPJbdXMuj9hYt1lUtr6/5Fs8=; b=HyWjc7kodhLKMi6NXoeHxwiPqLyZzSOLzFgs5KKh24pkPEohdiqfGL8td4Il4rQHuJSafLeS
- 19PHw7S/pczeT+mpy3r9xHoR9bqpuzI1RV6ZtlUzfVedSNJKAzFLOalOvhFvgky0JFDU2aBk
- 2fL1V0zCsIrPlZdtL4y89ZJybbo=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ bh=m26u8GXRAfLww1UnzFHikWU4UVdgIijSum+gcPCH04E=; b=GdT4xJK4qROjD/TMDizL6ao3B/fsgqIhgs1QJDIvRZFcES0pLalcVyi3x0xTJ4tSbB37Y4cs
+ cCDemIGj3p7nt8hdeEflFf4EVAuurryReT/RJ6GZq/749TqvLh8uXiZB7Ty2EvPJfvKIwRIL
+ +fiFPqjfHhdQdhevsTfl5PHKeFY=
+X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb0d316.7fdb70018308-smtp-out-n02;
- Tue, 05 May 2020 02:44:38 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5eb0d314.7fa3df047500-smtp-out-n05;
+ Tue, 05 May 2020 02:44:36 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 902CDC433F2; Tue,  5 May 2020 02:44:38 +0000 (UTC)
+        id 0A3B6C44791; Tue,  5 May 2020 02:44:36 +0000 (UTC)
 Received: from bbhatt-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BF14AC433CB;
-        Tue,  5 May 2020 02:44:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BF14AC433CB
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 38ED7C432C2;
+        Tue,  5 May 2020 02:44:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 38ED7C432C2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
 From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
@@ -50,9 +50,9 @@ To:     mani@kernel.org
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         hemantk@codeaurora.org, jhugo@codeaurora.org,
         Bhaumik Bhatt <bbhatt@codeaurora.org>
-Subject: [PATCH v5 8/8] bus: mhi: core: Ensure non-zero session or sequence ID values are used
-Date:   Mon,  4 May 2020 19:44:22 -0700
-Message-Id: <1588646662-25785-9-git-send-email-bbhatt@codeaurora.org>
+Subject: [PATCH v5 2/8] bus: mhi: core: Cache intmod from mhi event to mhi channel
+Date:   Mon,  4 May 2020 19:44:16 -0700
+Message-Id: <1588646662-25785-3-git-send-email-bbhatt@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1588646662-25785-1-git-send-email-bbhatt@codeaurora.org>
 References: <1588646662-25785-1-git-send-email-bbhatt@codeaurora.org>
@@ -61,83 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While writing any sequence or session identifiers, it is possible that
-the host could write a zero value, whereas only non-zero values should
-be supported writes to those registers. Ensure that the host does not
-write a non-zero value for them and also log them in debug messages.
+From: Hemant Kumar <hemantk@codeaurora.org>
 
+Driver is using zero initialized intmod value from mhi channel when
+configuring TRE for bei field. This prevents interrupt moderation to
+take effect in case it is supported by an event ring. Fix this by
+copying intmod value from associated event ring to mhi channel upon
+registering mhi controller.
+
+Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
 Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
 ---
- drivers/bus/mhi/core/boot.c     | 15 +++++++--------
- drivers/bus/mhi/core/internal.h |  2 ++
- 2 files changed, 9 insertions(+), 8 deletions(-)
+ drivers/bus/mhi/core/init.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/bus/mhi/core/boot.c b/drivers/bus/mhi/core/boot.c
-index e5fcde1..7b9b561 100644
---- a/drivers/bus/mhi/core/boot.c
-+++ b/drivers/bus/mhi/core/boot.c
-@@ -43,10 +43,7 @@ void mhi_rddm_prepare(struct mhi_controller *mhi_cntrl,
- 		      lower_32_bits(mhi_buf->dma_addr));
- 
- 	mhi_write_reg(mhi_cntrl, base, BHIE_RXVECSIZE_OFFS, mhi_buf->len);
--	sequence_id = prandom_u32() & BHIE_RXVECSTATUS_SEQNUM_BMSK;
--
--	if (unlikely(!sequence_id))
--		sequence_id = 1;
-+	sequence_id = MHI_RANDOM_U32_NONZERO(BHIE_RXVECSTATUS_SEQNUM_BMSK);
- 
- 	mhi_write_reg_field(mhi_cntrl, base, BHIE_RXVECDB_OFFS,
- 			    BHIE_RXVECDB_SEQNUM_BMSK, BHIE_RXVECDB_SEQNUM_SHFT,
-@@ -189,7 +186,9 @@ static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
- 		return -EIO;
+diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
+index eb2ab05..1a93d24 100644
+--- a/drivers/bus/mhi/core/init.c
++++ b/drivers/bus/mhi/core/init.c
+@@ -863,6 +863,10 @@ int mhi_register_controller(struct mhi_controller *mhi_cntrl,
+ 		mutex_init(&mhi_chan->mutex);
+ 		init_completion(&mhi_chan->completion);
+ 		rwlock_init(&mhi_chan->lock);
++
++		/* used in setting bei field of TRE */
++		mhi_event = &mhi_cntrl->mhi_event[mhi_chan->er_index];
++		mhi_chan->intmod = mhi_event->intmod;
  	}
  
--	dev_dbg(dev, "Starting AMSS download via BHIe\n");
-+	sequence_id = MHI_RANDOM_U32_NONZERO(BHIE_TXVECSTATUS_SEQNUM_BMSK);
-+	dev_dbg(dev, "Starting AMSS download via BHIe. Sequence ID:%u\n",
-+		sequence_id);
- 	mhi_write_reg(mhi_cntrl, base, BHIE_TXVECADDR_HIGH_OFFS,
- 		      upper_32_bits(mhi_buf->dma_addr));
- 
-@@ -198,7 +197,6 @@ static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
- 
- 	mhi_write_reg(mhi_cntrl, base, BHIE_TXVECSIZE_OFFS, mhi_buf->len);
- 
--	sequence_id = prandom_u32() & BHIE_TXVECSTATUS_SEQNUM_BMSK;
- 	mhi_write_reg_field(mhi_cntrl, base, BHIE_TXVECDB_OFFS,
- 			    BHIE_TXVECDB_SEQNUM_BMSK, BHIE_TXVECDB_SEQNUM_SHFT,
- 			    sequence_id);
-@@ -246,14 +244,15 @@ static int mhi_fw_load_sbl(struct mhi_controller *mhi_cntrl,
- 		goto invalid_pm_state;
- 	}
- 
--	dev_dbg(dev, "Starting SBL download via BHI\n");
-+	session_id = MHI_RANDOM_U32_NONZERO(BHI_TXDB_SEQNUM_BMSK);
-+	dev_dbg(dev, "Starting SBL download via BHI. Session ID:%u\n",
-+		session_id);
- 	mhi_write_reg(mhi_cntrl, base, BHI_STATUS, 0);
- 	mhi_write_reg(mhi_cntrl, base, BHI_IMGADDR_HIGH,
- 		      upper_32_bits(dma_addr));
- 	mhi_write_reg(mhi_cntrl, base, BHI_IMGADDR_LOW,
- 		      lower_32_bits(dma_addr));
- 	mhi_write_reg(mhi_cntrl, base, BHI_IMGSIZE, size);
--	session_id = prandom_u32() & BHI_TXDB_SEQNUM_BMSK;
- 	mhi_write_reg(mhi_cntrl, base, BHI_IMGTXDB, session_id);
- 	read_unlock_bh(pm_lock);
- 
-diff --git a/drivers/bus/mhi/core/internal.h b/drivers/bus/mhi/core/internal.h
-index 0965ca3..3205a92 100644
---- a/drivers/bus/mhi/core/internal.h
-+++ b/drivers/bus/mhi/core/internal.h
-@@ -452,6 +452,8 @@ enum mhi_pm_state {
- #define PRIMARY_CMD_RING		0
- #define MHI_DEV_WAKE_DB			127
- #define MHI_MAX_MTU			0xffff
-+#define MHI_RANDOM_U32_NONZERO(bmsk)	((prandom_u32_max(U32_MAX - 1) & \
-+					 (bmsk)) + 1)
- 
- enum mhi_er_type {
- 	MHI_ER_TYPE_INVALID = 0x0,
+ 	if (mhi_cntrl->bounce_buf) {
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
