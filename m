@@ -2,92 +2,100 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66149C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 225BCC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC65206CC
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:58:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588705092;
-	bh=yG4AToJ2yrTBxpZWwV16CR+5yATb2AmgVFbdKhJEmTw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2k2Hy/PiwW2oZws/dKJumZ6ADgJLzywAHYkEEyQROxnU91Qtu0X1utz7ATa2//vTM
-	 Sv2Rzh6uWTOcUg4Po5pxzx1o49YQ9JrnXbkIEbLVl3WB3f/q1Qw5s38OoJXNGSIPsQ
-	 sPw27yAzvm0aDnOHXhHYwb7wtr9loUFxCt3/B6ys=
+	by mail.kernel.org (Postfix) with ESMTP id EA5EA20663
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:59:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bTTMszeX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728947AbgEES6L (ORCPT
+        id S1728969AbgEES7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 14:58:11 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34009 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbgEES6K (ORCPT
+        Tue, 5 May 2020 14:59:44 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:54142 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727083AbgEES7n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 14:58:10 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 72so2647611otu.1;
-        Tue, 05 May 2020 11:58:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QLflle2CTzf5TvGsv3/RnJZmAoRYV5eA/IwZnI7X1VE=;
-        b=AEXnp19OHmwdE174voyhp0wFA6ePe5QQTvxnWhMNe2jj6wT9O0V9ynHUs3pd04JsAB
-         otFHYTrd98hi9z9JLKeL6Tx+MdYQ5d/aWDuujoJN3Xe5NBmC3xdkDGQdt3bKUAI/uAJ5
-         juklXuVfCue9V9rDo/iDvEUet6fR5ZaZsQcxuXdF78cEQsoLvVFHFcp0OiDZQ3eInJ+n
-         Uf1w+nwM6VDcOs7BXHTQfleQTcE84E7b/fsBZQ8Eic4aVLXV5RW7zOcp6q7jPnMfzxyl
-         ysSwtOidmbPwaN7GimkPEW+sgv8OOJvzIojryzQMNTEKBbLbSgTQmlwuvMAYhH3W/ZZX
-         EIqw==
-X-Gm-Message-State: AGi0PuZLNrKyzeuSn6nN9cqXtvKYpvvkIkursFKyuBRO99fEYILGaRYZ
-        S27Fm2XcLWknucgpBoCUGMTOPyw=
-X-Google-Smtp-Source: APiQypKItUMgGhyJv4Ds1UMh1LS87zMjeW32GyoIZJySORTWboRZCqIAxYAYpNNSJig3NDROnbAqaA==
-X-Received: by 2002:a05:6830:1656:: with SMTP id h22mr3708724otr.290.1588705087964;
-        Tue, 05 May 2020 11:58:07 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n16sm782516oop.23.2020.05.05.11.58.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 11:58:07 -0700 (PDT)
-Received: (nullmailer pid 3092 invoked by uid 1000);
-        Tue, 05 May 2020 18:58:06 -0000
-Date:   Tue, 5 May 2020 13:58:06 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Pedro =?iso-8859-1?Q?=C2ngelo?= <pangelo@void.io>,
-        Matt Merhar <mattmerhar@protonmail.com>,
-        Zack Pearsall <zpearsall@yahoo.com>,
-        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 4/6] dt-bindings: ARM: tegra: Add Acer Iconia Tab A500
-Message-ID: <20200505185806.GA3026@bogus>
-References: <20200505022517.30523-1-digetx@gmail.com>
- <20200505022517.30523-5-digetx@gmail.com>
+        Tue, 5 May 2020 14:59:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588705182;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0QimJWICcVgawJQV6KSoD8l4L46cS4D64iKKzoz7TGE=;
+        b=bTTMszeX/RJ1qcXGZJSZwWK+tCkFy9iVhO8WpNCEvHA9FtpazLJGmEl4v08055QggMWVxD
+        FmAXgkrPzIIANNXCf1ufZROgh3bthEgOqtC6GnlLrT6jHvwKn02dLMmTIdt7fHzXRIF0NZ
+        FMI/x0KrQSi6VRXRkWym0Tc229d23b8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-159-JSQ0t69xNUmsWKb7_pld1A-1; Tue, 05 May 2020 14:59:38 -0400
+X-MC-Unique: JSQ0t69xNUmsWKb7_pld1A-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A802FEC1A6;
+        Tue,  5 May 2020 18:59:36 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-116-211.rdu2.redhat.com [10.10.116.211])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E81D610021B3;
+        Tue,  5 May 2020 18:59:35 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 5A7A3222F75; Tue,  5 May 2020 14:59:35 -0400 (EDT)
+Date:   Tue, 5 May 2020 14:59:35 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH RFC 6/6] KVM: x86: Switch KVM guest to using interrupts
+ for page ready APF delivery
+Message-ID: <20200505185935.GC7155@redhat.com>
+References: <20200429093634.1514902-1-vkuznets@redhat.com>
+ <20200429093634.1514902-7-vkuznets@redhat.com>
+ <ee587bd6-a06f-8a38-9182-94218f7d08bb@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200505022517.30523-5-digetx@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ee587bd6-a06f-8a38-9182-94218f7d08bb@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  5 May 2020 05:25:15 +0300, Dmitry Osipenko wrote:
-> Add a binding for the Tegra20-based Acer Iconia Tab A500 tablet device.
+On Wed, Apr 29, 2020 at 12:53:33PM +0200, Paolo Bonzini wrote:
+> On 29/04/20 11:36, Vitaly Kuznetsov wrote:
+> > +
+> > +	if (__this_cpu_read(apf_reason.enabled)) {
+> > +		reason = __this_cpu_read(apf_reason.reason);
+> > +		if (reason == KVM_PV_REASON_PAGE_READY) {
+> > +			token = __this_cpu_read(apf_reason.token);
+> > +			/*
+> > +			 * Make sure we read 'token' before we reset
+> > +			 * 'reason' or it can get lost.
+> > +			 */
+> > +			mb();
+> > +			__this_cpu_write(apf_reason.reason, 0);
+> > +			kvm_async_pf_task_wake(token);
+> > +		}
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  Documentation/devicetree/bindings/arm/tegra.yaml | 3 +++
->  1 file changed, 3 insertions(+)
-> 
+> If tokens cannot be zero, could we avoid using reason for the page ready
+> interrupt (and ultimately retire "reason" completely)?
 
-Acked-by: Rob Herring <robh@kernel.org>
+If we are planning to report errors using this interface, then retaining
+KVM_PV_REASON_PAGE_READY makes sense because we can then introduce another
+state say KVM_PV_REASON_PAGE_ERROR.
+
+Thanks
+Vivek
+
