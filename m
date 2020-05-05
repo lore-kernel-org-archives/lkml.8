@@ -2,122 +2,144 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D25CC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 403DFC47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5475C20757
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:40:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588711220;
-	bh=KsXgkPIepQrTxi3STz1MeJ2XqM4eEMfu8mg3G7P86hg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c1ru1eiCQFOS2cTM963XcQ39yUF/U5CjAIunOkrIH5PbaXP84huyeucD+z5G7EG58
-	 6JcIRii0IVcGF3k+8T0WJfl95Nru4Eh04ZX8MmQeLGEtMShKl5Ycj7WuP3Xuyhh3/T
-	 t7pO9dkMDA3vik3mYfywSmzIQwUxwWADPnikDsAk=
+	by mail.kernel.org (Postfix) with ESMTP id 1C57020757
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:41:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XU6X9GMe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729186AbgEEUkT (ORCPT
+        id S1728853AbgEEUlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 16:40:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40944 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726350AbgEEUkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 16:40:18 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF5C920752;
-        Tue,  5 May 2020 20:40:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588711218;
-        bh=KsXgkPIepQrTxi3STz1MeJ2XqM4eEMfu8mg3G7P86hg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Kd3Y8n8K/YRIFOhhPweSLC+9q2w1NgM7FntiyXkAgNbpx7g1GG0YO06RDixKqu8Lw
-         eyR0UNKZwiWq1KgKk+h5ul4zS1tOgSxz/zHqJQiwHwlyiWygtZMZw3t2JP4yv6BBN1
-         2I7nQyVgfTGNc64wiaqTTIEuV69tpWbPHfqpccwI=
-Received: by pali.im (Postfix)
-        id C6C5E6F1; Tue,  5 May 2020 22:40:15 +0200 (CEST)
-Date:   Tue, 5 May 2020 22:40:15 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Andy Whitcroft <apw@canonical.com>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, users@linux.kernel.org
-Subject: Re: [kernel.org users] [PATCH v2] checkpatch: use patch subject when
- reading from stdin
-Message-ID: <20200505204015.44ibvg4bapnalrct@pali>
-References: <20200505132613.17452-1-geert+renesas@glider.be>
- <1b0b4e6562cbbf4621e71042e511ae3cd0b542f6.camel@perches.com>
+        Tue, 5 May 2020 16:41:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53156 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726350AbgEEUlq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 16:41:46 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1A41C061A10
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 13:41:46 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id f7so1479085pfa.9
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 13:41:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=TBeTodJwY1sbypPr0O4/M7Oc5AId4qrDzBRpp3D+bWw=;
+        b=XU6X9GMe8j4wKq96hvrcdX1ByQHmmyBW7U6O/ETyAHaaOeuNGkQLdp5aHsi+ZYAg/n
+         ToTVv9P6DfvsQWmACbq/7EkvxkgQBisVFC+Cuteh8eSBPa0l95XCST9S/53ATidKpelR
+         BE5pJ6fNUlqYODQ8vfoK3eOaI1hndoAxJQXJc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TBeTodJwY1sbypPr0O4/M7Oc5AId4qrDzBRpp3D+bWw=;
+        b=Uw9a4yQwmtez6/qxANGla1rC+xQl8WEHmfkK3pND+C2XLQPnKjxyj1ZrFi6QxwhkMe
+         k/6s3WQ/x+l0Z8GEKF5vKlCXtwYKg+r1SIvoRrTbtB0WMdZcMldLhcsxK3NelxhjvZdT
+         rIKk+l5Se/DBNrKZD8CyJGOoFmRb5BfxbtYT1ZxMUW6/b55BWjlACtuXg2qRBV+Orgzu
+         4YFxw3ynfhAV17PmLQOSG+XXTzQUKiynSPNZZvqFEXEgg0B/w7Rr9s0tVu5DqAD9n5Gv
+         XjePsq2bXxZFdlO87hvLiULVkyaJSDSwcCSYOmFQgRTcOlULixoio0UmuqB8tADmXuhQ
+         FF0w==
+X-Gm-Message-State: AGi0PuaGlEzM3yzuLbF59bWvJK/cyOiOIqPBigxW+1phgt0JMQm7QIYX
+        YNmNSRoQ1iWSEdnKlAGdF5R9xA==
+X-Google-Smtp-Source: APiQypKneSUsTTVo+yZKgZiaXfs8Cdo88B6bTaJHGjy6DGrc5Y7iwWPQe9ZysHr3aN4qrrZAuhv8sQ==
+X-Received: by 2002:a62:d005:: with SMTP id p5mr5183995pfg.156.1588711306249;
+        Tue, 05 May 2020 13:41:46 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id g16sm2726879pfq.203.2020.05.05.13.41.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 13:41:45 -0700 (PDT)
+Date:   Tue, 5 May 2020 13:41:44 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sysctl: Make sure proc handlers can't expose heap memory
+Message-ID: <202005051339.5F1979C4DF@keescook>
+References: <202005041205.C7AF4AF@keescook>
+ <20200504195937.GS11244@42.do-not-panic.com>
+ <202005041329.169799C65D@keescook>
+ <20200504215903.GT11244@42.do-not-panic.com>
+ <20200505063441.GA3877399@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1b0b4e6562cbbf4621e71042e511ae3cd0b542f6.camel@perches.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200505063441.GA3877399@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Tue, May 05, 2020 at 08:34:41AM +0200, Greg KH wrote:
+> On Mon, May 04, 2020 at 09:59:03PM +0000, Luis Chamberlain wrote:
+> > On Mon, May 04, 2020 at 01:32:07PM -0700, Kees Cook wrote:
+> > > On Mon, May 04, 2020 at 07:59:37PM +0000, Luis Chamberlain wrote:
+> > > > On Mon, May 04, 2020 at 12:08:55PM -0700, Kees Cook wrote:
+> > > > > Just as a precaution, make sure that proc handlers don't accidentally
+> > > > > grow "count" beyond the allocated kbuf size.
+> > > > > 
+> > > > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > > > ---
+> > > > > This applies to hch's sysctl cleanup tree...
+> > > > > ---
+> > > > >  fs/proc/proc_sysctl.c | 3 +++
+> > > > >  1 file changed, 3 insertions(+)
+> > > > > 
+> > > > > diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+> > > > > index 15030784566c..535ab26473af 100644
+> > > > > --- a/fs/proc/proc_sysctl.c
+> > > > > +++ b/fs/proc/proc_sysctl.c
+> > > > > @@ -546,6 +546,7 @@ static ssize_t proc_sys_call_handler(struct file *filp, void __user *ubuf,
+> > > > >  	struct inode *inode = file_inode(filp);
+> > > > >  	struct ctl_table_header *head = grab_header(inode);
+> > > > >  	struct ctl_table *table = PROC_I(inode)->sysctl_entry;
+> > > > > +	size_t count_max = count;
+> > > > >  	void *kbuf;
+> > > > >  	ssize_t error;
+> > > > >  
+> > > > > @@ -590,6 +591,8 @@ static ssize_t proc_sys_call_handler(struct file *filp, void __user *ubuf,
+> > > > >  
+> > > > >  	if (!write) {
+> > > > >  		error = -EFAULT;
+> > > > > +		if (WARN_ON(count > count_max))
+> > > > > +			count = count_max;
+> > > > 
+> > > > That would crash a system with panic-on-warn. I don't think we want that?
+> > > 
+> > > Eh? None of the handlers should be making this mistake currently and
+> > > it's not a mistake that can be controlled from userspace. WARN() is
+> > > absolutely what's wanted here: report an impossible situation (and
+> > > handle it gracefully for the bulk of users that don't have
+> > > panic_on_warn set).
+> > 
+> > Alrighty, Greg are you OK with this type of WARN_ON()? You recently
+> > expressed concerns over its use due to panic-on-warn on another patch.
+> 
+> We should never call WARN() on any path that a user can trigger.
+> 
+> If it is just a "the developer called this api in a foolish way" then we
+> could use a WARN_ON() to have them realize their mistake, but in my
+> personal experience, foolish developers don't even notice that kind of
+> mistake :(
 
-On Tuesday 05 May 2020 12:57:37 Joe Perches wrote:
-> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> > index eac40f0abd56a9f4..3355358697d9e790 100755
-> > --- a/scripts/checkpatch.pl
-> > +++ b/scripts/checkpatch.pl
-> > @@ -1057,6 +1057,10 @@ for my $filename (@ARGV) {
-> >  	}
-> >  	while (<$FILE>) {
-> >  		chomp;
-> > +		if ($vname eq 'Your patch') {
-> > +			my ($subject) = $_ =~ /^Subject:\s*(.*)/;
-> > +			$vname = '"' . $subject . '"' if $subject;
-> > +		}
-> >  		push(@rawlines, $_);
-> >  	}
-> >  	close($FILE);
-> 
-> There's a less cpu intensive way to do this,
-> for small patches, on my little laptop it's a
-> few dozen milliseconds faster, and for very
-> large patches multiple seconds faster to use
-> the following patch:
-> 
-> Substitute Geert's patch with the below but:
-> 
-> Acked-by: Joe Perches <joe@perches.com>
-> 
-> ---
-> 
->  scripts/checkpatch.pl | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index f0092104ff7b..29786a097862 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -1062,6 +1062,7 @@ for my $filename (@ARGV) {
->  	while (<$FILE>) {
->  		chomp;
->  		push(@rawlines, $_);
-> +		$vname = "\"$1\"" if ($filename eq '-' && $_ =~ /^Subject:\s*(.*)/);
+Right -- while it'd be nice if the developer noticed it, it is _usually_
+an unsuspecting end user (or fuzzer), in which case we absolutely want a
+WARN (and not a BUG![1]) and have the situations handled gracefully, so
+it can be reported and fixed.
 
-Hint: You can use qq operator to make code more readable (no need to
-escape quote character). And maybe you should match Subject as
-case-insensitive and expects at least one space after colon.
-As a Perl developer I would write above code as:
+-Kees
 
-+		$vname = qq("$1") if $filename eq '-' && $_ =~ m/^Subject:\s+(.+)/i;
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#bug-and-bug-on
 
-Anyway, what would happen if subject line contains quotes?
-
->  	}
->  	close($FILE);
->  
-> 
+-- 
+Kees Cook
