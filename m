@@ -2,101 +2,159 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DFAC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C738BC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5571206CC
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4499206CC
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:40:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EZSQQZlI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pzz9Y2va"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730517AbgEERiZ (ORCPT
+        id S1730557AbgEERkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 13:38:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52798 "EHLO
+        Tue, 5 May 2020 13:40:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729697AbgEERiW (ORCPT
+        by vger.kernel.org with ESMTP id S1728804AbgEERkl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 13:38:22 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C68CC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 10:38:22 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id a21so2506624ljj.11
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 10:38:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Nv0AIZrWlMo4m0rNhQ0hmb2K7EScYgYrwU3TenVEmog=;
-        b=EZSQQZlIteDqtbEIcl/sEkeBUfzjC+YtuCRNGMwWCq1AIeFJ3n4lyDDj8t67g6lgOv
-         vG2erCqH5ghfC7q0wRU3CL4Hc1X83XBVUxV/+FOuE8DVCZL3q7jY7Hj7QYyF0Vc85oqH
-         jyFcaDUaWWrs9ZE+JHUIH20XmBu1l0lK2xrnU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Nv0AIZrWlMo4m0rNhQ0hmb2K7EScYgYrwU3TenVEmog=;
-        b=DHPKmmqjEG9aguNjFMVdeyq9n+8IYtGwHLx8oYajynVdu3CxhOO+KiuhWe4OcWHaCF
-         X7BdAiZxHc0HA3mLV9h1maEB+lksHhm4InVv5gi7wJpwaodJpwdqRQgs0w0Xq8ZyTx3o
-         xpZc6in1LJGyUa7Qb47tBinAXJHaIqXAmPyEkcU+mdonFfBZ/W9b+O4QIINmlbuNJwnV
-         6JP88kPAy0dycFp323JsQoXnsVhwmHzlgKAi142lY3qjsf2J0ahMgKIq2kNCnW1BFFCs
-         +eDlSaKRhfkqR4dFxgstSAeOwklSLdxZ40OqV0dFv6GsXr7Giq4S0jetXk96mKy8XgMJ
-         b2ew==
-X-Gm-Message-State: AGi0PuY314IZ1z0Y5D5sOb6BAxtjXDv2ZBiJjB29KyBDCKTGK6TYZBd6
-        q2sgfYqeDZazpYNjerDArAzXDiWL/UY=
-X-Google-Smtp-Source: APiQypItp1qlHSsiwIfnI7y2uyxpOixJxK9alu4xtbnc2zsY+Me81ufC4N8QQPf+bTtZkVSn3OFQBQ==
-X-Received: by 2002:a2e:8798:: with SMTP id n24mr2520026lji.200.1588700300611;
-        Tue, 05 May 2020 10:38:20 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id a26sm2873518ljm.45.2020.05.05.10.38.19
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2020 10:38:19 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id b26so2060449lfa.5
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 10:38:19 -0700 (PDT)
-X-Received: by 2002:a19:c394:: with SMTP id t142mr2441981lff.129.1588700298965;
- Tue, 05 May 2020 10:38:18 -0700 (PDT)
+        Tue, 5 May 2020 13:40:41 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F3DDC061A0F;
+        Tue,  5 May 2020 10:40:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=+xKysGAdhf/irwW/OUccg7CXNaBzgyUUi6WNfDZAgIs=; b=pzz9Y2va31nko2N6/Sd/aAdmjx
+        11wG4XS7B/vo1wmHvyi3AFEd0zfPTEKsKen7bxEghsLS74BaQbKY01v1JfH3xwGat+/KNFwZDIwp4
+        /aDKWkwFByer7OhgWm9/PL6eP0EQ61MWoI4qJeXAROCPhhIxPL7EDhjJb6zhjYvrA4omRhDOlcXjq
+        QXqgN7v/sjP+qH40Vhfb71Xok/cS5MqQ14q+s7zAsFTAwk0iUF3gE/hqWYnvyifWpe4FRFO/WwY6k
+        oBjhGo1wwmn4PzG9WByt+gnbe2jdgrjeZ2VCpyEQHAIIdaE1yKHTmOpY4M2gUEzmgJBl1+nbicnfi
+        +akUAe6w==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jW1YX-0003GE-34; Tue, 05 May 2020 17:40:33 +0000
+Subject: Re: [PATCH v5 3/6] fs: Enable to enforce noexec mounts or file exec
+ through O_MAYEXEC
+To:     =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
+        linux-kernel@vger.kernel.org
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20200505153156.925111-1-mic@digikod.net>
+ <20200505153156.925111-4-mic@digikod.net>
+ <fb6e2d7d-a372-3e79-214d-3ac9a451cd0a@infradead.org>
+ <3555aab7-f4e0-80eb-0dfc-a87cfcba5e68@digikod.net>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <9e3ec812-128d-cc46-5206-ab72b737b274@infradead.org>
+Date:   Tue, 5 May 2020 10:40:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200505133602.25987-1-geert+renesas@glider.be>
-In-Reply-To: <20200505133602.25987-1-geert+renesas@glider.be>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Tue, 5 May 2020 10:38:07 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXO8TJ09vNQaCyoMgfoFVouNQRw7Evx2Vfko1k_03q8GHA@mail.gmail.com>
-Message-ID: <CA+ASDXO8TJ09vNQaCyoMgfoFVouNQRw7Evx2Vfko1k_03q8GHA@mail.gmail.com>
-Subject: Re: [PATCH v4 resend 2] dt-bindings: net: btusb: DT fix s/interrupt-name/interrupt-names/
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Rajat Jain <rajatja@google.com>,
-        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3555aab7-f4e0-80eb-0dfc-a87cfcba5e68@digikod.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 6:36 AM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
->
-> The standard DT property name is "interrupt-names".
->
-> Fixes: fd913ef7ce619467 ("Bluetooth: btusb: Add out-of-band wakeup support")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Acked-by: Rob Herring <robh@kernel.org>
+On 5/5/20 9:55 AM, Mickaël Salaün wrote:
+> 
+> 
+> On 05/05/2020 17:44, Randy Dunlap wrote:
+>> On 5/5/20 8:31 AM, Mickaël Salaün wrote:
+>>> diff --git a/security/Kconfig b/security/Kconfig
+>>> index cd3cc7da3a55..d8fac9240d14 100644
+>>> --- a/security/Kconfig
+>>> +++ b/security/Kconfig
+>>> @@ -230,6 +230,32 @@ config STATIC_USERMODEHELPER_PATH
+>>>  	  If you wish for all usermode helper programs to be disabled,
+>>>  	  specify an empty string here (i.e. "").
+>>>  
+>>> +menuconfig OMAYEXEC_STATIC
+>>> +	tristate "Configure O_MAYEXEC behavior at build time"
+>>> +	---help---
+>>> +	  Enable to enforce O_MAYEXEC at build time, and disable the dedicated
+>>> +	  fs.open_mayexec_enforce sysctl.
+>>
+>> That help message is a bit confusing IMO.  Does setting/enabling OMAYEXEC_STATIC
+>> both enforce O_MAYEXEC at build time and also disable the dedicated sysctl?
+> 
+> Yes. What about this?
+> "Define the O_MAYEXEC policy at build time only. As a side effect, this
+> also disables the fs.open_mayexec_enforce sysctl."
+> 
 
-If it matters:
+Yes, much better. Thanks.
 
-Reviewed-by: Brian Norris <briannorris@chromium.org>
+>>
+>> Or are these meant to be alternatives, one for what Enabling this kconfig symbol
+>> does and the other for what Disabling this symbol does?  If so, it doesn't
+>> say that.
+>>
+>>> +
+>>> +	  See Documentation/admin-guide/sysctl/fs.rst for more details.
+>>> +
+>>> +if OMAYEXEC_STATIC
+>>> +
+>>> +config OMAYEXEC_ENFORCE_MOUNT
+>>> +	bool "Mount restriction"
+>>> +	default y
+>>> +	---help---
+>>> +	  Forbid opening files with the O_MAYEXEC option if their underlying VFS is
+>>> +	  mounted with the noexec option or if their superblock forbids execution
+>>> +	  of its content (e.g., /proc).
+>>> +
+>>> +config OMAYEXEC_ENFORCE_FILE
+>>> +	bool "File permission restriction"
+>>> +	---help---
+>>> +	  Forbid opening files with the O_MAYEXEC option if they are not marked as
+>>> +	  executable for the current process (e.g., POSIX permissions).
+>>> +
+>>> +endif # OMAYEXEC_STATIC
+>>> +
+>>>  source "security/selinux/Kconfig"
+>>>  source "security/smack/Kconfig"
+>>>  source "security/tomoyo/Kconfig"
+>>
+>>
 
-We're definitely using the plural ("interrupt-names") not the
-singular, so this was just a typo.
 
-Brian
+-- 
+~Randy
+
