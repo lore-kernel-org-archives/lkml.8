@@ -2,151 +2,203 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E20C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 888B8C47259
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73BFF206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:13:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hqsTDeOO"
+	by mail.kernel.org (Postfix) with ESMTP id 6DC5320836
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:13:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730596AbgEEQNn (ORCPT
+        id S1730648AbgEEQNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:13:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39470 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730157AbgEEQN3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:13:29 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AE1DC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 09:13:28 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id w18so1282426qvs.3
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 09:13:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=NN0AhXtIWLO+HzOAES8HqNedREZZwt4I5Op/INZ8tT8=;
-        b=hqsTDeOOKt2oTCYnII9kbPDggfYoPKHu8fF8wHTD1Ksg0D2YpXT7fE3Pv3kcepcZkp
-         Ex5xph1tKfw47bEc7eiVeGV/Sdrddx2m7p3dtiBuOUcjO+Haf2dawpCwBLkQnNw3EWH9
-         vCteutFM4t4bCZpi4K9cll4khRu4fPEyY4kTZt3jgnuaUOVoIISkKJt7D5xA3UX3riqr
-         u/P3GpPal0LOm1MAG5RJ9V35KcifXo1ZgeqCflT3Vl/1hRHlANNOHp6GpD4SNNKgV2TB
-         7dXWckzAEXeBWtV6uMsL+vH+r0gg8nv3+qVr7lJQXCFvqm3pOP9wWZD+iTOFmFdRyq+d
-         DNCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NN0AhXtIWLO+HzOAES8HqNedREZZwt4I5Op/INZ8tT8=;
-        b=GXWgl0VblFmo+w34wM9dTxW9m+0TMeIgxIdprBbMpE4dMcs5K7kDM6UBYMaylTXdwC
-         rHXUQiQUJ9k3jAGfbycnNHXP4UzE3dSNYGMavjn3mmXjsryu2MQ/02nX6jeyYNCpCPVa
-         fm2K41sm5atkl+tGir5iR8vjjmTzk9Ik1WkD3oafEcDMj0TL/L1JyVGk4w0IiEG0X2wc
-         1E5d4x4V/ZkI6xfCf1Vh/2oG/tqq2kJbEt3i8Os8YAPG0H39km8GE0iE1q9ar0WrWi6n
-         9pEj+PGWi2viu2Z4OcddXbmj8qcS1Yc67xKmv9KGPyPDxZsiYPiOoRWcow/Ws+lQEgP6
-         knaw==
-X-Gm-Message-State: AGi0PuZSj1d3RzWKRn/LpS/acM9liAPiwuZsD7tow0PitForo/ETgNf+
-        LnOdQ9ZqziMrLkc9GWqKUqU=
-X-Google-Smtp-Source: APiQypLEHVVBQZlZoCeE3RwnN9M2t2NC/sXURxVYUEKvEHe6znRhtOuUtbqlkRQUAjqZUMIvtfjbMQ==
-X-Received: by 2002:a0c:9a08:: with SMTP id p8mr3601876qvd.54.1588695207450;
-        Tue, 05 May 2020 09:13:27 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id x124sm2070293qkd.32.2020.05.05.09.13.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 09:13:26 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CFD19409A3; Tue,  5 May 2020 13:13:24 -0300 (-03)
-Date:   Tue, 5 May 2020 13:13:24 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2 2/3] lib kallsyms: parse using io api
-Message-ID: <20200505161324.GW30487@kernel.org>
-References: <20200501221315.54715-1-irogers@google.com>
- <20200501221315.54715-3-irogers@google.com>
- <20200505142521.GD2041406@krava>
+        Tue, 5 May 2020 12:13:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53008 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730171AbgEEQN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 12:13:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 4B6EDAF5D;
+        Tue,  5 May 2020 16:13:29 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
+        helgaas@kernel.org, linux-kernel@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH v8 2/4] firmware: raspberrypi: Introduce vl805 init routine
+Date:   Tue,  5 May 2020 18:13:15 +0200
+Message-Id: <20200505161318.26200-3-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200505161318.26200-1-nsaenzjulienne@suse.de>
+References: <20200505161318.26200-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505142521.GD2041406@krava>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, May 05, 2020 at 04:25:21PM +0200, Jiri Olsa escreveu:
-> On Fri, May 01, 2020 at 03:13:14PM -0700, Ian Rogers wrote:
-> 
-> SNIP
-> 
-> > diff --git a/tools/lib/symbol/kallsyms.c b/tools/lib/symbol/kallsyms.c
-> > index 1a7a9f877095..e335ac2b9e19 100644
-> > --- a/tools/lib/symbol/kallsyms.c
-> > +++ b/tools/lib/symbol/kallsyms.c
-> > @@ -1,7 +1,9 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >  #include "symbol/kallsyms.h"
-> > +#include "api/io.h"
-> >  #include <stdio.h>
-> > -#include <stdlib.h>
-> > +#include <sys/stat.h>
-> > +#include <fcntl.h>
-> >  
-> >  u8 kallsyms2elf_type(char type)
-> >  {
-> > @@ -15,74 +17,62 @@ bool kallsyms__is_function(char symbol_type)
-> >  	return symbol_type == 'T' || symbol_type == 'W';
-> >  }
-> >  
-> > -/*
-> > - * While we find nice hex chars, build a long_val.
-> > - * Return number of chars processed.
-> > - */
-> > -int hex2u64(const char *ptr, u64 *long_val)
-> 
-> hi,
-> when you remove in here hex2u64, you'll break the compile:
-> 
-> 	  LINK     perf
-> 	/usr/bin/ld: perf-in.o: in function `modules__parse':
-> 	/home/jolsa/linux-perf/tools/perf/util/symbol.c:607: undefined reference to `hex2u64'
-> 	/usr/bin/ld: /home/jolsa/linux-perf/tools/perf/util/symbol.c:607: undefined reference to `hex2u64'
-> 	/usr/bin/ld: perf-in.o: in function `dso__load_perf_map':
-> 	/home/jolsa/linux-perf/tools/perf/util/symbol.c:1477: undefined reference to `hex2u64'
-> 	/usr/bin/ld: /home/jolsa/linux-perf/tools/perf/util/symbol.c:1483: undefined reference to `hex2u64'
-> 	collect2: error: ld returned 1 exit status
-> 	make[2]: *** [Makefile.perf:629: perf] Error 1
-> 	make[1]: *** [Makefile.perf:225: sub-make] Error 2
-> 	make: *** [Makefile:70: all] Error 2
-> 
-> that hex2u64 move needs to come before this change
+The Raspberry Pi 4 gets its USB functionality from VL805, a PCIe chip
+that implements xHCI. After a PCI reset, VL805's firmware may either be
+loaded directly from an EEPROM or, if not present, by the SoC's
+co-processor, VideoCore. RPi4's VideoCore OS contains both the non public
+firmware load logic and the VL805 firmware blob. The function this patch
+introduces triggers the aforementioned process.
 
-I noticed this and fixed it all, was about to send this note I've added:
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
----------------
+---
 
-Also we can't remove hex2u64() in this patch as this breaks the build:
+Change since v7:
+- Use usleep_delay()
+- Add comment about PCI errors
+- Don't wait on error
+- Typos
 
-  /usr/bin/ld: /tmp/build/perf/perf-in.o: in function `modules__parse':
-  /home/acme/git/perf/tools/perf/util/symbol.c:607: undefined reference to `hex2u64'
-  /usr/bin/ld: /home/acme/git/perf/tools/perf/util/symbol.c:607: undefined reference to `hex2u64'
-  /usr/bin/ld: /tmp/build/perf/perf-in.o: in function `dso__load_perf_map':
-  /home/acme/git/perf/tools/perf/util/symbol.c:1477: undefined reference to `hex2u64'
-  /usr/bin/ld: /home/acme/git/perf/tools/perf/util/symbol.c:1483: undefined reference to `hex2u64'
-  collect2: error: ld returned 1 exit status
+Change since v6:
+- Add test to avoid loading the firmware when not needed
+- Since we have it around, print VL805's firmware version, it'll make
+debugging easier in the future
+- Correct typos
+- Add a clearer view of HW topology in patch description
 
-Leave it there, move it in the next patch.
+Changes since v4:
+- Inline function definition when RASPBERRYPI_FIRMWARE is not defined
+
+Changes since v1:
+- Move include into .c file and add forward declaration to .h
+
+ drivers/firmware/raspberrypi.c             | 61 ++++++++++++++++++++++
+ include/soc/bcm2835/raspberrypi-firmware.h |  7 +++
+ 2 files changed, 68 insertions(+)
+
+diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberrypi.c
+index da26a584dca0..a166ad0cec2c 100644
+--- a/drivers/firmware/raspberrypi.c
++++ b/drivers/firmware/raspberrypi.c
+@@ -12,6 +12,8 @@
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
++#include <linux/pci.h>
++#include <linux/delay.h>
+ #include <soc/bcm2835/raspberrypi-firmware.h>
+ 
+ #define MBOX_MSG(chan, data28)		(((data28) & ~0xf) | ((chan) & 0xf))
+@@ -19,6 +21,8 @@
+ #define MBOX_DATA28(msg)		((msg) & ~0xf)
+ #define MBOX_CHAN_PROPERTY		8
+ 
++#define VL805_PCI_CONFIG_VERSION_OFFSET		0x50
++
+ static struct platform_device *rpi_hwmon;
+ static struct platform_device *rpi_clk;
+ 
+@@ -286,6 +290,63 @@ struct rpi_firmware *rpi_firmware_get(struct device_node *firmware_node)
+ }
+ EXPORT_SYMBOL_GPL(rpi_firmware_get);
+ 
++/*
++ * The Raspberry Pi 4 gets its USB functionality from VL805, a PCIe chip that
++ * implements xHCI. After a PCI reset, VL805's firmware may either be loaded
++ * directly from an EEPROM or, if not present, by the SoC's co-processor,
++ * VideoCore. RPi4's VideoCore OS contains both the non public firmware load
++ * logic and the VL805 firmware blob. This function triggers the aforementioned
++ * process.
++ */
++int rpi_firmware_init_vl805(struct pci_dev *pdev)
++{
++	struct device_node *fw_np;
++	struct rpi_firmware *fw;
++	u32 dev_addr, version;
++	int ret;
++
++	fw_np = of_find_compatible_node(NULL, NULL,
++					"raspberrypi,bcm2835-firmware");
++	if (!fw_np)
++		return 0;
++
++	fw = rpi_firmware_get(fw_np);
++	of_node_put(fw_np);
++	if (!fw)
++		return -ENODEV;
++
++	/*
++	 * Make sure we don't trigger a firmware load unnecessarily.
++	 *
++	 * If something went wrong with PCI, this whole exercise would be
++	 * futile as VideoCore expects from us a configured PCI bus. Just take
++	 * the faulty version (likely ~0) and let xHCI's registration fail
++	 * further down the line.
++	 */
++	pci_read_config_dword(pdev, VL805_PCI_CONFIG_VERSION_OFFSET, &version);
++	if (version)
++		goto exit;
++
++	dev_addr = pdev->bus->number << 20 | PCI_SLOT(pdev->devfn) << 15 |
++		   PCI_FUNC(pdev->devfn) << 12;
++
++	ret = rpi_firmware_property(fw, RPI_FIRMWARE_NOTIFY_XHCI_RESET,
++				    &dev_addr, sizeof(dev_addr));
++	if (ret)
++		return ret;
++
++	/* Wait for vl805 to startup */
++	usleep_range(200, 1000);
++
++	pci_read_config_dword(pdev, VL805_PCI_CONFIG_VERSION_OFFSET,
++			      &version);
++exit:
++	pci_info(pdev, "VL805 firmware version %08x\n", version);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(rpi_firmware_init_vl805);
++
+ static const struct of_device_id rpi_firmware_of_match[] = {
+ 	{ .compatible = "raspberrypi,bcm2835-firmware", },
+ 	{},
+diff --git a/include/soc/bcm2835/raspberrypi-firmware.h b/include/soc/bcm2835/raspberrypi-firmware.h
+index cc9cdbc66403..3025aca3c358 100644
+--- a/include/soc/bcm2835/raspberrypi-firmware.h
++++ b/include/soc/bcm2835/raspberrypi-firmware.h
+@@ -10,6 +10,7 @@
+ #include <linux/of_device.h>
+ 
+ struct rpi_firmware;
++struct pci_dev;
+ 
+ enum rpi_firmware_property_status {
+ 	RPI_FIRMWARE_STATUS_REQUEST = 0,
+@@ -141,6 +142,7 @@ int rpi_firmware_property(struct rpi_firmware *fw,
+ int rpi_firmware_property_list(struct rpi_firmware *fw,
+ 			       void *data, size_t tag_size);
+ struct rpi_firmware *rpi_firmware_get(struct device_node *firmware_node);
++int rpi_firmware_init_vl805(struct pci_dev *pdev);
+ #else
+ static inline int rpi_firmware_property(struct rpi_firmware *fw, u32 tag,
+ 					void *data, size_t len)
+@@ -158,6 +160,11 @@ static inline struct rpi_firmware *rpi_firmware_get(struct device_node *firmware
+ {
+ 	return NULL;
+ }
++
++static inline int rpi_firmware_init_vl805(struct pci_dev *pdev)
++{
++	return 0;
++}
+ #endif
+ 
+ #endif /* __SOC_RASPBERRY_FIRMWARE_H__ */
+-- 
+2.26.2
+
