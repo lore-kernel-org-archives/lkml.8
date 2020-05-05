@@ -2,81 +2,355 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2757C47259
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7FFC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9439206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:10:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588677031;
-	bh=GczSjg2mY+zVUBwyK+x5JROwfYQz7w+f1HqDD4SgsRI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yerQQCum2pPGrceX3NBoZb28wpsHqlB0pIbEVf+BM/Pfm3xJD187tpzDUSD/1Tri3
-	 KZc/8NCKFu4Ony8Sy3I0xIThTENi+gjfyG76Lqa7d4YJ9i0noMhtWkg/5VebN6HS/7
-	 fbLNCm8TsOVCHX+2TDkLreIYSPM7nK1O6aarrHtU=
+	by mail.kernel.org (Postfix) with ESMTP id 55839206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:10:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="LeodwwAu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbgEELKb (ORCPT
+        id S1728819AbgEELKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 5 May 2020 07:10:33 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:3509 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbgEELKb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 5 May 2020 07:10:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49826 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727090AbgEELKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 07:10:30 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E3C0206D7;
-        Tue,  5 May 2020 11:10:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588677030;
-        bh=GczSjg2mY+zVUBwyK+x5JROwfYQz7w+f1HqDD4SgsRI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OCwki1USRAmdS8aGyCPfJLL9E0Xi+2JLTACEEI3+u+VJjiE0S1JA2cFDtoV+JBCFM
-         6aaBfjDN/9N1JrYxckDC1PQ9cxInamd/QsLMvCTI4Dp4PZTOy+JUXzMkDjcroWR8PE
-         F/61FnIJ3qm1kmp5PKmLOZtQccMbeD6Mk8Pxi2X4=
-Date:   Tue, 5 May 2020 13:10:28 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     sean.wang@mediatek.com
-Cc:     jslaby@suse.com, andriy.shevchenko@linux.intel.com,
-        mika.westerberg@linux.intel.com, sr@denx.de, arnd@arndb.de,
-        matthias.bgg@gmail.com, tthayer@opensource.altera.com,
-        linux-mediatek@lists.infradead.org, linux-serial@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Steven Liu <steven.liu@mediatek.com>,
-        Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v3] tty: serial: don't do termios for BTIF
-Message-ID: <20200505111028.GA114206@kroah.com>
-References: <cc41ea10be9ab96568f0371784e3b9f8d9f434b9.1587577548.git.sean.wang@mediatek.com>
- <20200422180900.GA3454664@kroah.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1588677030; x=1620213030;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=GfwmAepOlGw0jc65vePXQyjyaX4cDEsLZQAUUm5+13E=;
+  b=LeodwwAugr4EdW2N6ILG6GYUgLq6xwsMg4MFmR5R+voM8mKbetBqRMaq
+   cGu7Gj92xHAw8+KRhN+2aObq3g7Vp+GJRIoxPLJdjIg3RtYk8UAz+UCMu
+   a2WopIQRk7/fVvywTnyXnaR5nsLL3TLtEPVKTh/gNaDuBSIYsU6ZVwhul
+   k=;
+IronPort-SDR: U951sFxepCa+Qb7TXkybI8h2ll5BqH3pY9nkGPY6TclyfJcYUJSxV07bvxi+Tk3I+E4NWG6Nk2
+ ak9flGZeyIzQ==
+X-IronPort-AV: E=Sophos;i="5.73,354,1583193600"; 
+   d="scan'208";a="28930959"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2b-55156cd4.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 05 May 2020 11:10:14 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-55156cd4.us-west-2.amazon.com (Postfix) with ESMTPS id 75550A1BD4;
+        Tue,  5 May 2020 11:10:11 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 5 May 2020 11:10:10 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.92) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 5 May 2020 11:09:54 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
+        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v10 03/16] mm: Introduce Data Access MONitor (DAMON)
+Date:   Tue, 5 May 2020 13:08:02 +0200
+Message-ID: <20200505110815.10532-4-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200505110815.10532-1-sjpark@amazon.com>
+References: <20200505110815.10532-1-sjpark@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422180900.GA3454664@kroah.com>
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.92]
+X-ClientProxiedBy: EX13D35UWB004.ant.amazon.com (10.43.161.230) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 08:09:00PM +0200, Greg KH wrote:
-> On Thu, Apr 23, 2020 at 02:02:08AM +0800, sean.wang@mediatek.com wrote:
-> > From: Sean Wang <sean.wang@mediatek.com>
-> > 
-> > Bluetooth Interface (BTIF) is designed dedicatedly for MediaTek SOC with
-> > BT in order to be instead of the UART interface between BT module and Host
-> > CPU, and not exported to user space to access.
-> > 
-> > As the UART design, BTIF will be an APB slave and can transmit or receive
-> > data by MCU access, but doesn't provide termios function like baudrate and
-> > flow control setup.
-> 
-> Why does it matter?  If the connection isn't exported to userspace, who
-> would run those termios functions on the port?
+From: SeongJae Park <sjpark@amazon.de>
 
-Dropping from my patch queues due to a lack of response, please address
-this question when you resend this.
+This commit introduces a kernel module named DAMON.  Note that this
+commit is implementing only the stub for the module load/unload, basic
+data structures, and simple manipulation functions of the structures to
+keep the size of commit small.  The core mechanisms of DAMON will be
+implemented one by one by following commits.
 
-greg k-h
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+---
+ include/linux/damon.h |  36 +++++++++
+ mm/Kconfig            |  12 +++
+ mm/Makefile           |   1 +
+ mm/damon.c            | 173 ++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 222 insertions(+)
+ create mode 100644 include/linux/damon.h
+ create mode 100644 mm/damon.c
+
+diff --git a/include/linux/damon.h b/include/linux/damon.h
+new file mode 100644
+index 000000000000..19f411d36c0d
+--- /dev/null
++++ b/include/linux/damon.h
+@@ -0,0 +1,36 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * DAMON api
++ *
++ * Copyright 2019-2020 Amazon.com, Inc. or its affiliates.
++ *
++ * Author: SeongJae Park <sjpark@amazon.de>
++ */
++
++#ifndef _DAMON_H_
++#define _DAMON_H_
++
++#include <linux/random.h>
++#include <linux/types.h>
++
++/* Represents a monitoring target region of [vm_start, vm_end) */
++struct damon_region {
++	unsigned long vm_start;
++	unsigned long vm_end;
++	unsigned long sampling_addr;
++	unsigned int nr_accesses;
++	struct list_head list;
++};
++
++/* Represents a monitoring target task */
++struct damon_task {
++	int pid;
++	struct list_head regions_list;
++	struct list_head list;
++};
++
++struct damon_ctx {
++	struct list_head tasks_list;	/* 'damon_task' objects */
++};
++
++#endif
+diff --git a/mm/Kconfig b/mm/Kconfig
+index ab80933be65f..9ea49633a6df 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -739,4 +739,16 @@ config ARCH_HAS_HUGEPD
+ config MAPPING_DIRTY_HELPERS
+         bool
+ 
++config DAMON
++	tristate "Data Access Monitor"
++	depends on MMU
++	help
++	  Provides data access monitoring.
++
++	  DAMON is a kernel module that allows users to monitor the actual
++	  memory access pattern of specific user-space processes.  It aims to
++	  be 1) accurate enough to be useful for performance-centric domains,
++	  and 2) sufficiently light-weight so that it can be applied online.
++	  If unsure, say N.
++
+ endmenu
+diff --git a/mm/Makefile b/mm/Makefile
+index 272e66039e70..5346314edee6 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -110,3 +110,4 @@ obj-$(CONFIG_HMM_MIRROR) += hmm.o
+ obj-$(CONFIG_MEMFD_CREATE) += memfd.o
+ obj-$(CONFIG_MAPPING_DIRTY_HELPERS) += mapping_dirty_helpers.o
+ obj-$(CONFIG_PTDUMP_CORE) += ptdump.o
++obj-$(CONFIG_DAMON) += damon.o
+diff --git a/mm/damon.c b/mm/damon.c
+new file mode 100644
+index 000000000000..e319c1e19f3d
+--- /dev/null
++++ b/mm/damon.c
+@@ -0,0 +1,173 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Data Access Monitor
++ *
++ * Copyright 2019-2020 Amazon.com, Inc. or its affiliates.
++ *
++ * Author: SeongJae Park <sjpark@amazon.de>
++ */
++
++#define pr_fmt(fmt) "damon: " fmt
++
++#include <linux/damon.h>
++#include <linux/mm.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++
++#define damon_get_task_struct(t) \
++	(get_pid_task(find_vpid(t->pid), PIDTYPE_PID))
++
++#define damon_next_region(r) \
++	(container_of(r->list.next, struct damon_region, list))
++
++#define damon_prev_region(r) \
++	(container_of(r->list.prev, struct damon_region, list))
++
++#define damon_for_each_region(r, t) \
++	list_for_each_entry(r, &t->regions_list, list)
++
++#define damon_for_each_region_safe(r, next, t) \
++	list_for_each_entry_safe(r, next, &t->regions_list, list)
++
++#define damon_for_each_task(ctx, t) \
++	list_for_each_entry(t, &(ctx)->tasks_list, list)
++
++#define damon_for_each_task_safe(ctx, t, next) \
++	list_for_each_entry_safe(t, next, &(ctx)->tasks_list, list)
++
++/* Get a random number in [l, r) */
++#define damon_rand(l, r) (l + prandom_u32() % (r - l))
++
++/*
++ * Construct a damon_region struct
++ *
++ * Returns the pointer to the new struct if success, or NULL otherwise
++ */
++static struct damon_region *damon_new_region(struct damon_ctx *ctx,
++				unsigned long vm_start, unsigned long vm_end)
++{
++	struct damon_region *region;
++
++	region = kmalloc(sizeof(*region), GFP_KERNEL);
++	if (!region)
++		return NULL;
++
++	region->vm_start = vm_start;
++	region->vm_end = vm_end;
++	region->nr_accesses = 0;
++	INIT_LIST_HEAD(&region->list);
++
++	return region;
++}
++
++/*
++ * Add a region between two other regions
++ */
++static inline void damon_insert_region(struct damon_region *r,
++		struct damon_region *prev, struct damon_region *next)
++{
++	__list_add(&r->list, &prev->list, &next->list);
++}
++
++static void damon_add_region(struct damon_region *r, struct damon_task *t)
++{
++	list_add_tail(&r->list, &t->regions_list);
++}
++
++static void damon_del_region(struct damon_region *r)
++{
++	list_del(&r->list);
++}
++
++static void damon_free_region(struct damon_region *r)
++{
++	kfree(r);
++}
++
++static void damon_destroy_region(struct damon_region *r)
++{
++	damon_del_region(r);
++	damon_free_region(r);
++}
++
++/*
++ * Construct a damon_task struct
++ *
++ * Returns the pointer to the new struct if success, or NULL otherwise
++ */
++static struct damon_task *damon_new_task(int pid)
++{
++	struct damon_task *t;
++
++	t = kmalloc(sizeof(*t), GFP_KERNEL);
++	if (!t)
++		return NULL;
++
++	t->pid = pid;
++	INIT_LIST_HEAD(&t->regions_list);
++
++	return t;
++}
++
++static void damon_add_task(struct damon_ctx *ctx, struct damon_task *t)
++{
++	list_add_tail(&t->list, &ctx->tasks_list);
++}
++
++static void damon_del_task(struct damon_task *t)
++{
++	list_del(&t->list);
++}
++
++static void damon_free_task(struct damon_task *t)
++{
++	struct damon_region *r, *next;
++
++	damon_for_each_region_safe(r, next, t)
++		damon_free_region(r);
++	kfree(t);
++}
++
++static void damon_destroy_task(struct damon_task *t)
++{
++	damon_del_task(t);
++	damon_free_task(t);
++}
++
++static unsigned int nr_damon_tasks(struct damon_ctx *ctx)
++{
++	struct damon_task *t;
++	unsigned int nr_tasks = 0;
++
++	damon_for_each_task(ctx, t)
++		nr_tasks++;
++
++	return nr_tasks;
++}
++
++static unsigned int nr_damon_regions(struct damon_task *t)
++{
++	struct damon_region *r;
++	unsigned int nr_regions = 0;
++
++	damon_for_each_region(r, t)
++		nr_regions++;
++
++	return nr_regions;
++}
++
++static int __init damon_init(void)
++{
++	return 0;
++}
++
++static void __exit damon_exit(void)
++{
++}
++
++module_init(damon_init);
++module_exit(damon_exit);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("SeongJae Park <sjpark@amazon.de>");
++MODULE_DESCRIPTION("DAMON: Data Access MONitor");
+-- 
+2.17.1
+
