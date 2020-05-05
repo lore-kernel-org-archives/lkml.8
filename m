@@ -2,108 +2,74 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D23BC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF9DC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AD0E20735
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:09:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="LBgZ5L4z"
+	by mail.kernel.org (Postfix) with ESMTP id B1B5A206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:09:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728754AbgEELJp (ORCPT
+        id S1728781AbgEELJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 07:09:45 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:2351 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728584AbgEELJp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 07:09:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1588676984; x=1620212984;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=G8CneijCkhkmAYrW5RLVj9rtVs0AB1S5RMsQ7jnOqO0=;
-  b=LBgZ5L4z5+6SDMbgppa0/iffMmS4vQHpx/i79Eoq/Mi4akSAZ/EcZTiC
-   nPZnu4Ork274505XTVxj66OQM16POFeGEd7x/WzGR/uU6JdPnkYs67wdP
-   Kb6rvu3ym0y3FKFZjuLeLMUzSRkxpgjvp7hy53QWYoOQAEyIxlo447Y9i
-   0=;
-IronPort-SDR: Z+1x4t+fJpZlkPe+iUdrCADyZ6K/A56bGL4rfiX9/WEqvsdm0/no2lhuJip01WQQAsrpyFTkFD
- cW3ZSIwvcUvg==
-X-IronPort-AV: E=Sophos;i="5.73,354,1583193600"; 
-   d="scan'208";a="33011968"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-1c1b5cdd.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 05 May 2020 11:09:44 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-1c1b5cdd.us-west-2.amazon.com (Postfix) with ESMTPS id 259F3A1BEF;
-        Tue,  5 May 2020 11:09:42 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 5 May 2020 11:09:41 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.92) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 5 May 2020 11:09:25 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
-        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v10 02/16] mm/page_ext: Export lookup_page_ext() to GPL modules
-Date:   Tue, 5 May 2020 13:08:01 +0200
-Message-ID: <20200505110815.10532-3-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200505110815.10532-1-sjpark@amazon.com>
-References: <20200505110815.10532-1-sjpark@amazon.com>
+        Tue, 5 May 2020 07:09:54 -0400
+Received: from verein.lst.de ([213.95.11.211]:34758 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728756AbgEELJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 07:09:53 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 4A89768C4E; Tue,  5 May 2020 13:09:50 +0200 (CEST)
+Date:   Tue, 5 May 2020 13:09:50 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Christoph Hellwig <hch@lst.de>, dri-devel@lists.freedesktop.org,
+        iommu@lists.linux-foundation.org, linaro-mm-sig@lists.linaro.org,
+        linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Subject: Re: [PATCH v3 02/25] drm: core: fix common struct sg_table related
+ issues
+Message-ID: <20200505110950.GA19067@lst.de>
+References: <20200505083926.28503-1-m.szyprowski@samsung.com> <20200505084614.30424-1-m.szyprowski@samsung.com> <CGME20200505084625eucas1p1a3c25fd171f360e0aab2f76700699454@eucas1p1.samsung.com> <20200505084614.30424-2-m.szyprowski@samsung.com> <20200505101508.GA14860@lst.de> <5dd1cb55-accb-0dc6-4ca5-90c57cd19527@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.92]
-X-ClientProxiedBy: EX13D35UWB004.ant.amazon.com (10.43.161.230) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5dd1cb55-accb-0dc6-4ca5-90c57cd19527@samsung.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On Tue, May 05, 2020 at 12:51:58PM +0200, Marek Szyprowski wrote:
+> Hi Christoph,
+> 
+> On 05.05.2020 12:15, Christoph Hellwig wrote:
+> >> -		for_each_sg_page(st->sgl, &sg_iter, st->nents, 0)
+> >> +		for_each_sg_page(st->sgl, &sg_iter, st->orig_nents, 0)
+> > Would it make sense to also add a for_each_sgtable_page helper that
+> > hides the use of orig_nents?  To be used like:
+> >
+> > 		for_each_sgtable_page(st, &sg_iter, 0) {
+> 
+> We would need two helpers:
+> 
+> for_each_sgtable_cpu_page() and for_each_sgtable_dma_page().
+> 
+> I considered them, but then I found that there are already 
+> for_each_sg_page(), for_each_sg_dma_page() and various special iterators 
+> like sg_page_iter, sg_dma_page_iter and sg_mapping_iter. Too bad that 
+> they are almost not used, at least in the DRM subsystem. I wonder if it 
+> make sense to apply them or simply provide the two above mentioned 
+> wrappers?
 
-This commit exports 'lookup_page_ext()' to GPL modules.  This will be
-used by DAMON.
-
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- mm/page_ext.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/mm/page_ext.c b/mm/page_ext.c
-index 4ade843ff588..71169b45bba9 100644
---- a/mm/page_ext.c
-+++ b/mm/page_ext.c
-@@ -131,6 +131,7 @@ struct page_ext *lookup_page_ext(const struct page *page)
- 					MAX_ORDER_NR_PAGES);
- 	return get_entry(base, index);
- }
-+EXPORT_SYMBOL_GPL(lookup_page_ext);
- 
- static int __init alloc_node_page_ext(int nid)
- {
--- 
-2.17.1
-
+None of the helpers helps with passing the right parameters from the
+sg_table.  So in doube we'd need wrappers for all of the above, or
+none..
