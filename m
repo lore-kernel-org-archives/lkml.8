@@ -2,126 +2,100 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B39C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56207C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EA59206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CEFA206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:51:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sBavfMWd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D7fddasA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729584AbgEEOvA (ORCPT
+        id S1729593AbgEEOvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:51:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54672 "EHLO
+        Tue, 5 May 2020 10:51:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729183AbgEEOvA (ORCPT
+        by vger.kernel.org with ESMTP id S1729142AbgEEOvR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:51:00 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 262CBC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:51:00 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id u10so912381pls.8
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 07:51:00 -0700 (PDT)
+        Tue, 5 May 2020 10:51:17 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69943C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:51:17 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id s18so1109988pgl.12
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 07:51:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=gqMtkzsSoPZBMMdRPapCy9u7s4SBqp2jU6yXsz651xs=;
-        b=sBavfMWdGoIANOSSLVXfXxC83qThaa0PpqS7Gu0n+50OKtn9f0tzizOmIqG2aTxtZ2
-         xp3HubkEHyBYGfLwk9sdggL6flPiZUZvKKQwy8GsCM8yTZ7LaNtDSwpxZpNzwSNfv6u0
-         H1Pio9FUQcYG/lkYk30Ywst5VEoF6G/Zt5DsgQxlGCZJevYunPeUUrixpsa1Sf8j6TQB
-         H2ruHWKzH0i8PhmCWp67lXb1UO+erKSBQAj5FlgOew7zF2kHf5BvBQzv0TmlWGewcqFq
-         Js+WWOGfBGVCGQTcfvhaZoqleU+outnnSDhigFJ1WXwhQCEvUdpPv4rpIH/3QZzcOH2G
-         IcBQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=M2EXFFKRgen9dOdoaNmpWiHUyjNR6THbe0hOWRO7mK8=;
+        b=D7fddasAWnayCiXP2vHn30lJiXBOJv2aUiHOdfJde4gO8WX1JRBXjaUsSh2f8mxYla
+         4Vcx3Lj7+2jFSZozWlZUqJ4F/wBJeDLYJdvLg7VanqP07JlBBqtkBCqZZBIGaBx+ozlG
+         1CWshZSJFrUHiODphYd2AfN9t9lUsX3GgK4i4aGC1nbA1xu/8yhuTNkbYYH95w8mrY6G
+         wPAc0l7d1YO0y2OmI1XmbtlFcZaMGMBON7c84uuWbYjK6CgU8A3QCP2bD3UK4x38AqKg
+         OkLqZ+ZQlbycqkgaaImtw/veRODLqWCXNa3yJJ4Mq21juD5AOLy9wI9SpzCSNPT0yRF1
+         TIbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=gqMtkzsSoPZBMMdRPapCy9u7s4SBqp2jU6yXsz651xs=;
-        b=LPHN+9ldeoTlk+Mcw7H0VbbBVHGhQ0Mpec+/HWRTZ4IS+ZeM7kq459B7rwvLMPq3fC
-         ODC6yGoHMFV2ugiN7yrQ+S996SaxCvApZRpN2stWU6CYVsTO1c/OE5em3vNFxx1pZmMW
-         Zmsh+j/axTedaJAZZTmyc/e1Z5/iHtjx0UhpA+ZPReXILky+YXhgNMFFC5lKYqHJ4+TZ
-         21TswNNV1y8ddp3ZTPXWWz9/NI2PPCBTO52j6+6p7cxlgLC0FbY1lMZzVamyA1jpCrSV
-         26AwEOSwM+OFCU5KxLxaMrDLEKHoMYbOxjyzwbgxcMAj0NCs52ER9noieHIzULZfV6zq
-         3ZLw==
-X-Gm-Message-State: AGi0PuYGM1brGjGkMNo40FVXH1/UuL58FvQ4P0cQNlW3obulVfmmghs4
-        fpCvjyP0BFieqLR9NLbXxaI=
-X-Google-Smtp-Source: APiQypLFBmQScYPm9uhGYX3oNnygObD/e41/YA0FYVhWFChPNj/bANXZeqfILu/X9kZs1suM8o1NIQ==
-X-Received: by 2002:a17:90b:93:: with SMTP id bb19mr3545245pjb.134.1588690259719;
-        Tue, 05 May 2020 07:50:59 -0700 (PDT)
-Received: from localhost.localdomain ([120.244.110.63])
-        by smtp.gmail.com with ESMTPSA id l16sm1727711pgh.35.2020.05.05.07.50.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 07:50:58 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=M2EXFFKRgen9dOdoaNmpWiHUyjNR6THbe0hOWRO7mK8=;
+        b=rrLxEvCYliyDUi/I4n0corDa4xGmaPp7fEvybjgqjRAzttxoL7y0OSm4dbLy3yk7rQ
+         verfk/WzP06kRWDtcloDWjxcZ0Qd5caHOfBd11Yoog5yQS350Ox3mzIZLu/OUqTQt7nR
+         wmwFOvHcFev2/YXEiTYAS/QQsPGXbc8YWwplYM30sLHvnKW2Rj/0ZnFDgarZFntGUG8C
+         M9MIsOy5UCFl947E8s4GW5ShnAa+2A4tVEvRnf+45KcJGi/s+9V6tYDqASPLK8nap6nR
+         3csnmqYC+6j4fPn32IDsdwUGrZemg3u9yH92kdWrq5MMYiidfr1LkAJv67LCW3JCbpAB
+         cdtQ==
+X-Gm-Message-State: AGi0Pua5ETW//5vt38yWZFbfnBVqdbC9etOThh9JAO3p1tlpMeIMF0zp
+        BnvAUfKAzOx/uvPFnWjYa+QndiEo05rlFw==
+X-Google-Smtp-Source: APiQypLWT/eT6bBlOmzsdnLhfcWjUIOGYmmUvs4tqBFlqETjzRpH8Cy+o7M1d/EQm2xTC6ZHMmnHZw==
+X-Received: by 2002:a63:da10:: with SMTP id c16mr3216084pgh.208.1588690276578;
+        Tue, 05 May 2020 07:51:16 -0700 (PDT)
+Received: from [192.168.1.7] ([120.244.110.63])
+        by smtp.gmail.com with ESMTPSA id x185sm2293389pfx.155.2020.05.05.07.51.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2020 07:51:15 -0700 (PDT)
+Subject: Re: [v2] fs: jfs: fix a possible data race in metapage_writepage()
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Jia-Ju Bai <baijiaju1990@gmail.com>,
+        jfs-discussion@lists.sourceforge.net
+Cc:     Dave Kleikamp <shaggy@kernel.org>, linux-kernel@vger.kernel.org
+References: <20200505135313.28793-1-baijiaju1990@gmail.com>
+ <d3e126df-e7f6-00bd-aa3c-ea39fcd1582e@web.de>
+ <05f9211d-6f57-b613-b584-a6d84b163645@gmail.com>
+ <074b3682-054a-d2ec-8142-1d87e1e97ed6@web.de>
 From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     shaggy@kernel.org, Markus.Elfring@web.de
-Cc:     jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH v2] fs: jfs: fix a possible data race in txBegin()
-Date:   Tue,  5 May 2020 22:50:13 +0800
-Message-Id: <20200505145013.8040-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.1
+Message-ID: <10f050ee-1b73-d015-ab57-fa0a3b59577b@gmail.com>
+Date:   Tue, 5 May 2020 22:50:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <074b3682-054a-d2ec-8142-1d87e1e97ed6@web.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The functions txBegin() and txLazyCommit() can be concurrently executed
-in the following call contexts:
 
-Thread1:
-  jfs_write_inode()
-    jfs_commit_inode()
-      txBegin()
 
-Thread2:
-  jfs_lazycommit()
-    txLazyCommit()
+On 2020/5/5 22:32, Markus Elfring wrote:
+>>>> This data race is found by our concurrency fuzzer.
+>>> * How do you think about to replace the word “is” by “was”?
+>> Okay.
+> Can such a positive feedback influence the change descriptions
+> for any of your other patches?
 
-In txBegin():
-  tblk->next = tblk->last = tblk->xflag = tblk->flag = tblk->lsn = 0;
+Okay, sure, thanks for the advice.
+I will resend my patches for jfs.
 
-In txLazyCommit():
-  spin_lock_irq(&log->gclock);
-  ...
-  tblk->flag |= tblkGC_COMMITTED;
-  ...
-  spin_unlock_irq(&log->gclock);
 
-A data race can occur for the data structure member "flag". 
-This data race was found by our concurrency fuzzer.
-
-Thus use the spin lock "gclock" for the resetting of five 
-data structure members in this function implementation.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
-v2:
-* Change the description.
-  Thank Markus Elfring for good advice.
-
- fs/jfs/jfs_txnmgr.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/fs/jfs/jfs_txnmgr.c b/fs/jfs/jfs_txnmgr.c
-index c8ce7f1bc594..a1f124aad2e0 100644
---- a/fs/jfs/jfs_txnmgr.c
-+++ b/fs/jfs/jfs_txnmgr.c
-@@ -415,7 +415,9 @@ tid_t txBegin(struct super_block *sb, int flag)
- 	 *
- 	 * memset(tblk, 0, sizeof(struct tblock));
- 	 */
-+	spin_lock_irq(&log->gclock);
- 	tblk->next = tblk->last = tblk->xflag = tblk->flag = tblk->lsn = 0;
-+	spin_unlock_irq(&log->gclock);
- 
- 	tblk->sb = sb;
- 	++log->logtid;
--- 
-2.17.1
-
+Best wishes,
+Jia-Ju Bai
