@@ -2,78 +2,102 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C31C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD017C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56C0420735
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A0822078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:42:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PZPHz2sf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728830AbgEELmU (ORCPT
+        id S1728853AbgEELml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 07:42:20 -0400
-Received: from foss.arm.com ([217.140.110.172]:37950 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727090AbgEELmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 07:42:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5315C30E;
-        Tue,  5 May 2020 04:42:19 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 38D643F305;
-        Tue,  5 May 2020 04:42:18 -0700 (PDT)
-Date:   Tue, 5 May 2020 12:42:15 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Ley Foon Tan <ley.foon.tan@intel.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        rfi@lists.rocketboards.org, linux-pci@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: altera: clean up indentation issue on a return
- statement
-Message-ID: <20200505114215.GE12543@e121166-lin.cambridge.arm.com>
-References: <20200327134556.265411-1-colin.king@canonical.com>
+        Tue, 5 May 2020 07:42:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53036 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728422AbgEELml (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 07:42:41 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4CD7C061A10
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 04:42:40 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id a21so1236019ljj.11
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 04:42:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ikKwSi47RkdUncF8ZIue6G09Cc3O7H+FG1YBZJHLO1c=;
+        b=PZPHz2sf+Y8/7voSUCVwWYQDTFp6jwT4eccln+h2V5t1fLtEiuMZ5ce3f8GLrLB5/+
+         Lv1kPL8izEzV+2IdG5SUTSb1GcCNzzZfyx/zyH1vNX1EgrQil8bLC2Jc+9mBLhAhHXe7
+         lOi78W5ciY1Ra0aIWnH4lpyflE7/EEEyKc94UjlHjcZQTnCuGIhy7/dnoqU7UVdaxjRC
+         Rdy8T9f0YhG4rZRuZD9UxnGFLdby4z/l2sf/CrEw82JtjLZcoH91Y9xfMaRapGwaeY1W
+         cCq9z7jHxn2gQYCZgaN9WotoV7g5/hfB1w9fLaw30A+XNiJTmnTXn2BktrD8y/mxhzoX
+         nxVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ikKwSi47RkdUncF8ZIue6G09Cc3O7H+FG1YBZJHLO1c=;
+        b=Mlm2xC+ohTzXSZd18ogUqA/Si+3VnTb08Se2StVky+mIOUbLYTdATd2Uzt57oOXsYh
+         ii60c5N1pPU6ajUoHZIb883ZlapFoTJqZj+NeKO+ds+GczvtKqUQkkciDH09Do6CPLFU
+         xHv8ACI12HUuXnaAEfRXXP91BDeiyhWlkqgrNB9+AR4fvQP2iIx4gSGAtKlfeXZuYQ+1
+         xYb9GfLujDn472U0zDqvwMIe9P1kI7SWSfZZjzZApnU50eLcQ6Pv92xD0jhQwU1ZWMeV
+         7dpvYt6V8mT4w0seGQ5kc+4sLXvD1ZP0BfD82M0/31qqaSP0ojSRBPkSrKJLeGeYzimo
+         sMOQ==
+X-Gm-Message-State: AGi0PuYBcMGxZEYoL1UgU7uOJo/B0S40HRK81bQUTWwCQad5mb5fJkl/
+        dmqPymvqspZVdDBjaNwb5KCktaU3wt89LYGsKBgVto8qsnU=
+X-Google-Smtp-Source: APiQypLzrurPKOFHS71dRCXI6iqbXYejtciTu5aveMTkrB6ldhKIG7OBjVfkuUaytzaP4Y/gPJR2+9djLt+JtIxmsXQ=
+X-Received: by 2002:a2e:b249:: with SMTP id n9mr1613232ljm.221.1588678959039;
+ Tue, 05 May 2020 04:42:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200327134556.265411-1-colin.king@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200429214954.44866-1-jannh@google.com> <20200429214954.44866-2-jannh@google.com>
+ <20200505104805.GA17400@lst.de>
+In-Reply-To: <20200505104805.GA17400@lst.de>
+From:   Jann Horn <jannh@google.com>
+Date:   Tue, 5 May 2020 13:42:12 +0200
+Message-ID: <CAG48ez3F70-UXwdHmO4CnR0bAForn-SBtstW5WAYjcrLFwS_9A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] binfmt_elf_fdpic: Stop using dump_emit() on user
+ pointers on !MMU
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Mark Salter <msalter@redhat.com>,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 01:45:56PM +0000, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> A return statment is indented incorrectly, remove extraneous space.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/pci/controller/pcie-altera.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, May 5, 2020 at 12:48 PM Christoph Hellwig <hch@lst.de> wrote:
+> On Wed, Apr 29, 2020 at 11:49:50PM +0200, Jann Horn wrote:
+> > dump_emit() is for kernel pointers, and VMAs describe userspace memory.
+> > Let's be tidy here and avoid accessing userspace pointers under KERNEL_DS,
+> > even if it probably doesn't matter much on !MMU systems - especially given
+> > that it looks like we can just use the same get_dump_page() as on MMU if
+> > we move it out of the CONFIG_MMU block.
+>
+> Looks sensible.  Did you get a chance to test this with a nommu setup?
 
-Applied to pci/altera, thanks.
-
-Lorenzo
-
-> diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
-> index b447c3e4abad..24cb1c331058 100644
-> --- a/drivers/pci/controller/pcie-altera.c
-> +++ b/drivers/pci/controller/pcie-altera.c
-> @@ -193,7 +193,7 @@ static bool altera_pcie_valid_device(struct altera_pcie *pcie,
->  	if (bus->number == pcie->root_bus_nr && dev > 0)
->  		return false;
->  
-> -	 return true;
-> +	return true;
->  }
->  
->  static int tlp_read_packet(struct altera_pcie *pcie, u32 *value)
-> -- 
-> 2.25.1
-> 
+Nope. Do you happen to have a recommendation for a convenient
+environment I can use with QEMU, or something like that? I'm guessing
+that just running a standard armel Debian userspace with a !mmu ARM
+kernel wouldn't work so well?
