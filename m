@@ -2,148 +2,115 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C10C4724C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 03:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A15AC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 03:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1C49206CC
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 03:05:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588647942;
-	bh=v8+6/shMHv91m2xsNYKuZpKxOv85PNBq8mG+n5ABQUY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PiGs7df0DB5VDmetOSDAtlid34AJXL2jvSk/1awF1rAmHzsJ3aT+qP8PtFIllqbV5
-	 GQhkUo1pHgVO86QF9VNLqvUMZb/QnypFF7WtY3+cjv7GiLIwayMb4Y/Z99M+CF+xVU
-	 7cFbFjPRSfi5UTy7bxpHVnP89gpwosMQ7R1pI7Wk=
+	by mail.kernel.org (Postfix) with ESMTP id 04920206CC
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 03:07:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbgEEDFm (ORCPT
+        id S1728217AbgEEDHi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 23:05:42 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:25270 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726516AbgEEDFl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 23:05:41 -0400
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 04535Oma001530;
-        Tue, 5 May 2020 12:05:25 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 04535Oma001530
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1588647925;
-        bh=7pzFWZ+G9qpXTN4C61MUU29XguMs9OYlbJNsdNGfSfU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sD5LQfjUMZW/+6W5ap9AHsWx45Oxcwi2meGBANQ8HQXiWCd3sCQ8rTeEJON64IXYk
-         Xzp4aIQDGndSGhY6dIbW6belAcrrIWC3mRQpCtmcQuLUAhimQzuVD8qyAZlvvuckMI
-         R6+fkdQoRZlPemDqPYGqj1y2pNy83t+OKLu9MEsb//w2FSwPnD02AtAUMPYKT4IIrO
-         BlA9F6VhoJHWNiZybbwGbjBX2BWTNmJDVDQXH+zEqKPfjyOOpuVl+1jNjD9kalEcv6
-         jPMbPnBoGjXWaV16O1O0xQVu4RIzTjdDY2ai3MjQ49fdts+/pCalaD9qhzycfF4F1N
-         FjTiUtYXAi7UQ==
-X-Nifty-SrcIP: [209.85.217.45]
-Received: by mail-vs1-f45.google.com with SMTP id b10so381505vsh.1;
-        Mon, 04 May 2020 20:05:25 -0700 (PDT)
-X-Gm-Message-State: AGi0Pua0m0mbL6UqyQAH6LXxJH0fDLqzdEnig0Cd7hHcY3j2g7yJArKg
-        MDsgLGbO4NF1D1htXr3kh87QRdP/NU+h9ELEmAw=
-X-Google-Smtp-Source: APiQypIVLbiCyi3UVlzZqvVq4xSo4WhtHlo5CE5Wd081k8YxTyEAtaRSh+pUvaI6stqG0JDc5lQtYCJiwrLalo0VJTA=
-X-Received: by 2002:a67:3293:: with SMTP id y141mr1020371vsy.54.1588647923948;
- Mon, 04 May 2020 20:05:23 -0700 (PDT)
+        Mon, 4 May 2020 23:07:38 -0400
+Received: from mga05.intel.com ([192.55.52.43]:59066 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726286AbgEEDHh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 23:07:37 -0400
+IronPort-SDR: lBwvHkb6E58fXMTWZA+wEINjQ5bzZV8qOIWrlLnBbL/JnRYV70W+CmK9qOWMrp32x8r6jw42Dq
+ lYsf8h9FVk/w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 20:07:36 -0700
+IronPort-SDR: SwhgkA8cwK89qvG3vWnOmOVOnFq6YT9L7YT83Qy8wMgzgXxlnIBVfG/BQSI0J13II96ttct2XF
+ UgSBjsCQ/mZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,354,1583222400"; 
+   d="scan'208";a="263014770"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga006.jf.intel.com with ESMTP; 04 May 2020 20:07:36 -0700
+Date:   Mon, 4 May 2020 20:07:36 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>
+Subject: Re: [PATCH v8 4/4] kvm: vmx: virtualize split lock detection
+Message-ID: <20200505030736.GA20916@linux.intel.com>
+References: <20200414063129.133630-5-xiaoyao.li@intel.com>
+ <871rooodad.fsf@nanos.tec.linutronix.de>
+ <20200415191802.GE30627@linux.intel.com>
+ <87tv1kmol8.fsf@nanos.tec.linutronix.de>
+ <20200415214318.GH30627@linux.intel.com>
 MIME-Version: 1.0
-References: <20200504020651.37031-1-masahiroy@kernel.org> <20200504020651.37031-2-masahiroy@kernel.org>
- <CAL_JsqLRUAEmh3kwEo+T-dMhXZTBH_kwbBwKzZyhJMR5P92pwA@mail.gmail.com>
-In-Reply-To: <CAL_JsqLRUAEmh3kwEo+T-dMhXZTBH_kwbBwKzZyhJMR5P92pwA@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 5 May 2020 12:04:47 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASGKrovgqEzSgqZRU0kAsh7rhZ78fZ21VrdKvmP2XH0JQ@mail.gmail.com>
-Message-ID: <CAK7LNASGKrovgqEzSgqZRU0kAsh7rhZ78fZ21VrdKvmP2XH0JQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] scripts/dtc: compile separate dtc-yaml
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     DTML <devicetree@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?TWFyZWsgQmVo77+977+9w6Ju?= <marek.behun@nic.cz>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415214318.GH30627@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 4:15 AM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Sun, May 3, 2020 at 9:07 PM Masahiro Yamada <masahiroy@kernel.org> wro=
-te:
-> >
-> > Marek Beh=C3=BAn reported a case where pkg-config fails to detect the
-> > libyaml-dev package, which is presumably a bug of the distro.
-> >
-> > Irrespective of that, I am not a big fan of pkg-config in the Makefile
-> > parse stage. The cost of pkg-config is quite small, but it is evaluated
-> > everytime we run make, even when we do 'make mrproper'. This commit
-> > changes the Makefile to not rely on pkg-config at all.
->
-> I don't really love the solution here... I'm inclined to just make
-> libyaml always required. Anyone building dtbs should care about
-> validating them. However, there's some dts files sprinkled in the tree
-> such as DT unittests and I don't want to break allmodconfig for CI,
-> 0-day, etc. Though eventually we may have to.
->
-> > The normal build should not require libyaml-dev while we need to compil=
-e
-> > dtc with libyaml for the schema check.
-> >
-> > Build two dtc variants:
-> >
-> >   scripts/dtc/dtc      for *.dts -> *.dtb
-> >   scripts/dtc/dtc-yaml for *.dts -> *.dt.yaml
->
-> My longer term plan is to integrate the schema checks into dtc. This
-> would be some sort of plugin to dtc found or specified at run-time. It
-> would eliminate the need for 2 passes of dtc and the 2nd case will go
-> away.
+On Wed, Apr 15, 2020 at 02:43:18PM -0700, Sean Christopherson wrote:
+> On Wed, Apr 15, 2020 at 11:22:11PM +0200, Thomas Gleixner wrote:
+> > Sean Christopherson <sean.j.christopherson@intel.com> writes:
+> > > I don't see any way to avoid having KVM differentiate between sld_warn and
+> > > sld_fatal.  Even if KVM is able to virtualize SLD in sld_fatal mode, e.g.
+> > > by telling the guest it must not try to disable SLD, KVM would still need
+> > > to know the kernel is sld_fatal so that it can forward that information to
+> > > the guest.
+> > 
+> > Huch? There is absolutely zero code like that. The only place where
+> > sld_state is used is:
+> > 
+> > + static inline void vmx_update_sld(struct kvm_vcpu *vcpu, bool on)
+> > + {
+> > +	if (sld_state == sld_warn && guest_cpu_has_feature_sld(vcpu) &&
+> > +	    on == test_thread_flag(TIF_SLD)) {
+> > +		    sld_update_msr(on);
+> > +		    update_thread_flag(TIF_SLD, !on);
+> > +	}
+> > 
+> > You might have some faint memories from the previous trainwrecks :)
+> 
+> Yeah, I was thinking SLD was only being exposed if the host is sld_warn.
+> I'll work with Xiaoyao to figure out a cleaner interface for this code.
 
+...
 
-OK.
+> > So we can go with the proposed mode of allowing the write but not
+> > propagating it. If the resulting split lock #AC originates from CPL != 3
+> > then the guest will be killed with SIGBUS. If it originates from CPL ==
+> > 3 and the guest has user #AC disabled then it will be killed as well.
+> 
+> An idea that's been floated around to avoid killing the guest on a CPL==3
+> split-lock #AC is to add a STICKY bit to MSR_TEST_CTRL that KVM can
+> virtualize to tell the guest that attempting to disable SLD is futile,
+> e.g. so that the guest can kill its misbehaving userspace apps instead of
+> trying to disable SLD and getting killed by the host.
 
+Circling back to this.  KVM needs access to sld_state in one form or another
+if we want to add a KVM hint when the host is in fatal mode.  Three options
+I've come up with:
 
+  1. Bite the bullet and export sld_state.  
 
-> > --- a/scripts/Makefile.lib
-> > +++ b/scripts/Makefile.lib
-> > @@ -246,6 +246,7 @@ quiet_cmd_gzip =3D GZIP    $@
-> >  # DTC
-> >  # --------------------------------------------------------------------=
--------
-> >  DTC ?=3D $(objtree)/scripts/dtc/dtc
-> > +DTC_YAML ?=3D $(objtree)/scripts/dtc/dtc-yaml
->
-> Can we make 'DTC' override both and keep this an internal detail.
->
+  2. Add an is_split_fatal_wrapper().  Ugly since it needs to be non-inline
+     to avoid triggering (1).
 
-No. For parallel building *.dtb and *.dt.yaml,
-they must be separate instances.
+  3. Add a synthetic feature flag, e.g. X86_FEATURE_SLD_FATAL, and drop
+     sld_state altogether.
 
+I like (3) because it requires the least amount of code when all is said
+and done, doesn't require more exports, and as a bonus it'd probably be nice
+for userspace to see sld_fatal in /proc/cpuinfo.
 
-> > +HOSTLDLIBS_dtc-yaml :=3D -lyaml
->
-> Does this work for yocto? As we had this before commit 067c650c456e.
-> Not clear if this changed for any reason or just 'let's use pkg-config
-> everywhere'.
->
-> Or is there another way to fix yocto issue and we can just check the
-> header exists. I assume yocto needs some prefix in front of
-> '/usr/include/yaml.h'?
->
-
-My bad - I missed 067c650c456e
-
-We need pkg-config to deal with yocto.
-
-
-Sorry, I take back this series.
-
---=20
-Best Regards
-Masahiro Yamada
+Thoughts?
