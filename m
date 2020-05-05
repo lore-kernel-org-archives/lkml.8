@@ -5,116 +5,123 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DE9C47256
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 998B0C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10BCA206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79105206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:05:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588651517;
-	bh=qpEoyVa9pWsVf6KM8WAQZ5zcBJhqzGSNpUu0hH7o0a8=;
+	s=default; t=1588651541;
+	bh=zF6sZRhsEgGpADrraSd7Rgy9rjEEJ9LkfiW61H42IdA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TCuqMdSPdGofiVewS4sCwGzCiEu/72LXim0l+BeLuxvmryPWeOa78ToZjvQcSao/D
-	 YcZjUXDC4UmkKRHZ/1LSGJUpbAVTvT2ryu97ajPzdjKTuAbuaW3L4NX1p7h4Vbo3+y
-	 o8wnDaTsDnm1sEf+TRYUJInCMiydoYIxYroEBxm8=
+	b=nSe1qQIFV4v1O8guJL5zL/dI6ift298aYQ+supZ0hlq8+DIjisq7OfSJJelXasVP2
+	 ap64+B9A2nqHl3yvuvyMcHAR/i6qjpD4BHm2wM7ZBU7Ak4VklJb0L0ab3TniySckaO
+	 4yTFYqjL/E5oNi74q72fTPberKx6XBnaW4Bs9U2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgEEEFQ (ORCPT
+        id S1727861AbgEEEFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 00:05:16 -0400
-Received: from mail-oo1-f66.google.com ([209.85.161.66]:37833 "EHLO
-        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725272AbgEEEFO (ORCPT
+        Tue, 5 May 2020 00:05:41 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:35732 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725272AbgEEEFk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 00:05:14 -0400
-Received: by mail-oo1-f66.google.com with SMTP id v6so18565oou.4;
-        Mon, 04 May 2020 21:05:13 -0700 (PDT)
+        Tue, 5 May 2020 00:05:40 -0400
+Received: by mail-oi1-f196.google.com with SMTP id o7so878066oif.2;
+        Mon, 04 May 2020 21:05:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6WQI3JSgZPOFGGzXwwk2K02/3Pv1yWZDzRlpx8k9vAU=;
-        b=T+4oLveKdi8SLPO732OHxpXLgdVPQNat74wBHGmzc29OiSZ4K0hH5CxT8SgQmfpAzF
-         wAGr/LXw6Qv+ISheetLCNqTlFxHcVYeZiHpX6fEcS9Wt+pFejupOu6tZv5ajTdOyr+3+
-         qSc7LYQLYCHc0UE+Xr6C6HlQ6Sfwx7mun3u/dAC0BeRWUuulf3l28UK/RINJpxA5mb2S
-         UI9T4LYk1cTvjiby8cZyqSjG6uBgyNhyGtDHIp4/JcWMx5/a3DkAgMLwikmRrChP+H56
-         wWkOst6wdoSLFhvCRP5cO7gHFAWmlaEYj7cv6BQBRSf9Mkgww+DhaOaCyEx7RrLfWX8H
-         /jVQ==
-X-Gm-Message-State: AGi0PuaG9rFe1aKPz/VPNgE2mKSO7hCmTcqB8oyhbwMD3ZHKMKfMdOjP
-        dR5YBDoER/H0G6XZcjB7yPzpEXs=
-X-Google-Smtp-Source: APiQypLGue2T2PeYCGDsL7qgUIq2ihNupfk0d/AlfGZGSS8M6OljhlK0/aPRKFsxfJuayvNWzuXA4w==
-X-Received: by 2002:a4a:92d1:: with SMTP id j17mr1338642ooh.13.1588651513417;
-        Mon, 04 May 2020 21:05:13 -0700 (PDT)
+        bh=NxcXGsja0RqwbNvyBbTQG5dqInSaMyIr4W7PW6vbWV0=;
+        b=jXUnYvJQVStbcYVTkL/Jw2kaOFvCP7u+v3ywFtgA8TQGU3zsFXnaEw2OAbednQaVqX
+         PH9ZnqDZZA+/CyUVFDHQfpV9ZPRmci8Wq5EVmx0y0cccFOGVW5sCHG5+owNcMlXCs4Kr
+         1eS7IHfc92GWspuXCycdZkAflpRkiLstgPukUmTAcn7xZgQnfzT8KAyUYo2X1TbeIwPa
+         GlTZQRLzB5JjK7XBlMxWiU5Pg9ap9mGtFvubgXxF6iyY43mmd0fxtEoJknmzdHTE3QSl
+         n0/02lyeig+VmBhaJD5wtTZ+bZRAQjefDFjMiidM9dYZEfiPS+FNFBTqOqXN0WwlBVjg
+         1oPA==
+X-Gm-Message-State: AGi0PuaJomyo3ngPktiGF7onaBkbeHlJxK90lLJ0hq5ORsQ9CYCdSSno
+        brt0bjq5kkD6NT2lO9YvfQ==
+X-Google-Smtp-Source: APiQypIm6bJ2GYcUWnDrZJSKFY2MMrVaOZ5DgIjiUPpdrF0QvVmDwHdw5rjjHX4mQ/dYp0iumLOLcQ==
+X-Received: by 2002:aca:d441:: with SMTP id l62mr1244483oig.9.1588651539145;
+        Mon, 04 May 2020 21:05:39 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e10sm260152oie.18.2020.05.04.21.05.12
+        by smtp.gmail.com with ESMTPSA id 61sm329855otp.13.2020.05.04.21.05.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 21:05:12 -0700 (PDT)
-Received: (nullmailer pid 30274 invoked by uid 1000);
-        Tue, 05 May 2020 04:05:12 -0000
-Date:   Mon, 4 May 2020 23:05:11 -0500
+        Mon, 04 May 2020 21:05:38 -0700 (PDT)
+Received: (nullmailer pid 31439 invoked by uid 1000);
+        Tue, 05 May 2020 04:05:37 -0000
+Date:   Mon, 4 May 2020 23:05:37 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Richard Cochran <richardcochran@gmail.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>, netdev@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Nishanth Menon <nm@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH net-next 1/7] dt-binding: ti: am65x: document common
- platform time sync cpts module
-Message-ID: <20200505040511.GB8509@bogus>
-References: <20200501205011.14899-1-grygorii.strashko@ti.com>
- <20200501205011.14899-2-grygorii.strashko@ti.com>
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: Re: [PATCH v6 6/7] dt-bindings: input: Add docs for ADC driven
+ joystick.
+Message-ID: <20200505040537.GA30791@bogus>
+References: <20200503171451.44034-1-contact@artur-rojek.eu>
+ <20200503171451.44034-6-contact@artur-rojek.eu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200501205011.14899-2-grygorii.strashko@ti.com>
+In-Reply-To: <20200503171451.44034-6-contact@artur-rojek.eu>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 1 May 2020 23:50:05 +0300, Grygorii Strashko wrote:
-> Document device tree bindings for TI AM654/J721E SoC The Common Platform
-> Time Sync (CPTS) module. The CPTS module is used to facilitate host control
-> of time sync operations. Main features of CPTS module are:
->   - selection of multiple external clock sources
->   - 64-bit timestamp mode in ns with ppm and nudge adjustment.
->   - control of time sync events via interrupt or polling
->   - hardware timestamp of ext. events (HWx_TS_PUSH)
->   - periodic generator function outputs (TS_GENFx)
->   - PPS in combination with timesync router
->   - Depending on integration it enables compliance with the IEEE 1588-2008
-> standard for a precision clock synchronization protocol, Ethernet Enhanced
-> Scheduled Traffic Operations (CPTS_ESTFn) and PCIe Subsystem Precision Time
-> Measurement (PTM).
+On Sun,  3 May 2020 19:14:50 +0200, Artur Rojek wrote:
+> Add documentation for the adc-joystick driver, used to provide support
+> for joysticks connected over ADC.
 > 
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> Tested-by: Paul Cercueil <paul@crapouillou.net>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
->  .../bindings/net/ti,k3-am654-cpsw-nuss.yaml   |   7 +
->  .../bindings/net/ti,k3-am654-cpts.yaml        | 152 ++++++++++++++++++
->  2 files changed, 159 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml
+> 
+>  Changes:
+> 
+>  v2: - Add `reg` property to axis subnode in order to enumerate the axes,
+>      - rename `linux,abs-code` property to `linux,code`,
+>      - drop `linux,` prefix from the remaining properties of axis subnode
+> 
+>  v3: no change
+> 
+>  v4: - remove "bindings" from the unique identifier string,
+>      - replace `|` with `>` for all description properties,
+>      - specify the number of items for `io-channels`,
+>      - correct the regex pattern of `axis` property,
+>      - specify the value range of `reg` property for each axis,
+>      - put `abs-range` properties under `allOf` 
+> 
+>  v5: add `a-f` to the regex pattern of `axis` property
+> 
+>  v6: no change
+> 
+>  .../bindings/input/adc-joystick.yaml          | 121 ++++++++++++++++++
+>  1 file changed, 121 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/adc-joystick.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml: $id: relative path/filename doesn't match actual path or filename
-	expected: http://devicetree.org/schemas/net/ti,k3-am654-cpts.yaml#
-Unknown file referenced: [Errno 2] No such file or directory: '/usr/local/lib/python3.6/dist-packages/dtschema/schemas/net/ti,am654-cpts.yaml'
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.example.dts] Error 255
+Error: Documentation/devicetree/bindings/input/adc-joystick.example.dts:24.31-32 syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/input/adc-joystick.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/input/adc-joystick.example.dt.yaml] Error 1
 make[1]: *** Waiting for unfinished jobs....
 Makefile:1300: recipe for target 'dt_binding_check' failed
 make: *** [dt_binding_check] Error 2
 
-See https://patchwork.ozlabs.org/patch/1281460
+See https://patchwork.ozlabs.org/patch/1282045
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
