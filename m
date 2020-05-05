@@ -2,151 +2,138 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A028C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 09:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A795C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 09:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5854C2068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 09:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E47D3206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 09:04:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IY78RnDb"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="kqHZgxMr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728529AbgEEJDH (ORCPT
+        id S1728596AbgEEJEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 05:03:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56306 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbgEEJDH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 05:03:07 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 282E3C061A0F;
-        Tue,  5 May 2020 02:03:07 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id t9so758006pjw.0;
-        Tue, 05 May 2020 02:03:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mInlraXI6UiuC8jn95iMV/BmULi+g5IjWHS/6IJojzM=;
-        b=IY78RnDbIb4vIJKDi/PLt66/Dh6V695zA5RvX6bWp3b/B9B7khhwf0c6SQE21bFn00
-         Qs3wubU2MZ7Kxw27FkQj7ZC2AWz4aCnAjcEAGJeVGpzwzCHh2Dx+pSQ9DzBwSFOdRapM
-         9fE4FeTJzYHqpcBnQ3S1lM7tjNquUaX/TVZHYhLdXdsfLSsX8YqcZphvOHZ6lY7YAp1G
-         A0brcLbn+86QUjcC0KoEXv7Lmwvq0KiMnEEWk5DxNQn2IgeaWNU2bPjhIAuTK/l6Sq1F
-         orrUG/yYIkTjlMyUawIRZ6QiEKhEr5/wMTg4nFFkUF/jaAICGCYA0oJtv10M8K2CUzsi
-         KApA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mInlraXI6UiuC8jn95iMV/BmULi+g5IjWHS/6IJojzM=;
-        b=IYKpm81B7WxFcMMCoJXs5p/DPSDbHeUfFk2JOSFrrYdHR9m/ZFuhcCf49CS3b6Xa0b
-         bEBffHKmIYh8n4rMVs0lr/enV6+Bfr4evMQ0bK8BVHnRoX2V36jXV3Cv+xYMvrlEpOeX
-         zxeZSCqPfuIpcojQaNRLsL2eHUBNN3aaLSFqRVRSEAVrCf5PEI0YhhOo5Xm/C8jIRJAt
-         Lyp+mz5em9vXp8+/ZHGy6uNPwIubNKkX8exM8PYMqCCLYKJHeGsq3+apmKasUAjsMjTv
-         ovnsRfkfrQO0ftZA5upNlJQbSA3ci+ERQfHAC1NGgFeV9ydDl2Ire5BY1BiB2Kg3dpDN
-         UUvQ==
-X-Gm-Message-State: AGi0PubAsDXpv3vHklePhnEMcZ72aaS3Gn1wEkQRolFiMaPWFzpXjlIL
-        VgimRiL5obUo+UM4eeIWBW0nTvxpoqnDjGYTcrpmZqxW
-X-Google-Smtp-Source: APiQypITF/w0OxPtiTL9eJELTK6RfwZPh/h3K8y5+ZC/W+OkZjaBXRq9bYDioiI7rfJPMY51Pd1aRH7pP5lK6p4/mSM=
-X-Received: by 2002:a17:90a:224b:: with SMTP id c69mr1767854pje.8.1588669386016;
- Tue, 05 May 2020 02:03:06 -0700 (PDT)
+        Tue, 5 May 2020 05:04:12 -0400
+Received: from mout.web.de ([217.72.192.78]:47763 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725766AbgEEJEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 05:04:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1588669425;
+        bh=sbmEMMiBSk8bvwWZ/D3b0FG5iaQet+xYwsgtjPy4XYY=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=kqHZgxMrp6EtOUTa/gvQWxqNJbXHNRtBroLBYq6Y0THm4b0vSiIpJAmj4usA64VUq
+         lCciQdSpoPT9n95zyQpivHZz2uVntqiZPttfzqKbMxtJOGMvLpLpctbH8MJJZl/Zeo
+         xyaFOTTepNiEGGv4MYx8UvCup9Jc9HQ9SjNfujSM=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.48.132.123]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0M57dy-1jDxfC38WM-00zIaY; Tue, 05
+ May 2020 11:03:44 +0200
+Subject: Re: net: rtw88: Fix an issue about leaking system resources
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Cc:     Dejin Zheng <zhengdejin5@gmail.com>,
+        Brian Norris <briannorris@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Yan-Hsuan Chuang <yhchuang@realtek.com>
+References: <79591cab-fe3e-0597-3126-c251d41d492b@web.de>
+ <20200504144206.GA5409@nuc8i5> <882eacd1-1cbf-6aef-06c5-3ed6d402c0f5@web.de>
+ <CA+ASDXOJ2CSzdgos4Y8Wd7iZjRUkrMN=Ma0_-ujG8bihGzPKkQ@mail.gmail.com>
+ <20200505005908.GA8464@nuc8i5>
+ <CAHp75Ve43za_hAQbECPTFS0eEqSeYJtq3bvojmed=-6g=3DhvA@mail.gmail.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <7442f3d4-db99-30cc-7eb6-79badda2f8b9@web.de>
+Date:   Tue, 5 May 2020 11:03:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200505013206.11223-1-david.e.box@linux.intel.com> <20200505023149.11630-1-david.e.box@linux.intel.com>
-In-Reply-To: <20200505023149.11630-1-david.e.box@linux.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 5 May 2020 12:02:54 +0300
-Message-ID: <CAHp75VcX=W3RGZpDVMDot+yfXH-N=gE=Ny7wSTdk33u8MUPjsg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] mfd: Intel Platform Monitoring Technology support
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        alexander.h.duyck@intel.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHp75Ve43za_hAQbECPTFS0eEqSeYJtq3bvojmed=-6g=3DhvA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+X-Provags-ID: V03:K1:8nddOyafvuTrOU8ir6S//KuAEVImUUucqnH0/fetpHYLX+iMFWh
+ jeJ5ASXSmCIbHLStQ6UWwKyaywYnb7Z+u3XivVkUaDzYOgPAzy3gEDZA0zApU2E1gL6I3L5
+ PdoZW4DNR56qV32/rLyft12/3THD/6DD9v3rqbYX0xqwVyzsCDrGtCJcuUOjH9p3OEX9azh
+ ek8P7mnP6TRj5HjtFxpcg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Lv72e3Xl4nQ=:X1HNxaVqkqD2NsGSOaqlJc
+ nQBrb2oxqR7UFRWvRJtHoSnLewYo9o/I4xzK/Dcr0avYvKzJcAmixuTIxvOB4xql1vmR6/S+4
+ A6/TIhKiWZTXCmmz85QRuo+YpZOOHiz27ASgD20Avj7sy0jTEoSi+j1ddN0X5/tLAed6LetO6
+ C/S0D4GUHrncXWbfot/WOpkfLeJzgDAlc2SEyuUMLf2UqYiMiZUK8jdPS+V6SK1EIAy/tDLap
+ UtcWGD5i+vHJsGFKHZjJrM1neocf/p1zoIZF/yts8/ZWkMNyM5Ca3zQ99nEpAaoExVLgIEsmv
+ Bib9IuIRxX5w7UdDWePq8FAFZWnVwqs7BJ7fNXIQfHyo3N5nFKKGdnLsTqx1nJsMvd9NABozZ
+ 8u4lS9ifO0VWluHHDWlRpi7waQqrATAWINmvl9dlHNbbtWcn73D6FrcRkyjQ7tfEuBA01f5gx
+ alm7bhQ+wM4LQeB5Ie02t0OGVX0lKZcBASbACxu9RvDom9SuarUJdSu4txAyLEzMK6YJQezg/
+ 92w2v1Blv6AU1lsxV6pnLfk9IIc2VzhycM5WrFtZCLA5uftuZEqbcQWtY93fagv3f7Ho93Cdq
+ 1tSR4Tyou4SbD2ZSCYdCkskqi4LtWTWYt7FU1nXIxufzGhJ+S1EWTl+QvgRPrE8pSvmQ7L79l
+ JUIelBE9+TB9jKeeJJ8Gov86JWdj5g5889ZE6bLSrSAY+Gw2/EMsdsF+WyEODzw22rVGbIm6d
+ s7mdscUxDobijScAbvjLZC/nlgsc4YVZMnBLL8vHPJIN+NUneJDNDU+YKptrEMNKK/M01cM9V
+ AnGil804YPpq3FxG8+s/yy65PZJex1Csk8OyBnBNpTQBfyZkDGf4SeJ5Ds3CYeN4sGZB1ZKnu
+ 87Mxw4bIX7sqjD/Yj3p1Rs375ZSKnGI2Fwwp0Uq8o8yxAwXi7yBfpBC9pq9wV4DRFRP6O4FwL
+ BvNm6H4h/JUc4MQwkt6SaGYy+psbE8QlCV5fy5Mkfu5gH2XRR0vw+hFzApZV1aJeY+W4jmUHr
+ L45M03wGMtD6IcSQlW21caSUGFedQY/ovVUNDUxjcvvVYTVt3lpDmb5lLjkZLi9vnWs9AJ3Vg
+ 1ayDUzxtECyHcE2uffViSdjhS7EqQpGa1rukp+bRgYPTPZjKZDRaZ32wnPx9aHAzHggsQuOo9
+ cfUQz3/LvhsNtMkwn3y+fWY/WvNtyb1sdrW6Giony2h+s/Lvz+BkQ3DuW4Us+8jTqn7qaMZNo
+ o5FeYYDsqfYdgJGnP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 5:32 AM David E. Box <david.e.box@linux.intel.com> wrote:
->
-> Intel Platform Monitoring Technology (PMT) is an architecture for
-> enumerating and accessing hardware monitoring facilities. PMT supports
-> multiple types of monitoring capabilities. Capabilities are discovered
-> using PCIe DVSEC with the Intel VID. Each capability is discovered as a
-> separate DVSEC instance in a device's config space. This driver uses MFD to
-> manage the creation of platform devices for each type so that they may be
-> controlled by their own drivers (to be introduced).  Support is included
-> for the 3 current capability types, Telemetry, Watcher, and Crashlog. The
-> features are available on new Intel platforms starting from Tiger Lake for
-> which support is added. Tiger Lake however will not support Watcher and
-> Crashlog even though the capabilities appear on the device. So add a quirk
-> facility and use it to disable them.
+> Perhaps we need to find a good researcher student who may do a MD
+> dissertation out of the case :-)
 
-...
+I got the impression that some research is performed already around
+affected areas.
+Would you like to reuse any more experiences from there?
 
->  include/linux/intel-dvsec.h |  44 +++++++++
-
-I guess it's no go for a such header, since we may end up with tons of
-a such. Perhaps simple pcie-dvsec.h ?
-
-...
-
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8783,6 +8783,11 @@ S:       Maintained
->  F:     arch/x86/include/asm/intel_telemetry.h
->  F:     drivers/platform/x86/intel_telemetry*
->
-> +INTEL PMT DRIVER
-> +M:     "David E. Box" <david.e.box@linux.intel.com>
-> +S:     Maintained
-> +F:     drivers/mfd/intel_pmt.c
-
-I believe you forgot to run parse-maintainers.pl --order
---input=MAINTAINERS --output=MAINTAINERS
-
-...
-
-> +       info = devm_kmemdup(&pdev->dev, (void *)id->driver_data, sizeof(*info),
-> +                           GFP_KERNEL);
-
-> +
-
-Extra blank line.
-
-> +       if (!info)
-> +               return -ENOMEM;
-> +
-> +       while ((pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DVSEC))) {
-> +               pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER1, &vid);
-> +               if (vid != PCI_VENDOR_ID_INTEL)
-> +                       continue;
-
-Perhaps a candidate for for_each_vendor_cap() macro in pcie-dvsec.h.
-Or how is it done for the rest of capabilities?
-
-> +       }
-
-...
-
-> +static const struct pci_device_id pmt_pci_ids[] = {
-> +       /* TGL */
-
-> +       { PCI_VDEVICE(INTEL, 0x9a0d), (kernel_ulong_t)&tgl_info },
-
-PCI_DEVICE_DATA()?
-
-> +       { }
-> +};
-
--- 
-With Best Regards,
-Andy Shevchenko
+Regards,
+Markus
