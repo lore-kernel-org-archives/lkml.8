@@ -2,125 +2,143 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BAEFC47258
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDCDC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3685F206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24EAF206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:53:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hl68Rx6+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I9RO3pgj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729129AbgEENwE (ORCPT
+        id S1729134AbgEENxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 09:52:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45040 "EHLO
+        Tue, 5 May 2020 09:53:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728993AbgEENwD (ORCPT
+        by vger.kernel.org with ESMTP id S1728965AbgEENxu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 09:52:03 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64787C061A0F;
-        Tue,  5 May 2020 06:52:03 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id z6so838631plk.10;
-        Tue, 05 May 2020 06:52:03 -0700 (PDT)
+        Tue, 5 May 2020 09:53:50 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2DD0C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 06:53:50 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id x15so920730pfa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 06:53:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zSUqQDWC8kjEfI7Zwy/W0Ml7p1PvgRlntpeykuMm0bw=;
-        b=hl68Rx6+hwqgjCDnRBIJ4ghqd/Mbjw3qnNO117CIrop6ybuvdvRuSN03pEe7LfHEPI
-         DEpOBZgu6KgRtAIgWgd9EZ6+ZSZpdmdrcUwE4xCJSRrgUf6ZClZVqGvF71hyrA1fE0CG
-         5XBjSIhRA4+6zJ8uXyhuPujWQz6cVK4l21vd5YazoEAGPJUkjCT72SOFXQTriCqkd2pk
-         uSYVpm7onCs3V/dcpk87Lc0IyMldYKecnD5gtwshAbJHKmuG7rbftbJtgtq4Hf5Eu4Dp
-         pPA8M/GBhnv2uvwEAgQAizkTBjG2gVDkDo7CwZbbHIjISSjFrMXB3MnYmb9f6aJ5H9kM
-         v4jw==
+        h=from:to:cc:subject:date:message-id;
+        bh=QJU1rgdyR3dsjV2URMfZxPtiLnMEVx7zziz4YW88wtc=;
+        b=I9RO3pgjGmr1FZpr0FwTzwdMQZjnnQ/wVjovFIecF1T58ixbSFm2fJTWOqsJQ+QiHg
+         OyJFLLZyE5MrODJ7pAmAy3cKW7fO7d9SZOH8/p55bXqM1ySA0LLe6GZ4LP9nHsoIhRBI
+         5TqYq3nNSBYoL+U8t/9YNBd2CVnf/oW0AKwN9Aj+dI0UVFEMsiM5iLDXSMIyiSyA0h7+
+         C6kWDkjUSP+ebxyGtTmhkRcALPduflyZwo1on3TtMGHfANUKwPXUSFUZt8NoZWV5s45v
+         aSCOBUSupfNy1R/dN+O+5R0A4/Uc0YEUHBDJDnAcYaXZGx9D7Qt2Q1Z90tIDjrRTWhAH
+         tFcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zSUqQDWC8kjEfI7Zwy/W0Ml7p1PvgRlntpeykuMm0bw=;
-        b=YrmUYUHWiqz1uko2DTOZU0kjuiCIF8oMjwoqtqJ1gOBycGoAyV6zAXWtpMX6PE+WRF
-         rkX3PzGaZWR0S9q9ei5/R5nNkHgi7d1yGjotALkON57FyRJxH3wGEfoJZD+yE9qCHWya
-         266jjWjU4u4h5I5wzjhzapg9ewJEePzj7Oo5X3/Npjbi8TCHl+FahcxZFE0g+sMvEtg3
-         XGTtDrxlYkGnXGY4K26LqGMHAJLLt1LIi09gxBdvCOaGGzm3mzaSb3WqMR6K73jqnDvk
-         VLwp5ekXCEVv2EYJ0htytVUy2MxwMHWC9DVEgbMSj4BnP8lbESq3WHF/3BWPi8y2vSiK
-         ftPQ==
-X-Gm-Message-State: AGi0Pua5/mAfQ2kNuhXgXSbKWC2YaqPOT+UXXiFhbjY38K4awGA6sn5q
-        Qeys2cTkYPXb4rySw/YJozpeHDHJ/4SP4fwuz8/NzVNn
-X-Google-Smtp-Source: APiQypJNEHsSL0GExSztmK2I6nxQUgw+68Y8I+I3LffAVV8E4crlumGaO3BAzZEfzHPrp79Ypgd2ypo3cV1x0ObIE9w=
-X-Received: by 2002:a17:90a:fa81:: with SMTP id cu1mr3234534pjb.25.1588686722930;
- Tue, 05 May 2020 06:52:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1588460322.git.syednwaris@gmail.com> <20200504114109.GE185537@smile.fi.intel.com>
- <20200504143638.GA4635@shinobu>
-In-Reply-To: <20200504143638.GA4635@shinobu>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 5 May 2020 16:51:56 +0300
-Message-ID: <CAHp75Vf_vP1qM9x81dErPeaJ4-cK-GOMnmEkxkhPY2gCvtmVbA@mail.gmail.com>
-Subject: Re: [PATCH v5 0/4] Introduce the for_each_set_clump macro
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Syed Nayyar Waris <syednwaris@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>, rrichter@marvell.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "Zhang, Rui" <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QJU1rgdyR3dsjV2URMfZxPtiLnMEVx7zziz4YW88wtc=;
+        b=rz5VPNGgYxw4HxpF3uKYCjW874TjPD4P1HjaasZrbKofmvmjL8m45e2yOS2OwTDrsy
+         fP+LkeRJyetPZm2H1njGbgF2PoGd2IRjY4TBgam8zplgsNpNyCbxf4fRt8/XO0Pw0m5Z
+         zz8FnJDJku8dRYsFzCXcBOcKFuMHcP16TIoP0xvWtdDjwI2DMtwX99pDqV/QHGUnNCyY
+         MrN8VJqjj9kikZhnqJ94SX77P2HgBhIVwT4kChhMiVWxa351A1R7d2aXVJ9ci8HvE4Iu
+         PP1m6wK5bAdz9BWOfQGjRKeN23wd10TzktzPSOMPtKUp2c1ZoqdkTVvF+JtRqFZORR+X
+         w/tw==
+X-Gm-Message-State: AGi0PuYTEbgdQCzM9fERGh/Hc8/4Gtk0/jaQnyS8lTnF7z/jcxoYFpLw
+        benOgGySwtufDYuApdplVxlLq4ZvTNHYUQ==
+X-Google-Smtp-Source: APiQypJTpVbLFJfbC4pTfe+3bRqpJK6v1l7Gl1XmYpllcrZp8mtXHfu530JzQx2s1IZ5/Qt1u+NwBQ==
+X-Received: by 2002:a62:e51a:: with SMTP id n26mr3180048pff.301.1588686829155;
+        Tue, 05 May 2020 06:53:49 -0700 (PDT)
+Received: from localhost.localdomain ([120.244.110.63])
+        by smtp.gmail.com with ESMTPSA id i15sm2061013pfo.195.2020.05.05.06.53.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 06:53:48 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     shaggy@kernel.org, Markus.Elfring@web.de
+Cc:     jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH v2] fs: jfs: fix a possible data race in metapage_writepage()
+Date:   Tue,  5 May 2020 21:53:13 +0800
+Message-Id: <20200505135313.28793-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 4, 2020 at 5:41 PM William Breathitt Gray
-<vilhelm.gray@gmail.com> wrote:
-> On Mon, May 04, 2020 at 02:41:09PM +0300, Andy Shevchenko wrote:
-> > On Sun, May 03, 2020 at 04:38:36AM +0530, Syed Nayyar Waris wrote:
+The functions metapage_writepage() and lmPostGC() can be concurrently 
+executed in the following call contexts:
 
-...
+Thread1:
+  metapage_writepage()
 
-> > Looking into the last patches where we have examples I still do not see a
-> > benefit of variadic clump sizes. power of 2 sizes would make sense (and be
-> > optimized accordingly (64-bit, 32-bit).
-> >
-> > --
-> > With Best Regards,
-> > Andy Shevchenko
->
-> There is of course benefit in defining for_each_set_clump with clump
-> sizes of powers of 2 (we can optimize for 32 and 64 bit sizes and avoid
-> boundary checks that we know will not occur), but at the very least the
-> variable size bitmap_set_value and bitmap_get_value provide significant
-> benefit for the readability of the gpio-xilinx code:
->
->         bitmap_set_value(old, state[0], 0, width[0]);
->         bitmap_set_value(old, state[1], width[0], width[1]);
->         ...
->         state[0] = bitmap_get_value(new, 0, width[0]);
->         state[1] = bitmap_get_value(new, width[0], width[1]);
->
-> These lines are simple and clear to read: we know immediately what they
-> do. But if we did not have bitmap_set_value/bitmap_get_value, we'd have
-> to use several bitwise operations for each line; the obfuscation of the
-> code would be an obvious hinderance here.
+Thread2:
+  lbmIODone()
+    lmPostGC()
 
-Do I understand correctly that width[0] and width[1] may not be power
-of two and it's actually the case?
+In metapage_writepage():
+  if (mp->log && !(mp->log->cflag & logGC_PAGEOUT))
 
+In lmPostGC():
+  spin_lock_irqsave(&log->gclock, flags);
+  ...
+  log->cflag &= ~logGC_PAGEOUT
+  ...
+  spin_unlock_irqrestore(&log->gclock, flags);
+
+The memory addresses of mp->log->cflag and log->cflag can be identical,
+and thus a data race can occur.
+
+This data race is found by our concurrency fuzzer.
+
+Thus use the spin lock "mp->log->gclock" for the assignment of 
+the data structure member "log->cflag" to a local variable 
+in this function implementation.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+v2:
+* Change the description.
+  Thank Markus Elfring for good advice.
+
+---
+ fs/jfs/jfs_metapage.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/fs/jfs/jfs_metapage.c b/fs/jfs/jfs_metapage.c
+index a2f5338a5ea1..026c11b2572d 100644
+--- a/fs/jfs/jfs_metapage.c
++++ b/fs/jfs/jfs_metapage.c
+@@ -351,6 +351,7 @@ static int metapage_writepage(struct page *page, struct writeback_control *wbc)
+ 	unsigned long bio_offset = 0;
+ 	int offset;
+ 	int bad_blocks = 0;
++	uint cflag;
+ 
+ 	page_start = (sector_t)page->index <<
+ 		     (PAGE_SHIFT - inode->i_blkbits);
+@@ -370,8 +371,14 @@ static int metapage_writepage(struct page *page, struct writeback_control *wbc)
+ 			 * Make sure this page isn't blocked indefinitely.
+ 			 * If the journal isn't undergoing I/O, push it
+ 			 */
+-			if (mp->log && !(mp->log->cflag & logGC_PAGEOUT))
+-				jfs_flush_journal(mp->log, 0);
++
++			if (mp->log) {
++				spin_lock_irq(&mp->log->gclock);
++				cflag = mp->log->cflag;
++				spin_unlock_irq(&mp->log->gclock);
++				if (!(cflag & logGC_PAGEOUT))
++					jfs_flush_journal(mp->log, 0);
++			}
+ 			continue;
+ 		}
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
