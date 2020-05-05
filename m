@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A81C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD18C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7AA820838
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:16:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3B1C207DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:16:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729451AbgEEOQ0 (ORCPT
+        id S1730132AbgEEOQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:16:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49116 "EHLO
+        Tue, 5 May 2020 10:16:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730071AbgEEOQU (ORCPT
+        by vger.kernel.org with ESMTP id S1730100AbgEEOQZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:16:20 -0400
+        Tue, 5 May 2020 10:16:25 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 121A3C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:16:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0592C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:16:24 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jVyMc-00022P-4z; Tue, 05 May 2020 16:16:02 +0200
+        id 1jVyMh-00026f-2k; Tue, 05 May 2020 16:16:07 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 969F6FFC8D;
-        Tue,  5 May 2020 16:16:01 +0200 (CEST)
-Message-Id: <20200505135314.716186134@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 8ECA9FFC8D;
+        Tue,  5 May 2020 16:16:06 +0200 (CEST)
+Message-Id: <20200505135315.084882104@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:49:40 +0200
+Date:   Tue, 05 May 2020 15:49:44 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -52,7 +52,8 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Will Deacon <will@kernel.org>
-Subject: [patch V4 part 4 14/24] x86/nmi: Protect NMI entry against instrumentation
+Subject: [patch V4 part 4 18/24] x86/entry: Provide IDTRENTRY_NOIST variants
+ for #DB and #MC
 References: <20200505134926.578885807@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -65,140 +66,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark all functions in the fragile code parts noinstr or force inlining so
-they can't be instrumented.
+Provide NOIST entry point macros which allows to implement NOIST variants
+of the C entry points. These are invoked when #DB or #MC enter from user
+space. This allows explicit handling of the difference between user mode
+and kernel mode entry later.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/include/asm/desc.h  |    8 ++++----
- arch/x86/kernel/cpu/common.c |    6 ++----
- arch/x86/kernel/nmi.c        |   10 ++++++----
- 3 files changed, 12 insertions(+), 12 deletions(-)
+ arch/x86/include/asm/idtentry.h |   19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
---- a/arch/x86/include/asm/desc.h
-+++ b/arch/x86/include/asm/desc.h
-@@ -214,7 +214,7 @@ static inline void native_load_gdt(const
- 	asm volatile("lgdt %0"::"m" (*dtr));
- }
- 
--static inline void native_load_idt(const struct desc_ptr *dtr)
-+static __always_inline void native_load_idt(const struct desc_ptr *dtr)
- {
- 	asm volatile("lidt %0"::"m" (*dtr));
- }
-@@ -393,7 +393,7 @@ extern unsigned long system_vectors[];
- 
- #ifdef CONFIG_X86_64
- DECLARE_PER_CPU(u32, debug_idt_ctr);
--static inline bool is_debug_idt_enabled(void)
-+static __always_inline bool is_debug_idt_enabled(void)
- {
- 	if (this_cpu_read(debug_idt_ctr))
- 		return true;
-@@ -401,7 +401,7 @@ static inline bool is_debug_idt_enabled(
- 	return false;
- }
- 
--static inline void load_debug_idt(void)
-+static __always_inline void load_debug_idt(void)
- {
- 	load_idt((const struct desc_ptr *)&debug_idt_descr);
- }
-@@ -423,7 +423,7 @@ static inline void load_debug_idt(void)
-  * that doesn't need to disable interrupts, as nothing should be
-  * bothering the CPU then.
+--- a/arch/x86/include/asm/idtentry.h
++++ b/arch/x86/include/asm/idtentry.h
+@@ -138,10 +138,12 @@ static __always_inline void __##func(str
+  * @vector:	Vector number (ignored for C)
+  * @func:	Function name of the entry point
+  *
+- * Maps to DECLARE_IDTENTRY_RAW
++ * Maps to DECLARE_IDTENTRY_RAW, but declares also the NOIST C handler
++ * which is called from the ASM entry point on user mode entry
   */
--static inline void load_current_idt(void)
-+static __always_inline void load_current_idt(void)
- {
- 	if (is_debug_idt_enabled())
- 		load_debug_idt();
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1692,21 +1692,19 @@ void syscall_init(void)
- DEFINE_PER_CPU(int, debug_stack_usage);
- DEFINE_PER_CPU(u32, debug_idt_ctr);
+ #define DECLARE_IDTENTRY_IST(vector, func)				\
+-	DECLARE_IDTENTRY_RAW(vector, func)
++	DECLARE_IDTENTRY_RAW(vector, func);				\
++	__visible void noist_##func(struct pt_regs *regs)
  
--void debug_stack_set_zero(void)
-+noinstr void debug_stack_set_zero(void)
- {
- 	this_cpu_inc(debug_idt_ctr);
- 	load_current_idt();
- }
--NOKPROBE_SYMBOL(debug_stack_set_zero);
+ /**
+  * DEFINE_IDTENTRY_IST - Emit code for IST entry points
+@@ -152,6 +154,17 @@ static __always_inline void __##func(str
+ #define DEFINE_IDTENTRY_IST(func)					\
+ 	DEFINE_IDTENTRY_RAW(func)
  
--void debug_stack_reset(void)
-+noinstr void debug_stack_reset(void)
- {
- 	if (WARN_ON(!this_cpu_read(debug_idt_ctr)))
- 		return;
- 	if (this_cpu_dec_return(debug_idt_ctr) == 0)
- 		load_current_idt();
- }
--NOKPROBE_SYMBOL(debug_stack_reset);
- 
++/**
++ * DEFINE_IDTENTRY_NOIST - Emit code for NOIST entry points which
++ *			   belong to a IST entry point (MCE, DB)
++ * @func:	Function name of the entry point. Must be the same as
++ *		the function name of the corresponding IST variant
++ *
++ * Maps to DEFINE_IDTENTRY_RAW().
++ */
++#define DEFINE_IDTENTRY_NOIST(func)					\
++	DEFINE_IDTENTRY_RAW(noist_##func)
++
  #else	/* CONFIG_X86_64 */
+ /* Maps to a regular IDTENTRY on 32bit for now */
+ # define DECLARE_IDTENTRY_IST		DECLARE_IDTENTRY
+@@ -161,12 +174,14 @@ static __always_inline void __##func(str
+ /* C-Code mapping */
+ #define DECLARE_IDTENTRY_MCE		DECLARE_IDTENTRY_IST
+ #define DEFINE_IDTENTRY_MCE		DEFINE_IDTENTRY_IST
++#define DEFINE_IDTENTRY_MCE_USER	DEFINE_IDTENTRY_NOIST
  
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -307,7 +307,7 @@ NOKPROBE_SYMBOL(unknown_nmi_error);
- static DEFINE_PER_CPU(bool, swallow_nmi);
- static DEFINE_PER_CPU(unsigned long, last_nmi_rip);
+ #define DECLARE_IDTENTRY_NMI		DECLARE_IDTENTRY_IST
+ #define DEFINE_IDTENTRY_NMI		DEFINE_IDTENTRY_IST
  
--static void default_do_nmi(struct pt_regs *regs)
-+static noinstr void default_do_nmi(struct pt_regs *regs)
- {
- 	unsigned char reason = 0;
- 	int handled;
-@@ -333,6 +333,7 @@ static void default_do_nmi(struct pt_reg
+ #define DECLARE_IDTENTRY_DEBUG		DECLARE_IDTENTRY_IST
+ #define DEFINE_IDTENTRY_DEBUG		DEFINE_IDTENTRY_IST
++#define DEFINE_IDTENTRY_DEBUG_USER	DEFINE_IDTENTRY_NOIST
  
- 	__this_cpu_write(last_nmi_rip, regs->ip);
- 
-+	instr_begin();
- 	handled = nmi_handle(NMI_LOCAL, regs);
- 	__this_cpu_add(nmi_stats.normal, handled);
- 	if (handled) {
-@@ -346,6 +347,7 @@ static void default_do_nmi(struct pt_reg
- 		 */
- 		if (handled > 1)
- 			__this_cpu_write(swallow_nmi, true);
-+		instr_end();
- 		return;
- 	}
- 
-@@ -378,6 +380,7 @@ static void default_do_nmi(struct pt_reg
- #endif
- 		__this_cpu_add(nmi_stats.external, 1);
- 		raw_spin_unlock(&nmi_reason_lock);
-+		instr_end();
- 		return;
- 	}
- 	raw_spin_unlock(&nmi_reason_lock);
-@@ -416,8 +419,8 @@ static void default_do_nmi(struct pt_reg
- 		__this_cpu_add(nmi_stats.swallow, 1);
- 	else
- 		unknown_nmi_error(reason, regs);
-+	instr_end();
- }
--NOKPROBE_SYMBOL(default_do_nmi);
- 
- /*
-  * NMIs can page fault or hit breakpoints which will cause it to lose
-@@ -489,7 +492,7 @@ static DEFINE_PER_CPU(unsigned long, nmi
-  */
- static DEFINE_PER_CPU(int, update_debug_stack);
- 
--static bool notrace is_debug_stack(unsigned long addr)
-+static noinstr bool is_debug_stack(unsigned long addr)
- {
- 	struct cea_exception_stacks *cs = __this_cpu_read(cea_exception_stacks);
- 	unsigned long top = CEA_ESTACK_TOP(cs, DB);
-@@ -504,7 +507,6 @@ static bool notrace is_debug_stack(unsig
- 	 */
- 	return addr >= bot && addr < top;
- }
--NOKPROBE_SYMBOL(is_debug_stack);
- #endif
- 
- DEFINE_IDTENTRY_NMI(exc_nmi)
+ /**
+  * DECLARE_IDTENTRY_XEN - Declare functions for XEN redirect IDT entry points
 
