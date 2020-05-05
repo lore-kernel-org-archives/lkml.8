@@ -2,225 +2,195 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D343C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FADC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:47:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C20A206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5E87206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:47:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=claycon.org header.i=@claycon.org header.b="CZyjyQRB"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FdNPXZmn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729392AbgEEWob (ORCPT
+        id S1729427AbgEEWre (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 18:44:31 -0400
-Received: from crocodile.birch.relay.mailchannels.net ([23.83.209.45]:50278
-        "EHLO crocodile.birch.relay.mailchannels.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726568AbgEEWo3 (ORCPT
+        Tue, 5 May 2020 18:47:34 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:27017 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728737AbgEEWrd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 18:44:29 -0400
-X-Greylist: delayed 600 seconds by postgrey-1.27 at vger.kernel.org; Tue, 05 May 2020 18:44:28 EDT
-X-Sender-Id: dreamhost|x-authsender|cosmos@claycon.org
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 78166700E91;
-        Tue,  5 May 2020 22:26:42 +0000 (UTC)
-Received: from pdx1-sub0-mail-a81.g.dreamhost.com (100-96-6-17.trex.outbound.svc.cluster.local [100.96.6.17])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id AFDDD7011B5;
-        Tue,  5 May 2020 22:26:41 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|cosmos@claycon.org
-Received: from pdx1-sub0-mail-a81.g.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-        by 0.0.0.0:2500 (trex/5.18.8);
-        Tue, 05 May 2020 22:26:42 +0000
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|cosmos@claycon.org
-X-MailChannels-Auth-Id: dreamhost
-X-Gusty-Arch: 77dfea3d492064f3_1588717602224_2324846253
-X-MC-Loop-Signature: 1588717602224:2854189442
-X-MC-Ingress-Time: 1588717602223
-Received: from pdx1-sub0-mail-a81.g.dreamhost.com (localhost [127.0.0.1])
-        by pdx1-sub0-mail-a81.g.dreamhost.com (Postfix) with ESMTP id 4081B7F567;
-        Tue,  5 May 2020 15:26:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=claycon.org; h=date:from
-        :to:cc:subject:message-id:references:mime-version:content-type
-        :in-reply-to; s=claycon.org; bh=1L82ZcdVX8X2vKTP+qh58U006UU=; b=
-        CZyjyQRBgk7jfQAz0BxPAIrixRYTu/DzEXYlRcbJs3xrMJLaYoevWP2GKkIv+TDv
-        eNt25Mp/xAbxwI2zoX8zQlfXxsgtdiGIHQczoZ864otSd8zxNAcaselfmMQiU4SV
-        9SreDwRhSyAplOo6amIPOMPEDVV+va3HINGD0tt5NuU=
-Received: from ps29521.dreamhostps.com (ps29521.dreamhostps.com [69.163.186.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 5 May 2020 18:47:33 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588718852; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=E7LIlu6idEggw0r6aWRRg+yA602dyGHPWItKfszpI10=; b=FdNPXZmnoDvRHmQGQdEFPYpuv2MQtP/2QpkwKrOvJpRroV/UCVnRnFFDej9k11eMnA8jqwV1
+ c+2YZkMLJaEYNRN5FNW5efbJYX96OYmEzPS0YDYXMe2IjriTecnNsIgS4njk+0h5mjm96dS2
+ WCsEXl+WV47YWZh0mFexW6TSdhA=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb1ecfc.7f608f498fb8-smtp-out-n04;
+ Tue, 05 May 2020 22:47:24 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5A1E5C44793; Tue,  5 May 2020 22:47:24 +0000 (UTC)
+Received: from bbhatt-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: cosmos@claycon.org)
-        by pdx1-sub0-mail-a81.g.dreamhost.com (Postfix) with ESMTPSA id CB3057F565;
-        Tue,  5 May 2020 15:26:39 -0700 (PDT)
-Date:   Tue, 5 May 2020 17:26:40 -0500
-X-DH-BACKEND: pdx1-sub0-mail-a81
-From:   Clay Harris <bugs@claycon.org>
-To:     Pavel Begunkov <asml.silence@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jann Horn <jannh@google.com>, io-uring@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH for-5.7] splice: move f_mode checks to do_{splice,tee}()
-Message-ID: <20200505222640.phkjuqfuselwl6gm@ps29521.dreamhostps.com>
-References: <51b4370ef70eebf941f6cef503943d7f7de3ea4d.1588621153.git.asml.silence@gmail.com>
- <20200505211029.azfj2c4scoh6x2kx@ps29521.dreamhostps.com>
- <2146b60d-d982-59c4-33d3-a5e6ad68fc8e@gmail.com>
- <20200505220032.fm5vqf3xuaucnjle@ps29521.dreamhostps.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505220032.fm5vqf3xuaucnjle@ps29521.dreamhostps.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-VR-OUT-STATUS: OK
-X-VR-OUT-SCORE: -100
-X-VR-OUT-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrjeejgdefiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucggtfgfnhhsuhgsshgtrhhisggvpdfftffgtefojffquffvnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpeevlhgrhicujfgrrhhrihhsuceosghughhssegtlhgrhigtohhnrdhorhhgqeenucggtffrrghtthgvrhhnpefgtdekjeehffefvdfhhedttdehkeejgfegiedtjedthfeuvdfgieevkeekvdfhvdenucfkphepieelrdduieefrddukeeirdejgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdphhgvlhhopehpshdvleehvddurdgurhgvrghmhhhoshhtphhsrdgtohhmpdhinhgvthepieelrdduieefrddukeeirdejgedprhgvthhurhhnqdhprghthhepvehlrgihucfjrghrrhhishcuoegsuhhgshestghlrgihtghonhdrohhrgheqpdhmrghilhhfrhhomhepsghughhssegtlhgrhigtohhnrdhorhhgpdhnrhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+        (Authenticated sender: bbhatt)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 49483C433CB;
+        Tue,  5 May 2020 22:47:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 49483C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
+From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
+To:     mani@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hemantk@codeaurora.org, jhugo@codeaurora.org,
+        Bhaumik Bhatt <bbhatt@codeaurora.org>
+Subject: [PATCH v6 5/8] bus: mhi: core: Handle firmware load using state worker
+Date:   Tue,  5 May 2020 15:47:09 -0700
+Message-Id: <1588718832-4891-6-git-send-email-bbhatt@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1588718832-4891-1-git-send-email-bbhatt@codeaurora.org>
+References: <1588718832-4891-1-git-send-email-bbhatt@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05 2020 at 17:00:32 -0500, Clay Harris quoth thus:
+Upon power up, driver queues firmware worker thread if the execution
+environment is PBL. Firmware worker is blocked with a timeout until
+state worker gets a chance to run and unblock firmware worker. An
+endpoint power up failure can be seen if state worker gets a chance to
+run after firmware worker has timed out. Remove this dependency and
+handle firmware load directly using state worker thread.
 
-> On Wed, May 06 2020 at 00:38:05 +0300, Pavel Begunkov quoth thus:
-> 
-> > On 06/05/2020 00:10, Clay Harris wrote:
-> > > On Mon, May 04 2020 at 22:39:35 +0300, Pavel Begunkov quoth thus:
-> > > 
-> > >> do_splice() is used by io_uring, as will be do_tee(). Move f_mode
-> > >> checks from sys_{splice,tee}() to do_{splice,tee}(), so they're
-> > >> enforced for io_uring as well.
-> > > 
-> > > I'm not seeing any check against splicing a pipe to itself in the
-> > > io_uring path, although maybe I just missed it.  As the comment
-> > > below says: /* Splicing to self would be fun, but... */ .
-> > 
-> > io_uring just forwards a request to do_splice(), which do the check at the exact
-> > place you mentioned. The similar story is with do_tee().
-> 
-> Okay.  I'd been thinking that since you were moving the file mode
-> checks into io_uring that the previous place they were called wasn't
-> on the path.  Evidently, you're just moving the mode checks earlier.
+Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+---
+ drivers/bus/mhi/core/boot.c     | 18 +++---------------
+ drivers/bus/mhi/core/init.c     |  1 -
+ drivers/bus/mhi/core/internal.h |  1 +
+ drivers/bus/mhi/core/pm.c       |  6 +-----
+ include/linux/mhi.h             |  2 --
+ 5 files changed, 5 insertions(+), 23 deletions(-)
 
-My bad.  I meant to say *later*.  (After the syscall entry, at the spot
-io_uring would call.)
-
-Thanks for looking at it!
-
-> > > 
-> > >> Fixes: 7d67af2c0134 ("io_uring: add splice(2) support")
-> > >> Reported-by: Jann Horn <jannh@google.com>
-> > >> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-> > >> ---
-> > >>  fs/splice.c | 45 ++++++++++++++++++---------------------------
-> > >>  1 file changed, 18 insertions(+), 27 deletions(-)
-> > >>
-> > >> diff --git a/fs/splice.c b/fs/splice.c
-> > >> index 4735defc46ee..fd0a1e7e5959 100644
-> > >> --- a/fs/splice.c
-> > >> +++ b/fs/splice.c
-> > >> @@ -1118,6 +1118,10 @@ long do_splice(struct file *in, loff_t __user *off_in,
-> > >>  	loff_t offset;
-> > >>  	long ret;
-> > >>  
-> > >> +	if (unlikely(!(in->f_mode & FMODE_READ) ||
-> > >> +		     !(out->f_mode & FMODE_WRITE)))
-> > >> +		return -EBADF;
-> > >> +
-> > >>  	ipipe = get_pipe_info(in);
-> > >>  	opipe = get_pipe_info(out);
-> > >>  
-> > >> @@ -1125,12 +1129,6 @@ long do_splice(struct file *in, loff_t __user *off_in,
-> > >>  		if (off_in || off_out)
-> > >>  			return -ESPIPE;
-> > >>  
-> > >> -		if (!(in->f_mode & FMODE_READ))
-> > >> -			return -EBADF;
-> > >> -
-> > >> -		if (!(out->f_mode & FMODE_WRITE))
-> > >> -			return -EBADF;
-> > >> -
-> > >>  		/* Splicing to self would be fun, but... */
-> > >>  		if (ipipe == opipe)
-> > >>  			return -EINVAL;
-> > >> @@ -1153,9 +1151,6 @@ long do_splice(struct file *in, loff_t __user *off_in,
-> > >>  			offset = out->f_pos;
-> > >>  		}
-> > >>  
-> > >> -		if (unlikely(!(out->f_mode & FMODE_WRITE)))
-> > >> -			return -EBADF;
-> > >> -
-> > >>  		if (unlikely(out->f_flags & O_APPEND))
-> > >>  			return -EINVAL;
-> > >>  
-> > >> @@ -1440,15 +1435,11 @@ SYSCALL_DEFINE6(splice, int, fd_in, loff_t __user *, off_in,
-> > >>  	error = -EBADF;
-> > >>  	in = fdget(fd_in);
-> > >>  	if (in.file) {
-> > >> -		if (in.file->f_mode & FMODE_READ) {
-> > >> -			out = fdget(fd_out);
-> > >> -			if (out.file) {
-> > >> -				if (out.file->f_mode & FMODE_WRITE)
-> > >> -					error = do_splice(in.file, off_in,
-> > >> -							  out.file, off_out,
-> > >> -							  len, flags);
-> > >> -				fdput(out);
-> > >> -			}
-> > >> +		out = fdget(fd_out);
-> > >> +		if (out.file) {
-> > >> +			error = do_splice(in.file, off_in, out.file, off_out,
-> > >> +					  len, flags);
-> > >> +			fdput(out);
-> > >>  		}
-> > >>  		fdput(in);
-> > >>  	}
-> > >> @@ -1770,6 +1761,10 @@ static long do_tee(struct file *in, struct file *out, size_t len,
-> > >>  	struct pipe_inode_info *opipe = get_pipe_info(out);
-> > >>  	int ret = -EINVAL;
-> > >>  
-> > >> +	if (unlikely(!(in->f_mode & FMODE_READ) ||
-> > >> +		     !(out->f_mode & FMODE_WRITE)))
-> > >> +		return -EBADF;
-> > >> +
-> > >>  	/*
-> > >>  	 * Duplicate the contents of ipipe to opipe without actually
-> > >>  	 * copying the data.
-> > >> @@ -1795,7 +1790,7 @@ static long do_tee(struct file *in, struct file *out, size_t len,
-> > >>  
-> > >>  SYSCALL_DEFINE4(tee, int, fdin, int, fdout, size_t, len, unsigned int, flags)
-> > >>  {
-> > >> -	struct fd in;
-> > >> +	struct fd in, out;
-> > >>  	int error;
-> > >>  
-> > >>  	if (unlikely(flags & ~SPLICE_F_ALL))
-> > >> @@ -1807,14 +1802,10 @@ SYSCALL_DEFINE4(tee, int, fdin, int, fdout, size_t, len, unsigned int, flags)
-> > >>  	error = -EBADF;
-> > >>  	in = fdget(fdin);
-> > >>  	if (in.file) {
-> > >> -		if (in.file->f_mode & FMODE_READ) {
-> > >> -			struct fd out = fdget(fdout);
-> > >> -			if (out.file) {
-> > >> -				if (out.file->f_mode & FMODE_WRITE)
-> > >> -					error = do_tee(in.file, out.file,
-> > >> -							len, flags);
-> > >> -				fdput(out);
-> > >> -			}
-> > >> +		out = fdget(fdout);
-> > >> +		if (out.file) {
-> > >> +			error = do_tee(in.file, out.file, len, flags);
-> > >> +			fdput(out);
-> > >>  		}
-> > >>   		fdput(in);
-> > >>   	}
-> > >> -- 
-> > >> 2.24.0
-> > 
-> > -- 
-> > Pavel Begunkov
+diff --git a/drivers/bus/mhi/core/boot.c b/drivers/bus/mhi/core/boot.c
+index ebad5eb..17c636b 100644
+--- a/drivers/bus/mhi/core/boot.c
++++ b/drivers/bus/mhi/core/boot.c
+@@ -377,30 +377,18 @@ static void mhi_firmware_copy(struct mhi_controller *mhi_cntrl,
+ 	}
+ }
+ 
+-void mhi_fw_load_worker(struct work_struct *work)
++void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
+ {
+-	struct mhi_controller *mhi_cntrl;
+ 	const struct firmware *firmware = NULL;
+ 	struct image_info *image_info;
+-	struct device *dev;
++	struct device *dev = &mhi_cntrl->mhi_dev->dev;
+ 	const char *fw_name;
+ 	void *buf;
+ 	dma_addr_t dma_addr;
+ 	size_t size;
+ 	int ret;
+ 
+-	mhi_cntrl = container_of(work, struct mhi_controller, fw_worker);
+-	dev = &mhi_cntrl->mhi_dev->dev;
+-
+-	dev_dbg(dev, "Waiting for device to enter PBL from: %s\n",
+-		TO_MHI_EXEC_STR(mhi_cntrl->ee));
+-
+-	ret = wait_event_timeout(mhi_cntrl->state_event,
+-				 MHI_IN_PBL(mhi_cntrl->ee) ||
+-				 MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state),
+-				 msecs_to_jiffies(mhi_cntrl->timeout_ms));
+-
+-	if (!ret || MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state)) {
++	if (MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state)) {
+ 		dev_err(dev, "Device MHI is not in valid state\n");
+ 		return;
+ 	}
+diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
+index 1a93d24..6882206 100644
+--- a/drivers/bus/mhi/core/init.c
++++ b/drivers/bus/mhi/core/init.c
+@@ -835,7 +835,6 @@ int mhi_register_controller(struct mhi_controller *mhi_cntrl,
+ 	spin_lock_init(&mhi_cntrl->wlock);
+ 	INIT_WORK(&mhi_cntrl->st_worker, mhi_pm_st_worker);
+ 	INIT_WORK(&mhi_cntrl->syserr_worker, mhi_pm_sys_err_worker);
+-	INIT_WORK(&mhi_cntrl->fw_worker, mhi_fw_load_worker);
+ 	init_waitqueue_head(&mhi_cntrl->state_event);
+ 
+ 	mhi_cmd = mhi_cntrl->mhi_cmd;
+diff --git a/drivers/bus/mhi/core/internal.h b/drivers/bus/mhi/core/internal.h
+index 40c47f9..0965ca3 100644
+--- a/drivers/bus/mhi/core/internal.h
++++ b/drivers/bus/mhi/core/internal.h
+@@ -627,6 +627,7 @@ void mhi_ring_chan_db(struct mhi_controller *mhi_cntrl,
+ void mhi_deinit_free_irq(struct mhi_controller *mhi_cntrl);
+ void mhi_rddm_prepare(struct mhi_controller *mhi_cntrl,
+ 		      struct image_info *img_info);
++void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl);
+ int mhi_prepare_channel(struct mhi_controller *mhi_cntrl,
+ 			struct mhi_chan *mhi_chan);
+ int mhi_init_chan_ctxt(struct mhi_controller *mhi_cntrl,
+diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
+index e7c8318..3cc238a 100644
+--- a/drivers/bus/mhi/core/pm.c
++++ b/drivers/bus/mhi/core/pm.c
+@@ -528,7 +528,6 @@ static void mhi_pm_disable_transition(struct mhi_controller *mhi_cntrl,
+ 	dev_dbg(dev, "Waiting for all pending threads to complete\n");
+ 	wake_up_all(&mhi_cntrl->state_event);
+ 	flush_work(&mhi_cntrl->st_worker);
+-	flush_work(&mhi_cntrl->fw_worker);
+ 
+ 	dev_dbg(dev, "Reset all active channels and remove MHI devices\n");
+ 	device_for_each_child(mhi_cntrl->cntrl_dev, NULL, mhi_destroy_device);
+@@ -643,7 +642,7 @@ void mhi_pm_st_worker(struct work_struct *work)
+ 				mhi_cntrl->ee = mhi_get_exec_env(mhi_cntrl);
+ 			write_unlock_irq(&mhi_cntrl->pm_lock);
+ 			if (MHI_IN_PBL(mhi_cntrl->ee))
+-				wake_up_all(&mhi_cntrl->state_event);
++				mhi_fw_load_handler(mhi_cntrl);
+ 			break;
+ 		case DEV_ST_TRANSITION_SBL:
+ 			write_lock_irq(&mhi_cntrl->pm_lock);
+@@ -976,9 +975,6 @@ int mhi_async_power_up(struct mhi_controller *mhi_cntrl)
+ 	next_state = MHI_IN_PBL(current_ee) ?
+ 		DEV_ST_TRANSITION_PBL : DEV_ST_TRANSITION_READY;
+ 
+-	if (next_state == DEV_ST_TRANSITION_PBL)
+-		schedule_work(&mhi_cntrl->fw_worker);
+-
+ 	mhi_queue_state_transition(mhi_cntrl, next_state);
+ 
+ 	mutex_unlock(&mhi_cntrl->pm_mutex);
+diff --git a/include/linux/mhi.h b/include/linux/mhi.h
+index e909b8f..2b20b9c 100644
+--- a/include/linux/mhi.h
++++ b/include/linux/mhi.h
+@@ -331,7 +331,6 @@ struct mhi_controller_config {
+  * @wlock: Lock for protecting device wakeup
+  * @mhi_link_info: Device bandwidth info
+  * @st_worker: State transition worker
+- * @fw_worker: Firmware download worker
+  * @syserr_worker: System error worker
+  * @state_event: State change event
+  * @status_cb: CB function to notify power states of the device (required)
+@@ -412,7 +411,6 @@ struct mhi_controller {
+ 	spinlock_t wlock;
+ 	struct mhi_link_info mhi_link_info;
+ 	struct work_struct st_worker;
+-	struct work_struct fw_worker;
+ 	struct work_struct syserr_worker;
+ 	wait_queue_head_t state_event;
+ 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
