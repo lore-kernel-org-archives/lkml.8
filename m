@@ -2,129 +2,125 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F001C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FC6C47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8106A2064A
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:02:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A89D520663
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:03:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588662184;
+	bh=zAlWUmcdaF8WTwICSO+uRSrsxqZGsPVUm6mh4zXuIDA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JC/gpCFkKk20C2xp6w34MGdVZKPIh9dWLjtKW+l1lavWP3xQc0BZinydXSB9vtjhO
+	 fnPNpE1U4NZdQ+Tayw/pyx6eHNS9z/zYZWTN7hTfrk8df5b3LjpLHkqQWm1UwmLAVh
+	 R1IvC5kL/cEt8LgqJ3SiIGAoBkglFdq/JgZQDoJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbgEEHCb (ORCPT
+        id S1728314AbgEEHDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 03:02:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:60978 "EHLO foss.arm.com"
+        Tue, 5 May 2020 03:03:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725320AbgEEHC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 03:02:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 599271FB;
-        Tue,  5 May 2020 00:02:28 -0700 (PDT)
-Received: from [10.163.71.248] (unknown [10.163.71.248])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 467B53F68F;
-        Tue,  5 May 2020 00:02:24 -0700 (PDT)
-Subject: Re: [PATCH V3 06/16] arm64/cpufeature: Introduce ID_MMFR5 CPU
- register
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-References: <1588426445-24344-1-git-send-email-anshuman.khandual@arm.com>
- <1588426445-24344-7-git-send-email-anshuman.khandual@arm.com>
- <20200504203313.GB5012@willie-the-truck>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <97cd9ba9-d5de-2a85-5eac-0cb460061617@arm.com>
-Date:   Tue, 5 May 2020 12:31:54 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1725320AbgEEHDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 03:03:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D7A32064A;
+        Tue,  5 May 2020 07:03:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588662181;
+        bh=zAlWUmcdaF8WTwICSO+uRSrsxqZGsPVUm6mh4zXuIDA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dTGYIyOBwm4RViwa2CRVuqc3Fu73qzw4TLHyzqZmNf6n2r7j+vV4+Fnl43d8bLScV
+         S6h3L/df02xxA09RHK8mhDGK0BBPPUSSl4eTLGB3zoGLHYFjOv7LH4ah9AqTfi2mJ0
+         zT/vy4/H5QROjHfwWE1wf7jmT8LCmAhv4FLjCGqI=
+Date:   Tue, 5 May 2020 09:02:59 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     stable@vger.kernel.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        Sasha Levin <sashal@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Tobias Urdin <tobias.urdin@binero.com>
+Subject: Re: [PATCH 4.19 STABLE 2/2] KVM: VMX: Mark RCX, RDX and RSI as
+ clobbered in vmx_vcpu_run()'s asm blob
+Message-ID: <20200505070259.GA3946129@kroah.com>
+References: <20200505012348.17099-1-sean.j.christopherson@intel.com>
+ <20200505012348.17099-3-sean.j.christopherson@intel.com>
+ <20200505061502.GA3874653@kroah.com>
+ <20200505062731.GA17313@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200504203313.GB5012@willie-the-truck>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505062731.GA17313@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 05/05/2020 02:03 AM, Will Deacon wrote:
-> On Sat, May 02, 2020 at 07:03:55PM +0530, Anshuman Khandual wrote:
->> This adds basic building blocks required for ID_MMFR5 CPU register which
->> provides information about the implemented memory model and memory
->> management support in AArch32 state. This is added per ARM DDI 0487F.a
->> specification.
->>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Marc Zyngier <maz@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: James Morse <james.morse@arm.com>
->> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
->> Cc: kvmarm@lists.cs.columbia.edu
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->>
->> Suggested-by: Will Deacon <will@kernel.org>
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->>  arch/arm64/include/asm/cpu.h    |  1 +
->>  arch/arm64/include/asm/sysreg.h |  3 +++
->>  arch/arm64/kernel/cpufeature.c  | 10 ++++++++++
->>  arch/arm64/kernel/cpuinfo.c     |  1 +
->>  arch/arm64/kvm/sys_regs.c       |  2 +-
->>  5 files changed, 16 insertions(+), 1 deletion(-)
+On Mon, May 04, 2020 at 11:27:31PM -0700, Sean Christopherson wrote:
+> On Tue, May 05, 2020 at 08:15:02AM +0200, Greg Kroah-Hartman wrote:
+> > On Mon, May 04, 2020 at 06:23:48PM -0700, Sean Christopherson wrote:
+> > > Save RCX, RDX and RSI to fake outputs to coerce the compiler into
+> > > treating them as clobbered.  RCX in particular is likely to be reused by
+> > > the compiler to dereference the 'struct vcpu_vmx' pointer, which will
+> > > result in a null pointer dereference now that RCX is zeroed by the asm
+> > > blob.
+> > > 
+> > > Add ASM_CALL_CONSTRAINT to fudge around an issue where <something>
+> > > during modpost can't find vmx_return when specifying output constraints.
+> > > 
+> > > Reported-by: Tobias Urdin <tobias.urdin@binero.com>
+> > > Fixes: b4be98039a92 ("KVM: VMX: Zero out *all* general purpose registers after VM-Exit")
+> > > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > > ---
+> > >  arch/x86/kvm/vmx.c | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+> > > index 5b06a98ffd4c..54c8b4dc750d 100644
+> > > --- a/arch/x86/kvm/vmx.c
+> > > +++ b/arch/x86/kvm/vmx.c
+> > > @@ -10882,7 +10882,8 @@ static void __noclone vmx_vcpu_run(struct kvm_vcpu *vcpu)
+> > >  		".global vmx_return \n\t"
+> > >  		"vmx_return: " _ASM_PTR " 2b \n\t"
+> > >  		".popsection"
+> > > -	      : : "c"(vmx), "d"((unsigned long)HOST_RSP), "S"(evmcs_rsp),
+> > > +	      : ASM_CALL_CONSTRAINT, "=c"((int){0}), "=d"((int){0}), "=S"((int){0})
+> > > +	      : "c"(vmx), "d"((unsigned long)HOST_RSP), "S"(evmcs_rsp),
+> > >  		[launched]"i"(offsetof(struct vcpu_vmx, __launched)),
+> > >  		[fail]"i"(offsetof(struct vcpu_vmx, fail)),
+> > >  		[host_rsp]"i"(offsetof(struct vcpu_vmx, host_rsp)),
+> > > -- 
+> > > 2.26.0
+> > > 
+> > 
+> > What is the git commit id of this patch in Linus's tree?
 > 
-> [...]
+> There is none.  In upstream at the time of the offending commit (b4be98039a92
+> in 4.19, 0e0ab73c9a024 upstream), the inline asm blob had previously been
+> moved to a dedicated helper, __vmx_vcpu_run(), that was intentionally put
+> into a separate compilation unit, i.e. consuming the clobbered register
+> was effectively impossible because %rcx is volatile and __vmx_vcpu_run()
+> couldn't itself be inlined.
 > 
->> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
->> index 2ce952d9668d..c790cc200bb1 100644
->> --- a/arch/arm64/kernel/cpufeature.c
->> +++ b/arch/arm64/kernel/cpufeature.c
->> @@ -403,6 +403,11 @@ static const struct arm64_ftr_bits ftr_id_isar4[] = {
->>  	ARM64_FTR_END,
->>  };
->>  
->> +static const struct arm64_ftr_bits ftr_id_mmfr5[] = {
->> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_MMFR5_ETS_SHIFT, 4, 0),
->> +	ARM64_FTR_END,
->> +};
->> +
->>  static const struct arm64_ftr_bits ftr_id_isar6[] = {
->>  	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR6_I8MM_SHIFT, 4, 0),
->>  	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR6_BF16_SHIFT, 4, 0),
->> @@ -527,6 +532,7 @@ static const struct __ftr_reg_entry {
->>  	ARM64_FTR_REG(SYS_MVFR2_EL1, ftr_mvfr2),
->>  	ARM64_FTR_REG(SYS_ID_PFR2_EL1, ftr_id_pfr2),
->>  	ARM64_FTR_REG(SYS_ID_DFR1_EL1, ftr_id_dfr1),
->> +	ARM64_FTR_REG(SYS_ID_MMFR5_EL1, ftr_id_mmfr5),
->>  
->>  	/* Op1 = 0, CRn = 0, CRm = 4 */
->>  	ARM64_FTR_REG(SYS_ID_AA64PFR0_EL1, ftr_id_aa64pfr0),
->> @@ -732,6 +738,7 @@ void __init init_cpu_features(struct cpuinfo_arm64 *info)
->>  		init_cpu_ftr_reg(SYS_ID_MMFR1_EL1, info->reg_id_mmfr1);
->>  		init_cpu_ftr_reg(SYS_ID_MMFR2_EL1, info->reg_id_mmfr2);
->>  		init_cpu_ftr_reg(SYS_ID_MMFR3_EL1, info->reg_id_mmfr3);
->> +		init_cpu_ftr_reg(SYS_ID_MMFR5_EL1, info->reg_id_mmfr5);
->>  		init_cpu_ftr_reg(SYS_ID_PFR0_EL1, info->reg_id_pfr0);
->>  		init_cpu_ftr_reg(SYS_ID_PFR1_EL1, info->reg_id_pfr1);
->>  		init_cpu_ftr_reg(SYS_ID_PFR2_EL1, info->reg_id_pfr2);
->> @@ -866,6 +873,8 @@ static int update_32bit_cpu_features(int cpu, struct cpuinfo_arm64 *info,
->>  				      info->reg_id_mmfr2, boot->reg_id_mmfr2);
->>  	taint |= check_update_ftr_reg(SYS_ID_MMFR3_EL1, cpu,
->>  				      info->reg_id_mmfr3, boot->reg_id_mmfr3);
-> 
-> Looks like MMFR4 is missing here?
+> To make things more confusing, the inline asm blob got moved into a proper
+> asm subroutine shortly thereafter.  Things really start to diverge from
+> current upstream right around the time of this commit.
 
-ID_MMFR4 is missing from cpuinfo_arm64 itself, hence from init_cpu_features()
-and update_cpu_features() as well. But it is defined in arm64_ftr_regs[]. I
-was wondering about it but left as it is (due to lack of complete context).
-Unless there is any other concern, will add it up in cpuinfo_arm64 and make
-it a part of the CPU context.
+Then you need to document the heck out of the fact that this is not
+upstream, why it is different from upstream, and why we can't just take
+what upstream did instead in the changelog.  That way, when this patch
+turns out to be buggy (hint, 90% of the times they are), we know why
+this was done the way it was so we can revert it and know who to
+complain to :)
+
+thanks,
+
+greg k-h
