@@ -2,106 +2,198 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 286A3C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D5BC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0491D206CC
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:19:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="1UfbGhRx"
+	by mail.kernel.org (Postfix) with ESMTP id 16EA42073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:19:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588695574;
+	bh=t9KNafh9+Gtu73W3l2JYFoYuMxI9I+J0/J8SUqj+y9w=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=VV57Xx2jwBBqhB1KrKiPqI9vBzDAry6bVNe6Kls4Gu3dlHGA1WR4Ie46z2Fbxp2As
+	 udj7EER3z/lAneai+jWlOAFudkxCIthXncsHttjH96KaJUWzEbke2srJw7/BEqgshG
+	 GCCTi+4h1uesoTQGAkoE1e5Wuok8rb0UFGDt8+vk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729915AbgEEQTJ (ORCPT
+        id S1730206AbgEEQTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:19:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40374 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729377AbgEEQTJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:19:09 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40131C061A41
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 09:19:09 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id g16so2402703qtp.11
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 09:19:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=A/Wm3UHNM4qlX8DljPnma9j6lm5XESNuL8D71GdjV38=;
-        b=1UfbGhRxXGz3GBtcxR9UNxM68oHkaj/WYVq1O0d/Pzl/wG0nhFdC8YkkSQk7lAfdvH
-         5Ak4p4yujEG9sGUn6s8vbQyWJjfBr+jTiWZjH3JkLVJOPH/X0sby/bdWoNE24sm7Ct4u
-         FWKT/jmiSIkJO/Tpqt2U+UXw5gSxKbmkry5EDE6mxveyCwgCeSprywvT2XvZob4BTVa/
-         e04gJRelogulBVELpi7p7SvrDBnpA/8MZPhnhM+bIV42lT15R3Gjgt1c013K60Yne6VP
-         yUpOU4KuQeRRl4T2kKhdlnbD9rTCeGeHobk3zfQ7ulhjY3A0zHfntGGHxEsIfXdU2wvt
-         2qLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=A/Wm3UHNM4qlX8DljPnma9j6lm5XESNuL8D71GdjV38=;
-        b=HBgSJfYg8Jaahi8FOp7gj7MH1fdTBRHH2D84tBgDSy3stlg3M5bM9cGze9/gMt07Mn
-         PbgMOoO/xrUJUOXzf2zqYRpSKCS2V8onWXEB9dZnBDG4mwKVRKCqyaZMmTNVkQEdY8X6
-         l3yDZuBbxoSkT0dSdrL2u9sQwmv3bwEjtsus2E3Y3bmEOaUbI2K7AcUMhOU1A9RS+rPq
-         q4ZbOwEylgzvXrQWXjDKpUfaIqP2ZN2NBpqzddJgcdgbmN1fAhBrFOh8eLaJqE5y0c1t
-         6s+PMstsxL9OhWp75zkO4MzdSaCZrRKLQWhgpVpVHysJ5332eD4FzqaGVjUwQk1P9Lfk
-         remg==
-X-Gm-Message-State: AGi0PubA5t+htZDWYweeP83xRhlhLCScSSil0Zybulzw9jeftuAO0PKL
-        FntjLYwVh9/pcSyj52PWL6JMtwYtON0nCIY1spOa6w==
-X-Google-Smtp-Source: APiQypLAizKoTqwFtOBKN/f1gzlwNVdkvxN9mo2b50TEgRtyqk55O3/9/e15NFeEPw0uW3ZQMHmqeBZnpb7i4CROJ3I=
-X-Received: by 2002:ac8:346f:: with SMTP id v44mr3419058qtb.27.1588695548443;
- Tue, 05 May 2020 09:19:08 -0700 (PDT)
+        Tue, 5 May 2020 12:19:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42444 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729377AbgEEQTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 12:19:33 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7740C20735;
+        Tue,  5 May 2020 16:19:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588695573;
+        bh=t9KNafh9+Gtu73W3l2JYFoYuMxI9I+J0/J8SUqj+y9w=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Q/9xeYNTb9Sn3sAJJ98n+iaRaU1vRsCtJ/eSwjfAOwLPmOu9Vv4zWg+6i/JmZRXDr
+         GCta9fSjUFr/AbLHMpn+wcQgdSjy3W4tCcjrcfGnVi5JTl7qfitKLcw1LjrMhpVdT+
+         gpyi4vDwqjjq5o/8dACPe8P5c3ONXXItYWYMCdZA=
+Subject: Re: [PATCH 5.6 00/73] 5.6.11-rc1 review
+To:     Takashi Iwai <tiwai@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        shuah <shuah@kernel.org>
+References: <20200504165501.781878940@linuxfoundation.org>
+ <3366716c-3a30-033d-4df6-4183eb262208@kernel.org>
+ <82eb8f25-4e15-001a-1c4f-5f59400d352b@kernel.org>
+ <s5h4ksubdh8.wl-tiwai@suse.de>
+ <e7326300-faad-df0e-1918-a36b5be4b078@kernel.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <9871eac6-29b7-2f0e-f383-2358b5a245d8@kernel.org>
+Date:   Tue, 5 May 2020 10:19:31 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200505084501.13170-1-ykaukab@suse.de>
-In-Reply-To: <20200505084501.13170-1-ykaukab@suse.de>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 5 May 2020 18:18:57 +0200
-Message-ID: <CAMpxmJXp9uZp=Q5Sm==_d720mg=aYSC1K1=V-P5Tz10gnLYuUQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: tegra186: export MODULE_DEVICE_TABLE
-To:     Mian Yousaf Kaukab <ykaukab@suse.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <e7326300-faad-df0e-1918-a36b5be4b078@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 5 maj 2020 o 10:45 Mian Yousaf Kaukab <ykaukab@suse.de> napisa=C5=82(a=
-):
->
-> Export MODULE_DEVICE_TABLE since the driver can be built as a module.
->
-> Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
-> ---
->  drivers/gpio/gpio-tegra186.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
-> index 79b553dc39a3..178e9128ded0 100644
-> --- a/drivers/gpio/gpio-tegra186.c
-> +++ b/drivers/gpio/gpio-tegra186.c
-> @@ -894,6 +894,7 @@ static const struct of_device_id tegra186_gpio_of_mat=
-ch[] =3D {
->                 /* sentinel */
->         }
->  };
-> +MODULE_DEVICE_TABLE(of, tegra186_gpio_of_match);
->
->  static struct platform_driver tegra186_gpio_driver =3D {
->         .driver =3D {
-> --
-> 2.25.0
->
+On 5/5/20 9:43 AM, shuah wrote:
+> On 5/5/20 9:36 AM, Takashi Iwai wrote:
+>> On Tue, 05 May 2020 17:30:07 +0200,
+>> shuah wrote:
+>>>
+>>> On 5/5/20 9:25 AM, shuah wrote:
+>>>> On 5/4/20 11:57 AM, Greg Kroah-Hartman wrote:
+>>>>> This is the start of the stable review cycle for the 5.6.11 release.
+>>>>> There are 73 patches in this series, all will be posted as a response
+>>>>> to this one.  If anyone has any issues with these being applied, 
+>>>>> please
+>>>>> let me know.
+>>>>>
+>>>>> Responses should be made by Wed, 06 May 2020 16:52:55 +0000.
+>>>>> Anything received after that time might be too late.
+>>>>>
+>>>>> The whole patch series can be found in one patch at:
+>>>>>      https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.11-rc1.gz 
+>>>>>
+>>>>>
+>>>>> or in the git tree and branch at:
+>>>>>      git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git 
+>>>>>
+>>>>> linux-5.6.y
+>>>>> and the diffstat can be found below.
+>>>>>
+>>>>> thanks,
+>>>>>
+>>>>> greg k-h
+>>>>>
+>>>>> -------------
+>>>>> Pseudo-Shortlog of commits:
+>>>>>
+>>>>> Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>>>>       Linux 5.6.11-rc1
+>>>>>
+>>>>
+>>>>> Takashi Iwai <tiwai@suse.de>
+>>>>>       ALSA: pcm: oss: Place the plugin buffer overflow checks 
+>>>>> correctly
+>>>>>
+>>>>> Vasily Khoruzhick <anarsoul@gmail.com>
+>>>>>       ALSA: line6: Fix POD HD500 audio playback
+>>>>>
+>>>>> Wu Bo <wubo40@huawei.com>
+>>>>>       ALSA: hda/hdmi: fix without unlocked before return
+>>>>>
+>>>>> Takashi Iwai <tiwai@suse.de>
+>>>>>       ALSA: usb-audio: Correct a typo of NuPrime DAC-10 USB ID
+>>>>>
+>>>>> Hui Wang <hui.wang@canonical.com>
+>>>>>       ALSA: hda/realtek - Two front mics on a Lenovo ThinkCenter
+>>>>>
+>>>>
+>>>>>    sound/core/oss/pcm_plugin.c                       | 20 ++++---
+>>>>>    sound/isa/opti9xx/miro.c                          |  9 ++-
+>>>>>    sound/isa/opti9xx/opti92x-ad1848.c                |  9 ++-
+>>>>>    sound/pci/hda/patch_hdmi.c                        |  4 +-
+>>>>>    sound/pci/hda/patch_realtek.c                     |  1 +
+>>>>>    sound/usb/line6/podhd.c                           | 22 ++-----
+>>>>>    sound/usb/quirks.c                                |  2 +-
+>>>>>    78 files changed, 554 insertions(+), 297 deletions(-)
+>>>>>
+>>>>>
+>>>>>
+>>>>
+>>>> Compiled and booted on my test system. Tons of the of following
+>>>> errors in dmesg
+>>>>
+>>>> Adding Takashi Iwai
+>>>>
+>>>> [   33.980302] usb 2-2.4: 1:1: cannot set freq 48000 to ep 0x1
+>>>> [   49.340581] usb 2-2.4: 2:1: cannot set freq 48000 to ep 0x82
+>>>> [   59.580511] usb 2-2.4: 13:0: cannot get min/max values for
+>>>> control 2 (id 13)
+>>>> [   64.700532] usb 2-2.4: 9:0: cannot get min/max values for control
+>>>> 2 (id 9)
+>>>> [   69.792257] usb 2-2.4: 10:0: cannot get min/max values for
+>>>> control 2 (id 10)
+>>>> [   69.792736] usbcore: registered new interface driver snd-usb-audio
+>>>> [   74.871038] usb 2-2.4: 9:0: cannot get min/max values for control
+>>>> 2 (id 9)
+>>>> [   79.967099] usb 2-2.4: 9:0: cannot get min/max values for control
+>>>> 2 (id 9)
+>>>> [   85.076961] usb 2-2.4: 9:0: cannot get min/max values for control
+>>>> 2 (id 9)
+>>>> [   90.191415] usb 2-2.4: 9:0: cannot get min/max values for control
+>>>> 2 (id 9)
+>>>> [   95.308843] usb 2-2.4: 9:0: cannot get min/max values for control
+>>>> 2 (id 9)
+>>>>
+>>>> followed by
+>>>>
+>>>> [  131.172280] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+>>>> [  136.259909] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+>>>> [  141.380345] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+>>>> [  146.500227] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+>>>> [  151.620227] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+>>>> [  156.739899] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+>>>> [  161.859999] usb 2-2.4: 1:1: usb_set_interface failed (-110)
+>>>>
+>>>>
+>>>> I have audio on that port. I haven't tried yet reverting these
+>>>> sound patches yet. demsg is filling up with these messages for
+>>>> sure.
+>>>>
+>>>
+>>> I just tried Linux 5.7-rc4 and it also has this problem. New in rc4 as
+>>> far as I can tell.
+>>
+>> Then it's unlikely from the changes in sound/*, but I'd suspect rather
+>> USB core side.  There is only one change for USB-audio driver and it's
+>> a correction of USB device ID.
+>>
+>>
+> 
+> For what its worth not seeing this on 5.4.39-rc1 with the same set of
+> sound changes. I will start bisect on 5.6.11-rc1
+> 
 
-Patch applied, thanks!
+I can't reproduce this problem on 5.7-rc1 and 5.6.11-rc1 after seeing
+it once on both.
 
-Bart
+Tried powerdown vs reboot to see if it is tied to hardware init
+sequence. Doesn't seem to make a difference. Oh well. I will
+update if I see it again.
+
+thanks,
+-- Shuah
+
