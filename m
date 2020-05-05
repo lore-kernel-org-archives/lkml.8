@@ -2,103 +2,111 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E46C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE532C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2147A20735
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 832CD2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:13:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588688001;
+	bh=R+70PJ9vucGn241Y2Cqa7rgwicdjK9Vs/+6SMmkQ9rA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O7pR3vtz+Vn5tHWAd2mPHgeIYTw7LioFXGwYN4uoyDr+zPqxW2q+cuh3iG2Zb4fG/
+	 6jm4KZpqcX0Rsl5D+L0n3x6wChhaZMEe5dbVfT8EX7VVRiNWg84Mc0JQ3Vv18JzF4g
+	 dDjrEkgvyVfU43aRVuL1U7PCbyImB255FNy0CENc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729289AbgEEONO (ORCPT
+        id S1729308AbgEEONV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:13:14 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:54865 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729219AbgEEONN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:13:13 -0400
-Received: from localhost.localdomain ([149.172.19.189]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Mrwnt-1ikU0n0FhF-00nxqr; Tue, 05 May 2020 16:13:00 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Torsten Duwe <duwe@lst.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Torsten Duwe <duwe@suse.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Julien Thierry <jthierry@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Alexandre Ghiti <alex@ghiti.fr>,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        Ionela Voinescu <ionela.voinescu@arm.com>,
-        Steve Capper <steve.capper@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] arm64: disable patchable function entry on big-endian clang builds
-Date:   Tue,  5 May 2020 16:12:36 +0200
-Message-Id: <20200505141257.707945-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
+        Tue, 5 May 2020 10:13:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33604 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729292AbgEEONU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 10:13:20 -0400
+Received: from localhost (p54B335A1.dip0.t-ipconnect.de [84.179.53.161])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D8D420735;
+        Tue,  5 May 2020 14:13:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588688000;
+        bh=R+70PJ9vucGn241Y2Cqa7rgwicdjK9Vs/+6SMmkQ9rA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FLcOyPVXax4walL2ONgDDGm3H9TAh64RPOsmQNypepd9HqsoSBONz+ZzlsIDQ5vD5
+         YHgBECF+mKdfrretnacbW9YNrIHo84HsBZXGZITataDIOYcqrhrgueLdEdcIRKvjT6
+         Bgo9XVwRjgwp7Tv78kNCktWKQfVJYUTzZCZbKjmw=
+Date:   Tue, 5 May 2020 16:13:16 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+Cc:     Thor Thayer <thor.thayer@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] i2c: drivers: Remove superfluous error message
+Message-ID: <20200505141316.GB2468@ninjato>
+References: <20200503120847.13528-1-aishwaryarj100@gmail.com>
+ <20200504114408.9128-1-aishwaryarj100@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:rkN2hFA/4F6NEnM1J64C8Aoib8T4jOG+siBiFVT9WROwOdH7x9t
- 4WH888TrHbFW/FHpjxq3U7UIYxkq42gZJvGVmzWSKCE/CP5xLY+4t0fiBxQKzBPqACB4Rxu
- Ppew9ALCOA7Zl3kFJwrRLZlpqi3jMRixTt0nmQPz31Umnk3BLwwh/1zbLQKb3mod0qsnKR/
- rNXzfBEB11Ep2dBi8d6QQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:cdva0oxEiZM=:FQRtrzAr9rWx5IUwkwoKVU
- 4+edO8zLchzG0t3lP2T3zLl0VcO/vDceZ7U8gqo0szcf3UGrnp8cqm3RsThr2qeuZDCnoxmJO
- veqZajiQ7CWyp2xDqmSubJR9bg6if5TOtLgEJ48h50YQHo2owT1RleKCLy76qLfmwy4xRXVkR
- XKLca5YQpwBnghGgN/jyJE2KrT/TKk+TsK/QDz2CRA77IiqjaVSB2akJo9+zH0ilrj/1TUj2D
- beLTyKsIsE1xxTZGlLlp66kd5pROyDWGCL1CJIrsmQdcqPBJv0vfcntLO68w61O8bNp6iWhCh
- ANwWYVWBfMwiIl2qwGJw3ZgjIySZ8wCqK5wU1YqOl26ial/nrVdcbrkixCFkG6atDKTbdZv5o
- lM6FuDHZ2WAl5ilc09yi8pu+sn3P1/m+UcpcsxxEpqJQxNKYQsIzCTZ3uyuC3Uz9PD7HjK32B
- 0Bx+Tcgsyya3G5pIone2mmBYxaClBltnbMnWQZJtTIlVpk3MIxLlrORfTCXPpOiqfOTzqNz3J
- D9zb8xppaQvpQHwp81dh1mJh7SVz99Du3S+zZy35Syk9ovW1Te6tM60nT1aUZa9TYRgScSyJ6
- fTfaB8IpMAB8iJV/RjgmGLPR9q4/q9fWr7cd7f+JQwWvmp3H9ACLTum5FFlc6OKxiAo+S0W6V
- Qe2JeJswxsdeh+GNiwZBcsq5GwonmV950Wpccx0cOX/zGJEK3kzxhV6CFJaN+pV9Ae2jku1w2
- 9INoLYGGsrvr8JLgpirpXlAifwJgXoorZG035wf4Nt+ZqQ7+8lCCAdPFhzkSnTRkqZ59sCG5x
- v/JSrNAdWm8DfWvw+w/viI7QyCBKfg1VXkZ7O+ztIiSTuzh++8=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="jq0ap7NbKX2Kqbes"
+Content-Disposition: inline
+In-Reply-To: <20200504114408.9128-1-aishwaryarj100@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang only supports the patchable_function_entry attribute on
-little-endian arm64 builds, but not on big-endian:
 
-include/linux/kasan-checks.h:16:8: error: unknown attribute 'patchable_function_entry' ignored [-Werror,-Wunknown-attributes]
+--jq0ap7NbKX2Kqbes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Disable that configuration with another dependency. Unfortunately
-the existing check is not enough, as $(cc-option) at this point does
-not pass the -mbig-endian flag.
+On Mon, May 04, 2020 at 05:14:06PM +0530, Aishwarya Ramakrishnan wrote:
+> The function platform_get_irq can log an error by itself.
+> This omit a redundant message for exception handling in the
+> calling function.
+>=20
+> Suggested by Coccinelle.
+>=20
+> Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
 
-Fixes: 3b23e4991fb6 ("arm64: implement ftrace with regs")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm64/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sorry, I forgot that these are already fixed with
+e42688ed5cf5936fb55c78cc365dbe0944af7c63 in i2c/for-next.
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 4b256fa6db7a..a33d6402b934 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -151,7 +151,7 @@ config ARM64
- 	select HAVE_DMA_CONTIGUOUS
- 	select HAVE_DYNAMIC_FTRACE
- 	select HAVE_DYNAMIC_FTRACE_WITH_REGS \
--		if $(cc-option,-fpatchable-function-entry=2)
-+		if $(cc-option,-fpatchable-function-entry=2) && !(CC_IS_CLANG && CPU_BIG_ENDIAN)
- 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
- 	select HAVE_FAST_GUP
- 	select HAVE_FTRACE_MCOUNT_RECORD
--- 
-2.26.0
 
+--jq0ap7NbKX2Kqbes
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6xdHgACgkQFA3kzBSg
+KbbwRA/+LGyt1I9I1ywJp0ulKpglf4waJU/2Fay5kC0dKFkixtjarMsChvsIcpJJ
+eJlTxUY6krLo7eUh223GmX5Y313bXl5uFIvEC4HCEbcxSVLOL81jvdVkDZcVG9u3
+CMBCXMCchPdGZnbPL7Yzvpshuj87+UtHNnS/a293LwO3exDR5eVZEGi/aICrRum/
+uf273Fx8g0pzh5h7J5erA4dgbrxP20PNt4BYUlfe9sdWft7yW1OS/kd3gaGxBnQp
+LCTk0q9f85vYTzrUX1bk2jvpls0n1kAnD5F1+73kvFq+DsnZD0t1C3FDv/GpRcc3
+TuC+rl4mcAVIoOtErmfT38xRW4PIAu0qzWJDNbnZrd12fZKH/kw20L7Yq5nmIjvi
+mXSpg+JKua+e69VuEsxSTuoDxxEVyWTo/yKc1rbDJNWKwngiR8bldUZDQDtOoSqA
+aWskPYf2kqarsWXYGeaXB8n4CXjD6fyufGjr+SsOD7tcd9ULOOzhfN6GUENw1t9L
+tI03I7owU1+hShjx/pBDpFlqzJQExHLFjMgoMD9aB5XxA7nY82ny4bcpjdy34qqW
+GF88XiojrHftpqtvEfq/qc22l89lvm9Yts8sNg0Axc+jp2/jiKLgY2rgfnZJ+e0r
+MdN0pEl1GRcD3e4WK+16qHy0BViPHmBqCreipeNddURCEXYezmo=
+=Q1Hw
+-----END PGP SIGNATURE-----
+
+--jq0ap7NbKX2Kqbes--
