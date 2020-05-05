@@ -2,271 +2,117 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52971C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E114FC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33904206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7C0C20661
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:59:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729072AbgEEN7K (ORCPT
+        id S1729134AbgEEN7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 09:59:10 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:37555 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727857AbgEEN7J (ORCPT
+        Tue, 5 May 2020 09:59:47 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42496 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728346AbgEEN7q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 09:59:09 -0400
-Received: from localhost.localdomain ([149.172.19.189]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MDhpZ-1jOVz83s9v-00AkWg; Tue, 05 May 2020 15:58:54 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH] [net-next] dsa: sja1105: dynamically allocate stats structure
-Date:   Tue,  5 May 2020 15:58:26 +0200
-Message-Id: <20200505135848.180753-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
+        Tue, 5 May 2020 09:59:46 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 57E5B2A1C94
+Message-ID: <c29fcc922a4917ac695043e605973ba9649f9c9b.camel@collabora.com>
+Subject: Re: [PATCH v3 1/3] media: rkvdec: Fix .buf_prepare
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel@collabora.com, Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Gustavo Padovan <gustavo.padovan@collabora.com>
+Date:   Tue, 05 May 2020 10:59:35 -0300
+In-Reply-To: <CAAFQd5AWZFoPk2YTp2k8M7LvJshxw46-z+wK2VoM9EzB2CqiFA@mail.gmail.com>
+References: <20200505134110.3435-1-ezequiel@collabora.com>
+         <20200505134110.3435-2-ezequiel@collabora.com>
+         <CAAFQd5AWZFoPk2YTp2k8M7LvJshxw46-z+wK2VoM9EzB2CqiFA@mail.gmail.com>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0-1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:VtJvDtSOHScQ9cJ4aBfIpXn6GuG4OnnuRks7px9SQloMrVCCckt
- 2O4bEsr4cAwtyo2nvEX39bliFdlSS2nIs/cBexh3UpC03lLCX/kTyNhM4PfAzKB3JDpW6St
- nf5h0Ar8u5ntraY9MwMkpX1t34R2DzbGhGToNWT8TF62QDhKk5qhwBgcBAQU4QDufn2Bzmp
- Qd4Iy/IdsW6TRqPPETx1Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ZGSBD1MSwg4=:Ef8u6FYRWR3cSKY+7pe/hk
- 0OwZ0ysva7sPeFhvwFW1zuKjxuCvSnq5z5MJRRGReM7aiWUsnax7l/egMC+LpO2fAXN/0ibXq
- xc68HAS0j6aubEZQRDG99fG1X39PAkw9/+zljLTNhe3e/EO+Uffmbl/xKxC++dADXE39R1zwK
- pyYpzL/SIySuUvol3PctktikW59DCfXWO4/xdnrmhm4Cyty0EcIm6m+wmf4+V15czFOSrRdCZ
- xpY+JzW/bR0z8/dGR7atn6+YrWi9uGufsZPO8F6/ZEgg/ZieIiVIvWrqAhEzZUVNeNvLWav6d
- CYafB5DDofOAuPNbQ2pnRkAhuo7wna6Q7xZFRkg6uLYSaN86gQhmevWexSkyaqq8mroAJWQtI
- XwRKXhFxg4r6wFIAxqDCVZ6l2FMBF5Oz0uNdJMmwLz1EgW24R4zoJrkvrd+6UB9uh8MTSZ/6u
- ivWKvMDYZQzXEjCq4iLWq2+2cecRhnVGLZOsM90i/M/jbo/xSQr/ESS0nCPDg+TY+jiog5ynD
- 1kgMNngopnrNdf6Mx0xQvbkFoeMYy8XZVRxd4OkNhbw5ibmhRyW49b7tVsU7oF00NJY/HpoSn
- C4EEfxlptlQ485k2qYJhCNTEylIRbP8oUTu3la0aEIrQSixzsEbTUsud+nhf6ax5eVa02b4ev
- OUu5/3hJ7SuAyYTijVrTLbolcQHDp0Tx53xt3u031Q5+2856MfzI2lKsPxuxkQuhhRp+iLUlT
- uJaMRVWjchWyIiywasnYRuKsAfTyXhTT+2d/+6EcFCnpmDjI47gCpRYTQQxXz9xQtX8RJwE3m
- PybUo/IXzNXzfERmQ29MvETVkKh8sJxVz6YrEO04zkdPWOnJ/8=
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The addition of sja1105_port_status_ether structure into the
-statistics causes the frame size to go over the warning limit:
+On Tue, 2020-05-05 at 15:56 +0200, Tomasz Figa wrote:
+> Hi Ezequiel,
+> 
+> On Tue, May 5, 2020 at 3:41 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
+> > The driver should only set the payload on .buf_prepare
+> > if the buffer is CAPTURE type, or if an OUTPUT buffer
+> > has a zeroed payload.
+> 
+> Thanks for the patch. Just one question below.
+> 
+> Where does the requirement to set OUTPUT buffer bytesused to sizeimage
+> if the original bytesused is 0 come from?
+> 
 
-drivers/net/dsa/sja1105/sja1105_ethtool.c:421:6: error: stack frame size of 1104 bytes in function 'sja1105_get_ethtool_stats' [-Werror,-Wframe-larger-than=]
+If I'm reading english correctly, it's here:
 
-Use dynamic allocation to avoid this.
+https://www.kernel.org/doc/html/latest/media/uapi/v4l/buffer.html
 
-Fixes: 336aa67bd027 ("net: dsa: sja1105: show more ethtool statistics counters for P/Q/R/S")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/net/dsa/sja1105/sja1105_ethtool.c | 144 +++++++++++-----------
- include/linux/warnings.h                  |   4 +-
- 2 files changed, 76 insertions(+), 72 deletions(-)
+"""
+The number of bytes occupied by the data in the buffer. It depends on the negotiated data format and may change with each buffer for compressed
+variable size data like JPEG images. Drivers must set this field when type refers to a capture stream, applications when it refers to an output
+stream. If the application sets this to 0 for an output stream, then bytesused will be set to the size of the buffer (see the length field of this
+struct) by the driver. For multiplanar formats this field is ignored and the planes pointer is used instead.
+"""
 
-diff --git a/drivers/net/dsa/sja1105/sja1105_ethtool.c b/drivers/net/dsa/sja1105/sja1105_ethtool.c
-index d742ffcbfce9..1f8bd4f2c004 100644
---- a/drivers/net/dsa/sja1105/sja1105_ethtool.c
-+++ b/drivers/net/dsa/sja1105/sja1105_ethtool.c
-@@ -421,92 +421,96 @@ static char sja1105pqrs_extra_port_stats[][ETH_GSTRING_LEN] = {
- void sja1105_get_ethtool_stats(struct dsa_switch *ds, int port, u64 *data)
- {
- 	struct sja1105_private *priv = ds->priv;
--	struct sja1105_port_status status;
-+	struct sja1105_port_status *status;
- 	int rc, i, k = 0;
- 
--	memset(&status, 0, sizeof(status));
-+	status = kzalloc(sizeof(*status), GFP_KERNEL);
-+	if (!status)
-+		goto out;
- 
--	rc = sja1105_port_status_get(priv, &status, port);
-+	rc = sja1105_port_status_get(priv, status, port);
- 	if (rc < 0) {
- 		dev_err(ds->dev, "Failed to read port %d counters: %d\n",
- 			port, rc);
--		return;
-+		goto out;;
- 	}
- 	memset(data, 0, ARRAY_SIZE(sja1105_port_stats) * sizeof(u64));
--	data[k++] = status.mac.n_runt;
--	data[k++] = status.mac.n_soferr;
--	data[k++] = status.mac.n_alignerr;
--	data[k++] = status.mac.n_miierr;
--	data[k++] = status.mac.typeerr;
--	data[k++] = status.mac.sizeerr;
--	data[k++] = status.mac.tctimeout;
--	data[k++] = status.mac.priorerr;
--	data[k++] = status.mac.nomaster;
--	data[k++] = status.mac.memov;
--	data[k++] = status.mac.memerr;
--	data[k++] = status.mac.invtyp;
--	data[k++] = status.mac.intcyov;
--	data[k++] = status.mac.domerr;
--	data[k++] = status.mac.pcfbagdrop;
--	data[k++] = status.mac.spcprior;
--	data[k++] = status.mac.ageprior;
--	data[k++] = status.mac.portdrop;
--	data[k++] = status.mac.lendrop;
--	data[k++] = status.mac.bagdrop;
--	data[k++] = status.mac.policeerr;
--	data[k++] = status.mac.drpnona664err;
--	data[k++] = status.mac.spcerr;
--	data[k++] = status.mac.agedrp;
--	data[k++] = status.hl1.n_n664err;
--	data[k++] = status.hl1.n_vlanerr;
--	data[k++] = status.hl1.n_unreleased;
--	data[k++] = status.hl1.n_sizeerr;
--	data[k++] = status.hl1.n_crcerr;
--	data[k++] = status.hl1.n_vlnotfound;
--	data[k++] = status.hl1.n_ctpolerr;
--	data[k++] = status.hl1.n_polerr;
--	data[k++] = status.hl1.n_rxfrm;
--	data[k++] = status.hl1.n_rxbyte;
--	data[k++] = status.hl1.n_txfrm;
--	data[k++] = status.hl1.n_txbyte;
--	data[k++] = status.hl2.n_qfull;
--	data[k++] = status.hl2.n_part_drop;
--	data[k++] = status.hl2.n_egr_disabled;
--	data[k++] = status.hl2.n_not_reach;
-+	data[k++] = status->mac.n_runt;
-+	data[k++] = status->mac.n_soferr;
-+	data[k++] = status->mac.n_alignerr;
-+	data[k++] = status->mac.n_miierr;
-+	data[k++] = status->mac.typeerr;
-+	data[k++] = status->mac.sizeerr;
-+	data[k++] = status->mac.tctimeout;
-+	data[k++] = status->mac.priorerr;
-+	data[k++] = status->mac.nomaster;
-+	data[k++] = status->mac.memov;
-+	data[k++] = status->mac.memerr;
-+	data[k++] = status->mac.invtyp;
-+	data[k++] = status->mac.intcyov;
-+	data[k++] = status->mac.domerr;
-+	data[k++] = status->mac.pcfbagdrop;
-+	data[k++] = status->mac.spcprior;
-+	data[k++] = status->mac.ageprior;
-+	data[k++] = status->mac.portdrop;
-+	data[k++] = status->mac.lendrop;
-+	data[k++] = status->mac.bagdrop;
-+	data[k++] = status->mac.policeerr;
-+	data[k++] = status->mac.drpnona664err;
-+	data[k++] = status->mac.spcerr;
-+	data[k++] = status->mac.agedrp;
-+	data[k++] = status->hl1.n_n664err;
-+	data[k++] = status->hl1.n_vlanerr;
-+	data[k++] = status->hl1.n_unreleased;
-+	data[k++] = status->hl1.n_sizeerr;
-+	data[k++] = status->hl1.n_crcerr;
-+	data[k++] = status->hl1.n_vlnotfound;
-+	data[k++] = status->hl1.n_ctpolerr;
-+	data[k++] = status->hl1.n_polerr;
-+	data[k++] = status->hl1.n_rxfrm;
-+	data[k++] = status->hl1.n_rxbyte;
-+	data[k++] = status->hl1.n_txfrm;
-+	data[k++] = status->hl1.n_txbyte;
-+	data[k++] = status->hl2.n_qfull;
-+	data[k++] = status->hl2.n_part_drop;
-+	data[k++] = status->hl2.n_egr_disabled;
-+	data[k++] = status->hl2.n_not_reach;
- 
- 	if (priv->info->device_id == SJA1105E_DEVICE_ID ||
- 	    priv->info->device_id == SJA1105T_DEVICE_ID)
--		return;
-+		goto out;;
- 
- 	memset(data + k, 0, ARRAY_SIZE(sja1105pqrs_extra_port_stats) *
- 			sizeof(u64));
- 	for (i = 0; i < 8; i++) {
--		data[k++] = status.hl2.qlevel_hwm[i];
--		data[k++] = status.hl2.qlevel[i];
-+		data[k++] = status->hl2.qlevel_hwm[i];
-+		data[k++] = status->hl2.qlevel[i];
- 	}
--	data[k++] = status.ether.n_drops_nolearn;
--	data[k++] = status.ether.n_drops_noroute;
--	data[k++] = status.ether.n_drops_ill_dtag;
--	data[k++] = status.ether.n_drops_dtag;
--	data[k++] = status.ether.n_drops_sotag;
--	data[k++] = status.ether.n_drops_sitag;
--	data[k++] = status.ether.n_drops_utag;
--	data[k++] = status.ether.n_tx_bytes_1024_2047;
--	data[k++] = status.ether.n_tx_bytes_512_1023;
--	data[k++] = status.ether.n_tx_bytes_256_511;
--	data[k++] = status.ether.n_tx_bytes_128_255;
--	data[k++] = status.ether.n_tx_bytes_65_127;
--	data[k++] = status.ether.n_tx_bytes_64;
--	data[k++] = status.ether.n_tx_mcast;
--	data[k++] = status.ether.n_tx_bcast;
--	data[k++] = status.ether.n_rx_bytes_1024_2047;
--	data[k++] = status.ether.n_rx_bytes_512_1023;
--	data[k++] = status.ether.n_rx_bytes_256_511;
--	data[k++] = status.ether.n_rx_bytes_128_255;
--	data[k++] = status.ether.n_rx_bytes_65_127;
--	data[k++] = status.ether.n_rx_bytes_64;
--	data[k++] = status.ether.n_rx_mcast;
--	data[k++] = status.ether.n_rx_bcast;
-+	data[k++] = status->ether.n_drops_nolearn;
-+	data[k++] = status->ether.n_drops_noroute;
-+	data[k++] = status->ether.n_drops_ill_dtag;
-+	data[k++] = status->ether.n_drops_dtag;
-+	data[k++] = status->ether.n_drops_sotag;
-+	data[k++] = status->ether.n_drops_sitag;
-+	data[k++] = status->ether.n_drops_utag;
-+	data[k++] = status->ether.n_tx_bytes_1024_2047;
-+	data[k++] = status->ether.n_tx_bytes_512_1023;
-+	data[k++] = status->ether.n_tx_bytes_256_511;
-+	data[k++] = status->ether.n_tx_bytes_128_255;
-+	data[k++] = status->ether.n_tx_bytes_65_127;
-+	data[k++] = status->ether.n_tx_bytes_64;
-+	data[k++] = status->ether.n_tx_mcast;
-+	data[k++] = status->ether.n_tx_bcast;
-+	data[k++] = status->ether.n_rx_bytes_1024_2047;
-+	data[k++] = status->ether.n_rx_bytes_512_1023;
-+	data[k++] = status->ether.n_rx_bytes_256_511;
-+	data[k++] = status->ether.n_rx_bytes_128_255;
-+	data[k++] = status->ether.n_rx_bytes_65_127;
-+	data[k++] = status->ether.n_rx_bytes_64;
-+	data[k++] = status->ether.n_rx_mcast;
-+	data[k++] = status->ether.n_rx_bcast;
-+out:
-+	kfree(status);
- }
- 
- void sja1105_get_strings(struct dsa_switch *ds, int port,
-diff --git a/include/linux/warnings.h b/include/linux/warnings.h
-index c02563d62d5a..3d77f710df24 100644
---- a/include/linux/warnings.h
-+++ b/include/linux/warnings.h
-@@ -136,7 +136,7 @@ KBUILD_WARN(0, CLANG_8, "-Warc-repeated-use-of-weak")
- KBUILD_WARN(0, CLANG_8, "-Warc-maybe-repeated-use-of-weak")
- KBUILD_WARN(0, CLANG_8, "-Warray-bounds")
- KBUILD_WARN(0, CLANG_8, "-Wasm")
--//KBUILD_WARN(0, CLANG_8, "-Wasm-ignored-qualifier")
-+KBUILD_WARN(0, CLANG_8, "-Wasm-ignored-qualifier")
- KBUILD_WARN(0, CLANG_8, "-Wasm-operand-widths")
- KBUILD_WARN(0, CLANG_8, "-Watimport-in-framework-header")
- KBUILD_WARN(0, CLANG_8, "-Wattributes")
-@@ -169,7 +169,7 @@ KBUILD_WARN(0, CLANG_8, "-Wextra-tokens")
- KBUILD_WARN(0, CLANG_8, "-Wenum-compare")
- KBUILD_WARN(0, CLANG_8, "-Wenum-compare-switch")
- KBUILD_WARN(0, CLANG_8, "-Wenum-too-large")
--//KBUILD_WARN(0, CLANG_8, "-Wexperimental-isel")
-+KBUILD_WARN(0, CLANG_8, "-Wexperimental-isel")
- KBUILD_WARN(0, CLANG_8, "-Wexplicit-initialize-call")
- KBUILD_WARN(0, CLANG_8, "-Wfallback")
- KBUILD_WARN(0, CLANG_8, "-Wflag-enum")
--- 
-2.26.0
+Thanks!
+Ezequiel
+
+> Best regards,
+> Tomasz
+> 
+> > Fix it.
+> > 
+> > Fixes: cd33c830448ba ("media: rkvdec: Add the rkvdec driver")
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > ---
+> >  drivers/staging/media/rkvdec/rkvdec.c | 10 +++++++++-
+> >  1 file changed, 9 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
+> > index 225eeca73356..4df2a248ab96 100644
+> > --- a/drivers/staging/media/rkvdec/rkvdec.c
+> > +++ b/drivers/staging/media/rkvdec/rkvdec.c
+> > @@ -456,7 +456,15 @@ static int rkvdec_buf_prepare(struct vb2_buffer *vb)
+> >                 if (vb2_plane_size(vb, i) < sizeimage)
+> >                         return -EINVAL;
+> >         }
+> > -       vb2_set_plane_payload(vb, 0, f->fmt.pix_mp.plane_fmt[0].sizeimage);
+> > +
+> > +       /*
+> > +        * Buffer's bytesused is written by the driver for CAPTURE buffers,
+> > +        * or if the application passed zero bytesused on an OUTPUT buffer.
+> > +        */
+> > +       if (!V4L2_TYPE_IS_OUTPUT(vq->type) ||
+> > +           (V4L2_TYPE_IS_OUTPUT(vq->type) && !vb2_get_plane_payload(vb, 0)))
+> > +               vb2_set_plane_payload(vb, 0,
+> > +                                     f->fmt.pix_mp.plane_fmt[0].sizeimage);
+> >         return 0;
+> >  }
+> > 
+> > --
+> > 2.26.0.rc2
+> > 
+
 
