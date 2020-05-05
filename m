@@ -2,236 +2,194 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A66A0C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D34C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7380520721
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:27:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588703246;
-	bh=pGTV2jTgDIrNw/8bj0vlb71vqmo9Xl2k5i3V19kVPco=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=teLHEMQU0U2wf0rqfKSgtkxtf9Oz4m4q4aR4qfJ0pE+GGvBzBj5WtWaP3GF36O+O7
-	 NPaEyHp8/j8tAj4bQBdf+lmg6Ynh6dBcJn29cFCyo8bimAwDf+ivAzwuZGOkCdo+k2
-	 OfcopL/1ECJrhD4sn0DeGG/dAy1ShYe22165/WiE=
+	by mail.kernel.org (Postfix) with ESMTP id 1BF1E206CC
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:28:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OYaFBo53"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728967AbgEES1Z (ORCPT
+        id S1728990AbgEES2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 14:27:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37692 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728850AbgEES1W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 14:27:22 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1008320663;
-        Tue,  5 May 2020 18:27:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588703241;
-        bh=pGTV2jTgDIrNw/8bj0vlb71vqmo9Xl2k5i3V19kVPco=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=zPi/4uRrmpdPpMQGxgPW6KMU3V8pZ8beXe/XCi5NmXkziDdWXbSMhUzIXInTQgAG8
-         HvL0wT6ZkzmjYFu73nTtIddq5JVyH1ZsQQmA3ChAxYrrJXIKLeBUp1IRUDLNA68TNu
-         GZmTj2ikiQPo6RhzfT1BKt/wNgGi2NhQ4FmqQG6g=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id D9D1B3523039; Tue,  5 May 2020 11:27:20 -0700 (PDT)
-Date:   Tue, 5 May 2020 11:27:20 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     SeongJae Park <sjpark@amazon.com>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        David Miller <davem@davemloft.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        sj38.park@gmail.com, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>, snu@amazon.com,
-        amit@kernel.org, stable@vger.kernel.org
-Subject: Re: Re: [PATCH net v2 0/2] Revert the 'socket_alloc' life cycle
- change
-Message-ID: <20200505182720.GK2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200505172358.GC2869@paulmck-ThinkPad-P72>
- <20200505174943.10384-1-sjpark@amazon.com>
+        Tue, 5 May 2020 14:28:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60518 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728135AbgEES2E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 14:28:04 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 473ABC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 11:28:04 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id a5so1580578pjh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 11:28:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o+I2ZEpd9rMStG/cH8oLpZvbJxOrhOe7FbrS6Jy7iRQ=;
+        b=OYaFBo53N41YL0p8SCOnpHV1R+tw5a4LhMXnIwzP8D//GJ5+IEOk9hpoI6oCV2xFQH
+         aySgt3bd5dneynZzlv+x3i3O5HGCf0fnX+A5gDKvwsONyESp2jWCZVNylHzWQ7A+mzK+
+         379MgLp8isot6kDWV4cqr0awdFFGm8nUN+Bze4Xf9FR85rM3jPva3qXM/t82rEj+jGwn
+         KMmZOnanmFr2mArpfXKAFriAPjKGFAFMmA2N4zrLVfhFASq/xwn/d0E1V43tula3k7uD
+         nYZ9m13pOTx7k/xuGFyBDaFrb5++habxqRx/12ky4kRH2P4/VgrWHvJFMlP5fM8HxHsR
+         LsHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o+I2ZEpd9rMStG/cH8oLpZvbJxOrhOe7FbrS6Jy7iRQ=;
+        b=eeNfFv//Z4AWEi9lhR197q0InvKNx+3QBQJp403S5FQN38JINBTu1COW8sQcAbw/eH
+         LTnAobxPr9SePEiJKUZ9AqXU6tjbRU16msv4XZzqAqBklYGjWP6sf1MbTKKOar3+YG65
+         stWoSg5RDQt64NiwerlE5xF3aAHqBJdxsZHYYQmKsK+tiP7sngogpn3r+jHLw5dcaD5t
+         d1/T6az4jbddFeRYoU/js7XDWCjBHYxeUGYP1kJsxAldQbDfBoa4072H4TIlcuNWYrhQ
+         vHif5NCCAYhYI3p0E3DLgkGjJPUYdO/IA6zda9E/gnI5FZhapcIraqUMS5gjGISpdkBh
+         07lA==
+X-Gm-Message-State: AGi0PuaNQ08nERmmLEVuofu5DpKJh0vYcG/2Rc3Ii4QE3gH8aHLlpFIE
+        BUq9wiNNkB+SWafjr9P6NjFmTa88dpLH44Ea2/USKLvmAQ4=
+X-Google-Smtp-Source: APiQypJ1QRZvnJwUKVMgH23rMrsqRdLI0q8UpwJckYydGWF5qT3qY2bI4VT9AXj4jo67L249SkRBVnWOFutezq1TZXM=
+X-Received: by 2002:a17:90a:6488:: with SMTP id h8mr4710233pjj.51.1588703283513;
+ Tue, 05 May 2020 11:28:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505174943.10384-1-sjpark@amazon.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200501202849.647891881@infradead.org> <20200501202944.593400184@infradead.org>
+ <1238787e-d97d-f09b-d76d-2df2dc273f4b@rasmusvillemoes.dk> <20200503125813.GL3762@hirez.programming.kicks-ass.net>
+ <a53369f3-665a-af0e-efad-09ae456af847@rasmusvillemoes.dk> <20200504201445.GQ3762@hirez.programming.kicks-ass.net>
+ <20200505093625.GE5298@hirez.programming.kicks-ass.net> <CAKwvOd=cP8UCX0+5pZ3AqzvOM8LKzLJJ_heDhrghqJdOnHoGMg@mail.gmail.com>
+In-Reply-To: <CAKwvOd=cP8UCX0+5pZ3AqzvOM8LKzLJJ_heDhrghqJdOnHoGMg@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 5 May 2020 11:27:53 -0700
+Message-ID: <CAKwvOdkL+2Gvn2mkZ8cdHN=1F5cHQHii57ocD0RFeLJxEt=TUQ@mail.gmail.com>
+Subject: Re: [PATCH v4 14/18] static_call: Add static_cond_call()
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>, bristot@redhat.com,
+        Jason Baron <jbaron@akamai.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Nadav Amit <namit@vmware.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 07:49:43PM +0200, SeongJae Park wrote:
-> On Tue, 5 May 2020 10:23:58 -0700 "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> 
-> > On Tue, May 05, 2020 at 09:25:06AM -0700, Eric Dumazet wrote:
-> > > 
-> > > 
-> > > On 5/5/20 9:13 AM, SeongJae Park wrote:
-> > > > On Tue, 5 May 2020 09:00:44 -0700 Eric Dumazet <edumazet@google.com> wrote:
-> > > > 
-> > > >> On Tue, May 5, 2020 at 8:47 AM SeongJae Park <sjpark@amazon.com> wrote:
-> > > >>>
-> > > >>> On Tue, 5 May 2020 08:20:50 -0700 Eric Dumazet <eric.dumazet@gmail.com> wrote:
-> > > >>>
-> > > >>>>
-> > > >>>>
-> > > >>>> On 5/5/20 8:07 AM, SeongJae Park wrote:
-> > > >>>>> On Tue, 5 May 2020 07:53:39 -0700 Eric Dumazet <edumazet@google.com> wrote:
-> > > >>>>>
-> > > >>>>
-> > > >>>>>> Why do we have 10,000,000 objects around ? Could this be because of
-> > > >>>>>> some RCU problem ?
-> > > >>>>>
-> > > >>>>> Mainly because of a long RCU grace period, as you guess.  I have no idea how
-> > > >>>>> the grace period became so long in this case.
-> > > >>>>>
-> > > >>>>> As my test machine was a virtual machine instance, I guess RCU readers
-> > > >>>>> preemption[1] like problem might affected this.
-> > > >>>>>
-> > > >>>>> [1] https://www.usenix.org/system/files/conference/atc17/atc17-prasad.pdf
-> > 
-> > If this is the root cause of the problem, then it will be necessary to
-> > provide a hint to the hypervisor.  Or, in the near term, avoid loading
-> > the hypervisor the point that vCPU preemption is so lengthy.
-> > 
-> > RCU could also provide some sort of pre-stall-warning notification that
-> > some of the CPUs aren't passing through quiescent states, which might
-> > allow the guest OS's userspace to take corrective action.
-> > 
-> > But first, what are you doing to either confirm or invalidate the
-> > hypothesis that this might be due to vCPU preemption?
-> 
-> Nothing, I was just guessing.  Sorry if this made you confused.
-> 
-> > 
-> > > >>>>>> Once Al patches reverted, do you have 10,000,000 sock_alloc around ?
-> > > >>>>>
-> > > >>>>> Yes, both the old kernel that prior to Al's patches and the recent kernel
-> > > >>>>> reverting the Al's patches didn't reproduce the problem.
-> > > >>>>>
-> > > >>>>
-> > > >>>> I repeat my question : Do you have 10,000,000 (smaller) objects kept in slab caches ?
-> > > >>>>
-> > > >>>> TCP sockets use the (very complex, error prone) SLAB_TYPESAFE_BY_RCU, but not the struct socket_wq
-> > > >>>> object that was allocated in sock_alloc_inode() before Al patches.
-> > > >>>>
-> > > >>>> These objects should be visible in kmalloc-64 kmem cache.
-> > > >>>
-> > > >>> Not exactly the 10,000,000, as it is only the possible highest number, but I
-> > > >>> was able to observe clear exponential increase of the number of the objects
-> > > >>> using slabtop.  Before the start of the problematic workload, the number of
-> > > >>> objects of 'kmalloc-64' was 5760, but I was able to observe the number increase
-> > > >>> to 1,136,576.
-> > > >>>
-> > > >>>           OBJS ACTIVE  USE OBJ SIZE  SLABS OBJ/SLAB CACHE SIZE NAME
-> > > >>> before:   5760   5088  88%    0.06K     90       64       360K kmalloc-64
-> > > >>> after:  1136576 1136576 100%    0.06K  17759       64     71036K kmalloc-64
-> > > >>>
-> > > >>
-> > > >> Great, thanks.
-> > > >>
-> > > >> How recent is the kernel you are running for your experiment ?
-> > > > 
-> > > > It's based on 5.4.35.
-> > 
-> > Is it possible to retest on v5.6?  I have been adding various mechanisms
-> > to make RCU keep up better with heavy callback overload.
-> 
-> I will try soon!
-> 
-> > 
-> > Also, could you please provide the .config?  If either NO_HZ_FULL or
-> > RCU_NOCB_CPU, please also provide the kernel boot parameters.
-> 
-> NO_HZ_FULL is not set, but RCU_NOCB_CPU is y.
+On Tue, May 5, 2020 at 11:13 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> On Tue, May 5, 2020 at 2:36 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> >
+> > HJ, Nick,
+> >
+> > Any chance any of you can see a way to make your respective compilers
+> > not emit utter junk for this?
+> >
+> > On Mon, May 04, 2020 at 10:14:45PM +0200, Peter Zijlstra wrote:
+> >
+> > > https://godbolt.org/z/SDRG2q
+>
+> Woah, a godbolt link! Now we're speaking the same language.  What were
+> you expecting? Us to remove the conditional check that a volatile read
+> wasn't NULL? (Not using READ_ONCE, produces the direct tail call I
+> suspect you're looking for, but am unsure if that's what you meant,
+> and understand that's not a solution).  I am simultaneously impressed
+> and disgusted by this btw, cool stuff.
+>
+> i.e.
+> void *func = &name.func; \
+> rather than
+> void *func = READ_ONCE(name.func); \
 
-OK, this is important information.
+Changing
+void *func = READ_ONCE(name.func); \
+to
+void *func = &READ_ONCE(name.func); \
+produces the tail call.  Not sure if that's relevant/what you were
+looking for/even correct (haven't thought to hard about the
+implications of that change; juggling other stuff ATM)
 
-> I think I should check whether it's ok to share the full config and boot
-> parameters.  Please wait this.
+> (I'm surprised that `&name.func;` and `name.func;` also produce
+> different results).
+>
+> > >
+> > > ---
+> > > #include <stddef.h>
+> > >
+> > >
+> > > #define READ_ONCE(var)                (*((volatile typeof(var) *)&(var)))
+> > > #define WRITE_ONCE(var, val)  (*((volatile typeof(var) *)&(var)) = (val))
+> > >
+> > > struct static_call_key {
+> > >       void *func;
+> > > };
+> > >
+> > > #define DECLARE_STATIC_CALL(name, func)       \
+> > >       extern struct static_call_key name; \
+> > >       extern typeof(func) __SCT__##name;
+> > >
+> > > #define DEFINE_STATIC_COND_CALL(name, _func) \
+> > >       DECLARE_STATIC_CALL(name, _func) \
+> > >       struct static_call_key name = { \
+> > >               .func = NULL, \
+> > >       }
+> > >
+> > > static void __static_call_nop(void)
+> > > {
+> > > }
+> > >
+> > > #define __static_cond_call(name) \
+> > > ({ \
+> > >       void *func = READ_ONCE(name.func); \
+> > >       if (!func) \
+> > >               func = &__static_call_nop; \
+> > >       (typeof(__SCT__##name)*)func; \
+> > > })
+> > >
+> > > #define static_cond_call(name) (void)__static_cond_call(name)
+> > >
+> > > static void inline static_call_update(struct static_call_key *call, void *func)
+> > > {
+> > >       WRITE_ONCE(call->func, func);
+> > > }
+> > >
+> > > volatile int _x;
+> > >
+> > > void bar(int x)
+> > > {
+> > >       _x = x;
+> > > }
+> > >
+> > > DEFINE_STATIC_COND_CALL(foo, bar);
+> > >
+> > > void ponies(int x)
+> > > {
+> > >       static_cond_call(foo)(x);
+> > > }
+>
+>
+>
+> --
+> Thanks,
+> ~Nick Desaulniers
 
-I probably don't need the whole thing.  So, if it makes it easier to
-gain approval...
 
-The main thing I need are CONFIG_PREEMPT and the various Kconfig options
-having "RCU" in their names.  For example, I have no need for any of the
-options pertaining to device drivers.  (As far as I know at the moment,
-anyway!)
 
-For the boot parameters, I am very interested in rcu_nocbs=.  Along with
-any other boot parameters whose names contain "rcu".
-
-If rcu_nocbs does designate have any CPUs listed, another thing to check
-is where the rcuo kthreads are permitted to run.  The reason that this
-is important is that any CPU listed in the rcu_nocbs= boot parameter
-has its RCU callbacks invoked by one of the rcuo kthreads.  If you have
-booted with (say) "rcu_nocbs=1,63" and then bound all of the resulting
-rcuo kthreads to CPU 0, you just tied RCU's hands, making it unable to
-keep up with any reasonable RCU callback load.
-
-This sort of configuration is permitted, but it is intended for tightly
-controlled real-time or HPC systems whose configurations and workloads
-avoid tossing out large numbers of callbacks.  Which might not be the
-case for your workload.
-
-> > > >> Let's make sure the bug is not in RCU.
-> > > > 
-> > > > One thing I can currently say is that the grace period passes at last.  I
-> > > > modified the benchmark to repeat not 10,000 times but only 5,000 times to run
-> > > > the test without OOM but easily observable memory pressure.  As soon as the
-> > > > benchmark finishes, the memory were freed.
-> > > > 
-> > > > If you need more tests, please let me know.
-> > > 
-> > > I would ask Paul opinion on this issue, because we have many objects
-> > > being freed after RCU grace periods.
-> > 
-> > As always, "It depends."
-> > 
-> > o	If the problem is a too-long RCU reader, RCU is prohibited from
-> > 	ending the grace period.  The reader duration must be shortened,
-> > 	and until it is shortened, there is nothing RCU can do.
-> > 
-> > o	In some special cases of the above, RCU can and does help, for
-> > 	example, by enlisting the aid of cond_resched().  So perhaps
-> > 	there is a long in-kernel loop that needs a cond_resched().
-> > 
-> > 	And perhaps RCU can help for some types of vCPU preemption.
-> > 
-> > o	As Al suggested offline and as has been discussed in the past,
-> > 	it would not be hard to cause RCU to burn CPU to attain faster
-> > 	grace periods during OOM events.  This could be helpful, but only
-> > 	given that RCU readers are completing in reasonable timeframes.
-> 
-> Totally agreed.
-> 
-> > > If RCU subsystem can not keep-up, I guess other workloads will also suffer.
-> > 
-> > If readers are not excessively long, RCU should be able to keep up.
-> > (In the absence of misconfigurations, for example, both NO_HZ_FULL and
-> > then binding all the rcuo kthreads to a single CPU on a 100-CPU system
-> > or some such.)
-> > 
-> > > Sure, we can revert patches there and there trying to work around the issue,
-> > > but for objects allocated from process context, we should not have these problems.
-> > 
-> > Agreed, let's get more info on what is happening to RCU.
-> > 
-> > One approach is to shorten the RCU CPU stall warning timeout
-> > (rcupdate.rcu_cpu_stall_timeout=10 for 10 seconds).
-> 
-> I will also try this and let you know the results.
-
-Sounds good, thank you!
-
-							Thanx, Paul
+-- 
+Thanks,
+~Nick Desaulniers
