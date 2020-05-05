@@ -4,87 +4,154 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 948CCC47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A75C47259
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F50520836
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B99C4207DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:09:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730171AbgEEPJl (ORCPT
+        id S1730190AbgEEPJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:09:41 -0400
-Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:19877 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729712AbgEEPJk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:09:40 -0400
-Received: from [192.168.42.210] ([93.23.13.215])
-        by mwinf5d12 with ME
-        id b39d220044ePWwV0339dV3; Tue, 05 May 2020 17:09:39 +0200
-X-ME-Helo: [192.168.42.210]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Tue, 05 May 2020 17:09:39 +0200
-X-ME-IP: 93.23.13.215
-Subject: Re: [PATCH 2/4 v2] firmware: stratix10-svc: Unmap some previously
- memremap'ed memory
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     richard.gong@linux.intel.com, atull@kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <cover.1588142343.git.christophe.jaillet@wanadoo.fr>
- <43505dc3a4b405d1c7d4a0fa74c67eda3e8bdb75.1588142343.git.christophe.jaillet@wanadoo.fr>
- <20200505144355.GC838641@kroah.com>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Message-ID: <5bae5684-6b3e-e94c-7745-046bd24c4f4b@wanadoo.fr>
-Date:   Tue, 5 May 2020 17:09:38 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 11:09:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:42916 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729712AbgEEPJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 11:09:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AFF5B1FB;
+        Tue,  5 May 2020 08:09:45 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2ACD63F68F;
+        Tue,  5 May 2020 08:09:44 -0700 (PDT)
+Date:   Tue, 5 May 2020 16:09:41 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Wei Hu <weh@microsoft.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, robh@kernel.org, bhelgaas@google.com,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, decui@microsoft.com,
+        mikelley@microsoft.com
+Subject: Re: [PATCH v2 2/2] PCI: hv: Retry PCI bus D0 entry when the first
+ attempt failed with invalid device state
+Message-ID: <20200505150941.GB16228@e121166-lin.cambridge.arm.com>
+References: <20200501053728.24740-1-weh@microsoft.com>
 MIME-Version: 1.0
-In-Reply-To: <20200505144355.GC838641@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200501053728.24740-1-weh@microsoft.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 05/05/2020 à 16:43, Greg KH a écrit :
-> On Wed, Apr 29, 2020 at 08:52:43AM +0200, Christophe JAILLET wrote:
->> In 'svc_create_memory_pool()' we memremap some memory. This has to be
->> undone in case of error and if the driver is removed.
->>
->> The easiest way to do it is to use 'devm_memremap()'.
->>
->> Fixes: 7ca5ce896524 ("firmware: add Intel Stratix10 service layer driver")
->> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->> ---
->>   drivers/firmware/stratix10-svc.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
->> index 3a176e62754a..de5870f76c5e 100644
->> --- a/drivers/firmware/stratix10-svc.c
->> +++ b/drivers/firmware/stratix10-svc.c
->> @@ -631,7 +631,7 @@ svc_create_memory_pool(struct platform_device *pdev,
->>   	end = rounddown(sh_memory->addr + sh_memory->size, PAGE_SIZE);
->>   	paddr = begin;
->>   	size = end - begin;
->> -	va = memremap(paddr, size, MEMREMAP_WC);
->> +	va = devm_memremap(dev, paddr, size, MEMREMAP_WC);
->>   	if (!va) {
->>   		dev_err(dev, "fail to remap shared memory\n");
->>   		return ERR_PTR(-EINVAL);
-> And there was no previous unmap happening when the pool was torn down
-> that now needs to be removed?
+On Fri, May 01, 2020 at 01:37:28PM +0800, Wei Hu wrote:
+> In the case of kdump, the PCI device was not cleanly shut down
+> before the kdump kernel starts. This causes the initial
+> attempt of entering D0 state in the kdump kernel to fail with
+> invalid device state returned from Hyper-V host.
+> When this happens, explicitly call PCI bus exit and retry to
+> enter the D0 state.
+> 
+> Signed-off-by: Wei Hu <weh@microsoft.com>
+> ---
+>    v2: Incorporate review comments from Michael Kelley, Dexuan Cui and
+>    Bjorn Helgaas
+> 
+>  drivers/pci/controller/pci-hyperv.c | 40 +++++++++++++++++++++++++++--
+>  1 file changed, 38 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index e6fac0187722..92092a47d3af 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -2739,6 +2739,8 @@ static void hv_free_config_window(struct hv_pcibus_device *hbus)
+>  	vmbus_free_mmio(hbus->mem_config->start, PCI_CONFIG_MMIO_LENGTH);
+>  }
+>  
+> +static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs);
+> +
+>  /**
+>   * hv_pci_enter_d0() - Bring the "bus" into the D0 power state
+>   * @hdev:	VMBus's tracking struct for this root PCI bus
+> @@ -2751,8 +2753,10 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+>  	struct pci_bus_d0_entry *d0_entry;
+>  	struct hv_pci_compl comp_pkt;
+>  	struct pci_packet *pkt;
+> +	bool retry = true;
+>  	int ret;
+>  
+> +enter_d0_retry:
+>  	/*
+>  	 * Tell the host that the bus is ready to use, and moved into the
+>  	 * powered-on state.  This includes telling the host which region
+> @@ -2779,6 +2783,38 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+>  	if (ret)
+>  		goto exit;
+>  
+> +	/*
+> +	 * In certain case (Kdump) the pci device of interest was
+> +	 * not cleanly shut down and resource is still held on host
+> +	 * side, the host could return invalid device status.
+> +	 * We need to explicitly request host to release the resource
+> +	 * and try to enter D0 again.
+> +	 */
+> +	if (comp_pkt.completion_status < 0 && retry) {
+> +		retry = false;
+> +
+> +		dev_err(&hdev->device, "Retrying D0 Entry\n");
+> +
+> +		/*
+> +		 * Hv_pci_bus_exit() calls hv_send_resource_released()
+> +		 * to free up resources of its child devices.
+> +		 * In the kdump kernel we need to set the
+> +		 * wslot_res_allocated to 255 so it scans all child
+> +		 * devices to release resources allocated in the
+> +		 * normal kernel before panic happened.
+> +		 */
+> +		hbus->wslot_res_allocated = 255;
 
-I don't think so, there is no memunmap call in 'stratix10-svc.c'
+I'd rather write a specific function eg hv_pci_bus_shutdown() to
+make it explicit. Actually, isn't it something that should *always*
+be _enforced_ at host bridge probe time - regardless of the kernel
+you are booting on ?
 
-CJ
+Lorenzo
 
-> thanks,
->
-> greg k-h
->
-
+> +
+> +		ret = hv_pci_bus_exit(hdev, true);
+> +
+> +		if (ret == 0) {
+> +			kfree(pkt);
+> +			goto enter_d0_retry;
+> +		}
+> +		dev_err(&hdev->device,
+> +			"Retrying D0 failed with ret %d\n", ret);
+> +	}
+> +
+>  	if (comp_pkt.completion_status < 0) {
+>  		dev_err(&hdev->device,
+>  			"PCI Pass-through VSP failed D0 Entry with status %x\n",
+> @@ -3185,7 +3221,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  	return ret;
+>  }
+>  
+> -static int hv_pci_bus_exit(struct hv_device *hdev, bool hibernating)
+> +static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+>  {
+>  	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
+>  	struct {
+> @@ -3203,7 +3239,7 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool hibernating)
+>  	if (hdev->channel->rescind)
+>  		return 0;
+>  
+> -	if (!hibernating) {
+> +	if (!keep_devs) {
+>  		/* Delete any children which might still exist. */
+>  		dr = kzalloc(sizeof(*dr), GFP_KERNEL);
+>  		if (dr && hv_pci_start_relations_work(hbus, dr))
+> -- 
+> 2.20.1
+> 
