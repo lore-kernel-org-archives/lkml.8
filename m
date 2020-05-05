@@ -2,161 +2,94 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97292C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A09C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 547CC206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:40:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ScOXw0wV"
+	by mail.kernel.org (Postfix) with ESMTP id 56012206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:42:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729447AbgEEOkW (ORCPT
+        id S1729336AbgEEOmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:40:22 -0400
-Received: from gateway31.websitewelcome.com ([192.185.144.80]:18623 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729060AbgEEOkR (ORCPT
+        Tue, 5 May 2020 10:42:40 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:48979 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729148AbgEEOmj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:40:17 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 3C01B14A89E3
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 09:35:15 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id VyfDje7Z5Sl8qVyfDj1Z6R; Tue, 05 May 2020 09:35:15 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=w8vO40rWXZ1GoRNZS/PfE/ay1WvD44l/8L95KgF2RvY=; b=ScOXw0wV7Vj+vTyGGrREdyREEs
-        wfcSrYktKVNZsiRm1MTr9133gkmGKxvBRjSV9EHu1uHkC6gzpGIFNwVFaQUuYpSUk03yvQhH/V6oh
-        583wKp7oea6AuIsv0YToFIaa/e/bzddHJtT3xX4Qnpls9jmv7AAx9QUVlvfDxhU6yayxD8vJBrTbH
-        mZLP3GfTgvaD+u/lPJMIV7yX46j2+pjNiPLzBUCFnW3AZ7xMMNIollEFSWezlMFdVMRMrL7l9jBY5
-        8M2l93g2+YEuP/FvIfgG9JlOx02bzlPElo07RrLcjrbV7CGOt57CcLoOUuDi+gVjogzoIoAvE4HYX
-        OpVDrxLw==;
-Received: from [189.207.59.248] (port=46906 helo=[192.168.15.4])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jVyfC-002vTa-QF; Tue, 05 May 2020 09:35:14 -0500
-Subject: Re: [PATCH] fsnotify: avoid gcc-10 zero-length-bounds warning
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Jan Kara <jack@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200505143028.1290686-1-arnd@arndb.de>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <b287bb2f-28e2-7a41-e015-aa5a0cb3b5d7@embeddedor.com>
-Date:   Tue, 5 May 2020 09:39:36 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 10:42:39 -0400
+Received: from mail-qt1-f174.google.com ([209.85.160.174]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MekrN-1ixkQF1vi1-00apPG for <linux-kernel@vger.kernel.org>; Tue, 05 May
+ 2020 16:42:38 +0200
+Received: by mail-qt1-f174.google.com with SMTP id q13so717406qtp.7
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 07:42:38 -0700 (PDT)
+X-Gm-Message-State: AGi0PubtyDTYm45KTTYbrMR/8CPNTSuVYBNXnsdxDqT39qnOh/1KRhRp
+        zDHCjFHtYwjgB0EFSlt5zRdIVfIhd1qGCv1mF2I=
+X-Google-Smtp-Source: APiQypLlhYQf7fq/1v0dm90zwWA86A9C8KA52UCtn36b/qe56zBKDZqiifbmYW+Cab0gFL/AUmEbJBOD9oHp5/E1lrQ=
+X-Received: by 2002:ac8:12c2:: with SMTP id b2mr3012949qtj.7.1588689757275;
+ Tue, 05 May 2020 07:42:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200505143028.1290686-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.207.59.248
-X-Source-L: No
-X-Exim-ID: 1jVyfC-002vTa-QF
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.4]) [189.207.59.248]:46906
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20200505141218.684079-1-arnd@arndb.de> <20200505141908.GH1551@shell.armlinux.org.uk>
+In-Reply-To: <20200505141908.GH1551@shell.armlinux.org.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 5 May 2020 16:42:20 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1c1+7GyAzocpWqUMo7=oN48WAdDfPZtnEBHQXpmd7pOw@mail.gmail.com>
+Message-ID: <CAK8P3a1c1+7GyAzocpWqUMo7=oN48WAdDfPZtnEBHQXpmd7pOw@mail.gmail.com>
+Subject: Re: [PATCH] ARM: use ARM unwinder for gcov
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Nathan Huckleberry <nhuck15@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:M1VNuKvVZ615qw96nOi5BI+GFyzPkKBKvKTrivaSkzc8INf5IAT
+ inekSEoVZRd86q6gvlHb6RZ1EtNC/6BAvBhbXdqxmvEMzdTpzxg2g22P8xusPYxzV4V0vPk
+ 1LmuD9dKslF3wBokf2SGU5DZWJJ/+KS4+IFyT82tG1t2UbDT9xYgJLvFmAfBdiZM5x6sVif
+ KTeFR4FvamZ+F8gcb5Ceg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Z9ubrjF0/fM=:f0rQU5LmNG+5Em1rKhJ8HA
+ f4CxNLQHh/d0L1MKrGeIx+x38t/JEfcEPtOi97b2oisnnxXd9blJ7LpRh8678uBXhGBrIAIzP
+ DtT+ZcSTzke4jUQvjykNzolu5kHxpgBErlfIOWEqgT1sJb6bSATc6fbQji7nFvCCBZEvmDtc0
+ ewRBnPPctC1L+tsdcwz8r1Okvd/WEhtntmaJCGdjD7cly7Dz21W8DykWi8dmbgpIVtT9s5EDd
+ 3pjJc310qnhx+Cj0FAJfuUa22tsMJ7UL9+YSXL95oxl7KpPpjCVCdutZ6bCTV8sWjVcAjtWle
+ fCZN/qHPbnYRehjtN8cRy7xKd8cEhDVQx9dq3Q76K3yMoWXNN4nPT8xlKJ/wcirdvlPzf5xxK
+ J7HB1vhEoVF6EV2UJpDsNA7/o+P4CwxNZ9KAh2JI71JmpbEGNf8Gj9eqmgPiIYbSp/JzWDgjC
+ SCc65hv7eeva24farfmerYholy0a9AYVtJ82vJiJyr99doG24ba+DpfHjEqvxlTkcFzc9uD2v
+ RyM3JEyUXhIvdaA5DjzP139XNfStlpx2vN0Wot+kOHDvEEJfXV/BbuiEeHr6IFS96wELjnywW
+ 0hp5Ix/wxb+ZPZDn6JFbEyYDLsQLMDIX69ftY7lAi+p5j83iXehK/UxTZ3mfM3hh+Nw+R76TV
+ VefLjrNPPTS84wIcmQPDQWX0joSbcgYkSCQt5za9U4BUAUCGEkPaRC+aF2uFsCZkjmq5IVfzw
+ 5SX8wKVoV0a7DOF7qyTyy/KizcULVKZm1L9w+I8khPRZTaxFs8pw9A19BbuVbWqtapQlHGrAM
+ Si2WlJfc34zgPfRjCmxZzxFmEZXqNIGnAvcwEaLbOOZ1PsTa5c=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 5, 2020 at 4:19 PM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Tue, May 05, 2020 at 04:11:56PM +0200, Arnd Bergmann wrote:
+> > Using gcov on ARM fails when the frame pointer unwinder is used:
+> >
+> > arm-linux-gnueabi-ld: kernel/softirq.o:(.ARM.exidx+0x120): undefined reference to `__aeabi_unwind_cpp_pr0'
+> > arm-linux-gnueabi-ld: init/main.o:(.ARM.exidx+0x98): undefined reference to `__aeabi_unwind_cpp_pr0'
+> > arm-linux-gnueabi-ld: init/version.o:(.ARM.exidx+0x0): undefined reference to `__aeabi_unwind_cpp_pr0'
+> > arm-linux-gnueabi-ld: init/do_mounts.o:(.ARM.exidx+0x28): undefined reference to `__aeabi_unwind_cpp_pr0'
+> > arm-linux-gnueabi-ld: init/do_mounts_initrd.o:(.ARM.exidx+0x0): undefined reference to `__aeabi_unwind_cpp_pr0'
+> > arm-linux-gnueabi-ld: init/initramfs.o:(.ARM.exidx+0x8): more undefined references to `__aeabi_unwind_cpp_pr0' follow
+> >
+> > This is likely a bug in clang that should be fixed in the compiler.
+> > Forcing the use of the ARM unwinder in this configuration however
+> > works around the problem.
+>
+> Or should the stub functions in arch/arm/kernel/unwind.c be moved out?
 
+I had not realized this is only a stub. Moving them out should fix the
+link failure, I can
+send a patch after testing if we are sure that calling them is not a
+bug in clang
+that would lead to runtime failures.
 
-On 5/5/20 09:30, Arnd Bergmann wrote:
-> gcc-10 warns about accesses into the f_handle[] zero-length array.
-> 
-> fs/notify/fdinfo.c: In function 'show_mark_fhandle':
-> fs/notify/fdinfo.c:66:47: error: array subscript 'i' is outside the bounds of an interior zero-length array 'unsigned char[0]' [-Werror=zero-length-bounds]
->    66 |   seq_printf(m, "%02x", (int)f.handle.f_handle[i]);
->       |                              ~~~~~~~~~~~~~~~~~^~~
-> In file included from fs/notify/fdinfo.c:3:
-> include/linux/fs.h:988:16: note: while referencing 'f_handle'
->   988 |  unsigned char f_handle[0];
->       |                ^~~~~~~~
-> 
-> This is solved by using a flexible array instead.
-> 
-> Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> Gustavo has done the same thing as part of a treewide change, but keeping
-> this separate lets us backport it to stable kernels more easily later.
-
-Arnd,
-
-I wonder why would we need to backport these changes to -stable... merely
-because of the use of a new version of GCC?
-
-Thanks
---
-Gustavo
+       Arnd
