@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FADC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A85FBC47259
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5E87206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78ED92073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:47:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FdNPXZmn"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="i5/0tsmo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729427AbgEEWre (ORCPT
+        id S1729459AbgEEWrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 18:47:34 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:27017 "EHLO
+        Tue, 5 May 2020 18:47:35 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:12164 "EHLO
         mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728737AbgEEWrd (ORCPT
+        by vger.kernel.org with ESMTP id S1728642AbgEEWre (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 18:47:33 -0400
+        Tue, 5 May 2020 18:47:34 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588718852; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1588718853; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=E7LIlu6idEggw0r6aWRRg+yA602dyGHPWItKfszpI10=; b=FdNPXZmnoDvRHmQGQdEFPYpuv2MQtP/2QpkwKrOvJpRroV/UCVnRnFFDej9k11eMnA8jqwV1
- c+2YZkMLJaEYNRN5FNW5efbJYX96OYmEzPS0YDYXMe2IjriTecnNsIgS4njk+0h5mjm96dS2
- WCsEXl+WV47YWZh0mFexW6TSdhA=
+ bh=xgPdxiWgqrt9fsFmtmQRXwbTFjJmJPGQzwijSSx6X7s=; b=i5/0tsmoHqdY6KOeDE+HPM9N6jqS+Cg6Ww0Kr2Mj7SHVFLjo++Sc8+DZndsgsjCO+QvoYVzT
+ jRMshXzkTdxPD8V8yEOElfmuVI6DG8b5T7i5w0wPn9O6Vst7JnWfwEgzRXyqx0SY5O8ozpRi
+ phMjhAge9kiC4scDqqPDZMuCqrg=
 X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb1ecfc.7f608f498fb8-smtp-out-n04;
- Tue, 05 May 2020 22:47:24 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5eb1ecf9.7f9baccccb90-smtp-out-n01;
+ Tue, 05 May 2020 22:47:21 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5A1E5C44793; Tue,  5 May 2020 22:47:24 +0000 (UTC)
+        id C4686C433D2; Tue,  5 May 2020 22:47:21 +0000 (UTC)
 Received: from bbhatt-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 49483C433CB;
-        Tue,  5 May 2020 22:47:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 49483C433CB
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 886B8C433F2;
+        Tue,  5 May 2020 22:47:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 886B8C433F2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
 From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
@@ -50,9 +50,9 @@ To:     mani@kernel.org
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         hemantk@codeaurora.org, jhugo@codeaurora.org,
         Bhaumik Bhatt <bbhatt@codeaurora.org>
-Subject: [PATCH v6 5/8] bus: mhi: core: Handle firmware load using state worker
-Date:   Tue,  5 May 2020 15:47:09 -0700
-Message-Id: <1588718832-4891-6-git-send-email-bbhatt@codeaurora.org>
+Subject: [PATCH v6 1/8] bus: mhi: core: Refactor mhi queue APIs
+Date:   Tue,  5 May 2020 15:47:05 -0700
+Message-Id: <1588718832-4891-2-git-send-email-bbhatt@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1588718832-4891-1-git-send-email-bbhatt@codeaurora.org>
 References: <1588718832-4891-1-git-send-email-bbhatt@codeaurora.org>
@@ -61,136 +61,236 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Upon power up, driver queues firmware worker thread if the execution
-environment is PBL. Firmware worker is blocked with a timeout until
-state worker gets a chance to run and unblock firmware worker. An
-endpoint power up failure can be seen if state worker gets a chance to
-run after firmware worker has timed out. Remove this dependency and
-handle firmware load directly using state worker thread.
+From: Hemant Kumar <hemantk@codeaurora.org>
 
+Move all the common code to generate TRE from mhi_queue_buf,
+mhi_queue_dma and mhi_queue_skb to mhi_gen_tre. This helps
+to centralize the TRE generation code which makes any future
+bug fixing easier to manage in these APIs.
+
+Suggested-by: Jeffrey Hugo <jhugo@codeaurora.org>
+Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
 Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
 Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
 ---
- drivers/bus/mhi/core/boot.c     | 18 +++---------------
- drivers/bus/mhi/core/init.c     |  1 -
- drivers/bus/mhi/core/internal.h |  1 +
- drivers/bus/mhi/core/pm.c       |  6 +-----
- include/linux/mhi.h             |  2 --
- 5 files changed, 5 insertions(+), 23 deletions(-)
+ drivers/bus/mhi/core/internal.h |   3 +-
+ drivers/bus/mhi/core/main.c     | 107 +++++++++++++++++-----------------------
+ 2 files changed, 47 insertions(+), 63 deletions(-)
 
-diff --git a/drivers/bus/mhi/core/boot.c b/drivers/bus/mhi/core/boot.c
-index ebad5eb..17c636b 100644
---- a/drivers/bus/mhi/core/boot.c
-+++ b/drivers/bus/mhi/core/boot.c
-@@ -377,30 +377,18 @@ static void mhi_firmware_copy(struct mhi_controller *mhi_cntrl,
- 	}
- }
- 
--void mhi_fw_load_worker(struct work_struct *work)
-+void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
- {
--	struct mhi_controller *mhi_cntrl;
- 	const struct firmware *firmware = NULL;
- 	struct image_info *image_info;
--	struct device *dev;
-+	struct device *dev = &mhi_cntrl->mhi_dev->dev;
- 	const char *fw_name;
- 	void *buf;
- 	dma_addr_t dma_addr;
- 	size_t size;
- 	int ret;
- 
--	mhi_cntrl = container_of(work, struct mhi_controller, fw_worker);
--	dev = &mhi_cntrl->mhi_dev->dev;
--
--	dev_dbg(dev, "Waiting for device to enter PBL from: %s\n",
--		TO_MHI_EXEC_STR(mhi_cntrl->ee));
--
--	ret = wait_event_timeout(mhi_cntrl->state_event,
--				 MHI_IN_PBL(mhi_cntrl->ee) ||
--				 MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state),
--				 msecs_to_jiffies(mhi_cntrl->timeout_ms));
--
--	if (!ret || MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state)) {
-+	if (MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state)) {
- 		dev_err(dev, "Device MHI is not in valid state\n");
- 		return;
- 	}
-diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
-index 1a93d24..6882206 100644
---- a/drivers/bus/mhi/core/init.c
-+++ b/drivers/bus/mhi/core/init.c
-@@ -835,7 +835,6 @@ int mhi_register_controller(struct mhi_controller *mhi_cntrl,
- 	spin_lock_init(&mhi_cntrl->wlock);
- 	INIT_WORK(&mhi_cntrl->st_worker, mhi_pm_st_worker);
- 	INIT_WORK(&mhi_cntrl->syserr_worker, mhi_pm_sys_err_worker);
--	INIT_WORK(&mhi_cntrl->fw_worker, mhi_fw_load_worker);
- 	init_waitqueue_head(&mhi_cntrl->state_event);
- 
- 	mhi_cmd = mhi_cntrl->mhi_cmd;
 diff --git a/drivers/bus/mhi/core/internal.h b/drivers/bus/mhi/core/internal.h
-index 40c47f9..0965ca3 100644
+index 095d95b..40c47f9 100644
 --- a/drivers/bus/mhi/core/internal.h
 +++ b/drivers/bus/mhi/core/internal.h
-@@ -627,6 +627,7 @@ void mhi_ring_chan_db(struct mhi_controller *mhi_cntrl,
- void mhi_deinit_free_irq(struct mhi_controller *mhi_cntrl);
- void mhi_rddm_prepare(struct mhi_controller *mhi_cntrl,
- 		      struct image_info *img_info);
-+void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl);
- int mhi_prepare_channel(struct mhi_controller *mhi_cntrl,
- 			struct mhi_chan *mhi_chan);
- int mhi_init_chan_ctxt(struct mhi_controller *mhi_cntrl,
-diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
-index e7c8318..3cc238a 100644
---- a/drivers/bus/mhi/core/pm.c
-+++ b/drivers/bus/mhi/core/pm.c
-@@ -528,7 +528,6 @@ static void mhi_pm_disable_transition(struct mhi_controller *mhi_cntrl,
- 	dev_dbg(dev, "Waiting for all pending threads to complete\n");
- 	wake_up_all(&mhi_cntrl->state_event);
- 	flush_work(&mhi_cntrl->st_worker);
--	flush_work(&mhi_cntrl->fw_worker);
+@@ -670,8 +670,7 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
+ irqreturn_t mhi_intvec_handler(int irq_number, void *dev);
  
- 	dev_dbg(dev, "Reset all active channels and remove MHI devices\n");
- 	device_for_each_child(mhi_cntrl->cntrl_dev, NULL, mhi_destroy_device);
-@@ -643,7 +642,7 @@ void mhi_pm_st_worker(struct work_struct *work)
- 				mhi_cntrl->ee = mhi_get_exec_env(mhi_cntrl);
- 			write_unlock_irq(&mhi_cntrl->pm_lock);
- 			if (MHI_IN_PBL(mhi_cntrl->ee))
--				wake_up_all(&mhi_cntrl->state_event);
-+				mhi_fw_load_handler(mhi_cntrl);
- 			break;
- 		case DEV_ST_TRANSITION_SBL:
- 			write_lock_irq(&mhi_cntrl->pm_lock);
-@@ -976,9 +975,6 @@ int mhi_async_power_up(struct mhi_controller *mhi_cntrl)
- 	next_state = MHI_IN_PBL(current_ee) ?
- 		DEV_ST_TRANSITION_PBL : DEV_ST_TRANSITION_READY;
- 
--	if (next_state == DEV_ST_TRANSITION_PBL)
--		schedule_work(&mhi_cntrl->fw_worker);
+ int mhi_gen_tre(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
+-		void *buf, void *cb, size_t buf_len, enum mhi_flags flags);
 -
- 	mhi_queue_state_transition(mhi_cntrl, next_state);
++		struct mhi_buf_info *info, enum mhi_flags flags);
+ int mhi_map_single_no_bb(struct mhi_controller *mhi_cntrl,
+ 			 struct mhi_buf_info *buf_info);
+ int mhi_map_single_use_bb(struct mhi_controller *mhi_cntrl,
+diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
+index c26eed0..605640c 100644
+--- a/drivers/bus/mhi/core/main.c
++++ b/drivers/bus/mhi/core/main.c
+@@ -919,9 +919,7 @@ int mhi_queue_skb(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+ 	struct mhi_chan *mhi_chan = (dir == DMA_TO_DEVICE) ? mhi_dev->ul_chan :
+ 							     mhi_dev->dl_chan;
+ 	struct mhi_ring *tre_ring = &mhi_chan->tre_ring;
+-	struct mhi_ring *buf_ring = &mhi_chan->buf_ring;
+-	struct mhi_buf_info *buf_info;
+-	struct mhi_tre *mhi_tre;
++	struct mhi_buf_info buf_info = { };
+ 	int ret;
  
- 	mutex_unlock(&mhi_cntrl->pm_mutex);
-diff --git a/include/linux/mhi.h b/include/linux/mhi.h
-index e909b8f..2b20b9c 100644
---- a/include/linux/mhi.h
-+++ b/include/linux/mhi.h
-@@ -331,7 +331,6 @@ struct mhi_controller_config {
-  * @wlock: Lock for protecting device wakeup
-  * @mhi_link_info: Device bandwidth info
-  * @st_worker: State transition worker
-- * @fw_worker: Firmware download worker
-  * @syserr_worker: System error worker
-  * @state_event: State change event
-  * @status_cb: CB function to notify power states of the device (required)
-@@ -412,7 +411,6 @@ struct mhi_controller {
- 	spinlock_t wlock;
- 	struct mhi_link_info mhi_link_info;
- 	struct work_struct st_worker;
--	struct work_struct fw_worker;
- 	struct work_struct syserr_worker;
- 	wait_queue_head_t state_event;
+ 	/* If MHI host pre-allocates buffers then client drivers cannot queue */
+@@ -946,27 +944,15 @@ int mhi_queue_skb(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+ 	/* Toggle wake to exit out of M2 */
+ 	mhi_cntrl->wake_toggle(mhi_cntrl);
  
+-	/* Generate the TRE */
+-	buf_info = buf_ring->wp;
+-
+-	buf_info->v_addr = skb->data;
+-	buf_info->cb_buf = skb;
+-	buf_info->wp = tre_ring->wp;
+-	buf_info->dir = mhi_chan->dir;
+-	buf_info->len = len;
+-	ret = mhi_cntrl->map_single(mhi_cntrl, buf_info);
+-	if (ret)
+-		goto map_error;
+-
+-	mhi_tre = tre_ring->wp;
+-
+-	mhi_tre->ptr = MHI_TRE_DATA_PTR(buf_info->p_addr);
+-	mhi_tre->dword[0] = MHI_TRE_DATA_DWORD0(buf_info->len);
+-	mhi_tre->dword[1] = MHI_TRE_DATA_DWORD1(1, 1, 0, 0);
++	buf_info.v_addr = skb->data;
++	buf_info.cb_buf = skb;
++	buf_info.len = len;
+ 
+-	/* increment WP */
+-	mhi_add_ring_element(mhi_cntrl, tre_ring);
+-	mhi_add_ring_element(mhi_cntrl, buf_ring);
++	ret = mhi_gen_tre(mhi_cntrl, mhi_chan, &buf_info, mflags);
++	if (unlikely(ret)) {
++		read_unlock_bh(&mhi_cntrl->pm_lock);
++		return ret;
++	}
+ 
+ 	if (mhi_chan->dir == DMA_TO_DEVICE)
+ 		atomic_inc(&mhi_cntrl->pending_pkts);
+@@ -980,11 +966,6 @@ int mhi_queue_skb(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+ 	read_unlock_bh(&mhi_cntrl->pm_lock);
+ 
+ 	return 0;
+-
+-map_error:
+-	read_unlock_bh(&mhi_cntrl->pm_lock);
+-
+-	return ret;
+ }
+ EXPORT_SYMBOL_GPL(mhi_queue_skb);
+ 
+@@ -996,9 +977,8 @@ int mhi_queue_dma(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+ 							     mhi_dev->dl_chan;
+ 	struct device *dev = &mhi_cntrl->mhi_dev->dev;
+ 	struct mhi_ring *tre_ring = &mhi_chan->tre_ring;
+-	struct mhi_ring *buf_ring = &mhi_chan->buf_ring;
+-	struct mhi_buf_info *buf_info;
+-	struct mhi_tre *mhi_tre;
++	struct mhi_buf_info buf_info = { };
++	int ret;
+ 
+ 	/* If MHI host pre-allocates buffers then client drivers cannot queue */
+ 	if (mhi_chan->pre_alloc)
+@@ -1025,25 +1005,16 @@ int mhi_queue_dma(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+ 	/* Toggle wake to exit out of M2 */
+ 	mhi_cntrl->wake_toggle(mhi_cntrl);
+ 
+-	/* Generate the TRE */
+-	buf_info = buf_ring->wp;
+-	WARN_ON(buf_info->used);
+-	buf_info->p_addr = mhi_buf->dma_addr;
+-	buf_info->pre_mapped = true;
+-	buf_info->cb_buf = mhi_buf;
+-	buf_info->wp = tre_ring->wp;
+-	buf_info->dir = mhi_chan->dir;
+-	buf_info->len = len;
+-
+-	mhi_tre = tre_ring->wp;
+-
+-	mhi_tre->ptr = MHI_TRE_DATA_PTR(buf_info->p_addr);
+-	mhi_tre->dword[0] = MHI_TRE_DATA_DWORD0(buf_info->len);
+-	mhi_tre->dword[1] = MHI_TRE_DATA_DWORD1(1, 1, 0, 0);
++	buf_info.p_addr = mhi_buf->dma_addr;
++	buf_info.cb_buf = mhi_buf;
++	buf_info.pre_mapped = true;
++	buf_info.len = len;
+ 
+-	/* increment WP */
+-	mhi_add_ring_element(mhi_cntrl, tre_ring);
+-	mhi_add_ring_element(mhi_cntrl, buf_ring);
++	ret = mhi_gen_tre(mhi_cntrl, mhi_chan, &buf_info, mflags);
++	if (unlikely(ret)) {
++		read_unlock_bh(&mhi_cntrl->pm_lock);
++		return ret;
++	}
+ 
+ 	if (mhi_chan->dir == DMA_TO_DEVICE)
+ 		atomic_inc(&mhi_cntrl->pending_pkts);
+@@ -1061,7 +1032,7 @@ int mhi_queue_dma(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+ EXPORT_SYMBOL_GPL(mhi_queue_dma);
+ 
+ int mhi_gen_tre(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
+-		void *buf, void *cb, size_t buf_len, enum mhi_flags flags)
++			struct mhi_buf_info *info, enum mhi_flags flags)
+ {
+ 	struct mhi_ring *buf_ring, *tre_ring;
+ 	struct mhi_tre *mhi_tre;
+@@ -1073,15 +1044,22 @@ int mhi_gen_tre(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
+ 	tre_ring = &mhi_chan->tre_ring;
+ 
+ 	buf_info = buf_ring->wp;
+-	buf_info->v_addr = buf;
+-	buf_info->cb_buf = cb;
++	WARN_ON(buf_info->used);
++	buf_info->pre_mapped = info->pre_mapped;
++	if (info->pre_mapped)
++		buf_info->p_addr = info->p_addr;
++	else
++		buf_info->v_addr = info->v_addr;
++	buf_info->cb_buf = info->cb_buf;
+ 	buf_info->wp = tre_ring->wp;
+ 	buf_info->dir = mhi_chan->dir;
+-	buf_info->len = buf_len;
++	buf_info->len = info->len;
+ 
+-	ret = mhi_cntrl->map_single(mhi_cntrl, buf_info);
+-	if (ret)
+-		return ret;
++	if (!info->pre_mapped) {
++		ret = mhi_cntrl->map_single(mhi_cntrl, buf_info);
++		if (ret)
++			return ret;
++	}
+ 
+ 	eob = !!(flags & MHI_EOB);
+ 	eot = !!(flags & MHI_EOT);
+@@ -1090,7 +1068,7 @@ int mhi_gen_tre(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
+ 
+ 	mhi_tre = tre_ring->wp;
+ 	mhi_tre->ptr = MHI_TRE_DATA_PTR(buf_info->p_addr);
+-	mhi_tre->dword[0] = MHI_TRE_DATA_DWORD0(buf_len);
++	mhi_tre->dword[0] = MHI_TRE_DATA_DWORD0(info->len);
+ 	mhi_tre->dword[1] = MHI_TRE_DATA_DWORD1(bei, eot, eob, chain);
+ 
+ 	/* increment WP */
+@@ -1107,6 +1085,7 @@ int mhi_queue_buf(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+ 	struct mhi_chan *mhi_chan = (dir == DMA_TO_DEVICE) ? mhi_dev->ul_chan :
+ 							     mhi_dev->dl_chan;
+ 	struct mhi_ring *tre_ring;
++	struct mhi_buf_info buf_info = { };
+ 	unsigned long flags;
+ 	int ret;
+ 
+@@ -1122,7 +1101,11 @@ int mhi_queue_buf(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+ 	if (mhi_is_ring_full(mhi_cntrl, tre_ring))
+ 		return -ENOMEM;
+ 
+-	ret = mhi_gen_tre(mhi_cntrl, mhi_chan, buf, buf, len, mflags);
++	buf_info.v_addr = buf;
++	buf_info.cb_buf = buf;
++	buf_info.len = len;
++
++	ret = mhi_gen_tre(mhi_cntrl, mhi_chan, &buf_info, mflags);
+ 	if (unlikely(ret))
+ 		return ret;
+ 
+@@ -1323,7 +1306,7 @@ int mhi_prepare_channel(struct mhi_controller *mhi_cntrl,
+ 
+ 		while (nr_el--) {
+ 			void *buf;
+-
++			struct mhi_buf_info info = { };
+ 			buf = kmalloc(len, GFP_KERNEL);
+ 			if (!buf) {
+ 				ret = -ENOMEM;
+@@ -1331,8 +1314,10 @@ int mhi_prepare_channel(struct mhi_controller *mhi_cntrl,
+ 			}
+ 
+ 			/* Prepare transfer descriptors */
+-			ret = mhi_gen_tre(mhi_cntrl, mhi_chan, buf, buf,
+-					  len, MHI_EOT);
++			info.v_addr = buf;
++			info.cb_buf = buf;
++			info.len = len;
++			ret = mhi_gen_tre(mhi_cntrl, mhi_chan, &info, MHI_EOT);
+ 			if (ret) {
+ 				kfree(buf);
+ 				goto error_pre_alloc;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
