@@ -2,145 +2,123 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD25C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9304DC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8BD220721
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:10:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588702247;
-	bh=mGS1zU5DxoI3NiTeJqYlRSitfGPu+7ydmkvDNU5fOF0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ai9gqlYVrvGk7dEOSrR2HBmLK3kLsNt/XvfIb5SlMRORc0vqqLMuRtf6IPZsIgy/+
-	 rYibIT9ISMucAJPL7fcItIFizgKlQN+7dM8/SCzgPNfLs2EJiw7M4z7muE3OsgnELv
-	 dRYq/41beHf45TNwhPcWY00UlE0T2FW5tFRWx9wI=
+	by mail.kernel.org (Postfix) with ESMTP id 73507206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:11:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ew+OdeAI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730758AbgEESKr (ORCPT
+        id S1730781AbgEESLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 14:10:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729315AbgEESKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 14:10:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 5 May 2020 14:11:18 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:45508 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730184AbgEESLR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 14:11:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588702276;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=FUXa2CXmLuQRCLi3xJlNiY+EjIDk0Fg9RVQ/zxz/azE=;
+        b=Ew+OdeAIVYU6nOSsvswepMvT/TlKYPq2wCU3jM7XJR4nYiTzXU8a+2/nJXsQFEISd+JxdV
+        uD/hXPb/EE9EkkGJH6EPgfqZCKLWSsNLh1bMYMy3pCtYY8F8pclqBhq8tlxVsI8bgyRIKL
+        cpvVYZ8N9LguhGrbanwuVOemWb0iPP8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-426-KnVlNyLUPpCFfSK0Az0--w-1; Tue, 05 May 2020 14:11:14 -0400
+X-MC-Unique: KnVlNyLUPpCFfSK0Az0--w-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 105ED206B8;
-        Tue,  5 May 2020 18:10:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588702244;
-        bh=mGS1zU5DxoI3NiTeJqYlRSitfGPu+7ydmkvDNU5fOF0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wAa1o6DrLpic163+KTKRsx5N3N/wdrmFTtm3TGfGHovtZF9/Y6a49T9cjz/rGU8fp
-         IZWVLyDkTAhihq4bsIzcdEPlgC6ANGCGll8j/5b2lsYOj7KGuX2xqeBwex2+p7r+Ng
-         M24V89Wo4FmdzUPeKMkZ0NjtG9+h/86Riq9cSmx8=
-Date:   Tue, 5 May 2020 20:10:42 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     mchehab@kernel.org, kstewart@linuxfoundation.org,
-        tomasbortoli@gmail.com, sean@mess.org, allison@lohutok.net,
-        tglx@linutronix.de, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: usb: ttusb-dec: avoid buffer overflow in
- ttusb_dec_handle_irq() when DMA failures/attacks occur
-Message-ID: <20200505181042.GD1199718@kroah.com>
-References: <20200505142110.7620-1-baijiaju1990@gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 78AEE8014D5;
+        Tue,  5 May 2020 18:11:12 +0000 (UTC)
+Received: from treble (ovpn-119-47.rdu2.redhat.com [10.10.119.47])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E79635C1B2;
+        Tue,  5 May 2020 18:11:10 +0000 (UTC)
+Date:   Tue, 5 May 2020 13:11:08 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] bpf: Tweak BPF jump table optimizations for objtool
+ compatibility
+Message-ID: <20200505181108.hwcqanvw3qf5qyxk@treble>
+References: <b581438a16e78559b4cea28cf8bc74158791a9b3.1588273491.git.jpoimboe@redhat.com>
+ <20200501190930.ptxyml5o4rviyo26@ast-mbp.dhcp.thefacebook.com>
+ <20200501192204.cepwymj3fln2ngpi@treble>
+ <20200501194053.xyahhknjjdu3gqix@ast-mbp.dhcp.thefacebook.com>
+ <20200501195617.czrnfqqcxfnliz3k@treble>
+ <20200502030622.yrszsm54r6s6k6gq@ast-mbp.dhcp.thefacebook.com>
+ <20200502192105.xp2osi5z354rh4sm@treble>
+ <20200505174300.gech3wr5v6kkho35@ast-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200505142110.7620-1-baijiaju1990@gmail.com>
+In-Reply-To: <20200505174300.gech3wr5v6kkho35@ast-mbp.dhcp.thefacebook.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 10:21:10PM +0800, Jia-Ju Bai wrote:
-> In ttusb_dec_init_usb():
->   dec->irq_buffer = usb_alloc_coherent(...)
-
-Nice.
-
-> Thus, "dec->irq_buffer" is a DMA value, and it is assigned to "buffer"
-> in ttusb_dec_handle_irq():
->   char *buffer = dec->irq_buffer;
-
-Nice.
-
-> When DMA failures or attacks occur, the value of buffer[4] can be
-> changed at any time.
-
-Wait, how can that happen?
-
-The kernel can not protect itself from something like that in each
-individual driver, that's impossible.  Your patch just makes that
-"window" a few cycles smaller than before.
-
-> In this case, "buffer[4] - 1 < ARRAY_SIZE(rc_keys)"
-> can be first satisfied, and then the value of buffer[4] can be changed
-> to a large number, causing a buffer-overflow vulnerability.
-
-Um, maybe.  I agree testing and then using the value can cause problems
-when userspace provides you with that data and control, but for
-DMA-backed memory, we are in so much other trouble if that is the case.
-
-> To avoid the risk of this vulnerability, buffer[4] is assigned to a
-> non-DMA local variable "index" at the beginning of
-> ttusb_dec_handle_irq(), and then this variable replaces each use of
-> buffer[4] in the function.
-
-I strongly doubt this is even possible.  Can you describe how you can
-modify DMA memory and if so, would you do something tiny like this?
-
+On Tue, May 05, 2020 at 10:43:00AM -0700, Alexei Starovoitov wrote:
+> > Or, if you want to minimize the patch's impact on other arches, and keep
+> > the current patch the way it is (with bug fixed and changed patch
+> > description), that's fine too.  I can change the patch description
+> > accordingly.
+> > 
+> > Or if you want me to measure the performance impact of the +40% code
+> > growth, and *then* decide what to do, that's also fine.  But you'd need
+> > to tell me what tests to run.
 > 
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-> ---
->  drivers/media/usb/ttusb-dec/ttusb_dec.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
+> I'd like to minimize the risk and avoid code churn,
+> so how about we step back and debug it first?
+> Which version of gcc are you using and what .config?
+> I've tried:
+> Linux version 5.7.0-rc2 (gcc version 10.0.1 20200505 (prerelease) (GCC)
+> CONFIG_UNWINDER_ORC=y
+> # CONFIG_RETPOLINE is not set
 > 
-> diff --git a/drivers/media/usb/ttusb-dec/ttusb_dec.c b/drivers/media/usb/ttusb-dec/ttusb_dec.c
-> index 3198f9624b7c..8543c552515b 100644
-> --- a/drivers/media/usb/ttusb-dec/ttusb_dec.c
-> +++ b/drivers/media/usb/ttusb-dec/ttusb_dec.c
-> @@ -250,6 +250,7 @@ static void ttusb_dec_handle_irq( struct urb *urb)
->  	struct ttusb_dec *dec = urb->context;
->  	char *buffer = dec->irq_buffer;
->  	int retval;
-> +	u8 index = buffer[4];
->  
->  	switch(urb->status) {
->  		case 0: /*success*/
-> @@ -281,11 +282,11 @@ static void ttusb_dec_handle_irq( struct urb *urb)
->  		 * this should/could be added later ...
->  		 * for now lets report each signal as a key down and up
->  		 */
-> -		if (buffer[4] - 1 < ARRAY_SIZE(rc_keys)) {
-> -			dprintk("%s:rc signal:%d\n", __func__, buffer[4]);
-> -			input_report_key(dec->rc_input_dev, rc_keys[buffer[4] - 1], 1);
-> +		if (index - 1 < ARRAY_SIZE(rc_keys)) {
-> +			dprintk("%s:rc signal:%d\n", __func__, index);
-> +			input_report_key(dec->rc_input_dev, rc_keys[index - 1], 1);
->  			input_sync(dec->rc_input_dev);
-> -			input_report_key(dec->rc_input_dev, rc_keys[buffer[4] - 1], 0);
-> +			input_report_key(dec->rc_input_dev, rc_keys[index - 1], 0);
->  			input_sync(dec->rc_input_dev);
->  		}
->  	}
+> and objtool didn't complain.
+> I would like to reproduce it first before making any changes.
 
-The above complaints aside, the patch does make sense for the simple
-fact that it might reduce the number of memory accesses.
+Revert
 
-But, the compiler might already be doing this type of optimization
-anyway, right?  So your original issue might not even be a problem.
+  3193c0836f20 ("bpf: Disable GCC -fgcse optimization for ___bpf_prog_run()")
 
-Anyhow, the patch looks fine, but it's a minor cleanup, not a fix for
-any sort of bug/security issue at all.  If you change the text in the
-changelog area, I'll be glad to ack it.
+and compile with retpolines off (and either ORC or FP, doesn't matter).
 
-thanks,
+I'm using GCC 9.3.1:
 
-greg k-h
+  kernel/bpf/core.o: warning: objtool: ___bpf_prog_run()+0x8dc: sibling call from callable instruction with modified stack frame
+
+That's the original issue described in that commit.
+
+> Also since objtool cannot follow the optimizations compiler is doing
+> how about admit the design failure and teach objtool to build ORC
+> (and whatever else it needs to build) based on dwarf for the functions where
+> it cannot understand the assembly code ?
+> Otherwise objtool will forever be playing whackamole with compilers.
+
+I agree it's not a good long term approach.  But DWARF has its own
+issues and we can't rely on it for live patching.
+
+As I mentioned we have a plan to use a compiler plugin to annotate jump
+tables (including GCC switch tables).  But the approach taken by this
+patch should be good enough for now.
+
+-- 
+Josh
+
