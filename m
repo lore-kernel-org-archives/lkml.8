@@ -2,67 +2,125 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2408FC47256
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECBCC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED5DE206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E314E206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 06:07:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EiP4PXZ4"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Av0Il68p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgEEGGJ (ORCPT
+        id S1728233AbgEEGHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 02:06:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725320AbgEEGGJ (ORCPT
+        Tue, 5 May 2020 02:07:36 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:45300 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725320AbgEEGHf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 02:06:09 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 426DBC061A0F;
-        Mon,  4 May 2020 23:06:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=W6C7+sFxYr0ur7PC5u5+OOcAwhCl6Vzl87BbtQFuCrs=; b=EiP4PXZ4qQ3SB1dEzQAYvsRXqn
-        5DuBWaZJw9AcbpUijjtnw3vUUZp0zwEpIRUFeWy8aGVbroEt6AvOgvcWsclj27dVf11l3ujEraXPR
-        LLQ7etcVhgIKviyf2zqXqECHu77FCvgRXXk8xFJUxUuBhLxmOec0RJnHGqYW7cDH+FJGFi3+EbhGy
-        ZMNCpDDd3edEP7nIO+Tv6JfKXEo86cqHRvS+NTqVbf5IkalaJWn2dM4MrUnagg7ZIh7mVShZxt9uP
-        3kLOLyp0JyZXNf7dOaqixgInznPrUbmWsfTGMDMWvzAOS8J1GdXSCpBcxLpkH1kYNU6cwrXAbplXX
-        mdeti6WQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jVqi4-0001hM-KU; Tue, 05 May 2020 06:05:40 +0000
-Date:   Mon, 4 May 2020 23:05:40 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Jeff Layton <jlayton@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 00/61] fscache, cachefiles: Rewrite the I/O interface
- in terms of kiocb/iov_iter
-Message-ID: <20200505060540.GA28929@infradead.org>
-References: <158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk>
+        Tue, 5 May 2020 02:07:35 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04563f2W106378;
+        Tue, 5 May 2020 06:07:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=Hd7te6S50m+hUOHmKAL5qGjVQoqJ2ucNIjBwUVXEubA=;
+ b=Av0Il68pcCYb/s6AmtrY4iUdwi6medwv7gkQA256Fs9RKlSSiHkMYyOhNzcdGolbAfM9
+ GGmzAbs2FS1p6XPXJxrDIKSg35U1UhbYZ55tZRogPjCzMEKWzDsrHoMlQAhkBFknK9Ng
+ 6wbnUKteuFCMd7q/84UUs6rKVxqQIP0Sk1Z8uJbpbbxg5yeP1FRC2lZRy7wcYEGmPa6B
+ b0DUCIfxs7KbfkY19GNn84Zr0ohr1cWWphxy9sskl8ZhqTCgGRA2W+MYDgpeGF1xZQ4G
+ l0x3I0y61xpbdQl4fX7PSZajErxLbQgzqeqjTLHoASnYxAFmHx5fT4SG5Q0oBsY0oaNI Mg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 30s1gn2h50-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 05 May 2020 06:07:26 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04566dqx079123;
+        Tue, 5 May 2020 06:07:25 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 30sjjxt8t0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 05 May 2020 06:07:25 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04567OBE030156;
+        Tue, 5 May 2020 06:07:24 GMT
+Received: from [10.191.203.202] (/10.191.203.202)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 04 May 2020 23:07:24 -0700
+Subject: Re: [PATCH net] net: dsa: Do not leave DSA master with NULL
+ netdev_ops
+To:     Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200504201806.27192-1-f.fainelli@gmail.com>
+From:   Allen <allen.pais@oracle.com>
+Message-ID: <905b0b48-5184-3b11-2f78-e99834dbc38a@oracle.com>
+Date:   Tue, 5 May 2020 11:37:12 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200504201806.27192-1-f.fainelli@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 phishscore=0
+ bulkscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005050050
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 mlxscore=0
+ spamscore=0 clxscore=1011 priorityscore=1501 bulkscore=0 phishscore=0
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005050050
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Can you split this into a few smaller series?  > 60 patches is beyond
-reviewer comprehension.
+> When ndo_get_phys_port_name() for the CPU port was added we introduced
+> an early check for when the DSA master network device in
+> dsa_master_ndo_setup() already implements ndo_get_phys_port_name(). When
+> we perform the teardown operation in dsa_master_ndo_teardown() we would
+> not be checking that cpu_dp->orig_ndo_ops was successfully allocated and
+> non-NULL initialized.
+> 
+> With network device drivers such as virtio_net, this leads to a NPD as
+> soon as the DSA switch hanging off of it gets torn down because we are
+> now assigning the virtio_net device's netdev_ops a NULL pointer.
+> 
+> Fixes: da7b9e9b00d4 ("net: dsa: Add ndo_get_phys_port_name() for CPU port")
+> Reported-by: Allen Pais <allen.pais@oracle.com>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+
+Tested-by: Allen Pais <allen.pais@oracle.com>
+
+Thank you Florain.
+> ---
+>   net/dsa/master.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/dsa/master.c b/net/dsa/master.c
+> index b5c535af63a3..a621367c6e8c 100644
+> --- a/net/dsa/master.c
+> +++ b/net/dsa/master.c
+> @@ -289,7 +289,8 @@ static void dsa_master_ndo_teardown(struct net_device *dev)
+>   {
+>   	struct dsa_port *cpu_dp = dev->dsa_ptr;
+>   
+> -	dev->netdev_ops = cpu_dp->orig_ndo_ops;
+> +	if (cpu_dp->orig_ndo_ops)
+> +		dev->netdev_ops = cpu_dp->orig_ndo_ops;
+>   	cpu_dp->orig_ndo_ops = NULL;
+>   }
+>   
+> 
