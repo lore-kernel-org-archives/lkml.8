@@ -2,178 +2,95 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A279C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1572AC47259
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9AA2068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD68C2068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:42:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W8I+ypz+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728649AbgEEImI (ORCPT
+        id S1728663AbgEEImO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 04:42:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39482 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728627AbgEEImH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 04:42:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 808AFAFF2;
-        Tue,  5 May 2020 08:42:08 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 05 May 2020 10:42:05 +0200
-From:   Roman Penyaev <rpenyaev@suse.de>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Jason Baron <jbaron@akamai.com>,
-        Khazhismel Kumykov <khazhy@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 1/1] epoll: call final ep_events_available() check under
- the lock
-In-Reply-To: <20200505084049.1779243-1-rpenyaev@suse.de>
-References: <20200505084049.1779243-1-rpenyaev@suse.de>
-Message-ID: <a9898eaefa85fa9c85e179ff162d5e8d@suse.de>
-X-Sender: rpenyaev@suse.de
-User-Agent: Roundcube Webmail
+        Tue, 5 May 2020 04:42:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53034 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728627AbgEEImM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 04:42:12 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15D1CC061A0F;
+        Tue,  5 May 2020 01:42:12 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id h12so921450pjz.1;
+        Tue, 05 May 2020 01:42:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=3Y0v2e1Lb5wtzzcdYvvYnMyMMtu+m1Dmqf+0QoZUhSA=;
+        b=W8I+ypz+cgycacfqwemetGRj30vIPDplypv2/Xw57pculAjHckI9bGny/k3mNTwZSw
+         mWH6WTxtwICdRj5L6uZO4Ldj3URk8KnAGufc8LmnraYmECPwDY+K5xkPJ2MOFth3h7Pu
+         NoJpF3Mg1ycdxynBawfjuBzhVfLqsMoeYA697UtPbu928uNV+lREnMfVTogtTXyZCGqz
+         3rDrKnQbd8Ugaf+vPfa3bOHr4iVK19wF39eyEes0GzcOqz/H2DLBfjVkvPb7a/ASr0/i
+         4Axs85+ravwposSptCnI0lJITCWWR+uCwK2ridpnaWSCpSsaxraQ0c/VXCWJmIj1UuOC
+         Qqjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3Y0v2e1Lb5wtzzcdYvvYnMyMMtu+m1Dmqf+0QoZUhSA=;
+        b=ITaCyTAmzqy8j649j9nKvm+9k9ZTC9Yr22avn6vWt59RGrFwDocEYCXY25tbuCvLDm
+         ELx/ksvrmPpe3lvUm3+D74nEOTBxWZBqdGAeEelfCzmUlDkvSBp8ABLuTNOrDBA3yONj
+         vsOkI+69bAEBD6Ve22okk8ECxA4KmPQnGjCaHS4y1MlI7RvAOttZIKYvr7bFswyr8SBo
+         sJ8ALIbsSddo+XoZeafPvuwUHDg57T5gljVU1SjiW7/7PGoPXyMhGsQSsWmVAinIM+wf
+         Zi2r3bYq+3Zx0rl+VIaNX9g5MAm03j6ZUxqzWjMBnU+bcWmzyy8KCeE374LQLYhn9ID8
+         RjTw==
+X-Gm-Message-State: AGi0PuanD59MJvWIEWT4VSShNguwDd8+qw92VZvfwFgnksLLZ8aufOmC
+        0neXtikZ6fMwjcDWC3udJ9c=
+X-Google-Smtp-Source: APiQypJe86ksUq/JAGwIY1F0YkpbSYUnxzodqwNL6d+yuiHFDb2CMphwQrg9xwf5ognUlD3wIGaeUQ==
+X-Received: by 2002:a17:902:b114:: with SMTP id q20mr1885097plr.120.1588668131523;
+        Tue, 05 May 2020 01:42:11 -0700 (PDT)
+Received: from localhost.localdomain ([203.100.54.194])
+        by smtp.gmail.com with ESMTPSA id p190sm1443802pfp.207.2020.05.05.01.42.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 01:42:10 -0700 (PDT)
+From:   Yafang Shao <laoar.shao@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     mhocko@kernel.org, hannes@cmpxchg.org, chris@chrisdown.name,
+        guro@fb.com, linux-mm@kvack.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>
+Subject: [PATCH v3 0/2] mm: memcontrol: memory.{low,min} reclaim fix & cleanup 
+Date:   Tue,  5 May 2020 04:41:25 -0400
+Message-Id: <20200505084127.12923-1-laoar.shao@gmail.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This series contains a fix for a edge case in my earlier protection
+calculation patches, and a patch to make the area overall a little more
+robust to hopefully help avoid this in future.
 
-Hi Andrew,
+[chris@chrisdown.name: commit log above]
 
-May I ask you to remove "epoll: ensure ep_poll() doesn't miss wakeup
-events" from your -mm queue? Jason lately found out that the patch
-does not fully solve the problem and this one patch is a second
-attempt to do things correctly in a different way (namely to do
-the final check under the lock). Previous changes are not needed.
+Changes since v2: commit log improved by Michal.
 
-Thanks.
+Chris Down (1):
+  mm, memcg: Decouple e{low,min} state mutations from protection checks
 
---
-Roman
+Yafang Shao (1):
+  mm, memcg: Avoid stale protection values when cgroup is above
+    protection
 
+ include/linux/memcontrol.h | 85 ++++++++++++++++++++++++++++++++------
+ mm/memcontrol.c            | 36 +++++++---------
+ mm/vmscan.c                | 20 +++------
+ 3 files changed, 93 insertions(+), 48 deletions(-)
 
-On 2020-05-05 10:40, Roman Penyaev wrote:
-> The original problem was described here:
->    https://lkml.org/lkml/2020/4/27/1121
-> 
-> There is a possible race when ep_scan_ready_list() leaves ->rdllist
-> and ->obflist empty for a short period of time although some events
-> are pending. It is quite likely that ep_events_available() observes
-> empty lists and goes to sleep. Since 339ddb53d373 ("fs/epoll: remove
-> unnecessary wakeups of nested epoll") we are conservative in wakeups
-> (there is only one place for wakeup and this is ep_poll_callback()),
-> thus ep_events_available() must always observe correct state of
-> two lists. The easiest and correct way is to do the final check
-> under the lock. This does not impact the performance, since lock
-> is taken anyway for adding a wait entry to the wait queue.
-> 
-> In this patch barrierless __set_current_state() is used. This is
-> safe since waitqueue_active() is called under the same lock on wakeup
-> side.
-> 
-> Short-circuit for fatal signals (i.e. fatal_signal_pending() check)
-> is moved to the line just before actual events harvesting routine.
-> This is fully compliant to what is said in the comment of the patch
-> where the actual fatal_signal_pending() check was added:
-> c257a340ede0 ("fs, epoll: short circuit fetching events if thread
-> has been killed").
-> 
-> Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
-> Reported-by: Jason Baron <jbaron@akamai.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Khazhismel Kumykov <khazhy@google.com>
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: linux-fsdevel@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: stable@vger.kernel.org
-> ---
->  fs/eventpoll.c | 48 ++++++++++++++++++++++++++++--------------------
->  1 file changed, 28 insertions(+), 20 deletions(-)
-> 
-> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-> index aba03ee749f8..8453e5403283 100644
-> --- a/fs/eventpoll.c
-> +++ b/fs/eventpoll.c
-> @@ -1879,34 +1879,33 @@ static int ep_poll(struct eventpoll *ep,
-> struct epoll_event __user *events,
->  		 * event delivery.
->  		 */
->  		init_wait(&wait);
-> -		write_lock_irq(&ep->lock);
-> -		__add_wait_queue_exclusive(&ep->wq, &wait);
-> -		write_unlock_irq(&ep->lock);
-> 
-> +		write_lock_irq(&ep->lock);
->  		/*
-> -		 * We don't want to sleep if the ep_poll_callback() sends us
-> -		 * a wakeup in between. That's why we set the task state
-> -		 * to TASK_INTERRUPTIBLE before doing the checks.
-> +		 * Barrierless variant, waitqueue_active() is called under
-> +		 * the same lock on wakeup ep_poll_callback() side, so it
-> +		 * is safe to avoid an explicit barrier.
->  		 */
-> -		set_current_state(TASK_INTERRUPTIBLE);
-> +		__set_current_state(TASK_INTERRUPTIBLE);
-> +
->  		/*
-> -		 * Always short-circuit for fatal signals to allow
-> -		 * threads to make a timely exit without the chance of
-> -		 * finding more events available and fetching
-> -		 * repeatedly.
-> +		 * Do the final check under the lock. ep_scan_ready_list()
-> +		 * plays with two lists (->rdllist and ->ovflist) and there
-> +		 * is always a race when both lists are empty for short
-> +		 * period of time although events are pending, so lock is
-> +		 * important.
->  		 */
-> -		if (fatal_signal_pending(current)) {
-> -			res = -EINTR;
-> -			break;
-> +		eavail = ep_events_available(ep);
-> +		if (!eavail) {
-> +			if (signal_pending(current))
-> +				res = -EINTR;
-> +			else
-> +				__add_wait_queue_exclusive(&ep->wq, &wait);
->  		}
-> +		write_unlock_irq(&ep->lock);
-> 
-> -		eavail = ep_events_available(ep);
-> -		if (eavail)
-> -			break;
-> -		if (signal_pending(current)) {
-> -			res = -EINTR;
-> +		if (eavail || res)
->  			break;
-> -		}
-> 
->  		if (!schedule_hrtimeout_range(to, slack, HRTIMER_MODE_ABS)) {
->  			timed_out = 1;
-> @@ -1927,6 +1926,15 @@ static int ep_poll(struct eventpoll *ep, struct
-> epoll_event __user *events,
->  	}
-> 
->  send_events:
-> +	if (fatal_signal_pending(current))
-> +		/*
-> +		 * Always short-circuit for fatal signals to allow
-> +		 * threads to make a timely exit without the chance of
-> +		 * finding more events available and fetching
-> +		 * repeatedly.
-> +		 */
-> +		res = -EINTR;
-> +
->  	/*
->  	 * Try to transfer events to user space. In case we get 0 events and
->  	 * there's still timeout left over, we go trying again in search of
+-- 
+2.18.2
 
