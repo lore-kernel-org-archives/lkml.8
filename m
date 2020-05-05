@@ -2,97 +2,203 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE00C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6B0C47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74FD72083B
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:15:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SGdpEVbP"
+	by mail.kernel.org (Postfix) with ESMTP id E56B52085B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:15:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729284AbgEEOPx (ORCPT
+        id S1729977AbgEEOPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:15:53 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:21065 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729939AbgEEOPr (ORCPT
+        Tue, 5 May 2020 10:15:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49004 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729942AbgEEOPv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:15:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588688146;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Pdh8PaKKCB6jydt3X9bRNYULYYUuebIi6pG6NH9E+WA=;
-        b=SGdpEVbPEAjN3SCEYVeQkqTns2vgKa79DxnAe2GNy5jhLHw8BozivequjrM9KX/z1f5VEu
-        HXH2NExUKS1PZ7FXyWl423eYl2XSDT+9i4VPX3s1Ztj1WwiMq3T2HSXutQFwFUv3KCtKmM
-        QUbUIMD3ckKcoQcwU2jT5bXBwGl6MSA=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-304-pU2HBKlgNHmvixV7kj_Yig-1; Tue, 05 May 2020 10:15:44 -0400
-X-MC-Unique: pU2HBKlgNHmvixV7kj_Yig-1
-Received: by mail-qt1-f198.google.com with SMTP id d35so1762652qtc.20
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 07:15:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Pdh8PaKKCB6jydt3X9bRNYULYYUuebIi6pG6NH9E+WA=;
-        b=ODSCNeOxG7xlsqbhcVtYWEYEGQU5+aGx3o4zvYliGB0/HqV5dQFSs1D9qsYCmqCnlF
-         MZMYsAALrjLjlRng3teNEssILWfkCNL8HK63swVIrcJoXdbNDwRdR+slAZZnRPxoy4To
-         8SeNwujTBm99a2r16L2frtYDsS7SIQ/QTuT3Lu9bs+ETjwyC1OEk0JuDqjdch93OZp+3
-         xztzVlpI6azyFDB07ivGqT8z0ggr4iE6feUB5YVJVsJU9/90kdJmV6PSATyfTEnv+HGR
-         ueiRED1bcGvpXL6Dc4CFrVLubbz/773cWontA8jSXJojz0xaUaPONB03LhOoUGqY6pmG
-         +7uQ==
-X-Gm-Message-State: AGi0PubIX9nEnjs5w+yCeaTc1TTQyK4NAfVRW/zjh3f7Qom5TrZjLQfP
-        8E1iFShaMwNK+tWpTb7FknP3sGiTA3tiYJuWQgdN83oVBySTfu17JeQJuyrKPu0T3Tc4FU4dI+F
-        2c7c4bu0dqOYr6+PbSFdxpTxF
-X-Received: by 2002:aed:3eca:: with SMTP id o10mr2829914qtf.30.1588688143991;
-        Tue, 05 May 2020 07:15:43 -0700 (PDT)
-X-Google-Smtp-Source: APiQypI7Nwwnxis/I/GyVehDFWGlPcQsyscfxDqmFgtIZNy/E6RdlTN/1qONlWTO6ejDKf2kO4H/Dg==
-X-Received: by 2002:aed:3eca:: with SMTP id o10mr2829897qtf.30.1588688143786;
-        Tue, 05 May 2020 07:15:43 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id h25sm1921298qte.37.2020.05.05.07.15.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 07:15:42 -0700 (PDT)
-Date:   Tue, 5 May 2020 10:15:41 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        jmattson@google.com
-Subject: Re: [PATCH] KVM: x86: fix DR6 delivery for emulated hardware
- breakpoint
-Message-ID: <20200505141541.GI6299@xz-x1>
-References: <20200505113449.18478-1-pbonzini@redhat.com>
+        Tue, 5 May 2020 10:15:51 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7613AC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:15:51 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jVyM0-0001eU-OY; Tue, 05 May 2020 16:15:25 +0200
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 4EFCFFFC8D;
+        Tue,  5 May 2020 16:15:24 +0200 (CEST)
+Message-Id: <20200505134905.928967113@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Tue, 05 May 2020 15:44:21 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Subject: [patch V4 part 3 27/29] x86/entry: Convert Alignment check exception
+ to IDTENTRY
+References: <20200505134354.774943181@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200505113449.18478-1-pbonzini@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-transfer-encoding: 8-bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 07:34:49AM -0400, Paolo Bonzini wrote:
-> Go through kvm_queue_exception_p so that the payload is correctly delivered
-> through the exit qualification, and add a kvm_update_dr6 call to
-> kvm_deliver_exception_payload that is needed on AMD.
-> 
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-I still think we could also change this in handle_exception_nmi() and
-handle_dr() as mentioned in the other thread, but no strong opinion:
+Convert #AC to IDTENTRY_ERRORCODE:
+  - Implement the C entry point with DEFINE_IDTENTRY
+  - Emit the ASM stub with DECLARE_IDTENTRY
+  - Remove the ASM idtentry in 64bit
+  - Remove the open coded ASM entry code in 32bit
+  - Fixup the XEN/PV code
+  - Remove the old prototyoes
+  - Remove the RCU warning as the new entry macro ensures correctness
 
-Reviewed-by: Peter Xu <peterx@redhat.com>
+No functional change.
 
-Thanks,
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
--- 
-Peter Xu
+---
+ arch/x86/entry/entry_32.S       |    6 ------
+ arch/x86/entry/entry_64.S       |    1 -
+ arch/x86/include/asm/idtentry.h |    1 +
+ arch/x86/include/asm/traps.h    |    3 ---
+ arch/x86/kernel/idt.c           |    2 +-
+ arch/x86/kernel/traps.c         |    4 +---
+ arch/x86/xen/enlighten_pv.c     |    2 +-
+ arch/x86/xen/xen-asm_64.S       |    2 +-
+ 8 files changed, 5 insertions(+), 16 deletions(-)
+
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -1311,12 +1311,6 @@ SYM_CODE_START(native_iret)
+ SYM_CODE_END(native_iret)
+ #endif
+ 
+-SYM_CODE_START(alignment_check)
+-	ASM_CLAC
+-	pushl	$do_alignment_check
+-	jmp	common_exception
+-SYM_CODE_END(alignment_check)
+-
+ #ifdef CONFIG_X86_MCE
+ SYM_CODE_START(machine_check)
+ 	ASM_CLAC
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -1074,7 +1074,6 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work
+  */
+ 
+ idtentry	X86_TRAP_BP		int3			do_int3				has_error_code=0
+-idtentry	X86_TRAP_AC		alignment_check		do_alignment_check		has_error_code=1
+ idtentry	X86_TRAP_XF		simd_coprocessor_error	do_simd_coprocessor_error	has_error_code=0
+ 
+ idtentry	X86_TRAP_PF		page_fault		do_page_fault			has_error_code=1
+--- a/arch/x86/include/asm/idtentry.h
++++ b/arch/x86/include/asm/idtentry.h
+@@ -137,5 +137,6 @@ DECLARE_IDTENTRY_ERRORCODE(X86_TRAP_TS,
+ DECLARE_IDTENTRY_ERRORCODE(X86_TRAP_NP,	exc_segment_not_present);
+ DECLARE_IDTENTRY_ERRORCODE(X86_TRAP_SS,	exc_stack_segment);
+ DECLARE_IDTENTRY_ERRORCODE(X86_TRAP_GP,	exc_general_protection);
++DECLARE_IDTENTRY_ERRORCODE(X86_TRAP_AC,	exc_alignment_check);
+ 
+ #endif
+--- a/arch/x86/include/asm/traps.h
++++ b/arch/x86/include/asm/traps.h
+@@ -19,7 +19,6 @@ asmlinkage void double_fault(void);
+ #endif
+ asmlinkage void page_fault(void);
+ asmlinkage void async_page_fault(void);
+-asmlinkage void alignment_check(void);
+ #ifdef CONFIG_X86_MCE
+ asmlinkage void machine_check(void);
+ #endif /* CONFIG_X86_MCE */
+@@ -31,7 +30,6 @@ asmlinkage void xen_xendebug(void);
+ asmlinkage void xen_int3(void);
+ asmlinkage void xen_double_fault(void);
+ asmlinkage void xen_page_fault(void);
+-asmlinkage void xen_alignment_check(void);
+ #ifdef CONFIG_X86_MCE
+ asmlinkage void xen_machine_check(void);
+ #endif /* CONFIG_X86_MCE */
+@@ -45,7 +43,6 @@ dotraplinkage void do_int3(struct pt_reg
+ dotraplinkage void do_double_fault(struct pt_regs *regs, long error_code, unsigned long cr2);
+ #endif
+ dotraplinkage void do_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address);
+-dotraplinkage void do_alignment_check(struct pt_regs *regs, long error_code);
+ dotraplinkage void do_simd_coprocessor_error(struct pt_regs *regs, long error_code);
+ #ifdef CONFIG_X86_32
+ dotraplinkage void do_iret_error(struct pt_regs *regs, long error_code);
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -82,7 +82,7 @@ static const __initconst struct idt_data
+ 	INTG(X86_TRAP_GP,		asm_exc_general_protection),
+ 	INTG(X86_TRAP_SPURIOUS,		asm_exc_spurious_interrupt_bug),
+ 	INTG(X86_TRAP_MF,		asm_exc_coprocessor_error),
+-	INTG(X86_TRAP_AC,		alignment_check),
++	INTG(X86_TRAP_AC,		asm_exc_alignment_check),
+ 	INTG(X86_TRAP_XF,		simd_coprocessor_error),
+ 
+ #ifdef CONFIG_X86_32
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -260,12 +260,10 @@ DEFINE_IDTENTRY_ERRORCODE(exc_stack_segm
+ 		      0, NULL);
+ }
+ 
+-dotraplinkage void do_alignment_check(struct pt_regs *regs, long error_code)
++DEFINE_IDTENTRY_ERRORCODE(exc_alignment_check)
+ {
+ 	char *str = "alignment check";
+ 
+-	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
+-
+ 	if (notify_die(DIE_TRAP, str, regs, error_code, X86_TRAP_AC, SIGBUS) == NOTIFY_STOP)
+ 		return;
+ 
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -634,7 +634,7 @@ static struct trap_array_entry trap_arra
+ 	TRAP_ENTRY(exc_general_protection,		false ),
+ 	TRAP_ENTRY(exc_spurious_interrupt_bug,		false ),
+ 	TRAP_ENTRY(exc_coprocessor_error,		false ),
+-	{ alignment_check,             xen_alignment_check,             false },
++	TRAP_ENTRY(exc_alignment_check,			false ),
+ 	{ simd_coprocessor_error,      xen_simd_coprocessor_error,      false },
+ };
+ 
+--- a/arch/x86/xen/xen-asm_64.S
++++ b/arch/x86/xen/xen-asm_64.S
+@@ -46,7 +46,7 @@ xen_pv_trap asm_exc_general_protection
+ xen_pv_trap page_fault
+ xen_pv_trap asm_exc_spurious_interrupt_bug
+ xen_pv_trap asm_exc_coprocessor_error
+-xen_pv_trap alignment_check
++xen_pv_trap asm_exc_alignment_check
+ #ifdef CONFIG_X86_MCE
+ xen_pv_trap machine_check
+ #endif /* CONFIG_X86_MCE */
 
