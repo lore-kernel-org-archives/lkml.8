@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9839C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD79C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA41B206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74672206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:15:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729808AbgEEOPX (ORCPT
+        id S1729824AbgEEOPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:15:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48874 "EHLO
+        Tue, 5 May 2020 10:15:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729797AbgEEOPU (ORCPT
+        by vger.kernel.org with ESMTP id S1729800AbgEEOPU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 5 May 2020 10:15:20 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29E2DC061A10
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B224C061A41
         for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:15:20 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jVyLe-0001Lf-Np; Tue, 05 May 2020 16:15:02 +0200
+        id 1jVyLX-0001GX-0e; Tue, 05 May 2020 16:14:55 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 026EDFFC8D;
-        Tue,  5 May 2020 16:15:02 +0200 (CEST)
-Message-Id: <20200505134904.166735365@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 838F5FFC8D;
+        Tue,  5 May 2020 16:14:54 +0200 (CEST)
+Message-Id: <20200505134903.531534675@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:44:03 +0200
+Date:   Tue, 05 May 2020 15:43:57 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -52,7 +52,8 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Will Deacon <will@kernel.org>
-Subject: [patch V4 part 3 09/29] x86/entry/32: Provide macro to emit IDT entry stubs
+Subject: [patch V4 part 3 03/29] x86/entry: Disable interrupts for
+ native_load_gs_index() in C code
 References: <20200505134354.774943181@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -65,109 +66,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
-
-32 and 64 bit have unnecessary different ways to populate the exception
-entry code. Provide a idtentry macro which allows to consolidate all of
-that.
+There is absolutely no point in doing this in ASM code. Move it to C.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
-V3: Remove the INVD bug asm. Can be done in C (Brian)
----
- arch/x86/entry/entry_32.S |   68 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
+ arch/x86/entry/entry_64.S            |   19 +++++++------------
+ arch/x86/include/asm/special_insns.h |   14 ++++++++++++--
+ 2 files changed, 19 insertions(+), 14 deletions(-)
 
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -44,6 +44,7 @@
- #include <asm/asm.h>
- #include <asm/smap.h>
- #include <asm/frame.h>
-+#include <asm/trapnr.h>
- #include <asm/nospec-branch.h>
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -1036,27 +1036,22 @@ idtentry alignment_check		do_alignment_c
+ idtentry simd_coprocessor_error		do_simd_coprocessor_error	has_error_code=0
  
- #include "calling.h"
-@@ -726,6 +727,31 @@
  
- .Lend_\@:
- .endm
-+
-+/**
-+ * idtentry - Macro to generate entry stubs for simple IDT entries
-+ * @vector:		Vector number
-+ * @asmsym:		ASM symbol for the entry point
-+ * @cfunc:		C function to be called
-+ * @has_error_code:	Hardware pushed error code on stack
-+ * @sane:		Compatibility flag with 64bit
+-	/*
+-	 * Reload gs selector with exception handling
+-	 * edi:  new selector
+-	 */
++/*
++ * Reload gs selector with exception handling
++ * edi:  new selector
 + */
-+.macro idtentry vector asmsym cfunc has_error_code:req sane=0
-+SYM_CODE_START(\asmsym)
-+	ASM_CLAC
-+	cld
-+
-+	.if \has_error_code == 0
-+		pushl	$0		/* Clear the error code */
-+	.endif
-+
-+	/* Push the C-function address into the GS slot */
-+	pushl	$\cfunc
-+	/* Invoke the common exception entry */
-+	jmp	handle_exception
-+SYM_CODE_END(\asmsym)
-+.endm
-+
- /*
-  * %eax: prev task
-  * %edx: next task
-@@ -1517,6 +1543,48 @@ SYM_CODE_START_LOCAL_NOALIGN(common_exce
- 	jmp	ret_from_exception
- SYM_CODE_END(common_exception)
+ .pushsection .text, "ax"
+-SYM_FUNC_START(native_load_gs_index)
++SYM_FUNC_START(asm_native_load_gs_index)
+ 	FRAME_BEGIN
+-	pushfq
+-	DISABLE_INTERRUPTS(CLBR_ANY & ~CLBR_RDI)
+-	TRACE_IRQS_OFF
+ 	SWAPGS
+ .Lgs_change:
+ 	movl	%edi, %gs
+ 2:	ALTERNATIVE "", "mfence", X86_BUG_SWAPGS_FENCE
+ 	SWAPGS
+-	TRACE_IRQS_FLAGS (%rsp)
+-	popfq
+ 	FRAME_END
+ 	ret
+-SYM_FUNC_END(native_load_gs_index)
+-EXPORT_SYMBOL(native_load_gs_index)
++SYM_FUNC_END(asm_native_load_gs_index)
++EXPORT_SYMBOL(asm_native_load_gs_index)
+ .popsection
  
-+SYM_CODE_START_LOCAL_NOALIGN(handle_exception)
-+	/* the function address is in %gs's slot on the stack */
-+	SAVE_ALL switch_stacks=1 skip_gs=1 unwind_espfix=1
-+	ENCODE_FRAME_POINTER
+ 	_ASM_EXTABLE(.Lgs_change, .Lbad_gs)
+--- a/arch/x86/include/asm/special_insns.h
++++ b/arch/x86/include/asm/special_insns.h
+@@ -7,6 +7,7 @@
+ 
+ #include <asm/nops.h>
+ #include <asm/processor-flags.h>
++#include <linux/irqflags.h>
+ #include <linux/jump_label.h>
+ 
+ /*
+@@ -129,7 +130,16 @@ static inline void native_wbinvd(void)
+ 	asm volatile("wbinvd": : :"memory");
+ }
+ 
+-extern asmlinkage void native_load_gs_index(unsigned);
++extern asmlinkage void asm_native_load_gs_index(unsigned int selector);
 +
-+	/* fixup %gs */
-+	GS_TO_REG %ecx
-+	movl	PT_GS(%esp), %edi		# get the function address
-+	REG_TO_PTGS %ecx
-+	SET_KERNEL_GS %ecx
++static inline void native_load_gs_index(unsigned int selector)
++{
++	unsigned long flags;
 +
-+	/* fixup orig %eax */
-+	movl	PT_ORIG_EAX(%esp), %edx		# get the error code
-+	movl	$-1, PT_ORIG_EAX(%esp)		# no syscall to restart
-+
-+	movl	%esp, %eax			# pt_regs pointer
-+	CALL_NOSPEC edi
-+
-+#ifdef CONFIG_VM86
-+	movl	PT_EFLAGS(%esp), %eax		# mix EFLAGS and CS
-+	movb	PT_CS(%esp), %al
-+	andl	$(X86_EFLAGS_VM | SEGMENT_RPL_MASK), %eax
-+#else
-+	/*
-+	 * We can be coming here from child spawned by kernel_thread().
-+	 */
-+	movl	PT_CS(%esp), %eax
-+	andl	$SEGMENT_RPL_MASK, %eax
-+#endif
-+	cmpl	$USER_RPL, %eax			# returning to v8086 or userspace ?
-+	jnb	ret_to_user
-+
-+	PARANOID_EXIT_TO_KERNEL_MODE
-+	BUG_IF_WRONG_CR3
-+	RESTORE_REGS 4
-+	jmp	.Lirq_return
-+
-+ret_to_user:
-+	movl	%esp, %eax
-+	jmp	restore_all_switch_stack
-+SYM_CODE_END(handle_exception)
-+
- SYM_CODE_START(debug)
- 	/*
- 	 * Entry from sysenter is now handled in common_exception
++	local_irq_save(flags);
++	asm_native_load_gs_index(selector);
++	local_irq_restore(flags);
++}
+ 
+ static inline unsigned long __read_cr4(void)
+ {
+@@ -186,7 +196,7 @@ static inline void wbinvd(void)
+ 
+ #ifdef CONFIG_X86_64
+ 
+-static inline void load_gs_index(unsigned selector)
++static inline void load_gs_index(unsigned int selector)
+ {
+ 	native_load_gs_index(selector);
+ }
 
