@@ -2,83 +2,67 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED699C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DFC6C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C90B720675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 558B120752
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:22:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728531AbgEEKW2 (ORCPT
+        id S1728689AbgEEKWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 06:22:28 -0400
-Received: from ms8.pegatroncorp.com ([43.251.62.78]:36486 "EHLO
-        ms8.pegatroncorp.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbgEEKW0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 06:22:26 -0400
-Received: from pps.filterd (ptwppsf02.pega.corp.pegatron [127.0.0.1])
-        by ptwppsf02.pega.corp.pegatron (8.16.0.21/8.16.0.21) with SMTP id 045AKpDc062936;
-        Tue, 5 May 2020 18:21:42 +0800
-Received: from ptw-ex-cas12.pega.corp.pegatron ([172.18.6.20])
-        by ptwppsf02.pega.corp.pegatron with ESMTP id 30u560gbd2-1
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=NOT);
-        Tue, 05 May 2020 18:21:42 +0800
-Received: from PTW-EX-38.PEGA.CORP.PEGATRON ([fe80::c52b:4934:6819:9fa]) by
- PTW-EX-CAS12.PEGA.CORP.PEGATRON ([::1]) with mapi id 14.03.0487.000; Tue, 5
- May 2020 18:21:42 +0800
-From:   =?utf-8?B?TGVzbGllIEhzaWEo5aSP6YKm6YCyX1BlZ2F0cm9uKQ==?= 
-        <Leslie_Hsia@pegatroncorp.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?utf-8?B?SGVybWVzIEhzaWVoKOisneaXu+WKrV9QZWdhdHJvbik=?= 
-        <Hermes_Hsieh@pegatroncorp.com>,
-        "jesse.sung@canonical.com" <jesse.sung@canonical.com>,
-        "jic23@kernel.org" <jic23@kernel.org>
-Subject: =?utf-8?B?5Zue5pS2OiBbUEFUQ0hdIEFTb0M6IHRhczU4MDVtOiBBZGQgVEFTNTgwNU0g?=
- =?utf-8?Q?amplifier_driver?=
-Thread-Topic: [PATCH] ASoC: tas5805m: Add TAS5805M amplifier driver
-Thread-Index: AdYixvf4D4BtzZxFTY+hYGcvSoPNIA==
-X-CallingTelephoneNumber: IPM.Note
-X-VoiceMessageDuration: 1
-X-FaxNumberOfPages: 0
-Date:   Tue, 5 May 2020 10:21:41 +0000
-Message-ID: <754706C925201D4896E92CCAD6B38E4401F0F7B915@PTW-EX-38.PEGA.CORP.PEGATRON>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.192.178.208]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 5 May 2020 06:22:38 -0400
+Received: from verein.lst.de ([213.95.11.211]:34498 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725766AbgEEKWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 06:22:38 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id AC3CE68C4E; Tue,  5 May 2020 12:22:34 +0200 (CEST)
+Date:   Tue, 5 May 2020 12:22:34 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH v3 01/25] dma-mapping: add generic helpers for mapping
+ sgtable objects
+Message-ID: <20200505102234.GA15038@lst.de>
+References: <20200505083926.28503-1-m.szyprowski@samsung.com> <CGME20200505084624eucas1p2a9a5c4d2aece2c1555a5480c19c2e050@eucas1p2.samsung.com> <20200505084614.30424-1-m.szyprowski@samsung.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505084614.30424-1-m.szyprowski@samsung.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TGVzbGllIEhzaWEo5aSP6YKm6YCyX1BlZ2F0cm9uKSDluIzmnJvlm57mlLbpgJnlsIHpg7Xku7Yg
-W1tQQVRDSF0gQVNvQzogdGFzNTgwNW06IEFkZCBUQVM1ODA1TSBhbXBsaWZpZXIgZHJpdmVyXeOA
-gg0KDQoNClRoaXMgZS1tYWlsIGFuZCBpdHMgYXR0YWNobWVudCBtYXkgY29udGFpbiBpbmZvcm1h
-dGlvbiB0aGF0IGlzIGNvbmZpZGVudGlhbCBvciBwcml2aWxlZ2VkLCBhbmQgYXJlIHNvbGVseSBm
-b3IgdGhlIHVzZSBvZiB0aGUgaW5kaXZpZHVhbCB0byB3aG9tIHRoaXMgZS1tYWlsIGlzIGFkZHJl
-c3NlZC4gSWYgeW91IGFyZSBub3QgdGhlIGludGVuZGVkIHJlY2lwaWVudCBvciBoYXZlIHJlY2Vp
-dmVkIGl0IGFjY2lkZW50YWxseSwgcGxlYXNlIGltbWVkaWF0ZWx5IG5vdGlmeSB0aGUgc2VuZGVy
-IGJ5IHJlcGx5IGUtbWFpbCBhbmQgZGVzdHJveSBhbGwgY29waWVzIG9mIHRoaXMgZW1haWwgYW5k
-IGl0cyBhdHRhY2htZW50LiBQbGVhc2UgYmUgYWR2aXNlZCB0aGF0IGFueSB1bmF1dGhvcml6ZWQg
-dXNlLCBkaXNjbG9zdXJlLCBkaXN0cmlidXRpb24gb3IgY29weWluZyBvZiB0aGlzIGVtYWlsIG9y
-IGl0cyBhdHRhY2htZW50IGlzIHN0cmljdGx5IHByb2hpYml0ZWQuDQoNCuacrOmbu+WtkOmDteS7
-tuWPiuWFtumZhOS7tuWPr+iDveWQq+acieapn+WvhuaIluS+neazleWPl+eJueauiueuoeWItuS5
-i+izh+ioiu+8jOWDheS+m+acrOmbu+WtkOmDteS7tuS5i+WPl+aWh+iAheS9v+eUqOOAguWPsOer
-r+WmgumdnuacrOmbu+WtkOmDteS7tuS5i+WPl+aWh+iAheaIluiqpOaUtuacrOmbu+WtkOmDteS7
-tu+8jOiri+eri+WNs+WbnuimhumDteS7tumAmuefpeWvhOS7tuS6uu+8jOS4pumKt+avgOacrOmb
-u+WtkOmDteS7tuS5i+aJgOacieikh+acrOWPiumZhOS7tuOAguS7u+S9leacque2k+aOiOasiuiA
-jOS9v+eUqOOAgeaPremcsuOAgeaVo+S9iOaIluikh+ijveacrOmbu+WtkOmDteS7tuaIluWFtumZ
-hOS7tuS5i+ihjOeCuu+8jOeahuWatOagvOemgeatoiDjgIINCg0K
+> +static inline int dma_map_sgtable_attrs(struct device *dev,
+> +	struct sg_table *sgt, enum dma_data_direction dir, unsigned long attrs)
+
+Two tab indents for parameter continuation, please.
+
+Can we also skip the separate _attrs version?  The existing ones have the
+separate _attrs variant as there were pre-existing versions without the
+attrs argument and lots of users, but that doesn't really apply here as
+an extra 0 argument isn't really an issue.
+
+> +static inline size_t iommu_map_sgtable(struct iommu_domain *domain,
+> +			unsigned long iova, struct sg_table *sgt, int prot)
+> +{
+> +	return iommu_map_sg(domain, iova, sgt->sgl, sgt->orig_nents, prot);
+> +}
+
+Should this be a separate patch due to the different subsystems?
+
+FYI, I'll happily pick up the prep patches in an immutable branch of
+the dma-mapping tree one we have settled on the details.
