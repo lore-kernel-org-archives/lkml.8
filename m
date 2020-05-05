@@ -2,57 +2,94 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A24C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0ABFC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA9E7206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6EFF20721
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:49:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X68YJ+61"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729119AbgEEUrf (ORCPT
+        id S1729088AbgEEUtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 16:47:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54074 "EHLO
+        Tue, 5 May 2020 16:49:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728135AbgEEUre (ORCPT
+        by vger.kernel.org with ESMTP id S1726593AbgEEUtf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 16:47:34 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86A89C061A0F;
-        Tue,  5 May 2020 13:47:34 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jW4TJ-001jb2-DG; Tue, 05 May 2020 20:47:21 +0000
-Date:   Tue, 5 May 2020 21:47:21 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Tue, 5 May 2020 16:49:35 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E932AC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 13:49:34 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id a7so142807pju.2
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 13:49:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gDQj+SjGugMQF8uI+esHL1nC61saNTbGZKF9q4vD+qY=;
+        b=X68YJ+6115N6xJQyXmzCTQ+PpT+i6HwBzGRgAcXyUKaveCJp095cI3uGI+MEomoRZ4
+         vvTeHPcOmw+LFxFuzftrI04yLDpWfcrQg4wNP+0hkHCoOBk6ys5D2SFBIRw2i5ZKl9Da
+         sxRMptkqta1hpE1wpKHxnWvOeTW6xpYDTH8pA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gDQj+SjGugMQF8uI+esHL1nC61saNTbGZKF9q4vD+qY=;
+        b=RlSs1upU/dwd6n+TM6KWPi8zMPZ+B+M2QGz1DOr1A1A/dnVviabR9MbKtEcetgREht
+         iCzPL7sdb9AVZ61foDOLUAAhbKDR2ts+I4+/kMw6guP0APLQ8lVNOKdZRQ+mA9n6L6sE
+         wJkAjdN+OsE2nMLOmUe3N1kCWMRAIXyhF+5tb8UgZEJunWfWzvi3fQOt7zMFDEVWNKyi
+         9yKHuWGJGPSy6T5mvVCfjVuUffNo4w2h2opfp1fCFuf8GVadSo7HmY4+Xw71lRom3weD
+         LUKwb/aDkLroZY/PNMRHOaTLymzzWYcCDeDqZm6x1JYTp4U9l9b5pM6XFr47ItJa07k1
+         Ko5A==
+X-Gm-Message-State: AGi0PubCuM94zCUZJG0TsGrtGnRrVtR7amnHWeSy4aSlOklQ8qhVLw/f
+        c6kFBFHBY7mgbTBOLTIApDeia76X5v0=
+X-Google-Smtp-Source: APiQypIBAlkG8zHKPW1X6EBiSl1Icjz6jxjYzyrkYgoneeW15xc46ZNoZsg5tUq2F0BQbxBZhiuepA==
+X-Received: by 2002:a17:90a:8c3:: with SMTP id 3mr5039320pjn.147.1588711774351;
+        Tue, 05 May 2020 13:49:34 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id j7sm2832507pjy.9.2020.05.05.13.49.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 13:49:33 -0700 (PDT)
+Date:   Tue, 5 May 2020 13:49:32 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Jeremy Kerr <jk@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: remove set_fs calls from the coredump code v6
-Message-ID: <20200505204721.GA23230@ZenIV.linux.org.uk>
-References: <20200505101256.3121270-1-hch@lst.de>
- <20200505203446.GZ23230@ZenIV.linux.org.uk>
- <20200505204258.GA24277@lst.de>
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 3/7] exec: Rename the flag called_exec_mmap
+ point_of_no_return
+Message-ID: <202005051348.E3358B456@keescook>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+ <87zhami2xp.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200505204258.GA24277@lst.de>
+In-Reply-To: <87zhami2xp.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 10:42:58PM +0200, Christoph Hellwig wrote:
-> On Tue, May 05, 2020 at 09:34:46PM +0100, Al Viro wrote:
-> > Looks good.  Want me to put it into vfs.git?  #work.set_fs-exec, perhaps?
+On Tue, May 05, 2020 at 02:42:26PM -0500, Eric W. Biederman wrote:
 > 
-> Sounds good.
+> Update the comments and make the code easier to understand by
+> renaming this flag.
+> 
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
-Applied, pushed and added into #for-next
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-- 
+Kees Cook
