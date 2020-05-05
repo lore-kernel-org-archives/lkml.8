@@ -2,226 +2,126 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC38FC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7109EC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C99612073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 256442073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:44:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IvCyOTvY"
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="oiObcX6j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729586AbgEEWiK (ORCPT
+        id S1729332AbgEEWoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 18:38:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43248 "EHLO
+        Tue, 5 May 2020 18:44:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728076AbgEEWiJ (ORCPT
+        with ESMTP id S1726568AbgEEWoH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 18:38:09 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 443DBC061A0F;
-        Tue,  5 May 2020 15:38:09 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id z1so44431vsn.11;
-        Tue, 05 May 2020 15:38:09 -0700 (PDT)
+        Tue, 5 May 2020 18:44:07 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BF6EC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 15:44:07 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id p13so1908533qvt.12
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 15:44:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cSfOB6yrL6iM3GyhSHKNdhh/qVQczJxQFfOD6vN+UVE=;
-        b=IvCyOTvYkL9YYbiYrwA/mKR7RsQ9/72wb6Sjv34ObwQF7QxQCSj55IPG2i6djLLHCu
-         2xrC4Nvg6/k7RyED3gdGWAzYBefYivdrQJSQhfJzGK7zCjn4Qj02Fy6pA0wKQJzjhlrS
-         WErK39Y+pAZyZGY3QSuK9SYo77xHLMCKC2NedbdWry8uEc4Eap6/WHnBsmL8RMWNOKW9
-         zScbUvNK6O7VDLlH9igh4CYW2dSeJRQI0zuJ/kYgjqI79Sko/KNsQHW/o2qIOTguUo0b
-         X4NusdIO7nAP0mZ06qI7XwmfbpW1rI5bHwtpHxaJxatWTJyby0bVO+JtDpIhEethjO87
-         E/FQ==
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=C76LIzi+5JEntbZy/qpJ0FbBUCkVF2NVl+l3fJXGdsQ=;
+        b=oiObcX6jBSeqxuVh18DxaP4VKpyAStp5GGdizA7cYt7WmM6dWbuGQxBEL+VVoIUoDS
+         ku8zmELuSS6v2qq/ewa5IGUmKfU1iJyBxNXu5tieOc9Fg7O/h6ARn4CbxdSx3sngwN7P
+         EEXC+owDs1Gi0O0EncsKBljKwVT4X2TuPXsU1rFQgyxcqNF9LjhT02wYkxMfR8aUXww7
+         p6+++CupbZ6LKHySeJgjAwRgwXZbB1Kin250GH4Raw+JGTZMtxqoUDIWW18Zst6JPlnq
+         xpCTHnxhduEM9lWP+uY1GPfZ458TP3yzoWOnG3LUPTIbN+CX5FTJVLp25HD2Jh/Ebus7
+         KYjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cSfOB6yrL6iM3GyhSHKNdhh/qVQczJxQFfOD6vN+UVE=;
-        b=hv7e8i9UbUxzC2iZfQCtzNIucr7s/QcR7c/QNdctHNC7tUmbcGvhykCaFgc2w8CE8m
-         461g+HbL8gM9fedWHdTVoIsLqolt25jmiXtvIEX5bb12RplDde6wZr7hDUlQDMiNmw47
-         LTLUsd7ixJd3upxPbsMYE7YYdla/bGWMWUWqw7nSGxQ142ambMHBaFkB/MIfKLu9wiIp
-         lPxB085dZCyhieUHmdK2Ae9f944nSSsatm6uC0IP9n1MUQxVYWzwI/rEmaPkA7RNT84j
-         ViPwZFX/zpT3OlNxuDzIrZiOorAOkDz+JhP5fm7w7xV+iFRmTMGQCPUi4Ij/VPrpYyHY
-         w1wQ==
-X-Gm-Message-State: AGi0PubkZmUPuykbGNfgtSistIX22LEzIFCTHnyYoqB/ikljM9qHmjYb
-        +yLPWcvpcBPEhLUcJtCBxI9xeQUN/rH7/oI0IK7P/Q==
-X-Google-Smtp-Source: APiQypIr9PI9/22peB1Fu3YgqrXSGAkGpCURNRdQGoxcO7miuw0Unp0PDignsXow25GHQ1rp6a3oJuLH1/qGyjX1M7s=
-X-Received: by 2002:a67:1502:: with SMTP id 2mr5322645vsv.80.1588718288093;
- Tue, 05 May 2020 15:38:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAHmME9oMcfY4nwkknwN9c4rB-O7xD4GCAOFPoZCbdnq=034=Vw@mail.gmail.com>
- <20200505215503.691205-1-Jason@zx2c4.com> <CAKwvOdk32cDowvrqRPKDRpf2ZiXh=jVnBTmhM-NWD=Ownq9v3w@mail.gmail.com>
- <20200505222540.GA230458@ubuntu-s3-xlarge-x86>
-In-Reply-To: <20200505222540.GA230458@ubuntu-s3-xlarge-x86>
-From:   George Burgess IV <george.burgess.iv@gmail.com>
-Date:   Tue, 5 May 2020 15:37:31 -0700
-Message-ID: <CAKh6zBEs50b6XmCn4O7JCgcrKOc3Q7Y28yxcWtAu30HJjqGpBg@mail.gmail.com>
-Subject: Re: [PATCH] Kbuild: disable FORTIFY_SOURCE on clang-10
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        George Burgess <gbiv@google.com>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=C76LIzi+5JEntbZy/qpJ0FbBUCkVF2NVl+l3fJXGdsQ=;
+        b=kQrFkHl8q+vbhKsPPvhZOXILJNOK61oHvecUsekKqGFTxNTKI3Ar7y6dcqrFP5/r2o
+         MHIW8udsORJ8Ez2QdiWBxsGk1J5+3dSUELXlhbWcV+FMX4LZUtW3ta5gqTBBH4pyuv9U
+         Qp09zXkMheDEX998l0RJfZ9eyi9mqCJor3MyfGDw3yzYJ6OWDOxQ1RnEQ5hrUk9NJjub
+         N/ZiEqPybukImcyytTAIFJPisBbx3TRucSm7oMWHFtew7h+vTD1JbSAaN6/+k7JkbQhW
+         IKOSlTgGZ58CNfqEkTWPnTSsiXdjxqRaxD/1cn/p/iGFbPkzCXnp3DdrnXRsDfMKgu5F
+         klPg==
+X-Gm-Message-State: AGi0PuY1WGGuM6/UaUuKDZIomXcKsW1SdpoyHjqHe7w1LpB1o/biKrJR
+        ICuDwJrPXRwnY1ypIX+ZDN2tmQ==
+X-Google-Smtp-Source: APiQypLneX5+0+lcyzB0u8ws0ZzKSXPK5claKysblIbIb96NIdVrq1gVior7r/FubUDA45y7URkDvw==
+X-Received: by 2002:ad4:55a5:: with SMTP id f5mr5000177qvx.133.1588718646066;
+        Tue, 05 May 2020 15:44:06 -0700 (PDT)
+Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
+        by smtp.gmail.com with ESMTPSA id u11sm3058126qtj.10.2020.05.05.15.44.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 15:44:05 -0700 (PDT)
+Message-ID: <c092c2f7659d344744bd4400bccc2bb6f774b998.camel@massaru.org>
+Subject: Re: [PATCH] docs: s390: Fix wrong label Guest2 instead of Guest3
+From:   Vitor Massaru Iha <vitor@massaru.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-doc@vger.kernel.org, akrowiak@linux.ibm.com,
+        pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, linux-kernel@vger.kernel.org,
+        brendanhiggins@google.com, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Date:   Tue, 05 May 2020 19:44:01 -0300
+In-Reply-To: <20200505094632.0d34f72b@lwn.net>
+References: <20200430221238.101838-1-vitor@massaru.org>
+         <20200505094632.0d34f72b@lwn.net>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This code generated by Clang here is the unfortunate side-effect of a
-bug introduced during Clang-10's development phase. From discussion
-with Kees on the links Nick mentioned, I surmise that FORTIFY in the
-kernel never worked as well for Clang as it does for GCC today. In
-many cases, it'd compile into nothing, but with the aforementioned
-Clang bug, it would turn into very suboptimal code.
+On Tue, 2020-05-05 at 09:46 -0600, Jonathan Corbet wrote:
+> On Thu, 30 Apr 2020 19:12:38 -0300
+> Vitor Massaru Iha <vitor@massaru.org> wrote:
+> 
+> > This fixes:
+> > 
+> > Documentation/s390/vfio-ap.rst:488: WARNING: duplicate label
+> > s390/vfio-ap:guest2, other instance in
+> > /home/iha/sdb/opensource/lkmp/linux_doc/Documentation/s390/vfio-
+> > ap.rst
+> > 
+> > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+> > ---
+> >  Documentation/s390/vfio-ap.rst | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/s390/vfio-ap.rst
+> > b/Documentation/s390/vfio-ap.rst
+> > index b5c51f7c748d..367e27ec3c50 100644
+> > --- a/Documentation/s390/vfio-ap.rst
+> > +++ b/Documentation/s390/vfio-ap.rst
+> > @@ -484,7 +484,7 @@ CARD.DOMAIN TYPE  MODE
+> >  05.00ff     CEX5A Accelerator
+> >  =========== ===== ============
+> >  
+> > -Guest2
+> > +Guest3
+> >  ------
+> >  =========== ===== ============
+> >  CARD.DOMAIN TYPE  MODE
+> 
+> Applied, thanks.
+> 
+> Note, though, that while the patch does "fix" the warning, what it
+> really
+> fixes is (as suggested in the subject) an incorrect heading; the
+> warning
+> was just a symptom.
 
-Kees sounded interested in getting a FORTIFY that plays more nicely
-with Clang into the kernel. Until that happens, we'll be in a world
-where an unpatched Clang-10 generates suboptimal code, and where a
-patched Clang-10 only FORTIFYs a subset of the kernel's `mem*`/`str*`
-functions. (I haven't checked assembly, but I assume that not every
-FORTIFY'ed function gets compiled into 'nothingness').
+Thanks Jon, I will be careful about that.
+> 
+> jon
 
-I don't have sufficient context to be opinionated on whether it's
-"better" to prefer a subset of opportune checks vs better codegen on
-unpatched versions of clang.
-
-If we do turn it off, it'd be nice to have some idea of when it can be
-turned back on (do we need a modified implementation as mentioned
-earlier? N months after clang's next point release is released,
-provided the fixes land in it?)
-
-> I can file an upstream PR for Tom to take a look out later tonight.
-
-Thank you for the bisection and for handling the merge :)
-
-
-
-
-
-On Tue, May 5, 2020 at 3:25 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Tue, May 05, 2020 at 03:02:16PM -0700, 'Nick Desaulniers' via Clang Built Linux wrote:
-> > On Tue, May 5, 2020 at 2:55 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
-> > >
-> > > clang-10 has a broken optimization stage that doesn't enable the
-> > > compiler to prove at compile time that certain memcpys are within
-> > > bounds, and thus the outline memcpy is always called, resulting in
-> > > horrific performance, and in some cases, excessive stack frame growth.
-> > > Here's a simple reproducer:
-> > >
-> > >     typedef unsigned long size_t;
-> > >     void *c(void *dest, const void *src, size_t n) __asm__("memcpy");
-> > >     extern inline __attribute__((gnu_inline)) void *memcpy(void *dest, const void *src, size_t n) { return c(dest, src, n); }
-> > >     void blah(char *a)
-> > >     {
-> > >       unsigned long long b[10], c[10];
-> > >       int i;
-> > >
-> > >       memcpy(b, a, sizeof(b));
-> > >       for (i = 0; i < 10; ++i)
-> > >         c[i] = b[i] ^ b[9 - i];
-> > >       for (i = 0; i < 10; ++i)
-> > >         b[i] = c[i] ^ a[i];
-> > >       memcpy(a, b, sizeof(b));
-> > >     }
-> > >
-> > > Compile this with clang-9 and clang-10 and observe:
-> > >
-> > > zx2c4@thinkpad /tmp/curve25519-hacl64-stack-frame-size-test $ clang-10 -Wframe-larger-than=0 -O3 -c b.c -o c10.o
-> > > b.c:5:6: warning: stack frame size of 104 bytes in function 'blah' [-Wframe-larger-than=]
-> > > void blah(char *a)
-> > >      ^
-> > > 1 warning generated.
-> > > zx2c4@thinkpad /tmp/curve25519-hacl64-stack-frame-size-test $ clang-9 -Wframe-larger-than=0 -O3 -c b.c -o c9.o
-> > >
-> > > Looking at the disassembly of c10.o and c9.o, one can see that c9.o is
-> > > properly optimized in the obvious way one would expect, while c10.o has
-> > > blown up and includes extern calls to memcpy.
-> > >
-> > > This is present on the most trivial bits of code. Thus, for clang-10, we
-> > > just set __NO_FORTIFY globally, so that this issue won't be incurred.
-> > >
-> > > Cc: Arnd Bergmann <arnd@arndb.de>
-> > > Cc: LKML <linux-kernel@vger.kernel.org>
-> > > Cc: clang-built-linux <clang-built-linux@googlegroups.com>
-> > > Cc: Kees Cook <keescook@chromium.org>
-> > > Cc: George Burgess <gbiv@google.com>
-> > > Cc: Nick Desaulniers <ndesaulniers@google.com>
-> > > Link: https://bugs.llvm.org/show_bug.cgi?id=45802
-> > > Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> >
-> > I'm going to request this not be merged until careful comment from
-> > George and Kees. My hands are quite full at the moment with other
-> > regressions.  I suspect these threads may be relevant, though I
-> > haven't had time to read through them myself.
-> > https://github.com/ClangBuiltLinux/linux/issues/979
-> > https://github.com/ClangBuiltLinux/linux/pull/980
->
-> I believe these issues are one in the same. I did a reverse bisect with
-> Arnd's test case and converged on George's first patch:
->
-> https://github.com/llvm/llvm-project/commit/2dd17ff08165e6118e70f00e22b2c36d2d4e0a9a
->
-> I think that in lieu of this patch, we should have that patch and its
-> follow-up fix merged into 10.0.1.
->
-> I can file an upstream PR for Tom to take a look out later tonight.
->
-> Cheers,
-> Nathan
->
-> > > ---
-> > >  Makefile | 7 +++++++
-> > >  1 file changed, 7 insertions(+)
-> > >
-> > > diff --git a/Makefile b/Makefile
-> > > index 49b2709ff44e..f022f077591d 100644
-> > > --- a/Makefile
-> > > +++ b/Makefile
-> > > @@ -768,6 +768,13 @@ KBUILD_CFLAGS += -Wno-gnu
-> > >  # source of a reference will be _MergedGlobals and not on of the whitelisted names.
-> > >  # See modpost pattern 2
-> > >  KBUILD_CFLAGS += -mno-global-merge
-> > > +
-> > > +# clang-10 has a broken optimization stage that causes memcpy to always be
-> > > +# outline, resulting in excessive stack frame growth and poor performance.
-> > > +ifeq ($(shell test $(CONFIG_CLANG_VERSION) -ge 100000 && test $(CONFIG_CLANG_VERSION) -lt 110000; echo $$?),0)
-> > > +KBUILD_CFLAGS += -D__NO_FORTIFY
-> > > +endif
-> > > +
-> > >  else
-> > >
-> > >  # These warnings generated too much noise in a regular build.
-> > > --
-> > > 2.26.2
-> > >
-> >
-> >
-> > --
-> > Thanks,
-> > ~Nick Desaulniers
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> > To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/CAKwvOdk32cDowvrqRPKDRpf2ZiXh%3DjVnBTmhM-NWD%3DOwnq9v3w%40mail.gmail.com.
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200505222540.GA230458%40ubuntu-s3-xlarge-x86.
