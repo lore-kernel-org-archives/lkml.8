@@ -2,107 +2,102 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 749BFC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 01:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4409C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 01:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47963206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 01:06:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nWAYyQPh"
+	by mail.kernel.org (Postfix) with ESMTP id AF2AA206D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 01:14:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbgEEBG0 (ORCPT
+        id S1728143AbgEEBOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 21:06:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38870 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbgEEBGZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 21:06:25 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D715C061A0F;
-        Mon,  4 May 2020 18:06:25 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id z25so253433otq.13;
-        Mon, 04 May 2020 18:06:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CdwxcUFpDpRXJQYQA4tNofTIdp6JTfVxZhsYvwhhuio=;
-        b=nWAYyQPhoAediHBMdLD5YT5596BfKZq6FPTPVXsb1xqpqhfvtCdD1WEDWCr0xWVwWN
-         x3FWG5i9v/O5cjy+6zhs7CGdQHkebZFOozOCgbpLp0vjLIr3Y9X7kxf8zsIvFUMYh2xI
-         0KBXg6V61tVBxeSLF10nQW5EwFNiLBI5iTabGx6KphnnFdAXKI0wNo7YmxIogC0Wzd4D
-         /tITPGjGT8aagOkGzgobTGFyaiVA3qPUotQbXXiG/qSDfcPAmO3Dj6At/MnJq+x8qv6V
-         C3R0EsiPYuQq2KfVXEQpHu74XmAV2sz61TtVAVJMnE9rY4bjQlQxNp9Oz4dQ3e13OYrt
-         VZOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CdwxcUFpDpRXJQYQA4tNofTIdp6JTfVxZhsYvwhhuio=;
-        b=ucee1zRyjqIlN1LxRlouY3qeJsQIT5lXchfgIHkINTERaPlmBzlRZRRGOniFPh9qqj
-         35XRGD0spMPyiUF50plW249Tl9hI2fpSf9YlF6xP6FVc5a7QqyXzga40G+RvlDHTRh7n
-         rsl+r7FTlzLNO71FqsyNSPKrbCBJUktvXoTdBVonr6VjpfyGfi8kjHNApxfKHIoM6VQW
-         R/+9yotnfwByDEtZqoKIm6Rxoe/Lmq3p4kclEtNY4XhmwnVNxrdM8GSFgTrQaDyqBolU
-         pT4o2OhmNQGyUj95s4hVJaCdJhNWraIG4wiAYq2zeXe4kRdun9t6KRMXYsXXPUyoyqUt
-         zYxA==
-X-Gm-Message-State: AGi0PuYLWj0jcNNpgpOJx+IO7nO5CkKNu+MfiJkZ4tsWD0JtbdcUDzGY
-        9k9YZDjCneINgW6symsl+0i753UHc2NaI2VEdgw=
-X-Google-Smtp-Source: APiQypIeUyYLu4PyVWEwcNM4KHou+LK6yqrKBTIIm3x+Utq3dMUUOEn1pRhdtOx7zI5xQ14fOIU0eNEWBOrKMPKSoe4=
-X-Received: by 2002:a9d:107:: with SMTP id 7mr648193otu.48.1588640784669; Mon,
- 04 May 2020 18:06:24 -0700 (PDT)
+        Mon, 4 May 2020 21:14:45 -0400
+Received: from mga18.intel.com ([134.134.136.126]:39118 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726635AbgEEBOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 21:14:45 -0400
+IronPort-SDR: AUBlGI+9GiKnCJY3gE7XFzCulIeFmkQvPmdQfbz8z/jmff0s8QOAhhBN4aBj6P40q5AZhx2lFt
+ uen4oye5W+SQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 18:14:44 -0700
+IronPort-SDR: d26C27YGcupVoq61tsh2NheD8M+GJHRYiT9Ig7OraRIBT6Gx8MS07v/zvYF9nM/0wkC/b02/4Z
+ ToYtlv437uHw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,354,1583222400"; 
+   d="scan'208";a="461205749"
+Received: from jbrandeb-mobl2.amr.corp.intel.com (HELO localhost) ([10.251.156.122])
+  by fmsmga006.fm.intel.com with ESMTP; 04 May 2020 18:14:43 -0700
+Date:   Mon, 4 May 2020 18:14:43 -0700
+From:   Jesse Brandeburg <jesse.brandeburg@intel.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     <clang-built-linux@googlegroups.com>,
+        <andriy.shevchenko@intel.com>, <bp@alien8.de>,
+        <dan.j.williams@intel.com>, <linux-kernel@vger.kernel.org>,
+        <linux@rasmusvillemoes.dk>, <mingo@redhat.com>,
+        <peterz@infradead.org>, <tglx@linutronix.de>, <x86@kernel.org>,
+        <ilie.halip@gmail.com>, <natechancellor@gmail.com>
+Subject: Re: [PATCH v6 1/2] x86: fix bitops.h warning with a moved cast
+Message-ID: <20200504181443.00007a3d@intel.com>
+In-Reply-To: <20200504193524.GA221287@google.com>
+References: <20200310221747.2848474-1-jesse.brandeburg@intel.com>
+        <20200504193524.GA221287@google.com>
+X-Mailer: Claws Mail 3.12.0 (GTK+ 2.24.28; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <0000000000005a8fe005a4b8a114@google.com> <20200504190348.iphzmd7micvidh46@treble>
-In-Reply-To: <20200504190348.iphzmd7micvidh46@treble>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Mon, 4 May 2020 18:06:13 -0700
-Message-ID: <CAM_iQpVu11xwKS5OEhDKmtbnP83oFNy9jBoAROS78-ECPEBWdw@mail.gmail.com>
-Subject: Re: BUG: stack guard page was hit in unwind_next_frame
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     syzbot <syzbot+e73ceacfd8560cc8a3ca@syzkaller.appspotmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        shile.zhang@linux.alibaba.com,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 4, 2020 at 12:08 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> On Sat, May 02, 2020 at 11:36:11PM -0700, syzbot wrote:
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    8999dc89 net/x25: Fix null-ptr-deref in x25_disconnect
-> > git tree:       net
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=16004440100000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=b7a70e992f2f9b68
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=e73ceacfd8560cc8a3ca
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+e73ceacfd8560cc8a3ca@syzkaller.appspotmail.com
->
-> Infinite loop in network code.
+On Mon, 4 May 2020 12:51:12 -0700
+Nick Desaulniers <ndesaulniers@google.com> wrote:
 
-It is not a loop, it is an unbound recursion where netdev events
-trigger between bond master and slave back and forth.
+> Sorry for the very late report.  It turns out that if your config
+> tickles __builtin_constant_p just right, this now produces invalid
+> assembly:
+> 
+> $ cat foo.c
+> long a(long b, long c) {
+>   asm("orb\t%1, %0" : "+q"(c): "r"(b));
+>   return c;
+> }
+> $ gcc foo.c
+> foo.c: Assembler messages:
+> foo.c:2: Error: `%rax' not allowed with `orb'
+> 
+> The "q" constraint only has meanting on -m32 otherwise is treated as
+> "r".
+> 
+> Since we have the mask (& 0xff), can we drop the `b` suffix from the
+> instruction? Or is a revert more appropriate? Or maybe another way to
+> skin this cat?
 
-Let me see how this can be fixed properly.
+Figures that such a small change can create problems :-( Sorry for the
+thrash!
 
-Thanks!
+The patches in the link below basically add back the cast, but I'm
+interested to see if any others can come up with a better fix that
+a) passes the above code generation test
+b) still keeps sparse happy
+c) passes the test module and the code inspection
+
+If need be I'm OK with a revert of the original patch to fix the issue
+in the short term, but it seems to me there must be a way to satisfy
+both tools.  We went through several iterations on the way to the final
+patch that we might be able to pluck something useful from.
+
+> Link: https://github.com/ClangBuiltLinux/linux/issues/961
+> This is blowing up our KernelCI reports.
+
+ASIDE: 
+Bummer, how come none of those KernelCI reports are part of
+zero-day testing at https://01.org/lkp/documentation/0-day-test-service
+I'm interested in your answer but don't want to pollute this thread,
+feel free to contact me directly for this one or start a new thread?
+
