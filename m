@@ -2,182 +2,217 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7BCC47258
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9318BC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3218C20752
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:35:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mjtr6v62"
+	by mail.kernel.org (Postfix) with ESMTP id 6D61A20757
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:36:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729204AbgEEUft (ORCPT
+        id S1729205AbgEEUgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 16:35:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52234 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729189AbgEEUfs (ORCPT
+        Tue, 5 May 2020 16:36:48 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:45884 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbgEEUgs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 16:35:48 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09DA3C061A41
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 13:35:47 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id j2so2936143qtr.12
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 13:35:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XEAq1qR7c6+ra3RdnbMtrjFGoO4ipOXO+A1Su5NP3KU=;
-        b=Mjtr6v624mwd+SkOqVanfa/Hmx2bM3zl8sFu15lvU6VJfAsYh3yx4ASR9yL9R2iG9G
-         pZ0TbpokKYqWaTDRcRQ4jfBhiEXVN87QcoLHfbbgizy1+qDCGZItP2yfMwu4WPteJGLW
-         cLxg9i5A+k5KGilQV9Ptl1g9EapQ7KYK9Mdcb6LmicnB/CyMKWIUPglmXeEkwrwuW6vd
-         GLk5shmmjjs8kKxnMYzAzbR66ZBlU07l4B2HT4e7tbQJMwRkj0w33h0REgMtsH2P7Bz0
-         pLKIytVpecHNSGhdcsJK492RjFMYN3q/DTT4I0Anen6oyeq4BEpP/4aI4X9hSNgWK7or
-         1GrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XEAq1qR7c6+ra3RdnbMtrjFGoO4ipOXO+A1Su5NP3KU=;
-        b=a/2qjzrwO5VWw+tTFlXELaoZ6YlbgkGR1lOJ9HVVzD94nqFrXJo4HIiqeLZlBMjI7g
-         FNgwbTkGM3qWqmE2evX70nXKkKur4G4Hlrhk44JJZrlmXm11/0R1P3yFSPrRmulXJU9y
-         ygCp8Z8hQ7nOO++y8sq7HBqyl8p2GSSkJiPXRtcHW4fD3rdrOEaTTl54t7UaSuf4NVPH
-         2i4fxmzef8J1XVr68samKCqNZwM8mlVXVj60vfyHThLdMAv0LeXmKlaL0Cc5ND3GXyIl
-         6tA8pUgnxfPvbbqW8w29MzrA2EAerqdlj6oglpg5faR4ZXWyLGUx5qSVZU+IEHGHhVWM
-         pWBQ==
-X-Gm-Message-State: AGi0PuaOqCDlj+I1rgXgM6T8un1Y312L7DCRvCWZgANoVUYGiGzlRDmU
-        0H1D7pHBv8t4GReb9jmC0+GK3Q9k0DvjA8GxpwNdpA==
-X-Google-Smtp-Source: APiQypL+7UscQbmRBHWrH8NdOndOCVOXNz1vyQHcPPi4an6UYcA0QN5lg2HueQHtrlZAnQ03coblSGKkUc7pWCJ5o1Y=
-X-Received: by 2002:ac8:3488:: with SMTP id w8mr4874608qtb.378.1588710945678;
- Tue, 05 May 2020 13:35:45 -0700 (PDT)
+        Tue, 5 May 2020 16:36:48 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id DE4D62A1A91
+Subject: Re: [PATCH] platform/chrome: cros_ec_typec: Handle NULL EC pointer
+ during probe.
+To:     Daniil Lunev <dlunev@chromium.org>,
+        Prashant Malani <pmalani@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+References: <20200428110253.1.I926f6741079cafb04ecb592130aef75b24ad31ae@changeid>
+ <c57b0892-d68d-f0f2-3cc1-b8549983227e@collabora.com>
+ <CAONX=-dLVBpz+p1si4cWGHEmQ_toO8kW=fCPcdUuX2KLc-o=2A@mail.gmail.com>
+ <CAONX=-dDWjMQDGncSgXNf86Bt3C5OUtFqh=Pe2HToGPSv5qa4A@mail.gmail.com>
+ <CACeCKacoEjQm0_VfZGYNEZVhKubPyqspNZupQk+7piJOsVzH+Q@mail.gmail.com>
+ <fc7901ff-9e67-d6d5-f084-70233fd8344c@collabora.com>
+ <CACeCKafnrMk_=Udg-roEbrkDzZe6m3mUk14OOVVROmn-agfpDA@mail.gmail.com>
+ <CAONX=-cR0H2zrGEunwq2k3g+d=9asmeu39ssFN31yFs6i-wktQ@mail.gmail.com>
+ <20200501005609.GA131713@google.com>
+ <CAONX=-fs_4zA4DGxcoRTod+amjVgSdAaQ-CQ4wsC7J9=fnm6Zw@mail.gmail.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <d5369956-aca4-2c40-3300-d86151847bbc@collabora.com>
+Date:   Tue, 5 May 2020 22:36:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200505084049.1779243-1-rpenyaev@suse.de> <a9898eaefa85fa9c85e179ff162d5e8d@suse.de>
- <20200505130357.04566dee5501c3787105376f@linux-foundation.org>
-In-Reply-To: <20200505130357.04566dee5501c3787105376f@linux-foundation.org>
-From:   Khazhismel Kumykov <khazhy@google.com>
-Date:   Tue, 5 May 2020 13:35:34 -0700
-Message-ID: <CACGdZYKyVEA3vF8A6cq+gM5CtsRi4gcxyCyRazqpxjTgqcuZ2w@mail.gmail.com>
-Subject: Re: [PATCH 1/1] epoll: call final ep_events_available() check under
- the lock
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Roman Penyaev <rpenyaev@suse.de>, Jason Baron <jbaron@akamai.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="0000000000009b8b1e05a4ec97e5"
+In-Reply-To: <CAONX=-fs_4zA4DGxcoRTod+amjVgSdAaQ-CQ4wsC7J9=fnm6Zw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000009b8b1e05a4ec97e5
-Content-Type: text/plain; charset="UTF-8"
+Hi.
 
-On Tue, May 5, 2020 at 1:04 PM Andrew Morton <akpm@linux-foundation.org> wrote:
->
-> On Tue, 05 May 2020 10:42:05 +0200 Roman Penyaev <rpenyaev@suse.de> wrote:
->
-> > May I ask you to remove "epoll: ensure ep_poll() doesn't miss wakeup
-> > events" from your -mm queue? Jason lately found out that the patch
-> > does not fully solve the problem and this one patch is a second
-> > attempt to do things correctly in a different way (namely to do
-> > the final check under the lock). Previous changes are not needed.
->
-> Where do we stand with Khazhismel's "eventpoll: fix missing wakeup for
-> ovflist in ep_poll_callback"?
->
-> http://lkml.kernel.org/r/20200424190039.192373-1-khazhy@google.com
->
+On 1/5/20 5:22, Daniil Lunev wrote:
+> Hi Prashant,
+> I do not think it is present. Thinking about it, I do not think it
+> shall be an issue on any released device as it will have either a
+> firmware which wouldn't even trigger the typec probe or the one after
+> the hierarchy fix. Likely I just got a firmware which was somewhere in
+> between those two (As I did some unrelated FW testing). So, yes,
+> probably putting this upstream is not necessary, though IMO more
+> sanity checks - especially on non-critical run-once paths - are always
+> better than having a kernel panic lingering around the corner, not
+> like I am insisting on pushing the patch though with all the info, up
+> to Enric.
 
-My understanding is - we need the ep_poll_callback fix on a logical
-level (ovfllist was never triggering wakeup), and the two follow-ups
-close races - in both how we add/remove from the wait queue, and how
-we observe the ready list, which are needed if we only wake when we
-add events, where before we were also waking when we were splicing
-ovflist events when reading the ready list. As well, the first two
-together are needed for epoll60 to pass in my testing.
+I'd prefer to not push the patch. If at some point this is starts of being
+possible we will catch soon.
 
-Khazhy
+Thank you,
+ Enric
 
---0000000000009b8b1e05a4ec97e5
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIIPBgYJKoZIhvcNAQcCoIIO9zCCDvMCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-ggxpMIIEkjCCA3qgAwIBAgINAewckktV4F6Q7sAtGDANBgkqhkiG9w0BAQsFADBMMSAwHgYDVQQL
-ExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UEAxMK
-R2xvYmFsU2lnbjAeFw0xODA2MjAwMDAwMDBaFw0yODA2MjAwMDAwMDBaMEsxCzAJBgNVBAYTAkJF
-MRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSEwHwYDVQQDExhHbG9iYWxTaWduIFNNSU1FIENB
-IDIwMTgwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCUeobu8FdB5oJg6Fz6SFf8YsPI
-dNcq4rBSiSDAwqMNYbeTpRrINMBdWuPqVWaBX7WHYMsKQwCOvAF1b7rkD+ROo+CCTJo76EAY25Pp
-jt7TYP/PxoLesLQ+Ld088+BeyZg9pQaf0VK4tn23fOCWbFWoM8hdnF86Mqn6xB6nLsxJcz4CUGJG
-qAhC3iedFiCfZfsIp2RNyiUhzPAqalkrtD0bZQvCgi5aSNJseNyCysS1yA58OuxEyn2e9itZJE+O
-sUeD8VFgz+nAYI5r/dmFEXu5d9npLvTTrSJjrEmw2/ynKn6r6ONueZnCfo6uLmP1SSglhI/SN7dy
-L1rKUCU7R1MjAgMBAAGjggFyMIIBbjAOBgNVHQ8BAf8EBAMCAYYwJwYDVR0lBCAwHgYIKwYBBQUH
-AwIGCCsGAQUFBwMEBggrBgEFBQcDCTASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdDgQWBBRMtwWJ
-1lPNI0Ci6A94GuRtXEzs0jAfBgNVHSMEGDAWgBSP8Et/qC5FJK5NUPpjmove4t0bvDA+BggrBgEF
-BQcBAQQyMDAwLgYIKwYBBQUHMAGGImh0dHA6Ly9vY3NwMi5nbG9iYWxzaWduLmNvbS9yb290cjMw
-NgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIzLmNybDBn
-BgNVHSAEYDBeMAsGCSsGAQQBoDIBKDAMBgorBgEEAaAyASgKMEEGCSsGAQQBoDIBXzA0MDIGCCsG
-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
-BQcCARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wUQYIKwYBBQUHAQEE
-RTBDMEEGCCsGAQUFBzAChjVodHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc3Nt
-aW1lY2EyMDE4LmNydDAfBgNVHSMEGDAWgBRMtwWJ1lPNI0Ci6A94GuRtXEzs0jA/BgNVHR8EODA2
-MDSgMqAwhi5odHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2NhL2dzc21pbWVjYTIwMTguY3JsMA0G
-CSqGSIb3DQEBCwUAA4IBAQCM37MMrUvgKBlbkfClP3kSaljmhqmtbhA855Dxg0ExJEaXMLDnSEod
-BZm4+79Rcp/gCP67jOVlkJHRSTPco73qpOMg8Q9aXMbcysY/rm3bul1wpALN1dQh8STLYiDdNBXJ
-LJZxf7nC3+xcLEb0+RTU05lUVCzmixKU665YZspUCQttLL7LxY8k7vpLtXeX7+OP6mxVsEOca9CI
-fEybv+pk4+vHfIg3XiUK2Qs4qTHSFZ09OuPSRqkO1CY/AET8DPwXkO2ByN/gdUYo1po23haQT7kB
-qhSVsP/BmQ7F6qER6f8mDR3F0uH26W4ZFxa/htst/Pb0qoQnkyDXLPSLJa9UMYICYTCCAl0CAQEw
-XzBLMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTEhMB8GA1UEAxMYR2xv
-YmFsU2lnbiBTTUlNRSBDQSAyMDE4AhABiQs/r7YF6iuE/NQrZF28MA0GCWCGSAFlAwQCAQUAoIHU
-MC8GCSqGSIb3DQEJBDEiBCCPB7JBGPWXEzvmI6+qkW04NwddgBWY9wJPycoyzBwfhzAYBgkqhkiG
-9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMDA1MDUyMDM1NDZaMGkGCSqGSIb3
-DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcN
-AwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAE
-ggEAgXA7etQPygilhOlUl4xAgxL22LrJJp3gHd/uYUpJecNRkLIrQ/pF3kUE5Mbihx1QsJD7Lmi+
-R940ZnPZxvPMG2UQ5j9VHWELETbJQK8KFr0Uz/wOEWooaMUT8RwTg42uX8xdhMyZy/abTNIeSbrm
-wz5XvrAlgeDxHGJgW2ZnTvzWzVh74AF90lFUiHjzHZ+m6koU65RV+5cizgR+LvrEnvdfCyr2FlOM
-EMba3dJOhXwOYN18sUclNma4/vlpGJHUiPvgewLRlvmX07WFgmLW1RpxhfK31pNS3b7fX8XQRj1p
-ozNF6zhgngcsIsA+xgAeaPBD3MoyVNsWPTp9dDBzVg==
---0000000000009b8b1e05a4ec97e5--
+> Cheers,
+> Daniil
+> 
+> On Fri, May 1, 2020 at 10:56 AM Prashant Malani <pmalani@chromium.org> wrote:
+>>
+>> Hi Daniil,
+>>
+>> On Fri, May 01, 2020 at 10:15:18AM +1000, Daniil Lunev wrote:
+>>> On the official revision of coreboot for hatch it doesn't even try to
+>>> load Type C. However it gives some warning messages from
+>>> cros-usbpd-notify-acpi about EC, So I wonder why the check of the same
+>>> type is not appropriate in the typec driver?
+>>
+>> I think the difference is that GOOG0003 is already present on shipped /
+>> official versions of coreboot (so not having that check can cause
+>> existing release images/devices to crash), whereas for GOOG0014 that is / isn't the case.
+>>
+>> Is GOOG0014 present on the official release coreboot image for this
+>> device? If so, what's its path (/sys/bus/acpi/devices/<HID>/path) ?
+>>
+>> Best regards,
+>>
+>> -Prashant
+>>>
+>>> ../chrome/cros_usbpd_notify.c
+>>>
+>>> /* Get the EC device pointer needed to talk to the EC. */
+>>> ec_dev = dev_get_drvdata(dev->parent);
+>>> if (!ec_dev) {
+>>> /*
+>>> * We continue even for older devices which don't have the
+>>> * correct device heirarchy, namely, GOOG0003 is a child
+>>> * of GOOG0004.
+>>> */
+>>> dev_warn(dev, "Couldn't get Chrome EC device pointer.\n");
+>>> }
+>>>
+>>>
+>>> # dmesg
+>>> ...
+>>> [    8.513351] cros-ec-spi spi-PRP0001:02: EC failed to respond in time
+>>> [    8.722072] cros-ec-spi spi-PRP0001:02: EC failed to respond in time
+>>> [    8.729271] cros-ec-spi spi-PRP0001:02: Cannot identify the EC: error -110
+>>> [    8.736966] cros-ec-spi spi-PRP0001:02: cannot register EC,
+>>> fallback to spidev
+>>> [    8.767017] cros_ec_lpcs GOOG0004:00: Chrome EC device registered
+>>> [    8.807537] cros-usbpd-notify-acpi GOOG0003:00: Couldn't get Chrome
+>>> EC device pointer.
+>>> ...
+>>>
+>>> On Fri, May 1, 2020 at 2:17 AM Prashant Malani <pmalani@chromium.org> wrote:
+>>>>
+>>>> Hi Enric,
+>>>>
+>>>> On Thu, Apr 30, 2020 at 8:26 AM Enric Balletbo i Serra
+>>>> <enric.balletbo@collabora.com> wrote:
+>>>>>
+>>>>> Hi Prashant,
+>>>>>
+>>>>> On 30/4/20 2:43, Prashant Malani wrote:
+>>>>>> On Wed, Apr 29, 2020 at 5:38 PM Daniil Lunev <dlunev@chromium.org> wrote:
+>>>>>>>
+>>>>>>> [to make it appear on the mailing list as I didn't realize I was in
+>>>>>>> hypertext sending mode]
+>>>>>>>
+>>>>>>> On Thu, Apr 30, 2020 at 10:11 AM Daniil Lunev <dlunev@chromium.org> wrote:
+>>>>>>>>
+>>>>>>>> Hi Enric.
+>>>>>>>> I encountered the issue on a Hatch device when trying running 5.4 kernel on that. After talking to Prashant it seems that any device with coreboot built before a certain point (a particular fix for device hierarchy in ACPI tables of Chrome devices which happened in mid-April) will not be able to correctly initialize the driver and will get a kernel panic trying to do so.
+>>>>>>
+>>>>>> A clarifying detail here: This should not be seen in any current
+>>>>>> *production* device. No prod device firmware will carry the erroneous
+>>>>>> ACPI device entry.
+>>>>>>
+>>>>>
+>>>>> Thanks for the clarification. Then, I don't think we need to upstream this. This
+>>>>> kind of "defensive-programming" it's not something that should matter to upstream.
+>>>>
+>>>> Actually, on second thought, I am not 100% sure about this:
+>>>> Daniil, is the erroneous ACPI device on a *production* firmware for
+>>>> this device (I'm not sure about the vintage of that device's BIOS)?
+>>>>
+>>>> My apologies for the confusion, Enric and Daniil; but would be good to
+>>>> get clarification from Daniil.
+>>>>
+>>>> Best regards,
+>>>>>
+>>>>> Thanks,
+>>>>>  Enric
+>>>>>
+>>>>>
+>>>>>>>> Thanks,
+>>>>>>>> Daniil
+>>>>>>>>
+>>>>>>>> On Thu, Apr 30, 2020 at 7:58 AM Enric Balletbo i Serra <enric.balletbo@collabora.com> wrote:
+>>>>>>>>>
+>>>>>>>>> Hi Daniil,
+>>>>>>>>>
+>>>>>>>>> Thank you for the patch.
+>>>>>>>>>
+>>>>>>>>> On 28/4/20 3:02, Daniil Lunev wrote:
+>>>>>>>>>> Missing EC in device hierarchy causes NULL pointer to be returned to the
+>>>>>>>>>> probe function which leads to NULL pointer dereference when trying to
+>>>>>>>>>> send a command to the EC. This can be the case if the device is missing
+>>>>>>>>>> or incorrectly configured in the firmware blob. Even if the situation
+>>>>>>>>>
+>>>>>>>>> There is any production device with a buggy firmware outside? Or this is just
+>>>>>>>>> for defensive programming while developing the firmware? Which device is
+>>>>>>>>> affected for this issue?
+>>>>>>>>>
+>>>>>>>>> Thanks,
+>>>>>>>>>  Enric
+>>>>>>>>>
+>>>>>>>>>> occures, the driver shall not cause a kernel panic as the condition is
+>>>>>>>>>> not critical for the system functions.
+>>>>>>>>>>
+>>>>>>>>>> Signed-off-by: Daniil Lunev <dlunev@chromium.org>
+>>>>>>>>>> ---
+>>>>>>>>>>
+>>>>>>>>>>  drivers/platform/chrome/cros_ec_typec.c | 5 +++++
+>>>>>>>>>>  1 file changed, 5 insertions(+)
+>>>>>>>>>>
+>>>>>>>>>> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+>>>>>>>>>> index 874269c07073..30d99c930445 100644
+>>>>>>>>>> --- a/drivers/platform/chrome/cros_ec_typec.c
+>>>>>>>>>> +++ b/drivers/platform/chrome/cros_ec_typec.c
+>>>>>>>>>> @@ -301,6 +301,11 @@ static int cros_typec_probe(struct platform_device *pdev)
+>>>>>>>>>>
+>>>>>>>>>>       typec->dev = dev;
+>>>>>>>>>>       typec->ec = dev_get_drvdata(pdev->dev.parent);
+>>>>>>>>>> +     if (!typec->ec) {
+>>>>>>>>>> +             dev_err(dev, "Failed to get Cros EC data\n");
+>>>>>>>>>> +             return -EINVAL;
+>>>>>>>>>> +     }
+>>>>>>>>>> +
+>>>>>>>>>>       platform_set_drvdata(pdev, typec);
+>>>>>>>>>>
+>>>>>>>>>>       ret = cros_typec_get_cmd_version(typec);
+>>>>>>>>>>
