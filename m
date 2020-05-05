@@ -2,192 +2,161 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E13F5C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97292C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA5BC206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:40:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588689617;
-	bh=j/GqXoT+GQGssQ3rGRFGFL3Qfzj08wyd/Iyt+COdg2A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eWTCG3rkaPYhNE5jXOyN91HJWbipom83JPkBtGuShftEKIO4C8B19Hvfqm/FGS6NA
-	 PEyvINN7yFsPV4ocTvO2S5Y/5oENvBDsQV4v8Ndd1pqR88rOK89P3w4n3GVReElCVv
-	 ns49raLUQb45OShde2FvYpiM9/o7D7a4JlncJF5Q=
+	by mail.kernel.org (Postfix) with ESMTP id 547CC206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:40:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ScOXw0wV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbgEEOkR (ORCPT
+        id S1729447AbgEEOkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 5 May 2020 10:40:22 -0400
+Received: from gateway31.websitewelcome.com ([192.185.144.80]:18623 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729060AbgEEOkR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 5 May 2020 10:40:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41766 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727083AbgEEOkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:40:16 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DB0A206B9;
-        Tue,  5 May 2020 14:40:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588689616;
-        bh=j/GqXoT+GQGssQ3rGRFGFL3Qfzj08wyd/Iyt+COdg2A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vQRX4RZsIX+qs0WE3rk0U3eOEH1uAOv+i+v2rDbwNKAFYykV6I37Zfaitx0oUXWwm
-         wtxPbEft1eIUz4BouINwCZusQpQ10+hcyUHJspFT+n8tfliHeVjyY4l+zIcs60Gf1f
-         /xBEITuUyoyNppCR7aSoddeDROW8aT33JQLYQlMU=
-Date:   Tue, 5 May 2020 16:40:13 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, loic.pallardy@st.com,
-        linus.walleij@linaro.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] bus: stm32: Introduce firewall controller helpers
-Message-ID: <20200505144013.GB838641@kroah.com>
-References: <20200505073308.22914-1-benjamin.gaignard@st.com>
- <20200505073308.22914-3-benjamin.gaignard@st.com>
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 3C01B14A89E3
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 09:35:15 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id VyfDje7Z5Sl8qVyfDj1Z6R; Tue, 05 May 2020 09:35:15 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=w8vO40rWXZ1GoRNZS/PfE/ay1WvD44l/8L95KgF2RvY=; b=ScOXw0wV7Vj+vTyGGrREdyREEs
+        wfcSrYktKVNZsiRm1MTr9133gkmGKxvBRjSV9EHu1uHkC6gzpGIFNwVFaQUuYpSUk03yvQhH/V6oh
+        583wKp7oea6AuIsv0YToFIaa/e/bzddHJtT3xX4Qnpls9jmv7AAx9QUVlvfDxhU6yayxD8vJBrTbH
+        mZLP3GfTgvaD+u/lPJMIV7yX46j2+pjNiPLzBUCFnW3AZ7xMMNIollEFSWezlMFdVMRMrL7l9jBY5
+        8M2l93g2+YEuP/FvIfgG9JlOx02bzlPElo07RrLcjrbV7CGOt57CcLoOUuDi+gVjogzoIoAvE4HYX
+        OpVDrxLw==;
+Received: from [189.207.59.248] (port=46906 helo=[192.168.15.4])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jVyfC-002vTa-QF; Tue, 05 May 2020 09:35:14 -0500
+Subject: Re: [PATCH] fsnotify: avoid gcc-10 zero-length-bounds warning
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Jan Kara <jack@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200505143028.1290686-1-arnd@arndb.de>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <b287bb2f-28e2-7a41-e015-aa5a0cb3b5d7@embeddedor.com>
+Date:   Tue, 5 May 2020 09:39:36 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505073308.22914-3-benjamin.gaignard@st.com>
+In-Reply-To: <20200505143028.1290686-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.207.59.248
+X-Source-L: No
+X-Exim-ID: 1jVyfC-002vTa-QF
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.4]) [189.207.59.248]:46906
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 8
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 09:33:05AM +0200, Benjamin Gaignard wrote:
-> The goal of these helpers are to offer an interface for the
-> hardware blocks controlling bus accesses rights.
+
+
+On 5/5/20 09:30, Arnd Bergmann wrote:
+> gcc-10 warns about accesses into the f_handle[] zero-length array.
 > 
-> Bus firewall controllers are typically used to control if a
-> hardware block can perform read or write operations on bus.
+> fs/notify/fdinfo.c: In function 'show_mark_fhandle':
+> fs/notify/fdinfo.c:66:47: error: array subscript 'i' is outside the bounds of an interior zero-length array 'unsigned char[0]' [-Werror=zero-length-bounds]
+>    66 |   seq_printf(m, "%02x", (int)f.handle.f_handle[i]);
+>       |                              ~~~~~~~~~~~~~~~~~^~~
+> In file included from fs/notify/fdinfo.c:3:
+> include/linux/fs.h:988:16: note: while referencing 'f_handle'
+>   988 |  unsigned char f_handle[0];
+>       |                ^~~~~~~~
 > 
-> Smarter firewall controllers could be able to define accesses
-> rights per hardware blocks to control where they can read
-> or write.
+> This is solved by using a flexible array instead.
 > 
-> Firewall controller configurations are provided in device node,
-> parsed by the helpers and send to the driver to apply them.
-> Each controller may need different number and type of inputs
-> to configure the firewall so device-tree properties size have to
-> be define by using "#firewall-cells".
-> Firewall configurations properties have to be named "firewall-X"
-> on device node.
-> "firewall-names" keyword can also be used to give a name to
-> a specific configuration.
-> 
-> Example of device-tree:
-> ctrl0: firewall@0 {
-> 	#firewall-cells = <2>;
->       };
-> 
-> foo: foo@0 {
-> 	firewall-names = "default", "setting1";
-> 	firewall-0 = <&ctrl0 1 2>;
-> 	firewall-1 = <&ctrl0 3 4>;
-> };
-> 
-> Configurations could be applied with functions like
-> firewall_set_config_by_index() or firewall_set_config_by_name().
-> 
-> firewall_set_default_config() function will apply the
-> configuration named "default" (if existing) or the configuration
-> with index 0 (i.e. firewall-0).
-> 
-> Drivers could register/unregister themselves be calling
-> firewall_register/firewall_unregister functions.
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  drivers/bus/Kconfig          |   2 +
->  drivers/bus/Makefile         |   2 +
->  drivers/bus/stm32/Kconfig    |   3 +
->  drivers/bus/stm32/Makefile   |   1 +
->  drivers/bus/stm32/firewall.c | 266 +++++++++++++++++++++++++++++++++++++++++++
->  drivers/bus/stm32/firewall.h |  75 ++++++++++++
->  6 files changed, 349 insertions(+)
->  create mode 100644 drivers/bus/stm32/Kconfig
->  create mode 100644 drivers/bus/stm32/Makefile
->  create mode 100644 drivers/bus/stm32/firewall.c
->  create mode 100644 drivers/bus/stm32/firewall.h
-> 
-> diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-> index 6d4e4497b59b..843b356322d9 100644
-> --- a/drivers/bus/Kconfig
-> +++ b/drivers/bus/Kconfig
-> @@ -203,4 +203,6 @@ config DA8XX_MSTPRI
->  source "drivers/bus/fsl-mc/Kconfig"
->  source "drivers/bus/mhi/Kconfig"
->  
-> +source "drivers/bus/stm32/Kconfig"
-> +
->  endmenu
-> diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
-> index 05f32cd694a4..5e0e34b10235 100644
-> --- a/drivers/bus/Makefile
-> +++ b/drivers/bus/Makefile
-> @@ -37,3 +37,5 @@ obj-$(CONFIG_DA8XX_MSTPRI)	+= da8xx-mstpri.o
->  
->  # MHI
->  obj-$(CONFIG_MHI_BUS)		+= mhi/
-> +
-> +obj-$(CONFIG_MACH_STM32MP157) 	+= stm32/
-> \ No newline at end of file
-> diff --git a/drivers/bus/stm32/Kconfig b/drivers/bus/stm32/Kconfig
-> new file mode 100644
-> index 000000000000..57221e833e2d
-> --- /dev/null
-> +++ b/drivers/bus/stm32/Kconfig
-> @@ -0,0 +1,3 @@
-> +config FIREWALL_CONTROLLERS
-> +	bool "Support of bus firewall controllers"
-> +	depends on OF
-> diff --git a/drivers/bus/stm32/Makefile b/drivers/bus/stm32/Makefile
-> new file mode 100644
-> index 000000000000..eb6b978d6450
-> --- /dev/null
-> +++ b/drivers/bus/stm32/Makefile
-> @@ -0,0 +1 @@
-> +obj-$(CONFIG_FIREWALL_CONTROLLERS) += firewall.o
-> diff --git a/drivers/bus/stm32/firewall.c b/drivers/bus/stm32/firewall.c
-> new file mode 100644
-> index 000000000000..95f716cf926f
-> --- /dev/null
-> +++ b/drivers/bus/stm32/firewall.c
-> @@ -0,0 +1,266 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) STMicroelectronics 2020 - All Rights Reserved
-> + * Author: Benjamin Gaignard <benjamin.gaignard@st.com> for STMicroelectronics.
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/list.h>
-> +#include <linux/of.h>
-> +#include <linux/slab.h>
-> +
-> +#include "firewall.h"
-> +
-> +/* Mutex taken to protect firewall_list */
-> +static DEFINE_MUTEX(firewall_list_mutex);
-> +
-> +/* Global list of firewall control devices */
-> +static LIST_HEAD(firewall_list);
+> Gustavo has done the same thing as part of a treewide change, but keeping
+> this separate lets us backport it to stable kernels more easily later.
 
-Why is that needed?  Why can't you just walk the list of devices on this
-"bus/class" if you really wanted to?
+Arnd,
 
-Along those lines, why is this going around the driver model and
-ignoring it?  Shouldn't this be a bus and you have devices attached to
-it of the specific type?
+I wonder why would we need to backport these changes to -stable... merely
+because of the use of a new version of GCC?
 
-
-greg k-h
+Thanks
+--
+Gustavo
