@@ -2,167 +2,145 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A541C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C33C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9B842073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:31:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GpDV33m9"
+	by mail.kernel.org (Postfix) with ESMTP id 1C15C2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:31:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729116AbgEENbS (ORCPT
+        id S1729032AbgEENbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 09:31:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41774 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728608AbgEENbR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 09:31:17 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38BBFC061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 06:31:17 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id g4so1629750ljl.2
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 06:31:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iyIfZkYPS9M4auvW6h31t2pDFbAPlltvGdvUpf8+y6s=;
-        b=GpDV33m9OSNcuyhoVsY1DzN1WJVXwBvsQzGImWQKbBl7G1Ok/h0FWE93M/g+o34hEz
-         jGRNIKP6e4YcXDEFzN49pEhwGTIWlbKs7Pjd7mXyWGqcz8LfpdZlONhsq5GlDqAl7/K2
-         H1hSjo2nf99o07pSf2OdvrzDJ09hDQOT1pLABRPzfSWSf4wG1rvC4fIydLeWX+Chd7t6
-         kAqAkHf3IbR5UvQ9jmYAc16dUZhUjw7VVUna36AjLjqHkz1HUnInDXBKHSF9l0THkL17
-         It99itvpb0xtTT69BVrjANEnLBeeVm2Al/+W4ulyRWPBC+V7N1Em6QrpNMmC4eEmOg5M
-         ytXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iyIfZkYPS9M4auvW6h31t2pDFbAPlltvGdvUpf8+y6s=;
-        b=SgspVm9pT4Mamp12nkuFmCuIh+k/oLpSJZwkeCcOFap8hTj083dFlP6S57Gh8s4bXu
-         Xdtl0XgEJNTkk3g2uCa0dTolMUIs8HjRZjiCXZtjEkPlv7mJuLasxmsxkxoX1VGTU5Ur
-         SaISHR52YjuJO1aAIEDyaOHccC4s9xP1xMEP27G1Gcx/gD+7Wyi6D4khQVTJBqTM0Ait
-         PvOW4GvpkcavGe7owsEg3DBOrPOCgWUCTaDekAzRfxTty0+/6a9TmYl+uY6eEebHvzDz
-         EV9DC0vkIhHbOpeV7P0fRYQ/l8SvNCHKXLm10yUvtHYCnd3ja5fBb4kbBplXRB6TI6qD
-         wU5g==
-X-Gm-Message-State: AGi0PuZbn7waSMHJgD91RFmK/yo7JeXhiug8q/hYI1zsaffpZ8JY0yFj
-        7lRIGO85ttEPtRvxuh4a3G+Ph1Mpdx3BVL9N4W8q7Q==
-X-Google-Smtp-Source: APiQypL5A7EGS952Im/T/fW2Ho6QLjbkrTeTEEXR6SQpUkH9EnSEIqtWgBh8X7krtW1GL1uzbdDUxxhdJV3oDK7Fjjo=
-X-Received: by 2002:a05:651c:107a:: with SMTP id y26mr1903487ljm.80.1588685475521;
- Tue, 05 May 2020 06:31:15 -0700 (PDT)
+        Tue, 5 May 2020 09:31:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50260 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728912AbgEENbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 09:31:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 06B06AC7B;
+        Tue,  5 May 2020 13:31:37 +0000 (UTC)
+Message-ID: <71f91033780ee9d95da2be44884d4d47efb03b5f.camel@suse.de>
+Subject: Re: [PATCH v2 4/4] PCI: brcmstb: Disable L0s component of ASPM if
+ requested
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Date:   Tue, 05 May 2020 15:31:32 +0200
+In-Reply-To: <20200501142831.35174-5-james.quinlan@broadcom.com>
+References: <20200501142831.35174-1-james.quinlan@broadcom.com>
+         <20200501142831.35174-5-james.quinlan@broadcom.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-/WMc+4hb6CwtaW97uLCZ"
+User-Agent: Evolution 3.36.2 
 MIME-Version: 1.0
-References: <20200501205011.14899-1-grygorii.strashko@ti.com>
- <20200501205011.14899-4-grygorii.strashko@ti.com> <CADYN=9L+RtruRYKah0Bomh7UaPGQ==N9trd0ZoVQ3GTc-VY8Dg@mail.gmail.com>
- <1bf51157-9fee-1948-f9ff-116799d12731@ti.com> <CADYN=9LfqLLmKNHPfXEiQbaX8ELF78BL-vWUcX-VP3aQ86csNg@mail.gmail.com>
- <CADYN=9LDCE2sQca12D4ow3BkaxXi1_bnc4Apu7pP4vnA=5AOKA@mail.gmail.com> <5f338763-b35b-e2b4-7f15-df3a5bcbb799@ti.com>
-In-Reply-To: <5f338763-b35b-e2b4-7f15-df3a5bcbb799@ti.com>
-From:   Anders Roxell <anders.roxell@linaro.org>
-Date:   Tue, 5 May 2020 15:31:04 +0200
-Message-ID: <CADYN=9Kdoc5WRHMpseFAXpL1wQymUGnSHfEU0b-i2Uz-GShmCA@mail.gmail.com>
-Subject: Re: [PATCH net-next 3/7] net: ethernet: ti: am65-cpsw-nuss: enable
- packet timestamping support
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Richard Cochran <richardcochran@gmail.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Networking <netdev@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Clay McClure <clay@daemons.net>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 May 2020 at 14:20, Grygorii Strashko <grygorii.strashko@ti.com> wrote:
->
-> Hi Anders,
 
-Hi Grygorii,
+--=-/WMc+4hb6CwtaW97uLCZ
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->
-> On 05/05/2020 14:59, Anders Roxell wrote:
-> > On Tue, 5 May 2020 at 13:16, Anders Roxell <anders.roxell@linaro.org> wrote:
-> >> On Tue, 5 May 2020 at 13:05, Grygorii Strashko <grygorii.strashko@ti.com> wrote:
-> >>> On 05/05/2020 13:17, Anders Roxell wrote:
-> >>>> On Fri, 1 May 2020 at 22:50, Grygorii Strashko <grygorii.strashko@ti.com> wrote:
-> >>>>>
-> >>>>> The MCU CPSW Common Platform Time Sync (CPTS) provides possibility to
-> >>>>> timestamp TX PTP packets and all RX packets.
-> >>>>>
-> >>>>> This enables corresponding support in TI AM65x/J721E MCU CPSW driver.
-> >>>>>
-> >>>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> >>>>> ---
-> >>>>>    drivers/net/ethernet/ti/Kconfig             |   1 +
-> >>>>>    drivers/net/ethernet/ti/am65-cpsw-ethtool.c |  24 ++-
-> >>>>>    drivers/net/ethernet/ti/am65-cpsw-nuss.c    | 172 ++++++++++++++++++++
-> >>>>>    drivers/net/ethernet/ti/am65-cpsw-nuss.h    |   6 +-
-> >>>>>    4 files changed, 201 insertions(+), 2 deletions(-)
-> >>>>>
-> >>>>> diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
-> >>>>> index 1f4e5b6dc686..2c7bd1ccaaec 100644
-> >>>>> --- a/drivers/net/ethernet/ti/Kconfig
-> >>>>> +++ b/drivers/net/ethernet/ti/Kconfig
-> >>>>> @@ -100,6 +100,7 @@ config TI_K3_AM65_CPSW_NUSS
-> >>>>>           depends on ARCH_K3 && OF && TI_K3_UDMA_GLUE_LAYER
-> >>>>>           select TI_DAVINCI_MDIO
-> >>>>>           imply PHY_TI_GMII_SEL
-> >>>>> +       imply TI_AM65_CPTS
-> >>>>
-> >>>> Should this be TI_K3_AM65_CPTS ?
-> >
-> > instead of 'imply TI_K3_AM65_CPTS' don't you want to do this:
-> > 'depends on TI_K3_AM65_CPTS || !TI_K3_AM65_CPTS'
-> >
-> >
->
-> Right, I'll try. It seems your defconfig is produced by randconfig as
-> I can't get broken cfg TI_AM65_CPTS=m and TI_K3_AM65_CPSW_NUSS=y
-> with neither one below:
->
->   make ARCH=arm64 O=k3-arm64 defconfig
->   make ARCH=arm64 O=k3-arm64 allnoconfig
->   make ARCH=arm64 O=k3-arm64 allyesconfig
->   make ARCH=arm64 O=k3-arm64 allmodconfig
->   make ARCH=arm64 O=k3-arm64 alldefconfig
->   make ARCH=arm64 O=k3-arm64 yes2modconfig
->   make ARCH=arm64 O=k3-arm64 mod2yesconfig
+On Fri, 2020-05-01 at 10:28 -0400, Jim Quinlan wrote:
+> From: Jim Quinlan <jquinlan@broadcom.com>
+>=20
+> Some informal internal experiments has shown that the BrcmSTB ASPM L0s
+> savings may introduce an undesirable noise signal on some customers'
+> boards.  In addition, L0s was found lacking in realized power savings,
+> especially relative to the L1 ASPM component.  This is BrcmSTB's
+> experience and may not hold for others.  At any rate, if the
+> 'aspm-no-l0s' property is present L0s will be disabled.
+>=20
+> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 
-I'm so sorry, I forgot to tell you that I do my allmodconfig like this:
+Modulo the new generic dt property:
 
-make ARCH=arm64 KCONFIG_ALLCONFIG=arch/arm64/configs/defconfig
-O=k3-arm64 allmodconfig
+Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-Then I'm sure I should get a bootable kernel since that uses the
-defconfig as a base...
+Regards,
+Nicolas
 
-Cheers,
-Anders
+> ---
+>  drivers/pci/controller/pcie-brcmstb.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c
+> b/drivers/pci/controller/pcie-brcmstb.c
+> index 5b0dec5971b8..73020b4ff090 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -41,6 +41,9 @@
+>  #define PCIE_RC_CFG_PRIV1_ID_VAL3			0x043c
+>  #define  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK	0xffffff
+> =20
+> +#define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY			0x04dc
+> +#define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK	0xc00
+> +
+>  #define PCIE_RC_DL_MDIO_ADDR				0x1100
+>  #define PCIE_RC_DL_MDIO_WR_DATA				0x1104
+>  #define PCIE_RC_DL_MDIO_RD_DATA				0x1108
+> @@ -693,7 +696,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+>  	int num_out_wins =3D 0;
+>  	u16 nlw, cls, lnksta;
+>  	int i, ret;
+> -	u32 tmp;
+> +	u32 tmp, aspm_support;
+> =20
+>  	/* Reset the bridge */
+>  	brcm_pcie_bridge_sw_init_set(pcie, 1);
+> @@ -803,6 +806,15 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+>  		num_out_wins++;
+>  	}
+> =20
+> +	/* Don't advertise L0s capability if 'aspm-no-l0s' */
+> +	aspm_support =3D PCIE_LINK_STATE_L1;
+> +	if (!of_property_read_bool(pcie->np, "aspm-no-l0s"))
+> +		aspm_support |=3D PCIE_LINK_STATE_L0S;
+> +	tmp =3D readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
+> +	u32p_replace_bits(&tmp, aspm_support,
+> +		PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
+> +	writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
+> +
+>  	/*
+>  	 * For config space accesses on the RC, show the right class for
+>  	 * a PCIe-PCIe bridge (the default setting is to be EP mode).
 
->
-> Related legacy TI CPTS threads:
->   https://lkml.org/lkml/2020/5/2/344
->   https://lkml.org/lkml/2020/5/1/1348
->
-> I'd try summarize goal
->   TI_K3_AM65_CPSW_NUSS  TI_AM65_CPTS
->   Y                     Y/N
->   M                     Y/M/N
->   N                     Y/M/N
->
->
-> --
-> Best regards,
-> grygorii
+
+--=-/WMc+4hb6CwtaW97uLCZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6xarQACgkQlfZmHno8
+x/5F2Af+NaU0XhF5SOoN9k/cqs0QD3cUh2gPJSrKgygCuqC79eeu2CIH9k3OmXSK
+2ArwxrQvKZS8cw8icZPETD6PuD5Z0bWmeUbl7dbTZwReORzCUeFGGjbFJUCw6mLv
+gzxQ1QTT60/rf2BeVu520PJeCB/KAnsiqwNo63UJhGYsdExXwGLyQqmgldCCfktl
+9i8QE/4C4Ne3A1QXj0aowFHD9pCI54bYj3UeDFo2Z7C0Hb2vMAt+KDkGiR40dDF2
+FBaM1gII/IUVqt12qLngl2aYjCWa8VQro6Hz53IM/Bkf1QVUbjYNq3GsIXph4sLQ
+81jE683L/9ZlfI95hcoWXr8aaqGdsQ==
+=aXbi
+-----END PGP SIGNATURE-----
+
+--=-/WMc+4hb6CwtaW97uLCZ--
+
