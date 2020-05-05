@@ -2,134 +2,210 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC99EC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 931BBC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0389206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73942206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:36:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="GDDaMxFr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729672AbgEEOeq (ORCPT
+        id S1729554AbgEEOga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:34:46 -0400
-Received: from mga01.intel.com ([192.55.52.88]:10117 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729142AbgEEOep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:34:45 -0400
-IronPort-SDR: m3X7mIEB7tTfaLF17mfk2z5ysj7v4W6O4PK9ngLR78pBRSxTh28SskOU677H2x6GXyI3PXwTwC
- apD5FTmVYSDQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 07:34:40 -0700
-IronPort-SDR: qrFj6iMtPzHsAywlLtyMywVTplrwJr0C8vOpRK7GA+E/Kw/OpjrehePNbXAVS+QBoAXTtr5oIU
- BNFfxIzV/8QQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,355,1583222400"; 
-   d="scan'208";a="263187158"
-Received: from jmserbon-mobl1.amr.corp.intel.com (HELO [10.254.110.254]) ([10.254.110.254])
-  by orsmga006.jf.intel.com with ESMTP; 05 May 2020 07:34:39 -0700
-Subject: Re: [PATCH v2 1/1] fs/splice: add missing callback for inaccessible
- pages
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ulrich Weigand <uweigand@de.ibm.com>
-Cc:     Claudio Imbrenda <imbrenda@linux.ibm.com>, viro@zeniv.linux.org.uk,
-        david@redhat.com, akpm@linux-foundation.org, aarcange@redhat.com,
-        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
-        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, jack@suse.cz, kirill@shutemov.name,
-        peterz@infradead.org, sean.j.christopherson@intel.com,
-        Ulrich.Weigand@de.ibm.com
-References: <20200430143825.3534128-1-imbrenda@linux.ibm.com>
- <1a3f5107-9847-73d4-5059-c6ef9d293551@de.ibm.com>
- <e3e95a35-b0e3-b733-92f4-98bcccbe7ca5@intel.com>
- <3d379d9e-241c-ef3b-dcef-20fdd3b8740d@de.ibm.com>
- <a10ec7ad-2648-950e-7f30-07c08e400e7b@intel.com>
- <20200504134154.GA21001@oc3748833570.ibm.com>
- <231da2f1-a6ef-0cf9-7f57-95e8b925997b@intel.com>
- <45bc81bb-8765-ffff-6e47-8ee9702c8bcd@de.ibm.com>
- <6e97a4b0-df4f-90c7-a6f7-61ee52e0833e@intel.com>
- <da6bc7cb-ef13-08cd-f162-663b4a66043b@de.ibm.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <fcc9adea-598f-f882-c3e3-09d190cd5d52@intel.com>
-Date:   Tue, 5 May 2020 07:34:39 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 10:36:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52382 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729123AbgEEOg3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 10:36:29 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF1B9C061A0F;
+        Tue,  5 May 2020 07:36:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=JHqeW2n9o8eTf4Hj7Xby8dss3L4FHej0u+cvFpm1AoA=; b=GDDaMxFr/i1udh9LrXu6dWreK
+        r28SRTfpehqGgO/3BlnNRVwB7mdrW7xBnVPGeiIGVOAiDzF0/5vmc8zgNIAfZQvFfXyZATf+kRN+3
+        iRS+dtALs24P+0ElYCsS78KRX48bXcODPVQFpR878hQogOs4f7kOvk3XkpCGUd/wKpQ+GKJfNPbRF
+        rIDFJgJdyViOV9mRsMuoGh3ylNSsPtvnj5y2YDGOSxZj3GIOnP0q8WHr+39iLDLynHDCNF0ILLypd
+        HixG9HokCuyUkZhIe9aAENG+VoIYS13gGtzTZnjundmF+bmjSQJlnUSDMFlVclzcDlgHfo1hRslzS
+        EpnQu/4QA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:56510)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jVyfz-0002xZ-I8; Tue, 05 May 2020 15:36:03 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jVyfv-0007Dz-PQ; Tue, 05 May 2020 15:35:59 +0100
+Date:   Tue, 5 May 2020 15:35:59 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Calvin Johnson <calvin.johnson@oss.nxp.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>, linux.cj@gmail.com,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        netdev@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [net-next PATCH v3 3/5] phylink: Introduce
+ phylink_fwnode_phy_connect()
+Message-ID: <20200505143559.GJ1551@shell.armlinux.org.uk>
+References: <20200505132905.10276-1-calvin.johnson@oss.nxp.com>
+ <20200505132905.10276-4-calvin.johnson@oss.nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <da6bc7cb-ef13-08cd-f162-663b4a66043b@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505132905.10276-4-calvin.johnson@oss.nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/5/20 7:31 AM, Christian Borntraeger wrote:
->> So, the requirements are:
->>
->> 1. Allow host-side DMA and CPU access to shared pages
->> 2. Stop host-side DMA and CPU access to encrypted pages
->> 3. Allow pages to be converted between the states at the request of the
->>    guest
->>
->> Stopping the DMA is pretty easy, even across the gazillions of drivers
->> in the tree because even random ethernet drivers do stuff like:
->>
->>                 txdr->buffer_info[i].dma =
->>                         dma_map_single(&pdev->dev, skb->data, skb->len,
->>                                        DMA_TO_DEVICE);
->>
->> So the DMA can be stopped at the mapping layer.  It's a *LOT* easier to
->> catch there since the IOMMUs already provide isolation between the I/O
->> and CPU address spaces.
-> And your problem is that the guest could convert this after the dma_map?
-> So you looked into our code if this would help?
+On Tue, May 05, 2020 at 06:59:03PM +0530, Calvin Johnson wrote:
+> Define phylink_fwnode_phy_connect() to connect phy specified by
+> a fwnode to a phylink instance.
+> 
+> Signed-off-by: Calvin Johnson <calvin.johnson@oss.nxp.com>
+> ---
+> 
+> Changes in v3:
+>   remove NULL return check as it is invalid
+>   remove unused phylink_device_phy_connect()
+> 
+> Changes in v2:
+>   replace of_ and acpi_ code with generic fwnode to get phy-handle.
+> 
+>  drivers/net/phy/phylink.c | 48 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/phylink.h   |  3 +++
+>  2 files changed, 51 insertions(+)
+> 
+> diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+> index 0f23bec431c1..560d1069426c 100644
+> --- a/drivers/net/phy/phylink.c
+> +++ b/drivers/net/phy/phylink.c
+> @@ -961,6 +961,54 @@ int phylink_connect_phy(struct phylink *pl, struct phy_device *phy)
+>  }
+>  EXPORT_SYMBOL_GPL(phylink_connect_phy);
+>  
+> +/**
+> + * phylink_fwnode_phy_connect() - connect the PHY specified in the fwnode.
+> + * @pl: a pointer to a &struct phylink returned from phylink_create()
+> + * @fwnode: a pointer to a &struct fwnode_handle.
+> + * @flags: PHY-specific flags to communicate to the PHY device driver
+> + *
+> + * Connect the phy specified @fwnode to the phylink instance specified
+> + * by @pl. Actions specified in phylink_connect_phy() will be
+> + * performed.
+> + *
+> + * Returns 0 on success or a negative errno.
+> + */
+> +int phylink_fwnode_phy_connect(struct phylink *pl,
+> +			       struct fwnode_handle *fwnode,
+> +			       u32 flags)
+> +{
+> +	struct fwnode_handle *phy_fwnode;
+> +	struct phy_device *phy_dev;
+> +	int ret = 0;
+> +
+> +	/* Fixed links and 802.3z are handled without needing a PHY */
+> +	if (pl->cfg_link_an_mode == MLO_AN_FIXED ||
+> +	    (pl->cfg_link_an_mode == MLO_AN_INBAND &&
+> +	     phy_interface_mode_is_8023z(pl->link_interface)))
+> +		return 0;
+> +
+> +	phy_fwnode = fwnode_get_phy_node(fwnode);
+> +	if ((IS_ERR(phy_fwnode)) && pl->cfg_link_an_mode == MLO_AN_PHY)
+> +		return -ENODEV;
 
-Yep, it seemed like a close-enough problem.
+This doesn't reflect the behaviour of phylink_of_phy_connect() - it is
+*not* a cleanup of what is there, which is:
+
+                if (!phy_node) {
+                        if (pl->cfg_link_an_mode == MLO_AN_PHY)
+                                return -ENODEV;
+                        return 0;
+                }
+
+which does:
+
+- if there is a PHY node, find the PHY and connect it.
+- if there is no PHY node, then:
+   + if we are expecting a PHY to be present, return an error.
+   + otherwise, it is not a problem, continue.
+
+That is very important behaviour - it allows drivers to call
+phylink_*_phy_connect() without knowing whether there should or should
+not be a PHY - and keeps that knowledge within phylink.  It means
+network drivers don't have to parse the firmware to find out if there's
+a fixed link or SFP cage attached, and decide whether to call these
+functions.
+
+> +
+> +	phy_dev = fwnode_phy_find_device(phy_fwnode);
+> +	fwnode_handle_put(phy_fwnode);
+> +	if (!phy_dev)
+> +		return -ENODEV;
+> +
+> +	ret = phy_attach_direct(pl->netdev, phy_dev, flags,
+> +				pl->link_interface);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = phylink_bringup_phy(pl, phy_dev, pl->link_config.interface);
+> +	if (ret)
+> +		phy_detach(phy_dev);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(phylink_fwnode_phy_connect);
+> +
+
+I think we need to go further with this, and we need to have
+phylink_fwnode_phy_connect() functionally identical to
+phylink_of_phy_connect() for DT-based fwnodes.  Doing so will avoid
+introducing errors such as the one you've added above.
+
+The only difference between these two is that DT has a number of
+legacy properties - these can be omitted if the fwnode is not a DT
+node.
+
+Remember that fwnode is compatible with DT, so fwnode_phy_find_device()
+can internally decide whether to look for the ACPI property or one of
+the three DT properties.
+
+It also means that phylink_of_phy_connect() can become:
+
+int phylink_of_phy_connect(struct phylink *pl, struct device_node *dn,
+                           u32 flags)
+{
+        return phylink_fwnode_phy_connect(pl, of_fwnode_handle(dn), flags);
+}
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
