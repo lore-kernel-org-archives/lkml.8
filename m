@@ -2,145 +2,145 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE957C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB73C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E6B4206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2249C206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:10:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Nhf5+JWv"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="rrhnM3iX";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="fZ5DnuDl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730734AbgEESIM (ORCPT
+        id S1730712AbgEESKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 14:08:12 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:57697 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729315AbgEESIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 14:08:11 -0400
-Received: from [172.27.9.0] (c-73-231-201-241.hsd1.ca.comcast.net [73.231.201.241])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 045I7QkG2666886
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Tue, 5 May 2020 11:07:27 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 045I7QkG2666886
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020042201; t=1588702047;
-        bh=4cVMSAo5+1hI6OdDCminTspOqusfTES7OMmVmqp4XjQ=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=Nhf5+JWvcVJBl3eGfQramD8sznodcvqRcLHWQ0zVAir5IoZp+WIZPnToDoDHsX//n
-         SsX499ThiXg4yy82lq+kfDM5g/TOw+rMstw1/3So72et/eB1Y698rxsg85FJ8Xt+KA
-         0rmUPKiYleJp4G4EUCJq0EbQbYQtjnioah8uauPjrrhCy1lw53QU9NFgpvA5aOGcqc
-         o7r6z6jh9H49TzsFT1P7VRnDP/5aBzkcu7CCAwWcZPGCAc56Fc54R8AlHYtq/QhA+h
-         SnPob6TTm7PQsUen9kZJSMVkhc8mMlnpz89ymMzf0xc5zPGrNOkuueiQLhobKEPiMD
-         B15Jhs20yU7AA==
-Date:   Tue, 05 May 2020 11:07:24 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200505174423.199985-1-ndesaulniers@google.com>
-References: <20200505174423.199985-1-ndesaulniers@google.com>
+        Tue, 5 May 2020 14:10:31 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:6878 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729315AbgEESKa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 14:10:30 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 045I5LrC032037;
+        Tue, 5 May 2020 11:10:10 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=ZL23tsEVV0Ez9AK+nbbfyZ1ZIIsJ+COn87xR/bqQIjc=;
+ b=rrhnM3iXGa6VRYYt9FLFL1rimQ5bVpgBu4HbKMX7A5Pf6n+iN6ieeG2q9XKgFn9KE/NR
+ KHmqzbKPRFF8/GUIYadp5OCeuFbIjewuZYtB3EpoLqew/iPF+sYbE54+beLViS2kogVR
+ ZDmnoe8JezReQl6z5WevxvG7guGVSkttetI= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 30s6cmqvkc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 05 May 2020 11:10:10 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.230) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Tue, 5 May 2020 11:09:17 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WQALre1mULPPw1kocngR/RGa+KuYmaXYUIA6uZgRxgBIA8n/CjHhSBZVNxteWnOyFMsbq+Pj0VfQYSTWQCb0h94OIRqtLr6iwwbzk7DJEIV8dzpvVWjp/PSSsLWSYNsE5bEt02n2TJZT9MTmxMM4EGJ/JNnjl0idVzKU9A0ihpz2vDfYa5n66xH9IeuQNkb2324zntc8K2rvw8O+TokZEjakqtAXzzMmE/hJGs82r5Q/PasArl6LSwRiMghFf2ZAt09Zv7qOSsBVou6XShIGRtC3t62uOJhw+1+YgKE6/2R/mKgRzQCluzI9OAaMjrPXcqXvArLJKM0rHzfb6xAWdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZL23tsEVV0Ez9AK+nbbfyZ1ZIIsJ+COn87xR/bqQIjc=;
+ b=OyvnqTqIIdy2opDO/VRnHd7bO12+hsZmJud3PqlxtnEGdUbSvS0Cf88EpGeHI93TjYI83Qfi4pgpRjdgG8EOtqXOwRKBM7Mb3YQ0O4hAMwSn+Am/K/3tW9evjOsI6dHI44vRUYmpn0PKAKwCIYIFPU6E/crf8rsnNgk2b4xotARQWjAiVE0wcX14UK9J9/ptDWIxlZZJY59ss8fgL4VqAIQ204esJA82hvMqW8ufDHiCGdQ+RmeAe3LeoaDIj252v0mPKMNR5I42RDsw0bnsFIab1Kp6OzNHehwhevqgBo4K4BHh+IntTFYr+czjlmjrrJfdfAfEqeX77AU4zYl7Jw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZL23tsEVV0Ez9AK+nbbfyZ1ZIIsJ+COn87xR/bqQIjc=;
+ b=fZ5DnuDlnfQA/zTxlZCZKIlQnsOOz1jviImk+sOwtWbrqAJNqO7CSDbXAw3/h2DYaoqWZ4Y8peEkwgf0JjOMOHmHmjeAtjObOIHFuJUQUilV0YQC6Svamr3YfWWY8r2FTDd1OPLgQBncPgeYg/j2Js2cjUuDezPxH+SXOpD2QB8=
+Authentication-Results: arndb.de; dkim=none (message not signed)
+ header.d=none;arndb.de; dmarc=none action=none header.from=fb.com;
+Received: from MW3PR15MB4044.namprd15.prod.outlook.com (2603:10b6:303:4b::24)
+ by MW3PR15MB3930.namprd15.prod.outlook.com (2603:10b6:303:46::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26; Tue, 5 May
+ 2020 18:09:17 +0000
+Received: from MW3PR15MB4044.namprd15.prod.outlook.com
+ ([fe80::e5c5:aeff:ca99:aae0]) by MW3PR15MB4044.namprd15.prod.outlook.com
+ ([fe80::e5c5:aeff:ca99:aae0%4]) with mapi id 15.20.2958.030; Tue, 5 May 2020
+ 18:09:17 +0000
+Date:   Tue, 5 May 2020 11:09:13 -0700
+From:   Martin KaFai Lau <kafai@fb.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <bpf@vger.kernel.org>
+Subject: Re: [PATCH] sysctl: fix unused function warning
+Message-ID: <20200505180913.dse5itmbzjsf2nou@kafai-mbp>
+References: <20200505140734.503701-1-arnd@arndb.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505140734.503701-1-arnd@arndb.de>
+User-Agent: NeoMutt/20180716
+X-ClientProxiedBy: MWHPR02CA0001.namprd02.prod.outlook.com
+ (2603:10b6:300:4b::11) To MW3PR15MB4044.namprd15.prod.outlook.com
+ (2603:10b6:303:4b::24)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] x86: bitops: fix build regression
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-CC:     Sedat Dilek <sedat.dilek@gmail.com>, stable@vger.kernel.org,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        "kernelci . org bot" <bot@kernelci.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Ilie Halip <ilie.halip@gmail.com>, x86@kernel.org,
-        Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-From:   hpa@zytor.com
-Message-ID: <8A776DBC-03AF-485B-9AA6-5920E3C4ACB2@zytor.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from kafai-mbp (2620:10d:c090:400::5:3100) by MWHPR02CA0001.namprd02.prod.outlook.com (2603:10b6:300:4b::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26 via Frontend Transport; Tue, 5 May 2020 18:09:15 +0000
+X-Originating-IP: [2620:10d:c090:400::5:3100]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 305763cc-5ebe-4993-e283-08d7f11f6cd7
+X-MS-TrafficTypeDiagnostic: MW3PR15MB3930:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MW3PR15MB393002EA8DD397A2E7D440E3D5A70@MW3PR15MB3930.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:2512;
+X-Forefront-PRVS: 0394259C80
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: E1y9NyMJN6DJwWlzZrGKam4znYwmBBJ6wY+P0POsQGy3gzzzIJG3jlR2L+wHRuxfmo6kPm0ssqzy76BYZ6c2ny6MdmRI01vACMuYMM05YZUktkTdFjpVKRpephxqhaVP7wK95tpMnXHSK6QCIvXYAahQruJqbolLIyRjsIbwu8AVg8rE0vHFAHUlKQgECTzl3qZidRXTFYERmNoQi+C1fjrNY73Sdb2dAOY1Mnl8OjCNWSDYFQSepY7zizv13LxTzLFKAIO4EWbbcO/NB0amOduGgMnlmxquswxb+nUEoQEqLe/wvmuV6m9DZkFpHlDybYfBbX77HB60Ucx74bfQsC/mJCo5HiFP9DvPrW9jypfhpY5kwfbxE2zW0ZW71IeLwWcR/JQLrVGjcAxUfXuIMY5J7eu3HEIelq56GVE+jYcvdFHPFz6MhrLBcUg9y3s9FMANNm+x+fJgI9VQvlaUyFJ59HXA2qsxIUWHrkbPqGdcsh3K+Jf09u46Rtq+MJUUqEhGpRSpioj/rVaICcq4nw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR15MB4044.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(33430700001)(1076003)(9686003)(6916009)(7416002)(55016002)(2906002)(33440700001)(4744005)(4326008)(33716001)(186003)(16526019)(52116002)(498600001)(8936002)(8676002)(66946007)(66556008)(66476007)(86362001)(6496006)(54906003)(5660300002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: q154qlvsjE6Q0P91e8MmYSiLqQYQfH8oFBUuYuxL001IO4T7zVbFseEtggy0BvI7q2BrGS/Vsa9qopCKQv6lek/hEuUc0NwrzB47Z563EZg1uGINrr7z6aaCnZo8wGJ973UQ05lAyvkyuvbubCign/JSibUjjRMlfJaUJf2DVw/b0cPvsbgwXSXKq62nr1uPndhJ2ughDxDwc6l5ggM1t8KgNIEBu3EVTVbio9RgE1Z/m9phdC+8zQ/pCDu4P0wMTTZbU9IZt7qjPNA3/A9aK+GsbD9/b5tUy+ovloV54m4GR9/2a7w9xo/b9h8kZO9UuKnOcG8Zq2peYmc3E5aBVgtHD3+Io1p/l1kpZwGXcG/SsW5Dsns1V4PBbWi984YWHWqpINXbT14EAHuxC9audXKR3c6g858Xx/5Ji0vsxR6jcG6+M8EK+W/qUMjN5FDWy+uluNygr+jYDLFceRraAjRqpi/G3th7tgFOrekYh3D++dtvSw8ixLuuiDjBL4/BrZH0avnyLyD/E4DBY9hGxcJtctLwzZKbFm1wKGWnWHbBPOQUG33EFRLXjf9tZwKVjXEDXy+AasNNc3DOI2BbjII3t53SOTGgs7O7tQ0y0DVLW8EPK/tvr5Fcn0SIsk/utsPyBlUmaczgKkSOOg8Jqv6Qay0yh1LwgE+IXrhF1lv72ot6q3w+/rGlvTC6YFq8Oz2HOSQ7d95qu0tdl6HPT/mPABsAgxrqG80WMh7ek436r4n2Qus+/TXZGfqa0lWL9MODA7+bwVZecLNRyLWnUJ9QoA6HK0ZD2/vl62yznA9+9mbkit7TSPTaav7BxFFwU6txCqrrY2USfJyjAIQtHQ==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 305763cc-5ebe-4993-e283-08d7f11f6cd7
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2020 18:09:17.0483
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4ikT9er0shgm3N6DwSLMb4zS1FdGlM4wIztqEpeAi5U2Ww6xCsHWjH4eB2NolV22
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR15MB3930
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-05_10:2020-05-04,2020-05-05 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0
+ mlxlogscore=540 spamscore=0 suspectscore=0 clxscore=1011
+ priorityscore=1501 impostorscore=0 lowpriorityscore=0 phishscore=0
+ mlxscore=0 bulkscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2005050138
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On May 5, 2020 10:44:22 AM PDT, Nick Desaulniers <ndesaulniers@google=2Ecom=
-> wrote:
->From: Sedat Dilek <sedat=2Edilek@gmail=2Ecom>
->
->It turns out that if your config tickles __builtin_constant_p via
->differences in choices to inline or not, this now produces invalid
->assembly:
->
->$ cat foo=2Ec
->long a(long b, long c) {
->  asm("orb\t%1, %0" : "+q"(c): "r"(b));
->  return c;
->}
->$ gcc foo=2Ec
->foo=2Ec: Assembler messages:
->foo=2Ec:2: Error: `%rax' not allowed with `orb'
->
->The "q" constraint only has meanting on -m32 otherwise is treated as
->"r"=2E
->
->This is easily reproducible via Clang+CONFIG_STAGING=3Dy+CONFIG_VT6656=3D=
-m,
->or Clang+allyesconfig=2E
->
->Keep the masking operation to appease sparse (`make C=3D1`), add back the
->cast in order to properly select the proper 8b register alias=2E
->
-> [Nick: reworded]
->
->Cc: stable@vger=2Ekernel=2Eorg
->Cc: Jesse Brandeburg <jesse=2Ebrandeburg@intel=2Ecom>
->Link: https://github=2Ecom/ClangBuiltLinux/linux/issues/961
->Link: https://lore=2Ekernel=2Eorg/lkml/20200504193524=2EGA221287@google=
-=2Ecom/
->Fixes: 1651e700664b4 ("x86: Fix bitops=2Eh warning with a moved cast")
->Reported-by: Sedat Dilek <sedat=2Edilek@gmail=2Ecom>
->Reported-by: kernelci=2Eorg bot <bot@kernelci=2Eorg>
->Suggested-by: Andy Shevchenko <andriy=2Eshevchenko@intel=2Ecom>
->Suggested-by: Ilie Halip <ilie=2Ehalip@gmail=2Ecom>
->Tested-by: Sedat Dilek <sedat=2Edilek@gmail=2Ecom>
->Signed-off-by: Sedat Dilek <sedat=2Edilek@gmail=2Ecom>
->Signed-off-by: Nick Desaulniers <ndesaulniers@google=2Ecom>
->---
-> arch/x86/include/asm/bitops=2Eh | 4 ++--
-> 1 file changed, 2 insertions(+), 2 deletions(-)
->
->diff --git a/arch/x86/include/asm/bitops=2Eh
->b/arch/x86/include/asm/bitops=2Eh
->index b392571c1f1d=2E=2E139122e5b25b 100644
->--- a/arch/x86/include/asm/bitops=2Eh
->+++ b/arch/x86/include/asm/bitops=2Eh
->@@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long *addr)
-> 	if (__builtin_constant_p(nr)) {
-> 		asm volatile(LOCK_PREFIX "orb %1,%0"
-> 			: CONST_MASK_ADDR(nr, addr)
->-			: "iq" (CONST_MASK(nr) & 0xff)
->+			: "iq" ((u8)(CONST_MASK(nr) & 0xff))
-> 			: "memory");
-> 	} else {
-> 		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
->@@ -74,7 +74,7 @@ arch_clear_bit(long nr, volatile unsigned long *addr)
-> 	if (__builtin_constant_p(nr)) {
-> 		asm volatile(LOCK_PREFIX "andb %1,%0"
-> 			: CONST_MASK_ADDR(nr, addr)
->-			: "iq" (CONST_MASK(nr) ^ 0xff));
->+			: "iq" ((u8)(CONST_MASK(nr) ^ 0xff)));
-> 	} else {
-> 		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
-> 			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
-
-Drop & 0xff and change ^ 0xff to ~=2E
-
-The redundancy is confusing=2E
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+On Tue, May 05, 2020 at 04:07:12PM +0200, Arnd Bergmann wrote:
+> The newly added bpf_stats_handler function has the wrong #ifdef
+> check around it, leading to an unused-function warning when
+> CONFIG_SYSCTL is disabled:
+> 
+> kernel/sysctl.c:205:12: error: unused function 'bpf_stats_handler' [-Werror,-Wunused-function]
+> static int bpf_stats_handler(struct ctl_table *table, int write,
+> 
+> Fix the check to match the reference.
+> 
+> Fixes: d46edd671a14 ("bpf: Sharing bpf runtime stats with BPF_ENABLE_STATS")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
