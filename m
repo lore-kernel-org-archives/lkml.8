@@ -2,167 +2,247 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1858C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D17CC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A18D92068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:24:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588667082;
-	bh=/+gpTkLBJ2Kqolj2/ROhBNblDxrQ10aUU/Dm52LEmQw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Wewkah3+hWWlw5lOOlSIBSf/chnpObPDolxklWHvyLm2i5nCeBBtnAk/HNBgc1VM4
-	 O+l+1JS/mWiMVAwF2fMpzJI4rtKHIYkHBwcoNlwl+weAXv+L3TDrXsUCKUJoe2TRk/
-	 +1mws99+Cxkulf1Mv+OfXrIxprnOSX0Y0uOssdys=
+	by mail.kernel.org (Postfix) with ESMTP id 1D553206CC
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:24:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="jyS3r+8I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbgEEIYm (ORCPT
+        id S1728524AbgEEIYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 04:24:42 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:54216 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725320AbgEEIYl (ORCPT
+        Tue, 5 May 2020 04:24:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50324 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725320AbgEEIYo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 04:24:41 -0400
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 0458ODXX025004;
-        Tue, 5 May 2020 17:24:14 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 0458ODXX025004
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1588667054;
-        bh=awhKCUwBKnrY0PuQr1ZiYwWdjhoVOMuvHRPkGvuPBig=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=19phWRHzfucRuYFNCHmJtFb/7S9prMsy4+8xbnqO2UzkhhIYF3PDX0zkECzWjC9rP
-         VPAamfUmx8FZXAphNx0xNboKMDcOukT7A2gcRIn5FCh1ayXqJHXEAtUsrQGAtftYFz
-         W7Cvk0kQy/30DfPXhks3p0xkdNyI8HT6TMYNRqEF/cTlVyjYHauACGyZNE1jCpZQ/l
-         8ds8YhANRh5mAySe5wJNhhi6I5mbhg5kDnw07OH4xijc4kOtyLzIHvcMT3jZSPGDk0
-         w9mP4m2pOj9g7xBrqBtjUyAcWg3gH0ssTP3shR9uL568wRIrMQj7P5fNcspyhfCtfj
-         CQjHfOgzUYTBw==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id s11so708794vsq.13;
-        Tue, 05 May 2020 01:24:14 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYKwtPisPWvtbIE6iMSgusOIidWXM9PZtE+ANDGO/86n6KbzLNn
-        JuP2HABB6yJnbP93suimd+6mFbO/t9pr/uQH+3A=
-X-Google-Smtp-Source: APiQypI+NF72kYXUBGhjZ7K//d9ckRGDhIKCAkr5ao2a5eh/orzgnX4ljHTKFkr5raukyfp0MWA96AsQ9GOht6LNT1E=
-X-Received: by 2002:a67:6e07:: with SMTP id j7mr1604563vsc.181.1588667052874;
- Tue, 05 May 2020 01:24:12 -0700 (PDT)
+        Tue, 5 May 2020 04:24:44 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93174C061A0F;
+        Tue,  5 May 2020 01:24:44 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id CD92A542;
+        Tue,  5 May 2020 10:24:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1588667082;
+        bh=K/OJh48zGNT78SlVNOwf5w0V7ZXOE1Xg23O044fx8sw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jyS3r+8IzBwPQtU1IuirZ0ch5WrFVcklVSMD/H39tp1sK5Wy9mLINXROlwuS315zo
+         nBHeuPebnJvTgU6yxoBCvyPmhNZRf1UC95RwPCcEXu9oQO+sJTvcIWZwRrK2BZMOpo
+         BGlJ/sNOtZlEaQadu0FMohyo7ahbSbHJbmwOZ0kA=
+Date:   Tue, 5 May 2020 11:24:36 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        robdclark@chromium.org, seanpaul@chromium.org,
+        linux-arm-msm@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: Implement lane reordering +
+ polarity
+Message-ID: <20200505082436.GD9658@pendragon.ideasonboard.com>
+References: <20200504213624.1.Ibc8eeddcee94984a608d6900b46f9ffde4045da4@changeid>
 MIME-Version: 1.0
-References: <20200504020651.37031-1-masahiroy@kernel.org> <20200504020651.37031-2-masahiroy@kernel.org>
- <CAL_JsqLRUAEmh3kwEo+T-dMhXZTBH_kwbBwKzZyhJMR5P92pwA@mail.gmail.com> <CAK7LNASGKrovgqEzSgqZRU0kAsh7rhZ78fZ21VrdKvmP2XH0JQ@mail.gmail.com>
-In-Reply-To: <CAK7LNASGKrovgqEzSgqZRU0kAsh7rhZ78fZ21VrdKvmP2XH0JQ@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 5 May 2020 17:23:36 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATXCKYfogvYxpaKW+CE0KwMeNjHfLpSemFAHdBzG0yGDQ@mail.gmail.com>
-Message-ID: <CAK7LNATXCKYfogvYxpaKW+CE0KwMeNjHfLpSemFAHdBzG0yGDQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] scripts/dtc: compile separate dtc-yaml
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     DTML <devicetree@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?TWFyZWsgQmVo77+977+9w6Ju?= <marek.behun@nic.cz>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200504213624.1.Ibc8eeddcee94984a608d6900b46f9ffde4045da4@changeid>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 12:04 PM Masahiro Yamada <masahiroy@kernel.org> wrot=
-e:
->
-> On Tue, May 5, 2020 at 4:15 AM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Sun, May 3, 2020 at 9:07 PM Masahiro Yamada <masahiroy@kernel.org> w=
-rote:
-> > >
-> > > Marek Beh=C3=BAn reported a case where pkg-config fails to detect the
-> > > libyaml-dev package, which is presumably a bug of the distro.
-> > >
-> > > Irrespective of that, I am not a big fan of pkg-config in the Makefil=
-e
-> > > parse stage. The cost of pkg-config is quite small, but it is evaluat=
-ed
-> > > everytime we run make, even when we do 'make mrproper'. This commit
-> > > changes the Makefile to not rely on pkg-config at all.
-> >
-> > I don't really love the solution here... I'm inclined to just make
-> > libyaml always required. Anyone building dtbs should care about
-> > validating them. However, there's some dts files sprinkled in the tree
-> > such as DT unittests and I don't want to break allmodconfig for CI,
-> > 0-day, etc. Though eventually we may have to.
-> >
-> > > The normal build should not require libyaml-dev while we need to comp=
-ile
-> > > dtc with libyaml for the schema check.
-> > >
-> > > Build two dtc variants:
-> > >
-> > >   scripts/dtc/dtc      for *.dts -> *.dtb
-> > >   scripts/dtc/dtc-yaml for *.dts -> *.dt.yaml
-> >
-> > My longer term plan is to integrate the schema checks into dtc. This
-> > would be some sort of plugin to dtc found or specified at run-time. It
-> > would eliminate the need for 2 passes of dtc and the 2nd case will go
-> > away.
->
->
-> OK.
->
->
->
-> > > --- a/scripts/Makefile.lib
-> > > +++ b/scripts/Makefile.lib
-> > > @@ -246,6 +246,7 @@ quiet_cmd_gzip =3D GZIP    $@
-> > >  # DTC
-> > >  # ------------------------------------------------------------------=
----------
-> > >  DTC ?=3D $(objtree)/scripts/dtc/dtc
-> > > +DTC_YAML ?=3D $(objtree)/scripts/dtc/dtc-yaml
-> >
-> > Can we make 'DTC' override both and keep this an internal detail.
-> >
->
-> No. For parallel building *.dtb and *.dt.yaml,
-> they must be separate instances.
->
->
-> > > +HOSTLDLIBS_dtc-yaml :=3D -lyaml
-> >
-> > Does this work for yocto? As we had this before commit 067c650c456e.
-> > Not clear if this changed for any reason or just 'let's use pkg-config
-> > everywhere'.
-> >
-> > Or is there another way to fix yocto issue and we can just check the
-> > header exists. I assume yocto needs some prefix in front of
-> > '/usr/include/yaml.h'?
-> >
->
-> My bad - I missed 067c650c456e
->
-> We need pkg-config to deal with yocto.
->
->
-> Sorry, I take back this series.
+Hi Douglas,
 
+Thank you for the patch.
 
-On my second thought, we can search libyaml
-in non-standard path without pkg-config.
+On Mon, May 04, 2020 at 09:36:31PM -0700, Douglas Anderson wrote:
+> The ti-sn65dsi86 MIPI DSI to eDP bridge chip supports arbitrary
+> remapping of eDP lanes and also polarity inversion.  Both of these
+> features have been described in the device tree bindings for the
+> device since the beginning but were never implemented in the driver.
+> Implement both of them.
+> 
+> Part of this change also allows you to (via the same device tree
+> bindings) specify to use fewer than the max number of DP lanes that
+> the panel reports.  This could be useful if your display supports more
+> lanes but only a few are hooked up on your board.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> This patch is based upon my my outstanding series[1] not because there
+> is any real requirement but simply to avoid merge conflicts.  I
+> believe that my previous series is ready to land.  If, however, you'd
+> prefer that I rebase this patch somewhere atop something else then
+> please shout.
+> 
+> [1] https://lore.kernel.org/r/20200430194617.197510-1-dianders@chromium.org
+> 
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 75 ++++++++++++++++++++++-----
+>  1 file changed, 62 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> index 1a125423eb07..52cca54b525f 100644
+> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> @@ -50,8 +50,12 @@
+>  #define SN_CHA_VERTICAL_BACK_PORCH_REG		0x36
+>  #define SN_CHA_HORIZONTAL_FRONT_PORCH_REG	0x38
+>  #define SN_CHA_VERTICAL_FRONT_PORCH_REG		0x3A
+> +#define SN_LN_ASSIGN_REG			0x59
+> +#define  LN_ASSIGN_WIDTH			2
+>  #define SN_ENH_FRAME_REG			0x5A
+>  #define  VSTREAM_ENABLE				BIT(3)
+> +#define  LN_POLRS_OFFSET			4
+> +#define  LN_POLRS_MASK				0xf0
+>  #define SN_DATA_FORMAT_REG			0x5B
+>  #define  BPP_18_RGB				BIT(0)
+>  #define SN_HPD_DISABLE_REG			0x5C
+> @@ -98,6 +102,7 @@
+>  
+>  #define SN_REGULATOR_SUPPLY_NUM		4
+>  
+> +#define SN_MAX_DP_LANES			4
+>  #define SN_NUM_GPIOS			4
+>  
+>  /**
+> @@ -115,6 +120,8 @@
+>   * @enable_gpio:  The GPIO we toggle to enable the bridge.
+>   * @supplies:     Data for bulk enabling/disabling our regulators.
+>   * @dp_lanes:     Count of dp_lanes we're using.
+> + * @ln_assign:    Value to program to the LN_ASSIGN register.
+> + * @ln_polr:      Value for the 4-bit LN_POLRS field of SN_ENH_FRAME_REG.
+>   *
+>   * @gchip:        If we expose our GPIOs, this is used.
+>   * @gchip_output: A cache of whether we've set GPIOs to output.  This
+> @@ -140,6 +147,8 @@ struct ti_sn_bridge {
+>  	struct gpio_desc		*enable_gpio;
+>  	struct regulator_bulk_data	supplies[SN_REGULATOR_SUPPLY_NUM];
+>  	int				dp_lanes;
+> +	u8				ln_assign;
+> +	u8				ln_polrs;
+>  
+>  	struct gpio_chip		gchip;
+>  	DECLARE_BITMAP(gchip_output, SN_NUM_GPIOS);
+> @@ -707,26 +716,20 @@ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
+>  	int dp_rate_idx;
+>  	unsigned int val;
+>  	int ret = -EINVAL;
+> +	int max_dp_lanes;
+>  
+> -	/*
+> -	 * Run with the maximum number of lanes that the DP sink supports.
+> -	 *
+> -	 * Depending use cases, we might want to revisit this later because:
+> -	 * - It's plausible that someone may have run fewer lines to the
+> -	 *   sink than the sink actually supports, assuming that the lines
+> -	 *   will just be driven at a higher rate.
+> -	 * - The DP spec seems to indicate that it's more important to minimize
+> -	 *   the number of lanes than the link rate.
+> -	 *
+> -	 * If we do revisit, it would be important to measure the power impact.
+> -	 */
+> -	pdata->dp_lanes = ti_sn_get_max_lanes(pdata);
+> +	max_dp_lanes = ti_sn_get_max_lanes(pdata);
+> +	pdata->dp_lanes = min(pdata->dp_lanes, max_dp_lanes);
+>  
+>  	/* DSI_A lane config */
+>  	val = CHA_DSI_LANES(4 - pdata->dsi->lanes);
+>  	regmap_update_bits(pdata->regmap, SN_DSI_LANES_REG,
+>  			   CHA_DSI_LANES_MASK, val);
+>  
+> +	regmap_write(pdata->regmap, SN_LN_ASSIGN_REG, pdata->ln_assign);
+> +	regmap_update_bits(pdata->regmap, SN_ENH_FRAME_REG, LN_POLRS_MASK,
+> +			   pdata->ln_polrs << LN_POLRS_OFFSET);
+> +
+>  	/* set dsi clk frequency value */
+>  	ti_sn_bridge_set_dsi_rate(pdata);
+>  
+> @@ -1063,6 +1066,50 @@ static int ti_sn_setup_gpio_controller(struct ti_sn_bridge *pdata)
+>  	return ret;
+>  }
+>  
+> +static void ti_sn_bridge_parse_lanes(struct ti_sn_bridge *pdata,
+> +				     struct device_node *np)
+> +{
+> +	u32 lane_assignments[SN_MAX_DP_LANES] = { 0, 1, 2, 3 };
+> +	u32 lane_polarities[SN_MAX_DP_LANES] = { };
+> +	struct device_node *endpoint;
+> +	u8 ln_assign = 0;
+> +	u8 ln_polrs = 0;
+> +	int dp_lanes;
+> +	int i;
+> +
+> +	/*
+> +	 * Read config from the device tree about lane remapping and lane
+> +	 * polarities.  These are optional and we assume identity map and
+> +	 * normal polarity if nothing is specified.  It's OK to specify just
+> +	 * data-lanes but not lane-polarities but not vice versa.
+> +	 */
+> +	endpoint = of_graph_get_endpoint_by_regs(np, 1, -1);
 
+Shouldn't you check for endpoint == NULL and fail probe if it is ?
 
-Kbuild provides a way to specify additional flags
-for building host tools.
+> +	dp_lanes = of_property_count_u32_elems(endpoint, "data-lanes");
+> +	if (dp_lanes > 0) {
+> +		of_property_read_u32_array(endpoint, "data-lanes",
+> +					   lane_assignments, dp_lanes);
+> +		of_property_read_u32_array(endpoint, "lane-polarities",
+> +					   lane_polarities, dp_lanes);
 
-make  HOSTCFLAGS=3D<install-dir-in-yocto>/include
-      HOSTLDFLAGS=3D<install-dir-in-yocto>/lib
+Similarly, with a buggy DT, you may have a buffer overrun here. I would
+first check that dp_lanes <= SN_MAX_DP_LANES and error out otherwise.
 
+> +	} else {
+> +		dp_lanes = SN_MAX_DP_LANES;
+> +	}
+> +
+> +	/*
+> +	 * Convert into register format.  Loop over all lanes even if
+> +	 * data-lanes had fewer elements so that we nicely initialize
+> +	 * the LN_ASSIGN register.
+> +	 */
+> +	for (i = SN_MAX_DP_LANES - 1; i >= 0; i--) {
+> +		ln_assign = ln_assign << LN_ASSIGN_WIDTH | lane_assignments[i];
+> +		ln_polrs = ln_polrs << 1 | lane_polarities[i];
+> +	}
 
+The datasheet documents the lane remapping register as allowing pretty
+much any combination, but "Table 12. Logical to Physical Supported
+Combinations" only documents a subset (for instance data-lanes = <2 3>
+isn't allowed in that table). Should we guard against invalid
+configurations ?
 
+> +
+> +	/* Stash in our struct for when we power on */
+> +	pdata->dp_lanes = dp_lanes;
+> +	pdata->ln_assign = ln_assign;
+> +	pdata->ln_polrs = ln_polrs;
+> +}
+> +
+>  static int ti_sn_bridge_probe(struct i2c_client *client,
+>  			      const struct i2c_device_id *id)
+>  {
+> @@ -1105,6 +1152,8 @@ static int ti_sn_bridge_probe(struct i2c_client *client,
+>  		return ret;
+>  	}
+>  
+> +	ti_sn_bridge_parse_lanes(pdata, client->dev.of_node);
+> +
+>  	ret = ti_sn_bridge_parse_regulators(pdata);
+>  	if (ret) {
+>  		DRM_ERROR("failed to parse regulators\n");
+> 
 
---=20
-Best Regards
-Masahiro Yamada
+-- 
+Regards,
+
+Laurent Pinchart
