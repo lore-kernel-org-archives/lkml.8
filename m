@@ -2,99 +2,83 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86EC0C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9ECDC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63D9520746
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:22:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588695768;
-	bh=MuVnf+TV/GNJ81ENNjRDqKXEElG+aVV1/V7k40ViqEU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2i3OoIns7+GIIoJuTVsGlogBzR4lvEGmvyFvdl+vVd/PB2Q/jhGe7F9CAT8js12G8
-	 PlhgTvzaZoqOH5kmxAWmO1s4WoAXFf7TfC/TjLuEa9NShCvoMtH15wPKwFNc1SmjtI
-	 WJwrTxMV2hOxOLV1f2j/6Er/m9XJeFU4o6ceXFUs=
+	by mail.kernel.org (Postfix) with ESMTP id 874132064A
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:23:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730079AbgEEQWr (ORCPT
+        id S1730342AbgEEQXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:22:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48752 "EHLO mail.kernel.org"
+        Tue, 5 May 2020 12:23:54 -0400
+Received: from fieldses.org ([173.255.197.46]:46768 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729119AbgEEQWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:22:46 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E68A4206B9;
-        Tue,  5 May 2020 16:22:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588695766;
-        bh=MuVnf+TV/GNJ81ENNjRDqKXEElG+aVV1/V7k40ViqEU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pHPGy/ufSY83Te9rXBrxY0sFocIR3kj0FCu7j+vGP2gBRjS/iMYxkmXbNATGqnkv8
-         7HB3vYiDouk4gLgFsP6esGyIFaUBY9rbPvb8Dg3pW7dbQgt+f5t/UnOzqy/hIYpW1T
-         Nob8NVbvHzMBt98GhNj7aq8r8gSmBdbUGVEUkmEs=
-Date:   Tue, 5 May 2020 17:22:42 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Peng Fan <peng.fan@nxp.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Steven Price <steven.price@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] firmware: arm_scmi: fix psci dependency
-Message-ID: <20200505162241.GH24239@willie-the-truck>
-References: <20200505140820.536615-1-arnd@arndb.de>
- <20200505150421.GA23612@bogus>
+        id S1728807AbgEEQXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 12:23:54 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id E8E7A5A30; Tue,  5 May 2020 12:23:53 -0400 (EDT)
+Date:   Tue, 5 May 2020 12:23:53 -0400
+To:     Tejun Heo <tj@kernel.org>
+Cc:     "J. Bruce Fields" <bfields@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        Jeff Layton <jlayton@redhat.com>,
+        David Howells <dhowells@redhat.com>, Shaohua Li <shli@fb.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/4] allow multiple kthreadd's
+Message-ID: <20200505162353.GA27966@fieldses.org>
+References: <1588348912-24781-1-git-send-email-bfields@redhat.com>
+ <CAHk-=wiGhZ_5xCRyUN+yMFdneKMQ-S8fBvdBp8o-JWPV4v+nVw@mail.gmail.com>
+ <20200501182154.GG5462@mtj.thefacebook.com>
+ <20200505021514.GA43625@pick.fieldses.org>
+ <20200505155405.GD12217@mtj.thefacebook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200505150421.GA23612@bogus>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200505155405.GD12217@mtj.thefacebook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 04:04:21PM +0100, Sudeep Holla wrote:
-> On Tue, May 05, 2020 at 04:08:08PM +0200, Arnd Bergmann wrote:
-> > When CONFIG_ARM_PSCI_FW is disabled but CONFIG_HAVE_ARM_SMCCC is enabled,
-> > arm-scmi runs into a link failure:
-> >
-> > arm-linux-gnueabi-ld: drivers/firmware/arm_scmi/smc.o: in function `smc_send_message':
-> > smc.c:(.text+0x200): undefined reference to `arm_smccc_1_1_get_conduit'
-> >
-> > Use an inline helper to default to version v1.0 in the absence of psci.
-> >
+On Tue, May 05, 2020 at 11:54:05AM -0400, Tejun Heo wrote:
+> Hello, Bruce.
 > 
-> Thanks for fixing this. I was thinking if we can separate PSCI and SMCCC
-> quickly as a fix for this but I think he needs to be discussed in detail.
+> On Mon, May 04, 2020 at 10:15:14PM -0400, J. Bruce Fields wrote:
+> > We're currently using it to pass the struct svc_rqst that a new nfsd
+> > thread needs.  But once the new thread has gotten that, I guess it could
+> > set kthread->data to some global value that it uses to say "I'm a knfsd
+> > thread"?
+> > 
+> > I suppose that would work.
+> > 
+> > Though now I'm feeling greedy: it would be nice to have both some kind
+> > of global flag, *and* keep kthread->data pointing to svc_rqst (as that
+> > would give me a simpler and quicker way to figure out which client is
+> > conflicting).  Could I take a flag bit in kthread->flags, maybe?
 > 
-> I am fine with this fix as is and happy to apply to my tree if no one
-> objects.
-> 
-> Sorry but taking this patch as opportunity to discuss how to carry the
-> dependency in future. Just a proposal,
-> 
-> 1. Introduce a DT node for SMCCC v1.2+
-> 2. The new SMCCC driver(strictly speaking library/few APIs) can probe 
->    independent of PSCI if DT node is present
-> 3. Else we fallback on PSCI and detect the SMCCC version for v1.1 and
->    v1.2
-> 4. Assume v1.0 if
-> 	a. PSCI FEATURE returns NOT_SUPPORTED for ARM_SMCCC_VERSION_FUNC_ID
-> 	b. CONFIG_ARM_PSCI{,_FW} is not defined
-> 
-> Mark/Will/Marc,
-> 
-> Any other use-case config missed above ?
+> Hmm... that'd be solvable if kthread->data can point to a struct which does
+> both things, right?
 
-Do we really gain much by separating PSCI from SMCCC? In other words, why
-do we care about allowing them to be selected independently?
+Isn't this some sort of chicken-and-egg problem?
 
-Will
+If you don't know whether a given kthread is an nfsd thread or not, then
+it's not safe to assume that kthread->data points to some nfsd-specific
+structure that might tell you whether it's an nfsd thread.
+
+> Because it doesn't have free() callback, it's a bit
+> awkward but the threadfn itself can unlink and RCU-free it before returning.
+
+It's only ever going to be referenced from the thread itself.  This is
+just a way to ask "am I running as an nfsd thread?" when we're deep
+inside generic filesystem code somewhere.  So I don't think there's any
+complicated lifetime issues here.
+
+--b.
