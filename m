@@ -2,179 +2,100 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3343C47258
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D6AC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0169206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:13:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="bcLfITJo"
+	by mail.kernel.org (Postfix) with ESMTP id BA91120735
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 11:14:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588677263;
+	bh=0K2DpxSvS3/qR26Gr3apwXgTBLAzGZEQ2x9wJfhnTxs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QnQ4dErZlI+LkWiXBOPekxN579BRoxUdkDlGOss0HSB17vh1HLfetLho2rIQRniCD
+	 5iPQbC1wtzLcHq8sNmi1yawSrbvQSJ0f/8fwLmZJG8amti0XLwaMMPYDhxFmNejNXR
+	 MwWdpWVc+z2vUF4tzjZByUivRS6thSlq4Vq0ealw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728922AbgEELNp (ORCPT
+        id S1728837AbgEELOW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 07:13:45 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:4735 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbgEELNo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 07:13:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1588677223; x=1620213223;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=Pt3cBmLZtE7h5ESUFNNHWoRiq0k+KQ57tz4K9OQ7T3w=;
-  b=bcLfITJoxsrFA5ThfE6jz7Bp/cgUZcibGqQNQcuIX7ZCTImtN7zFCU7K
-   EfLY4i/5cKuPqr0w2K2jIFfCVOhNGK+48T3ZMt01d7szVwnmATlqMOPzn
-   OKEQK5qTP0+uZpcPuOaMRCVkAF9Sre6LISntS5f5yDN6xErx3SzoTGe5W
-   Q=;
-IronPort-SDR: tuN0FVbulAJQEmVCRkXD7YZg7eKecF3wLQ+nWlaDDSTPEB7Y34yOPdhG06uiWHMVduTjvy7e/D
- rrb5bo2wX2Yg==
-X-IronPort-AV: E=Sophos;i="5.73,354,1583193600"; 
-   d="scan'208";a="28673540"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-e7be2041.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 05 May 2020 11:13:40 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-e7be2041.us-west-2.amazon.com (Postfix) with ESMTPS id CAE60A2784;
-        Tue,  5 May 2020 11:13:37 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 5 May 2020 11:13:37 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.92) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 5 May 2020 11:13:21 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
-        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v10 11/16] mm/damon: Add tracepoints
-Date:   Tue, 5 May 2020 13:08:10 +0200
-Message-ID: <20200505110815.10532-12-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200505110815.10532-1-sjpark@amazon.com>
-References: <20200505110815.10532-1-sjpark@amazon.com>
+        Tue, 5 May 2020 07:14:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54006 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728624AbgEELOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 07:14:22 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F267C206B9;
+        Tue,  5 May 2020 11:14:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588677262;
+        bh=0K2DpxSvS3/qR26Gr3apwXgTBLAzGZEQ2x9wJfhnTxs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PQ0hNzy9lxbvL4cILbgFbeZ/9NRJSCI9Rbt0kC9oprAvlHm2yBVvqjud3RbtPKAtC
+         xZAccWb+uKtskmlWSPhSyWJZ7S/fPiZxJ8SI3C+POiOvAOBDZ82GH9nJeE1fhSJW6+
+         mHAXafyh7JbkC3s7kT6femZL1bDttkNKfZmtYBmA=
+Date:   Tue, 5 May 2020 12:14:17 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 08/16] arm64/cpufeature: Add remaining feature bits in
+ ID_MMFR4 register
+Message-ID: <20200505111417.GG19710@willie-the-truck>
+References: <1588426445-24344-1-git-send-email-anshuman.khandual@arm.com>
+ <1588426445-24344-9-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.92]
-X-ClientProxiedBy: EX13D35UWB004.ant.amazon.com (10.43.161.230) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588426445-24344-9-git-send-email-anshuman.khandual@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On Sat, May 02, 2020 at 07:03:57PM +0530, Anshuman Khandual wrote:
+> Enable all remaining feature bits like EVT, CCIDX, LSM, HPDS, CnP, XNX,
+> SpecSEI in ID_MMFR4 register per ARM DDI 0487F.a.
+> 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> Suggested-by: Mark Rutland <mark.rutland@arm.com>
+> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>  arch/arm64/include/asm/sysreg.h |  8 ++++++++
+>  arch/arm64/kernel/cpufeature.c  | 13 +++++++++++++
+>  2 files changed, 21 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+> index f9e3b9350540..0f34927f52b9 100644
+> --- a/arch/arm64/include/asm/sysreg.h
+> +++ b/arch/arm64/include/asm/sysreg.h
+> @@ -790,6 +790,14 @@
+>  #define ID_ISAR6_DP_SHIFT		4
+>  #define ID_ISAR6_JSCVT_SHIFT		0
+>  
+> +#define ID_MMFR4_EVT_SHIFT		28
+> +#define ID_MMFR4_CCIDX_SHIFT		24
+> +#define ID_MMFR4_LSM_SHIFT		20
+> +#define ID_MMFR4_HPDS_SHIFT		16
+> +#define ID_MMFR4_CNP_SHIFT		12
+> +#define ID_MMFR4_XNX_SHIFT		8
 
-This commit adds a tracepoint for DAMON.  It traces the monitoring
-results of each region for each aggregation interval.  Using this, DAMON
-will be easily integrated with any tracepoints supporting tools such as
-perf.
+Why didn't you add ID_MMFR4_AC2_SHIFT as well?
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- include/trace/events/damon.h | 43 ++++++++++++++++++++++++++++++++++++
- mm/damon.c                   |  5 +++++
- 2 files changed, 48 insertions(+)
- create mode 100644 include/trace/events/damon.h
-
-diff --git a/include/trace/events/damon.h b/include/trace/events/damon.h
-new file mode 100644
-index 000000000000..22236642d366
---- /dev/null
-+++ b/include/trace/events/damon.h
-@@ -0,0 +1,43 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM damon
-+
-+#if !defined(_TRACE_DAMON_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_DAMON_H
-+
-+#include <linux/types.h>
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(damon_aggregated,
-+
-+	TP_PROTO(int pid, unsigned int nr_regions,
-+		unsigned long vm_start, unsigned long vm_end,
-+		unsigned int nr_accesses),
-+
-+	TP_ARGS(pid, nr_regions, vm_start, vm_end, nr_accesses),
-+
-+	TP_STRUCT__entry(
-+		__field(int, pid)
-+		__field(unsigned int, nr_regions)
-+		__field(unsigned long, vm_start)
-+		__field(unsigned long, vm_end)
-+		__field(unsigned int, nr_accesses)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->pid = pid;
-+		__entry->nr_regions = nr_regions;
-+		__entry->vm_start = vm_start;
-+		__entry->vm_end = vm_end;
-+		__entry->nr_accesses = nr_accesses;
-+	),
-+
-+	TP_printk("pid=%d nr_regions=%u %lu-%lu: %u", __entry->pid,
-+			__entry->nr_regions, __entry->vm_start,
-+			__entry->vm_end, __entry->nr_accesses)
-+);
-+
-+#endif /* _TRACE_DAMON_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-diff --git a/mm/damon.c b/mm/damon.c
-index fac56448847f..9f7d173eca3b 100644
---- a/mm/damon.c
-+++ b/mm/damon.c
-@@ -9,6 +9,8 @@
- 
- #define pr_fmt(fmt) "damon: " fmt
- 
-+#define CREATE_TRACE_POINTS
-+
- #include <linux/damon.h>
- #include <linux/debugfs.h>
- #include <linux/delay.h>
-@@ -20,6 +22,7 @@
- #include <linux/sched/mm.h>
- #include <linux/sched/task.h>
- #include <linux/slab.h>
-+#include <trace/events/damon.h>
- 
- /* Minimal region size.  Every damon_region is aligned by this. */
- #define MIN_REGION PAGE_SIZE
-@@ -650,6 +653,8 @@ static void kdamond_reset_aggregated(struct damon_ctx *c)
- 			damon_write_rbuf(c, &r->vm_end, sizeof(r->vm_end));
- 			damon_write_rbuf(c, &r->nr_accesses,
- 					sizeof(r->nr_accesses));
-+			trace_damon_aggregated(t->pid, nr,
-+					r->vm_start, r->vm_end, r->nr_accesses);
- 			r->nr_accesses = 0;
- 		}
- 	}
--- 
-2.17.1
-
+Will
