@@ -2,120 +2,146 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 693EEC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB2EC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40CC0206CC
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DAAB206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:05:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HoF+1DPH"
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="bEgemimG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728524AbgEEAEF (ORCPT
+        id S1728501AbgEEAFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 20:04:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40919 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728223AbgEEAED (ORCPT
+        Mon, 4 May 2020 20:05:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57604 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728258AbgEEAFW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 20:04:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588637042;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HwVHFxYYjOkkdD9SX+7OmmC4/WqixEH8rx2g3a5Y1PE=;
-        b=HoF+1DPHuAsgQieOzoWsOKYHe/2zRXnF4oWxOAEgt3Q52ycA+DmMzflK6skLdRC0qcqFh0
-        sE7XjqOaYmE4DmcwquFJhzrVmxHEmx4Jc0sc3dbKXt3lvQJpTlC9lPFFZvJYMMjAe/RDy2
-        ikxDoSP5jiJbX3Zr/nM0AN7U/RWo80I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-503-7vmAu_pHMM2arvLjdhPsjQ-1; Mon, 04 May 2020 20:03:58 -0400
-X-MC-Unique: 7vmAu_pHMM2arvLjdhPsjQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F1877107ACCA;
-        Tue,  5 May 2020 00:03:56 +0000 (UTC)
-Received: from krava (unknown [10.40.192.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AD0AA66062;
-        Tue,  5 May 2020 00:03:54 +0000 (UTC)
-Date:   Tue, 5 May 2020 02:03:52 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     "Jin, Yao" <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH] perf evsel: Get group fd from CPU0 for system wide event
-Message-ID: <20200505000352.GH1916255@krava>
-References: <20200430013451.17196-1-yao.jin@linux.intel.com>
- <20200501102337.GA1761222@krava>
- <b799b66a-42aa-6c55-647e-7b718473632a@linux.intel.com>
+        Mon, 4 May 2020 20:05:22 -0400
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91654C061A0F
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 17:05:22 -0700 (PDT)
+Received: by mail-pj1-x1034.google.com with SMTP id h12so461378pjz.1
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 17:05:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=AJisQVo+doMecpLYDgXbLnuJk8fwWTr3ooCXVB5wUoA=;
+        b=bEgemimGj7IRspISKSzcTlqaOWHAl6fmTwOvgtr3AN4Em7/FE7pp6vcnz7jJ4QwhdI
+         RytS6X7kee8K2g9n5YfWAMVERGszoIn7UpmVu7QoqjkJwmaTfWPx1tbaMuzluWwDPRFq
+         u+DIL3owBzu3hyp8p0fQyCYbW//9GObS3dO1fd9RWGy7KUyRO1+nygmCxOyQHim0pbXx
+         FxfRwcvKgX0WDmplcTe6MEbKgbddDFlrczf0uAZ2QFv5vDS8BRjctqni5IdECGAjFPEm
+         bMhBd6Z8ZBn6xr2bF4D4gqnvQyGUeK8NKNHU20aVDRGg7wtgkUcJ12rmK55LXq6GIiNR
+         ns1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=AJisQVo+doMecpLYDgXbLnuJk8fwWTr3ooCXVB5wUoA=;
+        b=Z2hOYO214vS0mwAs/eJKz2gg+LNdqOyCafaAFZQuRmBQ8JJeoOj0FY3uO/YLj6RNQI
+         C082Hjthv5LZwA1HBy7wz3RBZ2AoUoFWJv3S2WHZkGbnltTDU8JorACFMmUL2jZKm3OC
+         7ZP6ni6gVlZx6Fce5duofwApynWguOBUBns3KoZr7RJvQAaFJobTICl6rfTlx/0pZU6N
+         voryPBCUUDmzSMO/F4tvoBZsf+7L6+XnzJfZrbLYyLyl90L1JAKmLr3u8MnrBnFZ4c5f
+         npmMeHhXsMaMYIKrAayheQ4T1UNEGSuXbfNtZvZ+DSiNzqwkFqooZ6Bdu8NgWL2qk6+h
+         QyNA==
+X-Gm-Message-State: AGi0PuYaXgIvPXrknEUo+ojHh5LNWJKLJHi6TvabpLE5xWvFo30+hwbZ
+        bG0FF2p//xaufJXD2s3ztseiKQ==
+X-Google-Smtp-Source: APiQypLxIOTVNo8eLemhfWKUgu3c4328NsfUjwNsLd0y3N+j/UzZI2PMItToOZNaf2Stvx3eOnErfA==
+X-Received: by 2002:a17:902:361:: with SMTP id 88mr204608pld.279.1588637121607;
+        Mon, 04 May 2020 17:05:21 -0700 (PDT)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id b13sm223058pfo.67.2020.05.04.17.05.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 17:05:21 -0700 (PDT)
+Date:   Mon, 4 May 2020 17:05:12 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Po Liu <Po.Liu@nxp.com>
+Cc:     davem@davemloft.net, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, vinicius.gomes@intel.com, vlad@buslov.dev,
+        claudiu.manoil@nxp.com, vladimir.oltean@nxp.com,
+        alexandru.marginean@nxp.com, michael.chan@broadcom.com,
+        vishal@chelsio.com, saeedm@mellanox.com, leon@kernel.org,
+        jiri@mellanox.com, idosch@mellanox.com,
+        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
+        kuba@kernel.org, xiyou.wangcong@gmail.com,
+        simon.horman@netronome.com, pablo@netfilter.org,
+        moshe@mellanox.com, m-karicheri2@ti.com,
+        andre.guedes@linux.intel.com
+Subject: Re: [v3,iproute2 1/2] iproute2:tc:action: add a gate control action
+Message-ID: <20200504170512.74505a82@hermes.lan>
+In-Reply-To: <20200503063251.10915-1-Po.Liu@nxp.com>
+References: <20200501005318.21334-5-Po.Liu@nxp.com>
+        <20200503063251.10915-1-Po.Liu@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b799b66a-42aa-6c55-647e-7b718473632a@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 02, 2020 at 10:33:59AM +0800, Jin, Yao wrote:
+On Sun,  3 May 2020 14:32:50 +0800
+Po Liu <Po.Liu@nxp.com> wrote:
 
-SNIP
-
-> > > @@ -1461,6 +1461,9 @@ static int get_group_fd(struct evsel *evsel, int cpu, int thread)
-> > >   	BUG_ON(!leader->core.fd);
-> > >   	fd = FD(leader, cpu, thread);
-> > > +	if (fd == -1 && leader->core.system_wide)
-> > 
-> > fd does not need to be -1 in here.. in my setup cstate_pkg/c2-residency/
-> > has cpumask 0, so other cpus never get open and are 0, and the whole thing
-> > ends up with:
-> > 
-> > 	sys_perf_event_open: pid -1  cpu 1  group_fd 0  flags 0
-> > 	sys_perf_event_open failed, error -9
-> > 
-> > I actualy thought we put -1 to fd array but couldn't find it.. perhaps we should od that
-> > 
-> > 
+> Introduce a ingress frame gate control flow action.
+> Tc gate action does the work like this:
+> Assume there is a gate allow specified ingress frames can pass at
+> specific time slot, and also drop at specific time slot. Tc filter
+> chooses the ingress frames, and tc gate action would specify what slot
+> does these frames can be passed to device and what time slot would be
+> dropped.
+> Tc gate action would provide an entry list to tell how much time gate
+> keep open and how much time gate keep state close. Gate action also
+> assign a start time to tell when the entry list start. Then driver would
+> repeat the gate entry list cyclically.
+> For the software simulation, gate action require the user assign a time
+> clock type.
 > 
-> I have tested on two platforms. On KBL desktop fd is 0 for this case, but on
-> oncascadelakex server, fd is -1, so the BUG_ON(fd == -1) is triggered.
+> Below is the setting example in user space. Tc filter a stream source ip
+> address is 192.168.0.20 and gate action own two time slots. One is last
+> 200ms gate open let frame pass another is last 100ms gate close let
+> frames dropped.
 > 
-> > > +		fd = FD(leader, 0, thread);
-> > > +
-> > 
-> > so how do we group following events?
-> > 
-> >    cstate_pkg/c2-residency/ - cpumask 0
-> >    msr/tsc/                 - all cpus
-> > 
+>  # tc qdisc add dev eth0 ingress
+>  # tc filter add dev eth0 parent ffff: protocol ip \
 > 
-> Not sure if it's enough to only use cpumask 0 because
-> cstate_pkg/c2-residency/ should be per-socket.
+>             flower src_ip 192.168.0.20 \
+>             action gate index 2 clockid CLOCK_TAI \
+>             sched-entry open 200000000 -1 -1 \
+>             sched-entry close 100000000
 > 
-> > cpu 0 is fine.. the rest I have no idea ;-)
-> > 
+>  # tc chain del dev eth0 ingress chain 0
 > 
-> Perhaps we directly remove the BUG_ON(fd == -1) assertion?
+> "sched-entry" follow the name taprio style. Gate state is
+> "open"/"close". Follow the period nanosecond. Then next -1 is internal
+> priority value means which ingress queue should put to. "-1" means
+> wildcard. The last value optional specifies the maximum number of
+> MSDU octets that are permitted to pass the gate during the specified
+> time interval.
+> 
+> Below example shows filtering a stream with destination mac address is
+> 10:00:80:00:00:00 and ip type is ICMP, follow the action gate. The gate
+> action would run with one close time slot which means always keep close.
+> The time cycle is total 200000000ns. The base-time would calculate by:
+> 
+>      1357000000000 + (N + 1) * cycletime
+> 
+> When the total value is the future time, it will be the start time.
+> The cycletime here would be 200000000ns for this case.
+> 
+>  #tc filter add dev eth0 parent ffff:  protocol ip \
+>            flower skip_hw ip_proto icmp dst_mac 10:00:80:00:00:00 \
+>            action gate index 12 base-time 1357000000000 \
+>            sched-entry CLOSE 200000000 \
+>            clockid CLOCK_TAI
+> 
+> Signed-off-by: Po Liu <Po.Liu@nxp.com>
 
-I think we need to make clear how to deal with grouping over
-events that comes for different cpus
-
-	so how do we group following events?
-	
-	   cstate_pkg/c2-residency/ - cpumask 0
-	   msr/tsc/                 - all cpus
-
-
-what's the reason/expected output of groups with above events?
-seems to make sense only if we limit msr/tsc/ to cpumask 0 as well
-
-jirka
+These changes are specific to net-next should be assigned to iproute2-next.
+Will change delegation.
 
