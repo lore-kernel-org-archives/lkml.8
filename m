@@ -2,121 +2,310 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1202AC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCAEC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E408E20752
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:59:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588701551;
-	bh=0x7iqbFSynCom3RG2vdz4/c2M4DD2sIIWB2WCjFu2iQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HCvzYwVrKN3yzzCmaIQht+CLHOIOtnVv8ztZ/baKO/xuKVuP1t4xE9hfSk7lGC7s9
-	 ad9kFbuwAFFNcOUY4xfyZVmjExiFTsh1SwdCSQ4dtiqPDUR0YwjUeX+MIDr+O2jXfe
-	 5yZkkV0kORfBbW7K5D3yOn87XgnMhIBJ3j8jHRno=
+	by mail.kernel.org (Postfix) with ESMTP id 16A7A206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:59:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YJuLZaDj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730541AbgEER7K (ORCPT
+        id S1730631AbgEER7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 13:59:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52380 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729315AbgEER7J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 13:59:09 -0400
-Received: from gmail.com (unknown [104.132.1.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 087B1206B8;
-        Tue,  5 May 2020 17:59:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588701549;
-        bh=0x7iqbFSynCom3RG2vdz4/c2M4DD2sIIWB2WCjFu2iQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZGVlIeFj3wCCtSNeLmdjQArtitcehSpGtNv7FAO+I6CO8r2EqEtBe601I1+Puzarn
-         XF/raACUlARDMJXhC9+siFCPYaGiQGIjFBmLAGLfnoAnZ4lGhMDrTVnxacdQHLqlCC
-         2B8cP6Aes4oc9+LraO/fQC7v+4Z3JAi3SSiK5+ss=
-Date:   Tue, 5 May 2020 10:59:07 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-Cc:     kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [f2fs-dev] [PATCH] f2fs: get parent inode when recovering pino
-Message-ID: <20200505175907.GB98848@gmail.com>
-References: <20200505153139.201697-1-jaegeuk@kernel.org>
- <20200505165847.GA98848@gmail.com>
+        Tue, 5 May 2020 13:59:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56104 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729315AbgEER7p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 13:59:45 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C2F1C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 10:59:45 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id s11so1816322vsq.13
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 10:59:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+UvOYFnXRLt4GTLCxwnCi2QkxNBIoEIYa6GoyTolgT4=;
+        b=YJuLZaDj/YU+BKCH8nhuYFQqQuBVQY0EFn1scpuAv2jZ/GTpeskPov5ZCs2R7m/xn7
+         3koNWx1u6d0/eT7SzZKV5hM2vRB8Y5zRAhq/LgDEIYJyKesxRgX474e9YsNRJCnXfEUz
+         YtPaMbfc9zoce/c+Vg9lTZYiWXT4+YvM14l5U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+UvOYFnXRLt4GTLCxwnCi2QkxNBIoEIYa6GoyTolgT4=;
+        b=X4wktjNL79vDFNDYtppeon22hPONezvTpngkuT92JfkNJ2QLbXJ99j9LMyEA8BLssc
+         4Kxm31vws9EtAIhz6AyP+XDSV1XiIu8cj+S/vkVeCIuhysnKkI/ILmg4v612l5p6hzyh
+         TNAs+35wLHU8gmpMYk4c6py/zndMF/FuaJONKm/TiXV74wF5rn/YLrOULxqkvTXP9TsP
+         xoV5OboPo6b1qLCvxFACuQdbPSK6C1XneOyIxQrjL+tdT6CwTpIonal9pdTa1Icmk1cu
+         e368FEryMRcjG+cx8vnXxmGmtK2KEVRaJkU676Hhh9f/EtVdJWBd+pu97T3j3+RH31Yz
+         Bcwg==
+X-Gm-Message-State: AGi0PuY0N2COAvWGgx7vDsmdNb2aBc4X/6WVVmql99WqXmhu9YUTKgcF
+        lU9lwQfNVxmSC1+l3bQxZ8u47FyVCks=
+X-Google-Smtp-Source: APiQypIHdL8uYMeCdXslWeoyxDBMYqYpmvod8dmOVqtCHrecng1wBFYB+Uc9vIHLPsNdzWjYdiaLug==
+X-Received: by 2002:a05:6102:30a7:: with SMTP id y7mr4036880vsd.118.1588701583542;
+        Tue, 05 May 2020 10:59:43 -0700 (PDT)
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com. [209.85.221.173])
+        by smtp.gmail.com with ESMTPSA id x139sm1342471vkd.3.2020.05.05.10.59.42
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2020 10:59:42 -0700 (PDT)
+Received: by mail-vk1-f173.google.com with SMTP id w68so737271vke.5
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 10:59:42 -0700 (PDT)
+X-Received: by 2002:a1f:9645:: with SMTP id y66mr3711425vkd.40.1588701581561;
+ Tue, 05 May 2020 10:59:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505165847.GA98848@gmail.com>
+References: <20200504213624.1.Ibc8eeddcee94984a608d6900b46f9ffde4045da4@changeid>
+ <20200505082436.GD9658@pendragon.ideasonboard.com>
+In-Reply-To: <20200505082436.GD9658@pendragon.ideasonboard.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 5 May 2020 10:59:30 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WjUpwu5204K8yHzqsJv4vQX5S5CArH1Kj_kqjhZzTc9A@mail.gmail.com>
+Message-ID: <CAD=FV=WjUpwu5204K8yHzqsJv4vQX5S5CArH1Kj_kqjhZzTc9A@mail.gmail.com>
+Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: Implement lane reordering + polarity
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 09:58:47AM -0700, Eric Biggers wrote:
-> On Tue, May 05, 2020 at 08:31:39AM -0700, Jaegeuk Kim wrote:
-> > We had to grab the inode before retrieving i_ino.
-> > 
-> > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Hi,
+
+On Tue, May 5, 2020 at 1:24 AM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Douglas,
+>
+> Thank you for the patch.
+>
+> On Mon, May 04, 2020 at 09:36:31PM -0700, Douglas Anderson wrote:
+> > The ti-sn65dsi86 MIPI DSI to eDP bridge chip supports arbitrary
+> > remapping of eDP lanes and also polarity inversion.  Both of these
+> > features have been described in the device tree bindings for the
+> > device since the beginning but were never implemented in the driver.
+> > Implement both of them.
+> >
+> > Part of this change also allows you to (via the same device tree
+> > bindings) specify to use fewer than the max number of DP lanes that
+> > the panel reports.  This could be useful if your display supports more
+> > lanes but only a few are hooked up on your board.
+> >
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > > ---
-> >  fs/f2fs/file.c | 8 +++++++-
-> >  1 file changed, 7 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> > index a0a4413d6083b..9d4c3e3503567 100644
-> > --- a/fs/f2fs/file.c
-> > +++ b/fs/f2fs/file.c
-> > @@ -168,6 +168,7 @@ static const struct vm_operations_struct f2fs_file_vm_ops = {
-> >  static int get_parent_ino(struct inode *inode, nid_t *pino)
-> >  {
-> >  	struct dentry *dentry;
-> > +	struct inode *parent;
-> >  
-> >  	inode = igrab(inode);
-> >  	dentry = d_find_any_alias(inode);
-> > @@ -175,8 +176,13 @@ static int get_parent_ino(struct inode *inode, nid_t *pino)
-> >  	if (!dentry)
-> >  		return 0;
-> >  
-> > -	*pino = parent_ino(dentry);
-> > +	parent = igrab(d_inode(dentry->d_parent));
-> >  	dput(dentry);
-> > +	if (!parent)
-> > +		return 0;
+> > This patch is based upon my my outstanding series[1] not because there
+> > is any real requirement but simply to avoid merge conflicts.  I
+> > believe that my previous series is ready to land.  If, however, you'd
+> > prefer that I rebase this patch somewhere atop something else then
+> > please shout.
+> >
+> > [1] https://lore.kernel.org/r/20200430194617.197510-1-dianders@chromium.org
+> >
+> >  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 75 ++++++++++++++++++++++-----
+> >  1 file changed, 62 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> > index 1a125423eb07..52cca54b525f 100644
+> > --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> > +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> > @@ -50,8 +50,12 @@
+> >  #define SN_CHA_VERTICAL_BACK_PORCH_REG               0x36
+> >  #define SN_CHA_HORIZONTAL_FRONT_PORCH_REG    0x38
+> >  #define SN_CHA_VERTICAL_FRONT_PORCH_REG              0x3A
+> > +#define SN_LN_ASSIGN_REG                     0x59
+> > +#define  LN_ASSIGN_WIDTH                     2
+> >  #define SN_ENH_FRAME_REG                     0x5A
+> >  #define  VSTREAM_ENABLE                              BIT(3)
+> > +#define  LN_POLRS_OFFSET                     4
+> > +#define  LN_POLRS_MASK                               0xf0
+> >  #define SN_DATA_FORMAT_REG                   0x5B
+> >  #define  BPP_18_RGB                          BIT(0)
+> >  #define SN_HPD_DISABLE_REG                   0x5C
+> > @@ -98,6 +102,7 @@
+> >
+> >  #define SN_REGULATOR_SUPPLY_NUM              4
+> >
+> > +#define SN_MAX_DP_LANES                      4
+> >  #define SN_NUM_GPIOS                 4
+> >
+> >  /**
+> > @@ -115,6 +120,8 @@
+> >   * @enable_gpio:  The GPIO we toggle to enable the bridge.
+> >   * @supplies:     Data for bulk enabling/disabling our regulators.
+> >   * @dp_lanes:     Count of dp_lanes we're using.
+> > + * @ln_assign:    Value to program to the LN_ASSIGN register.
+> > + * @ln_polr:      Value for the 4-bit LN_POLRS field of SN_ENH_FRAME_REG.
+> >   *
+> >   * @gchip:        If we expose our GPIOs, this is used.
+> >   * @gchip_output: A cache of whether we've set GPIOs to output.  This
+> > @@ -140,6 +147,8 @@ struct ti_sn_bridge {
+> >       struct gpio_desc                *enable_gpio;
+> >       struct regulator_bulk_data      supplies[SN_REGULATOR_SUPPLY_NUM];
+> >       int                             dp_lanes;
+> > +     u8                              ln_assign;
+> > +     u8                              ln_polrs;
+> >
+> >       struct gpio_chip                gchip;
+> >       DECLARE_BITMAP(gchip_output, SN_NUM_GPIOS);
+> > @@ -707,26 +716,20 @@ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
+> >       int dp_rate_idx;
+> >       unsigned int val;
+> >       int ret = -EINVAL;
+> > +     int max_dp_lanes;
+> >
+> > -     /*
+> > -      * Run with the maximum number of lanes that the DP sink supports.
+> > -      *
+> > -      * Depending use cases, we might want to revisit this later because:
+> > -      * - It's plausible that someone may have run fewer lines to the
+> > -      *   sink than the sink actually supports, assuming that the lines
+> > -      *   will just be driven at a higher rate.
+> > -      * - The DP spec seems to indicate that it's more important to minimize
+> > -      *   the number of lanes than the link rate.
+> > -      *
+> > -      * If we do revisit, it would be important to measure the power impact.
+> > -      */
+> > -     pdata->dp_lanes = ti_sn_get_max_lanes(pdata);
+> > +     max_dp_lanes = ti_sn_get_max_lanes(pdata);
+> > +     pdata->dp_lanes = min(pdata->dp_lanes, max_dp_lanes);
+> >
+> >       /* DSI_A lane config */
+> >       val = CHA_DSI_LANES(4 - pdata->dsi->lanes);
+> >       regmap_update_bits(pdata->regmap, SN_DSI_LANES_REG,
+> >                          CHA_DSI_LANES_MASK, val);
+> >
+> > +     regmap_write(pdata->regmap, SN_LN_ASSIGN_REG, pdata->ln_assign);
+> > +     regmap_update_bits(pdata->regmap, SN_ENH_FRAME_REG, LN_POLRS_MASK,
+> > +                        pdata->ln_polrs << LN_POLRS_OFFSET);
 > > +
-> > +	*pino = parent->i_ino;
-> > +	iput(parent);
-> >  	return 1;
-> 
-> This doesn't appear to be necessary.  parent_ino() is:
-> 
-> 	spin_lock(&dentry->d_lock);
-> 	res = dentry->d_parent->d_inode->i_ino;
-> 	spin_unlock(&dentry->d_lock);
-> 
-> Since dentry is locked and referenced, ->d_parent is stable and positive.
-> 
-> In the encrypt+casefold patch I was reviewing, it's indeed necessary, but only
-> because there was a check of inode->i_flags added outside the locked region.
-> The following would be simpler:
-> 
->         spin_lock(&dentry->d_lock);
->         dir = dentry->d_parent->d_inode;
->         *pino = dir->i_ino;
->         needs_recovery = IS_ENCRYPTED(dir) && IS_CASEFOLDED(dir);
->         spin_unlock(&dentry->d_lock);
-> 
-> BTW, d_find_any_alias() is unnecessary too.  This code should just be using
-> file_dentry(file) from f2fs_do_sync_file().
-> 
+> >       /* set dsi clk frequency value */
+> >       ti_sn_bridge_set_dsi_rate(pdata);
+> >
+> > @@ -1063,6 +1066,50 @@ static int ti_sn_setup_gpio_controller(struct ti_sn_bridge *pdata)
+> >       return ret;
+> >  }
+> >
+> > +static void ti_sn_bridge_parse_lanes(struct ti_sn_bridge *pdata,
+> > +                                  struct device_node *np)
+> > +{
+> > +     u32 lane_assignments[SN_MAX_DP_LANES] = { 0, 1, 2, 3 };
+> > +     u32 lane_polarities[SN_MAX_DP_LANES] = { };
+> > +     struct device_node *endpoint;
+> > +     u8 ln_assign = 0;
+> > +     u8 ln_polrs = 0;
+> > +     int dp_lanes;
+> > +     int i;
+> > +
+> > +     /*
+> > +      * Read config from the device tree about lane remapping and lane
+> > +      * polarities.  These are optional and we assume identity map and
+> > +      * normal polarity if nothing is specified.  It's OK to specify just
+> > +      * data-lanes but not lane-polarities but not vice versa.
+> > +      */
+> > +     endpoint = of_graph_get_endpoint_by_regs(np, 1, -1);
+>
+> Shouldn't you check for endpoint == NULL and fail probe if it is ?
 
-Also, what is this code trying to accomplish?  If it's trying to find the parent
-directory of an inode with i_nlink == 1, this isn't the correct way to do it.
-The fsync could be done via a deleted file, which would make the wrong p_ino be
-set.  I think the correct approach would be to iterate through all the dentry's
-aliases, and choose the parent directory that's !IS_DEADDIR().
+I will if you feel strongly, but I don't think it's necessary.  Specifically:
 
-- Eric
+1. By design of_property_count_u32_elems() will return an error if
+passed a NULL node pointer.
+
+2. When we see an error this function will just init things to defaults.
+
+3. Later code which really needs the endpoint to hook things up
+properly will catch the error and yell.
+
+...so while I could add a yell here it doesn't seem like it gains much.
+
+
+> > +     dp_lanes = of_property_count_u32_elems(endpoint, "data-lanes");
+> > +     if (dp_lanes > 0) {
+> > +             of_property_read_u32_array(endpoint, "data-lanes",
+> > +                                        lane_assignments, dp_lanes);
+> > +             of_property_read_u32_array(endpoint, "lane-polarities",
+> > +                                        lane_polarities, dp_lanes);
+>
+> Similarly, with a buggy DT, you may have a buffer overrun here. I would
+> first check that dp_lanes <= SN_MAX_DP_LANES and error out otherwise.
+
+I will definitely add that.  Buffer overrun is no bueno.
+
+
+> > +     } else {
+> > +             dp_lanes = SN_MAX_DP_LANES;
+> > +     }
+> > +
+> > +     /*
+> > +      * Convert into register format.  Loop over all lanes even if
+> > +      * data-lanes had fewer elements so that we nicely initialize
+> > +      * the LN_ASSIGN register.
+> > +      */
+> > +     for (i = SN_MAX_DP_LANES - 1; i >= 0; i--) {
+> > +             ln_assign = ln_assign << LN_ASSIGN_WIDTH | lane_assignments[i];
+> > +             ln_polrs = ln_polrs << 1 | lane_polarities[i];
+> > +     }
+>
+> The datasheet documents the lane remapping register as allowing pretty
+> much any combination, but "Table 12. Logical to Physical Supported
+> Combinations" only documents a subset (for instance data-lanes = <2 3>
+> isn't allowed in that table). Should we guard against invalid
+> configurations ?
+
+As I understand it, in general standard kernel policy is to not sanity
+check the DT _too_ much.  This feels a bit on the border.  It's up to
+the person designing the board and writing the dts to not get things
+like this wrong just like it's up to them to make sure they've setup
+the i2c pins for our bus w/ the right pullups, configured our
+interrupt properly, not overvolted things, put in the correct address
+for MMIO, etc.
+
+I wrote this code (untested) and it feels a bit much:
+
+  if (dp_lanes == 1) {
+    if (lane_assignments[0] == 1) {
+      pr_warn("Lane 0 to physical pin 1 not suggested\n");
+    } else if (lane_assignments[0] != 0) {
+      pr_err("Unsupported logical to physical pin mapping\n");
+      return -EINVAL;
+    }
+  } else if (dp_lanes == 2 || dp_lanes == 4) {
+    u8 good_mask = dp_lanes == 2 ? 0x3 : 0xf;
+    u8 mask = 0;
+
+    for (i = 0; i < dp_lanes; i++)
+      mask |= BIT(lane_assignments[i])
+
+    if (mask != good_mask) {
+      pr_err("Unsupported logical to physical pin mapping\n");
+      return -EINVAL;
+    }
+  } else {
+    pr_err("Invalid number of DP lanes: %d\n", dp_lanes);
+  }
+
+If you feel strongly I'll add it to the next version.  Does anyone
+else have any opinions of whether they'd like all that checking or
+whether we should just trust the person designing the hardware and
+writing the device tree to put the right values in?
+
+
+-Doug
