@@ -2,195 +2,88 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF47C47259
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 467A7C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7D0220735
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:28:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u5hW8PHz"
+	by mail.kernel.org (Postfix) with ESMTP id 2C2FB20675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:28:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729544AbgEEO2L (ORCPT
+        id S1729561AbgEEO2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:28:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729308AbgEEO2K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:28:10 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5A13C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:28:09 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id g10so1506360lfj.13
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 07:28:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+uAwrnVW9vl6fCjTny0Qx0tOY7EJAzfPhuaRYgJwZTI=;
-        b=u5hW8PHzJahWFyul2XkcmX+OO4CaXeWzoWY71xAAYmRT12aQyNIVWRm61Sg1OYvSf2
-         SXDHU6P+/AZ6P+IrR77i8+e4ShQn5nCWn31kFTm22XQOkX3bir+LrMU5Dm+GzmR6znCb
-         kFR3n96RxsBGnFs1v1TSrySHtsXKm9K39n9LPPcS8e5DJ1u7BcUJlCNrah3etkMMEjO1
-         Ri4jVv7NoGM7XiJOvtIU3Wcoj5OClz5aWRUkcmxCJ86QqXZgqnGSpmRXT+NjoMGAt9wo
-         Z4yM6y/P+HmRlZuo7/ePTArkmoi0e8NaaRyvMgHkIG8H3WKzopcgJrITlazuhtvK7rgh
-         3img==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+uAwrnVW9vl6fCjTny0Qx0tOY7EJAzfPhuaRYgJwZTI=;
-        b=Mu3cpBvVKl4s9IbyswWQT1DELBA4mU+/1ZCgJ+HQ/oLovdEKsIJvrf4xEZEjrlwZf7
-         0+RuIG+4kDgb1gnVYpqk+qI1KYxbFeZgy3PYScdFES0EliFGrwXBPyXW5CroKlkkf24w
-         SarBxzoyNZ5L91AS7Pc0qXOFLQk4G5PQgSJrqLoYuAHOLv6nZZtpZsl6eopmfHF68zYU
-         LWqH2PvIX4q9iBLsN7mGsWSZn68owl9JwNN0j7FAgCd45uCWKEGEePWUq/aZC9Hmk7Ch
-         ECE57e9caheHzlq8+ZOZMJLhqu6dPoxoX5QCRboAI1V3ZT5iCSH+xxVAPMmf7vk0P4Ap
-         c9jA==
-X-Gm-Message-State: AGi0PuZL/wXiUhJshdeWOhzTl9zyDzk35OrC2gJinIfutf2Uj2EGQuXy
-        7ofcDoKK0/Mle5QUvCyGijRXu2rIvcLds+xR+XdyRU1rxj0ZHg==
-X-Google-Smtp-Source: APiQypKlYrUPwwfMUuA8+0KSmGw0C746f6/PsmNEXiY4KhylVTyFuq1tsKFUBFmRIwZhzKUqk3m2th9smiFVOhmyM4k=
-X-Received: by 2002:a19:3817:: with SMTP id f23mr1863422lfa.6.1588688887748;
- Tue, 05 May 2020 07:28:07 -0700 (PDT)
+        Tue, 5 May 2020 10:28:23 -0400
+Received: from sauhun.de ([88.99.104.3]:33798 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729308AbgEEO2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 10:28:22 -0400
+Received: from localhost (p54B335A1.dip0.t-ipconnect.de [84.179.53.161])
+        by pokefinder.org (Postfix) with ESMTPSA id 911B52C0892;
+        Tue,  5 May 2020 16:28:20 +0200 (CEST)
+Date:   Tue, 5 May 2020 16:28:17 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Alain Volmat <alain.volmat@st.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com
+Subject: Re: [PATCH] i2c: fix missing pm_runtime_put_sync in i2c_device_probe
+Message-ID: <20200505142817.GC2468@ninjato>
+References: <1588261401-11914-1-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
-References: <20200504165501.781878940@linuxfoundation.org>
-In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 5 May 2020 19:57:55 +0530
-Message-ID: <CA+G9fYtwpo01W30vF8PRNrDOxVgyVwyViC5RCmLvLu04t98u4Q@mail.gmail.com>
-Subject: Re: [PATCH 5.6 00/73] 5.6.11-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7qSK/uQB79J36Y4o"
+Content-Disposition: inline
+In-Reply-To: <1588261401-11914-1-git-send-email-alain.volmat@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 4 May 2020 at 23:36, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.6.11 release.
-> There are 73 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 06 May 2020 16:52:55 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.6.11-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+--7qSK/uQB79J36Y4o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Summary
-------------------------------------------------------------------------
+On Thu, Apr 30, 2020 at 05:43:21PM +0200, Alain Volmat wrote:
+> In case of the I2C client exposes the flag I2C_CLIENT_HOST_NOTIFY,
+> pm_runtime_get_sync is called in order to always keep active the
+> adapter. However later on, pm_runtime_put_sync is never called
+> within the function in case of an error. This commit add this
+> error handling.
+>=20
+> Fixes: 72bfcee11cf8 ("i2c: Prevent runtime suspend of adapter when Host N=
+otify is required")
+> Signed-off-by: Alain Volmat <alain.volmat@st.com>
 
-kernel: 5.6.11-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.6.y
-git commit: 6cd4bcd666cd831acf192bd7350b94121469ebcb
-git describe: v5.6.10-74-g6cd4bcd666cd
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.6-oe/bui=
-ld/v5.6.10-74-g6cd4bcd666cd
+Applied to for-current, thanks!
 
-No regressions (compared to build v5.6.10)
 
-No fixes (compared to build v5.6.10)
+--7qSK/uQB79J36Y4o
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Ran 29045 total tests in the following environments and test suites.
+-----BEGIN PGP SIGNATURE-----
 
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6xeAAACgkQFA3kzBSg
+KbYhiA//T+l0PEzPiaE6M7x6gAJ8psbfRCvstiVnIPTm05RkWxc6F5hPg/P3gCbJ
+23pSTbYP2xAhWve343T6dn/OsD/oRphhcu1av5v0yMee5k4QQ7I3MbAvxZM99bfG
+mfzQoZngIvCKgEA4PMl7Bq9JPIV0dS+6CpAl7OWOBjJGt6H6uJ+07MQNmyyGoz5e
+S3esTcF/60pQzcl5/VHA6/OyXExbqOOq92zcnd5IMXoqWC6xtIJjVoCHje0gJTpI
+bO87BHiDe5iK8tSzhLqUU/QRAvGBPgTNa4vjew9OhZgvoFsBI8GA9gAcJqYYoh3j
+t0XXWIq5sUjcWNZSlalb2/WLOdDHvEbvGMzc1jphUjdklw9ZYbY7fqA/6QIUvz6+
+NqF/j0wrBsj+dxyfxj5f82Q0672glf0Zqzt4n/QuPJ4QLf3qPVW3u96CRl0HPV1C
+/AwGTLPZUIbAmYiHaODfMlZ/v83HybqVZoRzhBS0xK/T7o4uUriVWag7tLOHmMni
+eswp+a+MsxyL+WrrC+Ug9PslANq0/VM83k0edA6MfwkHGM/DMFiDP0/ZAFGnKkjn
+zb6Wx0utBOgT7EaxNYwqFWlPHNK3X0l1cIKr4uO3t5hzIjjrF5tYoAzfTyV2uvQJ
+uT6/TtJbeWnxuW1lLmepPYYse4XDeWrHj8q/DnBVBsFJW+wnfAg=
+=e2w7
+-----END PGP SIGNATURE-----
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* libgpiod
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-io-tests
-* kvm-unit-tests
-* libhugetlbfs
-* ltp-containers-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* perf
-* kselftest/net
-* kselftest/networking
-* ltp-commands-tests
-* ltp-cve-tests
-* ltp-fs-tests
-* ltp-hugetlb-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-open-posix-tests
-* ltp-sched-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* v4l2-compliance
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-native/networking
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-* kselftest-vsyscall-mode-none/networking
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+--7qSK/uQB79J36Y4o--
