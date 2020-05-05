@@ -2,84 +2,168 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EE5C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E90FC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8219D20735
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10C1620735
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:25:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="sUkReXun"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qg/ZENHD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730427AbgEEQYH (ORCPT
+        id S1730505AbgEEQZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:24:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41188 "EHLO
+        Tue, 5 May 2020 12:25:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728807AbgEEQYH (ORCPT
+        with ESMTP id S1729455AbgEEQZM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:24:07 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 054CAC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 09:24:07 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b188so2871932qkd.9
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 09:24:06 -0700 (PDT)
+        Tue, 5 May 2020 12:25:12 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01A09C061A0F;
+        Tue,  5 May 2020 09:25:12 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id b6so985546plz.13;
+        Tue, 05 May 2020 09:25:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=URyHbD0b6VvGXIAxJMtFkLfSxA+pJ99LyvYiCEW+Gvw=;
-        b=sUkReXunZvh2bYEUD2/LaykRe129h0P5H5gZUPSANBLDCWkmySs2Uo73yXHbIDLFih
-         zEuOip4QQWVXcz2XFh5Wi0n9wps37xfAWgzKCxEcWaqkqJu8X7RbML/jyquRs2uaZHZ2
-         Tg64yy96y/vvenBNLjcYjRZojl4bWo/RIiYdFdQtfsBtf7hjSsC1c8+tRPLFQpCLnnZv
-         /o3L9XxkrYoHT6UiA4+FiFHXYMGdn6ycRgUD+mWfnCy2Z6UZWxdlAhj9m1Xp3nJ5TLLj
-         eYVwzrEfhT4AZHPwUPPUz0AReVA7E4q1NlOiSg8pl6a5hteljqLUpMb9AZDF8zAkQ226
-         LQ6w==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oxHsmVrleduKbLfAdqcEQpbtGTwe8qx1AwhsOsfeLyk=;
+        b=Qg/ZENHDNjH6IzMJDZxDsrruyETFW2jgFsFCGCeaJiUV9nGDSl+cZ5OvakprNCSsWG
+         Fr1Bwz6GnUxJi3qJnhCckUnEkOlzTwMYGf1o0kgMNtYaaF2Z8+wMHnwY8MbcyIjNTy7J
+         QD5EZ4ez25L449ERjGWZLZHoBMCdaVg5/ipgrdaRS+PiurMW0cfTmoZ88ibznaIaj0mw
+         h/0rYTlVQOCVZDsUS8OW4K0543o601VBShrPweuJ43dkuVc7iN2oH6ylARE8wDQvO/qi
+         oboYXXMzqaKC61dRofsVXe3I3J0dPELQ2czrgC9A+yQcc7JEpfCmluMKGAAq3Mlrejbj
+         JsCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=URyHbD0b6VvGXIAxJMtFkLfSxA+pJ99LyvYiCEW+Gvw=;
-        b=HRLI2oTBbQMpFFnFq+7kBRBJcpiLLuw0Ejggs2m02wTb4Wy2RwCi+85Pub4oy4sSxG
-         g01EfZv6Ji7t+XnOhDIRttpAUx1CcBRhsyAjWyvgvTwht47EErN4bvW+/o9t/CqCwUqE
-         +nWwFkTP4UvstJxkKrJ1DrsDm/2r4c8xeRKRX7c/aeRNvPsMFoV2aY7CwyY2/eS9O6ZW
-         2LFfIA0OV7k2810DvtY41dW+3VaIR5FqjqsTlNnfTxroveuWYVx+oUGCAyKcKp9fHp/X
-         YS/ZHjxYBQhbEn1RbmMAkDPVPluIRf6wCXbaS5xiIIGD5R+Y0xzyIjI5ArfbjZCJpYyX
-         eXTg==
-X-Gm-Message-State: AGi0PuaSNb5ZQ2SirKdarIl5TfY2CR8oCU3ramrrBhgWuFrNpIiORh7P
-        7CCXXDMnQbx5vLae/Wgl5HWGvZmSb1D5m5X5kazopzzl
-X-Google-Smtp-Source: APiQypKmH4QXCDccUEG7B64ooa0b5Bx+mw9OszfIv/3xB2iMzegem6Yn83znXSgFEK56y6AoEaM733iPBrf93ND74Fo=
-X-Received: by 2002:a05:620a:1395:: with SMTP id k21mr4338823qki.120.1588695846247;
- Tue, 05 May 2020 09:24:06 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oxHsmVrleduKbLfAdqcEQpbtGTwe8qx1AwhsOsfeLyk=;
+        b=GvYPYJ9OYUHU7I+ncihZPdZn2cJcFnO2Sp4Fwvtl6lOKQeetBYuQae7APe0XHFvdbJ
+         suKgQeINWjhPvmcHc05kYXi0rbrELHudy76o7bb4fjESKwq1U17OJ+7xys/9sa0i4UNK
+         /J74p6Tb+nm5+yTc2kLY7qbf3yInh5LjYlYP2Ym1etn+Npgg9IXlb+3Vkp7tfgO/qs62
+         wv5WCWSqtNU1/6epj1yw2kx4JIQfB1x0fLHPKHdS7IW7hl2ojV8gYT3ylvYI5SsuP9vk
+         69SZIPoin9o1QT5t1PDKeaJQ8q+BPQnpWGuVoE9khhtOWLGdGp2WqJtawtvzleHXm7hN
+         JFmw==
+X-Gm-Message-State: AGi0PuYk6ErWn3K+dxCT3yDh4BphplBnTnAEhNqPm1GH+fCHMZpKax+D
+        qpEIqw5aZRGKB6CeDlOu/78=
+X-Google-Smtp-Source: APiQypJdbWorU29J+5XCwUEq8a7RsykO7yMqOYnf6AL3ogkg9z1+4w58MWnNxe1exg1o+QoNMAMhhg==
+X-Received: by 2002:a17:902:bd02:: with SMTP id p2mr3870012pls.72.1588695911524;
+        Tue, 05 May 2020 09:25:11 -0700 (PDT)
+Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id x23sm1798701pgf.32.2020.05.05.09.25.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2020 09:25:09 -0700 (PDT)
+Subject: Re: [PATCH net v2 0/2] Revert the 'socket_alloc' life cycle change
+To:     SeongJae Park <sjpark@amazon.com>,
+        Eric Dumazet <edumazet@google.com>
+Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        sj38.park@gmail.com, netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        SeongJae Park <sjpark@amazon.de>, snu@amazon.com,
+        amit@kernel.org, stable@vger.kernel.org,
+        Paul McKenney <paulmck@kernel.org>
+References: <20200505161302.547-1-sjpark@amazon.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <05843a3c-eb9d-3a0d-f992-7e4b97cc1f19@gmail.com>
+Date:   Tue, 5 May 2020 09:25:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <4340a212-89f5-8c62-db61-f061e494d6b1@kiho.fi>
-In-Reply-To: <4340a212-89f5-8c62-db61-f061e494d6b1@kiho.fi>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 5 May 2020 18:23:55 +0200
-Message-ID: <CAMpxmJWytUARKF_2N4vkUcFbX7P6Lf=oaRYOn8BP_b3eKrEp9A@mail.gmail.com>
-Subject: Re: [PATCH] gpio-f7188x: Add GPIO support for F81865
-To:     Petteri Jokinen <petteri@kiho.fi>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200505161302.547-1-sjpark@amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sob., 2 maj 2020 o 19:22 Petteri Jokinen <petteri@kiho.fi> napisa=C5=82(a):
->
-> Add GPIO support for Fintek F81865 chip.
->
-> Datasheet: http://www.hardwaresecrets.com/datasheets/F81865_V028P.pdf
->
-> Signed-off-by: Petteri Jokinen <petteri@kiho.fi>
 
-Patch applied, thanks!
 
-Bart
+On 5/5/20 9:13 AM, SeongJae Park wrote:
+> On Tue, 5 May 2020 09:00:44 -0700 Eric Dumazet <edumazet@google.com> wrote:
+> 
+>> On Tue, May 5, 2020 at 8:47 AM SeongJae Park <sjpark@amazon.com> wrote:
+>>>
+>>> On Tue, 5 May 2020 08:20:50 -0700 Eric Dumazet <eric.dumazet@gmail.com> wrote:
+>>>
+>>>>
+>>>>
+>>>> On 5/5/20 8:07 AM, SeongJae Park wrote:
+>>>>> On Tue, 5 May 2020 07:53:39 -0700 Eric Dumazet <edumazet@google.com> wrote:
+>>>>>
+>>>>
+>>>>>> Why do we have 10,000,000 objects around ? Could this be because of
+>>>>>> some RCU problem ?
+>>>>>
+>>>>> Mainly because of a long RCU grace period, as you guess.  I have no idea how
+>>>>> the grace period became so long in this case.
+>>>>>
+>>>>> As my test machine was a virtual machine instance, I guess RCU readers
+>>>>> preemption[1] like problem might affected this.
+>>>>>
+>>>>> [1] https://www.usenix.org/system/files/conference/atc17/atc17-prasad.pdf
+>>>>>
+>>>>>>
+>>>>>> Once Al patches reverted, do you have 10,000,000 sock_alloc around ?
+>>>>>
+>>>>> Yes, both the old kernel that prior to Al's patches and the recent kernel
+>>>>> reverting the Al's patches didn't reproduce the problem.
+>>>>>
+>>>>
+>>>> I repeat my question : Do you have 10,000,000 (smaller) objects kept in slab caches ?
+>>>>
+>>>> TCP sockets use the (very complex, error prone) SLAB_TYPESAFE_BY_RCU, but not the struct socket_wq
+>>>> object that was allocated in sock_alloc_inode() before Al patches.
+>>>>
+>>>> These objects should be visible in kmalloc-64 kmem cache.
+>>>
+>>> Not exactly the 10,000,000, as it is only the possible highest number, but I
+>>> was able to observe clear exponential increase of the number of the objects
+>>> using slabtop.  Before the start of the problematic workload, the number of
+>>> objects of 'kmalloc-64' was 5760, but I was able to observe the number increase
+>>> to 1,136,576.
+>>>
+>>>           OBJS ACTIVE  USE OBJ SIZE  SLABS OBJ/SLAB CACHE SIZE NAME
+>>> before:   5760   5088  88%    0.06K     90       64       360K kmalloc-64
+>>> after:  1136576 1136576 100%    0.06K  17759       64     71036K kmalloc-64
+>>>
+>>
+>> Great, thanks.
+>>
+>> How recent is the kernel you are running for your experiment ?
+> 
+> It's based on 5.4.35.
+> 
+>>
+>> Let's make sure the bug is not in RCU.
+> 
+> One thing I can currently say is that the grace period passes at last.  I
+> modified the benchmark to repeat not 10,000 times but only 5,000 times to run
+> the test without OOM but easily observable memory pressure.  As soon as the
+> benchmark finishes, the memory were freed.
+> 
+> If you need more tests, please let me know.
+> 
+
+I would ask Paul opinion on this issue, because we have many objects
+being freed after RCU grace periods.
+
+If RCU subsystem can not keep-up, I guess other workloads will also suffer.
+
+Sure, we can revert patches there and there trying to work around the issue,
+but for objects allocated from process context, we should not have these problems.
+
+
+
