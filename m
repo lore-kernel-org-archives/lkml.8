@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70DC2C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16553C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE6220836
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0AD6207DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:15:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729724AbgEEOPB (ORCPT
+        id S1729733AbgEEOPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:15:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48774 "EHLO
+        Tue, 5 May 2020 10:15:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729677AbgEEOOv (ORCPT
+        by vger.kernel.org with ESMTP id S1729678AbgEEOOv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 5 May 2020 10:14:51 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 760CDC061A0F
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94AADC061A10
         for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:14:51 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jVyLB-00019B-Cx; Tue, 05 May 2020 16:14:33 +0200
+        id 1jVyLA-00018H-37; Tue, 05 May 2020 16:14:32 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id C5C89FFC8D;
-        Tue,  5 May 2020 16:14:32 +0200 (CEST)
-Message-Id: <20200505134341.672545766@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 884331001F5;
+        Tue,  5 May 2020 16:14:31 +0200 (CEST)
+Message-Id: <20200505134341.579034898@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:41:28 +0200
+Date:   Tue, 05 May 2020 15:41:27 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -52,8 +52,8 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Will Deacon <will@kernel.org>
-Subject: [patch V4 part 2 16/18] context_tracking: Make guest_enter/exit()
- .noinstr ready
+Subject: [patch V4 part 2 15/18] x86/kvm/svm: Handle hardirqs proper on guest
+ enter/exit
 References: <20200505134112.272268764@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -66,84 +66,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Force inlining of the helpers and mark the instrumentable parts
-accordingly.
+Add hardirq tracing to guest enter/exit functions in the same way as it is
+done in the user mode enter/exit code.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- include/linux/context_tracking.h |   21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ arch/x86/kvm/svm/svm.c |   30 +++++++++++++++++++++++++-----
+ 1 file changed, 25 insertions(+), 5 deletions(-)
 
---- a/include/linux/context_tracking.h
-+++ b/include/linux/context_tracking.h
-@@ -101,12 +101,14 @@ static inline void context_tracking_init
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -3331,12 +3331,23 @@ static void svm_vcpu_run(struct kvm_vcpu
+ 	x86_spec_ctrl_set_guest(svm->spec_ctrl, svm->virt_spec_ctrl);
  
- #ifdef CONFIG_VIRT_CPU_ACCOUNTING_GEN
- /* must be called with irqs disabled */
--static inline void guest_enter_irqoff(void)
-+static __always_inline void guest_enter_irqoff(void)
- {
-+	instr_begin();
- 	if (vtime_accounting_enabled_this_cpu())
- 		vtime_guest_enter(current);
- 	else
- 		current->flags |= PF_VCPU;
-+	instr_end();
- 
- 	if (context_tracking_enabled())
- 		__context_tracking_enter(CONTEXT_GUEST);
-@@ -118,39 +120,48 @@ static inline void guest_enter_irqoff(vo
- 	 * one time slice). Lets treat guest mode as quiescent state, just like
- 	 * we do with user-mode execution.
- 	 */
--	if (!context_tracking_enabled_this_cpu())
-+	if (!context_tracking_enabled_this_cpu()) {
-+		instr_begin();
- 		rcu_virt_note_context_switch(smp_processor_id());
-+		instr_end();
-+	}
- }
- 
--static inline void guest_exit_irqoff(void)
-+static __always_inline void guest_exit_irqoff(void)
- {
- 	if (context_tracking_enabled())
- 		__context_tracking_exit(CONTEXT_GUEST);
- 
-+	instr_begin();
- 	if (vtime_accounting_enabled_this_cpu())
- 		vtime_guest_exit(current);
- 	else
- 		current->flags &= ~PF_VCPU;
-+	instr_end();
- }
- 
- #else
--static inline void guest_enter_irqoff(void)
-+static __always_inline void guest_enter_irqoff(void)
- {
  	/*
- 	 * This is running in ioctl context so its safe
- 	 * to assume that it's the stime pending cputime
- 	 * to flush.
+-	 * Tell context tracking that this CPU is about to enter guest
+-	 * mode. This has to be after x86_spec_ctrl_set_guest() because
+-	 * that can take locks (lockdep needs RCU) and calls into world and
+-	 * some more.
++	 * VMENTER enables interrupts (host state), but the kernel state is
++	 * interrupts disabled when this is invoked. Also tell RCU about
++	 * it. This is the same logic as for exit_to_user_mode().
++	 *
++	 * 1) Trace interrupts on state
++	 * 2) Prepare lockdep with RCU on
++	 * 3) Invoke context tracking if enabled to adjust RCU state
++	 * 4) Tell lockdep that interrupts are enabled
++	 *
++	 * This has to be after x86_spec_ctrl_set_guest() because that can
++	 * take locks (lockdep needs RCU) and calls into world and some
++	 * more.
  	 */
-+	instr_begin();
- 	vtime_account_kernel(current);
- 	current->flags |= PF_VCPU;
- 	rcu_virt_note_context_switch(smp_processor_id());
-+	instr_end();
- }
++	trace_hardirqs_on_prepare();
++	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
+ 	guest_enter_irqoff();
++	lockdep_hardirqs_on(CALLER_ADDR0);
  
--static inline void guest_exit_irqoff(void)
-+static __always_inline void guest_exit_irqoff(void)
- {
-+	instr_begin();
- 	/* Flush the guest cputime we spent on the guest */
- 	vtime_account_kernel(current);
- 	current->flags &= ~PF_VCPU;
-+	instr_end();
- }
- #endif /* CONFIG_VIRT_CPU_ACCOUNTING_GEN */
+ 	__svm_vcpu_run(svm->vmcb_pa, (unsigned long *)&svm->vcpu.arch.regs);
  
+@@ -3348,14 +3359,23 @@ static void svm_vcpu_run(struct kvm_vcpu
+ 	loadsegment(gs, svm->host.gs);
+ #endif
+ #endif
++
+ 	/*
+-	 * Tell context tracking that this CPU is back.
++	 * VMEXIT disables interrupts (host state, see the CLI in the ASM
++	 * above), but tracing and lockdep have them in state 'on'. Same as
++	 * enter_from_user_mode().
++	 *
++	 * 1) Tell lockdep that interrupts are disabled
++	 * 2) Invoke context tracking if enabled to reactivate RCU
++	 * 3) Trace interrupts off state
+ 	 *
+ 	 * This needs to be done before the below as native_read_msr()
+ 	 * contains a tracepoint and x86_spec_ctrl_restore_host() calls
+ 	 * into world and some more.
+ 	 */
++	lockdep_hardirqs_off(CALLER_ADDR0);
+ 	guest_exit_irqoff();
++	trace_hardirqs_off_prepare();
+ 
+ 	/*
+ 	 * We do not use IBRS in the kernel. If this vCPU has used the
 
