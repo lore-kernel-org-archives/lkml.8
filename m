@@ -2,117 +2,97 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E114FC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B0BC47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7C0C20661
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:59:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C369720746
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:00:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbgEEN7r (ORCPT
+        id S1729177AbgEEOAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 09:59:47 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:42496 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728346AbgEEN7q (ORCPT
+        Tue, 5 May 2020 10:00:18 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:35333 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728076AbgEEOAR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 09:59:46 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 57E5B2A1C94
-Message-ID: <c29fcc922a4917ac695043e605973ba9649f9c9b.camel@collabora.com>
-Subject: Re: [PATCH v3 1/3] media: rkvdec: Fix .buf_prepare
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel@collabora.com, Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Gustavo Padovan <gustavo.padovan@collabora.com>
-Date:   Tue, 05 May 2020 10:59:35 -0300
-In-Reply-To: <CAAFQd5AWZFoPk2YTp2k8M7LvJshxw46-z+wK2VoM9EzB2CqiFA@mail.gmail.com>
-References: <20200505134110.3435-1-ezequiel@collabora.com>
-         <20200505134110.3435-2-ezequiel@collabora.com>
-         <CAAFQd5AWZFoPk2YTp2k8M7LvJshxw46-z+wK2VoM9EzB2CqiFA@mail.gmail.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0-1 
+        Tue, 5 May 2020 10:00:17 -0400
+Received: from localhost.localdomain ([149.172.19.189]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1Mgf4k-1ivnwQ1PHY-00h8U6; Tue, 05 May 2020 15:59:58 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH] crypto: curve25519-hacl64 - Disable fortify-source for clang-10
+Date:   Tue,  5 May 2020 15:59:34 +0200
+Message-Id: <20200505135947.216022-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:lga6gFSMOtoE9mutrLnQJE7st0bQNAzIeIYfftcfMNCL7iZsqJQ
+ JviJeYnETa8FS6wxzULcnVU5pwk6XzwEeQNgc1N9Zegd0vSPT8udDcc/dLNdT+kFJKuKRhM
+ pCcuCgkqdQkZFnO25/DxLaQCMQ9xi7obGLLAOWZgLjMS9hGQdNJ+zq/WfLkzEqkfVOICGQT
+ dOi7yOzxKWdNBMS3D/ruA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lziD+9ryinA=:tNSwIO9eiImUWcWzM7o7Yw
+ /IXnoW8Wn+JMx/zGIvnc/9jMRhHbe0jJvaWE3XWRWvQtv640zle7dGxD3ITwoBIKvW8BglR/+
+ X6n8DodtwVEVn50jJLaLfZSLxYycqL20C2qB2AQxsI7F9V2yeNz1H1v2Q/9RJXUq+8KH1dEko
+ GuIrjHzNHIq4QKluBgnGKugirOutwiQttifk76ghCblvVoXxNGQw81DJ/WUvQJLo6XxXo0sIR
+ 6VF4O/d5ptPzv8X9kEYKwH5N6uLU5lxy1a4sNEVR2gHUp0CE0tZAH/hl+KGOVcV0M1XptQeDa
+ LP9PsmsHPf4GLCZcdvq4uuEP9fifieYr885wEuGI6oxz/ahfDHiiiRKTkS3Yls22ToNXvUU5L
+ +3ulrQra3lWiD7+TMQQvBk+EsfGWUHm2Eofm1W1UfmN8Mbr+k7QU729dOwRikSeMMFHohhBgs
+ LVoKGzng6dhFRgv12dCPWqeI6+WqqAr+G0r09Wq0g1chqjpKSRWFvHWemnqxGcgP1NGR7fmIs
+ F29a/PH3VNORl+cIdUV1dwJCNfT8OzlhtcjEy1NDmZ/QxWysfw/pwXbwhTEGQK8yXEh21DrGM
+ FOxC3ng9GNHpNbCnD0hhVedW36jqeZlEQw4O/0Q737f8slLpdvm5YoUGdWdmEAb421gfGCvS9
+ HD3530hLbMvGA7rDUtaZQD6A8SvsyQf9opZ3Vf1l9WbIJdiwHHDwV+DxnbUhRESVc29pJfvLM
+ sPUHiRo21hMwdp89LUGuxi2WBvbVJckmIpTZuyYpTD5oMvwNc0nZto4P1b5V+hFrnwYzIqq/V
+ YbKjFtohfywfJwXSOcPghR1tlLnCszKHERi7dzhkCX0JeTCnMY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-05-05 at 15:56 +0200, Tomasz Figa wrote:
-> Hi Ezequiel,
-> 
-> On Tue, May 5, 2020 at 3:41 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
-> > The driver should only set the payload on .buf_prepare
-> > if the buffer is CAPTURE type, or if an OUTPUT buffer
-> > has a zeroed payload.
-> 
-> Thanks for the patch. Just one question below.
-> 
-> Where does the requirement to set OUTPUT buffer bytesused to sizeimage
-> if the original bytesused is 0 come from?
-> 
+clang-10 produces a warning about excessive stack usage, as well
+as rather unoptimized object code when CONFIG_FORTIFY_SOURCE is
+set:
 
-If I'm reading english correctly, it's here:
+lib/crypto/curve25519-hacl64.c:759:6: error: stack frame size of 2400 bytes in function 'curve25519_generic' [-Werror,-Wframe-larger-than=]
 
-https://www.kernel.org/doc/html/latest/media/uapi/v4l/buffer.html
+Jason Donenfeld managed to track this down to the usage of
+CONFIG_FORTIFY_SOURCE, and I found a minimal test case that illustrates
+this happening on clang-10 but not clang-9 or clang-11.
 
-"""
-The number of bytes occupied by the data in the buffer. It depends on the negotiated data format and may change with each buffer for compressed
-variable size data like JPEG images. Drivers must set this field when type refers to a capture stream, applications when it refers to an output
-stream. If the application sets this to 0 for an output stream, then bytesused will be set to the size of the buffer (see the length field of this
-struct) by the driver. For multiplanar formats this field is ignored and the planes pointer is used instead.
-"""
+To work around this, turn off fortification in this file.
 
-Thanks!
-Ezequiel
+Link: https://bugs.llvm.org/show_bug.cgi?id=45802
+Cc: Jason A. Donenfeld <Jason@zx2c4.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ lib/crypto/curve25519-hacl64.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> Best regards,
-> Tomasz
-> 
-> > Fix it.
-> > 
-> > Fixes: cd33c830448ba ("media: rkvdec: Add the rkvdec driver")
-> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > ---
-> >  drivers/staging/media/rkvdec/rkvdec.c | 10 +++++++++-
-> >  1 file changed, 9 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
-> > index 225eeca73356..4df2a248ab96 100644
-> > --- a/drivers/staging/media/rkvdec/rkvdec.c
-> > +++ b/drivers/staging/media/rkvdec/rkvdec.c
-> > @@ -456,7 +456,15 @@ static int rkvdec_buf_prepare(struct vb2_buffer *vb)
-> >                 if (vb2_plane_size(vb, i) < sizeimage)
-> >                         return -EINVAL;
-> >         }
-> > -       vb2_set_plane_payload(vb, 0, f->fmt.pix_mp.plane_fmt[0].sizeimage);
-> > +
-> > +       /*
-> > +        * Buffer's bytesused is written by the driver for CAPTURE buffers,
-> > +        * or if the application passed zero bytesused on an OUTPUT buffer.
-> > +        */
-> > +       if (!V4L2_TYPE_IS_OUTPUT(vq->type) ||
-> > +           (V4L2_TYPE_IS_OUTPUT(vq->type) && !vb2_get_plane_payload(vb, 0)))
-> > +               vb2_set_plane_payload(vb, 0,
-> > +                                     f->fmt.pix_mp.plane_fmt[0].sizeimage);
-> >         return 0;
-> >  }
-> > 
-> > --
-> > 2.26.0.rc2
-> > 
-
+diff --git a/lib/crypto/curve25519-hacl64.c b/lib/crypto/curve25519-hacl64.c
+index c7de61829a66..87adeb4f9276 100644
+--- a/lib/crypto/curve25519-hacl64.c
++++ b/lib/crypto/curve25519-hacl64.c
+@@ -10,6 +10,10 @@
+  * integer types.
+  */
+ 
++#if (CONFIG_CLANG_VERSION >= 100000) && (CONFIG_CLANG_VERSION < 110000)
++#define __NO_FORTIFY /* https://bugs.llvm.org/show_bug.cgi?id=45802 */
++#endif
++
+ #include <asm/unaligned.h>
+ #include <crypto/curve25519.h>
+ #include <linux/string.h>
+-- 
+2.26.0
 
