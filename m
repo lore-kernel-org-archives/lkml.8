@@ -2,84 +2,88 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4263EC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91413C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16586206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:00:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VN2sk+fu"
+	by mail.kernel.org (Postfix) with ESMTP id 6A2A82075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:00:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588705234;
+	bh=aFoR8LqfP3/I4PspXfqU66lX/Ku4OPBLCOidGQCvlWg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DBpsh3QNyABiRA27KeASv9Nn3xeE6XkBgSG8vaDoeaPafMmveLjlN5So7Xm7X4PPw
+	 tzEnU1VdFUrfFFCoFlc+IsSMLwogAXBnOsyQxaDsEH4kge2b6v0qtk56YlPTGyGNfK
+	 752bXDGfNCVbncCn1FONktu0RAwelZ6mJ//UwYNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729051AbgEETAZ (ORCPT
+        id S1729070AbgEETAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 15:00:25 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40314 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728481AbgEETAZ (ORCPT
+        Tue, 5 May 2020 15:00:33 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38264 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728584AbgEETAd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 15:00:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588705224;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc; bh=R7YqtoNVOAoFKS6RM3wllcWxnGsaIeVUvLmMoQN3l6s=;
-        b=VN2sk+fuJdiPCK3DG8DTXvA0TQhVDkdF3M5DCCfu+vSBzP+LLEeqiN2gzaEQ0w72pT6/3S
-        I9SCVM+sxkVkr8yQxe9R1ovDpwh51RUw9RBVVGCMlUxTdaqkSMmmB38ld3LmoN1ClukNpe
-        c1KPdu5fRLkPxs7Q7LbUhTEDHQHLo/Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-316-QjKGPL5FP2uTIWb7k7g_vw-1; Tue, 05 May 2020 15:00:20 -0400
-X-MC-Unique: QjKGPL5FP2uTIWb7k7g_vw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D1AE91899527;
-        Tue,  5 May 2020 19:00:18 +0000 (UTC)
-Received: from lszubowi.redhat.com (unknown [10.10.110.69])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8A51F19C4F;
-        Tue,  5 May 2020 19:00:17 +0000 (UTC)
-From:   Lenny Szubowicz <lszubowi@redhat.com>
-To:     ardb@kernel.org, eric.snowberg@oracle.com, mingo@kernel.org,
-        nivedita@alum.mit.edu, tglx@linutronix.de,
-        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] efi/libstub/x86: Free EFI map buffer in allocate_e820()
-Date:   Tue,  5 May 2020 15:00:16 -0400
-Message-Id: <20200505190016.4350-1-lszubowi@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        Tue, 5 May 2020 15:00:33 -0400
+Received: by mail-oi1-f196.google.com with SMTP id r66so2957658oie.5;
+        Tue, 05 May 2020 12:00:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bmNwg7qP1SBbdLMpqATS0EkQNQ8ln6bORoA+Yp7YlU8=;
+        b=E1Uo0dDu+Gvp0j+smUIN/8APv3RgAO49fI+Uz/hsxaKFd+zDYrZSQAhfWMv22y4woX
+         cG/A/BC126M0uPAvXSAFs+Z6OmDZDP1m+d9HpvGZuXi3qBr6FmMNQ8ee/FSEk1DUpMCO
+         L3RVMrsvdv1zOQ2WyO8dkGkBGBBc+uA4J143Fl0nS3GmJB9H4t8ceXwZfBky6hplvNHR
+         shrv2FNKSjQuNxXACZxyiAc/1tXjvcN11WbKxFkECWkJyXrSKHwqIlZ2XvVSWsz20Wr+
+         h/eIfEXWOoPu++EPYdanL06WuWWRkos+OjE+ZaWawV0MYPD9iQBiobXryiXZ1I/rGrZA
+         1p3Q==
+X-Gm-Message-State: AGi0PuazHHdgc+TIwe+2fj++KEtYwHaH2RYZR15jMLAJZZ6ShNT/d+uK
+        f/jS/+hvJb8oUEOHPoXRAA==
+X-Google-Smtp-Source: APiQypJereL2KKpxqNv0a1yG++pdI5i7lA8WFCr9HMbUx7pmg6sJEAPn+1moF9GzYhbzW3m0NFF0WQ==
+X-Received: by 2002:aca:f11:: with SMTP id 17mr49265oip.27.1588705232581;
+        Tue, 05 May 2020 12:00:32 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id q28sm763134oof.42.2020.05.05.12.00.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 12:00:31 -0700 (PDT)
+Received: (nullmailer pid 7289 invoked by uid 1000);
+        Tue, 05 May 2020 19:00:31 -0000
+Date:   Tue, 5 May 2020 14:00:31 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 5/5] dt-bindings: arm: fsl: add different Protonic
+ boards
+Message-ID: <20200505190030.GA7194@bogus>
+References: <20200421124057.19238-1-o.rempel@pengutronix.de>
+ <20200421124057.19238-6-o.rempel@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421124057.19238-6-o.rempel@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In allocate_e820(), free the EFI map buffer that has been returned
-by efi_get_memory_map(). The returned size of the EFI map buffer
-is used to allocate an adequately sized e820ext buffer, if it's
-needed. But the contents of that EFI map buffer is not used at all
-and the local pointer to it is gone on return from allocate_e820().
+On Tue, 21 Apr 2020 14:40:57 +0200, Oleksij Rempel wrote:
+> Add Protonic PRTI6Q, WD2, RVT, VT7 boards.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
 
-Signed-off-by: Lenny Szubowicz <lszubowi@redhat.com>
----
- drivers/firmware/efi/libstub/x86-stub.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-index 05ccb229fb45..4efe3e7a218d 100644
---- a/drivers/firmware/efi/libstub/x86-stub.c
-+++ b/drivers/firmware/efi/libstub/x86-stub.c
-@@ -623,6 +623,9 @@ static efi_status_t allocate_e820(struct boot_params *params,
- 	if (status != EFI_SUCCESS)
- 		return status;
- 
-+	/* Allocated EFI map buf is not used here. Just need its size. */
-+	efi_bs_call(free_pool, map);
-+
- 	nr_desc = buff_size / desc_size;
- 
- 	if (nr_desc > ARRAY_SIZE(params->e820_table)) {
--- 
-2.18.4
-
+Acked-by: Rob Herring <robh@kernel.org>
