@@ -2,105 +2,77 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B19C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B769DC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BAD52068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 908112068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:25:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728990AbgEEUTK (ORCPT
+        id S1729070AbgEEUZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 16:19:10 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:56431 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727785AbgEEUTK (ORCPT
+        Tue, 5 May 2020 16:25:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50496 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728756AbgEEUZA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 16:19:10 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0Txb6obD_1588709945;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Txb6obD_1588709945)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 06 May 2020 04:19:07 +0800
-Subject: Re: [RFC][PATCH 1/2] mm/migrate: remove extra page_count() check
-To:     Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Cc:     npiggin@gmail.com, akpm@linux-foundation.org, willy@infradead.org,
-        linux-mm@kvack.org
-References: <20200501210516.DFAFF456@viggo.jf.intel.com>
- <20200501210518.DA161B7E@viggo.jf.intel.com>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <2aa6a7b8-fc9b-e903-a665-c4cd516392b8@linux.alibaba.com>
-Date:   Tue, 5 May 2020 13:18:55 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200501210518.DA161B7E@viggo.jf.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 5 May 2020 16:25:00 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FE99C061A0F;
+        Tue,  5 May 2020 13:25:00 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C90331280C7D8;
+        Tue,  5 May 2020 13:24:59 -0700 (PDT)
+Date:   Tue, 05 May 2020 13:24:59 -0700 (PDT)
+Message-Id: <20200505.132459.1059623707678036566.davem@davemloft.net>
+To:     grygorii.strashko@ti.com
+Cc:     anders.roxell@linaro.org, netdev@vger.kernel.org, nsekhar@ti.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH net-next] net: ethernet: ti: am65-cpts: fix build
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200505162123.13366-1-grygorii.strashko@ti.com>
+References: <20200505162123.13366-1-grygorii.strashko@ti.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 05 May 2020 13:25:00 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Date: Tue, 5 May 2020 19:21:23 +0300
 
+> It's possible to have build configuration which will force PTP_1588_CLOCK=m
+> and so TI_K3_AM65_CPTS=m while still have TI_K3_AM65_CPSW_NUSS=y. This will
+> cause build failures:
+> 
+> aarch64-linux-gnu-ld: ../drivers/net/ethernet/ti/am65-cpsw-nuss.o: in function `am65_cpsw_init_cpts':
+> ../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1685: undefined reference to `am65_cpts_create'
+> aarch64-linux-gnu-ld: ../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1685:(.text+0x2e20):
+> relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `am65_cpts_create'
+> 
+> Fix it by adding dependencies from CPTS in TI_K3_AM65_CPSW_NUSS as below:
+>    config TI_K3_AM65_CPSW_NUSS
+>    ...
+>      depends on TI_K3_AM65_CPTS || !TI_K3_AM65_CPTS
+> 
+> Note. This will create below dependencies and for NFS boot + CPTS all of them
+> have to be built-in.
+>   PTP_1588_CLOCK -> TI_K3_AM65_CPTS -> TI_K3_AM65_CPSW_NUSS
+> 
+> While here, clean up TI_K3_AM65_CPTS definition.
+> 
+> Fixes: b1f66a5bee07 ("net: ethernet: ti: am65-cpsw-nuss: enable packet timestamping support")
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> Reported-by: Anders Roxell <anders.roxell@linaro.org>
 
-On 5/1/20 2:05 PM, Dave Hansen wrote:
-> From: Dave Hansen <dave.hansen@linux.intel.com>
->
-> This is not a bug fix.  It was found by inspection, but I believe
-> that it is confusing as it stands.
->
-> First, page_ref_freeze() is implemented internally with:
->
-> 	atomic_cmpxchg(&page->_refcount, expected, 0) == expected
->
-> The "cmp" part of cmpxchg is making sure that _refcount==expected
-> which means that there's an implicit check here, equivalent to:
->
-> 	page_count(page) == expected_count
->
-> This appears to have originated in "e286781: mm: speculative page
-> references", which is pretty ancient.  This check is also somewhat
-> dangerous to have here because it might lead someone to think that
-> page_ref_freeze() *doesn't* do its own page_count() checking.
->
-> Remove the unnecessary check.
-
-Make sense to me. Acked-by: Yang Shi <yang.shi@linux.alibaba.com>
-
->
-> Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
-> Cc: Yang Shi <yang.shi@linux.alibaba.com>
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->
->   b/mm/migrate.c |    3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff -puN mm/migrate.c~remove_extra_page_count_check mm/migrate.c
-> --- a/mm/migrate.c~remove_extra_page_count_check	2020-05-01 14:00:42.331525924 -0700
-> +++ b/mm/migrate.c	2020-05-01 14:00:42.336525924 -0700
-> @@ -425,11 +425,12 @@ int migrate_page_move_mapping(struct add
->   	newzone = page_zone(newpage);
->   
->   	xas_lock_irq(&xas);
-> -	if (page_count(page) != expected_count || xas_load(&xas) != page) {
-> +	if (xas_load(&xas) != page) {
->   		xas_unlock_irq(&xas);
->   		return -EAGAIN;
->   	}
->   
-> +	/* Freezing will fail if page_count()!=expected_count */
->   	if (!page_ref_freeze(page, expected_count)) {
->   		xas_unlock_irq(&xas);
->   		return -EAGAIN;
-> _
-
+Applied.
