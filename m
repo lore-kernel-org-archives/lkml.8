@@ -2,289 +2,348 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A88A3C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F861C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D54A206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 037E2206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:47:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FNVV24fC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KJUmanRl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbgEEAmf (ORCPT
+        id S1726774AbgEEAro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 20:42:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45525 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726531AbgEEAme (ORCPT
+        Mon, 4 May 2020 20:47:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35942 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbgEEArn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 20:42:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588639351;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=sSGS49q3WN+9F6RhzT1InoLhEYrc670AilMF8wVnH2Q=;
-        b=FNVV24fCK2UhpMuQMZ22J5IeitI3S7/u6pa/Zraemq5RMsk3Nf0308HopEgci1ifgg+dLt
-        P62uY235r8A0n13HiavHqB1oZdB8QNBS+wXu7iOPIZy0FJjIED7I2PD+dTvhXyEiK4eNtO
-        UbOMe1MxxdKrSPxFYxW5iaqduDhrHqU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-471-Ay-GMssaMRmBGeJIydfmkg-1; Mon, 04 May 2020 20:42:27 -0400
-X-MC-Unique: Ay-GMssaMRmBGeJIydfmkg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E7F621005510;
-        Tue,  5 May 2020 00:42:25 +0000 (UTC)
-Received: from localhost.localdomain (vpn2-54-132.bne.redhat.com [10.64.54.132])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5DC802C268;
-        Tue,  5 May 2020 00:42:21 +0000 (UTC)
-Reply-To: Gavin Shan <gshan@redhat.com>
-Subject: Re: [PATCH RFC 6/6] KVM: x86: Switch KVM guest to using interrupts
- for page ready APF delivery
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, x86@kernel.org,
-        kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>
-References: <20200429093634.1514902-1-vkuznets@redhat.com>
- <20200429093634.1514902-7-vkuznets@redhat.com>
-From:   Gavin Shan <gshan@redhat.com>
-Message-ID: <ee7cb56d-537d-e300-03fe-853f6fc5d56d@redhat.com>
-Date:   Tue, 5 May 2020 10:42:18 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Mon, 4 May 2020 20:47:43 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 583F6C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 17:47:42 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id 207so240917pgc.6
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 17:47:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=7Hv8FYkIIgHaMpc0l6U71Q1YcuTc0hBo/riFkGviInU=;
+        b=KJUmanRldAExcvGsb+cJXKIjlry6iUvKhrhpaSsW+61QYX+JKgkpCPcDfiSENB81Ge
+         FtZUU7BKWjLVrdRi1bpV/A0NV/mH3x4qvxhZ9lyOwaZprXHjonnPULIX83zneznlKTtF
+         d86gXdwJqtx6OtdZ+j6z6kQ0BT6k/yqlVYmHSmi+Q9W5cJ+fWwlzUccCpKnIHmmBKAGg
+         SN65OcK++Kid1hscv43XdcMETh2mUHg+9lETmWbMzPK9zWoNTb06UydiOJPzGpMYCllD
+         HnjncwTxkVZBBIwwpuAxYjGLcj58ggeX6IBH1rBuxq1SpLYfqOM4txRL18im2qZIyDA4
+         7nIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7Hv8FYkIIgHaMpc0l6U71Q1YcuTc0hBo/riFkGviInU=;
+        b=LFASv281IyvcVUUL41D+8y+ODjs5/bit8AM44bpvseqOdfyKsXNaI1BXD07XAvJVZd
+         vfuekJ1W+pbXv5UJE1D0lPu++m5tdIYXYXqDwFlA/qBgF5oaeVq7Jn21ypt+zYYfM0LD
+         52FUZHJqKQutznj8vpiXb4Ft84l0bebX3DtuGPTH2xHJvYx1UejLw2Puz+LOI9ll1cSY
+         w24Dafwr81YV3wgOfuucOVZg7jn4HdS4e7MiqVDcSmoA/T1CidZkGV6t7UEYhNRisH5o
+         hJG1iSf926R5Wu7wuKa5YuKIDGnAPm2KRolfol6DaVApZNWnihlesc7yyJALkVHw5DTy
+         g14A==
+X-Gm-Message-State: AGi0PuYaQ72CfSOnBzfqR2wCv3q3edzhvvwA5K0uYuP2kHdCT16A3Ux7
+        WSbtwXKNcN/dII9X/imPCeGIDg==
+X-Google-Smtp-Source: APiQypLg7g1ozfNCQPDF4B5ydlgy5jTdVVkCcs61BoN5r+lFwYrI99rIFsbtzUM6PDN6dVwYxB3YVg==
+X-Received: by 2002:a63:5a41:: with SMTP id k1mr861073pgm.424.1588639661583;
+        Mon, 04 May 2020 17:47:41 -0700 (PDT)
+Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
+        by smtp.gmail.com with ESMTPSA id i8sm269103pfq.126.2020.05.04.17.47.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 17:47:40 -0700 (PDT)
+Date:   Mon, 4 May 2020 17:47:38 -0700
+From:   Fangrui Song <maskray@google.com>
+To:     Sedat Dilek <sedat.dilek@gmail.com>,
+        Nick Desaulniers <nick.desaulniers@gmail.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] Makefile: support compressed debug info
+Message-ID: <20200505004738.ew2lcp27c2n4jqia@google.com>
+References: <20200504031340.7103-1-nick.desaulniers@gmail.com>
+ <CA+icZUUOaqeKeh6n4BJq2k6XQWAfNghUj57j42ZX5qyd3iOmLw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200429093634.1514902-7-vkuznets@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CA+icZUUOaqeKeh6n4BJq2k6XQWAfNghUj57j42ZX5qyd3iOmLw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vitaly,
 
-On 4/29/20 7:36 PM, Vitaly Kuznetsov wrote:
-> KVM now supports using interrupt for type 2 APF event delivery (page ready
-> notifications). Switch KVM guests to using it when the feature is present.
-> 
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->   arch/x86/entry/entry_32.S          |  5 ++++
->   arch/x86/entry/entry_64.S          |  5 ++++
->   arch/x86/include/asm/hardirq.h     |  3 +++
->   arch/x86/include/asm/irq_vectors.h |  6 ++++-
->   arch/x86/include/asm/kvm_para.h    |  6 +++++
->   arch/x86/kernel/irq.c              |  9 +++++++
->   arch/x86/kernel/kvm.c              | 42 ++++++++++++++++++++++++++++++
->   7 files changed, 75 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
-> index b67bae7091d7..d574dadcb2a1 100644
-> --- a/arch/x86/entry/entry_32.S
-> +++ b/arch/x86/entry/entry_32.S
-> @@ -1475,6 +1475,11 @@ BUILD_INTERRUPT3(hv_stimer0_callback_vector, HYPERV_STIMER0_VECTOR,
->   
->   #endif /* CONFIG_HYPERV */
->   
-> +#ifdef CONFIG_KVM_GUEST
-> +BUILD_INTERRUPT3(kvm_async_pf_vector, KVM_ASYNC_PF_VECTOR,
-> +		 kvm_async_pf_intr)
-> +#endif
-> +
->   SYM_CODE_START(page_fault)
->   	ASM_CLAC
->   	pushl	$do_page_fault
-> diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-> index 0e9504fabe52..6f127c1a6547 100644
-> --- a/arch/x86/entry/entry_64.S
-> +++ b/arch/x86/entry/entry_64.S
-> @@ -1190,6 +1190,11 @@ apicinterrupt3 HYPERVISOR_CALLBACK_VECTOR \
->   	acrn_hv_callback_vector acrn_hv_vector_handler
->   #endif
->   
-> +#ifdef CONFIG_KVM_GUEST
-> +apicinterrupt3 KVM_ASYNC_PF_VECTOR \
-> +	kvm_async_pf_vector kvm_async_pf_intr
-> +#endif
-> +
->   idtentry debug			do_debug		has_error_code=0	paranoid=1 shift_ist=IST_INDEX_DB ist_offset=DB_STACK_OFFSET
->   idtentry int3			do_int3			has_error_code=0	create_gap=1
->   idtentry stack_segment		do_stack_segment	has_error_code=1
-> diff --git a/arch/x86/include/asm/hardirq.h b/arch/x86/include/asm/hardirq.h
-> index 07533795b8d2..be0fbb15ad7f 100644
-> --- a/arch/x86/include/asm/hardirq.h
-> +++ b/arch/x86/include/asm/hardirq.h
-> @@ -44,6 +44,9 @@ typedef struct {
->   	unsigned int irq_hv_reenlightenment_count;
->   	unsigned int hyperv_stimer0_count;
->   #endif
-> +#ifdef CONFIG_KVM_GUEST
-> +	unsigned int kvm_async_pf_pageready_count;
-> +#endif
->   } ____cacheline_aligned irq_cpustat_t;
->   
->   DECLARE_PER_CPU_SHARED_ALIGNED(irq_cpustat_t, irq_stat);
-> diff --git a/arch/x86/include/asm/irq_vectors.h b/arch/x86/include/asm/irq_vectors.h
-> index 889f8b1b5b7f..8879a9ecd908 100644
-> --- a/arch/x86/include/asm/irq_vectors.h
-> +++ b/arch/x86/include/asm/irq_vectors.h
-> @@ -104,7 +104,11 @@
->   #define HYPERV_STIMER0_VECTOR		0xed
->   #endif
->   
-> -#define LOCAL_TIMER_VECTOR		0xec
-> +#ifdef CONFIG_KVM_GUEST
-> +#define KVM_ASYNC_PF_VECTOR		0xec
-> +#endif
-> +
-> +#define LOCAL_TIMER_VECTOR		0xeb
->   
->   #define NR_VECTORS			 256
->   
-> diff --git a/arch/x86/include/asm/kvm_para.h b/arch/x86/include/asm/kvm_para.h
-> index 9b4df6eaa11a..fde4f21607f9 100644
-> --- a/arch/x86/include/asm/kvm_para.h
-> +++ b/arch/x86/include/asm/kvm_para.h
-> @@ -4,6 +4,7 @@
->   
->   #include <asm/processor.h>
->   #include <asm/alternative.h>
-> +#include <linux/interrupt.h>
->   #include <uapi/asm/kvm_para.h>
->   
->   extern void kvmclock_init(void);
-> @@ -93,6 +94,11 @@ void kvm_async_pf_task_wake(u32 token);
->   u32 kvm_read_and_reset_pf_reason(void);
->   extern void kvm_disable_steal_time(void);
->   void do_async_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address);
-> +extern void kvm_async_pf_vector(void);
-> +#ifdef CONFIG_TRACING
-> +#define trace_kvm_async_pf_vector kvm_async_pf_vector
-> +#endif
-> +__visible void __irq_entry kvm_async_pf_intr(struct pt_regs *regs);
->   
->   #ifdef CONFIG_PARAVIRT_SPINLOCKS
->   void __init kvm_spinlock_init(void);
-> diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
-> index c7965ff429c5..a4c2f25ad74d 100644
-> --- a/arch/x86/kernel/irq.c
-> +++ b/arch/x86/kernel/irq.c
-> @@ -159,6 +159,15 @@ int arch_show_interrupts(struct seq_file *p, int prec)
->   				   irq_stats(j)->hyperv_stimer0_count);
->   		seq_puts(p, "  Hyper-V stimer0 interrupts\n");
->   	}
-> +#endif
-> +#ifdef CONFIG_KVM_GUEST
-> +	if (test_bit(KVM_ASYNC_PF_VECTOR, system_vectors)) {
-> +		seq_printf(p, "%*s: ", prec, "APF");
-> +		for_each_online_cpu(j)
-> +			seq_printf(p, "%10u ",
-> +				   irq_stats(j)->kvm_async_pf_pageready_count);
-> +		seq_puts(p, "  KVM async PF page ready interrupts\n");
-> +	}
->   #endif
->   	seq_printf(p, "%*s: %10u\n", prec, "ERR", atomic_read(&irq_err_count));
->   #if defined(CONFIG_X86_IO_APIC)
-> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> index 6efe0410fb72..1c00c7ba01ff 100644
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
-> @@ -259,9 +259,39 @@ do_async_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned lon
->   		rcu_irq_exit();
->   		break;
->   	}
-> +
-> +	if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF_INT))
-> +		wrmsrl(MSR_KVM_ASYNC_PF_ACK, 1);
->   }
->   NOKPROBE_SYMBOL(do_async_page_fault);
->   
-> +__visible void __irq_entry kvm_async_pf_intr(struct pt_regs *regs)
-> +{
-> +	u32 token, reason;
-> +
-> +	entering_ack_irq();
-> +
-> +	inc_irq_stat(kvm_async_pf_pageready_count);
-> +
-> +	if (__this_cpu_read(apf_reason.enabled)) {
-> +		reason = __this_cpu_read(apf_reason.reason);
-> +		if (reason == KVM_PV_REASON_PAGE_READY) {
-> +			token = __this_cpu_read(apf_reason.token);
-> +			/*
-> +			 * Make sure we read 'token' before we reset
-> +			 * 'reason' or it can get lost.
-> +			 */
-> +			mb();
-> +			__this_cpu_write(apf_reason.reason, 0);
-> +			kvm_async_pf_task_wake(token);
-> +		}
-> +	}
-> +
-> +	wrmsrl(MSR_KVM_ASYNC_PF_ACK, 1);
-> +
-> +	exiting_irq();
-> +}
-In theory, it's possible the interrupt happens in the context of the
-suspended process. With the call to kvm_async_pf_task_wake(), the
-suspended process tries to wake up itself, but it seems it's not
-working because of aacedf26fb760 ("sched/core: Optimize try_to_wake_up()
-for local wakeups").
+On 2020-05-04, Sedat Dilek wrote:
+>On Mon, May 4, 2020 at 5:13 AM Nick Desaulniers
+><nick.desaulniers@gmail.com> wrote:
+>>
+>> As debug information gets larger and larger, it helps significantly save
+>> the size of vmlinux images to compress the information in the debug
+>> information sections. Note: this debug info is typically split off from
+>> the final compressed kernel image, which is why vmlinux is what's used
+>> in conjunction with GDB. Minimizing the debug info size should have no
+>> impact on boot times, or final compressed kernel image size.
+>>
+>> All of the debug sections will have a `C` flag set.
+>> $ readelf -S <object file>
+>>
+>> $ bloaty vmlinux.gcc75.compressed.dwarf4 -- \
+>>     vmlinux.gcc75.uncompressed.dwarf4
+>>
+>>     FILE SIZE        VM SIZE
+>>  --------------  --------------
+>>   +0.0%     +18  [ = ]       0    [Unmapped]
+>>  -73.3%  -114Ki  [ = ]       0    .debug_aranges
+>>  -76.2% -2.01Mi  [ = ]       0    .debug_frame
+>>  -73.6% -2.89Mi  [ = ]       0    .debug_str
+>>  -80.7% -4.66Mi  [ = ]       0    .debug_abbrev
+>>  -82.9% -4.88Mi  [ = ]       0    .debug_ranges
+>>  -70.5% -9.04Mi  [ = ]       0    .debug_line
+>>  -79.3% -10.9Mi  [ = ]       0    .debug_loc
+>>  -39.5% -88.6Mi  [ = ]       0    .debug_info
+>>  -18.2%  -123Mi  [ = ]       0    TOTAL
+>>
+>> $ bloaty vmlinux.clang11.compressed.dwarf4 -- \
+>>     vmlinux.clang11.uncompressed.dwarf4
+>>
+>>     FILE SIZE        VM SIZE
+>>  --------------  --------------
+>>   +0.0%     +23  [ = ]       0    [Unmapped]
+>>  -65.6%    -871  [ = ]       0    .debug_aranges
+>>  -77.4% -1.84Mi  [ = ]       0    .debug_frame
+>>  -82.9% -2.33Mi  [ = ]       0    .debug_abbrev
+>>  -73.1% -2.43Mi  [ = ]       0    .debug_str
+>>  -84.8% -3.07Mi  [ = ]       0    .debug_ranges
+>>  -65.9% -8.62Mi  [ = ]       0    .debug_line
+>>  -86.2% -40.0Mi  [ = ]       0    .debug_loc
+>>  -42.0% -64.1Mi  [ = ]       0    .debug_info
+>>  -22.1%  -122Mi  [ = ]       0    TOTAL
+>>
+>
+>Hi Nick,
+>
+>thanks for the patch.
+>
+>I have slightly modified it to adapt to Linux v5.7-rc4 (what was your base?).
+>
+>Which linker did you use and has it an impact if you switch from
+>ld.bfd to ld.lld?
 
-It's one of issue I observed when enabling async page fault for arm64,
-but not sure it's valid to x86.
+lld has supported the linker option --compress-debug-sections=zlib since
+about 5.0.0 (https://reviews.llvm.org/D31941)
 
-Thanks,
-Gavin
+>I tried a first normal run and in a 2nd one with
+>CONFIG_DEBUG_INFO_COMPRESSED=y both with clang-10 and ld.lld-10.
+>
+>My numbers (sizes in MiB):
+>
+>[ diffconfig ]
+>
+>$ scripts/diffconfig /boot/config-5.7.0-rc4-1-amd64-clang
+>/boot/config-5.7.0-rc4-2-amd64-clang
+> BUILD_SALT "5.7.0-rc4-1-amd64-clang" -> "5.7.0-rc4-2-amd64-clang"
+>+DEBUG_INFO_COMPRESSED y
+>
+>[ compiler and linker ]
+>
+>$ clang-10 -v
+>ClangBuiltLinux clang version 10.0.1
+>(https://github.com/llvm/llvm-project
+>92d5c1be9ee93850c0a8903f05f36a23ee835dc2)
+>Target: x86_64-unknown-linux-gnu
+>Thread model: posix
+>InstalledDir: /home/dileks/src/llvm-toolchain/install/bin
+>Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/10
+>Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/8
+>Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/9
+>Selected GCC installation: /usr/lib/gcc/x86_64-linux-gnu/10
+>Candidate multilib: .;@m64
+>Candidate multilib: 32;@m32
+>Candidate multilib: x32;@mx32
+>Selected multilib: .;@m64
+>
+>$ ld.lld-10 -v
+>LLD 10.0.1 (https://github.com/llvm/llvm-project
+>92d5c1be9ee93850c0a8903f05f36a23ee835dc2) (compatible with GNU
+>linkers)
+>
+>[ sizes vmlinux ]
+>
+>$ du -m 5.7.0-rc4-*/vmlinux*
+>409     5.7.0-rc4-1-amd64-clang/vmlinux
+>7       5.7.0-rc4-1-amd64-clang/vmlinux.compressed
+>404     5.7.0-rc4-1-amd64-clang/vmlinux.o
+>324     5.7.0-rc4-2-amd64-clang/vmlinux
+>7       5.7.0-rc4-2-amd64-clang/vmlinux.compressed
+>299     5.7.0-rc4-2-amd64-clang/vmlinux.o
+>
+>[ readelf (.debug_info as example) ]
+>
+>$ readelf -S vmlinux.o
+>  [33] .debug_info       PROGBITS         0000000000000000  01d6a5e8
+>       0000000006be1ee6  0000000000000000           0     0     1
+>
+>$ readelf -S vmlinux.o
+>  [33] .debug_info       PROGBITS         0000000000000000  01749f18
+>       0000000002ef04d2  0000000000000000   C       0     0     1 <---
+>XXX: "C (compressed)" Flag
+>
+>Key to Flags:
+>  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
+>  L (link order), O (extra OS processing required), G (group), T (TLS),
+>  C (compressed), x (unknown), o (OS specific), E (exclude),
+>  l (large), p (processor specific)
+>
+>[ sizes linux-image debian packages ]
+>
+>$ du -m 5.7.0-rc4-*/linux-image*.deb
+>47      5.7.0-rc4-1-amd64-clang/linux-image-5.7.0-rc4-1-amd64-clang_5.7.0~rc4-1~bullseye+dileks1_amd64.deb
+>424     5.7.0-rc4-1-amd64-clang/linux-image-5.7.0-rc4-1-amd64-clang-dbg_5.7.0~rc4-1~bullseye+dileks1_amd64.deb
+>47      5.7.0-rc4-2-amd64-clang/linux-image-5.7.0-rc4-2-amd64-clang_5.7.0~rc4-2~bullseye+dileks1_amd64.deb
+>771     5.7.0-rc4-2-amd64-clang/linux-image-5.7.0-rc4-2-amd64-clang-dbg_5.7.0~rc4-2~bullseye+dileks1_amd64.deb
+>
+>[ sizes linux-git dir (compilation finished ]
+>
+>5.7.0-rc4-1-amd64-clang: 17963   /home/dileks/src/linux-kernel/linux
+>5.7.0-rc4-2-amd64-clang: 14328   /home/dileks/src/linux-kernel/linux
+>
+>[ xz compressed linux-image-dbg packages ]
+>
+>$ file linux-image-5.7.0-rc4-1-amd64-clang-dbg_5.7.0~rc4-1~bullseye+dileks1_amd64.deb
+>linux-image-5.7.0-rc4-1-amd64-clang-dbg_5.7.0~rc4-1~bullseye+dileks1_amd64.deb:
+>Debian binary package (format 2.0), with control.tar.xz, data
+>compression xz
+>$ file linux-image-5.7.0-rc4-2-amd64-clang-dbg_5.7.0~rc4-2~bullseye+dileks1_amd64.deb
+>linux-image-5.7.0-rc4-2-amd64-clang-dbg_5.7.0~rc4-2~bullseye+dileks1_amd64.deb:
+>Debian binary package (format 2.0), with control.tar.xz, data
+>compression xz
+>
+>[ file-lists ]
+>
+>$ dpkg --contents
+>linux-image-5.7.0-rc4-1-amd64-clang-dbg_5.7.0~rc4-1~bullseye+dileks1_amd64.deb
+>| wc -l
+>4395
+>$ dpkg --contents
+>linux-image-5.7.0-rc4-2-amd64-clang-dbg_5.7.0~rc4-2~bullseye+dileks1_amd64.deb
+>| wc -l
+>4395
+>
+>[ file-lists vmlinux ]
+>
+>$ dpkg --contents
+>linux-image-5.7.0-rc4-1-amd64-clang-dbg_5.7.0~rc4-1~bullseye+dileks1_amd64.deb
+>| grep vmlinux
+>-rwxr-xr-x root/root 428588312 2020-05-04 06:15
+>./usr/lib/debug/lib/modules/5.7.0-rc4-1-amd64-clang/vmlinux
+>lrwxrwxrwx root/root         0 2020-05-04 06:15
+>./usr/lib/debug/boot/vmlinux-5.7.0-rc4-1-amd64-clang ->
+>../lib/modules/5.7.0-rc4-1-amd64-clang/vmlinux
+>lrwxrwxrwx root/root         0 2020-05-04 06:15
+>./usr/lib/debug/vmlinux-5.7.0-rc4-1-amd64-clang ->
+>lib/modules/5.7.0-rc4-1-amd64-clang/vmlinux
+>
+>$ dpkg --contents
+>linux-image-5.7.0-rc4-2-amd64-clang-dbg_5.7.0~rc4-2~bullseye+dileks1_amd64.deb
+>| grep vmlinux
+>-rwxr-xr-x root/root 339341456 2020-05-04 12:24
+>./usr/lib/debug/lib/modules/5.7.0-rc4-2-amd64-clang/vmlinux
+>lrwxrwxrwx root/root         0 2020-05-04 12:24
+>./usr/lib/debug/boot/vmlinux-5.7.0-rc4-2-amd64-clang ->
+>../lib/modules/5.7.0-rc4-2-amd64-clang/vmlinux
+>lrwxrwxrwx root/root         0 2020-05-04 12:24
+>./usr/lib/debug/vmlinux-5.7.0-rc4-2-amd64-clang ->
+>lib/modules/5.7.0-rc4-2-amd64-clang/vmlinux
+>
+>[ conclusion ]
+>
+>As you can see there is a size-reduction in case of vmlinux/vmlinux.o
+>(debug) files...
+>...and my linux-git directory in total is smaller: 17963M vs. 14328M.
+>
+>But the resulting linux-image-dbg file is much fatter: 424M vs. 711M.
+>XZ-compressing the gz/zlib-compressed vmlinux (debug) file results in
+>a fatter linux-image-dbg package.
+>
+>For a usage of vmlinux (debug) in a VM scenario this might be nice but
+>seen from a debian repository perspective not.
+>
+>For the sake of completeness:  I have just installed and booted the
+>"normal" linux-image debian package - not the debug packages.
+>
+>Thanks.
+>
+>Regards,
+>- Sedat -
+>
+>> Suggested-by: David Blaikie <blakie@google.com>
+>> Signed-off-by: Nick Desaulniers <nick.desaulniers@gmail.com>
+>> ---
+>>  Makefile          | 5 +++++
+>>  lib/Kconfig.debug | 9 +++++++++
+>>  2 files changed, 14 insertions(+)
+>>
+>> diff --git a/Makefile b/Makefile
+>> index 981eb902384b..313a054e5dc6 100644
+>> --- a/Makefile
+>> +++ b/Makefile
+>> @@ -825,6 +825,11 @@ ifdef CONFIG_DEBUG_INFO_REDUCED
+>>  DEBUG_CFLAGS   += $(call cc-option, -femit-struct-debug-baseonly) \
+>>                    $(call cc-option,-fno-var-tracking)
+>>  endif
+>> +
+>> +ifdef CONFIG_DEBUG_INFO_COMPRESSED
+>> +DEBUG_CFLAGS   += -gz=zlib
+>> +KBUILD_LDFLAGS += --compress-debug-sections=zlib
+>> +endif
+>>  endif
+>>
+>>  KBUILD_CFLAGS += $(DEBUG_CFLAGS)
+>> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+>> index f6f9a039f736..1f4a47ba6c1b 100644
+>> --- a/lib/Kconfig.debug
+>> +++ b/lib/Kconfig.debug
+>> @@ -213,6 +213,15 @@ config DEBUG_INFO_REDUCED
+>>           DEBUG_INFO build and compile times are reduced too.
+>>           Only works with newer gcc versions.
+>>
+>> +config DEBUG_INFO_COMPRESSED
+>> +       bool "Compressed debugging information"
+>> +       depends on DEBUG_INFO
+>> +       depends on $(cc-option,-gz=zlib)
+>> +       depends on $(ld-option,--compress-debug-sections=zlib)
+>> +       help
+>> +         Compress the debug information using zlib.  Requires GCC 5.0+ or Clang
+>> +         5.0+.
+>> +
 
->   static void __init paravirt_ops_setup(void)
->   {
->   	pv_info.name = "KVM";
-> @@ -316,10 +346,17 @@ static void kvm_guest_cpu_init(void)
->   		if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF_VMEXIT))
->   			pa |= KVM_ASYNC_PF_DELIVERY_AS_PF_VMEXIT;
->   
-> +		if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF_INT))
-> +			pa |= KVM_ASYNC_PF_DELIVERY_AS_INT;
-> +
->   		wrmsrl(MSR_KVM_ASYNC_PF_EN, pa);
->   		__this_cpu_write(apf_reason.enabled, 1);
->   		printk(KERN_INFO"KVM setup async PF for cpu %d\n",
->   		       smp_processor_id());
-> +
-> +		if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF_INT))
-> +			wrmsrl(MSR_KVM_ASYNC_PF2, KVM_ASYNC_PF2_ENABLED |
-> +			       KVM_ASYNC_PF_VECTOR);
->   	}
->   
->   	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI)) {
-> @@ -649,6 +686,11 @@ static void __init kvm_guest_init(void)
->   	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
->   		apic_set_eoi_write(kvm_guest_apic_eoi_write);
->   
-> +	if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF_INT)) {
-> +		pr_info("KVM using interrupt for async PF page-ready\n");
-> +		alloc_intr_gate(KVM_ASYNC_PF_VECTOR, kvm_async_pf_vector);
-> +	}
-> +
->   #ifdef CONFIG_SMP
->   	smp_ops.smp_prepare_cpus = kvm_smp_prepare_cpus;
->   	smp_ops.smp_prepare_boot_cpu = kvm_smp_prepare_boot_cpu;
-> 
+linker option --compress-debug-sections=zlib require binutils >= 2.26 (ld-option)
+Assembler option --compress-debug-sections=zlib also require binutils >= 2.26 (cc-option,-gz=zlib)
 
+>>  config DEBUG_INFO_SPLIT
+>>         bool "Produce split debuginfo in .dwo files"
+>>         depends on DEBUG_INFO
+>> --
+>> 2.17.1
+>>
+>> --
+>> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+>> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+>> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200504031340.7103-1-nick.desaulniers%40gmail.com.
+>
+>-- 
+>You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+>To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+>To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/CA%2BicZUUOaqeKeh6n4BJq2k6XQWAfNghUj57j42ZX5qyd3iOmLw%40mail.gmail.com.
