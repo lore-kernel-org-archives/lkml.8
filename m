@@ -2,146 +2,123 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E988C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 09:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2819C47256
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 09:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B74D206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 09:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F2C4206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 09:15:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yBDN+kJt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uPwWy0x5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbgEEJGe (ORCPT
+        id S1728401AbgEEJPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 05:06:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56868 "EHLO
+        Tue, 5 May 2020 05:15:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728220AbgEEJGe (ORCPT
+        with ESMTP id S1725915AbgEEJPN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 05:06:34 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2D10C061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 02:06:32 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id 188so728364lfa.10
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 02:06:32 -0700 (PDT)
+        Tue, 5 May 2020 05:15:13 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D864C061A0F;
+        Tue,  5 May 2020 02:15:13 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id l18so1796295wrn.6;
+        Tue, 05 May 2020 02:15:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=nO6ukHcZ3A2s0DjR/Sbge6NFlDUm1cYVWdAlZ6rxYbs=;
-        b=yBDN+kJtFtreoIQShuVrrpbfggrRgrQroU1Jlch/wI7siJg8UatQT2wuM2vHyBFrPn
-         VbQYdTFURvS7dwFYRzHHjdOJm7phI0thy7YOmpPj1nMfksJSY16Yo8VvB5q0PClq9D1A
-         njGkmIMyXUqrW7mRf/KA4TkXqvmReVxhHBUoygXMQcQ0i+ZTkQzImmKYA1cLmVvSiq6c
-         2ewTFwIjP0qzbYL48k+CgRtr6Td0/R1n+nzW0hbLi/dYBilMdWvuVqAV1Hve39PlyBcl
-         dxOG19T7mExPkLdSASwhdv0TNaBnDatj2LNGWhmylqN0mSfi7oM57L4P4NBmboEi2iju
-         wBTg==
+        bh=RY7cDlpTuaGYvklt0tq/lt5rHTsOTKpcG4DTTLgRMho=;
+        b=uPwWy0x52Ah1Js8kGrNYWa1bV8vTY9V8wj/gnIm0oLsfc9a7C84/+siL9wcDzeQEvt
+         bR8g0PkRXmeef2fThZbJVBQuOPnnFaOQ25VrMRzv6UGroAkA9LAyibmAb+uk7r753nSw
+         rqsFlAK84KF/cvBfhqs6KfCX94ECh4MTwoMwyo5TpkNAR8+BfakNlbhRJzk/q2pGwM8i
+         4ldkI3q6KtNwS7VLGbbhyBNMRDON0KZ8C1gN3sczSWbdaCf6qRAp7YAks+mh49lSlNTo
+         NB/qoSCWJbyqWQECbaFqbKcTWlk752n/LuU7qZXeGOFNrvQL7znMOKzwh4G2b677k1hg
+         KEbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=nO6ukHcZ3A2s0DjR/Sbge6NFlDUm1cYVWdAlZ6rxYbs=;
-        b=nTt/ahqT4hrKfiyoGbU8AG5EK+qKqJ4xTvSaXRpuWsZZetiFBu+ugTplO3EFOiWBoI
-         tVS8711c7xuxrVZqbYpld8YJBNjbQ45kz6aHSVACUlzOy8Gp5cpW7Kw6PLeVXT2XSp8a
-         pH/6RWY6t8lT6dtcDGEMkxMAHzFOQ0KhiMo8BvC1pO7Qa0p4aIFmoGLzG3WjXYV+Vtxi
-         nrTzPaOhsgkb/iDHZ93zu3MSjWIUnfnS35XA6eY57qkIFrP9iH5qxrwlVjDuLLV26YuY
-         sikkv7gvArod5P1QMWGcbxmaPaVZg869+DaRPh9OYTnpVvj+7FoFZIkyPOMxj4hCXRFR
-         oBtg==
-X-Gm-Message-State: AGi0PuZbyKUc61cC86Uo0VdDHEivzyhpN9PqjRkfMRbXpaAvJzNbGf5/
-        jPwHBD4U45nwawYVadwx7J8ZIynb/LZgKgOMrp1dWg==
-X-Google-Smtp-Source: APiQypJwoVCHWmXH/6fevEAsP9bi0U+ixeJ1CzTbJIy0zTggYHWzUCRHaeTFmFZj3tCWKqSLBmW/uhcymDPK2nimKsc=
-X-Received: by 2002:a19:7004:: with SMTP id h4mr966365lfc.148.1588669591097;
- Tue, 05 May 2020 02:06:31 -0700 (PDT)
+        bh=RY7cDlpTuaGYvklt0tq/lt5rHTsOTKpcG4DTTLgRMho=;
+        b=NucGvITl8OIyp66GdUvEYeH3xS2zadtgZg38muSIU8IE8sv+unuHUnCbzQq+WQ3Aov
+         Q9yzdNogzEzC3saPt/N6+YK/PlBanAref/8eOCDO4eZPWHl8hWOdKjAkf5GIn0PrTKHi
+         Wo+heMxj+g9uf/7Siknybpv6LpXs98w2b7B73slDOX6hFlh4AS+r4F+xjqvNdisZQeS5
+         GPdi7Ea/AEmO+I3TX3QFXQeVbbnDna76RMppAOgVrqS8yBLPGMYGIkrRjq5I70f4Z6Eq
+         tLsPqP1xncdgyjZO4Z3gegJINZwtgwQmXYTSjNAB4wDIzjfXDqX/OjVg4w1udEqMadsP
+         uX/w==
+X-Gm-Message-State: AGi0PuYaD2c00SMVwc5Jg47mMFDxo37KWdYXhDikifAKBGc2+2eBSrNE
+        c08XlqRNivYVDfv7RQcFZhsuP8vgnqBKG+IIaYs=
+X-Google-Smtp-Source: APiQypK1Bz/oNmOaxggxrm9bETwKta2RG7Wk+wv6HGAiMkRo8VQGFQ/b3ZHRf9FsHJ2/gSb44gZE0s5+6DRgoFISKOY=
+X-Received: by 2002:adf:eac6:: with SMTP id o6mr2475150wrn.297.1588670111614;
+ Tue, 05 May 2020 02:15:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200505171548.6e1388f4@canb.auug.org.au>
-In-Reply-To: <20200505171548.6e1388f4@canb.auug.org.au>
-From:   Anders Roxell <anders.roxell@linaro.org>
-Date:   Tue, 5 May 2020 11:06:20 +0200
-Message-ID: <CADYN=9K90_GQVuc=X-kcryRm0xKDVwfza6RpriNe6ehwsp+-Ew@mail.gmail.com>
-Subject: Re: linux-next: Tree for May 5
-To:     Stephen Rothwell <sfr@canb.auug.org.au>, grygorii.strashko@ti.com,
-        David Miller <davem@davemloft.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200504063957.6638-1-benchuanggli@gmail.com> <21b55731-388f-91ef-3f38-5896f7da9121@intel.com>
+In-Reply-To: <21b55731-388f-91ef-3f38-5896f7da9121@intel.com>
+From:   Grzegorz Kowal <custos.mentis@gmail.com>
+Date:   Tue, 5 May 2020 06:15:00 -0300
+Message-ID: <CABmMA7tf4fUTd9uOP7z=XyR9ukfL+DAd2Ry7f1yKuTCmyZif_A@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdhci-pci-gli: Fix can not access GL9750 after
+ reboot from Windows 10
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Ben Chuang <benchuanggli@gmail.com>, ulf.hansson@linaro.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ben Chuang <ben.chuang@genesyslogic.com.tw>,
+        renius.chen@genesyslogic.com.tw
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 May 2020 at 09:16, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> Changes since 20200504:
->
-> New tree: ti-k3
->
-> My fixes tree contains:
->
->   bbefc924d0ff ("ubsan: disable UBSAN_ALIGNMENT under COMPILE_TEST")
->   7cb1d38f52b1 ("drm/msm: Fix undefined "rd_full" link error")
->
-> The qcom tree still had its build failure for which I reverted a commit.
->
-> Non-merge commits (relative to Linus' tree): 5888
->  6922 files changed, 233385 insertions(+), 91859 deletions(-)
->
+Tested-by: Grzegorz Kowal <custos.mentis@gmail.com>
 
-I did an arm64 allmodconfig build and got this undefined symbol:
+Thanks,
+Grzegorz
 
-aarch64-linux-gnu-ld: drivers/net/ethernet/ti/am65-cpsw-nuss.o: in
-function `am65_cpsw_init_cpts':
-/srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1685:
-undefined reference to `am65_cpts_create'
-aarch64-linux-gnu-ld:
-/srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1685:(.text+0x2e20):
-relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol
-`am65_cpts_create'
-aarch64-linux-gnu-ld: drivers/net/ethernet/ti/am65-cpsw-nuss.o: in
-function `am65_cpsw_nuss_tx_compl_packets':
-/srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:923:
-undefined reference to `am65_cpts_tx_timestamp'
-aarch64-linux-gnu-ld:
-/srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:923:(.text+0x4cf0):
-relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol
-`am65_cpts_tx_timestamp'
-aarch64-linux-gnu-ld: drivers/net/ethernet/ti/am65-cpsw-nuss.o: in
-function `am65_cpsw_nuss_ndo_slave_xmit':
-/srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1018:
-undefined reference to `am65_cpts_prep_tx_timestamp'
-aarch64-linux-gnu-ld:
-/srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1018:(.text+0x58fc):
-relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol
-`am65_cpts_prep_tx_timestamp'
-aarch64-linux-gnu-ld: drivers/net/ethernet/ti/am65-cpsw-nuss.o: in
-function `am65_cpsw_nuss_hwtstamp_set':
-/srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1265:
-undefined reference to `am65_cpts_rx_enable'
-aarch64-linux-gnu-ld:
-/srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1265:(.text+0x7564):
-relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol
-`am65_cpts_rx_enable'
-aarch64-linux-gnu-ld: drivers/net/ethernet/ti/am65-cpsw-ethtool.o: in
-function `am65_cpsw_get_ethtool_ts_info':
-/srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-ethtool.c:713:
-undefined reference to `am65_cpts_phc_index'
-aarch64-linux-gnu-ld:
-/srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-ethtool.c:713:(.text+0xbe8):
-relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol
-`am65_cpts_phc_index'
-make[1]: *** [/srv/src/kernel/next/Makefile:1114: vmlinux] Error 1
-make[1]: Target 'Image' not remade because of errors.
-make: *** [Makefile:180: sub-make] Error 2
-make: Target 'Image' not remade because of errors.
-
-
-I was able to build if I reverted this patch:
-b1f66a5bee07 ("net: ethernet: ti: am65-cpsw-nuss: enable packet
-timestamping support")
-
-
-Cheers,
-Anders
+On Mon, May 4, 2020 at 4:26 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>
+> On 4/05/20 9:39 am, Ben Chuang wrote:
+> > From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+> >
+> > Need to clear some bits in a vendor-defined register after reboot from
+> > Windows 10.
+> >
+> > Fixes: e51df6ce668a ("mmc: host: sdhci-pci: Add Genesys Logic GL975x support")
+> > Reported-by: Grzegorz Kowal <custos.mentis@gmail.com>
+> > Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+>
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+>
+> > ---
+> >  drivers/mmc/host/sdhci-pci-gli.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/drivers/mmc/host/sdhci-pci-gli.c b/drivers/mmc/host/sdhci-pci-gli.c
+> > index ce15a05f23d4..8170b659f2af 100644
+> > --- a/drivers/mmc/host/sdhci-pci-gli.c
+> > +++ b/drivers/mmc/host/sdhci-pci-gli.c
+> > @@ -26,6 +26,9 @@
+> >  #define   SDHCI_GLI_9750_DRIVING_2    GENMASK(27, 26)
+> >  #define   GLI_9750_DRIVING_1_VALUE    0xFFF
+> >  #define   GLI_9750_DRIVING_2_VALUE    0x3
+> > +#define   SDHCI_GLI_9750_SEL_1        BIT(29)
+> > +#define   SDHCI_GLI_9750_SEL_2        BIT(31)
+> > +#define   SDHCI_GLI_9750_ALL_RST      (BIT(24)|BIT(25)|BIT(28)|BIT(30))
+> >
+> >  #define SDHCI_GLI_9750_PLL         0x864
+> >  #define   SDHCI_GLI_9750_PLL_TX2_INV    BIT(23)
+> > @@ -122,6 +125,8 @@ static void gli_set_9750(struct sdhci_host *host)
+> >                                   GLI_9750_DRIVING_1_VALUE);
+> >       driving_value |= FIELD_PREP(SDHCI_GLI_9750_DRIVING_2,
+> >                                   GLI_9750_DRIVING_2_VALUE);
+> > +     driving_value &= ~(SDHCI_GLI_9750_SEL_1|SDHCI_GLI_9750_SEL_2|SDHCI_GLI_9750_ALL_RST);
+> > +     driving_value |= SDHCI_GLI_9750_SEL_2;
+> >       sdhci_writel(host, driving_value, SDHCI_GLI_9750_DRIVING);
+> >
+> >       sw_ctrl_value &= ~SDHCI_GLI_9750_SW_CTRL_4;
+> >
+>
