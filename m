@@ -2,91 +2,100 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED418C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EC0C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7879206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:05:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EAD8206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:09:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729119AbgEEWFh (ORCPT
+        id S1729218AbgEEWJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 18:05:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38170 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727785AbgEEWFg (ORCPT
+        Tue, 5 May 2020 18:09:15 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:56265 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727089AbgEEWJO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 18:05:36 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DEE8C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 15:05:36 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jW5gX-0005sF-0O; Wed, 06 May 2020 00:05:05 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 6AB101001F5; Wed,  6 May 2020 00:05:04 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     paulmck@kernel.org
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [patch V4 part 3 11/29] rcu: Provide rcu_irq_exit_preempt()
-In-Reply-To: <20200505220224.GT2869@paulmck-ThinkPad-P72>
-Date:   Wed, 06 May 2020 00:05:04 +0200
-Message-ID: <87zhamnilr.fsf@nanos.tec.linutronix.de>
+        Tue, 5 May 2020 18:09:14 -0400
+X-Originating-IP: 86.202.105.35
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 2C875C0003;
+        Tue,  5 May 2020 22:09:12 +0000 (UTC)
+Date:   Wed, 6 May 2020 00:09:11 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     linux-rtc@vger.kernel.org,
+        Per =?iso-8859-1?Q?N=F8rgaard?= Christensen 
+        <per.christensen@prevas.dk>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] rtc: pcf2127: report battery switch over
+Message-ID: <20200505220911.GW34497@piout.net>
+References: <20200505201310.255145-1-alexandre.belloni@bootlin.com>
+ <20200505201310.255145-5-alexandre.belloni@bootlin.com>
+ <e4910679-4453-f753-2c3e-4c93fd755b39@prevas.dk>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e4910679-4453-f753-2c3e-4c93fd755b39@prevas.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Paul E. McKenney" <paulmck@kernel.org> writes:
+On 05/05/2020 23:30:18+0200, Rasmus Villemoes wrote:
+> On 05/05/2020 22.13, Alexandre Belloni wrote:
+> > Add support for the RTC_VL_BACKUP_SWITCH flag to report battery switch over
+> > events.
+> > 
+> > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > ---
+> >  drivers/rtc/rtc-pcf2127.c | 16 ++++++++++++----
+> >  1 file changed, 12 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/rtc/rtc-pcf2127.c b/drivers/rtc/rtc-pcf2127.c
+> > index 039078029bd4..967de68e1b03 100644
+> > --- a/drivers/rtc/rtc-pcf2127.c
+> > +++ b/drivers/rtc/rtc-pcf2127.c
+> > @@ -188,18 +188,27 @@ static int pcf2127_rtc_ioctl(struct device *dev,
+> >  				unsigned int cmd, unsigned long arg)
+> >  {
+> >  	struct pcf2127 *pcf2127 = dev_get_drvdata(dev);
+> > -	int touser;
+> > +	int val, touser = 0;
+> >  	int ret;
+> >  
+> >  	switch (cmd) {
+> >  	case RTC_VL_READ:
+> > -		ret = regmap_read(pcf2127->regmap, PCF2127_REG_CTRL3, &touser);
+> > +		ret = regmap_read(pcf2127->regmap, PCF2127_REG_CTRL3, &val);
+> >  		if (ret)
+> >  			return ret;
+> >  
+> > -		touser = touser & PCF2127_BIT_CTRL3_BLF ? RTC_VL_BACKUP_LOW : 0;
+> > +		if (val & PCF2127_BIT_CTRL3_BLF)
+> > +			touser = RTC_VL_BACKUP_LOW;
+> > +
+> > +		if (val & PCF2127_BIT_CTRL3_BF)
+> > +			touser |= RTC_VL_BACKUP_SWITCH;
+> 
+> I think it's a bit easier to read if you use |= in both cases.
+> 
+> Re patch 3, one saves a little .text by eliding the ioctl function when,
+> as you say, it cannot be called anyway. No strong opinion either way, I
+> don't think anybody actually builds without CONFIG_RTC_INTF_DEV, but
+> those that do are probably the ones that care about having a tiny vmlinux.
+> 
 
-> On Tue, May 05, 2020 at 03:44:05PM +0200, Thomas Gleixner wrote:
->> Interrupts and exceptions invoke rcu_irq_enter() on entry and need to
->> invoke rcu_irq_exit() before they either return to the interrupted code or
->> invoke the scheduler due to preemption.
->> 
->> The general assumption is that RCU idle code has to have preemption
->> disabled so that a return from interrupt cannot schedule. So the return
->> from interrupt code invokes rcu_irq_exit() and preempt_schedule_irq().
->> 
->> If there is any imbalance in the rcu_irq/nmi* invocations or RCU idle code
->> had preemption enabled then this goes unnoticed until the CPU goes idle or
->> some other RCU check is executed.
->> 
->> Provide rcu_irq_exit_preempt() which can be invoked from the
->> interrupt/exception return code in case that preemption is enabled. It
->> invokes rcu_irq_exit() and contains a few sanity checks in case that
->> CONFIG_PROVE_RCU is enabled to catch such issues directly.
->> 
->> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
->> Cc: "Paul E. McKenney" <paulmck@kernel.org>
->> Cc: Joel Fernandes <joel@joelfernandes.org>
->
-> The ->dynticks_nmi_nesting field is going away at some point, but
-> there is always "git merge".  ;-)
+Honestly, I don't think it is worth doing that. On armv7, this only
+removes 248 bytes. Also, compiling without CONFIG_RTC_INTF_DEV simply
+makes the RTC unusable. There are no tools actually using the sysfs
+interface instead of the char device interface. I prefer keeping
+CONFIG_RTC_INTF_DEV private to the core.
 
-Yes. The logistics for merging all of this is going to be interesting :)
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
