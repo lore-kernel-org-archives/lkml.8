@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EAA3C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E009C47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 695F62068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:23:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65E812068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:23:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730075AbgEEOXk (ORCPT
+        id S1730521AbgEEOXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:23:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48566 "EHLO
+        Tue, 5 May 2020 10:23:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729457AbgEEON4 (ORCPT
+        by vger.kernel.org with ESMTP id S1729123AbgEEON4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 5 May 2020 10:13:56 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 392D5C061A0F
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B105C061A10
         for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:13:56 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jVyK7-0000QP-Uy; Tue, 05 May 2020 16:13:28 +0200
+        id 1jVyKJ-0000YO-7G; Tue, 05 May 2020 16:13:39 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 7438DFFC8D;
-        Tue,  5 May 2020 16:13:27 +0200 (CEST)
-Message-Id: <20200505134059.169270470@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id B35ADFFC8D;
+        Tue,  5 May 2020 16:13:38 +0200 (CEST)
+Message-Id: <20200505134100.075416272@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:16:13 +0200
+Date:   Tue, 05 May 2020 15:16:22 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -52,8 +52,8 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Will Deacon <will@kernel.org>
-Subject: [patch V4 part 1 11/36] x86/kvm: Handle async page faults directly
- through do_page_fault()
+Subject: [patch V4 part 1 20/36] vmlinux.lds.h: Create section for protection
+ against instrumentation
 References: <20200505131602.633487962@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -66,265 +66,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+Some code pathes, especially the low level entry code, must be protected
+against instrumentation for various reasons:
 
-KVM overloads #PF to indicate two types of not-actually-page-fault
-events.  Right now, the KVM guest code intercepts them by modifying
-the IDT and hooking the #PF vector.  This makes the already fragile
-fault code even harder to understand, and it also pollutes call
-traces with async_page_fault and do_async_page_fault for normal page
-faults.
+ - Low level entry code can be a fragile beast, especially on x86.
 
-Clean it up by moving the logic into do_page_fault() using a static
-branch.  This gets rid of the platform trap_init override mechanism
-completely.
+ - With NO_HZ_FULL RCU state needs to be established before using it.
 
-[ tglx: Fixed up 32bit, removed error code from the async functions and
-  	massaged coding style ]
+Having a dedicated section for such code allows to validate with tooling
+that no unsafe functions are invoked.
 
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Add the .noinstr.text section and the noinstr attribute to mark
+functions. noinstr implies notrace. Kprobes will gain a section check
+later.
+
+Provide also a set of markers: instr_begin()/end()
+
+These are used to mark code inside a noinstr function which calls
+into regular instrumentable text section as safe.
+
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/entry/entry_32.S       |    8 --------
- arch/x86/entry/entry_64.S       |    4 ----
- arch/x86/include/asm/kvm_para.h |   19 +++++++++++++++++--
- arch/x86/include/asm/x86_init.h |    2 --
- arch/x86/kernel/kvm.c           |   39 +++++++++++++++++++++------------------
- arch/x86/kernel/traps.c         |    2 --
- arch/x86/kernel/x86_init.c      |    1 -
- arch/x86/mm/fault.c             |   19 +++++++++++++++++++
- 8 files changed, 57 insertions(+), 37 deletions(-)
+V2: Drop noinstr_call_begin()/end()
+---
+ include/asm-generic/sections.h    |    3 +++
+ include/asm-generic/vmlinux.lds.h |    4 ++++
+ include/linux/compiler.h          |   17 +++++++++++++++++
+ include/linux/compiler_types.h    |    4 ++++
+ scripts/mod/modpost.c             |    2 +-
+ 5 files changed, 29 insertions(+), 1 deletion(-)
 
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -1693,14 +1693,6 @@ SYM_CODE_START(general_protection)
- 	jmp	common_exception
- SYM_CODE_END(general_protection)
+--- a/include/asm-generic/sections.h
++++ b/include/asm-generic/sections.h
+@@ -53,6 +53,9 @@ extern char __ctors_start[], __ctors_end
+ /* Start and end of .opd section - used for function descriptors. */
+ extern char __start_opd[], __end_opd[];
  
--#ifdef CONFIG_KVM_GUEST
--SYM_CODE_START(async_page_fault)
--	ASM_CLAC
--	pushl	$do_async_page_fault
--	jmp	common_exception_read_cr2
--SYM_CODE_END(async_page_fault)
--#endif
--
- SYM_CODE_START(rewind_stack_do_exit)
- 	/* Prevent any naive code from trying to unwind to our caller. */
- 	xorl	%ebp, %ebp
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -1204,10 +1204,6 @@ idtentry xendebug		do_debug		has_error_c
- idtentry general_protection	do_general_protection	has_error_code=1
- idtentry page_fault		do_page_fault		has_error_code=1	read_cr2=1
++/* Start and end of instrumentation protected text section */
++extern char __noinstr_text_start[], __noinstr_text_end[];
++
+ extern __visible const void __nosave_begin, __nosave_end;
  
--#ifdef CONFIG_KVM_GUEST
--idtentry async_page_fault	do_async_page_fault	has_error_code=1	read_cr2=1
--#endif
--
- #ifdef CONFIG_X86_MCE
- idtentry machine_check		do_mce			has_error_code=0	paranoid=1
- #endif
---- a/arch/x86/include/asm/kvm_para.h
-+++ b/arch/x86/include/asm/kvm_para.h
-@@ -91,8 +91,18 @@ unsigned int kvm_arch_para_hints(void);
- void kvm_async_pf_task_wait(u32 token, int interrupt_kernel);
- void kvm_async_pf_task_wake(u32 token);
- u32 kvm_read_and_reset_pf_reason(void);
--extern void kvm_disable_steal_time(void);
--void do_async_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address);
-+void kvm_disable_steal_time(void);
-+bool __kvm_handle_async_pf(struct pt_regs *regs, u32 token);
-+
-+DECLARE_STATIC_KEY_FALSE(kvm_async_pf_enabled);
-+
-+static __always_inline bool kvm_handle_async_pf(struct pt_regs *regs, u32 token)
-+{
-+	if (static_branch_unlikely(&kvm_async_pf_enabled))
-+		return __kvm_handle_async_pf(regs, token);
-+	else
-+		return false;
-+}
+ /* Function descriptor handling (if any).  Override in asm/sections.h */
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -551,6 +551,10 @@
+ #define TEXT_TEXT							\
+ 		ALIGN_FUNCTION();					\
+ 		*(.text.hot TEXT_MAIN .text.fixup .text.unlikely)	\
++		ALIGN_FUNCTION();					\
++		__noinstr_text_start = .;				\
++		*(.noinstr.text)					\
++		__noinstr_text_end = .;					\
+ 		*(.text..refcount)					\
+ 		*(.ref.text)						\
+ 	MEM_KEEP(init.text*)						\
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -120,10 +120,27 @@ void ftrace_likely_update(struct ftrace_
+ /* Annotate a C jump table to allow objtool to follow the code flow */
+ #define __annotate_jump_table __section(.rodata..c_jump_table)
  
- #ifdef CONFIG_PARAVIRT_SPINLOCKS
- void __init kvm_spinlock_init(void);
-@@ -130,6 +140,11 @@ static inline void kvm_disable_steal_tim
- {
- 	return;
- }
++/* Begin/end of an instrumentation safe region */
++#define instr_begin() ({						\
++	asm volatile("%c0:\n\t"						\
++		     ".pushsection .discard.instr_begin\n\t"		\
++		     ".long %c0b - .\n\t"				\
++		     ".popsection\n\t" : : "i" (__COUNTER__));		\
++})
 +
-+static inline bool kvm_handle_async_pf(struct pt_regs *regs, u32 token)
-+{
-+	return false;
-+}
++#define instr_end() ({							\
++	asm volatile("%c0:\n\t"						\
++		     ".pushsection .discard.instr_end\n\t"		\
++		     ".long %c0b - .\n\t"				\
++		     ".popsection\n\t" : : "i" (__COUNTER__));		\
++})
++
+ #else
+ #define annotate_reachable()
+ #define annotate_unreachable()
+ #define __annotate_jump_table
++#define instr_begin()		do { } while(0)
++#define instr_end()		do { } while(0)
  #endif
  
- #endif /* _ASM_X86_KVM_PARA_H */
---- a/arch/x86/include/asm/x86_init.h
-+++ b/arch/x86/include/asm/x86_init.h
-@@ -50,14 +50,12 @@ struct x86_init_resources {
-  * @pre_vector_init:		init code to run before interrupt vectors
-  *				are set up.
-  * @intr_init:			interrupt init code
-- * @trap_init:			platform specific trap setup
-  * @intr_mode_select:		interrupt delivery mode selection
-  * @intr_mode_init:		interrupt delivery mode setup
-  */
- struct x86_init_irqs {
- 	void (*pre_vector_init)(void);
- 	void (*intr_init)(void);
--	void (*trap_init)(void);
- 	void (*intr_mode_select)(void);
- 	void (*intr_mode_init)(void);
- };
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -35,6 +35,8 @@
- #include <asm/tlb.h>
- #include <asm/cpuidle_haltpoll.h>
- 
-+DEFINE_STATIC_KEY_FALSE(kvm_async_pf_enabled);
-+
- static int kvmapf = 1;
- 
- static int __init parse_no_kvmapf(char *arg)
-@@ -242,25 +244,27 @@ u32 kvm_read_and_reset_pf_reason(void)
- EXPORT_SYMBOL_GPL(kvm_read_and_reset_pf_reason);
- NOKPROBE_SYMBOL(kvm_read_and_reset_pf_reason);
- 
--dotraplinkage void
--do_async_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address)
-+bool __kvm_handle_async_pf(struct pt_regs *regs, u32 token)
- {
-+	/*
-+	 * If we get a page fault right here, the pf_reason seems likely
-+	 * to be clobbered.  Bummer.
-+	 */
- 	switch (kvm_read_and_reset_pf_reason()) {
- 	default:
--		do_page_fault(regs, error_code, address);
--		break;
-+		return false;
- 	case KVM_PV_REASON_PAGE_NOT_PRESENT:
- 		/* page is swapped out by the host. */
--		kvm_async_pf_task_wait((u32)address, !user_mode(regs));
--		break;
-+		kvm_async_pf_task_wait(token, !user_mode(regs));
-+		return true;
- 	case KVM_PV_REASON_PAGE_READY:
- 		rcu_irq_enter();
--		kvm_async_pf_task_wake((u32)address);
-+		kvm_async_pf_task_wake(token);
- 		rcu_irq_exit();
--		break;
-+		return true;
- 	}
- }
--NOKPROBE_SYMBOL(do_async_page_fault);
-+NOKPROBE_SYMBOL(__kvm_handle_async_pf);
- 
- static void __init paravirt_ops_setup(void)
- {
-@@ -306,7 +310,11 @@ static notrace void kvm_guest_apic_eoi_w
- static void kvm_guest_cpu_init(void)
- {
- 	if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF) && kvmapf) {
--		u64 pa = slow_virt_to_phys(this_cpu_ptr(&apf_reason));
-+		u64 pa;
-+
-+		WARN_ON_ONCE(!static_branch_likely(&kvm_async_pf_enabled));
-+
-+		pa = slow_virt_to_phys(this_cpu_ptr(&apf_reason));
- 
- #ifdef CONFIG_PREEMPTION
- 		pa |= KVM_ASYNC_PF_SEND_ALWAYS;
-@@ -592,12 +600,6 @@ static int kvm_cpu_down_prepare(unsigned
- }
+ #ifndef ASM_UNREACHABLE
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -118,6 +118,10 @@ struct ftrace_likely_data {
+ #define notrace			__attribute__((__no_instrument_function__))
  #endif
  
--static void __init kvm_apf_trap_init(void)
--{
--	update_intr_gate(X86_TRAP_PF, async_page_fault);
--}
--
--
- static void kvm_flush_tlb_others(const struct cpumask *cpumask,
- 			const struct flush_tlb_info *info)
- {
-@@ -632,8 +634,6 @@ static void __init kvm_guest_init(void)
- 	register_reboot_notifier(&kvm_pv_reboot_nb);
- 	for (i = 0; i < KVM_TASK_SLEEP_HASHSIZE; i++)
- 		raw_spin_lock_init(&async_pf_sleepers[i].lock);
--	if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF))
--		x86_init.irqs.trap_init = kvm_apf_trap_init;
- 
- 	if (kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
- 		has_steal_clock = 1;
-@@ -649,6 +649,9 @@ static void __init kvm_guest_init(void)
- 	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
- 		apic_set_eoi_write(kvm_guest_apic_eoi_write);
- 
-+	if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF) && kvmapf)
-+		static_branch_enable(&kvm_async_pf_enabled);
++/* Section for code which can't be instrumented at all */
++#define noinstr								\
++	noinline notrace __attribute((__section__(".noinstr.text")))
 +
- #ifdef CONFIG_SMP
- 	smp_ops.smp_prepare_cpus = kvm_smp_prepare_cpus;
- 	smp_ops.smp_prepare_boot_cpu = kvm_smp_prepare_boot_cpu;
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -988,7 +988,5 @@ void __init trap_init(void)
+ /*
+  * it doesn't make sense on ARM (currently the only user of __naked)
+  * to trace naked functions because then mcount is called without
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -948,7 +948,7 @@ static void check_section(const char *mo
  
- 	idt_setup_ist_traps();
- 
--	x86_init.irqs.trap_init();
--
- 	idt_setup_debugidt_traps();
- }
---- a/arch/x86/kernel/x86_init.c
-+++ b/arch/x86/kernel/x86_init.c
-@@ -79,7 +79,6 @@ struct x86_init_ops x86_init __initdata
- 	.irqs = {
- 		.pre_vector_init	= init_ISA_irqs,
- 		.intr_init		= native_init_IRQ,
--		.trap_init		= x86_init_noop,
- 		.intr_mode_select	= apic_intr_mode_select,
- 		.intr_mode_init		= apic_intr_mode_init
- 	},
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -30,6 +30,7 @@
- #include <asm/desc.h>			/* store_idt(), ...		*/
- #include <asm/cpu_entry_area.h>		/* exception stack		*/
- #include <asm/pgtable_areas.h>		/* VMALLOC_START, ...		*/
-+#include <asm/kvm_para.h>		/* kvm_handle_async_pf		*/
- 
- #define CREATE_TRACE_POINTS
- #include <asm/trace/exceptions.h>
-@@ -1523,6 +1524,24 @@ do_page_fault(struct pt_regs *regs, unsi
- 		unsigned long address)
- {
- 	prefetchw(&current->mm->mmap_sem);
-+	/*
-+	 * KVM has two types of events that are, logically, interrupts, but
-+	 * are unfortunately delivered using the #PF vector.  These events are
-+	 * "you just accessed valid memory, but the host doesn't have it right
-+	 * now, so I'll put you to sleep if you continue" and "that memory
-+	 * you tried to access earlier is available now."
-+	 *
-+	 * We are relying on the interrupted context being sane (valid RSP,
-+	 * relevant locks not held, etc.), which is fine as long as the
-+	 * interrupted context had IF=1.  We are also relying on the KVM
-+	 * async pf type field and CR2 being read consistently instead of
-+	 * getting values from real and async page faults mixed up.
-+	 *
-+	 * Fingers crossed.
-+	 */
-+	if (kvm_handle_async_pf(regs, (u32)address))
-+		return;
-+
- 	trace_page_fault_entries(regs, hw_error_code, address);
- 
- 	if (unlikely(kmmio_fault(regs, address)))
+ #define DATA_SECTIONS ".data", ".data.rel"
+ #define TEXT_SECTIONS ".text", ".text.unlikely", ".sched.text", \
+-		".kprobes.text", ".cpuidle.text"
++		".kprobes.text", ".cpuidle.text", ".noinstr.text"
+ #define OTHER_TEXT_SECTIONS ".ref.text", ".head.text", ".spinlock.text", \
+ 		".fixup", ".entry.text", ".exception.text", ".text.*", \
+ 		".coldtext"
 
