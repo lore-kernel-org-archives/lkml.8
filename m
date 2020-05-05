@@ -2,206 +2,158 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C606C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3956BC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6364120746
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19315206CC
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:31:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ke1ddssf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730636AbgEERbK (ORCPT
+        id S1730644AbgEERbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 13:31:10 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56558 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729199AbgEERbJ (ORCPT
+        Tue, 5 May 2020 13:31:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729199AbgEERbi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 13:31:09 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 045H2DC3174902;
-        Tue, 5 May 2020 13:31:06 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30s1sx6e6a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 13:31:05 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 045HQ1gP047636;
-        Tue, 5 May 2020 13:31:05 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30s1sx6e5e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 13:31:05 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 045HKTBc015153;
-        Tue, 5 May 2020 17:31:03 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 30s0g5qfa8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 17:31:03 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 045HV1kV1835350
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 May 2020 17:31:01 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 04690A4062;
-        Tue,  5 May 2020 17:31:01 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BBEE3A4060;
-        Tue,  5 May 2020 17:30:59 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.161.225])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  5 May 2020 17:30:59 +0000 (GMT)
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     linux-integrity@vger.kernel.org
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        Mimi Zohar <zohar@linux.ibm.com>, Jann Horn <jannh@google.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v1] ima: verify mprotect change is consistent with mmap policy
-Date:   Tue,  5 May 2020 13:30:45 -0400
-Message-Id: <1588699845-6196-1-git-send-email-zohar@linux.ibm.com>
-X-Mailer: git-send-email 2.7.5
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-05_09:2020-05-04,2020-05-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- lowpriorityscore=0 malwarescore=0 phishscore=0 adultscore=0
- impostorscore=0 mlxlogscore=915 bulkscore=0 clxscore=1015 suspectscore=3
- mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005050129
+        Tue, 5 May 2020 13:31:38 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE6DAC061A10
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 10:31:37 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id e10so1760083vsp.12
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 10:31:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EQsoLSVjLAyR/M3Ocg/DHLH6pm0RmX/436FGjF6WTao=;
+        b=Ke1ddssfTsxp0iPhblhR8uitz3u+NzVLxty3wGO22LNbm/oHweSwOoglBCDtTP/BIT
+         nV1QFq59DQfSmb6KnLtJ20O65z/eG/stUQHHvO8IH4EjGKYIUy9p4mmslme/tNVh5Flm
+         6cGsK5McFrzX89tb9oXS6LtVMITgWloKe3SwFt3NmJYkPMWNvHfXt2Ie7uhSd+23n+/8
+         ATV6FtzN+kcQJYmd3TQIVidF4Kn9qkk/B5Pp0RJ4v+8tQh2QN5nO4biP92tJ6VPwRAnT
+         Gj9H12bpBzqp+B/l/ZfQsusyeGTwkTsHyDvj43JP5reauKAVSHVR8hvyiuB885U4ug4L
+         ZUZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EQsoLSVjLAyR/M3Ocg/DHLH6pm0RmX/436FGjF6WTao=;
+        b=mAX0Heq8ozkAfuqLwy0nDhnWvPC/nGnOy2IUPOSMsaUM00dcCIGxHBTBCRmQq6NymD
+         TGKj/HlM1p3xD2MBsT+A3n0GWGbbFNf3GGqyiOuytseA4duNThZ5Z9STu5mek2sN8ruu
+         R31fW34fyL5F7Tw3yWS0g72uB5AHFvWnLz9UMgrrsQt03g233uWIjiApE2Z9UCm9i9Ls
+         HCEPN7BbL6u92lF9a++HFfcw+Iiy6GwTPIL/Ypt9c5SMAOjZOQ3/bnhQnyj2LUHBNFEE
+         YBuFI5twWGBQhxPvHWi2XtOltYrdkUCAaQozd2vhgjyQ+RZm28uLXrGe03KsQIIc9wu1
+         LAAg==
+X-Gm-Message-State: AGi0PuaqnHk6y6RIDB/UebiXbp7KseW1WhIXQrTB94M0uCtxtfamm6Lp
+        uhdDSnNcQnSiMqDDsScSm8kp7ErGdBHN/E0azZpRqw==
+X-Google-Smtp-Source: APiQypKY+Ec0L+QALIPDIkzOQ4WXjg5IcZuMySRts7hkgSJWNuiacaOPr1fNLfnrg/Vc3j1c0VN+v2jbTt5wryigOLM=
+X-Received: by 2002:a67:302:: with SMTP id 2mr3875137vsd.165.1588699896206;
+ Tue, 05 May 2020 10:31:36 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200428210229.703309-1-martin.blumenstingl@googlemail.com>
+ <20200428210229.703309-3-martin.blumenstingl@googlemail.com>
+ <1jlfmdi9uw.fsf@starbuckisacylon.baylibre.com> <CAPDyKFoEh8qKYFONo1SHnvwhDwjUa5bMnnT1Kbu8=4rd=T-8Kg@mail.gmail.com>
+ <1jh7x1i3hj.fsf@starbuckisacylon.baylibre.com> <CAPDyKFq_USCNNps3s4+C_1hriycrxtRMKJvnPFcP59CZmLXbGw@mail.gmail.com>
+ <1j1rnygye6.fsf@starbuckisacylon.baylibre.com>
+In-Reply-To: <1j1rnygye6.fsf@starbuckisacylon.baylibre.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 5 May 2020 19:30:59 +0200
+Message-ID: <CAPDyKFogZgX05mPgue4UT57cTM-KVPfmoPJPf1BNJurGN+qp-g@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] mmc: host: meson-mx-sdhc: new driver for the
+ Amlogic Meson SDHC host
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        yinxin_1989@aliyun.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        lnykww@gmail.com, Anand Moon <linux.amoon@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Files can be mmap'ed read/write and later changed to execute to circumvent
-IMA's mmap appraise policy rules.  Due to locking issues (mmap semaphore
-would be taken prior to i_mutex), files can not be measured or appraised at
-this point.  Eliminate this integrity gap, by denying the mprotect
-PROT_EXECUTE change, if an mmap appraise policy rule exists.
+On Tue, 5 May 2020 at 18:05, Jerome Brunet <jbrunet@baylibre.com> wrote:
+>
+>
+> On Tue 05 May 2020 at 10:17, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> > [...]
+> >
+> >> >> > +
+> >> >> > +     return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
+> >> >> > +                                        onecell_data);
+> >> >>
+> >> >> I think registering a provider for a module that does not provide clocks
+> >> >> to any other device is a bit overkill.
+> >> >>
+> >> >> I understand the matter is getting the per-user clk* pointer.
+> >> >> Since this is the module registering the clock, you can use clk_hw->clk
+> >> >> to get it.
+> >> >>
+> >> >> Once you have the clk* of the leaf clocks, you don't even need to keep
+> >> >> track of the clk_hw* since you are using devm_
+> >> >>
+> >> >> Afterward, we should propably discuss with Stephen if something should
+> >> >> be added in CCF to get a struct clk* from struct clk_hw*.
+> >> >>
+> >> >
+> >> > [...]
+> >> >
+> >> > Hmm.
+> >> >
+> >> > I am not sure the above is a good idea, at all. Unless, I am
+> >> > misunderstanding your point, which may be the case.
+> >> >
+> >> > I think above "shortcuts" could lead to abuse of the clock framework
+> >> > and its internal data structures. When going forward, this could make
+> >> > it unnecessary harder to maintain the clock framework.
+> >> >
+> >> > I know, it's not my responsibility, but from my experience with MMC
+> >> > and SDIO interfaces, is that those have been too easy abuse - since
+> >> > most of the data structures and interfaces have been exported. Now,
+> >> > it's hard to roll back that, if you see what I mean.
+> >>
+> >> Indeed, it worth clarifying this first.
+> >>
+> >> With clk_register deprecated in favor of clk_hw_register, we are likely
+> >> to see that case rise elsewhere.
+> >>
+> >
+> > So, according to the separate discussion [1], I think we can let
+> > Martin decide what option to implement at this point.
+> >
+> > 1. Implement the "clk_hw_get_clk()" approach. The preferred option,
+> > but requires wider changes of the clock subsystem as well.
+> >
+> > 2. Keep the existing approach, with devm_clk_get(). I am fine with
+> > this as well, we can always switch to 1) later on.
+>
+> I have a problem with this approach.
+> The dt-bindings would include "#clock-cells = <1>" for a device that
+> does not actually provide and only needs it has a temporary work around.
+> Those bindings are supposed to be stable ...
 
-On mprotect change success, return 0.  On failure, return -EACESS.
+I agree, the bindings need to be stable.
 
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
----
-Changelog v1:
-- Reverse tests to remove code indentation. (Lakshmi Ramasubramanian)
-- General code cleanup, including adding comments.
+What is the problem of keeping "#clock-cells = <1>" around, when we
+move to a clk_hw_get_clk() approach in the next step?
 
- include/linux/ima.h               |  7 ++++++
- security/integrity/ima/ima_main.c | 51 +++++++++++++++++++++++++++++++++++++++
- security/security.c               |  7 +++++-
- 3 files changed, 64 insertions(+), 1 deletion(-)
+>
+> I have proposed 2 other short term solutions, let's see how it goes
 
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index aefe758f4466..9164e1534ec9 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -18,6 +18,7 @@ extern int ima_file_check(struct file *file, int mask);
- extern void ima_post_create_tmpfile(struct inode *inode);
- extern void ima_file_free(struct file *file);
- extern int ima_file_mmap(struct file *file, unsigned long prot);
-+extern int ima_file_mprotect(struct vm_area_struct *vma, unsigned long prot);
- extern int ima_load_data(enum kernel_load_data_id id);
- extern int ima_read_file(struct file *file, enum kernel_read_file_id id);
- extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
-@@ -70,6 +71,12 @@ static inline int ima_file_mmap(struct file *file, unsigned long prot)
- 	return 0;
- }
- 
-+static inline int ima_file_mprotect(struct vm_area_struct *vma,
-+				    unsigned long prot)
-+{
-+	return 0;
-+}
-+
- static inline int ima_load_data(enum kernel_load_data_id id)
- {
- 	return 0;
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index f96f151294e6..800fb3bba418 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -394,6 +394,57 @@ int ima_file_mmap(struct file *file, unsigned long prot)
- }
- 
- /**
-+ * ima_file_mprotect - based on policy, limit mprotect change
-+ * @prot: contains the protection that will be applied by the kernel.
-+ *
-+ * Files can be mmap'ed read/write and later changed to execute to circumvent
-+ * IMA's mmap appraisal policy rules.  Due to locking issues (mmap semaphore
-+ * would be taken before i_mutex), files can not be measured or appraised at
-+ * this point.  Eliminate this integrity gap by denying the mprotect
-+ * PROT_EXECUTE change, if an mmap appraise policy rule exists.
-+ *
-+ * On mprotect change success, return 0.  On failure, return -EACESS.
-+ */
-+int ima_file_mprotect(struct vm_area_struct *vma, unsigned long prot)
-+{
-+	struct ima_template_desc *template;
-+	struct file *file = vma->vm_file;
-+	char filename[NAME_MAX];
-+	char *pathbuf = NULL;
-+	const char *pathname = NULL;
-+	struct inode *inode;
-+	int result = 0;
-+	int action;
-+	u32 secid;
-+	int pcr;
-+
-+	/* Is mprotect making an mmap'ed file executable? */
-+	if (!vma->vm_file || !(prot & PROT_EXEC) || (vma->vm_flags & VM_EXEC))
-+		return 0;
-+
-+	security_task_getsecid(current, &secid);
-+	inode = file_inode(vma->vm_file);
-+	action = ima_get_action(inode, current_cred(), secid, MAY_EXEC,
-+				MMAP_CHECK, &pcr, &template, 0);
-+
-+	/* Is the mmap'ed file in policy? */
-+	if (!(action & (IMA_MEASURE | IMA_APPRAISE_SUBMASK)))
-+		return 0;
-+
-+	if (action & IMA_APPRAISE_SUBMASK)
-+		result = -EPERM;
-+
-+	file = vma->vm_file;
-+	pathname = ima_d_path(&file->f_path, &pathbuf, filename);
-+	integrity_audit_msg(AUDIT_INTEGRITY_DATA, inode, pathname,
-+			    "collect_data", "failed-mprotect", result, 0);
-+	if (pathbuf)
-+		__putname(pathbuf);
-+
-+	return result;
-+}
-+
-+/**
-  * ima_bprm_check - based on policy, collect/store measurement.
-  * @bprm: contains the linux_binprm structure
-  *
-diff --git a/security/security.c b/security/security.c
-index 7fed24b9d57e..dd0917c5bfe9 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -1512,7 +1512,12 @@ int security_mmap_addr(unsigned long addr)
- int security_file_mprotect(struct vm_area_struct *vma, unsigned long reqprot,
- 			    unsigned long prot)
- {
--	return call_int_hook(file_mprotect, 0, vma, reqprot, prot);
-+	int ret;
-+
-+	ret = call_int_hook(file_mprotect, 0, vma, reqprot, prot);
-+	if (ret)
-+		return ret;
-+	return ima_file_mprotect(vma, prot);
- }
- 
- int security_file_lock(struct file *file, unsigned int cmd)
--- 
-2.7.5
+Yes, seems like we need to wait for Stephen's input then.
 
+Kind regards
+Uffe
