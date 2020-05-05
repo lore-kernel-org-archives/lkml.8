@@ -2,161 +2,166 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFF7C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B80C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29BD42075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:02:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588716147;
-	bh=jqBGVHODT2ZorzgQ2/+DwPIqnnfhekndrsHXricHH9I=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=xZgbD1n/zzK3xhPkHG3mPzTQywIqUpmLJKGWlnmLwIoGstItfyFT4D7/uAC0dwwwH
-	 SLQEN2Krf+1C6ZPWQHnuO32ZX/8FvpSxBSpXHcuhfSsrgWHTZsu/r18iLk9Ltn6vYU
-	 LzUfaUe5fnCF5ON8eNolLzFwa111Mmk04RUlTLLY=
+	by mail.kernel.org (Postfix) with ESMTP id D08622075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:02:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n4aYqZKu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728934AbgEEWC0 (ORCPT
+        id S1729387AbgEEWCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 18:02:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40160 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727089AbgEEWCZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 18:02:25 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D47C206B8;
-        Tue,  5 May 2020 22:02:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588716145;
-        bh=jqBGVHODT2ZorzgQ2/+DwPIqnnfhekndrsHXricHH9I=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=aOlZTH/98A1zwce46k+/fi1I4wNQxzGSYOhtSyYx1Jn1p/waNXqZ1ZIe7+xkMMT6t
-         NQEF/EKpJHDMpphEhy1gWAslQEKmVQOCLJX67D971XmXA1AM+dcOqU0xVe9CKoVioT
-         dAPV3UcaQpoOEimGY6Tbd7vtyPYa+65B8UIkuZhk=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id DC1243523039; Tue,  5 May 2020 15:02:24 -0700 (PDT)
-Date:   Tue, 5 May 2020 15:02:24 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [patch V4 part 3 11/29] rcu: Provide rcu_irq_exit_preempt()
-Message-ID: <20200505220224.GT2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200505134354.774943181@linutronix.de>
- <20200505134904.364456424@linutronix.de>
+        Tue, 5 May 2020 18:02:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37648 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727089AbgEEWC1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 18:02:27 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48A02C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 15:02:27 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id 207so151029pgc.6
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 15:02:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=meutyvpqi9+qTZ06UEsokNwwGPTMphxT3NcJSXe1Pt4=;
+        b=n4aYqZKuQDutp5OyuzgrDrbOfw46qnS5p3WJa9OrEVIOe7YEDc6L8MVm0rNqy/CM0v
+         EPXZs5B3vT9m/tCOyzVjW/ooXqk0Um9CTxmTKrdzOvr1UOvH2Qk+/a+xz1RKzAlgxxn/
+         +pdlW8483sPcBESg7tKJJzIWd/1En/kGux6bn2UKHxYtc/9s18CqMNz47UQ6MYEfRyON
+         uM9jikZBuhRPBp+wtcIzN7M6atPXrcF1VQeK5vlUAZCtcNvMhPHTK3gJNWy4Je8tr7UI
+         10hnifAwGP79iZJF9wqmIjs6NXBm00T1eiSZGgBgbmWGwd3IxBq9B+PC6QeOHFPTBGiF
+         B18Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=meutyvpqi9+qTZ06UEsokNwwGPTMphxT3NcJSXe1Pt4=;
+        b=JJK9XJfHNhikRIYXlNRCyAlYwrzsK7ANmt3VgLL3NvuWAt/f7IBV/u6Qp3E5XpoiRs
+         yR2jx4KqRnCYO/yWg0exExU021BTa5aoQzrA9OyPo/awhBynYB0t7sgtom4LEbSDQHDC
+         qjoGbmN6vZZakfoMGVsX0Z8QcVV655IGxTUh8t4F6WFwnvtX/mLs7ZOabvlaopW60Dq3
+         Wod/ix2xhqzg/OeLbvV7BSBAUCJrir60zsrk4WyOHdGYElR4riNgOBF0X1r/byWbyiwb
+         kqygQMRPfmaOekhfB/liirb3xF0eHz4YqqQhZ4a+MA9eJrz+5VA3ioFftRjjuMPd/rfk
+         LXpQ==
+X-Gm-Message-State: AGi0PuYRVCFvHe5i1urOY6SMbV+dzyj9edrcV+H7n0Ze9SiP4fUNU6AI
+        2iyma+jOi6ZadT+3Bz+XwX6YfdiYcdi21042hGqXqQ==
+X-Google-Smtp-Source: APiQypII92fzip+jhi9hD7251MPhAj00NvB2R8OUBsp6nQByudV49fC3OMI4LGDz7JOTRwkDao417VvP6RNTwjyMCU0=
+X-Received: by 2002:a65:5ac4:: with SMTP id d4mr4267862pgt.381.1588716146345;
+ Tue, 05 May 2020 15:02:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505134904.364456424@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <CAHmME9oMcfY4nwkknwN9c4rB-O7xD4GCAOFPoZCbdnq=034=Vw@mail.gmail.com>
+ <20200505215503.691205-1-Jason@zx2c4.com>
+In-Reply-To: <20200505215503.691205-1-Jason@zx2c4.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 5 May 2020 15:02:16 -0700
+Message-ID: <CAKwvOdk32cDowvrqRPKDRpf2ZiXh=jVnBTmhM-NWD=Ownq9v3w@mail.gmail.com>
+Subject: Re: [PATCH] Kbuild: disable FORTIFY_SOURCE on clang-10
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        George Burgess <gbiv@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 03:44:05PM +0200, Thomas Gleixner wrote:
-> Interrupts and exceptions invoke rcu_irq_enter() on entry and need to
-> invoke rcu_irq_exit() before they either return to the interrupted code or
-> invoke the scheduler due to preemption.
-> 
-> The general assumption is that RCU idle code has to have preemption
-> disabled so that a return from interrupt cannot schedule. So the return
-> from interrupt code invokes rcu_irq_exit() and preempt_schedule_irq().
-> 
-> If there is any imbalance in the rcu_irq/nmi* invocations or RCU idle code
-> had preemption enabled then this goes unnoticed until the CPU goes idle or
-> some other RCU check is executed.
-> 
-> Provide rcu_irq_exit_preempt() which can be invoked from the
-> interrupt/exception return code in case that preemption is enabled. It
-> invokes rcu_irq_exit() and contains a few sanity checks in case that
-> CONFIG_PROVE_RCU is enabled to catch such issues directly.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: "Paul E. McKenney" <paulmck@kernel.org>
-> Cc: Joel Fernandes <joel@joelfernandes.org>
+On Tue, May 5, 2020 at 2:55 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+>
+> clang-10 has a broken optimization stage that doesn't enable the
+> compiler to prove at compile time that certain memcpys are within
+> bounds, and thus the outline memcpy is always called, resulting in
+> horrific performance, and in some cases, excessive stack frame growth.
+> Here's a simple reproducer:
+>
+>     typedef unsigned long size_t;
+>     void *c(void *dest, const void *src, size_t n) __asm__("memcpy");
+>     extern inline __attribute__((gnu_inline)) void *memcpy(void *dest, const void *src, size_t n) { return c(dest, src, n); }
+>     void blah(char *a)
+>     {
+>       unsigned long long b[10], c[10];
+>       int i;
+>
+>       memcpy(b, a, sizeof(b));
+>       for (i = 0; i < 10; ++i)
+>         c[i] = b[i] ^ b[9 - i];
+>       for (i = 0; i < 10; ++i)
+>         b[i] = c[i] ^ a[i];
+>       memcpy(a, b, sizeof(b));
+>     }
+>
+> Compile this with clang-9 and clang-10 and observe:
+>
+> zx2c4@thinkpad /tmp/curve25519-hacl64-stack-frame-size-test $ clang-10 -Wframe-larger-than=0 -O3 -c b.c -o c10.o
+> b.c:5:6: warning: stack frame size of 104 bytes in function 'blah' [-Wframe-larger-than=]
+> void blah(char *a)
+>      ^
+> 1 warning generated.
+> zx2c4@thinkpad /tmp/curve25519-hacl64-stack-frame-size-test $ clang-9 -Wframe-larger-than=0 -O3 -c b.c -o c9.o
+>
+> Looking at the disassembly of c10.o and c9.o, one can see that c9.o is
+> properly optimized in the obvious way one would expect, while c10.o has
+> blown up and includes extern calls to memcpy.
+>
+> This is present on the most trivial bits of code. Thus, for clang-10, we
+> just set __NO_FORTIFY globally, so that this issue won't be incurred.
+>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: LKML <linux-kernel@vger.kernel.org>
+> Cc: clang-built-linux <clang-built-linux@googlegroups.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: George Burgess <gbiv@google.com>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Link: https://bugs.llvm.org/show_bug.cgi?id=45802
+> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
 
-The ->dynticks_nmi_nesting field is going away at some point, but
-there is always "git merge".  ;-)
+I'm going to request this not be merged until careful comment from
+George and Kees. My hands are quite full at the moment with other
+regressions.  I suspect these threads may be relevant, though I
+haven't had time to read through them myself.
+https://github.com/ClangBuiltLinux/linux/issues/979
+https://github.com/ClangBuiltLinux/linux/pull/980
 
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
 
 > ---
->  include/linux/rcutiny.h |    1 +
->  include/linux/rcutree.h |    1 +
->  kernel/rcu/tree.c       |   21 +++++++++++++++++++++
->  3 files changed, 23 insertions(+)
-> 
-> --- a/include/linux/rcutiny.h
-> +++ b/include/linux/rcutiny.h
-> @@ -71,6 +71,7 @@ static inline void rcu_irq_enter(void) {
->  static inline void rcu_irq_exit_irqson(void) { }
->  static inline void rcu_irq_enter_irqson(void) { }
->  static inline void rcu_irq_exit(void) { }
-> +static inline void rcu_irq_exit_preempt(void) { }
->  static inline void exit_rcu(void) { }
->  static inline bool rcu_preempt_need_deferred_qs(struct task_struct *t)
->  {
-> --- a/include/linux/rcutree.h
-> +++ b/include/linux/rcutree.h
-> @@ -46,6 +46,7 @@ void rcu_idle_enter(void);
->  void rcu_idle_exit(void);
->  void rcu_irq_enter(void);
->  void rcu_irq_exit(void);
-> +void rcu_irq_exit_preempt(void);
->  void rcu_irq_enter_irqson(void);
->  void rcu_irq_exit_irqson(void);
->  
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -706,6 +706,27 @@ void noinstr rcu_irq_exit(void)
->  	rcu_nmi_exit();
->  }
->  
-> +/**
-> + * rcu_irq_exit_preempt - Inform RCU that current CPU is exiting irq
-> + *			  towards in kernel preemption
-> + *
-> + * Same as rcu_irq_exit() but has a sanity check that scheduling is safe
-> + * from RCU point of view. Invoked from return from interrupt before kernel
-> + * preemption.
-> + */
-> +void rcu_irq_exit_preempt(void)
-> +{
-> +	lockdep_assert_irqs_disabled();
-> +	rcu_nmi_exit();
+>  Makefile | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/Makefile b/Makefile
+> index 49b2709ff44e..f022f077591d 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -768,6 +768,13 @@ KBUILD_CFLAGS += -Wno-gnu
+>  # source of a reference will be _MergedGlobals and not on of the whitelisted names.
+>  # See modpost pattern 2
+>  KBUILD_CFLAGS += -mno-global-merge
 > +
-> +	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nesting) <= 0,
-> +			 "RCU dynticks_nesting counter underflow/zero!");
-> +	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nmi_nesting) <= 0,
-> +			 "RCU dynticks_nmi_nesting counter underflow/zero!");
-> +	RCU_LOCKDEP_WARN(rcu_dynticks_curr_cpu_in_eqs(),
-> +			 "RCU in extended quiescent state!");
-> +}
+> +# clang-10 has a broken optimization stage that causes memcpy to always be
+> +# outline, resulting in excessive stack frame growth and poor performance.
+> +ifeq ($(shell test $(CONFIG_CLANG_VERSION) -ge 100000 && test $(CONFIG_CLANG_VERSION) -lt 110000; echo $$?),0)
+> +KBUILD_CFLAGS += -D__NO_FORTIFY
+> +endif
 > +
->  /*
->   * Wrapper for rcu_irq_exit() where interrupts are enabled.
->   *
-> 
+>  else
+>
+>  # These warnings generated too much noise in a regular build.
+> --
+> 2.26.2
+>
+
+
+-- 
+Thanks,
+~Nick Desaulniers
