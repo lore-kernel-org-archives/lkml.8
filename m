@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05CD3C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FE8C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF3E520838
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03FC320836
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:14:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729573AbgEEOOX (ORCPT
+        id S1729578AbgEEOO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:14:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48658 "EHLO
+        Tue, 5 May 2020 10:14:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729351AbgEEOOS (ORCPT
+        by vger.kernel.org with ESMTP id S1729324AbgEEOOR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:14:18 -0400
+        Tue, 5 May 2020 10:14:17 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC48CC061A41
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:14:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 356EDC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:14:17 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jVyKY-0000lj-2m; Tue, 05 May 2020 16:13:54 +0200
+        id 1jVyKd-0000qM-4J; Tue, 05 May 2020 16:13:59 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 936F7FFC8D;
-        Tue,  5 May 2020 16:13:53 +0200 (CEST)
-Message-Id: <20200505134101.248881738@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 955E7FFC8D;
+        Tue,  5 May 2020 16:13:58 +0200 (CEST)
+Message-Id: <20200505134101.617130349@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:16:34 +0200
+Date:   Tue, 05 May 2020 15:16:38 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -52,11 +52,9 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Will Deacon <will@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Rich Felker <dalias@libc.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>
-Subject: [patch V4 part 1 32/36] sh/ftrace: Move arch_ftrace_nmi_{enter,exit}
- into nmi exception
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [patch V4 part 1 36/36] rcu: Make RCU IRQ enter/exit functions rely
+ on in_nmi()
 References: <20200505131602.633487962@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -69,136 +67,160 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Paul E. McKenney <paulmck@kernel.org>
 
-SuperH is the last remaining user of arch_ftrace_nmi_{enter,exit}(),
-remove it from the generic code and into the SuperH code.
+The rcu_nmi_enter_common() and rcu_nmi_exit_common() functions take an
+"irq" parameter that indicates whether these functions are invoked from
+an irq handler (irq==true) or an NMI handler (irq==false).  However,
+recent changes have applied notrace to a few critical functions such
+that rcu_nmi_enter_common() and rcu_nmi_exit_common() many now rely
+on in_nmi().  Note that in_nmi() works no differently than before,
+but rather that tracing is now prohibited in code regions where in_nmi()
+would incorrectly report NMI state.
 
+Therefore remove the "irq" parameter and inlines rcu_nmi_enter_common() and
+rcu_nmi_exit_common() into rcu_nmi_enter() and rcu_nmi_exit(),
+respectively.
+
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Rich Felker <dalias@libc.org>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
 ---
- Documentation/trace/ftrace-design.rst |    8 --------
- arch/sh/Kconfig                       |    1 -
- arch/sh/kernel/traps.c                |   12 ++++++++++++
- include/linux/ftrace_irq.h            |   11 -----------
- kernel/trace/Kconfig                  |   10 ----------
- 5 files changed, 12 insertions(+), 30 deletions(-)
+ kernel/rcu/tree.c |   47 +++++++++++++++--------------------------------
+ 1 file changed, 15 insertions(+), 32 deletions(-)
 
---- a/Documentation/trace/ftrace-design.rst
-+++ b/Documentation/trace/ftrace-design.rst
-@@ -229,14 +229,6 @@ Adding support for it is easy: just defi
- pass the return address pointer as the 'retp' argument to
- ftrace_push_return_trace().
- 
--HAVE_FTRACE_NMI_ENTER
-----------------------
--
--If you can't trace NMI functions, then skip this option.
--
--<details to be filled>
--
--
- HAVE_SYSCALL_TRACEPOINTS
- ------------------------
- 
---- a/arch/sh/Kconfig
-+++ b/arch/sh/Kconfig
-@@ -71,7 +71,6 @@ config SUPERH32
- 	select HAVE_FUNCTION_TRACER
- 	select HAVE_FTRACE_MCOUNT_RECORD
- 	select HAVE_DYNAMIC_FTRACE
--	select HAVE_FTRACE_NMI_ENTER if DYNAMIC_FTRACE
- 	select ARCH_WANT_IPC_PARSE_VERSION
- 	select HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_ARCH_KGDB
---- a/arch/sh/kernel/traps.c
-+++ b/arch/sh/kernel/traps.c
-@@ -170,11 +170,21 @@ BUILD_TRAP_HANDLER(bug)
- 	force_sig(SIGTRAP);
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -627,16 +627,18 @@ noinstr void rcu_user_enter(void)
  }
+ #endif /* CONFIG_NO_HZ_FULL */
  
-+#ifdef CONFIG_DYNAMIC_FTRACE
-+extern void arch_ftrace_nmi_enter(void);
-+extern void arch_ftrace_nmi_exit(void);
-+#else
-+static inline void arch_ftrace_nmi_enter(void) { }
-+static inline void arch_ftrace_nmi_exit(void) { }
-+#endif
-+
- BUILD_TRAP_HANDLER(nmi)
+-/*
++/**
++ * rcu_nmi_exit - inform RCU of exit from NMI context
++ *
+  * If we are returning from the outermost NMI handler that interrupted an
+  * RCU-idle period, update rdp->dynticks and rdp->dynticks_nmi_nesting
+  * to let the RCU grace-period handling know that the CPU is back to
+  * being RCU-idle.
+  *
+- * If you add or remove a call to rcu_nmi_exit_common(), be sure to test
++ * If you add or remove a call to rcu_nmi_exit(), be sure to test
+  * with CONFIG_RCU_EQS_DEBUG=y.
+  */
+-static __always_inline void rcu_nmi_exit_common(bool irq)
++noinstr void rcu_nmi_exit(void)
  {
- 	unsigned int cpu = smp_processor_id();
- 	TRAP_HANDLER_DECL;
+ 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
  
-+	arch_ftrace_nmi_enter();
-+
- 	nmi_enter();
- 	nmi_count(cpu)++;
+@@ -667,7 +669,7 @@ static __always_inline void rcu_nmi_exit
+ 	trace_rcu_dyntick(TPS("Startirq"), rdp->dynticks_nmi_nesting, 0, atomic_read(&rdp->dynticks));
+ 	WRITE_ONCE(rdp->dynticks_nmi_nesting, 0); /* Avoid store tearing. */
  
-@@ -190,4 +200,6 @@ BUILD_TRAP_HANDLER(nmi)
- 	}
+-	if (irq)
++	if (!in_nmi())
+ 		rcu_prepare_for_idle();
+ 	instr_end();
  
- 	nmi_exit();
-+
-+	arch_ftrace_nmi_exit();
- }
---- a/include/linux/ftrace_irq.h
-+++ b/include/linux/ftrace_irq.h
-@@ -2,15 +2,6 @@
- #ifndef _LINUX_FTRACE_IRQ_H
- #define _LINUX_FTRACE_IRQ_H
+@@ -675,22 +677,11 @@ static __always_inline void rcu_nmi_exit
+ 	rcu_dynticks_eqs_enter();
+ 	// ... but is no longer watching here.
  
--
--#ifdef CONFIG_FTRACE_NMI_ENTER
--extern void arch_ftrace_nmi_enter(void);
--extern void arch_ftrace_nmi_exit(void);
--#else
--static inline void arch_ftrace_nmi_enter(void) { }
--static inline void arch_ftrace_nmi_exit(void) { }
--#endif
--
- #ifdef CONFIG_HWLAT_TRACER
- extern bool trace_hwlat_callback_enabled;
- extern void trace_hwlat_callback(bool enter);
-@@ -22,12 +13,10 @@ static inline void ftrace_nmi_enter(void
- 	if (trace_hwlat_callback_enabled)
- 		trace_hwlat_callback(true);
- #endif
--	arch_ftrace_nmi_enter();
+-	if (irq)
++	if (!in_nmi())
+ 		rcu_dynticks_task_enter();
  }
  
- static inline void ftrace_nmi_exit(void)
+ /**
+- * rcu_nmi_exit - inform RCU of exit from NMI context
+- *
+- * If you add or remove a call to rcu_nmi_exit(), be sure to test
+- * with CONFIG_RCU_EQS_DEBUG=y.
+- */
+-void noinstr rcu_nmi_exit(void)
+-{
+-	rcu_nmi_exit_common(false);
+-}
+-
+-/**
+  * rcu_irq_exit - inform RCU that current CPU is exiting irq towards idle
+  *
+  * Exit from an interrupt handler, which might possibly result in entering
+@@ -712,7 +703,7 @@ void noinstr rcu_nmi_exit(void)
+ void noinstr rcu_irq_exit(void)
  {
--	arch_ftrace_nmi_exit();
- #ifdef CONFIG_HWLAT_TRACER
- 	if (trace_hwlat_callback_enabled)
- 		trace_hwlat_callback(false);
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -10,11 +10,6 @@ config USER_STACKTRACE_SUPPORT
- config NOP_TRACER
- 	bool
+ 	lockdep_assert_irqs_disabled();
+-	rcu_nmi_exit_common(true);
++	rcu_nmi_exit();
+ }
  
--config HAVE_FTRACE_NMI_ENTER
--	bool
--	help
--	  See Documentation/trace/ftrace-design.rst
--
- config HAVE_FUNCTION_TRACER
- 	bool
- 	help
-@@ -72,11 +67,6 @@ config RING_BUFFER
- 	select TRACE_CLOCK
- 	select IRQ_WORK
+ /*
+@@ -801,7 +792,7 @@ void noinstr rcu_user_exit(void)
+ #endif /* CONFIG_NO_HZ_FULL */
  
--config FTRACE_NMI_ENTER
--       bool
--       depends on HAVE_FTRACE_NMI_ENTER
--       default y
+ /**
+- * rcu_nmi_enter_common - inform RCU of entry to NMI context
++ * rcu_nmi_enter - inform RCU of entry to NMI context
+  * @irq: Is this call from rcu_irq_enter?
+  *
+  * If the CPU was idle from RCU's viewpoint, update rdp->dynticks and
+@@ -810,10 +801,10 @@ void noinstr rcu_user_exit(void)
+  * long as the nesting level does not overflow an int.  (You will probably
+  * run out of stack space first.)
+  *
+- * If you add or remove a call to rcu_nmi_enter_common(), be sure to test
++ * If you add or remove a call to rcu_nmi_enter(), be sure to test
+  * with CONFIG_RCU_EQS_DEBUG=y.
+  */
+-static __always_inline void rcu_nmi_enter_common(bool irq)
++noinstr void rcu_nmi_enter(void)
+ {
+ 	long incby = 2;
+ 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+@@ -831,18 +822,18 @@ static __always_inline void rcu_nmi_ente
+ 	 */
+ 	if (rcu_dynticks_curr_cpu_in_eqs()) {
+ 
+-		if (irq)
++		if (!in_nmi())
+ 			rcu_dynticks_task_exit();
+ 
+ 		// RCU is not watching here ...
+ 		rcu_dynticks_eqs_exit();
+ 		// ... but is watching here.
+ 
+-		if (irq)
++		if (!in_nmi())
+ 			rcu_cleanup_after_idle();
+ 
+ 		incby = 1;
+-	} else if (irq) {
++	} else if (!in_nmi()) {
+ 		instr_begin();
+ 		if (tick_nohz_full_cpu(rdp->cpu) &&
+ 		    rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
+@@ -877,14 +868,6 @@ static __always_inline void rcu_nmi_ente
+ }
+ 
+ /**
+- * rcu_nmi_enter - inform RCU of entry to NMI context
+- */
+-noinstr void rcu_nmi_enter(void)
+-{
+-	rcu_nmi_enter_common(false);
+-}
 -
- config EVENT_TRACING
- 	select CONTEXT_SWITCH_TRACER
- 	select GLOB
+-/**
+  * rcu_irq_enter - inform RCU that current CPU is entering irq away from idle
+  *
+  * Enter an interrupt handler, which might possibly result in exiting
+@@ -909,7 +892,7 @@ noinstr void rcu_nmi_enter(void)
+ noinstr void rcu_irq_enter(void)
+ {
+ 	lockdep_assert_irqs_disabled();
+-	rcu_nmi_enter_common(true);
++	rcu_nmi_enter();
+ }
+ 
+ /*
 
