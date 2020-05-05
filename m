@@ -2,60 +2,101 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2136DC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4DCC47259
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09B13206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51C622078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:38:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588693104;
+	bh=vnZGTV0PFahJKuxybhCdgPOyDfTZu2dHlmXzSmZauCI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=l1gOQUevhvt5mdILPOMG8Ljepw6yer6a1Ainhm8GUnu1t6FaRx/O0iK4VY4jjYxJD
+	 jh2CimxpsAm8J7hjLfW+tVAbQoi/T4Ba4E8NuDmMcCnF5x58kgJnwJ9M/0c3hUMd9u
+	 QDKyU/LqftlL30k2EnslOdA6wf+OkeebHPizVwv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730089AbgEEPiG (ORCPT
+        id S1730146AbgEEPiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:38:06 -0400
-Received: from ms.lwn.net ([45.79.88.28]:50146 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729380AbgEEPiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:38:06 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 0C98A31A;
-        Tue,  5 May 2020 15:38:06 +0000 (UTC)
-Date:   Tue, 5 May 2020 09:38:04 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Qi Zheng <arch0.zheng@gmail.com>
-Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kobject: documentation: Fix erroneous function example
- in kobject doc.
-Message-ID: <20200505093804.6d39abef@lwn.net>
-In-Reply-To: <20200505061828.42952-1-arch0.zheng@gmail.com>
-References: <20200505061828.42952-1-arch0.zheng@gmail.com>
-Organization: LWN.net
+        Tue, 5 May 2020 11:38:23 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37259 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729276AbgEEPiX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 11:38:23 -0400
+Received: by mail-oi1-f194.google.com with SMTP id r25so2335440oij.4;
+        Tue, 05 May 2020 08:38:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kqQrkElLVWgKrW0ocIK6no1Eo72/15ji6o+a599XdUg=;
+        b=CfrW0kZs1N7xQV8YSJo4KJASPyM3oQVRbxwp7dA2dnXgoBSBlOU7YUlIS0xJc8LuPn
+         /u2WkdAJF0NhnLM1tjTvvzPxU623oE7kZveH8TCciBLIRe8q9bFz5wKwWqakiCLmujIX
+         nEXLwlIyvFhb1VEby7nld0ii9WUb+YfmhuwU4gzNwxli4LOorPvxweka8IIDDi2rFt8T
+         dyBpyl+FRLyvyI1Amso0EI+qE0b7isQVzUz9W3ijjDwxqYKFtxmsOjFba0NXcJDglQgU
+         apJIIXyMBdgmnh/k0pVrMqYcK5PSTVEftW+azO9kUWhaXgjlWzCOwzHNin3XzGNlATAS
+         Y6nQ==
+X-Gm-Message-State: AGi0Pubnz5beSXZjdv7yPFLZoCQSpYvjKaPt2feb1xjhFGYwsDu6UleQ
+        w6j6/4g08jFbVAi4/snOPw==
+X-Google-Smtp-Source: APiQypKYusD1gPoY+0joGmEA7TK8cSMo/0ZQO2nI0p43i7rGC3r3RtktHEbFfvgfs6RduoaUzLO7zg==
+X-Received: by 2002:aca:5806:: with SMTP id m6mr2830103oib.178.1588693102213;
+        Tue, 05 May 2020 08:38:22 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id p17sm656724oot.17.2020.05.05.08.38.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 08:38:21 -0700 (PDT)
+Received: (nullmailer pid 28227 invoked by uid 1000);
+        Tue, 05 May 2020 15:38:19 -0000
+Date:   Tue, 5 May 2020 10:38:19 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
+Subject: Re: [PATCH 2/2] dt-bindings: thermal: tsens: Add zeroc interrupt
+ support in yaml
+Message-ID: <20200505153819.GA19181@bogus>
+References: <20200505111204.963-1-manafm@codeaurora.org>
+ <20200505111204.963-3-manafm@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505111204.963-3-manafm@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  5 May 2020 14:18:28 +0800
-Qi Zheng <arch0.zheng@gmail.com> wrote:
-
-> Update the definitions of some functions listed in the kobject
-> document, since they have been changed.
+On Tue,  5 May 2020 16:42:04 +0530, Manaf Meethalavalappu Pallikunhi wrote:
+> Add 0C (zeroc) interrupt support for tsens in yaml.
 > 
-> Signed-off-by: Qi Zheng <arch0.zheng@gmail.com>
+> Signed-off-by: Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
 
-I've applied this since it's an improvement on the original.  The proper
-fix, though, is to bring in the nice kerneldoc comments that those
-functions have rather than trying to maintain another copy of that
-information.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Thanks,
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/qcom-tsens.example.dt.yaml: thermal-sensor@c263000: interrupt-names: ['uplow', 'critical', 'zeroc'] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/qcom-tsens.example.dt.yaml: thermal-sensor@c263000: interrupts: [[0, 506, 4], [0, 508, 4], [0, 510, 1]] is too long
 
-jon
+See https://patchwork.ozlabs.org/patch/1283470
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
