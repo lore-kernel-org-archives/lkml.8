@@ -2,92 +2,135 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C2FC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F08A8C47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C70820675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFF6520735
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:12:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gSAzcE/c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729242AbgEEOM3 (ORCPT
+        id S1729264AbgEEOMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:12:29 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:44489 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728135AbgEEOM2 (ORCPT
+        Tue, 5 May 2020 10:12:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48344 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729089AbgEEOMp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:12:28 -0400
-Received: from localhost.localdomain ([149.172.19.189]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MPooP-1jjMYw3zMZ-00MqB8; Tue, 05 May 2020 16:12:22 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Russell King <linux@armlinux.org.uk>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Nathan Huckleberry <nhuck15@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] ARM: use ARM unwinder for gcov
-Date:   Tue,  5 May 2020 16:11:56 +0200
-Message-Id: <20200505141218.684079-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
+        Tue, 5 May 2020 10:12:45 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C501C061A10
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:12:45 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id x10so2070963oie.1
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 07:12:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Yjm2cmKVuwlkstPxfFd5MfjFWk/J8R1nDWAUw4Id7r8=;
+        b=gSAzcE/ceHx3DD0GHkL/zUqm0ntyLCzjEfid4HO8kPLsHnWLW/F0L8YI2ve23ScdUX
+         SR0Z5J4h4hYUhRAu0sf2GUNqwtltdFruppAAsoH8zwvvowS4uwWSYI6fT1Q8LSRLegaC
+         J6UdM/icnIHrSTh/q0fEzggv34Jrmx9+Lr8NMLddFudUi4U5QiM/RI/uAJB0oFvMPzbz
+         izKi+kCspKWbqnxBLxwB8Elc4lL3Z7ABEXerd1WoTedVc/o4SczYSK0prr4dF5Pix0w4
+         ogM72D79j8OK39H5K1HkLXMQe39tDXPeZsYE5K/oiYsHvpadvrMniPLWrvwerrWTx8oq
+         1Nuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Yjm2cmKVuwlkstPxfFd5MfjFWk/J8R1nDWAUw4Id7r8=;
+        b=ubqbrrwj2L1KzaBb6KNJS724MEF/jLfAyfFmNRwPAylClV3Lda2fcVZTqqRyd+Nsmg
+         P4b23Its5IxCh6wRTdc7qQRwix7nfCpvvEJ/MmXOoBVHgrd1u+y1np2UZKUYqmz2S8ui
+         GbZXJ6S0jJldKn9UknHt06c+UH48pd7UJ7xuoaeubKPrsFJV3K7QTEVL7qtLC71Wu4ml
+         9JJNOl6FFO94p1C4at/Uti51JP4uGXrl90LG8dD3wW9wC8jonKv3+0Br5NlnOiwO+zAR
+         vkBFPLvh17eiejAacgkGjiB3Xc0U8leQQDAXV8S7ikvPbBiblP65wfB8TnlaK+Md3WQl
+         S/uQ==
+X-Gm-Message-State: AGi0PuaLvmNTrMIsrlUEedIu4NxLRjm8H+3dqIfPvVFMXc09sYxckbey
+        VGq5dhT1g/gXaCYvnDa/fVTyntn5nvjU66iuqGdPSQ==
+X-Google-Smtp-Source: APiQypIAywvPjEF+eFOU7gfeqV9lG2oqecVKyu+ef21qclXSvVG9C5gqW2wVY/N0EBRjBC6fH8Vm74uN5E+0Jr0Owmg=
+X-Received: by 2002:aca:1c08:: with SMTP id c8mr2558360oic.172.1588687963483;
+ Tue, 05 May 2020 07:12:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:xYF4bWF6ZBT8Pyevxjl7TuHwrRpMUeaWC2ade9WpKlAo8vN+BLm
- 5NYEooCfRPujRggbxVIeOPf1it9oT34YwaSKvZLx4zh1Mfhw3zzT6Y67uyTAI7izRBYyIbH
- HDnX7Aqnx6wJdexU7I9d9IkEDRelLi3/xo1y/LZ7OWdkJM5ICcrjCfBLbnJlGHsK7Brk22w
- VPiIPtIVo3hVudvHHOilw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:hcOUmx89Pao=:ORC3xGKBYI8iWGf6iU56dM
- IWOLCS5ZkjFI9dCrUtHFQ0k2f+Dmmy669ljCEwKvg6LHATZNCa0VuIDVwJL68A+PZJOyPq6A5
- iL3xXsjnCHos+K0gdqh3nKqTk8kEJFKIaFppmhvFP0X8nAc7bfF+lHSY0lMpt0ZuWSyQPBHNt
- 2Mb5akhUSpSlSTnKRxq1xV1MojGzEwfqkgrGy/+NRkQlXQ5wIVQZCVgZy8R05Qov7Dwq4w8sx
- Uzc7zCt88Z4IT65oVp6DFa+4qiV9pUdX/ujF9/MejBiBfLEQJhlV2JBhFM/rtsGlXp1mYl40P
- emt1EMa1fDqmZK7RsNO4jvA3Gg9peIxDNCh0dhadFCvONg1nuiJtuhJewfODqrttyfz9/zv9H
- coH7/be7/rZv6D3CHB28sK11ZuuCBissstLRibs0umsQCszOJ6F68fOeRjMNkO0QlRWOIEBu4
- /FubQg6OALzjsjYfUPLBqk+Yn0oGfflvrK3oYVfPoEAk2IIIQ23av5eombjwyxHgWUSvXnYsm
- zi555iu0Qh4P/7/Und7k8uhh/X4by2ULb0WBfH+RD/qBmTy6eT9dSorUuPQXs+LsknoK5OB4C
- guO+1D6OugrO6LlrUzC43cYAekk5PG6bTsx/CeL5NL8KybRPlLGVRIiXaAlG8gSBio1n8RGtJ
- a427JdifUZ+xlWNLC7sBWH9/VPrwP6dw4EHRBL5ac8BdivGlhpydUZgXyrgOcna1FxugNUt1P
- ccde1FtN8fjo3qNX6E2zMbajPVDtHvdq1rAuduFNNgqGGQFAuGJR1V0B2z26w7pvmPg0oLhR9
- jcBnb2ONOBsE9XYMONjrPNuuB0c778z8iUZh8Og52BolAv0nig=
+References: <20200505140407.373983-1-arnd@arndb.de>
+In-Reply-To: <20200505140407.373983-1-arnd@arndb.de>
+From:   Marco Elver <elver@google.com>
+Date:   Tue, 5 May 2020 16:12:30 +0200
+Message-ID: <CANpmjNNw6M9Gqj6WGTHH4Cegu8roTVu5x6Vqs_tCBxX3gPwL4A@mail.gmail.com>
+Subject: Re: [PATCH] omapfb: don't annotate dss_conv_list as __initdata
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com, Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using gcov on ARM fails when the frame pointer unwinder is used:
+On Tue, 5 May 2020 at 16:04, Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> With the kcsan changes, __read_once_size() is not inlined, but
+> clang can decide to emit a version that hardcodes the address, which
+> in turn triggers a warning for dss_conv_list being __initdata but
+> __read_once_size() not being __init:
+>
+> WARNING: modpost: vmlinux.o(.text+0x6e4d7a): Section mismatch in
+> reference from the function __read_once_size() to the variable
+> .init.data:dss_conv_list
+> The function __read_once_size() references
+> the variable __initdata dss_conv_list.
+> This is often because __read_once_size lacks a __initdata
+> annotation or the annotation of dss_conv_list is wrong.
+>
+> This is clearly a false positive warning, but it's hard to tell
+> who is to blame for it. Work around it by removing the __initdata
+> annotation, wasting the space of two pointers in return for getting
+> rid of the warning.
+>
+> Fixes: dfd402a4c4ba ("kcsan: Add Kernel Concurrency Sanitizer infrastructure")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-arm-linux-gnueabi-ld: kernel/softirq.o:(.ARM.exidx+0x120): undefined reference to `__aeabi_unwind_cpp_pr0'
-arm-linux-gnueabi-ld: init/main.o:(.ARM.exidx+0x98): undefined reference to `__aeabi_unwind_cpp_pr0'
-arm-linux-gnueabi-ld: init/version.o:(.ARM.exidx+0x0): undefined reference to `__aeabi_unwind_cpp_pr0'
-arm-linux-gnueabi-ld: init/do_mounts.o:(.ARM.exidx+0x28): undefined reference to `__aeabi_unwind_cpp_pr0'
-arm-linux-gnueabi-ld: init/do_mounts_initrd.o:(.ARM.exidx+0x0): undefined reference to `__aeabi_unwind_cpp_pr0'
-arm-linux-gnueabi-ld: init/initramfs.o:(.ARM.exidx+0x8): more undefined references to `__aeabi_unwind_cpp_pr0' follow
+[+Cc Will]
 
-This is likely a bug in clang that should be fixed in the compiler.
-Forcing the use of the ARM unwinder in this configuration however
-works around the problem.
+I think Will is working on a series that completely overhauls
+READ_ONCE/WRITE_ONCE, also getting rid of __read_once_size() in the
+process, which would make this patch redundant. If we can live with
+this warning until the new READ_ONCE/WRITE_ONCE gets merged, we can
+probably keep things as-is for now.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/Kconfig.debug | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
+-- Marco
 
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index a1dfb04231fd..41ef58acabf7 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -56,7 +56,7 @@ choice
- 
- config UNWINDER_FRAME_POINTER
- 	bool "Frame pointer unwinder"
--	depends on !THUMB2_KERNEL
-+	depends on !THUMB2_KERNEL && !(CC_IS_CLANG && GCOV_KERNEL)
- 	select ARCH_WANT_FRAME_POINTERS
- 	select FRAME_POINTER
- 	help
--- 
-2.26.0
-
+> ---
+>  drivers/video/fbdev/omap2/omapfb/dss/omapdss-boot-init.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/omapdss-boot-init.c b/drivers/video/fbdev/omap2/omapfb/dss/omapdss-boot-init.c
+> index 0ae0cab252d3..29fdff9c95f6 100644
+> --- a/drivers/video/fbdev/omap2/omapfb/dss/omapdss-boot-init.c
+> +++ b/drivers/video/fbdev/omap2/omapfb/dss/omapdss-boot-init.c
+> @@ -19,7 +19,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/list.h>
+>
+> -static struct list_head dss_conv_list __initdata;
+> +static struct list_head dss_conv_list;
+>
+>  static const char prefix[] __initconst = "omapdss,";
+>
+> --
+> 2.26.0
+>
