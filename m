@@ -2,283 +2,259 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E2EC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE199C47256
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE4A12068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 543B2206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:43:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZE2IcKT/"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="usnItLxx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728683AbgEEImY (ORCPT
+        id S1728526AbgEEInO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 04:42:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728323AbgEEImV (ORCPT
+        Tue, 5 May 2020 04:43:14 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:46957 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728323AbgEEInN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 04:42:21 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBEF0C061A0F;
-        Tue,  5 May 2020 01:42:20 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id m7so355696plt.5;
-        Tue, 05 May 2020 01:42:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=cFskabmmHvp4C/dLmH3xd8j3vuwmgpDBL417EZ/Ewyw=;
-        b=ZE2IcKT/v16LxgSX7/LGBmaV8h9lSA3IAukZ28Yx3M0eVAZgzcocSZ0N+LHp1V40s/
-         6h6OLhHJA6bW3SOc/Dt6jxIAL/bMJ2HrPGg+Ke3WpjWa1vfh9MnBBaqxDxq67avZXdDj
-         bOPli6joNV1r3S042vpilqGizaljOVRYRp0Q2dCmrMM9oS0GSeyOii4C7GdHLsH/FvFK
-         wK3Ntb/KCfmiceYN2owoId25A7cE6SMt8Nnpeb2NLQv5hPFmpR/j1aqgBsaibPw8nQb9
-         KXW5IL0W6pAkFmfB18b1kx9pyFA/ifrXLUMTt3r5q0Eznw5yM7kYH25VToF04s6ezP84
-         UkIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=cFskabmmHvp4C/dLmH3xd8j3vuwmgpDBL417EZ/Ewyw=;
-        b=OYw2CiSgI3d85XbsJNPJOkvq2jmA+I8NynhiF+jndDNc/Ii373yh+JG1LMpwMVDU6z
-         81viVserLJFKlHNDHG/jLpHBL1iKweH4OvO0pzxTCjY1U/Tq+v19bnt0hCa4Jda95A06
-         FjNb0NiZeA3VmOGA+Yqh+f4SgEMScEXOe4zCh9tMdzTVx0BZGmRKdx+KwH2UupzukZ32
-         5TyVpg5UaNBNoxxeVLGXSYSNWvgqtNkOS7HALZOkhx0JygNKX8x0s8JVc6zyP1lazWNW
-         lX1o71QnqyXi13Seyp+Tn/FKAT9AysVjhSBIQg5GBqmAYHYF2NGpJWfUvrUvvBo7qaMW
-         IzQA==
-X-Gm-Message-State: AGi0PuYtq2Fsr0MeLg+7ZUD9wVgZFWIHq1Bs1Nf5MIelO2bLo/7d1aiE
-        ckofTdcRueq6XqvjxNLNPPA=
-X-Google-Smtp-Source: APiQypLkIBAw7b/wIXu/OuUUdCasl8aw/yoD+hgWC91mTpRhXmosnl4Jl/TBALIdaVOQ2vde7kbg9Q==
-X-Received: by 2002:a17:90a:734b:: with SMTP id j11mr1661343pjs.108.1588668140507;
-        Tue, 05 May 2020 01:42:20 -0700 (PDT)
-Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id p190sm1443802pfp.207.2020.05.05.01.42.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 01:42:19 -0700 (PDT)
-From:   Yafang Shao <laoar.shao@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     mhocko@kernel.org, hannes@cmpxchg.org, chris@chrisdown.name,
-        guro@fb.com, linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>
-Subject: [PATCH v3 2/2] mm, memcg: Decouple e{low,min} state mutations from protection checks
-Date:   Tue,  5 May 2020 04:41:27 -0400
-Message-Id: <20200505084127.12923-3-laoar.shao@gmail.com>
-X-Mailer: git-send-email 2.18.1
-In-Reply-To: <20200505084127.12923-1-laoar.shao@gmail.com>
-References: <20200505084127.12923-1-laoar.shao@gmail.com>
+        Tue, 5 May 2020 04:43:13 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200505084309euoutp01825474fdb6eb33659ce4d2ab5b0fe095~MFU02dVy60065600656euoutp01Y
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 08:43:09 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200505084309euoutp01825474fdb6eb33659ce4d2ab5b0fe095~MFU02dVy60065600656euoutp01Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1588668189;
+        bh=gWvd1hDyo79x/s7tOktXvp9ucuQRiTgmKZjpFecY7X0=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=usnItLxxgUdMh6jZjR4EQ1AXCGMA2t/PLscZksyJqHW+MZhfdDoA4njWO0JXQExtt
+         QonZDNG9gvziDO+LvgsIxbBo2K73AzUy/RZSEyd2yvyIfGxwLFhVdc7B+Cm94YGs2+
+         G/dI+xm+BzswzjyMKqO9+RsWU/B70lFtpinEb1w4=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200505084309eucas1p1c8645351ceb70dd394c27c84d73af9c1~MFU0btZIj0757407574eucas1p15;
+        Tue,  5 May 2020 08:43:09 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id FF.A1.60679.D1721BE5; Tue,  5
+        May 2020 09:43:09 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200505084308eucas1p1aa040c3ae325a6c7d92f956b1f5aad0d~MFUz90wG30752907529eucas1p15;
+        Tue,  5 May 2020 08:43:08 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200505084308eusmtrp1f6d10f1165c581cda2504a3b128040e8~MFUz9FVZm0716407164eusmtrp12;
+        Tue,  5 May 2020 08:43:08 +0000 (GMT)
+X-AuditID: cbfec7f4-0cbff7000001ed07-a8-5eb1271dbcb6
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 01.A0.07950.C1721BE5; Tue,  5
+        May 2020 09:43:08 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200505084308eusmtip13a12b282487c6faf89fcb2ab4db393d5~MFUzetK7V0070700707eusmtip1g;
+        Tue,  5 May 2020 08:43:08 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH v3 00/25] DRM: fix struct sg_table nents vs. orig_nents
+ misuse
+Date:   Tue,  5 May 2020 10:43:00 +0200
+Message-Id: <20200505083926.28503-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJKsWRmVeSWpSXmKPExsWy7djPc7qy6hvjDHbul7boPXeSyWLjjPWs
+        Fv+3TWS2uPL1PZvFytVHmSwW7Le2+HLlIZPFpsfXWC0u75rDZrH2yF12i4MfnrA6cHusmbeG
+        0WPvtwUsHtu/PWD1uN99nMlj85J6j9v/HjN7TL6xnNFj980GNo++LasYPT5vkgvgiuKySUnN
+        ySxLLdK3S+DK2LXuA2PBPsuKno1r2RsYL+t0MXJySAiYSLxc/Zuti5GLQ0hgBaPEjpefmUAS
+        QgJfGCX+r3aESHxmlJg7+TcLTMfdy8tYIBLLGSX2XG2HagfqeLjiNlg7m4ChRNfbLjYQW0Sg
+        lVHiRC8PiM0sMINJ4ujrUhBbWCBA4sjX6WBTWQRUJR43tYDZvAK2Ev37ZrNDbJOXWL3hADPI
+        AgmB6ewS2/vOQJ3hItHYc4MNwhaWeHV8C1SDjMTpyT0sEA3NQBedW8sO4fQwSlxumsEIUWUt
+        cefcL6BuDqCTNCXW79KHCDtKPG29wAwSlhDgk7jxVhDiaD6JSdumQ4V5JTrahCCq1SRmHV8H
+        t/bghUvMELaHxPtbLWDDhQRiJRY89ZnAKDcLYdUCRsZVjOKppcW56anFRnmp5XrFibnFpXnp
+        esn5uZsYgQnm9L/jX3Yw7vqTdIhRgINRiYc34vP6OCHWxLLiytxDjBIczEoivMt+bIgT4k1J
+        rKxKLcqPLyrNSS0+xCjNwaIkzmu86GWskEB6YklqdmpqQWoRTJaJg1OqgXHzrvouv+pGg5nb
+        TN/NX2Nj9WFhafAfFu7VIl9C1/q03VfMlDy5Um0aq90ftgsXlPLXqQYtf+v2Ul+mqmrT366W
+        j+KzpII3/Zx1+TarFUdZcr+g5V2F3Ncyta8OnJ+g4X4ope732cbydYntszvWPpd+Ev93ve/z
+        xbnHyzqvfedsNu2s3zbXxU+JpTgj0VCLuag4EQCuXNZLLAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrILMWRmVeSWpSXmKPExsVy+t/xu7oy6hvjDJYdsLDoPXeSyWLjjPWs
+        Fv+3TWS2uPL1PZvFytVHmSwW7Le2+HLlIZPFpsfXWC0u75rDZrH2yF12i4MfnrA6cHusmbeG
+        0WPvtwUsHtu/PWD1uN99nMlj85J6j9v/HjN7TL6xnNFj980GNo++LasYPT5vkgvgitKzKcov
+        LUlVyMgvLrFVija0MNIztLTQMzKx1DM0No+1MjJV0rezSUnNySxLLdK3S9DL2LXuA2PBPsuK
+        no1r2RsYL+t0MXJySAiYSNy9vIyli5GLQ0hgKaPE4x1TWSESMhInpzVA2cISf651sUEUfWKU
+        6Hu/hR0kwSZgKNH1FiIhItDJKDGt+yM7iMMsMI9JYtHDQ0AOB4ewgJ/E0/9JIA0sAqoSj5ta
+        WEBsXgFbif59s9khNshLrN5wgHkCI88CRoZVjCKppcW56bnFRnrFibnFpXnpesn5uZsYgcG9
+        7djPLTsYu94FH2IU4GBU4uHd8HV9nBBrYllxZe4hRgkOZiUR3mU/NsQJ8aYkVlalFuXHF5Xm
+        pBYfYjQFWj6RWUo0OR8YeXkl8YamhuYWlobmxubGZhZK4rwdAgdjhATSE0tSs1NTC1KLYPqY
+        ODilGhjF2hdPaUzmDRDJ/dU4qe7Sm9ki/5k/bQgxeBCwK+ZlsEvCg5p/mkH3tfXURMLOX1c3
+        v1T5Lts09M33JW6TduXmiS40PRi3Se5LW2lE5j+u2+EZKxuC+Nwe/3/dKftFuF9FN7Hw1QmR
+        v1Uqqp9mCKYzb4j6dORgaWvwxeSNCzqO7BIvjOlZ5KLEUpyRaKjFXFScCADCUtXChAIAAA==
+X-CMS-MailID: 20200505084308eucas1p1aa040c3ae325a6c7d92f956b1f5aad0d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200505084308eucas1p1aa040c3ae325a6c7d92f956b1f5aad0d
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200505084308eucas1p1aa040c3ae325a6c7d92f956b1f5aad0d
+References: <CGME20200505084308eucas1p1aa040c3ae325a6c7d92f956b1f5aad0d@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Down <chris@chrisdown.name>
+Dear All,
 
-mem_cgroup_protected currently is both used to set effective low and min
-and return a mem_cgroup_protection based on the result.  As a user, this
-can be a little unexpected: it appears to be a simple predicate function,
-if not for the big warning in the comment above about the order in which
-it must be executed.
+During the Exynos DRM GEM rework and fixing the issues in the 
+drm_prime_sg_to_page_addr_arrays() function [1] I've noticed that most
+drivers in DRM framework incorrectly use nents and orig_nents entries of
+the struct sg_table.
 
-This change makes it so that we separate the state mutations from the
-actual protection checks, which makes it more obvious where we need to be
-careful mutating internal state, and where we are simply checking and
-don't need to worry about that.
+In case of the most DMA-mapping implementations exchanging those two
+entries or using nents for all loops on the scatterlist is harmless,
+because they both have the same value. There exists however a DMA-mapping
+implementations, for which such incorrect usage breaks things. The nents
+returned by dma_map_sg() might be lower than the nents passed as its
+parameter and this is perfectly fine. DMA framework or IOMMU is allowed
+to join consecutive chunks while mapping if such operation is supported
+by the underlying HW (bus, bridge, IOMMU, etc). Example of the case
+where dma_map_sg() might return 1 'DMA' chunk for the 4 'physical' pages
+is described here [2]
 
-Signed-off-by: Chris Down <chris@chrisdown.name>
-Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Roman Gushchin <guro@fb.com>
-Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
----
- include/linux/memcontrol.h | 43 ++++++++++++++++++++++++++++----------
- mm/memcontrol.c            | 28 +++++++------------------
- mm/vmscan.c                | 17 ++++-----------
- 3 files changed, 43 insertions(+), 45 deletions(-)
+The DMA-mapping framework documentation [3] states that dma_map_sg()
+returns the numer of the created entries in the DMA address space.
+However the subsequent calls to dma_sync_sg_for_{device,cpu} and
+dma_unmap_sg must be called with the original number of entries passed to
+dma_map_sg. The common pattern in DRM drivers were to assign the
+dma_map_sg() return value to sg_table->nents and use that value for
+the subsequent calls to dma_sync_sg_* or dma_unmap_sg functions. Also
+the code iterated over nents times to access the pages stored in the
+processed scatterlist, while it should use orig_nents as the numer of
+the page entries.
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index c07548ce26cb..7a2c56fc220c 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -50,12 +50,6 @@ enum memcg_memory_event {
- 	MEMCG_NR_MEMORY_EVENTS,
- };
- 
--enum mem_cgroup_protection {
--	MEMCG_PROT_NONE,
--	MEMCG_PROT_LOW,
--	MEMCG_PROT_MIN,
--};
--
- struct mem_cgroup_reclaim_cookie {
- 	pg_data_t *pgdat;
- 	unsigned int generation;
-@@ -394,8 +388,26 @@ static inline unsigned long mem_cgroup_protection(struct mem_cgroup *root,
- 		   READ_ONCE(memcg->memory.elow));
- }
- 
--enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
--						struct mem_cgroup *memcg);
-+void mem_cgroup_calculate_protection(struct mem_cgroup *root,
-+				     struct mem_cgroup *memcg);
-+
-+static inline bool mem_cgroup_below_low(struct mem_cgroup *memcg)
-+{
-+	if (mem_cgroup_disabled())
-+		return false;
-+
-+	return READ_ONCE(memcg->memory.elow) >=
-+		page_counter_read(&memcg->memory);
-+}
-+
-+static inline bool mem_cgroup_below_min(struct mem_cgroup *memcg)
-+{
-+	if (mem_cgroup_disabled())
-+		return false;
-+
-+	return READ_ONCE(memcg->memory.emin) >=
-+		page_counter_read(&memcg->memory);
-+}
- 
- int mem_cgroup_try_charge(struct page *page, struct mm_struct *mm,
- 			  gfp_t gfp_mask, struct mem_cgroup **memcgp,
-@@ -879,10 +891,19 @@ static inline unsigned long mem_cgroup_protection(struct mem_cgroup *root,
- 	return 0;
- }
- 
--static inline enum mem_cgroup_protection mem_cgroup_protected(
--	struct mem_cgroup *root, struct mem_cgroup *memcg)
-+static inline void mem_cgroup_calculate_protection(struct mem_cgroup *root,
-+						   struct mem_cgroup *memcg)
-+{
-+}
-+
-+static inline bool mem_cgroup_below_low(struct mem_cgroup *memcg)
- {
--	return MEMCG_PROT_NONE;
-+	return false;
-+}
-+
-+static inline bool mem_cgroup_below_min(struct mem_cgroup *memcg)
-+{
-+	return false;
- }
- 
- static inline int mem_cgroup_try_charge(struct page *page, struct mm_struct *mm,
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 1206682edc1a..474815acaf93 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -6370,21 +6370,15 @@ static unsigned long effective_protection(unsigned long usage,
-  *
-  * WARNING: This function is not stateless! It can only be used as part
-  *          of a top-down tree iteration, not for isolated queries.
-- *
-- * Returns one of the following:
-- *   MEMCG_PROT_NONE: cgroup memory is not protected
-- *   MEMCG_PROT_LOW: cgroup memory is protected as long there is
-- *     an unprotected supply of reclaimable memory from other cgroups.
-- *   MEMCG_PROT_MIN: cgroup memory is protected
-  */
--enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
--						struct mem_cgroup *memcg)
-+void mem_cgroup_calculate_protection(struct mem_cgroup *root,
-+				     struct mem_cgroup *memcg)
- {
- 	unsigned long usage, parent_usage;
- 	struct mem_cgroup *parent;
- 
- 	if (mem_cgroup_disabled())
--		return MEMCG_PROT_NONE;
-+		return;
- 
- 	if (!root)
- 		root = root_mem_cgroup;
-@@ -6397,21 +6391,21 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
- 	 * that special casing.
- 	 */
- 	if (memcg == root)
--		return MEMCG_PROT_NONE;
-+		return;
- 
- 	usage = page_counter_read(&memcg->memory);
- 	if (!usage)
--		return MEMCG_PROT_NONE;
-+		return;
- 
- 	parent = parent_mem_cgroup(memcg);
- 	/* No parent means a non-hierarchical mode on v1 memcg */
- 	if (!parent)
--		return MEMCG_PROT_NONE;
-+		return;
- 
- 	if (parent == root) {
- 		memcg->memory.emin = READ_ONCE(memcg->memory.min);
- 		memcg->memory.elow = memcg->memory.low;
--		goto out;
-+		return;
- 	}
- 
- 	parent_usage = page_counter_read(&parent->memory);
-@@ -6424,14 +6418,6 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
- 	WRITE_ONCE(memcg->memory.elow, effective_protection(usage, parent_usage,
- 			memcg->memory.low, READ_ONCE(parent->memory.elow),
- 			atomic_long_read(&parent->memory.children_low_usage)));
--
--out:
--	if (usage <= memcg->memory.emin)
--		return MEMCG_PROT_MIN;
--	else if (usage <= memcg->memory.elow)
--		return MEMCG_PROT_LOW;
--	else
--		return MEMCG_PROT_NONE;
- }
- 
- /**
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 4d3027ac131c..c71660e2c304 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -2635,14 +2635,15 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
- 		unsigned long reclaimed;
- 		unsigned long scanned;
- 
--		switch (mem_cgroup_protected(target_memcg, memcg)) {
--		case MEMCG_PROT_MIN:
-+		mem_cgroup_calculate_protection(target_memcg, memcg);
-+
-+		if (mem_cgroup_below_min(memcg)) {
- 			/*
- 			 * Hard protection.
- 			 * If there is no reclaimable memory, OOM.
- 			 */
- 			continue;
--		case MEMCG_PROT_LOW:
-+		} else if (mem_cgroup_below_low(memcg)) {
- 			/*
- 			 * Soft protection.
- 			 * Respect the protection only as long as
-@@ -2654,16 +2655,6 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
- 				continue;
- 			}
- 			memcg_memory_event(memcg, MEMCG_LOW);
--			break;
--		case MEMCG_PROT_NONE:
--			/*
--			 * All protection thresholds breached. We may
--			 * still choose to vary the scan pressure
--			 * applied based on by how much the cgroup in
--			 * question has exceeded its protection
--			 * thresholds (see get_scan_count).
--			 */
--			break;
- 		}
- 
- 		reclaimed = sc->nr_reclaimed;
+I've tried to identify all such incorrect usage of sg_table->nents and
+this is a result of my research. It looks that the incorrect pattern has
+been copied over the many drivers mainly in the DRM subsystem. Too bad in
+most cases it even worked correctly if the system used simple, linear
+DMA-mapping implementation, for which swapping nents and orig_nents
+doesn't make any difference. To avoid similar issues in the future, I've
+introduced a common dma-mapping wrappers, which operate directly on the
+sg_table objects.
+
+The biggest TODO is DRM/i915 driver and I don't feel brave enough to fix
+it fully. The driver creatively uses sg_table->orig_nents to store the
+size of the allocate scatterlist and ignores the number of the entries
+returned by dma_map_sg function. In this patchset I only fixed the
+sg_table objects exported by dmabuf related functions. I hope that I
+didn't break anything there.
+
+Patches are based on top of Linux next-20200504.
+
+Best regards,
+Marek Szyprowski
+
+
+References:
+
+[1] https://lkml.org/lkml/2020/3/27/555 
+[2] https://lkml.org/lkml/2020/3/29/65
+[3] Documentation/DMA-API-HOWTO.txt
+
+
+Changelog:
+
+v3:
+- introduce dma_*_sgtable_* wrappers and use them in all patches
+
+v2: https://lore.kernel.org/linux-iommu/c01c9766-9778-fd1f-f36e-2dc7bd376ba4@arm.com/T/
+- dropped most of the changes to drm/i915
+- added fixes for rcar-du, xen, media and ion
+- fixed a few issues pointed by kbuild test robot
+- added wide cc: list for each patch
+
+v1: https://lore.kernel.org/linux-iommu/c01c9766-9778-fd1f-f36e-2dc7bd376ba4@arm.com/T/
+- initial version
+
+
+Patch summary:
+
+Marek Szyprowski (25):
+  dma-mapping: add generic helpers for mapping sgtable objects
+  drm: core: fix common struct sg_table related issues
+  drm: amdgpu: fix common struct sg_table related issues
+  drm: armada: fix common struct sg_table related issues
+  drm: etnaviv: fix common struct sg_table related issues
+  drm: exynos: fix common struct sg_table related issues
+  drm: i915: fix common struct sg_table related issues
+  drm: lima: fix common struct sg_table related issues
+  drm: msm: fix common struct sg_table related issues
+  drm: panfrost: fix common struct sg_table related issues
+  drm: radeon: fix common struct sg_table related issues
+  drm: rockchip: fix common struct sg_table related issues
+  drm: tegra: fix common struct sg_table related issues
+  drm: virtio: fix common struct sg_table related issues
+  drm: vmwgfx: fix common struct sg_table related issues
+  xen: gntdev: fix common struct sg_table related issues
+  drm: host1x: fix common struct sg_table related issues
+  drm: rcar-du: fix common struct sg_table related issues
+  dmabuf: fix common struct sg_table related issues
+  staging: ion: fix common struct sg_table related issues
+  staging: tegra-vde: fix common struct sg_table related issues
+  misc: fastrpc: fix common struct sg_table related issues
+  rapidio: fix common struct sg_table related issues
+  samples: vfio-mdev/mbochs: fix common struct sg_table related issues
+  media: pci: fix common ALSA DMA-mapping related codes
+
+ drivers/dma-buf/heaps/heap-helpers.c             | 13 +++++-----
+ drivers/dma-buf/udmabuf.c                        |  7 +++---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c      |  6 ++---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c          |  9 +++----
+ drivers/gpu/drm/armada/armada_gem.c              | 10 ++++----
+ drivers/gpu/drm/drm_cache.c                      |  2 +-
+ drivers/gpu/drm/drm_gem_shmem_helper.c           | 14 +++++++----
+ drivers/gpu/drm/drm_prime.c                      | 13 +++++-----
+ drivers/gpu/drm/etnaviv/etnaviv_gem.c            | 12 ++++-----
+ drivers/gpu/drm/exynos/exynos_drm_g2d.c          |  9 +++----
+ drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c       | 13 ++++------
+ drivers/gpu/drm/i915/gem/selftests/mock_dmabuf.c |  7 +++---
+ drivers/gpu/drm/lima/lima_gem.c                  | 11 +++++---
+ drivers/gpu/drm/msm/msm_gem.c                    | 13 ++++------
+ drivers/gpu/drm/msm/msm_iommu.c                  |  2 +-
+ drivers/gpu/drm/panfrost/panfrost_gem.c          |  4 +--
+ drivers/gpu/drm/panfrost/panfrost_mmu.c          |  5 ++--
+ drivers/gpu/drm/radeon/radeon_ttm.c              | 11 ++++----
+ drivers/gpu/drm/rockchip/rockchip_drm_gem.c      | 26 +++++++++----------
+ drivers/gpu/drm/tegra/gem.c                      | 27 ++++++++------------
+ drivers/gpu/drm/tegra/plane.c                    | 15 ++++-------
+ drivers/gpu/drm/virtio/virtgpu_object.c          | 17 ++++++-------
+ drivers/gpu/drm/virtio/virtgpu_vq.c              | 10 +++-----
+ drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c       | 17 +++----------
+ drivers/gpu/host1x/job.c                         | 22 ++++++----------
+ drivers/media/pci/cx23885/cx23885-alsa.c         |  2 +-
+ drivers/media/pci/cx25821/cx25821-alsa.c         |  2 +-
+ drivers/media/pci/cx88/cx88-alsa.c               |  2 +-
+ drivers/media/pci/saa7134/saa7134-alsa.c         |  2 +-
+ drivers/media/platform/vsp1/vsp1_drm.c           |  9 ++++---
+ drivers/misc/fastrpc.c                           |  4 +--
+ drivers/rapidio/devices/rio_mport_cdev.c         |  8 +++---
+ drivers/staging/android/ion/ion.c                | 25 ++++++++----------
+ drivers/staging/android/ion/ion_heap.c           |  6 ++---
+ drivers/staging/android/ion/ion_system_heap.c    |  2 +-
+ drivers/staging/media/tegra-vde/iommu.c          |  4 +--
+ drivers/xen/gntdev-dmabuf.c                      |  7 +++---
+ include/linux/dma-mapping.h                      | 32 ++++++++++++++++++++++++
+ include/linux/iommu.h                            |  6 +++++
+ samples/vfio-mdev/mbochs.c                       |  3 ++-
+ 40 files changed, 202 insertions(+), 207 deletions(-)
+
 -- 
-2.18.2
+1.9.1
 
