@@ -2,147 +2,142 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F0AC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86395C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D4B720746
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:02:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6432820746
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:03:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="QPBVrk4u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729305AbgEEOCb (ORCPT
+        id S1729319AbgEEODI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:02:31 -0400
-Received: from mga07.intel.com ([134.134.136.100]:59050 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728135AbgEEOCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:02:31 -0400
-IronPort-SDR: jeQnvHRsA38Fnw2hH6WUZVJWTW0XwTKvzOpBEBQxFWOyX+jdjtwRp4nD7dK/QUs86wpHFdsUVK
- gITLkNzxwTDg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 07:02:30 -0700
-IronPort-SDR: 93rJmCyoHhkk+rriwwq3sVSXMgxCQaTQojB+DsunC9tjC67mNz+cjOU3RtLcD95EOedRbxzTAR
- aFKET6KsZ2CQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,355,1583222400"; 
-   d="scan'208";a="434495389"
-Received: from marshy.an.intel.com (HELO [10.122.105.159]) ([10.122.105.159])
-  by orsmga005.jf.intel.com with ESMTP; 05 May 2020 07:02:29 -0700
-Subject: Re: [PATCH 4/4 v2] firmware: stratix10-svc: Slightly simplify code
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        gregkh@linuxfoundation.org, atull@kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <cover.1588142343.git.christophe.jaillet@wanadoo.fr>
- <8c505c686438c54da61ad4fe15e1eae722011153.1588142343.git.christophe.jaillet@wanadoo.fr>
- <1f8ae50d-6830-7fbb-e999-3e8110fe7cd6@linux.intel.com>
- <c7ac6b7c-a1d5-e001-964b-0881707c41b1@wanadoo.fr>
- <2a1de0d5-444a-2680-10b5-8578c2670d54@linux.intel.com>
- <dab419d3-5942-fa89-a352-e8917ced0744@wanadoo.fr>
-From:   Richard Gong <richard.gong@linux.intel.com>
-Message-ID: <b3b70de2-73af-f136-749c-51e40be9ffdc@linux.intel.com>
-Date:   Tue, 5 May 2020 09:18:43 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 5 May 2020 10:03:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46796 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729247AbgEEODH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 10:03:07 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37F3AC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:03:06 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id y24so2472039wma.4
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 07:03:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=sewIQrOfMSMCFki5vvjbKoo8BkZz8WZa7NzooTrVnts=;
+        b=QPBVrk4u8bJ1lyN89axq0pdEKOmmpYRibOzYW9nIG6R7g/9gJVFV6ctaT8iBdUKdvE
+         UKqVm24R87Z+G6t4c+xieFb5HnHqsm9PsnsbYdN0/IyxhMLLe4qWBFTpRY3TR43BUQcJ
+         HzgxxM2cfl7MZ1UnQnpI7YpljOD+ekvKio1Vrf5ofqLNPTGwEXk969k4GdrLGfJE+YI6
+         PN4xsD86VY0ZuN1aQ79VgYNhb+8eTQmmtA4T1F5cgaoJYzI/3CliI4iabK5wwv0kUU9r
+         2Y7kIDZwYPSIG28sAGkYE+hzu8hM25jTiyicyfN9DUB/qeO+jSjC8pHYvFRah7uIc5ph
+         Y2Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=sewIQrOfMSMCFki5vvjbKoo8BkZz8WZa7NzooTrVnts=;
+        b=K8pWY3so/dU1p4oOPIqk6vF6c7xp3xy8WSp9eh3TXCv9KVRntMlMNkki12YzJdWFBG
+         8ykgtPa7kcZYK8N2srp3nSwud6lhMWqYHr55fqHbUmnTvkTLX4F5PL1g7rFo7Z1igpkS
+         qXqNrSb1XwW2QM1ryhF+Em8qCgTHWqOsKu9n5YwLCTBlRDqwlxyfqPKJX5zG2zFPohn6
+         +nwxAlieG0yu+XcxosUqSMGesbzGIwvSAH2XPCLr/wwXKp/fu5IeilXvwlL5+BuY+/MC
+         F4kFzkYhgD0zJz5A3saHrDTWfylP5+ZAxKntSlka7ZaN6aEWh75yI31qROtTB3Da/Yhl
+         MRuQ==
+X-Gm-Message-State: AGi0PuYG0wbIKV1pKcxh20z9SMQrFQzoE90xcU0E44GCbkPWZ5l+jr31
+        l1yAZBS7gb2/fyM1+yitCgGcvA==
+X-Google-Smtp-Source: APiQypKH83ab6otRmwy18VhA5GKakhCU3ceSapgu6ZcYgX3DVNjT64ntS3hfln0YNJ+gri577CJFIA==
+X-Received: by 2002:a1c:f609:: with SMTP id w9mr3451354wmc.123.1588687385015;
+        Tue, 05 May 2020 07:03:05 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id c190sm4075755wme.4.2020.05.05.07.03.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 07:03:04 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Felix Fietkau <nbd@openwrt.org>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 01/11] dt-bindings: add a binding document for MediaTek PERICFG controller
+Date:   Tue,  5 May 2020 16:02:21 +0200
+Message-Id: <20200505140231.16600-2-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200505140231.16600-1-brgl@bgdev.pl>
+References: <20200505140231.16600-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-In-Reply-To: <dab419d3-5942-fa89-a352-e8917ced0744@wanadoo.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-On 5/2/20 3:49 AM, Christophe JAILLET wrote:
-> Le 01/05/2020 à 18:55, Richard Gong a écrit :
->> Hi,
->>
->> On 5/1/20 10:48 AM, Christophe JAILLET wrote:
->>> Le 01/05/2020 à 17:40, Richard Gong a écrit :
->>>> Hi,
->>>>
->>>> On 4/29/20 1:52 AM, Christophe JAILLET wrote:
->>>>> Replace 'devm_kmalloc_array(... | __GFP_ZERO)' with the equivalent and
->>>>> shorter 'devm_kcalloc(...)'.
->>>>>
->>>> It doesn't make much sense.
->>>> Actually devm_kcalloc returns devm_kmalloc_array(.., flag | 
->>>> __GFP_ZERO).
->>>>
->>> The only goal is to have a sightly less verbose code.
->>> This saves one line of code and there is no need to wonder why we 
->>> explicitly pass __GFP_ZERO to kmalloc_array.
->>>
->>> Mostly a matter of taste.
->> I prefer this part remain unchanged.
->>
-> 
-> The easiest would be just to ignore this patch entirely
-Yes, please.
-  but if you need
-> a v3 for the series, could you tell me if you have any comments on the 3 
-> other patches?
-> 
-I added some comments in your patch #3, also recommend putting all 
-changes in one patch.
+This adds a binding document for the PERICFG controller present on
+MediaTek SoCs. For now the only variant supported is 'mt8516-pericfg'.
 
-Regards,
-Richard
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ .../arm/mediatek/mediatek,pericfg.yaml        | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
 
-> CJ
-> 
-> 
->> Regards,
->> Richard
->>
->>>
->>> 'devm_kcalloc' is inlined, so the binary should be exactly the same. >
->>> CJ
->>>
->>>>> 'ctrl->genpool' can not be NULL, so axe a useless test in the remove
->>>>> function.
->>>>>
->>>>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->>>>> ---
->>>>>   drivers/firmware/stratix10-svc.c | 6 ++----
->>>>>   1 file changed, 2 insertions(+), 4 deletions(-)
->>>>>
->>>>> diff --git a/drivers/firmware/stratix10-svc.c 
->>>>> b/drivers/firmware/stratix10-svc.c
->>>>> index 739004398877..c228337cb0a1 100644
->>>>> --- a/drivers/firmware/stratix10-svc.c
->>>>> +++ b/drivers/firmware/stratix10-svc.c
->>>>> @@ -1002,8 +1002,7 @@ static int stratix10_svc_drv_probe(struct 
->>>>> platform_device *pdev)
->>>>>       if (!controller)
->>>>>           return -ENOMEM;
->>>>>   -    chans = devm_kmalloc_array(dev, SVC_NUM_CHANNEL,
->>>>> -                   sizeof(*chans), GFP_KERNEL | __GFP_ZERO);
->>>>> +    chans = devm_kcalloc(dev, SVC_NUM_CHANNEL, sizeof(*chans), 
->>>>> GFP_KERNEL);
->>>>>       if (!chans)
->>>>>           return -ENOMEM;
->>>>>   @@ -1086,8 +1085,7 @@ static int stratix10_svc_drv_remove(struct 
->>>>> platform_device *pdev)
->>>>>           kthread_stop(ctrl->task);
->>>>>           ctrl->task = NULL;
->>>>>       }
->>>>> -    if (ctrl->genpool)
->>>>> -        gen_pool_destroy(ctrl->genpool);
->>>>> +    gen_pool_destroy(ctrl->genpool);
->>>>>       list_del(&ctrl->node);
->>>>>         return 0;
->>>>>
->>>>
->>>> Regards,
->>>> Richard
->>>>
->>>
->>
-> 
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
+new file mode 100644
+index 000000000000..74b2a6173ffb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
+@@ -0,0 +1,34 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/arm/mediatek/mediatek,pericfg.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: MediaTek Peripheral Configuration Controller
++
++maintainers:
++  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++        - enum:
++          - mediatek,pericfg
++        - const: syscon
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    pericfg: pericfg@10003050 {
++        compatible = "mediatek,mt8516-pericfg", "syscon";
++        reg = <0 0x10003050 0 0x1000>;
++    };
+-- 
+2.25.0
+
