@@ -2,154 +2,128 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F085AC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE46FC47259
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF92D206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:54:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588676057;
-	bh=aYqWgxDw5IsJh6TJ8GhppNLJSzt9m3CkVmWJNtjyYj8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=b86k5of+NYszmadIRHYjb6O+IH4qydlZGc3WbOy08AGbHbxAUscGIvpnoIYtoNBWD
-	 EutJE5WI5yXBnj8vbEhe4kWhuiODqFVgKqyXdPAKFbu64nsu3Pkt5a/jvfbSDifncJ
-	 PaRGBZfB0YlngWQDOT8dp40Sl4iIWjGot4u5lLIk=
+	by mail.kernel.org (Postfix) with ESMTP id 8FA0A20735
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:55:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="hH5li0cC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbgEEKyR (ORCPT
+        id S1728784AbgEEKzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 06:54:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32888 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728180AbgEEKyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 06:54:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E576206A5;
-        Tue,  5 May 2020 10:54:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588676055;
-        bh=aYqWgxDw5IsJh6TJ8GhppNLJSzt9m3CkVmWJNtjyYj8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LpmkD4yhNInpl3QPz4dnWFWoBI7wCZMXWIvaH63Gwj8Vd34Tie9w/eI4kSh8mjYbE
-         LeTJqsKggf6KCS+1jISsWYewd38EAWNn4FLJgBxIroiVP84QhAhoKfYqUD4hwPmjVT
-         qGzrNppK+vT1bNanDUIMgUL9GVb4R8244qIbVIiM=
-Date:   Tue, 5 May 2020 12:54:13 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Al Cooper <alcooperx@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v6 4/4] usb: host: Add ability to build new Broadcom STB
- USB drivers
-Message-ID: <20200505105413.GA93160@kroah.com>
-References: <20200430111258.6091-1-alcooperx@gmail.com>
- <20200430111258.6091-5-alcooperx@gmail.com>
+        Tue, 5 May 2020 06:55:38 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:64406 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728180AbgEEKzh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 06:55:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1588676137; x=1620212137;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=d+CEbn7A/FPIqL1jOQZTyvaEHjqgjmk+7wJrPTIxaDI=;
+  b=hH5li0cCQyA95pXCky4VHnK/DXKnbokYgcZYO7AGa4zn1JpeDQcyQLnb
+   iC/XyRxONchsGZQUicN0MNI2RLy5HehjsUdvBf9L8LK47vHrkozHjSGmF
+   InHn18BH0Nqtc/u8yb2uyuGCc+VjY6RUTwQv/GGy47jnponizGZLi8aod
+   4=;
+IronPort-SDR: tlE+amf1pNeoaJJ8vIvp5QLiqKx84kCjBNW5fwiQZiFwB3PSprJ4URmfFVjtexdLicbaDyD5MG
+ PSMFi22s28ZQ==
+X-IronPort-AV: E=Sophos;i="5.73,354,1583193600"; 
+   d="scan'208";a="33009948"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-9ec21598.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 05 May 2020 10:55:34 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-9ec21598.us-east-1.amazon.com (Postfix) with ESMTPS id C645EA1F53;
+        Tue,  5 May 2020 10:55:28 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 5 May 2020 10:55:28 +0000
+Received: from [192.168.13.172] (10.43.162.38) by EX13D01EUB001.ant.amazon.com
+ (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 5 May
+ 2020 10:55:19 +0000
+Subject: Re: [PATCH v6 2/2] EDAC: al-mc-edac: Introduce Amazon's Annapurna
+ Labs Memory Controller EDAC
+To:     Borislav Petkov <bp@alien8.de>
+CC:     <mchehab@kernel.org>, <james.morse@arm.com>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <nicolas.ferre@microchip.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <linux-edac@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <dwmw@amazon.co.uk>,
+        <benh@kernel.crashing.org>, <hhhawa@amazon.com>,
+        <ronenk@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
+        <eitan@amazon.com>
+References: <20200224134132.23924-1-talel@amazon.com>
+ <20200224134132.23924-3-talel@amazon.com> <20200428113950.GB11272@zn.tnic>
+ <46ccdb47-f28d-63f7-e759-1ba34e98add8@amazon.com>
+ <20200504183716.GJ15046@zn.tnic>
+From:   "Shenhar, Talel" <talel@amazon.com>
+Message-ID: <4d389169-89d1-4512-f6f0-c98477ab3623@amazon.com>
+Date:   Tue, 5 May 2020 13:55:14 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430111258.6091-5-alcooperx@gmail.com>
+In-Reply-To: <20200504183716.GJ15046@zn.tnic>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-Originating-IP: [10.43.162.38]
+X-ClientProxiedBy: EX13D14UWC003.ant.amazon.com (10.43.162.19) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 07:12:58AM -0400, Al Cooper wrote:
-> Add the build system changes needed to get the Broadcom STB XHCI,
-> EHCI and OHCI functionality working. The OHCI support does not
-> require anything unique to Broadcom so the standard ohci-platform
-> driver is being used. The link order for XHCI was changed in the
-> Makefile because of the way STB XHCI, EHCI and OHCI controllers
-> share a port which requires that the XHCI driver be initialized
-> first. Also update MAINTAINERS.
-> 
-> Signed-off-by: Al Cooper <alcooperx@gmail.com>
-> ---
->  MAINTAINERS               |  8 ++++++++
->  drivers/usb/host/Kconfig  | 16 ++++++++++++++++
->  drivers/usb/host/Makefile | 16 ++++++++++------
->  3 files changed, 34 insertions(+), 6 deletions(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 26f281d9f32a..6147ed78d212 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3481,6 +3481,14 @@ S:	Supported
->  F:	Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml
->  F:	drivers/i2c/busses/i2c-brcmstb.c
->  
-> +BROADCOM BRCMSTB USB EHCI DRIVER
-> +M:	Al Cooper <alcooperx@gmail.com>
-> +L:	linux-usb@vger.kernel.org
-> +L:	bcm-kernel-feedback-list@broadcom.com
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
-> +F:	drivers/usb/host/ehci-brcm.*
-> +
->  BROADCOM BRCMSTB USB2 and USB3 PHY DRIVER
->  M:	Al Cooper <alcooperx@gmail.com>
->  L:	linux-kernel@vger.kernel.org
-> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-> index 55bdfdf11e4c..7d58fd66e412 100644
-> --- a/drivers/usb/host/Kconfig
-> +++ b/drivers/usb/host/Kconfig
-> @@ -97,6 +97,22 @@ config USB_XHCI_TEGRA
->  
->  endif # USB_XHCI_HCD
->  
-> +config USB_EHCI_BRCMSTB
-> +       tristate
-> +
-> +config USB_BRCMSTB
-> +	tristate "Broadcom STB USB support"
-> +	depends on (ARCH_BRCMSTB && PHY_BRCM_USB) || COMPILE_TEST
-> +	select USB_OHCI_HCD_PLATFORM if USB_OHCI_HCD
-> +	select USB_EHCI_BRCMSTB if USB_EHCI_HCD
-> +	select USB_XHCI_PLATFORM if USB_XHCI_HCD
-> +	help
-> +	  Say Y to enable support for XHCI, EHCI and OHCI host controllers
-> +	  found in Broadcom STB SoC's.
-> +
-> +	  Disabling this will keep the controllers and corresponding
-> +	  PHYs powered down.
 
-Whhat are the module names?
-
-And why 2 config options here?
-
-> +
->  config USB_EHCI_HCD
->  	tristate "EHCI HCD (USB 2.0) support"
->  	depends on HAS_DMA && HAS_IOMEM
-> diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-> index b191361257cc..85fa6ace552a 100644
-> --- a/drivers/usb/host/Makefile
-> +++ b/drivers/usb/host/Makefile
-> @@ -37,6 +37,15 @@ endif
->  
->  obj-$(CONFIG_USB_PCI)	+= pci-quirks.o
->  
-> +# NOTE: BRCMSTB systems require that xhci driver be linked before the
-> +# ehci/ohci drivers.
-
-Why?  Please do this as a separate change before your makefile changes.
-
-And what else will this break?  We have relied on this link order for a
-very long time, changing it could cause issues...
-
-I don't see how your driver needs this, please explain in great detail.
-
-thanks,
-
-greg k-h
+On 5/4/2020 9:37 PM, Borislav Petkov wrote:
+>
+> On Mon, May 04, 2020 at 01:16:10PM +0300, Shenhar, Talel wrote:
+>>>> +     mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
+>>>> +                         sizeof(struct al_mc_edac));
+>>> You can let that line stick out.
+>> I rather avoid having this as a checkpatch warnning... (automation and
+>> stuff...)
+> checkpatch.pl - while useful - should not be taken to the letter and
+> human brain should be applied to sanity check it what it warns about.
+>
+>> This line break does seems to my eye as too hard to read.
+>>
+>> Let me know if you feel strongly about it.
+> I'm just sayin' - in the end of the day you'll be staring at that code -
+> not me - so whatever *you* prefer. :-)
+>
+> Just don't follow tools blindly.
+Thanks, I will leave it that way as it will make my life easier (with 
+automatic vim tools and automation) and doesn't really break code 
+understanding.
+>
+>>>> +     if (al_mc->irq_ue <= 0 || al_mc->irq_ce <= 0)
+>>> Shouldn't this be && here?
+>>>
+>>> I mean, you want to poll when neither of the IRQs can be found. But then
+>>> if you find one of them and not the other, what do you do? Poll and
+>>> interrupt? Is that case even possible?
+>> Correct.
+>>
+>> In case dt defined interrupt line only for one type and not for the other,
+>> than the interrupt mode shall be used for one of them while polling mode for
+>> the other.
+> That warrants a comment above it.
+Shall be part of v7.
+>
+> Thx.
+>
+> --
+> Regards/Gruss,
+>      Boris.
+>
+> https://people.kernel.org/tglx/notes-about-netiquette
