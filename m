@@ -2,348 +2,138 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F861C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA9D0C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 037E2206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F6F8206D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 00:55:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KJUmanRl"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VNmjKBsk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbgEEAro (ORCPT
+        id S1726863AbgEEAzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 20:47:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35942 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbgEEArn (ORCPT
+        Mon, 4 May 2020 20:55:03 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:55038 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbgEEAzC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 20:47:43 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 583F6C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 17:47:42 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id 207so240917pgc.6
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 17:47:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7Hv8FYkIIgHaMpc0l6U71Q1YcuTc0hBo/riFkGviInU=;
-        b=KJUmanRldAExcvGsb+cJXKIjlry6iUvKhrhpaSsW+61QYX+JKgkpCPcDfiSENB81Ge
-         FtZUU7BKWjLVrdRi1bpV/A0NV/mH3x4qvxhZ9lyOwaZprXHjonnPULIX83zneznlKTtF
-         d86gXdwJqtx6OtdZ+j6z6kQ0BT6k/yqlVYmHSmi+Q9W5cJ+fWwlzUccCpKnIHmmBKAGg
-         SN65OcK++Kid1hscv43XdcMETh2mUHg+9lETmWbMzPK9zWoNTb06UydiOJPzGpMYCllD
-         HnjncwTxkVZBBIwwpuAxYjGLcj58ggeX6IBH1rBuxq1SpLYfqOM4txRL18im2qZIyDA4
-         7nIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7Hv8FYkIIgHaMpc0l6U71Q1YcuTc0hBo/riFkGviInU=;
-        b=LFASv281IyvcVUUL41D+8y+ODjs5/bit8AM44bpvseqOdfyKsXNaI1BXD07XAvJVZd
-         vfuekJ1W+pbXv5UJE1D0lPu++m5tdIYXYXqDwFlA/qBgF5oaeVq7Jn21ypt+zYYfM0LD
-         52FUZHJqKQutznj8vpiXb4Ft84l0bebX3DtuGPTH2xHJvYx1UejLw2Puz+LOI9ll1cSY
-         w24Dafwr81YV3wgOfuucOVZg7jn4HdS4e7MiqVDcSmoA/T1CidZkGV6t7UEYhNRisH5o
-         hJG1iSf926R5Wu7wuKa5YuKIDGnAPm2KRolfol6DaVApZNWnihlesc7yyJALkVHw5DTy
-         g14A==
-X-Gm-Message-State: AGi0PuYaQ72CfSOnBzfqR2wCv3q3edzhvvwA5K0uYuP2kHdCT16A3Ux7
-        WSbtwXKNcN/dII9X/imPCeGIDg==
-X-Google-Smtp-Source: APiQypLg7g1ozfNCQPDF4B5ydlgy5jTdVVkCcs61BoN5r+lFwYrI99rIFsbtzUM6PDN6dVwYxB3YVg==
-X-Received: by 2002:a63:5a41:: with SMTP id k1mr861073pgm.424.1588639661583;
-        Mon, 04 May 2020 17:47:41 -0700 (PDT)
-Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
-        by smtp.gmail.com with ESMTPSA id i8sm269103pfq.126.2020.05.04.17.47.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 17:47:40 -0700 (PDT)
-Date:   Mon, 4 May 2020 17:47:38 -0700
-From:   Fangrui Song <maskray@google.com>
-To:     Sedat Dilek <sedat.dilek@gmail.com>,
-        Nick Desaulniers <nick.desaulniers@gmail.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
+        Mon, 4 May 2020 20:55:02 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0450nBAw033812;
+        Tue, 5 May 2020 00:54:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=b3hPsJgnAq/dGfbpEbMlQqeRtWLtkJ/rfPDyw2Kx044=;
+ b=VNmjKBskPOyZS197EmCQoi9ZiqIP06MS+SawxA9c3nHNfIvLXhhdrxqFyezuH6cEMFWU
+ mPBV25shFRDsnHQMLyib/s1z7f6rPTjH2thwc4QUn+mUf6axExVTuX/afF42wvquiZ0b
+ dxp7tOuXFQFc0j5gYOtHOGvKUHpe/h+JLBjJVtJUqn0LTAVMG7nyP1saa/UUZHPJyemd
+ DYOvxf+AdvztjhEMfYbcqOdKsy2me3SyAgD0S50D3BfwUJ6WABhXDe16/rvpTWwWkN5q
+ wRdJZQ50aqgW/OmgkaqhXFSIBn9y8DNGKMdnJTFUY8Cp7L2ZLQAMs4ysE+QtFsdLARV7 Ag== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 30s0tma05p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 05 May 2020 00:54:19 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0450kWUb096333;
+        Tue, 5 May 2020 00:54:19 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 30sjjx9k42-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 05 May 2020 00:54:19 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0450sBVI006589;
+        Tue, 5 May 2020 00:54:11 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 04 May 2020 17:54:11 -0700
+Date:   Mon, 4 May 2020 20:54:33 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@intel.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Randy Dunlap <rdunlap@infradead.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] Makefile: support compressed debug info
-Message-ID: <20200505004738.ew2lcp27c2n4jqia@google.com>
-References: <20200504031340.7103-1-nick.desaulniers@gmail.com>
- <CA+icZUUOaqeKeh6n4BJq2k6XQWAfNghUj57j42ZX5qyd3iOmLw@mail.gmail.com>
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Tejun Heo <tj@kernel.org>, Zi Yan <ziy@nvidia.com>,
+        linux-crypto@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 5/7] mm: move zone iterator outside of
+ deferred_init_maxorder()
+Message-ID: <20200505005432.bohmaa6zeffhdkgn@ca-dmjordan1.us.oracle.com>
+References: <20200430201125.532129-1-daniel.m.jordan@oracle.com>
+ <20200430201125.532129-6-daniel.m.jordan@oracle.com>
+ <deadac9a-fbef-6c66-207c-83d251d2ef50@linux.intel.com>
+ <20200501024539.tnjuybydwe3r4u2x@ca-dmjordan1.us.oracle.com>
+ <CAKgT0Uctro3+PWeJTi=O3Yc2qUF8Oy+HrypzCUzkaCt=XH0Lkg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+icZUUOaqeKeh6n4BJq2k6XQWAfNghUj57j42ZX5qyd3iOmLw@mail.gmail.com>
+In-Reply-To: <CAKgT0Uctro3+PWeJTi=O3Yc2qUF8Oy+HrypzCUzkaCt=XH0Lkg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 phishscore=0
+ bulkscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005050003
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 spamscore=0 suspectscore=0
+ phishscore=0 clxscore=1015 bulkscore=0 mlxlogscore=999 adultscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005050003
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, May 04, 2020 at 03:10:46PM -0700, Alexander Duyck wrote:
+> So we cannot stop in the middle of a max order block. That shouldn't
+> be possible as part of the issue is that the buddy allocator will
+> attempt to access the buddy for the page which could cause issues if
+> it tries to merge the page with one that is not initialized. So if
+> your code supports that then it is definitely broken. That was one of
+> the reasons for all of the variable weirdness in
+> deferred_init_maxorder. I was going through and making certain that
+> while we were initializing the range we were freeing the pages in
+> MAX_ORDER aligned blocks and skipping over whatever reserved blocks
+> were there. Basically it was handling the case where a single
+> MAX_ORDER block could span multiple ranges.
+> 
+> On x86 this was all pretty straightforward and I don't believe we
+> needed the code, but I seem to recall there were some other
+> architectures that had more complex memory layouts at the time and
+> that was one of the reasons why I had to be careful to wait until I
+> had processed the full MAX_ORDER block before I could start freeing
+> the pages, otherwise it would start triggering memory corruptions.
 
-On 2020-05-04, Sedat Dilek wrote:
->On Mon, May 4, 2020 at 5:13 AM Nick Desaulniers
-><nick.desaulniers@gmail.com> wrote:
->>
->> As debug information gets larger and larger, it helps significantly save
->> the size of vmlinux images to compress the information in the debug
->> information sections. Note: this debug info is typically split off from
->> the final compressed kernel image, which is why vmlinux is what's used
->> in conjunction with GDB. Minimizing the debug info size should have no
->> impact on boot times, or final compressed kernel image size.
->>
->> All of the debug sections will have a `C` flag set.
->> $ readelf -S <object file>
->>
->> $ bloaty vmlinux.gcc75.compressed.dwarf4 -- \
->>     vmlinux.gcc75.uncompressed.dwarf4
->>
->>     FILE SIZE        VM SIZE
->>  --------------  --------------
->>   +0.0%     +18  [ = ]       0    [Unmapped]
->>  -73.3%  -114Ki  [ = ]       0    .debug_aranges
->>  -76.2% -2.01Mi  [ = ]       0    .debug_frame
->>  -73.6% -2.89Mi  [ = ]       0    .debug_str
->>  -80.7% -4.66Mi  [ = ]       0    .debug_abbrev
->>  -82.9% -4.88Mi  [ = ]       0    .debug_ranges
->>  -70.5% -9.04Mi  [ = ]       0    .debug_line
->>  -79.3% -10.9Mi  [ = ]       0    .debug_loc
->>  -39.5% -88.6Mi  [ = ]       0    .debug_info
->>  -18.2%  -123Mi  [ = ]       0    TOTAL
->>
->> $ bloaty vmlinux.clang11.compressed.dwarf4 -- \
->>     vmlinux.clang11.uncompressed.dwarf4
->>
->>     FILE SIZE        VM SIZE
->>  --------------  --------------
->>   +0.0%     +23  [ = ]       0    [Unmapped]
->>  -65.6%    -871  [ = ]       0    .debug_aranges
->>  -77.4% -1.84Mi  [ = ]       0    .debug_frame
->>  -82.9% -2.33Mi  [ = ]       0    .debug_abbrev
->>  -73.1% -2.43Mi  [ = ]       0    .debug_str
->>  -84.8% -3.07Mi  [ = ]       0    .debug_ranges
->>  -65.9% -8.62Mi  [ = ]       0    .debug_line
->>  -86.2% -40.0Mi  [ = ]       0    .debug_loc
->>  -42.0% -64.1Mi  [ = ]       0    .debug_info
->>  -22.1%  -122Mi  [ = ]       0    TOTAL
->>
->
->Hi Nick,
->
->thanks for the patch.
->
->I have slightly modified it to adapt to Linux v5.7-rc4 (what was your base?).
->
->Which linker did you use and has it an impact if you switch from
->ld.bfd to ld.lld?
+Yes, thanks, I missed the case where deferred_grow_zone could stop
+mid-max-order-block.
 
-lld has supported the linker option --compress-debug-sections=zlib since
-about 5.0.0 (https://reviews.llvm.org/D31941)
+Maybe it's better to leave deferred_init_maxorder alone and adapt the
+multithreading to the existing implementation.  That'd mean dealing with the
+pesky opaque index somehow, so deferred_init_mem_pfn_range_in_zone() could be
+generalized to find it in the thread function based on the start/end range, or
+it could be maintained as part of the range that padata passes to the thread
+function.
 
->I tried a first normal run and in a 2nd one with
->CONFIG_DEBUG_INFO_COMPRESSED=y both with clang-10 and ld.lld-10.
->
->My numbers (sizes in MiB):
->
->[ diffconfig ]
->
->$ scripts/diffconfig /boot/config-5.7.0-rc4-1-amd64-clang
->/boot/config-5.7.0-rc4-2-amd64-clang
-> BUILD_SALT "5.7.0-rc4-1-amd64-clang" -> "5.7.0-rc4-2-amd64-clang"
->+DEBUG_INFO_COMPRESSED y
->
->[ compiler and linker ]
->
->$ clang-10 -v
->ClangBuiltLinux clang version 10.0.1
->(https://github.com/llvm/llvm-project
->92d5c1be9ee93850c0a8903f05f36a23ee835dc2)
->Target: x86_64-unknown-linux-gnu
->Thread model: posix
->InstalledDir: /home/dileks/src/llvm-toolchain/install/bin
->Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/10
->Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/8
->Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/9
->Selected GCC installation: /usr/lib/gcc/x86_64-linux-gnu/10
->Candidate multilib: .;@m64
->Candidate multilib: 32;@m32
->Candidate multilib: x32;@mx32
->Selected multilib: .;@m64
->
->$ ld.lld-10 -v
->LLD 10.0.1 (https://github.com/llvm/llvm-project
->92d5c1be9ee93850c0a8903f05f36a23ee835dc2) (compatible with GNU
->linkers)
->
->[ sizes vmlinux ]
->
->$ du -m 5.7.0-rc4-*/vmlinux*
->409     5.7.0-rc4-1-amd64-clang/vmlinux
->7       5.7.0-rc4-1-amd64-clang/vmlinux.compressed
->404     5.7.0-rc4-1-amd64-clang/vmlinux.o
->324     5.7.0-rc4-2-amd64-clang/vmlinux
->7       5.7.0-rc4-2-amd64-clang/vmlinux.compressed
->299     5.7.0-rc4-2-amd64-clang/vmlinux.o
->
->[ readelf (.debug_info as example) ]
->
->$ readelf -S vmlinux.o
->  [33] .debug_info       PROGBITS         0000000000000000  01d6a5e8
->       0000000006be1ee6  0000000000000000           0     0     1
->
->$ readelf -S vmlinux.o
->  [33] .debug_info       PROGBITS         0000000000000000  01749f18
->       0000000002ef04d2  0000000000000000   C       0     0     1 <---
->XXX: "C (compressed)" Flag
->
->Key to Flags:
->  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
->  L (link order), O (extra OS processing required), G (group), T (TLS),
->  C (compressed), x (unknown), o (OS specific), E (exclude),
->  l (large), p (processor specific)
->
->[ sizes linux-image debian packages ]
->
->$ du -m 5.7.0-rc4-*/linux-image*.deb
->47      5.7.0-rc4-1-amd64-clang/linux-image-5.7.0-rc4-1-amd64-clang_5.7.0~rc4-1~bullseye+dileks1_amd64.deb
->424     5.7.0-rc4-1-amd64-clang/linux-image-5.7.0-rc4-1-amd64-clang-dbg_5.7.0~rc4-1~bullseye+dileks1_amd64.deb
->47      5.7.0-rc4-2-amd64-clang/linux-image-5.7.0-rc4-2-amd64-clang_5.7.0~rc4-2~bullseye+dileks1_amd64.deb
->771     5.7.0-rc4-2-amd64-clang/linux-image-5.7.0-rc4-2-amd64-clang-dbg_5.7.0~rc4-2~bullseye+dileks1_amd64.deb
->
->[ sizes linux-git dir (compilation finished ]
->
->5.7.0-rc4-1-amd64-clang: 17963   /home/dileks/src/linux-kernel/linux
->5.7.0-rc4-2-amd64-clang: 14328   /home/dileks/src/linux-kernel/linux
->
->[ xz compressed linux-image-dbg packages ]
->
->$ file linux-image-5.7.0-rc4-1-amd64-clang-dbg_5.7.0~rc4-1~bullseye+dileks1_amd64.deb
->linux-image-5.7.0-rc4-1-amd64-clang-dbg_5.7.0~rc4-1~bullseye+dileks1_amd64.deb:
->Debian binary package (format 2.0), with control.tar.xz, data
->compression xz
->$ file linux-image-5.7.0-rc4-2-amd64-clang-dbg_5.7.0~rc4-2~bullseye+dileks1_amd64.deb
->linux-image-5.7.0-rc4-2-amd64-clang-dbg_5.7.0~rc4-2~bullseye+dileks1_amd64.deb:
->Debian binary package (format 2.0), with control.tar.xz, data
->compression xz
->
->[ file-lists ]
->
->$ dpkg --contents
->linux-image-5.7.0-rc4-1-amd64-clang-dbg_5.7.0~rc4-1~bullseye+dileks1_amd64.deb
->| wc -l
->4395
->$ dpkg --contents
->linux-image-5.7.0-rc4-2-amd64-clang-dbg_5.7.0~rc4-2~bullseye+dileks1_amd64.deb
->| wc -l
->4395
->
->[ file-lists vmlinux ]
->
->$ dpkg --contents
->linux-image-5.7.0-rc4-1-amd64-clang-dbg_5.7.0~rc4-1~bullseye+dileks1_amd64.deb
->| grep vmlinux
->-rwxr-xr-x root/root 428588312 2020-05-04 06:15
->./usr/lib/debug/lib/modules/5.7.0-rc4-1-amd64-clang/vmlinux
->lrwxrwxrwx root/root         0 2020-05-04 06:15
->./usr/lib/debug/boot/vmlinux-5.7.0-rc4-1-amd64-clang ->
->../lib/modules/5.7.0-rc4-1-amd64-clang/vmlinux
->lrwxrwxrwx root/root         0 2020-05-04 06:15
->./usr/lib/debug/vmlinux-5.7.0-rc4-1-amd64-clang ->
->lib/modules/5.7.0-rc4-1-amd64-clang/vmlinux
->
->$ dpkg --contents
->linux-image-5.7.0-rc4-2-amd64-clang-dbg_5.7.0~rc4-2~bullseye+dileks1_amd64.deb
->| grep vmlinux
->-rwxr-xr-x root/root 339341456 2020-05-04 12:24
->./usr/lib/debug/lib/modules/5.7.0-rc4-2-amd64-clang/vmlinux
->lrwxrwxrwx root/root         0 2020-05-04 12:24
->./usr/lib/debug/boot/vmlinux-5.7.0-rc4-2-amd64-clang ->
->../lib/modules/5.7.0-rc4-2-amd64-clang/vmlinux
->lrwxrwxrwx root/root         0 2020-05-04 12:24
->./usr/lib/debug/vmlinux-5.7.0-rc4-2-amd64-clang ->
->lib/modules/5.7.0-rc4-2-amd64-clang/vmlinux
->
->[ conclusion ]
->
->As you can see there is a size-reduction in case of vmlinux/vmlinux.o
->(debug) files...
->...and my linux-git directory in total is smaller: 17963M vs. 14328M.
->
->But the resulting linux-image-dbg file is much fatter: 424M vs. 711M.
->XZ-compressing the gz/zlib-compressed vmlinux (debug) file results in
->a fatter linux-image-dbg package.
->
->For a usage of vmlinux (debug) in a VM scenario this might be nice but
->seen from a debian repository perspective not.
->
->For the sake of completeness:  I have just installed and booted the
->"normal" linux-image debian package - not the debug packages.
->
->Thanks.
->
->Regards,
->- Sedat -
->
->> Suggested-by: David Blaikie <blakie@google.com>
->> Signed-off-by: Nick Desaulniers <nick.desaulniers@gmail.com>
->> ---
->>  Makefile          | 5 +++++
->>  lib/Kconfig.debug | 9 +++++++++
->>  2 files changed, 14 insertions(+)
->>
->> diff --git a/Makefile b/Makefile
->> index 981eb902384b..313a054e5dc6 100644
->> --- a/Makefile
->> +++ b/Makefile
->> @@ -825,6 +825,11 @@ ifdef CONFIG_DEBUG_INFO_REDUCED
->>  DEBUG_CFLAGS   += $(call cc-option, -femit-struct-debug-baseonly) \
->>                    $(call cc-option,-fno-var-tracking)
->>  endif
->> +
->> +ifdef CONFIG_DEBUG_INFO_COMPRESSED
->> +DEBUG_CFLAGS   += -gz=zlib
->> +KBUILD_LDFLAGS += --compress-debug-sections=zlib
->> +endif
->>  endif
->>
->>  KBUILD_CFLAGS += $(DEBUG_CFLAGS)
->> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
->> index f6f9a039f736..1f4a47ba6c1b 100644
->> --- a/lib/Kconfig.debug
->> +++ b/lib/Kconfig.debug
->> @@ -213,6 +213,15 @@ config DEBUG_INFO_REDUCED
->>           DEBUG_INFO build and compile times are reduced too.
->>           Only works with newer gcc versions.
->>
->> +config DEBUG_INFO_COMPRESSED
->> +       bool "Compressed debugging information"
->> +       depends on DEBUG_INFO
->> +       depends on $(cc-option,-gz=zlib)
->> +       depends on $(ld-option,--compress-debug-sections=zlib)
->> +       help
->> +         Compress the debug information using zlib.  Requires GCC 5.0+ or Clang
->> +         5.0+.
->> +
-
-linker option --compress-debug-sections=zlib require binutils >= 2.26 (ld-option)
-Assembler option --compress-debug-sections=zlib also require binutils >= 2.26 (cc-option,-gz=zlib)
-
->>  config DEBUG_INFO_SPLIT
->>         bool "Produce split debuginfo in .dwo files"
->>         depends on DEBUG_INFO
->> --
->> 2.17.1
->>
->> --
->> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
->> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
->> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200504031340.7103-1-nick.desaulniers%40gmail.com.
->
->-- 
->You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
->To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
->To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/CA%2BicZUUOaqeKeh6n4BJq2k6XQWAfNghUj57j42ZX5qyd3iOmLw%40mail.gmail.com.
+Or, keep this patch but make sure deferred_grow_zone stops on a
+max-order-aligned boundary.
