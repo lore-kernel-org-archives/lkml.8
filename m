@@ -2,166 +2,145 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B80C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF5DC47259
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D08622075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:02:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n4aYqZKu"
+	by mail.kernel.org (Postfix) with ESMTP id 4CDA8206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:03:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588716213;
+	bh=Z9c+r8PxKZxEtgGd3nEnLIJdWoPtqFf9Y5y1BKY3hYw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gQkdVbXDSJY2WhbSREYT2Jt9WR7qwFpmbvAPnuFd793zESN4WKgQd4pSPXrUCbJrK
+	 2xz+pRKsV7CBBHB8rMSv4b7JPdO3nzGTQzKK0f0QQbJGuIeDlALS0wFupTkGn5dGf5
+	 /ldzBHyrX1kKtpRYAjizsTw24MVWwSZppJ5S/j3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729387AbgEEWCa (ORCPT
+        id S1729427AbgEEWDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 18:02:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37648 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727089AbgEEWC1 (ORCPT
+        Tue, 5 May 2020 18:03:32 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:53243 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727089AbgEEWDb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 18:02:27 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48A02C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 15:02:27 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id 207so151029pgc.6
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 15:02:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=meutyvpqi9+qTZ06UEsokNwwGPTMphxT3NcJSXe1Pt4=;
-        b=n4aYqZKuQDutp5OyuzgrDrbOfw46qnS5p3WJa9OrEVIOe7YEDc6L8MVm0rNqy/CM0v
-         EPXZs5B3vT9m/tCOyzVjW/ooXqk0Um9CTxmTKrdzOvr1UOvH2Qk+/a+xz1RKzAlgxxn/
-         +pdlW8483sPcBESg7tKJJzIWd/1En/kGux6bn2UKHxYtc/9s18CqMNz47UQ6MYEfRyON
-         uM9jikZBuhRPBp+wtcIzN7M6atPXrcF1VQeK5vlUAZCtcNvMhPHTK3gJNWy4Je8tr7UI
-         10hnifAwGP79iZJF9wqmIjs6NXBm00T1eiSZGgBgbmWGwd3IxBq9B+PC6QeOHFPTBGiF
-         B18Q==
+        Tue, 5 May 2020 18:03:31 -0400
+Received: by mail-pj1-f65.google.com with SMTP id a5so222061pjh.2;
+        Tue, 05 May 2020 15:03:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=meutyvpqi9+qTZ06UEsokNwwGPTMphxT3NcJSXe1Pt4=;
-        b=JJK9XJfHNhikRIYXlNRCyAlYwrzsK7ANmt3VgLL3NvuWAt/f7IBV/u6Qp3E5XpoiRs
-         yR2jx4KqRnCYO/yWg0exExU021BTa5aoQzrA9OyPo/awhBynYB0t7sgtom4LEbSDQHDC
-         qjoGbmN6vZZakfoMGVsX0Z8QcVV655IGxTUh8t4F6WFwnvtX/mLs7ZOabvlaopW60Dq3
-         Wod/ix2xhqzg/OeLbvV7BSBAUCJrir60zsrk4WyOHdGYElR4riNgOBF0X1r/byWbyiwb
-         kqygQMRPfmaOekhfB/liirb3xF0eHz4YqqQhZ4a+MA9eJrz+5VA3ioFftRjjuMPd/rfk
-         LXpQ==
-X-Gm-Message-State: AGi0PuYRVCFvHe5i1urOY6SMbV+dzyj9edrcV+H7n0Ze9SiP4fUNU6AI
-        2iyma+jOi6ZadT+3Bz+XwX6YfdiYcdi21042hGqXqQ==
-X-Google-Smtp-Source: APiQypII92fzip+jhi9hD7251MPhAj00NvB2R8OUBsp6nQByudV49fC3OMI4LGDz7JOTRwkDao417VvP6RNTwjyMCU0=
-X-Received: by 2002:a65:5ac4:: with SMTP id d4mr4267862pgt.381.1588716146345;
- Tue, 05 May 2020 15:02:26 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Lpi8MZJNSPhbvdnHwiB6LcQYNoz5iZcaJ91eFfyKq3I=;
+        b=geI9MTUj1lyPkZ6fBPt5FJYeshQsIPP/s+oHHztUNcJj7IdUqMo+evq4LFpdUQivEa
+         lSRzjWEebJ/u1iWrI+1AsjhUNwYOaSDTiAbXF21NkuNX0q1iAWn1naq4U1+yaH1trPsf
+         Hd5Hv58GIHH7+Y2Z2JROXAiCP62yt1RjcqsKfaRXtn1vh5Nx/iA8Vh66cJCgnkzNqomy
+         VxDIIeaFEKuRtXrs6w4xx3BlI5/UNwjGee2LaY6j4ZHECp2vKu4XsbH7+bqPJvEeAAcC
+         iFPbAmVIGtNAp8dbXOEE3oxc0woIneqcpg4i+qPcmTjcrmEjzbXEbDBMC7ocGs6gsHsf
+         zaUA==
+X-Gm-Message-State: AGi0PuaI+bfXcfyeEtAqflMDmrsiPPI//nVDfM0ejAvPB7zWVx8JGeDE
+        NLGVNVrnNwy+9sv0aJp/B/A=
+X-Google-Smtp-Source: APiQypIlQ7vp+PigyBUJjXs2IzjQDASyZB2j0a3df8Yc3dcT5dEuIN8kzQWJl3UYEKmIcOD1rDvh5g==
+X-Received: by 2002:a17:90a:3ace:: with SMTP id b72mr5651418pjc.48.1588716209523;
+        Tue, 05 May 2020 15:03:29 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id b73sm9201pfb.52.2020.05.05.15.03.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 15:03:28 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 5616C403EA; Tue,  5 May 2020 22:03:27 +0000 (UTC)
+Date:   Tue, 5 May 2020 22:03:27 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sysctl: Make sure proc handlers can't expose heap memory
+Message-ID: <20200505220327.GV11244@42.do-not-panic.com>
+References: <202005041205.C7AF4AF@keescook>
+ <20200504195937.GS11244@42.do-not-panic.com>
+ <202005041329.169799C65D@keescook>
+ <20200504215903.GT11244@42.do-not-panic.com>
+ <20200505063441.GA3877399@kroah.com>
+ <202005051339.5F1979C4DF@keescook>
 MIME-Version: 1.0
-References: <CAHmME9oMcfY4nwkknwN9c4rB-O7xD4GCAOFPoZCbdnq=034=Vw@mail.gmail.com>
- <20200505215503.691205-1-Jason@zx2c4.com>
-In-Reply-To: <20200505215503.691205-1-Jason@zx2c4.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 5 May 2020 15:02:16 -0700
-Message-ID: <CAKwvOdk32cDowvrqRPKDRpf2ZiXh=jVnBTmhM-NWD=Ownq9v3w@mail.gmail.com>
-Subject: Re: [PATCH] Kbuild: disable FORTIFY_SOURCE on clang-10
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        George Burgess <gbiv@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202005051339.5F1979C4DF@keescook>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 2:55 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
->
-> clang-10 has a broken optimization stage that doesn't enable the
-> compiler to prove at compile time that certain memcpys are within
-> bounds, and thus the outline memcpy is always called, resulting in
-> horrific performance, and in some cases, excessive stack frame growth.
-> Here's a simple reproducer:
->
->     typedef unsigned long size_t;
->     void *c(void *dest, const void *src, size_t n) __asm__("memcpy");
->     extern inline __attribute__((gnu_inline)) void *memcpy(void *dest, const void *src, size_t n) { return c(dest, src, n); }
->     void blah(char *a)
->     {
->       unsigned long long b[10], c[10];
->       int i;
->
->       memcpy(b, a, sizeof(b));
->       for (i = 0; i < 10; ++i)
->         c[i] = b[i] ^ b[9 - i];
->       for (i = 0; i < 10; ++i)
->         b[i] = c[i] ^ a[i];
->       memcpy(a, b, sizeof(b));
->     }
->
-> Compile this with clang-9 and clang-10 and observe:
->
-> zx2c4@thinkpad /tmp/curve25519-hacl64-stack-frame-size-test $ clang-10 -Wframe-larger-than=0 -O3 -c b.c -o c10.o
-> b.c:5:6: warning: stack frame size of 104 bytes in function 'blah' [-Wframe-larger-than=]
-> void blah(char *a)
->      ^
-> 1 warning generated.
-> zx2c4@thinkpad /tmp/curve25519-hacl64-stack-frame-size-test $ clang-9 -Wframe-larger-than=0 -O3 -c b.c -o c9.o
->
-> Looking at the disassembly of c10.o and c9.o, one can see that c9.o is
-> properly optimized in the obvious way one would expect, while c10.o has
-> blown up and includes extern calls to memcpy.
->
-> This is present on the most trivial bits of code. Thus, for clang-10, we
-> just set __NO_FORTIFY globally, so that this issue won't be incurred.
->
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: LKML <linux-kernel@vger.kernel.org>
-> Cc: clang-built-linux <clang-built-linux@googlegroups.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: George Burgess <gbiv@google.com>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Link: https://bugs.llvm.org/show_bug.cgi?id=45802
-> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+On Tue, May 05, 2020 at 01:41:44PM -0700, Kees Cook wrote:
+> On Tue, May 05, 2020 at 08:34:41AM +0200, Greg KH wrote:
+> > On Mon, May 04, 2020 at 09:59:03PM +0000, Luis Chamberlain wrote:
+> > > On Mon, May 04, 2020 at 01:32:07PM -0700, Kees Cook wrote:
+> > > > On Mon, May 04, 2020 at 07:59:37PM +0000, Luis Chamberlain wrote:
+> > > > > On Mon, May 04, 2020 at 12:08:55PM -0700, Kees Cook wrote:
+> > > > > > Just as a precaution, make sure that proc handlers don't accidentally
+> > > > > > grow "count" beyond the allocated kbuf size.
+> > > > > > 
+> > > > > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > > > > ---
+> > > > > > This applies to hch's sysctl cleanup tree...
+> > > > > > ---
+> > > > > >  fs/proc/proc_sysctl.c | 3 +++
+> > > > > >  1 file changed, 3 insertions(+)
+> > > > > > 
+> > > > > > diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+> > > > > > index 15030784566c..535ab26473af 100644
+> > > > > > --- a/fs/proc/proc_sysctl.c
+> > > > > > +++ b/fs/proc/proc_sysctl.c
+> > > > > > @@ -546,6 +546,7 @@ static ssize_t proc_sys_call_handler(struct file *filp, void __user *ubuf,
+> > > > > >  	struct inode *inode = file_inode(filp);
+> > > > > >  	struct ctl_table_header *head = grab_header(inode);
+> > > > > >  	struct ctl_table *table = PROC_I(inode)->sysctl_entry;
+> > > > > > +	size_t count_max = count;
+> > > > > >  	void *kbuf;
+> > > > > >  	ssize_t error;
+> > > > > >  
+> > > > > > @@ -590,6 +591,8 @@ static ssize_t proc_sys_call_handler(struct file *filp, void __user *ubuf,
+> > > > > >  
+> > > > > >  	if (!write) {
+> > > > > >  		error = -EFAULT;
+> > > > > > +		if (WARN_ON(count > count_max))
+> > > > > > +			count = count_max;
+> > > > > 
+> > > > > That would crash a system with panic-on-warn. I don't think we want that?
+> > > > 
+> > > > Eh? None of the handlers should be making this mistake currently and
+> > > > it's not a mistake that can be controlled from userspace. WARN() is
+> > > > absolutely what's wanted here: report an impossible situation (and
+> > > > handle it gracefully for the bulk of users that don't have
+> > > > panic_on_warn set).
+> > > 
+> > > Alrighty, Greg are you OK with this type of WARN_ON()? You recently
+> > > expressed concerns over its use due to panic-on-warn on another patch.
+> > 
+> > We should never call WARN() on any path that a user can trigger.
+> > 
+> > If it is just a "the developer called this api in a foolish way" then we
+> > could use a WARN_ON() to have them realize their mistake, but in my
+> > personal experience, foolish developers don't even notice that kind of
+> > mistake :(
+> 
+> Right -- while it'd be nice if the developer noticed it, it is _usually_
+> an unsuspecting end user (or fuzzer), in which case we absolutely want a
+> WARN (and not a BUG![1]) and have the situations handled gracefully, so
+> it can be reported and fixed.
 
-I'm going to request this not be merged until careful comment from
-George and Kees. My hands are quite full at the moment with other
-regressions.  I suspect these threads may be relevant, though I
-haven't had time to read through them myself.
-https://github.com/ClangBuiltLinux/linux/issues/979
-https://github.com/ClangBuiltLinux/linux/pull/980
+I've been using WARN*() for this exact purpose before, so I am as
+surprised as you are bout these concerns. However if we have folks
+shipping with panic-on-warn this would be rather detrimental to our
+goals.
 
+Greg, are you aware of folks shipping with panic-on-warn on some products?
 
-> ---
->  Makefile | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/Makefile b/Makefile
-> index 49b2709ff44e..f022f077591d 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -768,6 +768,13 @@ KBUILD_CFLAGS += -Wno-gnu
->  # source of a reference will be _MergedGlobals and not on of the whitelisted names.
->  # See modpost pattern 2
->  KBUILD_CFLAGS += -mno-global-merge
-> +
-> +# clang-10 has a broken optimization stage that causes memcpy to always be
-> +# outline, resulting in excessive stack frame growth and poor performance.
-> +ifeq ($(shell test $(CONFIG_CLANG_VERSION) -ge 100000 && test $(CONFIG_CLANG_VERSION) -lt 110000; echo $$?),0)
-> +KBUILD_CFLAGS += -D__NO_FORTIFY
-> +endif
-> +
->  else
->
->  # These warnings generated too much noise in a regular build.
-> --
-> 2.26.2
->
-
-
--- 
-Thanks,
-~Nick Desaulniers
+  Luis
