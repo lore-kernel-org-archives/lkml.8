@@ -2,93 +2,127 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47664C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D8FC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 237332073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 401AC20735
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:54:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TG31h2lH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729142AbgEENym (ORCPT
+        id S1729164AbgEENyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 09:54:42 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:38735 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728180AbgEENym (ORCPT
+        Tue, 5 May 2020 09:54:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45476 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728180AbgEENyn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 09:54:42 -0400
-Received: from localhost.localdomain ([149.172.19.189]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1N8nnU-1j2qMm3NRe-015q6x; Tue, 05 May 2020 15:54:10 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        David Sterba <dsterba@suse.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Eric Biggers <ebiggers@google.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] crypto: blake2b - Fix clang optimization for ARMv7-M
-Date:   Tue,  5 May 2020 15:53:45 +0200
-Message-Id: <20200505135402.29356-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Jcy6N4TaUxzCTLGwDtoilz/VHBm8v5Cw2d3wSP9VaYY8DkkSDHc
- IjwbOhFL9N5vR7J3y8bL/HUgEQnv+/SEY1R6u5YlCOKSjKCeyDhZKQbc7NIMiMLvgLL9X0M
- ss0Dt2APwE1Lac9XpGyvrEmmt3SkvzgIZ/aqUw7TCW6ToUqhFuq0wwYhBIdXnNsP3ZbzwWV
- MVb8xIdXIzPH3B8jw2rpQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:FPPapW6OwyU=:sEXclkv4xPKGjOnt9Uta2g
- hkqp13EKC3+UOv0CEpd3Yxb8ku6UzK4m/CBCOryA8h19RJPscvHigxY6u5s5trj+X6OTpBzLa
- cP8nvCiII6HHi0fqR1tmrDAakapg24SczjInVPUkWOfxrq7ZU0Yjg81RcahSuenhO3KcF3U24
- RZ1NIKhkiRTxshPT8cfU2ILWholcmBtT6T5BDpgyyojL1hEsXgNpMGqR8vqnRwNDIUMucnN+h
- UG75soVBhGog7nkc3POBjgMMoJAFQGxcANnsv5GQcfZDied5/ov7luD5kLiXinGakUi+SnXK8
- CXKhlNDmNUktwMj2ezTPm/iQbfEtXGDqK8sW7ugqUaNl7hXZSp8tNq651fyewNk3HWpsnOgUm
- C27a/IyGBQPFe/lLgnPoX9kGhjENlTLLbESf+ebr2K0XgLzNWVttSPSd4qsoZtJsSivrrWfkG
- UAuoQBzqlWibuGEXAtw8LhI0l63m5vMK+H9EF5eSeEKJDkI3pWMKdbigaeHJOeFBddyLfxmbZ
- Wlz7q2qXPuFk9xBv2mUJNoW5MBehuyGwWv34y89Qqm1aKVPHOqX8olmTVGoE+sotqmwxYDayE
- SEvRyDZiepoEOehh078W3aoVC5KuTJuxUJSyjOdbQDnihCDCXN2pmSoDXA/gq11JjURDzDZCn
- gAk9emAk/PGP+pV2hPQ0mq2kel2UmqjsB3Gssfa6YjWyIZas/gy9PsqjCuys6bStZLbzOyiuL
- sFxp2GRdvXm60XuBgRprUAFyWZ2L7+2ujJSYBl4W/AY7uqSrl7jsj76o+DM/KV9HedOjLoARp
- zB0ISZaI95xb6BoxaptJWDjFl03AaYhkaWDVOezyZF5/FLzwWg=
+        Tue, 5 May 2020 09:54:43 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 496A0C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 06:54:43 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id q24so382893pjd.1
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 06:54:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Jsy+vFKG2w3TRg1if2OaNR87RH1NyplF73zGSyvE/Rs=;
+        b=TG31h2lHvlOV32idvIopV8FeDNBzrpP6uSBMRXYGBhlacTbKQbgLAB7yW1s+OghDa7
+         p80TzukpfZQ19ZLwiJ1jn/Cc2p9RKJaSQ3GZW2ASGloYUa97EdTDal19QwGCIxBpE3/v
+         IO3Tj3rhSHZhNqexHH0yuCvznft9zvVxjahrk6LxQP40yD3aUb8+Q6lrtsuHRVA4WpEQ
+         muyOvYHbwJ79uQ+jg29fNECEFPVytJ7vHf8kSB7CuV88f1wTVmu52Wy7WBmzVi3RS2Pf
+         na4soy+wKmWzasJfamrOzFvXquCB06vSUxanrnN8dPRrjsSZMa3lLJeC43Y6aPx8TlEO
+         4rGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Jsy+vFKG2w3TRg1if2OaNR87RH1NyplF73zGSyvE/Rs=;
+        b=RpLzfrMBUZfJL2R0aHFLigU1g3HGavyh0XfdicmKmaFzG/na8DXFyGp448wN7hcCxQ
+         cOkvucMFrl8m2/t8kbYG1XwoCa0YP1rNdABHfne4uTG7uUSYjg78+PrtRu8wJZDaX6yb
+         aCPNDfNMQH3DY1baBTe/afs6VE+KFIiasSh+QSbr2U0hyTfjN8i3zsjVniBgW/ZeKw0k
+         UNVn2tN4P0NlHG12TGBSLuLw7W5AVMSCdNhtmeXs3/VVEPkcsub7cj7+YBKI2Urn+bDz
+         AUwFU+7douv5OIASNYsEhPPZqmI7EHAaCRVrgcKmLMbwuAMlPhLGeHEFRWimrAHW+rgn
+         QW9A==
+X-Gm-Message-State: AGi0PubJY6ba30Pu/fBhn2xgQpXiizKnbcJhvRcXOnlYpofcVgWF+CpH
+        wbrHqlOWGndlVP6gNwVEW1Y=
+X-Google-Smtp-Source: APiQypLIecyv9059S8Yp0y1IaUmW33KUj4UfKa5RG+HrzaPRGW5IduBDk4rIUOfkF4z5zf1tD2P0cQ==
+X-Received: by 2002:a17:90a:f302:: with SMTP id ca2mr895545pjb.223.1588686882864;
+        Tue, 05 May 2020 06:54:42 -0700 (PDT)
+Received: from localhost.localdomain ([120.244.110.63])
+        by smtp.gmail.com with ESMTPSA id m63sm2221920pfb.101.2020.05.05.06.54.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 06:54:42 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     shaggy@kernel.org, Markus.Elfring@web.de
+Cc:     jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH v2] fs: jfs: fix a possible data race in txBegin()
+Date:   Tue,  5 May 2020 21:54:11 +0800
+Message-Id: <20200505135411.28893-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building for ARMv7-M, clang-9 or higher tries to unroll some loops,
-which ends up confusing the register allocator to the point of generating
-rather bad code and using more than the warning limit for stack frames:
+The functions txBegin() and txLazyCommit() can be concurrently executed
+in the following call contexts:
 
-warning: stack frame size of 1200 bytes in function 'blake2b_compress' [-Wframe-larger-than=]
+Thread1:
+  jfs_write_inode()
+    jfs_commit_inode()
+      txBegin()
 
-Forcing it to not unroll the final loop avoids this problem.
+Thread2:
+  jfs_lazycommit()
+    txLazyCommit()
 
-Fixes: 91d689337fe8 ("crypto: blake2b - add blake2b generic implementation")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+In txBegin():
+  tblk->next = tblk->last = tblk->xflag = tblk->flag = tblk->lsn = 0;
+
+In txLazyCommit():
+  spin_lock_irq(&log->gclock);
+  ...
+  tblk->flag |= tblkGC_COMMITTED;
+  ...
+  spin_unlock_irq(&log->gclock);
+
+A data race can occur for the data structure member "flag". 
+This data race was found by our concurrency fuzzer.
+
+Thus use the spin lock "gclock" for the resetting of five 
+data structure members in this function implementation.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
 ---
- crypto/blake2b_generic.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+v2:
+* Change the description.
+  Thank Markus Elfring for good advice.
 
-diff --git a/crypto/blake2b_generic.c b/crypto/blake2b_generic.c
-index 1d262374fa4e..0ffd8d92e308 100644
---- a/crypto/blake2b_generic.c
-+++ b/crypto/blake2b_generic.c
-@@ -129,7 +129,9 @@ static void blake2b_compress(struct blake2b_state *S,
- 	ROUND(9);
- 	ROUND(10);
- 	ROUND(11);
--
-+#ifdef CONFIG_CC_IS_CLANG
-+#pragma nounroll /* https://bugs.llvm.org/show_bug.cgi?id=45803 */
-+#endif
- 	for (i = 0; i < 8; ++i)
- 		S->h[i] = S->h[i] ^ v[i] ^ v[i + 8];
- }
+---
+ fs/jfs/jfs_txnmgr.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/fs/jfs/jfs_txnmgr.c b/fs/jfs/jfs_txnmgr.c
+index c8ce7f1bc594..a1f124aad2e0 100644
+--- a/fs/jfs/jfs_txnmgr.c
++++ b/fs/jfs/jfs_txnmgr.c
+@@ -415,7 +415,9 @@ tid_t txBegin(struct super_block *sb, int flag)
+ 	 *
+ 	 * memset(tblk, 0, sizeof(struct tblock));
+ 	 */
++	spin_lock_irq(&log->gclock);
+ 	tblk->next = tblk->last = tblk->xflag = tblk->flag = tblk->lsn = 0;
++	spin_unlock_irq(&log->gclock);
+ 
+ 	tblk->sb = sb;
+ 	++log->logtid;
 -- 
-2.26.0
+2.17.1
 
