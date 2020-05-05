@@ -2,150 +2,150 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC51C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C3EC47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF92D206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:37:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B47320735
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:37:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tz1+TWq5"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="DFGlFtj9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbgEEVhY (ORCPT
+        id S1729218AbgEEVhh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 17:37:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728584AbgEEVhX (ORCPT
+        Tue, 5 May 2020 17:37:37 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:60742 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbgEEVhh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 17:37:23 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A93EDC061A0F;
-        Tue,  5 May 2020 14:37:23 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id t11so134201pgg.2;
-        Tue, 05 May 2020 14:37:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F3cjpEcBYVPl9bnBNf68XdHTqzqq7zD5qmZWf9yJER4=;
-        b=tz1+TWq5YMkt8tUz6bFYVzJpba9Z/G1z4iKbsWJXd7bFjdpUbHz53VImsRxYuRBsfd
-         9fOLZuZkxUhEgGXZpajTkt13fGdmp1TBLIqXWs+U0xCU8ru4iZ2c/G/3Ng8eomF07TdH
-         f20fmRXU2+x22gQhnPLa0ZQ5Cx50Fx1PfSfO2dZABxbcQ4FxzXHzsKi+6Oi6JrbaCck2
-         06XtjchF0xGCSJ/BjwjyUvPp0ZhEAd6002q0nya/g9+/B1h4lFthE/0eUEfIKgilyG9n
-         ShtnKeKgKFfkOK8uV7h1CIzg9Uf/MSNKSgXOoRuIsS24Sx2FC3dgIK3hxtlf0LZJS9W9
-         drow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F3cjpEcBYVPl9bnBNf68XdHTqzqq7zD5qmZWf9yJER4=;
-        b=pCwPgyGqCSSRdliBSRoyv/wIRolzFlcguuQbHNqcqtkIM8stv3SK1eCqnj3+OO+tUF
-         Hp44LyzrvHPz57I7udvMHBVJepGw1Ad7ka2ugfjRBWDn4Pt5S88ryyT9c7elGjxtehjE
-         zhhVmmWBXuLUAXxZCcs5Tf0phRSpUPISCOtizDK1+RRNOCYh4V8rU7xwSTlkvV0qXy74
-         dozQguiHeEYYfOaCX22x370Yn45rKHtA3eC3vuCkUA/VCH1z9m6SSMsAmbu+9/tVxmUD
-         Muocg4TG+8tyj75IsT/o70s/wazQjLl14aSlpfybuQY39cE4ZAa5Z9YpamVcmEbbEe4G
-         tH0A==
-X-Gm-Message-State: AGi0PuZ3YQ69BwKN/CfW7vI4QA4dKvFUNNUp0itH/dOfSaiRy2JjkZZG
-        Q062c2TKAiBgdmIYohN9yv5loLsduNNv1DYt2B/5HUGTq5s=
-X-Google-Smtp-Source: APiQypKjIuDFIBIdUXXDprhBrI/Tiq4fQBxeML7Is4+n+AMv/V7JwMSJnnYW2wptHSUqLoNmxawk6KXWbukrGMepYhk=
-X-Received: by 2002:a62:5ec7:: with SMTP id s190mr4908701pfb.130.1588714643020;
- Tue, 05 May 2020 14:37:23 -0700 (PDT)
+        Tue, 5 May 2020 17:37:37 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 173BD542;
+        Tue,  5 May 2020 23:37:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1588714654;
+        bh=eiuReEMJvpjUWPLJO8Z2JmwStFJTrhUwSJ4qmcopXVk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DFGlFtj9VhJcu1wOKP6KnWvWsjIs3FSYmk0YczbGWyMQx69YEoLTxxR0ujvuY9Pgn
+         KqGv0OicNnqblZPJsokIZJ3IGqr7JtbJPH4shlXZxOigKF87teIlnOQvei+XhuuRP+
+         ogoGIucAmf/m06c/sx7YSYH7XfAkghbjOKk/55sk=
+Date:   Wed, 6 May 2020 00:37:28 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
+        narmstrong@baylibre.com, a.hajda@samsung.com,
+        spanda@codeaurora.org, linux-gpio@vger.kernel.org, jonas@kwiboo.se,
+        robdclark@chromium.org, bjorn.andersson@linaro.org,
+        jeffrey.l.hugo@gmail.com, jernej.skrabec@siol.net,
+        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 5/6] dt-bindings: drm/bridge: ti-sn65dsi86: Document
+ no-hpd
+Message-ID: <20200505213728.GB8640@pendragon.ideasonboard.com>
+References: <20200430194617.197510-1-dianders@chromium.org>
+ <20200430124442.v4.5.I72892d485088e57378a4748c86bc0f6c2494d807@changeid>
 MIME-Version: 1.0
-References: <20200504165448.264746645@linuxfoundation.org> <20200504165451.307643203@linuxfoundation.org>
- <20200505123159.GC28722@amd> <CAHp75VeM+qwh5rHL7RDdacru0jPSB9me2aTs__jdy749dTKRng@mail.gmail.com>
- <20200505125818.GA31126@amd> <CAHp75VcKreeQpjROdL23XGqgVu+F_0eL5DsJ=5APEQUO9V69EQ@mail.gmail.com>
- <20200505133700.GA31753@amd> <CAHp75Ve+pzhamZXiKxHF+VD8yfsjRF2coattHyiD+0aa7Fy2DA@mail.gmail.com>
- <20200505153227.GI13035@sasha-vm> <20200505155734.GA10069@duo.ucw.cz>
-In-Reply-To: <20200505155734.GA10069@duo.ucw.cz>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 6 May 2020 00:37:11 +0300
-Message-ID: <CAHp75Vfcrji_D8tsiBhpPWQTgS=WhO9fwWWut-xeVOg2Z_FqEA@mail.gmail.com>
-Subject: Re: [PATCH 4.19 28/37] dmaengine: dmatest: Fix iteration non-stop logic
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stable <stable@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200430124442.v4.5.I72892d485088e57378a4748c86bc0f6c2494d807@changeid>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 6:57 PM Pavel Machek <pavel@denx.de> wrote:
-> On Tue 2020-05-05 11:32:27, Sasha Levin wrote:
-> > On Tue, May 05, 2020 at 05:05:37PM +0300, Andy Shevchenko wrote:
+Hi Doug,
 
-...
+Thank you for the patch.
 
-> > I'm a bit confused about this too. Maybe it's too early in the morning,
-> > so I wrote this little test program:
-> >
-> > #include <stdio.h>
-> > #include <stdlib.h>
-> >
-> > int main(int argc, char *argv[])
-> > {
-> >        int a = atoi(argv[1]);
-> >        int b = atoi(argv[2]);
-> >
-> >        if (!a && !b)
-> >                printf("A");
-> >        else
-> >                printf("B");
-> >
-> >        if (!(a || b))
-> >                printf("A");
-> >        else
-> >                printf("B");
-> >
-> >        printf("\n");
-> >
-> >        return 0;
-> > }
-> >
-> > Andy, could you give an example of two values which will print something
-> > other than "AA" or "BB"?
->
-> The issue here is "sideffects". Does b have to be evaluated at all?
-> There is no difference between
->
->       int a, b;
->       if (a && b)
->
-> and
->
->         if ((!!a) & (!!b))
-> .
->
-> But there would be difference between
->
->       int a, b;
->         if (a && b++)
->
-> and
->         if ((!!a) & (!!(b++)))
->
-> But:
->
-> 1) && and || behave same way w.r.t. side effects
->
-> 2) in the patch we are talking about b has no important side effects
+On Thu, Apr 30, 2020 at 12:46:16PM -0700, Douglas Anderson wrote:
+> The ti-sn65dsi86 MIPI DSI to eDP bridge chip has a dedicated hardware
+> HPD (Hot Plug Detect) pin on it, but it's mostly useless for eDP
+> because of excessive debouncing in hardware.  Specifically there is no
+> way to disable the debouncing and for eDP debouncing hurts you because
+> HPD is just used for knowing when the panel is ready, not for
+> detecting physical plug events.
+> 
+> Currently the driver in Linux just assumes that nobody has HPD hooked
+> up.  It relies on folks setting the "no-hpd" property in the panel
+> node to specify that HPD isn't hooked up and then the panel driver
+> using this to add some worst case delays when turning on the panel.
+> 
+> Apparently it's also useful to specify "no-hpd" in the bridge node so
+> that the bridge driver can make sure it's doing the right thing
+> without peeking into the panel [1].  This would be used if anyone ever
+> found it useful to implement support for the HW HPD pin on the bridge.
+> Let's add this property to the bindings.
+> 
+> NOTES:
+> - This is somewhat of a backward-incompatible change.  All current
+>   known users of ti-sn65dsi86 didn't have "no-hpd" specified in the
+>   bridge node yet none of them had HPD hooked up.  This worked because
+>   the current Linux driver just assumed that HPD was never hooked up.
+>   We could make it less incompatible by saying that for this bridge
+>   it's assumed HPD isn't hooked up _unless_ a property is defined, but
+>   "no-hpd" is much more standard and it's unlikely to matter unless
+>   someone quickly goes and implements HPD in the driver.
+> - It is sensible to specify "no-hpd" at the bridge chip level and
+>   specify "hpd-gpios" at the panel level.  That would mean HPD is
+>   hooked up to some other GPIO in the system, just not the hardware
+>   HPD pin on the bridge chip.
+> 
+> [1] https://lore.kernel.org/r/20200417180819.GE5861@pendragon.ideasonboard.com
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-I have to admit that this seems like a luck and the real issue somewhere else.
-Definitely another test should be performed.
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Thank you, Pavel, for pointing this out.
+> ---
+> 
+> Changes in v4:
+> - Tacked on "or is otherwise unusable." to description.
+> 
+> Changes in v3:
+> - useful implement => useful to implement
+> 
+> Changes in v2:
+> - ("dt-bindings: drm/bridge: ti-sn65dsi86: Document no-hpd") new for v2.
+> 
+>  .../devicetree/bindings/display/bridge/ti,sn65dsi86.yaml  | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+> index 6d7d40ad45ac..75c4e8b8e4b7 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+> +++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+> @@ -28,6 +28,12 @@ properties:
+>      maxItems: 1
+>      description: GPIO specifier for GPIO1 pin on bridge (active low).
+>  
+> +  no-hpd:
+> +    type: boolean
+> +    description:
+> +      Set if the HPD line on the bridge isn't hooked up to anything or is
+> +      otherwise unusable.
+> +
+>    vccio-supply:
+>      description: A 1.8V supply that powers the digital IOs.
+>  
+> @@ -207,6 +213,8 @@ examples:
+>          clocks = <&rpmhcc RPMH_LN_BB_CLK2>;
+>          clock-names = "refclk";
+>  
+> +        no-hpd;
+> +
+>          ports {
+>            #address-cells = <1>;
+>            #size-cells = <0>;
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards,
+
+Laurent Pinchart
