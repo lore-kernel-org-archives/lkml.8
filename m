@@ -2,235 +2,117 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FB5C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3C4C47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04752206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A7F9206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:50:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SodFMjn/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PwsUNJU0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730529AbgEEPuw (ORCPT
+        id S1730595AbgEEPu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:50:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730442AbgEEPuv (ORCPT
+        Tue, 5 May 2020 11:50:57 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29351 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729828AbgEEPu4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:50:51 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FBC8C061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 08:50:50 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id f11so2157831ljp.1
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 08:50:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=UMlhFVIhuG4BQg7+7Jtw6J8Z8dON//8paovs3+Zex2Q=;
-        b=SodFMjn/B3pxZf7ZVhD75mEIZqjH+1/ziV1MYUIyyEhqLSS+pHK6Ws2DDP75ficdWZ
-         y2dwj3f4GsexWwrhDb/xpiaXozxhNFC1dfdBRQr3q3qJunqnJSz4UWC88zC7pp6/aUaM
-         38TWj5D6S5OquaYo9tEpkI0KFaKSzM1yU1sD/rmu9rS9dMrL9srIuyw/lSZ4G+ugMO0B
-         e/xLlYS16fd24RVaBObENrdBDL+xC/zslxwDzaGlAdCeCc4ScLEwEJo+hGza6P1f3Xsf
-         cMdrJwiU/Jopoc5LTnA1cDyrwwGp2qmiVwhFdGNfbbiJfv+OFMwokRyQ1zaLSF6pP2V1
-         lO/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UMlhFVIhuG4BQg7+7Jtw6J8Z8dON//8paovs3+Zex2Q=;
-        b=iCZYXecveHJA5OeoiT1kO1EmozuzusBsvGdyJjT1w25lifziFBR7mW237DMKkckbGa
-         KFuIQAIw/b+mvL/sb4aTbT7ia5jwcXNk5O2GKMPN49e4s0Q+Fc8TjUlQS/YUDw4qHkRy
-         Mb8rGnibroWjvJrnGMqACp9u6FGoFbd7YOdvv9GBKFs+3fAheZz0qJbcVULowFzxKJct
-         p3qWhsnSh4gkmZFLs+Z6a9QoK7yn49i9b0wW0TPEjCypyxXYioCQ8SPlT9BVd3OoLuDn
-         BfRgfc8FQ939qP3XsJpKXeB6ThVPCWCLsNah7vDMDSuD5St0CgChKqTN1fqWysbZHXE5
-         WRDQ==
-X-Gm-Message-State: AGi0PuZrZABDGx5dVVp50x6B6R5IDqAv85vPFf58elKPtjuaHekPP9kV
-        FKLrcImYdQPm5zBwBCzG0maQEQJS+YqcSdgXwF6oxw==
-X-Google-Smtp-Source: APiQypJb36H+6c8IlR0vTi9BXuXjJwwJvUVMzH0fBvWGdbfdEfk6ThGBEUXGm4auATlQOAa5YDCCxoc4uf0XtlhLTSo=
-X-Received: by 2002:a2e:80da:: with SMTP id r26mr2228163ljg.38.1588693848821;
- Tue, 05 May 2020 08:50:48 -0700 (PDT)
+        Tue, 5 May 2020 11:50:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588693854;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BU5ZQpCj0l/68xgDkpfBCKuLh4I4hSUfny0CTG25x9g=;
+        b=PwsUNJU0ax5k3wvk+pBb0rx73cKtx/ITpKqJ0rh03h16PuRibD0QhzPnq9upkd14lA4WVm
+        evS9mpD0YWRfGU7JsWlBKD3SOVnKyM4bNiHTb4lq78/aTM3n0uG11HfnTyJXiWRdekBTcW
+        mAz+MKupSJZ4462LiJ6BF9zgT1ahiho=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-94-OGdSBiARP6-UJlOyuB7bbA-1; Tue, 05 May 2020 11:50:50 -0400
+X-MC-Unique: OGdSBiARP6-UJlOyuB7bbA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E64DD84E27B;
+        Tue,  5 May 2020 15:50:46 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-114-81.rdu2.redhat.com [10.10.114.81])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A96775D9DA;
+        Tue,  5 May 2020 15:50:45 +0000 (UTC)
+Subject: Re: [PATCH] doc: Fix some typo errors in ras.rst
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        linux-edac@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200505151049.11134-1-longman@redhat.com>
+ <20200505093258.77d052f5@lwn.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <2cb38bb2-bdb5-5fea-870a-ec92401ea374@redhat.com>
+Date:   Tue, 5 May 2020 11:50:45 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200504165441.533160703@linuxfoundation.org>
-In-Reply-To: <20200504165441.533160703@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 5 May 2020 21:20:37 +0530
-Message-ID: <CA+G9fYuXiDk4Mhv2KtkjD3VU-PFdibMNbnEpgDBj-S1bKNqUng@mail.gmail.com>
-Subject: Re: [PATCH 4.4 00/18] 4.4.222-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200505093258.77d052f5@lwn.net>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 4 May 2020 at 23:29, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On 5/5/20 11:32 AM, Jonathan Corbet wrote:
+> On Tue,  5 May 2020 11:10:49 -0400
+> Waiman Long <longman@redhat.com> wrote:
 >
-> This is the start of the stable review cycle for the 4.4.222 release.
-> There are 18 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+>> Fix typo errors.
+>>
+>> Signed-off-by: Waiman Long <longman@redhat.com>
+>> ---
+>>   Documentation/admin-guide/ras.rst | 8 ++++----
+>>   1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/Documentation/admin-guide/ras.rst b/Documentation/admin-guide/ras.rst
+>> index 0310db624964..8b1803b2606f 100644
+>> --- a/Documentation/admin-guide/ras.rst
+>> +++ b/Documentation/admin-guide/ras.rst
+>> @@ -156,10 +156,10 @@ the labels provided by the BIOS won't match the real ones.
+>>   ECC memory
+>>   ----------
+>>   
+>> -As mentioned on the previous section, ECC memory has extra bits to be
+>> -used for error correction. So, on 64 bit systems, a memory module
+>> -has 64 bits of *data width*, and 74 bits of *total width*. So, there are
+>> -8 bits extra bits to be used for the error detection and correction
+>> +As mentioned on the previous section, ECC memory has extra bits to
+>> +be used for error correction. So, on 64 bit systems, a memory module
+>> +has 64 bits of *data width*, and 72 bits of *total width*. So, there
+>> +are 8 extra bits to be used for the error detection and correction
+>>   mechanisms. Those extra bits are called *syndrome*\ [#f1]_\ [#f2]_.
+> So I had to work to figure out what the change was, since you didn't say
+> in the changelog and you refilled the paragraph.  But this looks like a
+> *factual* error, giving the wrong number of bits, right?  It seems like
+> the changelog should say that.  Do the people who know about this stuff
+> agree that the change is correct?
 >
-> Responses should be made by Wed, 06 May 2020 16:52:55 +0000.
-> Anything received after that time might be too late.
+> Thanks,
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.4.222-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.4.y
-> and the diffstat can be found below.
+> jon
 >
-> thanks,
->
-> greg k-h
+Yes, I change 74 bits to 72 bits and remove an extra "bits". Will send 
+out v2 to clarify that.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Thanks,
+Longman
 
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.4.222-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.4.y
-git commit: 2f5149253281f474194117c5fa97972cf76c84ce
-git describe: v4.4.221-19-g2f5149253281
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
-ld/v4.4.221-19-g2f5149253281
-
-No regressions (compared to build v4.4.221)
-
-No fixes (compared to build v4.4.221)
-
-Ran 20159 total tests in the following environments and test suites.
-
-Environments
---------------
-- i386
-- juno-r2 - arm64
-- juno-r2-compat
-- juno-r2-kasan
-- x15 - arm
-- x86_64
-- x86-kasan
-
-Test Suites
------------
-* build
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-open-posix-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* perf
-* v4l2-compliance
-* kvm-unit-tests
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest/net
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.4.222-rc1
-git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
-git branch: 4.4.222-rc1-hikey-20200504-710
-git commit: b9d78bbbdbd389fe97e31f51872b6feeb6251466
-git describe: 4.4.222-rc1-hikey-20200504-710
-Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4=
--oe/build/4.4.222-rc1-hikey-20200504-710
-
-
-No regressions (compared to build 4.4.221-rc1-hikey-20200501-708)
-
-
-No fixes (compared to build 4.4.221-rc1-hikey-20200501-708)
-
-Ran 1766 total tests in the following environments and test suites.
-
-Environments
---------------
-- hi6220-hikey - arm64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* v4l2-compliance
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
