@@ -2,99 +2,118 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE2CC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 159F2C47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66A6120661
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3EBF206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:24:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="phNbBISD"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mjnNLkkp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729346AbgEEVXG (ORCPT
+        id S1729111AbgEEVYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 17:23:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59692 "EHLO
+        Tue, 5 May 2020 17:24:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726350AbgEEVXG (ORCPT
+        by vger.kernel.org with ESMTP id S1726350AbgEEVYh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 17:23:06 -0400
-Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E99A5C061A0F;
-        Tue,  5 May 2020 14:23:04 -0700 (PDT)
-Received: by mail-qk1-x72a.google.com with SMTP id q7so378404qkf.3;
-        Tue, 05 May 2020 14:23:04 -0700 (PDT)
+        Tue, 5 May 2020 17:24:37 -0400
+Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 614D2C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 14:24:37 -0700 (PDT)
+Received: by mail-ua1-x941.google.com with SMTP id a16so997227uaq.5
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 14:24:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:message-id:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-disposition:content-transfer-encoding;
-        bh=OZOGzu+oBJij+crVPXC6j4FuHIOBZ0Y5yruBwGyqEOg=;
-        b=phNbBISD4EHq+BETM88YyjRUXDdSFCfacPpfFEkkqXAeteZzjX8Y2S+W+w+klAuan1
-         Opn3R8FwPk016fp7vmQ1OvnhJajCugE/cX/17i+uWllYua9Guf4LiavNuZvvBgeRxyj7
-         7lJFFoiaMi13zyB62+VksFiYJPg1jM8YgIdCOfdTRRZs4fA0q6ATXKyYcYH10fwOn+Dt
-         +Kbt2xWTVWaAJE5YrLD/90uA+31WWa+8e9cplKgespzwLn17hS1RmXOycfuDj50b/ZRI
-         AD/dfbovAQ7pWJ4XeSseq3clzeTkVp5hxP7xokb8yx3TdpJ/vwNSMHRuGPOholc83hGV
-         +yBQ==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xD9oC230/p7xdIyNhq/DI72VMWwLQ0pXEid/2VB2RIE=;
+        b=mjnNLkkpMuBQM4TIComyfZixfgQHhE7tuFWValYOOMp5lib8ve2bEYRSkPoc6w3DfW
+         x+MXBWW0cMkQbuC/d4jz2iCfV4rJYanNXcJZAoAycgsG6CSrTebEpKdKS1Jiumphdr4L
+         iCabexNFAQFv7/oUMBhn7gE3sdcfhe6/b55/Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=OZOGzu+oBJij+crVPXC6j4FuHIOBZ0Y5yruBwGyqEOg=;
-        b=pASrVvM6JV/zfPjQ3LmSe50FTHq94x5joImUEA6/QKmm9BGt49RMdfB7qoO6Sv0mtt
-         YKij3VD6JsFngG5ymezgTcUpn1YCq/Zq5+tAEH84Ej9Hl5+CmQeiUi9zkBqmXil/hOqq
-         vsZ2OY3uIZ+eRaxQuwcykiEy5e5ylprXsIJbxKQLO8WUw0C/BiK7zIW21rCl4rmh/j7e
-         lVksCIfJISi07uPfwvJcOj1mJ3UF03Uk2pPkFgLQxHkG6SpxMBS4HsJl9qq6tmHy8F3O
-         rN/NlRjKPnsZuyHyDqpi57vfSUKVZSFEcitcGBV6xHQwpUbKk/D//Qi6jf0ym9H6SfVD
-         Jc4Q==
-X-Gm-Message-State: AGi0PuZt7OEKoRsa+H8loBqwKVH50DznZYGjvqgZ2HYZS4NiwAXrvo0v
-        svds129WQ6NtRETq1TWqzMMIeLXNs7k=
-X-Google-Smtp-Source: APiQypLc7y3yB72dymEd1J8JGtixv7IHpcMAzcgO3nR2cXIQwg6Agh0oEYlRZAOIm5cSi2cCQX24lA==
-X-Received: by 2002:ae9:ee0a:: with SMTP id i10mr5765549qkg.367.1588713784090;
-        Tue, 05 May 2020 14:23:04 -0700 (PDT)
-Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id g16sm57496qkk.122.2020.05.05.14.23.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 14:23:03 -0700 (PDT)
-Date:   Tue, 5 May 2020 17:23:02 -0400
-Message-ID: <20200505172302.GB1170406@t480s.localdomain>
-From:   Vivien Didelot <vivien.didelot@gmail.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, olteanv@gmail.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC net] net: dsa: Add missing reference counting
-In-Reply-To: <20200505210253.20311-1-f.fainelli@gmail.com>
-References: <20200505210253.20311-1-f.fainelli@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xD9oC230/p7xdIyNhq/DI72VMWwLQ0pXEid/2VB2RIE=;
+        b=P6XZzPNEN6/s98lBvt3ys6DEVUG3ME7ObUOL+6nX3QnqRvoe0PhBQ5kqIR2sje7oBP
+         NEyHYtyibczXeWdn8SVDWAQNjCoJ6K9eTpBZhwnOJsbaoMjESJnyZjHn8j9fUs0JzEgJ
+         hQYXY6L0spFhLR+MeTYhZWN/dp2I5pSqPVyzyCYzWFnS/2H0a51niS20U3N2WQ+PLMwU
+         VutyuRm2ydYgiggO9tOuNT3UVvUjMCXQuzdLL5/J1Uv+gK7Ych0SWpi6CM96G0D3Jkuj
+         embkq9+t+/VrgZtQxz+rdEWXfDCFVQaiZAjfX8IQ4UsaLr6c9L95DK3DoFEBQVtTdQNn
+         MdXA==
+X-Gm-Message-State: AGi0PuYpu2kE7MHhkVnflxwMVqBdxSI3zAemy1saf/YKWqiprwFtqpjR
+        768IxlbOlqyK+cfeCKEanYn2zRIJ0xk=
+X-Google-Smtp-Source: APiQypLecxjgvGOF4WVegIkBn8qwub54kUi+QgUlL2raBkT7Exa6lhZmpADTSNP6gvqqW9is9HdMFw==
+X-Received: by 2002:ab0:20aa:: with SMTP id y10mr4325074ual.60.1588713876410;
+        Tue, 05 May 2020 14:24:36 -0700 (PDT)
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
+        by smtp.gmail.com with ESMTPSA id z191sm1525006vsz.32.2020.05.05.14.24.35
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2020 14:24:35 -0700 (PDT)
+Received: by mail-vs1-f42.google.com with SMTP id a5so145297vsm.7
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 14:24:35 -0700 (PDT)
+X-Received: by 2002:a05:6102:4d:: with SMTP id k13mr4884961vsp.198.1588713874617;
+ Tue, 05 May 2020 14:24:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+References: <20200504213624.1.Ibc8eeddcee94984a608d6900b46f9ffde4045da4@changeid>
+ <20200505082436.GD9658@pendragon.ideasonboard.com> <CAD=FV=WjUpwu5204K8yHzqsJv4vQX5S5CArH1Kj_kqjhZzTc9A@mail.gmail.com>
+ <20200505210609.GA6094@pendragon.ideasonboard.com> <CAD=FV=UnGOYh8JX2=fEAqPN7wqANc0QevTirNO-WUDYMPqXcrg@mail.gmail.com>
+ <20200505211401.GC6094@pendragon.ideasonboard.com>
+In-Reply-To: <20200505211401.GC6094@pendragon.ideasonboard.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 5 May 2020 14:24:23 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WgRC-HViMxttF4VK+n48HNRuqAau8S7mgx6oSWsbZcgA@mail.gmail.com>
+Message-ID: <CAD=FV=WgRC-HViMxttF4VK+n48HNRuqAau8S7mgx6oSWsbZcgA@mail.gmail.com>
+Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: Implement lane reordering + polarity
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  5 May 2020 14:02:53 -0700, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> If we are probed through platform_data we would be intentionally
-> dropping the reference count on master after dev_to_net_device()
-> incremented it. If we are probed through Device Tree,
-> of_find_net_device() does not do a dev_hold() at all.
-> 
-> Ensure that the DSA master device is properly reference counted by
-> holding it as soon as the CPU port is successfully initialized and later
-> released during dsa_switch_release_ports(). dsa_get_tag_protocol() does
-> a short de-reference, so we hold and release the master at that time,
-> too.
-> 
-> Fixes: 83c0afaec7b7 ("net: dsa: Add new binding implementation")
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Hi,
 
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+On Tue, May 5, 2020 at 2:14 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> > I'll add this documentation into the comments of the yaml, but I'm not
+> > going to try to implement enforcement at the yaml level.
+>
+> Why not ? :-)
+
+Because trying to describe anything in the yaml bindings that doesn't
+fit in the exact pattern of things that the yaml bindings are designed
+to check is like constructing the empire state building with only
+toothpicks.
+
+If you want to suggest some syntax that would actually make this
+doable without blowing out the yaml bindings then I'm happy to add it.
+Me being naive would assume that we'd need to do an exhaustive list of
+the OK combinations.  That would be fine for the 1-land and 2-lane
+cases, but for 4 lanes that means adding 256 entries to the bindings.
+
+I think the correct way to do this would require adding code in the
+<https://github.com/devicetree-org/dt-schema> project but that's
+really only done for generic subsystem-level concepts and not for a
+single driver.
+
+-Doug
