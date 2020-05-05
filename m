@@ -2,130 +2,129 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2BEC47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F001C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5DFA20721
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:02:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="umG6XOaK"
+	by mail.kernel.org (Postfix) with ESMTP id 8106A2064A
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:02:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgEEHC2 (ORCPT
+        id S1728268AbgEEHCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 03:02:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37570 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725320AbgEEHC1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 03:02:27 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B1FAC061A0F;
-        Tue,  5 May 2020 00:02:27 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id i13so961794oie.9;
-        Tue, 05 May 2020 00:02:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qfsI1Ae/gqByhDdxZCxdOk6CE5/Yy0Hxtg5XtcaRpu8=;
-        b=umG6XOaKe/xvpUZeb+ZoINdQdF6RfrbdVKqruPqkdIJ3fN4ToRiF/OLriv7P70gpss
-         +7l7G+K7OdLaaw7rteichaKB0E6oUI12pB1ztiSsenG/+MVo4pPUNUOsUiQPXi/Gob3C
-         o0xRew0aPGmj1QwayCuMxqN95fzZk17nsUD/lExn8Wlcsheal9pzwjie9/u7PgTrGsyh
-         mWnqWj3earegjwCMKdLYOAo0hNQPJLzWM9+Wk8Rk2CGTVltXrw+MmLqBFEloTEGNBeaw
-         LUkn7aq2OlSq72zQMipu9yhlE9cWuqFuV7Tjnpah+So7NmMcgCCQvtODO4p9dRk5Hay8
-         YhYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qfsI1Ae/gqByhDdxZCxdOk6CE5/Yy0Hxtg5XtcaRpu8=;
-        b=T1ZzxKnWQvye0APIhOHVVY5s8NmWKw/Oxb98q+WE1DmXsErobofUqezpwPerOOSu7V
-         QP/LSRPItAOlbEHjuKHMC9fzSIGakFwG/8DRDjBNOOFvPWzwsqxZYiyBC6xLjHl8QSsz
-         VYbAP/zwIgoeeNpB3UvAvNeSPjHkjXgXwLUyJBEek79Hq4JX8R1/DFl9WMs8K5G/SW+M
-         BoW/6SWXZkM92jRiIVIcHCFQnNYX1uolXjwJ4lVmCBLWYPymfiyav5pA8hXYVSKvqXUr
-         Ktixpm5nelw6RrWxa/STdI9UXiXlY8b+JeqFotZVwubovD1mepNC9crtEnSDGq+QjWdi
-         ee4g==
-X-Gm-Message-State: AGi0PubSNO4Yh4Mod1TuLaN+M2uj+93Fu1Yw+pcXIz/WHtEeWAIMR0ix
-        0b6HuSZDagUprDrYBTYxvJI8z1wO2a7xhp4IAsY=
-X-Google-Smtp-Source: APiQypJ2xrC1M/0qN6b4tO9XZLdzWwTN5fdKRF0qgDKiz+8gLvFQDr/+AKJ8ps3kVV5UKQj3RHOQjIA0St1A71S1ZTw=
-X-Received: by 2002:a54:4e84:: with SMTP id c4mr1569779oiy.142.1588662146271;
- Tue, 05 May 2020 00:02:26 -0700 (PDT)
+        Tue, 5 May 2020 03:02:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:60978 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725320AbgEEHC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 03:02:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 599271FB;
+        Tue,  5 May 2020 00:02:28 -0700 (PDT)
+Received: from [10.163.71.248] (unknown [10.163.71.248])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 467B53F68F;
+        Tue,  5 May 2020 00:02:24 -0700 (PDT)
+Subject: Re: [PATCH V3 06/16] arm64/cpufeature: Introduce ID_MMFR5 CPU
+ register
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+References: <1588426445-24344-1-git-send-email-anshuman.khandual@arm.com>
+ <1588426445-24344-7-git-send-email-anshuman.khandual@arm.com>
+ <20200504203313.GB5012@willie-the-truck>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <97cd9ba9-d5de-2a85-5eac-0cb460061617@arm.com>
+Date:   Tue, 5 May 2020 12:31:54 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <0000000000005a8fe005a4b8a114@google.com> <20200504190348.iphzmd7micvidh46@treble>
- <CAM_iQpVu11xwKS5OEhDKmtbnP83oFNy9jBoAROS78-ECPEBWdw@mail.gmail.com>
-In-Reply-To: <CAM_iQpVu11xwKS5OEhDKmtbnP83oFNy9jBoAROS78-ECPEBWdw@mail.gmail.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Tue, 5 May 2020 00:02:15 -0700
-Message-ID: <CAM_iQpVsWkJQaWG01kz8C0J8oSPq23RNKfgAfgUs3dpSDRHFaQ@mail.gmail.com>
-Subject: Re: BUG: stack guard page was hit in unwind_next_frame
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     syzbot <syzbot+e73ceacfd8560cc8a3ca@syzkaller.appspotmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        shile.zhang@linux.alibaba.com,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200504203313.GB5012@willie-the-truck>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 4, 2020 at 6:06 PM Cong Wang <xiyou.wangcong@gmail.com> wrote:
->
-> On Mon, May 4, 2020 at 12:08 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> >
-> > On Sat, May 02, 2020 at 11:36:11PM -0700, syzbot wrote:
-> > > Hello,
-> > >
-> > > syzbot found the following crash on:
-> > >
-> > > HEAD commit:    8999dc89 net/x25: Fix null-ptr-deref in x25_disconnect
-> > > git tree:       net
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=16004440100000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=b7a70e992f2f9b68
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=e73ceacfd8560cc8a3ca
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > >
-> > > Unfortunately, I don't have any reproducer for this crash yet.
-> > >
-> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > Reported-by: syzbot+e73ceacfd8560cc8a3ca@syzkaller.appspotmail.com
-> >
-> > Infinite loop in network code.
->
-> It is not a loop, it is an unbound recursion where netdev events
-> trigger between bond master and slave back and forth.
->
-> Let me see how this can be fixed properly.
 
-The following patch works for me, I think it is reasonable to stop
-the netdev event propagation from upper to lower device, but I am
-not sure whether this will miss the netdev event in complex
-multi-layer setups.
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 522288177bbd..ece50ae346c3 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -8907,7 +8907,7 @@ static void netdev_sync_lower_features(struct
-net_device *upper,
-                        netdev_dbg(upper, "Disabling feature %pNF on
-lower dev %s.\n",
-                                   &feature, lower->name);
-                        lower->wanted_features &= ~feature;
--                       netdev_update_features(lower);
-+                       __netdev_update_features(lower);
+On 05/05/2020 02:03 AM, Will Deacon wrote:
+> On Sat, May 02, 2020 at 07:03:55PM +0530, Anshuman Khandual wrote:
+>> This adds basic building blocks required for ID_MMFR5 CPU register which
+>> provides information about the implemented memory model and memory
+>> management support in AArch32 state. This is added per ARM DDI 0487F.a
+>> specification.
+>>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Marc Zyngier <maz@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: James Morse <james.morse@arm.com>
+>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> Cc: kvmarm@lists.cs.columbia.edu
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>>
+>> Suggested-by: Will Deacon <will@kernel.org>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>  arch/arm64/include/asm/cpu.h    |  1 +
+>>  arch/arm64/include/asm/sysreg.h |  3 +++
+>>  arch/arm64/kernel/cpufeature.c  | 10 ++++++++++
+>>  arch/arm64/kernel/cpuinfo.c     |  1 +
+>>  arch/arm64/kvm/sys_regs.c       |  2 +-
+>>  5 files changed, 16 insertions(+), 1 deletion(-)
+> 
+> [...]
+> 
+>> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+>> index 2ce952d9668d..c790cc200bb1 100644
+>> --- a/arch/arm64/kernel/cpufeature.c
+>> +++ b/arch/arm64/kernel/cpufeature.c
+>> @@ -403,6 +403,11 @@ static const struct arm64_ftr_bits ftr_id_isar4[] = {
+>>  	ARM64_FTR_END,
+>>  };
+>>  
+>> +static const struct arm64_ftr_bits ftr_id_mmfr5[] = {
+>> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_MMFR5_ETS_SHIFT, 4, 0),
+>> +	ARM64_FTR_END,
+>> +};
+>> +
+>>  static const struct arm64_ftr_bits ftr_id_isar6[] = {
+>>  	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR6_I8MM_SHIFT, 4, 0),
+>>  	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR6_BF16_SHIFT, 4, 0),
+>> @@ -527,6 +532,7 @@ static const struct __ftr_reg_entry {
+>>  	ARM64_FTR_REG(SYS_MVFR2_EL1, ftr_mvfr2),
+>>  	ARM64_FTR_REG(SYS_ID_PFR2_EL1, ftr_id_pfr2),
+>>  	ARM64_FTR_REG(SYS_ID_DFR1_EL1, ftr_id_dfr1),
+>> +	ARM64_FTR_REG(SYS_ID_MMFR5_EL1, ftr_id_mmfr5),
+>>  
+>>  	/* Op1 = 0, CRn = 0, CRm = 4 */
+>>  	ARM64_FTR_REG(SYS_ID_AA64PFR0_EL1, ftr_id_aa64pfr0),
+>> @@ -732,6 +738,7 @@ void __init init_cpu_features(struct cpuinfo_arm64 *info)
+>>  		init_cpu_ftr_reg(SYS_ID_MMFR1_EL1, info->reg_id_mmfr1);
+>>  		init_cpu_ftr_reg(SYS_ID_MMFR2_EL1, info->reg_id_mmfr2);
+>>  		init_cpu_ftr_reg(SYS_ID_MMFR3_EL1, info->reg_id_mmfr3);
+>> +		init_cpu_ftr_reg(SYS_ID_MMFR5_EL1, info->reg_id_mmfr5);
+>>  		init_cpu_ftr_reg(SYS_ID_PFR0_EL1, info->reg_id_pfr0);
+>>  		init_cpu_ftr_reg(SYS_ID_PFR1_EL1, info->reg_id_pfr1);
+>>  		init_cpu_ftr_reg(SYS_ID_PFR2_EL1, info->reg_id_pfr2);
+>> @@ -866,6 +873,8 @@ static int update_32bit_cpu_features(int cpu, struct cpuinfo_arm64 *info,
+>>  				      info->reg_id_mmfr2, boot->reg_id_mmfr2);
+>>  	taint |= check_update_ftr_reg(SYS_ID_MMFR3_EL1, cpu,
+>>  				      info->reg_id_mmfr3, boot->reg_id_mmfr3);
+> 
+> Looks like MMFR4 is missing here?
 
-                        if (unlikely(lower->features & feature))
-                                netdev_WARN(upper, "failed to disable
-%pNF on %s!\n",
+ID_MMFR4 is missing from cpuinfo_arm64 itself, hence from init_cpu_features()
+and update_cpu_features() as well. But it is defined in arm64_ftr_regs[]. I
+was wondering about it but left as it is (due to lack of complete context).
+Unless there is any other concern, will add it up in cpuinfo_arm64 and make
+it a part of the CPU context.
