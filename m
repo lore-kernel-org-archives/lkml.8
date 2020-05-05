@@ -2,92 +2,125 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0F6C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 258FCC4725B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A617220838
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:31:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588692701;
-	bh=10UQQl3GPfT8mcIMbnLtvCSvPWaMAUPM/kBH8ajFl40=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=tiLtH5rda0oa7Nkob6zqz0S/eDxA/WXcXPhZJHEzE05qGAcxSIOPL/SPdbpmjFkYQ
-	 32fXlyLEVm4vmyDBRjXlgV5wmTkptDu+IhjSq5WMuEnh04f5yfNIyOcnHsE/L1e4NF
-	 nIMx8BxdmDXIdZeLbBTBJer1RQEvRUYYbgyy/QN8=
+	by mail.kernel.org (Postfix) with ESMTP id 0ACB1206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:32:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729986AbgEEPbk (ORCPT
+        id S1730086AbgEEPcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:31:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59980 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729281AbgEEPbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:31:40 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EDF92078C;
-        Tue,  5 May 2020 15:31:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588692700;
-        bh=10UQQl3GPfT8mcIMbnLtvCSvPWaMAUPM/kBH8ajFl40=;
-        h=From:To:Cc:Subject:Date:From;
-        b=HVY0pEgbAVyz6IqLvBZ+IAFiCCA7HoCpCBshkAB7xGhGO4uSDrUtwD2ZVCZ9I4C+C
-         jbloa10/2h+K7Ygp7jK04JFUsG6e0EtkkH/eTnRXAMrtKnRkaoO6ETvjAO0Z9+36t5
-         aVt+W3WZEw3RkFaT4DxJJAMSc7dYncstrhRsW7bA=
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [PATCH] f2fs: get parent inode when recovering pino
-Date:   Tue,  5 May 2020 08:31:39 -0700
-Message-Id: <20200505153139.201697-1-jaegeuk@kernel.org>
-X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
+        Tue, 5 May 2020 11:32:25 -0400
+Received: from smtp-42ab.mail.infomaniak.ch ([84.16.66.171]:57455 "EHLO
+        smtp-42ab.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729858AbgEEPcX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 11:32:23 -0400
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49GkHT2wK6zlhjXL;
+        Tue,  5 May 2020 17:32:21 +0200 (CEST)
+Received: from localhost (unknown [94.23.54.103])
+        by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 49GkHS4fpxzlsV54;
+        Tue,  5 May 2020 17:32:20 +0200 (CEST)
+From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?q?Philippe=20Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH v5 2/6] fs: Add a MAY_EXECMOUNT flag to infer the noexec mount property
+Date:   Tue,  5 May 2020 17:31:52 +0200
+Message-Id: <20200505153156.925111-3-mic@digikod.net>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200505153156.925111-1-mic@digikod.net>
+References: <20200505153156.925111-1-mic@digikod.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We had to grab the inode before retrieving i_ino.
+This new MAY_EXECMOUNT flag enables to check if the underlying mount
+point of an inode is marked as executable.  This is useful to implement
+a security policy taking advantage of the noexec mount option.
 
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+This flag is set according to path_noexec(), which checks if a mount
+point is mounted with MNT_NOEXEC or if the underlying superblock is
+SB_I_NOEXEC.
+
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+Reviewed-by: Philippe Trébuchet <philippe.trebuchet@ssi.gouv.fr>
+Reviewed-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+Cc: Aleksa Sarai <cyphar@cyphar.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Kees Cook <keescook@chromium.org>
 ---
- fs/f2fs/file.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ fs/namei.c         | 2 ++
+ include/linux/fs.h | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index a0a4413d6083b..9d4c3e3503567 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -168,6 +168,7 @@ static const struct vm_operations_struct f2fs_file_vm_ops = {
- static int get_parent_ino(struct inode *inode, nid_t *pino)
- {
- 	struct dentry *dentry;
-+	struct inode *parent;
+diff --git a/fs/namei.c b/fs/namei.c
+index a320371899cf..33b6d372e74a 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -2849,6 +2849,8 @@ static int may_open(const struct path *path, int acc_mode, int flag)
+ 		break;
+ 	}
  
- 	inode = igrab(inode);
- 	dentry = d_find_any_alias(inode);
-@@ -175,8 +176,13 @@ static int get_parent_ino(struct inode *inode, nid_t *pino)
- 	if (!dentry)
- 		return 0;
++	/* Pass the mount point executability. */
++	acc_mode |= path_noexec(path) ? 0 : MAY_EXECMOUNT;
+ 	error = inode_permission(inode, MAY_OPEN | acc_mode);
+ 	if (error)
+ 		return error;
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 313c934de9ee..79435fca6c3e 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -103,6 +103,8 @@ typedef int (dio_iodone_t)(struct kiocb *iocb, loff_t offset,
+ #define MAY_NOT_BLOCK		0x00000080
+ /* the inode is opened with O_MAYEXEC */
+ #define MAY_OPENEXEC		0x00000100
++/* the mount point is marked as executable */
++#define MAY_EXECMOUNT		0x00000200
  
--	*pino = parent_ino(dentry);
-+	parent = igrab(d_inode(dentry->d_parent));
- 	dput(dentry);
-+	if (!parent)
-+		return 0;
-+
-+	*pino = parent->i_ino;
-+	iput(parent);
- 	return 1;
- }
- 
+ /*
+  * flags in file.f_mode.  Note that FMODE_READ and FMODE_WRITE must correspond
 -- 
-2.26.2.526.g744177e7f7-goog
+2.26.2
 
