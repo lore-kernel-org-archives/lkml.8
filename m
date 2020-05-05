@@ -2,87 +2,108 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C273C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE05BC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14ADC206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:55:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B307A2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:55:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588690520;
+	bh=Azr1vvaVE+dpgsB2aF/71FqLe9dlhB5Rzk/5TXfEeuE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=plG0O0bVtlj9P+dMXIgEfBqs+/vvO5qCjCGVYxIWUGZx9gcfTI6YsPLE8alJpPPcA
+	 j1sPZLYBYmf+cwjdebW8MzA+818x3LEMmyTyISZdRKUfnvCTUS/avV01j1lFgJgehR
+	 r6L0IEXr+vyr4m5iKW6A1Db4T0XPLAKE5JkPYPKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729517AbgEEOzO (ORCPT
+        id S1729625AbgEEOzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:55:14 -0400
-Received: from mga14.intel.com ([192.55.52.115]:15926 "EHLO mga14.intel.com"
+        Tue, 5 May 2020 10:55:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729065AbgEEOzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:55:13 -0400
-IronPort-SDR: q0OzYQ6AhGRdU+7qih6XKW0VWGDu7GmjffiH+RicukiofPQlB286SXeAS/I0eWHWfanzxL7tP4
- LoWytvZVPYUg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 07:55:11 -0700
-IronPort-SDR: cdkoVR4zO3IfN7UEXcWHPg+dN81PKHeHv/O8xvNLRn9HPZrU/M65dJuUs6rdXm5Byi6XFHk+/i
- hbjclvgPEujQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,355,1583222400"; 
-   d="scan'208";a="434513771"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 05 May 2020 07:55:11 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
-        by linux.intel.com (Postfix) with ESMTP id 2185758048A;
-        Tue,  5 May 2020 07:55:11 -0700 (PDT)
-Message-ID: <43976043c0689c985f97dc782d40f2c330a02b7a.camel@linux.intel.com>
-Subject: Re: [PATCH 2/3] mfd: Intel Platform Monitoring Technology support
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Randy Dunlap <rdunlap@infradead.org>, bhelgaas@google.com,
-        andy@infradead.org, alexander.h.duyck@intel.com
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Date:   Tue, 05 May 2020 07:55:11 -0700
-In-Reply-To: <531eb6c8-7403-5380-af40-dca229467e6e@infradead.org>
-References: <20200505013206.11223-1-david.e.box@linux.intel.com>
-         <20200505023149.11630-1-david.e.box@linux.intel.com>
-         <531eb6c8-7403-5380-af40-dca229467e6e@infradead.org>
-Organization: David E. Box
+        id S1729065AbgEEOzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 10:55:19 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B2C220735;
+        Tue,  5 May 2020 14:55:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588690518;
+        bh=Azr1vvaVE+dpgsB2aF/71FqLe9dlhB5Rzk/5TXfEeuE=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=a5T8EinthUvJYRSr+mDUEaHJpiDGT5FyYKSGeJgqQgPB9yzzJ/bZqKndMr8dmmZk+
+         G/+2kcFH/j8Q3frXdg/sV12LGzLgzwohBNdnh7k3qpqtxY5gguiTX0y/DuZD/h2Rfa
+         BRuAWlKLuiClUuDIsOmttZKI3VAVLYTii0CAf3Dg=
+Message-ID: <e7d94046a8e2e9c9603b8ff2c69aabcb50ff5ce1.camel@kernel.org>
+Subject: Re: [PATCH] ceph: demote quotarealm lookup warning to a debug
+ message
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Luis Henriques <lhenriques@suse.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Gregory Farnum <gfarnum@redhat.com>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 05 May 2020 10:55:17 -0400
+In-Reply-To: <20200505125902.GA10381@suse.com>
+References: <20200505125902.GA10381@suse.com>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-05-04 at 19:53 -0700, Randy Dunlap wrote:
-> On 5/4/20 7:31 PM, David E. Box wrote:
-> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > index 0a59249198d3..c673031acdf1 100644
-> > --- a/drivers/mfd/Kconfig
-> > +++ b/drivers/mfd/Kconfig
-> > @@ -632,6 +632,16 @@ config MFD_INTEL_MSIC
-> >  	  Passage) chip. This chip embeds audio, battery, GPIO, etc.
-> >  	  devices used in Intel Medfield platforms.
-> >  
-> > +config MFD_INTEL_PMT
-> > +	tristate "Intel Platform Monitoring Technology support"
-> > +	depends on PCI
-> > +	select MFD_CORE
-> > +	help
-> > +	  The Intel Platform Monitoring Technology (PMT) is an
-> > interface that
-> > +	  provides access to hardware monitor registers. This driver
-> > supports
-> > +	  Telemetry, Watcher, and Crashlog PTM capabilities/devices for
+On Tue, 2020-05-05 at 13:59 +0100, Luis Henriques wrote:
+> A misconfigured cephx can easily result in having the kernel client
+> flooding the logs with:
 > 
-> What is PTM?
+>   ceph: Can't lookup inode 1 (err: -13)
+> 
+> Change his message to debug level.
+> 
+> Link: https://tracker.ceph.com/issues/44546
+> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> ---
+> Hi!
+> 
+> This patch should fix some harmless warnings when using cephx to restrict
+> users access to certain filesystem paths.  I've added a comment to the
+> tracker where removing this warning could result (unlikely, IMHO!) in an
+> admin to miss not-so-harmless bogus configurations.
+> 
+> Cheers,
+> --
+> Luís
+> 
+>  fs/ceph/quota.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/ceph/quota.c b/fs/ceph/quota.c
+> index de56dee60540..19507e2fdb57 100644
+> --- a/fs/ceph/quota.c
+> +++ b/fs/ceph/quota.c
+> @@ -159,8 +159,8 @@ static struct inode *lookup_quotarealm_inode(struct ceph_mds_client *mdsc,
+>  	}
+>  
+>  	if (IS_ERR(in)) {
+> -		pr_warn("Can't lookup inode %llx (err: %ld)\n",
+> -			realm->ino, PTR_ERR(in));
+> +		dout("Can't lookup inode %llx (err: %ld)\n",
+> +		     realm->ino, PTR_ERR(in));
+>  		qri->timeout = jiffies + msecs_to_jiffies(60 * 1000); /* XXX */
+>  	} else {
+>  		qri->timeout = 0;
+> 
 
-s/PTM/PMT
+Merged into testing.
 
-I have the fortune of working on another project involving PCI
-Precision Time Management.
+Thanks Luis!
+-- 
+Jeff Layton <jlayton@kernel.org>
 
