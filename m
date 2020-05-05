@@ -2,326 +2,90 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0495C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 01:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D12C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 01:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86E48206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 01:30:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="eOY1+0+N"
+	by mail.kernel.org (Postfix) with ESMTP id E60D3206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 01:32:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgEEBaC (ORCPT
+        id S1727795AbgEEBcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 21:30:02 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:10987 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbgEEBaC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 21:30:02 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eb0c1190000>; Mon, 04 May 2020 18:27:53 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 04 May 2020 18:30:01 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 04 May 2020 18:30:01 -0700
-Received: from [10.2.56.198] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 5 May
- 2020 01:30:01 +0000
-Subject: Re: [PATCH hmm v2 5/5] mm/hmm: remove the customizable pfn format
- from hmm_range_fault
-To:     Jason Gunthorpe <jgg@ziepe.ca>, <linux-mm@kvack.org>,
-        Ralph Campbell <rcampbell@nvidia.com>
-CC:     Alex Deucher <alexander.deucher@amd.com>,
-        <amd-gfx@lists.freedesktop.org>, Ben Skeggs <bskeggs@redhat.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        <dri-devel@lists.freedesktop.org>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Christoph Hellwig <hch@lst.de>,
-        <intel-gfx@lists.freedesktop.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        <linux-kernel@vger.kernel.org>,
-        Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
-        <nouveau@lists.freedesktop.org>,
-        "Yang, Philip" <Philip.Yang@amd.com>
-References: <5-v2-b4e84f444c7d+24f57-hmm_no_flags_jgg@mellanox.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <c0d02b98-c356-60b1-6043-5b8d1a9be19a@nvidia.com>
-Date:   Mon, 4 May 2020 18:30:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 21:32:41 -0400
+Received: from mga12.intel.com ([192.55.52.136]:52077 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726531AbgEEBck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 21:32:40 -0400
+IronPort-SDR: xIEtsE+m9CAcakmqGcP+5s+rpQ041eFR2Qvpgl46aHGFgNPwd80/AxBczQQLzjwkbr0oeQDX99
+ v+EaJ8tooq0g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 18:32:40 -0700
+IronPort-SDR: hHcKuDlrpepWuD8j8R8/g9YI9pBzTLbTh7UihT5c1jcZmfmhwmuuWM9V0uAGae6v67vQQ6dFvy
+ aJ0HY1fVhfPQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,354,1583222400"; 
+   d="scan'208";a="338501940"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 04 May 2020 18:32:40 -0700
+Received: from debox1-hc.jf.intel.com (debox1-hc.jf.intel.com [10.54.75.159])
+        by linux.intel.com (Postfix) with ESMTP id 51639580613;
+        Mon,  4 May 2020 18:32:40 -0700 (PDT)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     bhelgaas@google.com, andy@infradead.org,
+        alexander.h.duyck@intel.com
+Cc:     "David E. Box" <david.e.box@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [PATCH 1/3] pci: Add Designated Vendor Specific Capability
+Date:   Mon,  4 May 2020 18:32:04 -0700
+Message-Id: <20200505013206.11223-2-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200505013206.11223-1-david.e.box@linux.intel.com>
+References: <20200505013206.11223-1-david.e.box@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <5-v2-b4e84f444c7d+24f57-hmm_no_flags_jgg@mellanox.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588642074; bh=0RmV3sG8w7ohZ9OHDH/pFQovyGtqFiweq5osGERvRpo=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=eOY1+0+N16Z8aXdaiKYs4SjvO5ciGMllXCnn4JHvxrMNegzH6IgzBrgMQ6KLknx+2
-         NW61WlLixaCXwpAX66FkMFk33D1AZxP9m+6e4xhyt3iViJHKiqZE0yxobywOngahYp
-         Oa4t4//YPZ9FBYbFVnWJS7FFUuGNZMQcvthU8XFKEm+qluSRkODN/sHHCRiJUh5bGf
-         BKKLGG2OcIR8QibGldQa4e9evirUYK9GxZAkXDoSgZQj+ERLHJV3M/7/AZZ0+IMwVQ
-         /QA2kar4rqltVlXZDL6gLT9+eQ5GwMKMARyXGnZEQoIO2rCTlEo8sgwnQQ5HXAkQnM
-         O4nW+Hut9230g==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-01 11:20, Jason Gunthorpe wrote:
-> From: Jason Gunthorpe <jgg@mellanox.com>
-> 
-> Presumably the intent here was that hmm_range_fault() could put the data
-> into some HW specific format and thus avoid some work. However, nothing
-> actually does that, and it isn't clear how anything actually could do that
-> as hmm_range_fault() provides CPU addresses which must be DMA mapped.
-> 
-> Perhaps there is some special HW that does not need DMA mapping, but we
-> don't have any examples of this, and the theoretical performance win of
-> avoiding an extra scan over the pfns array doesn't seem worth the
-> complexity. Plus pfns needs to be scanned anyhow to sort out any
-> DEVICE_PRIVATE pages.
-> 
-> This version replaces the uint64_t with an usigned long containing a pfn
-> and fixed flags. On input flags is filled with the HMM_PFN_REQ_* values,
-> on successful output it is filled with HMM_PFN_* values, describing the
-> state of the pages.
-> 
+Add pcie dvsec extended capability id along with helper macros to
+retrieve information from the headers.
 
-Just some minor stuff below. I wasn't able to spot any errors in the code,
-though, so these are just documentation nits.
+https://members.pcisig.com/wg/PCI-SIG/document/12335
 
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+---
+ include/uapi/linux/pci_regs.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-...
-
-> 
-> diff --git a/Documentation/vm/hmm.rst b/Documentation/vm/hmm.rst
-> index 9924f2caa0184c..c9f2329113a47f 100644
-> --- a/Documentation/vm/hmm.rst
-> +++ b/Documentation/vm/hmm.rst
-> @@ -185,9 +185,6 @@ The usage pattern is::
->         range.start = ...;
->         range.end = ...;
->         range.pfns = ...;
-
-That should be:
-
-           range.hmm_pfns = ...;
-
-
-> -      range.flags = ...;
-> -      range.values = ...;
-> -      range.pfn_shift = ...;
->   
->         if (!mmget_not_zero(interval_sub->notifier.mm))
->             return -EFAULT;
-> @@ -229,15 +226,10 @@ The hmm_range struct has 2 fields, default_flags and pfn_flags_mask, that specif
->   fault or snapshot policy for the whole range instead of having to set them
->   for each entry in the pfns array.
->   
-> -For instance, if the device flags for range.flags are::
-> +For instance if the device driver wants pages for a range with at least read
-> +permission, it sets::
->   
-> -    range.flags[HMM_PFN_VALID] = (1 << 63);
-> -    range.flags[HMM_PFN_WRITE] = (1 << 62);
-> -
-> -and the device driver wants pages for a range with at least read permission,
-> -it sets::
-> -
-> -    range->default_flags = (1 << 63);
-> +    range->default_flags = HMM_PFN_REQ_FAULT;
->       range->pfn_flags_mask = 0;
->   
->   and calls hmm_range_fault() as described above. This will fill fault all pages
-> @@ -246,18 +238,18 @@ in the range with at least read permission.
->   Now let's say the driver wants to do the same except for one page in the range for
->   which it wants to have write permission. Now driver set::
->   
-> -    range->default_flags = (1 << 63);
-> -    range->pfn_flags_mask = (1 << 62);
-> -    range->pfns[index_of_write] = (1 << 62);
-> +    range->default_flags = HMM_PFN_REQ_FAULT;
-> +    range->pfn_flags_mask = HMM_PFN_REQ_WRITE;
-> +    range->pfns[index_of_write] = HMM_PFN_REQ_WRITE;
-
-
-All these choices for _WRITE behavior make it slightly confusing. I mean, it's
-better than it was, but there are default flags, a mask, and an index as well,
-and it looks like maybe we have a little more power and flexibility than
-desirable? Nouveau for example is now just setting the mask only:
-
-// nouveau_range_fault():
-     .pfn_flags_mask = HMM_PFN_REQ_FAULT | HMM_PFN_REQ_WRITE,
-     (.default_flags is not set, so is zero)
-
-Maybe the example should do what Nouveau is doing? And/or do we want to get rid
-of either .default_flags or .pfn_flags_mask?
-
-...
-
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
-> index cf0d9bd61bebf9..99697df28bfe12 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_svm.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
-
-...
-
-> @@ -518,9 +506,45 @@ static const struct mmu_interval_notifier_ops nouveau_svm_mni_ops = {
->   	.invalidate = nouveau_svm_range_invalidate,
->   };
->   
-> +static void nouveau_hmm_convert_pfn(struct nouveau_drm *drm,
-> +				    struct hmm_range *range, u64 *ioctl_addr)
-> +{
-> +	unsigned long i, npages;
-> +
-> +	/*
-> +	 * The ioctl_addr prepared here is passed through nvif_object_ioctl()
-> +	 * to an eventual DMA map in something like gp100_vmm_pgt_pfn()
-> +	 *
-> +	 * This is all just encoding the internal hmm reprensetation into a
-
-"representation"
-
-...
-
-> @@ -542,12 +564,15 @@ static int nouveau_range_fault(struct nouveau_svmm *svmm,
->   			return -EBUSY;
->   
->   		range.notifier_seq = mmu_interval_read_begin(range.notifier);
-> -		range.default_flags = 0;
-> -		range.pfn_flags_mask = -1UL;
->   		down_read(&mm->mmap_sem);
->   		ret = hmm_range_fault(&range);
->   		up_read(&mm->mmap_sem);
->   		if (ret) {
-> +			/*
-> +			 * FIXME: the input PFN_REQ flags are destroyed on
-> +			 * -EBUSY, we need to regenerate them, also for the
-> +			 * other continue below
-> +			 */
-
-
-How serious is this FIXME? It seems like we could get stuck in a loop here,
-if we're not issuing a new REQ, right?
-
-
->   			if (ret == -EBUSY)
->   				continue;
->   			return ret;
-> @@ -562,7 +587,7 @@ static int nouveau_range_fault(struct nouveau_svmm *svmm,
->   		break;
->   	}
->   
-> -	nouveau_dmem_convert_pfn(drm, &range);
-> +	nouveau_hmm_convert_pfn(drm, &range, ioctl_addr);
->   
->   	svmm->vmm->vmm.object.client->super = true;
->   	ret = nvif_object_ioctl(&svmm->vmm->vmm.object, data, size, NULL);
-> @@ -589,6 +614,7 @@ nouveau_svm_fault(struct nvif_notify *notify)
->   		} i;
->   		u64 phys[16];
->   	} args;
-> +	unsigned long hmm_pfns[ARRAY_SIZE(args.phys)];
-
-
-Is there a risk of blowing up the stack here?
-
-...
-
-> --- a/include/linux/hmm.h
-> +++ b/include/linux/hmm.h
-> @@ -19,45 +19,45 @@
->   #include <linux/mmu_notifier.h>
->   
->   /*
-> - * hmm_pfn_flag_e - HMM flag enums
-> + * On output:
-> + * 0             - The page is faultable and a future call with
-> + *                 HMM_PFN_REQ_FAULT could succeed.
-> + * HMM_PFN_VALID - the pfn field points to a valid PFN. This PFN is at
-> + *                 least readable. If dev_private_owner is !NULL then this could
-> + *                 point at a DEVICE_PRIVATE page.
-> + * HMM_PFN_WRITE - if the page memory can be written to (requires HMM_PFN_VALID)
-> + * HMM_PFN_ERROR - accessing the pfn is impossible and the device should
-> + *                 fail. ie poisoned memory, special pages, no vma, etc
->    *
-> - * Flags:
-> - * HMM_PFN_VALID: pfn is valid. It has, at least, read permission.
-> - * HMM_PFN_WRITE: CPU page table has write permission set
-> - *
-> - * The driver provides a flags array for mapping page protections to device
-> - * PTE bits. If the driver valid bit for an entry is bit 3,
-> - * i.e., (entry & (1 << 3)), then the driver must provide
-> - * an array in hmm_range.flags with hmm_range.flags[HMM_PFN_VALID] == 1 << 3.
-> - * Same logic apply to all flags. This is the same idea as vm_page_prot in vma
-> - * except that this is per device driver rather than per architecture.
-> + * On input:
-> + * 0                 - Return the current state of the page, do not fault it.
-> + * HMM_PFN_REQ_FAULT - The output must have HMM_PFN_VALID or hmm_range_fault()
-> + *                     will fail
-> + * HMM_PFN_REQ_WRITE - The output must have HMM_PFN_WRITE or hmm_range_fault()
-> + *                     will fail. Must be combined with HMM_PFN_REQ_FAULT.
->    */
-> -enum hmm_pfn_flag_e {
-> -	HMM_PFN_VALID = 0,
-> -	HMM_PFN_WRITE,
-> -	HMM_PFN_FLAG_MAX
-> +enum hmm_pfn_flags {
-
-Let's add:
-
-         /* Output flags: */
-
-> +	HMM_PFN_VALID = 1UL << (BITS_PER_LONG - 1),
-> +	HMM_PFN_WRITE = 1UL << (BITS_PER_LONG - 2),
-> +	HMM_PFN_ERROR = 1UL << (BITS_PER_LONG - 3),
-> +
-
-         /* Input flags: */
-
-...
-
-> @@ -174,44 +162,44 @@ static int hmm_vma_walk_hole(unsigned long addr, unsigned long end,
->   	}
->   	if (required_fault)
->   		return hmm_vma_fault(addr, end, required_fault, walk);
-> -	return hmm_pfns_fill(addr, end, range, HMM_PFN_NONE);
-> +	return hmm_pfns_fill(addr, end, range, 0);
->   }
->   
-> -static inline uint64_t pmd_to_hmm_pfn_flags(struct hmm_range *range, pmd_t pmd)
-> +static inline unsigned long pmd_to_hmm_pfn_flags(struct hmm_range *range,
-> +						 pmd_t pmd)
->   {
->   	if (pmd_protnone(pmd))
->   		return 0;
-> -	return pmd_write(pmd) ? range->flags[HMM_PFN_VALID] |
-> -				range->flags[HMM_PFN_WRITE] :
-> -				range->flags[HMM_PFN_VALID];
-> +	return pmd_write(pmd) ? (HMM_PFN_VALID | HMM_PFN_WRITE) : HMM_PFN_VALID;
-
-
-I always found the previous range->flags[...] approach hard to remember, so it's
-nice to see a simpler version now.
-
-
-thanks,
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index f9701410d3b5..c96f08d1e711 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -720,6 +720,7 @@
+ #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port Containment */
+ #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
+ #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
++#define PCI_EXT_CAP_ID_DVSEC	0x23	/* Desinated Vendor-Specific */
+ #define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
+ #define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer 16.0 GT/s */
+ #define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL_16GT
+@@ -1062,6 +1063,10 @@
+ #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /* LTR_L1.2_THRESHOLD_Scale */
+ #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register */
+ 
++/* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
++#define PCI_DVSEC_HEADER1		0x4 /* Vendor-Specific Header1 */
++#define PCI_DVSEC_HEADER2		0x8 /* Vendor-Specific Header2 */
++
+ /* Data Link Feature */
+ #define PCI_DLF_CAP		0x04	/* Capabilities Register */
+ #define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchange Enable */
 -- 
-John Hubbard
-NVIDIA
+2.20.1
+
