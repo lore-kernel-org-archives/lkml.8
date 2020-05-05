@@ -2,126 +2,150 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D11C47256
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EFCC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B68F20735
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3E1E20735
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:56:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="RppM4Sti"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730583AbgEERza (ORCPT
+        id S1730488AbgEER4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 13:55:30 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39655 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729315AbgEERz3 (ORCPT
+        Tue, 5 May 2020 13:56:50 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:55852 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729315AbgEER4t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 13:55:29 -0400
-Received: by mail-pl1-f196.google.com with SMTP id s20so1127650plp.6;
-        Tue, 05 May 2020 10:55:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=1XnfAt3AGQh/rZFKS28B4m7OBt34dcyuM9xZseDj1Xg=;
-        b=V2a9379zoGg3wdiuWGt8M6z5qkVEYZ25os4xgwLlG+2FnOHjtr70iuN6CBeQ8cEy2+
-         x4eckPo2By8HsZGrsbfFgyDwxPR49Z0X+F5OePeVQ+4qf1/hCYpZya7NgBKTz07nNPGs
-         Q8uyglXxR3J3AxZXxCUmmYic/nq69FdX/ngEiwX+LEyBSeoxsb3SNuXgJAeVYfHJw4Xr
-         opVR5iSRQmsoMTAmGI00BgaYZDzTszHRj3U8uEwdzSq72LI8CmauFHK/iTnn7sENbWJI
-         ZITGUDEW33iVdkTTqyKCapYov5upwlMT+NipxNoPqOPHq9bC1Wyg7yoydPPDMs1Q56ls
-         Ji5Q==
-X-Gm-Message-State: AGi0Pubf6c/6S2bCsBepki4VsVPkzpSeeGptO8dFBt27uyuFqtSBoD1C
-        VIpf205YWCrkuNnGP8KlFoZELY9FfJk=
-X-Google-Smtp-Source: APiQypICWTGE1KQHkpbZ7IS/dKQ3RPVusxPoSo0sC1YDpPK0n48xr0WoIfvQv3xSkcps+BXqktFuqA==
-X-Received: by 2002:a17:90a:3327:: with SMTP id m36mr4559967pjb.116.1588701326798;
-        Tue, 05 May 2020 10:55:26 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:b435:750c:4181:403d? ([2601:647:4000:d7:b435:750c:4181:403d])
-        by smtp.gmail.com with ESMTPSA id c10sm2783227pfm.50.2020.05.05.10.55.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2020 10:55:25 -0700 (PDT)
-Subject: Re: [PATCH v2] block: Make request_queue.rpm_status an enum
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200505140314.28813-1-geert+renesas@glider.be>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <92f41148-5973-a786-31f8-7a4e2f4c9b6c@acm.org>
-Date:   Tue, 5 May 2020 10:55:24 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 13:56:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1588701409; x=1620237409;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=BZbaV+a4U8fFiIaIlrZCfbC3DcKGOdw37Xx/FKA1f8w=;
+  b=RppM4StihQtn6BWRxdZ5FC5vrlO0lOo2yHzAPWMw5j1zVyqJ8QX+/Pgu
+   Kllyrtlknn4NR0/6dFZ+UdUrx29imIgEJ7cJ9RvUZCP63Jv4XYe13r/n8
+   7Eplsekk3l+quNjNh7xMk2nB38auh+uzxQd8ZuxkhGTu12VagKoVBNSSG
+   Y=;
+IronPort-SDR: G2mMMqyG1afU1/6i2loosHO4zzSo6fqmgFiJhpl6u0s8Jrh+UgW6IAkqpxpGXjZvRSSG9lLyVy
+ BI0+yfKVsPzQ==
+X-IronPort-AV: E=Sophos;i="5.73,356,1583193600"; 
+   d="scan'208";a="42847329"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 05 May 2020 17:56:47 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com (Postfix) with ESMTPS id A6B97A1D89;
+        Tue,  5 May 2020 17:56:43 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 5 May 2020 17:56:42 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.38) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 5 May 2020 17:56:35 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+CC:     SeongJae Park <sjpark@amazon.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        David Miller <davem@davemloft.net>,
+        "Al Viro" <viro@zeniv.linux.org.uk>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        <sj38.park@gmail.com>, netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        SeongJae Park <sjpark@amazon.de>, <snu@amazon.com>,
+        <amit@kernel.org>, <stable@vger.kernel.org>
+Subject: Re: Re: Re: [PATCH net v2 0/2] Revert the 'socket_alloc' life cycle change
+Date:   Tue, 5 May 2020 19:56:05 +0200
+Message-ID: <20200505175605.12015-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200505173036.GE2869@paulmck-ThinkPad-P72> (raw)
 MIME-Version: 1.0
-In-Reply-To: <20200505140314.28813-1-geert+renesas@glider.be>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.38]
+X-ClientProxiedBy: EX13D18UWC004.ant.amazon.com (10.43.162.77) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-05 07:03, Geert Uytterhoeven wrote:
-> request_queue.rpm_status is assigned values of the rpm_status enum only,
-> so reflect that in its type.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
-> Perhaps this was done to avoid the need to #include <linux/pm.h>?
-> Let's see what kbuild has to report about this...
-> 
-> v2:
->   - Add Acked-by.
-> ---
->  include/linux/blkdev.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-> index f00bd4042295967d..1e2c6f7a188941f1 100644
-> --- a/include/linux/blkdev.h
-> +++ b/include/linux/blkdev.h
-> @@ -454,7 +454,7 @@ struct request_queue {
->  
->  #ifdef CONFIG_PM
->  	struct device		*dev;
-> -	int			rpm_status;
-> +	enum rpm_status		rpm_status;
->  	unsigned int		nr_pending;
->  #endif
+On Tue, 5 May 2020 10:30:36 -0700 "Paul E. McKenney" <paulmck@kernel.org> wrote:
 
-Forward declarations of enums are not supported by the C language as far
-as I know. Relying on kbuild to decide whether or not to include
-<linux/pm.h> seems wrong to me. Please either add #include <linux/pm.h>
-or drop this patch.
+> On Tue, May 05, 2020 at 07:05:53PM +0200, SeongJae Park wrote:
+> > On Tue, 5 May 2020 09:37:42 -0700 Eric Dumazet <eric.dumazet@gmail.com> wrote:
+> > 
+> > > 
+> > > 
+> > > On 5/5/20 9:31 AM, Eric Dumazet wrote:
+> > > > 
+> > > > 
+> > > > On 5/5/20 9:25 AM, Eric Dumazet wrote:
+> > > >>
+> > > >>
+> > > >> On 5/5/20 9:13 AM, SeongJae Park wrote:
+> > > >>> On Tue, 5 May 2020 09:00:44 -0700 Eric Dumazet <edumazet@google.com> wrote:
+> > > >>>
+> > > >>>> On Tue, May 5, 2020 at 8:47 AM SeongJae Park <sjpark@amazon.com> wrote:
+> > > >>>>>
+> > > >>>>> On Tue, 5 May 2020 08:20:50 -0700 Eric Dumazet <eric.dumazet@gmail.com> wrote:
+> > > >>>>>
+> > > >>>>>>
+> > > >>>>>>
+> > > >>>>>> On 5/5/20 8:07 AM, SeongJae Park wrote:
+> > > >>>>>>> On Tue, 5 May 2020 07:53:39 -0700 Eric Dumazet <edumazet@google.com> wrote:
+> > > >>>>>>>
+> > > >>>>>>
+> > [...]
+> > > >>
+> > > >> I would ask Paul opinion on this issue, because we have many objects
+> > > >> being freed after RCU grace periods.
+> > > >>
+> > > >> If RCU subsystem can not keep-up, I guess other workloads will also suffer.
+> > > >>
+> > > >> Sure, we can revert patches there and there trying to work around the issue,
+> > > >> but for objects allocated from process context, we should not have these problems.
+> > > >>
+> > > > 
+> > > > I wonder if simply adjusting rcu_divisor to 6 or 5 would help 
+> > > > 
+> > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > > index d9a49cd6065a20936edbda1b334136ab597cde52..fde833bac0f9f81e8536211b4dad6e7575c1219a 100644
+> > > > --- a/kernel/rcu/tree.c
+> > > > +++ b/kernel/rcu/tree.c
+> > > > @@ -427,7 +427,7 @@ module_param(qovld, long, 0444);
+> > > >  static ulong jiffies_till_first_fqs = ULONG_MAX;
+> > > >  static ulong jiffies_till_next_fqs = ULONG_MAX;
+> > > >  static bool rcu_kick_kthreads;
+> > > > -static int rcu_divisor = 7;
+> > > > +static int rcu_divisor = 6;
+> > > >  module_param(rcu_divisor, int, 0644);
+> > > >  
+> > > >  /* Force an exit from rcu_do_batch() after 3 milliseconds. */
+> > > > 
+> > > 
+> > > To be clear, you can adjust the value without building a new kernel.
+> > > 
+> > > echo 6 >/sys/module/rcutree/parameters/rcu_divisor
+> > 
+> > I tried value 6, 5, and 4, but none of those removed the problem.
+> 
+> Thank you for checking this!
+> 
+> Was your earlier discussion on long RCU readers speculation, or do you
+> have measurements?
+
+It was just a guess without any measurement or dedicated investigation.
+
 
 Thanks,
+SeongJae Park
 
-Bart.
+> 
+> 							Thanx, Paul
