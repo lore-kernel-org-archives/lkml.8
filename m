@@ -2,91 +2,141 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F58C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA57C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6123206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E33B206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:18:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="s/qlWoxf"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dy8gI5Mm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728410AbgEEHSH (ORCPT
+        id S1728284AbgEEHSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 03:18:07 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:25507 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727978AbgEEHSF (ORCPT
+        Tue, 5 May 2020 03:18:11 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:32255 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727935AbgEEHSI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 03:18:05 -0400
+        Tue, 5 May 2020 03:18:08 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588663084; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=Ucvka1OSqO/XtIecNYyEKI9KAFnWzP85SPhN34KKW5c=;
- b=s/qlWoxf7eoNR63zUTc0JUfoxEa2CM+bBXC56C8I2jW6ptjl4ExxrvUoVlsF81br3kD6zM3B
- aRutnZmJ7ii+FZ03JcG/Ixj9Vb0SO67gQWYDn3Stu5lrgRSBUUPGWvHMzvVpO7MbfWVs4Hef
- gjk6JKijld0FeyzydMjYKKpOtVk=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ s=smtp; t=1588663088; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=FHvKSwOq7HDlR/x83tultcrCPZZOptkuScQLeJFruww=; b=dy8gI5MmD7QIhHZJxCSC3F+8JL7jA+HJKZMJ7gPAByILctaJYFbiglWXXyiuuULdhLcVXGU9
+ 0xFJfqs6REo9BrGT5QgRyPRTgb/Hd6ENb4dMTHv2tGiRD0lUFBYLXqUt7rS2IpTMpxopWHAs
+ h+7Qncml/NbJYnLU7dei36ovCxA=
+X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb11316.7fbb89257420-smtp-out-n04;
- Tue, 05 May 2020 07:17:42 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5eb11321.7fdbc0f4c6f8-smtp-out-n03;
+ Tue, 05 May 2020 07:17:53 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4336DC433BA; Tue,  5 May 2020 07:17:42 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        id 83413C433F2; Tue,  5 May 2020 07:17:53 +0000 (UTC)
+Received: from pillair-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 28A4DC433D2;
-        Tue,  5 May 2020 07:17:41 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 05 May 2020 12:47:41 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     sboyd@kernel.org, georgi.djakov@linaro.org,
-        bjorn.andersson@linaro.org, saravanak@google.com, mka@chromium.org,
-        nm@ti.com, agross@kernel.org, david.brown@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        dianders@chromium.org, vincent.guittot@linaro.org,
-        amit.kucheria@linaro.org, ulf.hansson@linaro.org,
-        lukasz.luba@arm.com, sudeep.holla@arm.com,
-        linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH v4 10/12] OPP: Add support for setting interconnect-tags
-In-Reply-To: <20200505045639.i4nnplwaxlkful4o@vireshk-i7>
-References: <20200504202243.5476-1-sibis@codeaurora.org>
- <20200504202243.5476-11-sibis@codeaurora.org>
- <20200505045639.i4nnplwaxlkful4o@vireshk-i7>
-Message-ID: <9310f586ca2084539353efdbca0d9c7d@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 19569C433D2;
+        Tue,  5 May 2020 07:17:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 19569C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   Rakesh Pillai <pillair@codeaurora.org>
+To:     ath10k@lists.infradead.org
+Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rakesh Pillai <pillair@codeaurora.org>
+Subject: [PATCH] ath10k: Skip handling del_server during driver exit
+Date:   Tue,  5 May 2020 12:47:41 +0530
+Message-Id: <1588663061-12138-1-git-send-email-pillair@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-05 10:26, Viresh Kumar wrote:
-> On 05-05-20, 01:52, Sibi Sankar wrote:
->> Add support for setting tags on icc paths associated with
->> the opp_table.
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->>  drivers/opp/of.c | 25 +++++++++++++++++++------
->>  1 file changed, 19 insertions(+), 6 deletions(-)
-> 
-> Maybe this should be part of Georgi's series ?
+The qmi infrastructure sends the client a del_server
+event when the client releases its qmi handle. This
+is not the msg indicating the actual qmi server exiting.
+In such cases the del_server msg should not be processed,
+since the wifi firmware does not reset its qmi state.
 
-yes, I've requested for the
-same in my cover-letter.
+Hence skip the processing of del_server event when the
+driver is unloading.
 
+Tested HW: WCN3990
+Tested FW: WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
+
+Fixes: ba94c753ccb4 ("ath10k: add QMI message handshake for wcn3990 client")
+Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+---
+ drivers/net/wireless/ath/ath10k/qmi.c | 13 ++++++++++++-
+ drivers/net/wireless/ath/ath10k/qmi.h |  6 ++++++
+ 2 files changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/ath/ath10k/qmi.c b/drivers/net/wireless/ath/ath10k/qmi.c
+index 85dce43..7abdef8 100644
+--- a/drivers/net/wireless/ath/ath10k/qmi.c
++++ b/drivers/net/wireless/ath/ath10k/qmi.c
+@@ -961,7 +961,16 @@ static void ath10k_qmi_del_server(struct qmi_handle *qmi_hdl,
+ 		container_of(qmi_hdl, struct ath10k_qmi, qmi_hdl);
+ 
+ 	qmi->fw_ready = false;
+-	ath10k_qmi_driver_event_post(qmi, ATH10K_QMI_EVENT_SERVER_EXIT, NULL);
++
++	/*
++	 * The del_server event is to be processed only if coming from
++	 * the qmi server. The qmi infrastructure sends del_server, when
++	 * any client releases the qmi handle. In this case do not process
++	 * this del_server event.
++	 */
++	if (qmi->state == ATH10K_QMI_STATE_INIT_DONE)
++		ath10k_qmi_driver_event_post(qmi, ATH10K_QMI_EVENT_SERVER_EXIT,
++					     NULL);
+ }
+ 
+ static struct qmi_ops ath10k_qmi_ops = {
+@@ -1091,6 +1100,7 @@ int ath10k_qmi_init(struct ath10k *ar, u32 msa_size)
+ 	if (ret)
+ 		goto err_qmi_lookup;
+ 
++	qmi->state = ATH10K_QMI_STATE_INIT_DONE;
+ 	return 0;
+ 
+ err_qmi_lookup:
+@@ -1109,6 +1119,7 @@ int ath10k_qmi_deinit(struct ath10k *ar)
+ 	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
+ 	struct ath10k_qmi *qmi = ar_snoc->qmi;
+ 
++	qmi->state = ATH10K_QMI_STATE_DEINIT;
+ 	qmi_handle_release(&qmi->qmi_hdl);
+ 	cancel_work_sync(&qmi->event_work);
+ 	destroy_workqueue(qmi->event_wq);
+diff --git a/drivers/net/wireless/ath/ath10k/qmi.h b/drivers/net/wireless/ath/ath10k/qmi.h
+index dc25737..b597205 100644
+--- a/drivers/net/wireless/ath/ath10k/qmi.h
++++ b/drivers/net/wireless/ath/ath10k/qmi.h
+@@ -83,6 +83,11 @@ struct ath10k_qmi_driver_event {
+ 	void *data;
+ };
+ 
++enum ath10k_qmi_state {
++	ATH10K_QMI_STATE_INIT_DONE,
++	ATH10K_QMI_STATE_DEINIT,
++};
++
+ struct ath10k_qmi {
+ 	struct ath10k *ar;
+ 	struct qmi_handle qmi_hdl;
+@@ -105,6 +110,7 @@ struct ath10k_qmi {
+ 	char fw_build_timestamp[MAX_TIMESTAMP_LEN + 1];
+ 	struct ath10k_qmi_cal_data cal_data[MAX_NUM_CAL_V01];
+ 	bool msa_fixed_perm;
++	enum ath10k_qmi_state state;
+ };
+ 
+ int ath10k_qmi_wlan_enable(struct ath10k *ar,
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+2.7.4
