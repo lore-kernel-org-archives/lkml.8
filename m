@@ -2,99 +2,103 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BABC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7441BC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6177C20735
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:10:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588687804;
-	bh=+ZwqiwiMx8jxlKUZJYOMUJycGuiHRy7wNsvP4B07hlw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=DJFEwqMSYmo+Jq86syuHDjTSnJZEBrZNFcbEKCa9O7aL7iSpl2wGmNRW0ors2+uST
-	 xOiLnJLnYWUApIzrkiSenOMXxKEHm7VJZmUlTHx+Vu+fUfJ/3jaMmduDBuht03Q01I
-	 GphXldCUr/1w+nZpZ09Sm2PMOmajQ8IfYChG846g=
+	by mail.kernel.org (Postfix) with ESMTP id 533A920675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:12:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729246AbgEEOKD (ORCPT
+        id S1729181AbgEEOMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:10:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59084 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727857AbgEEOKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:10:03 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D067320675;
-        Tue,  5 May 2020 14:10:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588687803;
-        bh=+ZwqiwiMx8jxlKUZJYOMUJycGuiHRy7wNsvP4B07hlw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Sco2qe2R6ULZ0SG6dvab5wjtqNs6aked0vMbvTuR+m+qIBsvXrCx9eJM9Q7C8h2MF
-         U/U3m9j/HYZ0Er5vmTzB97OsjuzpUTgrnjKnH8jDR7inGl3ndoVlq0e44jac6OefvM
-         mBWxHmrStp81eePzVALLr0ZM3qwU/Vh2jufHiV38=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jVyGm-009TGk-U9; Tue, 05 May 2020 15:10:01 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Subject: [PATCH] clk: Unlink clock if failed to prepare or enable
-Date:   Tue,  5 May 2020 15:09:53 +0100
-Message-Id: <20200505140953.409430-1-maz@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        Tue, 5 May 2020 10:12:19 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:43679 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728135AbgEEOMT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 10:12:19 -0400
+Received: from localhost.localdomain ([149.172.19.189]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1M4JiJ-1jVhJS0JBB-000KCA; Tue, 05 May 2020 16:11:39 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Marco Elver <elver@google.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Alexander Potapenko <glider@google.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH] kcsan: fix section mismatch for __write_once_size/blacklisted_initcalls
+Date:   Tue,  5 May 2020 16:11:32 +0200
+Message-Id: <20200505141137.665940-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux@roeck-us.net, sboyd@kernel.org, mturquette@baylibre.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Provags-ID: V03:K1:sZ6XTFz2CMPzSBdwXqFLEezhdI6Ey4V6Ow6vBHN3y1kBw7EMdFh
+ y5nNhRnXQJ73Pg+qHy/UJHeUVlDg7lkVCQGKEhyeWAy92WId526I8uu/QZro6fYW7ebtZrT
+ ul2g/2vxNn9QJr511dIObPohwg3JNFDkoGe6kAj4hn38WAtksBxdNfM0griAJGQc9o9XpQ5
+ INo2uJqhRbaGcCB88gHog==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:RI3Kzrd0e/g=:AIXv0ToRN1k/nvlxAzGBxM
+ Tz4lY6vQzIM6rMn48R4pTFOHWdRdvmOBNSQ97XjRhhqf5Yzth2BHoNoKlWdwlPpdHl37rdlFv
+ atbnENqa8azxgZkyb2Rly8OxUy4qkvXPc/BeY/pKgqBNFsevVEuVuIivbSPjda3dKrt0Fz1Rp
+ zTXt3/HgJVfqyEUERTWfB1pjnIgf6QirPK/namxOZrq+BtKVidVoZ9bldImXck4zuYxp1cgjD
+ l/TVoYypaoNIg0mienxNLvJrPfSmm4OMNwhv4GQjYAMIn7mcSHdniKI67YWyqiu5d2KSls9yd
+ 2XTD4h8sNA017a9Gc6Zx4TV4wgV0EtHXy4xW+f2vZP5mZwZF5+RNAs8WaCnq5z6XiUvaj2+uB
+ 4XeVo6W3U0UhV+G7iCZ9ctHTZsvKtBm3PHAXqaxPlcCjHx7h9cNI+uTUf2e2k2V9RkeFjMhqw
+ ARbWiYYTggSpPtqH8vFbGspdaiBxBWg6iB1SWxZk4K3FDZAVoSX1niVf27VNG0QW907f4giXm
+ ETrIGe6sTzhLEx2S9NXsXyPtl2DKPDVM9vBZm4M4WkEo+sPJs07B/KjwugIhlltz3ktOX8qf5
+ uFn0h3rYnIecJ/JZq8ZGYLJjZZj9FLiHTM4+8MeT6GFMjLcRQEznClPB0Nbstuxht4qB3L4P0
+ xUxT+1WwmnbipawbgfCkvrjBYV/LjNFQlJftcGoPz0JY9TPY45ti69jFaGPV4leHBZyd9eZqe
+ 28nnXdb2CczmbFMjxXuQKZRWLUeMv5rPijpw+adv8Hmd631RBaTnlUUK/eC2DtkfSx59zR1bB
+ ZnFvyifIFRS5cLQL9gJ4Lt8927Zs0oR6upAv3Tb9RxtrE0C4FE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On failing to prepare or enable a clock, remove the core structure
-from the list it has been inserted as it is about to be freed.
+Moving __write_once_size out of line causes a section mismatch warning
+with clang in one instance:
 
-This otherwise leads to random crashes when subsequent clocks get
-registered, during which parsing of the clock tree becomes adventurous.
+WARNING: modpost: vmlinux.o(.text+0x8dc): Section mismatch in reference from the function __write_once_size() to the variable .init.data:blacklisted_initcalls
+The function __write_once_size() references
+the variable __initdata blacklisted_initcalls.
+This is often because __write_once_size lacks a __initdata
+annotation or the annotation of blacklisted_initcalls is wrong.
 
-Observed with QEMU's RPi-3 emulation.
+Remove the __init_or_module annotation from the variable as a workaround.
 
-Fixes: 12ead77432f2 ("clk: Don't try to enable critical clocks if prepare failed")
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>
+Fixes: dfd402a4c4ba ("kcsan: Add Kernel Concurrency Sanitizer infrastructure")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/clk/clk.c | 3 +++
- 1 file changed, 3 insertions(+)
+So far, my randconfig checks found two such instances, one for read_once
+and one for write_once. There are probably a couple more in random
+configurations, but I guess they are rare enough that we can just work
+around them like this.
+---
+ init/main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index b34fc1d3a594..752e8eef3f55 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -3522,6 +3522,9 @@ static int __clk_core_init(struct clk_core *core)
- out:
- 	clk_pm_runtime_put(core);
- unlock:
-+	if (ret)
-+		hlist_del_init(&core->child_node);
-+
- 	clk_prepare_unlock();
+diff --git a/init/main.c b/init/main.c
+index 8f78399697e3..441c384a73cd 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -1020,7 +1020,7 @@ struct blacklist_entry {
+ 	char *buf;
+ };
  
- 	if (!ret)
+-static __initdata_or_module LIST_HEAD(blacklisted_initcalls);
++static LIST_HEAD(blacklisted_initcalls);
+ 
+ static int __init initcall_blacklist(char *str)
+ {
 -- 
-2.20.1
+2.26.0
 
