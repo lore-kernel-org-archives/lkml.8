@@ -2,99 +2,116 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6013C47256
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3873FC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84705206CC
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18B3F2075A
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:30:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DIWu5shl"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="SFAkZMtU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728552AbgEEI2I (ORCPT
+        id S1728575AbgEEIaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 04:28:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50842 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728497AbgEEI2H (ORCPT
+        Tue, 5 May 2020 04:30:12 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:37554 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbgEEIaM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 04:28:07 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6386C061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 01:28:05 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id y4so695033ljn.7
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 01:28:05 -0700 (PDT)
+        Tue, 5 May 2020 04:30:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bgM1z0W3jC692xWkgi3/Y+e2n/nzkwaSzFa78vdYF0E=;
-        b=DIWu5shlATY4PZunGAKyb/Z+n2zkJihLqazePZ4n/k6j5RCVLrLJOPjtisCmJ8+trj
-         /jCI1TplrSRfpZ5kH53qorDrheIpgsvZmn6FcroYQoDm5fn+1FLbBBDr72W4k8wY3OVB
-         oP681xMKnTOAASBA2YOqIwqrGCoLIboWhJoH6lGdTMUzvdFTmx0PSELZsW/M50f3dgAy
-         Dvxb+NmVgrs1GIGHpvW12W0Rsfa3soOn9dYUbzFobQPhbBJKn3mRg7aivW4Pww+9Jtxh
-         0hsIpSJz1JdCxorD1s+WITyExRl8HmHDaaFS3WDusH4MYrxLQ+cH9kSN4LWThyf4wjd2
-         GJvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bgM1z0W3jC692xWkgi3/Y+e2n/nzkwaSzFa78vdYF0E=;
-        b=qnvsEaGBPu1NUULXm0f6Oj/keNKyOCIca0IvuP72PrnqblFILjjWQWOs817hDPuwUu
-         +vZj4LCCu4F7vDNjIvfQKWRp1Mjaqv/IoHuyWlXGYbFdRJAzeSiW/ypXMrl5f48VrYHu
-         TOnCr4KS53JcE9P79pE8+aM5e/nxySoij9ELYobW+wUIhycTYMhjvxK1krx8JAlT9EIz
-         uasawwqFo0snFa34qOcl8vCg9jECKaaOk42E2kJNBWYLDqtBkfzE9hpvpeFlimEAg5IC
-         4stjHWWTjffxwzQ1q5SA1gJ4OyFivhnkuhcl4wfVUgyEnw2Q1fxM9pk3F32uix8QPaQI
-         ePoQ==
-X-Gm-Message-State: AGi0PuZ1O6yM2us3J8Pj2FTt6hirfmjKXIhOSh5QO3FtGfPUEfjCWy57
-        NI9jK3fN8eganhNw/rnncHKnhh10ddWWAZTTsgD++Q==
-X-Google-Smtp-Source: APiQypIIQGGErF0RDv5sRtJ2GxzvtG0I7XM5imQkPX+aeO8aBHMbbijsr0Vbdq7RLakWK+shJtSNW2tUidRKojT/TqI=
-X-Received: by 2002:a2e:8087:: with SMTP id i7mr993585ljg.99.1588667284186;
- Tue, 05 May 2020 01:28:04 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1588667412; x=1620203412;
+  h=to:cc:references:from:message-id:date:mime-version:
+   in-reply-to:content-transfer-encoding:subject;
+  bh=DB9DoB4dAy+tSnSPYNEN9V0bWmWAez3y3wdWalkVI28=;
+  b=SFAkZMtUg5437tJkyaAkUwpBwgD3+MhqYc/icE9iGSwTJLJUrNv6WHGj
+   CJyHD4dcbWtK9C4lOqdjx2aWSKLFAwoHshqaj9rFxan13KwR2nAOSz8JT
+   hv2ibk0bad86MFAGCZansOPwiyfVOf0Z0hDRdK8WLryD1y3w4J0duiZC6
+   A=;
+IronPort-SDR: m8F2JJq921i8U2hTPFX0OwXLwYDtpl5tpc29M2DH+3KrOTRiknwDPZ2TJ0WOTyoRcP0j5qH4tC
+ TRGUvBBx98GA==
+X-IronPort-AV: E=Sophos;i="5.73,354,1583193600"; 
+   d="scan'208";a="32985955"
+Subject: Re: [PATCH v9 3/3] edac: Add support for Amazon's Annapurna Labs L2 EDAC
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-e7be2041.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 05 May 2020 08:30:08 +0000
+Received: from EX13MTAUEB002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-e7be2041.us-west-2.amazon.com (Postfix) with ESMTPS id 77E8EA1D93;
+        Tue,  5 May 2020 08:30:07 +0000 (UTC)
+Received: from EX13D08UEB003.ant.amazon.com (10.43.60.11) by
+ EX13MTAUEB002.ant.amazon.com (10.43.60.12) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 5 May 2020 08:30:05 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
+ EX13D08UEB003.ant.amazon.com (10.43.60.11) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 5 May 2020 08:30:05 +0000
+Received: from [192.168.17.227] (10.1.213.30) by mail-relay.amazon.com
+ (10.43.61.243) with Microsoft SMTP Server (TLS) id 15.0.1497.2 via Frontend
+ Transport; Tue, 5 May 2020 08:30:02 +0000
+To:     Robert Richter <rrichter@marvell.com>, <bp@alien8.de>
+CC:     <mchehab@kernel.org>, <tony.luck@intel.com>, <james.morse@arm.com>,
+        <robh+dt@kernel.org>, <frowand.list@gmail.com>,
+        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
+        <Jonathan.Cameron@huawei.com>, <arnd@arndb.de>,
+        <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dwmw@amazon.co.uk>,
+        <benh@amazon.com>, <ronenk@amazon.com>, <talel@amazon.com>,
+        <jonnyc@amazon.com>, <hanochu@amazon.com>, <barakw@amazon.com>
+References: <20200129195016.956-1-hhhawa@amazon.com>
+ <20200129195016.956-4-hhhawa@amazon.com>
+ <20200310134713.n4gtrgtjdjymmgm5@rric.localdomain>
+From:   "Hawa, Hanna" <hhhawa@amazon.com>
+Message-ID: <8bd3e95c-c45e-383a-f1a3-d60be5c2ff19@amazon.com>
+Date:   Tue, 5 May 2020 11:30:00 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200408191458.1260397-1-arnd@arndb.de>
-In-Reply-To: <20200408191458.1260397-1-arnd@arndb.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 5 May 2020 10:27:52 +0200
-Message-ID: <CACRpkdYQJocN_-i07J0fFC16pDUfb9o0mzRF0YRO8UMrE=Suxw@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm: fix link error without CONFIG_DEBUG_FS
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200310134713.n4gtrgtjdjymmgm5@rric.localdomain>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 8, 2020 at 9:15 PM Arnd Bergmann <arnd@arndb.de> wrote:
 
-> I ran into a randconfig link error with debugfs disabled:
->
-> arm-linux-gnueabi-ld:
-> drivers/gpu/drm/msm/msm_gpu.o: in function `should_dump': msm_gpu.c:(.text+0x1cc): undefined reference to `rd_full'
->
-> Change the helper to only look at this variable if debugfs is present.
->
-> Fixes: e515af8d4a6f ("drm/msm: devcoredump should dump MSM_SUBMIT_BO_DUMP buffers")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-This fixes a compilation error for me on the APQ8060.
-Tested-by: Linus Walleij <linus.walleij@linaro.org>
+On 3/10/2020 3:47 PM, Robert Richter wrote:
+> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> 
+> 
+> 
+> On 29.01.20 21:50:16, Hanna Hawa wrote:
+>> Adds support for Amazon's Annapurna Labs L2 EDAC driver to detect and
+>> report L2 errors.
+>>
+>> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
+>> ---
+>>   MAINTAINERS               |   5 +
+>>   drivers/edac/Kconfig      |   8 ++
+>>   drivers/edac/Makefile     |   1 +
+>>   drivers/edac/al_l2_edac.c | 270 ++++++++++++++++++++++++++++++++++++++
+>>   4 files changed, 284 insertions(+)
+>>   create mode 100644 drivers/edac/al_l2_edac.c
+> 
+> Hanna, most of the review comments by Boris for patch #1 (al_l1_edac)
+> apply here too. Please address them.
 
-Yours,
-Linus Walleij
+Hi Boris, Robert,
+
+Sorry for not getting back to you sooner, will address comments on both 
+files and upload new patchset ASAP.
+
+Thanks,
+Hanna
+
+> 
+> Thanks,
+> 
+> -Robert
+> 
