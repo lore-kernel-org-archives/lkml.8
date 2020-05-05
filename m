@@ -2,149 +2,86 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14637C47256
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF59C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9110206CC
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C11320663
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588702631;
-	bh=bRKHqVtZZy3s0CV+bqbA3cR1nIgDpsK/suTlUu5Jacw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=zQ9QOwDGWwjEv12nnUS/Ki8QbvmxmdV4MdD/L/nfP+MHY3msVJ5EjvxEeurWlAsfZ
-	 LWqCRBNYpPFqAbLwH07rijk331cVZrrH1oT6B9KkjEFL+6nA4x46ZUd1n3jsMp5gWX
-	 HQ09N/Vy0tryDET85GTTdnydT3oD2CXVBXqBo9AE=
+	s=default; t=1588702651;
+	bh=oZIhy4uAhQMfRftPSAxXEs0/SUwk5XbjQFCfi1/11+o=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=2v3IbYMQegMjf8RAIbm3NIbE9Vl1oFahSVksPtmUzTVe+3ALto3lml7BlaNJgCsJc
+	 zwKhtvfoob3fQDgo70QvWp9JqsxBZK0koddzJka9sptnghrSzyLRZ80quNfeH64k8X
+	 vNJ7PYqX6VmAU2GYYjEVCPqOeTyjTTI/erDFR+aw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730791AbgEESRI (ORCPT
+        id S1730825AbgEESRa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 14:17:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60714 "EHLO mail.kernel.org"
+        Tue, 5 May 2020 14:17:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730334AbgEESRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 14:17:08 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730258AbgEESR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 14:17:29 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03C1E20663;
-        Tue,  5 May 2020 18:17:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82C2220663;
+        Tue,  5 May 2020 18:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588702628;
-        bh=bRKHqVtZZy3s0CV+bqbA3cR1nIgDpsK/suTlUu5Jacw=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=wXZ3e5nUNdk+37vbIr6V99Ka+VeRWm8SrCdR+v5lTp/MaQHRFurtZYjN82+Xe9eK4
-         nYdwh7LgQ5UmgNeQOw3rOKss4edzuRimvuyGGmgNy6pbHGCRUYar+kWjSAC6+y+sTr
-         yC+5oo9T1fIWw+Xl8fY8E6S/JVOOV2IgnhBhnMTI=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id D7D973523039; Tue,  5 May 2020 11:17:07 -0700 (PDT)
-Date:   Tue, 5 May 2020 11:17:07 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     SeongJae Park <sjpark@amazon.com>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        David Miller <davem@davemloft.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        sj38.park@gmail.com, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>, snu@amazon.com,
-        amit@kernel.org, stable@vger.kernel.org
-Subject: Re: Re: Re: [PATCH net v2 0/2] Revert the 'socket_alloc' life cycle
- change
-Message-ID: <20200505181707.GJ2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200505173036.GE2869@paulmck-ThinkPad-P72>
- <20200505175605.12015-1-sjpark@amazon.com>
+        s=default; t=1588702649;
+        bh=oZIhy4uAhQMfRftPSAxXEs0/SUwk5XbjQFCfi1/11+o=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=fYBbpjo91qL2bwN6FFFUcLIk0cn3McB4ntM5Qt+Rrvckuh/34djzMcYKkrf5Umuym
+         G0X2rpkq9+fFecmn/LBEwtxYj2swjIIAPRxsGVdZ0sKb8t7MDrhLmSLSz3PzMON8oM
+         9rHKTFfE0VbReNi0WnRWnKbEJI23LGHeGbxhUnCQ=
+Subject: Re: [PATCH 0/3] selftests: vdso: Add a selftest for vDSO getcpu()
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        shuah <shuah@kernel.org>
+References: <20200505174728.46594-1-broonie@kernel.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <fa32cdad-b7f0-caea-3ebb-811f26be85e2@kernel.org>
+Date:   Tue, 5 May 2020 12:17:28 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505175605.12015-1-sjpark@amazon.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200505174728.46594-1-broonie@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 07:56:05PM +0200, SeongJae Park wrote:
-> On Tue, 5 May 2020 10:30:36 -0700 "Paul E. McKenney" <paulmck@kernel.org> wrote:
+On 5/5/20 11:47 AM, Mark Brown wrote:
+> This series does a bit of a cleanup of the existing tests for the vDSO
+> in kselftest and then adds a new test for getcpu().
 > 
-> > On Tue, May 05, 2020 at 07:05:53PM +0200, SeongJae Park wrote:
-> > > On Tue, 5 May 2020 09:37:42 -0700 Eric Dumazet <eric.dumazet@gmail.com> wrote:
-> > > 
-> > > > 
-> > > > 
-> > > > On 5/5/20 9:31 AM, Eric Dumazet wrote:
-> > > > > 
-> > > > > 
-> > > > > On 5/5/20 9:25 AM, Eric Dumazet wrote:
-> > > > >>
-> > > > >>
-> > > > >> On 5/5/20 9:13 AM, SeongJae Park wrote:
-> > > > >>> On Tue, 5 May 2020 09:00:44 -0700 Eric Dumazet <edumazet@google.com> wrote:
-> > > > >>>
-> > > > >>>> On Tue, May 5, 2020 at 8:47 AM SeongJae Park <sjpark@amazon.com> wrote:
-> > > > >>>>>
-> > > > >>>>> On Tue, 5 May 2020 08:20:50 -0700 Eric Dumazet <eric.dumazet@gmail.com> wrote:
-> > > > >>>>>
-> > > > >>>>>>
-> > > > >>>>>>
-> > > > >>>>>> On 5/5/20 8:07 AM, SeongJae Park wrote:
-> > > > >>>>>>> On Tue, 5 May 2020 07:53:39 -0700 Eric Dumazet <edumazet@google.com> wrote:
-> > > > >>>>>>>
-> > > > >>>>>>
-> > > [...]
-> > > > >>
-> > > > >> I would ask Paul opinion on this issue, because we have many objects
-> > > > >> being freed after RCU grace periods.
-> > > > >>
-> > > > >> If RCU subsystem can not keep-up, I guess other workloads will also suffer.
-> > > > >>
-> > > > >> Sure, we can revert patches there and there trying to work around the issue,
-> > > > >> but for objects allocated from process context, we should not have these problems.
-> > > > >>
-> > > > > 
-> > > > > I wonder if simply adjusting rcu_divisor to 6 or 5 would help 
-> > > > > 
-> > > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > > > index d9a49cd6065a20936edbda1b334136ab597cde52..fde833bac0f9f81e8536211b4dad6e7575c1219a 100644
-> > > > > --- a/kernel/rcu/tree.c
-> > > > > +++ b/kernel/rcu/tree.c
-> > > > > @@ -427,7 +427,7 @@ module_param(qovld, long, 0444);
-> > > > >  static ulong jiffies_till_first_fqs = ULONG_MAX;
-> > > > >  static ulong jiffies_till_next_fqs = ULONG_MAX;
-> > > > >  static bool rcu_kick_kthreads;
-> > > > > -static int rcu_divisor = 7;
-> > > > > +static int rcu_divisor = 6;
-> > > > >  module_param(rcu_divisor, int, 0644);
-> > > > >  
-> > > > >  /* Force an exit from rcu_do_batch() after 3 milliseconds. */
-> > > > > 
-> > > > 
-> > > > To be clear, you can adjust the value without building a new kernel.
-> > > > 
-> > > > echo 6 >/sys/module/rcutree/parameters/rcu_divisor
-> > > 
-> > > I tried value 6, 5, and 4, but none of those removed the problem.
-> > 
-> > Thank you for checking this!
-> > 
-> > Was your earlier discussion on long RCU readers speculation, or do you
-> > have measurements?
+> Mark Brown (3):
+>    selftests: vdso: Rename vdso_test to vdso_test_gettimeofday
+>    selftests: vdso: Use a header file to prototype parse_vdso API
+>    selftests: vdso: Add a selftest for vDSO getcpu()
 > 
-> It was just a guess without any measurement or dedicated investigation.
+>   tools/testing/selftests/vDSO/.gitignore       |  2 +
+>   tools/testing/selftests/vDSO/Makefile         |  5 +-
+>   tools/testing/selftests/vDSO/parse_vdso.c     | 24 +--------
+>   tools/testing/selftests/vDSO/parse_vdso.h     | 31 ++++++++++++
+>   .../selftests/vDSO/vdso_standalone_test_x86.c |  4 +-
+>   .../testing/selftests/vDSO/vdso_test_getcpu.c | 50 +++++++++++++++++++
+>   .../{vdso_test.c => vdso_test_gettimeofday.c} | 10 ++--
+>   7 files changed, 92 insertions(+), 34 deletions(-)
+>   create mode 100644 tools/testing/selftests/vDSO/parse_vdso.h
+>   create mode 100644 tools/testing/selftests/vDSO/vdso_test_getcpu.c
+>   rename tools/testing/selftests/vDSO/{vdso_test.c => vdso_test_gettimeofday.c} (84%)
+> 
 
-OK, another thing to check is the duration of the low-memory episode.
-Does this duration exceed the RCU CPU stall warning time?  (21 seconds
-in mainline, 60 in many distros, but check rcupdate.rcu_cpu_stall_timeout
-to be sure.)
+Thanks Mark. These look good to me. I will apply them for
+Linux 5.8-rc1.
 
-Also, any chance of a .config?  Or at least the RCU portions?  I am
-guessing CONFIG_PREEMPT=n, for example.
-
-							Thanx, Paul
+thanks,
+-- Shuah
