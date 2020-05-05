@@ -2,84 +2,176 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,LOCALPART_IN_SUBJECT,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B5CC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B493C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 935FD206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0A3520658
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:47:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Y1drQe+0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="YkBgmP2m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729526AbgEEXmN (ORCPT
+        id S1729229AbgEEXrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 19:42:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53190 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728717AbgEEXmN (ORCPT
+        Tue, 5 May 2020 19:47:40 -0400
+Received: from gateway24.websitewelcome.com ([192.185.51.228]:40284 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728717AbgEEXrk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 19:42:13 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1237CC061A0F;
-        Tue,  5 May 2020 16:42:11 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Gx8b6X6Sz9sPF;
-        Wed,  6 May 2020 09:42:07 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588722128;
-        bh=2Jo9lu7OdYZOI6iSc1tzaW0Em95vOIvzYJQDOhcl41o=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Y1drQe+0/h1DS94E51D3Sb8ha64u4YDEE7zzx4oDCRrfN+coHsCzxIiiTXRKZG2x9
-         ut0w40wnbVSrw79G6x5oh3jxUa9mIpJ/QoyPpO5Zr15ZUpDMqpjLnnsBk9TBk28pol
-         LRT7WIlOlC4vfd5sNca//r4oWW9NNziGb6ih+ESdcNKTanxldUwsQSJYaNOg1DtQd7
-         Ad/xI1JEtTw5IDUsuZMwQgwvTBbhkS0DzLbzj5TFw7dVn4VFOScv9JROMapqoVisCl
-         AA5+9HoaR/XFiwXY24k99i0hkryTUsxngE/i9dl535jDeLJLEcsoVRopt37aldqFYd
-         B/1u799ZXmHNA==
-Date:   Wed, 6 May 2020 09:42:06 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Linux-Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux-kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: no release today
-Message-ID: <20200506094206.068977b6@canb.auug.org.au>
+        Tue, 5 May 2020 19:47:40 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id 06A2E77DD
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 18:47:39 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id W7Hmj2Oa6VQh0W7Hnj8acH; Tue, 05 May 2020 18:47:39 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=KOPjXpRAEDO9gDVQmxGovICcFiqsKOmDUl+JG+lNPqw=; b=YkBgmP2mcQEg2kn3TFnvNRqZON
+        KRE3srpQZuM58jSwKcE26UGT6J4v/6H5OGCZPeOPJHti8lOK/EXnx5hlb3xh5K2WN18GM6EcY2mXJ
+        aBmy/jjw2C22bdJr56JFSOIskhf9PuefI+j5jy+kGNdBdqc3UjkyZUjL3XC3qbDJA0cmQ9FtFesJJ
+        ortTHl9lbXEcU7AhkCJSG+/KaoYXcJw0XKEHnBN/VM8XHa6wZSRDy3kxZ8bKI5y/v0tYrncaMayGZ
+        UW+zyn19zNlqrIMLg/2RlePCiXmS30vn4kdnTSVDDQWKCX5Na5jb2aCu1G81cN9pBlJ9HJvu2vilV
+        Hgb57vuA==;
+Received: from [189.207.59.248] (port=57526 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jW7Hm-003MYG-Ki; Tue, 05 May 2020 18:47:38 -0500
+Date:   Tue, 5 May 2020 18:52:05 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Jussi Kivilinna <jussi.kivilinna@iki.fi>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] rndis_wlan: Remove logically dead code
+Message-ID: <20200505235205.GA18539@embeddedor>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/V7Oyu_4b2KNfUO.v+lO9MJH";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.207.59.248
+X-Source-L: No
+X-Exim-ID: 1jW7Hm-003MYG-Ki
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.207.59.248]:57526
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 6
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/V7Oyu_4b2KNfUO.v+lO9MJH
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+caps_buf is always of size sizeof(*caps) because
+sizeof(caps->auth_encr_pair) * 16 is always zero. Notice
+that when using zero-length arrays, sizeof evaluates to zero[1].
 
-Normal service should resume tomorrow.
+So, the code introduced by 
+commit 0308383f9591 ("rndis_wlan: get max_num_pmkids from device")
+is logically dead, hence is never executed and can be removed. As a
+consequence, the rest of the related code can be refactored a bit.
 
---=20
-Cheers,
-Stephen Rothwell
+Notice that this code has been out there since March 2010.
 
---Sig_/V7Oyu_4b2KNfUO.v+lO9MJH
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+In case this is actually a 10-year old bug, then we might want
+calculate the size of caps_buf through the use of the struct_size
+helper:
 
------BEGIN PGP SIGNATURE-----
+struct_size(caps, auth_encr_pair, 16);
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6x+c4ACgkQAVBC80lX
-0GwJWAgAgNTC7as6KeLcMjhctjwexT1xzCNQ1jHplfk0YInxZ+42zjLxlTEPfNNU
-JBcBGSKBtz30vahF1CooGV6LLbhVV22MMSxNs0MmyH1lYkaBvPdj/TTC/21fzwAd
-HZJJ9GUHcxJme5CBBfe8KHAsVMN516kB5iOCa/43WzCE3N3HEJnfnt4qpnIIWkqG
-bO1OEAspq12kT7D53Hpfr6JpGEVneDwQ82v3K/g+rZV31R5gkPgQjkGYLa1/IpMm
-J0nC1uVql9UBDU3s62LStKDy4Prf8qWMPbwBr5iISMR3GjtmnJtq7wXQ3iCxygpH
-g5MVTK30+rM0wQQIzPNj6fC8kYHS7w==
-=txAH
------END PGP SIGNATURE-----
+and we might also want to allocate dynamic memory instead, as we
+cannot do u8 caps_buf[struct_size(caps, auth_encr_pair, 16)];
+due to -Wvla.
 
---Sig_/V7Oyu_4b2KNfUO.v+lO9MJH--
+Thanks
+--
+Gustavo
+
+ drivers/net/wireless/rndis_wlan.c | 24 ++++++++----------------
+ 1 file changed, 8 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/net/wireless/rndis_wlan.c b/drivers/net/wireless/rndis_wlan.c
+index 52375f3e430a..8852a1832951 100644
+--- a/drivers/net/wireless/rndis_wlan.c
++++ b/drivers/net/wireless/rndis_wlan.c
+@@ -312,17 +312,11 @@ struct ndis_80211_assoc_info {
+ 	__le32 offset_resp_ies;
+ } __packed;
+ 
+-struct ndis_80211_auth_encr_pair {
+-	__le32 auth_mode;
+-	__le32 encr_mode;
+-} __packed;
+-
+ struct ndis_80211_capability {
+ 	__le32 length;
+ 	__le32 version;
+ 	__le32 num_pmkids;
+ 	__le32 num_auth_encr_pair;
+-	struct ndis_80211_auth_encr_pair auth_encr_pair[0];
+ } __packed;
+ 
+ struct ndis_80211_bssid_info {
+@@ -3109,8 +3103,7 @@ static int rndis_wlan_get_caps(struct usbnet *usbdev, struct wiphy *wiphy)
+ 		__le32	num_items;
+ 		__le32	items[8];
+ 	} networks_supported;
+-	struct ndis_80211_capability *caps;
+-	u8 caps_buf[sizeof(*caps) + sizeof(caps->auth_encr_pair) * 16];
++	struct ndis_80211_capability caps;
+ 	int len, retval, i, n;
+ 	struct rndis_wlan_private *priv = get_rndis_wlan_priv(usbdev);
+ 
+@@ -3140,19 +3133,18 @@ static int rndis_wlan_get_caps(struct usbnet *usbdev, struct wiphy *wiphy)
+ 	}
+ 
+ 	/* get device 802.11 capabilities, number of PMKIDs */
+-	caps = (struct ndis_80211_capability *)caps_buf;
+-	len = sizeof(caps_buf);
++	len = sizeof(caps);
+ 	retval = rndis_query_oid(usbdev,
+ 				 RNDIS_OID_802_11_CAPABILITY,
+-				 caps, &len);
++				 &caps, &len);
+ 	if (retval >= 0) {
+ 		netdev_dbg(usbdev->net, "RNDIS_OID_802_11_CAPABILITY -> len %d, "
+ 				"ver %d, pmkids %d, auth-encr-pairs %d\n",
+-				le32_to_cpu(caps->length),
+-				le32_to_cpu(caps->version),
+-				le32_to_cpu(caps->num_pmkids),
+-				le32_to_cpu(caps->num_auth_encr_pair));
+-		wiphy->max_num_pmkids = le32_to_cpu(caps->num_pmkids);
++				le32_to_cpu(caps.length),
++				le32_to_cpu(caps.version),
++				le32_to_cpu(caps.num_pmkids),
++				le32_to_cpu(caps.num_auth_encr_pair));
++		wiphy->max_num_pmkids = le32_to_cpu(caps.num_pmkids);
+ 	} else
+ 		wiphy->max_num_pmkids = 0;
+ 
+-- 
+2.26.2
+
