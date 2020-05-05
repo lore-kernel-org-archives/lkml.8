@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07ED1C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F134BC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0A40206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5706206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 22:51:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="uNstaW1h"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Lve8JeNE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729423AbgEEWuq (ORCPT
+        id S1729505AbgEEWvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 18:50:46 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:40068 "EHLO
+        Tue, 5 May 2020 18:51:25 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:40580 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726568AbgEEWup (ORCPT
+        with ESMTP id S1726568AbgEEWvY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 18:50:45 -0400
+        Tue, 5 May 2020 18:51:24 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 045MnEwN097921;
-        Tue, 5 May 2020 22:50:17 GMT
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 045MnI6G098056;
+        Tue, 5 May 2020 22:51:05 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
- bh=S6WxU5dSqS5Vf2BGX4o5lxPf66YtA9m2G3u26r24NCA=;
- b=uNstaW1h39mejeH8FZNXbVAHRuJ1LwHHCHhpJ3XIPvuvzqfi2vdnZrg0dsMRnQ7ltWRW
- gXF9gbuedc3d6kEMzoYDFW2S0wmIlkBpzjBSVx2Dqz96nWh4Mq3trDjOuhw+a+So7jTJ
- 052t1KA9dKLPKydmLAOqIuK/Se76+rPPrFeWAKmcdg02H5oE07vUt6+MKERlawhjy2Ju
- WjMpiY5tqwIA2LFFD2hqGdTCH848DHMi5dkDnRgoZ1h72pNrXunIDm03RMARpTctnsER
- EB6VDu2DWadktTcJUeaouaWsPWeRmndl0OlbQ67TNTxxcnCd4clDkn6qbqUfEJe5owqY iA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 30s0tmfeg8-1
+ bh=XGDjKTGSNe5944Iga4irJ5tXqXpy64d2pGEDwm2UX08=;
+ b=Lve8JeNENcrCnjFxaTo9gH5MmkFHM28dsoh0oV+FzWG8/kiOKUdIWgvzetkaTXYPwVnW
+ siRkgLlJIF8YTwFh3GUS60ic93UxS2rStj536ABrnPXaI3at4y/gfmH3l67SjeqOFSwg
+ JglBNP+ihvzcvZJu+hBfJ+wRQ2VkzZzE7kizp7e2qZmIpOKmaPYTALFcsRuedtCFt3P7
+ DTc9qS5xH5CnqP26UxfFFmFmkGvixb51nFSg2gVpdlw1XnB2sqNBvEbu/1iS6zz+hid9
+ P06PxV3Eqlkcaw7TaJez+LxLgARinNLttQ3dUv4hDPaSGUTqq9uUiBym2UNB5Dm0C/e5 gQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 30s0tmfej8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 05 May 2020 22:50:17 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 045MkZXL051613;
-        Tue, 5 May 2020 22:48:16 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 30sjk0qx5n-1
+        Tue, 05 May 2020 22:51:05 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 045MliHE098246;
+        Tue, 5 May 2020 22:51:04 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 30t1r65wn5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 05 May 2020 22:48:16 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 045MmBnT032639;
-        Tue, 5 May 2020 22:48:11 GMT
+        Tue, 05 May 2020 22:51:04 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 045Mp28D009762;
+        Tue, 5 May 2020 22:51:03 GMT
 Received: from vbusired-dt (/10.154.183.230)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 05 May 2020 15:48:10 -0700
-Date:   Tue, 5 May 2020 17:48:11 -0500
+        with ESMTP ; Tue, 05 May 2020 15:51:02 -0700
+Date:   Tue, 5 May 2020 17:51:03 -0500
 From:   Venu Busireddy <venu.busireddy@oracle.com>
 To:     Ashish Kalra <Ashish.Kalra@amd.com>
 Cc:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
@@ -60,23 +60,23 @@ Cc:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
         Thomas.Lendacky@amd.com, x86@kernel.org, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, srutherford@google.com,
         rientjes@google.com, brijesh.singh@amd.com
-Subject: Re: [PATCH v8 02/18] KVM: SVM: Add KVM_SEND_UPDATE_DATA command
-Message-ID: <20200505224811.GA1721674@vbusired-dt>
+Subject: Re: [PATCH v8 03/18] KVM: SVM: Add KVM_SEV_SEND_FINISH command
+Message-ID: <20200505225103.GB1721674@vbusired-dt>
 References: <cover.1588711355.git.ashish.kalra@amd.com>
- <1f43054f423c956e5fdf9c0fbad0c18be4ea3935.1588711355.git.ashish.kalra@amd.com>
+ <3ad971e9977700140d9092259d5326caab986f1f.1588711355.git.ashish.kalra@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1f43054f423c956e5fdf9c0fbad0c18be4ea3935.1588711355.git.ashish.kalra@amd.com>
+In-Reply-To: <3ad971e9977700140d9092259d5326caab986f1f.1588711355.git.ashish.kalra@amd.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9612 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=5 mlxscore=0 phishscore=0
- bulkscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 adultscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=1
+ spamscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
  definitions=main-2005050171
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9612 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 spamscore=0 suspectscore=5
+ priorityscore=1501 lowpriorityscore=0 spamscore=0 suspectscore=1
  phishscore=0 clxscore=1015 bulkscore=0 mlxlogscore=999 adultscore=0
  impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2005050171
@@ -85,11 +85,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-05 21:14:54 +0000, Ashish Kalra wrote:
+On 2020-05-05 21:15:11 +0000, Ashish Kalra wrote:
 > From: Brijesh Singh <Brijesh.Singh@amd.com>
 > 
-> The command is used for encrypting the guest memory region using the encryption
-> context created with KVM_SEV_SEND_START.
+> The command is used to finailize the encryption context created with
+> KVM_SEV_SEND_START command.
 > 
 > Cc: Thomas Gleixner <tglx@linutronix.de>
 > Cc: Ingo Molnar <mingo@redhat.com>
@@ -102,246 +102,77 @@ On 2020-05-05 21:14:54 +0000, Ashish Kalra wrote:
 > Cc: x86@kernel.org
 > Cc: kvm@vger.kernel.org
 > Cc: linux-kernel@vger.kernel.org
-> Reviewed-by : Steve Rutherford <srutherford@google.com>
+> Reviewed-by: Steve Rutherford <srutherford@google.com>
 > Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
 > Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
 
 Reviewed-by: Venu Busireddy <venu.busireddy@oracle.com>
 
 > ---
->  .../virt/kvm/amd-memory-encryption.rst        |  24 ++++
->  arch/x86/kvm/svm/sev.c                        | 135 +++++++++++++++++-
->  include/uapi/linux/kvm.h                      |   9 ++
->  3 files changed, 164 insertions(+), 4 deletions(-)
+>  .../virt/kvm/amd-memory-encryption.rst        |  8 +++++++
+>  arch/x86/kvm/svm/sev.c                        | 23 +++++++++++++++++++
+>  2 files changed, 31 insertions(+)
 > 
 > diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documentation/virt/kvm/amd-memory-encryption.rst
-> index 59cb59bd4675..d0dfa5b54e4f 100644
+> index d0dfa5b54e4f..93884ec8918e 100644
 > --- a/Documentation/virt/kvm/amd-memory-encryption.rst
 > +++ b/Documentation/virt/kvm/amd-memory-encryption.rst
-> @@ -290,6 +290,30 @@ Returns: 0 on success, -negative on error
->                  __u32 session_len;
+> @@ -314,6 +314,14 @@ Returns: 0 on success, -negative on error
+>                  __u32 trans_len;
 >          };
 >  
-> +11. KVM_SEV_SEND_UPDATE_DATA
-> +----------------------------
+> +12. KVM_SEV_SEND_FINISH
+> +------------------------
 > +
-> +The KVM_SEV_SEND_UPDATE_DATA command can be used by the hypervisor to encrypt the
-> +outgoing guest memory region with the encryption context creating using
-> +KVM_SEV_SEND_START.
-> +
-> +Parameters (in): struct kvm_sev_send_update_data
+> +After completion of the migration flow, the KVM_SEV_SEND_FINISH command can be
+> +issued by the hypervisor to delete the encryption context.
 > +
 > +Returns: 0 on success, -negative on error
-> +
-> +::
-> +
-> +        struct kvm_sev_launch_send_update_data {
-> +                __u64 hdr_uaddr;        /* userspace address containing the packet header */
-> +                __u32 hdr_len;
-> +
-> +                __u64 guest_uaddr;      /* the source memory region to be encrypted */
-> +                __u32 guest_len;
-> +
-> +                __u64 trans_uaddr;      /* the destition memory region  */
-> +                __u32 trans_len;
-> +        };
 > +
 >  References
 >  ==========
 >  
 > diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-> index 5a15b43b4349..7031b660f64d 100644
+> index 7031b660f64d..4d3031c9fdcf 100644
 > --- a/arch/x86/kvm/svm/sev.c
 > +++ b/arch/x86/kvm/svm/sev.c
-> @@ -23,6 +23,7 @@ static DECLARE_RWSEM(sev_deactivate_lock);
->  static DEFINE_MUTEX(sev_bitmap_lock);
->  unsigned int max_sev_asid;
->  static unsigned int min_sev_asid;
-> +static unsigned long sev_me_mask;
->  static unsigned long *sev_asid_bitmap;
->  static unsigned long *sev_reclaim_asid_bitmap;
->  #define __sme_page_pa(x) __sme_set(page_to_pfn(x) << PAGE_SHIFT)
-> @@ -1035,6 +1036,123 @@ static int sev_send_start(struct kvm *kvm, struct kvm_sev_cmd *argp)
+> @@ -1153,6 +1153,26 @@ static int sev_send_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
 >  	return ret;
 >  }
 >  
-> +/* Userspace wants to query either header or trans length. */
-> +static int
-> +__sev_send_update_data_query_lengths(struct kvm *kvm, struct kvm_sev_cmd *argp,
-> +				     struct kvm_sev_send_update_data *params)
+> +static int sev_send_finish(struct kvm *kvm, struct kvm_sev_cmd *argp)
 > +{
 > +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-> +	struct sev_data_send_update_data *data;
+> +	struct sev_data_send_finish *data;
 > +	int ret;
-> +
-> +	data = kzalloc(sizeof(*data), GFP_KERNEL_ACCOUNT);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	data->handle = sev->handle;
-> +	ret = sev_issue_cmd(kvm, SEV_CMD_SEND_UPDATE_DATA, data, &argp->error);
-> +
-> +	params->hdr_len = data->hdr_len;
-> +	params->trans_len = data->trans_len;
-> +
-> +	if (copy_to_user((void __user *)(uintptr_t)argp->data, params,
-> +			 sizeof(struct kvm_sev_send_update_data)))
-> +		ret = -EFAULT;
-> +
-> +	kfree(data);
-> +	return ret;
-> +}
-> +
-> +static int sev_send_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
-> +{
-> +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-> +	struct sev_data_send_update_data *data;
-> +	struct kvm_sev_send_update_data params;
-> +	void *hdr, *trans_data;
-> +	struct page **guest_page;
-> +	unsigned long n;
-> +	int ret, offset;
 > +
 > +	if (!sev_guest(kvm))
 > +		return -ENOTTY;
 > +
-> +	if (copy_from_user(&params, (void __user *)(uintptr_t)argp->data,
-> +			sizeof(struct kvm_sev_send_update_data)))
-> +		return -EFAULT;
-> +
-> +	/* userspace wants to query either header or trans length */
-> +	if (!params.trans_len || !params.hdr_len)
-> +		return __sev_send_update_data_query_lengths(kvm, argp, &params);
-> +
-> +	if (!params.trans_uaddr || !params.guest_uaddr ||
-> +	    !params.guest_len || !params.hdr_uaddr)
-> +		return -EINVAL;
-> +
-> +	/* Check if we are crossing the page boundary */
-> +	offset = params.guest_uaddr & (PAGE_SIZE - 1);
-> +	if ((params.guest_len + offset > PAGE_SIZE))
-> +		return -EINVAL;
-> +
-> +	/* Pin guest memory */
-> +	guest_page = sev_pin_memory(kvm, params.guest_uaddr & PAGE_MASK,
-> +				    PAGE_SIZE, &n, 0);
-> +	if (!guest_page)
-> +		return -EFAULT;
-> +
-> +	/* allocate memory for header and transport buffer */
-> +	ret = -ENOMEM;
-> +	hdr = kmalloc(params.hdr_len, GFP_KERNEL_ACCOUNT);
-> +	if (!hdr)
-> +		goto e_unpin;
-> +
-> +	trans_data = kmalloc(params.trans_len, GFP_KERNEL_ACCOUNT);
-> +	if (!trans_data)
-> +		goto e_free_hdr;
-> +
 > +	data = kzalloc(sizeof(*data), GFP_KERNEL);
 > +	if (!data)
-> +		goto e_free_trans_data;
+> +		return -ENOMEM;
 > +
-> +	data->hdr_address = __psp_pa(hdr);
-> +	data->hdr_len = params.hdr_len;
-> +	data->trans_address = __psp_pa(trans_data);
-> +	data->trans_len = params.trans_len;
-> +
-> +	/* The SEND_UPDATE_DATA command requires C-bit to be always set. */
-> +	data->guest_address = (page_to_pfn(guest_page[0]) << PAGE_SHIFT) +
-> +				offset;
-> +	data->guest_address |= sev_me_mask;
-> +	data->guest_len = params.guest_len;
 > +	data->handle = sev->handle;
+> +	ret = sev_issue_cmd(kvm, SEV_CMD_SEND_FINISH, data, &argp->error);
 > +
-> +	ret = sev_issue_cmd(kvm, SEV_CMD_SEND_UPDATE_DATA, data, &argp->error);
-> +
-> +	if (ret)
-> +		goto e_free;
-> +
-> +	/* copy transport buffer to user space */
-> +	if (copy_to_user((void __user *)(uintptr_t)params.trans_uaddr,
-> +			 trans_data, params.trans_len)) {
-> +		ret = -EFAULT;
-> +		goto e_free;
-> +	}
-> +
-> +	/* Copy packet header to userspace. */
-> +	ret = copy_to_user((void __user *)(uintptr_t)params.hdr_uaddr, hdr,
-> +				params.hdr_len);
-> +
-> +e_free:
 > +	kfree(data);
-> +e_free_trans_data:
-> +	kfree(trans_data);
-> +e_free_hdr:
-> +	kfree(hdr);
-> +e_unpin:
-> +	sev_unpin_memory(kvm, guest_page, n);
-> +
 > +	return ret;
 > +}
 > +
 >  int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
 >  {
 >  	struct kvm_sev_cmd sev_cmd;
-> @@ -1082,6 +1200,9 @@ int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
->  	case KVM_SEV_SEND_START:
->  		r = sev_send_start(kvm, &sev_cmd);
+> @@ -1203,6 +1223,9 @@ int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+>  	case KVM_SEV_SEND_UPDATE_DATA:
+>  		r = sev_send_update_data(kvm, &sev_cmd);
 >  		break;
-> +	case KVM_SEV_SEND_UPDATE_DATA:
-> +		r = sev_send_update_data(kvm, &sev_cmd);
+> +	case KVM_SEV_SEND_FINISH:
+> +		r = sev_send_finish(kvm, &sev_cmd);
 > +		break;
 >  	default:
 >  		r = -EINVAL;
 >  		goto out;
-> @@ -1238,16 +1359,22 @@ void sev_vm_destroy(struct kvm *kvm)
->  int __init sev_hardware_setup(void)
->  {
->  	struct sev_user_data_status *status;
-> +	u32 eax, ebx;
->  	int rc;
->  
-> -	/* Maximum number of encrypted guests supported simultaneously */
-> -	max_sev_asid = cpuid_ecx(0x8000001F);
-> +	/*
-> +	 * Query the memory encryption information.
-> +	 *  EBX:  Bit 0:5 Pagetable bit position used to indicate encryption
-> +	 *  (aka Cbit).
-> +	 *  ECX:  Maximum number of encrypted guests supported simultaneously.
-> +	 *  EDX:  Minimum ASID value that should be used for SEV guest.
-> +	 */
-> +	cpuid(0x8000001f, &eax, &ebx, &max_sev_asid, &min_sev_asid);
->  
->  	if (!svm_sev_enabled())
->  		return 1;
->  
-> -	/* Minimum ASID value that should be used for SEV guest */
-> -	min_sev_asid = cpuid_edx(0x8000001F);
-> +	sev_me_mask = 1UL << (ebx & 0x3f);
->  
->  	/* Initialize SEV ASID bitmaps */
->  	sev_asid_bitmap = bitmap_zalloc(max_sev_asid, GFP_KERNEL);
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index 8827d43e2684..7aaed8ee33cf 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -1610,6 +1610,15 @@ struct kvm_sev_send_start {
->  	__u32 session_len;
->  };
->  
-> +struct kvm_sev_send_update_data {
-> +	__u64 hdr_uaddr;
-> +	__u32 hdr_len;
-> +	__u64 guest_uaddr;
-> +	__u32 guest_len;
-> +	__u64 trans_uaddr;
-> +	__u32 trans_len;
-> +};
-> +
->  #define KVM_DEV_ASSIGN_ENABLE_IOMMU	(1 << 0)
->  #define KVM_DEV_ASSIGN_PCI_2_3		(1 << 1)
->  #define KVM_DEV_ASSIGN_MASK_INTX	(1 << 2)
 > -- 
 > 2.17.1
 > 
