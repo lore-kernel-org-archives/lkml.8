@@ -2,149 +2,117 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A095C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F06DC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73D3A206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:40:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N+27bzh+"
+	by mail.kernel.org (Postfix) with ESMTP id 74E70206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:40:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730426AbgEEPkO (ORCPT
+        id S1730436AbgEEPk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:40:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34138 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729317AbgEEPkO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:40:14 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAF62C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 08:40:13 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id t9so1331221pjw.0
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 08:40:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=bSFaPsY9Q06ol7z3I9i5NZy6Mx1BYRJOSiQQ/ADJ9Gg=;
-        b=N+27bzh+IMZfcRnh55NZgeIVBEml3gus4hp7iFUF6zcjpxNRyptB9OdCDWaJewid8l
-         zzggysGdilyS219iat2RsDVXdStYATE8skmp1BvkxX5T9jRUe2HsvL7E8uFvItikAObz
-         b9gwPB/r+co6aVYZdf0ShOVytK37AWhko/qoZYFNboprhcDhWsLbd8cCM/IIjsTSpz0l
-         f0N33fSctiP/mSHFqqUFrW/2BkUX+VQR/hx6ChD1Nv4YIqbI+uTvDE1JGGvhyFc4EI5/
-         crIBcVXx9W3f0frtN+DBlHtDkiDZWz/viDcRZu+ychATsekTG9x5kHtynjiBy6DeCqjM
-         owQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bSFaPsY9Q06ol7z3I9i5NZy6Mx1BYRJOSiQQ/ADJ9Gg=;
-        b=UXYV0AhadCKfBqw97pk+xdTlaUJ23qWMmjguVN/JqvYsJRMAa9GBLbLJ2zGcmn0h1Y
-         fFmBeMSragi1uF8/Y/f7Wwt9qnd8vdVWslbfWp31sIyxIx4CZdHTP844k7KeyF4hbkCS
-         BU4twd9klBgsL924RYQ8pU+Wctm5JAaK/sSnIHM6aTsshcLb6KwdEESm/Uz1zK14s/M7
-         JJ4XVQs8DHt412o/zg8QmHvhyxgWyTwY5T0eEetXjulVYunvWOX3tei1VY1UwGqyJzq7
-         2fw0cevNEz1dMu1kBFk5wilbqAO6U8eDkLF2Wqc/19Y69pTsDPzD72XqdLpYcf9pRwmm
-         SgQw==
-X-Gm-Message-State: AGi0PuYCM99Jk1hpVKMollfMdkwTgVZMYv4aHsK3odMJr2qSgtYJgVq2
-        HLxnslSmGUwhsCdZJRb8RGppHGpXYVD4QCgWnHZ7Kg==
-X-Google-Smtp-Source: APiQypJk7WFBLwQNHlWpEpX+GDFUCZgtHUU8RxuEIsH3h6aMqRYcSuecN1kdds/zND2KUHypdFOJyiF/OToVqwLaK+A=
-X-Received: by 2002:a17:90a:8c85:: with SMTP id b5mr3737036pjo.187.1588693212806;
- Tue, 05 May 2020 08:40:12 -0700 (PDT)
+        Tue, 5 May 2020 11:40:26 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:42653 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729317AbgEEPk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 11:40:26 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49GkSk662Lz9v6ZJ;
+        Tue,  5 May 2020 17:40:22 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id lB47a1rBtIIP; Tue,  5 May 2020 17:40:22 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49GkSk5DfVz9v6ZG;
+        Tue,  5 May 2020 17:40:22 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 69F418B7B3;
+        Tue,  5 May 2020 17:40:24 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id ZCQ8FQrSrO81; Tue,  5 May 2020 17:40:24 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E76B98B7A8;
+        Tue,  5 May 2020 17:40:22 +0200 (CEST)
+Subject: Re: [PATCH v4 1/2] powerpc/uaccess: Implement unsafe_put_user() using
+ 'asm goto'
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, npiggin@gmail.com,
+        segher@kernel.crashing.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <23e680624680a9a5405f4b88740d2596d4b17c26.1587143308.git.christophe.leroy@c-s.fr>
+ <87sggecv81.fsf@mpe.ellerman.id.au>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <1c6379b2-7e0a-91fe-34f0-51f5adca7929@csgroup.eu>
+Date:   Tue, 5 May 2020 17:40:21 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200505141606.837164-1-arnd@arndb.de> <e4a852b2-807b-bc73-7328-bcc399341085@amd.com>
-In-Reply-To: <e4a852b2-807b-bc73-7328-bcc399341085@amd.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 5 May 2020 08:39:59 -0700
-Message-ID: <CAKwvOd=JLsksy5adE_rnRKetqAMcSFsJPHXVsidOP9RPo+YpCA@mail.gmail.com>
-Subject: Re: [PATCH] amdgpu: fix integer overflow on 32-bit architectures
-To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Evan Quan <evan.quan@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        Monk Liu <Monk.Liu@amd.com>,
-        Kent Russell <kent.russell@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Alex Deucher <alexdeucher@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <87sggecv81.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-See also https://lore.kernel.org/lkml/CADnq5_NdtZh5_RGDWKJ9c_42XLvrncCs5DDU=
-1YSptfZP94KXkQ@mail.gmail.com/T/#me707e09e92c6e487285e8bb382a607e4e782c249
+Hi,
 
-On Tue, May 5, 2020 at 7:17 AM Christian K=C3=B6nig <christian.koenig@amd.c=
-om> wrote:
->
-> Am 05.05.20 um 16:15 schrieb Arnd Bergmann:
-> > Multiplying 1000000000 by four overruns a 'long' variable, as clang
-> > points out:
-> >
-> > drivers/gpu/drm/amd/amdgpu/amdgpu_device.c:4160:53: error: overflow in =
-expression; result is -294967296 with type 'long' [-Werror,-Winteger-overfl=
-ow]
-> >                  expires =3D ktime_get_mono_fast_ns() + NSEC_PER_SEC * =
-4L;
-> >                                                                    ^
-> > Make this a 'long long' constant instead.
-> >
-> > Fixes: 3f12acc8d6d4 ("drm/amdgpu: put the audio codec into suspend stat=
-e before gpu reset V3")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
->
-> > ---
-> > I'm not sure the ktime_get_mono_fast_ns() call is necessary here
-> > either. Is it intentional because ktime_get_ns() doesn't work
-> > during a driver suspend, or just a mistake?
-> > ---
-> >   drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/d=
-rm/amd/amdgpu/amdgpu_device.c
-> > index 6f93af972b0a..2e07e3e6b036 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> > @@ -4157,7 +4157,7 @@ static int amdgpu_device_suspend_display_audio(st=
-ruct amdgpu_device *adev)
-> >                * the audio controller default autosuspend delay setting=
-.
-> >                * 4S used here is guaranteed to cover that.
-> >                */
-> > -             expires =3D ktime_get_mono_fast_ns() + NSEC_PER_SEC * 4L;
-> > +             expires =3D ktime_get_mono_fast_ns() + NSEC_PER_SEC * 4LL=
-;
-> >
-> >       while (!pm_runtime_status_suspended(&(p->dev))) {
-> >               if (!pm_runtime_suspend(&(p->dev)))
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgi=
-d/clang-built-linux/e4a852b2-807b-bc73-7328-bcc399341085%40amd.com.
+Le 05/05/2020 à 16:27, Michael Ellerman a écrit :
+> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>> unsafe_put_user() is designed to take benefit of 'asm goto'.
+>>
+>> Instead of using the standard __put_user() approach and branch
+>> based on the returned error, use 'asm goto' and make the
+>> exception code branch directly to the error label. There is
+>> no code anymore in the fixup section.
+>>
+>> This change significantly simplifies functions using
+>> unsafe_put_user()
+>>
+> ...
+>>
+>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>> ---
+>>   arch/powerpc/include/asm/uaccess.h | 61 +++++++++++++++++++++++++-----
+>>   1 file changed, 52 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
+>> index 9cc9c106ae2a..9365b59495a2 100644
+>> --- a/arch/powerpc/include/asm/uaccess.h
+>> +++ b/arch/powerpc/include/asm/uaccess.h
+>> @@ -196,6 +193,52 @@ do {								\
+>>   })
+>>   
+>>   
+>> +#define __put_user_asm_goto(x, addr, label, op)			\
+>> +	asm volatile goto(					\
+>> +		"1:	" op "%U1%X1 %0,%1	# put_user\n"	\
+>> +		EX_TABLE(1b, %l2)				\
+>> +		:						\
+>> +		: "r" (x), "m<>" (*addr)				\
+> 
+> The "m<>" here is breaking GCC 4.6.3, which we allegedly still support.
+> 
+> Plain "m" works, how much does the "<>" affect code gen in practice?
+> 
+> A quick diff here shows no difference from removing "<>".
 
+It was recommended by Segher, there has been some discussion about it on 
+v1 of this patch, see 
+https://patchwork.ozlabs.org/project/linuxppc-dev/patch/4fdc2aba6f5e51887d1cd0fee94be0989eada2cd.1586942312.git.christophe.leroy@c-s.fr/
 
+As far as I understood that's mandatory on recent gcc to get the 
+pre-update form of the instruction. With older versions "m" was doing 
+the same, but not anymore. Should we ifdef the "m<>" or "m" based on GCC 
+version ?
 
---=20
-Thanks,
-~Nick Desaulniers
+Christophe
