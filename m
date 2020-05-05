@@ -2,94 +2,102 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 435A2C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C360C47256
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17F2F20721
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B2A220721
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:45:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gTUcBPhX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728518AbgEEHos (ORCPT
+        id S1728529AbgEEHo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 03:44:48 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3788 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725915AbgEEHos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 03:44:48 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1B733FA706249862D333;
-        Tue,  5 May 2020 15:44:46 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Tue, 5 May 2020
- 15:44:38 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <aelior@marvell.com>, <skalluru@marvell.com>,
-        <GR-everest-linux-l2@marvell.com>, <davem@davemloft.net>,
-        <yanaijie@huawei.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next] bnx2x: Remove Comparison to bool in bnx2x_dcb.c
-Date:   Tue, 5 May 2020 15:44:00 +0800
-Message-ID: <20200505074400.21658-1-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.21.1
+        Tue, 5 May 2020 03:44:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725915AbgEEHo6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 03:44:58 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A960C061A10
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 00:44:58 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id b6so446095plz.13
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 00:44:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O2pv13qx7VFGbbGCBI+M8Dk49yxcXbYowJJnWYcKPyA=;
+        b=gTUcBPhXn7zwDJld52yMM64s04tMkXRJBQG1NWq/zYwXC6B1H01YZwAbf03E0N+d3a
+         dsYVRX3mdZ9pP3VUEc1ki2liSb7gzB2RnSZzS39WlTfSWX5IENahsL6Ptt8mKz3pYpcg
+         OyJfrpRgzQWKerlBIyhp3wbvemUv+0LOlwiCk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O2pv13qx7VFGbbGCBI+M8Dk49yxcXbYowJJnWYcKPyA=;
+        b=hMnrt2aKMxBu/kxs5+hxtlkqr9SAXWxcFoYC9pvtq46o8dbq3jJDYxhPBISAUPdQrT
+         YIRgtHM8yTupF0BTTSYwLtlW03p4t00xJey/39mqjwPJXy+v8Tjv/n/8pFsouBgJC39U
+         RLeC7X3EdDXDOP1G9vZnR0sdBf9hDJZemXeAuGzsA0OHhxk4rGY2tUIim61puQlifGTK
+         nYMsEhlNrqxtoLXWP/3cGtt00HoKIDrjBHNtIoYt+LXOnF/674OaHHFfVfCyyZumOB0Z
+         +rXYDKP1332g4Jqt8YsM7LJGNpMwVcEkOKLqYMgBbv2GG+OmHidM8eKUPFEqLLQPN62L
+         3ktQ==
+X-Gm-Message-State: AGi0PuZeNxz7BnBVl6RCI88bedmdKyjgq8AZWoUwBuU0cpgGMsQFbqFN
+        f/DA9sH7USvMnWocntlrmOo2GZExBjg=
+X-Google-Smtp-Source: APiQypKEj76sEkdrmamm6pACw3UuGZqt7SISdTgTQwe/a0f+om4l4A/EzQV+B3BPoL0Bs/K056M7Kg==
+X-Received: by 2002:a17:902:8687:: with SMTP id g7mr1976063plo.59.1588664697580;
+        Tue, 05 May 2020 00:44:57 -0700 (PDT)
+Received: from localhost ([2401:fa00:9:14:a92f:c47d:76a8:b09e])
+        by smtp.gmail.com with ESMTPSA id j5sm1205741pfh.58.2020.05.05.00.44.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2020 00:44:57 -0700 (PDT)
+From:   Eizan Miyamoto <eizan@chromium.org>
+X-Google-Original-From: Eizan Miyamoto <eizan@google.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Eizan Miyamoto <eizan@google.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH v1 0/2] Refactor MDP driver and add dummy component driver
+Date:   Tue,  5 May 2020 17:44:29 +1000
+Message-Id: <20200505074431.242840-1-eizan@google.com>
+X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following coccicheck warning:
 
-drivers/net/ethernet/broadcom/bnx2x/bnx2x_dcb.c:1548:17-31: WARNING:
-Comparison to bool
-drivers/net/ethernet/broadcom/bnx2x/bnx2x_dcb.c:1148:16-24: WARNING:
-Comparison to bool
-drivers/net/ethernet/broadcom/bnx2x/bnx2x_dcb.c:1158:30-38: WARNING:
-Comparison to bool
+This series depends on changes in
+https://patchwork.kernel.org/patch/11528171/
 
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
----
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_dcb.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+We are adding a dummy MDP component driver so that all the components
+are properly configured with IOMMUs and LARBs. This is required for
+us to get hardware video decode working in 4.19, and possibly newer
+kernels.
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_dcb.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_dcb.c
-index 2c6ba046d2a8..17ae6df90723 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_dcb.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_dcb.c
-@@ -1145,7 +1145,7 @@ static void bnx2x_dcbx_get_num_pg_traf_type(struct bnx2x *bp,
- 					break;
- 				}
- 			}
--			if (false == pg_found) {
-+			if (!pg_found) {
- 				data[help_data->num_of_pg].pg = add_pg;
- 				data[help_data->num_of_pg].pg_priority =
- 						(1 << ttp[add_traf_type]);
-@@ -1155,7 +1155,7 @@ static void bnx2x_dcbx_get_num_pg_traf_type(struct bnx2x *bp,
- 		}
- 		DP(BNX2X_MSG_DCB,
- 		   "add_traf_type %d pg_found %s num_of_pg %d\n",
--		   add_traf_type, (false == pg_found) ? "NO" : "YES",
-+		   add_traf_type, !pg_found ? "NO" : "YES",
- 		   help_data->num_of_pg);
- 	}
- }
-@@ -1544,8 +1544,7 @@ static void bnx2x_dcbx_2cos_limit_cee_three_pg_to_cos_params(
- 			if (pg_entry < DCBX_MAX_NUM_PG_BW_ENTRIES) {
- 				entry = 0;
- 
--				if (i == (num_of_pri-1) &&
--				    false == b_found_strict)
-+				if (i == (num_of_pri-1) && !b_found_strict)
- 					/* last entry will be handled separately
- 					 * If no priority is strict than last
- 					 * entry goes to last queue.
+
+Eizan Miyamoto (2):
+  [media] mtk-mdp: add driver to probe mdp components
+  [media] mtk-mdp: use pm_runtime in MDP component driver
+
+ drivers/media/platform/mtk-mdp/mtk_mdp_comp.c | 186 +++++++++++++++---
+ drivers/media/platform/mtk-mdp/mtk_mdp_comp.h |  33 +---
+ drivers/media/platform/mtk-mdp/mtk_mdp_core.c | 177 ++++++++++++-----
+ drivers/media/platform/mtk-mdp/mtk_mdp_core.h |   1 +
+ 4 files changed, 297 insertions(+), 100 deletions(-)
+
 -- 
-2.21.1
+2.26.2.526.g744177e7f7-goog
 
