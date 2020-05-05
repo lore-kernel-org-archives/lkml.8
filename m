@@ -2,135 +2,135 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45179C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA16C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1574820746
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7177E20746
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:56:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ipNtgkcP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o1AKO/HS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729239AbgEEN4U (ORCPT
+        id S1729250AbgEEN41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 09:56:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45736 "EHLO
+        Tue, 5 May 2020 09:56:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729202AbgEEN4R (ORCPT
+        by vger.kernel.org with ESMTP id S1729122AbgEEN41 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 09:56:17 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEDBBC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 06:56:16 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id r16so1848158edw.5
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 06:56:16 -0700 (PDT)
+        Tue, 5 May 2020 09:56:27 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E499AC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 06:56:26 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id h12so1185540pjz.1
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 06:56:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kByI+w+1r3yVREOJZ6z093OJKNl72Y1CH8ahM0Q63XY=;
-        b=ipNtgkcPwQaCd/KFAKKCzEcUcKFCfb7x3z4NEVWMwUh94Bu54C4AbN3A72Y5hKnJ+n
-         oiStdLca3s0SQIKFEVG/KxqF9OkQx3cbrCDG4u9U3+xQz/xE655gmDYg1+OJeblGE2Iu
-         Y38P1mTpYn7m6tr5ZZYBBkCmxVOIAJ/Cck6YE=
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=dt4B0z5dYP0Uyr0mcsXM5/WpJpH1f8WRXqVG53zpmTQ=;
+        b=o1AKO/HSqppLELU1zsOuB8md57x4ABxWkYQW0v5+SHl8/tgSZb0b5nHEHpDEvrmPpB
+         GN7VOqsb4nUUNKhpIO0B9XpQYF9ZeJSAx+0siwZiknoYbdoui8vdgPRjiGg7O0bDXMHX
+         tHv+LGww+Zj1vRW6irLa/2F3yBwMUY4+unKr3xgNmnB7kclBKRzKOVFr3f3JpYkLtVqz
+         yXykZRTrGwMzyMU1d2WsduT3HrYZVdtA4vHB9y8LAV90ssDyS8Cvsv2YiG6h5wkbZSKY
+         xr4xYuGYB7bmlKmUpc5BuN2gFTnYJl1Zws+Py1FkouttXtXAc4OtqXTpD8QIoWop104g
+         NZfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kByI+w+1r3yVREOJZ6z093OJKNl72Y1CH8ahM0Q63XY=;
-        b=VC7LZ8xhyJeGc5QOzSn5Lo1MTPpqWplJ/AyEL3wcXcAQLV42CxYtjcDEmDzcxMsHXh
-         hxA8oWl+pHnCauOrokXEUzfVD2uagRICfXiIBTusLV4/IuSYpy21UB1trHTuVfdLfCqn
-         EaRJ9iIhTUORagw4UNLW3553lt7qFH9NfOLstrIG5EOhIV9VgKjZRtIM0ZCelclIBNAI
-         wSPSqFjbOr5+M+5GRr0C10GJszzliFi5i6Llng3JyeChm/IMTduuqu/I9fRVUgZpP5yQ
-         pwjHXQzrqyA05waaabxtipZMP5HXF2H+diNchEGDjHAOQuPWKaqvSQNgrKUPiOJ1X299
-         I7Nw==
-X-Gm-Message-State: AGi0PuYOTMm0bMN14gGJ6AyKJI+ETTeGLut1N6094XqmZnl6fWlcdfNM
-        Tn3kf/r2EifFLLMRvrOapZJXBUa6uM1mPQ==
-X-Google-Smtp-Source: APiQypLpClg/LDKjwG9N3bEcMExDk79HPejzsHiEr5UWEdWny8X2Kt91gMsZy0BLHXVL7m7QV67z9w==
-X-Received: by 2002:aa7:cb43:: with SMTP id w3mr2651240edt.95.1588686975283;
-        Tue, 05 May 2020 06:56:15 -0700 (PDT)
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com. [209.85.221.51])
-        by smtp.gmail.com with ESMTPSA id o17sm332460ejr.76.2020.05.05.06.56.14
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2020 06:56:14 -0700 (PDT)
-Received: by mail-wr1-f51.google.com with SMTP id y3so2900694wrt.1
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 06:56:14 -0700 (PDT)
-X-Received: by 2002:adf:d0d1:: with SMTP id z17mr3809161wrh.295.1588686973780;
- Tue, 05 May 2020 06:56:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200505134110.3435-1-ezequiel@collabora.com> <20200505134110.3435-2-ezequiel@collabora.com>
-In-Reply-To: <20200505134110.3435-2-ezequiel@collabora.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Tue, 5 May 2020 15:56:02 +0200
-X-Gmail-Original-Message-ID: <CAAFQd5AWZFoPk2YTp2k8M7LvJshxw46-z+wK2VoM9EzB2CqiFA@mail.gmail.com>
-Message-ID: <CAAFQd5AWZFoPk2YTp2k8M7LvJshxw46-z+wK2VoM9EzB2CqiFA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] media: rkvdec: Fix .buf_prepare
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel@collabora.com, Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Gustavo Padovan <gustavo.padovan@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=dt4B0z5dYP0Uyr0mcsXM5/WpJpH1f8WRXqVG53zpmTQ=;
+        b=sRkqkTYebGNb7frwldIVuvQZn2H572kjdBEp5zHQHmLf2gaNSpaQoFsIYv/SvrEI7j
+         EPiIU/hknr7t0Q44/KlWicWPjIPQq50eY3L4w9Ira05p6BOpue4wy2OjhQRZoMbn6htO
+         UmIgjlUkldrMBoC0zIkCHczh4fY6RzC8HPZUMzXq6GAyQEq2acl/beqstSvCYqXf4R4z
+         5OoMEob0l7DEmmVlT2uZ4JKv3AebAfgeD4gzoa9baqBExqhX1gtUX9TKnsOijh4ca/qy
+         CPrkmuSsRI8WUE/hNYB58/xn6nJGTgInI+pt2E4zZiOsw+sc35csGlxk1ffN3hvAmSdv
+         +Dew==
+X-Gm-Message-State: AGi0PuaDdUovj0CVA6WVodwbDKiQhdB/XbwRCZstWHDXb9GhxvpEfcxY
+        gqDK0ZQ1Uu04ZtjppyiuMBXiGQ==
+X-Google-Smtp-Source: APiQypIHysObxDkfTPL5Ld8IioHs66VbL78eaPDd5OTIG6b36V584rOvubMrndPUJ07U5+/saSXr8w==
+X-Received: by 2002:a17:90a:80c2:: with SMTP id k2mr3204469pjw.6.1588686986451;
+        Tue, 05 May 2020 06:56:26 -0700 (PDT)
+Received: from localhost ([2400:8904::f03c:91ff:fe8a:bbe4])
+        by smtp.gmail.com with ESMTPSA id n34sm1724456pgl.43.2020.05.05.06.56.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 05 May 2020 06:56:26 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Paul Cercueil <paul@crapouillou.net>,
+        "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v2 3/3] arm64: perf_event: Fix time_offset for arch timer
+Date:   Tue,  5 May 2020 21:55:44 +0800
+Message-Id: <20200505135544.6003-4-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200505135544.6003-1-leo.yan@linaro.org>
+References: <20200505135544.6003-1-leo.yan@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ezequiel,
+'userpg->time_offset' is assigned to the negative 'now', 'now' if the
+value of sched clock and this value cannot reflect the time offset for
+arch timer's raw counter prior to sched clock's registration.
 
-On Tue, May 5, 2020 at 3:41 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
->
-> The driver should only set the payload on .buf_prepare
-> if the buffer is CAPTURE type, or if an OUTPUT buffer
-> has a zeroed payload.
+To fix this issue, this patch invokes arch_timer_get_epoch_offset() to
+read time offset prior to sched clock's registration, and assign its
+negative value to 'userpg->time_offset'.
 
-Thanks for the patch. Just one question below.
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ arch/arm64/kernel/perf_event.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Where does the requirement to set OUTPUT buffer bytesused to sizeimage
-if the original bytesused is 0 come from?
+diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+index 4d7879484cec..cbad7bd770fb 100644
+--- a/arch/arm64/kernel/perf_event.c
++++ b/arch/arm64/kernel/perf_event.c
+@@ -1163,10 +1163,12 @@ static int __init armv8_pmu_driver_init(void)
+ device_initcall(armv8_pmu_driver_init)
+ 
+ void arch_perf_update_userpage(struct perf_event *event,
+-			       struct perf_event_mmap_page *userpg, u64 now)
++			       struct perf_event_mmap_page *userpg,
++			       u64 __maybe_unused now)
+ {
+ 	u32 freq;
+ 	u32 shift;
++	u64 offset;
+ 
+ 	/*
+ 	 * Internal timekeeping for enabled/running/stopped times
+@@ -1188,5 +1190,7 @@ void arch_perf_update_userpage(struct perf_event *event,
+ 		userpg->time_mult >>= 1;
+ 	}
+ 	userpg->time_shift = (u16)shift;
+-	userpg->time_offset = -now;
++
++	offset = arch_timer_get_epoch_offset();
++	userpg->time_offset = -offset;
+ }
+-- 
+2.17.1
 
-Best regards,
-Tomasz
-
->
-> Fix it.
->
-> Fixes: cd33c830448ba ("media: rkvdec: Add the rkvdec driver")
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> ---
->  drivers/staging/media/rkvdec/rkvdec.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
-> index 225eeca73356..4df2a248ab96 100644
-> --- a/drivers/staging/media/rkvdec/rkvdec.c
-> +++ b/drivers/staging/media/rkvdec/rkvdec.c
-> @@ -456,7 +456,15 @@ static int rkvdec_buf_prepare(struct vb2_buffer *vb)
->                 if (vb2_plane_size(vb, i) < sizeimage)
->                         return -EINVAL;
->         }
-> -       vb2_set_plane_payload(vb, 0, f->fmt.pix_mp.plane_fmt[0].sizeimage);
-> +
-> +       /*
-> +        * Buffer's bytesused is written by the driver for CAPTURE buffers,
-> +        * or if the application passed zero bytesused on an OUTPUT buffer.
-> +        */
-> +       if (!V4L2_TYPE_IS_OUTPUT(vq->type) ||
-> +           (V4L2_TYPE_IS_OUTPUT(vq->type) && !vb2_get_plane_payload(vb, 0)))
-> +               vb2_set_plane_payload(vb, 0,
-> +                                     f->fmt.pix_mp.plane_fmt[0].sizeimage);
->         return 0;
->  }
->
-> --
-> 2.26.0.rc2
->
