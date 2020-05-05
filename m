@@ -2,266 +2,104 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACC7C47256
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8688EC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19904206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59FB720746
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 19:18:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588706095;
-	bh=HRSjKrTamOYRO0r7hp7vVBok4LXMDiBONvTE4IAMZRI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KidW+cnKNHN3EfQjUj39ca7kApPa4aiexd3/9T9nljJqbPrziL+Kb6zc1n4CGTYYY
-	 n3g7u6x1vK83fII3/SRUMSiQ9NXg6nuR24zK/gf8UjG93rarSVYMIqmIcScdy3P/C+
-	 aiMYLoPkoFZIirph6HmNmBVOmik4cwFC0GA5E5fI=
+	s=default; t=1588706287;
+	bh=B1klzDQVK7YKyYcQEg165w2ZvInxV5HQ5ljlSWKecVk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=vzsW23aZ0pfYxchaFCxTAkiwbP4QK1GGoTj9i5Pgqmn/6oSjQrH71yFFAkzHG+loW
+	 aPWYfSUdCtf4L4apGXGIKEmFOKeKRnXPxHGY0ak66yZbfeUe6wtlUsUFYrZLYa39RD
+	 Dmxg+Z1gE+1TKsS+EsP1LTgOeCT8MIry/q/rF36s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729000AbgEETOy (ORCPT
+        id S1728660AbgEETSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 15:14:54 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46976 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726350AbgEETOx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 15:14:53 -0400
-Received: by mail-ot1-f68.google.com with SMTP id z25so2636199otq.13;
-        Tue, 05 May 2020 12:14:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=c07EkN8nUavQhuddMPdcCa0IqRMVwevRP8t8M8iGngk=;
-        b=R5O4evYzv3xcI7CQy76kYyUB+FQg0LmcJDAyu97CUOtKauKAICBWRPpMVFEFlfd08b
-         RCl2q6e3+FGM3qnODMR+UKrkGRR2YZX+2F61V8aex7S778JIX55FuDOwWFRuYfl783UC
-         X7i3acBxNddZQ4NJ+5CMH7BjAj3/Pm2DotgY6KuLgw+BDykka74A7IIiXbi0/8ZTbCqV
-         nNAFYdFnn72ARLEIE6ti//wDjVg6dBCw49aMaEVvR7Rbl6qat8PW5MxUMxpqVNQOZWKy
-         ZU0g4MrpBgMVbyWHd0i2WqGqdiQW+VA2VELw7ko5knDd+IIXR19Kj7rsb+n9fXTdl5g9
-         +Zvw==
-X-Gm-Message-State: AGi0PubJgDiEvKv2/X3xh1d8SKEO6OBaXcJH9vgzGzlUL2BAHiE+Kcvb
-        3pqJyqMgnO2qOEgkjD/f5w==
-X-Google-Smtp-Source: APiQypLJ7B8BekQTVMEcUznrg8i5h9ec/mhxt5tyxQ9F79nU+fqxew4SDSJu20DnhOGzihLlcUNGbg==
-X-Received: by 2002:a9d:6c09:: with SMTP id f9mr3830759otq.94.1588706092211;
-        Tue, 05 May 2020 12:14:52 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n132sm790879oig.49.2020.05.05.12.14.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 12:14:51 -0700 (PDT)
-Received: (nullmailer pid 31997 invoked by uid 1000);
-        Tue, 05 May 2020 19:14:50 -0000
-Date:   Tue, 5 May 2020 14:14:50 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] devicetree: bindings: phy: Document ipq806x dwc3
- qcom phy
-Message-ID: <20200505191450.GA26404@bogus>
-References: <20200501215807.11175-1-ansuelsmth@gmail.com>
- <20200501215807.11175-2-ansuelsmth@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501215807.11175-2-ansuelsmth@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 5 May 2020 15:18:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36402 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726350AbgEETSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 15:18:06 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A27C6206B9;
+        Tue,  5 May 2020 19:18:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588706285;
+        bh=B1klzDQVK7YKyYcQEg165w2ZvInxV5HQ5ljlSWKecVk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=O2A12MGWgReI6iEWxxcspGQtX8FpUPNjN7J8Pk0Ieua87xfoREq3FfJ8qAjU9Y7SO
+         47dT4uSZ0ruchymZPRXe0I5NIRFtTstGelbOyOpFwB3gtvrYGh2wSNLUoNeSTDkwh7
+         JGi55cTemT/vKgMGvTCu254ZRU19qED6/Wmnx8Bg=
+Date:   Tue, 5 May 2020 12:18:05 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, users@linux.kernel.org
+Subject: Re: [PATCH v2] checkpatch: use patch subject when reading from
+ stdin
+Message-Id: <20200505121805.cb29ea992ec3e3b445f4b707@linux-foundation.org>
+In-Reply-To: <20200505132613.17452-1-geert+renesas@glider.be>
+References: <20200505132613.17452-1-geert+renesas@glider.be>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 11:58:05PM +0200, Ansuel Smith wrote:
-> Document dwc3 qcom phy hs and ss phy bindings needed to correctly
-> inizialize and use usb on ipq806x SoC.
+On Tue,  5 May 2020 15:26:13 +0200 Geert Uytterhoeven <geert+renesas@glider.be> wrote:
+
+> While "git am" can apply an mbox file containing multiple patches (e.g.
+> as created by b4[1], or a patch bundle downloaded from patchwork),
+> checkpatch does not have proper support for that.  When operating on an
+> mbox, checkpatch will merge all detected tags, and complain falsely
+> about duplicates:
 > 
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
-> v5:
-> * Fix dt_binding_check error
-> v4:
-> * Add qcom to specific bindings
-> v3:
-> * Use explicit reg instead of regmap
+>     WARNING: Duplicate signature
 > 
->  .../bindings/phy/qcom,ipq806x-usb-phy-hs.yaml | 58 ++++++++++++++
->  .../bindings/phy/qcom,ipq806x-usb-phy-ss.yaml | 79 +++++++++++++++++++
->  2 files changed, 137 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+> As modifying checkpatch to reset state in between each patch is a lot of
+> work, a simple solution is splitting the mbox into individual patches,
+> and invoking checkpatch for each of them.  Fortunately checkpatch can read
+> a patch from stdin, so the classic "formail" tool can be used to split
+> the mbox, and pipe all individual patches to checkpatch:
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
-> new file mode 100644
-> index 000000000000..c019de7478e3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
-> @@ -0,0 +1,58 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-hs.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm ipq806x usb DWC3 HS PHY CONTROLLER
-> +
-> +maintainers:
-> +  - Ansuel Smith <ansuelsmth@gmail.com>
-> +
-> +description:
-> +  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
-> +  controllers used in ipq806x. Each DWC3 PHY controller should have its
-> +  own node.
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,ipq806x-usb-phy-hs
-> +
-> +  "#phy-cells":
-> +    const: 0
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    description: |
-> +      - "ref" Is required
-> +      - "xo"	Optional external reference clock
-> +    items:
-> +      - const: ref
-> +      - const: xo
-> +
-> +required:
-> +  - compatible
-> +  - "#phy-cells"
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
-> +
-> +    hs_phy_0: phy@110f8800 {
-> +      compatible = "qcom,ipq806x-usb-phy-hs";
-> +      reg = <0x110f8800 0x30>;
-> +      clocks = <&gcc USB30_0_UTMI_CLK>;
-> +      clock-names = "ref";
-> +      #phy-cells = <0>;
-> +    };
-> diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
-> new file mode 100644
-> index 000000000000..fa10a1c51cf0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
-> @@ -0,0 +1,79 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-ss.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm ipq806x usb DWC3 SS PHY CONTROLLER
-> +
-> +maintainers:
-> +  - Ansuel Smith <ansuelsmth@gmail.com>
-> +
-> +description:
-> +  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
-> +  controllers used in ipq806x. Each DWC3 PHY controller should have its
-> +  own node.
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,ipq806x-usb-phy-ss
-> +
-> +  "#phy-cells":
-> +    const: 0
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    description: |
-> +      - "ref" Required.
-> +      - "xo"	Optional external reference clock.
-
-description just repeats what the schema says. Just drop.
-
-> +    items:
-> +      - const: ref
-> +      - const: xo
-> +
-> +  qcom,rx_eq:
-
-s/_/-/
-
-> +    maxItems: 1
-
-Drop. Not an array.
-
-> +    description: Override value for rx_eq.
-> +    default: 4
-
-0-2^32 are okay values?
-
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  qcom,tx_deamp_3_5db:
-
-Same issues in this one.
-
-> +    maxItems: 1
-> +    description: Override value for transmit preemphasis.
-> +    default: 23
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  qcom,mpll:
-
-And here.
-
-> +    maxItems: 1
-> +    description: Override value for mpll.
-> +    default: 0
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +required:
-> +  - compatible
-> +  - "#phy-cells"
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
-> +
-> +    ss_phy_0: phy@110f8830 {
-> +      compatible = "qcom,ipq806x-usb-phy-ss";
-> +      reg = <0x110f8830 0x30>;
-> +      clocks = <&gcc USB30_0_MASTER_CLK>;
-> +      clock-names = "ref";
-> +      #phy-cells = <0>;
-> +    };
-> -- 
-> 2.25.1
+>     formail -s scripts/checkpatch.pl < my-mbox
 > 
+> However, when reading a patch file from standard input, checkpatch calls
+> it "Your patch", and reports its state as:
+> 
+>     Your patch has style problems, please review.
+> 
+> or:
+> 
+>     Your patch has no obvious style problems and is ready for submission.
+
+Showing the proposed "after patch" output would be helpful.  It seems
+that it will be
+
+	"checkpatch: use patch subject when reading from stdin" has no obvious style problems and is ready for submission.
+
+yes?
+
+> Hence it can be difficult to identify which patches need to be reviewed
+> and improved.
+> 
+> Fix this by replacing "Your patch" by (the first line of) the email
+> subject, if present.
+> 
+> Note that "git mailsplit" can also be used to split an mbox, but it will
+> create individual files for each patch, thus requiring cleanup
+> afterwards.  Formail does not have this disadvantage.
+> 
+
