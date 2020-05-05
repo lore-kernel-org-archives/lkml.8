@@ -2,100 +2,139 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D916C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A08CC4725A
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 192D3206CC
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:54:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p0OmBMiN"
+	by mail.kernel.org (Postfix) with ESMTP id 1F94120746
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:56:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730457AbgEEQyH (ORCPT
+        id S1730188AbgEEQ4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:54:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45916 "EHLO
+        Tue, 5 May 2020 12:56:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729949AbgEEQyG (ORCPT
+        by vger.kernel.org with ESMTP id S1729483AbgEEQ4F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:54:06 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2465DC0610D5
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 09:54:05 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id w11so2116815iov.8
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 09:54:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CQPV38VFHq5jUdj3xuK872aLx1CmmM995oAhTR/zeg4=;
-        b=p0OmBMiNRcbZeEVttRyrUydpDTEXD+loILZwadE01yiYrZMAefBa5lEnkCd8IE/f1C
-         wqtNt3itnutwU9SNyU/Y0fQOnPrSFTEoDV1obS+naK5wdvSAbwcozgcVIGkY/Otjnd9p
-         51XhOstTUsx5ISmBzOTD1jNv/oS5q27DmqmWhYSeqm+5U94xAJaIyLgweW34StzfEErI
-         3dfM/v0XMGcRAFe9bPtoLVFLg5ACcy1j8Rnan0JmxmJvsltfDo9KWXkcjYgZK/TvXSRC
-         Oh/P44Cii0cxHTkyJ4tN2a3504hNbCU0BEhwsSTKenaJXoMTLVbgu3JdVv36Y/5fs6vB
-         BO9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CQPV38VFHq5jUdj3xuK872aLx1CmmM995oAhTR/zeg4=;
-        b=BiG5Sa2gL4o1f1YKG6RtUP30sxLxwd0W1PzGrNGCuWn3NfEl7tClUA/V0w6s/4umb6
-         CmOV7ea7EK63emIHsdwPvZFAZrpnmCktHBLPlhiumFwDmVCDez3HfrYXsoolugLd9Uz5
-         sciM0YeGXTHgvZKTH/Q49HH25RCrnJZy7q5zss28csEy2u4Cu+/dpHntGHV/2w501u9h
-         I7y+UuSPddYVOHvY1xVeKaYd6wzT4upHWhcsk/EkIgkWGq7cC+peHKehMcBKRBb08s80
-         xSAhKT6sC41LWUT49fof0M/QWI2ueom+ZqABXGNx0qcF9EOnNFwN+UnjufOh284NfYgO
-         gRpA==
-X-Gm-Message-State: AGi0PuY7pOva1DF4S11rYo45cT7g+1XwqjsTy590LSKpTIccWcqAVVIS
-        Px0NCmG4OwRcf6L1C1Iw571Iur0A5bUqt7M6/Nyt1Q==
-X-Google-Smtp-Source: APiQypIh87tWtIMtuteWC1af3Q4H+FkjslZ8xyNvCG2aA394n3dc+bOaNgbwVm/hpp4CR/gsTCwAOETr4pzr5lry2Mw=
-X-Received: by 2002:a02:a004:: with SMTP id a4mr3700717jah.18.1588697644142;
- Tue, 05 May 2020 09:54:04 -0700 (PDT)
+        Tue, 5 May 2020 12:56:05 -0400
+Received: from smtp-bc0d.mail.infomaniak.ch (smtp-bc0d.mail.infomaniak.ch [IPv6:2001:1600:3:17::bc0d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95A5AC061A10
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 09:56:05 -0700 (PDT)
+Received: from smtp-2-0000.mail.infomaniak.ch (unknown [10.5.36.107])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49Gm823TvXzlhlsl;
+        Tue,  5 May 2020 18:56:02 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-2-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 49Gm7z59gRzlq4RT;
+        Tue,  5 May 2020 18:55:59 +0200 (CEST)
+Subject: Re: [PATCH v5 3/6] fs: Enable to enforce noexec mounts or file exec
+ through O_MAYEXEC
+To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20200505153156.925111-1-mic@digikod.net>
+ <20200505153156.925111-4-mic@digikod.net>
+ <fb6e2d7d-a372-3e79-214d-3ac9a451cd0a@infradead.org>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <3555aab7-f4e0-80eb-0dfc-a87cfcba5e68@digikod.net>
+Date:   Tue, 5 May 2020 18:55:59 +0200
+User-Agent: 
 MIME-Version: 1.0
-References: <20200504110344.17560-1-eesposit@redhat.com> <alpine.DEB.2.22.394.2005041429210.224786@chino.kir.corp.google.com>
- <f2654143-b8e5-5a1f-8bd0-0cb0df2cd638@redhat.com>
-In-Reply-To: <f2654143-b8e5-5a1f-8bd0-0cb0df2cd638@redhat.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Tue, 5 May 2020 09:53:53 -0700
-Message-ID: <CALMp9eQYcLr_REzDC1kWTHX4SJWt7x+Zd1KwNvS1YGd5TVM1xA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] Statsfs: a new ram-based file sytem for Linux
- kernel statistics
-To:     Emanuele Giuseppe Esposito <eesposit@redhat.com>
-Cc:     David Rientjes <rientjes@google.com>,
-        Jonathan Adams <jwadams@google.com>,
-        kvm list <kvm@vger.kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <fb6e2d7d-a372-3e79-214d-3ac9a451cd0a@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 2:18 AM Emanuele Giuseppe Esposito
-<eesposit@redhat.com> wrote:
->
->
->
-> On 5/4/20 11:37 PM, David Rientjes wrote:
-> > Since this is becoming a generic API (good!!), maybe we can discuss
-> > possible ways to optimize gathering of stats in mass?
->
-> Sure, the idea of a binary format was considered from the beginning in
-> [1], and it can be done either together with the current filesystem, or
-> as a replacement via different mount options.
 
-ASCII stats are not scalable. A binary format is definitely the way to go.
+
+On 05/05/2020 17:44, Randy Dunlap wrote:
+> On 5/5/20 8:31 AM, Mickaël Salaün wrote:
+>> diff --git a/security/Kconfig b/security/Kconfig
+>> index cd3cc7da3a55..d8fac9240d14 100644
+>> --- a/security/Kconfig
+>> +++ b/security/Kconfig
+>> @@ -230,6 +230,32 @@ config STATIC_USERMODEHELPER_PATH
+>>  	  If you wish for all usermode helper programs to be disabled,
+>>  	  specify an empty string here (i.e. "").
+>>  
+>> +menuconfig OMAYEXEC_STATIC
+>> +	tristate "Configure O_MAYEXEC behavior at build time"
+>> +	---help---
+>> +	  Enable to enforce O_MAYEXEC at build time, and disable the dedicated
+>> +	  fs.open_mayexec_enforce sysctl.
+> 
+> That help message is a bit confusing IMO.  Does setting/enabling OMAYEXEC_STATIC
+> both enforce O_MAYEXEC at build time and also disable the dedicated sysctl?
+
+Yes. What about this?
+"Define the O_MAYEXEC policy at build time only. As a side effect, this
+also disables the fs.open_mayexec_enforce sysctl."
+
+> 
+> Or are these meant to be alternatives, one for what Enabling this kconfig symbol
+> does and the other for what Disabling this symbol does?  If so, it doesn't
+> say that.
+> 
+>> +
+>> +	  See Documentation/admin-guide/sysctl/fs.rst for more details.
+>> +
+>> +if OMAYEXEC_STATIC
+>> +
+>> +config OMAYEXEC_ENFORCE_MOUNT
+>> +	bool "Mount restriction"
+>> +	default y
+>> +	---help---
+>> +	  Forbid opening files with the O_MAYEXEC option if their underlying VFS is
+>> +	  mounted with the noexec option or if their superblock forbids execution
+>> +	  of its content (e.g., /proc).
+>> +
+>> +config OMAYEXEC_ENFORCE_FILE
+>> +	bool "File permission restriction"
+>> +	---help---
+>> +	  Forbid opening files with the O_MAYEXEC option if they are not marked as
+>> +	  executable for the current process (e.g., POSIX permissions).
+>> +
+>> +endif # OMAYEXEC_STATIC
+>> +
+>>  source "security/selinux/Kconfig"
+>>  source "security/smack/Kconfig"
+>>  source "security/tomoyo/Kconfig"
+> 
+> 
