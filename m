@@ -2,96 +2,195 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D756C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD686C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B04B20721
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60A0E20721
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:23:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="SeDwSbyn"
+	dkim=pass (2048-bit key) header.d=aurel32.net header.i=@aurel32.net header.b="KzR1Fn9y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729625AbgEEXWz (ORCPT
+        id S1729633AbgEEXXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 19:22:55 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:48629 "EHLO mail.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728076AbgEEXWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 19:22:55 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id f738d374;
-        Tue, 5 May 2020 23:10:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=l2C3eGUZm0cGSrtG5eEab6sxYaM=; b=SeDwSb
-        yn2Zee+fmI/17Fiftl1FOfY1ba1n+vgk5HAZNms4Z2oPSAGJPMxoMFsplZ9K1l3V
-        cGiraIm+5V3zyAynv3m1RIB/0qA5dTXLDpLd/YBKUb8HTL7jvssKJJ8dvigqD65A
-        5rtC1o6fnJMFJgfBIE2V2eC6HdPgREalkossHOT7jVrAxd7xZkaiYLAfc2nXmKfo
-        VzyHQy2gwbY2+3sNsCFChilNm2eOPxJNsViUVeVHgAMJ75Jc6cBEx7wucbcgvvH+
-        SA3ST7ASFTqz7RC6QhqSGNAHhPwk5qHHdtR3OEgpK80fsC+pZmru9f+rX57CTUdd
-        cIbZkugKXFiCrJsA==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 1ce01312 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Tue, 5 May 2020 23:10:18 +0000 (UTC)
-Received: by mail-io1-f46.google.com with SMTP id w11so208087iov.8;
-        Tue, 05 May 2020 16:22:53 -0700 (PDT)
-X-Gm-Message-State: AGi0PublBl+yTXAVZIKw7Z+bJOSBoWqmwicskUHJr7l36wv9r/X/C7nr
-        J37F8U+qEy17ZWHm2wh9lQWXp/9+PXPpsNiDQd8=
-X-Google-Smtp-Source: APiQypJqRUfqrgcUx2pI/zt5ty6fSBfyjcvaFYUblPYalQ/j6fLp2KKxWN5jLWtm/o1Eba9uMrLwhZDX2cvbBF6VU1k=
-X-Received: by 2002:a5e:9401:: with SMTP id q1mr5640448ioj.80.1588720973419;
- Tue, 05 May 2020 16:22:53 -0700 (PDT)
+        Tue, 5 May 2020 19:23:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727989AbgEEXXL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 19:23:11 -0400
+X-Greylist: delayed 1793 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 05 May 2020 16:23:10 PDT
+Received: from hall.aurel32.net (hall.aurel32.net [IPv6:2001:bc8:30d7:100::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAE0EC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 16:23:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=aurel32.net
+        ; s=202004.hall; h=In-Reply-To:Content-Type:MIME-Version:References:
+        Message-ID:Subject:Cc:To:From:Date:Content-Transfer-Encoding:From:Reply-To:
+        Subject:Content-ID:Content-Description:X-Debbugs-Cc;
+        bh=Fw7aDfSu8Ev49U5D2tYj2n61oUrGmj01KXcwQiHtfOw=; b=KzR1Fn9yMaNCO6OrbAlStQTrCQ
+        M8PJEs62EAYQDNYCKoSgP5/tizMNxmI2+LyE/2WL8MhSEsWEA4QXF2K5oQCyMw+mhtrduovWhPLrT
+        R8vflig+4tkhLYP6aiwUIggsphFUOLFchvZgscq0GvDxHwU+lgCO69pMi+wK3lfF7Fdpr2K4wDrXg
+        D+NzjWVnDgzqGG8X54XrgdX+TZV3W3e7bvaJ6J0tMLBLtkmF7rnCTVJLPDBeaCXhJYeWEhQZDVzKy
+        +zynG2YEh6sAElR2x/Ls9zy/b9lg7Ewi6OWRJPzWwhsdfHJc8RxctIbxTEGnR/9NMarCo/P6Q6UOq
+        Rd96FIbw==;
+Received: from [2a01:e35:2fdd:a4e1:fe91:fc89:bc43:b814] (helo=ohm.rr44.fr)
+        by hall.aurel32.net with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <aurelien@aurel32.net>)
+        id 1jW6Qo-0008Qi-OU; Wed, 06 May 2020 00:52:54 +0200
+Received: from aurel32 by ohm.rr44.fr with local (Exim 4.93)
+        (envelope-from <aurelien@aurel32.net>)
+        id 1jW6Qo-001zlp-3y; Wed, 06 May 2020 00:52:54 +0200
+Date:   Wed, 6 May 2020 00:52:54 +0200
+From:   Aurelien Jarno <aurelien@aurel32.net>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        arnd@arndb.de
+Subject: Re: [PATCH v4 7/8] powerpc/vdso32: implement clock_getres entirely
+Message-ID: <20200505225254.GA471364@aurel32.net>
+Mail-Followup-To: Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, arnd@arndb.de
+References: <cover.1575273217.git.christophe.leroy@c-s.fr>
+ <37f94e47c91070b7606fb3ec3fe6fd2302a475a0.1575273217.git.christophe.leroy@c-s.fr>
 MIME-Version: 1.0
-References: <CAHmME9oMcfY4nwkknwN9c4rB-O7xD4GCAOFPoZCbdnq=034=Vw@mail.gmail.com>
- <20200505215503.691205-1-Jason@zx2c4.com> <CAKwvOdk32cDowvrqRPKDRpf2ZiXh=jVnBTmhM-NWD=Ownq9v3w@mail.gmail.com>
- <20200505222540.GA230458@ubuntu-s3-xlarge-x86> <CAHmME9qs0iavoBqd_z_7Xibyz7oxY+FRt+sHyy+sBa1wQc66ww@mail.gmail.com>
- <202005051617.F9B32B5526@keescook> <CAHmME9q3zFe4e1xnpptJ27zywGqngZK2K7LCVzDSoG__ht=fNA@mail.gmail.com>
-In-Reply-To: <CAHmME9q3zFe4e1xnpptJ27zywGqngZK2K7LCVzDSoG__ht=fNA@mail.gmail.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Tue, 5 May 2020 17:22:42 -0600
-X-Gmail-Original-Message-ID: <CAHmME9oWTv8YE63FboK4qNmy5vt2pLGyOkP52gPWVRGrhN67SQ@mail.gmail.com>
-Message-ID: <CAHmME9oWTv8YE63FboK4qNmy5vt2pLGyOkP52gPWVRGrhN67SQ@mail.gmail.com>
-Subject: Re: [PATCH] Kbuild: disable FORTIFY_SOURCE on clang-10
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Arnd Bergmann <arnd@arndb.de>, George Burgess <gbiv@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <37f94e47c91070b7606fb3ec3fe6fd2302a475a0.1575273217.git.christophe.leroy@c-s.fr>
+User-Agent: Mutt/1.13.2 (2019-12-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 5:22 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
->
-> On Tue, May 5, 2020 at 5:19 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Tue, May 05, 2020 at 04:37:38PM -0600, Jason A. Donenfeld wrote:
-> > > On Tue, May 5, 2020 at 4:25 PM Nathan Chancellor
-> > > <natechancellor@gmail.com> wrote:
-> > > > I believe these issues are one in the same. I did a reverse bisect with
-> > > > Arnd's test case and converged on George's first patch:
-> > > >
-> > > > https://github.com/llvm/llvm-project/commit/2dd17ff08165e6118e70f00e22b2c36d2d4e0a9a
-> > > >
-> > > > I think that in lieu of this patch, we should have that patch and its
-> > > > follow-up fix merged into 10.0.1.
-> > >
-> > > If this is fixed in 10.0.1, do we even need to patch the kernel at
-> > > all? Or can we just leave it be, considering most organizations using
-> > > clang know what they're getting into? I'd personally prefer the
-> > > latter, so that we don't clutter things.
-> >
-> > I agree: I'd rather this was fixed in 10.0.1 (but if we do want a
-> > kernel-side work-around for 10.0.0, I would suggest doing the version
-> > check in the Kconfig for FORTIFY_SOURCE instead of in the Makefile,
-> > as that's where these things are supposed to live these days).
->
-> Indeed this belongs in the Makefile. I can send a patch adjusting
+Hi,
 
-er, Kconfig, is what I meant to type.
+On 2019-12-02 07:57, Christophe Leroy wrote:
+> clock_getres returns hrtimer_res for all clocks but coarse ones
+> for which it returns KTIME_LOW_RES.
+> 
+> return EINVAL for unknown clocks.
+> 
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+>  arch/powerpc/kernel/asm-offsets.c         |  3 +++
+>  arch/powerpc/kernel/vdso32/gettimeofday.S | 19 +++++++++++--------
+>  2 files changed, 14 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/asm-offsets.c b/arch/powerpc/kernel/asm-offsets.c
+> index 0013197d89a6..90e53d432f2e 100644
+> --- a/arch/powerpc/kernel/asm-offsets.c
+> +++ b/arch/powerpc/kernel/asm-offsets.c
+> @@ -413,7 +413,10 @@ int main(void)
+>  	DEFINE(CLOCK_MONOTONIC, CLOCK_MONOTONIC);
+>  	DEFINE(CLOCK_REALTIME_COARSE, CLOCK_REALTIME_COARSE);
+>  	DEFINE(CLOCK_MONOTONIC_COARSE, CLOCK_MONOTONIC_COARSE);
+> +	DEFINE(CLOCK_MAX, CLOCK_TAI);
+>  	DEFINE(NSEC_PER_SEC, NSEC_PER_SEC);
+> +	DEFINE(EINVAL, EINVAL);
+> +	DEFINE(KTIME_LOW_RES, KTIME_LOW_RES);
+>  
+>  #ifdef CONFIG_BUG
+>  	DEFINE(BUG_ENTRY_SIZE, sizeof(struct bug_entry));
+> diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
+> index 9aafacea9c4a..20ae38f3a5a3 100644
+> --- a/arch/powerpc/kernel/vdso32/gettimeofday.S
+> +++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
+> @@ -196,17 +196,20 @@ V_FUNCTION_END(__kernel_clock_gettime)
+>  V_FUNCTION_BEGIN(__kernel_clock_getres)
+>    .cfi_startproc
+>  	/* Check for supported clock IDs */
+> -	cmpwi	cr0,r3,CLOCK_REALTIME
+> -	cmpwi	cr1,r3,CLOCK_MONOTONIC
+> -	cror	cr0*4+eq,cr0*4+eq,cr1*4+eq
+> -	bne	cr0,99f
+> +	cmplwi	cr0, r3, CLOCK_MAX
+> +	cmpwi	cr1, r3, CLOCK_REALTIME_COARSE
+> +	cmpwi	cr7, r3, CLOCK_MONOTONIC_COARSE
+> +	bgt	cr0, 99f
+> +	LOAD_REG_IMMEDIATE(r5, KTIME_LOW_RES)
+> +	beq	cr1, 1f
+> +	beq	cr7, 1f
+>  
+>  	mflr	r12
+>    .cfi_register lr,r12
+>  	get_datapage	r3, r0
+>  	lwz	r5, CLOCK_HRTIMER_RES(r3)
+>  	mtlr	r12
+> -	li	r3,0
+> +1:	li	r3,0
+>  	cmpli	cr0,r4,0
+>  	crclr	cr0*4+so
+>  	beqlr
+> @@ -215,11 +218,11 @@ V_FUNCTION_BEGIN(__kernel_clock_getres)
+>  	blr
+>  
+>  	/*
+> -	 * syscall fallback
+> +	 * invalid clock
+>  	 */
+>  99:
+> -	li	r0,__NR_clock_getres
+> -	sc
+> +	li	r3, EINVAL
+> +	crset	so
+>  	blr
+>    .cfi_endproc
+>  V_FUNCTION_END(__kernel_clock_getres)
+
+Removing the syscall fallback looks wrong, and broke access to
+per-processes clocks. With this change a few glibc tests now fail.
+
+This can be reproduced by the simple code below:
+
+| #include <errno.h>
+| #include <stdio.h>
+| #include <string.h>
+| #include <sys/types.h>
+| #include <time.h>
+| #include <unistd.h>
+| 
+| int main()
+| {
+|     struct timespec res;
+|     clockid_t ci;
+|     int e;
+|
+|     e = clock_getcpuclockid(getpid(), &ci);
+|     if (e) {
+|         printf("clock_getcpuclockid returned %d\n", e);
+|         return e;
+|     }
+|     e = clock_getres (ci, &res);
+|     printf("clock_getres returned %d\n", e);
+|     if (e) {
+|         printf("  errno: %d, %s\n", errno, strerror(errno));
+|     }
+|
+|     return e;
+| }
+
+Without this patch or with -m64, it returns:
+
+| clock_getres returned 0
+
+With this patch with -m32 it returns:
+
+| clock_getres returned -1
+|   errno: 22, Invalid argument
+
+Regards,
+Aurelien
+
+-- 
+Aurelien Jarno                          GPG: 4096R/1DDD8C9B
+aurelien@aurel32.net                 http://www.aurel32.net
