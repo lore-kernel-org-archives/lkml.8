@@ -2,168 +2,143 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1839EC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C56C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9BF9206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:45:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588693555;
-	bh=TJ5JkssCdhFOYQwFIJPeii3/dV3iPQguY4nuHrVHRrc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Po/hY8lQhLbUq9eFFxr9JkTONWM8HUiL8KLxMgCYWWqwFX/KNDDy9E/EEksWNnDcN
-	 ApjOp5OUINWaOhole8jaG2Y5zfOZL+itfwB2XUhbRPbujJas0pobN5fk0B1gaswijx
-	 THjEj3sogT8tDNhKDTiZShAqgKHLb+GkdjSDX3vk=
+	by mail.kernel.org (Postfix) with ESMTP id E5D5A206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:46:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XGSsCxMi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730789AbgEEPpx (ORCPT
+        id S1730509AbgEEPqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:45:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53120 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730360AbgEEPpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:45:52 -0400
-Received: from localhost (mobile-166-175-56-67.mycingular.net [166.175.56.67])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17BCC206B9;
-        Tue,  5 May 2020 15:45:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588693551;
-        bh=TJ5JkssCdhFOYQwFIJPeii3/dV3iPQguY4nuHrVHRrc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=NFckFzKjcpgEh2s+QWD5+nT9J8r37cN82TjEVJy4G1zSPMFXq7PyBY3j/CLcTlpUJ
-         XHJJMclZNs6U5HhS7HLUqXSRxWdK+WGRYWQ5x+7rKRNFCTKKRbRtuBfdIsBybrhEAR
-         ZubZo1ixIJKrw7GcbxQoRGpi2a4tsGdpgYUaGnRM=
-Date:   Tue, 5 May 2020 10:45:49 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] PCI/ASPM: Enable ASPM for root complex <-> bridge <->
- bridge case
-Message-ID: <20200505154549.GA359490@bjorn-Precision-5520>
+        Tue, 5 May 2020 11:46:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730312AbgEEPqB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 11:46:01 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9218EC061A10;
+        Tue,  5 May 2020 08:46:01 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id s20so975995plp.6;
+        Tue, 05 May 2020 08:46:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cW7zcIJFnttVMMcvhKofjB7umzWccwAfCSkWG/hmw+A=;
+        b=XGSsCxMiCQ8UcZsyIyPPlVzuIWwo5jGRQh0MmMQ8tU+7WT53LEhk+69l/nABmlVcx2
+         evybuJWkhNx6+53juCKMFhlDj6MWGAWplavC4s+5MI4sGhQM2w87SsIUdZ88ISri/kXU
+         xasKUQ7DXKunoJgzTeH1kv7J74HOtktJwoz27xzD9dPklhtIYIMZ75oVrNKr6Sqnty1p
+         d96AQsooXSLpXQsyIxqVPnGTUdjxTeKjZgKTV72biPnnDirT0Fx7U7EV/xpPRPL+/GU/
+         4fhbLOe6H/GBu48oP5i1nSK05oAXOQV19reC2D5wog6XNjqOYN5ceel/BVucDQK1WU8A
+         dVqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=cW7zcIJFnttVMMcvhKofjB7umzWccwAfCSkWG/hmw+A=;
+        b=XsVM686M7Fu1zret4QDWEisT4gzfg2rrJY9fxf+AYlhjcul5Uwkj86CpZ5i8erBXZL
+         m2oD9RR/Ogoj9HOxsgEztF7fiQfchEhQ7EqwnqSf77tfTiheV4PrGQwjzecV4HPS/qf4
+         tRIfWi6nHQRaBuJtu7lVPSsslaoV0fRQGn8lNsKSsnqwxEBrZnI6bJ9cscu4crdY2pvO
+         F0cK4rkxuvZ21i0t9E48C92nczPSrxapYexwvUTu0nOUHQPce6Y3K9AyhpxxDAij8Rrv
+         YOf7URyCJLjl4kofbbfeEsVugY4GFZ+z3K2HvP3SdEpAzC8lED7FW6mU90gZD3+12+Ne
+         wX0g==
+X-Gm-Message-State: AGi0PuYLQEhCajWpqkI6Ckj57cGetPsd+i3rMNebxkAcgU3p4la8zuL4
+        Cpbbg5TJdyzmsMiiT8vk43C0M9jM
+X-Google-Smtp-Source: APiQypJYpoEc9GOsHaoZZ3gtvXYBZP//KU75GlEU/E2N52QyuBhRxzOj/tUJL3qoQxfKgY9cxmADCQ==
+X-Received: by 2002:a17:90a:24e6:: with SMTP id i93mr3960494pje.13.1588693560897;
+        Tue, 05 May 2020 08:46:00 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d12sm2417246pfq.36.2020.05.05.08.45.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2020 08:46:00 -0700 (PDT)
+Subject: Re: [PATCH 5.6 00/73] 5.6.11-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200504165501.781878940@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <2c85f997-cf6a-3013-09fc-a56417cc56d3@roeck-us.net>
+Date:   Tue, 5 May 2020 08:45:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <B6977248-C345-466D-AE8B-600088B73FA8@canonical.com>
+In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 10:00:44PM +0800, Kai-Heng Feng wrote:
-> > On May 5, 2020, at 21:38, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Tue, May 05, 2020 at 08:27:59PM +0800, Kai-Heng Feng wrote:
-> >> The TI PCIe-to-PCI bridge prevents the Intel SoC from entering power
-> >> state deeper than PC3 due to disabled ASPM, consumes lots of unnecessary
-> >> power. On Windows ASPM L1 is enabled on the device and its upstream
-> >> bridge, so it can make the Intel SoC reach PC8 or PC10 to save lots of
-> >> power.
-> > 
-> > The above is a benefit, but leading off with it suggests that this
-> > change is specifically for that config, which it isn't.
+On 5/4/20 10:57 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.6.11 release.
+> There are 73 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Yes, it applies all devices that meet the condition.
+> Responses should be made by Wed, 06 May 2020 16:52:55 +0000.
+> Anything received after that time might be too late.
 > 
-> >> Currently, ASPM is disabled if downstream has bridge function. It was
-> >> introduced by commit 7d715a6c1ae5 ("PCI: add PCI Express ASPM support").
-> >> The commit introduced PCIe ASPM support, but didn't explain why ASPM
-> >> needs to be in that case.
-> > 
-> > s/needs to be in that case/needs to be disabled in that case/ ?
-> 
-> Yes indeed I missed that word...
-> 
-> >> So relax the condition a bit to let bridge which connects to root
-> >> complex enables ASPM, instead of removing it completely, to avoid
-> >> regression.
-> > 
-> > If this is a regression, that means it used to work correctly.  So are
-> > you saying 7d715a6c1ae5^ works correctly?  That seems doubtful since
-> > 7d715a6c1ae5 appeared in v2.6.26 and added ASPM support in the first
-> > place.
-> 
-> Clearly I didn't express my intention well enough.
-> What I meant was, we can either remove the "disable ASPM on bridge"
-> case completely, or do what this patch does.
 
-Ah, that makes sense, thanks.
+Build results:
+	total: 155 pass: 155 fail: 0
+Qemu test results:
+	total: 427 pass: 427 fail: 0
 
-> >> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207571
-> >> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> >> ---
-> >> drivers/pci/pcie/aspm.c | 14 ++++++++------
-> >> 1 file changed, 8 insertions(+), 6 deletions(-)
-> >> 
-> >> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> >> index 2378ed692534..af5e22d78101 100644
-> >> --- a/drivers/pci/pcie/aspm.c
-> >> +++ b/drivers/pci/pcie/aspm.c
-> >> @@ -629,13 +629,15 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
-> >> 	/* Setup initial capable state. Will be updated later */
-> >> 	link->aspm_capable = link->aspm_support;
-> >> 	/*
-> >> -	 * If the downstream component has pci bridge function, don't
-> >> -	 * do ASPM for now.
-> > 
-> > I agree, that comment is missing the essential information about *why*
-> > we don't do ASPM.
-> 
-> Or missing a part to re-enable ASPM in later time.
-> 
-> >> +	 * If upstream bridge isn't connected to root complex and the
-> >> +	 * downstream component has pci bridge function, don't do ASPM for now.
-> > 
-> > But this comment just perpetuates it and makes the special case even
-> > more special.  I think we should either remove that special case
-> > completely or figure out what the real issue is.
-> 
-> I do prefer remote it completely, but I was afraid of introducing
-> any regression so I just made the case more "special".
-> 
-> > I know we weren't always very good about computing the acceptable
-> > latencies (and we still don't handle LTR correctly, though that's an
-> > L1 Substates issue that wouldn't have applied in the 7d715a6c1ae5
-> > timeframe).
-> 
-> Seems like Windows doesn't disable ASPM on bridge to bridge case,
-> can we take the risk and remove the special case completely?
-
-I think we should remove the special case completely.  The spec
-clearly envisions the possibility of ASPM being enabled on links
-between switches, e.g., PCIe r5.0, sec 5.4.1.3.1, says:
-
-  software examines the Endpoint L0s/L1 Acceptable Latency ... and
-  enables or disables L0s/L1 entry ... in some or all of the
-  intervening device Ports on that hierarchy.
-
-We might break something, but if we do, we'll learn something concrete
-about what we need to avoid.
-
-> >> 	 */
-> >> -	list_for_each_entry(child, &linkbus->devices, bus_list) {
-> >> -		if (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) {
-> >> -			link->aspm_disable = ASPM_STATE_ALL;
-> >> -			break;
-> >> +	if (parent->bus->parent) {
-> >> +		list_for_each_entry(child, &linkbus->devices, bus_list) {
-> >> +			if (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) {
-> >> +				link->aspm_disable = ASPM_STATE_ALL;
-> >> +				break;
-> >> +			}
-> >> 		}
-> >> 	}
-> >> 
-> >> -- 
-> >> 2.17.1
-> 
+Guenter
