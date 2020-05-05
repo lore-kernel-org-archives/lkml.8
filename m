@@ -2,153 +2,101 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C8C1C4725A
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18094C47259
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8DDC2078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDEC2206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:33:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DdR1dvS5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730381AbgEEPdY (ORCPT
+        id S1730399AbgEEPdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:33:24 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3206 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730347AbgEEPdQ (ORCPT
+        Tue, 5 May 2020 11:33:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33100 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729250AbgEEPdh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:33:16 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 045FV0Vs191030;
-        Tue, 5 May 2020 11:33:12 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30u9aybp9w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 11:33:12 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 045FVenr193308;
-        Tue, 5 May 2020 11:33:11 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30u9aybp8r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 11:33:10 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 045FUr9J031283;
-        Tue, 5 May 2020 15:33:08 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03ams.nl.ibm.com with ESMTP id 30s0g5q982-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 15:33:08 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 045FX6Do55967892
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 May 2020 15:33:06 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6B9EFA405B;
-        Tue,  5 May 2020 15:33:06 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8D7BFA405C;
-        Tue,  5 May 2020 15:33:05 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.200.227])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  5 May 2020 15:33:05 +0000 (GMT)
-Message-ID: <1588692785.5157.11.camel@linux.ibm.com>
-Subject: Re: [RFC PATCH] ima: verify mprotect change is consistent with mmap
- policy
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org
-Cc:     Jann Horn <jannh@google.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 05 May 2020 11:33:05 -0400
-In-Reply-To: <7812a3a7-f47d-c924-c12e-f417bb6f43dc@linux.microsoft.com>
-References: <1588627060-7399-1-git-send-email-zohar@linux.ibm.com>
-         <7812a3a7-f47d-c924-c12e-f417bb6f43dc@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-05_08:2020-05-04,2020-05-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
- lowpriorityscore=0 adultscore=0 mlxlogscore=999 suspectscore=0 bulkscore=0
- malwarescore=0 clxscore=1015 mlxscore=0 phishscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005050121
+        Tue, 5 May 2020 11:33:37 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAE67C061A0F;
+        Tue,  5 May 2020 08:33:37 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id t40so1250824pjb.3;
+        Tue, 05 May 2020 08:33:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=K45WauttThvvJZYIBOgON+J2UV9mJIBfT5/f4RIS0HA=;
+        b=DdR1dvS5/ImeMjt8XY4oGRVkc+pac6cXfU8CQHQaQB8a05i2g+Iti/jKndedRkkrgf
+         KnBS0K06302+iRQNVFI/yxA+C99XDRulMqeH5R/4N1m1BLczLGZJtjMFs8Jy8WRyTwm8
+         2+9HTOUrlXblAC7JrolcSn51LBR5n91xjT98wAbZpMHI9Y3FJN2LkZKoZPfHcF15BjSy
+         kmo+d5kImY8mzeTYnSMvpNdQJGFl0n2i/PW6SDGl/b5CEqu/NuuHJhqWxHRXb6ZP7+6r
+         +bhCgbDvjp7hfOV5y9V9V3vd9pGaJ6cMTVjQ6pQ7mJSfcKNTZvsTyb2eG5s5r6fY3vdV
+         KsZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=K45WauttThvvJZYIBOgON+J2UV9mJIBfT5/f4RIS0HA=;
+        b=qEzb5gSKVaNfWtj46zv2zj3iQYspy06+AADRdHyzR/Ixr/3aD0/HeYDRfakZm5NpOC
+         U4al36p8f3eQro1iTXe1l/dDZ8dLQRji0AkwL2kWo9MtqUHBZIWisH7kDDCQ7wRyYqPX
+         PwOrH7DdHB+DC86ZCEJY6Hnr3J6ReAGGlGFFLjJMuw7sCV7juiaaMwtN4bz+hUwlqM+S
+         F/zA1opdr9f7kMtqcy3tgBleu9jX627nHnQT9ZmNdj9XPqWP+G7MTi35cV2USxce6QfI
+         Ol1tXjRkcOazBj28TUGOCXThfdLzXjcgPW6T0+UbgfwshtPwtzjUocu+PHcjdlUJm35a
+         /VDw==
+X-Gm-Message-State: AGi0PubMD3D/AhOXIiAE579NxIHCXrNrpwES0t5X5CxsJBPMAt5V3tOt
+        yOvpZPpPEa7uGPPEFQhXQY0=
+X-Google-Smtp-Source: APiQypIc3+DX9p4fb8nDlwCpu7fJA9hacLoAULqXEpwjWIEDmZXFZaf0bjy1gLs78Dlxczs7z649Zw==
+X-Received: by 2002:a17:902:bd07:: with SMTP id p7mr3233441pls.293.1588692817311;
+        Tue, 05 May 2020 08:33:37 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:60b:fcd9:7c28:bcca:10e4:5523])
+        by smtp.gmail.com with ESMTPSA id w126sm2323033pfb.117.2020.05.05.08.33.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 08:33:36 -0700 (PDT)
+From:   Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     aishwaryarj100@gmail.com
+Subject: [PATCH] Input: edt-ft5x06: Use DEFINE_DEBUGFS_ATTRIBUTE to define debugfs fops
+Date:   Tue,  5 May 2020 21:03:24 +0530
+Message-Id: <20200505153325.20113-1-aishwaryarj100@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-05-04 at 15:51 -0700, Lakshmi Ramasubramanian wrote:
-> On 5/4/20 2:17 PM, Mimi Zohar wrote:
-> 
-> Hi Mimi,
-> 
-> > +int ima_file_mprotect(struct vm_area_struct *vma, unsigned long prot)
-> > +{
-> > +	struct ima_template_desc *template;
-> > +	struct inode *inode;
-> > +	int result = 0;
-> > +	int action;
-> > +	u32 secid;
-> > +	int pcr;
-> > +
-> > +	if (vma->vm_file && (prot & PROT_EXEC) && !(vma->vm_flags & VM_EXEC)) {
-> 
-> Just a suggestion:
-> Maybe you could do the negative of the above check and return, so that 
-> the block within the if statement doesn't have to be indented.
+It is more clear to use DEFINE_DEBUGFS_ATTRIBUTE to define debugfs file
+operation rather than DEFINE_SIMPLE_ATTRIBUTE.
 
-Good suggestion.
+Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+---
+ drivers/input/touchscreen/edt-ft5x06.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> > +		inode = file_inode(vma->vm_file);
-> > +
-> > +		security_task_getsecid(current, &secid);
-> > +		action = ima_get_action(inode, current_cred(), secid, MAY_EXEC,
-> > +					MMAP_CHECK, &pcr, &template, 0);
-> > +
-> > +		if (action & IMA_APPRAISE_SUBMASK)
-> > +			result = -EPERM;
-> > +
-> > +		if ((action & IMA_APPRAISE_SUBMASK) || (action & IMA_MEASURE)) {
-> 
-> action is checked for IMA_APPRAISE_SUBMASK bits in the previous if 
-> statement. Does it need to be checked again in the above if statement?
-
-Agreed, the code should be cleaned up here too.  In either the
-measurement or the appraisal case, mprotect modifying the execute mmap
-flag should be audited, but only in the appraisal case is the request
-denied.
-
-Mimi
-
-> 
-> > +			struct file *file = vma->vm_file;
-> > +			char *pathbuf = NULL;
-> > +			const char *pathname;
-> > +			char filename[NAME_MAX];
-> > +
-> > +			pathname = ima_d_path(&file->f_path, &pathbuf,
-> > +					      filename);
-> > +			integrity_audit_msg(AUDIT_INTEGRITY_DATA, inode,
-> > +					    pathname, "collect_data",
-> > +					    "failed-mprotect", result, 0);
-> > +
-> > +			if (pathbuf)
-> > +				__putname(pathbuf);
-> > +		}
-> > +	}
-> > +	return result;
-> > +}
-> 
-> thanks,
->   -lakshmi
-> 
+diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+index d2587724c52a..7f2070fde2ae 100644
+--- a/drivers/input/touchscreen/edt-ft5x06.c
++++ b/drivers/input/touchscreen/edt-ft5x06.c
+@@ -676,7 +676,7 @@ static int edt_ft5x06_debugfs_mode_set(void *data, u64 mode)
+ 	return retval;
+ };
+ 
+-DEFINE_SIMPLE_ATTRIBUTE(debugfs_mode_fops, edt_ft5x06_debugfs_mode_get,
++DEFINE_DEBUGFS_ATTRIBUTE(debugfs_mode_fops, edt_ft5x06_debugfs_mode_get,
+ 			edt_ft5x06_debugfs_mode_set, "%llu\n");
+ 
+ static ssize_t edt_ft5x06_debugfs_raw_data_read(struct file *file,
+-- 
+2.17.1
 
