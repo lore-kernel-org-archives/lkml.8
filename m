@@ -4,97 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AAFFC47258
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA07C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFB242068E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:14:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 228232068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:15:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729213AbgEEUO1 (ORCPT
+        id S1729218AbgEEUPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 16:14:27 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:46625 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727785AbgEEUO1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 16:14:27 -0400
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id C7098200006;
-        Tue,  5 May 2020 20:14:00 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     linux-rtc@vger.kernel.org
-Cc:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        =?UTF-8?q?Per=20N=C3=B8rgaard=20Christensen?= 
-        <per.christensen@prevas.dk>, linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 5/5] rtc: pcf2127: report battery switch over
-Date:   Tue,  5 May 2020 22:13:10 +0200
-Message-Id: <20200505201310.255145-5-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200505201310.255145-1-alexandre.belloni@bootlin.com>
-References: <20200505201310.255145-1-alexandre.belloni@bootlin.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 5 May 2020 16:15:37 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:52032 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727785AbgEEUPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 16:15:36 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id BCCE41A0908;
+        Tue,  5 May 2020 22:15:34 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B04251A08F2;
+        Tue,  5 May 2020 22:15:34 +0200 (CEST)
+Received: from fsr-ub1864-126.ea.freescale.net (fsr-ub1864-126.ea.freescale.net [10.171.82.212])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 620E2205D4;
+        Tue,  5 May 2020 22:15:34 +0200 (CEST)
+From:   Ioana Ciornei <ioana.ciornei@nxp.com>
+To:     davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     youri.querry_1@nxp.com, leoyang.li@nxp.com,
+        Ioana Ciornei <ioana.ciornei@nxp.com>
+Subject: [PATCH net] soc: fsl: dpio: properly compute the consumer index
+Date:   Tue,  5 May 2020 23:14:29 +0300
+Message-Id: <20200505201429.24360-1-ioana.ciornei@nxp.com>
+X-Mailer: git-send-email 2.17.1
+Reply-to: ioana.ciornei@nxp.com
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the RTC_VL_BACKUP_SWITCH flag to report battery switch over
-events.
+Mask the consumer index before using it. Without this, we would be
+writing frame descriptors beyond the ring size supported by the QBMAN
+block.
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: 3b2abda7d28c ("soc: fsl: dpio: Replace QMAN array mode with ring mode enqueue")
+Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
 ---
- drivers/rtc/rtc-pcf2127.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/rtc/rtc-pcf2127.c b/drivers/rtc/rtc-pcf2127.c
-index 039078029bd4..967de68e1b03 100644
---- a/drivers/rtc/rtc-pcf2127.c
-+++ b/drivers/rtc/rtc-pcf2127.c
-@@ -188,18 +188,27 @@ static int pcf2127_rtc_ioctl(struct device *dev,
- 				unsigned int cmd, unsigned long arg)
- {
- 	struct pcf2127 *pcf2127 = dev_get_drvdata(dev);
--	int touser;
-+	int val, touser = 0;
- 	int ret;
+I am sending this fix through the net tree since the bug manifests
+itself only on net-next and not the soc trees. This way it would be
+easier to integrate this sooner rather than later.
+
+ drivers/soc/fsl/dpio/qbman-portal.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/soc/fsl/dpio/qbman-portal.c b/drivers/soc/fsl/dpio/qbman-portal.c
+index 804b8ba9bf5c..23a1377971f4 100644
+--- a/drivers/soc/fsl/dpio/qbman-portal.c
++++ b/drivers/soc/fsl/dpio/qbman-portal.c
+@@ -669,6 +669,7 @@ int qbman_swp_enqueue_multiple_direct(struct qbman_swp *s,
+ 		eqcr_ci = s->eqcr.ci;
+ 		p = s->addr_cena + QBMAN_CENA_SWP_EQCR_CI;
+ 		s->eqcr.ci = qbman_read_register(s, QBMAN_CINH_SWP_EQCR_CI);
++		s->eqcr.ci &= full_mask;
  
- 	switch (cmd) {
- 	case RTC_VL_READ:
--		ret = regmap_read(pcf2127->regmap, PCF2127_REG_CTRL3, &touser);
-+		ret = regmap_read(pcf2127->regmap, PCF2127_REG_CTRL3, &val);
- 		if (ret)
- 			return ret;
- 
--		touser = touser & PCF2127_BIT_CTRL3_BLF ? RTC_VL_BACKUP_LOW : 0;
-+		if (val & PCF2127_BIT_CTRL3_BLF)
-+			touser = RTC_VL_BACKUP_LOW;
-+
-+		if (val & PCF2127_BIT_CTRL3_BF)
-+			touser |= RTC_VL_BACKUP_SWITCH;
- 
- 		return put_user(touser, (unsigned int __user *)arg);
-+
-+	case RTC_VL_CLR:
-+		return regmap_update_bits(pcf2127->regmap, PCF2127_REG_CTRL3,
-+					  PCF2127_BIT_CTRL3_BF, 0);
-+
- 	default:
- 		return -ENOIOCTLCMD;
- 	}
-@@ -493,7 +502,6 @@ static int pcf2127_probe(struct device *dev, struct regmap *regmap,
- 	 */
- 	ret = regmap_update_bits(pcf2127->regmap, PCF2127_REG_CTRL3,
- 				 PCF2127_BIT_CTRL3_BTSE |
--				 PCF2127_BIT_CTRL3_BF |
- 				 PCF2127_BIT_CTRL3_BIE |
- 				 PCF2127_BIT_CTRL3_BLIE, 0);
- 	if (ret) {
+ 		s->eqcr.available = qm_cyc_diff(s->eqcr.pi_ring_size,
+ 					eqcr_ci, s->eqcr.ci);
 -- 
-2.26.2
+2.17.1
 
