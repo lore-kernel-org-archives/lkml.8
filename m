@@ -2,147 +2,177 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E62C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54755C47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6580D206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A5312078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:54:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tjSAZq8c"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X43eTslC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729612AbgEEOxw (ORCPT
+        id S1729579AbgEEOyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:53:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55114 "EHLO
+        Tue, 5 May 2020 10:54:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729150AbgEEOxw (ORCPT
+        by vger.kernel.org with ESMTP id S1729065AbgEEOyL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:53:52 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CCF5C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:53:52 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id w137so5303ybg.8
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 07:53:52 -0700 (PDT)
+        Tue, 5 May 2020 10:54:11 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB96FC061A0F;
+        Tue,  5 May 2020 07:54:10 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id b188so2507369qkd.9;
+        Tue, 05 May 2020 07:54:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YG6y8orYpJzDQB8e1eZa9Fuhz3Q8PhX0LEqRw9jpFUg=;
-        b=tjSAZq8c7g1WZfAE9R+g+hnNv/rcciTbeuQNP3UR//p0LVE48OMSS48KOloIX8wuQl
-         3GF5y9fIy2K7J/RyZsL7k6Y+njHlllGeEY24dnbzffYJUhuOwW0C6KMEDkGbJRWZixjj
-         PEiNAIKAk0L08NRjz3eMU3QTOdsqG2RKyrdSO28IQsrNvqjTV9SNhWTsjlk/BErxBXkk
-         MtkDYNfHSPUYKEIfuZxW2yaWCKM95pQeGE5qiPeVJdcUKzN407bqXp1YPgzvCAdGGvnC
-         XfFs/WosYwgBSWiB7X0FFnZ0utQb6LeNXQlYZScQl5n8fkycSCnrL1Pc0YKRfXLr3hhO
-         qKyA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jSocksHYb9zl/JGU+koYObwZ4sleYquXCNFXOruiZU0=;
+        b=X43eTslCX/HNNmesYL3Fsx5aXrB31f7o5wrAqV4kmD0074bnyV3S/oxOdYGuTkrU0r
+         O/fPkW9VYXn6njRBNjHvblOJh1jq/wrCGmnHWcWdlw40qUH+VmtdR+TvwdxF3TcAZB2x
+         V2NcTJuHrq/2UvuAg+1vvFCuhzRk9R9fPP9X3lPGeKgUkjI3ePV/JFfZvFaoo9CK6Hgo
+         KTwY9YxA1zIb4Bayqff9RZHp2a9O/kyquhucRegxrqCrqXmlfkA4TcwNaIsCH3PHEGP5
+         7QWeuCqRHAZJPC8hGH8s2QiNyQ93fqvw0veotMHke9Rtrc2+bf2AiEEMO1h9Jl/z4W61
+         ukhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YG6y8orYpJzDQB8e1eZa9Fuhz3Q8PhX0LEqRw9jpFUg=;
-        b=e7FTi0u+UNeLdGQBELyXVWePf3Bcj8g9lkb8HDUfi0C7ybZm+yI3/N0h3V1bqKUJBq
-         rqZ2jismdtY3DpEh5r9Q6+ipZCQkKVpZOhhL4RGAzuDDQ/6DVWiHsEH8vGqlSeZ2aTdR
-         aeNZdfYc7U/MJKEGM95v2A3ju949zHp5g9PtutkLyRO/dddLRzwmKpHoPZBeFbFeUx95
-         OJBc3JRvfrItygomXfNP0cpGCiso2M1c8Z1EZIWEBsDxKhES1NBqlBRVkOXBGfA1qVSc
-         TCBU7VclkLsIB9HCcGh+GGRIpVVG0vErOQ2DYlB7ezsq8xb9rU5wuw3qY2cCEXu/Z7sc
-         si4g==
-X-Gm-Message-State: AGi0PuZylc3Eho2JgqAKfecCywXW9SzblhPrU77AHej7DHEBWQ4HtzrO
-        oemOGsqyNRn/5x757doCPnP5fhBDU3VJ1UkNb7FTEQ==
-X-Google-Smtp-Source: APiQypJE3/NAOndb253iP3iislRRnAogVWKw3Bp6NrwNIK8nvTjsZebtJUhCZwR2Z3oy4k4A9w5KuzfI7Vp9mnFUBiM=
-X-Received: by 2002:a25:1484:: with SMTP id 126mr5292169ybu.380.1588690430999;
- Tue, 05 May 2020 07:53:50 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jSocksHYb9zl/JGU+koYObwZ4sleYquXCNFXOruiZU0=;
+        b=dCmL7DkDFU13DpGE7NqkNNzYFR9OeOqfyxqtpONejaw2cP40Lxtkm1YfHzSs8QzgXT
+         59tgbXjW4y2xV2Cq8N4y33Qmdz8Q9C9oHy0nW/iNz0Rps+4hE1bd1IXhD9XO6/WHy7/K
+         d44EGQQHQugPaTQQ+567p8WMfmBvAm4EMY7RQJbuVsMYc1jUrj2nFoptiQyBtxyDMOzo
+         sO/U5Lzu1aDBo40/8TCGgRVkU3zxAdOGgiQJxKka6RaFjE9Ep4gtNO1NawcFwHYFumQE
+         A5wbZV005qULBwN0IDFHLuz7z4VFagQef6f+V4MSqBpOWVXAYIiBxqMl75YpLZu3uYXE
+         ra1g==
+X-Gm-Message-State: AGi0PuZvFFMztVwveuia4EgOhdWuzQiXxYNuTJJEkZrSFe5frnPWT2BR
+        u8hxQeE/9Bk/g3+nk9afj0g=
+X-Google-Smtp-Source: APiQypKHZt/tsl7D6ZxkoYpLuHMfDxw0ggzb9p/Ze2te7v0luNbbLGjLb8VqX9Ukk2YwMWDPUKrTog==
+X-Received: by 2002:a05:620a:1f1:: with SMTP id x17mr3990168qkn.330.1588690449917;
+        Tue, 05 May 2020 07:54:09 -0700 (PDT)
+Received: from shinobu (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id n124sm2004093qkn.24.2020.05.05.07.54.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 07:54:09 -0700 (PDT)
+Date:   Tue, 5 May 2020 10:53:49 -0400
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michal Simek <michal.simek@xilinx.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Syed Nayyar Waris <syednwaris@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, rrichter@marvell.com,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "Zhang, Rui" <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH v5 0/4] Introduce the for_each_set_clump macro
+Message-ID: <20200505145250.GA5979@shinobu>
+References: <cover.1588460322.git.syednwaris@gmail.com>
+ <20200504114109.GE185537@smile.fi.intel.com>
+ <20200504143638.GA4635@shinobu>
+ <CAHp75Vf_vP1qM9x81dErPeaJ4-cK-GOMnmEkxkhPY2gCvtmVbA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200505081035.7436-1-sjpark@amazon.com> <20200505115402.25768-1-sjpark@amazon.com>
-In-Reply-To: <20200505115402.25768-1-sjpark@amazon.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Tue, 5 May 2020 07:53:39 -0700
-Message-ID: <CANn89iJ6f=x9XSfjSCFc0KNcjSXop3QMEgAfh9PLJ6khTbXrnQ@mail.gmail.com>
-Subject: Re: [PATCH net v2 0/2] Revert the 'socket_alloc' life cycle change
-To:     SeongJae Park <sjpark@amazon.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        sj38.park@gmail.com, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>, snu@amazon.com,
-        amit@kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="CblX+4bnyfN0pR09"
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vf_vP1qM9x81dErPeaJ4-cK-GOMnmEkxkhPY2gCvtmVbA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 4:54 AM SeongJae Park <sjpark@amazon.com> wrote:
->
-> CC-ing stable@vger.kernel.org and adding some more explanations.
->
-> On Tue, 5 May 2020 10:10:33 +0200 SeongJae Park <sjpark@amazon.com> wrote:
->
-> > From: SeongJae Park <sjpark@amazon.de>
-> >
-> > The commit 6d7855c54e1e ("sockfs: switch to ->free_inode()") made the
-> > deallocation of 'socket_alloc' to be done asynchronously using RCU, as
-> > same to 'sock.wq'.  And the following commit 333f7909a857 ("coallocate
-> > socket_sq with socket itself") made those to have same life cycle.
-> >
-> > The changes made the code much more simple, but also made 'socket_alloc'
-> > live longer than before.  For the reason, user programs intensively
-> > repeating allocations and deallocations of sockets could cause memory
-> > pressure on recent kernels.
->
-> I found this problem on a production virtual machine utilizing 4GB memory while
-> running lebench[1].  The 'poll big' test of lebench opens 1000 sockets, polls
-> and closes those.  This test is repeated 10,000 times.  Therefore it should
-> consume only 1000 'socket_alloc' objects at once.  As size of socket_alloc is
-> about 800 Bytes, it's only 800 KiB.  However, on the recent kernels, it could
-> consume up to 10,000,000 objects (about 8 GiB).  On the test machine, I
-> confirmed it consuming about 4GB of the system memory and results in OOM.
->
-> [1] https://github.com/LinuxPerfStudy/LEBench
 
-To be fair, I have not backported Al patches to Google production
-kernels, nor I have tried this benchmark.
+--CblX+4bnyfN0pR09
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Why do we have 10,000,000 objects around ? Could this be because of
-some RCU problem ?
+On Tue, May 05, 2020 at 04:51:56PM +0300, Andy Shevchenko wrote:
+> On Mon, May 4, 2020 at 5:41 PM William Breathitt Gray
+> <vilhelm.gray@gmail.com> wrote:
+> > On Mon, May 04, 2020 at 02:41:09PM +0300, Andy Shevchenko wrote:
+> > > On Sun, May 03, 2020 at 04:38:36AM +0530, Syed Nayyar Waris wrote:
+>=20
+> ...
+>=20
+> > > Looking into the last patches where we have examples I still do not s=
+ee a
+> > > benefit of variadic clump sizes. power of 2 sizes would make sense (a=
+nd be
+> > > optimized accordingly (64-bit, 32-bit).
+> > >
+> > > --
+> > > With Best Regards,
+> > > Andy Shevchenko
+> >
+> > There is of course benefit in defining for_each_set_clump with clump
+> > sizes of powers of 2 (we can optimize for 32 and 64 bit sizes and avoid
+> > boundary checks that we know will not occur), but at the very least the
+> > variable size bitmap_set_value and bitmap_get_value provide significant
+> > benefit for the readability of the gpio-xilinx code:
+> >
+> >         bitmap_set_value(old, state[0], 0, width[0]);
+> >         bitmap_set_value(old, state[1], width[0], width[1]);
+> >         ...
+> >         state[0] =3D bitmap_get_value(new, 0, width[0]);
+> >         state[1] =3D bitmap_get_value(new, width[0], width[1]);
+> >
+> > These lines are simple and clear to read: we know immediately what they
+> > do. But if we did not have bitmap_set_value/bitmap_get_value, we'd have
+> > to use several bitwise operations for each line; the obfuscation of the
+> > code would be an obvious hinderance here.
+>=20
+> Do I understand correctly that width[0] and width[1] may not be power
+> of two and it's actually the case?
+>=20
+> --=20
+> With Best Regards,
+> Andy Shevchenko
 
-Once Al patches reverted, do you have 10,000,000 sock_alloc around ?
+I'm under the impression that width[0] and width[1] are arbitrarily
+chosen by the user and could be any integer. I have never used this
+hardware so I'm hoping one of the gpio-xilinx or GPIO subsystem
+maintainers in this thread will respond with some guidance.
 
-Thanks.
+If the values of width[0] and width[1] are restricted to powers of 2,
+then I agree that there is no need for generic bitmap_set_value and
+bitmap_get_value functions and we can instead use more optimized power
+of 2 versions.
 
->
-> >
-> > To avoid the problem, this commit reverts the changes.
->
-> I also tried to make fixup rather than reverts, but I couldn't easily find
-> simple fixup.  As the commits 6d7855c54e1e and 333f7909a857 were for code
-> refactoring rather than performance optimization, I thought introducing complex
-> fixup for this problem would make no sense.  Meanwhile, the memory pressure
-> regression could affect real machines.  To this end, I decided to quickly
-> revert the commits first and consider better refactoring later.
->
->
-> Thanks,
-> SeongJae Park
->
-> >
-> > SeongJae Park (2):
-> >   Revert "coallocate socket_wq with socket itself"
-> >   Revert "sockfs: switch to ->free_inode()"
-> >
-> >  drivers/net/tap.c      |  5 +++--
-> >  drivers/net/tun.c      |  8 +++++---
-> >  include/linux/if_tap.h |  1 +
-> >  include/linux/net.h    |  4 ++--
-> >  include/net/sock.h     |  4 ++--
-> >  net/core/sock.c        |  2 +-
-> >  net/socket.c           | 23 ++++++++++++++++-------
-> >  7 files changed, 30 insertions(+), 17 deletions(-)
-> >
-> > --
-> > 2.17.1
+William Breathitt Gray
+
+--CblX+4bnyfN0pR09
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl6xff0ACgkQhvpINdm7
+VJI65w/8CTBNaBXzqQ6+AtgyAfLROsibTUPDE3wEs7s/eQkI4dlNN0BzmXwJ6sb6
+oMCj6NqzTFksNVUoM6OSjyAGqHZVTJaSfFS97TG4+GrUZm4iWrLMmCipkYEh3qjB
+b10DXznOSf6l0IFFbB51QRFRaDu2hJEFYbtCM0hDHYssMXQyI3wMyw/9qCtPwPOC
+1l0MYPTFb825gGxAnfNCJ8CODpBXFxbahDtK1gvkaNB7Bdq/BFHyaR4FqMP0QbCC
+hoxK7bdMqur6ghYjld9dPRw7iFMXZHt1gD90DMzyXZDl3FcOKlzaAsAz9abgCZ4d
+sNHU6i8bRUtdTy66niUDTFHuMKOsWzcHe223zeC6SXp9L00kRzWbSJ4RioncRIEP
+X1/Vc+7x62yX/PzECkI+jxhLA8G+wwWuizAxN2VxDDx3ei7XJ4UEfSnNYZwBYlyc
+DUhyQZ3UyeID5wDu0XiGGBM8/+Y6mQprrYG7pgsPqAMCMYbcuK58W6cC+uM9ilH9
+oNFMz74DRUKaRrK6N/L+ujYD5R+uqVIzq4rwXsT9UOeh4N85uNI/Vjxx5jYO6ICG
+B4SGVNo2lwkdvH8XhnCfad+no1HV1XWPNflkedffcfALCxAsxhKF5riw4H1cmZ3B
+NbCZv5hfWtY/5opWhWKCVrxAdH512xxHdWBThcAdj8l2NGpZaYM=
+=lkYR
+-----END PGP SIGNATURE-----
+
+--CblX+4bnyfN0pR09--
