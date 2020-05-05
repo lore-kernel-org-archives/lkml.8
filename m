@@ -2,86 +2,182 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BE4C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7BCC47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 600E320757
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:35:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588710924;
-	bh=FlarCttK714TCgXtLmYHtw4n67Swh0WSbhkChXfoK6Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ZUhSzRxJtCGEANvlFPae8Q+MJlGkm0LGG2n/yZgPP4+VQnbaC10NIsDaa2szhIVqu
-	 W67ssjkU4TT1Bt+MZZL/8xxuXK9V7wMdJcd9h+Su3IoRS4i0E0m4ZiXNWsHWCI0xuN
-	 PeAc9emc2UH+sS+tnGKQt6APukQYxUXGQxUq65os=
+	by mail.kernel.org (Postfix) with ESMTP id 3218C20752
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:35:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mjtr6v62"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729159AbgEEUfX (ORCPT
+        id S1729204AbgEEUft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 16:35:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37088 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726350AbgEEUfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 16:35:22 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2728020752;
-        Tue,  5 May 2020 20:35:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588710922;
-        bh=FlarCttK714TCgXtLmYHtw4n67Swh0WSbhkChXfoK6Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=REiW3W0Ma8o3zstTFwYlU20TscGpSEG9Ai+jA01wL570DTG19447riGJRlCdoUgwy
-         whVbWcZYGa0UsxP2sQkC69QmhA/BNYTM7mgR46rxKa87WTynbSZB0ALYZKJqDAiytr
-         sBAqhbsUS4k/vPLw2zQ1884irPHC7ElqjGpJt6fo=
-Date:   Tue, 5 May 2020 13:35:21 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Waiman Long <longman@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, linux-mm@kvack.org,
-        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joe Perches <joe@perches.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: [PATCH v3] mm: Add kvfree_sensitive() for freeing sensitive
- data objects
-Message-Id: <20200505133521.eb8901d0b92e09452191ab49@linux-foundation.org>
-In-Reply-To: <694340.1586290917@warthog.procyon.org.uk>
-References: <694135.1586290793@warthog.procyon.org.uk>
-        <20200407200318.11711-1-longman@redhat.com>
-        <694340.1586290917@warthog.procyon.org.uk>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 5 May 2020 16:35:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52234 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729189AbgEEUfs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 16:35:48 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09DA3C061A41
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 13:35:47 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id j2so2936143qtr.12
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 13:35:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XEAq1qR7c6+ra3RdnbMtrjFGoO4ipOXO+A1Su5NP3KU=;
+        b=Mjtr6v624mwd+SkOqVanfa/Hmx2bM3zl8sFu15lvU6VJfAsYh3yx4ASR9yL9R2iG9G
+         pZ0TbpokKYqWaTDRcRQ4jfBhiEXVN87QcoLHfbbgizy1+qDCGZItP2yfMwu4WPteJGLW
+         cLxg9i5A+k5KGilQV9Ptl1g9EapQ7KYK9Mdcb6LmicnB/CyMKWIUPglmXeEkwrwuW6vd
+         GLk5shmmjjs8kKxnMYzAzbR66ZBlU07l4B2HT4e7tbQJMwRkj0w33h0REgMtsH2P7Bz0
+         pLKIytVpecHNSGhdcsJK492RjFMYN3q/DTT4I0Anen6oyeq4BEpP/4aI4X9hSNgWK7or
+         1GrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XEAq1qR7c6+ra3RdnbMtrjFGoO4ipOXO+A1Su5NP3KU=;
+        b=a/2qjzrwO5VWw+tTFlXELaoZ6YlbgkGR1lOJ9HVVzD94nqFrXJo4HIiqeLZlBMjI7g
+         FNgwbTkGM3qWqmE2evX70nXKkKur4G4Hlrhk44JJZrlmXm11/0R1P3yFSPrRmulXJU9y
+         ygCp8Z8hQ7nOO++y8sq7HBqyl8p2GSSkJiPXRtcHW4fD3rdrOEaTTl54t7UaSuf4NVPH
+         2i4fxmzef8J1XVr68samKCqNZwM8mlVXVj60vfyHThLdMAv0LeXmKlaL0Cc5ND3GXyIl
+         6tA8pUgnxfPvbbqW8w29MzrA2EAerqdlj6oglpg5faR4ZXWyLGUx5qSVZU+IEHGHhVWM
+         pWBQ==
+X-Gm-Message-State: AGi0PuaOqCDlj+I1rgXgM6T8un1Y312L7DCRvCWZgANoVUYGiGzlRDmU
+        0H1D7pHBv8t4GReb9jmC0+GK3Q9k0DvjA8GxpwNdpA==
+X-Google-Smtp-Source: APiQypL+7UscQbmRBHWrH8NdOndOCVOXNz1vyQHcPPi4an6UYcA0QN5lg2HueQHtrlZAnQ03coblSGKkUc7pWCJ5o1Y=
+X-Received: by 2002:ac8:3488:: with SMTP id w8mr4874608qtb.378.1588710945678;
+ Tue, 05 May 2020 13:35:45 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200505084049.1779243-1-rpenyaev@suse.de> <a9898eaefa85fa9c85e179ff162d5e8d@suse.de>
+ <20200505130357.04566dee5501c3787105376f@linux-foundation.org>
+In-Reply-To: <20200505130357.04566dee5501c3787105376f@linux-foundation.org>
+From:   Khazhismel Kumykov <khazhy@google.com>
+Date:   Tue, 5 May 2020 13:35:34 -0700
+Message-ID: <CACGdZYKyVEA3vF8A6cq+gM5CtsRi4gcxyCyRazqpxjTgqcuZ2w@mail.gmail.com>
+Subject: Re: [PATCH 1/1] epoll: call final ep_events_available() check under
+ the lock
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Roman Penyaev <rpenyaev@suse.de>, Jason Baron <jbaron@akamai.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+        boundary="0000000000009b8b1e05a4ec97e5"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 07 Apr 2020 21:21:57 +0100 David Howells <dhowells@redhat.com> wrote:
+--0000000000009b8b1e05a4ec97e5
+Content-Type: text/plain; charset="UTF-8"
 
-> David Howells <dhowells@redhat.com> wrote:
-> 
-> > >  			if (unlikely(key_data))
-> > > -				__kvzfree(key_data, key_data_len);
-> > > +				kvfree_sensitive(key_data, key_data_len);
-> > 
-> > I think the if-statement is redundant.
-> 
-> Ah - I see that you explicitly wanted to keep it.
+On Tue, May 5, 2020 at 1:04 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+>
+> On Tue, 05 May 2020 10:42:05 +0200 Roman Penyaev <rpenyaev@suse.de> wrote:
+>
+> > May I ask you to remove "epoll: ensure ep_poll() doesn't miss wakeup
+> > events" from your -mm queue? Jason lately found out that the patch
+> > does not fully solve the problem and this one patch is a second
+> > attempt to do things correctly in a different way (namely to do
+> > the final check under the lock). Previous changes are not needed.
+>
+> Where do we stand with Khazhismel's "eventpoll: fix missing wakeup for
+> ovflist in ep_poll_callback"?
+>
+> http://lkml.kernel.org/r/20200424190039.192373-1-khazhy@google.com
+>
 
-Why's that?
+My understanding is - we need the ep_poll_callback fix on a logical
+level (ovfllist was never triggering wakeup), and the two follow-ups
+close races - in both how we add/remove from the wait queue, and how
+we observe the ready list, which are needed if we only wake when we
+add events, where before we were also waking when we were splicing
+ovflist events when reading the ready list. As well, the first two
+together are needed for epoll60 to pass in my testing.
 
-> There's a good chance it'll get janitored at some point.
+Khazhy
 
-Indeed.  Perhaps add a few little comments to explain the reasoning and
-to keep the janitorial fingers away?
+--0000000000009b8b1e05a4ec97e5
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
+MIIPBgYJKoZIhvcNAQcCoIIO9zCCDvMCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
+ggxpMIIEkjCCA3qgAwIBAgINAewckktV4F6Q7sAtGDANBgkqhkiG9w0BAQsFADBMMSAwHgYDVQQL
+ExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UEAxMK
+R2xvYmFsU2lnbjAeFw0xODA2MjAwMDAwMDBaFw0yODA2MjAwMDAwMDBaMEsxCzAJBgNVBAYTAkJF
+MRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSEwHwYDVQQDExhHbG9iYWxTaWduIFNNSU1FIENB
+IDIwMTgwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCUeobu8FdB5oJg6Fz6SFf8YsPI
+dNcq4rBSiSDAwqMNYbeTpRrINMBdWuPqVWaBX7WHYMsKQwCOvAF1b7rkD+ROo+CCTJo76EAY25Pp
+jt7TYP/PxoLesLQ+Ld088+BeyZg9pQaf0VK4tn23fOCWbFWoM8hdnF86Mqn6xB6nLsxJcz4CUGJG
+qAhC3iedFiCfZfsIp2RNyiUhzPAqalkrtD0bZQvCgi5aSNJseNyCysS1yA58OuxEyn2e9itZJE+O
+sUeD8VFgz+nAYI5r/dmFEXu5d9npLvTTrSJjrEmw2/ynKn6r6ONueZnCfo6uLmP1SSglhI/SN7dy
+L1rKUCU7R1MjAgMBAAGjggFyMIIBbjAOBgNVHQ8BAf8EBAMCAYYwJwYDVR0lBCAwHgYIKwYBBQUH
+AwIGCCsGAQUFBwMEBggrBgEFBQcDCTASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdDgQWBBRMtwWJ
+1lPNI0Ci6A94GuRtXEzs0jAfBgNVHSMEGDAWgBSP8Et/qC5FJK5NUPpjmove4t0bvDA+BggrBgEF
+BQcBAQQyMDAwLgYIKwYBBQUHMAGGImh0dHA6Ly9vY3NwMi5nbG9iYWxzaWduLmNvbS9yb290cjMw
+NgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIzLmNybDBn
+BgNVHSAEYDBeMAsGCSsGAQQBoDIBKDAMBgorBgEEAaAyASgKMEEGCSsGAQQBoDIBXzA0MDIGCCsG
+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
+BQcCARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wUQYIKwYBBQUHAQEE
+RTBDMEEGCCsGAQUFBzAChjVodHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc3Nt
+aW1lY2EyMDE4LmNydDAfBgNVHSMEGDAWgBRMtwWJ1lPNI0Ci6A94GuRtXEzs0jA/BgNVHR8EODA2
+MDSgMqAwhi5odHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2NhL2dzc21pbWVjYTIwMTguY3JsMA0G
+CSqGSIb3DQEBCwUAA4IBAQCM37MMrUvgKBlbkfClP3kSaljmhqmtbhA855Dxg0ExJEaXMLDnSEod
+BZm4+79Rcp/gCP67jOVlkJHRSTPco73qpOMg8Q9aXMbcysY/rm3bul1wpALN1dQh8STLYiDdNBXJ
+LJZxf7nC3+xcLEb0+RTU05lUVCzmixKU665YZspUCQttLL7LxY8k7vpLtXeX7+OP6mxVsEOca9CI
+fEybv+pk4+vHfIg3XiUK2Qs4qTHSFZ09OuPSRqkO1CY/AET8DPwXkO2ByN/gdUYo1po23haQT7kB
+qhSVsP/BmQ7F6qER6f8mDR3F0uH26W4ZFxa/htst/Pb0qoQnkyDXLPSLJa9UMYICYTCCAl0CAQEw
+XzBLMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTEhMB8GA1UEAxMYR2xv
+YmFsU2lnbiBTTUlNRSBDQSAyMDE4AhABiQs/r7YF6iuE/NQrZF28MA0GCWCGSAFlAwQCAQUAoIHU
+MC8GCSqGSIb3DQEJBDEiBCCPB7JBGPWXEzvmI6+qkW04NwddgBWY9wJPycoyzBwfhzAYBgkqhkiG
+9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMDA1MDUyMDM1NDZaMGkGCSqGSIb3
+DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcN
+AwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAE
+ggEAgXA7etQPygilhOlUl4xAgxL22LrJJp3gHd/uYUpJecNRkLIrQ/pF3kUE5Mbihx1QsJD7Lmi+
+R940ZnPZxvPMG2UQ5j9VHWELETbJQK8KFr0Uz/wOEWooaMUT8RwTg42uX8xdhMyZy/abTNIeSbrm
+wz5XvrAlgeDxHGJgW2ZnTvzWzVh74AF90lFUiHjzHZ+m6koU65RV+5cizgR+LvrEnvdfCyr2FlOM
+EMba3dJOhXwOYN18sUclNma4/vlpGJHUiPvgewLRlvmX07WFgmLW1RpxhfK31pNS3b7fX8XQRj1p
+ozNF6zhgngcsIsA+xgAeaPBD3MoyVNsWPTp9dDBzVg==
+--0000000000009b8b1e05a4ec97e5--
