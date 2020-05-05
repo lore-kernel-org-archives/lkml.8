@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD5EC47258
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4DEC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E767206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58150206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 20:51:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Kve8F3BK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WgX/BZxH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729338AbgEEUud (ORCPT
+        id S1729354AbgEEUvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 16:50:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54554 "EHLO
+        Tue, 5 May 2020 16:51:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729297AbgEEUub (ORCPT
+        by vger.kernel.org with ESMTP id S1728660AbgEEUvL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 16:50:31 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94B02C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 13:50:31 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id o18so1567139pgg.8
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 13:50:31 -0700 (PDT)
+        Tue, 5 May 2020 16:51:11 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 240DBC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 13:51:11 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id h12so1581986pjz.1
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 13:51:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=gZPmqP7f0zZq0i6x3n5wYzmjgYaqHaT+GySyTpMlPTE=;
-        b=Kve8F3BKs4sbH9Cpna7uFNaJN6fCv7xO+sFp9md+JOMcsVfxcmaVv+88JYyYgsbnag
-         0FzzthJndg1UHG0uNLxFCD/9clIuGjzGfBzXIXCe3hfI6On3CzGWs6h9BcirTJNBTv00
-         Dg1wvkjA4PIhmWOgtfNoLbSky1vPGQBSqYD/U=
+        bh=3hao9Rbd2DOkgWQuq9i9E+Ng3Pr6zL+wsaZllNiP784=;
+        b=WgX/BZxHr++sd2IPiEB/unUtdMnEP1tXqVSjjQPQ7/lC6eDNdAE1MDzdb6OFx5jM6n
+         iPGWeclUB9c9273Ekhi4XWJet840MqRqm8KbgQEQ2SIRTuL6i9FqK716EuoCCJSDNzvj
+         jZlhOgsztO8LVHZZJLNeJsVSyIPERfb1DQfqE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=gZPmqP7f0zZq0i6x3n5wYzmjgYaqHaT+GySyTpMlPTE=;
-        b=gwwDR1ldqjaxJRAmofbtRCSCYxNB21Cer3ejj8CkY/u/09uRVBUl44eOY8118b/QjL
-         72YLmtJKh+3llh2n8RVDSd/pT3+NwVm6m7cOjopYaN5ZadWRwgm5YBPZN/Jop66eer7/
-         hoKl1kYlYZu2nZfZTmPXMEo4I9hMdpCLA8ZU+rCNuE//XQ9H6km8rbG2wh4MTWfVK33a
-         LGBWqqcMs9koLzkAC1/hptx3OJlGUcQAofijzNFaQem/p02I7OziO7GdEN54YzgO//AO
-         oDe7bMzpnPDetPIwT7H4NS1OlqcSP2Hn1tmF2NXhc7I7KdTkt4xnbQpBjA1F22V6bCms
-         v4Ww==
-X-Gm-Message-State: AGi0PuZPZKU2KCSn0HIPloV6E+Rzt67kFWTfoRh1ToMcjBYcWqyXbwBN
-        zllfIa8RYoLwjag8kD6AvodeYw==
-X-Google-Smtp-Source: APiQypIUB2lMuWPuFNQUARBx41SRb0quETrjJOgDQIFQl6CnLZPg+Mzu4paMDk2eFPwm6Fc+UAIOEA==
-X-Received: by 2002:a65:460f:: with SMTP id v15mr4347488pgq.24.1588711831209;
-        Tue, 05 May 2020 13:50:31 -0700 (PDT)
+        bh=3hao9Rbd2DOkgWQuq9i9E+Ng3Pr6zL+wsaZllNiP784=;
+        b=prJBVXS8DtXN5SitN1KN3y5ziXlbTnlj1OCF7CTLjvYbnHYL4H8xlqJeCD2hCtFmkP
+         xXhM9z5cdAhWxN2vk87C6TJ5yn/TdtprC3JZyMp5WyYAqBl+MwLoB84hSEGFklh1Mi2G
+         //zFA1cHrKgyPGBSeY/BrIK7QsNO/ApxNMWjvMpZdEbdimqkBGcl3XM07iZVQ5ZYldwu
+         c6s2rO4PUS36N4Gj8uJWJdzUkEeHFwnc4DqM6UN1X+5KrV1NJuYFww+yVlllYrqISft7
+         QsHyqYmzKGMkJC8Cn4vvDkKLMH96ugNiXcF57ZSfGE1VSG5vVFnNMOdr1nWyHUGLA4Xu
+         PBuQ==
+X-Gm-Message-State: AGi0PuYiTjiD6HjVKyPlU+QU4hbL78rTsD4pslo0KycjIP4jCS38aLt2
+        pGZ+5IYfe5WC9UsBmY8+7B7fcu7LWEA=
+X-Google-Smtp-Source: APiQypJ6njqoyd6pae1zIPv2aNYbmoo179h4Ms13R64/sNOWb9cOrMDgTpfu6+4Az4zWRwzmrRVS5A==
+X-Received: by 2002:a17:902:728e:: with SMTP id d14mr4880686pll.107.1588711870715;
+        Tue, 05 May 2020 13:51:10 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c4sm15795pga.73.2020.05.05.13.50.29
+        by smtp.gmail.com with ESMTPSA id g16sm2739074pfq.203.2020.05.05.13.51.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 13:50:30 -0700 (PDT)
-Date:   Tue, 5 May 2020 13:50:29 -0700
+        Tue, 05 May 2020 13:51:09 -0700 (PDT)
+Date:   Tue, 5 May 2020 13:51:09 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     "Eric W. Biederman" <ebiederm@xmission.com>
 Cc:     linux-kernel@vger.kernel.org,
@@ -68,23 +68,29 @@ Cc:     linux-kernel@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
         Alexey Dobriyan <adobriyan@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 4/7] exec: Merge install_exec_creds into setup_new_exec
-Message-ID: <202005051350.FBB43BE@keescook>
+Subject: Re: [PATCH 5/7] exec: In setup_new_exec cache current in the local
+ variable me
+Message-ID: <202005051351.74B5320@keescook>
 References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
- <87tv0ui2w2.fsf@x220.int.ebiederm.org>
+ <87o8r2i2ub.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87tv0ui2w2.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87o8r2i2ub.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 02:43:25PM -0500, Eric W. Biederman wrote:
+On Tue, May 05, 2020 at 02:44:28PM -0500, Eric W. Biederman wrote:
 > 
-> The two functions are now always called one right after the
-> other so merge them together to make future maintenance easier.
+> At least gcc 8.3 when generating code for x86_64 has a hard time
+> consolidating multiple calls to current aka get_current(), and winds
+> up unnecessarily rereading %gs:current_task several times in
+> setup_new_exec.
+> 
+> Caching the value of current in the local variable of me generates
+> slightly better and shorter assembly.
 > 
 > Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
