@@ -2,251 +2,81 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2EA5C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FCEEC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E0EB2078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29BC0206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:39:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730411AbgEEPi4 (ORCPT
+        id S1729593AbgEEPju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:38:56 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:39771 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729276AbgEEPiz (ORCPT
+        Tue, 5 May 2020 11:39:50 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:26048 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729317AbgEEPju (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:38:55 -0400
-Received: from localhost.localdomain ([149.172.19.189]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MdNse-1iweps3DMG-00ZMLU; Tue, 05 May 2020 17:38:40 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH] [net-next, v2] dsa: sja1105: dynamically allocate stats structure
-Date:   Tue,  5 May 2020 17:38:19 +0200
-Message-Id: <20200505153834.1437767-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
+        Tue, 5 May 2020 11:39:50 -0400
+Received: from pps.filterd (m0150241.ppops.net [127.0.0.1])
+        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 045FO3r6007893;
+        Tue, 5 May 2020 15:39:46 GMT
+Received: from g4t3425.houston.hpe.com (g4t3425.houston.hpe.com [15.241.140.78])
+        by mx0a-002e3701.pphosted.com with ESMTP id 30u64ntfm1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 May 2020 15:39:46 +0000
+Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
+        by g4t3425.houston.hpe.com (Postfix) with ESMTP id 73658B9;
+        Tue,  5 May 2020 15:39:45 +0000 (UTC)
+Received: from hpe.com (unknown [16.99.160.159])
+        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id B14EB4A;
+        Tue,  5 May 2020 15:39:44 +0000 (UTC)
+Date:   Tue, 5 May 2020 10:39:44 -0500
+From:   Dimitri Sivanich <sivanich@hpe.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     x86@kernel.org, Mike Travis <mike.travis@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: x86/uv cleanups
+Message-ID: <20200505153944.GD2297@hpe.com>
+References: <20200504171527.2845224-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Bh13PbOFLRcVbfsxdpNxOCz10zCbKaRSrYe3NBwEcgKKrMQUnXM
- N/7bKe6eyT4HrM6m/PTZy/7zyd+TkuTxsSMZcPxXAzZRMkMEEQo2Ah/bZMPlbeaBNG1J3ax
- PJfsPb84pa8r05m8l4MZeiOSQzgdUoWyCOCyaRf3hXLu3hW3VaHUDn/X1zy3DNsbr2hScYZ
- 4BJQJr/OHk3mEG/Q+sCow==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:oCYYc5N0GXI=:+vWtTkunBfUxKZhYKXfcYJ
- nP70/QVR6iB36EwCq+h9db2bUhRp2D0ardfof1Y4h5ghv8wYsjfnGcStKL3ktgHAw3HBg+rlL
- CAQDToKiPNmwZUGs7S1sQTTWZ2+86LR/WjpJgIwXfbwuzghzAVPAJ97jH12Dm4/n//5bzeMmQ
- /PxxGyw2o3Y6Y3cvAg1p6qawfWn3ZFa8hoZ3lxu4Kwr3xLpUIzS3UWORCn1mnFwQe7GLBswIW
- lAfr6SswAliaQor9f+MWyrUJ17YTvCwjJsDoUZScHoqPPpAHyO97R6PgvZOPf56OD/IOSTU2k
- drlS91I0um+S6ai4Vz5YmhYQzO0vb1zsHnYe/JdXeocEE/7LroDGA/V5MKlY12ET6yrDjSj9u
- sX8DQ8+4Z7UjSOJ5wH9cAx1yqBCn5/Hf+TTJhdTeXeA0qHBBotrZD3fDAFx23qXq/g+xNpCEh
- rBfzUhVDRfryd0YIbnn1bxpIscGScUqiHqQjUFcHriJ/zfkusIwsX7AttmVgybFNLruL7bUUl
- fEZj3AtCOizhLGbNZFDGc4E+Dh4VguNDoRcaMbZzdsz4rcc7uFkEfVnsjpk2tDuzWMWA7hlUw
- 4RlJvXEBE/OXulf3Ntp4E8UUgI/xb4FqKwQAj7dZzCm+9Mp4D0z5o+WtfywqRhnTGQmn6PVvT
- zwwmQmwR/fMrFexrD4ybL/hZGEPrYUN+vzVxwv6GJsLvvFKeNKzS9zjrzg1iVR1RTRVbvdm5I
- yEUEsug04AsgHRPLkaRvB1v7yPgQip19h5gr0gEQHw+ZDqh+dWd9AlZ8/ECtmXIbmV+VOukPF
- mfycg7NmcFiJIOIVxeRnXNt9qpi3uXd0oUyIFpGnMTk1nu7p5A=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200504171527.2845224-1-hch@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-05_08:2020-05-04,2020-05-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ priorityscore=1501 bulkscore=0 malwarescore=0 adultscore=0 phishscore=0
+ impostorscore=0 suspectscore=0 clxscore=1011 mlxlogscore=536
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005050123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The addition of sja1105_port_status_ether structure into the
-statistics causes the frame size to go over the warning limit:
+Yes, we do see a need to clean up old code where it exists, but we would like
+to assume this responsibility ourselves in order to ensure functional continuity
+with externally available open-sourced modules that our customers rely on.  This
+code supports current Superdome Flex systems, as well as forthcoming platforms
+based on Intel Cooper Lake and Sapphire Rapids processors.  Some cleanup is
+already being included as part of a forthcoming patchset in support of the
+upcoming Sapphire Rapids platform.
 
-drivers/net/dsa/sja1105/sja1105_ethtool.c:421:6: error: stack frame size of 1104 bytes in function 'sja1105_get_ethtool_stats' [-Werror,-Wframe-larger-than=]
+Nacked-by: Dimitri Sivanich <sivanich@hpe.com>
 
-Use dynamic allocation to avoid this.
-
-Fixes: 336aa67bd027 ("net: dsa: sja1105: show more ethtool statistics counters for P/Q/R/S")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-v2: remove extra ';'
-    remove bogus include/linux/warnings.h change
----
- drivers/net/dsa/sja1105/sja1105_ethtool.c | 144 +++++++++++-----------
- 1 file changed, 74 insertions(+), 70 deletions(-)
-
-diff --git a/drivers/net/dsa/sja1105/sja1105_ethtool.c b/drivers/net/dsa/sja1105/sja1105_ethtool.c
-index d742ffcbfce9..709f035055c5 100644
---- a/drivers/net/dsa/sja1105/sja1105_ethtool.c
-+++ b/drivers/net/dsa/sja1105/sja1105_ethtool.c
-@@ -421,92 +421,96 @@ static char sja1105pqrs_extra_port_stats[][ETH_GSTRING_LEN] = {
- void sja1105_get_ethtool_stats(struct dsa_switch *ds, int port, u64 *data)
- {
- 	struct sja1105_private *priv = ds->priv;
--	struct sja1105_port_status status;
-+	struct sja1105_port_status *status;
- 	int rc, i, k = 0;
- 
--	memset(&status, 0, sizeof(status));
-+	status = kzalloc(sizeof(*status), GFP_KERNEL);
-+	if (!status)
-+		goto out;
- 
--	rc = sja1105_port_status_get(priv, &status, port);
-+	rc = sja1105_port_status_get(priv, status, port);
- 	if (rc < 0) {
- 		dev_err(ds->dev, "Failed to read port %d counters: %d\n",
- 			port, rc);
--		return;
-+		goto out;
- 	}
- 	memset(data, 0, ARRAY_SIZE(sja1105_port_stats) * sizeof(u64));
--	data[k++] = status.mac.n_runt;
--	data[k++] = status.mac.n_soferr;
--	data[k++] = status.mac.n_alignerr;
--	data[k++] = status.mac.n_miierr;
--	data[k++] = status.mac.typeerr;
--	data[k++] = status.mac.sizeerr;
--	data[k++] = status.mac.tctimeout;
--	data[k++] = status.mac.priorerr;
--	data[k++] = status.mac.nomaster;
--	data[k++] = status.mac.memov;
--	data[k++] = status.mac.memerr;
--	data[k++] = status.mac.invtyp;
--	data[k++] = status.mac.intcyov;
--	data[k++] = status.mac.domerr;
--	data[k++] = status.mac.pcfbagdrop;
--	data[k++] = status.mac.spcprior;
--	data[k++] = status.mac.ageprior;
--	data[k++] = status.mac.portdrop;
--	data[k++] = status.mac.lendrop;
--	data[k++] = status.mac.bagdrop;
--	data[k++] = status.mac.policeerr;
--	data[k++] = status.mac.drpnona664err;
--	data[k++] = status.mac.spcerr;
--	data[k++] = status.mac.agedrp;
--	data[k++] = status.hl1.n_n664err;
--	data[k++] = status.hl1.n_vlanerr;
--	data[k++] = status.hl1.n_unreleased;
--	data[k++] = status.hl1.n_sizeerr;
--	data[k++] = status.hl1.n_crcerr;
--	data[k++] = status.hl1.n_vlnotfound;
--	data[k++] = status.hl1.n_ctpolerr;
--	data[k++] = status.hl1.n_polerr;
--	data[k++] = status.hl1.n_rxfrm;
--	data[k++] = status.hl1.n_rxbyte;
--	data[k++] = status.hl1.n_txfrm;
--	data[k++] = status.hl1.n_txbyte;
--	data[k++] = status.hl2.n_qfull;
--	data[k++] = status.hl2.n_part_drop;
--	data[k++] = status.hl2.n_egr_disabled;
--	data[k++] = status.hl2.n_not_reach;
-+	data[k++] = status->mac.n_runt;
-+	data[k++] = status->mac.n_soferr;
-+	data[k++] = status->mac.n_alignerr;
-+	data[k++] = status->mac.n_miierr;
-+	data[k++] = status->mac.typeerr;
-+	data[k++] = status->mac.sizeerr;
-+	data[k++] = status->mac.tctimeout;
-+	data[k++] = status->mac.priorerr;
-+	data[k++] = status->mac.nomaster;
-+	data[k++] = status->mac.memov;
-+	data[k++] = status->mac.memerr;
-+	data[k++] = status->mac.invtyp;
-+	data[k++] = status->mac.intcyov;
-+	data[k++] = status->mac.domerr;
-+	data[k++] = status->mac.pcfbagdrop;
-+	data[k++] = status->mac.spcprior;
-+	data[k++] = status->mac.ageprior;
-+	data[k++] = status->mac.portdrop;
-+	data[k++] = status->mac.lendrop;
-+	data[k++] = status->mac.bagdrop;
-+	data[k++] = status->mac.policeerr;
-+	data[k++] = status->mac.drpnona664err;
-+	data[k++] = status->mac.spcerr;
-+	data[k++] = status->mac.agedrp;
-+	data[k++] = status->hl1.n_n664err;
-+	data[k++] = status->hl1.n_vlanerr;
-+	data[k++] = status->hl1.n_unreleased;
-+	data[k++] = status->hl1.n_sizeerr;
-+	data[k++] = status->hl1.n_crcerr;
-+	data[k++] = status->hl1.n_vlnotfound;
-+	data[k++] = status->hl1.n_ctpolerr;
-+	data[k++] = status->hl1.n_polerr;
-+	data[k++] = status->hl1.n_rxfrm;
-+	data[k++] = status->hl1.n_rxbyte;
-+	data[k++] = status->hl1.n_txfrm;
-+	data[k++] = status->hl1.n_txbyte;
-+	data[k++] = status->hl2.n_qfull;
-+	data[k++] = status->hl2.n_part_drop;
-+	data[k++] = status->hl2.n_egr_disabled;
-+	data[k++] = status->hl2.n_not_reach;
- 
- 	if (priv->info->device_id == SJA1105E_DEVICE_ID ||
- 	    priv->info->device_id == SJA1105T_DEVICE_ID)
--		return;
-+		goto out;;
- 
- 	memset(data + k, 0, ARRAY_SIZE(sja1105pqrs_extra_port_stats) *
- 			sizeof(u64));
- 	for (i = 0; i < 8; i++) {
--		data[k++] = status.hl2.qlevel_hwm[i];
--		data[k++] = status.hl2.qlevel[i];
-+		data[k++] = status->hl2.qlevel_hwm[i];
-+		data[k++] = status->hl2.qlevel[i];
- 	}
--	data[k++] = status.ether.n_drops_nolearn;
--	data[k++] = status.ether.n_drops_noroute;
--	data[k++] = status.ether.n_drops_ill_dtag;
--	data[k++] = status.ether.n_drops_dtag;
--	data[k++] = status.ether.n_drops_sotag;
--	data[k++] = status.ether.n_drops_sitag;
--	data[k++] = status.ether.n_drops_utag;
--	data[k++] = status.ether.n_tx_bytes_1024_2047;
--	data[k++] = status.ether.n_tx_bytes_512_1023;
--	data[k++] = status.ether.n_tx_bytes_256_511;
--	data[k++] = status.ether.n_tx_bytes_128_255;
--	data[k++] = status.ether.n_tx_bytes_65_127;
--	data[k++] = status.ether.n_tx_bytes_64;
--	data[k++] = status.ether.n_tx_mcast;
--	data[k++] = status.ether.n_tx_bcast;
--	data[k++] = status.ether.n_rx_bytes_1024_2047;
--	data[k++] = status.ether.n_rx_bytes_512_1023;
--	data[k++] = status.ether.n_rx_bytes_256_511;
--	data[k++] = status.ether.n_rx_bytes_128_255;
--	data[k++] = status.ether.n_rx_bytes_65_127;
--	data[k++] = status.ether.n_rx_bytes_64;
--	data[k++] = status.ether.n_rx_mcast;
--	data[k++] = status.ether.n_rx_bcast;
-+	data[k++] = status->ether.n_drops_nolearn;
-+	data[k++] = status->ether.n_drops_noroute;
-+	data[k++] = status->ether.n_drops_ill_dtag;
-+	data[k++] = status->ether.n_drops_dtag;
-+	data[k++] = status->ether.n_drops_sotag;
-+	data[k++] = status->ether.n_drops_sitag;
-+	data[k++] = status->ether.n_drops_utag;
-+	data[k++] = status->ether.n_tx_bytes_1024_2047;
-+	data[k++] = status->ether.n_tx_bytes_512_1023;
-+	data[k++] = status->ether.n_tx_bytes_256_511;
-+	data[k++] = status->ether.n_tx_bytes_128_255;
-+	data[k++] = status->ether.n_tx_bytes_65_127;
-+	data[k++] = status->ether.n_tx_bytes_64;
-+	data[k++] = status->ether.n_tx_mcast;
-+	data[k++] = status->ether.n_tx_bcast;
-+	data[k++] = status->ether.n_rx_bytes_1024_2047;
-+	data[k++] = status->ether.n_rx_bytes_512_1023;
-+	data[k++] = status->ether.n_rx_bytes_256_511;
-+	data[k++] = status->ether.n_rx_bytes_128_255;
-+	data[k++] = status->ether.n_rx_bytes_65_127;
-+	data[k++] = status->ether.n_rx_bytes_64;
-+	data[k++] = status->ether.n_rx_mcast;
-+	data[k++] = status->ether.n_rx_bcast;
-+out:
-+	kfree(status);
- }
- 
- void sja1105_get_strings(struct dsa_switch *ds, int port,
--- 
-2.26.0
-
+On Mon, May 04, 2020 at 07:15:16PM +0200, Christoph Hellwig wrote:
+> Hi x86 maintainers,
+> 
+> this series removes various exports and sniplets of dead code
+> from the x86/uv code.
+> 
+> Diffstat:
+> 
+>   8 files changed, 21 insertions(+), 111 deletions(-)
