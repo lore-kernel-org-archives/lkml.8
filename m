@@ -2,70 +2,55 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22942C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 162D2C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBD1F206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E195F24959
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nfmE75xA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="emwvWX7Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730324AbgEEOVS (ORCPT
+        id S1730615AbgEEOVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:21:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48886 "EHLO
+        Tue, 5 May 2020 10:21:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729797AbgEEOPX (ORCPT
+        by vger.kernel.org with ESMTP id S1730604AbgEEOVW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:15:23 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FC5DC061A0F;
-        Tue,  5 May 2020 07:15:23 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id s8so1135687pgq.1;
-        Tue, 05 May 2020 07:15:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0nX/PJie6N8ENA2Zvbm0yQ+G3ZDyBTfdd9KJ7MPuSj4=;
-        b=nfmE75xAk2mRtYELliGHUe/ax/6qkgrPatqmkxJZ/4QQY+o+lMk11CjpG4sAQ3FVBV
-         WzncbHPCgbdKwNdc+0McksELLJMYnMAiR59i9RiNpkJ1wTWQvRjMj/LOf+Xb5oeK3q9X
-         8VD8zvXA45j3xTucUWd8a6+SrLV7AXDs8dsNgTmPYadNJvCSJY3+9yk+3FG9cqznsAn1
-         Ayjs9sTijBSlXb0wCaoDlmLuPkX19TLs6CSO8ttbuzlrxO+xpFQbVBsTgFRVP0zVj4wd
-         QyMxU4d3tVal6fMMXpNV6WOxd3TZfCk2bsV8QT8ybu6iLP/OmMTw0MsgxUT8NrAH2Rv+
-         1Ceg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0nX/PJie6N8ENA2Zvbm0yQ+G3ZDyBTfdd9KJ7MPuSj4=;
-        b=L303mJpbVSMNy1ExethZrn1BrbfB9EogsM9HridS/D8+4WcZiXGqoWk7vWF6GPZiwo
-         ShmaWWFGJ/lyaH7gqfTXYghTHub9QlUO9yz7cn1laBMCOMwbudx9/lUWLuGL5xuJsNPo
-         CI2/0YQ5F4AV4a4lCye0DXUkXVIqhJBIFeqaCZIeyjXJz25GoUDcSbduNuFXuXG1N0Il
-         aR7+eG5H1tpsAUtCeJAVMMxvj//QmYLwQnhRPokCYQg8i4fnhrU8bTRoi60H2Z/K8kVY
-         OqMOUi1o1U6nMLpn3D1XnMCvtKo15MO15T8WFUGIHH+dzfcK0X1j6BB+qCz34GA751PF
-         AJMw==
-X-Gm-Message-State: AGi0PuamiyE38pwwZG5ADwgsmkPDl8yYZxVtl5QOKKVlbSCLmL/w7NJm
-        BnWthRIaovLTx4nmjYGsV71Mz904+ktKfu2m3T4=
-X-Google-Smtp-Source: APiQypLc7JWdA097hNwo8eG2GAZy8/3FtlTIfHPPFCBF9V0wjqm7rU8EeIuNboUNOrlwwMtxJqnfA7pV8Mn60TSZrt8=
-X-Received: by 2002:a62:5ec7:: with SMTP id s190mr3257831pfb.130.1588688122575;
- Tue, 05 May 2020 07:15:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200505132905.10276-1-calvin.johnson@oss.nxp.com> <20200505132905.10276-5-calvin.johnson@oss.nxp.com>
-In-Reply-To: <20200505132905.10276-5-calvin.johnson@oss.nxp.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 5 May 2020 17:15:16 +0300
-Message-ID: <CAHp75VfQ_ueABUcgUUirQ7kK60CR6vMi1gP-UsdDd+UmsSE4Sw@mail.gmail.com>
-Subject: Re: [net-next PATCH v3 4/5] net: phy: Introduce fwnode_get_phy_id()
-To:     Calvin Johnson <calvin.johnson@oss.nxp.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        linux.cj@gmail.com, Jeremy Linton <jeremy.linton@arm.com>,
+        Tue, 5 May 2020 10:21:22 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86ADBC061A10;
+        Tue,  5 May 2020 07:21:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=vgLgwA2IYB8xZ+i4x2z61nR3kQ321LSxvjJp90lZwhk=; b=emwvWX7QcAOvZyEwWRtlY3u75
+        YrX1Uqcns0qRJwr2MAlCIPi+uSNplwaVui1xMGOENdmL8I4P9spu4Wg9JZR987liWr7K4Cq6lnbum
+        lZacolR99lTdruHc1EjyNWly0E96wof1BEtJwXJt2x0c/aGPzrmUF0c8Plw+2LUmlnn1tInPcokgV
+        wJxC3v7fjOvva8xRJ/NR74yaGtk8quY9LvGwS0tX+jNMfYeHtQDUVkh3/qOhuVg5qDSxg2waIb45O
+        JA6aeyCKI/Hm9AAJRA5+2a3cAakP5gMaXnONZgVJIGJMNjORsxoER52ZwVnZHJn2GtWd2zJQ712nw
+        9o8G9Wdkg==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:36328)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jVyRI-0002rx-5s; Tue, 05 May 2020 15:20:52 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jVyRC-0007Dj-U4; Tue, 05 May 2020 15:20:46 +0100
+Date:   Tue, 5 May 2020 15:20:46 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Calvin Johnson <calvin.johnson@oss.nxp.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>, linux.cj@gmail.com,
+        Jeremy Linton <jeremy.linton@arm.com>,
         Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
         Cristi Sovaiala <cristian.sovaiala@nxp.com>,
@@ -86,46 +71,34 @@ Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
         Pankaj Bansal <pankaj.bansal@nxp.com>,
         "David S. Miller" <davem@davemloft.net>,
         Heiner Kallweit <hkallweit1@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [net-next PATCH v3 4/5] net: phy: Introduce fwnode_get_phy_id()
+Message-ID: <20200505142046.GI1551@shell.armlinux.org.uk>
+References: <20200505132905.10276-1-calvin.johnson@oss.nxp.com>
+ <20200505132905.10276-5-calvin.johnson@oss.nxp.com>
+ <CAHp75VfQ_ueABUcgUUirQ7kK60CR6vMi1gP-UsdDd+UmsSE4Sw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VfQ_ueABUcgUUirQ7kK60CR6vMi1gP-UsdDd+UmsSE4Sw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 4:29 PM Calvin Johnson
-<calvin.johnson@oss.nxp.com> wrote:
->
-> Extract phy_id from compatible string. This will be used by
-> fwnode_mdiobus_register_phy() to create phy device using the
-> phy_id.
+On Tue, May 05, 2020 at 05:15:16PM +0300, Andy Shevchenko wrote:
+> On Tue, May 5, 2020 at 4:29 PM Calvin Johnson
+> > +               if (sscanf(cp, "ethernet-phy-id%4x.%4x",
+> > +                          &upper, &lower) == 2) {
+> 
+> > +                       *phy_id = ((upper & 0xFFFF) << 16) | (lower & 0xFFFF);
+> 
+> How upper can be bigger than 0xfff? Same for lower.
 
-> +int fwnode_get_phy_id(struct fwnode_handle *fwnode, u32 *phy_id)
-> +{
-> +       const char *cp;
-> +       unsigned int upper, lower;
-> +       int ret;
-> +
-> +       ret = fwnode_property_read_string(fwnode, "compatible", &cp);
-> +       if (!ret) {
-
-if (ret)
- return ret;
-
-will help a lot with readability of this.
-
-> +               if (sscanf(cp, "ethernet-phy-id%4x.%4x",
-> +                          &upper, &lower) == 2) {
-
-> +                       *phy_id = ((upper & 0xFFFF) << 16) | (lower & 0xFFFF);
-
-How upper can be bigger than 0xfff? Same for lower.
-
-> +                       return 0;
-> +               }
-> +       }
-> +       return -EINVAL;
-> +}
+I think your comment is incorrect here.  Four hex digits can be larger
+than 0xfff.  "1000" interpreted as hex is four hex digits and larger
+than 0xfff, for example.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
