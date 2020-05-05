@@ -2,123 +2,110 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CF7C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3D9C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45321206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:47:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EAF9206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:47:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="G+Q7z7KL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QBRkPDZZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730468AbgEEPr2 (ORCPT
+        id S1729965AbgEEPr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:47:28 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:63427 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729406AbgEEPr1 (ORCPT
+        Tue, 5 May 2020 11:47:56 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52487 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729569AbgEEPr4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:47:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1588693647; x=1620229647;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=qgL+UrIHPggA/cbMIcuZ6L6wlHkLvvYMOzgo5iwxhgg=;
-  b=G+Q7z7KLHWVXnfTXL6vCm+I433aihc4qv6kJ4WtoMTKroRNfPk1h2ODX
-   OF6z/eK/BT306TyXHZLwicMXlh1LxUV8H66LNNDTsbf9ehFMfjnYhlQjE
-   jI8MAGvELZ+s45fCv7TLThd3hP0hjX2NmaUVQsLs2nttVoml0/fnqvhKa
-   U=;
-IronPort-SDR: O166hFl/kUUCS2stThOFXVSw6unJMOC3/77W9R3kUjp/BSPJ10ib3NA17O1H6Lb1AtOuv/GJ+Y
- 1lR6gvyLhizA==
-X-IronPort-AV: E=Sophos;i="5.73,355,1583193600"; 
-   d="scan'208";a="33074496"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-5dd976cd.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 05 May 2020 15:47:24 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-5dd976cd.us-east-1.amazon.com (Postfix) with ESMTPS id DA09DA225F;
-        Tue,  5 May 2020 15:47:20 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 5 May 2020 15:47:20 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.38) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 5 May 2020 15:47:12 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-CC:     SeongJae Park <sjpark@amazon.com>,
-        Eric Dumazet <edumazet@google.com>,
-        David Miller <davem@davemloft.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Jakub Kicinski" <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <sj38.park@gmail.com>, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>, <snu@amazon.com>,
-        <amit@kernel.org>, <stable@vger.kernel.org>
-Subject: Re: Re: [PATCH net v2 0/2] Revert the 'socket_alloc' life cycle change
-Date:   Tue, 5 May 2020 17:46:44 +0200
-Message-ID: <20200505154644.18997-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <a8510327-d4f0-1207-1342-d688e9d5b8c3@gmail.com> (raw)
+        Tue, 5 May 2020 11:47:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588693675;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=EQ23tM5kMyn811fS97lNvm/DAC1rh32RC7gp61B/0ws=;
+        b=QBRkPDZZ+owFkGi2+xP/wa1o/3GMmZWkxf4drmH9KQTuhIEBFvu2sb5ZC/uEGgAaQg5Tlk
+        HO/9yj5nH84dReaP0JYm0IiNhVpEJB9/OAz9/HuA66PD+w5uoUzRDVnh4btjMyrrqEgdLU
+        WnrRMgegYep2/fp4ODNC1QKSLFtMBcg=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-255-w8o9HSUHPAygHf6BAPDKMA-1; Tue, 05 May 2020 11:47:53 -0400
+X-MC-Unique: w8o9HSUHPAygHf6BAPDKMA-1
+Received: by mail-qt1-f197.google.com with SMTP id f56so2071697qte.18
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 08:47:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EQ23tM5kMyn811fS97lNvm/DAC1rh32RC7gp61B/0ws=;
+        b=GP3l+ihcO7vz56Retb9cZ/zsdHhBnnntN1l/hawU4J/aF4cud03RygiZP5KBhu7Vk6
+         3Fufex7jzooc4lQp58SpWidv2QBIoIA9jHCVzHpno80Ufkt8djrOHefuaZZ/ibbAyXFH
+         qw/nQphfcHqRfR60R3ovDsHfveRD1csDI5RPKfMTdriTrwQgt5Zq2KY9D6YjRovjq+tI
+         7/Ugy3MB/PHMAtrV2NJhLAwrSw99rju7MR/94hnuZscdOHqSMeXjiH5JQpQRPjSdj/ms
+         WwkWw+DWdHrHIjfiwSVCZ6wO1UfujckNbcQrepIu86ddKIkR/xdO1Od3do6kH/9ubsOk
+         M/Tw==
+X-Gm-Message-State: AGi0PuaKLiBs7GE9PUvKO9AzUAxTMvluY+sbTdFNG7O0Ey6OVN5xUMVw
+        iMuCB6TOWKeJVOWI6ePF9yEHNJSSFeLHohbGqnlGUY0kbf5wkCGGH3thd+6TsqEbL1EVf587t7d
+        uwlqx4b55v/9FOj2/lGyv+IBE
+X-Received: by 2002:a37:af05:: with SMTP id y5mr4261812qke.471.1588693673001;
+        Tue, 05 May 2020 08:47:53 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLoIwGDPk77az/a2DrITfutNeyY8xsNdsMX2fUvJgFNvtmn7qg0F/iELQj44ngrT8/uGNZ7sg==
+X-Received: by 2002:a37:af05:: with SMTP id y5mr4261783qke.471.1588693672668;
+        Tue, 05 May 2020 08:47:52 -0700 (PDT)
+Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id u5sm2081443qkm.116.2020.05.05.08.47.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 08:47:52 -0700 (PDT)
+From:   Peter Xu <peterx@redhat.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, peterx@redhat.com,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: [PATCH] KVM: X86: Declare KVM_CAP_SET_GUEST_DEBUG properly
+Date:   Tue,  5 May 2020 11:47:50 -0400
+Message-Id: <20200505154750.126300-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.38]
-X-ClientProxiedBy: EX13D18UWC003.ant.amazon.com (10.43.162.237) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 May 2020 08:20:50 -0700 Eric Dumazet <eric.dumazet@gmail.com> wrote:
+KVM_CAP_SET_GUEST_DEBUG should be supported for x86 however it's not declared
+as supported.  My wild guess is that userspaces like QEMU are using "#ifdef
+KVM_CAP_SET_GUEST_DEBUG" to check for the capability instead, but that could be
+wrong because the compilation host may not be the runtime host.
 
-> 
-> 
-> On 5/5/20 8:07 AM, SeongJae Park wrote:
-> > On Tue, 5 May 2020 07:53:39 -0700 Eric Dumazet <edumazet@google.com> wrote:
-> > 
-> 
-> >> Why do we have 10,000,000 objects around ? Could this be because of
-> >> some RCU problem ?
-> > 
-> > Mainly because of a long RCU grace period, as you guess.  I have no idea how
-> > the grace period became so long in this case.
-> > 
-> > As my test machine was a virtual machine instance, I guess RCU readers
-> > preemption[1] like problem might affected this.
-> > 
-> > [1] https://www.usenix.org/system/files/conference/atc17/atc17-prasad.pdf
-> > 
-> >>
-> >> Once Al patches reverted, do you have 10,000,000 sock_alloc around ?
-> > 
-> > Yes, both the old kernel that prior to Al's patches and the recent kernel
-> > reverting the Al's patches didn't reproduce the problem.
-> >
-> 
-> I repeat my question : Do you have 10,000,000 (smaller) objects kept in slab caches ?
-> 
-> TCP sockets use the (very complex, error prone) SLAB_TYPESAFE_BY_RCU, but not the struct socket_wq
-> object that was allocated in sock_alloc_inode() before Al patches.
-> 
-> These objects should be visible in kmalloc-64 kmem cache.
+The userspace might still want to keep the old "#ifdef" though to not break the
+guest debug on old kernels.
 
-Not exactly the 10,000,000, as it is only the possible highest number, but I
-was able to observe clear exponential increase of the number of the objects
-using slabtop.  Before the start of the problematic workload, the number of
-objects of 'kmalloc-64' was 5760, but I was able to observe the number increase
-to 1,136,576.
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
 
-	  OBJS ACTIVE  USE OBJ SIZE  SLABS OBJ/SLAB CACHE SIZE NAME
-before:	  5760   5088  88%    0.06K     90       64       360K kmalloc-64
-after:	1136576 1136576 100%    0.06K  17759       64     71036K kmalloc-64
+I also think both ppc and s390 may need similar thing, but I didn't touch them
+yet because of not confident enough to cover all cases.
+---
+ arch/x86/kvm/x86.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-
-Thanks,
-SeongJae Park
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index c5835f9cb9ad..ac7b0e6f4000 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -3385,6 +3385,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 	case KVM_CAP_GET_MSR_FEATURES:
+ 	case KVM_CAP_MSR_PLATFORM_INFO:
+ 	case KVM_CAP_EXCEPTION_PAYLOAD:
++	case KVM_CAP_SET_GUEST_DEBUG:
+ 		r = 1;
+ 		break;
+ 	case KVM_CAP_SYNC_REGS:
+-- 
+2.26.2
 
