@@ -2,170 +2,201 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99836C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5375CC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73A5D206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26BA4206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:47:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="k2jJfmbm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KixiIuLh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbgEEKpJ (ORCPT
+        id S1728675AbgEEKrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 06:45:09 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:10192 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbgEEKpI (ORCPT
+        Tue, 5 May 2020 06:47:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728497AbgEEKrc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 06:45:08 -0400
+        Tue, 5 May 2020 06:47:32 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00976C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 03:47:31 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id s8so928229pgq.1
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 03:47:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1588675507; x=1620211507;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=XBSflEuWAde/CeVgwd1MVyCQIVmkLdJKa2kWwWmS9Qc=;
-  b=k2jJfmbmOkUbhT+mX2cFVJ5jz8ZF0aECN+rQqC912s44US6ISTlwOIjJ
-   4H+JM8LuXl8JelavGP9FEA8YblZDM9bPNg5BFB5fWmxItMazrQSG8k4EF
-   0SL937on4Ax9fUN+3r21+GiM5YewKyJqvZbD30SDzInHitFPh3RWjUuW+
-   M=;
-IronPort-SDR: /zcmW88pk2aPTxCJdquuhy1OAS8pv2KZcoSP/u09BnfoQaUg8JxdjY2lqJSRaREoBcNIJ3WsQF
- +6613ajzi/Cw==
-X-IronPort-AV: E=Sophos;i="5.73,354,1583193600"; 
-   d="scan'208";a="42749270"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-f273de60.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 05 May 2020 10:45:04 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-f273de60.us-east-1.amazon.com (Postfix) with ESMTPS id C2F85A26F7;
-        Tue,  5 May 2020 10:44:58 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 5 May 2020 10:44:58 +0000
-Received: from [192.168.13.172] (10.43.162.38) by EX13D01EUB001.ant.amazon.com
- (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 5 May
- 2020 10:44:48 +0000
-Subject: [PATCH v6 1/2] dt-bindings: edac: al-mc-edac: Amazon's Annapurna Labs
- Memory Controller EDAC
-To:     Borislav Petkov <bp@alien8.de>, <robh+dt@kernel.org>
-CC:     <mchehab@kernel.org>, <james.morse@arm.com>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <nicolas.ferre@microchip.com>,
-        <mark.rutland@arm.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <linux-edac@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <dwmw@amazon.co.uk>,
-        <benh@kernel.crashing.org>, <hhhawa@amazon.com>,
-        <ronenk@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
-        <eitan@amazon.com>
-References: <20200224134132.23924-1-talel@amazon.com>
- <20200224134132.23924-2-talel@amazon.com> <20200428110659.GA11272@zn.tnic>
-From:   "Shenhar, Talel" <talel@amazon.com>
-Message-ID: <5e2c5119-52e9-2c3c-e205-e661ba218fcb@amazon.com>
-Date:   Tue, 5 May 2020 13:44:43 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nvbM8c1Z/qdFrh3t6fLfLCpLiA9WBZW2/oqn8XwcHpY=;
+        b=KixiIuLhTOxYmPkU/svFJAyvGfpUNSMreSsO8G5B3WbOjqVysVZmgu0NRQxjWlo91Z
+         uxnJxkc4n4tyg4W2W16MunYTT3GQRTI1laKW31C5ayWWjuDet/VkNv4tkOMe3OYGKXcZ
+         g1MK8xB5N+YUNlmYpMttVjdVRS0TrPJCj5vuenVYyjxRRaU0MLHYTxAR63eKIwQL/lN/
+         PDA1inZOR1ARo1LRXheCmvBnMsWw6dO/AZObsFpZU61UK7bHH0ZGbmEQhXTaywYKcwB9
+         7SliFXEiXdj9I7ea2zpeScC9qjYDMN9hmpUjSpSaRwgrTnSjpKwiLPlOXRKFwnopF6MS
+         TK8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nvbM8c1Z/qdFrh3t6fLfLCpLiA9WBZW2/oqn8XwcHpY=;
+        b=lJSnbZ73JhYzjKu5PzmSqZtp3f3xZklqQCPNSZA/6hCRotnn7QqD+3ELKKI/q22vPV
+         ziyku3PSmWn5huLzYBaXYiQnWxnimBvxiLizw4d0I2RHvnpUXFzyA2RBS/KULh2uj5bE
+         p+DuiFvVW9a31ZUNuIg3RofD3GxG8dcY5JHNwRO9bn+RWQ+EFH0LbO+VDekY5krY4D5z
+         ZND8a79t5WLbx9NSaUfbgl08KBL0hhawq3rLHsUXtX+JczczpL1ev3rPRgXZTT/tUkMi
+         QYjDhmvmJkPyMQXeuOWksUTJOZodhIH2RHzeO1/s0eGzckxOI61xAnAQ6lkyDD7ySDAC
+         ROkA==
+X-Gm-Message-State: AGi0PuYHUP8eFnAGvcjQXNVcJlsBQAxL4kXPB8LTvPWvz291mL2y5Tli
+        RrSDYa9QrBEbjBreadTpY5ZDGg==
+X-Google-Smtp-Source: APiQypIXXmXXHkFirtUenC4bDqREP8INqJcmI51kYdQprj47QK/EnA5cfm5D/hAe76MwUcvJvKCuDA==
+X-Received: by 2002:a62:5209:: with SMTP id g9mr2677791pfb.220.1588675651326;
+        Tue, 05 May 2020 03:47:31 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([2600:3c01::f03c:91ff:fe8a:bb03])
+        by smtp.gmail.com with ESMTPSA id d12sm1649260pjx.1.2020.05.05.03.47.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 05 May 2020 03:47:30 -0700 (PDT)
+Date:   Tue, 5 May 2020 18:47:29 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     Thomas Backlund <tmb@mageia.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Subject: Re: perf build error with gcc 10 on arm and aarch64
+Message-ID: <20200505104728.GB17996@leoy-ThinkPad-X240s>
+References: <2869c4f6-9adf-3d55-a41d-a42865ae56f2@mageia.org>
+ <20200505041050.GA8131@leoy-ThinkPad-X240s>
+ <CAJ9a7Vh8nqT5zGO1XPzWhPTpmMK+rx-S6DXvzPC4m31Fjkr+rQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200428110659.GA11272@zn.tnic>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-X-Originating-IP: [10.43.162.38]
-X-ClientProxiedBy: EX13D37UWC004.ant.amazon.com (10.43.162.212) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJ9a7Vh8nqT5zGO1XPzWhPTpmMK+rx-S6DXvzPC4m31Fjkr+rQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob and other DT folks,
+Hi Mike,
 
-Can you please help with below query?
+On Tue, May 05, 2020 at 11:26:49AM +0100, Mike Leach wrote:
+> Hi Leo,
+> 
+> This is caused by GCC 10 new default to -fno-common. Temporarily
+> adding this to perf build reproduces issue with other compilers,
+> including x86 build of perf with cs-etm.
 
+Good to know how to reproduce this issue.
 
-On 4/28/2020 2:06 PM, Borislav Petkov wrote:
-> On Mon, Feb 24, 2020 at 03:41:31PM +0200, Talel Shenhar wrote:
->> Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
->>
->> Signed-off-by: Talel Shenhar <talel@amazon.com>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> ---
->>   .../bindings/edac/amazon,al-mc-edac.yaml      | 52 +++++++++++++++++++
->>   1 file changed, 52 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
->> new file mode 100644
->> index 000000000000..20505f37c9f8
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
->> @@ -0,0 +1,52 @@
->> +# SPDX-License-Identifier: GPL-2.0-only
-> WARNING: DT binding documents should be licensed (GPL-2.0-only OR BSD-2-Clause)
-> #36: FILE: Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml:1:
-> +# SPDX-License-Identifier: GPL-2.0-only
->
-> Hi Rob, should I listen to checkpatch or ignore it?
+> As such - your fix is good to resolve this issue.
+> 
+> Tested by / Reviewed by Mike Leach <mike.leach@linaro.org>
 
-Rob and other dt folks,
+Will send out patch to LKML soon.
 
-In continue to disscussion with Boris below, Looking at the checkpatch 
-check:
-
-    if ($realfile =~ m@^Documentation/devicetree/bindings/@ &&
-        not $spdx_license =~/GPL-2\.0.*BSD-2-Clause/) {
-
-It wants the whole string "GPL-2.0-only OR BSD-2-Clause" and my oatch has only "GPL-2.0-only".
-
-Now, looking at a bunch of .yaml DT files, there are all kinds of formatting:
-
-$ git grep -h SPDX *.yaml | sort | uniq -c
-       3 1:# SPDX-License-Identifier: (GPL-2.0)
-     313 1:# SPDX-License-Identifier: GPL-2.0
-       9 1:# SPDX-License-Identifier: GPL-2.0+
-       1 1:# SPDX-License-Identifier: (GPL-2.0-only)
-      43 1:# SPDX-License-Identifier: GPL-2.0-only
-       4 1:# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
-       1 1:# SPDX-License-Identifier: GPL-2.0-only or BSD-2-Clause
-     148 1:# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-      25 1:# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-     104 1:# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-       3 1:# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-       2 1:# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
-       1 1:# SPDX-License-Identifier: (GPL-2.0-or-later)
-       5 1:# SPDX-License-Identifier: GPL-2.0-or-later
-       3 1:# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-       2 1:# SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause
-       3 1:# SPDX-License-Identifier: (GPL-2.0 OR MIT)
-       3 1:# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-       3 1:# SPDX-License-Identifier: (GPL-2.0+ OR X11)
-
-And the patch which did rule is:
-
-commit 50c92900214dd9a55bcecc3c53e90d072aff6560
-Author: Lubomir Rintel<lkundrak@v3.sk>
-Date:   Mon Apr 6 20:11:13 2020 -0700
-
-     checkpatch: check proper licensing of Devicetree bindings
-
-     According to Devicetree maintainers (see Link: below), the Devicetree
-     binding documents are preferrably licensed (GPL-2.0-only OR BSD-2-Clause).
-
-     Let's check that.  The actual check is a bit more relaxed, to allow more
-     liberal but compatible licensing (e.g.  GPL-2.0-or-later OR BSD-2-Clause).
-
-
-Will love your help.
-This patch already have your (Rob) Reviewed-by so Boris and myself are unsure what is the right thing to do now.
+Thank you for the testing and reviewing.
 
 Thanks,
-Talel.
+Leo
 
->
-> --
-> Regards/Gruss,
->      Boris.
->
-> https://people.kernel.org/tglx/notes-about-netiquette
+> On Tue, 5 May 2020 at 05:11, Leo Yan <leo.yan@linaro.org> wrote:
+> >
+> > Hi Thomas,
+> >
+> > [ + Mathieu/Mike/Suzuki ]
+> >
+> > On Mon, May 04, 2020 at 10:22:27PM +0300, Thomas Backlund wrote:
+> > > This is building perf from kernel-5.6.10 on armv7hl and aarch64:
+> > >
+> > > Compiler is gcc 10.1.0-RC
+> > >
+> > >
+> > >   LD       perf-in.o
+> > > ld: arch/perf-in.o: in function `.LANCHOR0':
+> > > /home/iurt/rpmbuild/BUILD/kernel-arm/linux-5.6/tools/perf/util/include/../../util/cs-etm.h:118:
+> > > multiple definition of `traceid_list'; util/perf-in.o:/home/iurt/rpmbuild/BUILD/kernel-arm/linux-5.6/tools/perf/util/cs-etm.h:118:
+> > > first defined here
+> > > make[3]: *** [/home/iurt/rpmbuild/BUILD/kernel-arm/linux-5.6/tools/build/Makefile.build:145:
+> > > perf-in.o] Error 1
+> > >
+> > >   LD       perf-in.o
+> > > ld: arch/perf-in.o:/home/iurt/rpmbuild/BUILD/kernel-aarch64/linux-5.6/tools/perf/util/include/../../util/cs-etm.h:118:
+> > > multiple definition of `traceid_list'; util/perf-in.o:/home/iurt/rpmbuild/BUILD/kernel-aarch64/linux-5.6/tools/perf/util/cs-etm.h:118:
+> > > first defined here
+> > > make[3]: *** [/home/iurt/rpmbuild/BUILD/kernel-aarch64/linux-5.6/tools/build/Makefile.build:145:
+> > > perf-in.o] Error 1
+> > > make[2]: *** [Makefile.perf:616: perf-in.o] Error 2
+> > > make[1]: *** [Makefile.perf:225: sub-make] Error 2
+> > > make: *** [Makefile:70: all] Error 2
+> > >
+> > >
+> > > The same build succeeds with gcc 9.3.0
+> >
+> > Thanks for reporting the issue.
+> >
+> > Could you help confirm if below change can resolve this issue?
+> >
+> > Thanks,
+> > Leo
+> >
+> > ---8<---
+> >
+> > Subject: [PATCH] perf cs-etm: Move defined of traceid_list
+> >
+> > The variable 'traceid_list' is defined in the header file cs-etm.h,
+> > if multiple C files include cs-etm.h the compiler might complaint for
+> > multiple definition of 'traceid_list'.
+> >
+> > To fix multiple definition error, move the definition of 'traceid_list'
+> > into cs-etm.c.
+> >
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > ---
+> >  tools/perf/util/cs-etm.c | 3 +++
+> >  tools/perf/util/cs-etm.h | 3 ---
+> >  2 files changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> > index 62d2f9b9ce1b..381d9708e9bd 100644
+> > --- a/tools/perf/util/cs-etm.c
+> > +++ b/tools/perf/util/cs-etm.c
+> > @@ -94,6 +94,9 @@ struct cs_etm_queue {
+> >         struct cs_etm_traceid_queue **traceid_queues;
+> >  };
+> >
+> > +/* RB tree for quick conversion between traceID and metadata pointers */
+> > +static struct intlist *traceid_list;
+> > +
+> >  static int cs_etm__update_queues(struct cs_etm_auxtrace *etm);
+> >  static int cs_etm__process_queues(struct cs_etm_auxtrace *etm);
+> >  static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
+> > diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
+> > index 650ecc2a6349..4ad925d6d799 100644
+> > --- a/tools/perf/util/cs-etm.h
+> > +++ b/tools/perf/util/cs-etm.h
+> > @@ -114,9 +114,6 @@ enum cs_etm_isa {
+> >         CS_ETM_ISA_T32,
+> >  };
+> >
+> > -/* RB tree for quick conversion between traceID and metadata pointers */
+> > -struct intlist *traceid_list;
+> > -
+> >  struct cs_etm_queue;
+> >
+> >  struct cs_etm_packet {
+> > --
+> > 2.17.1
+> 
+> 
+> 
+> -- 
+> Mike Leach
+> Principal Engineer, ARM Ltd.
+> Manchester Design Centre. UK
