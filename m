@@ -2,184 +2,140 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A296C47256
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E6AC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BBC920746
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:49:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588704597;
-	bh=KfOJ1bNlaBRu8hNC+oQtr3+NZ5WeNHLWOHTP2GwjliM=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=tf7LeIJ3+QJWqDRpLFWCgMOwqe6xe70JAwVLD/J4pEINP6kcR5kwaGEt1Upc1FGTx
-	 PGP0Wllw2/SFHNnwodQ3xv4rApt4BdpPWI8j/qUUqWJXpJe0qmLO5w4c5jGZ2+nz4m
-	 HPFEVAKR/Md758lGa62v2bSxuVlD1DG76tQVkjtA=
+	by mail.kernel.org (Postfix) with ESMTP id 65D75206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 18:50:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e2LM4c7y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729019AbgEESt4 (ORCPT
+        id S1729050AbgEESuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 14:49:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49416 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728807AbgEESt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 14:49:56 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 834BC206CC;
-        Tue,  5 May 2020 18:49:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588704595;
-        bh=KfOJ1bNlaBRu8hNC+oQtr3+NZ5WeNHLWOHTP2GwjliM=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=N26Rhli2ECY6OsVWpu0QZfXZx6Hiyng83I0UMdIeKFPVXyYSAZd9O8K8X3uN6LANm
-         QSk++JhskOjRmP/vlrsFMH61hn0NUyv5yN70YuZb+M9GsdEaAtYFUmNLj34XSphAMB
-         NbkcIu0eE1+w5NEe+jPRrqmGde9LfNd8FNnLy/5E=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 64AAB3523039; Tue,  5 May 2020 11:49:55 -0700 (PDT)
-Date:   Tue, 5 May 2020 11:49:55 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     SeongJae Park <sjpark@amazon.com>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        David Miller <davem@davemloft.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        sj38.park@gmail.com, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>, snu@amazon.com,
-        amit@kernel.org, stable@vger.kernel.org
-Subject: Re: Re: Re: Re: [PATCH net v2 0/2] Revert the 'socket_alloc' life
- cycle change
-Message-ID: <20200505184955.GO2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200505181707.GJ2869@paulmck-ThinkPad-P72>
- <20200505183402.2021-1-sjpark@amazon.com>
+        Tue, 5 May 2020 14:50:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35822 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728076AbgEESub (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 14:50:31 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59AA7C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 11:50:31 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id h4so2756518ljg.12
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 11:50:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fQtcPUQW49oPTnT+jASB+pu5t+m5qPdUelhle+W5F4o=;
+        b=e2LM4c7y4U0BetC/gB0eIa7BcxIovrqW2+yMivftL2EUsrm9A/3tzPHnkWrENn0+BY
+         3u8nlKnzNbvWltqUbePhaEVeITEBqdy3oJ/OoqwDOACo021vaWG3fpFzoZBwAEfpJ/T7
+         +AgIzXtc4NJ1zsQ+y6SrWc1RKchP8F8XxTSv08dWWyQ2BtBnzBt+iy4L92tZ3UliSHEx
+         lZPLffC2w/YnG5vf5M2YiUUcpWIt7S3jEiV8hAHP9h79nVayw4X1+qTG0d8wF3MY8iSJ
+         v9f/mCqFam0KZFjTCQpO/p7SAEWfWjm3aKaNwCqNALVOt0eWz/CsLXXLRBCOZRGKAVY5
+         N1LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fQtcPUQW49oPTnT+jASB+pu5t+m5qPdUelhle+W5F4o=;
+        b=LSQuXYLhlik0NKwjjC0eAFuj91quSGBYx+Mqkvn3SeeCcaiQX8dTvVpgdBmrICORXj
+         DTdo7/A/jGf/dUhdxqNTs52s9RpsPkiBTbt+gf6paR1pIjUJDm2W1/z7p1nJ67uT61Ww
+         Y4SOTxr5+JWVa2kcCWEJ7BC5d9Oi/H2m0lgG1uQTJPj/yUwLVGEqSweHzVIeSKM3iuDl
+         zeEYLiJNbJwWc1be35HOZp5OQ2zuGwRCBIkGn6DU+tXRH5SNZaOT2j1XEMO81gUSSg5J
+         dz+fbh42xLqwVfVQBsy3x9P9jwgIFY1UmVcKQHbq8VGtIgblmr1FOXD9lAJ2ewELGRI/
+         jVGw==
+X-Gm-Message-State: AGi0PuaK8/16zaMytY/E7xggQjYIAL67YOur3K5Gd6wtRPodDgyDV66W
+        yTxgsEbLMo+VpDqgqT8dAjK+TVPuL5u09+wg6WnqSw==
+X-Google-Smtp-Source: APiQypKvjCJ8PklB3LOXCvVyQOThS4XpKMQ/Afaf/e/kP6nt/5BFFzQYKIqd2OgadCHb/8wFTCM6UEj3k7Ta0f50ic0=
+X-Received: by 2002:a05:651c:107a:: with SMTP id y26mr2697805ljm.80.1588704629773;
+ Tue, 05 May 2020 11:50:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505183402.2021-1-sjpark@amazon.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200505162123.13366-1-grygorii.strashko@ti.com>
+In-Reply-To: <20200505162123.13366-1-grygorii.strashko@ti.com>
+From:   Anders Roxell <anders.roxell@linaro.org>
+Date:   Tue, 5 May 2020 20:50:18 +0200
+Message-ID: <CADYN=9KZ9GSBv+VOA0MSLHcW312sEOX+T+h5GNyaaAridaLXuA@mail.gmail.com>
+Subject: Re: [PATCH net-next] net: ethernet: ti: am65-cpts: fix build
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 08:34:02PM +0200, SeongJae Park wrote:
-> On Tue, 5 May 2020 11:17:07 -0700 "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> 
-> > On Tue, May 05, 2020 at 07:56:05PM +0200, SeongJae Park wrote:
-> > > On Tue, 5 May 2020 10:30:36 -0700 "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> > > 
-> > > > On Tue, May 05, 2020 at 07:05:53PM +0200, SeongJae Park wrote:
-> > > > > On Tue, 5 May 2020 09:37:42 -0700 Eric Dumazet <eric.dumazet@gmail.com> wrote:
-> > > > > 
-> > > > > > 
-> > > > > > 
-> > > > > > On 5/5/20 9:31 AM, Eric Dumazet wrote:
-> > > > > > > 
-> > > > > > > 
-> > > > > > > On 5/5/20 9:25 AM, Eric Dumazet wrote:
-> > > > > > >>
-> > > > > > >>
-> > > > > > >> On 5/5/20 9:13 AM, SeongJae Park wrote:
-> > > > > > >>> On Tue, 5 May 2020 09:00:44 -0700 Eric Dumazet <edumazet@google.com> wrote:
-> > > > > > >>>
-> > > > > > >>>> On Tue, May 5, 2020 at 8:47 AM SeongJae Park <sjpark@amazon.com> wrote:
-> > > > > > >>>>>
-> > > > > > >>>>> On Tue, 5 May 2020 08:20:50 -0700 Eric Dumazet <eric.dumazet@gmail.com> wrote:
-> > > > > > >>>>>
-> > > > > > >>>>>>
-> > > > > > >>>>>>
-> > > > > > >>>>>> On 5/5/20 8:07 AM, SeongJae Park wrote:
-> > > > > > >>>>>>> On Tue, 5 May 2020 07:53:39 -0700 Eric Dumazet <edumazet@google.com> wrote:
-> > > > > > >>>>>>>
-> > > > > > >>>>>>
-> > > > > [...]
-> > > > > > >>
-> > > > > > >> I would ask Paul opinion on this issue, because we have many objects
-> > > > > > >> being freed after RCU grace periods.
-> > > > > > >>
-> > > > > > >> If RCU subsystem can not keep-up, I guess other workloads will also suffer.
-> > > > > > >>
-> > > > > > >> Sure, we can revert patches there and there trying to work around the issue,
-> > > > > > >> but for objects allocated from process context, we should not have these problems.
-> > > > > > >>
-> > > > > > > 
-> > > > > > > I wonder if simply adjusting rcu_divisor to 6 or 5 would help 
-> > > > > > > 
-> > > > > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > > > > > index d9a49cd6065a20936edbda1b334136ab597cde52..fde833bac0f9f81e8536211b4dad6e7575c1219a 100644
-> > > > > > > --- a/kernel/rcu/tree.c
-> > > > > > > +++ b/kernel/rcu/tree.c
-> > > > > > > @@ -427,7 +427,7 @@ module_param(qovld, long, 0444);
-> > > > > > >  static ulong jiffies_till_first_fqs = ULONG_MAX;
-> > > > > > >  static ulong jiffies_till_next_fqs = ULONG_MAX;
-> > > > > > >  static bool rcu_kick_kthreads;
-> > > > > > > -static int rcu_divisor = 7;
-> > > > > > > +static int rcu_divisor = 6;
-> > > > > > >  module_param(rcu_divisor, int, 0644);
-> > > > > > >  
-> > > > > > >  /* Force an exit from rcu_do_batch() after 3 milliseconds. */
-> > > > > > > 
-> > > > > > 
-> > > > > > To be clear, you can adjust the value without building a new kernel.
-> > > > > > 
-> > > > > > echo 6 >/sys/module/rcutree/parameters/rcu_divisor
-> > > > > 
-> > > > > I tried value 6, 5, and 4, but none of those removed the problem.
-> > > > 
-> > > > Thank you for checking this!
-> > > > 
-> > > > Was your earlier discussion on long RCU readers speculation, or do you
-> > > > have measurements?
-> > > 
-> > > It was just a guess without any measurement or dedicated investigation.
-> > 
-> > OK, another thing to check is the duration of the low-memory episode.
-> > Does this duration exceed the RCU CPU stall warning time?  (21 seconds
-> > in mainline, 60 in many distros, but check rcupdate.rcu_cpu_stall_timeout
-> > to be sure.)
-> 
-> The benchmark takes about 36 seconds for 10,000 repeats of the test.
-> 
-> The value on the test machine is 60.
-> 
-> So the duration would not exceeded the warning time and therefore I haven't
-> seen the warning message.
-> 
-> As told in other mail, I will also adjust this value to shorter one.
+On Tue, 5 May 2020 at 18:21, Grygorii Strashko <grygorii.strashko@ti.com> wrote:
+>
+> It's possible to have build configuration which will force PTP_1588_CLOCK=m
+> and so TI_K3_AM65_CPTS=m while still have TI_K3_AM65_CPSW_NUSS=y. This will
+> cause build failures:
+>
+> aarch64-linux-gnu-ld: ../drivers/net/ethernet/ti/am65-cpsw-nuss.o: in function `am65_cpsw_init_cpts':
+> ../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1685: undefined reference to `am65_cpts_create'
+> aarch64-linux-gnu-ld: ../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1685:(.text+0x2e20):
+> relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `am65_cpts_create'
+>
+> Fix it by adding dependencies from CPTS in TI_K3_AM65_CPSW_NUSS as below:
+>    config TI_K3_AM65_CPSW_NUSS
+>    ...
+>      depends on TI_K3_AM65_CPTS || !TI_K3_AM65_CPTS
+>
+> Note. This will create below dependencies and for NFS boot + CPTS all of them
+> have to be built-in.
+>   PTP_1588_CLOCK -> TI_K3_AM65_CPTS -> TI_K3_AM65_CPSW_NUSS
+>
+> While here, clean up TI_K3_AM65_CPTS definition.
+>
+> Fixes: b1f66a5bee07 ("net: ethernet: ti: am65-cpsw-nuss: enable packet timestamping support")
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> Reported-by: Anders Roxell <anders.roxell@linaro.org>
 
-Sounds good, thank you!
+Tested-by: Anders Roxell <anders.roxell@linaro.org>
 
-> > Also, any chance of a .config?  Or at least the RCU portions?  I am
-> > guessing CONFIG_PREEMPT=n, for example.
-> 
-> I guess this would be ok.
-> 
->     # CONFIG_PREEMPT is not set
->     
->     #
->     # RCU Subsystem
->     #
->     CONFIG_TREE_RCU=y
->     CONFIG_RCU_EXPERT=y
->     CONFIG_SRCU=y
->     CONFIG_TREE_SRCU=y
->     CONFIG_RCU_STALL_COMMON=y
->     CONFIG_RCU_NEED_SEGCBLIST=y
->     CONFIG_RCU_FANOUT=64
->     CONFIG_RCU_FANOUT_LEAF=16
->     # CONFIG_RCU_FAST_NO_HZ is not set
->     CONFIG_RCU_NOCB_CPU=y
->     # end of RCU Subsystem
+> ---
+>  drivers/net/ethernet/ti/Kconfig | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+> index 4ab35ce7b451..988e907e3322 100644
+> --- a/drivers/net/ethernet/ti/Kconfig
+> +++ b/drivers/net/ethernet/ti/Kconfig
+> @@ -99,7 +99,7 @@ config TI_K3_AM65_CPSW_NUSS
+>         depends on ARCH_K3 && OF && TI_K3_UDMA_GLUE_LAYER
+>         select TI_DAVINCI_MDIO
+>         imply PHY_TI_GMII_SEL
+> -       imply TI_AM65_CPTS
+> +       depends on TI_K3_AM65_CPTS || !TI_K3_AM65_CPTS
 
-And thank you again!
+Don't we want to move this so it is below the other 'depends on' ?
 
-							Thanx, Paul
+Cheers,
+Anders
+
+>         help
+>           This driver supports TI K3 AM654/J721E CPSW2G Ethernet SubSystem.
+>           The two-port Gigabit Ethernet MAC (MCU_CPSW0) subsystem provides
+> @@ -112,9 +112,8 @@ config TI_K3_AM65_CPSW_NUSS
+>
+>  config TI_K3_AM65_CPTS
+>         tristate "TI K3 AM65x CPTS"
+> -       depends on ARCH_K3 && OF && PTP_1588_CLOCK
+> +       depends on ARCH_K3 && OF
+>         depends on PTP_1588_CLOCK
+> -       select NET_PTP_CLASSIFY
+>         help
+>           Say y here to support the TI K3 AM65x CPTS with 1588 features such as
+>           PTP hardware clock for each CPTS device and network packets
+> --
+> 2.17.1
+>
