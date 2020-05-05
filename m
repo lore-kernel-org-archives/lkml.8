@@ -2,69 +2,93 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8628C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 09:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0426C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 09:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6889206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 09:56:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1A94206CC
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 09:57:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728632AbgEEJ4t (ORCPT
+        id S1728672AbgEEJ52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 05:56:49 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3795 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725766AbgEEJ4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 05:56:49 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2484EF110FAAF2FDBF65;
-        Tue,  5 May 2020 17:56:46 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 5 May 2020 17:56:39 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Christian Brauner <christian@brauner.io>
-CC:     YueHaibing <yuehaibing@huawei.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] mm: remove duplicated include from madvise.c
-Date:   Tue, 5 May 2020 10:00:49 +0000
-Message-ID: <20200505100049.191351-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 5 May 2020 05:57:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:35894 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725766AbgEEJ51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 05:57:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D177A30E;
+        Tue,  5 May 2020 02:57:26 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B66C83F305;
+        Tue,  5 May 2020 02:57:25 -0700 (PDT)
+Date:   Tue, 5 May 2020 10:57:23 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        amurray@thegoodpenguin.co.uk, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH] PCI: dwc: clean up computing of msix_tbl
+Message-ID: <20200505095723.GB12543@e121166-lin.cambridge.arm.com>
+References: <20200420065227.4920-1-jslaby@suse.cz>
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420065227.4920-1-jslaby@suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove duplicated include.
+On Mon, Apr 20, 2020 at 08:52:27AM +0200, Jiri Slaby wrote:
+> Commit 6f5e193bfb55 ("PCI: dwc: Fix dw_pcie_ep_raise_msix_irq() to get
+> correct MSI-X table address") overcomplicated the computation of the
+> msix_tbl address. Simplify it as it's simply the addr + offset. Provided
+> addr is (void *) already.
+> 
+> objdump -d shows no difference after this patch.
+> 
+> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-ep.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- mm/madvise.c | 1 -
- 1 file changed, 1 deletion(-)
+Applied to pci/dwc, thanks !
 
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 8fec261457a6..f8be54dd92d3 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -29,7 +29,6 @@
- #include <linux/swapops.h>
- #include <linux/shmem_fs.h>
- #include <linux/mmu_notifier.h>
--#include <linux/sched/mm.h>
- #include <linux/uio.h>
- 
- #include <asm/tlb.h>
+Lorenzo
 
-
-
-
-
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 1cdcbd102ce8..c815d36905b6 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -433,7 +433,6 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>  	struct pci_epf_msix_tbl *msix_tbl;
+>  	struct pci_epc *epc = ep->epc;
+> -	struct pci_epf_bar *epf_bar;
+>  	u32 reg, msg_data, vec_ctrl;
+>  	unsigned int aligned_offset;
+>  	u32 tbl_offset;
+> @@ -446,10 +445,7 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	bir = (tbl_offset & PCI_MSIX_TABLE_BIR);
+>  	tbl_offset &= PCI_MSIX_TABLE_OFFSET;
+>  
+> -	epf_bar = ep->epf_bar[bir];
+> -	msix_tbl = epf_bar->addr;
+> -	msix_tbl = (struct pci_epf_msix_tbl *)((char *)msix_tbl + tbl_offset);
+> -
+> +	msix_tbl = ep->epf_bar[bir]->addr + tbl_offset;
+>  	msg_addr = msix_tbl[(interrupt_num - 1)].msg_addr;
+>  	msg_data = msix_tbl[(interrupt_num - 1)].msg_data;
+>  	vec_ctrl = msix_tbl[(interrupt_num - 1)].vector_ctrl;
+> -- 
+> 2.26.1
+> 
