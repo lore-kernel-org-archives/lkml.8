@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C01F3C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B08C47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E27020675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 808DA20675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:20:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729868AbgEEOPf (ORCPT
+        id S1730223AbgEEOUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:15:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48922 "EHLO
+        Tue, 5 May 2020 10:20:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729848AbgEEOPb (ORCPT
+        by vger.kernel.org with ESMTP id S1729269AbgEEOPe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:15:31 -0400
+        Tue, 5 May 2020 10:15:34 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E071BC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:15:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EF0DC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:15:34 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jVyLo-0001Sp-E8; Tue, 05 May 2020 16:15:12 +0200
+        id 1jVyLs-0001WD-2N; Tue, 05 May 2020 16:15:16 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id DE5BEFFC8D;
-        Tue,  5 May 2020 16:15:11 +0200 (CEST)
-Message-Id: <20200505134904.955511913@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 99DB7FFC8D;
+        Tue,  5 May 2020 16:15:15 +0200 (CEST)
+Message-Id: <20200505134905.258989060@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:44:11 +0200
+Date:   Tue, 05 May 2020 15:44:14 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -52,8 +52,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Will Deacon <will@kernel.org>
-Subject: [patch V4 part 3 17/29] x86/entry: Convert Invalid Opcode exception
- to IDTENTRY
+Subject: [patch V4 part 3 20/29] x86/entry: Provide IDTENTRY_ERRORCODE
 References: <20200505134354.774943181@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -68,179 +67,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-Convert #UD to IDTENTRY:
-  - Implement the C entry point with DEFINE_IDTENTRY
-  - Emit the ASM stub with DECLARE_IDTENTRY
-  - Remove the ASM idtentry in 64bit
-  - Remove the open coded ASM entry code in 32bit
-  - Fixup the XEN/PV code
-  - Fixup the FOOF bug call in fault.c
-  - Remove the old prototyoes
-
-No functional change.
+Same as IDTENTRY but the C entry point has an error code argument.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
-V2: Fixup the FOOF bug call into invalid op
----
- arch/x86/entry/entry_32.S       |    7 -------
- arch/x86/entry/entry_64.S       |    1 -
- arch/x86/include/asm/idtentry.h |    1 +
- arch/x86/include/asm/traps.h    |    8 +++++---
- arch/x86/kernel/idt.c           |    2 +-
- arch/x86/kernel/traps.c         |   16 +++++++++++++++-
- arch/x86/mm/fault.c             |    2 +-
- arch/x86/xen/enlighten_pv.c     |    2 +-
- arch/x86/xen/xen-asm_64.S       |    2 +-
- 9 files changed, 25 insertions(+), 16 deletions(-)
 
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -1325,13 +1325,6 @@ SYM_CODE_START(native_iret)
- SYM_CODE_END(native_iret)
- #endif
- 
--SYM_CODE_START(invalid_op)
--	ASM_CLAC
--	pushl	$0
--	pushl	$do_invalid_op
--	jmp	common_exception
--SYM_CODE_END(invalid_op)
--
- SYM_CODE_START(coprocessor_segment_overrun)
- 	ASM_CLAC
- 	pushl	$0
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -1074,7 +1074,6 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work
-  */
- 
- idtentry	X86_TRAP_BP		int3			do_int3				has_error_code=0
--idtentry	X86_TRAP_UD		invalid_op		do_invalid_op			has_error_code=0
- idtentry	X86_TRAP_NM		device_not_available	do_device_not_available		has_error_code=0
- idtentry	X86_TRAP_OLD_MF		coprocessor_segment_overrun	do_coprocessor_segment_overrun	has_error_code=0
- idtentry	X86_TRAP_TS		invalid_TSS		do_invalid_TSS			has_error_code=1
+---
+ arch/x86/include/asm/idtentry.h |   46 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+
 --- a/arch/x86/include/asm/idtentry.h
 +++ b/arch/x86/include/asm/idtentry.h
-@@ -80,5 +80,6 @@ static __always_inline void __##func(str
- DECLARE_IDTENTRY(X86_TRAP_DE,		exc_divide_error);
- DECLARE_IDTENTRY(X86_TRAP_OF,		exc_overflow);
- DECLARE_IDTENTRY(X86_TRAP_BR,		exc_bounds);
-+DECLARE_IDTENTRY(X86_TRAP_UD,		exc_invalid_op);
+@@ -57,6 +57,49 @@ static __always_inline void __##func(str
+ 									\
+ static __always_inline void __##func(struct pt_regs *regs)
  
- #endif
---- a/arch/x86/include/asm/traps.h
-+++ b/arch/x86/include/asm/traps.h
-@@ -14,7 +14,6 @@
- asmlinkage void debug(void);
- asmlinkage void nmi(void);
- asmlinkage void int3(void);
--asmlinkage void invalid_op(void);
- asmlinkage void device_not_available(void);
- #ifdef CONFIG_X86_64
- asmlinkage void double_fault(void);
-@@ -38,7 +37,6 @@ asmlinkage void simd_coprocessor_error(v
- asmlinkage void xen_xennmi(void);
- asmlinkage void xen_xendebug(void);
- asmlinkage void xen_int3(void);
--asmlinkage void xen_invalid_op(void);
- asmlinkage void xen_device_not_available(void);
- asmlinkage void xen_double_fault(void);
- asmlinkage void xen_coprocessor_segment_overrun(void);
-@@ -59,7 +57,6 @@ asmlinkage void xen_simd_coprocessor_err
- dotraplinkage void do_debug(struct pt_regs *regs, long error_code);
- dotraplinkage void do_nmi(struct pt_regs *regs, long error_code);
- dotraplinkage void do_int3(struct pt_regs *regs, long error_code);
--dotraplinkage void do_invalid_op(struct pt_regs *regs, long error_code);
- dotraplinkage void do_device_not_available(struct pt_regs *regs, long error_code);
- #if defined(CONFIG_X86_64) || defined(CONFIG_DOUBLEFAULT)
- dotraplinkage void do_double_fault(struct pt_regs *regs, long error_code, unsigned long cr2);
-@@ -86,6 +83,11 @@ struct bad_iret_stack *fixup_bad_iret(st
- void __init trap_init(void);
- #endif
- 
-+#ifdef CONFIG_X86_F00F_BUG
-+/* For handling the FOOF bug */
-+void handle_invalid_op(struct pt_regs *regs);
-+#endif
++/**
++ * DECLARE_IDTENTRY_ERRORCODE - Declare functions for simple IDT entry points
++ *				Error code pushed by hardware
++ * @vector:	Vector number (ignored for C)
++ * @func:	Function name of the entry point
++ *
++ * Declares three functions:
++ * - The ASM entry point: asm_##func
++ * - The XEN PV trap entry point: xen_##func (maybe unused)
++ * - The C handler called from the ASM entry point
++ *
++ * Same as DECLARE_IDTENTRY, but has an extra error_code argument for the
++ * C-handler.
++ */
++#define DECLARE_IDTENTRY_ERRORCODE(vector, func)			\
++	asmlinkage void asm_##func(void);				\
++	asmlinkage void xen_asm_##func(void);				\
++	__visible void func(struct pt_regs *regs, unsigned long error_code)
 +
- static inline int get_si_code(unsigned long condition)
- {
- 	if (condition & DR_STEP)
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -73,7 +73,7 @@ static const __initconst struct idt_data
- 	INTG(X86_TRAP_DE,		asm_exc_divide_error),
- 	INTG(X86_TRAP_NMI,		nmi),
- 	INTG(X86_TRAP_BR,		asm_exc_bounds),
--	INTG(X86_TRAP_UD,		invalid_op),
-+	INTG(X86_TRAP_UD,		asm_exc_invalid_op),
- 	INTG(X86_TRAP_NM,		device_not_available),
- 	INTG(X86_TRAP_OLD_MF,		coprocessor_segment_overrun),
- 	INTG(X86_TRAP_TS,		invalid_TSS),
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -221,6 +221,21 @@ DEFINE_IDTENTRY(exc_overflow)
- 	do_error_trap(regs, 0, "overflow", X86_TRAP_OF, SIGSEGV, 0, NULL);
- }
- 
-+#ifdef CONFIG_X86_F00F_BUG
-+void handle_invalid_op(struct pt_regs *regs)
-+#else
-+static inline void handle_invalid_op(struct pt_regs *regs)
-+#endif
-+{
-+	do_error_trap(regs, 0, "invalid opcode", X86_TRAP_UD, SIGILL,
-+		      ILL_ILLOPN, error_get_trap_addr(regs));
-+}
++/**
++ * DEFINE_IDTENTRY_ERRORCODE - Emit code for simple IDT entry points
++ *			       Error code pushed by hardware
++ * @func:	Function name of the entry point
++ *
++ * Same as DEFINE_IDTENTRY, but has an extra error_code argument
++ */
++#define DEFINE_IDTENTRY_ERRORCODE(func)					\
++static __always_inline void __##func(struct pt_regs *regs,		\
++				     unsigned long error_code);		\
++									\
++__visible noinstr void func(struct pt_regs *regs,			\
++			    unsigned long error_code)			\
++{									\
++	idtentry_enter(regs);						\
++	instr_begin();							\
++	__##func (regs, error_code);					\
++	instr_end();							\
++	idtentry_exit(regs);						\
++}									\
++									\
++static __always_inline void __##func(struct pt_regs *regs,		\
++				     unsigned long error_code)
 +
-+DEFINE_IDTENTRY(exc_invalid_op)
-+{
-+	handle_invalid_op(regs);
-+}
+ #else /* !__ASSEMBLY__ */
+ 
+ /*
+@@ -65,6 +108,9 @@ static __always_inline void __##func(str
+ #define DECLARE_IDTENTRY(vector, func)					\
+ 	idtentry vector asm_##func func has_error_code=0 sane=1
+ 
++#define DECLARE_IDTENTRY_ERRORCODE(vector, func)			\
++	idtentry vector asm_##func func has_error_code=1 sane=1
 +
- #define IP ((void __user *)uprobe_get_trap_addr(regs))
- #define DO_ERROR(trapnr, signr, sicode, addr, str, name)		   \
- dotraplinkage void do_##name(struct pt_regs *regs, long error_code)	   \
-@@ -228,7 +243,6 @@ dotraplinkage void do_##name(struct pt_r
- 	do_error_trap(regs, error_code, str, trapnr, signr, sicode, addr); \
- }
+ #endif /* __ASSEMBLY__ */
  
--DO_ERROR(X86_TRAP_UD,     SIGILL,  ILL_ILLOPN,   IP, "invalid opcode",      invalid_op)
- DO_ERROR(X86_TRAP_OLD_MF, SIGFPE,           0, NULL, "coprocessor segment overrun", coprocessor_segment_overrun)
- DO_ERROR(X86_TRAP_TS,     SIGSEGV,          0, NULL, "invalid TSS",         invalid_TSS)
- DO_ERROR(X86_TRAP_NP,     SIGBUS,           0, NULL, "segment not present", segment_not_present)
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -567,7 +567,7 @@ static int is_f00f_bug(struct pt_regs *r
- 		nr = (address - idt_descr.address) >> 3;
- 
- 		if (nr == 6) {
--			do_invalid_op(regs, 0);
-+			handle_invalid_op(regs);
- 			return 1;
- 		}
- 	}
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -625,7 +625,7 @@ static struct trap_array_entry trap_arra
- 	{ page_fault,                  xen_page_fault,                  false },
- 	TRAP_ENTRY(exc_divide_error,			false ),
- 	TRAP_ENTRY(exc_bounds,				false ),
--	{ invalid_op,                  xen_invalid_op,                  false },
-+	TRAP_ENTRY(exc_invalid_op,			false ),
- 	{ device_not_available,        xen_device_not_available,        false },
- 	{ coprocessor_segment_overrun, xen_coprocessor_segment_overrun, false },
- 	{ invalid_TSS,                 xen_invalid_TSS,                 false },
---- a/arch/x86/xen/xen-asm_64.S
-+++ b/arch/x86/xen/xen-asm_64.S
-@@ -35,7 +35,7 @@ xen_pv_trap int3
- xen_pv_trap xennmi
- xen_pv_trap asm_exc_overflow
- xen_pv_trap asm_exc_bounds
--xen_pv_trap invalid_op
-+xen_pv_trap asm_exc_invalid_op
- xen_pv_trap device_not_available
- xen_pv_trap double_fault
- xen_pv_trap coprocessor_segment_overrun
+ /*
 
