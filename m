@@ -2,232 +2,88 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5641CC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8AFC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BD99206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F352920746
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:50:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588693839;
+	bh=sFSOu0wrBVEu3vNwrjFbX/f117ESQRiaC7SFXRmxR6g=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=j6zOfziMZCOXzfBWjMs6yFF9P/3Oyfzmfhgw1MlDl3PktV0kvbJYqK6lsTAgvhDN4
+	 e04Jaf00j5nuPkLG+sxP9YDLBIbPpjLgwM5HAGANXvRXd5YldbHj/ljThkr8VdxpVQ
+	 vN1JSmkNSo94Yo3iI2EzNWFa+mLIMj5nUhEy6VII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729488AbgEEPuK (ORCPT
+        id S1730244AbgEEPui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:50:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35808 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729871AbgEEPuI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:50:08 -0400
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EDDFC061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 08:50:08 -0700 (PDT)
-Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:bd97:8453:3b10:1832])
-        by baptiste.telenet-ops.be with bizsmtp
-        id b3pl2200A3VwRR3013plnF; Tue, 05 May 2020 17:49:45 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jVzpJ-0003KC-DL; Tue, 05 May 2020 17:49:45 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jVzpJ-0001Cw-A3; Tue, 05 May 2020 17:49:45 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] dt-bindings: timer: renesas: tmu: Convert to json-schema
-Date:   Tue,  5 May 2020 17:49:44 +0200
-Message-Id: <20200505154944.4598-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Tue, 5 May 2020 11:50:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33548 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729516AbgEEPuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 11:50:37 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 215242073B;
+        Tue,  5 May 2020 15:50:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588693837;
+        bh=sFSOu0wrBVEu3vNwrjFbX/f117ESQRiaC7SFXRmxR6g=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=UbjjyVXlxFsuTq0bEF2oVRALRsFdk4BkOqw5wylQNCZptdvZwsgPO/3uo5V7IqCZu
+         SboEQPsgIdZO7zrunK+8EUV+cXO4+Gn+V5gc1FFhYqOdqsrd0ZXH/p4qq7vCy17DIR
+         nZQlto8k91GBW9Ye0RSv+HDVvK3v6RZp+4V0NmTU=
+Subject: Re: [PATCH 4.19 00/37] 4.19.121-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200504165448.264746645@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <0cf33fe3-2ce5-7174-d899-f3d58b51326a@kernel.org>
+Date:   Tue, 5 May 2020 09:50:36 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200504165448.264746645@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the Renesas R-Mobile/R-Car Timer Unit (TMU) Device Tree binding
-documentation to json-schema.
+On 5/4/20 11:57 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.121 release.
+> There are 37 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed, 06 May 2020 16:52:55 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.121-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Document missing properties.
-Update the example to match reality.
+Compiled and booted on my test system. No dmesg regressions.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-v2:
-  - Add missing "additionalProperties: false",
-  - Add Reviewed-by.
----
- .../devicetree/bindings/timer/renesas,tmu.txt | 49 ---------
- .../bindings/timer/renesas,tmu.yaml           | 99 +++++++++++++++++++
- 2 files changed, 99 insertions(+), 49 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/renesas,tmu.txt
- create mode 100644 Documentation/devicetree/bindings/timer/renesas,tmu.yaml
-
-diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.txt b/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-deleted file mode 100644
-index 29159f4e65abece9..0000000000000000
---- a/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-+++ /dev/null
-@@ -1,49 +0,0 @@
--* Renesas R-Mobile/R-Car Timer Unit (TMU)
--
--The TMU is a 32-bit timer/counter with configurable clock inputs and
--programmable compare match.
--
--Channels share hardware resources but their counter and compare match value
--are independent. The TMU hardware supports up to three channels.
--
--Required Properties:
--
--  - compatible: must contain one or more of the following:
--    - "renesas,tmu-r8a7740" for the r8a7740 TMU
--    - "renesas,tmu-r8a774a1" for the r8a774A1 TMU
--    - "renesas,tmu-r8a774b1" for the r8a774B1 TMU
--    - "renesas,tmu-r8a774c0" for the r8a774C0 TMU
--    - "renesas,tmu-r8a7778" for the r8a7778 TMU
--    - "renesas,tmu-r8a7779" for the r8a7779 TMU
--    - "renesas,tmu-r8a77970" for the r8a77970 TMU
--    - "renesas,tmu-r8a77980" for the r8a77980 TMU
--    - "renesas,tmu" for any TMU.
--      This is a fallback for the above renesas,tmu-* entries
--
--  - reg: base address and length of the registers block for the timer module.
--
--  - interrupts: interrupt-specifier for the timer, one per channel.
--
--  - clocks: a list of phandle + clock-specifier pairs, one for each entry
--    in clock-names.
--  - clock-names: must contain "fck" for the functional clock.
--
--Optional Properties:
--
--  - #renesas,channels: number of channels implemented by the timer, must be 2
--    or 3 (if not specified the value defaults to 3).
--
--
--Example: R8A7779 (R-Car H1) TMU0 node
--
--	tmu0: timer@ffd80000 {
--		compatible = "renesas,tmu-r8a7779", "renesas,tmu";
--		reg = <0xffd80000 0x30>;
--		interrupts = <0 32 IRQ_TYPE_LEVEL_HIGH>,
--			     <0 33 IRQ_TYPE_LEVEL_HIGH>,
--			     <0 34 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&mstp0_clks R8A7779_CLK_TMU0>;
--		clock-names = "fck";
--
--		#renesas,channels = <3>;
--	};
-diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.yaml b/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
-new file mode 100644
-index 0000000000000000..621addf87a52195f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
-@@ -0,0 +1,99 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/renesas,tmu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Renesas R-Mobile/R-Car Timer Unit (TMU)
-+
-+maintainers:
-+  - Geert Uytterhoeven <geert+renesas@glider.be>
-+  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-+
-+description:
-+  The TMU is a 32-bit timer/counter with configurable clock inputs and
-+  programmable compare match.
-+
-+  Channels share hardware resources but their counter and compare match value
-+  are independent. The TMU hardware supports up to three channels.
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - renesas,tmu-r8a7740  # R-Mobile A1
-+          - renesas,tmu-r8a774a1 # RZ/G2M
-+          - renesas,tmu-r8a774b1 # RZ/G2N
-+          - renesas,tmu-r8a774c0 # RZ/G2E
-+          - renesas,tmu-r8a7778  # R-Car M1A
-+          - renesas,tmu-r8a7779  # R-Car H1
-+          - renesas,tmu-r8a77970 # R-Car V3M
-+          - renesas,tmu-r8a77980 # R-Car V3H
-+      - const: renesas,tmu
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    minItems: 2
-+    maxItems: 3
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: fck
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  '#renesas,channels':
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - enum: [ 2, 3 ]
-+      - default: 3
-+    description:
-+      Number of channels implemented by the timer.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - power-domains
-+
-+if:
-+  not:
-+    properties:
-+      compatible:
-+        contains:
-+          enum:
-+            - renesas,tmu-r8a7740
-+            - renesas,tmu-r8a7778
-+            - renesas,tmu-r8a7779
-+then:
-+  required:
-+    - resets
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/r8a7779-clock.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/power/r8a7779-sysc.h>
-+    tmu0: timer@ffd80000 {
-+            compatible = "renesas,tmu-r8a7779", "renesas,tmu";
-+            reg = <0xffd80000 0x30>;
-+            interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+            clocks = <&mstp0_clks R8A7779_CLK_TMU0>;
-+            clock-names = "fck";
-+            power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
-+            #renesas,channels = <3>;
-+    };
--- 
-2.17.1
+thanks,
+-- Shuah
 
