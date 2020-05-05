@@ -2,134 +2,105 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43576C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBBEC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F01A20661
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:04:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="a8DMxibR"
+	by mail.kernel.org (Postfix) with ESMTP id 350AE20661
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:04:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729241AbgEEOET (ORCPT
+        id S1729495AbgEEOEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:04:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46806 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729315AbgEEODH (ORCPT
+        Tue, 5 May 2020 10:04:33 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:47851 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728135AbgEEOEc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:03:07 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BC41C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:03:07 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id z8so1968886wrw.3
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 07:03:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PK31tVWfgrccN1MBhDjrbakpYyyD2tO24v7BYQEkurI=;
-        b=a8DMxibRqTrZGmyZ0KLtsYlfgQSvtBtYx+i51AoL6kzVb3a3Zcw5KFc8r5emhX2L/e
-         qLVl57SKF7PdhjnPEnfYmiBsHkXDn94m+UKH2rLq8YYGcxS7EN5GAv4eWBPvoY1byN7N
-         QxZMFs3Qb+qVtydhG5IbCi+FEqOcJ0waPkxXqf2ILV3oLLL0N8BnwvrKySVqhV+H6q/X
-         68KP5IqC6ZqPMnSBCsQ0mVeuFaW8UzGdm+AMBhfl1Jooa4pbk4UE+wnG551wvwjBL9yZ
-         yo8Kq56xX0wXRuQs1Lf5bbGGIUhYjKU0+mCWMv1cZeNM2eZ0NXSh3Pl4lvUmp2tjq5pt
-         c2Dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PK31tVWfgrccN1MBhDjrbakpYyyD2tO24v7BYQEkurI=;
-        b=Mr4hqznmhmwvJO8BmTnKAeHRxFQE8dRombQauOskZ+UP/dxqsDlGv5o+JasqYTrgTU
-         CE1sgBKWRJFs95AyHR5jr4xQgJo8GDT4OLdE5xlQeci8GhF+CLgl89McaLouyieUzdMd
-         McxYTVAV6j8b6SfW1tDacGiqdoNJk53ybLDMs3IrPF4EYl/qxe+/XN3hKep18GEX07FF
-         C9Kx5nPhKFp7Lke0Ev9GJaknsriPPC56g6mHMZfSeFmgF+FgUd5mnaOlSs/v+WU2gMzY
-         QFFPwN2lb1xg8selSHG3U1h22Pyj69ga4g5/OCokbnENo/3fpG3BA0fnIIR6hYldw5Aq
-         etfA==
-X-Gm-Message-State: AGi0PuZ9xNrD5sM2BiAR+lGUomFDg+4wlfoaUt9ag/H31E1mYn+JIVfv
-        rBGvTgE62n+vqiY2g8y3amO01w==
-X-Google-Smtp-Source: APiQypJK0fRzPjzYsRI0o6WTCpJIb10ZVt2+vpQjB2QmGMKqpkl9pQ80cS/ZweDjU4zPMeSAzrIc8g==
-X-Received: by 2002:a5d:4711:: with SMTP id y17mr3781592wrq.49.1588687383658;
-        Tue, 05 May 2020 07:03:03 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id c190sm4075755wme.4.2020.05.05.07.03.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 07:03:03 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Felix Fietkau <nbd@openwrt.org>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Fabien Parent <fparent@baylibre.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 00/11] mediatek: add support for MediaTek Ethernet MAC
-Date:   Tue,  5 May 2020 16:02:20 +0200
-Message-Id: <20200505140231.16600-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.25.0
+        Tue, 5 May 2020 10:04:32 -0400
+Received: from localhost.localdomain ([149.172.19.189]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1Md6AP-1ixBSU2MgF-00aDyq; Tue, 05 May 2020 16:04:09 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marco Elver <elver@google.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH] omapfb: don't annotate dss_conv_list as __initdata
+Date:   Tue,  5 May 2020 16:03:52 +0200
+Message-Id: <20200505140407.373983-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:b7GTK4JxzyLmn2gIsYhgbVf/xIlBzgBQDzJn6IhgPioBvsvScLO
+ hkBobGOJ16kEh5G53aN++eiN7fEy2+8WNjNT2oAAh+pto0naL3H5RGdPuiPGftRLYE+WWk6
+ AARHIaGwYWpgUPXoaHmYhwOoJNFWjRb9NvVIVNJ1vaGDXFt+mHz9QyUnAZl6/+oWiMZPV/U
+ jTlT9OnyODlD3fxIq7spw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:kJXlH+hW/RM=:GF6iW7yf/Pyctg3y13GUV2
+ FqaS5odzEtD72BBRKOElhcz2U29q1LNd/0g9U9cvxHcoGNelA0e2X+cWbz9NoPViSRltONkbm
+ LGFE+3SZlqFaNTw6HHnzmjvCuCr0ZCnNxcORk1uAX+Sey3pNmJg2E4YT1mR7/HMrhT54dR9ts
+ J4X5/BFzLGeko86ZgOn9pIDklBlnCoK6I5TjvbVjBYP1n6iO1zpOuv4DVRQ1XIdvqm0Afyx6Q
+ NN9DNF/UxpQnwNk6AxRh+ZAYljaQMy6P/nNk8rSnCKfInuMJvpLLRlzTGRQfwwH51hZ/qH6kJ
+ GVRF5EJgFdrY/GmQxvz7qdg6pZRs5bnMigu8+zm028MNOcJmaGY7EZp4KW1fS8JHoRa1b7FKg
+ zag7CBsFaMmPV22qZvJdIIDm0wl5M6BqnQYGxLhrc2Rr0CPFRbHNQ5IGfXehZbjPhZ9hfKqwJ
+ B6HdayRKMOpYvsMoivRxljBAGW8MRnMNWtuWKgjAFTdWacPd9pqEdzEJv4rZXVo2ufbp//ZUb
+ gHYy4n7XY5GyijCSW9fVbHqO7dYRzg84I3dRveYdKcWxkUqz4Hc6HXFkPgmW9DRysy9glOIZp
+ D0GqunN4gpNaJQYpfCS7+U+LA4mR4UiyESvK+5oVfVIB+uAVYMijAw1/n2v5iEGvZfAD9ejp5
+ La0lZdiWAcQSxK+M/9XNjltEvLvOA3ImAHOawsmGo4wRlXMTXm/6Q4nTx48oalue2KSKvBOuj
+ 0yjErUk/kCOrAMj0XMFmXosWZZFAbd/GbAaeFNtG3GQw0Y/IqMaFg9Slu2BZtppe+LVNj9Vb2
+ BAdW/soKwj4RV9o1kG+AcGs+1G+ryxdeSkhmSUU9+eHuQkZ5uY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+With the kcsan changes, __read_once_size() is not inlined, but
+clang can decide to emit a version that hardcodes the address, which
+in turn triggers a warning for dss_conv_list being __initdata but
+__read_once_size() not being __init:
 
-This adds support for the Ethernet Controller present on MediaTeK SoCs
-from the MT8* family.
+WARNING: modpost: vmlinux.o(.text+0x6e4d7a): Section mismatch in
+reference from the function __read_once_size() to the variable
+.init.data:dss_conv_list
+The function __read_once_size() references
+the variable __initdata dss_conv_list.
+This is often because __read_once_size lacks a __initdata
+annotation or the annotation of dss_conv_list is wrong.
 
-The first two patches add binding documents for the PERICFG syscon and
-for the MAC itself.
+This is clearly a false positive warning, but it's hard to tell
+who is to blame for it. Work around it by removing the __initdata
+annotation, wasting the space of two pointers in return for getting
+rid of the warning.
 
-Patches 3/11 & 4/11 do some cleanup of the mediatek ethernet drivers
-directory.
+Fixes: dfd402a4c4ba ("kcsan: Add Kernel Concurrency Sanitizer infrastructure")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/video/fbdev/omap2/omapfb/dss/omapdss-boot-init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Patch 5/11 provides a devres variant of register_netdev().
-
-Patch 6/11 adds the new ethernet driver.
-
-The rest of the patches add DT fixups for the boards already supported
-upstream.
-
-Bartosz Golaszewski (11):
-  dt-bindings: add a binding document for MediaTek PERICFG controller
-  dt-bindings: new: add yaml bindings for MediaTek Ethernet MAC
-  net: ethernet: mediatek: rename Kconfig prompt
-  net: ethernet: mediatek: remove unnecessary spaces from Makefile
-  net: core: provide devm_register_netdev()
-  net: ethernet: mtk-eth-mac: new driver
-  ARM64: dts: mediatek: add pericfg syscon to mt8516.dtsi
-  ARM64: dts: mediatek: add the ethernet node to mt8516.dtsi
-  ARM64: dts: mediatek: add an alias for ethernet0 for pumpkin boards
-  ARM64: dts: mediatek: add ethernet pins for pumpkin boards
-  ARM64: dts: mediatek: enable ethernet on pumpkin boards
-
- .../arm/mediatek/mediatek,pericfg.yaml        |   34 +
- .../bindings/net/mediatek,eth-mac.yaml        |   80 +
- arch/arm64/boot/dts/mediatek/mt8516.dtsi      |   17 +
- .../boot/dts/mediatek/pumpkin-common.dtsi     |   34 +
- drivers/net/ethernet/mediatek/Kconfig         |    8 +-
- drivers/net/ethernet/mediatek/Makefile        |    3 +-
- drivers/net/ethernet/mediatek/mtk_eth_mac.c   | 1476 +++++++++++++++++
- include/linux/netdevice.h                     |    4 +
- net/core/dev.c                                |   48 +
- net/ethernet/eth.c                            |    1 +
- 10 files changed, 1703 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
- create mode 100644 Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml
- create mode 100644 drivers/net/ethernet/mediatek/mtk_eth_mac.c
-
+diff --git a/drivers/video/fbdev/omap2/omapfb/dss/omapdss-boot-init.c b/drivers/video/fbdev/omap2/omapfb/dss/omapdss-boot-init.c
+index 0ae0cab252d3..29fdff9c95f6 100644
+--- a/drivers/video/fbdev/omap2/omapfb/dss/omapdss-boot-init.c
++++ b/drivers/video/fbdev/omap2/omapfb/dss/omapdss-boot-init.c
+@@ -19,7 +19,7 @@
+ #include <linux/slab.h>
+ #include <linux/list.h>
+ 
+-static struct list_head dss_conv_list __initdata;
++static struct list_head dss_conv_list;
+ 
+ static const char prefix[] __initconst = "omapdss,";
+ 
 -- 
-2.25.0
+2.26.0
 
