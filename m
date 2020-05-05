@@ -2,111 +2,73 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 640E3C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D41B4C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4112B2495A
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:54:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588694049;
-	bh=h7XJ5IEke0nE3YO8tGZYNwWJdf4LMHUJvgxmMzKZJlc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FfxnhH6LPTI+htIoUW0nGJHZ+CHE7myxcfVeXwdZySZHlDTdW78n4QL+bB+U4k4vR
-	 57H5Hufm+qO06oNWin87j2kul3QPH33h/uV1utXXXmS3VaEQRj4nWJwjY6/vaRi1bt
-	 eVLpEg52XTQKFzftQXJUbr7Hd/DCQX2qRY205Ys8=
+	by mail.kernel.org (Postfix) with ESMTP id B4E28207DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:54:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730203AbgEEPyI (ORCPT
+        id S1730368AbgEEPyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:54:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36430 "EHLO
+        Tue, 5 May 2020 11:54:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729150AbgEEPyI (ORCPT
+        with ESMTP id S1729541AbgEEPyN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:54:08 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E83BAC061A0F;
-        Tue,  5 May 2020 08:54:07 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id h26so2332799qtu.8;
-        Tue, 05 May 2020 08:54:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=v3uxQIYXEUSRnI5mMzO80Z7OA/WXwhyvyfvFB5PsW3M=;
-        b=bi5sRw5T4v8EMdNLYVF9CC8SVI8wAQojk6MdL1BCSvnn67T02STBZUpPDIBHvnZCcj
-         qgdLfBWVP5oOr1xw/TpNTSbFnbeJKl8zAVzdq7k+Q62ofw/xvXyuqy0+rMSJa55ebfyD
-         2hDA3zfCyMkFik+CS6+t8cdyLMKrIxruqMr2fhYuwGSOSJnzaBd/M12op0boJdKOTe/m
-         gxbA+vF5hc2qyc+9fVc9rBUM11bzyv3fXO1wS5dbKC6fgIpHHKX4eTQDtoCDGVm02EU2
-         Cq9rFx/fEcJ/nrU8AHAgvDCIT9EqKOuAkq1YJYcEJ7mpg0bdhnhUr1V7qP+4E6AZ6DdK
-         JCpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=v3uxQIYXEUSRnI5mMzO80Z7OA/WXwhyvyfvFB5PsW3M=;
-        b=kVzOthcKpuhOcALPO/fI9LGf1q26NCorXZQO6Jqn2eu9sQuDMRKyett8q4jXGKvUsk
-         ClQs4n0GnsYC7yARzZSfAJ5bwbrvJoGQwlrI2FQJ48aRPhNahNwtt19loGFhqPM4IaOy
-         s2RyJw3n9GupsuGKju5c3EQwbqgQFt/nJI1ntUuLt3Zs564hs/O8h+pIgLHXP1wE+I0e
-         tlEoSWGeP0XMVKw0pTIw049SjmZX0l6E2Cf+jk5M2f8EwpUpdw6vBdGyvZsEnPz69lMT
-         R0/6CfpDphbQsOF8FXOatNdIfvSBG+0yAlbCgxTbsNl6mXrn9w27f6ppvK7dXmeJn0fz
-         l2zA==
-X-Gm-Message-State: AGi0PuYMhEXP12oQxAh3laINrlyxbnllRZXyZe4s6HQ/nnMd3tWqBgs0
-        L0BMudB9H2R1RoFztHMCt6a+vNmJIEs=
-X-Google-Smtp-Source: APiQypJarG8TrXh/1uXdoQr9xHKdB5xbqE4LDytOnqLJJdhq9JAGkL2XlcLm36r5eeDId3XwYVyowg==
-X-Received: by 2002:ac8:19dd:: with SMTP id s29mr3417047qtk.164.1588694047013;
-        Tue, 05 May 2020 08:54:07 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:5ece])
-        by smtp.gmail.com with ESMTPSA id b11sm2092051qti.50.2020.05.05.08.54.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 08:54:06 -0700 (PDT)
-Date:   Tue, 5 May 2020 11:54:05 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     "J. Bruce Fields" <bfields@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        Jeff Layton <jlayton@redhat.com>,
-        David Howells <dhowells@redhat.com>, Shaohua Li <shli@fb.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/4] allow multiple kthreadd's
-Message-ID: <20200505155405.GD12217@mtj.thefacebook.com>
-References: <1588348912-24781-1-git-send-email-bfields@redhat.com>
- <CAHk-=wiGhZ_5xCRyUN+yMFdneKMQ-S8fBvdBp8o-JWPV4v+nVw@mail.gmail.com>
- <20200501182154.GG5462@mtj.thefacebook.com>
- <20200505021514.GA43625@pick.fieldses.org>
+        Tue, 5 May 2020 11:54:13 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5919BC061A0F;
+        Tue,  5 May 2020 08:54:13 -0700 (PDT)
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id E6A8A31A;
+        Tue,  5 May 2020 15:54:12 +0000 (UTC)
+Date:   Tue, 5 May 2020 09:54:11 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Stephen Kitt <steve@sk2.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] docs: sysctl/kernel: document ftrace entries
+Message-ID: <20200505095411.75d49151@lwn.net>
+In-Reply-To: <20200429205801.5ce95ab3@oasis.local.home>
+References: <20200429205757.8677-1-steve@sk2.org>
+        <20200429205801.5ce95ab3@oasis.local.home>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505021514.GA43625@pick.fieldses.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Bruce.
+On Wed, 29 Apr 2020 20:58:01 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-On Mon, May 04, 2020 at 10:15:14PM -0400, J. Bruce Fields wrote:
-> We're currently using it to pass the struct svc_rqst that a new nfsd
-> thread needs.  But once the new thread has gotten that, I guess it could
-> set kthread->data to some global value that it uses to say "I'm a knfsd
-> thread"?
+> On Wed, 29 Apr 2020 22:57:56 +0200
+> Stephen Kitt <steve@sk2.org> wrote:
 > 
-> I suppose that would work.
+> > Based on the ftrace documentation, the tp_printk boot parameter
+> > documentation, and the implementation in kernel/trace/trace.c.
+> > 
+> > Signed-off-by: Stephen Kitt <steve@sk2.org>
+> > ---
+> > Changes since v2:
+> >   - spelling and grammar fixes in ftrace_dump_on_oops ("outputing it"  
+> >     -> "outputting them")    
+> >   - "and::" in a single line in tracepoint_printk  
 > 
-> Though now I'm feeling greedy: it would be nice to have both some kind
-> of global flag, *and* keep kthread->data pointing to svc_rqst (as that
-> would give me a simpler and quicker way to figure out which client is
-> conflicting).  Could I take a flag bit in kthread->flags, maybe?
+> I didn't re-read or compare this patch with v1, but if the only changes
+> were the above:
+> 
+> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Hmm... that'd be solvable if kthread->data can point to a struct which does
-both things, right? Because it doesn't have free() callback, it's a bit
-awkward but the threadfn itself can unlink and RCU-free it before returning.
+Both applied, thanks.
 
-Thanks.
-
--- 
-tejun
+jon
