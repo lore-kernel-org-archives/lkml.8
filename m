@@ -2,197 +2,174 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7399CC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3A1C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41433206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1784220746
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:38:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o3lVQd9b"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PJ+S5nHN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730372AbgEEQhq (ORCPT
+        id S1730443AbgEEQiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:37:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43350 "EHLO
+        Tue, 5 May 2020 12:38:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729989AbgEEQhp (ORCPT
+        with ESMTP id S1728804AbgEEQiB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:37:45 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96410C061A0F;
-        Tue,  5 May 2020 09:37:45 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id s20so1034757plp.6;
-        Tue, 05 May 2020 09:37:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=un2HqrYJeLi559EHQvGLp0mAi/PQdWiaf/DuAFbu8d4=;
-        b=o3lVQd9b0m+nhlAeQR7UtaMZ9mgLlAqgSwwkvq2DlNH9wvUqV9GoYqKPSVhnjcnO3Z
-         H7NCKxgckgYptCdu576Uc8hTI+iAvyowdiuk8PzJfxHwDjT02HUNDHBKo6sLVQP50NfB
-         X7NYFc1fh+N+4PWMxUUxVEfYq0tXEM9rsb2a5CF/0GgE5NcLbDy3+oJ3afAGgvyv03Nl
-         t8HGudY3f7Nm/MjnNW2wwQw+RECIm6YxivfqDoiAzzhcD6OovY3ZJ0W0t7/uFtv3yD1v
-         TpeUE4xbdZhW5nCXc1Gu6hDzXtrs1wpbMohaThWHnGwGjOHUFzySluc6QfolBSIzDKh9
-         U+8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=un2HqrYJeLi559EHQvGLp0mAi/PQdWiaf/DuAFbu8d4=;
-        b=j1ypOirTRTOnpzUk+7nV9SjGjCZJNcMwNmxSNmaDb7TX8JluxPwW8AvjG9O0OTUiJ7
-         bm0XWkbH1g4q02VQUO0HROFFoQgiszTNWQhcz9R5jfJobTqMCAjzWswf5JSUaJWtxgx2
-         z48lJ8A0kgpLjLDElCTBLtDkJ0h+0UXEBgJu7vglalfDgYgtxHObfwE2EpbzGpdPqEGn
-         YbrjwOR2/EEvgh58kO/6lGi2MV313oe0g6fwbpIA/yNP2nXs4P7AkqbgpsKEaDe/59XM
-         CNCuGL8SQG1EY4+dSaeU6VzvCU2b8L94LHidKPIjkopwkxj0NqGQJzzp3d97ftuoOgF2
-         eaIQ==
-X-Gm-Message-State: AGi0Puar8F43A8ThRQSETgsxH2yN5Tpqy+eq2ZI60iIbGwQvUegpi9fZ
-        v8d/O0MNhB3jky4fiYleX+o=
-X-Google-Smtp-Source: APiQypJmWfVc8acKWgsK+7Vqq+NzhGASqeuNjrDjhX+K56+evq1iWmMfx9oOweAvaLn6e6CaJKFEJg==
-X-Received: by 2002:a17:902:8a81:: with SMTP id p1mr3990217plo.104.1588696665108;
-        Tue, 05 May 2020 09:37:45 -0700 (PDT)
-Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
-        by smtp.gmail.com with ESMTPSA id a129sm2459072pfb.102.2020.05.05.09.37.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2020 09:37:43 -0700 (PDT)
-Subject: Re: [PATCH net v2 0/2] Revert the 'socket_alloc' life cycle change
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-To:     SeongJae Park <sjpark@amazon.com>,
-        Eric Dumazet <edumazet@google.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        sj38.park@gmail.com, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>, snu@amazon.com,
-        amit@kernel.org, stable@vger.kernel.org,
-        Paul McKenney <paulmck@kernel.org>
-References: <20200505161302.547-1-sjpark@amazon.com>
- <05843a3c-eb9d-3a0d-f992-7e4b97cc1f19@gmail.com>
- <77124fc2-86b2-27f6-fd7c-4f1e86eb3fff@gmail.com>
-Message-ID: <67bdfac9-0d7d-0bbe-dc7a-d73979fd8ed9@gmail.com>
-Date:   Tue, 5 May 2020 09:37:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 5 May 2020 12:38:01 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2173AC061A0F;
+        Tue,  5 May 2020 09:38:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=y7yq0XdDHvHmtj9MaLNUjkmFFQ9+bgFTYTDYA/E7uGw=; b=PJ+S5nHNXYFjBh5XG85gs5Xg5W
+        bbI4vxmLMkxJBdXvmEygmrSzaliEsK1es2k/y0l9+u2YMdCjYeHWPcCLxSg7Tii9fePSmYIyww8wm
+        rbEvi+XorLY5GHz8uv2/8/krcL3mEj5THMW03gQlfDV6tR2NTWWhyJB6FcLYOC1qU4peqFrSry8gm
+        RF9xy5u1RSgxyI7jRl5APpxmR6JdtTVZa+QPT6FJamZsY8OV7zBOfb5/VI+X3cyggAVVps/Q8cPWf
+        y6wKzqOAkMbYsfucq8JUrVWjCqrciJcFF5ABvQirYBzeGZbQWTtMXAkyHspTqETkqO9Un4k+BcPj3
+        vvGhN+rQ==;
+Received: from [179.97.37.151] (helo=sandy.ghostprotocols.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jW0Zp-0006h8-Nd; Tue, 05 May 2020 16:37:50 +0000
+Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
+        id B04241B0; Tue,  5 May 2020 13:37:45 -0300 (BRT)
+Date:   Tue, 5 May 2020 13:37:45 -0300
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+To:     Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>
+Cc:     Andreas Gerstmayr <agerstmayr@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        He Zhe <zhe.he@windriver.com>, Ian Rogers <irogers@google.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Konstantin Kharlamov <hi-angel@yandex.ru>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        lkft-triage@lists.linaro.org
+Subject: Re: [GIT PULL] perf/core improvements and fixes
+Message-ID: <20200505163745.GD3777@redhat.com>
+References: <20200420115316.18781-1-acme@kernel.org>
+ <20200422120943.GA110748@gmail.com>
+ <CAEUSe7_wmKS361mKLTB1eYbzYXcKkXdU26BX5BojdKRz8MfPCw@mail.gmail.com>
+ <20200424130722.GK19437@kernel.org>
+ <0f6403ec-36cd-f43f-b3a6-b87e628f3789@redhat.com>
+ <CAEUSe7_Ybp=7XC-2xMSEGYmCHvEMff0YbZq1f6akvxLVcS_ePA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <77124fc2-86b2-27f6-fd7c-4f1e86eb3fff@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEUSe7_Ybp=7XC-2xMSEGYmCHvEMff0YbZq1f6akvxLVcS_ePA@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.5.20 (2009-12-10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/5/20 9:31 AM, Eric Dumazet wrote:
+Em Mon, May 04, 2020 at 02:07:56PM -0500, Daniel Díaz escreveu:
+> Hello!
 > 
+> On Fri, 24 Apr 2020 at 09:10, Andreas Gerstmayr <agerstmayr@redhat.com> wrote:
+> >
+> > On 24.04.20 15:07, Arnaldo Carvalho de Melo wrote:
+> > > Em Thu, Apr 23, 2020 at 04:28:46PM -0500, Daniel Díaz escreveu:
+> > >> On Wed, 22 Apr 2020 at 07:09, Ingo Molnar <mingo@kernel.org> wrote:
+> > >>>>   85 files changed, 1851 insertions(+), 513 deletions(-)
+> > >
+> > >>> Pulled, thanks a lot Arnaldo!
+> > >
+> > >> Our OpenEmbedded builds detected an issue with 5287f9269206 ("perf
+> > >> script: Add flamegraph.py script"):
+> > >>    ERROR: perf-1.0-r9 do_package_qa: QA Issue:
+> > >> /usr/libexec/perf-core/scripts/python/bin/flamegraph-report contained
+> > >> in package perf-python requires /usr/bin/sh, but no providers found in
+> > >> RDEPENDS_perf-python? [file-rdeps]
+> > >
+> > >
+> > > yeah, the flamegraph scripts are the outliers, there, everything else is
+> > > using /bin/bash, so I'll switch to that, ok Andreas?
+> >
+> > Sure, no problem. Thanks!
 > 
-> On 5/5/20 9:25 AM, Eric Dumazet wrote:
->>
->>
->> On 5/5/20 9:13 AM, SeongJae Park wrote:
->>> On Tue, 5 May 2020 09:00:44 -0700 Eric Dumazet <edumazet@google.com> wrote:
->>>
->>>> On Tue, May 5, 2020 at 8:47 AM SeongJae Park <sjpark@amazon.com> wrote:
->>>>>
->>>>> On Tue, 5 May 2020 08:20:50 -0700 Eric Dumazet <eric.dumazet@gmail.com> wrote:
->>>>>
->>>>>>
->>>>>>
->>>>>> On 5/5/20 8:07 AM, SeongJae Park wrote:
->>>>>>> On Tue, 5 May 2020 07:53:39 -0700 Eric Dumazet <edumazet@google.com> wrote:
->>>>>>>
->>>>>>
->>>>>>>> Why do we have 10,000,000 objects around ? Could this be because of
->>>>>>>> some RCU problem ?
->>>>>>>
->>>>>>> Mainly because of a long RCU grace period, as you guess.  I have no idea how
->>>>>>> the grace period became so long in this case.
->>>>>>>
->>>>>>> As my test machine was a virtual machine instance, I guess RCU readers
->>>>>>> preemption[1] like problem might affected this.
->>>>>>>
->>>>>>> [1] https://www.usenix.org/system/files/conference/atc17/atc17-prasad.pdf
->>>>>>>
->>>>>>>>
->>>>>>>> Once Al patches reverted, do you have 10,000,000 sock_alloc around ?
->>>>>>>
->>>>>>> Yes, both the old kernel that prior to Al's patches and the recent kernel
->>>>>>> reverting the Al's patches didn't reproduce the problem.
->>>>>>>
->>>>>>
->>>>>> I repeat my question : Do you have 10,000,000 (smaller) objects kept in slab caches ?
->>>>>>
->>>>>> TCP sockets use the (very complex, error prone) SLAB_TYPESAFE_BY_RCU, but not the struct socket_wq
->>>>>> object that was allocated in sock_alloc_inode() before Al patches.
->>>>>>
->>>>>> These objects should be visible in kmalloc-64 kmem cache.
->>>>>
->>>>> Not exactly the 10,000,000, as it is only the possible highest number, but I
->>>>> was able to observe clear exponential increase of the number of the objects
->>>>> using slabtop.  Before the start of the problematic workload, the number of
->>>>> objects of 'kmalloc-64' was 5760, but I was able to observe the number increase
->>>>> to 1,136,576.
->>>>>
->>>>>           OBJS ACTIVE  USE OBJ SIZE  SLABS OBJ/SLAB CACHE SIZE NAME
->>>>> before:   5760   5088  88%    0.06K     90       64       360K kmalloc-64
->>>>> after:  1136576 1136576 100%    0.06K  17759       64     71036K kmalloc-64
->>>>>
->>>>
->>>> Great, thanks.
->>>>
->>>> How recent is the kernel you are running for your experiment ?
->>>
->>> It's based on 5.4.35.
->>>
->>>>
->>>> Let's make sure the bug is not in RCU.
->>>
->>> One thing I can currently say is that the grace period passes at last.  I
->>> modified the benchmark to repeat not 10,000 times but only 5,000 times to run
->>> the test without OOM but easily observable memory pressure.  As soon as the
->>> benchmark finishes, the memory were freed.
->>>
->>> If you need more tests, please let me know.
->>>
->>
->> I would ask Paul opinion on this issue, because we have many objects
->> being freed after RCU grace periods.
->>
->> If RCU subsystem can not keep-up, I guess other workloads will also suffer.
->>
->> Sure, we can revert patches there and there trying to work around the issue,
->> but for objects allocated from process context, we should not have these problems.
->>
-> 
-> I wonder if simply adjusting rcu_divisor to 6 or 5 would help 
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index d9a49cd6065a20936edbda1b334136ab597cde52..fde833bac0f9f81e8536211b4dad6e7575c1219a 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -427,7 +427,7 @@ module_param(qovld, long, 0444);
->  static ulong jiffies_till_first_fqs = ULONG_MAX;
->  static ulong jiffies_till_next_fqs = ULONG_MAX;
->  static bool rcu_kick_kthreads;
-> -static int rcu_divisor = 7;
-> +static int rcu_divisor = 6;
->  module_param(rcu_divisor, int, 0644);
->  
->  /* Force an exit from rcu_do_batch() after 3 milliseconds. */
-> 
+> Just a gentle reminder that this can still be fixed in today's
+> linux-next tree (next-20200504).
 
-To be clear, you can adjust the value without building a new kernel.
+Thanks for the reminder, I've just added this to my tree:
 
-echo 6 >/sys/module/rcutree/parameters/rcu_divisor
+commit c74ab13a30d3bec443c116e25b611255c58f32c0
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date:   Tue May 5 13:33:12 2020 -0300
 
+    perf flamegraph: Use /bin/bash for report script
+    
+    As all the other tools/perf/scripts/python/bin/*-report scripts, fixing
+    the this problem reported by Daniel Diaz:
+    
+      Our OpenEmbedded builds detected an issue with 5287f9269206 ("perf
+      script: Add flamegraph.py script"):
+        ERROR: perf-1.0-r9 do_package_qa: QA Issue:
+      /usr/libexec/perf-core/scripts/python/bin/flamegraph-report contained
+      in package perf-python requires /usr/bin/sh, but no providers found in
+      RDEPENDS_perf-python? [file-rdeps]
+    
+      This means that there is a new binary pulled in in the shebang line
+      which was unaccounted for: `/usr/bin/sh`. I don't see any other usage
+      of /usr/bin/sh in the kernel tree (does not even exist on my Ubuntu
+      dev machine) but plenty of /bin/sh. This patch is needed:
+      -----8<----------8<----------8<-----
+      diff --git a/tools/perf/scripts/python/bin/flamegraph-record
+      b/tools/perf/scripts/python/bin/flamegraph-record
+      index 725d66e71570..a2f3fa25ef81 100755
+      --- a/tools/perf/scripts/python/bin/flamegraph-record
+      +++ b/tools/perf/scripts/python/bin/flamegraph-record
+      @@ -1,2 +1,2 @@
+      -#!/usr/bin/sh
+      +#!/bin/sh
+       perf record -g "$@"
+      diff --git a/tools/perf/scripts/python/bin/flamegraph-report
+      b/tools/perf/scripts/python/bin/flamegraph-report
+      index b1a79afd903b..b0177355619b 100755
+      --- a/tools/perf/scripts/python/bin/flamegraph-report
+      +++ b/tools/perf/scripts/python/bin/flamegraph-report
+      @@ -1,3 +1,3 @@
+      -#!/usr/bin/sh
+      +#!/bin/sh
+       # description: create flame graphs
+       perf script -s "$PERF_EXEC_PATH"/scripts/python/flamegraph.py -- "$@"
+      ----->8---------->8---------->8-----
+    
+    Fixes: 5287f9269206 ("perf script: Add flamegraph.py script")
+    Reported-by: Daniel Díaz <daniel.diaz@linaro.org>
+    Cc: Adrian Hunter <adrian.hunter@intel.com>
+    Cc: Andreas Gerstmayr <agerstmayr@redhat.com>
+    Cc: Jiri Olsa <jolsa@kernel.org>
+    Cc: lkft-triage@lists.linaro.org
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Link: http://lore.kernel.org/lkml/CAEUSe7_wmKS361mKLTB1eYbzYXcKkXdU26BX5BojdKRz8MfPCw@mail.gmail.com
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
+diff --git a/tools/perf/scripts/python/bin/flamegraph-report b/tools/perf/scripts/python/bin/flamegraph-report
+index b1a79afd903b..53c5dc90c87e 100755
+--- a/tools/perf/scripts/python/bin/flamegraph-report
++++ b/tools/perf/scripts/python/bin/flamegraph-report
+@@ -1,3 +1,3 @@
+-#!/usr/bin/sh
++#!/bin/bash
+ # description: create flame graphs
+ perf script -s "$PERF_EXEC_PATH"/scripts/python/flamegraph.py -- "$@"
