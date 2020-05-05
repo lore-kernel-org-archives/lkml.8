@@ -4,35 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C82C47259
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1449C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DE0C20658
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:33:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87E692068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 08:36:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbgEEIdr (ORCPT
+        id S1728559AbgEEIgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 04:33:47 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3411 "EHLO huawei.com"
+        Tue, 5 May 2020 04:36:37 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44452 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725320AbgEEIdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 04:33:46 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id F17FEFE53B4BF7EC7C92;
-        Tue,  5 May 2020 16:33:21 +0800 (CST)
-Received: from localhost (10.166.215.154) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Tue, 5 May 2020
- 16:33:15 +0800
+        id S1725833AbgEEIgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 04:36:37 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 0A92C1AC43DB951D8E36;
+        Tue,  5 May 2020 16:36:36 +0800 (CST)
+Received: from localhost (10.166.215.154) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Tue, 5 May 2020
+ 16:36:29 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] net: sun: cassini: Remove unused inline functions
-Date:   Tue, 5 May 2020 16:33:12 +0800
-Message-ID: <20200505083312.52312-1-yuehaibing@huawei.com>
+To:     <jeffrey.t.kirsher@intel.com>, <davem@davemloft.net>
+CC:     <intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH net-next] ixgbe: Remove unused inline function ixgbe_irq_disable_queues
+Date:   Tue, 5 May 2020 16:35:54 +0800
+Message-ID: <20200505083554.25808-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -43,43 +42,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's no callers in-tree anymore.
+commit b5f69ccf6765 ("ixgbe: avoid bringing rings up/down as macvlans are added/removed")
+left behind this, remove it.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/net/ethernet/sun/cassini.c | 12 ------------
- 1 file changed, 12 deletions(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 29 -------------------
+ 1 file changed, 29 deletions(-)
 
-diff --git a/drivers/net/ethernet/sun/cassini.c b/drivers/net/ethernet/sun/cassini.c
-index 3ee6ab104cb9..e6e25960da4f 100644
---- a/drivers/net/ethernet/sun/cassini.c
-+++ b/drivers/net/ethernet/sun/cassini.c
-@@ -237,12 +237,6 @@ static inline void cas_lock_tx(struct cas *cp)
- 		spin_lock_nested(&cp->tx_lock[i], i);
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+index 718931d951bc..ebfe6b57ed30 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -2954,35 +2954,6 @@ static inline void ixgbe_irq_enable_queues(struct ixgbe_adapter *adapter,
+ 	/* skip the flush */
  }
  
--static inline void cas_lock_all(struct cas *cp)
+-static inline void ixgbe_irq_disable_queues(struct ixgbe_adapter *adapter,
+-					    u64 qmask)
 -{
--	spin_lock_irq(&cp->lock);
--	cas_lock_tx(cp);
+-	u32 mask;
+-	struct ixgbe_hw *hw = &adapter->hw;
+-
+-	switch (hw->mac.type) {
+-	case ixgbe_mac_82598EB:
+-		mask = (IXGBE_EIMS_RTX_QUEUE & qmask);
+-		IXGBE_WRITE_REG(hw, IXGBE_EIMC, mask);
+-		break;
+-	case ixgbe_mac_82599EB:
+-	case ixgbe_mac_X540:
+-	case ixgbe_mac_X550:
+-	case ixgbe_mac_X550EM_x:
+-	case ixgbe_mac_x550em_a:
+-		mask = (qmask & 0xFFFFFFFF);
+-		if (mask)
+-			IXGBE_WRITE_REG(hw, IXGBE_EIMC_EX(0), mask);
+-		mask = (qmask >> 32);
+-		if (mask)
+-			IXGBE_WRITE_REG(hw, IXGBE_EIMC_EX(1), mask);
+-		break;
+-	default:
+-		break;
+-	}
+-	/* skip the flush */
 -}
 -
- /* WTZ: QA was finding deadlock problems with the previous
-  * versions after long test runs with multiple cards per machine.
-  * See if replacing cas_lock_all with safer versions helps. The
-@@ -266,12 +260,6 @@ static inline void cas_unlock_tx(struct cas *cp)
- 		spin_unlock(&cp->tx_lock[i - 1]);
- }
- 
--static inline void cas_unlock_all(struct cas *cp)
--{
--	cas_unlock_tx(cp);
--	spin_unlock_irq(&cp->lock);
--}
--
- #define cas_unlock_all_restore(cp, flags) \
- do { \
- 	struct cas *xxxcp = (cp); \
+ /**
+  * ixgbe_irq_enable - Enable default interrupt generation settings
+  * @adapter: board private structure
 -- 
 2.17.1
 
