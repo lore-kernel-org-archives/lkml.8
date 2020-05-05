@@ -2,191 +2,119 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C50D6C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB90DC47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A40D420735
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:05:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B00A42073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:05:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B3hkYBmK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YU+6u86+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729306AbgEEOF0 (ORCPT
+        id S1729356AbgEEOFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:05:26 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26725 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727785AbgEEOFX (ORCPT
+        Tue, 5 May 2020 10:05:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47236 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727785AbgEEOFg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:05:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588687521;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=luoy1TLOzPtNCKIsAfLeQmh34ahepyUul/Qz8MaTrLs=;
-        b=B3hkYBmK44NBz0ffhvBOOfh0OC8gdke8n+HSQlOkRYoLsIvfIfB75n6SXtjfRanz3+qHzd
-        HG5Z+n2Nj+JXJfyqzZf6fZsYBDaM6mbILjNGyphInGzspD/DNhSMUdWdso37eJSZPV32QB
-        4Kn/vUP9hDwQuYoe1Rv3z8bFvgiYvW0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-367-ymkQCNgyNxC4TvjMGnwTBg-1; Tue, 05 May 2020 10:05:17 -0400
-X-MC-Unique: ymkQCNgyNxC4TvjMGnwTBg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 26879461;
-        Tue,  5 May 2020 14:05:16 +0000 (UTC)
-Received: from x1.home (ovpn-113-95.phx2.redhat.com [10.3.113.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1904C6061C;
-        Tue,  5 May 2020 14:05:15 +0000 (UTC)
-Date:   Tue, 5 May 2020 08:05:14 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Raj, Ashok" <ashok.raj@intel.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Darrel Goeddel <DGoeddel@forcepoint.com>,
-        Mark Scott <mscott@forcepoint.com>,
-        Romil Sharma <rsharma@forcepoint.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH] iommu: Relax ACS requirement for RCiEP devices.
-Message-ID: <20200505080514.01153835@x1.home>
-In-Reply-To: <20200505061107.GA22974@araj-mobl1.jf.intel.com>
-References: <1588653736-10835-1-git-send-email-ashok.raj@intel.com>
-        <20200504231936.2bc07fe3@x1.home>
-        <20200505061107.GA22974@araj-mobl1.jf.intel.com>
-Organization: Red Hat
+        Tue, 5 May 2020 10:05:36 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1351C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:05:35 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id t12so1953210edw.3
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 07:05:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DQhPVNzCwxODV9jjVycfNahbwJl6DrUIjQ9AnoCrWCs=;
+        b=YU+6u86++6VWtYwNPHyc1ME4CNkzeonYAyS/jdldZueht1JjMExBXKZ2fwCZZnMaZI
+         ZhkNfG4Iq7Wa8TgqlSCI9rUl8C2Q7X0XofiEN2if0Co5+gwFJU/5PxOH4YrwKBPJ5sGz
+         zyiacbV9r11JC/U44S4xnE/s0Ymar0Oax5aJI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DQhPVNzCwxODV9jjVycfNahbwJl6DrUIjQ9AnoCrWCs=;
+        b=l2kpgnuaxdUih4SKRNq637HdzUpSZKJ4NtYz6wQQxe1eAJ7av+jbeY82WArRPzABX3
+         Yh+PFvujqB2fHoLWMZ+hh8fmXLdbtpEQt1yLfPt6yHducQs3ysMwFhXEO4MlMZT0ysGU
+         K9lUyYfE5QOc/DSbJ1ZvcFdlbGOL8Cj9QImJsJUrjFlWOrWguiSvSa+rjsbIC9Lb5BsL
+         Dma+5iMIahy9Z5ad54pDGEFloOpAf7dXAceDQFwsk9NFHGn1YCpo4cR59IPYkmh4fAKn
+         sxPztQVQjT6yTvMgFa6HDCCoAelJhIplJu+v/VjBwkwBYRj3Ml64SNrLO06u//7m9S1P
+         TkxA==
+X-Gm-Message-State: AGi0PuYC8Kj5WQynKh8mv6T6Ag2SAMfokkyLqfMpW2WUDjkLDj/NzEO+
+        owFqi2FojaXhXJ0Bxo1f/88pDpMDRK3q/g==
+X-Google-Smtp-Source: APiQypJvAdJ5T9ubYe6ooTQjRkaVi9jVob+Ai8aRYPfxkoAB72ZN9Pbp52HoNAJ3M6IZ4PRE/sFlWQ==
+X-Received: by 2002:a05:6402:22cd:: with SMTP id dm13mr2890372edb.56.1588687534319;
+        Tue, 05 May 2020 07:05:34 -0700 (PDT)
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com. [209.85.221.53])
+        by smtp.gmail.com with ESMTPSA id k24sm326357ejv.15.2020.05.05.07.05.33
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2020 07:05:33 -0700 (PDT)
+Received: by mail-wr1-f53.google.com with SMTP id f13so2866221wrm.13
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 07:05:33 -0700 (PDT)
+X-Received: by 2002:adf:fc4f:: with SMTP id e15mr3926804wrs.415.1588687532834;
+ Tue, 05 May 2020 07:05:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <20200505134110.3435-1-ezequiel@collabora.com> <20200505134110.3435-2-ezequiel@collabora.com>
+ <CAAFQd5AWZFoPk2YTp2k8M7LvJshxw46-z+wK2VoM9EzB2CqiFA@mail.gmail.com> <c29fcc922a4917ac695043e605973ba9649f9c9b.camel@collabora.com>
+In-Reply-To: <c29fcc922a4917ac695043e605973ba9649f9c9b.camel@collabora.com>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Tue, 5 May 2020 16:05:19 +0200
+X-Gmail-Original-Message-ID: <CAAFQd5A458E8iqwakKTDEyTHC+NYY-M1SaTS3m0MARwPaRyOuw@mail.gmail.com>
+Message-ID: <CAAFQd5A458E8iqwakKTDEyTHC+NYY-M1SaTS3m0MARwPaRyOuw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] media: rkvdec: Fix .buf_prepare
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel@collabora.com, Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Gustavo Padovan <gustavo.padovan@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 4 May 2020 23:11:07 -0700
-"Raj, Ashok" <ashok.raj@intel.com> wrote:
+On Tue, May 5, 2020 at 3:59 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
+>
+> On Tue, 2020-05-05 at 15:56 +0200, Tomasz Figa wrote:
+> > Hi Ezequiel,
+> >
+> > On Tue, May 5, 2020 at 3:41 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
+> > > The driver should only set the payload on .buf_prepare
+> > > if the buffer is CAPTURE type, or if an OUTPUT buffer
+> > > has a zeroed payload.
+> >
+> > Thanks for the patch. Just one question below.
+> >
+> > Where does the requirement to set OUTPUT buffer bytesused to sizeimage
+> > if the original bytesused is 0 come from?
+> >
+>
+> If I'm reading english correctly, it's here:
+>
+> https://www.kernel.org/doc/html/latest/media/uapi/v4l/buffer.html
+>
+> """
+> The number of bytes occupied by the data in the buffer. It depends on the negotiated data format and may change with each buffer for compressed
+> variable size data like JPEG images. Drivers must set this field when type refers to a capture stream, applications when it refers to an output
+> stream. If the application sets this to 0 for an output stream, then bytesused will be set to the size of the buffer (see the length field of this
+> struct) by the driver. For multiplanar formats this field is ignored and the planes pointer is used instead.
+> """
 
-> Hi Alex
-> 
-> + Joerg, accidently missed in the Cc.
-> 
-> On Mon, May 04, 2020 at 11:19:36PM -0600, Alex Williamson wrote:
-> > On Mon,  4 May 2020 21:42:16 -0700
-> > Ashok Raj <ashok.raj@intel.com> wrote:
-> >   
-> > > PCIe Spec recommends we can relax ACS requirement for RCIEP devices.
-> > > 
-> > > PCIe 5.0 Specification.
-> > > 6.12 Access Control Services (ACS)
-> > > Implementation of ACS in RCiEPs is permitted but not required. It is
-> > > explicitly permitted that, within a single Root Complex, some RCiEPs
-> > > implement ACS and some do not. It is strongly recommended that Root Complex
-> > > implementations ensure that all accesses originating from RCiEPs
-> > > (PFs and VFs) without ACS capability are first subjected to processing by
-> > > the Translation Agent (TA) in the Root Complex before further decoding and
-> > > processing. The details of such Root Complex handling are outside the scope
-> > > of this specification.
-> > > 
-> > > Since Linux didn't give special treatment to allow this exception, certain
-> > > RCiEP MFD devices are getting grouped in a single iommu group. This
-> > > doesn't permit a single device to be assigned to a guest for instance.
-> > > 
-> > > In one vendor system: Device 14.x were grouped in a single IOMMU group.
-> > > 
-> > > /sys/kernel/iommu_groups/5/devices/0000:00:14.0
-> > > /sys/kernel/iommu_groups/5/devices/0000:00:14.2
-> > > /sys/kernel/iommu_groups/5/devices/0000:00:14.3
-> > > 
-> > > After the patch:
-> > > /sys/kernel/iommu_groups/5/devices/0000:00:14.0
-> > > /sys/kernel/iommu_groups/5/devices/0000:00:14.2
-> > > /sys/kernel/iommu_groups/6/devices/0000:00:14.3 <<< new group
-> > > 
-> > > 14.0 and 14.2 are integrated devices, but legacy end points.
-> > > Whereas 14.3 was a PCIe compliant RCiEP.
-> > > 
-> > > 00:14.3 Network controller: Intel Corporation Device 9df0 (rev 30)
-> > > Capabilities: [40] Express (v2) Root Complex Integrated Endpoint, MSI 00
-> > > 
-> > > This permits assigning this device to a guest VM.
-> > > 
-> > > Fixes: f096c061f552 ("iommu: Rework iommu_group_get_for_pci_dev()")
-> > > Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-> > > To: Joerg Roedel <joro@8bytes.org>
-> > > To: Bjorn Helgaas <bhelgaas@google.com>
-> > > Cc: linux-kernel@vger.kernel.org
-> > > Cc: iommu@lists.linux-foundation.org
-> > > Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> > > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > > Cc: Darrel Goeddel <DGoeddel@forcepoint.com>
-> > > Cc: Mark Scott <mscott@forcepoint.com>,
-> > > Cc: Romil Sharma <rsharma@forcepoint.com>
-> > > Cc: Ashok Raj <ashok.raj@intel.com>
-> > > ---
-> > >  drivers/iommu/iommu.c | 15 ++++++++++++++-
-> > >  1 file changed, 14 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> > > index 2b471419e26c..5744bd65f3e2 100644
-> > > --- a/drivers/iommu/iommu.c
-> > > +++ b/drivers/iommu/iommu.c
-> > > @@ -1187,7 +1187,20 @@ static struct iommu_group *get_pci_function_alias_group(struct pci_dev *pdev,
-> > >  	struct pci_dev *tmp = NULL;
-> > >  	struct iommu_group *group;
-> > >  
-> > > -	if (!pdev->multifunction || pci_acs_enabled(pdev, REQ_ACS_FLAGS))
-> > > +	/*
-> > > +	 * PCI Spec 5.0, Section 6.12 Access Control Service
-> > > +	 * Implementation of ACS in RCiEPs is permitted but not required.
-> > > +	 * It is explicitly permitted that, within a single Root
-> > > +	 * Complex, some RCiEPs implement ACS and some do not. It is
-> > > +	 * strongly recommended that Root Complex implementations ensure
-> > > +	 * that all accesses originating from RCiEPs (PFs and VFs) without
-> > > +	 * ACS capability are first subjected to processing by the Translation
-> > > +	 * Agent (TA) in the Root Complex before further decoding and
-> > > +	 * processing.
-> > > +	 */  
-> > 
-> > Is the language here really strong enough to make this change?  ACS is
-> > an optional feature, so being permitted but not required is rather
-> > meaningless.  The spec is also specifically avoiding the words "must"
-> > or "shall" and even when emphasized with "strongly", we still only have
-> > a recommendation that may or may not be honored.  This seems like a
-> > weak basis for assuming that RCiEPs universally honor this
-> > recommendation.  Thanks,
-> >   
-> 
-> We are speaking about PCIe spec, where people write it about 5 years ahead
-> and every vendor tries to massage their product behavior with vague
-> words like this..  :)
-> 
-> But honestly for any any RCiEP, or even integrated endpoints, there 
-> is no way to send them except up north. These aren't behind a RP.
+Okay, thanks. I wonder if this shouldn't be handled by the core,
+though. Especially given that the document refers to the length field
+specifically and not the sizeimage set in the format.
 
-But they are multi-function devices and the spec doesn't define routing
-within multifunction packages.  A single function RCiEP will already be
-assumed isolated within its own group.
- 
-> I did check with couple folks who are part of the SIG, and seem to agree
-> that ACS treatment for RCiEP's doesn't mean much. 
-> 
-> I understand the language isn't strong, but it doesn't seem like ACS should
-> be a strong requirement for RCiEP's and reasonable to relax.
-> 
-> What are your thoughts? 
-
-I think hardware vendors have ACS at their disposal to clarify when
-isolation is provided, otherwise vendors can submit quirks, but I don't
-see that the "strongly recommended" phrasing is sufficient to assume
-isolation between multifunction RCiEPs.  Thanks,
-
-Alex
-
+Best regards,
+Tomasz
