@@ -2,121 +2,77 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAED8C47258
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3730C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86AF0206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97503206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 12:10:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XofyCUGf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbgEEMJ7 (ORCPT
+        id S1728892AbgEEMKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 08:09:59 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:39056 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728660AbgEEMJ7 (ORCPT
+        Tue, 5 May 2020 08:10:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728660AbgEEMKt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 08:09:59 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 3ABF11C022C; Tue,  5 May 2020 14:09:57 +0200 (CEST)
-Date:   Tue, 5 May 2020 14:09:56 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Dexuan Cui <decui@microsoft.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH 4.19 11/37] PM: hibernate: Freeze kernel threads in
- software_resume()
-Message-ID: <20200505120956.GA28722@amd>
-References: <20200504165448.264746645@linuxfoundation.org>
- <20200504165449.741334238@linuxfoundation.org>
+        Tue, 5 May 2020 08:10:49 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 646F4C061A10;
+        Tue,  5 May 2020 05:10:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=1l+GyMaj5ngxaPJrqDJo+9L5X5yBFW27xzweVKqFpAY=; b=XofyCUGf4B51GP0D9K0P/MUgA7
+        UGOcsycb32rFn1/tzyeuK2C5kl5aYTYhR1hdA34qBj/CdaW8k9iixBLYFY1sMvapHKF7iCI/n9hMd
+        u0SRCb5VsvLPvl0vktX+FILSgqLXmyjjSJT0X7kFECt0s5Y3ROakGlMBwvc4P3ejUTKHEf5Qn5REw
+        UjcgW3pE4VET0u7df/2+upNK6NoXV7hFAItPFqhsWfLrAle0s4jgm4Z48lwsDDt5LLxQ8o7EkIocX
+        ROnL+X96xrqizbaX5XyQd5YVngRdYa9+0I2meVfsRw9wy3/Nb3qmzTPy4QOe0awkhVC2cQ2wZzu7v
+        YIbh/Rag==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jVwPL-0004tR-Mq; Tue, 05 May 2020 12:10:43 +0000
+Date:   Tue, 5 May 2020 05:10:43 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Zhen Lei <thunder.leizhen@huawei.com>
+Cc:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>, Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        dm-devel <dm-devel@redhat.com>, Song Liu <song@kernel.org>,
+        linux-raid <linux-raid@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/4] block: Move SECTORS_PER_PAGE and
+ SECTORS_PER_PAGE_SHIFT definitions into <linux/blkdev.h>
+Message-ID: <20200505121043.GG16070@bombadil.infradead.org>
+References: <20200505115543.1660-1-thunder.leizhen@huawei.com>
+ <20200505115543.1660-2-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200504165449.741334238@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200505115543.1660-2-thunder.leizhen@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 05, 2020 at 07:55:40PM +0800, Zhen Lei wrote:
+> +#ifndef SECTORS_PER_PAGE_SHIFT
+> +#define SECTORS_PER_PAGE_SHIFT	(PAGE_SHIFT - SECTOR_SHIFT)
+> +#endif
+> +#ifndef SECTORS_PER_PAGE
+> +#define SECTORS_PER_PAGE	(1 << SECTORS_PER_PAGE_SHIFT)
+>  #endif
 
---tThc/1wpZn/ma/RB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> commit 2351f8d295ed63393190e39c2f7c1fee1a80578f upstream.
->=20
-> Currently the kernel threads are not frozen in software_resume(), so
-> between dpm_suspend_start(PMSG_QUIESCE) and resume_target_kernel(),
-> system_freezable_power_efficient_wq can still try to submit SCSI
-> commands and this can cause a panic since the low level SCSI driver
-> (e.g. hv_storvsc) has quiesced the SCSI adapter and can not accept
-> any SCSI commands: https://lkml.org/lkml/2020/4/10/47
->=20
-> At first I posted a fix (https://lkml.org/lkml/2020/4/21/1318) trying
-> to resolve the issue from hv_storvsc, but with the help of
-> Bart Van Assche, I realized it's better to fix software_resume(),
-> since this looks like a generic issue, not only pertaining to SCSI.
-
-I believe it is too soon to merge this into stable. It is rather big
-hammer. Yes, it is right thing to do. But I'd wait for 5.7 to be
-released before merging it to stable.
-
-It needs some testing and it did not get any.
-
-Best regards,
-							Pavel
-
-> Cc: All applicable <stable@vger.kernel.org>
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->=20
-> ---
->  kernel/power/hibernate.c |    7 +++++++
->  1 file changed, 7 insertions(+)
->=20
-> --- a/kernel/power/hibernate.c
-> +++ b/kernel/power/hibernate.c
-> @@ -901,6 +901,13 @@ static int software_resume(void)
->  	error =3D freeze_processes();
->  	if (error)
->  		goto Close_Finish;
-> +
-> +	error =3D freeze_kernel_threads();
-> +	if (error) {
-> +		thaw_processes();
-> +		goto Close_Finish;
-> +	}
-> +
->  	error =3D load_image_and_restore();
->  	thaw_processes();
->   Finish:
->=20
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---tThc/1wpZn/ma/RB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl6xV5QACgkQMOfwapXb+vLdngCfWXiRv6+x3tG+LpFhumaMbyZq
-ek4An1F4jv81BEgOsgETKkkyu5eN7pM9
-=FCx7
------END PGP SIGNATURE-----
-
---tThc/1wpZn/ma/RB--
+I find SECTORS_PER_PAGE_SHIFT quite hard to read.  I had a quick skim
+of your other patches, and it seems to me that we could replace
+'<< SECTORS_PER_PAGE_SHIFT' with '* SECTORS_PER_PAGE' and it would be
+more readable in every case.
