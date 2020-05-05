@@ -2,146 +2,183 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D38C9C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C032C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADBA920659
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:56:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588722962;
-	bh=3sOFBfJ7/Y7pRswTyrfyPYAxQMpF/nDHfoDgbjG7YMs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=yuzbBWphUeNcD8pzR6eiSBqPTSBx9jf0NgDinZbpdeP0/qvTq/ZOIcZs9KusSTsLg
-	 bIojIIx9yN3VRF6/6osPxcot+X1cZPYF4jDI3UaZa8Q3MHCb1i56uDS2Ae+LuR/aoF
-	 EKaOeDw/9GUD6wV2O8L99TusYJO49e6VCez1kylg=
+	by mail.kernel.org (Postfix) with ESMTP id 7A55720721
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:58:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="GcCRqF0r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729533AbgEEX4B (ORCPT
+        id S1729474AbgEEX6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 19:56:01 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:63600 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728642AbgEEX4B (ORCPT
+        Tue, 5 May 2020 19:58:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55640 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbgEEX6I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 19:56:01 -0400
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 045NtZnN006317
-        for <linux-kernel@vger.kernel.org>; Wed, 6 May 2020 08:55:36 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 045NtZnN006317
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1588722936;
-        bh=Y9RWxiRgOZwnVwD83VxXe/juAd1avld7+FovXshP7OI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Btemxv12bE2TFIaNRp2UDHOS+O3LYyBMJGNElW4v+e2RRb9kLax99VIJr88qnnKCk
-         vtNOxapLTEh9uMnvC1aa3cAJXu/iMLSCz9+DzSHxCAkqtH4WgzA3l2vNthRTjCbrj8
-         i9i/O8D2nXJG3vJYPdcjjBhHEDX1vs+0He0eyGsGE9AiHzdDJa5WIv3tTNnOojIxhx
-         csgoJRpVVGdYGc7yAYJlQMN5moc1lyAxh2wNuZcXJZuzdWAmv4uB8UR7nNpn6MPLdm
-         1i+ZrioO3PVKf48AEPFd2HRbpFaArrHtYn1fsWbe4igMHEFKMGpBtidbwm53an9WA1
-         UectidQhDHQug==
-X-Nifty-SrcIP: [209.85.221.179]
-Received: by mail-vk1-f179.google.com with SMTP id w68so54837vke.5
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 16:55:36 -0700 (PDT)
-X-Gm-Message-State: AGi0Puaq//sSBa7ybQqI+AXeBU4qXftfHYy6z4fGHuY7NF98Rry/o9I7
-        t22olPIqo/MWs1RquPbdW1CUr/QXuHL1FTKiIkM=
-X-Google-Smtp-Source: APiQypI+/RbUwYA5RFpvV4RyRz1fC3Ok15Mm/8/k0F/GZ2w3vpKCGOdJSdoDo/J+o9eBlCt2hs0jYbW5su9myiejCGo=
-X-Received: by 2002:a1f:1ed1:: with SMTP id e200mr4979912vke.96.1588722934713;
- Tue, 05 May 2020 16:55:34 -0700 (PDT)
+        Tue, 5 May 2020 19:58:08 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CF8DC061A10
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 16:58:08 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id x77so105475pfc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 16:58:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=JzaMwZpjc8kiyvkXAl8SC5OdIZko9B1uAdjf5EokFQA=;
+        b=GcCRqF0rng+bDWT+XXGpRMzlhC2e6WqRpie++FCTYazS0pzx+X/KrFcQezY41N8Bqo
+         L29pS/NkKaT2NqRgus6tqpdexXorGt7AUV+kFahU2b1GCiXg75mTfXKtntElnpIKDADf
+         HGKWtD5DBrBDh7IcgMYYf2RgdPMDDROgrQGmw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=JzaMwZpjc8kiyvkXAl8SC5OdIZko9B1uAdjf5EokFQA=;
+        b=s5yVg3ZNhznYVkVe7i1hX2hp91bypisF0wsTLVP0cudV83WxG1CSZXKVZHLcmE8ePw
+         eVN4L7d3scUg825+jkQcvK2zyu75gpHyvybIuNRj7j/6wshRPUbkeuWJU3KhtjJTrsJW
+         2okLMphymESb0f8tap9vf2/UL46G1Y0QAr1oahHUzIbaQPSXGCPak9/0ewTTojcasIoa
+         27sbmxws10/iRXtiCIeXzINUpRy2E60je3oD8oM5Tb6YXq44qJjULbTg3x2amLByU1XK
+         tHU+Yhqo8RYC4Pvgeqn0fbzEniC4UMrxIgkf6TQrp6lfZ+/1b44QzY7yqROzuWmLrbLC
+         kYww==
+X-Gm-Message-State: AGi0PuY/imhcJ5rfJ9wLK+dd57cQwcQF8e1I4BiqfjHJ3SPE9Ls9kNBX
+        UiZowZG8Lt9BYS8PWfzynRBSeQ==
+X-Google-Smtp-Source: APiQypIqzHj2k/gz4IlPISOypaTNQykNBBmbQbErw1/2L6sk4p7yd0/jxv3gmS3o6U9qQVXKSF+LKg==
+X-Received: by 2002:a63:e62:: with SMTP id 34mr4290017pgo.300.1588723087207;
+        Tue, 05 May 2020 16:58:07 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id b13sm42170pfo.67.2020.05.05.16.58.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2020 16:58:06 -0700 (PDT)
+Subject: Re: [PATCH v3 6/7] misc: bcm-vk: add Broadcom VK driver
+To:     kbuild test robot <lkp@intel.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        bjorn.andersson@linaro.org, Arnd Bergmann <arnd@arndb.de>
+Cc:     kbuild-all@lists.01.org, "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Dan Carpenter <error27@gmail.com>
+References: <20200420162809.17529-7-scott.branden@broadcom.com>
+ <202004221945.LY6x0DQD%lkp@intel.com>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <b3e0c534-9e6a-f270-b6af-3658dca1bd42@broadcom.com>
+Date:   Tue, 5 May 2020 16:58:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200428212555.2806258-1-arnd@arndb.de>
-In-Reply-To: <20200428212555.2806258-1-arnd@arndb.de>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 6 May 2020 08:54:58 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT6-F2qB5=gxZjxwNuArcbiTzsmhHApMUipxy+=QAu6ag@mail.gmail.com>
-Message-ID: <CAK7LNAT6-F2qB5=gxZjxwNuArcbiTzsmhHApMUipxy+=QAu6ag@mail.gmail.com>
-Subject: Re: [PATCH] samples: fix binderfs sample
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <202004221945.LY6x0DQD%lkp@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+All the kbuild and sparse issues should be resolved in PATCH v4.
 
-
-On Wed, Apr 29, 2020 at 6:26 AM Arnd Bergmann <arnd@arndb.de> wrote:
+On 2020-04-22 4:17 a.m., kbuild test robot wrote:
+> Hi Scott,
 >
-> A routine check for misspelled Kconfig symbols showed on instance
-> from last year, the correct symbol name is CONFIG_ANDROID_BINDERFS,
-> not CONFIG_CONFIG_ANDROID_BINDERFS, so the extra prefix must
-> be removed in the Kconfig file to allow enabling the sample.
+> I love your patch! Perhaps something to improve:
 >
-> As the actual sample fails to build as a kernel module, change the
-> Makefile enough to get to build as a hostprog instead.
+> [auto build test WARNING on driver-core/driver-core-testing]
+> [also build test WARNING on next-20200421]
+> [cannot apply to char-misc/char-misc-testing kselftest/next linus/master v5.7-rc2]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 >
-> Fixes: 9762dc1432e1 ("samples: add binderfs sample program")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  samples/Kconfig           | 2 +-
->  samples/binderfs/Makefile | 6 +++++-
->  2 files changed, 6 insertions(+), 2 deletions(-)
+> url:    https://github.com/0day-ci/linux/commits/Scott-Branden/firmware-add-partial-read-support-in-request_firmware_into_buf/20200422-114528
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git 55623260bb33e2ab849af76edf2253bc04cb241f
+> reproduce:
+>          # apt-get install sparse
+>          # sparse version: v0.6.1-191-gc51a0382-dirty
+>          make ARCH=x86_64 allmodconfig
+>          make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 >
-> diff --git a/samples/Kconfig b/samples/Kconfig
-> index 5c31971a5745..e0b747cc90c9 100644
-> --- a/samples/Kconfig
-> +++ b/samples/Kconfig
-> @@ -171,7 +171,7 @@ config SAMPLE_VFIO_MDEV_MBOCHS
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kbuild test robot <lkp@intel.com>
 >
->  config SAMPLE_ANDROID_BINDERFS
->         bool "Build Android binderfs example"
-> -       depends on CONFIG_ANDROID_BINDERFS
-> +       depends on ANDROID_BINDERFS
->         help
->           Builds a sample program to illustrate the use of the Android binderfs
->           filesystem.
-> diff --git a/samples/binderfs/Makefile b/samples/binderfs/Makefile
-> index ea4c93d36256..a3ac5476338a 100644
-> --- a/samples/binderfs/Makefile
-> +++ b/samples/binderfs/Makefile
-> @@ -1,2 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -obj-$(CONFIG_SAMPLE_ANDROID_BINDERFS) += binderfs_example.o
-> +ifndef CROSS_COMPILE
-> +ifdef CONFIG_SAMPLE_ANDROID_BINDERFS
-> +hostprogs := binderfs_example
-> +endif
-> +endif
+>
+> sparse warnings: (new ones prefixed by >>)
+>
+>>> drivers/misc/bcm-vk/bcm_vk_dev.c:189:15: sparse: sparse: incorrect type in assignment (different address spaces) @@    expected struct bcm_vk_peer_log *p_ctl @@    got struct bcm_vk_peer_log *p_ctl @@
+>>> drivers/misc/bcm-vk/bcm_vk_dev.c:189:15: sparse:    expected struct bcm_vk_peer_log *p_ctl
+>>> drivers/misc/bcm-vk/bcm_vk_dev.c:189:15: sparse:    got void [noderef] <asn:2> *
+>>> drivers/misc/bcm-vk/bcm_vk_dev.c:685:36: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void const [noderef] <asn:1> *from @@    got oderef] <asn:1> *from @@
+>>> drivers/misc/bcm-vk/bcm_vk_dev.c:685:36: sparse:    expected void const [noderef] <asn:1> *from
+>>> drivers/misc/bcm-vk/bcm_vk_dev.c:685:36: sparse:    got struct vk_image *arg
+>     drivers/misc/bcm-vk/bcm_vk_dev.c:780:36: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void const [noderef] <asn:1> *from @@    got oderef] <asn:1> *from @@
+>     drivers/misc/bcm-vk/bcm_vk_dev.c:780:36: sparse:    expected void const [noderef] <asn:1> *from
+>>> drivers/misc/bcm-vk/bcm_vk_dev.c:780:36: sparse:    got struct vk_reset *arg
+>>> drivers/misc/bcm-vk/bcm_vk_dev.c:858:45: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected struct vk_image *arg @@    got void [nstruct vk_image *arg @@
+>>> drivers/misc/bcm-vk/bcm_vk_dev.c:858:45: sparse:    expected struct vk_image *arg
+>>> drivers/misc/bcm-vk/bcm_vk_dev.c:858:45: sparse:    got void [noderef] <asn:1> *argp
+>>> drivers/misc/bcm-vk/bcm_vk_dev.c:862:40: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected struct vk_reset *arg @@    got void [nstruct vk_reset *arg @@
+>>> drivers/misc/bcm-vk/bcm_vk_dev.c:862:40: sparse:    expected struct vk_reset *arg
+>     drivers/misc/bcm-vk/bcm_vk_dev.c:862:40: sparse:    got void [noderef] <asn:1> *argp
 > --
-> 2.26.0
+>>> drivers/misc/bcm-vk/bcm_vk_msg.c:507:17: sparse: sparse: cast removes address space '<asn:2>' of expression
+>     drivers/misc/bcm-vk/bcm_vk_msg.c:707:15: sparse: sparse: cast removes address space '<asn:2>' of expression
+>     drivers/misc/bcm-vk/bcm_vk_msg.c:715:23: sparse: sparse: cast removes address space '<asn:2>' of expression
+>     drivers/misc/bcm-vk/bcm_vk_msg.c:871:31: sparse: sparse: cast removes address space '<asn:2>' of expression
+>     drivers/misc/bcm-vk/bcm_vk_msg.c:899:47: sparse: sparse: cast removes address space '<asn:2>' of expression
 >
+> vim +189 drivers/misc/bcm-vk/bcm_vk_dev.c
+>
+>     180	
+>     181	static void bcm_vk_dump_peer_log(struct bcm_vk *vk)
+>     182	{
+>     183		struct bcm_vk_peer_log log, *p_ctl;
+>     184		char loc_buf[BCM_VK_PEER_LOG_LINE_MAX];
+>     185		int cnt;
+>     186		struct device *dev = &vk->pdev->dev;
+>     187		uint data_offset;
+>     188	
+>   > 189		p_ctl = vk->bar[BAR_2] + vk->peerlog_off;
+>     190		log = *p_ctl;
+>     191		/* do a rmb() to make sure log is updated */
+>     192		rmb();
+>     193	
+>     194		dev_dbg(dev, "Peer PANIC: Size 0x%x(0x%x), [Rd Wr] = [%d %d]\n",
+>     195			log.buf_size, log.mask, log.rd_idx, log.wr_idx);
+>     196	
+>     197		cnt = 0;
+>     198		data_offset = vk->peerlog_off + sizeof(struct bcm_vk_peer_log);
+>     199		while (log.rd_idx != log.wr_idx) {
+>     200			loc_buf[cnt] = vkread8(vk, BAR_2, data_offset + log.rd_idx);
+>     201	
+>     202			if ((loc_buf[cnt] == '\0') ||
+>     203			    (cnt == (BCM_VK_PEER_LOG_LINE_MAX - 1))) {
+>     204				dev_err(dev, "%s", loc_buf);
+>     205				cnt = 0;
+>     206			} else {
+>     207				cnt++;
+>     208			}
+>     209			log.rd_idx = (log.rd_idx + 1) & log.mask;
+>     210		}
+>     211		/* update rd idx at the end */
+>     212		vkwrite32(vk, log.rd_idx, BAR_2, vk->peerlog_off);
+>     213	}
+>     214	
+>
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
-
-binderfs_example.c includes <linux/android/binderfs.h>.
-
-This uapi header is very new.
-
-include/uapi/linux/android/binderfs.h was added by
-commit c13295ad219d8bb0e47942d4cfc8251de449a67e
-i.e. Linux  5.0
-
-
-If this sample is compiled by a compiler with kernel headers
-older than Linux 5.0, it will fail to build.
-
-
-Documentation/process/changes.rst defines the minumal
-GCC version, but the minimal kernel header version
-is undefined.
-
-Is there any criteria when to add
-'-I usr/include' ?
-
-
-At least, this is this case, I think.
-
---
-Best Regards
-Masahiro Yamada
