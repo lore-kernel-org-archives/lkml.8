@@ -2,90 +2,101 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F050FC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6092DC47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D13AB20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3970120675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:27:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="AYudScwg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729427AbgEEO1l (ORCPT
+        id S1729437AbgEEO1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:27:41 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:42808 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729123AbgEEO1k (ORCPT
+        Tue, 5 May 2020 10:27:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729275AbgEEO1t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:27:40 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 84EAE2A1EA1
-Message-ID: <ac6e162a24a8e2b2180b1a743e5ecd9a2023ac65.camel@collabora.com>
-Subject: Re: [PATCH v3 1/3] media: rkvdec: Fix .buf_prepare
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel@collabora.com, Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Gustavo Padovan <gustavo.padovan@collabora.com>
-Date:   Tue, 05 May 2020 11:27:30 -0300
-In-Reply-To: <CAAFQd5A458E8iqwakKTDEyTHC+NYY-M1SaTS3m0MARwPaRyOuw@mail.gmail.com>
-References: <20200505134110.3435-1-ezequiel@collabora.com>
-         <20200505134110.3435-2-ezequiel@collabora.com>
-         <CAAFQd5AWZFoPk2YTp2k8M7LvJshxw46-z+wK2VoM9EzB2CqiFA@mail.gmail.com>
-         <c29fcc922a4917ac695043e605973ba9649f9c9b.camel@collabora.com>
-         <CAAFQd5A458E8iqwakKTDEyTHC+NYY-M1SaTS3m0MARwPaRyOuw@mail.gmail.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0-1 
+        Tue, 5 May 2020 10:27:49 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E68BFC061A10
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:27:48 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Ghrw1s5zz9sTp;
+        Wed,  6 May 2020 00:27:43 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1588688864;
+        bh=tKWmkjZzDQuTCUpYsJT44pgEzBrMuLquVBArlnJPTok=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=AYudScwgGeF513DR39+vld/7XBnzPx/RmHX/ZpsMbR2xXEUEL2wuQW4p4g7Kvsisv
+         9BkStSD8LskDREEIZEUcnucf5n8bIAP/kQu2rNGVG4fIKIdYaiLi+vc3W32DET/0hz
+         5nsmqgrX3/E2FGtgYlYHZLqT5wY+S9qw+8b60lg/xiFk9lQCri05hPLII8zOg03WtG
+         PzAzrymQXDPh8UfjPGwC7IuvwSJwXnjW1UDF04L9jrzlQAsxufL0jpsgaVkvW/fPcm
+         FkzgDihqutVRnj1lbOzrs8G2my6pLc9rXtAY5CntiQp+YF12WDNjpeIJ+Iwrq2Q2bI
+         9B+Cn2SIClkKg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, npiggin@gmail.com,
+        segher@kernel.crashing.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v4 1/2] powerpc/uaccess: Implement unsafe_put_user() using 'asm goto'
+In-Reply-To: <23e680624680a9a5405f4b88740d2596d4b17c26.1587143308.git.christophe.leroy@c-s.fr>
+References: <23e680624680a9a5405f4b88740d2596d4b17c26.1587143308.git.christophe.leroy@c-s.fr>
+Date:   Wed, 06 May 2020 00:27:58 +1000
+Message-ID: <87sggecv81.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-05-05 at 16:05 +0200, Tomasz Figa wrote:
-> On Tue, May 5, 2020 at 3:59 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
-> > On Tue, 2020-05-05 at 15:56 +0200, Tomasz Figa wrote:
-> > > Hi Ezequiel,
-> > > 
-> > > On Tue, May 5, 2020 at 3:41 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
-> > > > The driver should only set the payload on .buf_prepare
-> > > > if the buffer is CAPTURE type, or if an OUTPUT buffer
-> > > > has a zeroed payload.
-> > > 
-> > > Thanks for the patch. Just one question below.
-> > > 
-> > > Where does the requirement to set OUTPUT buffer bytesused to sizeimage
-> > > if the original bytesused is 0 come from?
-> > > 
-> > 
-> > If I'm reading english correctly, it's here:
-> > 
-> > https://www.kernel.org/doc/html/latest/media/uapi/v4l/buffer.html
-> > 
-> > """
-> > The number of bytes occupied by the data in the buffer. It depends on the negotiated data format and may change with each buffer for compressed
-> > variable size data like JPEG images. Drivers must set this field when type refers to a capture stream, applications when it refers to an output
-> > stream. If the application sets this to 0 for an output stream, then bytesused will be set to the size of the buffer (see the length field of this
-> > struct) by the driver. For multiplanar formats this field is ignored and the planes pointer is used instead.
-> > """
-> 
-> Okay, thanks. I wonder if this shouldn't be handled by the core,
-> though. Especially given that the document refers to the length field
-> specifically and not the sizeimage set in the format.
-> 
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> unsafe_put_user() is designed to take benefit of 'asm goto'.
+>
+> Instead of using the standard __put_user() approach and branch
+> based on the returned error, use 'asm goto' and make the
+> exception code branch directly to the error label. There is
+> no code anymore in the fixup section.
+>
+> This change significantly simplifies functions using
+> unsafe_put_user()
+>
+...
+>
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+>  arch/powerpc/include/asm/uaccess.h | 61 +++++++++++++++++++++++++-----
+>  1 file changed, 52 insertions(+), 9 deletions(-)
+>
+> diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
+> index 9cc9c106ae2a..9365b59495a2 100644
+> --- a/arch/powerpc/include/asm/uaccess.h
+> +++ b/arch/powerpc/include/asm/uaccess.h
+> @@ -196,6 +193,52 @@ do {								\
+>  })
+>  
+>  
+> +#define __put_user_asm_goto(x, addr, label, op)			\
+> +	asm volatile goto(					\
+> +		"1:	" op "%U1%X1 %0,%1	# put_user\n"	\
+> +		EX_TABLE(1b, %l2)				\
+> +		:						\
+> +		: "r" (x), "m<>" (*addr)				\
 
-Yes, either core or helper, this definitely calls for a generic solution.
+The "m<>" here is breaking GCC 4.6.3, which we allegedly still support.
 
-Ezequiel
+Plain "m" works, how much does the "<>" affect code gen in practice?
 
+A quick diff here shows no difference from removing "<>".
+
+cheers
