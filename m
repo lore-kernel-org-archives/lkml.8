@@ -2,145 +2,99 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C33C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9AAFC47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C15C2073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8BEC206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 13:32:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588685560;
+	bh=nOagl6uAd323E1GePcTCSBFA436BDC6z1ocoIZtcicE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wimBJfWDK6RRJUmvywdvNB3eW0Yl9TeAXdyl7f5UqmtSurSDZpMpvp5b3dkqnFLWq
+	 G1NjXxE//1aeX7ipI2wsjJfkOj+7DdIN+UforvgJW+oL1Nf0YWAFQ9RLu2MZ9GAYTK
+	 E68/k29j5PiLBwlZYSOCuh85ShOKP+lN5LvuER1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729032AbgEENbi (ORCPT
+        id S1729083AbgEENck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 09:31:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50260 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728912AbgEENbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 09:31:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 06B06AC7B;
-        Tue,  5 May 2020 13:31:37 +0000 (UTC)
-Message-ID: <71f91033780ee9d95da2be44884d4d47efb03b5f.camel@suse.de>
-Subject: Re: [PATCH v2 4/4] PCI: brcmstb: Disable L0s component of ASPM if
- requested
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Date:   Tue, 05 May 2020 15:31:32 +0200
-In-Reply-To: <20200501142831.35174-5-james.quinlan@broadcom.com>
-References: <20200501142831.35174-1-james.quinlan@broadcom.com>
-         <20200501142831.35174-5-james.quinlan@broadcom.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-/WMc+4hb6CwtaW97uLCZ"
-User-Agent: Evolution 3.36.2 
+        Tue, 5 May 2020 09:32:40 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43434 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729042AbgEENck (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 09:32:40 -0400
+Received: by mail-oi1-f196.google.com with SMTP id j16so1751425oih.10;
+        Tue, 05 May 2020 06:32:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aGzwYdYfDeCBheVXdcJg3XhWuww2Jcj8IasjcEOMoV0=;
+        b=MR6I+DklNB4UWIma+YhYtDGiP/qik9dk5lDXhtsvBcl1ZZGYNS5sysTXpcCPRqm8GG
+         TInab9/NjZatkLiTSUlVW5TjxT7wiIQ4jtg8+H76xQ1zY9KoDgM77LjoCWPeXZzH11lM
+         PU7LLmJuIkt/1wDksXzahxHqKOKQOLXc/6ohjl0iL1rIehZL4B1eIQ7BXzRTr50pEa5O
+         /ZEoc4uLEbqRxGUjNa2RzMv20kvfrBM7/z+mZ0jJvez2bz7n/wyiKQ+siP2zBkBHMCYy
+         nlpA81DDB1DlCvnIJxnbpFV7CI/Gt6w2mRhi6FH7nYHtxh0svw5+R8MrcF94FAERvekW
+         p/Vg==
+X-Gm-Message-State: AGi0PuY+sgtv1pEGfs9uBWoUdRHO+UrO/NFQzdHmam9LMUoaewHDggIS
+        cZLy6lrgOwgElvpRMmzS2+wq4wM=
+X-Google-Smtp-Source: APiQypIAPbkEpcmAYhh8URn60kb6nxOuIrbrTxcDfwgGhqJijN2M8awvs8XkUUWZp//f+WPg20NRnA==
+X-Received: by 2002:aca:7209:: with SMTP id p9mr2407871oic.168.1588685559210;
+        Tue, 05 May 2020 06:32:39 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 1sm547503oir.5.2020.05.05.06.32.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 06:32:38 -0700 (PDT)
+Received: (nullmailer pid 22806 invoked by uid 1000);
+        Tue, 05 May 2020 13:32:37 -0000
+Date:   Tue, 5 May 2020 08:32:37 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [v3 PATCH 2/2] dt-bindings: display: Document ASUS Z00T TM5P5
+ NT35596 panel compatible
+Message-ID: <20200505133237.GA22147@bogus>
+References: <20200504200102.129195-1-konradybcio@gmail.com>
+ <20200504200102.129195-3-konradybcio@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200504200102.129195-3-konradybcio@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-/WMc+4hb6CwtaW97uLCZ
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, 2020-05-01 at 10:28 -0400, Jim Quinlan wrote:
-> From: Jim Quinlan <jquinlan@broadcom.com>
->=20
-> Some informal internal experiments has shown that the BrcmSTB ASPM L0s
-> savings may introduce an undesirable noise signal on some customers'
-> boards.  In addition, L0s was found lacking in realized power savings,
-> especially relative to the L1 ASPM component.  This is BrcmSTB's
-> experience and may not hold for others.  At any rate, if the
-> 'aspm-no-l0s' property is present L0s will be disabled.
->=20
-> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-
-Modulo the new generic dt property:
-
-Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-
-Regards,
-Nicolas
-
+On Mon,  4 May 2020 22:01:00 +0200, Konrad Dybcio wrote:
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 > ---
->  drivers/pci/controller/pcie-brcmstb.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c
-> b/drivers/pci/controller/pcie-brcmstb.c
-> index 5b0dec5971b8..73020b4ff090 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -41,6 +41,9 @@
->  #define PCIE_RC_CFG_PRIV1_ID_VAL3			0x043c
->  #define  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK	0xffffff
-> =20
-> +#define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY			0x04dc
-> +#define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK	0xc00
-> +
->  #define PCIE_RC_DL_MDIO_ADDR				0x1100
->  #define PCIE_RC_DL_MDIO_WR_DATA				0x1104
->  #define PCIE_RC_DL_MDIO_RD_DATA				0x1108
-> @@ -693,7 +696,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
->  	int num_out_wins =3D 0;
->  	u16 nlw, cls, lnksta;
->  	int i, ret;
-> -	u32 tmp;
-> +	u32 tmp, aspm_support;
-> =20
->  	/* Reset the bridge */
->  	brcm_pcie_bridge_sw_init_set(pcie, 1);
-> @@ -803,6 +806,15 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
->  		num_out_wins++;
->  	}
-> =20
-> +	/* Don't advertise L0s capability if 'aspm-no-l0s' */
-> +	aspm_support =3D PCIE_LINK_STATE_L1;
-> +	if (!of_property_read_bool(pcie->np, "aspm-no-l0s"))
-> +		aspm_support |=3D PCIE_LINK_STATE_L0S;
-> +	tmp =3D readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-> +	u32p_replace_bits(&tmp, aspm_support,
-> +		PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
-> +	writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-> +
->  	/*
->  	 * For config space accesses on the RC, show the right class for
->  	 * a PCIe-PCIe bridge (the default setting is to be EP mode).
+>  .../display/panel/asus,z00t-tm5p5-n35596.yaml | 56 +++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/asus,z00t-tm5p5-n35596.yaml
+> 
 
+My bot found errors running 'make dt_binding_check' on your patch:
 
---=-/WMc+4hb6CwtaW97uLCZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Documentation/devicetree/bindings/display/panel/asus,z00t-tm5p5-n35596.yaml: $id: relative path/filename doesn't match actual path or filename
+	expected: http://devicetree.org/schemas/display/panel/asus,z00t-tm5p5-n35596.yaml#
 
------BEGIN PGP SIGNATURE-----
+See https://patchwork.ozlabs.org/patch/1282986
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6xarQACgkQlfZmHno8
-x/5F2Af+NaU0XhF5SOoN9k/cqs0QD3cUh2gPJSrKgygCuqC79eeu2CIH9k3OmXSK
-2ArwxrQvKZS8cw8icZPETD6PuD5Z0bWmeUbl7dbTZwReORzCUeFGGjbFJUCw6mLv
-gzxQ1QTT60/rf2BeVu520PJeCB/KAnsiqwNo63UJhGYsdExXwGLyQqmgldCCfktl
-9i8QE/4C4Ne3A1QXj0aowFHD9pCI54bYj3UeDFo2Z7C0Hb2vMAt+KDkGiR40dDF2
-FBaM1gII/IUVqt12qLngl2aYjCWa8VQro6Hz53IM/Bkf1QVUbjYNq3GsIXph4sLQ
-81jE683L/9ZlfI95hcoWXr8aaqGdsQ==
-=aXbi
------END PGP SIGNATURE-----
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
 
---=-/WMc+4hb6CwtaW97uLCZ--
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
 
+Please check and re-submit.
