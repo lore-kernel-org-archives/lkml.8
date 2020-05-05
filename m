@@ -2,156 +2,123 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F56CC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9F6C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C0DE206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:05:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="pCbw8Q2D"
+	by mail.kernel.org (Postfix) with ESMTP id A3CFD206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:06:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588694804;
+	bh=yXBy4PpJ8ZOzFULpTar52yzsr2A/dQrKwz7gB8kTsIQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nn1mMp2l2mhmhfG1nSF2A+N0dQ8Tt02WOoPpjSV8jRaxnuHrMF33DQ9HIuzqWHhFJ
+	 CphiopS0gNDRLnxlzyj73QMAwhNAAC+WgRFUhLHLYy6IDbLG1e1Tt+QNGP1yaymTi0
+	 Opikw4Tv78KmnJ1djEHz1MQrFIy+pPl7Tt08c9cc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729828AbgEEQF4 (ORCPT
+        id S1730046AbgEEQGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:05:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38292 "EHLO
+        Tue, 5 May 2020 12:06:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729195AbgEEQF4 (ORCPT
+        with ESMTP id S1729171AbgEEQGn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:05:56 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35485C061A41
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 09:05:56 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id f13so3371465wrm.13
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 09:05:56 -0700 (PDT)
+        Tue, 5 May 2020 12:06:43 -0400
+Received: from mail-qk1-x729.google.com (mail-qk1-x729.google.com [IPv6:2607:f8b0:4864:20::729])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FDFDC061A0F;
+        Tue,  5 May 2020 09:06:43 -0700 (PDT)
+Received: by mail-qk1-x729.google.com with SMTP id c10so2843267qka.4;
+        Tue, 05 May 2020 09:06:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=njl+I1KZR8dAJRFqU7HOVFmyMwpktP+Payzdk7cqiZo=;
-        b=pCbw8Q2Djt96EsEtPl4Xwf9WOgp+W7CXvZgaxdqcpirmNYjSYs2lAQfYP/qBeN/imW
-         qVMnYbtAIPWG5WvEXKrE3XH56YcQ5PblSP5dxSicG19C+Fm9IHnOwcV3lDboZ/rahDZX
-         KaV7vV6svD+bncNQN5UeWvAx1zaJqLFE+x33f58dhDIhxEQ+WgOKmPKT3J6RZ8o0i06h
-         kf7BZ1v3yDpTlV6C7mQTqSZbNF8qq3GoMgdq9JlBFZzbejBN6FDDzVfxn08kDc2K1pZP
-         dwfSr/9J/i1UZKnhFzYWvndqFjCsIHYjOlxrqmpfh+pStSpfhfIEGQUBA5z85DMujbZr
-         MQUw==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=bv8d5auwv8WPKBW85dEhvwg9llp+d9U+MUHdBWxQ/AA=;
+        b=YXZUrR/FBzuSZDfpKyddp1h4Q3IEai/+synGatezI1urLNAo/GqDaNbGAM9LoDkeJA
+         gzaObuXQxJdC3rrvG/FR/5EeiUTZlK6odsPf1p2j4udJUVYqoD/ixxWPQ3wlnh6Ugoj0
+         vYy2wGt9ujB5Jsvwcbjm+GoiqKD2A2/exauGq8LvJ2S4UBZhS+fXlOwif5kPyc9klZmB
+         9pp6rHNVpVcYYqLKhsd8OLFqIo0pi5jKkzudk8kKoFvPirFDS9eZPbtzFjaqUlvibmD1
+         zA1nh/SEvZlB/pAWTKki+2g6j2zyhskCgHDaHXMFDI2s+KdFCtrcgdJ2wtHFQf42tAqX
+         W3kQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=njl+I1KZR8dAJRFqU7HOVFmyMwpktP+Payzdk7cqiZo=;
-        b=BOAxSv5O9PzcbFPj2+b+qW+xG6uLChSC8tPLCXu6U548enL8/Q/1LGw8q/TQLXRd2W
-         8c4qUdbSuQGWq30EaVAByValTnL+7vJOSUvkrd/yZzMxFGtIjIBo+es88KychJsThubQ
-         1KN51SqY9Q76fMDu6+qnuS9UoL9oZexUGvTT5/Hkqoou5AcHsuVojcQ4UpwJvJaMAEvH
-         u739pei2rC6yZISeF3WRu68RloJOaTXhRY66m2avTYCsUPrv2ntJwqOpyM2F6/h/wISH
-         9knFTGiXL/OvkZLX3Qkg4P6MgAjhd+LhJatZQvVSCX7Iw3MiCrCDWTZ9ahH2/lkU6WX5
-         PgDQ==
-X-Gm-Message-State: AGi0Pua0y/o04t8D5l2cugZai8liFPc5eTzgp2Uyog9tHjDNRV2Kurgb
-        LOatgdtJAe0YGuI0n9Q98NqD8Q==
-X-Google-Smtp-Source: APiQypLoB4fjwTQJDOAaK7x/BgWoRefOlMYzgeBPm4DGbTUjdPo8UYmkhAaAStq6Y7TclKEt1oNfMQ==
-X-Received: by 2002:a5d:6107:: with SMTP id v7mr4240620wrt.270.1588694754820;
-        Tue, 05 May 2020 09:05:54 -0700 (PDT)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id l19sm4636869wmj.14.2020.05.05.09.05.53
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=bv8d5auwv8WPKBW85dEhvwg9llp+d9U+MUHdBWxQ/AA=;
+        b=EA0Fb44EaAqRz1NnMYOLAHJzhMFSRw2FtCfgtH7FH70IkeW7Yc2yqNvlUZewtvLefb
+         2AR2dGMVVgJoevVzidxd8oB5/VA6q50/xEXiZKZzidt8gFK5gG5gx4P3dLnf3iDQ4hqC
+         7ZXTiZWiBWF57xlF5xpVlAF/Uo1kdnbBousP6fwhH9jUMNA02uvdfBT09SweWWLsPrLf
+         6FMWwsAT5k9Esstmj4riG5RhZeluWqZzH5fBJj47mJxpjLWigU60Z/44INWjiwFus4WL
+         TyqxlgzBnEGNad576yFBc9Z9/+DXZUrWXVQDXI67jhVd1nHmetnlbjuoGoDDLs4mFnQl
+         uyGQ==
+X-Gm-Message-State: AGi0PuafDBCMejXuKKZEXwypOHQyoUzE4omgAAu1b/diCvHAoki7lDHc
+        m2Cjht7ViVO2cQz1au7gQBsRVxNvdzU=
+X-Google-Smtp-Source: APiQypL5/C35QYYNodlbdp+B4QZRwv17VqFw+9s44HXXYSewnnFddcstPi/LKf8jnUN7YSzyi3YHSA==
+X-Received: by 2002:a05:620a:16aa:: with SMTP id s10mr4277450qkj.216.1588694802205;
+        Tue, 05 May 2020 09:06:42 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:5ece])
+        by smtp.gmail.com with ESMTPSA id w69sm2087380qka.75.2020.05.05.09.06.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 09:05:54 -0700 (PDT)
-References: <20200428210229.703309-1-martin.blumenstingl@googlemail.com> <20200428210229.703309-3-martin.blumenstingl@googlemail.com> <1jlfmdi9uw.fsf@starbuckisacylon.baylibre.com> <CAPDyKFoEh8qKYFONo1SHnvwhDwjUa5bMnnT1Kbu8=4rd=T-8Kg@mail.gmail.com> <1jh7x1i3hj.fsf@starbuckisacylon.baylibre.com> <CAPDyKFq_USCNNps3s4+C_1hriycrxtRMKJvnPFcP59CZmLXbGw@mail.gmail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        "open list\:ARM\/Amlogic Meson..." 
-        <linux-amlogic@lists.infradead.org>,
-        "linux-mmc\@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        yinxin_1989@aliyun.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        lnykww@gmail.com, Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCH v6 2/2] mmc: host: meson-mx-sdhc: new driver for the Amlogic Meson SDHC host
-In-reply-to: <CAPDyKFq_USCNNps3s4+C_1hriycrxtRMKJvnPFcP59CZmLXbGw@mail.gmail.com>
-Date:   Tue, 05 May 2020 18:05:53 +0200
-Message-ID: <1j1rnygye6.fsf@starbuckisacylon.baylibre.com>
+        Tue, 05 May 2020 09:06:41 -0700 (PDT)
+Date:   Tue, 5 May 2020 12:06:39 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Yang Yingliang <yangyingliang@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        netdev@vger.kernel.org, "Libin (Huawei)" <huawei.libin@huawei.com>,
+        guofan5@huawei.com, wangkefeng.wang@huawei.com
+Subject: Re: cgroup pointed by sock is leaked on mode switch
+Message-ID: <20200505160639.GG12217@mtj.thefacebook.com>
+References: <03dab6ab-0ffe-3cae-193f-a7f84e9b14c5@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <03dab6ab-0ffe-3cae-193f-a7f84e9b14c5@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello, Yang.
 
-On Tue 05 May 2020 at 10:17, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+On Sat, May 02, 2020 at 06:27:21PM +0800, Yang Yingliang wrote:
+> I find the number nr_dying_descendants is increasing:
+> linux-dVpNUK:~ # find /sys/fs/cgroup/ -name cgroup.stat -exec grep
+> '^nr_dying_descendants [^0]'  {} +
+> /sys/fs/cgroup/unified/cgroup.stat:nr_dying_descendants 80
+> /sys/fs/cgroup/unified/system.slice/cgroup.stat:nr_dying_descendants 1
+> /sys/fs/cgroup/unified/system.slice/system-hostos.slice/cgroup.stat:nr_dying_descendants
+> 1
+> /sys/fs/cgroup/unified/lxc/cgroup.stat:nr_dying_descendants 79
+> /sys/fs/cgroup/unified/lxc/5f1fdb8c54fa40c3e599613dab6e4815058b76ebada8a27bc1fe80c0d4801764/cgroup.stat:nr_dying_descendants
+> 78
+> /sys/fs/cgroup/unified/lxc/5f1fdb8c54fa40c3e599613dab6e4815058b76ebada8a27bc1fe80c0d4801764/system.slice/cgroup.stat:nr_dying_descendants
+> 78
 
-> [...]
->
->> >> > +
->> >> > +     return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
->> >> > +                                        onecell_data);
->> >>
->> >> I think registering a provider for a module that does not provide clocks
->> >> to any other device is a bit overkill.
->> >>
->> >> I understand the matter is getting the per-user clk* pointer.
->> >> Since this is the module registering the clock, you can use clk_hw->clk
->> >> to get it.
->> >>
->> >> Once you have the clk* of the leaf clocks, you don't even need to keep
->> >> track of the clk_hw* since you are using devm_
->> >>
->> >> Afterward, we should propably discuss with Stephen if something should
->> >> be added in CCF to get a struct clk* from struct clk_hw*.
->> >>
->> >
->> > [...]
->> >
->> > Hmm.
->> >
->> > I am not sure the above is a good idea, at all. Unless, I am
->> > misunderstanding your point, which may be the case.
->> >
->> > I think above "shortcuts" could lead to abuse of the clock framework
->> > and its internal data structures. When going forward, this could make
->> > it unnecessary harder to maintain the clock framework.
->> >
->> > I know, it's not my responsibility, but from my experience with MMC
->> > and SDIO interfaces, is that those have been too easy abuse - since
->> > most of the data structures and interfaces have been exported. Now,
->> > it's hard to roll back that, if you see what I mean.
->>
->> Indeed, it worth clarifying this first.
->>
->> With clk_register deprecated in favor of clk_hw_register, we are likely
->> to see that case rise elsewhere.
->>
->
-> So, according to the separate discussion [1], I think we can let
-> Martin decide what option to implement at this point.
->
-> 1. Implement the "clk_hw_get_clk()" approach. The preferred option,
-> but requires wider changes of the clock subsystem as well.
->
-> 2. Keep the existing approach, with devm_clk_get(). I am fine with
-> this as well, we can always switch to 1) later on.
+Those numbers are nowhere close to causing oom issues. There are some
+aspects of page and other cache draining which is being improved but unless
+you're seeing numbers multiple orders of magnitude higher, this isn't the
+source of your problem.
 
-I have a problem with this approach.
-The dt-bindings would include "#clock-cells = <1>" for a device that
-does not actually provide and only needs it has a temporary work around.
-Those bindings are supposed to be stable ...
+> The situation is as same as the commit bd1060a1d671 ("sock, cgroup: add
+> sock->sk_cgroup") describes.
+> "On mode switch, cgroup references which are already being pointed to by
+> socks may be leaked."
 
-I have proposed 2 other short term solutions, let's see how it goes
+I'm doubtful that you're hitting that issue. Mode switching means memcg
+being switched between cgroup1 and cgroup2 hierarchies, which is unlikely to
+be what's happening when you're launching docker containers.
 
->
-> [...]
->
-> Kind regards
-> Uffe
->
-> [1]
-> https://www.spinics.net/lists/linux-clk/msg48373.html
+The first step would be identifying where memory is going and finding out
+whether memcg is actually being switched between cgroup1 and 2 - look at the
+hierarchy number in /proc/cgroups, if that's switching between 0 and
+someting not zero, it is switching.
 
+Thanks.
+
+-- 
+tejun
