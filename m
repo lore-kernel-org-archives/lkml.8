@@ -2,98 +2,145 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB09CC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 672A8C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5B05206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41DA4206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 21:30:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aZRjcMSG"
+	dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b="k6HZMgiH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729247AbgEEVaK (ORCPT
+        id S1729293AbgEEVaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 17:30:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60810 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728853AbgEEVaJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 17:30:09 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C8D8C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 14:30:09 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id u22so1356531plq.12
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 14:30:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=AYOhvViGtfOYUpiUVO6St0IFegyeJIOeiAmdAI4TNGQ=;
-        b=aZRjcMSGm6tpJdp5dwhoA4BnTL577pukRa7mQxkssp3Sui1VOiL8Cg5ituwtaTjV63
-         puUEc6X0vUmy9Ut2Ru4iG7PiSQeUG9f5uPgZ7vStJgQ5nKW+uovurKtQKfkKF/xcGUEi
-         lexkvpQCX0AhebneUv6ca46cPDFaGMd+VR3ZQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=AYOhvViGtfOYUpiUVO6St0IFegyeJIOeiAmdAI4TNGQ=;
-        b=U0bzVxtbhqevLZ36eM3ByG43QfqvGMLqUw6PCSWH4llKyzc+DXZybW35Z6i882Be9D
-         A39dwua1aySYa7bHH7kLBTmASp1w3ChiuPSIvtf8rOnC4J6r/xPF3j6U8eku0X2X0gHx
-         gyv4468eEKEQI0cQEYlQMZb9laM8BWkJ74ftvghzhqN6jbyMjgVT2KzWDbvTy5ls8a+u
-         HGexJOLqYHAmDy+13bSco9Sew7MvQ279uqBO3ZYEocyNReHp96ahAZoMtCdLuKbO3a2z
-         2m6dpKwMr5+lro1hRymR1boY9PRuASv7P1ZE/i1AuxVdByedcJAPu/uyIhJd4ggSEt6T
-         4kGw==
-X-Gm-Message-State: AGi0PuZKFkKaje2Ak1Gu+qYmTVpXdwQF04Ovd5wgyMyw7rMpUnwRpgDb
-        eHz1GVevgE002rjg4hOwljiXKg==
-X-Google-Smtp-Source: APiQypK3WcjO6U2JPoW88Je3vxrfxgNXgBI2d3GGp00OAegb5kl+6AC9gnF876wanQj3MCGBJKiezw==
-X-Received: by 2002:a17:902:a98c:: with SMTP id bh12mr4905381plb.176.1588714209118;
-        Tue, 05 May 2020 14:30:09 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o1sm2883000pjs.35.2020.05.05.14.30.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 14:30:08 -0700 (PDT)
-Date:   Tue, 5 May 2020 14:30:07 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 7/7] exec: Rename flush_old_exec begin_new_exec
-Message-ID: <202005051430.6ED1CC450@keescook>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
- <87a72mi2rq.fsf@x220.int.ebiederm.org>
+        Tue, 5 May 2020 17:30:24 -0400
+Received: from mail-eopbgr00125.outbound.protection.outlook.com ([40.107.0.125]:55104
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728853AbgEEVaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 17:30:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=O3oXONrU+aihIXIKD5URuYEbO30Ph7aHHLH6m3t5AqD6ERHwfSabqtutR/AxnDDwhafP3k4mJZ50xlem1c36961e5AMJ3+U76t3havFWb3ZMjw0fmnWMkXZVAweyfyB15NbB0N0OmKi3pbqvuF8iCkox+TVCiveu50ElfJdqgX0TsC6i9UR+Bfr6omOp0HJvRcf2uXrvaps5v+IR+U0HAnx2tkkNMySyTjWETCQhpbo4ate78rNzj32RuWGAILz0pVF9PNnAZftfM2A214u37G6C3/ktAqdvpS2/X0frm1dEsak3AXT61DQ8UhTUdB139aJ/zUyDf16DXYw72LLzSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+DOJUdoxG92qUWc5t3gWvqwdP0U/JrCONTeZMCny3sg=;
+ b=EvoA4RNchdYIkH507x50Af5WsUf7l9vojebl0TnBctivxWLXDIMuIWYO+JYA1sDBFiS9uqU8ZDMi/7eoZIpSAYlyNr8GXeSxsigdYKEfWyRasmq41DjS0rIQbqnibO6W+GZRcbBsX9wro16DzcA1MlcuA79Rby7lwffOypxbmTUGiH3rldggDIIJE89MPTTnrFOyEPNTOZvX6VU+pU+IIseHhES34yl6MHv43o7bqT3/v2lxGwbHhtkpJPxte5ei2rCr7oFA5Zf5LxGx8hdPcHh1xo5nsVutZ63ITXD1Q7NerX0J+xaMxlI97AKY/1brg8iB6U65ghAvHk1tJimQpQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=prevas.dk; dmarc=pass action=none header.from=prevas.dk;
+ dkim=pass header.d=prevas.dk; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.dk;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+DOJUdoxG92qUWc5t3gWvqwdP0U/JrCONTeZMCny3sg=;
+ b=k6HZMgiHD0gUJvFg6nJ9pEdI9qz1d+JNHCmsnvYjAMfydeNNASFemvFtrakSbsix0lXW0Dqn9ttdTbvCEnJbN6CBOovThLtt43JYyoJY5kuLcQOReE51iWFhwfZWqwgvatJbOacnW+7knEQaAN5umkBU8fn9QwCVTxN3S64LHTY=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=prevas.dk;
+Received: from VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:803:e1::21)
+ by VI1PR10MB2189.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:803:80::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.27; Tue, 5 May
+ 2020 21:30:19 +0000
+Received: from VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::f0ac:4e97:2536:faa]) by VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::f0ac:4e97:2536:faa%7]) with mapi id 15.20.2958.030; Tue, 5 May 2020
+ 21:30:19 +0000
+Subject: Re: [PATCH 5/5] rtc: pcf2127: report battery switch over
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-rtc@vger.kernel.org
+Cc:     =?UTF-8?Q?Per_N=c3=b8rgaard_Christensen?= 
+        <per.christensen@prevas.dk>, linux-kernel@vger.kernel.org
+References: <20200505201310.255145-1-alexandre.belloni@bootlin.com>
+ <20200505201310.255145-5-alexandre.belloni@bootlin.com>
+From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Message-ID: <e4910679-4453-f753-2c3e-4c93fd755b39@prevas.dk>
+Date:   Tue, 5 May 2020 23:30:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+In-Reply-To: <20200505201310.255145-5-alexandre.belloni@bootlin.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM6PR08CA0027.eurprd08.prod.outlook.com
+ (2603:10a6:20b:c0::15) To VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:803:e1::21)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87a72mi2rq.fsf@x220.int.ebiederm.org>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.149] (5.186.116.45) by AM6PR08CA0027.eurprd08.prod.outlook.com (2603:10a6:20b:c0::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26 via Frontend Transport; Tue, 5 May 2020 21:30:19 +0000
+X-Originating-IP: [5.186.116.45]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c43ba18e-1a59-4b29-a1fd-08d7f13b82b0
+X-MS-TrafficTypeDiagnostic: VI1PR10MB2189:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR10MB2189B3AD1DE15087B8EA020993A70@VI1PR10MB2189.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0394259C80
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 5iEI2AHpW6uxAZr9pYWse7O+W33grWprt5zRFWC/Yn89OiF6o0554THhjF3LpYGIGSZvjp0xiuYBO5hKhccImGoMaUOCXPHi4fbD5GIq2LQ9vMmnZ6+tRPg5tUeMrVHIgGj6QoMHpw/qTH/musTR/CwYnwM/vFwZNfspgcIhrO1HuWd39Jcb/X18Kt5GujEqKZ1E+F552EwpHVPF1bfFQNRAFBPvuVEZAK8sgg+neatP25tQup0O9fgF+mxx9dUKEpEo9XUCOXguT/WRM7R1ASP7YQPdXMIvUudgs6HMm8fG4owe73nmqpQQOYleGNhA0ULxciog65tDAjPyzt/fWzuWDEj9XgIOdnrUKRvOXJi9Vnf5Yiu9hcecezQVzCbUPqzdbaD7az0/Wo+1WxsYdyZ8p1vwHXzH8+7dzk54ErwM4LxrBESC3Wf5FXd+hAD2D+lwoihQ9JIxJ9HlfrJvVj6LbkbVD6IWNbEVydv9tUEvxXlGncrfGUR2HM60gNtV7BnLIzJJxZjcL3S9pIo+PfIMlfLiimp4wT2uhiJTlmxVAAZJlVOh+bxlC7wqVgMU
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(366004)(33430700001)(2906002)(16576012)(8976002)(8936002)(8676002)(26005)(16526019)(186003)(31686004)(52116002)(33440700001)(36756003)(86362001)(66946007)(6486002)(66556008)(66476007)(5660300002)(4326008)(44832011)(31696002)(956004)(498600001)(2616005)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: AUrrj47CYEEnizxH6TI631clTnqWM80AMQGt2kee99zmhcrS1+urjnMk8jmQrVhYkB281HxYquTEQ0mKp8iHfKbXNHsZbmcuVIe3SySTpqEL84muWqhe/ZOvPOLNs6zgwRQKHFWTCluTRufWm3KAI86ryHn6O4z4nEl4myvfgB70w7yLDU7BrB4RiQBj6K5lyT7aIoggvprrnw3dOQtmLa/YvMsADCpS6kg3DpK3Z6D7LjQZW9MkUjzIlZzR65fTMYQfdrIDtJv3IsQtnlJ9wv+4Y02VDOAe1E4z14EWazMl96IYCtJraxNA7dKJe+uFBIt2K9A/QIwt6WwvQKlFz5lJVTP+7Eia7cq8E9tzIgp/c7a55VPDPvWzJ06orXRmxKkAbde859mg93dSNHTkVQQb3vrd4BY6yxT3zd9728JToIuhK1CO9VtacceGqGx/e9LE5xqh5EsNaEMNZbhI/XRjBy33HvIwKwNj2xJxW3gSkOpIeI1obBlLyG0TotzQZKHknzoMr0kZZcyijQMvVP/HlxGUmInT/mWxROBclDGq5m9+KCRBjG7Xl4mRx/i+imXzDIIS7jJrUiuLOqlKWWxhK2X4SRdQVZuGKpOlwIm54CZxbs8QeBisaLVQuzJcpYmNntYe9ssLsRTOWou0dv6czJkIpRQAgVCX1RCQ8AHPnW9vbtL6uXDZPSxY4Hj+fL90e7GR7DoysNFmkGzD2d9WtKUQuS9mELndoy+EG+1uDq5ZrFCL7KpsZ5LAP69+l8/HT3NfEz6GNRwmq/n+bNoToWeSev0D5VH4Ph+r0xU=
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: c43ba18e-1a59-4b29-a1fd-08d7f13b82b0
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2020 21:30:19.5082
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d350cf71-778d-4780-88f5-071a4cb1ed61
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MrIsL22N8NRbmwL8YDkgyT5xRvfjz6rte4QGLE/7Z8d9k/366+VIBt2g6rX5gDCKoCuLBNoSj0NiZmSM7oc97OVjmlyKqYJgMs1QdyyelDM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB2189
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 02:46:01PM -0500, Eric W. Biederman wrote:
+On 05/05/2020 22.13, Alexandre Belloni wrote:
+> Add support for the RTC_VL_BACKUP_SWITCH flag to report battery switch over
+> events.
 > 
-> There is and has been for a very long time been a lot more going on in
-> flush_old_exec than just flushing the old state.  After the movement
-> of code from setup_new_exec there is a whole lot more going on than
-> just flushing the old executables state.
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> ---
+>  drivers/rtc/rtc-pcf2127.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
 > 
-> Rename flush_old_exec to begin_new_exec to more accurately reflect
-> what this function does.
-> 
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> diff --git a/drivers/rtc/rtc-pcf2127.c b/drivers/rtc/rtc-pcf2127.c
+> index 039078029bd4..967de68e1b03 100644
+> --- a/drivers/rtc/rtc-pcf2127.c
+> +++ b/drivers/rtc/rtc-pcf2127.c
+> @@ -188,18 +188,27 @@ static int pcf2127_rtc_ioctl(struct device *dev,
+>  				unsigned int cmd, unsigned long arg)
+>  {
+>  	struct pcf2127 *pcf2127 = dev_get_drvdata(dev);
+> -	int touser;
+> +	int val, touser = 0;
+>  	int ret;
+>  
+>  	switch (cmd) {
+>  	case RTC_VL_READ:
+> -		ret = regmap_read(pcf2127->regmap, PCF2127_REG_CTRL3, &touser);
+> +		ret = regmap_read(pcf2127->regmap, PCF2127_REG_CTRL3, &val);
+>  		if (ret)
+>  			return ret;
+>  
+> -		touser = touser & PCF2127_BIT_CTRL3_BLF ? RTC_VL_BACKUP_LOW : 0;
+> +		if (val & PCF2127_BIT_CTRL3_BLF)
+> +			touser = RTC_VL_BACKUP_LOW;
+> +
+> +		if (val & PCF2127_BIT_CTRL3_BF)
+> +			touser |= RTC_VL_BACKUP_SWITCH;
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+I think it's a bit easier to read if you use |= in both cases.
 
--- 
-Kees Cook
+Re patch 3, one saves a little .text by eliding the ioctl function when,
+as you say, it cannot be called anyway. No strong opinion either way, I
+don't think anybody actually builds without CONFIG_RTC_INTF_DEV, but
+those that do are probably the ones that care about having a tiny vmlinux.
+
+Other than that, the series looks good to me.
+
+Thanks,
+Rasmus
