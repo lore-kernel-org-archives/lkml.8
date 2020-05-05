@@ -2,105 +2,109 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BE1C47256
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 03:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D909C47258
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E082206CC
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 03:55:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588650948;
-	bh=rHTxzGcwMeCDg1nOjVr/jfX2SZVBp4avXgqxuwEXbW0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mEfDj4bEIBEUeqmdx2EVDPv/PpwNDBK8P0N/rlTwOqucWnVjD7uOMgpVYj/GSHvSr
-	 56Np+Upwho79pPkBd2dg7yz/pq7nGf8o3ZJ4Yj0GOrqbikLhfz4nHqtz8MbmdVVUcu
-	 FSyBhJo8RrQ5ioeCFcS+kBxCrhQ24URsSaES55Xs=
+	by mail.kernel.org (Postfix) with ESMTP id 6801620721
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 04:01:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L9xooj06"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbgEEDzr (ORCPT
+        id S1726065AbgEEEBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 23:55:47 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44737 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbgEEDzr (ORCPT
+        Tue, 5 May 2020 00:01:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725272AbgEEEBA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 23:55:47 -0400
-Received: by mail-ot1-f68.google.com with SMTP id j4so524842otr.11;
-        Mon, 04 May 2020 20:55:46 -0700 (PDT)
+        Tue, 5 May 2020 00:01:00 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E62A2C061A10
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 21:00:59 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id q124so430391pgq.13
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 21:00:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zXcNVzanMlcydlCFrB2r+HWplGTpnlRV6J+MdBaPrW0=;
+        b=L9xooj06SkKYA1F/mM6gzkXw0XRoE4+PPOkuKWhil2K0egyXKdJzupiMsGnMwT0YZQ
+         xGiwlJ5L/ot5yLd7/aWq+6s6xqhhn81GenquLvLfmVrAVCzRFE5iCEWnvH3ef9uQv72m
+         Ixc8jb7K6KPUUbjSkttRV/P8Yde3shEwk7HKE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fVpmlRqOB7eXke8uevfSsRs8l7hcoXGDZESzEE9L/Kk=;
-        b=LTmzC+z2LtrtoCvIZe1d3Ny2xovOeB6f2rKZV6s3kHfC/8qn5qyqN0p8+bwJFxotHm
-         Zw0cQLRtOx/jciMAuAv76A2SwpoR0f+ljTL7r5/5FDvvbzrApIOlmwSPydkLUer83DGe
-         cqbKEtSQEMqluaOH2T4r41hYfPcdfwjGZaxIuNBlUp1S1A2Wnm8eoEbjfMGbe9nA92u4
-         y+QXHeTAV5QAPPHHsp0MA6kO2da0R1rTufWOi0opKAD+1eLBKw16puxkFZN/E74+Q7dz
-         vLyGbrAq0NxWOQSmelz7Yg56Yk0YNBxRVO7uf358RT0tXqRrMySmI4CHpcqvK6aV3yBU
-         W98Q==
-X-Gm-Message-State: AGi0PuYeact1L4SFN2P1fgTfEUx9WOcFtUntI213U8dbVUhaLA6dZhI3
-        5tuWvi21Th2S6zfRyEkjFiQEXEw=
-X-Google-Smtp-Source: APiQypJTqz87zIpF1xabhLlbR6oZBO16QbukiXQa0HRhnMbsIVziIpe/J85nsrXb8hc4FUxAuvipIg==
-X-Received: by 2002:a9d:5e04:: with SMTP id d4mr988124oti.312.1588650945786;
-        Mon, 04 May 2020 20:55:45 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id b63sm318718otc.23.2020.05.04.20.55.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 20:55:44 -0700 (PDT)
-Received: (nullmailer pid 7523 invoked by uid 1000);
-        Tue, 05 May 2020 03:55:43 -0000
-Date:   Mon, 4 May 2020 22:55:43 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     skrzynka@konradybcio.pl, Konrad Dybcio <konradybcio@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zXcNVzanMlcydlCFrB2r+HWplGTpnlRV6J+MdBaPrW0=;
+        b=Jlgn0Iz+kogtJe+St936Kt+xEd/HhwbOGg6uX7kj1mYHpha8o5euALQBnqU3oeFA4F
+         0nZAz0LifRLtXiDYbnBKdmMsy6ZM4520p//BvHc41d5uH51vN/jePobj/QQSMahQoXvd
+         IAGZo5blcvhFbHtCNKSyo9GuVmZ0aYpDEEsl79+rMxbi9BQ4/ia+kJUGONTqAi0F67kW
+         SvZpvTZv0Wnq+hEeIgxadS2YUq6giZ1b4SKbhIuSAPwZ5IDBL2WzgIbrYYppPqPCAum5
+         3VMqCPPpzJzwlTKgXPfqqS8AFi4tcA7XKeBbEqab4JZSGXYfXnG0gtAc1q5UGIGy1uhN
+         ra8g==
+X-Gm-Message-State: AGi0PubIecZu6ny68Jkq8d7Ivn0dlUyVimiODK+BpYOLY7bt1jgARAnC
+        JfWVZoDkTbplxHqo8yBorBQ9NDUY5MQ=
+X-Google-Smtp-Source: APiQypIp32k7wFgY1LdvBHBmqXAPISaNhBFaTPFmVLXNVlSrCu74vyD+6Dj1MKLOgE+L+DG1C5YGzw==
+X-Received: by 2002:a63:1103:: with SMTP id g3mr1357965pgl.206.1588651258943;
+        Mon, 04 May 2020 21:00:58 -0700 (PDT)
+Received: from localhost ([2401:fa00:9:14:a92f:c47d:76a8:b09e])
+        by smtp.gmail.com with ESMTPSA id c124sm585707pfb.187.2020.05.04.21.00.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 May 2020 21:00:58 -0700 (PDT)
+From:   Eizan Miyamoto <eizan@chromium.org>
+X-Google-Original-From: Eizan Miyamoto <eizan@google.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Eizan Miyamoto <eizan@chromium.org>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: media: Document MSM8939 Venus
-Message-ID: <20200505035543.GA5765@bogus>
-References: <20200501203505.144362-1-konradybcio@gmail.com>
- <20200501203505.144362-3-konradybcio@gmail.com>
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH v1 0/5] MTK MDP driver cleanups to prep for futher work
+Date:   Tue,  5 May 2020 14:00:43 +1000
+Message-Id: <20200505040048.132493-1-eizan@google.com>
+X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501203505.144362-3-konradybcio@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  1 May 2020 22:35:03 +0200, Konrad Dybcio wrote:
-> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-> ---
->  .../bindings/media/qcom,msm8939-venus.yaml    | 119 ++++++++++++++++++
->  1 file changed, 119 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/qcom,msm8939-venus.yaml
-> 
+From: Eizan Miyamoto <eizan@chromium.org>
 
-My bot found errors running 'make dt_binding_check' on your patch:
 
-Documentation/devicetree/bindings/media/qcom,msm8939-venus.example.dts:20:18: fatal error: dt-bindings/clock/qcom,gcc-msm8939.h: No such file or directory
-         #include <dt-bindings/clock/qcom,gcc-msm8939.h>
-                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/media/qcom,msm8939-venus.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/media/qcom,msm8939-venus.example.dt.yaml] Error 1
-make[1]: *** Waiting for unfinished jobs....
-Makefile:1300: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+It most notably converts an array of MDP components to a list instead,
+but also removes some unused fields.
 
-See https://patchwork.ozlabs.org/patch/1281452
+This series of patches does some cleanup in preparation for futher work
+so that hardware video decode works on 4.19 and later kernels. We are
+planning on adding a dummy driver for the relevant MDP components that
+will be bound together using the component framework, which will enable
+calls to set up IOMMUs and LARBs, and make calls into pm_runtime.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+Eizan Miyamoto (5):
+  [media] mtk-mdp: remove mtk_mdp_comp.regs from mtk_mdp_comp.h
+  [media] mtk-mdp: handle vb2_dma_contig_set_max_seg_size errors during
+    probe
+  [media] mtk-mdp: handle vpu_wdt_reg_handler() errors during probe
+  [media] mtk-mdp: convert mtk_mdp_dev.comp array to list
+  [media] mtk-mdp: Remove mtk_mdp_comp.id and supporting functionality
 
-Please check and re-submit.
+ drivers/media/platform/mtk-mdp/mtk_mdp_comp.c | 60 ++-------------
+ drivers/media/platform/mtk-mdp/mtk_mdp_comp.h | 23 +-----
+ drivers/media/platform/mtk-mdp/mtk_mdp_core.c | 74 ++++++++++++-------
+ drivers/media/platform/mtk-mdp/mtk_mdp_core.h | 10 ++-
+ 4 files changed, 68 insertions(+), 99 deletions(-)
+
+-- 
+2.26.2.526.g744177e7f7-goog
+
