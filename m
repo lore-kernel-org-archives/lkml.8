@@ -2,178 +2,89 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BDAC47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9BCC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 881A3206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:34:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KcHACnyr"
+	by mail.kernel.org (Postfix) with ESMTP id 7F27C206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:34:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730405AbgEEPeW (ORCPT
+        id S1730410AbgEEPe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:34:22 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:50289 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729250AbgEEPeW (ORCPT
+        Tue, 5 May 2020 11:34:56 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:32923 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729447AbgEEPe4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:34:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588692860;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tnbFEV0yzg7DHxDmKfIXizOuP0I8+/dIqAQu+mCixHM=;
-        b=KcHACnyrxqUxSzR03MpKnNxH4GpVw9zrG6ZfBtRivOYVtMc/CvRmcMmPa/giWkL9OANSLY
-        49RsIXL3WjbXr4PdG3r+QbJWUsdEzFastsgZbM+b55/Q0erKfMDnw1iBEG5zB+gniWDVI8
-        Ffsvwl7+PbxVlqRls1eXkMAd3MdKFBo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-204-q6FCn2JzMkCHeL88OvURcA-1; Tue, 05 May 2020 11:34:18 -0400
-X-MC-Unique: q6FCn2JzMkCHeL88OvURcA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7EE9D107ACCA;
-        Tue,  5 May 2020 15:34:16 +0000 (UTC)
-Received: from x1.home (ovpn-113-95.phx2.redhat.com [10.3.113.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6FA006061C;
-        Tue,  5 May 2020 15:34:15 +0000 (UTC)
-Date:   Tue, 5 May 2020 09:34:14 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Raj, Ashok" <ashok.raj@intel.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Darrel Goeddel <DGoeddel@forcepoint.com>,
-        Mark Scott <mscott@forcepoint.com>,
-        Romil Sharma <rsharma@forcepoint.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH] iommu: Relax ACS requirement for RCiEP devices.
-Message-ID: <20200505093414.6bae52e0@x1.home>
-In-Reply-To: <20200505145605.GA13690@otc-nc-03>
-References: <1588653736-10835-1-git-send-email-ashok.raj@intel.com>
-        <20200504231936.2bc07fe3@x1.home>
-        <20200505061107.GA22974@araj-mobl1.jf.intel.com>
-        <20200505080514.01153835@x1.home>
-        <20200505145605.GA13690@otc-nc-03>
-Organization: Red Hat
+        Tue, 5 May 2020 11:34:56 -0400
+Received: from mail-qk1-f171.google.com ([209.85.222.171]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MtfRp-1jHtsv2esh-00v4dV; Tue, 05 May 2020 17:34:54 +0200
+Received: by mail-qk1-f171.google.com with SMTP id f13so2735742qkh.2;
+        Tue, 05 May 2020 08:34:54 -0700 (PDT)
+X-Gm-Message-State: AGi0Pub2Lj7INkZdZeZmap/L7ibpyvMtORfQ2A/xm/7yxrSS2TbOdxGb
+        XV2Xx/RTXaHU5FaOTe4RgnI25XMuC5CQTGfBDxg=
+X-Google-Smtp-Source: APiQypJ6aNF96MJ+osF2WCBQeZWcDk6l1GVugJ56JpB8nOxW+eYqhDjSR3n8hNxMlYLYJbdvAfV1tblMIRLQi6j+tII=
+X-Received: by 2002:a37:4e08:: with SMTP id c8mr4066508qkb.286.1588692893453;
+ Tue, 05 May 2020 08:34:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <20200505135848.180753-1-arnd@arndb.de> <20200505140443.GK208718@lunn.ch>
+In-Reply-To: <20200505140443.GK208718@lunn.ch>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 5 May 2020 17:34:37 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2Dtr5Ng7tt0ibPkNL565S+7cyYfGxfo4WUftkQ9mxgWw@mail.gmail.com>
+Message-ID: <CAK8P3a2Dtr5Ng7tt0ibPkNL565S+7cyYfGxfo4WUftkQ9mxgWw@mail.gmail.com>
+Subject: Re: [PATCH] [net-next] dsa: sja1105: dynamically allocate stats structure
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Vladimir Oltean <olteanv@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:yBMsXm2HGYg8sUK9ISFYJPBa5Zh9OYPYxhrn4HeznkNc9saoevk
+ EBUJ6mAyWlRpoGY+nhYlpQNpoDtf3V+vmdCrzPOp7KWBD0DZjWR5D7c+QW02sB2vAOF5NKB
+ AGnVIJ184N9M8wFpcWz3obPPxJ7P9ZhRLTZ4Q/Ark332CNZu5b/yKh+QVcjDEyU+4E4jVxz
+ xzqh9TGTQIgHZOjIM93+A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ahYfMqjPmJ8=:Qa4mc42wjBSHKhfVxUB9N+
+ 3s4eJA7LpiAxcvhQV13VGaVmD3gn/Ld+IMKFWU0LlO5IDzmCUTV1K8+NYLTAmt5go8nN5odzq
+ cEtLbmsTjpXK34lO+dsy08D43RoSxhJU/CuQIRRcSFYlk0Bme8wqq1qsL9Zh0RFqP+lPIxsmW
+ /JRqMd13Xb4mLPhWBxRLq+QmcYH2s1zc6f2nRBb8r8s8vYyGJ7jtZa6OjsWV2wjulxWv3Kt3i
+ kQ218wOwHcD/JjTQOeEoYxkeUpJ5Mzo9wDS0+Pp0aKTIy8et9jaH/57oW8IlaT60GwStFYCsR
+ 1qTRt+m+/5kBV1M8HD90+ArNaO/8EhbxLLiAVHruiuMMRmAiolf5wzQUFnB0JaHaT7n67eowd
+ 8AkeotN1ZWLX/NcDNhufoZZnpz6IHbmfZNA2Ebfvp0j9gVxSix1olkTsxTZ7d7CCMqrAPHh6v
+ CrstWmRTrjeXnSSyin7OIn3YQ88M826aVhodQx33zg/8rrNRp+2XGANMaUunBdnkfhkSj5I3M
+ 9ozFd9hVclEJCEG+ZPMR6h85k8LSCn86wQceSHPpqo7I1+y9DxxKydGFY+0R9Us7j0XBDdKSL
+ g3i/8SDG4C2sOYTZIbeS21fWU4I9VEeYiLvtHpZRrj0DSwe9sVtUYKE6yNY7PJnFu0cYjGW2q
+ CqjJ0WSrMa63xkR/HkP+KHNFRgwoPJlefbXlufAiw/HwBxjRC5QAGZiu4CMVcRXkTFhHbKncg
+ RcswhfLTaw4wa/NyXvG/LT1Ws4y3NA0d/teEIHtEv1hgL7aRKOsoKutUzrasidRHdH1EdIQqf
+ TN88wcF3MTtFs8XkaHACJVJSpyO5MJ8fK/te0F3oHsVssf8lzw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 May 2020 07:56:06 -0700
-"Raj, Ashok" <ashok.raj@intel.com> wrote:
+On Tue, May 5, 2020 at 4:04 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> > -     rc = sja1105_port_status_get(priv, &status, port);
+> > +     rc = sja1105_port_status_get(priv, status, port);
+> >       if (rc < 0) {
+> >               dev_err(ds->dev, "Failed to read port %d counters: %d\n",
+> >                       port, rc);
+> > -             return;
+> > +             goto out;;
+>
+> Hi Arnd
+>
+> I expect static checker people will drive by soon with a fix for the ;; :-)
 
-> On Tue, May 05, 2020 at 08:05:14AM -0600, Alex Williamson wrote:
-> > On Mon, 4 May 2020 23:11:07 -0700
-> > "Raj, Ashok" <ashok.raj@intel.com> wrote:
-> >   
-> > > Hi Alex
-> > > 
-> > > + Joerg, accidently missed in the Cc.
-> > > 
-> > > On Mon, May 04, 2020 at 11:19:36PM -0600, Alex Williamson wrote:  
-> > > > On Mon,  4 May 2020 21:42:16 -0700
-> > > > Ashok Raj <ashok.raj@intel.com> wrote:
-> > > >     
-> > > > > PCIe Spec recommends we can relax ACS requirement for RCIEP devices.
-> > > > > 
-> > > > > PCIe 5.0 Specification.
-> > > > > 6.12 Access Control Services (ACS)
-> > > > > Implementation of ACS in RCiEPs is permitted but not required. It is
-> > > > > explicitly permitted that, within a single Root Complex, some RCiEPs
-> > > > > implement ACS and some do not. It is strongly recommended that Root Complex
-> > > > > implementations ensure that all accesses originating from RCiEPs
-> > > > > (PFs and VFs) without ACS capability are first subjected to processing by
-> > > > > the Translation Agent (TA) in the Root Complex before further decoding and
-> > > > > processing. The details of such Root Complex handling are outside the scope
-> > > > > of this specification.
-> > > > >   
-> > > > 
-> > > > Is the language here really strong enough to make this change?  ACS is
-> > > > an optional feature, so being permitted but not required is rather
-> > > > meaningless.  The spec is also specifically avoiding the words "must"
-> > > > or "shall" and even when emphasized with "strongly", we still only have
-> > > > a recommendation that may or may not be honored.  This seems like a
-> > > > weak basis for assuming that RCiEPs universally honor this
-> > > > recommendation.  Thanks,
-> > > >     
-> > > 
-> > > We are speaking about PCIe spec, where people write it about 5 years ahead
-> > > and every vendor tries to massage their product behavior with vague
-> > > words like this..  :)
-> > > 
-> > > But honestly for any any RCiEP, or even integrated endpoints, there 
-> > > is no way to send them except up north. These aren't behind a RP.  
-> > 
-> > But they are multi-function devices and the spec doesn't define routing
-> > within multifunction packages.  A single function RCiEP will already be
-> > assumed isolated within its own group.  
-> 
-> That's right. The other two devices only have legacy PCI headers. So 
-> they can't claim to be RCiEP's but just integrated endpoints. The legacy
-> devices don't even have a PCIe header.
-> 
-> I honestly don't know why these are groped as MFD's in the first place.
-> 
-> >    
-> > > I did check with couple folks who are part of the SIG, and seem to agree
-> > > that ACS treatment for RCiEP's doesn't mean much. 
-> > > 
-> > > I understand the language isn't strong, but it doesn't seem like ACS should
-> > > be a strong requirement for RCiEP's and reasonable to relax.
-> > > 
-> > > What are your thoughts?   
-> > 
-> > I think hardware vendors have ACS at their disposal to clarify when
-> > isolation is provided, otherwise vendors can submit quirks, but I don't
-> > see that the "strongly recommended" phrasing is sufficient to assume
-> > isolation between multifunction RCiEPs.  Thanks,  
-> 
-> You point is that integrated MFD endpoints, without ACS, there is no 
-> gaurantee to SW that they are isolated.
-> 
-> As far as a quirk, do you think:
-> 	- a cmdline optput for integrated endpoints, and RCiEP's suffice?
-> 	  along with a compile time default that is strict enforcement
-> 	- typical vid/did type exception list?
-> 
-> A more generic way to ask for exception would be scalable until we can stop
-> those type of integrated devices. Or we need to maintain these device lists
-> for eternity. 
+I need to fix the patch up anyway, as it accidentally included an unrelated
+change that fails to apply. Fixed now.
 
-I don't think the language in the spec is anything sufficient to handle
-RCiEP uniquely.  We've previously rejected kernel command line opt-outs
-for ACS, and the extent to which those patches still float around the
-user community and are blindly used to separate IOMMU groups are a
-testament to the failure of this approach.  Users do not have a basis
-for enabling this sort of opt-out.  The benefit is obvious in the IOMMU
-grouping, but the risk is entirely unknown.  A kconfig option is even
-worse as that means if you consume a downstream kernel, the downstream
-maintainers might have decided universally that isolation is less
-important than functionality.
-
-I think the only solution is that the hardware vendors need to step up
-to indicate where devices are isolated.  The hardware can do this
-itself by implementing ACS, otherwise we need quirks.  I think we've
-also generally been reluctant to accept quirks that provide a blanket
-opt-out for a vendor because doing so is akin to trying to predict the
-future (determining the behavior of all current and previous hardware
-is generally a sufficiently impossible task already).  Perhaps if a
-vendor has a published internal policy regarding RCiEP isolation and is
-willing to stand by a quirk, there might be room to negotiate.  Thanks,
-
-Alex
-
+      Arnd
