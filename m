@@ -2,106 +2,93 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 722BDC47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25407C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37B57207DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:12:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="iDiXTUjq"
+	by mail.kernel.org (Postfix) with ESMTP id A04CF2078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:12:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729931AbgEEPMX (ORCPT
+        id S1729949AbgEEPM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:12:23 -0400
-Received: from mout.gmx.net ([212.227.17.20]:33091 "EHLO mout.gmx.net"
+        Tue, 5 May 2020 11:12:59 -0400
+Received: from sauhun.de ([88.99.104.3]:34206 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729332AbgEEPMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:12:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1588691536;
-        bh=rP2jwm5r1DSsgQcMQyTdDXK8vZHVg6r+l7O9JIrJHNM=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=iDiXTUjqdcI/8c04L3AeaCi0hUu+fW5bzn8Lw4h2BNmoYekmHUUNpNyynneYirP4I
-         ejhAYNpUIKvarVuvfzOVFmgq/e4a2eCCD67GDUtUNBZwHyFYFS9S5zyZh1kKq2yLOJ
-         N68KyFNHiO+7DYQHkXgbrJCLYYrmUqUoJsXacW9Y=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([212.114.250.16]) by mail.gmx.com
- (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1N3KTy-1j66P743ve-010L62; Tue, 05 May 2020 17:12:16 +0200
-From:   Julian Sax <jsbc@gmx.de>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Julian Sax <jsbc@gmx.de>,
-        stable@vger.kernel.org
-Subject: [PATCH] HID: i2c-hid: add Schneider SCL142ALM to descriptor override
-Date:   Tue,  5 May 2020 17:10:42 +0200
-Message-Id: <20200505151042.122157-1-jsbc@gmx.de>
-X-Mailer: git-send-email 2.26.2
+        id S1729332AbgEEPM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 11:12:58 -0400
+Received: from localhost (p54B335A1.dip0.t-ipconnect.de [84.179.53.161])
+        by pokefinder.org (Postfix) with ESMTPSA id 7F2872C0892;
+        Tue,  5 May 2020 17:12:56 +0200 (CEST)
+Date:   Tue, 5 May 2020 17:12:56 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        ludovic.desroches@microchip.com, nicolas.ferre@microchip.com,
+        alexandre.belloni@bootlin.com, kamel.bouhara@bootlin.com,
+        linux@armlinux.org.uk, linus.walleij@linaro.org, alan@softiron.com
+Subject: Re: [RFC PATCH] i2c: at91: Fix pinmux after devm_gpiod_get() for bus
+ recovery
+Message-ID: <20200505151256.GF2468@ninjato>
+References: <20200415070643.23663-1-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:1xGtNobj9IeDfNsT7NU9grJu6PKvdVE4rsepR8eiLGugWh9vK2t
- X374UBlmCSX1GJbm+Vis111h+wVie9BpMQt/QVPyEle8yJRHGLsRFSWerk7KbU6rVgUvIFI
- iAWMmR2+Uc6cv2jSLm5zlwA17JdxerpnOfDqMP+nvCIIxJN+KQVpbLT9zHR6KCEhjGo6+15
- HEuZ7/ugGknrEmahEJBWw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2vDpBxRuuzs=:ODep58ZEW2ncfPvvDJi5tC
- KL9PsAJNtm8M0ZjM7nSNLCYSMoUA1kAX/neIPBo9QgiAl13fMvPwwVTC68yN0HiG8Wcn7DHmX
- iqHtyYzhvCFBhmzOPbAW6dFZcYh6tHZPIlhVZPphak/q6qFlSY1+iRuqrfiN3f5Rp5s9dTcOw
- cYpu1DsEwF69JLQv7xMv1XnnGmlQBqZIaLTpTMKsX4XHhL4eNtCqHDj2suDAwBMk/L0JCfivW
- 0FCZSlrpaQBJCUU6Ff6YfqtTn26Fz3pjyaUmYgokiUv2ac2dCqvXGqICT1bJFZhyaoo/IFapW
- /AJ1GHc6cG3zbUHr48mZ0gz/YVpVhDPiPV1vPnKWSFTnXQ58OMpJHcQF4quJ+wP/P/jROPGxc
- 6YFGIUKl5s4QYXw5enkFxNYAun4Bz4QHLCwDNNSqADTlXC+wsH/Apw8fNoyABI+mAlIXy8Q/A
- fVlkhrvah+AWOoWNcfiRGYrjy9E7iiJlGrgzJGIkw34O9OKYxUVFeL0iEu87BgJcLRS9TyITO
- i+6N5+3jA+AwGS4Ki0LZBPgoMKVR/ystVB+HD48lCw9tqcuNDRKo1BbOmAVC9c+YZtvw9yiFv
- K07vr/tc9EBUul93FH0L6BsWKp1S+8iJWURuRpar8Fsf9ym3619gH8Wk/t808bQiHBMa1brzs
- cnfs5SOJ65s3jYKP2ud2+fMuUf6M2/WSC5T4/oDBXLF3F/gSp7AMIwNpbyx5hZ3EmJmquQhUN
- dLndPl4d6cJtHT3sVmfxxYhjzasfbyutv637HYfOyJkUJ4nB1M62CfqrwCsCxg3mENqdQXxOP
- 1qP34DZX0l6QKNUJawGoxqmO6A3/+zNREdZXeiqPnKrMaaKVx6YrshgnbK7+0pS+CaIRq+jIY
- 7ojY9RriOyfuMGozeSbYmz1kht2bgJ1Wm2NgODVJ0F71bDPCq6MCYnt63UT8Su6NUnQIUvZD3
- G9SZfA91TW+3oi96CV6fal2HIzOssG8L/WXMp2VocqSK6ONIDIIQxqu1evZ0lUiMDXkxWc99N
- +TeBgs1F73WyuHNEouvbKlhISKb0SIxs8kCRpSVLWKQ16cpkMzVKKv6sD2ULsOy8qaXE0p216
- 3jfx5YJIx/iQE6tyywDpzw9dU8stKpM3lYIU2KJXImZxBBbjymbKAjVOfPmLRy4BmpH1RSrs2
- hDBj8K6suxsSgAmlyQfiSvAqlQgaJXv/wP5ohNmL6TzcXwWKFoAoyUf6ISrUrQfelH97c=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="twz1s1Hj1O0rHoT0"
+Content-Disposition: inline
+In-Reply-To: <20200415070643.23663-1-codrin.ciubotariu@microchip.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This device uses the SIPODEV SP1064 touchpad, which does not
-supply descriptors, so it has to be added to the override list.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Julian Sax <jsbc@gmx.de>
-=2D--
- drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+--twz1s1Hj1O0rHoT0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hi=
-d/i2c-hid-dmi-quirks.c
-index a66f08041a1a..ec142bc8c1da 100644
-=2D-- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-@@ -389,6 +389,14 @@ static const struct dmi_system_id i2c_hid_dmi_desc_ov=
-erride_table[] =3D {
- 		},
- 		.driver_data =3D (void *)&sipodev_desc
- 	},
-+	{
-+		.ident =3D "Schneider SCL142ALM",
-+		.matches =3D {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "SCHNEIDER"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "SCL142ALM"),
-+		},
-+		.driver_data =3D (void *)&sipodev_desc
-+	},
- 	{ }	/* Terminate list */
- };
+On Wed, Apr 15, 2020 at 10:06:43AM +0300, Codrin Ciubotariu wrote:
+> devm_gpiod_get() usually calls gpio_request_enable() for non-strict pinmux
+> drivers. These puts the pins in GPIO mode, whithout notifying the pinctrl
+> driver. At this point, the I2C bus no longer owns the pins. To mux the
+> pins back to the I2C bus, we use the pinctrl driver to change the state
+> of the pins to GPIO, before using devm_gpiod_get(). After the pins are
+> received as GPIOs, we switch theer pinctrl state back to the default
+> one,
+>=20
+> Fixes: d3d3fdcc4c90 ("i2c: at91: implement i2c bus recovery")
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 
-=2D-
-2.26.2
+Applied to for-current, thanks!
 
+This will do for 5.7. For 5.8 or 5.9, I can imagine to take the two
+pinctrl_state pointers into bus_recovery_info and handle all this in the
+core. I will try this later this week if noone is super-eager to try it
+out before.
+
+
+--twz1s1Hj1O0rHoT0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6xgnQACgkQFA3kzBSg
+KbbY+xAArfL/iEHhieAsZoajJ8HCWqBjKMu523a4uPpmSCk4jP9UIqOQqtUac4tK
+wUCJg3LXJvbT8pfvfxAcSTHYjgVIvh0br6N44vO5zWz6uTlyEH0LXrg8NP9qrECb
+B5HHfsFxVWhTMuFTgcqRHel1qHzhd3rWCebhfdiFrBcHpM6xmeB9VlYyXoq4/qx5
+p3/5LwgKJW4xo4AT2J3PCfX5h/zVdIzeWW9qPX+xyUtCJ0MpCxsVxStpUXwudIH2
+rJahIU7t0NL0MtKLa4Waf8PjQULKShZc1vrQ/QQhi50kLicGkPwQSJnkFe+lLnjS
+aMGEKiJajucG8tz1nqsg8A2CsXpUC70f7bwQP7kGlUVPqEPp13soeor9qoKIClfX
+LleANdq18XOlIIRKGtcLKvg/abHXk1/OQ9efNx8Aa4G30im3rozCwbR+Fpn+mLZC
+oANKeX7VJ+DmuYqiWaD23Iz/j3M2skgBmUeuzAMYvA+OX6lERmWWnBqEMAqb0si2
+nngZTQcBg1s8HEbeDMkH7N9zu47bEdXAARoFE9ys16uZK3A7RRNnv46NSjZAph1b
+uepFxAB8QGm9a+sLjLY4Ym/G6vBAv9CRh5FCLDxZ1ODzYZfEiPtt3umtz7DFfGKp
+/9wolNpCGqYXQHYwgmakJq5f9MEASvhl4GNag81Qi1AHgRJeDqs=
+=kQ/H
+-----END PGP SIGNATURE-----
+
+--twz1s1Hj1O0rHoT0--
