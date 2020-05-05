@@ -2,84 +2,104 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8774C47256
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84568C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7521C20663
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BC57206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 07:37:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oXtQWlXn"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vagCgOey"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbgEEHgb (ORCPT
+        id S1728430AbgEEHhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 03:36:31 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:25392 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726337AbgEEHgb (ORCPT
+        Tue, 5 May 2020 03:37:00 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:15974 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726575AbgEEHhA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 03:36:31 -0400
+        Tue, 5 May 2020 03:37:00 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588664190; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=E5ikgPmsaSTtogguuprJ4svrQMsqzNWKpQn1yRMxllE=;
- b=oXtQWlXnCEt14ZM/zEdcqOorH4WVYlHa0eDfoAM35T/oiHOB1l2IV6h/uSNd/QB0NsWv36jY
- hREZCmiQlAuHkexcsx/1v3ropolbv8Nj08GHVuOG66zcLC/1q3BrXLACUV0iha2t0FRUXCSt
- dJht8l7Dwe1iD6E+S6Sg/a/CgjU=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ s=smtp; t=1588664219; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=kIFbus3pdBIDI9q5dNQbOWwVqxDFyCbLIbVYGC3IkTQ=;
+ b=vagCgOeykJ42vpaE0uNOq/51602FAR4zeAcoOphrv+nj3GKqBE6e+hU7D1YUWM5tZWisznP+
+ kuHrGXCJixBQp/uO3X2a/CzvagqhWy17DU7YPhZ+VuoU+pwXyAwO4O7TMOnzegG5VHRzxhPj
+ GQnMi004QNWU0+SWVKddGdE7MdA=
+X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb11796.7fc83b4433b0-smtp-out-n03;
+ Tue, 05 May 2020 07:36:54 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 17A48C433F2; Tue,  5 May 2020 07:36:25 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id A2428C44788; Tue,  5 May 2020 07:36:53 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 661CBC433D2;
-        Tue,  5 May 2020 07:36:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 661CBC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 01650C433D2;
+        Tue,  5 May 2020 07:36:52 +0000 (UTC)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v3 1/3] dt-bindings: ath10k: Add wifi-firmware subnode for
- wifi node
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <1586971906-20985-2-git-send-email-pillair@codeaurora.org>
-References: <1586971906-20985-2-git-send-email-pillair@codeaurora.org>
-To:     Rakesh Pillai <pillair@codeaurora.org>
-Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rakesh Pillai <pillair@codeaurora.org>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200505073625.17A48C433F2@smtp.codeaurora.org>
-Date:   Tue,  5 May 2020 07:36:25 +0000 (UTC)
+Date:   Tue, 05 May 2020 13:06:52 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Nishanth Menon <nm@ti.com>, Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-arm-msm@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>, lukasz.luba@arm.com,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH v4 07/12] OPP: Add and export helper to get icc path count
+In-Reply-To: <CAGETcx9=kfuG9WtaSxsDe_SM1Gewbn889eQ--3ui3H_rzm3BRA@mail.gmail.com>
+References: <20200504202243.5476-1-sibis@codeaurora.org>
+ <20200504202243.5476-8-sibis@codeaurora.org>
+ <CAGETcx9=kfuG9WtaSxsDe_SM1Gewbn889eQ--3ui3H_rzm3BRA@mail.gmail.com>
+Message-ID: <9c5786c552bf7f0092cecbbdabd7761b@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rakesh Pillai <pillair@codeaurora.org> wrote:
-
-> Add a wifi-firmware subnode for the wifi node.
-> This wifi-firmware subnode is needed for the
-> targets which do not support TrustZone.
+On 2020-05-05 03:33, Saravana Kannan wrote:
+> On Mon, May 4, 2020 at 1:24 PM Sibi Sankar <sibis@codeaurora.org> 
+> wrote:
+>> 
+>> Add and export 'dev_pm_opp_get_path_count' to get the icc path count
+>> associated with the device.
 > 
-> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+> This is not related to OPP. You should add this helper function to ICC
+> framework?
 
-3 patches applied to ath-next branch of ath.git, thanks.
+yes it should be, I'll work with
+Georgi so that it gets re-used in
+his series as well.
 
-85325c24d5d2 dt-bindings: ath10k: Add wifi-firmware subnode for wifi node
-727fec790ead ath10k: Setup the msa resources before qmi init
-1423f4327331 ath10k: Add support for targets without trustzone
+
+> 
+> -Saravana
 
 -- 
-https://patchwork.kernel.org/patch/11491759/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
