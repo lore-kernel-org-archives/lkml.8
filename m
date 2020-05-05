@@ -2,135 +2,114 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F08A8C47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC30DC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFF6520735
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9272120735
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:12:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gSAzcE/c"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c33eASpj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729264AbgEEOMq (ORCPT
+        id S1729278AbgEEOM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:12:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48344 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729089AbgEEOMp (ORCPT
+        Tue, 5 May 2020 10:12:57 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48972 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729219AbgEEOM4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:12:45 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C501C061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:12:45 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id x10so2070963oie.1
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 07:12:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Yjm2cmKVuwlkstPxfFd5MfjFWk/J8R1nDWAUw4Id7r8=;
-        b=gSAzcE/ceHx3DD0GHkL/zUqm0ntyLCzjEfid4HO8kPLsHnWLW/F0L8YI2ve23ScdUX
-         SR0Z5J4h4hYUhRAu0sf2GUNqwtltdFruppAAsoH8zwvvowS4uwWSYI6fT1Q8LSRLegaC
-         J6UdM/icnIHrSTh/q0fEzggv34Jrmx9+Lr8NMLddFudUi4U5QiM/RI/uAJB0oFvMPzbz
-         izKi+kCspKWbqnxBLxwB8Elc4lL3Z7ABEXerd1WoTedVc/o4SczYSK0prr4dF5Pix0w4
-         ogM72D79j8OK39H5K1HkLXMQe39tDXPeZsYE5K/oiYsHvpadvrMniPLWrvwerrWTx8oq
-         1Nuw==
+        Tue, 5 May 2020 10:12:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588687974;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9QocmiR79ciyCV8YIogR/mIbS+d3+LtRW/0KmEr7MtM=;
+        b=c33eASpjxykGTTat16XijkHaLXWb58lI0IqcNJJPtPhut7A8LNJZvd9EPsei2q+6r9YhA1
+        qPTf4BRKkHr7bLAzhdewDNGW/cKerZ33PLVbqhIGqGdU8CvibQsUIDiKsFd181KWDZ2MSU
+        4RoeCKM/KvUBXtmd4AU3cu6b/StZotU=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-119-6OnTRXnfMh6jQtRIW_mcTg-1; Tue, 05 May 2020 10:12:49 -0400
+X-MC-Unique: 6OnTRXnfMh6jQtRIW_mcTg-1
+Received: by mail-qt1-f197.google.com with SMTP id e44so1799150qta.9
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 07:12:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Yjm2cmKVuwlkstPxfFd5MfjFWk/J8R1nDWAUw4Id7r8=;
-        b=ubqbrrwj2L1KzaBb6KNJS724MEF/jLfAyfFmNRwPAylClV3Lda2fcVZTqqRyd+Nsmg
-         P4b23Its5IxCh6wRTdc7qQRwix7nfCpvvEJ/MmXOoBVHgrd1u+y1np2UZKUYqmz2S8ui
-         GbZXJ6S0jJldKn9UknHt06c+UH48pd7UJ7xuoaeubKPrsFJV3K7QTEVL7qtLC71Wu4ml
-         9JJNOl6FFO94p1C4at/Uti51JP4uGXrl90LG8dD3wW9wC8jonKv3+0Br5NlnOiwO+zAR
-         vkBFPLvh17eiejAacgkGjiB3Xc0U8leQQDAXV8S7ikvPbBiblP65wfB8TnlaK+Md3WQl
-         S/uQ==
-X-Gm-Message-State: AGi0PuaLvmNTrMIsrlUEedIu4NxLRjm8H+3dqIfPvVFMXc09sYxckbey
-        VGq5dhT1g/gXaCYvnDa/fVTyntn5nvjU66iuqGdPSQ==
-X-Google-Smtp-Source: APiQypIAywvPjEF+eFOU7gfeqV9lG2oqecVKyu+ef21qclXSvVG9C5gqW2wVY/N0EBRjBC6fH8Vm74uN5E+0Jr0Owmg=
-X-Received: by 2002:aca:1c08:: with SMTP id c8mr2558360oic.172.1588687963483;
- Tue, 05 May 2020 07:12:43 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=9QocmiR79ciyCV8YIogR/mIbS+d3+LtRW/0KmEr7MtM=;
+        b=pHnFSoiYt++iv5kMD8tFnDYSscZ7mXGD2AOw8RXaN8HZg2KOWzybaqmsT3pcxbRoE3
+         4ItENiKygewLxwa7JOUTPBr0tzlB4UOUG+HBi/gs0OUL0h7q/glKOiZrHhkkdhJfa5Re
+         Bw9YY9HzXclDBbun2PABFvkaFm3dEc5CZQbYR9SH7xAsi6H8DFkQAVxGIHB0z2RidRNN
+         sznccOYJhN7sb8sjl1MS85dnjVljiQ5jdsJ/16JHsRNKALJjFNjTImXi7fM4VyQdyW/o
+         JUfoB1tuvyh/Spm4t2tL5cFxZKZiaYZrk+JwthMzBA2fEd8+Z1Diyhj/2Y/asHgLHREQ
+         zaSw==
+X-Gm-Message-State: AGi0PuYjzmr/Co8OSMDua3vixPjzksiWhjh62mCtomUSBB4Z0ZGHNf2B
+        J6UHInEzRGIJO2v6ikJ5qZXSWsR9KgS/LEGcUU7pltOuGzF+pGIHVAQPM3wUDULF4Cc5Ax3gpKw
+        1R26L1GQ3NxhMeHg7K+brg7io
+X-Received: by 2002:a05:620a:112c:: with SMTP id p12mr844433qkk.313.1588687967629;
+        Tue, 05 May 2020 07:12:47 -0700 (PDT)
+X-Google-Smtp-Source: APiQypL2JXMwNHFY++ym7AgRDXitYWpCdW9rKuEVfwZfFB1urpeidfFT0kVgaOLz2D8FZ6rVTNljng==
+X-Received: by 2002:a05:620a:112c:: with SMTP id p12mr844411qkk.313.1588687967341;
+        Tue, 05 May 2020 07:12:47 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id v5sm1810925qkg.9.2020.05.05.07.12.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 07:12:46 -0700 (PDT)
+Date:   Tue, 5 May 2020 10:12:45 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH] KVM: Fix a warning in __kvm_gfn_to_hva_cache_init()
+Message-ID: <20200505141245.GH6299@xz-x1>
+References: <20200504190526.84456-1-peterx@redhat.com>
+ <20200505013929.GA17225@linux.intel.com>
 MIME-Version: 1.0
-References: <20200505140407.373983-1-arnd@arndb.de>
-In-Reply-To: <20200505140407.373983-1-arnd@arndb.de>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 5 May 2020 16:12:30 +0200
-Message-ID: <CANpmjNNw6M9Gqj6WGTHH4Cegu8roTVu5x6Vqs_tCBxX3gPwL4A@mail.gmail.com>
-Subject: Re: [PATCH] omapfb: don't annotate dss_conv_list as __initdata
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com, Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200505013929.GA17225@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 May 2020 at 16:04, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> With the kcsan changes, __read_once_size() is not inlined, but
-> clang can decide to emit a version that hardcodes the address, which
-> in turn triggers a warning for dss_conv_list being __initdata but
-> __read_once_size() not being __init:
->
-> WARNING: modpost: vmlinux.o(.text+0x6e4d7a): Section mismatch in
-> reference from the function __read_once_size() to the variable
-> .init.data:dss_conv_list
-> The function __read_once_size() references
-> the variable __initdata dss_conv_list.
-> This is often because __read_once_size lacks a __initdata
-> annotation or the annotation of dss_conv_list is wrong.
->
-> This is clearly a false positive warning, but it's hard to tell
-> who is to blame for it. Work around it by removing the __initdata
-> annotation, wasting the space of two pointers in return for getting
-> rid of the warning.
->
-> Fixes: dfd402a4c4ba ("kcsan: Add Kernel Concurrency Sanitizer infrastructure")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On Mon, May 04, 2020 at 06:39:29PM -0700, Sean Christopherson wrote:
+> On Mon, May 04, 2020 at 03:05:26PM -0400, Peter Xu wrote:
+> > GCC 10.0.1 gives me this warning when building KVM:
+> > 
+> >   warning: ‘nr_pages_avail’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+> >   2442 |  for ( ; start_gfn <= end_gfn; start_gfn += nr_pages_avail) {
+> > 
+> > It should not happen, but silent it.
+> 
+> Heh, third times a charm?  This has been reported and proposed twice
+> before[1][2].  Are you using any custom compiler flags?  E.g. -O3 is known
+> to cause false positives with -Wmaybe-uninitialized.
 
-[+Cc Will]
+No, what I did was only upgrading to Fedora 32 (which will auto-upgrade GCC),
+so it should be using the default params of whatever provided.
 
-I think Will is working on a series that completely overhauls
-READ_ONCE/WRITE_ONCE, also getting rid of __read_once_size() in the
-process, which would make this patch redundant. If we can live with
-this warning until the new READ_ONCE/WRITE_ONCE gets merged, we can
-probably keep things as-is for now.
+> 
+> If we do end up killing this warning, I'd still prefer to use
+> uninitialized_var() over zero-initializing the variable.
+> 
+> [1] https://lkml.kernel.org/r/20200218184756.242904-1-oupton@google.com
+> [2] https://bugzilla.kernel.org/show_bug.cgi?id=207173
+
+OK, I didn't know this is a known problem and discussions going on.  But I
+guess it would be good to address this sooner because it could become a common
+warning very soon after people upgrades gcc.
 
 Thanks,
--- Marco
 
-> ---
->  drivers/video/fbdev/omap2/omapfb/dss/omapdss-boot-init.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/omapdss-boot-init.c b/drivers/video/fbdev/omap2/omapfb/dss/omapdss-boot-init.c
-> index 0ae0cab252d3..29fdff9c95f6 100644
-> --- a/drivers/video/fbdev/omap2/omapfb/dss/omapdss-boot-init.c
-> +++ b/drivers/video/fbdev/omap2/omapfb/dss/omapdss-boot-init.c
-> @@ -19,7 +19,7 @@
->  #include <linux/slab.h>
->  #include <linux/list.h>
->
-> -static struct list_head dss_conv_list __initdata;
-> +static struct list_head dss_conv_list;
->
->  static const char prefix[] __initconst = "omapdss,";
->
-> --
-> 2.26.0
->
+-- 
+Peter Xu
+
