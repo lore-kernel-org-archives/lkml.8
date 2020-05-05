@@ -2,179 +2,242 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AA1C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDBAC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10E4A20735
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:27:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FMGNXT2f"
+	by mail.kernel.org (Postfix) with ESMTP id 3158B20675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:28:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729491AbgEEO1x (ORCPT
+        id S1729525AbgEEO2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:27:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51048 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729346AbgEEO1t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:27:49 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45F61C061A0F;
-        Tue,  5 May 2020 07:27:48 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id t9so1215266pjw.0;
-        Tue, 05 May 2020 07:27:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0d2zCfXjqEkoPjXPCO2eW50jfsT6IHtXFCM1nqKnraI=;
-        b=FMGNXT2fKKRoI0Pby3QgAP4Puaf5obX+oQRGw4q02LmDjkOt+RB6cbjPh0JwHzPXfm
-         AHgHRP5heysnfoNbOXjMjPwe8r8YvUqZYGmP0RO83fTG6L+69/EfRbWXibcjJEy4klyV
-         ZkVXEgz1N+v2K2Upz/9ML8/Ba9tJGB9+/XJ9/7DVg8asisv+bu2bxXRwNeUmRu4GS+rQ
-         rnmONhdRXEj+ZJuD0x7PLI2XHbxKq8lKli1c1n4pX2VMrBHmcR28oHgqtcjOLi7KktiM
-         b8StMxT9POylTHoanWOo3dIONP33MQIuul6kPigKUGMMWQ3HZmwaUKYbJBSJB+xZNnaH
-         zY0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0d2zCfXjqEkoPjXPCO2eW50jfsT6IHtXFCM1nqKnraI=;
-        b=icpyOGM7V3Lj9PJQO6gvlswQnj7J4IHV0uB5If0bkIbI1vroxNNT5d99CedpzeCkbb
-         xXWtQsCfuN6zgdUL6a1yuiFhZb5gLw1hlspxqn4ElJYmgrT1cFPScKrkRSIxZCOrHz3L
-         aePNq+eoo/UmqwK9Spm0pCQh0XmzXhEI90mlxM3O1dlt5HItVqftUWzlIOihZw0C2eVe
-         BUpBlPI2/vr7iof0Fueo+Kc1x/HOOew0hrEHbtyoy2S/3B1UXJ12OzghauTFpuo96iEO
-         7O/HVkzDj/AbdhQt90pJNYpnlTI3Pl9WjIkqCBa9qzkwrJ6gOUSJ5uT4HRfoLBbz4gvQ
-         JCzA==
-X-Gm-Message-State: AGi0PuYTCai6Cv7s/X3Oj7Hh9T3qme0msReFwrkwSHl2/zur5q6T+Nmb
-        rsDqlbekm0iI2mD56ic+J3pJBM8AqYxoKD96cDs=
-X-Google-Smtp-Source: APiQypI3q+uz07fz96ONWB3ggyRrtBojxXIGIS+eu+fruU+zGJ0LKKFfiU+ajF4EFSxYHvXi9wX/IzALXoeJqGzIQko=
-X-Received: by 2002:a17:90a:fa81:: with SMTP id cu1mr3442100pjb.25.1588688867728;
- Tue, 05 May 2020 07:27:47 -0700 (PDT)
+        Tue, 5 May 2020 10:28:05 -0400
+Received: from foss.arm.com ([217.140.110.172]:41792 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729308AbgEEO2D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 10:28:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EBF3D1FB;
+        Tue,  5 May 2020 07:28:02 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 840BD3F68F;
+        Tue,  5 May 2020 07:28:00 -0700 (PDT)
+Date:   Tue, 5 May 2020 15:27:58 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Patrick Bellasi <derkling@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] sched/uclamp: Add a new sysctl to control RT
+ default boost value
+Message-ID: <20200505142757.rturrjok4uklf2ea@e107158-lin.cambridge.arm.com>
+References: <20200501114927.15248-1-qais.yousef@arm.com>
+ <87h7wwrkcd.derkling@matbug.com>
 MIME-Version: 1.0
-References: <20200502182951.114231-1-hdegoede@redhat.com> <20200502182951.114231-5-hdegoede@redhat.com>
- <7c3e5f844a224ff780cd8e3b3f5f7641@AUSX13MPC101.AMER.DELL.COM>
- <13a8ec94-1eae-4d95-7238-85c612ebc896@redhat.com> <afe7c366c97f4ab18d5a98a9695ceff6@AUSX13MPC101.AMER.DELL.COM>
-In-Reply-To: <afe7c366c97f4ab18d5a98a9695ceff6@AUSX13MPC101.AMER.DELL.COM>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 5 May 2020 17:27:41 +0300
-Message-ID: <CAHp75VcNJFfgshhL_pYsHodF1pMNySw08Z_4jr-vVkE-Xpj_ng@mail.gmail.com>
-Subject: Re: [PATCH 4/5] platform/x86: intel-vbtn: Also handle tablet-mode
- switch on "Detachable" and "Portable" chassis-types
-To:     Mario Limonciello <Mario.Limonciello@dell.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87h7wwrkcd.derkling@matbug.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 5:22 PM <Mario.Limonciello@dell.com> wrote:
->
-> > -----Original Message-----
-> > From: platform-driver-x86-owner@vger.kernel.org <platform-driver-x86-
-> > owner@vger.kernel.org> On Behalf Of Hans de Goede
-> > Sent: Tuesday, May 5, 2020 4:06 AM
-> > To: Limonciello, Mario; dvhart@infradead.org; andy@infradead.org
-> > Cc: linux-acpi@vger.kernel.org; platform-driver-x86@vger.kernel.org; linux-
-> > kernel@vger.kernel.org
-> > Subject: Re: [PATCH 4/5] platform/x86: intel-vbtn: Also handle tablet-mode
-> > switch on "Detachable" and "Portable" chassis-types
-> >
-> >
-> > [EXTERNAL EMAIL]
-> >
-> > Hi,
-> >
-> > On 5/4/20 5:37 PM, Mario.Limonciello@dell.com wrote:
-> > >
-> > >
-> > >> -----Original Message-----
-> > >> From: Hans de Goede <hdegoede@redhat.com>
-> > >> Sent: Saturday, May 2, 2020 1:30 PM
-> > >> To: Darren Hart; Andy Shevchenko; Limonciello, Mario
-> > >> Cc: Hans de Goede; linux-acpi@vger.kernel.org; platform-driver-
-> > >> x86@vger.kernel.org; linux-kernel@vger.kernel.org
-> > >> Subject: [PATCH 4/5] platform/x86: intel-vbtn: Also handle tablet-mode
-> > switch
-> > >> on "Detachable" and "Portable" chassis-types
-> > >>
-> > >>
-> > >> [EXTERNAL EMAIL]
-> > >>
-> > >> Commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
-> > >> switch on 2-in-1's") added a DMI chassis-type check to avoid accidentally
-> > >> reporting SW_TABLET_MODE = 1 to userspace on laptops.
-> > >>
-> > >> Some devices with a detachable keyboard and using the intel-vbnt (INT33D6)
-> > >> interface to report if they are in tablet mode (keyboard detached) or not,
-> > >> report 32 / "Detachable" as chassis-type, e.g. the HP Pavilion X2 series.
-> > >>
-> > >> Other devices with a detachable keyboard and using the intel-vbnt (INT33D6)
-> > >> interface to report SW_TABLET_MODE, report 8 / "Portable" as chassis-type.
-> > >> The Dell Venue 11 Pro 7130 is an example of this.
-> > >>
-> > >> Extend the DMI chassis-type check to also accept Portables and Detachables
-> > >> so that the intel-vbtn driver will report SW_TABLET_MODE on these devices.
-> > >>
-> > >> Note the chassis-type check was originally added to avoid a false-positive
-> > >> tablet-mode report on the Dell XPS 9360 laptop. To the best of my knowledge
-> > >> that laptop is using a chassis-type of 9 / "Laptop", so after this commit
-> > >> we still ignore the tablet-switch for that chassis-type.
-> > >
-> > > Yes that's correct.
-> > >
-> > >>
-> > >> Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
-> > >> switch on 2-in-1's")
-> > >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> > >> ---
-> > >> Looking at the Microsoft Windows documentation for tablet-mode reporting:
-> > >> https://docs.microsoft.com/en-us/windows-hardware/drivers/gpiobtn/button-
-> > >> implementation
-> > >>
-> > >> Then the presence of a tablet-mode switch is indicated by the presence
-> > >> of a PNP0C60 compatible ACPI devices. There are 2 ways in which this device
-> > >> can report the tablet-mode. 1. Directly providing a GpioInt resource inside
-> > >> the PNP0C60 device, 2. Through injecting events from a Windows driver.
-> > >>
-> > >> It seems that the intel-vbtn / the INT33D6 ACPI device is the ACPI side
-> > >> of Intel's generic solution for the case where the tablet-mode comes from
-> > >> the embedded-controller and needs to be "injected".
-> > >>
-> > >> This all suggests that it might be better to replace the chassis-type
-> > >> check with a acpi_dev_present("PNP0C60", NULL, -1) check.
-> > >>
-> > >> Mario, can you provide an acpidump and alsa-info.sh output for the
-> > >> Dell XPS 9360, so that I can check if that might help with the issue
-> > >> there, and thus is a potential candidate to replace the chassis-type
-> > >> check?
-> > >
-> > > Unfortunately with WFH right now, I don't have access to a XPS 9630 to
-> > > double check the patch series.
-> > >
-> > > However I do agree this should be a good approach.
-> >
-> > Ok, so lets stick with the chassis-type check (as amended by this patch)
-> > for now then. Then once you are able to go to your office again, we
-> > can examine the acpi_dev_present("PNP0C60", NULL, -1) alternative.
->
-> I know XPS 13's are pretty popular, perhaps someone on the mailing list who has
-> one can share ACPI dump in the interim.
+On 05/03/20 19:37, Patrick Bellasi wrote:
 
-https://github.com/intel/dptfxtract/issues/13
-?
+[...]
 
--- 
-With Best Regards,
-Andy Shevchenko
+> > +static inline void uclamp_sync_util_min_rt_default(struct task_struct *p,
+> > +						   enum uclamp_id clamp_id)
+> > +{
+> > +	struct uclamp_se *uc_se;
+> > +
+> > +	/* Only sync for UCLAMP_MIN and RT tasks */
+> > +	if (clamp_id != UCLAMP_MIN || likely(!rt_task(p)))
+>                                       ^^^^^^
+> Are we sure that likely makes any difference when used like that?
+> 
+> I believe you should either use:
+> 
+> 	if (likely(clamp_id != UCLAMP_MIN || !rt_task(p)))
+> 
+> or completely drop it.
+
+I agree all these likely/unlikely better dropped.
+
+> 
+> > +		return;
+> > +
+> > +	uc_se = &p->uclamp_req[UCLAMP_MIN];
+> 
+> nit-pick: you can probably move this at declaration time.
+> 
+> The compiler will be smart enough to either post-pone the init or, given
+> the likely() above, "pre-fetch" the value.
+> 
+> Anyway, the compiler is likely smarter then us. :)
+
+I'll fling this question to the reviewers who voiced concerns about the
+overhead. Personally I see the v3 implementation is the best fit :)
+
+> 
+> > +
+> > +	/*
+> > +	 * Only sync if user didn't override the default request and the sysctl
+> > +	 * knob has changed.
+> > +	 */
+> > +	if (unlikely(uc_se->user_defined) ||
+> > +	    likely(uc_se->value == sysctl_sched_uclamp_util_min_rt_default))
+> > +		return;
+> 
+> Same here, I believe likely/unlikely work only if wrapping a full if()
+> condition. Thus, you should probably better split the above in two
+> separate checks, which also makes for a better inline doc.
+> 
+> > +
+> > +	uclamp_se_set(uc_se, sysctl_sched_uclamp_util_min_rt_default, false);
+> 
+> Nit-pick: perhaps we can also improve a bit readability by defining at
+> the beginning an alias variable with a shorter name, e.g.
+> 
+>        unsigned int uclamp_min =  sysctl_sched_uclamp_util_min_rt_default;
+> 
+> ?
+
+Could do. I used default_util_min as a name though.
+
+> 
+> > +}
+> > +
+> >  static inline struct uclamp_se
+> >  uclamp_tg_restrict(struct task_struct *p, enum uclamp_id clamp_id)
+> >  {
+> > @@ -907,8 +949,15 @@ uclamp_tg_restrict(struct task_struct *p, enum uclamp_id clamp_id)
+> >  static inline struct uclamp_se
+> >  uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
+> >  {
+> > -	struct uclamp_se uc_req = uclamp_tg_restrict(p, clamp_id);
+> > -	struct uclamp_se uc_max = uclamp_default[clamp_id];
+> > +	struct uclamp_se uc_req, uc_max;
+> > +
+> > +	/*
+> > +	 * Sync up any change to sysctl_sched_uclamp_util_min_rt_default value.
+>                                                                          ^^^^^
+> > +	 */
+> 
+> nit-pick: we can use a single line comment if you drop the (useless)
+> 'value' at the end.
+
+Okay.
+
+> 
+> > +	uclamp_sync_util_min_rt_default(p, clamp_id);
+> > +
+> > +	uc_req = uclamp_tg_restrict(p, clamp_id);
+> > +	uc_max = uclamp_default[clamp_id];
+> >  
+> >  	/* System default restrictions always apply */
+> >  	if (unlikely(uc_req.value > uc_max.value))
+> > @@ -1114,12 +1163,13 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
+> >  				loff_t *ppos)
+> >  {
+> >  	bool update_root_tg = false;
+> > -	int old_min, old_max;
+> > +	int old_min, old_max, old_min_rt;
+> >  	int result;
+> >  
+> >  	mutex_lock(&uclamp_mutex);
+> >  	old_min = sysctl_sched_uclamp_util_min;
+> >  	old_max = sysctl_sched_uclamp_util_max;
+> > +	old_min_rt = sysctl_sched_uclamp_util_min_rt_default;
+> >  
+> >  	result = proc_dointvec(table, write, buffer, lenp, ppos);
+> >  	if (result)
+> > @@ -1133,6 +1183,18 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
+> >  		goto undo;
+> >  	}
+> >  
+> > +	/*
+> > +	 * The new value will be applied to RT tasks the next time the
+> > +	 * scheduler needs to calculate the effective uclamp.min for that task,
+> > +	 * assuming the task is using the system default and not a user
+> > +	 * specified value. In the latter we shall leave the value as the user
+> > +	 * requested.
+> 
+> IMO it does not make sense to explain here what you will do with this
+> value. This will make even more complicated to maintain the comment
+> above if the code using it should change in the future.
+> 
+> So, if the code where we use the knob is not clear enough, maybe we can
+> move this comment to the description of:
+>    uclamp_sync_util_min_rt_default()
+> or to be part of the documentation of:
+>   sysctl_sched_uclamp_util_min_rt_default
+> 
+> By doing that you can also just add this if condition with the previous ones.
+
+Okay.
+
+> 
+> > +	 */
+> > +	if (sysctl_sched_uclamp_util_min_rt_default > SCHED_CAPACITY_SCALE) {
+> > +		result = -EINVAL;
+> > +		goto undo;
+> > +	}
+> > +
+> >  	if (old_min != sysctl_sched_uclamp_util_min) {
+> >  		uclamp_se_set(&uclamp_default[UCLAMP_MIN],
+> >  			      sysctl_sched_uclamp_util_min, false);
+> > @@ -1158,6 +1220,7 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
+> >  undo:
+> >  	sysctl_sched_uclamp_util_min = old_min;
+> >  	sysctl_sched_uclamp_util_max = old_max;
+> > +	sysctl_sched_uclamp_util_min_rt_default = old_min_rt;
+> >  done:
+> >  	mutex_unlock(&uclamp_mutex);
+> >  
+> > @@ -1200,9 +1263,13 @@ static void __setscheduler_uclamp(struct task_struct *p,
+> >  		if (uc_se->user_defined)
+> >  			continue;
+> >  
+> > -		/* By default, RT tasks always get 100% boost */
+> > +		/*
+> > +		 * By default, RT tasks always get 100% boost, which the admins
+> > +		 * are allowed to change via
+> > +		 * sysctl_sched_uclamp_util_min_rt_default knob.
+> > +		 */
+> >  		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
+> > -			clamp_value = uclamp_none(UCLAMP_MAX);
+> > +			clamp_value = sysctl_sched_uclamp_util_min_rt_default;
+> 
+> Mmm... I suspect we don't need this anymore.
+> 
+> If the task has a user_defined value, we skip this anyway.
+> If the task has not a user_defined value, we will do set this anyway at
+> each enqueue time.
+> 
+> No?
+
+Indeed.
+
+Thanks
+
+--
+Qais Yousef
