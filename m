@@ -2,240 +2,119 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0553C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70652C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87D0A206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E612206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:48:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="b2Jt5T0j"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="q4VZsEbY";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qGjGewXS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729406AbgEEOpV (ORCPT
+        id S1729254AbgEEOsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:45:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727857AbgEEOpV (ORCPT
+        Tue, 5 May 2020 10:48:18 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:38247 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729065AbgEEOsR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:45:21 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7878C061A0F;
-        Tue,  5 May 2020 07:45:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=bce39cuhX+v1hhfYsPnYxLnuYR5lP/z3GapCTjD03hM=; b=b2Jt5T0jNdoZl3RJSWosMCfhx
-        kgLFhgINbBWKyjtBOcxA48/fC1ckaCPZjO8j937EwIiBU4erqDB7D6RmWvm8RHrOqtENm7l8eHZ+C
-        f+YnQvZk6yGKlVtaXZAhBkEuJPKAa4fA/+tCo2SJgGVFLrHiMw5b0aA/webhWeJX1A9tmjuzfpMMQ
-        EiOLtC5g8TLkvnMlRURyYhWvzpC9ddO9H52wFyZmELgmCDazwji3PP3ueKlVEUEmJyQzS45eFLsci
-        AQQd2bWz7zT+OGSLFNkNYkd/lkL8nV3EZKre9zaUHj8OX/lu/HbIGwE8iBgAHEbT5LLfJR4IuBDFP
-        ucLMiqVAw==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:36340)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jVyod-00030V-EZ; Tue, 05 May 2020 15:44:59 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jVyoc-0007F0-7K; Tue, 05 May 2020 15:44:58 +0100
-Date:   Tue, 5 May 2020 15:44:58 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Calvin Johnson <calvin.johnson@oss.nxp.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>, linux.cj@gmail.com,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Madalin Bucur <madalin.bucur@oss.nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Varun Sethi <V.Sethi@nxp.com>,
-        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Diana Madalina Craciun <diana.craciun@nxp.com>,
-        netdev@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [net-next PATCH v3 1/5] net: phy: Introduce phy related fwnode
- functions
-Message-ID: <20200505144458.GK1551@shell.armlinux.org.uk>
-References: <20200505132905.10276-1-calvin.johnson@oss.nxp.com>
- <20200505132905.10276-2-calvin.johnson@oss.nxp.com>
+        Tue, 5 May 2020 10:48:17 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id A791F5C0114;
+        Tue,  5 May 2020 10:48:16 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Tue, 05 May 2020 10:48:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=kfT8ZL/aV6Mm5grejUEjVjEC1xM
+        kxA/XGNBpdFiLAvA=; b=q4VZsEbYXjBdmg+bYJMsB9PlXvdvHudKAF2W7IczXji
+        Mn3kosPvJ8q/k4dPLxIzopeHxO7y79C/iK4NWsI0HRYpjGvEmI92u14KXeAzQLvR
+        Xt2Vpk6iRCpztA56SMKOdazi4TNkfk7Pg9J5/kQ0q2+QOWor0uJBlzBUTPUwSe9p
+        JZIkTPkTc/Wkh3soqMmcK9QJx39TphhdyB4lMjr579SBNB/t/lnhDj3q7tl/tIcy
+        ELoxBTgQCuXRCyHU/9aDEJatrXvZ8M+UMErhUaU4PVpi2OJH0qYoetmfJeTQwSHI
+        m2/S66bB4YzScyZVpMBmBjgveerJfvmYvyOo5AWJ2eA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=kfT8ZL
+        /aV6Mm5grejUEjVjEC1xMkxA/XGNBpdFiLAvA=; b=qGjGewXSgRNCk+x0/kv0D3
+        5iC1lRHDm9IKo3qrAa+UqB7CfhvUqFUUa8QH36rTDvQc3IbnLDSWqJkTEKbpiULG
+        lnWytYb85laZrK7I3Sr8P2jQIm8EdKbfQyDA2WuX3bAC2++WSsPGLghj5mIC0bae
+        JomZqhLSJn8wfxjcLoqugw2b8JMeFZjqGOb63KS8x94kh3IbwwI9NU7rtxHMlsDp
+        HBK9SIBQWYAV8/xR7Wr9w+6WHcSvYTpAmpzJ2i6CYgq4Fiad46RR4Br2SV3jaKZJ
+        IN7U/s67L4qJSDYkEqNFmStogWxfND+3W0imqtLmH8v4lmTvFcgkAcDLSLByueXQ
+        ==
+X-ME-Sender: <xms:sHyxXo4dYFytKfne1AQSsrx9RFDCjttmlVQ9iQR01R741aBv3DbZFA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrjeeigdejjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjsehttdertd
+    dttddvnecuhfhrohhmpefirhgvghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeen
+    ucggtffrrghtthgvrhhnpeevueehjefgfffgiedvudekvdektdelleelgefhleejieeuge
+    egveeuuddukedvteenucfkphepkeefrdekiedrkeelrddutdejnecuvehluhhsthgvrhfu
+    ihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtoh
+    hm
+X-ME-Proxy: <xmx:sHyxXqotKpWkQbZor0craKikS8L5Nz08yRnf9H_5C0TWboi9qhyTaA>
+    <xmx:sHyxXnE-JT-0FBBjzRO6aszC1R_XhAMtv7McoOIcbTl40nM6zilv1w>
+    <xmx:sHyxXmWjjeb5AznIXuwAQFm-Ak8wKDrtJEkoy_WQD0mOI29KhchUpA>
+    <xmx:sHyxXtr9UocSRf9Qbb7r0M1NC4PYkz9-YJW3RH3vJmpNaMxr5vG50g>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0734C3066089;
+        Tue,  5 May 2020 10:48:15 -0400 (EDT)
+Date:   Tue, 5 May 2020 16:48:11 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Akira Shimahara <akira215corp@gmail.com>
+Cc:     zbr@ioremap.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/9] w1_therm: creating w1_therm.h
+Message-ID: <20200505144811.GD838641@kroah.com>
+References: <20200429225915.198956-1-akira215corp@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200505132905.10276-2-calvin.johnson@oss.nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200429225915.198956-1-akira215corp@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 06:59:01PM +0530, Calvin Johnson wrote:
-> Define fwnode_phy_find_device() to iterate an mdiobus and find the
-> phy device of the provided phy fwnode. Additionally define
-> device_phy_find_device() to find phy device of provided device.
+On Thu, Apr 30, 2020 at 12:59:15AM +0200, Akira Shimahara wrote:
+> Creating w1_therm.h header to organize code. Organize the w1_therm.c file
+> to gather hardware functions, device specific functions, interface
+> functions and sysfs functions.
 > 
-> Define fwnode_get_phy_node() to get phy_node using named reference.
-> 
-> Signed-off-by: Calvin Johnson <calvin.johnson@oss.nxp.com>
+> Signed-off-by: Akira Shimahara <akira215corp@gmail.com>
 > ---
-> 
-> Changes in v3:
->   move fwnode APIs to appropriate place
->   stubs fwnode APIs for !CONFIG_PHYLIB
->   improve comment on function return condition.
-> 
-> Changes in v2:
->   move phy code from base/property.c to net/phy/phy_device.c
->   replace acpi & of code to get phy-handle with fwnode_find_reference
-> 
->  drivers/net/phy/phy_device.c | 53 ++++++++++++++++++++++++++++++++++++
->  include/linux/phy.h          | 19 +++++++++++++
->  2 files changed, 72 insertions(+)
-> 
-> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-> index 7e1ddd5745d2..3e8224132218 100644
-> --- a/drivers/net/phy/phy_device.c
-> +++ b/drivers/net/phy/phy_device.c
-> @@ -31,6 +31,7 @@
->  #include <linux/mdio.h>
->  #include <linux/io.h>
->  #include <linux/uaccess.h>
-> +#include <linux/property.h>
->  
->  MODULE_DESCRIPTION("PHY library");
->  MODULE_AUTHOR("Andy Fleming");
-> @@ -2436,6 +2437,58 @@ static bool phy_drv_supports_irq(struct phy_driver *phydrv)
->  	return phydrv->config_intr && phydrv->ack_interrupt;
->  }
->  
-> +/**
-> + * fwnode_phy_find_device - Find phy_device on the mdiobus for the provided
-> + * phy_fwnode.
-> + * @phy_fwnode: Pointer to the phy's fwnode.
-> + *
-> + * If successful, returns a pointer to the phy_device with the embedded
-> + * struct device refcount incremented by one, or NULL on failure.
+>  drivers/w1/slaves/w1_therm.c | 302 +++++++++++++++--------------------
+>  drivers/w1/slaves/w1_therm.h | 138 ++++++++++++++++
+>  2 files changed, 269 insertions(+), 171 deletions(-)
+>  create mode 100644 drivers/w1/slaves/w1_therm.h
+
+Wait, why is a .h file needed for just a single .c file?
+
+
+<snip>
+
+>  static ssize_t read_therm(struct device *device,
+
+
+> +/** read_therm()
+> + * @param sl pointer to the slave to read
+> + * @param info pointer to a structure to store the read results
+> + * @return 0 if success, -kernel error code otherwise
 > + */
-> +struct phy_device *fwnode_phy_find_device(struct fwnode_handle *phy_fwnode)
-> +{
-> +	struct device *d;
-> +	struct mdio_device *mdiodev;
+> +static ssize_t read_therm(struct device *device,
+> +			struct w1_slave *sl, struct therm_info *info);
 > +
-> +	if (!phy_fwnode)
-> +		return NULL;
-> +
-> +	d = bus_find_device_by_fwnode(&mdio_bus_type, phy_fwnode);
-> +	if (d) {
-> +		mdiodev = to_mdio_device(d);
-> +		if (mdiodev->flags & MDIO_DEVICE_FLAG_PHY)
-> +			return to_phy_device(d);
-> +		put_device(d);
-> +	}
-> +
-> +	return NULL;
-> +}
-> +EXPORT_SYMBOL(fwnode_phy_find_device);
 
-This is basically functionally equivalent to of_phy_find_device().  If
-we replaced of_mdio_find_device() with a fwnode equivalent and used that
-above, we could have both of_mdio_find_device() and of_phy_find_device()
-be wrappers around their fwnode equivalents.
+Why is this function needed to be declared in this .h file?
 
-That also means less lines of code to maintain, and means that we're
-unlikely to have two implementations that may drift apart functionally
-over time because their separated in two different parts of the kernel.
-That is an especially important point given that fwnodes can be DT
-nodes, so one may call fwnode APIs on a DT platform.
+Why is any of this needed?  For some reason I thought you needed a .h
+file to make things simpler for other .c files, but if all of this is
+static, it's not needed at all, right?
 
-> +
-> +/**
-> + * device_phy_find_device - For the given device, get the phy_device
-> + * @dev: Pointer to the given device
-> + *
-> + * Refer return conditions of fwnode_phy_find_device().
-> + */
-> +struct phy_device *device_phy_find_device(struct device *dev)
-> +{
-> +	return fwnode_phy_find_device(dev_fwnode(dev));
-> +}
-> +EXPORT_SYMBOL_GPL(device_phy_find_device);
-> +
-> +/**
-> + * fwnode_get_phy_node - Get the phy_node using the named reference.
-> + * @fwnode: Pointer to fwnode from which phy_node has to be obtained.
-> + *
-> + * Refer return conditions of fwnode_find_reference().
-> + */
-> +struct fwnode_handle *fwnode_get_phy_node(struct fwnode_handle *fwnode)
-> +{
-> +	return fwnode_find_reference(fwnode, "phy-handle", 0);
-> +}
-> +EXPORT_SYMBOL_GPL(fwnode_get_phy_node);
+thanks,
 
-What if the fwnode is a DT device handle?  Shouldn't this also check for
-the legacy properties as well, so we can transition code over to this
-new interface?
-
-> +
->  /**
->   * phy_probe - probe and init a PHY device
->   * @dev: device to probe and init
-> diff --git a/include/linux/phy.h b/include/linux/phy.h
-> index e2bfb9240587..f2664730a331 100644
-> --- a/include/linux/phy.h
-> +++ b/include/linux/phy.h
-> @@ -1141,10 +1141,29 @@ struct phy_device *phy_device_create(struct mii_bus *bus, int addr, u32 phy_id,
->  				     bool is_c45,
->  				     struct phy_c45_device_ids *c45_ids);
->  #if IS_ENABLED(CONFIG_PHYLIB)
-> +struct phy_device *fwnode_phy_find_device(struct fwnode_handle *phy_fwnode);
-> +struct phy_device *device_phy_find_device(struct device *dev);
-> +struct fwnode_handle *fwnode_get_phy_node(struct fwnode_handle *fwnode);
->  struct phy_device *get_phy_device(struct mii_bus *bus, int addr, bool is_c45);
->  int phy_device_register(struct phy_device *phy);
->  void phy_device_free(struct phy_device *phydev);
->  #else
-> +static inline
-> +struct phy_device *fwnode_phy_find_device(struct fwnode_handle *phy_fwnode)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline struct phy_device *device_phy_find_device(struct device *dev)
-> +{
-> +	return NULL;
-> +}
-> +
-> +struct fwnode_handle *fwnode_get_phy_node(struct fwnode_handle *fwnode)
-> +{
-> +	return NULL;
-> +}
-> +
->  static inline
->  struct phy_device *get_phy_device(struct mii_bus *bus, int addr, bool is_c45)
->  {
-> -- 
-> 2.17.1
-> 
-> 
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+greg k-h
