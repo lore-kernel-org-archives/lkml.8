@@ -2,125 +2,176 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA790C47256
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 09:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81480C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3C74206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 09:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BA3F206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 10:01:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728693AbgEEJ7X (ORCPT
+        id S1728547AbgEEKB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 05:59:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:35942 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728268AbgEEJ7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 05:59:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A77330E;
-        Tue,  5 May 2020 02:59:21 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A74BF3F305;
-        Tue,  5 May 2020 02:59:13 -0700 (PDT)
-Date:   Tue, 5 May 2020 10:59:08 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Prakhar Srivastava <prsriva@linux.microsoft.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
-        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org,
-        serge@hallyn.com, pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, vincenzo.frascino@arm.com,
-        masahiroy@kernel.org, james.morse@arm.com, bhsharma@redhat.com,
-        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
-        christophe.leroy@c-s.fr, gregkh@linuxfoundation.org,
-        nramas@linux.microsoft.com, tusharsu@linux.microsoft.com,
-        balajib@linux.microsoft.com
-Subject: Re: [RFC][PATCH 0/2] Add support for using reserved memory for ima
- buffer pass
-Message-ID: <20200505095620.GA82424@C02TD0UTHF1T.local>
-References: <20200504203829.6330-1-prsriva@linux.microsoft.com>
+        Tue, 5 May 2020 06:01:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727931AbgEEKB2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 06:01:28 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67FEEC061A0F;
+        Tue,  5 May 2020 03:01:28 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:d3ea:1c7:41fd:3038])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id B203B2A0982;
+        Tue,  5 May 2020 11:01:26 +0100 (BST)
+Date:   Tue, 5 May 2020 12:01:23 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     masonccyang@mxic.com.tw
+Cc:     "Pratyush Yadav" <me@yadavpratyush.com>, broonie@kernel.org,
+        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com,
+        "Pratyush Yadav" <p.yadav@ti.com>, richard@nod.at,
+        tudor.ambarus@microchip.com, vigneshr@ti.com
+Subject: Re: [PATCH v2 0/5] mtd: spi-nor: Add support for Octal 8D-8D-8D
+ mode
+Message-ID: <20200505120123.24962338@collabora.com>
+In-Reply-To: <20200505114443.6ebd5d3c@collabora.com>
+References: <1587451187-6889-1-git-send-email-masonccyang@mxic.com.tw>
+        <20200421092328.129308f6@collabora.com>
+        <20200427175536.2mmei2fy6f7bg6jm@yadavpratyush.com>
+        <OF18214CA5.6A9B2B30-ON48258558.001D894C-48258558.002249E0@mxic.com.tw>
+        <20200428085401.574wmo6qddmumd7q@yadavpratyush.com>
+        <OF04289CE2.B346916F-ON48258559.002280BD-48258559.00295800@mxic.com.tw>
+        <20200429181856.kkavelcczylg4yxf@yadavpratyush.com>
+        <OF28AE0642.4F34D6BB-ON4825855F.002D6E58-4825855F.003458C9@mxic.com.tw>
+        <20200505114443.6ebd5d3c@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504203829.6330-1-prsriva@linux.microsoft.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prakhar,
+On Tue, 5 May 2020 11:44:43 +0200
+Boris Brezillon <boris.brezillon@collabora.com> wrote:
 
-On Mon, May 04, 2020 at 01:38:27PM -0700, Prakhar Srivastava wrote:
-> IMA during kexec(kexec file load) verifies the kernel signature and measures
-> the signature of the kernel. The signature in the logs can be used to verfiy the 
-> authenticity of the kernel. The logs don not get carried over kexec and thus
-> remote attesation cannot verify the signature of the running kernel.
+> On Tue, 5 May 2020 17:31:45 +0800
+> masonccyang@mxic.com.tw wrote:
 > 
-> Introduce an ABI to carry forward the ima logs over kexec.
-> Memory reserved via device tree reservation can be used to store and read
-> via the of_* functions.
-
-This flow needs to work for:
-
-1) Pure DT
-2) DT + EFI memory map
-3) ACPI + EFI memory map
-
-... and if this is just for transiently passing the log, I don't think
-that a reserved memory region is the right thing to use, since they're
-supposed to be more permanent.
-
-This sounds analogous to passing the initrd, and should probably use
-properties under the chosen node (which can be used for all three boot
-flows above).
-
-For reference, how big is the IMA log likely to be? Does it need
-physically contiguous space?
-
-Thanks,
-Mark.
-
 > 
-> Reserved memory stores the size(sizeof(size_t)) of the buffer in the starting
-> address, followed by the IMA log contents.
+> > > > > > I quickly went through your patches but can't reply them in each     
+> > your   
+> > > > > > patches.
+> > > > > > 
+> > > > > > i.e,.
+> > > > > > 1) [v4,03/16] spi: spi-mem: allow specifying a command's extension
+> > > > > > 
+> > > > > > -                                u8 opcode;
+> > > > > > +                                u16 opcode;
+> > > > > > 
+> > > > > > big/little Endian issue, right? 
+> > > > > > why not just u8 ext_opcode;
+> > > > > > No any impact for exist code and actually only xSPI device use     
+> > > > extension     
+> > > > > > command.    
+> > > > > 
+> > > > > Boris already explained the reasoning behind it.    
+> > > > 
+> > > > yup, I got his point and please make sure CPU data access.
+> > > > 
+> > > > i.e,.
+> > > > Fix endianness of the BFPT DWORDs and xSPI in sfdp.c
+> > > > 
+> > > > and your patch,
+> > > > +                                ext = spi_nor_get_cmd_ext(nor, op);
+> > > > +                                op->cmd.opcode = (op->cmd.opcode <<     
+> > 8) |   
+> > > > ext;
+> > > > +                                op->cmd.nbytes = 2;
+> > > > 
+> > > > I think maybe using u8 opcode[2] could avoid endianness.    
+> > > 
+> > > Again, thanks Boris for answering this. FWIW, I don't see anything wrong     
+> >   
+> > > with his suggestion.
+> > > 
+> > > To clarify a bit more, the idea is that we transmit the opcode MSB 
+> > > first, just we do for the address. Assume we want to issue the command 
+> > > 0x05. In 1S mode, we set cmd.opcode to 0x05. Here cmd.nbytes == 1. Treat     
+> >   
+> > > is as a 1-byte value, so the MSB is the same as the LSB. We directly 
+> > > send 0x5 on the bus.    
+> > 
+> > There are many SPI controllers driver use "op->cmd.opcode" directly,
+> > so is spi-mxic.c.
+> > 
+> > i.e,.
+> > ret = mxic_spi_data_xfer(mxic, &op->cmd.opcode, NULL, op->cmd.nbytes);  
 > 
-> Tested on:
->   arm64 with Uboot
+> Just because you do it doesn't mean it's right. And most controllers use
+> the opcode value, they don't dereference the pointer as you do here.
 > 
-> Prakhar Srivastava (2):
->   Add a layer of abstraction to use the memory reserved by device tree
->     for ima buffer pass.
->   Add support for ima buffer pass using reserved memory for arm64 kexec.
->     Update the arch sepcific code path in kexec file load to store the
->     ima buffer in the reserved memory. The same reserved memory is read
->     on kexec or cold boot.
+> >   
+> > > 
+> > > If cmd.nbytes == 2, then the opcode would be 0x05FA (assuming extension 
+> > > is invert of command). So we send the MSB (0x05) first, and LSB (0xFA) 
+> > > next.    
+> > 
+> > My platform is Xilinx Zynq platform which CPU is ARMv7 processor.
+> > 
+> > In 1-1-1 mode, it's OK to send 1 byte command by u16 opcode but
+> > in 8D-8D-8D mode, I need to patch
+> > 
+> > i.e.,
+> > op->cmd.opcode = op->cmd.opcode | (ext << 8);
+> > 
+> > rather than your patch.  
 > 
->  arch/arm64/Kconfig                     |   1 +
->  arch/arm64/include/asm/ima.h           |  22 ++++
->  arch/arm64/include/asm/kexec.h         |   5 +
->  arch/arm64/kernel/Makefile             |   1 +
->  arch/arm64/kernel/ima_kexec.c          |  64 ++++++++++
->  arch/arm64/kernel/machine_kexec_file.c |   1 +
->  arch/powerpc/include/asm/ima.h         |   3 +-
->  arch/powerpc/kexec/ima.c               |  14 ++-
->  drivers/of/Kconfig                     |   6 +
->  drivers/of/Makefile                    |   1 +
->  drivers/of/of_ima.c                    | 165 +++++++++++++++++++++++++
->  include/linux/of.h                     |  34 +++++
->  security/integrity/ima/ima_kexec.c     |  15 ++-
->  13 files changed, 325 insertions(+), 7 deletions(-)
->  create mode 100644 arch/arm64/include/asm/ima.h
->  create mode 100644 arch/arm64/kernel/ima_kexec.c
->  create mode 100644 drivers/of/of_ima.c
-> 
-> -- 
-> 2.25.1
-> 
+> Seriously, how hard is it to extract each byte from the u16 if your
+> controller needs to pass things in a different order? I mean, that's
+> already how it's done for the address cycle, so why is it a problem
+> here? This sounds like bikeshedding to me. If the order is properly
+> documented in the kernel doc, I see no problem having it grouped in one
+> u16, with the first cmd cycle placed in the MSB and the second one in
+> the LSB.
+
+So, I gave it a try, and we're talking about something as simple as the
+below diff. And yes, the mxic controller needs to be patched before
+extending the cmd.opcode field, but we're talking about one driver here
+(all other drivers should be fine). Oh, and if you look a few lines below
+the changed lines, you'll notice that we do exactly the same for the
+address.
+
+--->8---
+diff --git a/drivers/spi/spi-mxic.c b/drivers/spi/spi-mxic.c
+index 69491f3a515d..c3f4136a7c1d 100644
+--- a/drivers/spi/spi-mxic.c
++++ b/drivers/spi/spi-mxic.c
+@@ -356,6 +356,7 @@ static int mxic_spi_mem_exec_op(struct spi_mem *mem,
+        int nio = 1, i, ret;
+        u32 ss_ctrl;
+        u8 addr[8];
++       u8 cmd[2];
+ 
+        ret = mxic_spi_set_freq(mxic, mem->spi->max_speed_hz);
+        if (ret)
+@@ -393,7 +394,10 @@ static int mxic_spi_mem_exec_op(struct spi_mem *mem,
+        writel(readl(mxic->regs + HC_CFG) | HC_CFG_MAN_CS_ASSERT,
+               mxic->regs + HC_CFG);
+ 
+-       ret = mxic_spi_data_xfer(mxic, &op->cmd.opcode, NULL, 1);
++       for (i = 0; i < op->cmd.nbytes; i++)
++               cmd[i] = op->cmd.opcode >> (8 * (op->cmd.nbytes - i - 1));
++
++       ret = mxic_spi_data_xfer(mxic, cmd, NULL, op->cmd.nbytes);
+        if (ret)
+                goto out;
+ 
