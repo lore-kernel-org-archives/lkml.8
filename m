@@ -2,126 +2,143 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B2AC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BF4C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E59A20838
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="MlVY1pqC"
+	by mail.kernel.org (Postfix) with ESMTP id C76AE206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730575AbgEEOVD (ORCPT
+        id S1730591AbgEEOVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:21:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49966 "EHLO
+        Tue, 5 May 2020 10:21:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730559AbgEEOU7 (ORCPT
+        by vger.kernel.org with ESMTP id S1729813AbgEEOPX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:20:59 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EC57C061A0F;
-        Tue,  5 May 2020 07:20:59 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 4345523E80;
-        Tue,  5 May 2020 16:20:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1588688457;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hN9heAe9nvYzjYtNDE8SqD4yGSnkgCfLMAsBpUZiufs=;
-        b=MlVY1pqCRINZzT3UE7EK05+wlTCqLm5hLyXTOO7pvnWZEFyJ1Hjw6ZViHh/C6qOFZW/c1e
-        ij0zOdNDDPAsMcw+63PcWcYuDXYuXlijC8S0BEiNDJbBhOk9Xpz4douoc05xQn/BYNxc/1
-        5hCUs+spNQgxlPqVZecpaZYfq04dtTk=
+        Tue, 5 May 2020 10:15:23 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D0C5C061A10
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:15:23 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jVyLh-0001NI-0g; Tue, 05 May 2020 16:15:05 +0200
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 75102FFC8D;
+        Tue,  5 May 2020 16:15:04 +0200 (CEST)
+Message-Id: <20200505134904.364456424@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Tue, 05 May 2020 15:44:05 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Subject: [patch V4 part 3 11/29] rcu: Provide rcu_irq_exit_preempt()
+References: <20200505134354.774943181@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 05 May 2020 16:20:57 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [RFC net-next] net: phy: at803x: add cable diagnostics support
-In-Reply-To: <20200505130741.GD208718@lunn.ch>
-References: <20200503181517.4538-1-michael@walle.cc>
- <20200505130741.GD208718@lunn.ch>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <7dcb92b092057d50b8f079fa8bf0bfeb@walle.cc>
-X-Sender: michael@walle.cc
+Content-Type: text/plain; charset=UTF-8
+Content-transfer-encoding: 8-bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-05-05 15:07, schrieb Andrew Lunn:
->> +static int at803x_cable_test_get_status(struct phy_device *phydev,
->> +					bool *finished)
->> +{
->> +	struct at803x_priv *priv = phydev->priv;
->> +	static const int ethtool_pair[] = {
->> +		ETHTOOL_A_CABLE_PAIR_0, ETHTOOL_A_CABLE_PAIR_1,
->> +		ETHTOOL_A_CABLE_PAIR_2, ETHTOOL_A_CABLE_PAIR_3};
-> 
-> If you put one per line, you will keep the reverse christmas tree, and
-> David will be happy.
-> 
->> +	int pair, val, ret;
->> +	unsigned int delay_ms;
-> 
-> Well, David will be happy if you move this as well.
+Interrupts and exceptions invoke rcu_irq_enter() on entry and need to
+invoke rcu_irq_exit() before they either return to the interrupted code or
+invoke the scheduler due to preemption.
 
-Damn, this should really be a checkpatch.pl check ;) It was "int 
-delay_ms;"
-before, then it was changed to "unsigned int delay_ms;"..
+The general assumption is that RCU idle code has to have preemption
+disabled so that a return from interrupt cannot schedule. So the return
+from interrupt code invokes rcu_irq_exit() and preempt_schedule_irq().
 
-> 
->> +	*finished = false;
->> +
->> +	if (priv->cdt_start) {
->> +		delay_ms = AT803X_CDT_DELAY_MS;
->> +		delay_ms -= jiffies_delta_to_msecs(jiffies - priv->cdt_start);
->> +		if (delay_ms > 0)
->> +			msleep(delay_ms);
->> +	}
->> +
->> +	for (pair = 0; pair < 4; pair++) {
->> +		ret = at803x_cdt_start(phydev, pair);
->> +		if (ret)
->> +			return ret;
->> +
->> +		ret = at803x_cdt_wait_for_completion(phydev);
->> +		if (ret)
->> +			return ret;
->> +
->> +		val = phy_read(phydev, AT803X_CDT_STATUS);
->> +		if (val < 0)
->> +			return val;
->> +
->> +		ethnl_cable_test_result(phydev, ethtool_pair[pair],
->> +					at803x_cdt_test_result(val));
->> +
->> +		if (at803x_cdt_fault_length_valid(val))
->> +			continue;
-> 
-> The name is not very intuitive. It return false if it is valid?
+If there is any imbalance in the rcu_irq/nmi* invocations or RCU idle code
+had preemption enabled then this goes unnoticed until the CPU goes idle or
+some other RCU check is executed.
 
-Mhh, this is actually wrong, it returns true if the length is
-valid. I need to double check that. what about
-at803x_cdt_fault_length_is_valid()
+Provide rcu_irq_exit_preempt() which can be invoked from the
+interrupt/exception return code in case that preemption is enabled. It
+invokes rcu_irq_exit() and contains a few sanity checks in case that
+CONFIG_PROVE_RCU is enabled to catch such issues directly.
 
-> Otherwise, this looks good.
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Joel Fernandes <joel@joelfernandes.org>
+---
+ include/linux/rcutiny.h |    1 +
+ include/linux/rcutree.h |    1 +
+ kernel/rcu/tree.c       |   21 +++++++++++++++++++++
+ 3 files changed, 23 insertions(+)
 
-I'll wait for your v3 and then I'll rebase on that.
+--- a/include/linux/rcutiny.h
++++ b/include/linux/rcutiny.h
+@@ -71,6 +71,7 @@ static inline void rcu_irq_enter(void) {
+ static inline void rcu_irq_exit_irqson(void) { }
+ static inline void rcu_irq_enter_irqson(void) { }
+ static inline void rcu_irq_exit(void) { }
++static inline void rcu_irq_exit_preempt(void) { }
+ static inline void exit_rcu(void) { }
+ static inline bool rcu_preempt_need_deferred_qs(struct task_struct *t)
+ {
+--- a/include/linux/rcutree.h
++++ b/include/linux/rcutree.h
+@@ -46,6 +46,7 @@ void rcu_idle_enter(void);
+ void rcu_idle_exit(void);
+ void rcu_irq_enter(void);
+ void rcu_irq_exit(void);
++void rcu_irq_exit_preempt(void);
+ void rcu_irq_enter_irqson(void);
+ void rcu_irq_exit_irqson(void);
+ 
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -706,6 +706,27 @@ void noinstr rcu_irq_exit(void)
+ 	rcu_nmi_exit();
+ }
+ 
++/**
++ * rcu_irq_exit_preempt - Inform RCU that current CPU is exiting irq
++ *			  towards in kernel preemption
++ *
++ * Same as rcu_irq_exit() but has a sanity check that scheduling is safe
++ * from RCU point of view. Invoked from return from interrupt before kernel
++ * preemption.
++ */
++void rcu_irq_exit_preempt(void)
++{
++	lockdep_assert_irqs_disabled();
++	rcu_nmi_exit();
++
++	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nesting) <= 0,
++			 "RCU dynticks_nesting counter underflow/zero!");
++	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nmi_nesting) <= 0,
++			 "RCU dynticks_nmi_nesting counter underflow/zero!");
++	RCU_LOCKDEP_WARN(rcu_dynticks_curr_cpu_in_eqs(),
++			 "RCU in extended quiescent state!");
++}
++
+ /*
+  * Wrapper for rcu_irq_exit() where interrupts are enabled.
+  *
 
--michael
