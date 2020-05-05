@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B37C2C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA60C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9860720675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C791206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:21:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730243AbgEEOVy (ORCPT
+        id S1729695AbgEEOO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:21:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48836 "EHLO
+        Tue, 5 May 2020 10:14:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729257AbgEEOPK (ORCPT
+        by vger.kernel.org with ESMTP id S1729651AbgEEOOy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:15:10 -0400
+        Tue, 5 May 2020 10:14:54 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37DB8C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:15:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDD03C0610D6
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:14:53 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jVyLU-0001F2-G3; Tue, 05 May 2020 16:14:52 +0200
+        id 1jVyLD-0001BC-Rv; Tue, 05 May 2020 16:14:36 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 08335FFC8D;
-        Tue,  5 May 2020 16:14:52 +0200 (CEST)
-Message-Id: <20200505134903.346741553@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 4DB3EFFC8D;
+        Tue,  5 May 2020 16:14:35 +0200 (CEST)
+Message-Id: <20200505134341.873785437@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:43:55 +0200
+Date:   Tue, 05 May 2020 15:41:30 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -52,8 +52,8 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Will Deacon <will@kernel.org>
-Subject: [patch V4 part 3 01/29] x86/traps: Mark fixup_bad_iret() noinstr
-References: <20200505134354.774943181@linutronix.de>
+Subject: [patch V4 part 2 18/18] x86/kvm/svm: Move guest enter/exit into .noinstr.text
+References: <20200505134112.272268764@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-transfer-encoding: 8-bit
@@ -65,51 +65,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is called from deep entry ASM in a situation where instrumentation
-will cause more harm than providing useful information.
+Move the functions which are inside the RCU off region into the
+non-instrumentable text section.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kernel/traps.c |   16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ arch/x86/kvm/svm/svm.c     |  102 ++++++++++++++++++++++++---------------------
+ arch/x86/kvm/svm/vmenter.S |    2 
+ 2 files changed, 57 insertions(+), 47 deletions(-)
 
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -621,7 +621,7 @@ struct bad_iret_stack {
- 	struct pt_regs regs;
- };
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -3278,6 +3278,61 @@ static void svm_cancel_injection(struct
  
--asmlinkage __visible notrace
-+asmlinkage __visible noinstr
- struct bad_iret_stack *fixup_bad_iret(struct bad_iret_stack *s)
- {
- 	/*
-@@ -632,19 +632,21 @@ struct bad_iret_stack *fixup_bad_iret(st
- 	 * just below the IRET frame) and we want to pretend that the
- 	 * exception came from the IRET target.
- 	 */
--	struct bad_iret_stack *new_stack =
--		(struct bad_iret_stack *)this_cpu_read(cpu_tss_rw.x86_tss.sp0) - 1;
-+	struct bad_iret_stack tmp, *new_stack =
-+		(struct bad_iret_stack *)__this_cpu_read(cpu_tss_rw.x86_tss.sp0) - 1;
+ void __svm_vcpu_run(unsigned long vmcb_pa, unsigned long *regs);
  
--	/* Copy the IRET target to the new stack. */
--	memmove(&new_stack->regs.ip, (void *)s->regs.sp, 5*8);
-+	/* Copy the IRET target to the temporary storage. */
-+	memcpy(&tmp.regs.ip, (void *)s->regs.sp, 5*8);
- 
- 	/* Copy the remainder of the stack from the current stack. */
--	memmove(new_stack, s, offsetof(struct bad_iret_stack, regs.ip));
-+	memcpy(&tmp, s, offsetof(struct bad_iret_stack, regs.ip));
++static noinstr void svm_vcpu_enter_exit(struct kvm_vcpu *vcpu,
++					struct vcpu_svm *svm)
++{
++	/*
++	 * VMENTER enables interrupts (host state), but the kernel state is
++	 * interrupts disabled when this is invoked. Also tell RCU about
++	 * it. This is the same logic as for exit_to_user_mode().
++	 *
++	 * 1) Trace interrupts on state
++	 * 2) Prepare lockdep with RCU on
++	 * 3) Invoke context tracking if enabled to adjust RCU state
++	 * 4) Tell lockdep that interrupts are enabled
++	 *
++	 * This has to be after x86_spec_ctrl_set_guest() because that can
++	 * take locks (lockdep needs RCU) and calls into world and some
++	 * more.
++	 */
++	instr_begin();
++	trace_hardirqs_on_prepare();
++	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
++	instr_end();
++	guest_enter_irqoff();
++	lockdep_hardirqs_on(CALLER_ADDR0);
 +
-+	/* Update the entry stack */
-+	memcpy(new_stack, &tmp, sizeof(tmp));
++	__svm_vcpu_run(svm->vmcb_pa, (unsigned long *)&svm->vcpu.arch.regs);
++
++#ifdef CONFIG_X86_64
++	native_wrmsrl(MSR_GS_BASE, svm->host.gs_base);
++#else
++	loadsegment(fs, svm->host.fs);
++#ifndef CONFIG_X86_32_LAZY_GS
++	loadsegment(gs, svm->host.gs);
++#endif
++#endif
++
++	/*
++	 * VMEXIT disables interrupts (host state, see the CLI in the ASM
++	 * above), but tracing and lockdep have them in state 'on'. Same as
++	 * enter_from_user_mode().
++	 *
++	 * 1) Tell lockdep that interrupts are disabled
++	 * 2) Invoke context tracking if enabled to reactivate RCU
++	 * 3) Trace interrupts off state
++	 *
++	 * This needs to be done before the below as native_read_msr()
++	 * contains a tracepoint and x86_spec_ctrl_restore_host() calls
++	 * into world and some more.
++	 */
++	lockdep_hardirqs_off(CALLER_ADDR0);
++	guest_exit_irqoff();
++	instr_begin();
++	trace_hardirqs_off_prepare();
++	instr_end();
++}
++
+ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
+ {
+ 	struct vcpu_svm *svm = to_svm(vcpu);
+@@ -3330,52 +3385,7 @@ static void svm_vcpu_run(struct kvm_vcpu
+ 	 */
+ 	x86_spec_ctrl_set_guest(svm->spec_ctrl, svm->virt_spec_ctrl);
  
- 	BUG_ON(!user_mode(&new_stack->regs));
- 	return new_stack;
- }
--NOKPROBE_SYMBOL(fixup_bad_iret);
+-	/*
+-	 * VMENTER enables interrupts (host state), but the kernel state is
+-	 * interrupts disabled when this is invoked. Also tell RCU about
+-	 * it. This is the same logic as for exit_to_user_mode().
+-	 *
+-	 * 1) Trace interrupts on state
+-	 * 2) Prepare lockdep with RCU on
+-	 * 3) Invoke context tracking if enabled to adjust RCU state
+-	 * 4) Tell lockdep that interrupts are enabled
+-	 *
+-	 * This has to be after x86_spec_ctrl_set_guest() because that can
+-	 * take locks (lockdep needs RCU) and calls into world and some
+-	 * more.
+-	 */
+-	trace_hardirqs_on_prepare();
+-	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
+-	guest_enter_irqoff();
+-	lockdep_hardirqs_on(CALLER_ADDR0);
+-
+-	__svm_vcpu_run(svm->vmcb_pa, (unsigned long *)&svm->vcpu.arch.regs);
+-
+-#ifdef CONFIG_X86_64
+-	wrmsrl(MSR_GS_BASE, svm->host.gs_base);
+-#else
+-	loadsegment(fs, svm->host.fs);
+-#ifndef CONFIG_X86_32_LAZY_GS
+-	loadsegment(gs, svm->host.gs);
+-#endif
+-#endif
+-
+-	/*
+-	 * VMEXIT disables interrupts (host state, see the CLI in the ASM
+-	 * above), but tracing and lockdep have them in state 'on'. Same as
+-	 * enter_from_user_mode().
+-	 *
+-	 * 1) Tell lockdep that interrupts are disabled
+-	 * 2) Invoke context tracking if enabled to reactivate RCU
+-	 * 3) Trace interrupts off state
+-	 *
+-	 * This needs to be done before the below as native_read_msr()
+-	 * contains a tracepoint and x86_spec_ctrl_restore_host() calls
+-	 * into world and some more.
+-	 */
+-	lockdep_hardirqs_off(CALLER_ADDR0);
+-	guest_exit_irqoff();
+-	trace_hardirqs_off_prepare();
++	svm_vcpu_enter_exit(vcpu, svm);
+ 
+ 	/*
+ 	 * We do not use IBRS in the kernel. If this vCPU has used the
+--- a/arch/x86/kvm/svm/vmenter.S
++++ b/arch/x86/kvm/svm/vmenter.S
+@@ -27,7 +27,7 @@
+ #define VCPU_R15	__VCPU_REGS_R15 * WORD_SIZE
  #endif
  
- static bool is_sysenter_singlestep(struct pt_regs *regs)
+-	.text
++.section .noinstr.text, "ax"
+ 
+ /**
+  * __svm_vcpu_run - Run a vCPU via a transition to SVM guest mode
 
