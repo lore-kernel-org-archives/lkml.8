@@ -2,61 +2,73 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A84C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 930DBC47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB92E206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D986206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 15:40:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730243AbgEEPkB (ORCPT
+        id S1730386AbgEEPkJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 11:40:01 -0400
-Received: from muru.com ([72.249.23.125]:52872 "EHLO muru.com"
+        Tue, 5 May 2020 11:40:09 -0400
+Received: from ms.lwn.net ([45.79.88.28]:50152 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729317AbgEEPkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 11:40:00 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id E842080A5;
-        Tue,  5 May 2020 15:40:48 +0000 (UTC)
-Date:   Tue, 5 May 2020 08:39:57 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     afzal mohammed <afzal.mohd.ma@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: omap1: fix irq setup
-Message-ID: <20200505153957.GK37466@atomide.com>
-References: <20200505141400.767312-1-arnd@arndb.de>
- <20200505143017.GA5263@afzalpc>
+        id S1729317AbgEEPkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 11:40:08 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 45E12737;
+        Tue,  5 May 2020 15:40:08 +0000 (UTC)
+Date:   Tue, 5 May 2020 09:40:07 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Wolfram Sang <wsa@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] watchdog: update email address in conversion doc
+Message-ID: <20200505094007.5449d2d2@lwn.net>
+In-Reply-To: <20200502143103.19473-1-wsa@kernel.org>
+References: <20200502143103.19473-1-wsa@kernel.org>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505143017.GA5263@afzalpc>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* afzal mohammed <afzal.mohd.ma@gmail.com> [200505 14:31]:
-> Hi,
-> 
-> On Tue, May 05, 2020 at 04:13:48PM +0200, Arnd Bergmann wrote:
-> 
-> > A recent cleanup introduced a bug on any omap1 machine that has
-> > no wakeup IRQ, i.e. omap15xx:
-> 
-> > Move this code into a separate function to deal with it cleanly.
-> > 
-> > Fixes: b75ca5217743 ("ARM: OMAP: replace setup_irq() by request_irq()")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> 
-> Sorry for the mistake and thanks for the fix,
-> 
-> Acked-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+On Sat,  2 May 2020 16:30:58 +0200
+Wolfram Sang <wsa@kernel.org> wrote:
 
-Acked-by: Tony Lindgren <tony@atomide.com>
+> The old one is defunct. However, I think it makes sense that I am still
+> the primary contact person for updates here.
+> 
+> Signed-off-by: Wolfram Sang <wsa@kernel.org>
+> ---
+> 
+> ... if there will be any. Let me know if you agree.
+> 
+>  Documentation/watchdog/convert_drivers_to_kernel_api.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/watchdog/convert_drivers_to_kernel_api.rst b/Documentation/watchdog/convert_drivers_to_kernel_api.rst
+> index dd934cc08e40..b972ef4c7cff 100644
+> --- a/Documentation/watchdog/convert_drivers_to_kernel_api.rst
+> +++ b/Documentation/watchdog/convert_drivers_to_kernel_api.rst
+> @@ -2,7 +2,7 @@
+>  Converting old watchdog drivers to the watchdog framework
+>  =========================================================
+>  
+> -by Wolfram Sang <w.sang@pengutronix.de>
+> +by Wolfram Sang <wsa@kernel.org>
+
+Applied, thanks.
+
+jon
