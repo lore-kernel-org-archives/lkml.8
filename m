@@ -2,149 +2,98 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBA3C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFCBC47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3091206B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 077DC206B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 17:45:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lneA14fz"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="WbXsKMFI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730597AbgEERod (ORCPT
+        id S1730652AbgEERpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 13:44:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53762 "EHLO
+        Tue, 5 May 2020 13:45:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730184AbgEERod (ORCPT
+        with ESMTP id S1730037AbgEERpJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 13:44:33 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7AFEC061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 10:44:32 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id n205so3179041ybf.14
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 10:44:32 -0700 (PDT)
+        Tue, 5 May 2020 13:45:09 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8545FC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 10:45:09 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id e9so2852578iok.9
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 10:45:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=Xw/XeQONehgAZgmp50DsvTIx8rMMLD3xww9tGSOkTsA=;
-        b=lneA14fzuFIhvEyDZhEZTjVIaajfkM2Z7jKfKmPgQ32k4DXwTcL6jmrVG9lLKS/STZ
-         i1h5X98Rgd/oyrVzCu4ccHiaoXOVE6pNfPXCDw1dC27kWhnuB24Pl6NHQejX1rAOoNob
-         uxdOxtVcR57USHxeCw39W3UFF68ZmyFXSDnrkcblxXwOTZLZ1A7k1FPLtWM2C8QUxQRM
-         tYj7uyH/RRNIV5aGL8nNs6qF8M0ghJZznLP795RJ0up2LeIE9E1JVbtTNqrD5gB7fVKk
-         hDPTWVoBA5rqaknUJTuYGNajFguFjI3/Vrg/I4l5PVV3wBXe82Wjjvio1muWO7wBehvL
-         heZQ==
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0d4t3WjdojD07U20/q5eVWp+2G5xuWU682MyxZ52/dk=;
+        b=WbXsKMFIFpH6ExU8GPMs+ehXklgjz/p2eQPhb4qVM9RXiU5nErEMtpRDgTo/PuNeMl
+         ylVJKR07XAtfhT5WIuD/HinW3vNWoGKPW1jz40Eoivc15+x8spW/VDhXOds2EvUkP1Gl
+         SYfxEoqSuPtQnmM1BEA/8hzv0FeEd3MxXHlRs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=Xw/XeQONehgAZgmp50DsvTIx8rMMLD3xww9tGSOkTsA=;
-        b=WP+c8l+hJVST9IXL3TEGwdI3a6o0EWtmJPu6mPfR8RSwIgZPVei75YisirhX1KSaBP
-         Lu9GYqtjZ5RDWCbNfQ72dllq7+LicgBT4TlTj6GYRP3TNgVYtDmZrpqFmg0lvW63o/64
-         HnLlYJP8p1ecY3X41THa/zlxleSIPJFJCSHq6MakP55Ur+llFTxSHpDDbLBEjJr7GXAU
-         XyHXMxnaBDBW/gr625arpmZY/6Ipt4FCj6wjtRyS6j1esstspMlXscRCstvN3PAeol3u
-         8Sncm7U0daDR+pw762Ygbw8Ku30QpO9znmOZQiplz2xw8Lv9iJEf3CIWZAsFuz7mZshN
-         om7Q==
-X-Gm-Message-State: AGi0PuYr/dCM5pxalXF4ITFXNHGfKfNdZfosYDsd+VXGe+38zqvDxfa+
-        ycnWhlPR1TL2U7WXELWVhI5Q87tDNk06ALwOXGc=
-X-Google-Smtp-Source: APiQypIX//cgIeEKcfL0yb8zr5R8ZbH/uRJM3Yv5sXuOog51eI5PRryDXtV3TYrJvL5SfnLEbSZi5o6qlXlDHTWTyWM=
-X-Received: by 2002:a25:9a47:: with SMTP id r7mr6630305ybo.7.1588700672013;
- Tue, 05 May 2020 10:44:32 -0700 (PDT)
-Date:   Tue,  5 May 2020 10:44:22 -0700
-Message-Id: <20200505174423.199985-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-Subject: [PATCH] x86: bitops: fix build regression
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc:     Sedat Dilek <sedat.dilek@gmail.com>, stable@vger.kernel.org,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        "kernelci . org bot" <bot@kernelci.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0d4t3WjdojD07U20/q5eVWp+2G5xuWU682MyxZ52/dk=;
+        b=nc4mTanOa8PVEWH7ECgBM378IT4NzZYgzdtrOmM60fWv/VHie4ix6S+GLLNLYTK/51
+         5Gk0sYvhYyG2jp4xZDB01EeXvF+S5j4yJHv7ayvo4idcg1oYgpFa4Y4jXFvoSy/KJR7h
+         duhhSCz5XNNVUHYHZtlgSV2ysmIfBfO3m2dSerb0LysbzL/xBxtY8mDIV9ZLmp7PiZy0
+         vDuF3XqBncA1drc0ZyqZUQ5hXAghqsQyP1uKdizo27rM04082DO96BF5kCgXedKnwdGy
+         ZZuYCz+1qkmGIVzTWF2yLnugtli/jIXqTx7f2Rf04YH07vrObgkI6C/pBRZUTVGJWdNV
+         uTsw==
+X-Gm-Message-State: AGi0PuZi0tbACPGJ/mZbElbwB+7P3D3+OY3u0lmJKZ7i42b8wfy1UC/q
+        L3wrV2PwSlh52uCypIL0P6ORdd818W03UU202rM6Lw==
+X-Google-Smtp-Source: APiQypLLRpcxvQZusL/Xf0XMmd1EBwRfygNouFkqsgZZ+8IUFk4f1vnkB2SkIWFOJt66uGv5+9re8uKhsH1gb8UFSkg=
+X-Received: by 2002:a02:b88e:: with SMTP id p14mr4548710jam.36.1588700708877;
+ Tue, 05 May 2020 10:45:08 -0700 (PDT)
+MIME-Version: 1.0
+References: <f3208af6-80ad-223f-3490-30561996afff@web.de>
+In-Reply-To: <f3208af6-80ad-223f-3490-30561996afff@web.de>
+From:   Jonathan Richardson <jonathan.richardson@broadcom.com>
+Date:   Tue, 5 May 2020 10:44:57 -0700
+Message-ID: <CAHrpVsWbAdf+K1+mToj-5yoj-quFoXwF5D6_aAKufBE2tNSkFA@mail.gmail.com>
+Subject: Re: [PATCH] net: broadcom: fix a mistake about ioremap resource
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Dejin Zheng <zhengdejin5@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>,
+        Ray Jui <ray.jui@broadcom.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Stephen Boyd <swboyd@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sedat Dilek <sedat.dilek@gmail.com>
+On Tue, May 5, 2020 at 12:20 AM Markus Elfring <Markus.Elfring@web.de> wrote:
+>
+> > Commit d7a5502b0bb8b ("net: broadcom: convert to
+> > devm_platform_ioremap_resource_byname()") will broke this driver.
+> > idm_base and nicpm_base were optional, after this change, they are
+> > mandatory. it will probe fails with -22 when the dtb doesn't have them
+> > defined. so revert part of this commit and make idm_base and nicpm_base
+> > as optional.
+>
+> I hope that other contributors can convince you to improve also this
+> commit message considerably.
+> Would you like to fix the spelling besides other wording weaknesses?
 
-It turns out that if your config tickles __builtin_constant_p via
-differences in choices to inline or not, this now produces invalid
-assembly:
+How about this wording:
 
-$ cat foo.c
-long a(long b, long c) {
-  asm("orb\t%1, %0" : "+q"(c): "r"(b));
-  return c;
-}
-$ gcc foo.c
-foo.c: Assembler messages:
-foo.c:2: Error: `%rax' not allowed with `orb'
-
-The "q" constraint only has meanting on -m32 otherwise is treated as
-"r".
-
-This is easily reproducible via Clang+CONFIG_STAGING=y+CONFIG_VT6656=m,
-or Clang+allyesconfig.
-
-Keep the masking operation to appease sparse (`make C=1`), add back the
-cast in order to properly select the proper 8b register alias.
-
- [Nick: reworded]
-
-Cc: stable@vger.kernel.org
-Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/961
-Link: https://lore.kernel.org/lkml/20200504193524.GA221287@google.com/
-Fixes: 1651e700664b4 ("x86: Fix bitops.h warning with a moved cast")
-Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-Reported-by: kernelci.org bot <bot@kernelci.org>
-Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-Suggested-by: Ilie Halip <ilie.halip@gmail.com>
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
----
- arch/x86/include/asm/bitops.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-index b392571c1f1d..139122e5b25b 100644
---- a/arch/x86/include/asm/bitops.h
-+++ b/arch/x86/include/asm/bitops.h
-@@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long *addr)
- 	if (__builtin_constant_p(nr)) {
- 		asm volatile(LOCK_PREFIX "orb %1,%0"
- 			: CONST_MASK_ADDR(nr, addr)
--			: "iq" (CONST_MASK(nr) & 0xff)
-+			: "iq" ((u8)(CONST_MASK(nr) & 0xff))
- 			: "memory");
- 	} else {
- 		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
-@@ -74,7 +74,7 @@ arch_clear_bit(long nr, volatile unsigned long *addr)
- 	if (__builtin_constant_p(nr)) {
- 		asm volatile(LOCK_PREFIX "andb %1,%0"
- 			: CONST_MASK_ADDR(nr, addr)
--			: "iq" (CONST_MASK(nr) ^ 0xff));
-+			: "iq" ((u8)(CONST_MASK(nr) ^ 0xff)));
- 	} else {
- 		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
- 			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
--- 
-2.26.2.526.g744177e7f7-goog
-
+Commit d7a5502b0bb8b ("net: broadcom: convert to
+devm_platform_ioremap_resource_byname()")
+inadvertently made idm_base and nicpm_base mandatory. These are
+optional properties.
+probe will fail when they're not defined. The commit is partially
+reverted so that they are
+obtained by platform_get_resource_byname() as before. amac_base can
+still be obtained
+by devm_platform_ioremap_resource_byname().
