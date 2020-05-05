@@ -2,203 +2,102 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1779C47247
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 05:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5754C47257
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 05:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B139220663
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 05:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4712206E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 05:52:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tUQk5WHT"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Mu+zXVFR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbgEEFsu (ORCPT
+        id S1728104AbgEEFwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 01:48:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54422 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725535AbgEEFsu (ORCPT
+        Tue, 5 May 2020 01:52:37 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:53704 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725320AbgEEFwf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 01:48:50 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0253AC061A0F;
-        Mon,  4 May 2020 22:48:49 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id w20so328229ljj.0;
-        Mon, 04 May 2020 22:48:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jB37zzTgwI47TMOI0FYcGt2ovqz6plx1N4prNTTSWkc=;
-        b=tUQk5WHT0xp0po7KBS7AbhpZnUyQxyDSSfskMBn6KRcygua9OIkn4IroRx61Q3/Rlk
-         1eWEwZHNwHmBS++DlWBPt8gcw6r0pW/fpGA1dI6Tggq4QzB/hHePWECvJ5SljCrj9Zhl
-         EiiG1Ks2T4XlFm0Je8+uXS0CbXvJ4W1kRXjHA6iS3r/4/4ipT1LDZUIpRDqCRURl3wBB
-         SxLPNxU634eB8ZzfllUVka8M84djKF3EiH/88ulyTe9WcdA8ADA7v83cQVMNf7vbONO9
-         maw7GfsYfrFAJMHySRylr4Xq5LjukUXmZcD9FFNurXMmXGbrtQiBOslXahF96f645+fp
-         KbrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jB37zzTgwI47TMOI0FYcGt2ovqz6plx1N4prNTTSWkc=;
-        b=k5xamMYhGhV1hOyvypyvoUCesXTfrCuRzrhgLRvw7VRKhpelRFk4JZgVT/c+Ayecaw
-         ejaXa/cXgd4COEneYntw/FjR7TIaoVJXc2sclktwoIJ3GNzXipxks6Mehc0RyhhoE3dr
-         gKqWXCeIJ6AS61gNXkPzAGF5jJ7MfueEV7+rup9nTepWtoZN582Z/BeZLWPFMT1EfQtS
-         sAz7u9E3uAs6EYrJMCdTa+C04Q5KAoWKJAa6ZfJ6mZVXKs7EXsajFtKZAA9ah5xQDk6L
-         mm9MQXDPO9iqeOdPdHg1nnQiKEjng6XsEjiOP5TWb9s6fmGJYoETl/s8U6+kTNBkqT98
-         sh+w==
-X-Gm-Message-State: AGi0PuZNXOdd8GCDhS9PiiI4o81jLVoILvv7mjgfxeT3uxE0V6RsBdV+
-        5RWbrKPyEgj+fFnBHQIFc4K68edKBa27PQ==
-X-Google-Smtp-Source: APiQypLrS97ESMZ1bmwkR1k5TAF+7cc8KaEokiEguxHbpPIWE6LxWEmXImDJ2ul57nuERrvl+BkZzA==
-X-Received: by 2002:a2e:864f:: with SMTP id i15mr750080ljj.179.1588657727848;
-        Mon, 04 May 2020 22:48:47 -0700 (PDT)
-Received: from [192.168.0.103] (static-91-225-135-18.devs.futuro.pl. [91.225.135.18])
-        by smtp.gmail.com with ESMTPSA id g20sm989642lfj.1.2020.05.04.22.48.46
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 May 2020 22:48:47 -0700 (PDT)
-Subject: Re: [PATCH] Fix all coding-style warnings on lm75 driver
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     jdelvare@suse.com, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1588255534-28073-1-git-send-email-michalorzel.eng@gmail.com>
- <20200505015808.GA139531@roeck-us.net>
-From:   =?UTF-8?B?TWljaGHFgiBPcnplxYI=?= <michalorzel.eng@gmail.com>
-Message-ID: <cc5e0f61-a7f7-c7b7-2e90-8e7817329d1e@gmail.com>
-Date:   Tue, 5 May 2020 07:48:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 5 May 2020 01:52:35 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0455lBeA027132;
+        Tue, 5 May 2020 07:52:21 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=/RG1jmnvaQFJTmB5c3f4Wt7K8CWp+WbtLlXwa1U86qY=;
+ b=Mu+zXVFRC3qGokaDcoghATVQ8pmNONE6Cjbzr/DwCxry1ftwv0uNxLgtR5L+GS2lmWch
+ jlhMN2cO2EF/nXRICAJ0E/+PEkt+bbhCj09CWVvnqeWxEufybzeBhR7e3Vg/XdakGJUK
+ PCTXgC11Ma6F4PLY/LjxmocXVurNc6Elkn5Bhum77xZ194mvG9kDNV4yVg6xCPBprY55
+ PMbK1NuYlMemW0aXjUOTBZkWycoPPWIFxivPKJBCHsnE8UznFKJOKioAm0xrck60yIVg
+ 5Jr4rNgW3sMhqLtHXyVLGKG6EO0z42TiW1fQ5azQd6wEPoRW3RdliN143gqiXTeP9tcL xQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30rxb1wy0s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 May 2020 07:52:21 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2EFF610002A;
+        Tue,  5 May 2020 07:52:21 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 21AC021CA74;
+        Tue,  5 May 2020 07:52:21 +0200 (CEST)
+Received: from localhost (10.75.127.51) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 5 May 2020 07:52:20
+ +0200
+From:   Alain Volmat <alain.volmat@st.com>
+To:     <wsa@kernel.org>, <robh+dt@kernel.org>
+CC:     <mark.rutland@arm.com>, <pierre-yves.mordret@st.com>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
+        <alain.volmat@st.com>
+Subject: [PATCH 3/4] dt-bindings: i2c-stm32: add SMBus Alert bindings
+Date:   Tue, 5 May 2020 07:51:10 +0200
+Message-ID: <1588657871-14747-4-git-send-email-alain.volmat@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1588657871-14747-1-git-send-email-alain.volmat@st.com>
+References: <1588657871-14747-1-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
-In-Reply-To: <20200505015808.GA139531@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG5NODE2.st.com (10.75.127.14) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-05_02:2020-05-04,2020-05-05 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add a new binding of the i2c-stm32f7 driver to enable the handling
+of the SMBUS-Alert
 
+Signed-off-by: Alain Volmat <alain.volmat@st.com>
+---
+ Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-On 05.05.2020 03:58, Guenter Roeck wrote:
-> On Thu, Apr 30, 2020 at 04:05:34PM +0200, Michal Orzel wrote:
->> Check/fix all warnings generated by checkpatch.pl script on LM75 driver.
->>
->> Signed-off-by: Michal Orzel <michalorzel.eng@gmail.com>
-> 
-> Applied, but for the future please prepend your patches with something like
-> "subsystem: driver:", or for hwmon "hwmon: (driver)".
-> 
-> Also, please keep in mind that such cleanups are not encouraged unless you
-> also provide functional changes.
-> 
-> Thanks,
-> Guenter
-> 
-I will keep it in mind.
+diff --git a/Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml b/Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml
+index b50a2f420b36..04c0882c3661 100644
+--- a/Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml
++++ b/Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml
+@@ -36,6 +36,10 @@ allOf:
+                 minItems: 3
+                 maxItems: 3
+ 
++        st,smbus-alert:
++          description: Enable the SMBus Alert feature
++          $ref: /schemas/types.yaml#/definitions/flag
++
+   - if:
+       properties:
+         compatible:
+-- 
+2.17.1
 
-Thanks,
-Michal
->> ---
->>  drivers/hwmon/lm75.c |  8 ++++++--
->>  drivers/hwmon/lm75.h | 31 +++++++++++++++++--------------
->>  2 files changed, 23 insertions(+), 16 deletions(-)
->>
->> diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
->> index 5e63922..ba0be48 100644
->> --- a/drivers/hwmon/lm75.c
->> +++ b/drivers/hwmon/lm75.c
->> @@ -797,8 +797,10 @@ static int lm75_detect(struct i2c_client *new_client,
->>  
->>  	/* First check for LM75A */
->>  	if (i2c_smbus_read_byte_data(new_client, 7) == LM75A_ID) {
->> -		/* LM75A returns 0xff on unused registers so
->> -		   just to be sure we check for that too. */
->> +		/*
->> +		 * LM75A returns 0xff on unused registers so
->> +		 * just to be sure we check for that too.
->> +		 */
->>  		if (i2c_smbus_read_byte_data(new_client, 4) != 0xff
->>  		 || i2c_smbus_read_byte_data(new_client, 5) != 0xff
->>  		 || i2c_smbus_read_byte_data(new_client, 6) != 0xff)
->> @@ -849,6 +851,7 @@ static int lm75_suspend(struct device *dev)
->>  {
->>  	int status;
->>  	struct i2c_client *client = to_i2c_client(dev);
->> +
->>  	status = i2c_smbus_read_byte_data(client, LM75_REG_CONF);
->>  	if (status < 0) {
->>  		dev_dbg(&client->dev, "Can't read config? %d\n", status);
->> @@ -863,6 +866,7 @@ static int lm75_resume(struct device *dev)
->>  {
->>  	int status;
->>  	struct i2c_client *client = to_i2c_client(dev);
->> +
->>  	status = i2c_smbus_read_byte_data(client, LM75_REG_CONF);
->>  	if (status < 0) {
->>  		dev_dbg(&client->dev, "Can't read config? %d\n", status);
->> diff --git a/drivers/hwmon/lm75.h b/drivers/hwmon/lm75.h
->> index b614e63..a398171 100644
->> --- a/drivers/hwmon/lm75.h
->> +++ b/drivers/hwmon/lm75.h
->> @@ -1,17 +1,15 @@
->>  /* SPDX-License-Identifier: GPL-2.0-or-later */
->>  /*
->> -    lm75.h - Part of lm_sensors, Linux kernel modules for hardware
->> -	      monitoring
->> -    Copyright (c) 2003 Mark M. Hoffman <mhoffman@lightlink.com>
->> -
->> -*/
->> + * lm75.h - Part of lm_sensors, Linux kernel modules for hardware monitoring
->> + * Copyright (c) 2003 Mark M. Hoffman <mhoffman@lightlink.com>
->> + */
->>  
->>  /*
->> -    This file contains common code for encoding/decoding LM75 type
->> -    temperature readings, which are emulated by many of the chips
->> -    we support.  As the user is unlikely to load more than one driver
->> -    which contains this code, we don't worry about the wasted space.
->> -*/
->> + * This file contains common code for encoding/decoding LM75 type
->> + * temperature readings, which are emulated by many of the chips
->> + * we support.  As the user is unlikely to load more than one driver
->> + * which contains this code, we don't worry about the wasted space.
->> + */
->>  
->>  #include <linux/kernel.h>
->>  
->> @@ -20,18 +18,23 @@
->>  #define LM75_TEMP_MAX 125000
->>  #define LM75_SHUTDOWN 0x01
->>  
->> -/* TEMP: 0.001C/bit (-55C to +125C)
->> -   REG: (0.5C/bit, two's complement) << 7 */
->> +/*
->> + * TEMP: 0.001C/bit (-55C to +125C)
->> + * REG: (0.5C/bit, two's complement) << 7
->> + */
->>  static inline u16 LM75_TEMP_TO_REG(long temp)
->>  {
->>  	int ntemp = clamp_val(temp, LM75_TEMP_MIN, LM75_TEMP_MAX);
->> +
->>  	ntemp += (ntemp < 0 ? -250 : 250);
->>  	return (u16)((ntemp / 500) << 7);
->>  }
->>  
->>  static inline int LM75_TEMP_FROM_REG(u16 reg)
->>  {
->> -	/* use integer division instead of equivalent right shift to
->> -	   guarantee arithmetic shift and preserve the sign */
->> +	/*
->> +	 * use integer division instead of equivalent right shift to
->> +	 * guarantee arithmetic shift and preserve the sign
->> +	 */
->>  	return ((s16)reg / 128) * 500;
->>  }
->> -- 
->> 2.7.4
->>
