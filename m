@@ -2,38 +2,38 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F9CC47257
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49728C47247
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E371207DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 311A4206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:14:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729248AbgEEOOF (ORCPT
+        id S1729519AbgEEOOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:14:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48570 "EHLO
+        Tue, 5 May 2020 10:14:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729461AbgEEON5 (ORCPT
+        by vger.kernel.org with ESMTP id S1729191AbgEEOOA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 10:13:57 -0400
+        Tue, 5 May 2020 10:14:00 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA9A3C061A41
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:13:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C18B4C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:14:00 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jVyKH-0000XS-Vy; Tue, 05 May 2020 16:13:38 +0200
+        id 1jVyKM-0000bq-TF; Tue, 05 May 2020 16:13:43 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 78A5EFFC8D;
-        Tue,  5 May 2020 16:13:37 +0200 (CEST)
-Message-Id: <20200505134059.970057117@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 6CF14FFC8D;
+        Tue,  5 May 2020 16:13:42 +0200 (CEST)
+Message-Id: <20200505134100.376598577@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:16:21 +0200
+Date:   Tue, 05 May 2020 15:16:25 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -51,10 +51,8 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Brian Gerst <brgerst@gmail.com>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V4 part 1 19/36] x86/entry: Exclude low level entry code from
- sanitizing 
+        Will Deacon <will@kernel.org>
+Subject: [patch V4 part 1 23/36] bug: Annotate WARN/BUG/stackfail as noinstr safe
 References: <20200505131602.633487962@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -67,31 +65,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sanitizers are not really applicable to the fragile low level entry
-code. code. Entry code needs to carefully setup a normal 'runtime'
-environment.
+Warnings, bugs and stack protection fails from noinstr sections, e.g. low
+level and early entry code, are likely to be fatal.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Mark them as "safe" to be invoked from noinstr protected code to avoid
+annotating all usage sites. Getting the information out is important.
+
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/entry/Makefile |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/x86/include/asm/bug.h |    3 +++
+ include/asm-generic/bug.h  |    9 +++++++--
+ kernel/panic.c             |    4 +++-
+ 3 files changed, 13 insertions(+), 3 deletions(-)
 
---- a/arch/x86/entry/Makefile
-+++ b/arch/x86/entry/Makefile
-@@ -3,6 +3,14 @@
- # Makefile for the x86 low level entry code
- #
+--- a/arch/x86/include/asm/bug.h
++++ b/arch/x86/include/asm/bug.h
+@@ -70,13 +70,16 @@ do {									\
+ #define HAVE_ARCH_BUG
+ #define BUG()							\
+ do {								\
++	instr_begin();						\
+ 	_BUG_FLAGS(ASM_UD2, 0);					\
+ 	unreachable();						\
+ } while (0)
  
-+KASAN_SANITIZE := n
-+UBSAN_SANITIZE := n
-+KCOV_INSTRUMENT := n
-+
-+CFLAGS_REMOVE_common.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
-+CFLAGS_REMOVE_syscall_32.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
-+CFLAGS_REMOVE_syscall_64.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
-+
- OBJECT_FILES_NON_STANDARD_entry_64_compat.o := y
+ #define __WARN_FLAGS(flags)					\
+ do {								\
++	instr_begin();						\
+ 	_BUG_FLAGS(ASM_UD2, BUGFLAG_WARNING|(flags));		\
++	instr_end();						\
+ 	annotate_reachable();					\
+ } while (0)
  
- CFLAGS_syscall_64.o		+= $(call cc-option,-Wno-override-init,)
+--- a/include/asm-generic/bug.h
++++ b/include/asm-generic/bug.h
+@@ -83,14 +83,19 @@ extern __printf(4, 5)
+ void warn_slowpath_fmt(const char *file, const int line, unsigned taint,
+ 		       const char *fmt, ...);
+ #define __WARN()		__WARN_printf(TAINT_WARN, NULL)
+-#define __WARN_printf(taint, arg...)					\
+-	warn_slowpath_fmt(__FILE__, __LINE__, taint, arg)
++#define __WARN_printf(taint, arg...) do {				\
++		instr_begin();						\
++		warn_slowpath_fmt(__FILE__, __LINE__, taint, arg);	\
++		instr_end();						\
++	} while (0)
+ #else
+ extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
+ #define __WARN()		__WARN_FLAGS(BUGFLAG_TAINT(TAINT_WARN))
+ #define __WARN_printf(taint, arg...) do {				\
++		instr_begin();						\
+ 		__warn_printk(arg);					\
+ 		__WARN_FLAGS(BUGFLAG_NO_CUT_HERE | BUGFLAG_TAINT(taint));\
++		instr_end();						\
+ 	} while (0)
+ #define WARN_ON_ONCE(condition) ({				\
+ 	int __ret_warn_on = !!(condition);			\
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -662,10 +662,12 @@ device_initcall(register_warn_debugfs);
+  * Called when gcc's -fstack-protector feature is used, and
+  * gcc detects corruption of the on-stack canary value
+  */
+-__visible void __stack_chk_fail(void)
++__visible noinstr void __stack_chk_fail(void)
+ {
++	instr_begin();
+ 	panic("stack-protector: Kernel stack is corrupted in: %pB",
+ 		__builtin_return_address(0));
++	instr_end();
+ }
+ EXPORT_SYMBOL(__stack_chk_fail);
+ 
 
