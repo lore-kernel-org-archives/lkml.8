@@ -4,38 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9E6C47259
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE09CC47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23234206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB1822073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 16:13:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730352AbgEEQNa (ORCPT
+        id S1730452AbgEEQNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 12:13:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52970 "EHLO mx2.suse.de"
+        Tue, 5 May 2020 12:13:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53056 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730095AbgEEQN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 12:13:27 -0400
+        id S1730190AbgEEQNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 12:13:30 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 0992CAF4F;
-        Tue,  5 May 2020 16:13:28 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 3372DAF7A;
+        Tue,  5 May 2020 16:13:31 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
         helgaas@kernel.org, linux-kernel@vger.kernel.org,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com
 Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v8 1/4] soc: bcm2835: Add notify xHCI reset property
-Date:   Tue,  5 May 2020 18:13:14 +0200
-Message-Id: <20200505161318.26200-2-nsaenzjulienne@suse.de>
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH v8 3/4] PCI: brcmstb: Wait for Raspberry Pi's firmware when present
+Date:   Tue,  5 May 2020 18:13:16 +0200
+Message-Id: <20200505161318.26200-4-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200505161318.26200-1-nsaenzjulienne@suse.de>
 References: <20200505161318.26200-1-nsaenzjulienne@suse.de>
@@ -46,29 +47,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The property is needed in order to trigger VL805's firmware load. Note
-that gap between the property introduced and the previous one is due to
-the properties not being defined.
+xHCI's PCI fixup, run at the end of pcie-brcmstb's probe, depends on
+RPi4's VideoCore firmware interface to be up and running. It's possible
+for both initializations to race, so make sure it's available prior to
+starting.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
----
- include/soc/bcm2835/raspberrypi-firmware.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/soc/bcm2835/raspberrypi-firmware.h b/include/soc/bcm2835/raspberrypi-firmware.h
-index 7800e12ee042..cc9cdbc66403 100644
---- a/include/soc/bcm2835/raspberrypi-firmware.h
-+++ b/include/soc/bcm2835/raspberrypi-firmware.h
-@@ -90,7 +90,7 @@ enum rpi_firmware_property_tag {
- 	RPI_FIRMWARE_SET_PERIPH_REG =                         0x00038045,
- 	RPI_FIRMWARE_GET_POE_HAT_VAL =                        0x00030049,
- 	RPI_FIRMWARE_SET_POE_HAT_VAL =                        0x00030050,
--
-+	RPI_FIRMWARE_NOTIFY_XHCI_RESET =                      0x00030058,
+---
+
+Changes since v6:
+- Add more complete comment
+
+ drivers/pci/controller/pcie-brcmstb.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index 6d79d14527a6..0b97b94c4a9a 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -28,6 +28,8 @@
+ #include <linux/string.h>
+ #include <linux/types.h>
  
- 	/* Dispmanx TAGS */
- 	RPI_FIRMWARE_FRAMEBUFFER_ALLOCATE =                   0x00040001,
++#include <soc/bcm2835/raspberrypi-firmware.h>
++
+ #include "../pci.h"
+ 
+ /* BRCM_PCIE_CAP_REGS - Offset for the mandatory capability config regs */
+@@ -917,11 +919,26 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node, *msi_np;
+ 	struct pci_host_bridge *bridge;
++	struct device_node *fw_np;
+ 	struct brcm_pcie *pcie;
+ 	struct pci_bus *child;
+ 	struct resource *res;
+ 	int ret;
+ 
++	/*
++	 * We have to wait for Raspberry Pi's firmware interface to be up as a
++	 * PCI fixup, rpi_firmware_init_vl805(), depends on it. This driver's
++	 * probe can race with the firmware interface's (see
++	 * drivers/firmware/raspberrypi.c) and potentially break the PCI fixup.
++	 */
++	fw_np = of_find_compatible_node(NULL, NULL,
++					"raspberrypi,bcm2835-firmware");
++	if (fw_np && !rpi_firmware_get(fw_np)) {
++		of_node_put(fw_np);
++		return -EPROBE_DEFER;
++	}
++	of_node_put(fw_np);
++
+ 	bridge = devm_pci_alloc_host_bridge(&pdev->dev, sizeof(*pcie));
+ 	if (!bridge)
+ 		return -ENOMEM;
 -- 
 2.26.2
 
