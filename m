@@ -2,283 +2,207 @@ Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE11BC47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB29C47254
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E12720675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:19:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD56720735
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 14:19:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O0ZpsJPd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730471AbgEEOTO (ORCPT
+        id S1729863AbgEEOTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 10:19:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49126 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730088AbgEEOQW (ORCPT
+        Tue, 5 May 2020 10:19:19 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:32523 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730081AbgEEOQW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 5 May 2020 10:16:22 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5631C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 07:16:21 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jVyMe-00024a-Gw; Tue, 05 May 2020 16:16:04 +0200
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 18C0BFFC8D;
-        Tue,  5 May 2020 16:16:04 +0200 (CEST)
-Message-Id: <20200505135314.900297476@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Tue, 05 May 2020 15:49:42 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588688180;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=s1Gnhsex7IEz73A8ZB5poIdfMPTSBcM675dHjORTals=;
+        b=O0ZpsJPdU5JMWeB1bvmn0A0EGd1yYmQzfVvr9FnbkWU8b7BsEHtfagIDZnP30x0JbGqqQe
+        tv0vW+FC52+RirflELHCvAlzfO5pYxuXBJ0BBoCo/C08tKXtV7p8WUbAVOQQ4oBfwbTSvF
+        8H3FSgR0t1olra8HIZn6gSfm979AAPQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-433-nheUdfDqPmaV8UOOzq7zCg-1; Tue, 05 May 2020 10:16:06 -0400
+X-MC-Unique: nheUdfDqPmaV8UOOzq7zCg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8D272872FE0;
+        Tue,  5 May 2020 14:16:04 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-116-211.rdu2.redhat.com [10.10.116.211])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0F0495D9D5;
+        Tue,  5 May 2020 14:16:03 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 59771222F75; Tue,  5 May 2020 10:16:03 -0400 (EDT)
+Date:   Tue, 5 May 2020 10:16:03 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: [patch V4 part 4 16/24] x86/entry: Convert Debug exception to IDTENTRY_DB
-References: <20200505134926.578885807@linutronix.de>
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH RFC 1/6] Revert "KVM: async_pf: Fix #DF due to inject
+ "Page not Present" and "Page Ready" exceptions simultaneously"
+Message-ID: <20200505141603.GA7155@redhat.com>
+References: <20200429093634.1514902-1-vkuznets@redhat.com>
+ <20200429093634.1514902-2-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-transfer-encoding: 8-bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429093634.1514902-2-vkuznets@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert #DB to IDTENTRY_ERRORCODE:
-  - Implement the C entry point with DEFINE_IDTENTRY_DB
-  - Emit the ASM stub with DECLARE_IDTENTRY
-  - Remove the ASM idtentry in 64bit
-  - Remove the open coded ASM entry code in 32bit
-  - Fixup the XEN/PV code
-  - Remove the old prototyoes
+On Wed, Apr 29, 2020 at 11:36:29AM +0200, Vitaly Kuznetsov wrote:
+> Commit 9a6e7c39810e (""KVM: async_pf: Fix #DF due to inject "Page not
+> Present" and "Page Ready" exceptions simultaneously") added a protection
+> against 'page ready' notification coming before 'page not ready' is
+> delivered.
 
-No functional change.
+Hi Vitaly,
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- arch/x86/entry/entry_32.S       |   10 ----------
- arch/x86/entry/entry_64.S       |    2 --
- arch/x86/include/asm/idtentry.h |    4 ++++
- arch/x86/include/asm/traps.h    |    3 ---
- arch/x86/kernel/idt.c           |    8 ++++----
- arch/x86/kernel/traps.c         |   21 +++++++++++++--------
- arch/x86/xen/enlighten_pv.c     |    2 +-
- arch/x86/xen/xen-asm_64.S       |    4 ++--
- 8 files changed, 24 insertions(+), 30 deletions(-)
+Description of the commit seems to suggest that it is solving double
+fault issue. That is both "page not present" and "page ready" exceptions
+got queued and on next vcpu entry, it will result in double fault.
 
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -1488,16 +1488,6 @@ SYM_CODE_START_LOCAL_NOALIGN(handle_exce
- 	jmp	restore_all_switch_stack
- SYM_CODE_END(handle_exception)
- 
--SYM_CODE_START(debug)
--	/*
--	 * Entry from sysenter is now handled in common_exception
--	 */
--	ASM_CLAC
--	pushl	$0
--	pushl	$do_debug
--	jmp	common_exception
--SYM_CODE_END(debug)
--
- #ifdef CONFIG_DOUBLEFAULT
- SYM_CODE_START(double_fault)
- 1:
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -1075,12 +1075,10 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work
- 
- idtentry	X86_TRAP_PF		page_fault		do_page_fault			has_error_code=1
- 
--idtentry_mce_db	X86_TRAP_DB		debug			do_debug
- idtentry_df	X86_TRAP_DF		double_fault		do_double_fault
- 
- #ifdef CONFIG_XEN_PV
- idtentry	512 /* dummy */		hypervisor_callback	xen_do_hypervisor_callback	has_error_code=0
--idtentry	X86_TRAP_DB		xendebug		do_debug			has_error_code=0
- #endif
- 
- /*
---- a/arch/x86/include/asm/idtentry.h
-+++ b/arch/x86/include/asm/idtentry.h
-@@ -262,4 +262,8 @@ DECLARE_IDTENTRY_MCE(X86_TRAP_MC,	exc_ma
- DECLARE_IDTENTRY_NMI(X86_TRAP_NMI,	exc_nmi);
- DECLARE_IDTENTRY_XEN(X86_TRAP_NMI,	nmi);
- 
-+/* #DB */
-+DECLARE_IDTENTRY_DEBUG(X86_TRAP_DB,	exc_debug);
-+DECLARE_IDTENTRY_XEN(X86_TRAP_DB,	debug);
-+
- #endif
---- a/arch/x86/include/asm/traps.h
-+++ b/arch/x86/include/asm/traps.h
-@@ -11,7 +11,6 @@
- 
- #define dotraplinkage __visible
- 
--asmlinkage void debug(void);
- #ifdef CONFIG_X86_64
- asmlinkage void double_fault(void);
- #endif
-@@ -19,12 +18,10 @@ asmlinkage void page_fault(void);
- asmlinkage void async_page_fault(void);
- 
- #if defined(CONFIG_X86_64) && defined(CONFIG_XEN_PV)
--asmlinkage void xen_xendebug(void);
- asmlinkage void xen_double_fault(void);
- asmlinkage void xen_page_fault(void);
- #endif
- 
--dotraplinkage void do_debug(struct pt_regs *regs, long error_code);
- #if defined(CONFIG_X86_64) || defined(CONFIG_DOUBLEFAULT)
- dotraplinkage void do_double_fault(struct pt_regs *regs, long error_code, unsigned long cr2);
- #endif
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -56,7 +56,7 @@ struct idt_data {
-  * stacks work only after cpu_init().
-  */
- static const __initconst struct idt_data early_idts[] = {
--	INTG(X86_TRAP_DB,		debug),
-+	INTG(X86_TRAP_DB,		asm_exc_debug),
- 	SYSG(X86_TRAP_BP,		asm_exc_int3),
- #ifdef CONFIG_X86_32
- 	INTG(X86_TRAP_PF,		page_fault),
-@@ -90,7 +90,7 @@ static const __initconst struct idt_data
- #else
- 	INTG(X86_TRAP_DF,		double_fault),
- #endif
--	INTG(X86_TRAP_DB,		debug),
-+	INTG(X86_TRAP_DB,		asm_exc_debug),
- 
- #ifdef CONFIG_X86_MCE
- 	INTG(X86_TRAP_MC,		asm_exc_machine_check),
-@@ -161,7 +161,7 @@ static const __initconst struct idt_data
-  * stack set to DEFAULT_STACK (0). Required for NMI trap handling.
-  */
- static const __initconst struct idt_data dbg_idts[] = {
--	INTG(X86_TRAP_DB,	debug),
-+	INTG(X86_TRAP_DB,		asm_exc_debug),
- };
- #endif
- 
-@@ -182,7 +182,7 @@ gate_desc debug_idt_table[IDT_ENTRIES] _
-  * cpu_init() when the TSS has been initialized.
-  */
- static const __initconst struct idt_data ist_idts[] = {
--	ISTG(X86_TRAP_DB,	debug,			IST_INDEX_DB),
-+	ISTG(X86_TRAP_DB,	asm_exc_debug,		IST_INDEX_DB),
- 	ISTG(X86_TRAP_NMI,	asm_exc_nmi,		IST_INDEX_NMI),
- 	ISTG(X86_TRAP_DF,	double_fault,		IST_INDEX_DF),
- #ifdef CONFIG_X86_MCE
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -753,7 +753,7 @@ static __always_inline void debug_exit(u
-  *
-  * May run on IST stack.
-  */
--dotraplinkage void do_debug(struct pt_regs *regs, long error_code)
-+DEFINE_IDTENTRY_DEBUG(exc_debug)
- {
- 	struct task_struct *tsk = current;
- 	unsigned long dr6, dr7;
-@@ -762,7 +762,10 @@ dotraplinkage void do_debug(struct pt_re
- 
- 	debug_enter(&dr6, &dr7);
- 
--	nmi_enter();
-+	if (user_mode(regs))
-+		idtentry_enter(regs);
-+	else
-+		nmi_enter();
- 
- 	/*
- 	 * The SDM says "The processor clears the BTF flag when it
-@@ -799,7 +802,7 @@ dotraplinkage void do_debug(struct pt_re
- 		goto exit;
- #endif
- 
--	if (notify_die(DIE_DEBUG, "debug", regs, (long)&dr6, error_code,
-+	if (notify_die(DIE_DEBUG, "debug", regs, (long)&dr6, 0,
- 		       SIGTRAP) == NOTIFY_STOP)
- 		goto exit;
- 
-@@ -813,8 +816,8 @@ dotraplinkage void do_debug(struct pt_re
- 	cond_local_irq_enable(regs);
- 
- 	if (v8086_mode(regs)) {
--		handle_vm86_trap((struct kernel_vm86_regs *) regs, error_code,
--					X86_TRAP_DB);
-+		handle_vm86_trap((struct kernel_vm86_regs *) regs, 0,
-+				 X86_TRAP_DB);
- 		cond_local_irq_disable(regs);
- 		debug_stack_usage_dec();
- 		goto exit;
-@@ -833,15 +836,17 @@ dotraplinkage void do_debug(struct pt_re
- 	}
- 	si_code = get_si_code(tsk->thread.debugreg6);
- 	if (tsk->thread.debugreg6 & (DR_STEP | DR_TRAP_BITS) || user_icebp)
--		send_sigtrap(regs, error_code, si_code);
-+		send_sigtrap(regs, 0, si_code);
- 	cond_local_irq_disable(regs);
- 	debug_stack_usage_dec();
- 
- exit:
--	nmi_exit();
-+	if (user_mode(regs))
-+		idtentry_exit(regs);
-+	else
-+		nmi_exit();
- 	debug_exit(dr7);
- }
--NOKPROBE_SYMBOL(do_debug);
- 
- /*
-  * Note that we play around with the 'TS' bit in an attempt to get
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -616,7 +616,7 @@ struct trap_array_entry {
- 	.ist_okay	= ist_ok }
- 
- static struct trap_array_entry trap_array[] = {
--	{ debug,                       xen_xendebug,                    true },
-+	TRAP_ENTRY_REDIR(exc_debug, exc_xendebug,	true  ),
- 	{ double_fault,                xen_double_fault,                true },
- #ifdef CONFIG_X86_MCE
- 	TRAP_ENTRY(exc_machine_check,			true  ),
---- a/arch/x86/xen/xen-asm_64.S
-+++ b/arch/x86/xen/xen-asm_64.S
-@@ -29,8 +29,8 @@ SYM_CODE_END(xen_\name)
- .endm
- 
- xen_pv_trap asm_exc_divide_error
--xen_pv_trap debug
--xen_pv_trap xendebug
-+xen_pv_trap asm_exc_debug
-+xen_pv_trap asm_exc_xendebug
- xen_pv_trap asm_exc_int3
- xen_pv_trap asm_exc_xennmi
- xen_pv_trap asm_exc_overflow
+It does not seem to solve the issue of "page not ready" being delivered
+before "page ready". That guest can handle already and its not an issue.
+
+> This situation seems to be impossible since commit 2a266f23550b
+> ("KVM MMU: check pending exception before injecting APF) which added
+> 'vcpu->arch.exception.pending' check to kvm_can_do_async_pf.
+
+This original commit description is confusing too. It says.
+
+"For example, when two APF's for page ready happen after one exit and
+ the first one becomes pending, the second one will result in #DF.
+ Instead, just handle the second page fault synchronously."
+
+So it seems to be trying to protect against that two "page ready"
+exceptions don't get queued simultaneously. But you can't fall back
+to synchronous mechanism once you have started the async pf prototocol.
+Once you have started async page fault protocol by sending "page not
+reay", you have to send "page ready". So I am not sure how above commit
+solved the issue of two "page ready" not being queued at the same time.
+
+I am wondering what problem did this commit solve. It looks like it
+can avoid queueing two "page not ready" events. But can that even happen?
+
+> 
+> On x86, kvm_arch_async_page_present() has only one call site:
+> kvm_check_async_pf_completion() loop and we only enter the loop when
+> kvm_arch_can_inject_async_page_present(vcpu) which when async pf msr
+> is enabled, translates into kvm_can_do_async_pf().
+
+kvm_check_async_pf_completion() skips injecting "page ready" if fault
+can't be injected now. Does that mean we leave it queued and it will
+be injected after next exit.
+
+If yes, then previous commit kind of makes sense. When it will not
+queue up two exceptions at the same time but will wait for queuing
+up the exception after next exit. But commit description still seems
+to be wrong in the sense it is not falling back to synchronous page
+fault for "page ready" events.
+
+try_async_pf() also calls kvm_can_do_async_pf(). And IIUC, it will
+fall back to synchrounous fault if injecting async_pf is not possible
+at this point of time. So that means despite the fact that async pf
+is enabled, all the page faults might not take that route and some
+will fall back to synchrounous faults. I am concerned that how will
+this work for reporting errors back to guest (for virtiofs use case).
+If we are relying on async pf mechanism to also be able to report
+errors back, then we can't afford to do synchrounous page faults becase
+we don't have a way to report errors back to guest and it will hang (if
+page can't be faulted in).
+
+So either we need a way to report errors back while doing synchrounous
+page faults or we can't fall back to synchorounous page faults while
+async page faults are enabled. 
+
+While we are reworking async page mechanism, want to make sure that
+error reporting part has been taken care of as part of design. Don't
+want to be dealing with it after the fact.
+
+Thanks
+Vivek
+
+
+> 
+> There is also one problem with the cancellation mechanism. We don't seem
+> to check that the 'page not ready' notification we're cancelling matches
+> the 'page ready' notification so in theory, we may erroneously drop two
+> valid events.
+> 
+> Revert the commit. apf_get_user() stays as we will need it for the new
+> 'page ready notifications via interrupt' mechanism.
+> 
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  arch/x86/kvm/x86.c | 16 +---------------
+>  1 file changed, 1 insertion(+), 15 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index c5835f9cb9ad..b93133ee07ba 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -10430,7 +10430,6 @@ void kvm_arch_async_page_present(struct kvm_vcpu *vcpu,
+>  				 struct kvm_async_pf *work)
+>  {
+>  	struct x86_exception fault;
+> -	u32 val;
+>  
+>  	if (work->wakeup_all)
+>  		work->arch.token = ~0; /* broadcast wakeup */
+> @@ -10439,19 +10438,7 @@ void kvm_arch_async_page_present(struct kvm_vcpu *vcpu,
+>  	trace_kvm_async_pf_ready(work->arch.token, work->cr2_or_gpa);
+>  
+>  	if (vcpu->arch.apf.msr_val & KVM_ASYNC_PF_ENABLED &&
+> -	    !apf_get_user(vcpu, &val)) {
+> -		if (val == KVM_PV_REASON_PAGE_NOT_PRESENT &&
+> -		    vcpu->arch.exception.pending &&
+> -		    vcpu->arch.exception.nr == PF_VECTOR &&
+> -		    !apf_put_user(vcpu, 0)) {
+> -			vcpu->arch.exception.injected = false;
+> -			vcpu->arch.exception.pending = false;
+> -			vcpu->arch.exception.nr = 0;
+> -			vcpu->arch.exception.has_error_code = false;
+> -			vcpu->arch.exception.error_code = 0;
+> -			vcpu->arch.exception.has_payload = false;
+> -			vcpu->arch.exception.payload = 0;
+> -		} else if (!apf_put_user(vcpu, KVM_PV_REASON_PAGE_READY)) {
+> +	    !apf_put_user(vcpu, KVM_PV_REASON_PAGE_READY)) {
+>  			fault.vector = PF_VECTOR;
+>  			fault.error_code_valid = true;
+>  			fault.error_code = 0;
+> @@ -10459,7 +10446,6 @@ void kvm_arch_async_page_present(struct kvm_vcpu *vcpu,
+>  			fault.address = work->arch.token;
+>  			fault.async_page_fault = true;
+>  			kvm_inject_page_fault(vcpu, &fault);
+> -		}
+>  	}
+>  	vcpu->arch.apf.halted = false;
+>  	vcpu->arch.mp_state = KVM_MP_STATE_RUNNABLE;
+> -- 
+> 2.25.3
+> 
 
