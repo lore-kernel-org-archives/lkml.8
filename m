@@ -2,87 +2,141 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E278C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56B1C47258
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EA62206E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:26:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lp9albrl"
+	by mail.kernel.org (Postfix) with ESMTP id BCF5B206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:27:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728710AbgEFI0j (ORCPT
+        id S1728779AbgEFI1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 04:26:39 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:16879 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728595AbgEFI0i (ORCPT
+        Wed, 6 May 2020 04:27:36 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40656 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728436AbgEFI1f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 04:26:38 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588753598; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=+e/hn/YJWiH0dL4r0I+5eUSTGJwUxUv6Ig6xc3EC2tk=; b=lp9albrlhRpShukcN39TYB1igGT5IgqRUtRPkbHBdUtXrrHBfC7FCThhP5DAZEcEcwfL28/D
- vG6pPTnEW4TXcfxCOfP0MOp76ih5QoWjxFhzozXXkvIAYVE99Tl5FYBnIrqB/mr2K3ybQYU9
- lhHMSvTlY7G7UuAjkKmCO7ylqOE=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb274bb.7fc2faca4ca8-smtp-out-n05;
- Wed, 06 May 2020 08:26:35 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6DD6EC44788; Wed,  6 May 2020 08:26:34 +0000 (UTC)
-Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 675E6C433BA;
-        Wed,  6 May 2020 08:26:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 675E6C433BA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-From:   Wesley Cheng <wcheng@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        robh+dt@kernel.org, vkoul@kernel.org, sboyd@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, jackp@codeaurora.org,
-        Wesley Cheng <wcheng@codeaurora.org>
-Subject: [PATCH] dt-bindings: phy: usb-snps-femto-v2: Add regulator entries to example
-Date:   Wed,  6 May 2020 01:26:29 -0700
-Message-Id: <1588753589-22673-1-git-send-email-wcheng@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Wed, 6 May 2020 04:27:35 -0400
+Received: by mail-ot1-f67.google.com with SMTP id i27so691825ota.7;
+        Wed, 06 May 2020 01:27:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vCxRIS23FoOP0c2W/2eOvh5VSv4P5EkgKVxWMleJAFA=;
+        b=XtK74gnw9shrUVLTG2rtJOuI+clhWnXbq2X3iTJK8lS+YQ4hwR5pvrvizAgJHmPzhL
+         uRpclv1Lg/XZosFN4UpwYY0AcBwCFZ0MyKz6t7eQycyKjtSlRtHe5AJ+UK48+phQFTDA
+         oP9Hi8tTvOxRYpPFdfe4Fe6LtpTXfGC4YFzJYCQFBB679MigjNgrox4txLAkG/JOHsw5
+         KDBGxZhJn5h6Y/qWp/9V8Agt6A/pUU/Fex38qFVO+cu6RPiv4zo+JfGcXLZ620xQI1by
+         piyMul+GdU2BTXg5rxZqB05f91hSzhiwY8gAadO0eFHDKp6ljOPpwbbbOcRYiVHnL38I
+         wsyQ==
+X-Gm-Message-State: AGi0PuZsluczeOTDx2xRX52PT05FK1HROB1Lp+ogQu2BOyWKVYyxi7gf
+        kxkYOdxQk3/S0DCBwO0sh5YDjh707R/ebiguwd8=
+X-Google-Smtp-Source: APiQypId8MqlCuIicyVdeJAq4AzLk9FuRq8+nlSwPhMnLKUA9N4T7je+r8pkSaItm2cixXY805fYVRX8Frp727kVdqo=
+X-Received: by 2002:a9d:63da:: with SMTP id e26mr44857otl.107.1588753654870;
+ Wed, 06 May 2020 01:27:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200506014135.2941967-1-alistair@alistair23.me>
+In-Reply-To: <20200506014135.2941967-1-alistair@alistair23.me>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 6 May 2020 10:27:23 +0200
+Message-ID: <CAMuHMdV7qGSbw44O+ykSz3W6h6oxj-ir+9qRbeazKb+p7Z=2Mg@mail.gmail.com>
+Subject: Re: [PATCH] spi: sun6i: Add support for GPIO chip select lines
+To:     Alistair Francis <alistair@alistair23.me>
+Cc:     Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, alistair23@gmail.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix errors reported by dt_binding_check, due to missing required
-regulators in the example node.
+Hi Alistair,
 
-Fixes: f06b9fc9a814 ("dt-bindings: phy: Add binding for qcom,usb-snps-femto-v2")
-Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-Reported-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+On Wed, May 6, 2020 at 3:41 AM Alistair Francis <alistair@alistair23.me> wrote:
+> Add a setup function that can be used to support using generic GPIO
+> lines for the chip select.
+>
+> Signed-off-by: Alistair Francis <alistair@alistair23.me>
+> ---
+>  drivers/spi/spi-sun6i.c | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>
+> diff --git a/drivers/spi/spi-sun6i.c b/drivers/spi/spi-sun6i.c
+> index ec7967be9e2f..fd4e19434942 100644
+> --- a/drivers/spi/spi-sun6i.c
+> +++ b/drivers/spi/spi-sun6i.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/clk.h>
+>  #include <linux/delay.h>
+>  #include <linux/device.h>
+> +#include <linux/gpio.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+> @@ -171,6 +172,31 @@ static inline void sun6i_spi_fill_fifo(struct sun6i_spi *sspi, int len)
+>         }
+>  }
+>
+> +static int sun6i_spi_setup(struct spi_device *spi)
+> +{
+> +       int ret;
+> +
+> +       /* sanity check for native cs */
+> +       if (spi->mode & SPI_NO_CS)
+> +               return 0;
+> +       if (gpio_is_valid(spi->cs_gpio)) {
+> +               /* with gpio-cs set the GPIO to the correct level
+> +                * and as output (in case the dt has the gpio not configured
+> +                * as output but native cs)
+> +                */
+> +               ret = gpio_direction_output(spi->cs_gpio,
+> +                                           (spi->mode & SPI_CS_HIGH) ? 0 : 1);
+> +               if (ret)
+> +                       dev_err(&spi->dev,
+> +                               "could not set gpio %i as output: %i\n",
+> +                               spi->cs_gpio, ret);
+> +
+> +               return ret;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  static void sun6i_spi_set_cs(struct spi_device *spi, bool enable)
+>  {
+>         struct sun6i_spi *sspi = spi_master_get_devdata(spi->master);
+> @@ -470,6 +496,7 @@ static int sun6i_spi_probe(struct platform_device *pdev)
+>
+>         master->max_speed_hz = 100 * 1000 * 1000;
+>         master->min_speed_hz = 3 * 1000;
+> +       master->setup = sun6i_spi_setup;
+>         master->set_cs = sun6i_spi_set_cs;
+>         master->transfer_one = sun6i_spi_transfer_one;
+>         master->num_chipselect = 4;
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml b/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
-index 984242f..574f890 100644
---- a/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
-+++ b/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
-@@ -72,5 +72,9 @@ examples:
-         clock-names = "ref";
- 
-         resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
-+
-+        vdda-pll-supply = <&vdd_usb_hs_core>;
-+        vdda33-supply = <&vdda_usb_hs_3p1>;
-+        vdda18-supply = <&vdda_usb_hs_1p8>;
-     };
- ...
+Can't you just set
+
+    master->use_gpio_descriptors = true;
+
+instead and be done with it?
+Then drivers/spi/spi.c:spi_get_gpio_descs() will configure the GPIO line
+as output for you.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
