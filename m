@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8068C4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29955C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A42FE20CC7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 037EF20A8B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:25:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588778730;
-	bh=x6l5mBC29ZbBWQo63n0uJET+4/UfSgu/sEfAg5RWrVs=;
+	s=default; t=1588778735;
+	bh=MxnNjbuzywBmmkj2/doKUHe/7DaYkxmqhrljPhsDuMk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NKIbgarB8Bzvt8xXt9zao43U0Hekiy67YAs4mqEhRftWYjPxE5jOFoEFQOr+MtFHG
-	 VEoWkMHsiWZuVotD7KwbZALyqXK9T5oc3YRHe8QGXUvRyiiUW1gO9S91/cFjUuNUZG
-	 MzwiPcBKI8T6LulUhYZPAafPnbMzp+vhqGZ+pYGc=
+	b=IjSa7u3BkNV3rMoPAnbfMmoV8+WFhPOyeju5vhpT91be5UISaA3tBAl+HRCwMWwLq
+	 sQHJUX7t/gXNT3hgSFP9QefeA/kzdfAzdVqSXwLW+J70WDjoGzNdEY1bcDpN37HRf/
+	 2vgGGO1esaE6kcXuhQZGFdaf53NBD0BxWew1pfVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730031AbgEFPZ3 (ORCPT
+        id S1730039AbgEFPZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:25:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45646 "EHLO mail.kernel.org"
+        Wed, 6 May 2020 11:25:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730018AbgEFPZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:25:27 -0400
+        id S1729591AbgEFPZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:25:30 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC10421582;
-        Wed,  6 May 2020 15:25:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0EE1215A4;
+        Wed,  6 May 2020 15:25:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588778726;
-        bh=x6l5mBC29ZbBWQo63n0uJET+4/UfSgu/sEfAg5RWrVs=;
+        s=default; t=1588778729;
+        bh=MxnNjbuzywBmmkj2/doKUHe/7DaYkxmqhrljPhsDuMk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ek+z6hXHau7UcuI+Yak4ahmbpp4nMmNe49rurTw/tZ445MG7xOIl2vo/wYiw8n0hL
-         +XElySfIFyA6wTSYKCqoT9SWBdbc9LcT9BqGYa6074sB3CGEs51DreRlp5lsnBwpqv
-         /vUsqPfgAG+Ua4N8wMpp1q4oVxA+CZ8CL72K1i20=
+        b=jikBymjKBiwlMk1IewrOWMAzRc5rOnjAmvzOm3qfaSzKQAVxjOxn8zj+kwaSPIcGT
+         1CmYpv4zTc4IxiP44idovbjtwbIIy7vcftdpCaATmTaxboCI7eQLw2/a8Q84nq52C1
+         ddIJQC0nEqmDbZPqxTcSjLhk7ubghe2KC6Ldm5FM=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -48,9 +48,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 45/91] perf intel-pt: Add support for synthesizing branch stacks for regular events
-Date:   Wed,  6 May 2020 12:21:48 -0300
-Message-Id: <20200506152234.21977-46-acme@kernel.org>
+Subject: [PATCH 46/91] perf intel-pt: Update documentation about itrace G and L options
+Date:   Wed,  6 May 2020 12:21:49 -0300
+Message-Id: <20200506152234.21977-47-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
@@ -63,175 +63,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Use the new thread_stack__br_sample_late() function to create a thread
-stack for regular events.
-
-Example:
-
- # perf record --kcore --aux-sample -e '{intel_pt//,cycles:ppp}' -c 10000 uname
- Linux
- [ perf record: Woken up 2 times to write data ]
- [ perf record: Captured and wrote 0.743 MB perf.data ]
- # perf report --itrace=Le --stdio | head -30 | tail -18
-
- # Samples: 11K of event 'cycles:ppp'
- # Event count (approx.): 11648
- #
- # Overhead  Command  Source Shared Object  Source Symbol                 Target Symbol                 Basic Block Cycles
- # ........  .......  ....................  ............................  ............................  ..................
- #
-      5.49%  uname    libc-2.30.so          [.] _dl_addr                  [.] _dl_addr                  -
-      2.41%  uname    ld-2.30.so            [.] _dl_relocate_object       [.] _dl_relocate_object       -
-      2.31%  uname    ld-2.30.so            [.] do_lookup_x               [.] do_lookup_x               -
-      2.17%  uname    [kernel.kallsyms]     [k] unmap_page_range          [k] unmap_page_range          -
-      2.05%  uname    ld-2.30.so            [k] _dl_start                 [k] _dl_start                 -
-      1.97%  uname    ld-2.30.so            [.] _dl_lookup_symbol_x       [.] _dl_lookup_symbol_x       -
-      1.94%  uname    [kernel.kallsyms]     [k] filemap_map_pages         [k] filemap_map_pages         -
-      1.60%  uname    [kernel.kallsyms]     [k] __handle_mm_fault         [k] __handle_mm_fault         -
-      1.44%  uname    [kernel.kallsyms]     [k] page_add_file_rmap        [k] page_add_file_rmap        -
-      1.12%  uname    [kernel.kallsyms]     [k] vma_interval_tree_insert  [k] vma_interval_tree_insert  -
-      0.94%  uname    [kernel.kallsyms]     [k] perf_iterate_ctx          [k] perf_iterate_ctx          -
+Provide a little more information about the new G and L options,
+particularly the issue with large PEBs.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20200429150751.12570-8-adrian.hunter@intel.com
+Link: http://lore.kernel.org/lkml/20200429150751.12570-9-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/intel-pt.c | 73 ++++++++++++++++++++++++++++++++++----
- 1 file changed, 66 insertions(+), 7 deletions(-)
+ tools/perf/Documentation/itrace.txt        |  4 +++
+ tools/perf/Documentation/perf-intel-pt.txt | 35 ++++++++++++++++++++++
+ 2 files changed, 39 insertions(+)
 
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 03b76904ca52..59811b39430c 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -72,6 +72,7 @@ struct intel_pt {
- 	bool use_thread_stack;
- 	bool callstack;
- 	unsigned int br_stack_sz;
-+	unsigned int br_stack_sz_plus;
- 	int have_sched_switch;
- 	u32 pmu_type;
- 	u64 kernel_start;
-@@ -130,6 +131,7 @@ struct intel_pt {
- 	unsigned int range_cnt;
+diff --git a/tools/perf/Documentation/itrace.txt b/tools/perf/Documentation/itrace.txt
+index 0326050beebd..271484754fee 100644
+--- a/tools/perf/Documentation/itrace.txt
++++ b/tools/perf/Documentation/itrace.txt
+@@ -33,6 +33,10 @@
+ 	Also the number of last branch entries (default 64, max. 1024) for
+ 	instructions or transactions events can be specified.
  
- 	struct ip_callchain *chain;
-+	struct branch_stack *br_stack;
- };
++	Similar to options g and l, size may also be specified for options G and L.
++	On x86, note that G and L work poorly when data has been recorded with
++	large PEBS. Refer linkperf:perf-intel-pt[1] man page for details.
++
+ 	It is also possible to skip events generated (instructions, branches, transactions,
+ 	ptwrite, power) at the beginning. This is useful to ignore initialization code.
  
- enum switch_state {
-@@ -911,6 +913,44 @@ static void intel_pt_add_callchain(struct intel_pt *pt,
- 	sample->callchain = pt->chain;
- }
+diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
+index 456fdcbf26ac..782eb8a65caf 100644
+--- a/tools/perf/Documentation/perf-intel-pt.txt
++++ b/tools/perf/Documentation/perf-intel-pt.txt
+@@ -821,7 +821,9 @@ The letters are:
+ 	e	synthesize tracing error events
+ 	d	create a debug log
+ 	g	synthesize a call chain (use with i or x)
++	G	synthesize a call chain on existing event records
+ 	l	synthesize last branch entries (use with i or x)
++	L	synthesize last branch entries on existing event records
+ 	s	skip initial number of events
  
-+static struct branch_stack *intel_pt_alloc_br_stack(struct intel_pt *pt)
-+{
-+	size_t sz = sizeof(struct branch_stack);
-+
-+	sz += pt->br_stack_sz * sizeof(struct branch_entry);
-+	return zalloc(sz);
-+}
-+
-+static int intel_pt_br_stack_init(struct intel_pt *pt)
-+{
-+	struct evsel *evsel;
-+
-+	evlist__for_each_entry(pt->session->evlist, evsel) {
-+		if (!(evsel->core.attr.sample_type & PERF_SAMPLE_BRANCH_STACK))
-+			evsel->synth_sample_type |= PERF_SAMPLE_BRANCH_STACK;
-+	}
-+
-+	pt->br_stack = intel_pt_alloc_br_stack(pt);
-+	if (!pt->br_stack)
-+		return -ENOMEM;
-+
-+	return 0;
-+}
-+
-+static void intel_pt_add_br_stack(struct intel_pt *pt,
-+				  struct perf_sample *sample)
-+{
-+	struct thread *thread = machine__findnew_thread(pt->machine,
-+							sample->pid,
-+							sample->tid);
-+
-+	thread_stack__br_sample_late(thread, sample->cpu, pt->br_stack,
-+				     pt->br_stack_sz, sample->ip,
-+				     pt->kernel_start);
-+
-+	sample->branch_stack = pt->br_stack;
-+}
-+
- static struct intel_pt_queue *intel_pt_alloc_queue(struct intel_pt *pt,
- 						   unsigned int queue_nr)
- {
-@@ -929,10 +969,7 @@ static struct intel_pt_queue *intel_pt_alloc_queue(struct intel_pt *pt,
- 	}
+ "Instructions" events look like they were recorded by "perf record -e
+@@ -912,6 +914,39 @@ transactions events can be specified. e.g.
+ Note that last branch entries are cleared for each sample, so there is no overlap
+ from one sample to the next.
  
- 	if (pt->synth_opts.last_branch) {
--		size_t sz = sizeof(struct branch_stack);
--
--		sz += pt->br_stack_sz * sizeof(struct branch_entry);
--		ptq->last_branch = zalloc(sz);
-+		ptq->last_branch = intel_pt_alloc_br_stack(pt);
- 		if (!ptq->last_branch)
- 			goto out_free;
- 	}
-@@ -1963,7 +2000,7 @@ static int intel_pt_sample(struct intel_pt_queue *ptq)
- 		thread_stack__event(ptq->thread, ptq->cpu, ptq->flags,
- 				    state->from_ip, state->to_ip, ptq->insn_len,
- 				    state->trace_nr, pt->callstack,
--				    pt->br_stack_sz,
-+				    pt->br_stack_sz_plus,
- 				    pt->mispred_all);
- 	} else {
- 		thread_stack__set_trace_nr(ptq->thread, ptq->cpu, state->trace_nr);
-@@ -2609,6 +2646,8 @@ static int intel_pt_process_event(struct perf_session *session,
- 	if (event->header.type == PERF_RECORD_SAMPLE) {
- 		if (pt->synth_opts.add_callchain && !sample->callchain)
- 			intel_pt_add_callchain(pt, sample);
-+		if (pt->synth_opts.add_last_branch && !sample->branch_stack)
-+			intel_pt_add_br_stack(pt, sample);
- 	}
- 
- 	if (event->header.type == PERF_RECORD_AUX &&
-@@ -3370,13 +3409,33 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
- 			goto err_delete_thread;
- 	}
- 
--	if (pt->synth_opts.last_branch)
-+	if (pt->synth_opts.last_branch || pt->synth_opts.add_last_branch) {
- 		pt->br_stack_sz = pt->synth_opts.last_branch_sz;
-+		pt->br_stack_sz_plus = pt->br_stack_sz;
-+	}
++The G and L options are designed in particular for sample mode, and work much
++like g and l but add call chain and branch stack to the other selected events
++instead of synthesized events. For example, to record branch-misses events for
++'ls' and then add a call chain derived from the Intel PT trace:
 +
-+	if (pt->synth_opts.add_last_branch) {
-+		err = intel_pt_br_stack_init(pt);
-+		if (err)
-+			goto err_delete_thread;
-+		/*
-+		 * Additional branch stack size to cater for tracing from the
-+		 * actual sample ip to where the sample time is recorded.
-+		 * Measured at about 200 branches, but generously set to 1024.
-+		 * If kernel space is not being traced, then add just 1 for the
-+		 * branch to kernel space.
-+		 */
-+		if (intel_pt_tracing_kernel(pt))
-+			pt->br_stack_sz_plus += 1024;
-+		else
-+			pt->br_stack_sz_plus += 1;
-+	}
++	perf record --aux-sample -e '{intel_pt//u,branch-misses:u}' -- ls
++	perf report --itrace=Ge
++
++Although in fact G is a default for perf report, so that is the same as just:
++
++	perf report
++
++One caveat with the G and L options is that they work poorly with "Large PEBS".
++Large PEBS means PEBS records will be accumulated by hardware and the written
++into the event buffer in one go.  That reduces interrupts, but can give very
++late timestamps.  Because the Intel PT trace is synchronized by timestamps,
++the PEBS events do not match the trace.  Currently, Large PEBS is used only in
++certain circumstances:
++	- hardware supports it
++	- PEBS is used
++	- event period is specified, instead of frequency
++	- the sample type is limited to the following flags:
++		PERF_SAMPLE_IP | PERF_SAMPLE_TID | PERF_SAMPLE_ADDR |
++		PERF_SAMPLE_ID | PERF_SAMPLE_CPU | PERF_SAMPLE_STREAM_ID |
++		PERF_SAMPLE_DATA_SRC | PERF_SAMPLE_IDENTIFIER |
++		PERF_SAMPLE_TRANSACTION | PERF_SAMPLE_PHYS_ADDR |
++		PERF_SAMPLE_REGS_INTR | PERF_SAMPLE_REGS_USER |
++		PERF_SAMPLE_PERIOD (and sometimes) | PERF_SAMPLE_TIME
++Because Intel PT sample mode uses a different sample type to the list above,
++Large PEBS is not used with Intel PT sample mode. To avoid Large PEBS in other
++cases, avoid specifying the event period i.e. avoid the 'perf record' -c option,
++--count option, or 'period' config term.
++
+ To disable trace decoding entirely, use the option --no-itrace.
  
- 	pt->use_thread_stack = pt->synth_opts.callchain ||
- 			       pt->synth_opts.add_callchain ||
- 			       pt->synth_opts.thread_stack ||
--			       pt->synth_opts.last_branch;
-+			       pt->synth_opts.last_branch ||
-+			       pt->synth_opts.add_last_branch;
- 
- 	pt->callstack = pt->synth_opts.callchain ||
- 			pt->synth_opts.add_callchain ||
+ It is also possible to skip events generated (instructions, branches, transactions)
 -- 
 2.21.1
 
