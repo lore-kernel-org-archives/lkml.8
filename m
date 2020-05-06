@@ -2,115 +2,103 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE8AC4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D10C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBE3620659
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9050B206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:25:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="k86+QaKw"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="AWpURNSl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728489AbgEFGX4 (ORCPT
+        id S1728029AbgEFGZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 02:23:56 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:49501 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728470AbgEFGXy (ORCPT
+        Wed, 6 May 2020 02:25:00 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:21786 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbgEFGZA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 02:23:54 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588746234; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=dFXYFwmr9Kq7E8BnIqmlk7XAccUM4rpE8P+I2uOZkSc=;
- b=k86+QaKwPIfcgAABM1b5rrXzvR3u46DonMWCqoojAVBXiNJurtALRBKhzLHLJYLaBC4MrTOL
- X8PBbKd6aDoTADM7dwZtHFgv8RaxEa1a3krwGITzSlmbuxjkuadWH5AQeKMYAa/U1qUuoyoY
- ODK+Lhzo8oUHPwGMSyf+KjtWboU=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb257e3.7f79bd2a2e68-smtp-out-n03;
- Wed, 06 May 2020 06:23:31 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 74420C43637; Wed,  6 May 2020 06:23:30 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E677EC4478F;
-        Wed,  6 May 2020 06:23:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E677EC4478F
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Wed, 6 May 2020 02:25:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1588746299; x=1620282299;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   in-reply-to:content-transfer-encoding;
+  bh=uP/BhJmSmX3L3+P3MYiFUKs9vkkg39y9yHhc2FQC2CE=;
+  b=AWpURNSlT6NY+dMJNU7IbbIjkpxAHKe2yVEyddxuvV6/ef8KyVNnuFf+
+   OUYTrLLGHNw6CKmVgQNgp8BtpqRm1g6P5CclrZ6ttJcyh+M0gXHxTGlzw
+   xK5e2xOaLjz1GDPZQuvHF2vW28bSNZ4PEt/bh0cgq9pkcCkT2cqqQmRkq
+   w=;
+IronPort-SDR: qhyU6KFoz/1V89gyCJYv+kd3k1uEGCYFRYrs/Ix3poJbo/3VkCLYcuvefjU+v8VD2IW0xCvhJK
+ Ty9ZARoFU/og==
+X-IronPort-AV: E=Sophos;i="5.73,358,1583193600"; 
+   d="scan'208";a="28845370"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 06 May 2020 06:24:47 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com (Postfix) with ESMTPS id B1839A218C;
+        Wed,  6 May 2020 06:24:45 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 6 May 2020 06:24:44 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.180) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 6 May 2020 06:24:39 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     David Miller <davem@davemloft.net>
+CC:     <sjpark@amazon.com>, <viro@zeniv.linux.org.uk>, <kuba@kernel.org>,
+        <gregkh@linuxfoundation.org>, <edumazet@google.com>,
+        <sj38.park@gmail.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sjpark@amazon.de>
+Subject: Re: Re: [PATCH net v2 0/2] Revert the 'socket_alloc' life cycle change
+Date:   Wed, 6 May 2020 08:24:23 +0200
+Message-ID: <20200506062423.28873-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] ath11k: Replace zero-length array with flexible-array
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200504201224.GA32282@embeddedor>
-References: <20200504201224.GA32282@embeddedor>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        ath11k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200506062330.74420C43637@smtp.codeaurora.org>
-Date:   Wed,  6 May 2020 06:23:30 +0000 (UTC)
+In-Reply-To: <20200505.120049.635223866062154775.davem@davemloft.net> (raw)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.43.160.180]
+X-ClientProxiedBy: EX13D02UWC003.ant.amazon.com (10.43.162.199) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
+On Tue, 05 May 2020 12:00:49 -0700 (PDT) David Miller <davem@davemloft.net> wrote:
 
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
+> From: David Miller <davem@davemloft.net>
+> Date: Tue, 05 May 2020 11:48:25 -0700 (PDT)
 > 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
+> > Series applied and queued up for -stable, thanks.
 > 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
+> Nevermind, this doesn't even compile.
 > 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
+> net/smc/af_smc.c: In function ‘smc_switch_to_fallback’:
+> net/smc/af_smc.c:473:19: error: ‘smc->clcsock->wq’ is a pointer; did you mean to use ‘->’?
+>   473 |   smc->clcsock->wq.fasync_list =
+>       |                   ^
+>       |                   ->
+> net/smc/af_smc.c:474:25: error: ‘smc->sk.sk_socket->wq’ is a pointer; did you mean to use ‘->’?
+>   474 |    smc->sk.sk_socket->wq.fasync_list;
+>       |                         ^
+>       |                         ->
 > 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
+> So I had to revert these changes.
 > 
-> sizeof(flexible-array-member) triggers a warning because flexible array
-> members have incomplete type[1]. There are some instances of code in
-> which the sizeof operator is being incorrectly/erroneously applied to
-> zero-length arrays and the result is zero. Such instances may be hiding
-> some bugs. So, this work (flexible-array member conversions) will also
-> help to get completely rid of those sorts of issues.
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+> When you make a change of this magnitude and scope you must do an
+> allmodconfig build.
 
-Patch applied to ath-next branch of ath.git, thanks.
+Definitely my fault.  I will fix this in next spin.
 
-14dd3a71ccb7 ath11k: Replace zero-length array with flexible-array
 
--- 
-https://patchwork.kernel.org/patch/11527611/
+Thanks,
+SeongJae Park
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> 
+> Thank you.
