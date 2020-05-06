@@ -2,92 +2,183 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DFAC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA02DC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48D9B20A8B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89C2120B1F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:36:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nJNoq/YX"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="dYMsW87k";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QVJBUdD+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729414AbgEFPgS (ORCPT
+        id S1729425AbgEFPg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:36:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60540 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729219AbgEFPgR (ORCPT
+        Wed, 6 May 2020 11:36:56 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:40407 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725887AbgEFPgz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:36:17 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE61FC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 08:36:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Lkbi0V0mxfen0EUXPkli1HhZu245Pv1mIUCvQhgJgMQ=; b=nJNoq/YXU6Bid3fUxuDaOdV4dQ
-        CQKWe6bkZ1bVvgCSRA3TprhJ7SCivVITZ9SkaJrdonM7ZvzU32OhiV6NOG+nhu83Ml/jOM3HZa15n
-        PnUN/JrAvbRTvLteVPibhj/iT4UY6RUxAF+xR+lhJq+BGIDFmqxCLa7Nz6NItpH4GjETCIAfnwJpf
-        BOEWIv9DMwyogJHsD085Gc4lvpzbJGgEdTGnfOdTm6ybRzU9tWZronacdz4mtusVUnWmGTxmGRtIY
-        Z/ewislj2uMEZ4Xlmb+KMtrsNaTAML9qSYyN9xEYXJd7u9o2ivc8YpTwNajqXUksXVnMcVadyqjxV
-        6LzAzJig==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jWM55-0004n1-Gw; Wed, 06 May 2020 15:35:31 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 491B1301EFB;
-        Wed,  6 May 2020 17:35:28 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 97AC6203ECDC3; Wed,  6 May 2020 17:35:28 +0200 (CEST)
-Date:   Wed, 6 May 2020 17:35:28 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [patch V4 part 1 05/36] x86/entry: Flip _TIF_SIGPENDING and
- _TIF_NOTIFY_RESUME handling
-Message-ID: <20200506153528.GC5281@hirez.programming.kicks-ass.net>
-References: <20200505131602.633487962@linutronix.de>
- <20200505134058.560059744@linutronix.de>
- <alpine.LSU.2.21.2005061352050.20724@pobox.suse.cz>
+        Wed, 6 May 2020 11:36:55 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id A3BCF58032B;
+        Wed,  6 May 2020 11:36:53 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 06 May 2020 11:36:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=/+05KqBTk3oydVggvk0oaQyCPAJ
+        z1Y/tOkrcMC1KWGU=; b=dYMsW87kzQdTYVzBdsHEEWUk+IY0JF5You9OLDT0Plf
+        bjPLfchBAW+G3HReL9Ft0Yfc9GNlDMFzQTv9rce9eVI+Qs6xSqw1/KDwNng44Stc
+        44k5Mj5hXWzWpCDyd9MPU7HRi/9OWXUag+9V9IfUrsfwNmIuZW8V33H2jVKJofBA
+        +RDI+3yqD6rBVx4u36C65xL/8TpyJeqvQRhmtcBHaIwFz6DC6/WHIxVSglCE1zzv
+        FSzwQ9MypkyDIVOEb/P/bzN7cFoygVZd6TMP7pHshw7pf1jVdYyOJJ+lqMei4K29
+        9b5/bbhyzHCQN6nMeaRdVXyEIkbBlbMSFhLOTAhlJTw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=/+05Kq
+        BTk3oydVggvk0oaQyCPAJz1Y/tOkrcMC1KWGU=; b=QVJBUdD+tRrFspsGcUoA2F
+        PoD0sa7ltQTt4QsnvkUQSaO3LL+S3/rG7CMvrFmVeDRYgAqQ1+BeS8SPjLY0hYi4
+        EkMHkLDFPY0+kE4xdWuRSaISvGvZSKyENuV6SDNVy2xysZJsSiMz7bbw1qV++Wd2
+        eqSlhLMObAED8BZFQ9gpgwPSwmrr0GeemNFLmEiUSO8OCNQMhujg/EPIax6evtyP
+        NJ0EE1S1vFIElq+GKgPcBjaQ2Y4lyWvW/K3TsI2/mgzeDAz3RlvroOsKG7mg2EIE
+        YfkpyICiEFCK6w5rJpifKeEDJU4uv6dVDyJyC9/buFRhUigfalit1BJPhwQ8Jkwg
+        ==
+X-ME-Sender: <xms:lNmyXgqrCcQNdAIPVuBzajR5lgSq-T-q887yRciGH4wQ7POZKR97Og>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrjeekgdekkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
+    gvrhhnpeethfeiueffueeikeeifefhheeijeeigfelteehheetjeekueevtdfhlefhgfdt
+    ieenucffohhmrghinhepghhithhhuhgsrdgtohhmpdgrrhhmsghirghnrdgtohhmnecukf
+    hppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghm
+    pehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:lNmyXhlmALE-N71etmI62IoUcm6VIVJqxnhmcYUGF8GOjgbHXwZvDQ>
+    <xmx:lNmyXn3UCN8LilgAP3FDW-4A8rSV_1Cj31Jy1FI5Wtoom_IQAPRjog>
+    <xmx:lNmyXmp7l0HhvY1DRQ0pIQia1SN6AJdaFGDpEl1IA3fHLvkLB_vhEg>
+    <xmx:ldmyXvedgtdvWjzIrDy8oNd09iM8YIUKOKz54FJdGSAdnYSixBEKLA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 7F3E8328006C;
+        Wed,  6 May 2020 11:36:52 -0400 (EDT)
+Date:   Wed, 6 May 2020 17:36:49 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [RFC PATCH] PCI: dwc: add support for Allwinner SoCs' PCIe
+ controller
+Message-ID: <20200506153649.ahzlhcquyhnggbou@gilmour.lan>
+References: <20200402160549.296203-1-icenowy@aosc.io>
+ <20200406082732.nt5d7puwn65j4nvl@gilmour.lan>
+ <13564b9a57f734524357a26665c48211e436e305.camel@aosc.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="p2kmtjzg5nllbilb"
 Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.21.2005061352050.20724@pobox.suse.cz>
+In-Reply-To: <13564b9a57f734524357a26665c48211e436e305.camel@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 01:53:36PM +0200, Miroslav Benes wrote:
-> On Tue, 5 May 2020, Thomas Gleixner wrote:
-> 
-> > Make sure task_work runs before any kind of userspace -- very much
-> > including signals -- is invoked.
-> 
-> I might be missing something, but isn't this guaranteed by 
-> do_signal()->get_signal()->task_work_run() path?
 
-Yes, that too, that 'hack' can now be removed I suppose.
+--p2kmtjzg5nllbilb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Apr 20, 2020 at 04:18:58PM +0800, Icenowy Zheng wrote:
+> =E5=9C=A8 2020-04-06=E6=98=9F=E6=9C=9F=E4=B8=80=E7=9A=84 10:27 +0200=EF=
+=BC=8CMaxime Ripard=E5=86=99=E9=81=93=EF=BC=9A
+> > Hi,
+> >=20
+> > On Fri, Apr 03, 2020 at 12:05:49AM +0800, Icenowy Zheng wrote:
+> > > The Allwinner H6 SoC uses DesignWare's PCIe controller to provide a
+> > > PCIe
+> > > host.
+> > >=20
+> > > However, on Allwinner H6, the PCIe host has bad MMIO, which needs
+> > > to be
+> > > workarounded. A workaround with the EL2 hypervisor functionality of
+> > > ARM
+> > > Cortex cores is now available, which wraps MMIO operations.
+> > >=20
+> > > This patch is going to add a driver for the DWC PCIe controller
+> > > available in Allwinner SoCs, either the H6 one when wrapped by the
+> > > hypervisor (so that the driver can consider it as an ordinary PCIe
+> > > controller) or further not buggy ones.
+> > >=20
+> > > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> > > ---
+> > > There's no device tree binding patch available, because I still
+> > > have
+> > > questions on the device tree compatible string. I want to use it to
+> > > describe that this driver doesn't support the "native Allwinner H6
+> > > PCIe
+> > > controller", but a wrapped version with my hypervisor.
+> > >=20
+> > > I think supporting a "para-physical" device is some new thing, so
+> > > this
+> > > patch is RFC.
+> > >=20
+> > > My hypervisor is at [1], and some basic usage documentation is at
+> > > [2].
+> > >=20
+> > > [1] https://github.com/Icenowy/aw-el2-barebone
+> > > [2]=20
+> > > https://forum.armbian.com/topic/13529-a-try-on-utilizing-h6-pcie-with=
+-virtualization/
+> >=20
+> > I'm a bit concerned to throw yet another mandatory, difficult to
+> > update, component in the already quite long boot chain.
+> >=20
+> > Getting fixes deployed in ATF or U-Boot is already pretty long,
+> > having
+> > another component in there will just make it worse, and it's another
+> > hard to debug component that we throw into the mix.
+> >=20
+> > And this prevents any use of virtualisation on the platform.
+> >=20
+> > I haven't found an explanation on what that hypervisor is doing
+> > exactly, but from a look at it it seems that it will trap all the
+> > accesses to the PCIe memory region to emulate a regular space on top
+> > of the restricted one we have?
+> >=20
+> > If so, can't we do that from the kernel directly by using a memory
+> > region that always fault with a fault handler like Framebuffer's
+> > deferred_io is doing (drivers/video/fbdev/core/fb_defio.c) ?
+>=20
+> I don't know well about the memory management of the kernel. However,
+> for PCIe memory space, the kernel allows simple ioremap() on it. So
+> wrapping it shouldn't be so easy.
+
+I'm not sure this would cause any trouble, it's worth exploring I guess. Th=
+is
+would solve all the current shortcomings.
+
+Maxime
+>
+
+--p2kmtjzg5nllbilb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXrLZkQAKCRDj7w1vZxhR
+xdzrAP9eNr9KcfU2kbvxMpWxzsG/4z0BCVJuoyB9oqqcCJ+rSgEA8LASQMw0yBXS
+EWoo2T8XCMOXkT+flamRrPJwfGv3/AQ=
+=oD3G
+-----END PGP SIGNATURE-----
+
+--p2kmtjzg5nllbilb--
