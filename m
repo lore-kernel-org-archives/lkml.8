@@ -2,134 +2,117 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CC2C54E49
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 213D7C38A2A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC25220735
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:03:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lfgwokHK"
+	by mail.kernel.org (Postfix) with ESMTP id F0EA9206B9
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:05:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgEFXDp (ORCPT
+        id S1726811AbgEFXF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 19:03:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46008 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726612AbgEFXDf (ORCPT
+        Wed, 6 May 2020 19:05:28 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:48776 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726612AbgEFXF1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 19:03:35 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7C96C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 16:03:35 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id x15so1951851pfa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 16:03:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fykYEAZBREXkb37+0Le9Kbmd8C0bOVDbkDBjBlbVUGs=;
-        b=lfgwokHK0Brklpzmvej4JY8UQXjySJzJ+cT+2XjoIkDqqZjSbOTNZ6iPY8vjZi9La1
-         akivu/sXiwoKnL4CijDaXD1urZM8fMii/n8Xu0NMSP+goA0/yhjTXDuxVTfoo1Bn0cmK
-         azlsh4ZzLuWf0l/Ut5hrPMr6DfpcJbBBQHiLU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fykYEAZBREXkb37+0Le9Kbmd8C0bOVDbkDBjBlbVUGs=;
-        b=KzHI5PHC0xrKSrBmgcYSoDK081cG/LlahaBgDA9cN6bbEpjCi8vwBL6Ki9s5A63dUe
-         OEn1emn9gvS0jH3R+UQ5q449KI7E9ziFL/suBGgv0F2CraY/m9fLr85sLtjJIkCgWucs
-         4HjRvytVtMw9l36MBcVlG3V2N66BVhA/5ilTCOBl0W1HrbglMzF/9hf32c3s5NYpD9pm
-         hxP5y8+ObZ+dREqzB4R8TCxnh3oy28cEvG7UyO66LYuHD9HlRZ4uQNVbjZfLAmh7jdSz
-         Nu+UoR2jYtnr1aEjOPYfhMHC013PwY0upj1sirYOgJQZ9XA+4mSF5XN3I+U0l19D8Wv2
-         Uq/Q==
-X-Gm-Message-State: AGi0PuYAdOBXw774FRWpNGl0n2FGqS5/ycFS+I8OdRQq5aZAyZ44p6I9
-        0vZe4JBheQQaSonScrONuwXV5w==
-X-Google-Smtp-Source: APiQypJzs+W5WYsIPFMtcylCwrB5U4odFnrNJsA8N4YlUV03urAgiM46sr3oUpC6aJ8qe9h4yvm5KQ==
-X-Received: by 2002:a62:fc82:: with SMTP id e124mr10932061pfh.126.1588806215221;
-        Wed, 06 May 2020 16:03:35 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4cc0:7eee:97c9:3c1a])
-        by smtp.gmail.com with ESMTPSA id e2sm5555852pjt.2.2020.05.06.16.03.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 May 2020 16:03:34 -0700 (PDT)
-From:   Gwendal Grignou <gwendal@chromium.org>
-To:     enric.balletbo@collabora.com, jic23@kernel.org
-Cc:     bleung@chromium.org, groeck@chromium.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        Gwendal Grignou <gwendal@chromium.org>
-Subject: [PATCH v2 2/3] iio: cros_ec: Allow enabling/disabling calibration mode
-Date:   Wed,  6 May 2020 16:03:23 -0700
-Message-Id: <20200506230324.139241-3-gwendal@chromium.org>
-X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-In-Reply-To: <20200506230324.139241-1-gwendal@chromium.org>
-References: <20200506230324.139241-1-gwendal@chromium.org>
+        Wed, 6 May 2020 19:05:27 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 488E41C0241; Thu,  7 May 2020 01:05:26 +0200 (CEST)
+Date:   Thu, 7 May 2020 01:05:25 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
+        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz
+Subject: Re: USB networking news, ofono for d4: less hacked version
+Message-ID: <20200506230525.GA22354@amd>
+References: <20200506101125.GA7490@amd>
+ <20200506144338.GT37466@atomide.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="x+6KMIRAuhnl3hBn"
+Content-Disposition: inline
+In-Reply-To: <20200506144338.GT37466@atomide.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-calibration was a one-shot event sent to the sensor to calibrate itself.
-It is used on Bosch sensors (BMI160, BMA254).
-For TCS3400 light sensor, we need to stay in calibration mode to run
-tests.
-Accept boolean true and false (not just true) to enter/exit calibration.
 
-Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
----
- .../common/cros_ec_sensors/cros_ec_sensors_core.c    |  3 +--
- include/linux/platform_data/cros_ec_commands.h       | 12 +++++++++---
- 2 files changed, 10 insertions(+), 5 deletions(-)
+--x+6KMIRAuhnl3hBn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-index c831915ca7e56..3d8b25ee9d80c 100644
---- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-+++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-@@ -411,11 +411,10 @@ static ssize_t cros_ec_sensors_calibrate(struct iio_dev *indio_dev,
- 	ret = strtobool(buf, &calibrate);
- 	if (ret < 0)
- 		return ret;
--	if (!calibrate)
--		return -EINVAL;
- 
- 	mutex_lock(&st->cmd_lock);
- 	st->param.cmd = MOTIONSENSE_CMD_PERFORM_CALIB;
-+	st->param.perform_calib.enable = calibrate;
- 	ret = cros_ec_motion_send_host_cmd(st, 0);
- 	if (ret != 0) {
- 		dev_warn(&indio_dev->dev, "Unable to calibrate sensor\n");
-diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
-index 451885c697cc3..395c9b2b05c66 100644
---- a/include/linux/platform_data/cros_ec_commands.h
-+++ b/include/linux/platform_data/cros_ec_commands.h
-@@ -2517,13 +2517,19 @@ struct ec_params_motion_sense {
- 
- 		/*
- 		 * Used for MOTIONSENSE_CMD_INFO, MOTIONSENSE_CMD_DATA
--		 * and MOTIONSENSE_CMD_PERFORM_CALIB.
- 		 */
- 		struct __ec_todo_unpacked {
- 			uint8_t sensor_num;
--		} info, info_3, data, fifo_flush, perform_calib,
--				list_activities;
-+		} info, info_3, data, fifo_flush, list_activities;
- 
-+		/*
-+		 * Used for MOTIONSENSE_CMD_PERFORM_CALIB:
-+		 * Allow entering/exiting the calibration mode.
-+		 */
-+		struct __ec_todo_unpacked {
-+			uint8_t sensor_num;
-+			uint8_t enable;
-+		} perform_calib;
- 		/*
- 		 * Used for MOTIONSENSE_CMD_EC_RATE, MOTIONSENSE_CMD_SENSOR_ODR
- 		 * and MOTIONSENSE_CMD_SENSOR_RANGE.
--- 
-2.26.2.526.g744177e7f7-goog
+On Wed 2020-05-06 07:43:38, Tony Lindgren wrote:
+> * Pavel Machek <pavel@ucw.cz> [200506 10:12]:
+> > Hi!
+> >=20
+> > So... I found out that USB networking works way better when I don't
+> > attempt to charge the phone at the same. Yes, green light was
+> > blinking.
+>=20
+> OK yes we don't have much of a charger detection currently and the
+> charger tries to reconnect with the LED blinking rapidly with an
+> empty battery.
 
+Do you have an idea why that causes problems with usb data connection?
+
+I created a script to disable charging -- and that works. I also found
+out cable about 5cm long. Not nice to use, but works significantly
+better w.r.t. charging.
+
+> > To github.com:pavelmachek/ofono.git
+> >    e7b58fdd..1e7e5ce3  mux-v1.19-2 -> mux-v1.19-2
+> >=20
+> > which creates copy of atchat, so I don't damage existing
+> > functionality. It still seems to somehow work. Lot more work is still
+> > needed. Designed to work with latest kernel patches from Tony, using
+> > gsmmux interfaces.
+>=20
+> OK, sounds like that should work :)
+
+As I said, still ton of work to do :-(.
+
+> I still need to figure update audio notifications for the current set of
+> gsmmux patches. Eventually maybe ofono can just set the voice call audio
+> routing using alsa. But let's get the kernel notifications working first
+> as we also need to fix up the audio parts for the earlier comments from
+> Peter and Sebastian.
+
+Ofono does not normally touch ALSA, so I'd prefer not to do it from
+there.
+
+But I might be confused. I recall some audio patches were needed for
+basic phone calls (setting up mixers to connect gsm<->audio), but
+those worked before gsmux support was enabled. (Maybe some hardcoded
+commands were needed to be sent to gsmmux somewhere).
+
+I assume neither gsmmux audio parts nor mixer parts are available in
+-next at the moment?
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--x+6KMIRAuhnl3hBn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl6zQrUACgkQMOfwapXb+vJF1QCgqarLMWC4FO5LgMlW6LlCOlI2
+dhkAnRHc+zX0noNocp+CI5Hd0uRb0qFk
+=gjFT
+-----END PGP SIGNATURE-----
+
+--x+6KMIRAuhnl3hBn--
