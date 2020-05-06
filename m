@@ -5,166 +5,144 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AE5C47247
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 02:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D16CC47254
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 02:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E8BA20752
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 02:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B3C020721
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 02:44:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="seY8O0PO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GMBFz7sP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729915AbgEFCib (ORCPT
+        id S1729692AbgEFCoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 22:38:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52260 "EHLO
+        Tue, 5 May 2020 22:44:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728069AbgEFCib (ORCPT
+        with ESMTP id S1728069AbgEFCoT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 22:38:31 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDB9FC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 19:38:30 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id c124so200880oib.13
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 19:38:30 -0700 (PDT)
+        Tue, 5 May 2020 22:44:19 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F826C061A0F;
+        Tue,  5 May 2020 19:44:19 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id m18so196846otq.9;
+        Tue, 05 May 2020 19:44:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=j7wFQAej6fSwbScLFcHGQ/mYv2AH2O4tGHNnw9sXpTw=;
-        b=seY8O0POHGfuH4/v0E+MvvBGOlBNe3TSs+pon6lutFfFTJyH7NM7SGGAHRo3CNqEYM
-         DT+oKAAQE447xpE4KJqfqKJkxcrh/EOf5wOV6/1ZQ6UEo7EvRQ31W3kSOtrjjrlZEL49
-         TPC4IKEg4p8N6gGtNM5mSle6xWvPSe1VNs8TKbzvVT1+31a5Rt1ec5fcP67q4CTYswGW
-         c1oi/ZvdUAcCPzN1j+9zEDbLohRx7huSWGToqfzeaIIVL8fQAocwxipKjcO/u+6nu129
-         2UedapB8pyftgR07ghml+KAAtFL7KdBwOQOebhezkmdxxE8xr3FWYVZSQzp72NPDPEUy
-         ReIA==
+        bh=lToKiYqDzeyepcFYxdBUJOiTycbEPx+SdzPCH8xZYpU=;
+        b=GMBFz7sPA/TGfkt1kbDYWSZGtF7dE0sIA+dILblK8rgopnKEHvEfl7XLAy62/X5lVB
+         aDe1gPwU+EouYVsvHd5fUssazSTRFiEL09WzDIDgj08KPji+ZqgtS1rQ0661pe2SKb9Q
+         g/uI1QUxXd6vCgq4SUmULMvqMJVP7i8T8tSCeYktMZMtSssC3W/cNsjpk7PZUTjajdr6
+         gYreOi+yZo8clrQYQ0QLybtIhfKvgCGje1A2yS4p6pySutpq+gZ6rOpaQ7Shm67Oa0kN
+         aBATkYxtkZEjSiKcyRptHmqhfl56KdEuqrZwU1wwtnD6zVvwcfY+LjXqoCpl1MyMiIVc
+         vSzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=j7wFQAej6fSwbScLFcHGQ/mYv2AH2O4tGHNnw9sXpTw=;
-        b=rNpjmkAmgqDtBd0orD6gfq4Anxn1llB06GuKeq5/csJw+kxd/R0iyaHsU2s9hrBglR
-         W4Tyf6kLveG1/W2QRVqxTaDCKCKj9CHlJMLVmlJYX2HRcIFiV3SCoA1o8e0vyUPqlAbF
-         HgyieCNttSzJO8O1WnRFrIl071bJSdnKcvl3ygKHw9JgDrXn2ZRTwrDueE+lWcw+IVpm
-         /kK9V3shOhuZ7myvPLHnrMXx3G6Fp/JKvxvvDBE1UgVlozqPDLLhfLegyF3J7hvuJlnC
-         QCBESYmHx4ix7J7FFZsb9yD5C9cT69TH7wgAUtDYFbV2PUeL2IbXyjMbpgVWGdrkWSdf
-         YI+A==
-X-Gm-Message-State: AGi0PualtkJlCNlhuYBa4wVlbCvZNnK0pFx485TiZtkdx9yYzcMAI445
-        pfj76zI2nmM5F5hv/s1XAVY=
-X-Google-Smtp-Source: APiQypJp6sM5iMmhiBeRcyJVDAiCKIul5pMj/MADX52YdCUZiyUcj98ydKDZM6L9vV663CnjHO1XVQ==
-X-Received: by 2002:a05:6808:a93:: with SMTP id q19mr1284179oij.6.1588732710003;
-        Tue, 05 May 2020 19:38:30 -0700 (PDT)
+        bh=lToKiYqDzeyepcFYxdBUJOiTycbEPx+SdzPCH8xZYpU=;
+        b=Ewof0V1y/5lH7p+SDRbT/UI6jpozwjW8EbFQYwrIwTckyqYUzlQQrzPbXbG4ms/c3G
+         hUVvgeJQKt4bbJLr5MMlXZHGO0gxfuJQQQsvPtJutUECjpbOMszFRUGyaTAMVltwXhFx
+         7OHx201iMQL6zi/m0UgzFHFqIHDupZxEOWok1fzQss07CxTEPI9cKXqyJrARdLcr0rae
+         weMAc2eXIgVWPbrcMTDgSJN+BY9uhxtgL0h73E/FtX8dTVxH0/hHqEiJxqHjN+NGXhHX
+         wuLbjR+SlvnlR0RtQDRbBB9ho4iC0CJYBzSYTheB0weBYzqvo3Tni2IkiqQYoQa1DRx9
+         brGA==
+X-Gm-Message-State: AGi0PuZAcA/jjaS9+KT+WFs0hMmf+TuYmP3YUqR6l62IcB8UZpO2k12X
+        mWo9zIRAe+l8Gpp58xG8Q00=
+X-Google-Smtp-Source: APiQypKZ9U3E4u2jK3T6T7S2CFrG49xOysMgOhOpNszjxXwMTKHUPf1wx4Fr7wtM+u5GFswF860+HA==
+X-Received: by 2002:a05:6830:da:: with SMTP id x26mr4862496oto.259.1588733058513;
+        Tue, 05 May 2020 19:44:18 -0700 (PDT)
 Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id i10sm263302oos.28.2020.05.05.19.38.29
+        by smtp.gmail.com with ESMTPSA id a27sm135255oos.37.2020.05.05.19.44.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 19:38:29 -0700 (PDT)
-Date:   Tue, 5 May 2020 19:38:28 -0700
+        Tue, 05 May 2020 19:44:18 -0700 (PDT)
+Date:   Tue, 5 May 2020 19:44:16 -0700
 From:   Nathan Chancellor <natechancellor@gmail.com>
 To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Vincenzo Aliberti <vincenzo.aliberti@gmail.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Bryan Wu <bryan.wu@canonical.com>,
+        "G.Shark Jeong" <gshark.jeong@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
         clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] mtd: lpddr: fix excessive stack usage with clang
-Message-ID: <20200506023828.GA415100@ubuntu-s3-xlarge-x86>
-References: <20200505140136.263461-1-arnd@arndb.de>
+Subject: Re: [PATCH] leds: lm355x: avoid enum conversion warning
+Message-ID: <20200506024416.GB415100@ubuntu-s3-xlarge-x86>
+References: <20200505141928.923428-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200505140136.263461-1-arnd@arndb.de>
+In-Reply-To: <20200505141928.923428-1-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 04:01:16PM +0200, Arnd Bergmann wrote:
-> Building lpddr2_nvm with clang can result in a giant stack usage
-> in one function:
+On Tue, May 05, 2020 at 04:19:17PM +0200, Arnd Bergmann wrote:
+> clang points out that doing arithmetic between diffent enums is usually
+                                                 ^ different
+> a mistake:
 > 
-> drivers/mtd/lpddr/lpddr2_nvm.c:399:12: error: stack frame size of 1144 bytes in function 'lpddr2_nvm_probe' [-Werror,-Wframe-larger-than=]
+> drivers/leds/leds-lm355x.c:167:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
+>                 reg_val = pdata->pin_tx2 | pdata->ntc_pin;
+>                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
+> drivers/leds/leds-lm355x.c:178:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
+>                 reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
+>                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
 > 
-> The problem is that clang decides to build a copy of the mtd_info
-> structure on the stack and then do a memcpy() into the actual version. It
-> shouldn't really do it that way, but it's not strictly a bug either.
+> In this driver, it is intentional, so add a cast to hide the false-positive
+
+Not sure that I would call this a false positive. The warning is correct
+that there is a bitwise operation between different enumeration types
+but we do not care since we are just using the enumerated type for its
+integer value in lieu of a #define VAR value.
+
+> warning. It appears to be the only instance of this warning at the moment.
 > 
-> As a workaround, use a static const version of the structure to assign
-> most of the members upfront and then only set the few members that
-> require runtime knowledge at probe time.
-> 
-> Fixes: 96ba9dd65788 ("mtd: lpddr: add driver for LPDDR2-NVM PCM memories")
+> Fixes: b98d13c72592 ("leds: Add new LED driver for lm355x chips")
 > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-
 > ---
->  drivers/mtd/lpddr/lpddr2_nvm.c | 35 ++++++++++++++++++----------------
->  1 file changed, 19 insertions(+), 16 deletions(-)
+>  drivers/leds/leds-lm355x.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/mtd/lpddr/lpddr2_nvm.c b/drivers/mtd/lpddr/lpddr2_nvm.c
-> index 0f1547f09d08..72f5c7b30079 100644
-> --- a/drivers/mtd/lpddr/lpddr2_nvm.c
-> +++ b/drivers/mtd/lpddr/lpddr2_nvm.c
-> @@ -393,6 +393,17 @@ static int lpddr2_nvm_lock(struct mtd_info *mtd, loff_t start_add,
->  	return lpddr2_nvm_do_block_op(mtd, start_add, len, LPDDR2_NVM_LOCK);
->  }
+> diff --git a/drivers/leds/leds-lm355x.c b/drivers/leds/leds-lm355x.c
+> index 11ce05249751..b2eb2e1e9c04 100644
+> --- a/drivers/leds/leds-lm355x.c
+> +++ b/drivers/leds/leds-lm355x.c
+> @@ -164,18 +164,19 @@ static int lm355x_chip_init(struct lm355x_chip_data *chip)
+>  	/* input and output pins configuration */
+>  	switch (chip->type) {
+>  	case CHIP_LM3554:
+> -		reg_val = pdata->pin_tx2 | pdata->ntc_pin;
+> +		reg_val = (u32)pdata->pin_tx2 | (u32)pdata->ntc_pin;
+>  		ret = regmap_update_bits(chip->regmap, 0xE0, 0x28, reg_val);
+>  		if (ret < 0)
+>  			goto out;
+> -		reg_val = pdata->pass_mode;
+> +		reg_val = (u32)pdata->pass_mode;
+
+Is this cast needed? I don't think there should be warning from going
+from an enumerated type to unsigned int.
+
+>  		ret = regmap_update_bits(chip->regmap, 0xA0, 0x04, reg_val);
+>  		if (ret < 0)
+>  			goto out;
+>  		break;
 >  
-> +static const struct mtd_info lpddr2_nvm_mtd_info = {
-> +	.type		= MTD_RAM,
-> +	.writesize	= 1,
-> +	.flags		= (MTD_CAP_NVRAM | MTD_POWERUP_LOCK),
-> +	._read		= lpddr2_nvm_read,
-> +	._write		= lpddr2_nvm_write,
-> +	._erase		= lpddr2_nvm_erase,
-> +	._unlock	= lpddr2_nvm_unlock,
-> +	._lock		= lpddr2_nvm_lock,
-> +};
-> +
->  /*
->   * lpddr2_nvm driver probe method
->   */
-> @@ -433,6 +444,7 @@ static int lpddr2_nvm_probe(struct platform_device *pdev)
->  		.pfow_base	= OW_BASE_ADDRESS,
->  		.fldrv_priv	= pcm_data,
->  	};
-> +
->  	if (IS_ERR(map->virt))
->  		return PTR_ERR(map->virt);
->  
-> @@ -444,22 +456,13 @@ static int lpddr2_nvm_probe(struct platform_device *pdev)
->  		return PTR_ERR(pcm_data->ctl_regs);
->  
->  	/* Populate mtd_info data structure */
-> -	*mtd = (struct mtd_info) {
-> -		.dev		= { .parent = &pdev->dev },
-> -		.name		= pdev->dev.init_name,
-> -		.type		= MTD_RAM,
-> -		.priv		= map,
-> -		.size		= resource_size(add_range),
-> -		.erasesize	= ERASE_BLOCKSIZE * pcm_data->bus_width,
-> -		.writesize	= 1,
-> -		.writebufsize	= WRITE_BUFFSIZE * pcm_data->bus_width,
-> -		.flags		= (MTD_CAP_NVRAM | MTD_POWERUP_LOCK),
-> -		._read		= lpddr2_nvm_read,
-> -		._write		= lpddr2_nvm_write,
-> -		._erase		= lpddr2_nvm_erase,
-> -		._unlock	= lpddr2_nvm_unlock,
-> -		._lock		= lpddr2_nvm_lock,
-> -	};
-> +	*mtd = lpddr2_nvm_mtd_info;
-> +	mtd->dev.parent		= &pdev->dev;
-> +	mtd->name		= pdev->dev.init_name;
-> +	mtd->priv		= map;
-> +	mtd->size		= resource_size(add_range);
-> +	mtd->erasesize		= ERASE_BLOCKSIZE * pcm_data->bus_width;
-> +	mtd->writebufsize	= WRITE_BUFFSIZE * pcm_data->bus_width;
->  
->  	/* Verify the presence of the device looking for PFOW string */
->  	if (!lpddr2_nvm_pfow_present(map)) {
+>  	case CHIP_LM3556:
+> -		reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
+> +		reg_val = (u32)pdata->pin_tx2 | (u32)pdata->ntc_pin |
+> +		          (u32)pdata->pass_mode;
+>  		ret = regmap_update_bits(chip->regmap, 0x0A, 0xC4, reg_val);
+>  		if (ret < 0)
+>  			goto out;
 > -- 
 > 2.26.0
 > 
+
+With those comments addressed, feel free to add:
+
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
