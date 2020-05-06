@@ -2,92 +2,77 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C838C47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 03:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0ABC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 03:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CC1D20757
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 03:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 915772075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 03:52:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgEFDrr (ORCPT
+        id S1726618AbgEFDwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 23:47:47 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:33852 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726477AbgEFDrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 23:47:47 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id EAB4A1CEDB2C3B6D3534;
-        Wed,  6 May 2020 11:47:44 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.55) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Wed, 6 May 2020
- 11:47:41 +0800
-Subject: Re: [PATCH 2/4] mm/swap: use SECTORS_PER_PAGE_SHIFT to clean up code
-From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
-        "Sergey Senozhatsky" <sergey.senozhatsky.work@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>, Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        dm-devel <dm-devel@redhat.com>, Song Liu <song@kernel.org>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200505115543.1660-1-thunder.leizhen@huawei.com>
- <20200505115543.1660-3-thunder.leizhen@huawei.com>
- <20200505172520.GI16070@bombadil.infradead.org>
- <32ba9907-60ad-27c0-c565-e7b5c80ab03c@huawei.com>
-Message-ID: <bddd596b-2e8e-42aa-70cc-41583b15c548@huawei.com>
-Date:   Wed, 6 May 2020 11:47:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 5 May 2020 23:52:18 -0400
+Received: from smtp05.smtpout.orange.fr ([80.12.242.127]:51656 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbgEFDwS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 23:52:18 -0400
+Received: from localhost.localdomain ([93.23.13.221])
+        by mwinf5d40 with ME
+        id bFsD2200H4m9Yy503FsDqi; Wed, 06 May 2020 05:52:16 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Wed, 06 May 2020 05:52:16 +0200
+X-ME-IP: 93.23.13.221
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, info@metux.net, gregkh@linuxfoundation.org,
+        dan.carpenter@oracle.com, tglx@linutronix.de
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] iio: sca3000: Remove an erroneous 'get_device()'
+Date:   Wed,  6 May 2020 05:52:06 +0200
+Message-Id: <20200506035206.192173-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <32ba9907-60ad-27c0-c565-e7b5c80ab03c@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.166.215.55]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This looks really unusual to have a 'get_device()' hidden in a 'dev_err()'
+call.
+Remove it.
 
+While at it add a missing \n at the end of the message.
 
-On 2020/5/6 9:33, Leizhen (ThunderTown) wrote:
-> 
-> 
-> On 2020/5/6 1:25, Matthew Wilcox wrote:
->> On Tue, May 05, 2020 at 07:55:41PM +0800, Zhen Lei wrote:
->>> +++ b/mm/swapfile.c
->>> @@ -177,8 +177,8 @@ static int discard_swap(struct swap_info_struct *si)
->>>  
->>>  	/* Do not discard the swap header page! */
->>>  	se = first_se(si);
->>> -	start_block = (se->start_block + 1) << (PAGE_SHIFT - 9);
->>> -	nr_blocks = ((sector_t)se->nr_pages - 1) << (PAGE_SHIFT - 9);
->>> +	start_block = (se->start_block + 1) << SECTORS_PER_PAGE_SHIFT;
->>> +	nr_blocks = ((sector_t)se->nr_pages - 1) << SECTORS_PER_PAGE_SHIFT;
->>
->> Thinking about this some more, wouldn't this look better?
->>
->> 	start_block = page_sectors(se->start_block + 1);
->> 	nr_block = page_sectors(se->nr_pages - 1);
->>
-> 
-> OK，That's fine, it's clearer. And in this way, there won't be more than 80 columns.
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+This patch is purely speculative.
+I've looked a bit arround and see no point for this get_device() but other
+eyes are welcomed :)
+---
+ drivers/iio/accel/sca3000.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Should we rename "page_sectors" to "page_to_sectors"? Because we may need to define
-"sectors_to_page" also.
-
-> 
->>
->> .
->>
+diff --git a/drivers/iio/accel/sca3000.c b/drivers/iio/accel/sca3000.c
+index 66d768d971e1..6e429072e44a 100644
+--- a/drivers/iio/accel/sca3000.c
++++ b/drivers/iio/accel/sca3000.c
+@@ -980,7 +980,7 @@ static int sca3000_read_data(struct sca3000_state *st,
+ 	st->tx[0] = SCA3000_READ_REG(reg_address_high);
+ 	ret = spi_sync_transfer(st->us, xfer, ARRAY_SIZE(xfer));
+ 	if (ret) {
+-		dev_err(get_device(&st->us->dev), "problem reading register");
++		dev_err(&st->us->dev, "problem reading register\n");
+ 		return ret;
+ 	}
+ 
+-- 
+2.25.1
 
