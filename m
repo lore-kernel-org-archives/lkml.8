@@ -2,111 +2,116 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A345C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62178C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0327206E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38A1724953
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:03:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="FeY1euaz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728283AbgEFHAo (ORCPT
+        id S1728010AbgEFHDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 03:00:44 -0400
-Received: from mga14.intel.com ([192.55.52.115]:14800 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728244AbgEFHAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 03:00:41 -0400
-IronPort-SDR: ISHQmuRW9w1YFGWWOyPWjyNvV1MI44mFgIWja1OcJkdhQ+l75JfsQ+XZHVqPqxLVJgik4UMYg2
- p1hu8jNv26jg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 00:00:37 -0700
-IronPort-SDR: BuypfD8hgJq/oZvch/8WnxQawyfcaQENOeVKmR67ET/zyw/t1ivmyxIrszOzqaTax7ItuUiu5K
- SEqzbQbOY/1A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,358,1583222400"; 
-   d="scan'208";a="304715942"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 06 May 2020 00:00:37 -0700
-Received: from [10.215.165.195] (rtanwar-mobl.gar.corp.intel.com [10.215.165.195])
-        by linux.intel.com (Postfix) with ESMTP id B417D580378;
-        Wed,  6 May 2020 00:00:35 -0700 (PDT)
-Subject: Re: [PATCH] serial: lantiq: Add x86 in Kconfig dependencies for
- Lantiq serial driver
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com
-References: <96fd193c0a8939d27641ff93573545c02313048f.1588577002.git.rahul.tanwar@linux.intel.com>
- <20200505142504.GA832370@kroah.com>
- <3aa4aac0-a9d2-5ab2-e9c9-c7f3bd16da96@linux.intel.com>
- <20200506064148.GA2266968@kroah.com>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <efa6660e-f572-a884-5d9c-5ad92230944b@linux.intel.com>
-Date:   Wed, 6 May 2020 15:00:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 6 May 2020 03:03:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726480AbgEFHDJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 03:03:09 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56C58C061A41
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 00:03:09 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id j8so1007222iog.13
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 00:03:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=kNp8v77ILg0esKTUhtdtghBS9Oa/t4onJ0W3YRlQA2s=;
+        b=FeY1euazNQf3RbKL1bjD/43J4EwwmimWuHqwEOZnwBz1hd1L/dc031nSE9oFG+Wg3T
+         2MlLi4P3wjow8IWLNhEQw5wQzsUq1yR+pgmzkLdVVMq5F7acvzCJw8xt9tRwn4YzdTqI
+         kq7B8RhWDy1Uvo/U/3HxmGo/XUghQ5rSkaM7QtRSng9YDN+DAZRzDNHwxdWW3bqi1RwX
+         Xh5e60qZDatUFmTvM25J+WaTlWzSbN0N0nS7q/Emfd0rfMxf1322dnteGutZVlRQiV6j
+         fm+T0G1XqnxcfRt5xUFvnQ+oI02GhWQhe3J5K8O2fEQKiuxWrHopugqtZsq2TI4F9eZL
+         Ldxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=kNp8v77ILg0esKTUhtdtghBS9Oa/t4onJ0W3YRlQA2s=;
+        b=JmM1FNSNN3PkFItmmZpCKk/0m/d92JHGiNk2WoRUh1VUFzmtfBZ9VxHtp51GWrhaiy
+         VQxHXw0odePguaOtO5NfZlCFlAB6FahB7ENN0Dg/wD2dYObf0aV6uBMFfLNN9prRCQb6
+         LS/ebaXH0J5eoAnNnHtMM3FxmG7zRPo0VhdDmtShZU2xmpfrmQroAfOGonCjQJG7ITpd
+         ib6CXEWp1o080WG+CpHRdmSzBn24CmNmg0xBFbjBFvY7p8e6vZt80YkmhrSVqzAeaT7a
+         h4Y9kCHYT2ADaO5qhFC6gSs0c6lzQU4eBBjGuuRQeUlLQYm6YNA7SxMBCUpcozTm0ZFg
+         oS0A==
+X-Gm-Message-State: AGi0PuYpT77h4x95Bq7jPQm8NqjLB4XkuI5iREKRkZTf8B+GgIRXlNYi
+        HcBNjyLAiRHUXsKRNGQy0zeS65cTXrExuyrZQfs9QQ==
+X-Google-Smtp-Source: APiQypK484RcQGROR6N++Jsg8cJZdgh7y4enPWlVzQyBROs9NdLHKNWT34OgKh5Hlj/AoF1qRVFqfpsKTSIhrMt9Np8=
+X-Received: by 2002:a6b:8bd2:: with SMTP id n201mr7159413iod.131.1588748588553;
+ Wed, 06 May 2020 00:03:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200506064148.GA2266968@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200505140231.16600-1-brgl@bgdev.pl> <20200505140231.16600-7-brgl@bgdev.pl>
+ <20200505174709.GD224913@lunn.ch>
+In-Reply-To: <20200505174709.GD224913@lunn.ch>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 6 May 2020 09:02:57 +0200
+Message-ID: <CAMRc=Meob9VP83HiF4r2zAEXX0+1LduSrJGCXx=rKB1W701pnA@mail.gmail.com>
+Subject: Re: [PATCH 06/11] net: ethernet: mtk-eth-mac: new driver
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Felix Fietkau <nbd@openwrt.org>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-mediatek@lists.infradead.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Andrew,
 
-On 6/5/2020 2:41 pm, Greg KH wrote:
-> On Wed, May 06, 2020 at 12:49:57PM +0800, Tanwar, Rahul wrote:
->> On 5/5/2020 10:25 pm, Greg KH wrote:
->>> On Mon, May 04, 2020 at 04:03:52PM +0800, Rahul Tanwar wrote:
->>>> Lantiq serial driver/IP is reused for a x86 based SoC as well.
->>>> Update the Kconfig accordingly.
->>>>
->>>> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
->>>> ---
->>>>  drivers/tty/serial/Kconfig | 2 +-
->>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
->>>> index 0aea76cd67ff..4b0a7b98f8c7 100644
->>>> --- a/drivers/tty/serial/Kconfig
->>>> +++ b/drivers/tty/serial/Kconfig
->>>> @@ -1035,7 +1035,7 @@ config SERIAL_SIFIVE_CONSOLE
->>>>  
->>>>  config SERIAL_LANTIQ
->>>>  	bool "Lantiq serial driver"
->>>> -	depends on LANTIQ
->>>> +	depends on (LANTIQ || X86) || COMPILE_TEST
->>>>  	select SERIAL_CORE
->>>>  	select SERIAL_CORE_CONSOLE
->>>>  	select SERIAL_EARLYCON
->>>> -- 
->>>> 2.11.0
->>>>
->>> Any reason this can't also be a module?
->> Thanks a lot for accepting the patch. This driver is also used for
->> console during bootup so we always have it as built in.
-> So no generic kernel images can ever be made for this driver?  That's
-> not good, what about systems that have this serial port but does not
-> care about the console?
+thanks for the review.
+
+wt., 5 maj 2020 o 19:47 Andrew Lunn <andrew@lunn.ch> napisa=C5=82(a):
 >
-> That's just ensuring that it will not be built into any distro kernel
-> images, I suggest fixing this up please.
-
-I understand your concern. I will send out another incremental patch
-series to fix it assuming that this Kconfig change is already merged
-in tty tree. Thanks.
-
-Regards,
-Rahul
-
-> thanks,
+> > +static struct net_device *mtk_mac_get_netdev(struct mtk_mac_priv *priv=
+)
+> > +{
+> > +     char *ptr =3D (char *)priv;
+> > +
+> > +     return (struct net_device *)(ptr - ALIGN(sizeof(struct net_device=
+),
+> > +                                              NETDEV_ALIGN));
+> > +}
 >
-> greg k-h
+> Bit of an odd way to do it. It is much more normal to just have
+>
+>     return priv->netdev;
+>
 
+But then you store a pointer to the starting address of the structure
+in that very structure. This is actually weirder to me. :) I'd say:
+let's generalize it and provide a counterpart to netdev_priv():
+priv_to_netdev(), how about that?
+
+For the other issues: I'll address them in v2.
+
+Bart
