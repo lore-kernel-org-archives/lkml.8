@@ -2,213 +2,167 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E95C47254
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 00:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9D5C47254
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 00:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26C0B206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 00:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7F5206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 00:19:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="Wnv9h8DF"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YP9DojNn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729590AbgEFAPw (ORCPT
+        id S1729332AbgEFATD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 20:15:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58450 "EHLO
+        Tue, 5 May 2020 20:19:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728642AbgEFAPv (ORCPT
+        with ESMTP id S1728356AbgEFATD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 20:15:51 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E739C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 17:15:51 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f13so50867wrm.13
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 17:15:51 -0700 (PDT)
+        Tue, 5 May 2020 20:19:03 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 242C8C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 17:19:03 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id g2so11444vsb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 17:19:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=c2hLm6+zbJEAyEVfAYowpOyewzOW+kIv+YTbZQ2i84M=;
-        b=Wnv9h8DFu6J1kDi8bq3i9rgHlErQOSO5b2nOTXCK2bc54VFNTOkk5Kd/ClmcCuHm4Q
-         VwfRWOEr1NhchIQ8XeAqwgX4bGh1orWeSO4dAmSha799JFEOKbletI8XUJ7QmZdDatsG
-         kqU09jDULZN8sx1sg/VAu8E3+7D6iQ374zGLU=
+        bh=uxf7PIfuQA1AmzwbgiAc6qi52bK5LTEy5mM67o299pg=;
+        b=YP9DojNnvL0GKT59bxFJk7GMLrsEk2LCd5aowl6qLFcQdpPAxIs6zTVGg2i6fYhDJz
+         dyvRxqWVH9vP7aAeBY2R+7ovwrMKFqgr+zf5hfdg2ome+cQL9T+tX2oEiMp15mZ3FxB7
+         qL0Sg3ZHqsoiZp8InrBjMlJzG2kBeeYmEkBsk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=c2hLm6+zbJEAyEVfAYowpOyewzOW+kIv+YTbZQ2i84M=;
-        b=B7+XOwWcfRcLiCAnSijMTAUqgDH+LsmP3IN2mXflxZ+kex7awXg0iKbIQEYGKMAllk
-         Fo2CKiR/Ogmu8D6dLZL7DM2Th7Bdke0URdzhTzMuh9dAAj1D19IjEVLDes9odTouyF0m
-         O7vpw/WRzkrS7SH49zEtUsnhy7wTrXqUA8CnfCOaahG9FFOyS7onQQBAMWOIyIA8JB0W
-         eAE/4j9NQpS+ZW+JikuFWOwp4AbIuKszwnYhCyMnkm9owreyjLAZ+c1gCYcwmRvLTqJ4
-         q2e1wyU6AnqY8OviaLi/jP20wJolzPJEaLqqaYLcaXgGe0SzNL9kCFEXAy6i3xsDPCr4
-         5Zrg==
-X-Gm-Message-State: AGi0Pub3EQB0HNB4hHUOdGlReQGEfUIS9pzkkoWKyX2p1x505ri/QEg0
-        yPDqd/jVLLxZAAFmu8WouU5Ewuu2DCAfN1ONvNb/
-X-Google-Smtp-Source: APiQypJ1u2GBFKhtFoqPNkbEjRt4MRHKXVYXGuuImjbH5C0ppvHZvK7OPliGzhwpMWEylhO8hEeXVUJxUpx+Nj3jUXE=
-X-Received: by 2002:a5d:5703:: with SMTP id a3mr6910168wrv.53.1588724150121;
- Tue, 05 May 2020 17:15:50 -0700 (PDT)
+        bh=uxf7PIfuQA1AmzwbgiAc6qi52bK5LTEy5mM67o299pg=;
+        b=e1emW5Z4YJELKh4Ap5aXGYNXKJZLPekNEvdMOKAEnRoZi5zuDwWvhmj+il8oVhH2hD
+         VlgNO7xUJig731xffSV31i4SmCAFikBgikTeE+zuQBFI2xCYLf2HYsh+FS0Woe8k7zPz
+         /g1/+EEQ9jpb7Y8Qg8nNuH2ilefvErGOuqTP+GYAQCJ8Wzn9uhWOXjKtdmOgMN5yo4/3
+         4MSoXIRdsthqzQwwt1UBZE6Gi0Y1c8OTHf33AeaEaH2Grr9BaHE6mh7j0i6VlFxJZpOm
+         ZGzkL8TtyXIDjB3B6aOU5a4v7lkiOI5GWB07UUjVEIS/4WgMmGZTLaeu+mnkJHU4xZtc
+         Ysng==
+X-Gm-Message-State: AGi0PubZgKtj48Erp4w3U2Tw3iIZ9pjDEsUVbXJM3f8HewxlP61RFAL4
+        aC4TPZr4BGD4ypX0iOwDjn9TdrMnbxU=
+X-Google-Smtp-Source: APiQypKPMioIXPbmV+hY0AZtVeD4NXoa+IxIbXUqZYZGeKjYB7rip1TsSdogKQcRJaZhIpc1fwrIzA==
+X-Received: by 2002:a67:f957:: with SMTP id u23mr5877488vsq.146.1588724341905;
+        Tue, 05 May 2020 17:19:01 -0700 (PDT)
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
+        by smtp.gmail.com with ESMTPSA id q25sm84107uap.1.2020.05.05.17.19.00
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2020 17:19:00 -0700 (PDT)
+Received: by mail-vs1-f41.google.com with SMTP id g2so11397vsb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 17:19:00 -0700 (PDT)
+X-Received: by 2002:a05:6102:4d:: with SMTP id k13mr5406597vsp.198.1588724340078;
+ Tue, 05 May 2020 17:19:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAOnJCUJtnVjYwfaHbiUdO4SqPk8rY0q0uYckNJpQpc7jK0Pz7g@mail.gmail.com>
- <mhng-3b48ef6b-d427-40af-b8f7-1bdccc117927@palmerdabbelt-glaptop1>
-In-Reply-To: <mhng-3b48ef6b-d427-40af-b8f7-1bdccc117927@palmerdabbelt-glaptop1>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Tue, 5 May 2020 17:15:38 -0700
-Message-ID: <CAOnJCU+LrLSbf2HqFJY6PkOYqt6_dHSj_zwKrEHYQCvmKrZQaQ@mail.gmail.com>
-Subject: Re: [PATCH] RISC-V: Remove unused code from STRICT_KERNEL_RWX
-To:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Nick Kossifidis <mick@ics.forth.gr>
-Cc:     Atish Patra <Atish.Patra@wdc.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Zong Li <zong.li@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>
+References: <20200504213624.1.Ibc8eeddcee94984a608d6900b46f9ffde4045da4@changeid>
+ <20200505082436.GD9658@pendragon.ideasonboard.com> <CAD=FV=WjUpwu5204K8yHzqsJv4vQX5S5CArH1Kj_kqjhZzTc9A@mail.gmail.com>
+ <20200505210609.GA6094@pendragon.ideasonboard.com> <CAD=FV=UnGOYh8JX2=fEAqPN7wqANc0QevTirNO-WUDYMPqXcrg@mail.gmail.com>
+ <20200505211401.GC6094@pendragon.ideasonboard.com> <CAD=FV=WgRC-HViMxttF4VK+n48HNRuqAau8S7mgx6oSWsbZcgA@mail.gmail.com>
+In-Reply-To: <CAD=FV=WgRC-HViMxttF4VK+n48HNRuqAau8S7mgx6oSWsbZcgA@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 5 May 2020 17:18:48 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=U8_Krob9oftJjzrYs1zrbLr9WZ-HSStv5_rbq9MpTChw@mail.gmail.com>
+Message-ID: <CAD=FV=U8_Krob9oftJjzrYs1zrbLr9WZ-HSStv5_rbq9MpTChw@mail.gmail.com>
+Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: Implement lane reordering + polarity
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 5:03 PM Palmer Dabbelt <palmer@dabbelt.com> wrote:
+Hi,
+
+On Tue, May 5, 2020 at 2:24 PM Doug Anderson <dianders@chromium.org> wrote:
 >
-> On Tue, 05 May 2020 17:00:05 PDT (-0700), atishp@atishpatra.org wrote:
-> > On Tue, May 5, 2020 at 4:55 PM Palmer Dabbelt <palmer@dabbelt.com> wrote:
-> >>
-> >> On Sun, 03 May 2020 21:03:19 PDT (-0700), Atish Patra wrote:
-> >> > This patch removes the unused functions set_kernel_text_rw/ro.
-> >> > Currently, it is not being invoked from anywhere and no other architecture
-> >> > (except arm) uses this code. Even in ARM, these functions are not invoked
-> >> > from anywhere currently.
-> >> >
-> >> > Fixes: d27c3c90817e ("riscv: add STRICT_KERNEL_RWX support")
-> >> >
-> >> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> >> > ---
-> >> >  arch/riscv/mm/init.c | 16 ----------------
-> >> >  1 file changed, 16 deletions(-)
-> >> >
-> >> > diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> >> > index b55be44ff9bd..ba60a581e9b6 100644
-> >> > --- a/arch/riscv/mm/init.c
-> >> > +++ b/arch/riscv/mm/init.c
-> >> > @@ -501,22 +501,6 @@ static inline void setup_vm_final(void)
-> >> >  #endif /* CONFIG_MMU */
-> >> >
-> >> >  #ifdef CONFIG_STRICT_KERNEL_RWX
-> >> > -void set_kernel_text_rw(void)
-> >> > -{
-> >> > -     unsigned long text_start = (unsigned long)_text;
-> >> > -     unsigned long text_end = (unsigned long)_etext;
-> >> > -
-> >> > -     set_memory_rw(text_start, (text_end - text_start) >> PAGE_SHIFT);
-> >> > -}
-> >> > -
-> >> > -void set_kernel_text_ro(void)
-> >> > -{
-> >> > -     unsigned long text_start = (unsigned long)_text;
-> >> > -     unsigned long text_end = (unsigned long)_etext;
-> >> > -
-> >> > -     set_memory_ro(text_start, (text_end - text_start) >> PAGE_SHIFT);
-> >> > -}
-> >> > -
-> >> >  void mark_rodata_ro(void)
-> >> >  {
-> >> >       unsigned long text_start = (unsigned long)_text;
-> >>
-> >> Thanks, this is on fixes.  Are you going to remove the ARM code as well?
-> >>
+> Hi,
+>
+> On Tue, May 5, 2020 at 2:14 PM Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
 > >
-> > Yeah and also I realized that I forgot to remove the declarations from
-> > the header file.
-> > My bad. I will send out a v2. Please drop this one and take v2.
+> > > I'll add this documentation into the comments of the yaml, but I'm not
+> > > going to try to implement enforcement at the yaml level.
+> >
+> > Why not ? :-)
 >
-> I just fixed it up
+> Because trying to describe anything in the yaml bindings that doesn't
+> fit in the exact pattern of things that the yaml bindings are designed
+> to check is like constructing the empire state building with only
+> toothpicks.
 >
+> If you want to suggest some syntax that would actually make this
+> doable without blowing out the yaml bindings then I'm happy to add it.
+> Me being naive would assume that we'd need to do an exhaustive list of
+> the OK combinations.  That would be fine for the 1-land and 2-lane
+> cases, but for 4 lanes that means adding 256 entries to the bindings.
+>
+> I think the correct way to do this would require adding code in the
+> <https://github.com/devicetree-org/dt-schema> project but that's
+> really only done for generic subsystem-level concepts and not for a
+> single driver.
 
-Thanks. I was going over the code again and found one usage for
-set_kernel_text_rw for ARM.
-It is used in kexec while set_kernel_text_ro is not invoked anywhere.
-I am not sure if it is required
-for kexec implementation for RISC-V.
+OK.  Looked at your review of the .yaml and the "uniqueItems" is
+probably the bit I didn't think of.  With that I can limit this but
+it's still a little awkward.  I still haven't figured out how to force
+data-lanes and lane-polarities to have the same number of items, too.
+I'll add this as an add-on patch to my v2 and folks can decide if they
+like it or hate it.
 
-@nick: Can you please comment ?
+# See ../../media/video-interface.txt for details.
+data-lanes:
+  oneOf:
+    - minItems: 1
+      maxItems: 1
+      uniqueItems: true
+      items:
+        enum:
+          - 0
+          - 1
+      description:
+        If you have 1 logical lane it can go to either physical
+        port 0 or port 1.  Port 0 is suggested.
 
-> commit 73cb8e2a5863ccc5215660f5123db621bd57dff7
-> gpg: Signature made Tue 05 May 2020 05:02:17 PM PDT
-> gpg:                using RSA key 2B3C3747446843B24A943A7A2E1319F35FBB1889
-> gpg:                issuer "palmer@dabbelt.com"
-> gpg: Good signature from "Palmer Dabbelt <palmer@dabbelt.com>" [ultimate]
-> gpg:                 aka "Palmer Dabbelt <palmerdabbelt@google.com>" [ultimate]
-> Author: Atish Patra <atish.patra@wdc.com>
-> Date:   Sun May 3 21:03:19 2020 -0700
->
->     RISC-V: Remove unused code from STRICT_KERNEL_RWX
->
->     This patch removes the unused functions set_kernel_text_rw/ro.
->     Currently, it is not being invoked from anywhere and no other architecture
->     (except arm) uses this code. Even in ARM, these functions are not invoked
->     from anywhere currently.
->
->     Fixes: d27c3c90817e ("riscv: add STRICT_KERNEL_RWX support")
->     Signed-off-by: Atish Patra <atish.patra@wdc.com>
->     Reviewed-by: Zong Li <zong.li@sifive.com>
->     Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
->
-> diff --git a/arch/riscv/include/asm/set_memory.h b/arch/riscv/include/asm/set_memory.h
-> index c38df4771c09..4c5bae7ca01c 100644
-> --- a/arch/riscv/include/asm/set_memory.h
-> +++ b/arch/riscv/include/asm/set_memory.h
-> @@ -22,14 +22,6 @@ static inline int set_memory_x(unsigned long addr, int numpages) { return 0; }
->  static inline int set_memory_nx(unsigned long addr, int numpages) { return 0; }
->  #endif
->
-> -#ifdef CONFIG_STRICT_KERNEL_RWX
-> -void set_kernel_text_ro(void);
-> -void set_kernel_text_rw(void);
-> -#else
-> -static inline void set_kernel_text_ro(void) { }
-> -static inline void set_kernel_text_rw(void) { }
-> -#endif
-> -
->  int set_direct_map_invalid_noflush(struct page *page);
->  int set_direct_map_default_noflush(struct page *page);
->
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index 5b813532db59..27a334106708 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -502,22 +502,6 @@ static inline void setup_vm_final(void)
->  #endif /* CONFIG_MMU */
->
->  #ifdef CONFIG_STRICT_KERNEL_RWX
-> -void set_kernel_text_rw(void)
-> -{
-> -       unsigned long text_start = (unsigned long)_text;
-> -       unsigned long text_end = (unsigned long)_etext;
-> -
-> -       set_memory_rw(text_start, (text_end - text_start) >> PAGE_SHIFT);
-> -}
-> -
-> -void set_kernel_text_ro(void)
-> -{
-> -       unsigned long text_start = (unsigned long)_text;
-> -       unsigned long text_end = (unsigned long)_etext;
-> -
-> -       set_memory_ro(text_start, (text_end - text_start) >> PAGE_SHIFT);
-> -}
-> -
->  void mark_rodata_ro(void)
->  {
->         unsigned long text_start = (unsigned long)_text;
->
+    - minItems: 2
+      maxItems: 2
+      uniqueItems: true
+      items:
+        enum:
+          - 0
+          - 1
+      description:
+        If you have 2 logical lanes they can be reordered on
+        physical ports 0 and 1.
 
+    - minItems: 4
+      maxItems: 4
+      uniqueItems: true
+      items:
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
+      description:
+        If you have 4 logical lanes they can be reordered on
+        in any way.
 
--- 
-Regards,
-Atish
+-Doug
