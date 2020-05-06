@@ -2,117 +2,159 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFCCFC38A2A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F339CC47257
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF8AF2080D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0D1420B1F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:50:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="apgnO1tx"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pOQPtpaJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730396AbgEFWt6 (ORCPT
+        id S1730405AbgEFWuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 18:49:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43906 "EHLO
+        Wed, 6 May 2020 18:50:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729243AbgEFWt4 (ORCPT
+        with ESMTP id S1729243AbgEFWuR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 18:49:56 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B94AC061A10
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 15:49:55 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id s20so1243174plp.6
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 15:49:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Q2FUrzCimCoQvPDI8jhXkMBxIsQZ8fqLNRuB8pW8C9I=;
-        b=apgnO1tx03gYzmTiztou0ozl4DqE9Ke1CUls8XDLxiqo5GiuaT0cgajPeNIc1Nvgrh
-         QSR/aDtXJFrDbcw3pE4mo7iM3uXupATiB4zjUWXDBhAWz29oyPbkwjLQEjzRYt4t1HSV
-         HCgAaF82vmv4XqWI3sJU/yOu1FGAMo8m0rBsQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Q2FUrzCimCoQvPDI8jhXkMBxIsQZ8fqLNRuB8pW8C9I=;
-        b=kjO5QQBt33VQ+iJ1c/MquGrB25VVzOJ5hTxGMR/plx05NhDFiSXV5S/WWjm9IzCc5F
-         rrF+6CaEgqaTrZrU27I0IKb5cwJCCWIkQFqaM2HQbXYI9CrK35nM2+CzFoQM6Bx8xxtg
-         03FruS0ZIP+JYhr5hYMAES1GSNQtSErj3f7ge0XNdnroTV1F2DBhSKgSxphj+IZa156L
-         c3ZdZlSmnx0FR5zCcXnn8wXm00YeJZwq/dIZLdsclIOizOfTwOu/jThNgGtqfKTbx9+E
-         YQMTlH7776+Br8e4x0ie/jFIM9apcV/boJnwkMAqB4NAzZwx2bO/sAifez6AkAdancoR
-         TtvQ==
-X-Gm-Message-State: AGi0PuYM+ZLqwTpBQCmYWxBa9FVAtvsjJsIy6O4hecTaAP92c4P7xN8Y
-        gWBePU8TtwbNCzoZ9iZ3rsmWdkd18Zg=
-X-Google-Smtp-Source: APiQypKzOSl6t5TXplgO53uZ+njke5Lpns5FHbM+l01D4h+BwwkOyeefVKk0O7oypj6oZi1uWRWTzA==
-X-Received: by 2002:a17:902:bd09:: with SMTP id p9mr10891853pls.214.1588805394525;
-        Wed, 06 May 2020 15:49:54 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a30sm2294097pgm.44.2020.05.06.15.49.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 15:49:53 -0700 (PDT)
-Date:   Wed, 6 May 2020 15:49:52 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] securityfs: Add missing d_delete() call on removal
-Message-ID: <202005061543.97CC065531@keescook>
-References: <202005051626.7648DC65@keescook>
- <20200506011431.GB23230@ZenIV.linux.org.uk>
- <202005052024.2D7626C742@keescook>
- <20200506040252.GC23230@ZenIV.linux.org.uk>
- <202005060831.C05759E@keescook>
- <20200506184920.GD23230@ZenIV.linux.org.uk>
+        Wed, 6 May 2020 18:50:17 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63D8AC061A0F;
+        Wed,  6 May 2020 15:50:17 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49HWyF6PY9z9sRY;
+        Thu,  7 May 2020 08:50:13 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588805414;
+        bh=g97rsObDOdVNCdYZjFLmqmZ5KdiMffj3fP/AYJOZNFw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pOQPtpaJKGWPoRez2o4PZaJ/DC3B9OOICs+p7+dcAwpjyY8dy8U3p/XVhNwQmAper
+         sz8SgBDOLQwbGvhmEuRuzwLuY+HUA1VOlwiHVYZOo7fpKfnbAwVL4d+9VRZDL+4Cfv
+         wX4Y+S/ct+YSkhnsyTRLniuosV38XDFJeL2ToMPUrP2Y632VHt3G1dTnbUODPkFCKB
+         WtDx1qz4Qct7NNDtA+lpk8eePusDe70kuOJFJAL7qig6QBFLwSo7fNxq3BNjmZjtNi
+         Su+BpZtQ8IRsNCJIbTbcmPr0c/6pc8srhId6bcpP3kM73Vv9gB0ETaVAcA8QQTHtab
+         sQ2iLS/MtCV/Q==
+Date:   Thu, 7 May 2020 08:50:11 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: linux-next: Tree for Apr 14 (objtool crazy)
+Message-ID: <20200507085011.6d2edf32@canb.auug.org.au>
+In-Reply-To: <20200414221914.hbvp4dvh47at4nlg@treble>
+References: <20200414123900.4f97a83f@canb.auug.org.au>
+        <e01557a7-746a-6af0-d890-707e9dd86b86@infradead.org>
+        <20200414221914.hbvp4dvh47at4nlg@treble>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506184920.GD23230@ZenIV.linux.org.uk>
+Content-Type: multipart/signed; boundary="Sig_/wi_KE6gtug08SdJ3btf248c";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 07:49:20PM +0100, Al Viro wrote:
-> On Wed, May 06, 2020 at 08:34:29AM -0700, Kees Cook wrote:
-> 
-> > Just posted the whole series:
-> > https://lore.kernel.org/lkml/20200506152114.50375-1-keescook@chromium.org/
-> > 
-> > But the specific question was driven by this patch:
-> > https://lore.kernel.org/lkml/20200506152114.50375-11-keescook@chromium.org/
-> 
-> Yecchh...  First of all, you are leaving a dangling pointer in your
-> struct pstore_private ->dentry.  What's more, in your case d_delete()
+--Sig_/wi_KE6gtug08SdJ3btf248c
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Yeah, good idea: I can wipe out the pstore_private->dentry at this point
-just for robustness. From what I could tell the evict got immediately
-called after the dput().
+Hi all,
 
-> is definitely wrong - either there are other references to dentry
-> (in which case d_delete() is the same as d_drop()), or dput() right
-> after it will drive ->d_count to zero and since you end up using
-> simple_dentry_operations, dentry will be freed immediately after
-> that.
+On Tue, 14 Apr 2020 17:19:14 -0500 Josh Poimboeuf <jpoimboe@redhat.com> wro=
+te:
+>
+> On Tue, Apr 14, 2020 at 06:50:15AM -0700, Randy Dunlap wrote:
+> > On 4/13/20 7:39 PM, Stephen Rothwell wrote: =20
+> > > Hi all,
+> > >=20
+> > > Changes since 20200413:
+> > >  =20
+> >=20
+> >=20
+> > I killed objtool after 49 minutes of CPU time:
+> >=20
+> >   PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ CO=
+MMAND   =20
+> >  6159 rdunlap   30  10   42756   8028      0 R 100.0 0.099  49:19.02 ob=
+jtool=20
+> >=20
+> >=20
+> > /bin/sh: line 1:  6159 Terminated              ./tools/objtool/objtool =
+orc generate --no-fp --no-unreachable --uaccess drivers/i2c/busses/i2c-parp=
+ort.o =20
+>=20
+> I took an initial look at this one.  I can dig more tomorrow unless
+> Peter beats me to it.
+>=20
+> (gdb) bt
+> #0  0x000000000040df55 in sec_offset_hash (sec=3D0xc30930, offset=3D43345=
+61216) at elf.h:104
+> #1  0x000000000040e907 in find_rela_by_dest_range (elf=3D0x7ffff64a4010, =
+sec=3D0xc30930, offset=3D18446744073709551608, len=3D1) at elf.c:227
+> #2  0x000000000040ea67 in find_rela_by_dest (elf=3D0x7ffff64a4010, sec=3D=
+0xc30710, offset=3D18446744073709551608) at elf.c:246
+> #3  0x0000000000408038 in find_jump_table (file=3D0x427620 <file>, func=
+=3D0xc32bf0, insn=3D0xc4f840) at check.c:1118
+> #4  0x0000000000408242 in mark_func_jump_tables (file=3D0x427620 <file>, =
+func=3D0xc32bf0) at check.c:1170
+> #5  0x00000000004083b6 in add_jump_table_alts (file=3D0x427620 <file>) at=
+ check.c:1215
+> #6  0x0000000000408b95 in decode_sections (file=3D0x427620 <file>) at che=
+ck.c:1413
+> #7  0x000000000040bf44 in check (_objname=3D0x7fffffffceff "drivers/i2c/b=
+usses/i2c-parport.o", orc=3Dtrue) at check.c:2508
+> #8  0x0000000000405580 in cmd_orc (argc=3D1, argv=3D0x7fffffffc9d8) at bu=
+iltin-orc.c:41
+> #9  0x0000000000411297 in handle_internal_command (argc=3D6, argv=3D0x7ff=
+fffffc9d0) at objtool.c:96
+> #10 0x0000000000411349 in main (argc=3D6, argv=3D0x7fffffffc9d0) at objto=
+ol.c:119
+>=20
+> It's an infinite loop in find_rela_by_dest_range() because offset is -8.
+> That comes from find_jump_table():
+>=20
+>   table_offset =3D text_rela->addend;
+>   table_sec =3D text_rela->sym->sec;
+>   ...
+>   table_rela =3D find_rela_by_dest(file->elf, table_sec, table_offset);
+>=20
+> which comes from this gem:
+>=20
+> 00000000000001fd <line_set>:
+>  1fd:	48 b8 00 00 00 00 00 	movabs $0x0,%rax
+>  204:	00 00 00=20
+> 			1ff: R_X86_64_64	.rodata-0x8
+>=20
+> So objtool is getting confused by that -0x8 rela addend.
 
-Do you mean the d_drop() isn't needed? What happens if someone has
-the file open during this routine? The goal here is to make these files
-disappear so they'll go through evict.
+Did this get fixed?
 
-> I have not looked at the locking in that series yet, so no comments
+--=20
+Cheers,
+Stephen Rothwell
 
-Yeah, I would not be surprised by some more locking issues, but I think
-it's an improvement over what was there. Most of the code seems to have
-been designed to be non-modular. :P
+--Sig_/wi_KE6gtug08SdJ3btf248c
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-> on the races, but in any case - that d_delete() is a misspelled d_drop().
+-----BEGIN PGP SIGNATURE-----
 
-I'll change it; thanks!
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6zPyMACgkQAVBC80lX
+0Gy5gwf+Pazdk3Qgggc83+OjxWz5ncw4lgx81/U8kJ9RWI4VDBA59dtImqHX2+XE
+wMdWZaPsW8dWV7MKu0fqQKDv1q1S0OKduv2lkd9woI6bob1O09V5wFw3pxIurlQ/
+pMdCh+IQjRpdaOSl/KKodSMHdTpCQpHzQJv60vWou2v1sjTToS/wf3dXqvnIYNpw
+4hoj8AdwM6FGwq/ZimMlXQgGzlPpY5cgE2yso8Bl0UbJvzO/G+9Yvx3+frl9Rsjn
+BPu3y/FNnOs3cnoTbSfbgtQLpDxME85ppregM6EKpvLoHsMlomLZ/tyFtGb3ZbjE
+XD+UExC0Nq3hYfyCRUit3ReZe2VdfQ==
+=6Vtc
+-----END PGP SIGNATURE-----
 
--- 
-Kees Cook
+--Sig_/wi_KE6gtug08SdJ3btf248c--
