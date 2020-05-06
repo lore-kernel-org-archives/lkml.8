@@ -2,135 +2,199 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A29C47259
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BC0C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5540220838
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:19:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WA6smniH"
+	by mail.kernel.org (Postfix) with ESMTP id ED124206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:20:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgEFIT6 (ORCPT
+        id S1728894AbgEFIUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 04:19:58 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35757 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728876AbgEFIT4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 04:19:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588753195;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RCAnXwZiAEiMj7R4ogMQj0woVBKNACtfrYeqTg9CBXo=;
-        b=WA6smniH//ewHF7w6tGyq/otml4+NZxZm9X05CmC2sR2aOYjV9fhVRiq5VVV1iKQRnI3SQ
-        xpLKcgZPCWbbrzMKnJkHuCeemln3lNppGgeTORYOVddIBW1Ka3k5qUukPxvgg7XHYKCF2w
-        l2n8fjFV0+vM7fNomp/caoaufL2HUV0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-132-9_qVx4ajOxaJgzLRs0P4VQ-1; Wed, 06 May 2020 04:19:51 -0400
-X-MC-Unique: 9_qVx4ajOxaJgzLRs0P4VQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8787818FE860;
-        Wed,  6 May 2020 08:19:50 +0000 (UTC)
-Received: from [10.72.13.165] (ovpn-13-165.pek2.redhat.com [10.72.13.165])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 22F8E1FBCD;
-        Wed,  6 May 2020 08:19:41 +0000 (UTC)
-Subject: Re: [PATCH net-next 1/2] virtio-net: don't reserve space for vnet
- header for XDP
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Jesper Dangaard Brouer <brouer@redhat.com>
-References: <20200506061633.16327-1-jasowang@redhat.com>
- <20200506033834-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <7a169b06-b6b9-eac1-f03a-39dd1cfcce57@redhat.com>
-Date:   Wed, 6 May 2020 16:19:40 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Wed, 6 May 2020 04:20:03 -0400
+Received: from mga09.intel.com ([134.134.136.24]:8281 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728712AbgEFIT5 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 04:19:57 -0400
+IronPort-SDR: NZ8P64XlD+kYF27usswiXNnphp66f8bbhv1wJNdiATuon6FiPPp+YnCrif5E74VPvczE19jFUU
+ 4YZFgtJM7uDQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 01:19:56 -0700
+IronPort-SDR: jfT4IrRly8gK0qfRYGh7zoa2bXakxRPAT+XKrcQ28m+5qRZ8ZhPrUhpD5XMTa+JFHFD7WMA4T0
+ F21EZm5P440g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,358,1583222400"; 
+   d="scan'208";a="249705053"
+Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.255.29.46]) ([10.255.29.46])
+  by fmsmga007.fm.intel.com with ESMTP; 06 May 2020 01:19:52 -0700
+Subject: Re: [PATCH v2 1/2] perf evsel: Create counts for collecting summary
+ data
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20200502020705.19295-1-yao.jin@linux.intel.com>
+ <20200502020705.19295-2-yao.jin@linux.intel.com>
+ <20200504235059.GG1916255@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <52f68553-e880-4da7-90d5-6bf5ebb6a5a7@linux.intel.com>
+Date:   Wed, 6 May 2020 16:19:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200506033834-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20200504235059.GG1916255@krava>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jiri,
 
-On 2020/5/6 =E4=B8=8B=E5=8D=883:53, Michael S. Tsirkin wrote:
-> On Wed, May 06, 2020 at 02:16:32PM +0800, Jason Wang wrote:
->> We tried to reserve space for vnet header before
->> xdp.data_hard_start. But this is useless since the packet could be
->> modified by XDP which may invalidate the information stored in the
->> header and there's no way for XDP to know the existence of the vnet
->> header currently.
-> What do you mean? Doesn't XDP_PASS use the header in the buffer?
-
-
-We don't, see 436c9453a1ac0 ("virtio-net: keep vnet header zeroed after=20
-processing XDP")
-
-If there's other place, it should be a bug.
-
-
+On 5/5/2020 7:50 AM, Jiri Olsa wrote:
+> On Sat, May 02, 2020 at 10:07:04AM +0800, Jin Yao wrote:
+>> It would be useful to support the overall statistics for perf-stat
+>> interval mode. For example, report the summary at the end of
+>> "perf-stat -I" output.
+>>
+>> But since perf-stat can support many aggregation modes, such as
+>> --per-thread, --per-socket, -M and etc, we need a solution which
+>> doesn't bring much complexity.
+>>
+>> The idea is to create new 'evsel->summary_counts' which sums up the
+>> counts delta per interval. Before reporting the summary, we copy the
+>> data from evsel->summary_counts to evsel->counts, and next we just
+>> follow current code.
+>>
+>>   v2:
+>>   ---
+>>   Rebase to perf/core branch
+>>
+>> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+>> ---
+>>   tools/perf/util/evsel.c | 10 ++++++++--
+>>   tools/perf/util/evsel.h |  1 +
+>>   tools/perf/util/stat.c  | 20 ++++++++++++++++++++
+>>   3 files changed, 29 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+>> index a75bcb95bf23..abc503dd6eda 100644
+>> --- a/tools/perf/util/evsel.c
+>> +++ b/tools/perf/util/evsel.c
+>> @@ -1280,22 +1280,28 @@ void evsel__delete(struct evsel *evsel)
+>>   void evsel__compute_deltas(struct evsel *evsel, int cpu, int thread,
+>>   			   struct perf_counts_values *count)
+>>   {
+>> -	struct perf_counts_values tmp;
+>> +	struct perf_counts_values tmp, *summary;
+>>   
+>> -	if (!evsel->prev_raw_counts)
+>> +	if (!evsel->prev_raw_counts || !evsel->summary_counts)
+>>   		return;
+>>   
+>>   	if (cpu == -1) {
+>>   		tmp = evsel->prev_raw_counts->aggr;
+>>   		evsel->prev_raw_counts->aggr = *count;
+>> +		summary = &evsel->summary_counts->aggr;
+>>   	} else {
+>>   		tmp = *perf_counts(evsel->prev_raw_counts, cpu, thread);
+>>   		*perf_counts(evsel->prev_raw_counts, cpu, thread) = *count;
+>> +		summary = perf_counts(evsel->summary_counts, cpu, thread);
+> 
+> shouldn't this be enough?
+> 
+> 		perf_counts(evsel->summary_counts, cpu, thread) = *count
+> 
+> without the code below.. and similar for aggr case
+> however I still wonder if we should count this in
+> perf_stat_process_counter and only for interval mode
 >
->> So let's just not reserve space for vnet header in this case.
-> In any case, we can find out XDP does head adjustments
-> if we need to.
 
+Actually I have an easier way, which just resets the prev_raw counters. For example,
 
-But XDP program can modify the packets without adjusting headers.
+@@ -724,6 +727,12 @@ static int __run_perf_stat(int argc, const char **argv, int 
+run_idx)
+
+         update_stats(&walltime_nsecs_stats, t1 - t0);
+
++       if (interval) {
++               stat_config.interval = 0;
++               stat_config.summary = true;
++               perf_evlist__reset_prev_raw_counts(evsel_list);
++       }
++
+         /*
+          * Closing a group leader splits the group, and as we only disable
+          * group leaders, results in remaining events becoming enabled. To
+
+But if we just directly copy from current counts, the summary result looks a bit 
+confused.
+
+For example,
+
+root@kbl-ppc:/# perf stat -e cycles -I1000 --interval-count 2
+#           time             counts unit events
+      1.000402302          2,943,521      cycles
+      2.001333982          2,146,165      cycles
+
+  Performance counter stats for 'system wide':
+
+          5,880,031      cycles
+
+        2.002805025 seconds time elapsed
+
+2,943,521 + 2,146,165 != 5,880,031
+
+That's because the counter is still enabled after interval printing. So at the 
+time of printing summary, the counts are sightly increased. User may be confused 
+for the summary result (why it's not equal to the sum of interval values?).
+
+>>   	}
+>>   
+>>   	count->val = count->val - tmp.val;
+>>   	count->ena = count->ena - tmp.ena;
+>>   	count->run = count->run - tmp.run;
+>> +
+>> +	summary->val += count->val;
+>> +	summary->ena += count->ena;
+>> +	summary->run += count->run;
+>>   }
+>>   
+>>   void perf_counts_values__scale(struct perf_counts_values *count,
+>> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+>> index 783246bf8d0d..430639c99d04 100644
+>> --- a/tools/perf/util/evsel.h
+>> +++ b/tools/perf/util/evsel.h
+>> @@ -46,6 +46,7 @@ struct evsel {
+>>   	char			*filter;
+>>   	struct perf_counts	*counts;
+>>   	struct perf_counts	*prev_raw_counts;
+>> +	struct perf_counts	*summary_counts;
+> 
+> 'sum_counts' might be better
+> 
+
+That's OK. :)
 
 Thanks
+Jin Yao
 
-
->
->
->> Cc: Jesper Dangaard Brouer <brouer@redhat.com>
->> Signed-off-by: Jason Wang <jasowang@redhat.com>
->> ---
->>   drivers/net/virtio_net.c | 6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
->> index 11f722460513..98dd75b665a5 100644
->> --- a/drivers/net/virtio_net.c
->> +++ b/drivers/net/virtio_net.c
->> @@ -684,8 +684,8 @@ static struct sk_buff *receive_small(struct net_de=
-vice *dev,
->>   			page =3D xdp_page;
->>   		}
->>  =20
->> -		xdp.data_hard_start =3D buf + VIRTNET_RX_PAD + vi->hdr_len;
->> -		xdp.data =3D xdp.data_hard_start + xdp_headroom;
->> +		xdp.data_hard_start =3D buf + VIRTNET_RX_PAD;
->> +		xdp.data =3D xdp.data_hard_start + xdp_headroom + vi->hdr_len;
->>   		xdp.data_end =3D xdp.data + len;
->>   		xdp.data_meta =3D xdp.data;
->>   		xdp.rxq =3D &rq->xdp_rxq;
->> @@ -845,7 +845,7 @@ static struct sk_buff *receive_mergeable(struct ne=
-t_device *dev,
->>   		 * the descriptor on if we get an XDP_TX return code.
->>   		 */
->>   		data =3D page_address(xdp_page) + offset;
->> -		xdp.data_hard_start =3D data - VIRTIO_XDP_HEADROOM + vi->hdr_len;
->> +		xdp.data_hard_start =3D data - VIRTIO_XDP_HEADROOM;
->>   		xdp.data =3D data + vi->hdr_len;
->>   		xdp.data_end =3D xdp.data + (len - vi->hdr_len);
->>   		xdp.data_meta =3D xdp.data;
->> --=20
->> 2.20.1
-
+> jirka
+> 
+>>   	int			idx;
+>>   	unsigned long		max_events;
+>>   	unsigned long		nr_events_printed;
+>> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+>> index 774468341851..c3fd008b4e84 100644
+>> --- a/tools/perf/util/stat.c
+> 
+> SNIP
+> 
