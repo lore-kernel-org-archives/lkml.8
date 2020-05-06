@@ -2,111 +2,167 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FECC47257
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E57AC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FBB1206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:00:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="O7wbrp3+"
+	by mail.kernel.org (Postfix) with ESMTP id 6D92E206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:00:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728701AbgEFM77 (ORCPT
+        id S1728706AbgEFNA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 08:59:59 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:3969 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728081AbgEFM77 (ORCPT
+        Wed, 6 May 2020 09:00:27 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:39120 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727964AbgEFNA1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 08:59:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1588769999; x=1620305999;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=hzNQ5w8A6cYw04c6yt2I+QRIddI3RMJ0UShL/31p7vY=;
-  b=O7wbrp3+hc61Ubb6f/QioHNMd4ypqhClz5kTK/WeNPwDYHLg0vhvW0kb
-   s4sMXUe5gIYJHmiOg39qy2v2mi/E3ZkuLVa/Qt3Cgi4/qrTYHOYQcVUvW
-   GCg6EBe8P7obU+wQWWDAKaS/uAeSQDmKo2qm4VDshxATOCMiER/QTuYuX
-   4=;
-IronPort-SDR: xgLqf4VcV6A5KTjgLiK+37uZzeJclYtKvvSu+1j2P9BEIN7sDK2pOZZGVgYvWutqahP88n8hsS
- 1u5J2RKWL8Ow==
-X-IronPort-AV: E=Sophos;i="5.73,359,1583193600"; 
-   d="scan'208";a="43050805"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-1968f9fa.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 06 May 2020 12:59:57 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2c-1968f9fa.us-west-2.amazon.com (Postfix) with ESMTPS id D9095A2400;
-        Wed,  6 May 2020 12:59:55 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 6 May 2020 12:59:55 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.180) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 6 May 2020 12:59:48 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-CC:     SeongJae Park <sjpark@amazon.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        David Miller <davem@davemloft.net>,
-        "Al Viro" <viro@zeniv.linux.org.uk>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        <sj38.park@gmail.com>, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>, <snu@amazon.com>,
-        <amit@kernel.org>, <stable@vger.kernel.org>
-Subject: Re: Re: Re: Re: Re: [PATCH net v2 0/2] Revert the 'socket_alloc' life cycle change
-Date:   Wed, 6 May 2020 14:59:26 +0200
-Message-ID: <20200506125926.29844-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200505184955.GO2869@paulmck-ThinkPad-P72> (raw)
+        Wed, 6 May 2020 09:00:27 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jWJey-0007Bg-TN; Wed, 06 May 2020 07:00:24 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jWJey-00061w-1F; Wed, 06 May 2020 07:00:24 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Greg Ungerer <gerg@linux-m68k.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+        <87bln2jhki.fsf@x220.int.ebiederm.org>
+        <ce5f0c22-675b-cdc8-cd95-976c0e0babee@linux-m68k.org>
+Date:   Wed, 06 May 2020 07:56:59 -0500
+In-Reply-To: <ce5f0c22-675b-cdc8-cd95-976c0e0babee@linux-m68k.org> (Greg
+        Ungerer's message of "Wed, 6 May 2020 22:42:42 +1000")
+Message-ID: <87v9l9dxwk.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.43.160.180]
-X-ClientProxiedBy: EX13D12UWA003.ant.amazon.com (10.43.160.50) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+X-XM-SPF: eid=1jWJey-00061w-1F;;;mid=<87v9l9dxwk.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19W5a9a8zm+g2O6M8Y98Fe+NXQMQUxKUZo=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 1/7] binfmt: Move install_exec_creds after setup_new_exec to match binfmt_elf
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TL; DR: It was not kernel's fault, but the benchmark program.
+Greg Ungerer <gerg@linux-m68k.org> writes:
 
-So, the problem is reproducible using the lebench[1] only.  I carefully read
-it's code again.
+> One small nit:
 
-Before running the problem occurred "poll big" sub test, lebench executes
-"context switch" sub test.  For the test, it sets the cpu affinity[2] and
-process priority[3] of itself to '0' and '-20', respectively.  However, it
-doesn't restore the values to original value even after the "context switch" is
-finished.  For the reason, "select big" sub test also run binded on CPU 0 and
-has lowest nice value.  Therefore, it can disturb the RCU callback thread for
-the CPU 0, which processes the deferred deallocations of the sockets, and as a
-result it triggers the OOM.
+Good point.
 
-We confirmed the problem disappears by offloading the RCU callbacks from the
-CPU 0 using rcu_nocbs=0 boot parameter or simply restoring the affinity and/or
-priority.
-
-Someone _might_ still argue that this is kernel problem because the problem
-didn't occur on the old kernels prior to the Al's patches.  However, setting
-the affinity and priority was available because the program received the
-permission.  Therefore, it would be reasonable to blame the system
-administrators rather than the kernel.
-
-So, please ignore this patchset, apology for making confuse.  If you still has
-some doubts or need more tests, please let me know.
-
-[1] https://github.com/LinuxPerfStudy/LEBench
-[2] https://github.com/LinuxPerfStudy/LEBench/blob/master/TEST_DIR/OS_Eval.c#L820
-[3] https://github.com/LinuxPerfStudy/LEBench/blob/master/TEST_DIR/OS_Eval.c#L822
-
-
-Thanks,
-SeongJae Park
+> On 6/5/20 5:41 am, Eric W. Biederman wrote:
+>> In 2016 Linus moved install_exec_creds immediately after
+>> setup_new_exec, in binfmt_elf as a cleanup and as part of closing a
+>> potential information leak.
+>>
+>> Perform the same cleanup for the other binary formats.
+>>
+>> Different binary formats doing the same things the same way makes exec
+>> easier to reason about and easier to maintain.
+>>
+>> The binfmt_flagt bits were tested by Greg Ungerer <gerg@linux-m68k.org>
+>              ^^^^^
+>              flat
+>
+> Regards
+> Greg
+>
+>
+>> Ref: 9f834ec18def ("binfmt_elf: switch to new creds when switching to new mm")
+>> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>> ---
+>>   arch/x86/ia32/ia32_aout.c | 3 +--
+>>   fs/binfmt_aout.c          | 2 +-
+>>   fs/binfmt_elf_fdpic.c     | 2 +-
+>>   fs/binfmt_flat.c          | 3 +--
+>>   4 files changed, 4 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/arch/x86/ia32/ia32_aout.c b/arch/x86/ia32/ia32_aout.c
+>> index 9bb71abd66bd..37b36a8ce5fa 100644
+>> --- a/arch/x86/ia32/ia32_aout.c
+>> +++ b/arch/x86/ia32/ia32_aout.c
+>> @@ -140,6 +140,7 @@ static int load_aout_binary(struct linux_binprm *bprm)
+>>   	set_personality_ia32(false);
+>>     	setup_new_exec(bprm);
+>> +	install_exec_creds(bprm);
+>>     	regs->cs = __USER32_CS;
+>>   	regs->r8 = regs->r9 = regs->r10 = regs->r11 = regs->r12 =
+>> @@ -156,8 +157,6 @@ static int load_aout_binary(struct linux_binprm *bprm)
+>>   	if (retval < 0)
+>>   		return retval;
+>>   -	install_exec_creds(bprm);
+>> -
+>>   	if (N_MAGIC(ex) == OMAGIC) {
+>>   		unsigned long text_addr, map_size;
+>>   diff --git a/fs/binfmt_aout.c b/fs/binfmt_aout.c
+>> index 8e8346a81723..ace587b66904 100644
+>> --- a/fs/binfmt_aout.c
+>> +++ b/fs/binfmt_aout.c
+>> @@ -162,6 +162,7 @@ static int load_aout_binary(struct linux_binprm * bprm)
+>>   	set_personality(PER_LINUX);
+>>   #endif
+>>   	setup_new_exec(bprm);
+>> +	install_exec_creds(bprm);
+>>     	current->mm->end_code = ex.a_text +
+>>   		(current->mm->start_code = N_TXTADDR(ex));
+>> @@ -174,7 +175,6 @@ static int load_aout_binary(struct linux_binprm * bprm)
+>>   	if (retval < 0)
+>>   		return retval;
+>>   -	install_exec_creds(bprm);
+>>     	if (N_MAGIC(ex) == OMAGIC) {
+>>   		unsigned long text_addr, map_size;
+>> diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
+>> index 240f66663543..6c94c6d53d97 100644
+>> --- a/fs/binfmt_elf_fdpic.c
+>> +++ b/fs/binfmt_elf_fdpic.c
+>> @@ -353,6 +353,7 @@ static int load_elf_fdpic_binary(struct linux_binprm *bprm)
+>>   		current->personality |= READ_IMPLIES_EXEC;
+>>     	setup_new_exec(bprm);
+>> +	install_exec_creds(bprm);
+>>     	set_binfmt(&elf_fdpic_format);
+>>   @@ -434,7 +435,6 @@ static int load_elf_fdpic_binary(struct linux_binprm
+>> *bprm)
+>>   	current->mm->start_stack = current->mm->start_brk + stack_size;
+>>   #endif
+>>   -	install_exec_creds(bprm);
+>>   	if (create_elf_fdpic_tables(bprm, current->mm,
+>>   				    &exec_params, &interp_params) < 0)
+>>   		goto error;
+>> diff --git a/fs/binfmt_flat.c b/fs/binfmt_flat.c
+>> index 831a2b25ba79..1a1d1fcb893f 100644
+>> --- a/fs/binfmt_flat.c
+>> +++ b/fs/binfmt_flat.c
+>> @@ -541,6 +541,7 @@ static int load_flat_file(struct linux_binprm *bprm,
+>>   		/* OK, This is the point of no return */
+>>   		set_personality(PER_LINUX_32BIT);
+>>   		setup_new_exec(bprm);
+>> +		install_exec_creds(bprm);
+>>   	}
+>>     	/*
+>> @@ -963,8 +964,6 @@ static int load_flat_binary(struct linux_binprm *bprm)
+>>   		}
+>>   	}
+>>   -	install_exec_creds(bprm);
+>> -
+>>   	set_binfmt(&flat_format);
+>>     #ifdef CONFIG_MMU
+>>
