@@ -2,487 +2,119 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A53F7C4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F5CC47258
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 839ED2078C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E1B920735
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:08:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FLnYnHqJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728204AbgEFHHY (ORCPT
+        id S1728279AbgEFHIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 03:07:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45294 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726480AbgEFHHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 03:07:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 065A0AB99;
-        Wed,  6 May 2020 07:07:23 +0000 (UTC)
-Subject: Re: [PATCH RFC 1/2] tracing/block: cleanup rwbs filling in trace
- events
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
-Cc:     linux-bcache@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Christoph Hellwig <hch@infradead.org>
-References: <158860537783.30407.1084087380643625249.stgit@buzz>
-From:   Coly Li <colyli@suse.de>
-Autocrypt: addr=colyli@suse.de; keydata=
- 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
-Message-ID: <32f18d59-0717-702e-960f-e5b7a6dac756@suse.de>
-Date:   Wed, 6 May 2020 15:07:15 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Wed, 6 May 2020 03:08:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37642 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727832AbgEFHIe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 03:08:34 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3770CC061A0F;
+        Wed,  6 May 2020 00:08:34 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id r26so1271508wmh.0;
+        Wed, 06 May 2020 00:08:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=i1McQv5JxS+S3dpHPfoR+SRFx7AO1GcGwXm3Mh9ZmIw=;
+        b=FLnYnHqJH1U3gU09Sqx/ZBdsyli2VND4iZgspbc9VISSBTT3y17lgp5dXe4LxMa81+
+         md7sot+kcTyCqcu6EeTMAt+0L0RSrhzzaZ4jQgttSiZnI/geHJzSEYoGJCsyx/LFb+7l
+         7eTHJKjUzfChc54f6iBO9xmmVE6VudIAtGAgwdD24JErTkCb8gUWQrfj6rViGZ2T4h9I
+         74bqVkmvA4qIHe9VW30CK3fvIsnh0d3FkTw0PPEuMwxasv3hi0HwiZClysYya7VZ23ym
+         0edoLm+0RDqUPgNpZCzrnY08bARddy+4zf3/0ZYjSQE1lklzrXFIUpfRPOxCipSizBvL
+         WpjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=i1McQv5JxS+S3dpHPfoR+SRFx7AO1GcGwXm3Mh9ZmIw=;
+        b=n5+jcICRX4XUjIzlRrl/Cu6nbkd2Nk6Lanhn+WivKZ9qVrXFZlnk8cI5iqxWWovRl1
+         fJvruIcyaL7x6y5bEHqajVG6kypQGfuDJQgCGgA3lszeDBWcREnRR6G0+YIfRpczGFfN
+         jvm6C5LrKGGji+eOR3ztR9H3FvquDcjiRPlMJRkl437S3Hrzy4wdJgQHiCHRRIlYUnb9
+         cUpYIzT9EU/szr4i0FgE3AGMzT1Pyyzj18Eo5o3hBxuqzYb0ieuUfWb+roXgT2PbZwG4
+         ofngDPPRsy0swBqxSsRA+1iqlcbkC3Pq7+QWWtlPzJbFqdK8uHEf/X6EK0kbNVcJ+ION
+         Gksw==
+X-Gm-Message-State: AGi0PuaxW56ne3R9/lx+LOzP0dmXiyA+A0WnNv7qmfRZ06eAtYb9/zAE
+        piWxpBZ91asWWvk61+OGHi2JXkQdaFcIa9E2j+M=
+X-Google-Smtp-Source: APiQypLonxc2SJgZ3t+ABye4ETFW+KuYGgzgoiH27uLerIQZ3u+pO2iInq911uZepzHOpZi9JGpmgKNSZrBBZK/DNrc=
+X-Received: by 2002:a1c:6787:: with SMTP id b129mr2820878wmc.165.1588748912923;
+ Wed, 06 May 2020 00:08:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <158860537783.30407.1084087380643625249.stgit@buzz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200506000320.28965-1-luke.r.nels@gmail.com>
+In-Reply-To: <20200506000320.28965-1-luke.r.nels@gmail.com>
+From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
+Date:   Wed, 6 May 2020 09:08:21 +0200
+Message-ID: <CAJ+HfNgbuBoMTrU+TM3JCd1stEM1Zi3hG5k=PazT=CxAWa4wBQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 0/4] RV64 BPF JIT Optimizations
+To:     Luke Nelson <lukenels@cs.washington.edu>
+Cc:     bpf <bpf@vger.kernel.org>, Luke Nelson <luke.r.nels@gmail.com>,
+        Xi Wang <xi.wang@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Netdev <netdev@vger.kernel.org>, linux-riscv@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/4 23:16, Konstantin Khlebnikov wrote:
-> Define BLK_RWBS_LEN in blktrace_api.h
-> Bcache events use shorter 6 char buffer which could overflow.
-> 
-> Also remove unsed "bytes" argument.
-> 
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+On Wed, 6 May 2020 at 02:03, Luke Nelson <lukenels@cs.washington.edu> wrote=
+:
+>
+> This patch series introduces a set of optimizations to the BPF JIT
+> on RV64. The optimizations are related to the verifier zero-extension
+> optimization and BPF_JMP BPF_K.
+>
+> We tested the optimizations on a QEMU riscv64 virt machine, using
+> lib/test_bpf and test_verifier, and formally verified their correctness
+> using Serval.
+>
 
-The patch is good for me, it can be directly handled by block layer
-maintainer and skip me.
+Luke and Xi,
 
-Reviewed-by: Coly Li <colyli@suse.de>
+Thanks a lot for working on this! Very nice series!
 
+For the series:
+Reviewed-by: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.com>
+Acked-by: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.com>
 
-Thank you.
-
-Coly Li
-
-
-> ---
->  include/linux/blktrace_api.h  |    4 +-
->  include/trace/events/bcache.h |   20 +++++-----
->  include/trace/events/block.h  |   84 ++++++++++++++++++++---------------------
->  kernel/trace/blktrace.c       |    2 -
->  4 files changed, 55 insertions(+), 55 deletions(-)
-> 
-> diff --git a/include/linux/blktrace_api.h b/include/linux/blktrace_api.h
-> index 3b6ff5902edc..ea9da15d32d9 100644
-> --- a/include/linux/blktrace_api.h
-> +++ b/include/linux/blktrace_api.h
-> @@ -120,7 +120,9 @@ struct compat_blk_user_trace_setup {
->  
->  #endif
->  
-> -extern void blk_fill_rwbs(char *rwbs, unsigned int op, int bytes);
-> +#define BLK_RWBS_LEN	8
-> +
-> +extern void blk_fill_rwbs(char *rwbs, unsigned int op);
->  
->  static inline sector_t blk_rq_trace_sector(struct request *rq)
->  {
-> diff --git a/include/trace/events/bcache.h b/include/trace/events/bcache.h
-> index 0bddea663b3b..7440d704c200 100644
-> --- a/include/trace/events/bcache.h
-> +++ b/include/trace/events/bcache.h
-> @@ -18,7 +18,7 @@ DECLARE_EVENT_CLASS(bcache_request,
->  		__field(sector_t,	sector			)
->  		__field(dev_t,		orig_sector		)
->  		__field(unsigned int,	nr_sector		)
-> -		__array(char,		rwbs,	6		)
-> +		__array(char,		rwbs,	BLK_RWBS_LEN	)
->  	),
->  
->  	TP_fast_assign(
-> @@ -28,7 +28,7 @@ DECLARE_EVENT_CLASS(bcache_request,
->  		__entry->sector		= bio->bi_iter.bi_sector;
->  		__entry->orig_sector	= bio->bi_iter.bi_sector - 16;
->  		__entry->nr_sector	= bio->bi_iter.bi_size >> 9;
-> -		blk_fill_rwbs(__entry->rwbs, bio->bi_opf, bio->bi_iter.bi_size);
-> +		blk_fill_rwbs(__entry->rwbs, bio->bi_opf);
->  	),
->  
->  	TP_printk("%d,%d %s %llu + %u (from %d,%d @ %llu)",
-> @@ -95,14 +95,14 @@ DECLARE_EVENT_CLASS(bcache_bio,
->  		__field(dev_t,		dev			)
->  		__field(sector_t,	sector			)
->  		__field(unsigned int,	nr_sector		)
-> -		__array(char,		rwbs,	6		)
-> +		__array(char,		rwbs,	BLK_RWBS_LEN	)
->  	),
->  
->  	TP_fast_assign(
->  		__entry->dev		= bio_dev(bio);
->  		__entry->sector		= bio->bi_iter.bi_sector;
->  		__entry->nr_sector	= bio->bi_iter.bi_size >> 9;
-> -		blk_fill_rwbs(__entry->rwbs, bio->bi_opf, bio->bi_iter.bi_size);
-> +		blk_fill_rwbs(__entry->rwbs, bio->bi_opf);
->  	),
->  
->  	TP_printk("%d,%d  %s %llu + %u",
-> @@ -128,7 +128,7 @@ TRACE_EVENT(bcache_read,
->  		__field(dev_t,		dev			)
->  		__field(sector_t,	sector			)
->  		__field(unsigned int,	nr_sector		)
-> -		__array(char,		rwbs,	6		)
-> +		__array(char,		rwbs,	BLK_RWBS_LEN	)
->  		__field(bool,		cache_hit		)
->  		__field(bool,		bypass			)
->  	),
-> @@ -137,7 +137,7 @@ TRACE_EVENT(bcache_read,
->  		__entry->dev		= bio_dev(bio);
->  		__entry->sector		= bio->bi_iter.bi_sector;
->  		__entry->nr_sector	= bio->bi_iter.bi_size >> 9;
-> -		blk_fill_rwbs(__entry->rwbs, bio->bi_opf, bio->bi_iter.bi_size);
-> +		blk_fill_rwbs(__entry->rwbs, bio->bi_opf);
->  		__entry->cache_hit = hit;
->  		__entry->bypass = bypass;
->  	),
-> @@ -158,7 +158,7 @@ TRACE_EVENT(bcache_write,
->  		__field(u64,		inode			)
->  		__field(sector_t,	sector			)
->  		__field(unsigned int,	nr_sector		)
-> -		__array(char,		rwbs,	6		)
-> +		__array(char,		rwbs,	BLK_RWBS_LEN	)
->  		__field(bool,		writeback		)
->  		__field(bool,		bypass			)
->  	),
-> @@ -168,7 +168,7 @@ TRACE_EVENT(bcache_write,
->  		__entry->inode		= inode;
->  		__entry->sector		= bio->bi_iter.bi_sector;
->  		__entry->nr_sector	= bio->bi_iter.bi_size >> 9;
-> -		blk_fill_rwbs(__entry->rwbs, bio->bi_opf, bio->bi_iter.bi_size);
-> +		blk_fill_rwbs(__entry->rwbs, bio->bi_opf);
->  		__entry->writeback = writeback;
->  		__entry->bypass = bypass;
->  	),
-> @@ -229,7 +229,7 @@ TRACE_EVENT(bcache_journal_write,
->  		__field(dev_t,		dev			)
->  		__field(sector_t,	sector			)
->  		__field(unsigned int,	nr_sector		)
-> -		__array(char,		rwbs,	6		)
-> +		__array(char,		rwbs,	BLK_RWBS_LEN	)
->  		__field(u32,		nr_keys			)
->  	),
->  
-> @@ -238,7 +238,7 @@ TRACE_EVENT(bcache_journal_write,
->  		__entry->sector		= bio->bi_iter.bi_sector;
->  		__entry->nr_sector	= bio->bi_iter.bi_size >> 9;
->  		__entry->nr_keys	= keys;
-> -		blk_fill_rwbs(__entry->rwbs, bio->bi_opf, bio->bi_iter.bi_size);
-> +		blk_fill_rwbs(__entry->rwbs, bio->bi_opf);
->  	),
->  
->  	TP_printk("%d,%d  %s %llu + %u keys %u",
-> diff --git a/include/trace/events/block.h b/include/trace/events/block.h
-> index 81b43f5bdf23..aac9a5c0e2cc 100644
-> --- a/include/trace/events/block.h
-> +++ b/include/trace/events/block.h
-> @@ -10,7 +10,6 @@
->  #include <linux/buffer_head.h>
->  #include <linux/tracepoint.h>
->  
-> -#define RWBS_LEN	8
->  
->  DECLARE_EVENT_CLASS(block_buffer,
->  
-> @@ -81,7 +80,7 @@ TRACE_EVENT(block_rq_requeue,
->  		__field(  dev_t,	dev			)
->  		__field(  sector_t,	sector			)
->  		__field(  unsigned int,	nr_sector		)
-> -		__array(  char,		rwbs,	RWBS_LEN	)
-> +		__array(  char,		rwbs,	BLK_RWBS_LEN	)
->  		__dynamic_array( char,	cmd,	1		)
->  	),
->  
-> @@ -90,7 +89,7 @@ TRACE_EVENT(block_rq_requeue,
->  		__entry->sector    = blk_rq_trace_sector(rq);
->  		__entry->nr_sector = blk_rq_trace_nr_sectors(rq);
->  
-> -		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags, blk_rq_bytes(rq));
-> +		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
->  		__get_str(cmd)[0] = '\0';
->  	),
->  
-> @@ -124,7 +123,7 @@ TRACE_EVENT(block_rq_complete,
->  		__field(  sector_t,	sector			)
->  		__field(  unsigned int,	nr_sector		)
->  		__field(  int,		error			)
-> -		__array(  char,		rwbs,	RWBS_LEN	)
-> +		__array(  char,		rwbs,	BLK_RWBS_LEN	)
->  		__dynamic_array( char,	cmd,	1		)
->  	),
->  
-> @@ -134,7 +133,7 @@ TRACE_EVENT(block_rq_complete,
->  		__entry->nr_sector = nr_bytes >> 9;
->  		__entry->error     = error;
->  
-> -		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags, nr_bytes);
-> +		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
->  		__get_str(cmd)[0] = '\0';
->  	),
->  
-> @@ -156,7 +155,7 @@ DECLARE_EVENT_CLASS(block_rq,
->  		__field(  sector_t,	sector			)
->  		__field(  unsigned int,	nr_sector		)
->  		__field(  unsigned int,	bytes			)
-> -		__array(  char,		rwbs,	RWBS_LEN	)
-> +		__array(  char,		rwbs,	BLK_RWBS_LEN	)
->  		__array(  char,         comm,   TASK_COMM_LEN   )
->  		__dynamic_array( char,	cmd,	1		)
->  	),
-> @@ -167,7 +166,7 @@ DECLARE_EVENT_CLASS(block_rq,
->  		__entry->nr_sector = blk_rq_trace_nr_sectors(rq);
->  		__entry->bytes     = blk_rq_bytes(rq);
->  
-> -		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags, blk_rq_bytes(rq));
-> +		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
->  		__get_str(cmd)[0] = '\0';
->  		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
->  	),
-> @@ -232,7 +231,7 @@ TRACE_EVENT(block_bio_bounce,
->  		__field( dev_t,		dev			)
->  		__field( sector_t,	sector			)
->  		__field( unsigned int,	nr_sector		)
-> -		__array( char,		rwbs,	RWBS_LEN	)
-> +		__array( char,		rwbs,	BLK_RWBS_LEN	)
->  		__array( char,		comm,	TASK_COMM_LEN	)
->  	),
->  
-> @@ -240,7 +239,7 @@ TRACE_EVENT(block_bio_bounce,
->  		__entry->dev		= bio_dev(bio);
->  		__entry->sector		= bio->bi_iter.bi_sector;
->  		__entry->nr_sector	= bio_sectors(bio);
-> -		blk_fill_rwbs(__entry->rwbs, bio->bi_opf, bio->bi_iter.bi_size);
-> +		blk_fill_rwbs(__entry->rwbs, bio->bi_opf);
->  		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
->  	),
->  
-> @@ -266,11 +265,11 @@ TRACE_EVENT(block_bio_complete,
->  	TP_ARGS(q, bio, error),
->  
->  	TP_STRUCT__entry(
-> -		__field( dev_t,		dev		)
-> -		__field( sector_t,	sector		)
-> -		__field( unsigned,	nr_sector	)
-> -		__field( int,		error		)
-> -		__array( char,		rwbs,	RWBS_LEN)
-> +		__field( dev_t,		dev			)
-> +		__field( sector_t,	sector			)
-> +		__field( unsigned,	nr_sector		)
-> +		__field( int,		error			)
-> +		__array( char,		rwbs,	BLK_RWBS_LEN	)
->  	),
->  
->  	TP_fast_assign(
-> @@ -278,7 +277,7 @@ TRACE_EVENT(block_bio_complete,
->  		__entry->sector		= bio->bi_iter.bi_sector;
->  		__entry->nr_sector	= bio_sectors(bio);
->  		__entry->error		= error;
-> -		blk_fill_rwbs(__entry->rwbs, bio->bi_opf, bio->bi_iter.bi_size);
-> +		blk_fill_rwbs(__entry->rwbs, bio->bi_opf);
->  	),
->  
->  	TP_printk("%d,%d %s %llu + %u [%d]",
-> @@ -297,7 +296,7 @@ DECLARE_EVENT_CLASS(block_bio_merge,
->  		__field( dev_t,		dev			)
->  		__field( sector_t,	sector			)
->  		__field( unsigned int,	nr_sector		)
-> -		__array( char,		rwbs,	RWBS_LEN	)
-> +		__array( char,		rwbs,	BLK_RWBS_LEN	)
->  		__array( char,		comm,	TASK_COMM_LEN	)
->  	),
->  
-> @@ -305,7 +304,7 @@ DECLARE_EVENT_CLASS(block_bio_merge,
->  		__entry->dev		= bio_dev(bio);
->  		__entry->sector		= bio->bi_iter.bi_sector;
->  		__entry->nr_sector	= bio_sectors(bio);
-> -		blk_fill_rwbs(__entry->rwbs, bio->bi_opf, bio->bi_iter.bi_size);
-> +		blk_fill_rwbs(__entry->rwbs, bio->bi_opf);
->  		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
->  	),
->  
-> @@ -364,7 +363,7 @@ TRACE_EVENT(block_bio_queue,
->  		__field( dev_t,		dev			)
->  		__field( sector_t,	sector			)
->  		__field( unsigned int,	nr_sector		)
-> -		__array( char,		rwbs,	RWBS_LEN	)
-> +		__array( char,		rwbs,	BLK_RWBS_LEN	)
->  		__array( char,		comm,	TASK_COMM_LEN	)
->  	),
->  
-> @@ -372,7 +371,7 @@ TRACE_EVENT(block_bio_queue,
->  		__entry->dev		= bio_dev(bio);
->  		__entry->sector		= bio->bi_iter.bi_sector;
->  		__entry->nr_sector	= bio_sectors(bio);
-> -		blk_fill_rwbs(__entry->rwbs, bio->bi_opf, bio->bi_iter.bi_size);
-> +		blk_fill_rwbs(__entry->rwbs, bio->bi_opf);
->  		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
->  	),
->  
-> @@ -392,7 +391,7 @@ DECLARE_EVENT_CLASS(block_get_rq,
->  		__field( dev_t,		dev			)
->  		__field( sector_t,	sector			)
->  		__field( unsigned int,	nr_sector		)
-> -		__array( char,		rwbs,	RWBS_LEN	)
-> +		__array( char,		rwbs,	BLK_RWBS_LEN	)
->  		__array( char,		comm,	TASK_COMM_LEN	)
->          ),
->  
-> @@ -400,8 +399,7 @@ DECLARE_EVENT_CLASS(block_get_rq,
->  		__entry->dev		= bio ? bio_dev(bio) : 0;
->  		__entry->sector		= bio ? bio->bi_iter.bi_sector : 0;
->  		__entry->nr_sector	= bio ? bio_sectors(bio) : 0;
-> -		blk_fill_rwbs(__entry->rwbs,
-> -			      bio ? bio->bi_opf : 0, __entry->nr_sector);
-> +		blk_fill_rwbs(__entry->rwbs, bio ? bio->bi_opf : 0);
->  		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
->          ),
->  
-> @@ -524,18 +522,18 @@ TRACE_EVENT(block_split,
->  	TP_ARGS(q, bio, new_sector),
->  
->  	TP_STRUCT__entry(
-> -		__field( dev_t,		dev				)
-> -		__field( sector_t,	sector				)
-> -		__field( sector_t,	new_sector			)
-> -		__array( char,		rwbs,		RWBS_LEN	)
-> -		__array( char,		comm,		TASK_COMM_LEN	)
-> +		__field( dev_t,		dev			)
-> +		__field( sector_t,	sector			)
-> +		__field( sector_t,	new_sector		)
-> +		__array( char,		rwbs,	BLK_RWBS_LEN	)
-> +		__array( char,		comm,	TASK_COMM_LEN	)
->  	),
->  
->  	TP_fast_assign(
->  		__entry->dev		= bio_dev(bio);
->  		__entry->sector		= bio->bi_iter.bi_sector;
->  		__entry->new_sector	= new_sector;
-> -		blk_fill_rwbs(__entry->rwbs, bio->bi_opf, bio->bi_iter.bi_size);
-> +		blk_fill_rwbs(__entry->rwbs, bio->bi_opf);
->  		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
->  	),
->  
-> @@ -564,12 +562,12 @@ TRACE_EVENT(block_bio_remap,
->  	TP_ARGS(q, bio, dev, from),
->  
->  	TP_STRUCT__entry(
-> -		__field( dev_t,		dev		)
-> -		__field( sector_t,	sector		)
-> -		__field( unsigned int,	nr_sector	)
-> -		__field( dev_t,		old_dev		)
-> -		__field( sector_t,	old_sector	)
-> -		__array( char,		rwbs,	RWBS_LEN)
-> +		__field( dev_t,		dev			)
-> +		__field( sector_t,	sector			)
-> +		__field( unsigned int,	nr_sector		)
-> +		__field( dev_t,		old_dev			)
-> +		__field( sector_t,	old_sector		)
-> +		__array( char,		rwbs,	BLK_RWBS_LEN	)
->  	),
->  
->  	TP_fast_assign(
-> @@ -578,7 +576,7 @@ TRACE_EVENT(block_bio_remap,
->  		__entry->nr_sector	= bio_sectors(bio);
->  		__entry->old_dev	= dev;
->  		__entry->old_sector	= from;
-> -		blk_fill_rwbs(__entry->rwbs, bio->bi_opf, bio->bi_iter.bi_size);
-> +		blk_fill_rwbs(__entry->rwbs, bio->bi_opf);
->  	),
->  
->  	TP_printk("%d,%d %s %llu + %u <- (%d,%d) %llu",
-> @@ -608,13 +606,13 @@ TRACE_EVENT(block_rq_remap,
->  	TP_ARGS(q, rq, dev, from),
->  
->  	TP_STRUCT__entry(
-> -		__field( dev_t,		dev		)
-> -		__field( sector_t,	sector		)
-> -		__field( unsigned int,	nr_sector	)
-> -		__field( dev_t,		old_dev		)
-> -		__field( sector_t,	old_sector	)
-> -		__field( unsigned int,	nr_bios		)
-> -		__array( char,		rwbs,	RWBS_LEN)
-> +		__field( dev_t,		dev			)
-> +		__field( sector_t,	sector			)
-> +		__field( unsigned int,	nr_sector		)
-> +		__field( dev_t,		old_dev			)
-> +		__field( sector_t,	old_sector		)
-> +		__field( unsigned int,	nr_bios			)
-> +		__array( char,		rwbs,	BLK_RWBS_LEN	)
->  	),
->  
->  	TP_fast_assign(
-> @@ -624,7 +622,7 @@ TRACE_EVENT(block_rq_remap,
->  		__entry->old_dev	= dev;
->  		__entry->old_sector	= from;
->  		__entry->nr_bios	= blk_rq_count_bios(rq);
-> -		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags, blk_rq_bytes(rq));
-> +		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
->  	),
->  
->  	TP_printk("%d,%d %s %llu + %u <- (%d,%d) %llu %u",
-> diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-> index ca39dc3230cb..dd10667d4164 100644
-> --- a/kernel/trace/blktrace.c
-> +++ b/kernel/trace/blktrace.c
-> @@ -1935,7 +1935,7 @@ void blk_trace_remove_sysfs(struct device *dev)
->  
->  #ifdef CONFIG_EVENT_TRACING
->  
-> -void blk_fill_rwbs(char *rwbs, unsigned int op, int bytes)
-> +void blk_fill_rwbs(char *rwbs, unsigned int op)
->  {
->  	int i = 0;
->  
-> 
-
+> Luke Nelson (4):
+>   bpf, riscv: Enable missing verifier_zext optimizations on RV64
+>   bpf, riscv: Optimize FROM_LE using verifier_zext on RV64
+>   bpf, riscv: Optimize BPF_JMP BPF_K when imm =3D=3D 0 on RV64
+>   bpf, riscv: Optimize BPF_JSET BPF_K using andi on RV64
+>
+>  arch/riscv/net/bpf_jit_comp64.c | 64 ++++++++++++++++++++++-----------
+>  1 file changed, 44 insertions(+), 20 deletions(-)
+>
+> Cc: Xi Wang <xi.wang@gmail.com>
+>
+> --
+> 2.17.1
+>
