@@ -2,185 +2,124 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4747C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9FFC4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDE0320A8B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:41:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O41+Bmx8"
+	by mail.kernel.org (Postfix) with ESMTP id B7EDA20A8B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:42:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729769AbgEFPl7 (ORCPT
+        id S1729786AbgEFPmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:41:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33176 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729668AbgEFPlw (ORCPT
+        Wed, 6 May 2020 11:42:09 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50728 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729668AbgEFPmI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:41:52 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B828BC061A0F;
-        Wed,  6 May 2020 08:41:51 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id e20so1695319otk.12;
-        Wed, 06 May 2020 08:41:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/4Bf7uYJizHHCHu/IYW7D03zmrwhqK6qEQ4Buf+txbw=;
-        b=O41+Bmx8B9NB10qlOMxkKc0/Rv3M6Si5CS/dzS1zYHq3s3oh4P78J7myxdWBSa8y7s
-         TD5F8clLMBWSS1ZLwUnEC80SEY2vxP/eG5egZesXB3oTOocuQV8YKmYGSHFexTzy0lQA
-         x6c14L+ldRqF5Nd/eK3gLz7QSa2FI5PiEnU0D8seFKuPxVS/oBHGIha5cS/7p9Mouuqe
-         THcE6aPAzEfYI65zy/Ffx4s5unLOIJsNqQTlboU+HHBE1Grx2Ouxkr8TIdBtuUd2PCjM
-         4f0tdzFCeGgvCPpfNRoGlgdhQY/+lGA6IoNjql+Ks0i2xqgQYonpZV09sQOuXW/qsynV
-         NnqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/4Bf7uYJizHHCHu/IYW7D03zmrwhqK6qEQ4Buf+txbw=;
-        b=snOQJvCxRngpebz6HC0Kjk20I6iK1mEENBfM+7I0Xv/ZOP3lbGcEdUM6kv850bBhRe
-         wHIMNFK3G8ZaQJQuxLUqWWtVhTCmnyt2Pu/mL0S+UUMOgZLpun3p4hXni5rGP7JoQMx+
-         gXexA82wr1Vn+/vaZNabk8RR3Zx2+iHLig8q8STf/lFqxIfkEczJCE8WhM0EG4NfOKkW
-         d6R174ZVXwiWbhPsstmLxLa2/noMcxCcVhfMaVP9G7ZD8pxQwtXRGO8hq/50Z+tqtCbr
-         y6AK4JT8uL/y8eaHh0fA2rE8qTCUOLkcxPNKXKDjb84IGMRrIJMTezD4rxxy+56TKORm
-         sgSA==
-X-Gm-Message-State: AGi0Puay2YBpaucN9nnfhh0zgdkwwXKX0n0qEuc4d9XhGHzjtFsaJNyP
-        wmLj9RWaTJzwTY+6rbzr5gk=
-X-Google-Smtp-Source: APiQypII0o5v6UpXX6yiU/YBF8h71UF/2SWu7x/H3RFRnCZA7CNKMbDeTyEgZQ762wQ2tp22LhtsWQ==
-X-Received: by 2002:a9d:569:: with SMTP id 96mr6710053otw.59.1588779710938;
-        Wed, 06 May 2020 08:41:50 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id k19sm655259oof.33.2020.05.06.08.41.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 08:41:50 -0700 (PDT)
-Date:   Wed, 6 May 2020 08:41:48 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Sedat Dilek <sedat.dilek@gmail.com>, stable@vger.kernel.org,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        "kernelci . org bot" <bot@kernelci.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Ilie Halip <ilie.halip@gmail.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] x86: bitops: fix build regression
-Message-ID: <20200506154148.GC1213645@ubuntu-s3-xlarge-x86>
-References: <20200505174423.199985-1-ndesaulniers@google.com>
- <20200506043028.GA663805@ubuntu-s3-xlarge-x86>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506043028.GA663805@ubuntu-s3-xlarge-x86>
+        Wed, 6 May 2020 11:42:08 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 046F2Qod060973;
+        Wed, 6 May 2020 11:42:07 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30uvm97051-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 May 2020 11:42:01 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 046FdOPj007467;
+        Wed, 6 May 2020 11:41:46 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30uvm9703w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 May 2020 11:41:45 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 046FexB6027812;
+        Wed, 6 May 2020 15:41:42 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma03ams.nl.ibm.com with ESMTP id 30s0g5sg8g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 May 2020 15:41:42 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 046FeUs065732886
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 6 May 2020 15:40:30 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 08C35A404D;
+        Wed,  6 May 2020 15:41:40 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D47A0A4055;
+        Wed,  6 May 2020 15:41:39 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  6 May 2020 15:41:39 +0000 (GMT)
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>
+Subject: [RFC 0/2] Enable PF-VF linking with pdev->no_vf_scan (s390)
+Date:   Wed,  6 May 2020 17:41:37 +0200
+Message-Id: <20200506154139.90609-1-schnelle@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-06_07:2020-05-05,2020-05-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ suspectscore=0 clxscore=1015 adultscore=0 bulkscore=0 malwarescore=0
+ phishscore=0 mlxlogscore=461 lowpriorityscore=0 spamscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005060117
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 09:30:28PM -0700, Nathan Chancellor wrote:
-> On Tue, May 05, 2020 at 10:44:22AM -0700, Nick Desaulniers wrote:
-> > From: Sedat Dilek <sedat.dilek@gmail.com>
-> > 
-> > It turns out that if your config tickles __builtin_constant_p via
-> > differences in choices to inline or not, this now produces invalid
-> > assembly:
-> > 
-> > $ cat foo.c
-> > long a(long b, long c) {
-> >   asm("orb\t%1, %0" : "+q"(c): "r"(b));
-> >   return c;
-> > }
-> > $ gcc foo.c
-> > foo.c: Assembler messages:
-> > foo.c:2: Error: `%rax' not allowed with `orb'
-> > 
-> > The "q" constraint only has meanting on -m32 otherwise is treated as
-> > "r".
-> > 
-> > This is easily reproducible via Clang+CONFIG_STAGING=y+CONFIG_VT6656=m,
-> > or Clang+allyesconfig.
-> 
-> For what it's worth, I don't see this with allyesconfig.
-> 
-> > Keep the masking operation to appease sparse (`make C=1`), add back the
-> > cast in order to properly select the proper 8b register alias.
-> > 
-> >  [Nick: reworded]
-> > 
-> > Cc: stable@vger.kernel.org
-> 
-> The offending commit was added in 5.7-rc1; we shouldn't need to
-> Cc stable since this should be picked up as an -rc fix.
-> 
-> > Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/961
-> > Link: https://lore.kernel.org/lkml/20200504193524.GA221287@google.com/
-> > Fixes: 1651e700664b4 ("x86: Fix bitops.h warning with a moved cast")
-> > Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-> > Reported-by: kernelci.org bot <bot@kernelci.org>
-> > Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-> > Suggested-by: Ilie Halip <ilie.halip@gmail.com>
-> 
-> Not to split hairs but this is Ilie's diff, he should probably be the
-> author with Sedat's Reported-by/Tested-by.
-> 
-> https://github.com/ClangBuiltLinux/linux/issues/961#issuecomment-608239458
-> 
-> But eh, it's all a team effort plus that can only happen with Ilie's
-> explicit consent for a Signed-off-by.
-> 
-> I am currently doing a set of builds with clang-11 with this patch on
-> top of 5.7-rc4 to make sure that all of the cases I have found work.
-> Once that is done, I'll comment back with a tag.
+Hello Kernel Hackers,
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com> # build
+the following series enables PF-VF linking for architectures using the
+pdev->no_vf_scan flag (currently just s390). This includes kernel internal
+linking with pdev->physfn as well as creation of the relevant sysfs links.
+The former are required for example by libvirt to manage VFs.
 
-> > Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-> > Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
-> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> > ---
-> >  arch/x86/include/asm/bitops.h | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-> > index b392571c1f1d..139122e5b25b 100644
-> > --- a/arch/x86/include/asm/bitops.h
-> > +++ b/arch/x86/include/asm/bitops.h
-> > @@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long *addr)
-> >  	if (__builtin_constant_p(nr)) {
-> >  		asm volatile(LOCK_PREFIX "orb %1,%0"
-> >  			: CONST_MASK_ADDR(nr, addr)
-> > -			: "iq" (CONST_MASK(nr) & 0xff)
-> > +			: "iq" ((u8)(CONST_MASK(nr) & 0xff))
-> >  			: "memory");
-> >  	} else {
-> >  		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
-> > @@ -74,7 +74,7 @@ arch_clear_bit(long nr, volatile unsigned long *addr)
-> >  	if (__builtin_constant_p(nr)) {
-> >  		asm volatile(LOCK_PREFIX "andb %1,%0"
-> >  			: CONST_MASK_ADDR(nr, addr)
-> > -			: "iq" (CONST_MASK(nr) ^ 0xff));
-> > +			: "iq" ((u8)(CONST_MASK(nr) ^ 0xff)));
-> >  	} else {
-> >  		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
-> >  			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
-> > -- 
-> > 2.26.2.526.g744177e7f7-goog
-> > 
-> 
-> Cheers,
-> Nathan
+The series consists of two patches against the featuress branch of
+git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git
+
+- PCI/IOV: Introduce pci_iov_sysfs_link() function
+
+This patch factors the sysfs link creation out of pci_iov_add_virtfn() and
+into a new pci_iov_sysfs_link() function. On its own it also applies
+cleanly on v5.7-rc4.
+ 
+- s390/pci: create links between PFs and VFs
+
+This patch makes use of the pci_iov_sysfs_link() function introduced in the
+first patch to create the sysfs PF-VF links. It exploits recent work for
+multi-function support on s390 that gives us the real devfnto identify the
+parent PF of a given VF.
+Apart from these s390 specific support contained within arch/s390/ it also
+removes the fencing off of pci_iov_remove_virtfn() by the pdev->no_vf_scan
+flag making use of the common code path for clean VF removal.
+While this is common code s390 is currently the only case where
+pdev->no_vf_scan is true I can of course split this into a separate patch
+if requested but wanted to keep this together for the discussion.
+
+Best regards and your feedback is welcome,
+Niklas Schnelle
+
+Niklas Schnelle (2):
+  PCI/IOV: Introduce pci_iov_sysfs_link() function
+  s390/pci: create links between PFs and VFs
+
+ arch/s390/include/asm/pci.h     |  3 +-
+ arch/s390/include/asm/pci_clp.h |  3 +-
+ arch/s390/pci/pci_bus.c         | 69 ++++++++++++++++++++++++++++++++-
+ arch/s390/pci/pci_clp.c         |  1 +
+ drivers/pci/iov.c               | 39 ++++++++++++-------
+ include/linux/pci.h             |  8 ++++
+ 6 files changed, 105 insertions(+), 18 deletions(-)
+
+-- 
+2.17.1
+
