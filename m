@@ -2,194 +2,122 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D95BAC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C55C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB3AB20643
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:38:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="P99HOglq"
+	by mail.kernel.org (Postfix) with ESMTP id C45DC20643
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:39:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588779565;
+	bh=3vHR7mIDMx1JrwDBTXavOeVMQEgHan5TwoeTpgI2D5Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=x87ZTqe22fefGDHbUcX/SJ1rF1S5BuLT6fZ+uSqblV+USi+Z0lxwMS8Ptc15Ztp80
+	 BXNzAwmfokxNaEnF5htf1s6ek+4I+gBPuOWkJVjtVVNN1/ygfPcYJ7E6tRjkHPGvNJ
+	 6jzcliadQiGnqNJkNVRRaSoVRkIV+L/VHRKK+IWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729444AbgEFPif (ORCPT
+        id S1729517AbgEFPjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:38:35 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:53340 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbgEFPif (ORCPT
+        Wed, 6 May 2020 11:39:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbgEFPjY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:38:35 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046Fbi0p052060;
-        Wed, 6 May 2020 15:37:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=j1Xe1r0jUzWMXNoigXzq+GaoW22b0gC2NvzvR16qr2Q=;
- b=P99HOglqOP07Lr6/hHy/jBpu++dHXQZ4yBthI2A2BX5gB5CP9UP6fYwQO8p705VMfUMc
- BXxokfjcwMc2AycCqWtX12PQh+qzSAxjJcJztRAPG4jhbrQRp9iUve2mZZubp5TSb8Gq
- zJL5sWg6rWpuvAHGTtzV3VS2XdDtEryWRA1LJUhBHIsdx48DjoWriILGlzo/YNfPRV5x
- yh9PGZAQyMXVpBr/rZBItSvO4hHQ1ysqWCZ+6kRmvJgGZvEK6IfiHrKw2hE0UUJUAOrB
- GlE4TQ6zYuX/i7UOST+bjqVUKfy/TMkeUBFiWZ3DS/kWHjIFcYAYgIErUcaKOkKjiqLI fg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 30s1gnaxsw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 May 2020 15:37:44 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046FIdjS085335;
-        Wed, 6 May 2020 15:35:44 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 30us7n0e43-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 May 2020 15:35:44 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 046FZfS9030023;
-        Wed, 6 May 2020 15:35:42 GMT
-Received: from linux-1.home (/10.175.10.30)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 May 2020 08:35:41 -0700
-Subject: Re: [patch V4 part 1 14/36] x86/entry: Get rid of
- ist_begin/end_non_atomic()
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-References: <20200505131602.633487962@linutronix.de>
- <20200505134059.462640294@linutronix.de>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Message-ID: <e0037089-113c-d262-bae0-1beacf4198d8@oracle.com>
-Date:   Wed, 6 May 2020 17:34:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 6 May 2020 11:39:24 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78A7FC061A0F;
+        Wed,  6 May 2020 08:39:24 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id c10so2401893qka.4;
+        Wed, 06 May 2020 08:39:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2ldQrxl/Gb/wRFAuytJca8G56Q/kIoRyMgqfl16exiE=;
+        b=W3A5OKo7EkhcaGvEPgsUd40S+A9dKvHLVTse38jjDrCHcO85rqqAN0GHAUo750jKyf
+         nyA5TcYQXQ2MrVo54oLywdjDeDIlUplaqoiz40BV7sBfvhgecZId6WEOYJDg9R49u8Kw
+         foCMvWelVeem7ZglJ/p1VQ+HEblaVfrWJPe6RcDwq1P+z0pQU6KZ/sHqCyZPKdgyqXaw
+         PBGjLKtnykHXNfErxwV5CpskQr4FU7FN9XX1EPqG99C1oWgEQGn5WLAGIoelwMqq++OZ
+         lYpPrR+WZrOlkJRh1kVaqi8Nhc5GImNuEab/bdcH1teKlcLPuDTDf1eGZmu7DXLL3+3L
+         z6mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=2ldQrxl/Gb/wRFAuytJca8G56Q/kIoRyMgqfl16exiE=;
+        b=djbdbxr+KM922bXBEADKXc5QUCYr7Aym5EIcPI27ev9msh63jx+CKpDZEbIECWBVcp
+         VXxFD7Ua1zz6iUlDbvrqNJ3ChlOdmOjcZlImNltqeKKx5YHkJwdIGxrJAdXAvLtulish
+         oSXyiYDYjSZ+soTCqWnbKfrs9h9mkpwLWcfUjEiEoRsyeAKGLnX1tW9Idg3ZBuieBwdq
+         TqXaaUEP2lwQCU9Y4WZyBoRUV7cUDTtjVWYk6zct4dgcpg/I5W9hggUEOe6+RdjpfjEU
+         Q9zoFJtB9FibfaVdqj8sijypexD89kufAQT24uiZ7fEq2rBjd/SjVAChV8N6jCDrcMNW
+         szNQ==
+X-Gm-Message-State: AGi0Pua5dsU5fhxhqG+6RXxDvmA7VWL+41DRmdcH0+snJT3Dzcs6ChaD
+        5YTCFQntahfVRRpP3QjklWUUn3/G+i8=
+X-Google-Smtp-Source: APiQypJq9xuh1jpId2VAIHlIswKTJyc1R1BJ5CsV28I3FE7cxiBPL30JoJze5y6XJEwIj1F2XNuCIw==
+X-Received: by 2002:ae9:ef84:: with SMTP id d126mr9252708qkg.19.1588779563482;
+        Wed, 06 May 2020 08:39:23 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:b0df])
+        by smtp.gmail.com with ESMTPSA id n9sm1893626qkn.10.2020.05.06.08.39.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 08:39:22 -0700 (PDT)
+Date:   Wed, 6 May 2020 11:39:20 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     "J. Bruce Fields" <bfields@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        Jeff Layton <jlayton@redhat.com>,
+        David Howells <dhowells@redhat.com>, Shaohua Li <shli@fb.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/4] allow multiple kthreadd's
+Message-ID: <20200506153920.GB3350@mtj.thefacebook.com>
+References: <1588348912-24781-1-git-send-email-bfields@redhat.com>
+ <CAHk-=wiGhZ_5xCRyUN+yMFdneKMQ-S8fBvdBp8o-JWPV4v+nVw@mail.gmail.com>
+ <20200501182154.GG5462@mtj.thefacebook.com>
+ <20200505021514.GA43625@pick.fieldses.org>
+ <20200505210118.GC27966@fieldses.org>
+ <20200505210956.GA3350@mtj.thefacebook.com>
+ <20200505212527.GA1265@fieldses.org>
+ <20200506153658.GA21307@fieldses.org>
 MIME-Version: 1.0
-In-Reply-To: <20200505134059.462640294@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=0
- mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005060124
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 mlxscore=0
- spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0
- impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005060125
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506153658.GA21307@fieldses.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello, Bruce.
 
-On 5/5/20 3:16 PM, Thomas Gleixner wrote:
-> This is completely overengineered and definitely not an interface which
-> should be made available to anything else than this particular MCE case.
+On Wed, May 06, 2020 at 11:36:58AM -0400, J. Bruce Fields wrote:
+> On Tue, May 05, 2020 at 05:25:27PM -0400, J. Bruce Fields wrote:
+> > On Tue, May 05, 2020 at 05:09:56PM -0400, Tejun Heo wrote:
+> > > It's not the end of the world but a bit hacky. I wonder whether something
+> > > like the following would work better for identifying worker type so that you
+> > > can do sth like
+> > > 
+> > >  if (kthread_fn(current) == nfsd)
+> > >         return kthread_data(current);
+> > >  else
+> > >         return NULL;     
+> > 
+> > Yes, definitely more generic, looks good to me.
 > 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->   arch/x86/include/asm/traps.h   |    2 --
->   arch/x86/kernel/cpu/mce/core.c |    6 ++++--
->   arch/x86/kernel/traps.c        |   37 -------------------------------------
->   3 files changed, 4 insertions(+), 41 deletions(-)
-
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-
-alex.
-
-> --- a/arch/x86/include/asm/traps.h
-> +++ b/arch/x86/include/asm/traps.h
-> @@ -120,8 +120,6 @@ asmlinkage void smp_irq_move_cleanup_int
->   
->   extern void ist_enter(struct pt_regs *regs);
->   extern void ist_exit(struct pt_regs *regs);
-> -extern void ist_begin_non_atomic(struct pt_regs *regs);
-> -extern void ist_end_non_atomic(void);
->   
->   #ifdef CONFIG_VMAP_STACK
->   void __noreturn handle_stack_overflow(const char *message,
-> --- a/arch/x86/kernel/cpu/mce/core.c
-> +++ b/arch/x86/kernel/cpu/mce/core.c
-> @@ -1352,13 +1352,15 @@ void notrace do_machine_check(struct pt_
->   
->   	/* Fault was in user mode and we need to take some action */
->   	if ((m.cs & 3) == 3) {
-> -		ist_begin_non_atomic(regs);
-> +		/* If this triggers there is no way to recover. Die hard. */
-> +		BUG_ON(!on_thread_stack() || !user_mode(regs));
->   		local_irq_enable();
-> +		preempt_enable();
->   
->   		if (kill_it || do_memory_failure(&m))
->   			force_sig(SIGBUS);
-> +		preempt_disable();
->   		local_irq_disable();
-> -		ist_end_non_atomic();
->   	} else {
->   		if (!fixup_exception(regs, X86_TRAP_MC, error_code, 0))
->   			mce_panic("Failed kernel mode recovery", &m, msg);
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -117,43 +117,6 @@ void ist_exit(struct pt_regs *regs)
->   		rcu_nmi_exit();
->   }
->   
-> -/**
-> - * ist_begin_non_atomic() - begin a non-atomic section in an IST exception
-> - * @regs:	regs passed to the IST exception handler
-> - *
-> - * IST exception handlers normally cannot schedule.  As a special
-> - * exception, if the exception interrupted userspace code (i.e.
-> - * user_mode(regs) would return true) and the exception was not
-> - * a double fault, it can be safe to schedule.  ist_begin_non_atomic()
-> - * begins a non-atomic section within an ist_enter()/ist_exit() region.
-> - * Callers are responsible for enabling interrupts themselves inside
-> - * the non-atomic section, and callers must call ist_end_non_atomic()
-> - * before ist_exit().
-> - */
-> -void ist_begin_non_atomic(struct pt_regs *regs)
-> -{
-> -	BUG_ON(!user_mode(regs));
-> -
-> -	/*
-> -	 * Sanity check: we need to be on the normal thread stack.  This
-> -	 * will catch asm bugs and any attempt to use ist_preempt_enable
-> -	 * from double_fault.
-> -	 */
-> -	BUG_ON(!on_thread_stack());
-> -
-> -	preempt_enable_no_resched();
-> -}
-> -
-> -/**
-> - * ist_end_non_atomic() - begin a non-atomic section in an IST exception
-> - *
-> - * Ends a non-atomic section started with ist_begin_non_atomic().
-> - */
-> -void ist_end_non_atomic(void)
-> -{
-> -	preempt_disable();
-> -}
-> -
->   int is_valid_bugaddr(unsigned long addr)
->   {
->   	unsigned short ud;
+> This is what I'm testing with.
 > 
+> If it's OK with you, could I add your Signed-off-by and take it through
+> the nfsd tree? I'll have some other patches that will depend on it.
+
+Please feel free to use the code however you see fit. Given that it'll be
+originating from you, my signed-off-by might not be the right tag. Something
+like Original-patch-by should be good (nothing is fine too).
+
+Thanks.
+
+-- 
+tejun
