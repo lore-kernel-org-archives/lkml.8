@@ -2,108 +2,137 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C28C47257
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 01:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 713A4C47254
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 01:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1956E2078D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 01:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 463F220735
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 01:24:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588728272;
+	bh=0MLo2NbZMkoEikI+0ws5DDZ7FousY6/b9nnHo7P+Gjk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZfiMSn+OPOLMIzROQsaCRZOy9RIMMAcc8RZEQqJ1P1jOQFtZSDjDM58/CmxplWs2c
+	 sMWLJGW5SzYTVswhq0ArXKjvTsquaOiZO8r5ZTY7JN4BEkDW1MbJvm0SCED4tz3QjB
+	 xIQdD4/QZys0kyiTsYshsNkcgoR6iP+qAUADezNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729710AbgEFBS0 (ORCPT
+        id S1729774AbgEFBYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 21:18:26 -0400
-Received: from mail-pg1-f178.google.com ([209.85.215.178]:33193 "EHLO
-        mail-pg1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbgEFBSZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 21:18:25 -0400
-Received: by mail-pg1-f178.google.com with SMTP id a4so370096pgc.0;
-        Tue, 05 May 2020 18:18:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=TB95JfcrXLdUl9kBee+SDhoQM4+heqr0oLNCpeox9Sg=;
-        b=nduRsLfJbrEF+Reluzo4EvQHLwhqgVvu7CUjEly6Xo5F/hsJi8suzNmv/RLR7uRDw8
-         PDSjwJgde2M9U28Nn8YFPrTg5RErOguV9X6R9Mpjl18MxCHtWMdsqmGAfZzDEehwsQqc
-         9BmGHXlFVGPfjST9rXd9f4mMfNzwqcGS3r1MrgDp3LN5LY+hRc55DcZ3ME2x9jSCTGdJ
-         pXwwGBFwfXhTeZ3cTPat235Q534tcrfAmEp4wfWl9Ce3wi2mxvgRWBgfCPjY66eRqXEB
-         uX3lhaZQnoAuz/eGqzYN1Oa6sRHQTAMj+Mb9PZ8gTytzOJMyr2d6+TALm/v2ioZ2OMzC
-         pX9g==
-X-Gm-Message-State: AGi0PuYNZyjmVOIiGF2KNwdlS1Ou45IiLg9/tYu8yfKz6kEtCX0kwUE7
-        TgkQKA/xhaTAguWlIi2RIuY+J6vv+iE=
-X-Google-Smtp-Source: APiQypKcMdiVpEdcd6k1tCehCJfKSR47ZJ4R9cF4/38cu7GQ+m8U6H5RGIjrbLwS+uyA3xzuaPZenw==
-X-Received: by 2002:a63:5320:: with SMTP id h32mr5236568pgb.28.1588727904320;
-        Tue, 05 May 2020 18:18:24 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:b435:750c:4181:403d? ([2601:647:4000:d7:b435:750c:4181:403d])
-        by smtp.gmail.com with ESMTPSA id t14sm295503pgr.61.2020.05.05.18.18.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2020 18:18:23 -0700 (PDT)
-Subject: Re: [RFC v1 0/6] block: add error handling for *add_disk*()
-To:     Luis Chamberlain <mcgrof@kernel.org>, axboe@kernel.dk,
-        ming.lei@redhat.com
-Cc:     yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200429074844.6241-1-mcgrof@kernel.org>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <896ca55e-0daa-fb62-f9cb-0714389936a5@acm.org>
-Date:   Tue, 5 May 2020 18:18:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 21:24:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40380 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729457AbgEFBYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 21:24:31 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38C3320721;
+        Wed,  6 May 2020 01:24:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588728270;
+        bh=0MLo2NbZMkoEikI+0ws5DDZ7FousY6/b9nnHo7P+Gjk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tXVf6TQ1Sti0iAG5VHBet6ALroDk6gYzIaC5JV+smROfEfJggD6fgeg19XW+7O8/2
+         bYWn7fbiDYwRISi5X8fDqEQVdH9Z1kdp2hU8Dh38/TYjeZjSAUC6kkug7gkha0bjeZ
+         VQJDeO6Ztfl/XIAlww3YDrgnB3H7htuULoFp3GfM=
+Date:   Tue, 5 May 2020 18:24:28 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Gao Xiang <hsiangkao@gmx.com>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [PATCH] f2fs: get parent inode when recovering pino
+Message-ID: <20200506012428.GG128280@sol.localdomain>
+References: <20200505153139.201697-1-jaegeuk@kernel.org>
+ <20200505165847.GA98848@gmail.com>
+ <20200505181323.GA55221@google.com>
+ <20200505181941.GC98848@gmail.com>
+ <20200506001403.GA2101@hsiangkao-HP-ZHAN-66-Pro-G1>
 MIME-Version: 1.0
-In-Reply-To: <20200429074844.6241-1-mcgrof@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506001403.GA2101@hsiangkao-HP-ZHAN-66-Pro-G1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-29 00:48, Luis Chamberlain wrote:
-> While working on some blktrace races I noticed that we don't do
-> error handling on *add_disk*() and friends. This is my initial
-> work on that.
+On Wed, May 06, 2020 at 08:14:07AM +0800, Gao Xiang wrote:
+> >
+> > Actually, I think this is wrong because the fsync can be done via a file
+> > descriptor that was opened to a now-deleted link to the file.
 > 
-> This is based on linux-next tag next-20200428, you can also get this
-> on my branch 20200428-block-fixes [0].
+> I'm still confused about this...
 > 
-> Let me know what you think.
-Hi Luis,
+> I don't know what's wrong with this version from my limited knowledge?
+>  inode itself is locked when fsyncing, so
+> 
+>    if the fsync inode->i_nlink == 1, this inode has only one hard link
+>    (not deleted yet) and should belong to a single directory; and
+> 
+>    the only one parent directory would not go away (not deleted as well)
+>    since there are some dirents in it (not empty).
+> 
+> Could kindly explain more so I would learn more about this scenario?
+> Thanks a lot!
 
-Thank you for having done this work. Since triggering error paths can be
-challenging, how about adding fault injection capabilities that make it
-possible to trigger all modified error paths and how about adding
-blktests that trigger these paths? That is the strategy that I followed
-myself recently to fix an error path in blk_mq_realloc_hw_ctxs().
+i_nlink == 1 just means that there is one non-deleted link.  There can be links
+that have since been deleted, and file descriptors can still be open to them.
 
-Thanks,
+> 
+> >
+> > We need to find the dentry whose parent directory is still exists, i.e. the
+> > parent directory that is counting towards 'inode->i_nlink == 1'.
+> 
+> directory counting towards 'inode->i_nlink == 1', what's happening?
 
-Bart.
+The non-deleted link is the one counted in i_nlink.
+
+> 
+> >
+> > I think d_find_alias() is what we're looking for.
+> 
+> It may be simply dentry->d_parent (stable/positive as you said before, and it's
+> not empty). why need to d_find_alias()?
+
+Because we need to get the dentry that hasn't been deleted yet, which isn't
+necessarily the one associated with the file descriptor being fsync()'ed.
+
+> And what is the original problem? I could not get some clue from the original
+> patch description (I only saw some extra igrab/iput because of some unknown
+> reasons), it there some backtrace related to the problem?
+
+The problem is that i_pino gets set incorrectly.  I just noticed this while
+reviewing the code.  It's not hard to reproduce, e.g.:
+
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+
+int main()
+{
+        int fd;
+
+        mkdir("dir1", 0700);
+        mkdir("dir2", 0700);
+        mknod("dir1/file", S_IFREG|0600, 0);
+        link("dir1/file", "dir2/file");
+        fd = open("dir2/file", O_WRONLY);
+        unlink("dir2/file");
+        write(fd, "X", 1);
+        fsync(fd);
+}
+
+Then:
+
+sync
+echo N | dump.f2fs -i $(stat -c %i dir1/file) /dev/vdb | grep 'i_pino'
+echo "dir1 (correct): $(stat -c %i dir1)"
+echo "dir2 (wrong): $(stat -c %i dir2)"
+
+i_pino will point to dir2 rather than dir1 as expected.
+
+- Eric
