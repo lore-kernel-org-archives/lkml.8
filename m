@@ -2,83 +2,147 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 705B6C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 11:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9298AC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 11:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51B7A20663
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 11:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66BB72070B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 11:24:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BNUQwYnn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727824AbgEFLXK (ORCPT
+        id S1727844AbgEFLYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 07:23:10 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3818 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727099AbgEFLXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 07:23:10 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A5ABFE62CDF7BBCBE9B0;
-        Wed,  6 May 2020 19:23:08 +0800 (CST)
-Received: from huawei.com (10.67.174.156) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Wed, 6 May 2020
- 19:23:02 +0800
-From:   ChenTao <chentao107@huawei.com>
-To:     <claudiu.manoil@nxp.com>
-CC:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <chentao107@huawei.com>
-Subject: [PATCH -next] net: enetc: Make some symbols static
-Date:   Wed, 6 May 2020 19:22:17 +0800
-Message-ID: <20200506112217.161534-1-chentao107@huawei.com>
-X-Mailer: git-send-email 2.22.0
+        Wed, 6 May 2020 07:24:38 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46921 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726712AbgEFLYi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 07:24:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588764276;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/Qr0XiLssBUP1KzSEARJHgF0bv5jIGk/42Em4vy6c0w=;
+        b=BNUQwYnnGThARz+grob2z/FTy3vGBMPZSazayKiR91WoRCk6KT7qkz/+KfuvB7LZXh7vCY
+        D1jSG4iIxGYgX8f8hL3rpVa6duaWBzSAqz1OwLC4rXJZNk0rCLetoDE4BSbLOBLpz0iFws
+        eD2Bk8Sb1tf9aEqZKDvjp6QobZpcZ3c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-229-7gDtz1ExOEa6CAGZiSQbdw-1; Wed, 06 May 2020 07:24:33 -0400
+X-MC-Unique: 7gDtz1ExOEa6CAGZiSQbdw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0DCE1107ACCA;
+        Wed,  6 May 2020 11:24:32 +0000 (UTC)
+Received: from gondolin (ovpn-112-211.ams2.redhat.com [10.36.112.211])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A307399CF;
+        Wed,  6 May 2020 11:24:30 +0000 (UTC)
+Date:   Wed, 6 May 2020 13:24:27 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Jared Rossi <jrossi@linux.ibm.com>
+Cc:     Eric Farman <farman@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/1] vfio-ccw: Enable transparent CCW IPL from DASD
+Message-ID: <20200506132427.2f64a07d.cohuck@redhat.com>
+In-Reply-To: <20200506001544.16213-2-jrossi@linux.ibm.com>
+References: <20200506001544.16213-1-jrossi@linux.ibm.com>
+        <20200506001544.16213-2-jrossi@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.174.156]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following warning:
+On Tue,  5 May 2020 20:15:44 -0400
+Jared Rossi <jrossi@linux.ibm.com> wrote:
 
-drivers/net/ethernet/freescale/enetc/enetc_qos.c:427:20: warning:
-symbol 'enetc_act_fwd' was not declared. Should it be static?
-drivers/net/ethernet/freescale/enetc/enetc_qos.c:966:20: warning:
-symbol 'enetc_check_flow_actions' was not declared. Should it be static?
+> Remove the explicit prefetch check when using vfio-ccw devices.
+> This check does not trigger in practice as all Linux channel programs
+> are intended to use prefetch.
+> 
+> It is expected that all ORBs issued by Linux will request prefetch.
+> Although non-prefetching ORBs are not rejected, they will prefetch
+> nonetheless. A warning is issued up to once per 5 seconds when a
+> forced prefetch occurs.
+> 
+> A non-prefetch ORB does not necessarily result in an error, however
+> frequent encounters with non-prefetch ORBs indicate that channel
+> programs are being executed in a way that is inconsistent with what
+> the guest is requesting. While there is currently no known case of an
+> error caused by forced prefetch, it is possible in theory that forced
+> prefetch could result in an error if applied to a channel program that
+> is dependent on non-prefetch.
+> 
+> Signed-off-by: Jared Rossi <jrossi@linux.ibm.com>
+> ---
+>  Documentation/s390/vfio-ccw.rst |  6 ++++++
+>  drivers/s390/cio/vfio_ccw_cp.c  | 19 ++++++++++++-------
+>  2 files changed, 18 insertions(+), 7 deletions(-)
+> 
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: ChenTao <chentao107@huawei.com>
----
- drivers/net/ethernet/freescale/enetc/enetc_qos.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+(...)
 
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_qos.c b/drivers/net/ethernet/freescale/enetc/enetc_qos.c
-index 48e589e9d0f7..172acb602ccb 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_qos.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_qos.c
-@@ -424,7 +424,7 @@ struct enetc_psfp {
- 	spinlock_t psfp_lock; /* spinlock for the struct enetc_psfp r/w */
- };
- 
--struct actions_fwd enetc_act_fwd[] = {
-+static struct actions_fwd enetc_act_fwd[] = {
- 	{
- 		BIT(FLOW_ACTION_GATE),
- 		BIT(FLOW_DISSECTOR_KEY_ETH_ADDRS),
-@@ -963,7 +963,8 @@ static int enetc_psfp_hw_set(struct enetc_ndev_priv *priv,
- 	return err;
- }
- 
--struct actions_fwd *enetc_check_flow_actions(u64 acts, unsigned int inputkeys)
-+static struct actions_fwd *enetc_check_flow_actions(u64 acts,
-+						    unsigned int inputkeys)
- {
- 	int i;
- 
--- 
-2.22.0
+> @@ -625,23 +626,27 @@ static int ccwchain_fetch_one(struct ccwchain *chain,
+>   * the target channel program from @orb->cmd.iova to the new ccwchain(s).
+>   *
+>   * Limitations:
+> - * 1. Supports only prefetch enabled mode.
+> - * 2. Supports idal(c64) ccw chaining.
+> - * 3. Supports 4k idaw.
+> + * 1. Supports idal(c64) ccw chaining.
+> + * 2. Supports 4k idaw.
+>   *
+>   * Returns:
+>   *   %0 on success and a negative error value on failure.
+>   */
+>  int cp_init(struct channel_program *cp, struct device *mdev, union orb *orb)
+>  {
+> +	static DEFINE_RATELIMIT_STATE(ratelimit_state, 5 * HZ, 1);
+>  	int ret;
+>  
+>  	/*
+> -	 * XXX:
+> -	 * Only support prefetch enable mode now.
+> +	 * We only support prefetching the channel program. We assume all channel
+> +	 * programs executed by supported guests (i.e. Linux) likewise support
+> +	 * prefetching. Even if prefetching is not specified the channel program
+> +	 * is still executed using prefetch. Executing a channel program that
+> +	 * does not specify prefetching will typically not cause an error, but a
+> +	 * warning is issued to help identify the problem if something does break.
+>  	 */
+> -	if (!orb->cmd.pfch)
+> -		return -EOPNOTSUPP;
+
+/* custom ratelimiting to avoid flood during boot */
+
+(to avoid people stumbling over this)
+
+> +	if (!orb->cmd.pfch && __ratelimit(&ratelimit_state))
+> +		dev_warn(mdev, "executing channel program with prefetch, but prefetch isn't specified");
+
+hmm... what about
+
+"prefetching channel program even though prefetch not specified in orb"?
+
+>  
+>  	INIT_LIST_HEAD(&cp->ccwchain_list);
+>  	memcpy(&cp->orb, orb, sizeof(*orb));
+
+(...)
+
+Apart from the bikeshedding, looks sane to me; but would like more
+opinions.
 
