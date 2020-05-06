@@ -2,129 +2,109 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2541C4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1566C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0DF5206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9607206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:19:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="CDYYUXVy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZVZfWssV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730055AbgEFQS1 (ORCPT
+        id S1729669AbgEFQT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:18:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38970 "EHLO
+        Wed, 6 May 2020 12:19:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729521AbgEFQS1 (ORCPT
+        by vger.kernel.org with ESMTP id S1729239AbgEFQT0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:18:27 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C08D5C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 09:18:26 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id q13so1849508qtp.7
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 09:18:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dI/8k01wqNtPsEMN3JryPuexKMUAM9GFAPsiKlMJOgs=;
-        b=CDYYUXVytFKURB46DxLbtSQhLKEUVHOamKg4N6ws/VeYuZqe48aW2fVU4DY/h9Bp0C
-         oxPsar9OJVyyfKYewl2b61UAK/iYMJhUOEztf6FyAWUPWMHx6K52Ms3zjFawc0T82Nl1
-         7Xt+P1aPijxMvudfHiyJNFg5C9ZFGxb7Xq5W8dbwJ21FJwxC/q1Blc/Rw7qi4EBtZ7QU
-         QsgB9ERVVjUURncAAw80TIEnHnDpJ9Brzd9+PloSZTbvOPoos60r/CIiiaGLTHr18jlp
-         z1hKejvJ2XMgEhTqjmxxET3DODSbvUQWlTA4t/TK35N6seBmGymATrWanur938yEOAM8
-         A/+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dI/8k01wqNtPsEMN3JryPuexKMUAM9GFAPsiKlMJOgs=;
-        b=DIRayEjvVcxXyOLbZixl7+FMNDesJqUGKGNZTcwzy3F9wkwz9Yo0CLw9aAIoKo311H
-         ZDaMmaYWBN2+CGI9AxcTZ7dVvTjeq7isU72Mb3posRW9YGmKh610c4LBZw3QIOFM0qJY
-         HHQnvVBBb9utTyfPjHBmepGErx9fA81MiAQ1V88ewkg9yDKXi5szvTUsDpWntAkHr6sj
-         +c8X3rZpSbFTFE4rPvTZiXz7YFZQIqFvXcbDPEStceCB3unS0NBAMaNHOaym1SEpLyqn
-         JZ9BNuJibyIOHIKOwkO0diMzxJI1fc1LCYQROBSfOYe9edd/SSbLSO4mChQkAEHaxE8a
-         SdNQ==
-X-Gm-Message-State: AGi0PuaVXOVZaeFyIKGfRiNg4nref4gUerdkXPy3LfeWbf41Ti6XHpXC
-        wC/Lcd0DPnxVgEaInv9NGCUfKA==
-X-Google-Smtp-Source: APiQypKyDRDNEzprm+gsfACpH0aQyfocl+/L2XhuNJKEuZItD8tyLPJ84MVvdGkrVM9/6D8550tNkg==
-X-Received: by 2002:aed:2e83:: with SMTP id k3mr9101168qtd.2.1588781906015;
-        Wed, 06 May 2020 09:18:26 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id h13sm1895261qti.32.2020.05.06.09.18.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 06 May 2020 09:18:25 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jWMka-0002ut-Lq; Wed, 06 May 2020 13:18:24 -0300
-Date:   Wed, 6 May 2020 13:18:24 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     linux-mm@kvack.org, Alex Deucher <alexander.deucher@amd.com>,
-        amd-gfx@lists.freedesktop.org, Ben Skeggs <bskeggs@redhat.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        dri-devel@lists.freedesktop.org,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Christoph Hellwig <hch@lst.de>,
-        intel-gfx@lists.freedesktop.org,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        linux-kernel@vger.kernel.org,
-        Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
-        nouveau@lists.freedesktop.org, "Yang, Philip" <Philip.Yang@amd.com>
-Subject: Re: [PATCH hmm v2 5/5] mm/hmm: remove the customizable pfn format
- from hmm_range_fault
-Message-ID: <20200506161824.GG26002@ziepe.ca>
-References: <5-v2-b4e84f444c7d+24f57-hmm_no_flags_jgg@mellanox.com>
- <3c06a94c-c17f-dc31-537e-f3f6e1ace9a2@nvidia.com>
+        Wed, 6 May 2020 12:19:26 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E21DC061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 09:19:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=5mLMqArBW6jfYF76Y9dmQCS1j4NzrBHjUeYojdIbkfo=; b=ZVZfWssVFJEVUhUMfYX0vnZGSG
+        JeVMiXeUfkUhUl5IY9mGmlv7ffd2UtQ35YDWAA9sn0Lvb73fpzSpm7MLJ2Wi//itVW9a16aLkfc1O
+        tQT5MWXK0Vddk1UoHs4Pw6hatzgOjEHrFTXw6qm6fZNi0vBz4HA+0mprVYOLfzasAcNeumH1qP8nI
+        J9wbpxd3p810ti+I5sASRPjH7Y9n1Z9994wzt3FdxJvoiOlJaLaaR5xBF1biyeC/m1N3FjMdo1RYL
+        i6GNYnfW2nCTr3JsoXD5H1Y9WX3MC71I/8oJtxsRdT02l8w4+z3at+gdYcmaktEwTHRfeC5jLBxtw
+        8xIuiaCw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jWMl0-00066N-Ou; Wed, 06 May 2020 16:18:50 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 397C4300238;
+        Wed,  6 May 2020 18:18:49 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 198A9203ECDC2; Wed,  6 May 2020 18:18:49 +0200 (CEST)
+Date:   Wed, 6 May 2020 18:18:49 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     ndesaulniers <ndesaulniers@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        x86 <x86@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        bristot <bristot@redhat.com>, jbaron <jbaron@akamai.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Nadav Amit <namit@vmware.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH v4 14/18] static_call: Add static_cond_call()
+Message-ID: <20200506161849.GV3762@hirez.programming.kicks-ass.net>
+References: <20200501202849.647891881@infradead.org>
+ <CAKwvOd=cP8UCX0+5pZ3AqzvOM8LKzLJJ_heDhrghqJdOnHoGMg@mail.gmail.com>
+ <CAKwvOdkL+2Gvn2mkZ8cdHN=1F5cHQHii57ocD0RFeLJxEt=TUQ@mail.gmail.com>
+ <CAHk-=wiUd=fcpegFLK4VK9iFfrO5BmpGKDszGpuyJkDdz4JaoQ@mail.gmail.com>
+ <656098739.766.1588705237442.JavaMail.zimbra@efficios.com>
+ <CAKwvOdnLze0e3Vwmb1Xdqwcwe9h6gnAwGnt3ksiNX7ENb_3Y9w@mail.gmail.com>
+ <470458191.1021.1588710464160.JavaMail.zimbra@efficios.com>
+ <20200506135502.GS3762@hirez.programming.kicks-ass.net>
+ <482526608.2543.1588773672085.JavaMail.zimbra@efficios.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3c06a94c-c17f-dc31-537e-f3f6e1ace9a2@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <482526608.2543.1588773672085.JavaMail.zimbra@efficios.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 05:53:26PM -0700, Ralph Campbell wrote:
-> > Acked-by: Felix Kuehling <Felix.Kuehling@amd.com>
-> > Tested-by: Ralph Campbell <rcampbell@nvidia.com>
-> > Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> >   Documentation/vm/hmm.rst                |  26 ++--
-> >   drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c |  35 ++----
-> >   drivers/gpu/drm/nouveau/nouveau_dmem.c  |  27 +---
-> >   drivers/gpu/drm/nouveau/nouveau_dmem.h  |   3 +-
-> >   drivers/gpu/drm/nouveau/nouveau_svm.c   |  87 ++++++++-----
-> >   include/linux/hmm.h                     |  99 ++++++---------
-> >   mm/hmm.c                                | 160 +++++++++++-------------
-> >   7 files changed, 192 insertions(+), 245 deletions(-)
+On Wed, May 06, 2020 at 10:01:12AM -0400, Mathieu Desnoyers wrote:
+> ----- On May 6, 2020, at 9:55 AM, Peter Zijlstra peterz@infradead.org wrote:
+> 
+> > On Tue, May 05, 2020 at 04:27:44PM -0400, Mathieu Desnoyers wrote:
+> >> Actually, if the goal is to do code patching of the call, I wonder
+> >> what makes it OK to "guess" all the call patterns generated by the compiler ?
 > > 
+> > We're not guessing, have have objtool read the compiler output and
+> > record the location for us. The compiler can generate whatever it likes.
 > 
-> ...snip...
-> 
-> > +static void nouveau_hmm_convert_pfn(struct nouveau_drm *drm,
-> > +				    struct hmm_range *range, u64 *ioctl_addr)
-> > +{
-> > +	unsigned long i, npages;
-> > +
-> > +	/*
-> > +	 * The ioctl_addr prepared here is passed through nvif_object_ioctl()
-> > +	 * to an eventual DMA map in something like gp100_vmm_pgt_pfn()
-> > +	 *
-> > +	 * This is all just encoding the internal hmm reprensetation into a
-> 
-> s/reprensetation/representation/
-> 
-> Looks good and still tests OK with nouveau.
+> So is the plan to adapt objtool if future compilers change the generated
+> instruction patterns ?
 
-Got it, thanks
+If needed, sure. I don't really see what a compiler can do differently
+though.
 
-Jason
+objtool looks for:
+
+	JMP/CALL	__SCT__##foo
+
+and writes a .static_call_sites table entry for it. Anything else we
+can't rewrite anyway and will have to keep relying on the trampoline
+working (which we also update, so that's fine).
