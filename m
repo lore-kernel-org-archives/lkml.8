@@ -2,42 +2,42 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8BBC4725A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69328C47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF6920721
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FE3720721
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:12:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SZWs6cuT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j952TzFr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbgEFGMN (ORCPT
+        id S1727801AbgEFGMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 02:12:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57116 "EHLO
+        Wed, 6 May 2020 02:12:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725782AbgEFGMM (ORCPT
+        by vger.kernel.org with ESMTP id S1726712AbgEFGMc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 02:12:12 -0400
+        Wed, 6 May 2020 02:12:32 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2A62C061A0F;
-        Tue,  5 May 2020 23:12:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2103C061A0F;
+        Tue,  5 May 2020 23:12:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=l2WBiCb5duYJRA9nKpihqrJOH1Qjg6utSrFiu8qAdtc=; b=SZWs6cuTwWDpHnradHiRX/tMQZ
-        +Al2Fwz0adWeAKm7BUCM1a6l1tkbbJ8ZQog7GVVIkeO0X7gAY9m81Rv4rv0nDDkEb+PxjEJvPK0Ya
-        +Hh/826mXAFL+qTsal90JM2zjfE9f/x/DCnYyyw9k6mWGl7bU51QoIC4l6b7CQMQD1i/BqWGb9Udv
-        erKicqJNxaN9YezH+3Wx8x3AUCQ21pUpDBNZ9RAK817fBUxFMDx9lHx1p5UKm4j6rQsgjMWI9t/EA
-        2f3koc0nA9VhmzavBfVPBE6kZw9fsglQe8ENPgseP6QVG8TR7VhMVn5m60OuYUAuLnMGLw3V6+09y
-        TtfksgLw==;
+        bh=Oc7HruaqMyMr9pTlVN1ulKYPOvpUsDEw+vO89pPdjyA=; b=j952TzFrbpHbH5dTGsB49rrCV2
+        t1BowzsK1PnLyvg0lTCicbOUDm6PEyLVlvMpcMMUHbXceEhf1kp8HDLBVXrHgganuuymqfj54ljrR
+        z1m4PJ0Ro+S0bDyz/mC1OhV65GLm8CfEzbnzVsP+K8pxAH+oPcWn5Ywc+/caniRYXzanTAFtxoHDb
+        n9eHKd095iiiXu0QHpCuPklZcAM5tTh1mCzabpDTQYzBHrWPayhql6HbCDZF9Yy60RJ+G6gyIoRyH
+        2C4b3K1foDBtZf0HqP4Lrr3tpOPiecFX4lz/sxjRu/SwSYdF4Wog1oFq8RQDe0W/3J3JLRBDJnwR3
+        AZMrrU1g==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jWDHu-0004KN-O0; Wed, 06 May 2020 06:12:10 +0000
-Date:   Tue, 5 May 2020 23:12:10 -0700
+        id 1jWDIF-0004bp-TW; Wed, 06 May 2020 06:12:31 +0000
+Date:   Tue, 5 May 2020 23:12:31 -0700
 From:   Christoph Hellwig <hch@infradead.org>
 To:     ira.weiny@intel.com
 Cc:     linux-kernel@vger.kernel.org,
@@ -64,19 +64,35 @@ Cc:     linux-kernel@vger.kernel.org,
         linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
         linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH V2 06/11] arch/kmap_atomic: Consolidate duplicate code
-Message-ID: <20200506061210.GB5192@infradead.org>
+Subject: Re: [PATCH V2 07/11] arch/kunmap_atomic: Consolidate duplicate code
+Message-ID: <20200506061231.GC5192@infradead.org>
 References: <20200504010912.982044-1-ira.weiny@intel.com>
- <20200504010912.982044-7-ira.weiny@intel.com>
+ <20200504010912.982044-8-ira.weiny@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200504010912.982044-7-ira.weiny@intel.com>
+In-Reply-To: <20200504010912.982044-8-ira.weiny@intel.com>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+
+On Sun, May 03, 2020 at 06:09:08PM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> Every single architecture (including !CONFIG_HIGHMEM) calls...
+> 
+> 	pagefault_enable();
+> 	preempt_enable();
+> 
+> ... before returning from __kunmap_atomic().  Lift this code into the
+> kunmap_atomic() macro.
+> 
+> While we are at it rename __kunmap_atomic() to kunmap_atomic_high() to
+> be consistent.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
 Looks good,
 
