@@ -2,124 +2,121 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5DAC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 03:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5818C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 03:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FE162073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 03:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61BC62073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 03:37:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="L0zsIjjg"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i66gvCd5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgEFDfF (ORCPT
+        id S1726776AbgEFDhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 23:35:05 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:57539 "EHLO mail.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726367AbgEFDfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 23:35:05 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id d4b1984b
-        for <linux-kernel@vger.kernel.org>;
-        Wed, 6 May 2020 03:22:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=w5ijTqKozix4OEJYDh+ZB3lJIbM=; b=L0zsIj
-        jgcud13jZ89v1eLww8RGzOESf/AWlCc+TZd/4CWa8Rd/Bok4fM/xAHeFxPkWp2zJ
-        tp6dPGHnJFlqyGo8Z2CcZUQTDOsYtA2LNqJ4UJiC8TkMjHwl1z5CUrMSPhNET9tM
-        bx4wnBP95GpICnJvh1tUVB2dkCjeze8jevr2PnyDG5fmetjUVFNTNaapyfBeDQL9
-        R+V7QcJimXEdayXo2VGUQnh7AMHEpekY+pqVjHLgbHu7TsTXny6Vi81LJA/3nRyk
-        124VKkGt0bNEiWA4wulK6JxkAEtmHC0qJs+iqc6CfsXsk32zhN5Tw3MZPXSmXeZR
-        gDq8aKBA73Vl3ubA==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id a155db1e (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO)
-        for <linux-kernel@vger.kernel.org>;
-        Wed, 6 May 2020 03:22:26 +0000 (UTC)
-Received: by mail-il1-f181.google.com with SMTP id s10so399660iln.11
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 20:35:03 -0700 (PDT)
-X-Gm-Message-State: AGi0PubF5dxLsD5dxLCe33Z22g28dO4x0UPPkPpgcSVylSyMGFGTsNIG
-        LkvoN7R/zl8g82DsijOLwkeCXUyzwEoNf6+f374=
-X-Google-Smtp-Source: APiQypK2oDZgNlFCK8APE5ivQm4g13SH0DT9OG3/kGjqW6k3JwqUOPduNbQvgnMNVeADSERuh5m+BdGY7bccCDWmcmI=
-X-Received: by 2002:a92:5c82:: with SMTP id d2mr7181724ilg.231.1588736102459;
- Tue, 05 May 2020 20:35:02 -0700 (PDT)
+        Tue, 5 May 2020 23:37:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33200 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726367AbgEFDhx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 23:37:53 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEB14C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 20:37:52 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id a7so23840uak.2
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 20:37:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=/K450lb1lXZWNub5l53fuFTH1txZt+evZRmROoeb2I4=;
+        b=i66gvCd5ocghenQRtvgyBvO4MQYtXaaIOon567733AdAxnF0DIOSZhuFE+cORJxNdd
+         YOiB/UYnx7f7v6JjSC+TJ1pc8vKVmZNfKPXeEWf1v9B6zqt7HP9vcSutGuUvtL76kw/d
+         NRnLYDQmjUIKTL4GHRCv/IPLUMcq6VpL0657fCSVZAue++G46gIWtA3FF8w+OKQJJHue
+         /HzU8UFrua5SixBKkwyq3ECJrlKVnF0u9b+Fl5xYVE7qUfHT28DpioD8cBUApJROyv92
+         r5QixTZ42/4k7N9zgNQp0sQTwpsvIZBVX1BiACbxogmow4WaY9Wp1sXxvIb2yjv6LEZQ
+         XM/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=/K450lb1lXZWNub5l53fuFTH1txZt+evZRmROoeb2I4=;
+        b=snN5xgQiRD04hE40BhRwqktstmUpNXZViGOnmsPgaZImghVSwWhiM+qAPsdpAig3iw
+         jQnX638SDt+potigkNeRo5XVjJ3A2tesT4J+ZbEoPuDDc0RXUf87+qcvxxC5AugdFx2K
+         JxHQfsUNp7ag9gnN2dY9syjUbJKGLHzQy32HIg9aMpUDeCIGTbEYDAlRoYYHA4wIENrH
+         mHCcxUb5ezM755SK/vu7IZy92C2ZoLVEGxXgfMeMe8TlNjvz/92Nr1BRPl8CucRFZKyB
+         I7N4/m8zpyu1TWnDuKOBD29adNmqX4UIKzP439wLKghY+7NoPmBX4ybBVseEZWo9lyHx
+         LcJQ==
+X-Gm-Message-State: AGi0PuYEAPZUTb/UkQKsUfGfiuCat2Kq7N9ntMoyYhZj521lDyayyXmC
+        z3NOtiQOQb0QghmYhsnWOMxRYUhfpp496HguVHGJDw==
+X-Google-Smtp-Source: APiQypJlf5KZKjLajfXJQSqAKZ6We6VVt8fBpwvc1g/C/PnGIfueFpC5UpeqG3DfA9rW0IDxilviVwOXRtieMJ6OVMw=
+X-Received: by 2002:a9f:2344:: with SMTP id 62mr5892977uae.7.1588736271638;
+ Tue, 05 May 2020 20:37:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <202005051617.F9B32B5526@keescook> <20200506001453.764332-1-Jason@zx2c4.com>
- <202005051953.AF54DA4@keescook>
-In-Reply-To: <202005051953.AF54DA4@keescook>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Tue, 5 May 2020 21:34:51 -0600
-X-Gmail-Original-Message-ID: <CAHmME9ofHLjgB3KY9xwCkhK4V78KB_XUe1kzyizfx5yQRKo0JA@mail.gmail.com>
-Message-ID: <CAHmME9ofHLjgB3KY9xwCkhK4V78KB_XUe1kzyizfx5yQRKo0JA@mail.gmail.com>
-Subject: Re: [PATCH v2] security: disable FORTIFY_SOURCE on clang
-To:     Kees Cook <keescook@chromium.org>
+From:   Stephane Eranian <eranian@google.com>
+Date:   Tue, 5 May 2020 20:37:40 -0700
+Message-ID: <CABPqkBQ13AEPrV=pUcF1L6iYOaDgN2dsVanXBa8+AqgUh87kEQ@mail.gmail.com>
+Subject: callchain ABI change with commit 6cbc304f2f360
+To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        George Burgess <gbiv@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
+        Vince Weaver <vincent.weaver@maine.edu>, jpoimboe@redhat.com,
+        "Liang, Kan" <kan.liang@intel.com>, Andi Kleen <ak@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 8:54 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Tue, May 05, 2020 at 06:14:53PM -0600, Jason A. Donenfeld wrote:
-> > clang-10 has a broken optimization stage that doesn't allow the
-> > compiler to prove at compile time that certain memcpys are within
-> > bounds, and thus the outline memcpy is always called, resulting in
-> > horrific performance, and in some cases, excessive stack frame growth.
-> > Here's a simple reproducer:
-> >
-> >     typedef unsigned long size_t;
-> >     void *c(void *dest, const void *src, size_t n) __asm__("memcpy");
-> >     extern inline __attribute__((gnu_inline)) void *memcpy(void *dest, const void *src, size_t n) { return c(dest, src, n); }
-> >     void blah(char *a)
-> >     {
-> >       unsigned long long b[10], c[10];
-> >       int i;
-> >
-> >       memcpy(b, a, sizeof(b));
-> >       for (i = 0; i < 10; ++i)
-> >         c[i] = b[i] ^ b[9 - i];
-> >       for (i = 0; i < 10; ++i)
-> >         b[i] = c[i] ^ a[i];
-> >       memcpy(a, b, sizeof(b));
-> >     }
-> >
-> > Compile this with clang-9 and clang-10 and observe:
-> >
-> > zx2c4@thinkpad /tmp/curve25519-hacl64-stack-frame-size-test $ clang-10 -Wframe-larger-than=0 -O3 -c b.c -o c10.o
-> > b.c:5:6: warning: stack frame size of 104 bytes in function 'blah' [-Wframe-larger-than=]
-> > void blah(char *a)
-> >      ^
-> > 1 warning generated.
-> > zx2c4@thinkpad /tmp/curve25519-hacl64-stack-frame-size-test $ clang-9 -Wframe-larger-than=0 -O3 -c b.c -o c9.o
-> >
-> > Looking at the disassembly of c10.o and c9.o, one can see that c9.o is
-> > properly optimized in the obvious way one would expect, while c10.o has
-> > blown up and includes extern calls to memcpy.
-> >
-> > But actually, for versions of clang earlier than 10, fortify source
-> > mostly does nothing. So, between being broken and doing nothing, it
-> > probably doesn't make sense to pretend to offer this option. So, this
-> > commit just disables it entirely when compiling with clang.
-> >
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: LKML <linux-kernel@vger.kernel.org>
-> > Cc: clang-built-linux <clang-built-linux@googlegroups.com>
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Cc: George Burgess <gbiv@google.com>
-> > Cc: Nick Desaulniers <ndesaulniers@google.com>
-> > Link: https://bugs.llvm.org/show_bug.cgi?id=45802
-> > Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
->
-> Grudgingly,
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+Hi,
 
-Do you want to take this into your tree to send to Linus? Seems like
-security kconfig switches is in line with your usual submissions.
+I have received reports from users who have noticed a change of
+behaviour caused by
+commit:
+
+6cbc304f2f360 ("perf/x86/intel: Fix unwind errors from PEBS entries (mk-II)")
+
+When using PEBS sampling on Intel processors.
+
+Doing simple profiling with:
+$ perf record -g -e cycles:pp ...
+
+Before:
+
+1 1595951041120856 0x7f77f8 [0xe8]: PERF_RECORD_SAMPLE(IP, 0x4002):
+795385/690513: 0x558aa66a9607 period: 10000019 addr: 0
+... FP chain: nr:22
+.....  0: fffffffffffffe00
+.....  1: 0000558aa66a9607
+.....  2: 0000558aa66a8751
+.....  3: 0000558a984a3d4f
+
+Entry 1: matches sampled IP 0x558aa66a9607.
+
+After:
+
+3 487420973381085 0x2f797c0 [0x90]: PERF_RECORD_SAMPLE(IP, 0x4002):
+349591/146458: 0x559dcd2ef889 period: 10000019 addr: 0
+... FP chain: nr:11
+.....  0: fffffffffffffe00
+.....  1: 0000559dcd2ef88b
+.....  2: 0000559dcd19787d
+.....  3: 0000559dcd1cf1be
+
+entry 1 does not match sampled IP anymore.
+
+Before the patch the kernel was stashing the sampled IP from PEBS into
+the callchain. After the patch it is stashing the interrupted IP, thus
+with the skid.
+
+I am trying to understand whether this is an intentional change or not
+for the IP.
+
+It seems that stashing the interrupted IP would be more consistent across all
+sampling modes, i.e., with and without PEBS. Entry 1: would always be
+the interrupted IP.
+The changelog talks about ORC unwinder being more happy this the
+interrupted machine
+state, but not about the ABI expectation here.
+Could you clarify?
+Thanks.
