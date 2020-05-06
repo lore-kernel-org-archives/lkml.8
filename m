@@ -4,67 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8B2C47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2728C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C18552068E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC6A020752
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:43:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgEFNnk (ORCPT
+        id S1728739AbgEFNnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 09:43:40 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3826 "EHLO huawei.com"
+        Wed, 6 May 2020 09:43:43 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3825 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726529AbgEFNnj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 09:43:39 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id DDA8859BBBF4A8403685;
-        Wed,  6 May 2020 21:43:37 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Wed, 6 May 2020
- 21:43:28 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <tsbogend@alpha.franken.de>, <yanaijie@huawei.com>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] MIPS: Remove dead code in pci.h
-Date:   Wed, 6 May 2020 21:42:50 +0800
-Message-ID: <20200506134250.32550-1-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.21.1
+        id S1728248AbgEFNnm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 09:43:42 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id AA80028CC3C2A4686EED;
+        Wed,  6 May 2020 21:43:36 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 6 May 2020 21:43:29 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <simon@nikanor.nu>,
+        <jeremy@azazel.net>, <dan.carpenter@oracle.com>
+CC:     Wei Yongjun <weiyongjun1@huawei.com>, <devel@driverdev.osuosl.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next v2] staging: kpc2000: fix error return code in kp2000_pcie_probe()
+Date:   Wed, 6 May 2020 13:47:35 +0000
+Message-ID: <20200506134735.102041-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200506125255.90336-1-weiyongjun1@huawei.com>
+References: <20200506125255.90336-1-weiyongjun1@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.28]
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This code has been marked dead for more than 10 years. Seems no need to
-keep it now.
+Fix to return a negative error code from the error handling
+case instead of 0, as done elsewhere in this function. Also
+removed var 'rv' since we can use 'err' instead.
 
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Fixes: 7dc7967fc39a ("staging: kpc2000: add initial set of Daktronics drivers")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 ---
- arch/mips/include/asm/mach-rc32434/pci.h | 3 ---
- 1 file changed, 3 deletions(-)
+v1 -> v2: fix code aligns and add fixes
+---
+ drivers/staging/kpc2000/kpc2000/core.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/arch/mips/include/asm/mach-rc32434/pci.h b/arch/mips/include/asm/mach-rc32434/pci.h
-index 6f40d1515580..9a6eefd12757 100644
---- a/arch/mips/include/asm/mach-rc32434/pci.h
-+++ b/arch/mips/include/asm/mach-rc32434/pci.h
-@@ -319,9 +319,6 @@ struct pci_msu {
- #define PCIM_H_EA		0x3
- #define PCIM_H_IA_FIX		0x4
- #define PCIM_H_IA_RR		0x5
--#if 0
--#define PCI_ADDR_START		0x13000000
--#endif
+diff --git a/drivers/staging/kpc2000/kpc2000/core.c b/drivers/staging/kpc2000/kpc2000/core.c
+index 7b00d7069e21..358d7b2f4ad1 100644
+--- a/drivers/staging/kpc2000/kpc2000/core.c
++++ b/drivers/staging/kpc2000/kpc2000/core.c
+@@ -298,7 +298,6 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
+ {
+ 	int err = 0;
+ 	struct kp2000_device *pcard;
+-	int rv;
+ 	unsigned long reg_bar_phys_addr;
+ 	unsigned long reg_bar_phys_len;
+ 	unsigned long dma_bar_phys_addr;
+@@ -445,11 +444,11 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
+ 	if (err < 0)
+ 		goto err_release_dma;
  
- #define PCI_ADDR_START		0x50000000
- 
--- 
-2.21.1
+-	rv = request_irq(pcard->pdev->irq, kp2000_irq_handler, IRQF_SHARED,
+-			 pcard->name, pcard);
+-	if (rv) {
++	err = request_irq(pcard->pdev->irq, kp2000_irq_handler, IRQF_SHARED,
++			  pcard->name, pcard);
++	if (err) {
+ 		dev_err(&pcard->pdev->dev,
+-			"%s: failed to request_irq: %d\n", __func__, rv);
++			"%s: failed to request_irq: %d\n", __func__, err);
+ 		goto err_disable_msi;
+ 	}
+
+
 
