@@ -2,80 +2,93 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2D5C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B08D6C47258
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B08FD206F9
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90B80206F9
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:53:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="YdKKR/zF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbgEFGwD (ORCPT
+        id S1728181AbgEFGxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 02:52:03 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:3793 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727067AbgEFGwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 02:52:03 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49H6hc4tZRz9tyLM;
-        Wed,  6 May 2020 08:52:00 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id lfELA5zHptK2; Wed,  6 May 2020 08:52:00 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49H6hZ5HGmz9tyLL;
-        Wed,  6 May 2020 08:51:58 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B86BF8B7BB;
-        Wed,  6 May 2020 08:51:59 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id u1G0VEPPKTCA; Wed,  6 May 2020 08:51:59 +0200 (CEST)
-Received: from localhost.localdomain (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7D0D68B777;
-        Wed,  6 May 2020 08:51:59 +0200 (CEST)
-Received: by localhost.localdomain (Postfix, from userid 0)
-        id 350CC658FB; Wed,  6 May 2020 06:51:59 +0000 (UTC)
-Message-Id: <9fd0f9a827ebbeae64ad7a6f6c595d242f4dd5fc.1588747860.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH] powerpc/8xx: Update email address in MAINTAINERS
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed,  6 May 2020 06:51:59 +0000 (UTC)
+        Wed, 6 May 2020 02:53:43 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:36493 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725782AbgEFGxm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 02:53:42 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id WDvzjnD9u8hmdWDw2jBezh; Wed, 06 May 2020 08:53:39 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1588748019; bh=Ddl4ba8z2sdkFORjy6VpZX0NiuD+njlkCF/5UPTFDhQ=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=YdKKR/zFlVMl6PdQNI+Dz8Rbn1g7xsA5evWTPTtt1jiu54MRUrlAg2m+KYMxeSHyy
+         mXIiIfzm7gwfuQHU+0VzIEVF4OXRIBPf9Qi7YuKevqRW0jTsKMHs5cgS8IYgWWffPM
+         P5X+3WSljeKOZpZQgV1nQPmZj13LABeW5teoJ6xyErG+t5wMXWj6ngQjUYu2j0NSQq
+         dsUEi82QVqCu6huemIrzJ6vOGkSWlQrZ5Ewzi0JtywujZBJcZqCr8G32ZH2iO56ZjK
+         pNdI0HDGkLifgsVmxK9z4NlJuKqNfMG5BB/ARbwf33qGeJ82BvcA7AtvCewwmURnWD
+         /akEXcAHM1Xmw==
+Subject: Re: [RFC PATCH v12 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     digetx@gmail.com, sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1588645920-20557-1-git-send-email-skomatineni@nvidia.com>
+ <1588645920-20557-7-git-send-email-skomatineni@nvidia.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <e4a5c68b-4856-175f-5d02-06dc4a038b00@xs4all.nl>
+Date:   Wed, 6 May 2020 08:53:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <1588645920-20557-7-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfEX9ydVl7E+s7YONC63NHL4RtUlk0vpw7gHw/qvWvWz35D5FYSom7dt9UFaUAIfdPFX8sRJ0HiyPLTtK5e/ObCadkslhnRDwHBvi9T1SNxOF96nJN/Am
+ IW/x2eWW5iZMNib74/ndHPt58VApCxK0K2e7iiX9pwkJqXS3WxrOjKgL9OjrrDiKx9AOylCxAHqbY1jCXZZXYGaZyyyCpDlUnG6GxRXaD1W8tJBvwM5X5tyv
+ SHCxAXtDl3BXOot+PeDAHOl8oNh9epL+EHZIdNGZ3rhpolf8uLCydnKXrXpdo5dt4tQTUr88ukcQuJ7NNwcfvAgUHC11qKElGJCEC/FDy7ZmEahvOL6WWa63
+ wuffyJq3CSltos3h7/54WkLRR971dheZyeQqyQaiAZPUh4AQ5PNIsjMkbnHKAOhuLFpDulUNYwuhyq5vweZyXJsR5WaOI/6Q6cQjg7+zvSWEzCsQ4/VzWwki
+ OinvMOOb9SBSel5gULKfYRs+rxkoMQFhpAHwNhJ1saxNvZZnX1Hc0/fEmKrdWXyGV7IKvOBpeqPOW1Yrlk8RmqZBZPfavg3Pf5jt6XSK+NRVk4qOICgTXVdu
+ U+rXYmyVvU87pBkgaUsS+5wV
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since 01 May 2020, our email adresses have changed to @csgroup.eu
+On 05/05/2020 04:31, Sowjanya Komatineni wrote:
+> Tegra210 contains a powerful Video Input (VI) hardware controller
+> which can support up to 6 MIPI CSI camera sensors.
+> 
+> Each Tegra CSI port can be one-to-one mapped to VI channel and can
+> capture from an external camera sensor connected to CSI or from
+> built-in test pattern generator.
+> 
+> Tegra210 supports built-in test pattern generator from CSI to VI.
+> 
+> This patch adds a v4l2 capture driver with media interface for
+> Tegra210 built-in CSI to VI test pattern generator.
+> 
+> This patch includes TPG support only and all the video pipeline
+> configuration happens through the video device node.
+> 
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-Update MAINTAINERS accordingly.
+Since this goes through Thierry:
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2926327e4976..e8714328cc90 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9794,7 +9794,7 @@ F:	arch/powerpc/platforms/83xx/
- F:	arch/powerpc/platforms/85xx/
- 
- LINUX FOR POWERPC EMBEDDED PPC8XX
--M:	Christophe Leroy <christophe.leroy@c-s.fr>
-+M:	Christophe Leroy <christophe.leroy@csgroup.eu>
- L:	linuxppc-dev@lists.ozlabs.org
- S:	Maintained
- F:	arch/powerpc/platforms/8xx/
--- 
-2.25.0
+Regards,
 
+	Hans
