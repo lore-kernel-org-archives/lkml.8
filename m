@@ -6,123 +6,91 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90032C47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9DBC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 670A9208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6331A20A8B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:48:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730425AbgEFQsS (ORCPT
+        id S1730448AbgEFQsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:48:18 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:9381 "EHLO pegase1.c-s.fr"
+        Wed, 6 May 2020 12:48:20 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:31807 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729414AbgEFQsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:48:10 -0400
+        id S1729706AbgEFQsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 12:48:09 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49HMwQ60yqz9tydh;
-        Wed,  6 May 2020 18:48:06 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 49HMwN5lBNz9tybJ;
+        Wed,  6 May 2020 18:48:04 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 9lwF8EZ8l9AR; Wed,  6 May 2020 18:48:06 +0200 (CEST)
+        with ESMTP id S73CFDMZnuSh; Wed,  6 May 2020 18:48:04 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMwQ4y1bz9txk0;
-        Wed,  6 May 2020 18:48:06 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMwN4jj2z9txk0;
+        Wed,  6 May 2020 18:48:04 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 792D98B7C5;
-        Wed,  6 May 2020 18:48:08 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 769138B7C5;
+        Wed,  6 May 2020 18:48:06 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 4OCiJnyLs3tC; Wed,  6 May 2020 18:48:08 +0200 (CEST)
+        with ESMTP id wyTw7rKfgMCe; Wed,  6 May 2020 18:48:06 +0200 (CEST)
 Received: from localhost.localdomain (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3846B8B7C3;
-        Wed,  6 May 2020 18:48:08 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 37F5B8B7C3;
+        Wed,  6 May 2020 18:48:06 +0200 (CEST)
 Received: by localhost.localdomain (Postfix, from userid 0)
-        id 08DB265911; Wed,  6 May 2020 16:48:08 +0000 (UTC)
-Message-Id: <ac85b6a034a67ef4186175cb6af208b8a9cdf4cf.1588783498.git.christophe.leroy@csgroup.eu>
+        id EE8BA65911; Wed,  6 May 2020 16:48:05 +0000 (UTC)
+Message-Id: <369c68a45d4566ad34e2b31bef8181509fd86c6d.1588783498.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 References: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v2 03/45] powerpc/kasan: Fix shadow pages allocation failure
+Subject: [PATCH v2 01/45] powerpc/kasan: Fix error detection on memory
+ allocation
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed,  6 May 2020 16:48:08 +0000 (UTC)
+Date:   Wed,  6 May 2020 16:48:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Doing kasan pages allocation in MMU_init is too early, kernel doesn't
-have access yet to the entire memory space and memblock_alloc() fails
-when the kernel is a bit big.
+In case (k_start & PAGE_MASK) doesn't equal (kstart), 'va' will never be
+NULL allthough 'block' is NULL
 
-Do it from kasan_init() instead.
+Check the return of memblock_alloc() directly instead of
+the resulting address in the loop.
 
-Fixes: 2edb16efc899 ("powerpc/32: Add KASAN support")
-Cc: stable@vger.kernel.org
+Fixes: 509cd3f2b473 ("powerpc/32: Simplify KASAN init")
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/include/asm/kasan.h      | 2 --
- arch/powerpc/mm/init_32.c             | 2 --
- arch/powerpc/mm/kasan/kasan_init_32.c | 4 +++-
- 3 files changed, 3 insertions(+), 5 deletions(-)
+ arch/powerpc/mm/kasan/kasan_init_32.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/kasan.h b/arch/powerpc/include/asm/kasan.h
-index fc900937f653..4769bbf7173a 100644
---- a/arch/powerpc/include/asm/kasan.h
-+++ b/arch/powerpc/include/asm/kasan.h
-@@ -27,12 +27,10 @@
- 
- #ifdef CONFIG_KASAN
- void kasan_early_init(void);
--void kasan_mmu_init(void);
- void kasan_init(void);
- void kasan_late_init(void);
- #else
- static inline void kasan_init(void) { }
--static inline void kasan_mmu_init(void) { }
- static inline void kasan_late_init(void) { }
- #endif
- 
-diff --git a/arch/powerpc/mm/init_32.c b/arch/powerpc/mm/init_32.c
-index 872df48ae41b..a6991ef8727d 100644
---- a/arch/powerpc/mm/init_32.c
-+++ b/arch/powerpc/mm/init_32.c
-@@ -170,8 +170,6 @@ void __init MMU_init(void)
- 	btext_unmap();
- #endif
- 
--	kasan_mmu_init();
--
- 	setup_kup();
- 
- 	/* Shortly after that, the entire linear mapping will be available */
 diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
-index 8b15fe09b967..b7c287adfd59 100644
+index cbcad369fcb2..8b15fe09b967 100644
 --- a/arch/powerpc/mm/kasan/kasan_init_32.c
 +++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -131,7 +131,7 @@ static void __init kasan_unmap_early_shadow_vmalloc(void)
+@@ -76,15 +76,14 @@ static int __init kasan_init_region(void *start, size_t size)
+ 		return ret;
+ 
+ 	block = memblock_alloc(k_end - k_start, PAGE_SIZE);
++	if (!block)
++		return -ENOMEM;
+ 
+ 	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
+ 		pmd_t *pmd = pmd_ptr_k(k_cur);
+ 		void *va = block + k_cur - k_start;
+ 		pte_t pte = pfn_pte(PHYS_PFN(__pa(va)), PAGE_KERNEL);
+ 
+-		if (!va)
+-			return -ENOMEM;
+-
+ 		__set_pte_at(&init_mm, k_cur, pte_offset_kernel(pmd, k_cur), pte, 0);
+ 	}
  	flush_tlb_kernel_range(k_start, k_end);
- }
- 
--void __init kasan_mmu_init(void)
-+static void __init kasan_mmu_init(void)
- {
- 	int ret;
- 	struct memblock_region *reg;
-@@ -159,6 +159,8 @@ void __init kasan_mmu_init(void)
- 
- void __init kasan_init(void)
- {
-+	kasan_mmu_init();
-+
- 	kasan_remap_early_shadow_ro();
- 
- 	clear_page(kasan_early_shadow_page);
 -- 
 2.25.0
 
