@@ -2,108 +2,110 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60257C47254
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 00:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11453C47254
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 00:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 311A5206A5
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 00:11:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IXrHIwTy"
+	by mail.kernel.org (Postfix) with ESMTP id E7CD9206A5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 00:13:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729437AbgEFALk (ORCPT
+        id S1729561AbgEFANR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 20:11:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727895AbgEFALk (ORCPT
+        Tue, 5 May 2020 20:13:17 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57184 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727989AbgEFANQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 20:11:40 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12E75C061A0F;
-        Tue,  5 May 2020 17:11:40 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id 207so286894pgc.6;
-        Tue, 05 May 2020 17:11:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6rGu0sVp/3NAepP9oEGraMQ5oL3cJh69tpXja2JPQP4=;
-        b=IXrHIwTyy3IDmGOzmo5iSmZ+KvsIf0gBiVOQSwCflXVcOaOMZmqzfbgRWuqZnXyYo7
-         iZ0KpTwkfpJjntjSY7Nz+3gTsao2qBjKjfWjMtSU/qdhKDekGy9LkiRd5SFqoxALlske
-         Kwqc9FQrRzZfLQ8Mr4KPGaH+OawqY+9ByhXte490wCUD7/dcCcS2qui7RlLHFUDkK+G8
-         A/zCA9+oI26Oxb2WTLavHDdDAHsi9aZYG/ar13ujOwHi/2anN6sCdo10G5dLWMfT5/y1
-         dVaVT3TUM8/0JBH+SRXEArqGCJfaXs+PYpv4woXWaF+Pzw93a8XDJNuCkDJeAzjBhzH3
-         7/5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6rGu0sVp/3NAepP9oEGraMQ5oL3cJh69tpXja2JPQP4=;
-        b=WeOWe0t8Yob301EazAvCCKh3wNs08I4JKQH5Ne/RCN1Gs6ShIaFlG6vDIBfjf1WPdy
-         7fJSD9VGwfQN3X6R8ODSiwqhBxF4tOGj0lPQIRgIyAn1b1BX1pr0u+g965/Ky/MsoSlt
-         oGMfRvXd0juoN4uoXwY5LvyVe739xKRw4gcCGuKt4T3BdhFJ9t/bNBziiwSCE4voQHNY
-         8MJut5fhJlsDB7bKQOP678+AXTQ6QQwaakGZX1hSkFK5Vbe1N4eaVSBP9jv4PNQNx6dw
-         ed6N0dNapbb43Mw39gOgOOn6K7wxh1mGZIqSJJRFAsD328aQbxwlG2WN43gywdyV/VQ+
-         bRkA==
-X-Gm-Message-State: AGi0PuZjQxOSy9aSPuHTQDbXObfEo56dyJVNvDae+jbgyt1uCZX4UnlI
-        mnlK0INhhSd7V3OLr0lj7B4=
-X-Google-Smtp-Source: APiQypL1IVmchFlXHqi3N/XTIbZoB088fB3C0Kk+juCoogCCiluAItpGPHUrfWmgKDbZ701pnpjksg==
-X-Received: by 2002:a63:1820:: with SMTP id y32mr4691563pgl.182.1588723899444;
-        Tue, 05 May 2020 17:11:39 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id b75sm3018009pjc.23.2020.05.05.17.11.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 17:11:39 -0700 (PDT)
-Date:   Tue, 5 May 2020 17:11:37 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Wolfram Sang <wsa@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH] input: lm8333: update contact email
-Message-ID: <20200506001137.GA89269@dtor-ws>
-References: <20200502142639.18925-1-wsa@kernel.org>
+        Tue, 5 May 2020 20:13:16 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 046035xK012562;
+        Tue, 5 May 2020 20:13:15 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30ugugaba0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 May 2020 20:13:15 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04603Xqn014153;
+        Tue, 5 May 2020 20:13:15 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30ugugab9n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 May 2020 20:13:15 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0460AL6Y006022;
+        Wed, 6 May 2020 00:13:14 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma03dal.us.ibm.com with ESMTP id 30s0g7c4dd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 May 2020 00:13:14 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0460DC7637093636
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 6 May 2020 00:13:12 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5F39E7805F;
+        Wed,  6 May 2020 00:13:12 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8E8BC7805C;
+        Wed,  6 May 2020 00:13:11 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.85.145.129])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed,  6 May 2020 00:13:11 +0000 (GMT)
+From:   Jared Rossi <jrossi@linux.ibm.com>
+To:     Eric Farman <farman@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/1] vfio-ccw: Enable transparent CCW IPL from DASD
+Date:   Tue,  5 May 2020 20:15:43 -0400
+Message-Id: <20200506001544.16213-1-jrossi@linux.ibm.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200502142639.18925-1-wsa@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-05_11:2020-05-04,2020-05-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
+ phishscore=0 impostorscore=0 lowpriorityscore=0 suspectscore=0 bulkscore=0
+ spamscore=0 adultscore=0 malwarescore=0 priorityscore=1501 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005050178
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 02, 2020 at 04:26:39PM +0200, Wolfram Sang wrote:
-> The 'pengutronix' address is defunct for years. Use the proper contact
-> address.
-> 
-> Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Remove the explicit prefetch check when using vfio-ccw devices.
+This check does not trigger in practice as all Linux channel programs
+are intended to use prefetch.
 
-Applied, thank you.
+Version 3 improves logging by including the UUID of the vfio device
+that triggers the warning.  A custom rate limit is used because
+the generic rate limit of 10 per 5 seconds will still result in
+multiple warnings during IPL. The warning message has been clarfied
+to reflect that a channel program will be executed using prefetch
+even though prefetch was not specified.
 
-> ---
->  include/linux/input/lm8333.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/input/lm8333.h b/include/linux/input/lm8333.h
-> index 79f918c6e8c5..906da5fc06e0 100644
-> --- a/include/linux/input/lm8333.h
-> +++ b/include/linux/input/lm8333.h
-> @@ -1,6 +1,6 @@
->  /*
->   * public include for LM8333 keypad driver - same license as driver
-> - * Copyright (C) 2012 Wolfram Sang, Pengutronix <w.sang@pengutronix.de>
-> + * Copyright (C) 2012 Wolfram Sang, Pengutronix <kernel@pengutronix.de>
->   */
->  
->  #ifndef _LM8333_H
-> -- 
-> 2.20.1
-> 
+The text of warning itself does not explicitly refer to non-prefetching
+channel programs as unsupported because it will trigger during IPL,
+which is a normal and expected sequence.  Likewise, because we expect
+the message to appear during IPL, the warning also does not explicitly
+alert to the potential of an error, rather it simply notes that a
+channel program is being executed in a way other than specified.
+
+Verson 3 also makes some word choice changes to the documentation.
+
+Jared Rossi (1):
+  vfio-ccw: Enable transparent CCW IPL from DASD
+
+ Documentation/s390/vfio-ccw.rst |  6 ++++++
+ drivers/s390/cio/vfio_ccw_cp.c  | 19 ++++++++++++-------
+ 2 files changed, 18 insertions(+), 7 deletions(-)
 
 -- 
-Dmitry
+2.17.0
+
