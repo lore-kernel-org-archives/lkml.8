@@ -2,155 +2,232 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF829C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBF1C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD721208CA
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:56:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588784218;
-	bh=GPt0Ao4SuzOwEVG/H0krmtr7Ntra56UtzZmAGRDH9vk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mdcXMnuue2dOy8sNnG5NRIpLHq71ydFQ43odIJuwKnstBOJ5VJkyOe5vHsAr3dmHd
-	 2u1WvlSAQFLhx6f3vUIr0GB4hdnmdMcqdTOKe8sZiGHsDwNUxIhICg2a4Fd/Hsbbyf
-	 aINQF52b/svRU8xdtrOuyc4BhnJa7zDlmpXBaY6Q=
+	by mail.kernel.org (Postfix) with ESMTP id DE32220936
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:58:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n4ITJP8Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730219AbgEFQ46 (ORCPT
+        id S1730246AbgEFQ6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:56:58 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40734 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729414AbgEFQ45 (ORCPT
+        Wed, 6 May 2020 12:58:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45368 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727984AbgEFQ6g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:56:57 -0400
-Received: by mail-wr1-f66.google.com with SMTP id e16so3046274wra.7
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 09:56:56 -0700 (PDT)
+        Wed, 6 May 2020 12:58:36 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47386C061A0F;
+        Wed,  6 May 2020 09:58:36 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id r26so3567576wmh.0;
+        Wed, 06 May 2020 09:58:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=urL/1Hl7CbQz1tvWJVXBDZwwE0k+bC9CyG/pLzAD9eY=;
+        b=n4ITJP8ZUmskRYarZpj4We/HSjgI/T0Hg9NqtQwemLwUNJVGtEKpWyCyCTp1JMhzQh
+         sUs5YCX/fPYV0E4aDGpKnBg3LUKq/lpro2RImH9LrwMIO/vQnundwo84smYOpH8b2Bll
+         UpYdAtyetbFM3nd9p4PwYvIUqay9wFG/oBUaY6v2jmHSzGu82RYkuOi3Z7Yuwduvgkvr
+         sSKy8B7jfObi65qrK4fWP2YP5cANwiWkDBKhmALtBdfJqeq9Ej5dNDE+cKe9eIGyyEkt
+         oE5oVjtEFr5prUat//7+XyuWae2oXYL7JsF+NQJCwBXjKqbzj8sofzwWLoPEMIWN5rsd
+         7C7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UAR3StJ1tjRjcPQPguO3q+ZrNyaW8mBxV+t84vp3JQk=;
-        b=rSLvDT7BsJgnXX5dFt/bCCv3rjkp9POk9u5jEh3iYBaRd6P3l6J2Y1nuVUPxpqbc/+
-         vTypRN4VUv5xQLMBiaIc5tcvWw4ZqXM3M1jHSsvxqXmaXsvxyalG8iLtie3mKfWv7qh8
-         xtEP8WqpVy0AuKd1odWrDndGR6iXer0XSGwoK/y3ym2vbhNEheIePIjUaKYCYyK7HWgT
-         sn305svfZ75xR0RjVp2aYOvpRDOthIdRgISBqrQYz+JDda3vrE0Vx4z64cajeUdB9HC+
-         +0+tkd8IR2NUdoms3Sl3j1LwzziFZEz0c55qdbow9MGbb1KCnctbonPSzrSCfHAlJvzH
-         OGDA==
-X-Gm-Message-State: AGi0PuaTtS1IBOGMneasGYc/h/H9VqmacJbFzDf5GIjzgizHYImz90r/
-        OFGG8MlG65+R3WwmnXBgRYk=
-X-Google-Smtp-Source: APiQypKZ0cJ4el/27ukSaL29mvN14Cb9ejX5GlSiZbyH+oRs0LbgOJNJeFatIDPQ8ZENpLYMBt/yUA==
-X-Received: by 2002:a5d:6b8a:: with SMTP id n10mr10193186wrx.36.1588784215607;
-        Wed, 06 May 2020 09:56:55 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id v5sm3638531wrr.93.2020.05.06.09.56.54
+        bh=urL/1Hl7CbQz1tvWJVXBDZwwE0k+bC9CyG/pLzAD9eY=;
+        b=Z/P9exuENOfcsLabHAj50PGlmUoCa+GS9XD/MsFMjLnB4VASLFop/73mnPPBUxZ3DN
+         t+opijYYem7dbv4juAg/mS1hSVEgm/DaeMgV6x7nZGQqX7tPxnU7fAiTs59ulJTpFpqE
+         xMsF6UGolLhduuFxkE0se8+k3nq3dEPY3Vm70wklSvHViyJvr8r9W1ZMwk0xU7oVb2dc
+         hzjAdXrpiFYxa3aWcer5FjfOzWpE2oRKVPI6FUBXi50uM61zFTuAjruRYsOkdepzTNto
+         VmJiiiTu4bqCdHiz/Y9ncJenxmC9cGux10v/MBd4VwMyOCXEE8dWwmUm52Uebf/FvN9R
+         0oCA==
+X-Gm-Message-State: AGi0PuaeLxCxw+ujsFwFWN+ccnyoQVUaNXs6qiq1GsR7LOuMl6Nq9NJk
+        hzlzAEZYqPkMWWJzbHDY4gU=
+X-Google-Smtp-Source: APiQypLL8NcQW71SlaZlZM66Xm2JGhE9FIsxnUUClaZ7Wp7fOFdRjERSk9KK8D941iPG5yUy/53sng==
+X-Received: by 2002:a1c:a4c2:: with SMTP id n185mr5853495wme.104.1588784313927;
+        Wed, 06 May 2020 09:58:33 -0700 (PDT)
+Received: from localhost (p2E5BE57B.dip0.t-ipconnect.de. [46.91.229.123])
+        by smtp.gmail.com with ESMTPSA id l16sm3551225wrp.91.2020.05.06.09.58.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 09:56:55 -0700 (PDT)
-Date:   Wed, 6 May 2020 16:56:53 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>, Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>
-Subject: Re: [patch V4 part 5 22/31] x86/entry: Convert various hypervisor
- vectors to IDTENTRY_SYSVEC
-Message-ID: <20200506165653.ttxa33llcynokaq2@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
-References: <20200505135341.730586321@linutronix.de>
- <20200505135830.298201197@linutronix.de>
+        Wed, 06 May 2020 09:58:32 -0700 (PDT)
+Date:   Wed, 6 May 2020 18:58:31 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Mikko Perttunen <cyndis@kapsi.fi>, Sumit Gupta <sumitg@nvidia.com>,
+        catalin.marinas@arm.com, will@kernel.org, jonathanh@nvidia.com,
+        talho@nvidia.com, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, bbasu@nvidia.com,
+        mperttunen@nvidia.com, devicetree@vger.kernel.org
+Subject: Re: [TEGRA194_CPUFREQ Patch 1/3] firmware: tegra: adding function to
+ get BPMP data
+Message-ID: <20200506165831.GD2723987@ulmo>
+References: <1575394348-17649-1-git-send-email-sumitg@nvidia.com>
+ <20191203174229.GA1721849@ulmo>
+ <9404232d-84ce-a117-89dd-f2d8de80993e@kapsi.fi>
+ <20191204091703.d32to5omdm3eynon@vireshk-i7>
+ <20191204093339.GA2784830@ulmo>
+ <20191204095138.rrul5vxnkprfwmku@vireshk-i7>
+ <20200407100520.GA1720957@ulmo>
+ <20200427071800.GA3451400@ulmo>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="mJm6k4Vb/yFcL9ZU"
 Content-Disposition: inline
-In-Reply-To: <20200505135830.298201197@linutronix.de>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200427071800.GA3451400@ulmo>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 03:54:03PM +0200, Thomas Gleixner wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
-> 
-> Convert various hypervisor vectors to IDTENTRY_SYSVEC
->   - Implement the C entry point with DEFINE_IDTENTRY_SYSVEC
->   - Emit the ASM stub with DECLARE_IDTENTRY_SYSVEC
->   - Remove the ASM idtentries in 64bit
->   - Remove the BUILD_INTERRUPT entries in 32bit
->   - Remove the old prototypes
-> 
-> No functional change.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Wei Liu <wei.liu@kernel.org>
-> Cc: Michael Kelley <mikelley@microsoft.com>
-> Cc: Jason Chen CJ <jason.cj.chen@intel.com>
-> Cc: Zhao Yakui <yakui.zhao@intel.com>
-> 
-> ---
->  arch/x86/entry/entry_32.S       |   14 --------------
->  arch/x86/entry/entry_64.S       |   17 -----------------
->  arch/x86/hyperv/hv_init.c       |    9 +++------
->  arch/x86/include/asm/acrn.h     |   11 -----------
->  arch/x86/include/asm/apic.h     |   20 --------------------
->  arch/x86/include/asm/idtentry.h |   10 ++++++++++
->  arch/x86/include/asm/mshyperv.h |   13 -------------
->  arch/x86/kernel/cpu/acrn.c      |    9 ++++-----
->  arch/x86/kernel/cpu/mshyperv.c  |   22 ++++++++++------------
->  9 files changed, 27 insertions(+), 98 deletions(-)
-> 
-> --- a/arch/x86/entry/entry_32.S
-> +++ b/arch/x86/entry/entry_32.S
-> @@ -1342,20 +1342,6 @@ BUILD_INTERRUPT3(xen_hvm_callback_vector
->  		 xen_evtchn_do_upcall)
->  #endif
->  
 
-You seem to have missed the Xen entry.
+--mJm6k4Vb/yFcL9ZU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> -
-> -#if IS_ENABLED(CONFIG_HYPERV)
-> -
-> -BUILD_INTERRUPT3(hyperv_callback_vector, HYPERVISOR_CALLBACK_VECTOR,
-> -		 hyperv_vector_handler)
-> -
-> -BUILD_INTERRUPT3(hyperv_reenlightenment_vector, HYPERV_REENLIGHTENMENT_VECTOR,
-> -		 hyperv_reenlightenment_intr)
-> -
-> -BUILD_INTERRUPT3(hv_stimer0_callback_vector, HYPERV_STIMER0_VECTOR,
-> -		 hv_stimer0_vector_handler)
-> -
-> -#endif /* CONFIG_HYPERV */
-> -
->  SYM_CODE_START_LOCAL_NOALIGN(handle_exception)
->  	/* the function address is in %gs's slot on the stack */
->  	SAVE_ALL switch_stacks=1 skip_gs=1 unwind_espfix=1
-> --- a/arch/x86/entry/entry_64.S
-> +++ b/arch/x86/entry/entry_64.S
-> @@ -1078,23 +1078,6 @@ apicinterrupt3 HYPERVISOR_CALLBACK_VECTO
->  	xen_hvm_callback_vector xen_evtchn_do_upcall
->  #endif
->  
+On Mon, Apr 27, 2020 at 09:18:00AM +0200, Thierry Reding wrote:
+> On Tue, Apr 07, 2020 at 12:05:20PM +0200, Thierry Reding wrote:
+> > On Wed, Dec 04, 2019 at 03:21:38PM +0530, Viresh Kumar wrote:
+> > > On 04-12-19, 10:33, Thierry Reding wrote:
+> > > > Yeah, the code that registers this device is in drivers/base/cpu.c =
+in
+> > > > register_cpu(). It even retrieves the device tree node for the CPU =
+=66rom
+> > > > device tree and stores it in cpu->dev.of_node, so we should be able=
+ to
+> > > > just pass &cpu->dev to tegra_bpmp_get() in order to retrieve a refe=
+rence
+> > > > to the BPMP.
+> > > >=20
+> > > > That said, I'm wondering if perhaps we could just add a compatible
+> > > > string to the /cpus node for cases like this where we don't have an
+> > > > actual device representing the CPU complex. There are a number of C=
+PU
+> > > > frequency drivers that register dummy devices just so that they have
+> > > > something to bind a driver to.
+> > > >=20
+> > > > If we allow the /cpus node to represent the CPU complex (if no other
+> > > > "device" does that yet), we can add a compatible string and have the
+> > > > cpufreq driver match on that.
+> > > >=20
+> > > > Of course this would be slightly difficult to retrofit into existing
+> > > > drivers because they'd need to remain backwards compatible with exi=
+sting
+> > > > device trees. But it would allow future drivers to do this a little=
+ more
+> > > > elegantly. For some SoCs this may not matter, but especially once y=
+ou
+> > > > start depending on additional resources this would come in handy.
+> > > >=20
+> > > > Adding Rob and the device tree mailing list for feedback on this id=
+ea.
+> > >=20
+> > > Took some time to find this thread, but something around this was
+> > > suggested by Rafael earlier.
+> > >=20
+> > > https://lore.kernel.org/lkml/8139001.Q4eV8YG1Il@vostro.rjw.lan/
+> >=20
+> > I gave this a try and came up with the following:
+> >=20
+> > --- >8 ---
+> > diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot=
+/dts/nvidia/tegra194.dtsi
+> > index f4ede86e32b4..e4462f95f0b3 100644
+> > --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> > +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> > @@ -1764,6 +1764,9 @@ bpmp_thermal: thermal {
+> >  	};
+> > =20
+> >  	cpus {
+> > +		compatible =3D "nvidia,tegra194-ccplex";
+> > +		nvidia,bpmp =3D <&bpmp>;
+> > +
+> >  		#address-cells =3D <1>;
+> >  		#size-cells =3D <0>;
+> > =20
+> > --- >8 ---
+> >=20
+> > Now I can do something rougly like this, although I have a more complete
+> > patch locally that also gets rid of all the global variables because we
+> > now actually have a struct platform_device that we can anchor everything
+> > at:
+> >=20
+> > --- >8 ---
+> > static const struct of_device_id tegra194_cpufreq_of_match[] =3D {
+> > 	{ .compatible =3D "nvidia,tegra194-ccplex", },
+> > 	{ /* sentinel */ }
+> > };
+> > MODULE_DEVICE_TABLE(of, tegra194_cpufreq_of_match);
+> >=20
+> > static struct platform_driver tegra194_ccplex_driver =3D {
+> > 	.driver =3D {
+> > 		.name =3D "tegra194-cpufreq",
+> > 		.of_match_table =3D tegra194_cpufreq_of_match,
+> > 	},
+> > 	.probe =3D tegra194_cpufreq_probe,
+> > 	.remove =3D tegra194_cpufreq_remove,
+> > };
+> > module_platform_driver(tegra194_ccplex_driver);
+> > --- >8 ---
+> >=20
+> > I don't think that's exactly what Rafael (Cc'ed) had in mind, since the
+> > above thread seems to have mostly talked about binding a driver to each
+> > individual CPU.
+> >=20
+> > But this seems a lot better than having to instantiate a device from
+> > scratch just so that a driver can bind to it and it allows additional
+> > properties to be associated with the CCPLEX device.
+> >=20
+> > Rob, any thoughts on this from a device tree point of view? The /cpus
+> > bindings don't mention the compatible property, but there doesn't seem
+> > to be anything in the bindings that would prohibit its use.
+> >=20
+> > If we can agree on that, I can forward my local changes to Sumit for
+> > inclusion or reference.
+>=20
+> Rob, do you see any reason why we shouldn't be able to use a compatible
+> string in the /cpus node for devices such as Tegra194 where there is no
+> dedicated hardware block for the CCPLEX?
 
-Ditto.
+Rob, can you take a brief look and provide some feedback on this? I'd
+like to get this merged for v5.8 and where to instantiate this is the
+only thing holding this up at this point.
 
-Wei.
+Thanks,
+Thierry
+
+--mJm6k4Vb/yFcL9ZU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6y7LQACgkQ3SOs138+
+s6H8fhAAsblr+qgCiB7yS180H3p6InsOYHfDulKJs1Q5JgPntHbYFHnkkOY8ciHS
+3FYgPS7F1UEbIq3hSKsd9W/eEaAEPI9wCah03JEUQwhICaIJRDjyT8ZRN4hNxtDW
+DBI0TfsGIz+DwjbNkfYdjoSzACDUKtq4ROeJxo2qIUdAwNxlQ5c0coSma3EgPocA
+AUwQ2dn+26tXF6ghTdmwT30rrXAHsZ8mMAawS0FmFgXIQhRrRTTmoMz+Khi8H8/I
+UfKmF5wHXnWRGMViKrlotwr5imKryi5IWHjTTgppCNHHWZXqRVgfjz1d8VIMxSrd
+hPchNhx+kE43wsf030h2TAhmdQ4YONqRCthET4UmAcK2H+OzOIpwdb9ukJxx0NxU
+5EGuPpOGeZc8pIkWtGt9tbKmxUf4CijBbc01FbTXAnX6oVl12MnXu2QiyMXNh9qM
+AEyuxG0cbKDDSVDqnjqiZtsBiicNnsR3aZE/bKLWA3ZaoloqKJTKM/c1k0WV/ea8
+OPE5lmwoEJCtIL2I/TYKaOexVYuXcO2JjLNVhJ7gKbXB0CGblDygcvvKV/bbivSU
+Osn/wiXGz8fen/IBfWGG5VAwXr79aMn89EJeKkUqXGMhJ+CW+Lk5XhA4WxGE/44/
+POtwuKsO4lFKLthTmNkAwhy4zLnYTRJ769DSUzNdpaRs1h4+lcU=
+=frvo
+-----END PGP SIGNATURE-----
+
+--mJm6k4Vb/yFcL9ZU--
