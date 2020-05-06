@@ -2,54 +2,54 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B54C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 11:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 945DAC38A2A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 11:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA56F2070B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 11:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70708206D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 11:11:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B3hSr7OJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N96f/5dq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbgEFLLG (ORCPT
+        id S1728392AbgEFLLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 07:11:06 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50703 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728278AbgEFLKv (ORCPT
+        Wed, 6 May 2020 07:11:05 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:60307 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728299AbgEFLKx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 07:10:51 -0400
+        Wed, 6 May 2020 07:10:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588763449;
+        s=mimecast20190719; t=1588763451;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=+RdRe4V7IwgQkRUVtBHtkzWDMGu2ps3B9XGwHFcspaM=;
-        b=B3hSr7OJJOxHHUSYQv3xb04WGyOSSMxy4+YwjfAd8XkcTHQSrQ+6+xboNB7DwlfvCoXcp0
-        UzX2LthdxGs4uVDzOUz4XIMAmBdSrKbzie0ApEvZ4seBoDeBgft6Cq3saiGqj/qAIGEMYd
-        dPuh5WN60MruA4dAXoJkBo53IWUdH/s=
+        bh=npOpt8oHol9rhjiongSdF0I22b9oFIvkhMSQyGULjb4=;
+        b=N96f/5dqF9uOvfEfmrUUBvoJZuQXNOpg6GvSHg9D2iF9tCwc5qK1y8bjjnolTBYWgVNi+I
+        5pdDAQX4FvgeaX5dQazq4Q/UhBvM18oMuXU1HooYIQUqhSZhHqI1hS9t/Sa4hmpOIPpWYR
+        LUrvqHrR2KQ/YEqTSlbRP5ReifIvC2Q=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-233-1n7geU-ENfu88gqG-gClxQ-1; Wed, 06 May 2020 07:10:48 -0400
-X-MC-Unique: 1n7geU-ENfu88gqG-gClxQ-1
+ us-mta-296-YPcx_xtQPGe-22HZAwZx5g-1; Wed, 06 May 2020 07:10:46 -0400
+X-MC-Unique: YPcx_xtQPGe-22HZAwZx5g-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E33BC107ACF2;
-        Wed,  6 May 2020 11:10:46 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 802C91899520;
+        Wed,  6 May 2020 11:10:45 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5D7B95C1D4;
-        Wed,  6 May 2020 11:10:46 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EBE745C1D6;
+        Wed,  6 May 2020 11:10:44 +0000 (UTC)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     peterx@redhat.com,
         Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH 7/9] KVM: x86: simplify dr6 accessors in kvm_x86_ops
-Date:   Wed,  6 May 2020 07:10:32 -0400
-Message-Id: <20200506111034.11756-8-pbonzini@redhat.com>
+Subject: [PATCH 5/9] KVM: selftests: Add KVM_SET_GUEST_DEBUG test
+Date:   Wed,  6 May 2020 07:10:30 -0400
+Message-Id: <20200506111034.11756-6-pbonzini@redhat.com>
 In-Reply-To: <20200506111034.11756-1-pbonzini@redhat.com>
 References: <20200506111034.11756-1-pbonzini@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
@@ -58,114 +58,253 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kvm_x86_ops.set_dr6 is only ever called with vcpu->arch.dr6 as the
-second argument, and for both SVM and VMX the VMCB value is kept
-synchronized with vcpu->arch.dr6 on #DB; we can therefore remove the
-read accessor.
+From: Peter Xu <peterx@redhat.com>
 
-For the write accessor we can avoid the retpoline penalty on Intel
-by accepting a NULL value and just skipping the call in that case.
+Covers fundamental tests for KVM_SET_GUEST_DEBUG. It is very close to the debug
+test in kvm-unit-test, but doing it from outside the guest.
 
-Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Peter Xu <peterx@redhat.com>
+Message-Id: <20200505205000.188252-4-peterx@redhat.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/include/asm/kvm_host.h |  1 -
- arch/x86/kvm/svm/svm.c          |  6 ------
- arch/x86/kvm/vmx/vmx.c          | 11 -----------
- arch/x86/kvm/x86.c              |  8 +++-----
- 4 files changed, 3 insertions(+), 23 deletions(-)
+ tools/testing/selftests/kvm/Makefile          |   1 +
+ .../testing/selftests/kvm/include/kvm_util.h  |   2 +
+ tools/testing/selftests/kvm/lib/kvm_util.c    |   9 +
+ .../testing/selftests/kvm/x86_64/debug_regs.c | 180 ++++++++++++++++++
+ 4 files changed, 192 insertions(+)
+ create mode 100644 tools/testing/selftests/kvm/x86_64/debug_regs.c
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 8c247bcb037e..93f6f696d059 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1093,7 +1093,6 @@ struct kvm_x86_ops {
- 	void (*set_idt)(struct kvm_vcpu *vcpu, struct desc_ptr *dt);
- 	void (*get_gdt)(struct kvm_vcpu *vcpu, struct desc_ptr *dt);
- 	void (*set_gdt)(struct kvm_vcpu *vcpu, struct desc_ptr *dt);
--	u64 (*get_dr6)(struct kvm_vcpu *vcpu);
- 	void (*set_dr6)(struct kvm_vcpu *vcpu, unsigned long value);
- 	void (*sync_dirty_debug_regs)(struct kvm_vcpu *vcpu);
- 	void (*set_dr7)(struct kvm_vcpu *vcpu, unsigned long value);
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 5627004e077e..f03bffafd9e6 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -1672,11 +1672,6 @@ static void new_asid(struct vcpu_svm *svm, struct svm_cpu_data *sd)
- 	mark_dirty(svm->vmcb, VMCB_ASID);
+diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+index 712a2ddd2a27..44b6ef513164 100644
+--- a/tools/testing/selftests/kvm/Makefile
++++ b/tools/testing/selftests/kvm/Makefile
+@@ -28,6 +28,7 @@ TEST_GEN_PROGS_x86_64 += x86_64/vmx_dirty_log_test
+ TEST_GEN_PROGS_x86_64 += x86_64/vmx_set_nested_state_test
+ TEST_GEN_PROGS_x86_64 += x86_64/vmx_tsc_adjust_test
+ TEST_GEN_PROGS_x86_64 += x86_64/xss_msr_test
++TEST_GEN_PROGS_x86_64 += x86_64/debug_regs
+ TEST_GEN_PROGS_x86_64 += clear_dirty_log_test
+ TEST_GEN_PROGS_x86_64 += demand_paging_test
+ TEST_GEN_PROGS_x86_64 += dirty_log_test
+diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+index a99b875f50d2..92e184a422ee 100644
+--- a/tools/testing/selftests/kvm/include/kvm_util.h
++++ b/tools/testing/selftests/kvm/include/kvm_util.h
+@@ -143,6 +143,8 @@ struct kvm_run *vcpu_state(struct kvm_vm *vm, uint32_t vcpuid);
+ void vcpu_run(struct kvm_vm *vm, uint32_t vcpuid);
+ int _vcpu_run(struct kvm_vm *vm, uint32_t vcpuid);
+ void vcpu_run_complete_io(struct kvm_vm *vm, uint32_t vcpuid);
++void vcpu_set_guest_debug(struct kvm_vm *vm, uint32_t vcpuid,
++			  struct kvm_guest_debug *debug);
+ void vcpu_set_mp_state(struct kvm_vm *vm, uint32_t vcpuid,
+ 		       struct kvm_mp_state *mp_state);
+ void vcpu_regs_get(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_regs *regs);
+diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+index 8a3523d4434f..9622431069bc 100644
+--- a/tools/testing/selftests/kvm/lib/kvm_util.c
++++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+@@ -1201,6 +1201,15 @@ void vcpu_run_complete_io(struct kvm_vm *vm, uint32_t vcpuid)
+ 		    ret, errno);
  }
  
--static u64 svm_get_dr6(struct kvm_vcpu *vcpu)
--{
--	return vcpu->arch.dr6;
--}
--
- static void svm_set_dr6(struct kvm_vcpu *vcpu, unsigned long value)
- {
- 	struct vcpu_svm *svm = to_svm(vcpu);
-@@ -3932,7 +3927,6 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
- 	.set_idt = svm_set_idt,
- 	.get_gdt = svm_get_gdt,
- 	.set_gdt = svm_set_gdt,
--	.get_dr6 = svm_get_dr6,
- 	.set_dr6 = svm_set_dr6,
- 	.set_dr7 = svm_set_dr7,
- 	.sync_dirty_debug_regs = svm_sync_dirty_debug_regs,
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 2384a2dbec44..e2b71b0cdfce 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4965,15 +4965,6 @@ static int handle_dr(struct kvm_vcpu *vcpu)
- 	return kvm_skip_emulated_instruction(vcpu);
- }
- 
--static u64 vmx_get_dr6(struct kvm_vcpu *vcpu)
--{
--	return vcpu->arch.dr6;
--}
--
--static void vmx_set_dr6(struct kvm_vcpu *vcpu, unsigned long val)
--{
--}
--
- static void vmx_sync_dirty_debug_regs(struct kvm_vcpu *vcpu)
- {
- 	get_debugreg(vcpu->arch.db[0], 0);
-@@ -7736,8 +7727,6 @@ static struct kvm_x86_ops vmx_x86_ops __initdata = {
- 	.set_idt = vmx_set_idt,
- 	.get_gdt = vmx_get_gdt,
- 	.set_gdt = vmx_set_gdt,
--	.get_dr6 = vmx_get_dr6,
--	.set_dr6 = vmx_set_dr6,
- 	.set_dr7 = vmx_set_dr7,
- 	.sync_dirty_debug_regs = vmx_sync_dirty_debug_regs,
- 	.cache_reg = vmx_cache_reg,
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index f7628555f036..f4254d716b10 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1050,7 +1050,8 @@ static void kvm_update_dr0123(struct kvm_vcpu *vcpu)
- 
- static void kvm_update_dr6(struct kvm_vcpu *vcpu)
- {
--	if (!(vcpu->guest_debug & KVM_GUESTDBG_USE_HW_BP))
-+	if (!(vcpu->guest_debug & KVM_GUESTDBG_USE_HW_BP) &&
-+	    kvm_x86_ops.set_dr6)
- 		kvm_x86_ops.set_dr6(vcpu, vcpu->arch.dr6);
- }
- 
-@@ -1129,10 +1130,7 @@ int kvm_get_dr(struct kvm_vcpu *vcpu, int dr, unsigned long *val)
- 	case 4:
- 		/* fall through */
- 	case 6:
--		if (vcpu->guest_debug & KVM_GUESTDBG_USE_HW_BP)
--			*val = vcpu->arch.dr6;
--		else
--			*val = kvm_x86_ops.get_dr6(vcpu);
-+		*val = vcpu->arch.dr6;
- 		break;
- 	case 5:
- 		/* fall through */
++void vcpu_set_guest_debug(struct kvm_vm *vm, uint32_t vcpuid,
++			  struct kvm_guest_debug *debug)
++{
++	struct vcpu *vcpu = vcpu_find(vm, vcpuid);
++	int ret = ioctl(vcpu->fd, KVM_SET_GUEST_DEBUG, debug);
++
++	TEST_ASSERT(ret == 0, "KVM_SET_GUEST_DEBUG failed: %d", ret);
++}
++
+ /*
+  * VM VCPU Set MP State
+  *
+diff --git a/tools/testing/selftests/kvm/x86_64/debug_regs.c b/tools/testing/selftests/kvm/x86_64/debug_regs.c
+new file mode 100644
+index 000000000000..077f25d61d1a
+--- /dev/null
++++ b/tools/testing/selftests/kvm/x86_64/debug_regs.c
+@@ -0,0 +1,180 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * KVM guest debug register tests
++ *
++ * Copyright (C) 2020, Red Hat, Inc.
++ */
++#include <stdio.h>
++#include <string.h>
++#include "kvm_util.h"
++#include "processor.h"
++
++#define VCPU_ID 0
++
++/* For testing data access debug BP */
++uint32_t guest_value;
++
++extern unsigned char sw_bp, hw_bp, write_data, ss_start;
++
++static void guest_code(void)
++{
++	/*
++	 * Software BP tests.
++	 *
++	 * NOTE: sw_bp need to be before the cmd here, because int3 is an
++	 * exception rather than a normal trap for KVM_SET_GUEST_DEBUG (we
++	 * capture it using the vcpu exception bitmap).
++	 */
++	asm volatile("sw_bp: int3");
++
++	/* Hardware instruction BP test */
++	asm volatile("hw_bp: nop");
++
++	/* Hardware data BP test */
++	asm volatile("mov $1234,%%rax;\n\t"
++		     "mov %%rax,%0;\n\t write_data:"
++		     : "=m" (guest_value) : : "rax");
++
++	/* Single step test, covers 2 basic instructions and 2 emulated */
++	asm volatile("ss_start: "
++		     "xor %%rax,%%rax\n\t"
++		     "cpuid\n\t"
++		     "movl $0x1a0,%%ecx\n\t"
++		     "rdmsr\n\t"
++		     : : : "rax", "ecx");
++
++	GUEST_DONE();
++}
++
++#define  CLEAR_DEBUG()  memset(&debug, 0, sizeof(debug))
++#define  APPLY_DEBUG()  vcpu_set_guest_debug(vm, VCPU_ID, &debug)
++#define  CAST_TO_RIP(v)  ((unsigned long long)&(v))
++#define  SET_RIP(v)  do {				\
++		vcpu_regs_get(vm, VCPU_ID, &regs);	\
++		regs.rip = (v);				\
++		vcpu_regs_set(vm, VCPU_ID, &regs);	\
++	} while (0)
++#define  MOVE_RIP(v)  SET_RIP(regs.rip + (v));
++
++int main(void)
++{
++	struct kvm_guest_debug debug;
++	unsigned long long target_dr6, target_rip;
++	struct kvm_regs regs;
++	struct kvm_run *run;
++	struct kvm_vm *vm;
++	struct ucall uc;
++	uint64_t cmd;
++	int i;
++	/* Instruction lengths starting at ss_start */
++	int ss_size[4] = {
++		3,		/* xor */
++		2,		/* cpuid */
++		5,		/* mov */
++		2,		/* rdmsr */
++	};
++
++	if (!kvm_check_cap(KVM_CAP_SET_GUEST_DEBUG)) {
++		print_skip("KVM_CAP_SET_GUEST_DEBUG not supported");
++		return 0;
++	}
++
++	vm = vm_create_default(VCPU_ID, 0, guest_code);
++	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
++	run = vcpu_state(vm, VCPU_ID);
++
++	/* Test software BPs - int3 */
++	CLEAR_DEBUG();
++	debug.control = KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_SW_BP;
++	APPLY_DEBUG();
++	vcpu_run(vm, VCPU_ID);
++	TEST_ASSERT(run->exit_reason == KVM_EXIT_DEBUG &&
++		    run->debug.arch.exception == BP_VECTOR &&
++		    run->debug.arch.pc == CAST_TO_RIP(sw_bp),
++		    "INT3: exit %d exception %d rip 0x%llx (should be 0x%llx)",
++		    run->exit_reason, run->debug.arch.exception,
++		    run->debug.arch.pc, CAST_TO_RIP(sw_bp));
++	MOVE_RIP(1);
++
++	/* Test instruction HW BP over DR[0-3] */
++	for (i = 0; i < 4; i++) {
++		CLEAR_DEBUG();
++		debug.control = KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_HW_BP;
++		debug.arch.debugreg[i] = CAST_TO_RIP(hw_bp);
++		debug.arch.debugreg[7] = 0x400 | (1UL << (2*i+1));
++		APPLY_DEBUG();
++		vcpu_run(vm, VCPU_ID);
++		target_dr6 = 0xffff0ff0 | (1UL << i);
++		TEST_ASSERT(run->exit_reason == KVM_EXIT_DEBUG &&
++			    run->debug.arch.exception == DB_VECTOR &&
++			    run->debug.arch.pc == CAST_TO_RIP(hw_bp) &&
++			    run->debug.arch.dr6 == target_dr6,
++			    "INS_HW_BP (DR%d): exit %d exception %d rip 0x%llx "
++			    "(should be 0x%llx) dr6 0x%llx (should be 0x%llx)",
++			    i, run->exit_reason, run->debug.arch.exception,
++			    run->debug.arch.pc, CAST_TO_RIP(hw_bp),
++			    run->debug.arch.dr6, target_dr6);
++	}
++	/* Skip "nop" */
++	MOVE_RIP(1);
++
++	/* Test data access HW BP over DR[0-3] */
++	for (i = 0; i < 4; i++) {
++		CLEAR_DEBUG();
++		debug.control = KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_HW_BP;
++		debug.arch.debugreg[i] = CAST_TO_RIP(guest_value);
++		debug.arch.debugreg[7] = 0x00000400 | (1UL << (2*i+1)) |
++		    (0x000d0000UL << (4*i));
++		APPLY_DEBUG();
++		vcpu_run(vm, VCPU_ID);
++		target_dr6 = 0xffff0ff0 | (1UL << i);
++		TEST_ASSERT(run->exit_reason == KVM_EXIT_DEBUG &&
++			    run->debug.arch.exception == DB_VECTOR &&
++			    run->debug.arch.pc == CAST_TO_RIP(write_data) &&
++			    run->debug.arch.dr6 == target_dr6,
++			    "DATA_HW_BP (DR%d): exit %d exception %d rip 0x%llx "
++			    "(should be 0x%llx) dr6 0x%llx (should be 0x%llx)",
++			    i, run->exit_reason, run->debug.arch.exception,
++			    run->debug.arch.pc, CAST_TO_RIP(write_data),
++			    run->debug.arch.dr6, target_dr6);
++		/* Rollback the 4-bytes "mov" */
++		MOVE_RIP(-7);
++	}
++	/* Skip the 4-bytes "mov" */
++	MOVE_RIP(7);
++
++	/* Test single step */
++	target_rip = CAST_TO_RIP(ss_start);
++	target_dr6 = 0xffff4ff0ULL;
++	vcpu_regs_get(vm, VCPU_ID, &regs);
++	for (i = 0; i < (sizeof(ss_size) / sizeof(ss_size[0])); i++) {
++		target_rip += ss_size[i];
++		CLEAR_DEBUG();
++		debug.control = KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_SINGLESTEP;
++		debug.arch.debugreg[7] = 0x00000400;
++		APPLY_DEBUG();
++		vcpu_run(vm, VCPU_ID);
++		TEST_ASSERT(run->exit_reason == KVM_EXIT_DEBUG &&
++			    run->debug.arch.exception == DB_VECTOR &&
++			    run->debug.arch.pc == target_rip &&
++			    run->debug.arch.dr6 == target_dr6,
++			    "SINGLE_STEP[%d]: exit %d exception %d rip 0x%llx "
++			    "(should be 0x%llx) dr6 0x%llx (should be 0x%llx)",
++			    i, run->exit_reason, run->debug.arch.exception,
++			    run->debug.arch.pc, target_rip, run->debug.arch.dr6,
++			    target_dr6);
++	}
++
++	/* Disable all debug controls, run to the end */
++	CLEAR_DEBUG();
++	APPLY_DEBUG();
++
++	vcpu_run(vm, VCPU_ID);
++	TEST_ASSERT(run->exit_reason == KVM_EXIT_IO, "KVM_EXIT_IO");
++	cmd = get_ucall(vm, VCPU_ID, &uc);
++	TEST_ASSERT(cmd == UCALL_DONE, "UCALL_DONE");
++
++	kvm_vm_free(vm);
++
++	return 0;
++}
 -- 
 2.18.2
 
