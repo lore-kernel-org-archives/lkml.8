@@ -2,191 +2,132 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF94C38A2A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E363BC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF19B2075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B73D22075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:37:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="DYUT6FUx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MTekYnJP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730340AbgEFWg4 (ORCPT
+        id S1730361AbgEFWhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 18:36:56 -0400
-Received: from mout.gmx.net ([212.227.17.21]:37845 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730313AbgEFWgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 18:36:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1588804597;
-        bh=jMqTPLplV3feDysjlHGaAHOsRH2Ey6JsMC0NKjgtrfM=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=DYUT6FUxuw9qQ1wAYbAe6qjKFNWYfbXkGhDXd5/F0XVIVHXHHApscpdoOe78IE2iF
-         9rytMwth/vTVtfzxZN7onK1bpx4TGDVRkrKTQAl50/h0O5HYQ24Ezh3F+XwcSpANv9
-         fp+gp7YVL1FfrYqHhmE+XZ9gMDeGskEUPvZLJ1b8=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from hsiangkao-HP-ZHAN-66-Pro-G1 ([120.242.76.42]) by mail.gmx.com
- (mrgmx105 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1N7iCg-1j1GTO2bYo-014kRU; Thu, 07 May 2020 00:36:37 +0200
-Date:   Thu, 7 May 2020 06:36:26 +0800
-From:   Gao Xiang <hsiangkao@gmx.com>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, kernel-team@android.com,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [f2fs-dev] [PATCH] f2fs: get parent inode when recovering pino
-Message-ID: <20200506223623.GA27760@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20200505153139.201697-1-jaegeuk@kernel.org>
- <20200505165847.GA98848@gmail.com>
- <20200505181323.GA55221@google.com>
- <20200505181941.GC98848@gmail.com>
- <20200506001403.GA2101@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20200506012428.GG128280@sol.localdomain>
- <20200506015813.GA9256@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20200506064709.GA25482@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20200506191613.GB842@sol.localdomain>
+        Wed, 6 May 2020 18:37:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729675AbgEFWhG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 18:37:06 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29924C061A0F;
+        Wed,  6 May 2020 15:37:06 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id t12so1780998ile.9;
+        Wed, 06 May 2020 15:37:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EqjtatwoK6H8Lcx1Rhpj+GxNACQFKFH+9PeapNxu2JM=;
+        b=MTekYnJP90JNHZTmsIuBlkEn4myBtRaTxukh4xi/ctVgI0KxdRIcicfubDzM7VNSZ1
+         RGnmh3eNtWnS6SV/MGvc8hBdCQxR5ICDyfnkBTkDuDtjc9eW0Mzg+iCG6ErR8hfnkO2b
+         yFHfKAQy8Q5u8XYIetUR8EACxcHMqHfa64OXKnnnPhaPPklkvNf9o6hVjGzqN2REgr6h
+         TTrpAsZIxGLfpn6AhkibRAy2gsztNp7IS/7EPP2Kaq7AsykcWwzSFZXfzFQpyFXwwrdT
+         xmX/YuqCf66apZ5qP/laKCkxPO7cjwyn7lyNtSqhqJRANdjsYjfmeWhoeTvMeiUeIA/L
+         xMnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EqjtatwoK6H8Lcx1Rhpj+GxNACQFKFH+9PeapNxu2JM=;
+        b=SS4dpuFzNWOtGBbnQhVbuu8FrurbkR3rpe2lVMcWcHOhbtoDRhVx19NeFT2Hf3DPt2
+         2KLQmM3xzgBNTpdalZsK8Xj5inMZDWqPQ/XVtLAEhSsxxXZ64B3bn1E9F8ZFdECYgpyT
+         VoSI64lfFlj5XDcraA8BeuZuCML8VBTqQnUK9ghcPMFM96JcRJ2+Oh0AamkKH3sR6keB
+         DjyUQks4xtQPJrW0D5gQGMia3CGWD55U9nLVyDUo/h8gmRW/YLdoBCFAi8qTgV2uLVsd
+         1yTiWPHIa/DGnoUY7jXouGuTDdWW2tfOnayZJK6yh3u+KXgl3tj3Ot81iXHwCLjhDyBq
+         K/5A==
+X-Gm-Message-State: AGi0PubHpmkv11JFryR2BfGKyEkBNT+PbXkH5c5JZECkdBg1td30d07d
+        vq0LAnEiNwlUyOHrwQIP1Inv5dPhXfcZBeGf0w0=
+X-Google-Smtp-Source: APiQypJh1i3df2NxoyGwheWAG3Ch1BHPcr0BNM6f4zyqUF6px9kD/RgBXFKKX/b6OduGEY0oNq/GyoKLcUIe4Bk+1bQ=
+X-Received: by 2002:a92:858b:: with SMTP id f133mr10241065ilh.97.1588804625313;
+ Wed, 06 May 2020 15:37:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506191613.GB842@sol.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:ri2UJfRqCi9CrS2zGaKMZ6aJn281d6XAnbJ9XZIUIviP96/s9Eu
- IYngQM4ftXQDiHgqRWZCkQeQyAh1AqJM8f3K8+21t5Y0FFFfNO9OX+ZmMTu0KAtYJtFKzPk
- xrnQ98ASz/SJsokxdl++9IL6cNU4Uuj+GWqrkeYGfsk82Uw9C9/g2KRr9MxfiEAPiYrQQPy
- O1CLYUyrWGH8CikI5M6mw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:B+lt3r38RYQ=:D2ZUtIJvYc/qkhW/+EPb34
- 0mUY5T0xNv7hjQfW990tRbucCEcrq2+FSe0p6gHEVyY2DZOHiGDkrE6wrceIypmVJJmBu76Pc
- 6/YrApjWNH3DCambBH9hcvvYJnu2U4ti8BjQ2uZREt01FTuTqSMSmXO1Szdrch0k1ExFeh8H7
- jnks4ZfOpQ/Pk7aWu4SI/TyL0Z/JdQcLquFqtDOAO8W6ajGAUEz69oRXca7OLmVwJKnqxpTVW
- OjwpDTNe2b0AUimzzT6C5rCJUDD/aVj9i7BZuYdIuWhgkpPdZ8sA1huiZ+xfZ69F7zFLr1m1V
- Iho7aOoEt7Lqb7PzjGxoYTs7nvWJn4HA5M9OWWYZQ2T4N2xSUo5kr0aPks2FTO/1g2a4JC/M/
- /ygoqzTOJSATnPrv/rkXFObRCdO+T/OkCsLj6ud1+RFaE/P3zWKaFGQTkEZkKSemP3QR3ZEIL
- DdYDBN9n+mu1Fnyt3n59azTt4+SjcKOUpOJcUG/qPlx56xeefk1qDi1AoU2h1vOcJyQFun1wL
- yHM6nmYnLnJsZA7UB8TrRz73Iv62gNGgGQLJQpbTWfhyAxk6tpabr7DllcY1IJ78oJtggo0k8
- Fq0KbAfrTojKmIj9m84HdvOkxV35jm1TuAMvRw5vsVf8ruvbS1tWTEruub2I/UHFi4BpaMLU7
- j3LlRwF5POt0y8JrvbNrh4CSIa1SbGNJVVvdjbOzivANycXOJDGBU2JqXBf4d03sQO/1PA9Y/
- Kg76huCQx+S0YvrROR04LDwTEP3EXYNifLqm5R7xYFKK0N4byibFzWN5M/H8MRy7G1zu9uS6o
- 5GQeu6TT9LOPFQwhtKGLt6Ksf33tRmA/U+51DjUpdt3T+K7wpJENVwq3H6vUJ79QgffLuFTIn
- omaDP4mZct7qMBUZi8ToC6jDjO9fpOyri8+goGVqO+7p/po9cBLlXRTdO+G/p7I8vVDKOF0Hu
- VE8+m6hFHDyk0MLagOi9kEyvZSjo9l1JYVv98THoyToNozfc5bXZxAtIgaC03SWRw1GnCiOP1
- ov7mTCxlXgCjjo63OISXzstJPBr4dYvUMSKdL3y83pFeLSL/AIwZajb6KuuhUoQNKLPaP0MZf
- bhKEGoUh8cz5hDG1cU6H2YOawbC0shB/+m/XFP1fPSjBSZDvSHngN1ACQDawZ9pzeaNQaQK6K
- NEtIZEjSN/yVLHjkKeLZOoJN9tdcS6MwQEazlCn/5JLzgfpe64Y5wsXd6lTBVNf9pPG0tUHSF
- +EJ/ZlGWO9wRl7rT6
-Content-Transfer-Encoding: quoted-printable
+References: <20200430201125.532129-1-daniel.m.jordan@oracle.com>
+ <20200430201125.532129-7-daniel.m.jordan@oracle.com> <CAKgT0Uf7e5514SOi8dmkB5oXUK9bwqD_z-5KJ_F3MUn3CAQyPQ@mail.gmail.com>
+ <3C3C62BE-6363-41C3-834C-C3124EB3FFAB@joshtriplett.org> <CAKgT0UdBv-Wj98P2wMFGDSihPLKWFsqpu77ZmO+eA51uteZ-Ag@mail.gmail.com>
+ <20200505014844.ulp4rtih7adtcicm@ca-dmjordan1.us.oracle.com>
+ <20200505020916.mve4ijrg4z5h7eh5@ca-dmjordan1.us.oracle.com>
+ <CAKgT0UdE1ex_aAyMeR3PWtVcmXL8cUtjqy0J8hLpnFm42yn82w@mail.gmail.com> <20200506222127.l3p2a2vjavwz2bdl@ca-dmjordan1.us.oracle.com>
+In-Reply-To: <20200506222127.l3p2a2vjavwz2bdl@ca-dmjordan1.us.oracle.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Wed, 6 May 2020 15:36:54 -0700
+Message-ID: <CAKgT0UcZhnCtM4YP3L9kbtghNp9vOzSpVm5WC1164OVmRHLaMA@mail.gmail.com>
+Subject: Re: [PATCH 6/7] mm: parallelize deferred_init_memmap()
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     Josh Triplett <josh@joshtriplett.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Tejun Heo <tj@kernel.org>, Zi Yan <ziy@nvidia.com>,
+        linux-crypto@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 12:16:13PM -0700, Eric Biggers wrote:
-> On Wed, May 06, 2020 at 02:47:19PM +0800, Gao Xiang wrote:
-> > On Wed, May 06, 2020 at 09:58:22AM +0800, Gao Xiang wrote:
-> > > On Tue, May 05, 2020 at 06:24:28PM -0700, Eric Biggers wrote:
-> > > > On Wed, May 06, 2020 at 08:14:07AM +0800, Gao Xiang wrote:
-> > > > > >
-> > > > > > Actually, I think this is wrong because the fsync can be done =
-via a file
-> > > > > > descriptor that was opened to a now-deleted link to the file.
-> > > > >
-> > > > > I'm still confused about this...
-> > > > >
-> > > > > I don't know what's wrong with this version from my limited know=
-ledge?
-> > > > >  inode itself is locked when fsyncing, so
-> > > > >
-> > > > >    if the fsync inode->i_nlink =3D=3D 1, this inode has only one=
- hard link
-> > > > >    (not deleted yet) and should belong to a single directory; an=
-d
-> > > > >
-> > > > >    the only one parent directory would not go away (not deleted =
-as well)
-> > > > >    since there are some dirents in it (not empty).
-> > > > >
-> > > > > Could kindly explain more so I would learn more about this scena=
-rio?
-> > > > > Thanks a lot!
-> > > >
-> > > > i_nlink =3D=3D 1 just means that there is one non-deleted link.  T=
-here can be links
-> > > > that have since been deleted, and file descriptors can still be op=
-en to them.
-> > >
-> > > Thanks for your inspiration. You are right, thanks.
-> > >
-> > > Correct my words... I didn't check f2fs code just now, it seems f2fs=
- doesn't
-> > > take inode_lock as some other fs like __generic_file_fsync or ubifs_=
-fsync.
-> > >
-> > > And i_sem locks nlink / try_to_fix_pino similarly in some extent. It=
- seems
-> > > no race by using d_find_alias here. Thanks again.
-> > >
-> >
-> > (think more little bit just now...)
-> >
-> >  Thread 1:                                           Thread 2 (fsync):
-> >   vfs_unlink                                          try_to_fix_pino
-> >     f2fs_unlink
-> >        f2fs_delete_entry
-> >          f2fs_drop_nlink  (i_sem, inode->i_nlink =3D 1)
-> >
-> >   (...   but this dentry still hashed)                  i_sem, check i=
-node->i_nlink =3D 1
-> >                                                         i_sem d_find_a=
-lias
-> >
-> >   d_delete
-> >
-> > I'm not sure if fsync could still use some wrong alias by chance..
-> > completely untested, maybe just noise...
-> >
+On Wed, May 6, 2020 at 3:21 PM Daniel Jordan <daniel.m.jordan@oracle.com> wrote:
 >
-> Right, good observation.  My patch makes it better, but it's still broke=
-n.
+> On Tue, May 05, 2020 at 07:55:43AM -0700, Alexander Duyck wrote:
+> > One question about this data. What is the power management
+> > configuration on the systems when you are running these tests? I'm
+> > just curious if CPU frequency scaling, C states, and turbo are
+> > enabled?
 >
-> I don't know how to fix it.  If we see i_nlink =3D=3D 1 and multiple has=
-hed
-> dentries, there doesn't appear to be a way to distingush which one corre=
-sponds
-> to the remaining link on-disk (if any; it may not even be in the dcache)=
-, and
-> which correspond to links that vfs_unlink() has deleted from disk but ha=
-sn't yet
-> done d_delete() on.
+> Yes, intel_pstate is loaded in active mode without hwp and with turbo enabled
+> (those power management docs are great by the way!) and intel_idle is in use
+> too.
 >
-> One idea would be choose one, then take inode_lock_shared(dir) and do
-> __f2fs_find_entry() to check if the dentry is really still on-disk.  Tha=
-t's
-> heavyweight and error-prone though, and the locking could cause problems=
-.
+> > I ask because that is what I have seen usually make the
+> > difference in these kind of workloads as the throughput starts
+> > dropping off as you start seeing the core frequency lower and more
+> > cores become active.
 >
-> I'm wondering though, does f2fs really need try_to_fix_pino() at all, an=
-d did it
-> ever really work?  It never actually updates the f2fs_inode::i_name to m=
-atch the
-> new directory.  So independently of this bug with deleted links, I don't=
- see how
-> it can possibly work as intended.
+> If I follow, you're saying there's a chance performance would improve with the
+> above disabled, but how often would a system be configured that way?  Even if
+> it were faster, the machine is configured how it's configured, or am I missing
+> your point?
 
-Part of my humble opinion would be "update pino in rename/unlink/link... s=
-uch ops
-instead of in fsync" (maybe it makes better sense of locking)... But actua=
-lly I'm
-not a f2fs folk now, just curious about what the original patch resolved w=
-ith
-these new extra igrab/iput (as I said before, I could not find some clue p=
-reviously).
+I think you might be missing my point. What I was getting at is that I
+know for performance testing sometimes C states and P states get
+disabled in order to get consistent results between runs, it sounds
+like you have them enabled though. I was just wondering if you had
+disabled them or not. If they were disabled then you wouldn't get the
+benefits of turbo and as such adding more cores wouldn't come at a
+penalty, while with it enabled the first few cores should start to
+slow down as they fell out of turbo mode. So it may be part of the
+reason why you are only hitting about 10x at full core count.
 
-Thanks,
-Gao Xiang
-
->
-> - Eric
+As it stands I think your code may speed up a bit if you split the
+work up based on section instead of max order. That would get rid of
+any cache bouncing you may be doing on the pageblock flags and reduce
+the overhead for splitting the work up into individual pieces since
+each piece will be bigger.
