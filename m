@@ -2,160 +2,196 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE9EC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF49C38A2A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B61920736
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 673F5206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:26:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgEFMYe (ORCPT
+        id S1728106AbgEFM0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 08:24:34 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3820 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725985AbgEFMYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 08:24:34 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id EC90425609AF455590E9;
-        Wed,  6 May 2020 20:24:31 +0800 (CST)
-Received: from [127.0.0.1] (10.65.95.32) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Wed, 6 May 2020
- 20:24:24 +0800
-Subject: Re: [PATCH v2] perf stat: Fix the ratio comments of miss-events
-References: <B82435381E3B2943AA4D2826ADEF0B3A02333ED8@DGGEML522-MBX.china.huawei.com>
- <bac9f132-63c4-df6c-6959-32bc63ac3cdd@huawei.com>
-From:   Qi Liu <liuqi115@huawei.com>
-To:     <acme@kernel.org>, <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andi Kleen <ak@linux.intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>
-Message-ID: <4feb7586-e5a6-6a55-75d9-2fed47dc7c29@huawei.com>
-Date:   Wed, 6 May 2020 20:24:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Wed, 6 May 2020 08:26:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58994 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725985AbgEFM0f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 08:26:35 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86413C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 05:26:35 -0700 (PDT)
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jWJ84-0004dl-4N; Wed, 06 May 2020 14:26:24 +0200
+Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jWJ80-0008SB-9H; Wed, 06 May 2020 14:26:20 +0200
+Date:   Wed, 6 May 2020 14:26:20 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Maxime Ripard <maxime@cerno.tech>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Ben Kao <ben.kao@intel.com>, Maxime Ripard <mripard@kernel.org>
+Subject: Re: [PATCH v10 1/3] media: dt-bindings: ov8856: Document YAML
+ bindings
+Message-ID: <20200506122620.GN18755@pengutronix.de>
+References: <20200505100129.104673-1-robert.foss@linaro.org>
+ <20200505100129.104673-2-robert.foss@linaro.org>
+ <1588679279.8804.133.camel@mhfsdcap03>
+ <CAG3jFyvo3gmO3zLRUKQEdgRkmzvvvMTzDKV-LZAeKYFdOfCnEw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <bac9f132-63c4-df6c-6959-32bc63ac3cdd@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.95.32]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG3jFyvo3gmO3zLRUKQEdgRkmzvvvMTzDKV-LZAeKYFdOfCnEw@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 14:15:18 up 74 days, 23:32, 107 users,  load average: 0.43, 0.98,
+ 4.24
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gentle ping ...
+On 20-05-06 13:29, Robert Foss wrote:
+> Hey Dongchun,
+> 
+> Thanks for having a look at this series.
+> 
+> > > +examples:
+> > > +  - |
+> > > +    #include <dt-bindings/gpio/gpio.h>
+> > > +
+> > > +    i2c {
+> > > +        #address-cells = <1>;
+> > > +        #size-cells = <0>;
+> > > +
+> > > +        ov8856: camera@10 {
+> > > +            compatible = "ovti,ov8856";
+> > > +            reg = <0x10>;
+> > > +
+> > > +            reset-gpios = <&pio 111 GPIO_ACTIVE_LOW>;
+> >
+> > Apologies for missing to follow the earlier discussion related to this.
+> > I noticed the GPIO flag para and __ov8856_power_on() are aligned using
+> > ACTIVE_LOW.
+> >
+> > But from the datasheet, XSHUTDN pin is active-high for OV8856.
+> > It means devm_gpiod_get API (in probe func) should use GPIOD_OUT_LOW to
+> > initialize the GPIO as output with a value of 0.
+> > Otherwise it should use GPIOD_OUT_HIGH.
+> >
+> > There is one case for GPIO_ACTIVE_LOW setting:
+> > https://patchwork.linuxtv.org/patch/63460/
+> > https://patchwork.linuxtv.org/patch/63461/
+> 
+> We went back and forth about this a few times, and I switched to this
+> gpio setting after having worked through the device probing reset gpio
+> toggling. Semantically it seemed easier to understand in the driver,
+> since the gpio is called reset and not !shutdown.
 
-Hi Arnaldo,
-If possible, could you give a look for this patch?
+IMHO you can keep your version. DTs are part of the system integration.
+What if one system has a invert logic infront of the gpio input.. The
+system integrator needs to read and to understand the schematic
+correctly to pick the correct value.
 
-Thank you,
-Qi Liu
+> Looking into devm_gpiod_get_optional(), the flag argument
+> GPIOD_OUT_LOW or HIGH for that matter is actually not used initialize
 
-On 2020/5/6 20:01, Qi Liu wrote:
-> Perf stat displays miss ratio of L1-dcache, L1-icache, dTLB cache, iTLB cache and LL-cache. Take L1-dcache for example, its miss ratio is caculated as "L1-dcache-load-misses/L1-dcache-loads". So "of all L1-dcache hits" is unsuitable to describe it, and "of all L1-dcache accesses" seems better. The comments of L1-icache, dTLB cache, iTLB cache and LL-cache are fixed in the same way.
+The good think about gpiod is that it care about logic values not
+physical/electrical values. If you set GPIOD_OUT_HIGH then the reset is
+asserted, whatever asserted means electrical.
+
+Regards,
+  Marco
+
+> the output, but only used for an exclusivity check.
+> https://elixir.bootlin.com/linux/latest/source/drivers/gpio/gpiolib-devres.c#L109
 > 
-> Signed-off-by: Qi Liu <liuqi115@huawei.com>
-> Reviewed-by: Andi Kleen <ak@linux.intel.com>
-> ---
-> Changelog
-> v2: Fix the format issue
+> If you prefer, I can invert the logic again. To me making the reset
+> gpio active resulting in the device being actually reset seems like
+> the most intuitive and easy to understand option.
+> The different OmniVision drivers seem to have different approaches to
+> this. The ov9640 driver for example is doing what this series
+> currently is doing.
 > 
->  tools/perf/util/stat-shadow.c | 20 ++++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
+> >
+> > Sakari, Tomasz, am I right?
+> >
+> > > +            pinctrl-names = "default";
+> > > +            pinctrl-0 = <&clk_24m_cam>;
+> > > +
+> > > +            clocks = <&cam_osc>;
+> > > +            clock-names = "xvclk";
+> > > +            clock-frequency = <19200000>;
+> > > +
+> > > +            avdd-supply = <&mt6358_vcama2_reg>;
+> > > +            dvdd-supply = <&mt6358_vcamd_reg>;
+> > > +            dovdd-supply = <&mt6358_vcamio_reg>;
+> > > +
+> > > +            port {
+> > > +                wcam_out: endpoint {
+> > > +                    remote-endpoint = <&mipi_in_wcam>;
+> > > +                    data-lanes = <1 2 3 4>;
+> > > +                    link-frequencies = /bits/ 64 <360000000>;
+> > > +                };
+> > > +            };
+> > > +        };
+> > > +    };
+> > > +...
+> > > \ No newline at end of file
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 26f281d9f32a..84b262afd13d 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -12489,6 +12489,7 @@ L:    linux-media@vger.kernel.org
+> > >  S:   Maintained
+> > >  T:   git git://linuxtv.org/media_tree.git
+> > >  F:   drivers/media/i2c/ov8856.c
+> > > +F:   Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> > >
+> >
+> > Had you run parse-maintainers.pl?
+> > The new item is supposed to be arranged in alphabetical order.
 > 
-> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c index 2c41d47..28f4470 100644
-> --- a/tools/perf/util/stat-shadow.c
-> +++ b/tools/perf/util/stat-shadow.c
-> @@ -506,7 +506,7 @@ static void print_l1_dcache_misses(struct perf_stat_config *config,
+> No, I have not. But upon running it now, it doesn't make suggest any
+> changes. But let me order the files manually in the next revision.
 > 
->  	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+> However, I noticed I removed the wrong person from the maintainers
+> file in this revision.
+> So, I'll correct that and add you Dongchun as the maintainer if that's ok.
 > 
-> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-dcache hits", ratio);
-> +	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all +L1-dcache accesses", ratio);
->  }
-> 
->  static void print_l1_icache_misses(struct perf_stat_config *config, @@ -527,7 +527,7 @@ static void print_l1_icache_misses(struct perf_stat_config *config,
->  		ratio = avg / total * 100.0;
-> 
->  	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
-> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-icache hits", ratio);
-> +	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all +L1-icache accesses", ratio);
->  }
-> 
->  static void print_dtlb_cache_misses(struct perf_stat_config *config, @@ -547,7 +547,7 @@ static void print_dtlb_cache_misses(struct perf_stat_config *config,
->  		ratio = avg / total * 100.0;
-> 
->  	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
-> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all dTLB cache hits", ratio);
-> +	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all dTLB +cache accesses", ratio);
->  }
-> 
->  static void print_itlb_cache_misses(struct perf_stat_config *config, @@ -567,7 +567,7 @@ static void print_itlb_cache_misses(struct perf_stat_config *config,
->  		ratio = avg / total * 100.0;
-> 
->  	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
-> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all iTLB cache hits", ratio);
-> +	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all iTLB +cache accesses", ratio);
->  }
-> 
->  static void print_ll_cache_misses(struct perf_stat_config *config, @@ -587,7 +587,7 @@ static void print_ll_cache_misses(struct perf_stat_config *config,
->  		ratio = avg / total * 100.0;
-> 
->  	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
-> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all LL-cache hits", ratio);
-> +	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all LL-cache +accesses", ratio);
->  }
-> 
->  /*
-> @@ -872,7 +872,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
->  		if (runtime_stat_n(st, STAT_L1_DCACHE, ctx, cpu) != 0)
->  			print_l1_dcache_misses(config, cpu, evsel, avg, out, st);
->  		else
-> -			print_metric(config, ctxp, NULL, NULL, "of all L1-dcache hits", 0);
-> +			print_metric(config, ctxp, NULL, NULL, "of all L1-dcache accesses", +0);
->  	} else if (
->  		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
->  		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_L1I | @@ -882,7 +882,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
->  		if (runtime_stat_n(st, STAT_L1_ICACHE, ctx, cpu) != 0)
->  			print_l1_icache_misses(config, cpu, evsel, avg, out, st);
->  		else
-> -			print_metric(config, ctxp, NULL, NULL, "of all L1-icache hits", 0);
-> +			print_metric(config, ctxp, NULL, NULL, "of all L1-icache accesses", +0);
->  	} else if (
->  		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
->  		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_DTLB | @@ -892,7 +892,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
->  		if (runtime_stat_n(st, STAT_DTLB_CACHE, ctx, cpu) != 0)
->  			print_dtlb_cache_misses(config, cpu, evsel, avg, out, st);
->  		else
-> -			print_metric(config, ctxp, NULL, NULL, "of all dTLB cache hits", 0);
-> +			print_metric(config, ctxp, NULL, NULL, "of all dTLB cache accesses", +0);
->  	} else if (
->  		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
->  		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_ITLB | @@ -902,7 +902,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
->  		if (runtime_stat_n(st, STAT_ITLB_CACHE, ctx, cpu) != 0)
->  			print_itlb_cache_misses(config, cpu, evsel, avg, out, st);
->  		else
-> -			print_metric(config, ctxp, NULL, NULL, "of all iTLB cache hits", 0);
-> +			print_metric(config, ctxp, NULL, NULL, "of all iTLB cache accesses", +0);
->  	} else if (
->  		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
->  		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_LL | @@ -912,7 +912,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
->  		if (runtime_stat_n(st, STAT_LL_CACHE, ctx, cpu) != 0)
->  			print_ll_cache_misses(config, cpu, evsel, avg, out, st);
->  		else
-> -			print_metric(config, ctxp, NULL, NULL, "of all LL-cache hits", 0);
-> +			print_metric(config, ctxp, NULL, NULL, "of all LL-cache accesses", +0);
->  	} else if (perf_evsel__match(evsel, HARDWARE, HW_CACHE_MISSES)) {
->  		total = runtime_stat_avg(st, STAT_CACHEREFS, ctx, cpu);
-> 
-> --
-> 2.8.1
-> 
+> >
+> > >  OMNIVISION OV9640 SENSOR DRIVER
+> > >  M:   Petr Cvek <petrcvekcz@gmail.com>
+> >
 > 
 
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
