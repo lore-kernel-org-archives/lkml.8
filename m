@@ -2,125 +2,175 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E712DC4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D4BAC47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C63AF2075A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:02:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588788154;
-	bh=z92+mQf7UCpY5n67Uv6gibVlbx0OePllFMQQ+ADBjAs=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=I7a1EPBlMy8cexIMpoAY77BRwktruwwD4Ag320HH8SbuOCGG6UdZEXzGq2nlAbuRp
-	 8JeKd3E8ZwwtV7uvGxNmlxv431/fvFYbUNmn5EQChWZT8/2aSgQQklP86JuzogZI9B
-	 axGG9VkcqxWp4GFx9dqgtwaPtapQuMeyI/yxvTZo=
+	by mail.kernel.org (Postfix) with ESMTP id 33FCC20747
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:03:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oCbWVJ+g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729331AbgEFSCe (ORCPT
+        id S1729886AbgEFSDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 14:02:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50122 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727872AbgEFSCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 14:02:33 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D13FF20753;
-        Wed,  6 May 2020 18:02:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588788152;
-        bh=z92+mQf7UCpY5n67Uv6gibVlbx0OePllFMQQ+ADBjAs=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=vvPXHot6utJAOBEWMZwD3stj37CKE8NYtkDGePF2p5nCueY8btewNWSfB4NJwjMGO
-         C0Sa+xsxR2SQLwgvoGpm5wNZsPf34KxIKH715zS7enj7aYbmnnuFb7TV1z4qoFm/7x
-         89qOrLSnJQpiXy3L9jf6vUhzYCm56dFuSIC8Qg4w=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id BB102352306C; Wed,  6 May 2020 11:02:32 -0700 (PDT)
-Date:   Wed, 6 May 2020 11:02:32 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Please can I have a stable KCSAN branch for 5.8?
-Message-ID: <20200506180232.GB2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200506132816.GJ8043@willie-the-truck>
- <20200506143616.GY2869@paulmck-ThinkPad-P72>
- <20200506144141.GA12919@willie-the-truck>
- <CANpmjNP3ge49sXJZS-KaL5bpEq0rmc4CqepjGRbtbCVwm7rwpw@mail.gmail.com>
+        Wed, 6 May 2020 14:03:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55598 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727872AbgEFSDb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 14:03:31 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F35C8C061A0F;
+        Wed,  6 May 2020 11:03:30 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id q8so2140947eja.2;
+        Wed, 06 May 2020 11:03:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Cr6ABbOcAj5/Vp1Y9NcSiEi2mo0kADAGjNrqyHtiq9A=;
+        b=oCbWVJ+gSQksrSbx5++3DarHBSgTNJoXOBxIml2gdrIjaMIuqn8yXRj+CHsZTlcFXe
+         slYP7AVlLvcVm+P/5/0BZSggyDGeseiKNbqCDPFf2FjDhS6nEoH8DCAJpIMsqXRJLhl3
+         DY5RBT7vtn7jOlO617HQ98NhwaYYwzRse8wY34SL7BLNqG7BDGLSnZ5ctsjFYv+HvL12
+         WV4fTqxiZYk27n2UeBpKf85dGZGaoOhhlI8AYCjK3ZlXxh9AKt3k0kknEIFhFPfSFagD
+         yg8Vhl1N9oXUt5vyQtzXQhkGCqPvrjUaWWlk31sBrl0Ge+01bgGfYh6ggAch1s3jUCZJ
+         bElw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Cr6ABbOcAj5/Vp1Y9NcSiEi2mo0kADAGjNrqyHtiq9A=;
+        b=aWPEdR46UJTbXue39Wmjf5ifIXgtcI8XtvhI4kRvgRVb9fNSqGo8sUdvj7AoXe6aTA
+         vGZzPVvFGw57lod6JrVZcyoULnouEpjS7DeoKYGgI4L99cwnPA85yo1w0vGFHiAIcmJV
+         XxvRRsqP97Dm96EzGj1jx27mHIioG98+tz+GRsi1UP1aa/epu2vGbWRqz8sO5AQvWLVI
+         wjHwmZvdZPf2eFDv/5J/p9IkPhHtH4Xn3JnAzEU8Jmx1EujRZtGrHsw6TWuTgF6eudNF
+         XgSUyzJBZ2JWFi4UeiVU/UJl0MfA1JsMcrw594WvothiZKHFCk2X98tmrSGcgXrweL5i
+         5nyQ==
+X-Gm-Message-State: AGi0PubfTBITZ+B5S0pyMTqTtJ3PEaUO118PwQN+C5o3XdtuYcaHC20F
+        3kVouuJ/YJLFtjSZEwPEBR8FWA49VfasBWdEnmI=
+X-Google-Smtp-Source: APiQypIAKVQp9vj0c0GnmeeFGukCjSSe2/89qm1fYOJldHfWurXMbgDzTLRWDFFoSCej8aEZM37NmA3qyS2TqNCstLY=
+X-Received: by 2002:a17:906:1e47:: with SMTP id i7mr8785472ejj.61.1588788209559;
+ Wed, 06 May 2020 11:03:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNP3ge49sXJZS-KaL5bpEq0rmc4CqepjGRbtbCVwm7rwpw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200429133657.22632-1-willy@infradead.org> <20200429133657.22632-18-willy@infradead.org>
+In-Reply-To: <20200429133657.22632-18-willy@infradead.org>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Wed, 6 May 2020 11:03:06 -0700
+Message-ID: <CAHbLzkrEmEvVXmhPfngjkLP5iT_GH2SyRhDbHAiC7D2De8xyjw@mail.gmail.com>
+Subject: Re: [PATCH v3 17/25] mm: Add __page_cache_alloc_order
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 05:26:56PM +0200, Marco Elver wrote:
-> On Wed, 6 May 2020 at 16:41, Will Deacon <will@kernel.org> wrote:
-> >
-> > Hi Paul,
-> >
-> > Cheers for the quick reply!
-> >
-> > On Wed, May 06, 2020 at 07:36:16AM -0700, Paul E. McKenney wrote:
-> > > On Wed, May 06, 2020 at 02:28:17PM +0100, Will Deacon wrote:
-> > > > I'm looking to rebase my READ_ONCE() series [1] on top of the KCSAN patches
-> > > > so that we can get them in for 5.8. However, tip/locking/kcsan seems to be
-> > > > missing some bits:
-> > > >
-> > > >   * An update to checkpatch.pl to warn about missing comments for
-> > > >     data_race():
-> > > >
-> > > >     https://lore.kernel.org/r/20200401101714.44781-1-elver@google.com
-> > >
-> > > For some reason, I thought this was going up some other tree, but I do
-> > > not see it in -next.  So unless I hear otherwise, I will pull it into
-> > > the v5.8 kcsan branch.
-> >
-> > Brill, thanks.
-> >
-> > > >   * I'm unable to apply these two patches from Marco that are needed for
-> > > >     my READ_ONCE() work:
-> > > >
-> > > >     https://lore.kernel.org/lkml/20200424154730.190041-1-elver@google.com/
-> > > >
-> > > >     I think these depend on stuff that has been queued by Paul, and appears
-> > > >     in linux-next, but to be honest with you I'm quite confused about what
-> > > >     is queued for 5.8 and what isn't.
-> > >
-> > > This one is queued, but I currently have it in the v5.9 pile (but
-> > > tentatively for v5.8).  Unless Marco tells me otherwise, I will move it
-> > > to the v5.8 branch, which will be part of my pull request next week.
-> >
-> > Great, then this would all show up on tip/locking/kscan, right?
-> >
-> > > > What's the best base for me to use?
-> > >
-> > > The -next tree has the latter, but not yet the former.
-> >
-> > That probably means -next is good enough for me to cook a new version of my
-> > series, and then I can make a proper branch next week.
-> >
-> > > Hopefully we can get this straightened out, and please accept my apologies
-> > > for the hassle!
-> >
-> > No need to apologise, I just couldn't figure out what was what and decided
-> > it was easier to ask the experts ;)
-> 
-> Just confirming that I don't see any issues with the plan -- the
-> patches that Will needs are good to go into the v5.8 branch.
+On Wed, Apr 29, 2020 at 6:37 AM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+>
+> This new function allows page cache pages to be allocated that are
+> larger than an order-0 page.
+>
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> ---
+>  include/linux/pagemap.h | 24 +++++++++++++++++++++---
+>  mm/filemap.c            | 12 ++++++++----
+>  2 files changed, 29 insertions(+), 7 deletions(-)
+>
+> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+> index 55199cb5bd66..1169e2428dd7 100644
+> --- a/include/linux/pagemap.h
+> +++ b/include/linux/pagemap.h
+> @@ -205,15 +205,33 @@ static inline int page_cache_add_speculative(struct page *page, int count)
+>         return __page_cache_add_speculative(page, count);
+>  }
+>
+> +static inline gfp_t thp_gfpmask(gfp_t gfp)
+> +{
+> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> +       /* We'd rather allocate smaller pages than stall a page fault */
+> +       gfp |= GFP_TRANSHUGE_LIGHT;
 
-OK, I have updated -rcu's kcsan and kcsan-dev branches.  Could you please
-double-check, given that pull-request time is quite soon?
+This looks not correct. GFP_TRANSHUGE_LIGHT may set GFP_FS, but some
+filesystem may expect GFP_NOFS, i.e. in readahead path.
 
-							Thanx, Paul
+> +       gfp &= ~__GFP_DIRECT_RECLAIM;
+> +#endif
+> +       return gfp;
+> +}
+> +
+>  #ifdef CONFIG_NUMA
+> -extern struct page *__page_cache_alloc(gfp_t gfp);
+> +extern struct page *__page_cache_alloc_order(gfp_t gfp, unsigned int order);
+>  #else
+> -static inline struct page *__page_cache_alloc(gfp_t gfp)
+> +static inline
+> +struct page *__page_cache_alloc_order(gfp_t gfp, unsigned int order)
+>  {
+> -       return alloc_pages(gfp, 0);
+> +       if (order == 0)
+> +               return alloc_pages(gfp, 0);
+> +       return prep_transhuge_page(alloc_pages(thp_gfpmask(gfp), order));
+>  }
+>  #endif
+>
+> +static inline struct page *__page_cache_alloc(gfp_t gfp)
+> +{
+> +       return __page_cache_alloc_order(gfp, 0);
+> +}
+> +
+>  static inline struct page *page_cache_alloc(struct address_space *x)
+>  {
+>         return __page_cache_alloc(mapping_gfp_mask(x));
+> diff --git a/mm/filemap.c b/mm/filemap.c
+> index 23a051a7ef0f..9abba062973a 100644
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -941,24 +941,28 @@ int add_to_page_cache_lru(struct page *page, struct address_space *mapping,
+>  EXPORT_SYMBOL_GPL(add_to_page_cache_lru);
+>
+>  #ifdef CONFIG_NUMA
+> -struct page *__page_cache_alloc(gfp_t gfp)
+> +struct page *__page_cache_alloc_order(gfp_t gfp, unsigned int order)
+>  {
+>         int n;
+>         struct page *page;
+>
+> +       if (order > 0)
+> +               gfp = thp_gfpmask(gfp);
+> +
+>         if (cpuset_do_page_mem_spread()) {
+>                 unsigned int cpuset_mems_cookie;
+>                 do {
+>                         cpuset_mems_cookie = read_mems_allowed_begin();
+>                         n = cpuset_mem_spread_node();
+> -                       page = __alloc_pages_node(n, gfp, 0);
+> +                       page = __alloc_pages_node(n, gfp, order);
+> +                       prep_transhuge_page(page);
+>                 } while (!page && read_mems_allowed_retry(cpuset_mems_cookie));
+>
+>                 return page;
+>         }
+> -       return alloc_pages(gfp, 0);
+> +       return prep_transhuge_page(alloc_pages(gfp, order));
+>  }
+> -EXPORT_SYMBOL(__page_cache_alloc);
+> +EXPORT_SYMBOL(__page_cache_alloc_order);
+>  #endif
+>
+>  /*
+> --
+> 2.26.2
+>
+>
