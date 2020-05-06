@@ -2,123 +2,82 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 636BDC47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54938C47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 406C620708
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:53:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LoJoT1s8"
+	by mail.kernel.org (Postfix) with ESMTP id 33551208DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:54:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729723AbgEFPxw (ORCPT
+        id S1729789AbgEFPyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:53:52 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21851 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729477AbgEFPxw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:53:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588780431;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=IIPWhemhWOivhkyMoHAaTDjhY+Cd4+/PKB7r/lBHTsk=;
-        b=LoJoT1s8Gqvmd5zulQGPC2YjSv8cEKxqZqEfJO4++94L8YG5D1prRWnwGXHRUSiygm0U+F
-        puy6u8PvgbfAxknCZEEAsA6KMFMVSI3C7cFo5DP2EG7mFLdO4Tm1njTK8ibf57GoBGxcxd
-        l2TXQubHcomzgvjByu7ua3IP8u1Co1c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-313-lZeX6d8kP4GU7xA9uNEoKg-1; Wed, 06 May 2020 11:53:49 -0400
-X-MC-Unique: lZeX6d8kP4GU7xA9uNEoKg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 42FE145F;
-        Wed,  6 May 2020 15:53:47 +0000 (UTC)
-Received: from treble (ovpn-115-96.rdu2.redhat.com [10.10.115.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C1D605D9C5;
-        Wed,  6 May 2020 15:53:45 +0000 (UTC)
-Date:   Wed, 6 May 2020 10:53:43 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] bpf: Tweak BPF jump table optimizations for objtool
- compatibility
-Message-ID: <20200506155343.7x3slq3uasponb6w@treble>
-References: <20200501192204.cepwymj3fln2ngpi@treble>
- <20200501194053.xyahhknjjdu3gqix@ast-mbp.dhcp.thefacebook.com>
- <20200501195617.czrnfqqcxfnliz3k@treble>
- <20200502030622.yrszsm54r6s6k6gq@ast-mbp.dhcp.thefacebook.com>
- <20200502192105.xp2osi5z354rh4sm@treble>
- <20200505174300.gech3wr5v6kkho35@ast-mbp.dhcp.thefacebook.com>
- <20200505181108.hwcqanvw3qf5qyxk@treble>
- <20200505195320.lyphpnprn3sjijf6@ast-mbp.dhcp.thefacebook.com>
- <20200505202823.zkmq6t55fxspqazk@treble>
- <20200505235939.utnmzqsn22cec643@ast-mbp.dhcp.thefacebook.com>
+        Wed, 6 May 2020 11:54:41 -0400
+Received: from fieldses.org ([173.255.197.46]:47730 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728991AbgEFPyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:54:41 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 8876B1507; Wed,  6 May 2020 11:54:40 -0400 (EDT)
+Date:   Wed, 6 May 2020 11:54:40 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     "J. Bruce Fields" <bfields@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        Jeff Layton <jlayton@redhat.com>,
+        David Howells <dhowells@redhat.com>, Shaohua Li <shli@fb.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/4] allow multiple kthreadd's
+Message-ID: <20200506155440.GB21307@fieldses.org>
+References: <1588348912-24781-1-git-send-email-bfields@redhat.com>
+ <CAHk-=wiGhZ_5xCRyUN+yMFdneKMQ-S8fBvdBp8o-JWPV4v+nVw@mail.gmail.com>
+ <20200501182154.GG5462@mtj.thefacebook.com>
+ <20200505021514.GA43625@pick.fieldses.org>
+ <20200505210118.GC27966@fieldses.org>
+ <20200505210956.GA3350@mtj.thefacebook.com>
+ <20200505212527.GA1265@fieldses.org>
+ <20200506153658.GA21307@fieldses.org>
+ <20200506153920.GB3350@mtj.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200505235939.utnmzqsn22cec643@ast-mbp.dhcp.thefacebook.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200506153920.GB3350@mtj.thefacebook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 04:59:39PM -0700, Alexei Starovoitov wrote:
-> As far as workaround I prefer the following:
-> From 94bbc27c5a70d78846a5cb675df4cf8732883564 Mon Sep 17 00:00:00 2001
-> From: Alexei Starovoitov <ast@kernel.org>
-> Date: Tue, 5 May 2020 16:52:41 -0700
-> Subject: [PATCH] bpf,objtool: tweak interpreter compilation flags to help objtool
+On Wed, May 06, 2020 at 11:39:20AM -0400, Tejun Heo wrote:
+> Hello, Bruce.
 > 
-> tbd
+> On Wed, May 06, 2020 at 11:36:58AM -0400, J. Bruce Fields wrote:
+> > On Tue, May 05, 2020 at 05:25:27PM -0400, J. Bruce Fields wrote:
+> > > On Tue, May 05, 2020 at 05:09:56PM -0400, Tejun Heo wrote:
+> > > > It's not the end of the world but a bit hacky. I wonder whether something
+> > > > like the following would work better for identifying worker type so that you
+> > > > can do sth like
+> > > > 
+> > > >  if (kthread_fn(current) == nfsd)
+> > > >         return kthread_data(current);
+> > > >  else
+> > > >         return NULL;     
+> > > 
+> > > Yes, definitely more generic, looks good to me.
+> > 
+> > This is what I'm testing with.
+> > 
+> > If it's OK with you, could I add your Signed-off-by and take it through
+> > the nfsd tree? I'll have some other patches that will depend on it.
 > 
-> Fixes: 3193c0836f20 ("bpf: Disable GCC -fgcse optimization for ___bpf_prog_run()")
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Reported-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-> ---
->  include/linux/compiler-gcc.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
-> index d7ee4c6bad48..05104c3cc033 100644
-> --- a/include/linux/compiler-gcc.h
-> +++ b/include/linux/compiler-gcc.h
-> @@ -171,4 +171,4 @@
->  #define __diag_GCC_8(s)
->  #endif
-> 
-> -#define __no_fgcse __attribute__((optimize("-fno-gcse")))
-> +#define __no_fgcse __attribute__((optimize("-fno-gcse,-fno-omit-frame-pointer")))
-> --
-> 2.23.0
-> 
-> I've tested it with gcc 8,9,10 and clang 11 with FP=y and with ORC=y.
-> All works.
-> I think it's safer to go with frame pointers even for ORC=y considering
-> all the pain this issue had caused. Even if objtool gets confused again
-> in the future __bpf_prog_run() will have frame pointers and kernel stack
-> unwinding can fall back from ORC to FP for that frame.
-> wdyt?
+> Please feel free to use the code however you see fit. Given that it'll be
+> originating from you, my signed-off-by might not be the right tag. Something
+> like Original-patch-by should be good (nothing is fine too).
 
-It seems dangerous to me.  The GCC manual recommends against it.
+OK, I'll do that, thanks!
 
-And how do we know what other flags are getting removed for various
-arches (now or in the future)?
-
--- 
-Josh
-
+--b.
