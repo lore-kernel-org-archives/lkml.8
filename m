@@ -2,182 +2,123 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D32C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83106C47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4AC8206E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:11:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AA3E206F9
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:12:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PWmLLBCe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgEFFLn (ORCPT
+        id S1727104AbgEFFMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 01:11:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47754 "EHLO
+        Wed, 6 May 2020 01:12:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725821AbgEFFLn (ORCPT
+        by vger.kernel.org with ESMTP id S1725821AbgEFFMD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 01:11:43 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ACC9C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 22:11:43 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jWCLH-0002HK-M7; Wed, 06 May 2020 07:11:35 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jWCLG-00086W-Ft; Wed, 06 May 2020 07:11:34 +0200
-Date:   Wed, 6 May 2020 07:11:34 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v1] dt-bindings: net: nxp,tja11xx: rework validation
- support
-Message-ID: <20200506051134.mrm4nuqxssw255tl@pengutronix.de>
-References: <20200505104215.8975-1-o.rempel@pengutronix.de>
- <20200505140127.GJ208718@lunn.ch>
+        Wed, 6 May 2020 01:12:03 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC12CC061A0F;
+        Tue,  5 May 2020 22:12:02 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id k110so407652otc.2;
+        Tue, 05 May 2020 22:12:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3pa+z5yRoZ1c8FaD2cxTuWWdNrsrhZtS7/bufcqIM2A=;
+        b=PWmLLBCe1epja7NdbWvKWCpCXb8eV2jAMIITdDD8EYvfA9prDmV4zALNL+a1M/Tcor
+         MtrliG3sZwaHrFJd6MXwH23/50juTqWDiuDKmpgaQ+eBmyNzWC/2U+Qx+lSm1vzXy3dB
+         Xo8lbSStne+aDK9/L6QOl5IDItGdPLQlWFuKCPVBtgLVgYBatm46hccMVrnTkiLzykbY
+         5/ZcM+y+MtRD0iwIWdO/ZB3F1VARlwNtJyJgxqLmX4ld0AACUgrwrm/+jPqj3ghpx+Jv
+         BfrXOx5N5y9wgncsdi6QmRh5EAe2djh/2BEiTon28M4XftzwF8cocMzGA/iwPZmmokne
+         8gOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3pa+z5yRoZ1c8FaD2cxTuWWdNrsrhZtS7/bufcqIM2A=;
+        b=Xt/HKuXaNhMW8LpV5GFrqQ/2mREXedCqUSqFfHGuX2QQ4J2THVXiVavmsSXo1XO/Dj
+         gOiYRWwGUg8FA+kjLX9Z9Qunupw5QPmDDE5HzIkVv57EIp0berII/BT/JHJja7eOq4Zd
+         gPUV41Tz/zi366s199fUuSzgzQV2ILVFvoiQFHV4jH0isIodxweDgpAPbBxWj880Xk3p
+         uIn6awK/eUA3TFkZOzCLAkH09iwu7iAc6lDol/rHaenx4XTLKalDP4XxVd2g1ie23jQ+
+         1SoJWo909bM0Cw1Vq2CIhYwof8o3JPlCjDk8+LhoLBJMmOxN2EEGXpuF05Szv8BARgi2
+         f7OQ==
+X-Gm-Message-State: AGi0Pua7uey/ziaEmAYKhItw4VJ1p7fZaS39qAVN8Jc1Zc4jz+kDxNKN
+        T5zl8u5M35WRgHD598mcKIU=
+X-Google-Smtp-Source: APiQypL6DCRhQ+E6SYpUR7ZBDm8fdazSrL/wFlCv9H93Q0uTCBdjfpcS5A+FbZcjfN3/U3did81qqA==
+X-Received: by 2002:a05:6830:225d:: with SMTP id t29mr4881623otd.125.1588741922299;
+        Tue, 05 May 2020 22:12:02 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id h65sm298950oth.34.2020.05.05.22.12.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 22:12:01 -0700 (PDT)
+Date:   Tue, 5 May 2020 22:12:00 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Sterba <dsterba@suse.com>,
+        Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
+        Eric Biggers <ebiggers@google.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] crypto: blake2b - Fix clang optimization for ARMv7-M
+Message-ID: <20200506051200.GA831492@ubuntu-s3-xlarge-x86>
+References: <20200505135402.29356-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="y6mtvp5pc3cshvwy"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200505140127.GJ208718@lunn.ch>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 07:01:44 up 172 days, 20:20, 176 users,  load average: 0.19, 0.10,
- 0.09
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200505135402.29356-1-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 05, 2020 at 03:53:45PM +0200, Arnd Bergmann wrote:
+> When building for ARMv7-M, clang-9 or higher tries to unroll some loops,
+> which ends up confusing the register allocator to the point of generating
+> rather bad code and using more than the warning limit for stack frames:
+> 
+> warning: stack frame size of 1200 bytes in function 'blake2b_compress' [-Wframe-larger-than=]
+> 
+> Forcing it to not unroll the final loop avoids this problem.
+> 
+> Fixes: 91d689337fe8 ("crypto: blake2b - add blake2b generic implementation")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  crypto/blake2b_generic.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/crypto/blake2b_generic.c b/crypto/blake2b_generic.c
+> index 1d262374fa4e..0ffd8d92e308 100644
+> --- a/crypto/blake2b_generic.c
+> +++ b/crypto/blake2b_generic.c
+> @@ -129,7 +129,9 @@ static void blake2b_compress(struct blake2b_state *S,
+>  	ROUND(9);
+>  	ROUND(10);
+>  	ROUND(11);
+> -
+> +#ifdef CONFIG_CC_IS_CLANG
 
---y6mtvp5pc3cshvwy
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Given your comment in the bug:
 
-On Tue, May 05, 2020 at 04:01:27PM +0200, Andrew Lunn wrote:
-> On Tue, May 05, 2020 at 12:42:15PM +0200, Oleksij Rempel wrote:
-> > To properly identify this node, we need to use ethernet-phy-id0180.dc80.
-> > And add missing required properties.
-> >=20
-> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> > ---
-> >  .../devicetree/bindings/net/nxp,tja11xx.yaml  | 55 ++++++++++++-------
-> >  1 file changed, 35 insertions(+), 20 deletions(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml b/D=
-ocumentation/devicetree/bindings/net/nxp,tja11xx.yaml
-> > index 42be0255512b3..cc322107a24a2 100644
-> > --- a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
-> > +++ b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
-> > @@ -1,4 +1,4 @@
-> > -# SPDX-License-Identifier: GPL-2.0+
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >  %YAML 1.2
-> >  ---
-> >  $id: http://devicetree.org/schemas/net/nxp,tja11xx.yaml#
-> > @@ -12,44 +12,59 @@ maintainers:
-> >    - Heiner Kallweit <hkallweit1@gmail.com>
-> > =20
-> >  description:
-> > -  Bindings for NXP TJA11xx automotive PHYs
-> > +  Bindings for the NXP TJA1102 automotive PHY. This is a dual PHY pack=
-age where
-> > +  only the first PHY has global configuration register and HW health
-> > +  monitoring.
-> > =20
-> > -allOf:
-> > -  - $ref: ethernet-phy.yaml#
-> > +properties:
-> > +  compatible:
-> > +    const: ethernet-phy-id0180.dc80
-> > +    description: ethernet-phy-id0180.dc80 used for TJA1102 PHY
-> > +
-> > +  reg:
-> > +    minimum: 0
-> > +    maximum: 14
-> > +    description:
-> > +      The PHY address of the parent PHY.
->=20
-> Hi Oleksij
->=20
-> reg is normally 0 to 31, since that is the address range for MDIO.=20
-> Did you use 14 here because of what strapping allows?
+"The code is written to assume no loops are unrolled"
 
-Yes. Only BITs 1:3 are configurable. BIT(0) is always 0 for the PHY0 and 1
-for the PHY1
+Does it make sense to make this unconditional and take compiler
+heuristics out of it?
 
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - '#address-cells'
-> > +  - '#size-cells'
->=20
-> So we have two different meanings of 'required' here.
->=20
-> One meaning is the code requires it. compatible is not required, the
-> driver will correctly be bind to the device based on its ID registers.
-> Is reg also required by the code?
->=20
-> The second meaning is about keeping the yaml verifier happy. It seems
-> like compatible is needed for the verifier. Is reg also required? We
-> do recommend having reg, but the generic code does not require it.
-
-reg is used by:
-tja1102_p0_probe()
-  tja1102_p1_register()
-    of_mdio_parse_addr()
-
-But this is required for the slave PHY. I assume the reg can be
-optional for the master PHY. Should I?
-
-Regards,
-Oleksij
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---y6mtvp5pc3cshvwy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl6yRvkACgkQ4omh9DUa
-UbPheA//Te8R3kEDCbeoDdug4dcFxw6htc5AlZmxKUGyHniiMNo5ew1OleQGFEg+
-c48xPMKS+5d4hvh5qp/Yw4g4Vl7pE59vVScvU8nX/H1P6FFM4SrQQDDosNGRwIB1
-SKaSa/mIfdzCr8tBFM5i3CLnyRjPmYXkkzbBQjUo2spO0HPyMzl3suLvtuPB8mRf
-csh9yPAazDtz6MfyI1YiDmJqonRnt/GAOdhBTlkeb2UYkQ4EOWQXkQ5Zu2zgkvOV
-z2vwshWm0H1uVnSNXh4Zr3nsZyWHuYRpUBmmcxXFV1wXz66tc0hO56l+iGpVFLRs
-lFeA0M1/UNHeCmKX76WrCnnSDIvTuPKdlVWh1GsnhCEums++2LXuP2XMajVPBfXv
-oPwIs7xBydzxbShTUgaIpmpC7jGwVT78XFRfzo/2gX/PxrTfcY5DM4SdJvhs+xS3
-sV+8Jc7STqrPTYY2iWno3dKf5ESZG66JV++ZHZks6RUK/ttfi438yLVK5AP5RREH
-IOKY/xvk3//wFM0UbHwQiC2dV3bvv2T/sdkWopg6/dN3DBjlUGVTeM1B/wYjZeW6
-YrWn3aR94IyIbCjEaDqOS0H9+rcSWYJYkh8JBiLiGH2P6aG381rNONYhCZVibekq
-pd1dZ+bGGW29K8RcoTtW27FuOcSqn/wqjANviuF5dxBdGXj+OAw=
-=K2Aq
------END PGP SIGNATURE-----
-
---y6mtvp5pc3cshvwy--
+> +#pragma nounroll /* https://bugs.llvm.org/show_bug.cgi?id=45803 */
+> +#endif
+>  	for (i = 0; i < 8; ++i)
+>  		S->h[i] = S->h[i] ^ v[i] ^ v[i + 8];
+>  }
+> -- 
+> 2.26.0
+> 
