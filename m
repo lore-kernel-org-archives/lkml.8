@@ -2,150 +2,127 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3878DC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C36C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C6672075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:45:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kWmi9VLq"
+	by mail.kernel.org (Postfix) with ESMTP id A10D4207DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:45:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730343AbgEFWpP (ORCPT
+        id S1730371AbgEFWpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 18:45:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43182 "EHLO
+        Wed, 6 May 2020 18:45:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728888AbgEFWpO (ORCPT
+        with ESMTP id S1728888AbgEFWpl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 18:45:14 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DB1AC061A0F;
-        Wed,  6 May 2020 15:45:14 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id l18so4059582wrn.6;
-        Wed, 06 May 2020 15:45:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Xzs/Kjvpb+Bur4dwOG66eDftXF7VVBOIkEWHXdV8Ezc=;
-        b=kWmi9VLqH4Jbm/yDYVVIYklJy4C82ABfqo+2aSRFKrm0baEfzTcF71bUab/rukbU+F
-         btz2HIWRg80PgSJkntipQIcleerbKCph8jlGEmMcUrC6Irvpun7DJoqIguZSVNu/lT1j
-         INL3F9AyJAPPVgbM31rpJPLQqz5AfDJZJ0fTNuRM4JTm0okY7O3SzlnHBHLkwfx3RqKw
-         5o+5ZDllWJE6oU79nD6dk1sMbF4gz9pnyf4wGIvGB5DT8YYflzVjMPWpOX5D6/5HXitX
-         I1rj+IOPudnuQsUhlzzIfa/gfBfeGoMsZpsNc33RZwjuyydCoNB89PVp+ZUjRlvgSift
-         pXcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Xzs/Kjvpb+Bur4dwOG66eDftXF7VVBOIkEWHXdV8Ezc=;
-        b=eJL2Zg7NLApB1X3iYMQI/2ZJFgb8Rv8T5DhRJpR93+Dte6jDKbfzm1RdqwcmwVGBo/
-         t1kRycakaGJzJkIh0jY2KKbzLagmakbgHXUQRXJuZWOccADfy6U27rFFMMEDMod3f7dQ
-         wcyL85HfodGQJqBFa8OqJDBPaNKQgGV26CVwv92aZSzR+6tlQjjgm64iRjikt/cfoIOd
-         X6fphpAgWljSPlTjL2TXwX4mis+B0KueeqipYgwXCO2SOJeUCY8g9vusjthdlJ16my6I
-         P51r6cQ8+ffuFQEyQtPnMQ11M1rIQvrv1tnWbLZxODoZ227sqhMgqbKjwfLPh1uqK566
-         5m0w==
-X-Gm-Message-State: AGi0PuYvTQkl/Zo228stN+yrykRdcWVaRGhTL9zwjFmj9ieKQ7un9MLr
-        +NxTTe7tcrIWdZK7IooOtfwQIjpB
-X-Google-Smtp-Source: APiQypJrXBV0Jqvdn9YGs9vGJDgAOFrPfAwOn4vgQjb+k2HiNPcQD5mngDn/UDlb8ftheGPJNq85sA==
-X-Received: by 2002:a5d:6a85:: with SMTP id s5mr11737214wru.122.1588805112574;
-        Wed, 06 May 2020 15:45:12 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id x6sm4745410wrv.57.2020.05.06.15.45.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 May 2020 15:45:11 -0700 (PDT)
-Subject: Re: [RFC net] net: dsa: Add missing reference counting
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
-        netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200505210253.20311-1-f.fainelli@gmail.com>
- <20200505172302.GB1170406@t480s.localdomain>
- <d681a82b-5d4b-457f-56de-3a439399cb3d@gmail.com>
- <CA+h21hpvC6ST2iv-4xjpwpmRHQJvk-AufYFvG0J=5KzUgcnC5A@mail.gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <97c93b65-3631-e694-78ac-7e520e063f95@gmail.com>
-Date:   Wed, 6 May 2020 15:45:08 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.7.0
+        Wed, 6 May 2020 18:45:41 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32121C061A0F;
+        Wed,  6 May 2020 15:45:41 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jWSnH-0005W9-22; Thu, 07 May 2020 00:45:35 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E002D1C0081;
+        Thu,  7 May 2020 00:45:33 +0200 (CEST)
+Date:   Wed, 06 May 2020 22:45:33 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: locking/urgent] ARM: futex: Address build warning
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <87pncao2ph.fsf@nanos.tec.linutronix.de>
+References: <87pncao2ph.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <CA+h21hpvC6ST2iv-4xjpwpmRHQJvk-AufYFvG0J=5KzUgcnC5A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Message-ID: <158880513375.8414.17944066222342801665.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the locking/urgent branch of tip:
 
+Commit-ID:     8101b5a1531f3390b3a69fa7934c70a8fd6566ad
+Gitweb:        https://git.kernel.org/tip/8101b5a1531f3390b3a69fa7934c70a8fd6566ad
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Tue, 14 Apr 2020 11:07:22 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 07 May 2020 00:41:47 +02:00
 
-On 5/6/2020 2:40 PM, Vladimir Oltean wrote:
-> Hi Florian,
-> 
-> On Thu, 7 May 2020 at 00:24, Florian Fainelli <f.fainelli@gmail.com> wrote:
->>
->>
->>
->> On 5/5/2020 2:23 PM, Vivien Didelot wrote:
->>> On Tue,  5 May 2020 14:02:53 -0700, Florian Fainelli <f.fainelli@gmail.com> wrote:
->>>> If we are probed through platform_data we would be intentionally
->>>> dropping the reference count on master after dev_to_net_device()
->>>> incremented it. If we are probed through Device Tree,
->>>> of_find_net_device() does not do a dev_hold() at all.
->>>>
->>>> Ensure that the DSA master device is properly reference counted by
->>>> holding it as soon as the CPU port is successfully initialized and later
->>>> released during dsa_switch_release_ports(). dsa_get_tag_protocol() does
->>>> a short de-reference, so we hold and release the master at that time,
->>>> too.
->>>>
->>>> Fixes: 83c0afaec7b7 ("net: dsa: Add new binding implementation")
->>>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->>>
->>> Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
->>>
->> Andrew, Vladimir, any thoughts on that?
->> --
->> Florian
-> 
-> I might be completely off because I guess I just don't understand what
-> is the goal of keeping a reference to the DSA master in this way for
-> the entire lifetime of the DSA switch. I think that dev_hold is for
-> short-term things that cannot complete atomically, but I think that
-> you are trying to prevent the DSA master from getting freed from under
-> our feet, which at the moment would fault the kernel instantaneously?
+ARM: futex: Address build warning
 
-Yes, that's the idea, you should not be able to rmmod/unbind the DSA
-master while there is a DSA switch tree hanging off of it.
+Stephen reported the following build warning on a ARM multi_v7_defconfig
+build with GCC 9.2.1:
 
-> 
-> If this is correct, it certainly doesn't do what it intends to do:
-> echo 0000\:00\:00.5> /sys/bus/pci/drivers/mscc_felix/unbind
-> [   71.576333] unregister_netdevice: waiting for swp0 to become free.
-> Usage count = 1
-> (hangs there)
+kernel/futex.c: In function 'do_futex':
+kernel/futex.c:1676:17: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]
+ 1676 |   return oldval == cmparg;
+      |          ~~~~~~~^~~~~~~~~
+kernel/futex.c:1652:6: note: 'oldval' was declared here
+ 1652 |  int oldval, ret;
+      |      ^~~~~~
 
-Is this with the sja1105 switch hanging off felix? If so, is not it
-working as expected because you still have sja1150 being bound to one of
-those ports? If not, then I will look into why.
+introduced by commit a08971e9488d ("futex: arch_futex_atomic_op_inuser()
+calling conventions change").
 
-> 
-> But if I'm right and that's indeed what you want to achieve, shouldn't
-> we be using device links instead?
-> https://www.kernel.org/doc/html/v4.14/driver-api/device_link.html
+While that change should not make any difference it confuses GCC which
+fails to work out that oldval is not referenced when the return value is
+not zero.
 
-device links could work but given that the struct device and struct
-net_device have almost the same lifetime, with the net_device being a
-little bit shorter, and that is what DSA uses, I am not sure whether
-device link would bring something better.
--- 
-Florian
+GCC fails to properly analyze arch_futex_atomic_op_inuser(). It's not the
+early return, the issue is with the assembly macros. GCC fails to detect
+that those either set 'ret' to 0 and set oldval or set 'ret' to -EFAULT
+which makes oldval uninteresting. The store to the callsite supplied oldval
+pointer is conditional on ret == 0.
+
+The straight forward way to solve this is to make the store unconditional.
+
+Aside of addressing the build warning this makes sense anyway because it
+removes the conditional from the fastpath. In the error case the stored
+value is uninteresting and the extra store does not matter at all.
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/87pncao2ph.fsf@nanos.tec.linutronix.de
+
+---
+ arch/arm/include/asm/futex.h |  9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/include/asm/futex.h b/arch/arm/include/asm/futex.h
+index e133da3..a915188 100644
+--- a/arch/arm/include/asm/futex.h
++++ b/arch/arm/include/asm/futex.h
+@@ -165,8 +165,13 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
+ 	preempt_enable();
+ #endif
+ 
+-	if (!ret)
+-		*oval = oldval;
++	/*
++	 * Store unconditionally. If ret != 0 the extra store is the least
++	 * of the worries but GCC cannot figure out that __futex_atomic_op()
++	 * is either setting ret to -EFAULT or storing the old value in
++	 * oldval which results in a uninitialized warning at the call site.
++	 */
++	*oval = oldval;
+ 
+ 	return ret;
+ }
