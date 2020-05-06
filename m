@@ -2,82 +2,82 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9F3C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFFAC47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EAD8206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C1B420746
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:28:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588771703;
+	bh=LVUfe9mSykJZFr6+07W64xVGHzU3Mi6tnYebvbmsww8=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=jCaRm/I5jUtiSeDdW127fVucbxlQC4fUQHAB8XQl+hatfbNtHFZoOtwIKeXdu1YzO
+	 JOJ7yLmBhpssEshLtNMYf4GmecaPK7mqZDMdEU2Ve86d4PIGQMtkPekdIhYY7hZizH
+	 djPDEbIxzzLIVmfCp+vvNFXWahs7D5BAfaH6hIcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728482AbgEFNXM (ORCPT
+        id S1728298AbgEFN2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 09:23:12 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:42640 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728058AbgEFNXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 09:23:12 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9B9D2CFD35C662F401BB;
-        Wed,  6 May 2020 21:23:07 +0800 (CST)
-Received: from localhost (10.166.215.154) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Wed, 6 May 2020
- 21:23:00 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <clm@fb.com>, <josef@toxicpanda.com>, <dsterba@suse.com>
-CC:     <linux-btrfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] btrfs: Remove unused inline function heads_to_leaves
-Date:   Wed, 6 May 2020 21:22:39 +0800
-Message-ID: <20200506132239.3252-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 6 May 2020 09:28:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42336 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727964AbgEFN2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 09:28:22 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EB28206DB;
+        Wed,  6 May 2020 13:28:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588771702;
+        bh=LVUfe9mSykJZFr6+07W64xVGHzU3Mi6tnYebvbmsww8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=MdehGSe4QwJ2WJS3nPHgN3xY7ScZNMJX2eUU+PzKZLBoXY2hTSY7fE0mgZBCNEcnN
+         6OuHULEQyNb4i3Egcc0hdins1d0FSKERgLil/nxz1Yq+FLzp4Lf1A4cGNifVnUmJA2
+         0LRXYCo0IglL7Kygq0OptJCv1xCvtqsjYBOEvSgU=
+Date:   Wed, 6 May 2020 14:28:17 +0100
+From:   Will Deacon <will@kernel.org>
+To:     mingo@kernel.org, tglx@linutronix.de, paulmck@kernel.org
+Cc:     peterz@infradead.org, elver@google.com,
+        linux-kernel@vger.kernel.org
+Subject: Please can I have a stable KCSAN branch for 5.8?
+Message-ID: <20200506132816.GJ8043@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.166.215.154]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's no callers in-tree anymore since commit 64403612b73a ("btrfs:
-rework btrfs_check_space_for_delayed_refs")
+Hi TIP folks,
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- fs/btrfs/extent-tree.c | 16 ----------------
- 1 file changed, 16 deletions(-)
+I'm looking to rebase my READ_ONCE() series [1] on top of the KCSAN patches
+so that we can get them in for 5.8. However, tip/locking/kcsan seems to be
+missing some bits:
 
-diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
-index faa585d54eb7..3593f8cce9e5 100644
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -2114,22 +2114,6 @@ static u64 find_middle(struct rb_root *root)
- }
- #endif
- 
--static inline u64 heads_to_leaves(struct btrfs_fs_info *fs_info, u64 heads)
--{
--	u64 num_bytes;
--
--	num_bytes = heads * (sizeof(struct btrfs_extent_item) +
--			     sizeof(struct btrfs_extent_inline_ref));
--	if (!btrfs_fs_incompat(fs_info, SKINNY_METADATA))
--		num_bytes += heads * sizeof(struct btrfs_tree_block_info);
--
--	/*
--	 * We don't ever fill up leaves all the way so multiply by 2 just to be
--	 * closer to what we're really going to want to use.
--	 */
--	return div_u64(num_bytes, BTRFS_LEAF_DATA_SIZE(fs_info));
--}
--
- /*
-  * Takes the number of bytes to be csumm'ed and figures out how many leaves it
-  * would require to store the csums for that many bytes.
--- 
-2.17.1
+  * An update to checkpatch.pl to warn about missing comments for
+    data_race():
 
+    https://lore.kernel.org/r/20200401101714.44781-1-elver@google.com
 
+  * I'm unable to apply these two patches from Marco that are needed for
+    my READ_ONCE() work:
+
+    https://lore.kernel.org/lkml/20200424154730.190041-1-elver@google.com/
+
+    I think these depend on stuff that has been queued by Paul, and appears
+    in linux-next, but to be honest with you I'm quite confused about what
+    is queued for 5.8 and what isn't.
+
+What's the best base for me to use?
+
+Cheers,
+
+Will
+
+[1] https://lore.kernel.org/r/20200421151537.19241-1-will@kernel.org
