@@ -2,111 +2,83 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE0DC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9706CC38A2A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6DE220753
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:17:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bZZ0sEhP"
+	by mail.kernel.org (Postfix) with ESMTP id 7F4B72078C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:18:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730276AbgEFWRc (ORCPT
+        id S1730300AbgEFWSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 18:17:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38776 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730007AbgEFWRE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 18:17:04 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E814AC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 15:17:03 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id v8so6005796wma.0
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 15:17:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=C7wyn7pTmnqlyc+rUBJSxE06sG0HtgEW0OKPvR8Tsxw=;
-        b=bZZ0sEhPZuBxlzODOJ2aTuq+FhFpV1ia8MKgxHjrFxQTgPgb1/IiJIyk1VfFMd2Ao8
-         JStJv+kED03Cu503MsnaEP34m51mBXV4YQbVJiHLMvcCQKquwqOsjSofBO0Liyd3A4IY
-         KUDyuKelz3pjodgMWdFuCNVUhCKcslha7bMryR02eLZmMMZPsDcj2Hlchq4iuHQIz4a7
-         uag3vtq1iN4X4HqD27GUp5nfxxx1m+YPzrlKF/ctbn7Xt8O4yEgRYgh1unTzD7KEkNEJ
-         Yldo4q4P5P+OMg/2mRv/7h5wk7G0IMeTM6p7A9/t63pRICb3yB2myHnMx6We0WKuWFmv
-         DqHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=C7wyn7pTmnqlyc+rUBJSxE06sG0HtgEW0OKPvR8Tsxw=;
-        b=a4jhoHCZGvlxs90yCClU0YMJtDx63FXf9FqHjDl7nltbZrRXpMRBR0Bf+vjPy4DYdw
-         bV3GRebYmN73lvJQrQlNXDit5TZMDQ3OjO9Syh3224RjjKD/kacbiLOvE4TyhKz6trVV
-         4KiET33BVi/RsSiWAvuSPa+vjcpzBEVcuTVQVToeyyQlTAsePcZpWYiJQUKahr8E8Sks
-         uDLlHv4cNjB2Ebab3PcxyohxylDAqu0ig9t+eZ6ej2Tb3rZ+HtHwXMb/x2M4z2dunBT5
-         lr1Qa74PfGjzMkxZoxHMimn8HWP3zX8q7QE0YqE8Gd6fZjNqPZ47l2Av3CzOWaeJ0c2A
-         RDmQ==
-X-Gm-Message-State: AGi0PuZ9ovFre1uKgmKw0yWvNPLBWtcnBOho3TClS7Ygx5+1r9eEASMS
-        JssgXvIULubJPNQD9WCKGpIHRw==
-X-Google-Smtp-Source: APiQypITq7crxLJkVn/RbrWEv9v+jnCVErJ0W6XgCWccZZtRNqqXQPGqAMhjaj6LCy08zERmAi+p4Q==
-X-Received: by 2002:a1c:4b16:: with SMTP id y22mr6789413wma.170.1588803422609;
-        Wed, 06 May 2020 15:17:02 -0700 (PDT)
-Received: from starbuck.lan (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.googlemail.com with ESMTPSA id f5sm4760671wrp.70.2020.05.06.15.17.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 15:17:02 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/7] arm64: dts: meson: gxl: add acodec support
-Date:   Thu,  7 May 2020 00:16:50 +0200
-Message-Id: <20200506221656.477379-2-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200506221656.477379-1-jbrunet@baylibre.com>
-References: <20200506221656.477379-1-jbrunet@baylibre.com>
+        Wed, 6 May 2020 18:18:06 -0400
+Received: from mail.ispras.ru ([83.149.199.45]:45370 "EHLO mail.ispras.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729114AbgEFWSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 18:18:06 -0400
+X-Greylist: delayed 477 seconds by postgrey-1.27 at vger.kernel.org; Wed, 06 May 2020 18:18:05 EDT
+Received: from localhost.localdomain (unknown [46.188.10.168])
+        by mail.ispras.ru (Postfix) with ESMTPSA id C2AFDCD460;
+        Thu,  7 May 2020 01:10:06 +0300 (MSK)
+From:   Alexander Monakov <amonakov@ispras.ru>
+To:     linux-kernel@vger.kernel.org
+Cc:     Alexander Monakov <amonakov@ispras.ru>,
+        Borislav Petkov <bp@alien8.de>, linux-edac@vger.kernel.org
+Subject: [PATCH] EDAC/amd64: Dump registers before checking ECC
+Date:   Wed,  6 May 2020 22:06:42 +0000
+Message-Id: <20200506220642.32717-1-amonakov@ispras.ru>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the internal audio DAC to the gxl SoC DT
+Move dump_misc_regs earlier so decoded register contents are shown
+even if ECC cannot be enabled. The dump gives info such as number of
+memory controllers, so it serves as a sensible smoke-check even on
+platforms without ECC memory.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: linux-edac@vger.kernel.org
 ---
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index 44c0371f63ca..fc59c8534c0f 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -54,6 +54,17 @@ dwc3: usb@c9000000 {
- 			};
- 		};
+Hi,
+
+I used this patch when testing EDAC on AMD Family 17h Model 60h CPU,
+which needs another patch (adding PCI ids) that I intend to send
+shortly. I think it would be useful to have this upstream. 
+
+ drivers/edac/amd64_edac.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index f91f3bc1e0b2..1136500c5f53 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -3533,6 +3533,8 @@ static int probe_one_instance(unsigned int nid)
+ 		goto err_enable;
+ 	}
  
-+		acodec: audio-controller@c8832000 {
-+			compatible = "amlogic,t9015";
-+			reg = <0x0 0xc8832000 0x0 0x14>;
-+			#sound-dai-cells = <0>;
-+			sound-name-prefix = "ACODEC";
-+			clocks = <&clkc CLKID_ACODEC>;
-+			clock-names = "pclk";
-+			resets = <&reset RESET_ACODEC>;
-+			status = "disabled";
-+		};
++	dump_misc_regs(pvt);
 +
- 		crypto: crypto@c883e000 {
- 			compatible = "amlogic,gxl-crypto";
- 			reg = <0x0 0xc883e000 0x0 0x36>;
+ 	if (!ecc_enabled(pvt)) {
+ 		ret = -ENODEV;
+ 
+@@ -3559,8 +3561,6 @@ static int probe_one_instance(unsigned int nid)
+ 		goto err_enable;
+ 	}
+ 
+-	dump_misc_regs(pvt);
+-
+ 	return ret;
+ 
+ err_enable:
 -- 
-2.25.4
+2.26.2
 
