@@ -2,123 +2,204 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94960C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCCD5C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 651AB2073A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 939CF20714
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:22:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MElx+Mzy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eLBC11Zt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728964AbgEFJWb (ORCPT
+        id S1729038AbgEFJWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 05:22:31 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:60441 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728385AbgEFJWb (ORCPT
+        Wed, 6 May 2020 05:22:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728559AbgEFJWf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 05:22:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588756950;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc; bh=CBdTHlgR58fqrVhQa11e/qboBcj6G8ntplKxPy2GBxU=;
-        b=MElx+MzyDkY8Q38uCP2mANKG+TIM4AtFd+ao4K9JUq7xInl1Gm9hlHlEr5CdiyyOrPG6Lh
-        BogQeWcJSZXjvHoqxmLtra7niwN6uW0WY2CBQv68fR4JMqIy3fuImfb8RG1GTukpd4nmck
-        BfguvQxvpyTZhHWIIazPn8sri/9QvQ4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-508-AJeojHx0OeioLnMVoERQNA-1; Wed, 06 May 2020 05:22:28 -0400
-X-MC-Unique: AJeojHx0OeioLnMVoERQNA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8BC4E107ACCD;
-        Wed,  6 May 2020 09:22:27 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 434C8261A1;
-        Wed,  6 May 2020 09:22:27 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH v2] KVM: x86: fix DR6 delivery for various cases of #DB injection
-Date:   Wed,  6 May 2020 05:22:26 -0400
-Message-Id: <20200506092226.26394-1-pbonzini@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        Wed, 6 May 2020 05:22:35 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAF93C061A0F;
+        Wed,  6 May 2020 02:22:34 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id a21so1553791ljb.9;
+        Wed, 06 May 2020 02:22:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=oa3P1hvJ9JWgjoriWyaE6QqHlQBf9qEx9mp41zilS0I=;
+        b=eLBC11ZtPyd8FTayDY0uqooiZnpRr1qiuZ76CPLefg1fOLwOcQQm+i7+Japb0mAdLI
+         zyhuxC+Hkjbr1VmR1XYu8l4rsh8a1IC5mMK1LEHxyi+Gma0VJtQqJ7l9dmAjtXaoS6AC
+         1v58SBlH+3SoD+gTp+bTIdL2G/FKmTd/tnQRi8dOxFmOD2HdPC+YsbttMkciqn7vHXEL
+         3uPAAwiBWk6iFBAoWpc2hal7KpcYhLZqZMkQwOPXxncwC6SL6TrSjXoFP1DEcwa+TptN
+         s7x+sQWyd7iyDCyyGhz0Y7BMHxKIXtOBlVWgo74WNAO9fyJz/wIRgph3NnIk+9NtfX3R
+         aLBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=oa3P1hvJ9JWgjoriWyaE6QqHlQBf9qEx9mp41zilS0I=;
+        b=jtfYur0bhPhx3bspTLJCINDxYa5qFp2ujJNjZjxFDiB36xOo4b4bbwDJoIZE04zhEE
+         ognCC225+y91ow6VBNHQjdfg6da+RnVjwDW21S/6cMhFsS67T6F9xme59ICqFZCOxcph
+         ouOS9OT1wcS3jRzlJP2Vg951p4lhi+UU9Ez+wTlvv7NJ/fNQcUfo+G0gUTBnSAma3Jb0
+         w8rN+YtWZ79wg9mq+sgAvM+N+BKx9Q5uwJbpwWxVL08uK5r+ckXzFABZzmrpEL6EIJhI
+         gPIsgPSOvjjtBhDV+JqoD9mvFY2h7LZ0+y6GnWnaydH9sOgLm8d8WrNZvZlh5cBVtIsR
+         IYIQ==
+X-Gm-Message-State: AGi0PuYnqLS17+bEVSpj0n4MaO3NRD01REiedgzxmxt9Q5S2j6SQOiU9
+        7n1vBjAYfxXbJ4RWVwx9TvjdPWyoAvjF+jmAKD4=
+X-Google-Smtp-Source: APiQypLb3/ZlGRa6gpg6Sn8UR5LHRo20nItZ7tPR6vGsur8ge7hKXcp2BPav8kBQhasdNFllU582mMaLnJKnznKLL6o=
+X-Received: by 2002:a05:651c:385:: with SMTP id e5mr4345047ljp.208.1588756952993;
+ Wed, 06 May 2020 02:22:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200505174423.199985-1-ndesaulniers@google.com> <20200506043028.GA663805@ubuntu-s3-xlarge-x86>
+In-Reply-To: <20200506043028.GA663805@ubuntu-s3-xlarge-x86>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Wed, 6 May 2020 11:22:34 +0200
+Message-ID: <CA+icZUUnrku_CLpaRchV-tNA4VFDhoYg7pnZuAA55cwghz00_A@mail.gmail.com>
+Subject: Re: [PATCH] x86: bitops: fix build regression
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        stable@vger.kernel.org,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        "kernelci . org bot" <bot@kernelci.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Ilie Halip <ilie.halip@gmail.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Go through kvm_queue_exception_p so that the payload is correctly delivered
-through the exit qualification, and add a kvm_update_dr6 call to
-kvm_deliver_exception_payload that is needed on AMD.
+On Wed, May 6, 2020 at 6:30 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> On Tue, May 05, 2020 at 10:44:22AM -0700, Nick Desaulniers wrote:
+> > From: Sedat Dilek <sedat.dilek@gmail.com>
+> >
+> > It turns out that if your config tickles __builtin_constant_p via
+> > differences in choices to inline or not, this now produces invalid
+> > assembly:
+> >
+> > $ cat foo.c
+> > long a(long b, long c) {
+> >   asm("orb\t%1, %0" : "+q"(c): "r"(b));
+> >   return c;
+> > }
+> > $ gcc foo.c
+> > foo.c: Assembler messages:
+> > foo.c:2: Error: `%rax' not allowed with `orb'
+> >
+> > The "q" constraint only has meanting on -m32 otherwise is treated as
+> > "r".
+> >
+> > This is easily reproducible via Clang+CONFIG_STAGING=y+CONFIG_VT6656=m,
+> > or Clang+allyesconfig.
+>
+> For what it's worth, I don't see this with allyesconfig.
+>
+> > Keep the masking operation to appease sparse (`make C=1`), add back the
+> > cast in order to properly select the proper 8b register alias.
+> >
+> >  [Nick: reworded]
+> >
+> > Cc: stable@vger.kernel.org
+>
+> The offending commit was added in 5.7-rc1; we shouldn't need to
+> Cc stable since this should be picked up as an -rc fix.
+>
+> > Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/961
+> > Link: https://lore.kernel.org/lkml/20200504193524.GA221287@google.com/
+> > Fixes: 1651e700664b4 ("x86: Fix bitops.h warning with a moved cast")
+> > Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > Reported-by: kernelci.org bot <bot@kernelci.org>
+> > Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> > Suggested-by: Ilie Halip <ilie.halip@gmail.com>
+>
+> Not to split hairs but this is Ilie's diff, he should probably be the
+> author with Sedat's Reported-by/Tested-by.
+>
+> https://github.com/ClangBuiltLinux/linux/issues/961#issuecomment-608239458
+>
+> But eh, it's all a team effort plus that can only happen with Ilie's
+> explicit consent for a Signed-off-by.
+>
 
-Reported-by: Peter Xu <peterx@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/vmx/vmx.c | 6 ++----
- arch/x86/kvm/x86.c     | 6 +++---
- 2 files changed, 5 insertions(+), 7 deletions(-)
+Digital dementia... Looking 3 weeks back I have put all relevant
+informations into the patches in [1], mentionning the diff is from
+Ilie.
+Ilie for what reason did not react on any response for 3 weeks in the
+CBL issue-tracker.
+I think Nick wants to quickly fix the Kernel-CI-Bot issue seen with Clang.
+Personally, I hope this patch will be upstreamed in (one of) the next
+RC release.
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index c2c6335a998c..254c46a5d69d 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4682,7 +4682,7 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
- 			if (is_icebp(intr_info))
- 				WARN_ON(!skip_emulated_instruction(vcpu));
- 
--			kvm_queue_exception(vcpu, DB_VECTOR);
-+			kvm_queue_exception_p(vcpu, DB_VECTOR, dr6);
- 			return 1;
- 		}
- 		kvm_run->debug.arch.dr6 = dr6 | DR6_FIXED_1;
-@@ -4936,9 +4936,7 @@ static int handle_dr(struct kvm_vcpu *vcpu)
- 			vcpu->run->exit_reason = KVM_EXIT_DEBUG;
- 			return 0;
- 		} else {
--			vcpu->arch.dr6 &= ~DR_TRAP_BITS;
--			vcpu->arch.dr6 |= DR6_BD | DR6_RTM;
--			kvm_queue_exception(vcpu, DB_VECTOR);
-+			kvm_queue_exception_p(vcpu, DB_VECTOR, DR6_BD);
- 			return 1;
- 		}
- 	}
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index c5835f9cb9ad..f571e40de438 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -104,6 +104,7 @@ static u64 __read_mostly cr4_reserved_bits = CR4_RESERVED_BITS;
-                                     KVM_X2APIC_API_DISABLE_BROADCAST_QUIRK)
- 
- static void update_cr8_intercept(struct kvm_vcpu *vcpu);
-+static void kvm_update_dr6(struct kvm_vcpu *vcpu);
- static void process_nmi(struct kvm_vcpu *vcpu);
- static void enter_smm(struct kvm_vcpu *vcpu);
- static void __kvm_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags);
-@@ -473,6 +474,7 @@ void kvm_deliver_exception_payload(struct kvm_vcpu *vcpu)
- 		 * breakpoint), it is reserved and must be zero in DR6.
- 		 */
- 		vcpu->arch.dr6 &= ~BIT(12);
-+		kvm_update_dr6(vcpu);
- 		break;
- 	case PF_VECTOR:
- 		vcpu->arch.cr2 = payload;
-@@ -6731,9 +6733,7 @@ static bool kvm_vcpu_check_breakpoint(struct kvm_vcpu *vcpu, int *r)
- 					   vcpu->arch.db);
- 
- 		if (dr6 != 0) {
--			vcpu->arch.dr6 &= ~DR_TRAP_BITS;
--			vcpu->arch.dr6 |= dr6 | DR6_RTM;
--			kvm_queue_exception(vcpu, DB_VECTOR);
-+			kvm_queue_exception_p(vcpu, DB_VECTOR, dr6);
- 			*r = 1;
- 			return true;
- 		}
--- 
-2.18.2
+I agree on CC:stable can be dropped.
+Check causing commit-id:
 
+$ git describe --contains 1651e700664b4
+v5.7-rc1~122^2
+
+Thanks.
+
+Regards,
+- Sedat -
+
+[1] https://github.com/ClangBuiltLinux/linux/issues/961#issuecomment-613207374
+
+> I am currently doing a set of builds with clang-11 with this patch on
+> top of 5.7-rc4 to make sure that all of the cases I have found work.
+> Once that is done, I'll comment back with a tag.
+>
+> > Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> > ---
+> >  arch/x86/include/asm/bitops.h | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
+> > index b392571c1f1d..139122e5b25b 100644
+> > --- a/arch/x86/include/asm/bitops.h
+> > +++ b/arch/x86/include/asm/bitops.h
+> > @@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long *addr)
+> >       if (__builtin_constant_p(nr)) {
+> >               asm volatile(LOCK_PREFIX "orb %1,%0"
+> >                       : CONST_MASK_ADDR(nr, addr)
+> > -                     : "iq" (CONST_MASK(nr) & 0xff)
+> > +                     : "iq" ((u8)(CONST_MASK(nr) & 0xff))
+> >                       : "memory");
+> >       } else {
+> >               asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
+> > @@ -74,7 +74,7 @@ arch_clear_bit(long nr, volatile unsigned long *addr)
+> >       if (__builtin_constant_p(nr)) {
+> >               asm volatile(LOCK_PREFIX "andb %1,%0"
+> >                       : CONST_MASK_ADDR(nr, addr)
+> > -                     : "iq" (CONST_MASK(nr) ^ 0xff));
+> > +                     : "iq" ((u8)(CONST_MASK(nr) ^ 0xff)));
+> >       } else {
+> >               asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
+> >                       : : RLONG_ADDR(addr), "Ir" (nr) : "memory");
+> > --
+> > 2.26.2.526.g744177e7f7-goog
+> >
+>
+> Cheers,
+> Nathan
