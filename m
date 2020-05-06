@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A63EC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 307E8C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 403B020747
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07F3920747
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:23:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b6GeJ8UP"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iphw8LOH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbgEFHXi (ORCPT
+        id S1728349AbgEFHXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 03:23:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39968 "EHLO
+        Wed, 6 May 2020 03:23:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727842AbgEFHXf (ORCPT
+        by vger.kernel.org with ESMTP id S1727842AbgEFHXk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 03:23:35 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF661C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 00:23:35 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id hi11so434280pjb.3
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 00:23:35 -0700 (PDT)
+        Wed, 6 May 2020 03:23:40 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29EAFC061A10
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 00:23:39 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id x77so574523pfc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 00:23:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Fze5y+aKClh/oN5ITL+3asoB6Hf78k3jqX6stiIJKcY=;
-        b=b6GeJ8UPMHmMtngVK6oP7jgFPERIM/MP+rQoEKWeDRP6IYT61AIk/DyPtbsELKkJjP
-         NntpASpXHm/XVrfEFPd6iq0VNv4d7bhlHyBMQpbm7uq1Jg/VMi1K7cIBRrPNtMHAvDkt
-         tB2YjES4xTYtAzvKwTUkasbONsz2/7ry000ck=
+        bh=5LGrd0GCp2GzoXCciri6QP/vYjybcGcRtj9Gm0aAra8=;
+        b=iphw8LOHvc14me23EkcDGAveepL+5oyVXgA/7aVqeoEgbqB/kHqW7UDZshvRhYen0n
+         Phl9jDxNaaJWm//QIjLLLSHud5Tr5atoUUu0Gu+K+/HzYd0qIGMH+h04d3AooOrF2bEU
+         84xw9tqPnkasKhkgaE0aNrQBUtzcxyTwUu7Qs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Fze5y+aKClh/oN5ITL+3asoB6Hf78k3jqX6stiIJKcY=;
-        b=L1n+SS5JpcBb2CN1yUIJmC1s/v3d8XWuya1sD6udKKNWf33NgxCHrMM3zcUGkRXuJ+
-         Rx58Cxs9n/JhkQH+xWxGNTn0lsuXvGSQgTOn8lFJswhvuzBalChzypmaOChVXwdkWM4F
-         fRb1a0485q2nu+NJzuONkwAK4U1WcZJEaFcyB9B/CuPIpnjM/IWEWHp8vyud/8XvXgfX
-         0KQ09/uobPnjuPHjIyqK+NSMZD7ObRuMEkojh+cQFc9pyNvXLyHEQAsmiYrq6uoJZU+z
-         oFUjEZ+XzcZH10LB+XpZRzMktT8rUt8f/WD1bqI4UBKIGfLAa2uGN8VEEQe+XTMXZdio
-         694A==
-X-Gm-Message-State: AGi0PubCJKlXxh9TRrqyokWYY7KbGAolE2ea00I68qXQaluk3tNkhY7z
-        7jP5bUOrk3lBRLKcmYe2WPEBwg==
-X-Google-Smtp-Source: APiQypJEvMODLnMzIV3b0m4nrv11Ky4vgltOYbvUg4ZEskSuldeLgaEBh3RVHEyvggyqkyGztVJPAQ==
-X-Received: by 2002:a17:90a:2949:: with SMTP id x9mr7656502pjf.33.1588749815268;
-        Wed, 06 May 2020 00:23:35 -0700 (PDT)
+        bh=5LGrd0GCp2GzoXCciri6QP/vYjybcGcRtj9Gm0aAra8=;
+        b=TmU8qDRkDZP6OGAJbuCTPMXyXFPKhQBeMLpe9I30ue0Ys6y4nhh2xSPxyCFhr7+quv
+         OTUpFw4d187/iLClddIDFIysi6+fydXjHDM8UWCQjJ5leqyjuLMxyyzFyXSHhqDwNXM+
+         58/z4OAwZOE56q2snUSLdoGLXYxHlGD0xxU3LdillVXtwCu7ewkI2042FC+xbLVQImpq
+         Sw3gC2pacnpY10ryHbXIWn7lrtCKQhFHKy8ajIJrtwmsQIb+CtXkH7PFFNgBRVa/oPW8
+         jSQphkl3kNi3iiBNRNBJjW8pfrYok5ll8xRak506ChpfSR5ocy5VUnhdnJV7PD36NSjG
+         TuTg==
+X-Gm-Message-State: AGi0Puaf+hMxHztFqcnIQJZS3scrcG9syrzuH2bM/z2Dw5kAkH3DvOY6
+        OV4I9UnOpabWd1gaCcCZCjLrbg==
+X-Google-Smtp-Source: APiQypKo1Sd/AT6g8MTRHUbLALuWztAtTilmBnoQG2IBw8cdHyWnDYPoOcoAWJvi465bvD3/LJF4qA==
+X-Received: by 2002:aa7:982a:: with SMTP id q10mr6950169pfl.212.1588749818693;
+        Wed, 06 May 2020 00:23:38 -0700 (PDT)
 Received: from localhost ([2401:fa00:1:10:3db2:76bf:938b:be05])
-        by smtp.gmail.com with ESMTPSA id o7sm948044pgs.35.2020.05.06.00.23.33
+        by smtp.gmail.com with ESMTPSA id i18sm3980351pjx.33.2020.05.06.00.23.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 May 2020 00:23:34 -0700 (PDT)
+        Wed, 06 May 2020 00:23:38 -0700 (PDT)
 From:   Claire Chang <tientzu@chromium.org>
 To:     robh@kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com,
         long.cheng@mediatek.com, changqi.hu@mediatek.com
 Cc:     linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org,
         linux-kernel@vger.kernel.org, Claire Chang <tientzu@chromium.org>
-Subject: [PATCH 2/3] tty: serial_core: add wakeup_irq to support in-band wakeup
-Date:   Wed,  6 May 2020 15:23:13 +0800
-Message-Id: <20200506072314.112409-3-tientzu@chromium.org>
+Subject: [PATCH 3/3] uart: mediatek: move the in-band wakeup logic to core
+Date:   Wed,  6 May 2020 15:23:14 +0800
+Message-Id: <20200506072314.112409-4-tientzu@chromium.org>
 X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
 In-Reply-To: <20200506072314.112409-1-tientzu@chromium.org>
 References: <20200506072314.112409-1-tientzu@chromium.org>
@@ -74,85 +74,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since some uart controllers may be off in S3, we won't be able to use
-the normal in-band wakeup.
-
-Take 8250_mtk.c as an example. The driver needs to allocate an edge
-sensitive interrupt as the wakeup_irq and use an addtional pinctrl to
-reconfigure Rx pin to normal GPIO in sleep state. Once host detects Rx
-falling, an interrupt is triggered, and the system leaves sleep state.
-
-Add the wakeup_irq logic in core to simplify and make the code more
-generic. Also, we can align with the original wakeup behavior and
-power/wakeup node.
+Move the in-band wakeup logic to core so that we can control the wakeup
+behavior by serdev controller's power/wakeup node and align with other
+serial drivers.
 
 Signed-off-by: Claire Chang <tientzu@chromium.org>
 ---
- drivers/tty/serial/8250/8250_core.c | 1 +
- drivers/tty/serial/serial_core.c    | 8 +++++---
- include/linux/serial_core.h         | 1 +
- 3 files changed, 7 insertions(+), 3 deletions(-)
+ drivers/tty/serial/8250/8250_mtk.c | 24 +++---------------------
+ 1 file changed, 3 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
-index 45d9117cab680..06214e9fdc8ff 100644
---- a/drivers/tty/serial/8250/8250_core.c
-+++ b/drivers/tty/serial/8250/8250_core.c
-@@ -1001,6 +1001,7 @@ int serial8250_register_8250_port(struct uart_8250_port *up)
- 		uart->port.membase      = up->port.membase;
- 		uart->port.irq          = up->port.irq;
- 		uart->port.irqflags     = up->port.irqflags;
-+		uart->port.wakeup_irq	= up->port.wakeup_irq;
- 		uart->port.uartclk      = up->port.uartclk;
- 		uart->port.fifosize     = up->port.fifosize;
- 		uart->port.regshift     = up->port.regshift;
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index 66a5e2faf57ea..1796a33986613 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -2165,12 +2165,13 @@ int uart_suspend_port(struct uart_driver *drv, struct uart_port *uport)
- 	struct tty_port *port = &state->port;
- 	struct device *tty_dev;
- 	struct uart_match match = {uport, drv};
-+	int irq = uport->wakeup_irq > 0 ? uport->wakeup_irq : uport->irq;
+diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
+index f839380c2f4c1..52cb41e4e493d 100644
+--- a/drivers/tty/serial/8250/8250_mtk.c
++++ b/drivers/tty/serial/8250/8250_mtk.c
+@@ -71,7 +71,6 @@ struct mtk8250_data {
+ #ifdef CONFIG_SERIAL_8250_DMA
+ 	enum dma_rx_status	rx_status;
+ #endif
+-	int			rx_wakeup_irq;
+ };
  
- 	mutex_lock(&port->mutex);
+ /* flow control mode */
+@@ -496,6 +495,8 @@ static int mtk8250_probe(struct platform_device *pdev)
+ 	struct uart_8250_port uart = {};
+ 	struct resource *regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	struct resource *irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
++	struct resource *wakeup_irq =
++		platform_get_resource(pdev, IORESOURCE_IRQ, 1);
+ 	struct mtk8250_data *data;
+ 	int err;
  
- 	tty_dev = device_find_child(uport->dev, &match, serial_match_port);
- 	if (tty_dev && device_may_wakeup(tty_dev)) {
--		enable_irq_wake(uport->irq);
-+		enable_irq_wake(irq);
- 		put_device(tty_dev);
- 		mutex_unlock(&port->mutex);
- 		return 0;
-@@ -2228,13 +2229,14 @@ int uart_resume_port(struct uart_driver *drv, struct uart_port *uport)
- 	struct device *tty_dev;
- 	struct uart_match match = {uport, drv};
- 	struct ktermios termios;
-+	int irq = uport->wakeup_irq > 0 ? uport->wakeup_irq : uport->irq;
+@@ -525,6 +526,7 @@ static int mtk8250_probe(struct platform_device *pdev)
+ 	spin_lock_init(&uart.port.lock);
+ 	uart.port.mapbase = regs->start;
+ 	uart.port.irq = irq->start;
++	uart.port.wakeup_irq = wakeup_irq ? wakeup_irq->start : -ENXIO;
+ 	uart.port.pm = mtk8250_do_pm;
+ 	uart.port.type = PORT_16550;
+ 	uart.port.flags = UPF_BOOT_AUTOCONF | UPF_FIXED_PORT;
+@@ -556,8 +558,6 @@ static int mtk8250_probe(struct platform_device *pdev)
+ 	if (data->line < 0)
+ 		return data->line;
  
- 	mutex_lock(&port->mutex);
+-	data->rx_wakeup_irq = platform_get_irq_optional(pdev, 1);
+-
+ 	return 0;
+ }
  
- 	tty_dev = device_find_child(uport->dev, &match, serial_match_port);
- 	if (!uport->suspended && device_may_wakeup(tty_dev)) {
--		if (irqd_is_wakeup_set(irq_get_irq_data((uport->irq))))
--			disable_irq_wake(uport->irq);
-+		if (irqd_is_wakeup_set(irq_get_irq_data((irq))))
-+			disable_irq_wake(irq);
- 		put_device(tty_dev);
- 		mutex_unlock(&port->mutex);
- 		return 0;
-diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
-index 92f5eba860528..5764687b90a36 100644
---- a/include/linux/serial_core.h
-+++ b/include/linux/serial_core.h
-@@ -136,6 +136,7 @@ struct uart_port {
- 						  struct serial_iso7816 *iso7816);
- 	unsigned int		irq;			/* irq number */
- 	unsigned long		irqflags;		/* irq flags  */
-+	unsigned int		wakeup_irq;		/* wakeup irq number */
- 	unsigned int		uartclk;		/* base uart clock */
- 	unsigned int		fifosize;		/* tx fifo size */
- 	unsigned char		x_char;			/* xon/xoff char */
+@@ -581,23 +581,9 @@ static int mtk8250_remove(struct platform_device *pdev)
+ static int __maybe_unused mtk8250_suspend(struct device *dev)
+ {
+ 	struct mtk8250_data *data = dev_get_drvdata(dev);
+-	int irq = data->rx_wakeup_irq;
+-	int err;
+ 
+ 	serial8250_suspend_port(data->line);
+-
+ 	pinctrl_pm_select_sleep_state(dev);
+-	if (irq >= 0) {
+-		err = enable_irq_wake(irq);
+-		if (err) {
+-			dev_err(dev,
+-				"failed to enable irq wake on IRQ %d: %d\n",
+-				irq, err);
+-			pinctrl_pm_select_default_state(dev);
+-			serial8250_resume_port(data->line);
+-			return err;
+-		}
+-	}
+ 
+ 	return 0;
+ }
+@@ -605,12 +591,8 @@ static int __maybe_unused mtk8250_suspend(struct device *dev)
+ static int __maybe_unused mtk8250_resume(struct device *dev)
+ {
+ 	struct mtk8250_data *data = dev_get_drvdata(dev);
+-	int irq = data->rx_wakeup_irq;
+ 
+-	if (irq >= 0)
+-		disable_irq_wake(irq);
+ 	pinctrl_pm_select_default_state(dev);
+-
+ 	serial8250_resume_port(data->line);
+ 
+ 	return 0;
 -- 
 2.26.2.526.g744177e7f7-goog
 
