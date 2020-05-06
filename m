@@ -2,149 +2,169 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0883C47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A54C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF80A20A8B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:49:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XF2QLEqj"
+	by mail.kernel.org (Postfix) with ESMTP id 6A5E320B1F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:49:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730660AbgEFQtZ (ORCPT
+        id S1730666AbgEFQte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:49:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43862 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730600AbgEFQs6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:48:58 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BE48C061A0F;
-        Wed,  6 May 2020 09:48:58 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id s18so1033392pgl.12;
-        Wed, 06 May 2020 09:48:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=Q5IRPzLfDFc6zE5WNxwnTajRGP0x4b+ii1VC2EvdLBA=;
-        b=XF2QLEqjTD2QnOLJBp1OzwZJQQsiq+YIlYLWBtZj1eBnyNpi9Rcc1/30vzfG6oLAwT
-         /zJ8OM5+6cI4raADuZlzasemdSnMNlZ6U99dJ7FEB9Nqk1SlstQENZfCKXlctc4y3XH6
-         U98Vf3pAFefTaEDi+Xp4gG08BvFTS5MUsF9SL6hBlJSGXajQ7OW9sikF14xeT7a4Lpwu
-         tK/7OkUlJsNU0fcUf2N3wPB8qSoOKK6+ypn/jQdkTsXuQgiZ9+rFwAWAX80QTG7QN46D
-         niAESIK0pW4nhb0cDndJLW3lPgMm0DnwI/bbZLS5qHlkjeBWSt9zIS+gym7dkyrEizcv
-         oSMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Q5IRPzLfDFc6zE5WNxwnTajRGP0x4b+ii1VC2EvdLBA=;
-        b=s41w2fmedGow7aObXRjz94/wu9HEbE32UuzZT0n/FohmwKN6xES7F3aFMhwxlACmzy
-         GwpqFlLujIIga2A2I5i7/Fx7ycoc1R4KiAV98XUnEAwJmdzTTGvRgItJMcIp6nI28vBx
-         78RI0Y3J4k3DtHw3fmmp5ECVW9G2cmUJ3yN9pMV2qd+4TWVSSaN6za5z3GtOw0gWoyJ7
-         hT9bmzBEwMkOPAn4xn1AE0Jd5MNRxZVUxhqf7e5y0DyWUuiIYh3EWuX/kPXcBzr7UPEQ
-         HSxHL7fAFsnE3pMisUVG/Cxt4MP6tWgLRseeQOtiBWVdxORqkFwzE90qVRHR/tVX1Q/J
-         O7Yg==
-X-Gm-Message-State: AGi0PuZ8kCmSqwQ6knMTToa4t46iBhLmvGVFAyavbpG1WYoLpic0bols
-        v3wNAjdMdKilmElkUxR/OG6otfGQq1g=
-X-Google-Smtp-Source: APiQypLBYRdgWEyw6Mj7pmR/T0S9WSt4ZK/eK79Wp+uv+ye4U97ZHumhHS2/tZ+YxVnjnsqT/VxpcQ==
-X-Received: by 2002:aa7:982b:: with SMTP id q11mr8890440pfl.260.1588783737640;
-        Wed, 06 May 2020 09:48:57 -0700 (PDT)
-Received: from [192.168.1.7] ([223.72.42.191])
-        by smtp.gmail.com with ESMTPSA id d20sm1928346pgl.72.2020.05.06.09.48.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 May 2020 09:48:56 -0700 (PDT)
-Subject: Re: [PATCH] media: usb: ttusb-dec: avoid buffer overflow in
- ttusb_dec_handle_irq() when DMA failures/attacks occur
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     mchehab@kernel.org, kstewart@linuxfoundation.org,
-        tomasbortoli@gmail.com, sean@mess.org, allison@lohutok.net,
-        tglx@linutronix.de, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200505142110.7620-1-baijiaju1990@gmail.com>
- <20200505181042.GD1199718@kroah.com>
- <0e4a86ee-8c4e-4ac3-8499-4e9a6ed7bd1e@gmail.com>
- <20200506110722.GA2975410@kroah.com>
- <b3af10e3-8709-3da0-6841-e5ddd6b4a609@gmail.com>
- <20200506155257.GB3537174@kroah.com>
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-Message-ID: <46615f6e-11ec-6546-42a9-3490414f9550@gmail.com>
-Date:   Thu, 7 May 2020 00:48:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200506155257.GB3537174@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Wed, 6 May 2020 12:49:34 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:9462 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730582AbgEFQsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 12:48:53 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49HMxG1tVRz9v4kH;
+        Wed,  6 May 2020 18:48:50 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id mPULLINeXMSc; Wed,  6 May 2020 18:48:50 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMxG0nBcz9v4kG;
+        Wed,  6 May 2020 18:48:50 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E793A8B7C5;
+        Wed,  6 May 2020 18:48:51 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id UAxc12qlDLEm; Wed,  6 May 2020 18:48:51 +0200 (CEST)
+Received: from localhost.localdomain (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9EF638B777;
+        Wed,  6 May 2020 18:48:51 +0200 (CEST)
+Received: by localhost.localdomain (Postfix, from userid 0)
+        id 691C565911; Wed,  6 May 2020 16:48:51 +0000 (UTC)
+Message-Id: <dbf3f04358be4ce733fe4f495775a9ca0c6e719b.1588783498.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <cover.1588783498.git.christophe.leroy@csgroup.eu>
+References: <cover.1588783498.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH v2 45/45] powerpc/32s: Implement dedicated kasan_init_region()
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Wed,  6 May 2020 16:48:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Implement a kasan_init_region() dedicated to book3s/32 that
+allocates KASAN regions using BATs.
 
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ arch/powerpc/include/asm/kasan.h      |  1 +
+ arch/powerpc/mm/kasan/Makefile        |  1 +
+ arch/powerpc/mm/kasan/book3s_32.c     | 57 +++++++++++++++++++++++++++
+ arch/powerpc/mm/kasan/kasan_init_32.c |  2 +-
+ 4 files changed, 60 insertions(+), 1 deletion(-)
+ create mode 100644 arch/powerpc/mm/kasan/book3s_32.c
 
-On 2020/5/6 23:52, Greg KH wrote:
-> On Wed, May 06, 2020 at 11:30:22PM +0800, Jia-Ju Bai wrote:
->>
->> On 2020/5/6 19:07, Greg KH wrote:
->>> On Wed, May 06, 2020 at 06:13:01PM +0800, Jia-Ju Bai wrote:
->>>> I have never modified DMA memory in the real world, but an attacker can use
->>>> a malicious device to do this.
->>>> There is a video that shows how to use the Inception tool to perform DMA
->>>> attacks and login in the Windows OS without password:
->>>> https://www.youtube.com/watch?v=HDhpy7RpUjM
->>> If you have control over the hardware, and can write to any DMA memory,
->>> again, there's almost nothing a kernel can do to protect from that.
->> I think that each device can only access its own DMA memory, instead of any
->> DMA memory for other hardware devices.
-> That's not true at all for all systems that Linux runs on.
+diff --git a/arch/powerpc/include/asm/kasan.h b/arch/powerpc/include/asm/kasan.h
+index 107a24c3f7b3..be85c7005fb1 100644
+--- a/arch/powerpc/include/asm/kasan.h
++++ b/arch/powerpc/include/asm/kasan.h
+@@ -34,6 +34,7 @@ static inline void kasan_init(void) { }
+ static inline void kasan_late_init(void) { }
+ #endif
+ 
++void kasan_update_early_region(unsigned long k_start, unsigned long k_end, pte_t pte);
+ int kasan_init_shadow_page_tables(unsigned long k_start, unsigned long k_end);
+ int kasan_init_region(void *start, size_t size);
+ 
+diff --git a/arch/powerpc/mm/kasan/Makefile b/arch/powerpc/mm/kasan/Makefile
+index 440038ea79f1..bb1a5408b86b 100644
+--- a/arch/powerpc/mm/kasan/Makefile
++++ b/arch/powerpc/mm/kasan/Makefile
+@@ -4,3 +4,4 @@ KASAN_SANITIZE := n
+ 
+ obj-$(CONFIG_PPC32)           += kasan_init_32.o
+ obj-$(CONFIG_PPC_8xx)		+= 8xx.o
++obj-$(CONFIG_PPC_BOOK3S_32)	+= book3s_32.o
+diff --git a/arch/powerpc/mm/kasan/book3s_32.c b/arch/powerpc/mm/kasan/book3s_32.c
+new file mode 100644
+index 000000000000..4bc491a4a1fd
+--- /dev/null
++++ b/arch/powerpc/mm/kasan/book3s_32.c
+@@ -0,0 +1,57 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#define DISABLE_BRANCH_PROFILING
++
++#include <linux/kasan.h>
++#include <linux/memblock.h>
++#include <asm/pgalloc.h>
++#include <mm/mmu_decl.h>
++
++int __init kasan_init_region(void *start, size_t size)
++{
++	unsigned long k_start = (unsigned long)kasan_mem_to_shadow(start);
++	unsigned long k_end = (unsigned long)kasan_mem_to_shadow(start + size);
++	unsigned long k_cur = k_start;
++	int k_size = k_end - k_start;
++	int k_size_base = 1 << (ffs(k_size) - 1);
++	int ret;
++	void *block;
++
++	block = memblock_alloc(k_size, k_size_base);
++
++	if (block && k_size_base >= SZ_128K && k_start == ALIGN(k_start, k_size_base)) {
++		int k_size_more = 1 << (ffs(k_size - k_size_base) - 1);
++
++		setbat(-1, k_start, __pa(block), k_size_base, PAGE_KERNEL);
++		if (k_size_more >= SZ_128K)
++			setbat(-1, k_start + k_size_base, __pa(block) + k_size_base,
++			       k_size_more, PAGE_KERNEL);
++		if (v_block_mapped(k_start))
++			k_cur = k_start + k_size_base;
++		if (v_block_mapped(k_start + k_size_base))
++			k_cur = k_start + k_size_base + k_size_more;
++
++		update_bats();
++	}
++
++	if (!block)
++		block = memblock_alloc(k_size, PAGE_SIZE);
++	if (!block)
++		return -ENOMEM;
++
++	ret = kasan_init_shadow_page_tables(k_start, k_end);
++	if (ret)
++		return ret;
++
++	kasan_update_early_region(k_start, k_cur, __pte(0));
++
++	for (; k_cur < k_end; k_cur += PAGE_SIZE) {
++		pmd_t *pmd = pmd_ptr_k(k_cur);
++		void *va = block + k_cur - k_start;
++		pte_t pte = pfn_pte(PHYS_PFN(__pa(va)), PAGE_KERNEL);
++
++		__set_pte_at(&init_mm, k_cur, pte_offset_kernel(pmd, k_cur), pte, 0);
++	}
++	flush_tlb_kernel_range(k_start, k_end);
++	return 0;
++}
+diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
+index 76d418af4ce8..c42085801c04 100644
+--- a/arch/powerpc/mm/kasan/kasan_init_32.c
++++ b/arch/powerpc/mm/kasan/kasan_init_32.c
+@@ -79,7 +79,7 @@ int __init __weak kasan_init_region(void *start, size_t size)
+ 	return 0;
+ }
+ 
+-static void __init
++void __init
+ kasan_update_early_region(unsigned long k_start, unsigned long k_end, pte_t pte)
+ {
+ 	unsigned long k_cur;
+-- 
+2.25.0
 
-I am not sure to understand this.
-For example, a driver requests DMA memory with "len" size by using:
-    mem = dma_alloc_coherent(..., len, ...);
-I think that the driver can only access DMA memory between "mem" and 
-"mem + len", is it true?
-Can the driver access other DMA memory using some code like "mem + len * 
-10"?
-
->
->> A feasible example is that, the attacker inserts a malicious device via
->> PCI-E bus in a locked computer, when the owner of this computer leaves.
-> This is a semi-well-known issue.  It's been described in the past
-> regarding thunderbolt devices, and odds are, more people will run across
-> it again in the future and also complain about it.
->
-> The best solution is to solve this at the bus level, preventing
-> different devices access to other memory areas.
->
-> And providing physical access control to systems that you care about
-> this type of attack for.
->
-> Again, this isn't a new thing, but the ability for us to do much about
-> it depends on the specific hardware control, and how we set defaults up.
-
-Yes, I agree that this issue is not new, because DMA attacks are old 
-problems.
-But I am a little surprised that many current drivers are still 
-vulnerable to DMA attacks.
-
->
-> If you trust a device enough to plug it in, well, you need to trust it
-> :)
-
-Well, maybe I need to trust all devices in my computer :)
-
-Anyway, thanks a lot for your patient explanation and reply.
-If you have encountered other kinds of DMA-related bugs/vulnerabilities, 
-maybe I can help to detect them using my static-analysis tool :)
-
-
-Best wishes,
-Jia-Ju Bai
