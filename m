@@ -2,212 +2,226 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B73C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC27C47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F389020752
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74E6720752
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:45:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dMf6oT2D"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pXhbgeR1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgEFNpn (ORCPT
+        id S1728836AbgEFNpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 09:45:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43250 "EHLO
+        Wed, 6 May 2020 09:45:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725966AbgEFNpm (ORCPT
+        by vger.kernel.org with ESMTP id S1725966AbgEFNpu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 09:45:42 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D8DCC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 06:45:42 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id 188so1376533lfa.10
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 06:45:42 -0700 (PDT)
+        Wed, 6 May 2020 09:45:50 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17521C061A0F;
+        Wed,  6 May 2020 06:45:50 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id d22so1127304pgk.3;
+        Wed, 06 May 2020 06:45:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oNMw1/oUmQe9wJ5IG8wrbgriwK3wMZ1bOEkTKJypMs4=;
-        b=dMf6oT2DO2yk/Rta1AQRBREJoVhXM6CqkriMdZHwYpd5adf/lEIDdhHN8FCarTxLov
-         2WjdtT3LffvxiLAJyvmR05yc1WPgxZHSnwquGGGjA7TEklgRR5uKoGK4nEGVdpwTOews
-         xJ+U2Q4BiZTfk30AreuFL+ePDQqbWLnSbw5CytDhe1nmK2ErFNIF6Qk+JScOoF2cLupY
-         nhUurXboYWL1FeJD3gQPgBfRACkrBnicRuEiB4H+3EYIS6kk33m9YxQH1l3CpgaJAoH9
-         fFG1W8X/wZEts5mRURxutxDhi4blnOt2ns/Vwg/dhQutv+XnS6nRICqfICOJSZMCfF+D
-         WA/g==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=S3Lwm4AKo+YF745y2UjeT2m8wwH3bfZOap41uVObmhM=;
+        b=pXhbgeR1QKrcPuSNZiwXRMXBdl17dvD867jNinBv+BMnTfkH+cnwt6kgaa4T1nVWmr
+         dbVKmBxjQ6N4NedamQUDQ50Svb0TpHEJBzeipLe6/Iq2TXy3gO+zCawrOtQlDl8m8egc
+         mbRIqbVy6H/5NvRqUvX8al1LFclAmY/LxwOQdw/nrNWZtFQBqczvoSVsmpmbc4lmHU3h
+         0zMFzmCgITU412brnVgu51qHXBllle1mA7ynClUazyt+yRHNQQW9/pyqe57JXMcVvidd
+         WaTA9Qx8e4ZfYIU4rJtjXAqsSxotlAXImNgdpP0F0uy9YZUGkOScAUhr0PG0wSQBXpwb
+         hZGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oNMw1/oUmQe9wJ5IG8wrbgriwK3wMZ1bOEkTKJypMs4=;
-        b=DS7IRAaGlLNwzl8d/mLqQK2kkVh6Xg4z0SSmxfsqMEswvlmm9ZvvPm/Cd8J9RoHEea
-         mmO1bqSlJMMyjC2FhfLs3b58zRerDZv8Su5xAnH97hCfp88GtleWGCCT4TmVgm2WvbXj
-         FU3LmG3jZv4onn5sAgd+31n3kbAmEJcvekIi44+tBZ3Aee0xyCCDixIYwhkbCIauhBxM
-         6lowc3KD+GSjgfXGerDMbo7Vkg4JLXvbRwxRvp12QS3GBH1zw34bUMS477ymWNEiADUS
-         dXPgFhC4yjec1VFvhe9nO65GGedbJZGiHD9PaFZF/73MttD6dV6tFcO6J16Ruzp1H6JN
-         VViA==
-X-Gm-Message-State: AGi0PublSswhx/ZTKjKHWL8gvJonMtdWXQhNNkIGCkENYuA/S+hxTsyG
-        9pEWNYy6w/bFROCJ0DWMPtMlMzDTRO/Tz1WkMRPbPg==
-X-Google-Smtp-Source: APiQypLKFhBjnKbCluld53RcHtlLQB6Qj6qAB6Yyyk+eqxahTlAl1GfB0NFgZUOTgcfgsYpfgp/XPua0q/klDsg0FF0=
-X-Received: by 2002:ac2:46c1:: with SMTP id p1mr4912523lfo.25.1588772739676;
- Wed, 06 May 2020 06:45:39 -0700 (PDT)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=S3Lwm4AKo+YF745y2UjeT2m8wwH3bfZOap41uVObmhM=;
+        b=ahIU9+u7xBzQN2rOBFM9t1TNSObrM0WfX6P1QIObqTLeDJnoSbMt/ci+V3UBlnSQU1
+         yeChp7biTmwL5tkitSQOea8iUQEUu3v0O3o3QLL2SaX+R+fH0tDEjp289O8B2U6GQsio
+         HMBzZT1BYnAaKPPT3IqcHVhnNX9U8GbWv66L5mR43RgDC2/oaacVqxy+SimSe1WkNQvs
+         4aq48p2cPOqeTk2POMkAZX1Hg0PYq3xykkvE3JRQuf2LyM3oP58MvYtNEEPHroAO5h18
+         RuG8CSKCkWfPxgveNpKtrssNfM/HE7j+b1pdJZpVk5HXH+QyK5gTW4DVv6lflsUjtN+0
+         zj5w==
+X-Gm-Message-State: AGi0PuYibTQ9TF9tGqoapGx8GQhyVd/JuwxkjT+1OU4329W9XjWazkfS
+        76U8uSYsi0royBFYC9gaSHc3IHYG
+X-Google-Smtp-Source: APiQypINpwMfiEoPsVfPVR3/1u/QrlIjA9AJighlTYyj1K8cdQyo3P+Dy7P9kv5Pnuns6elfp4Wx/A==
+X-Received: by 2002:a62:343:: with SMTP id 64mr8265734pfd.47.1588772749363;
+        Wed, 06 May 2020 06:45:49 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 3sm1905650pfo.27.2020.05.06.06.45.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 May 2020 06:45:48 -0700 (PDT)
+Subject: Re: [PATCH v6 1/2] dt-bindings: watchdog: Add ARM smc wdt for mt8173
+ watchdog
+To:     Evan Benn <evanbenn@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     jwerner@chromium.org, xingyu.chen@amlogic.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org
+References: <20200505031331.122781-1-evanbenn@chromium.org>
+ <20200505131242.v6.1.Id96574f1f52479d7a2f3b866b8a0552ab8c03d7f@changeid>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <adbf700e-20e6-47db-a674-f965f65818c6@roeck-us.net>
+Date:   Wed, 6 May 2020 06:45:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200503083407.GA27766@iZj6chx1xj0e0buvshuecpZ>
- <CAKfTPtCNG9Y4xNA-iLd+JRRsUCA1+SkkFFRbbzk5n7q6v401tw@mail.gmail.com>
- <20200505134056.GA31680@iZj6chx1xj0e0buvshuecpZ> <20200505142711.GA12952@vingu-book>
- <jhjftcd1hmx.mognet@arm.com>
-In-Reply-To: <jhjftcd1hmx.mognet@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 6 May 2020 15:45:28 +0200
-Message-ID: <CAKfTPtCM7mE7a63rXB4cG5gHn03ArjTB1ZBje=qEWOGR9mj67g@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: Fix nohz.next_balance update
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Peng Liu <iwtbavbm@gmail.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200505131242.v6.1.Id96574f1f52479d7a2f3b866b8a0552ab8c03d7f@changeid>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 May 2020 at 12:29, Valentin Schneider
-<valentin.schneider@arm.com> wrote:
->
->
-> On 05/05/20 15:27, Vincent Guittot wrote:
-> > So I would be in favor of something as simple as :
-> >
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index 04098d678f3b..e028bc1c4744 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -10457,6 +10457,14 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
-> >                 }
-> >         }
-> >
-> > +       /*
-> > +        * next_balance will be updated only when there is a need.
-> > +        * When the CPU is attached to null domain for ex, it will not be
-> > +        * updated.
-> > +        */
-> > +       if (likely(update_next_balance))
-> > +               nohz.next_balance = next_balance;
-> > +
-> >         /* Newly idle CPU doesn't need an update */
-> >         if (idle != CPU_NEWLY_IDLE) {
-> >                 update_blocked_averages(this_cpu);
-> > @@ -10477,14 +10485,6 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
-> >         if (has_blocked_load)
-> >                 WRITE_ONCE(nohz.has_blocked, 1);
-> >
-> > -       /*
-> > -        * next_balance will be updated only when there is a need.
-> > -        * When the CPU is attached to null domain for ex, it will not be
-> > -        * updated.
-> > -        */
-> > -       if (likely(update_next_balance))
-> > -               nohz.next_balance = next_balance;
-> > -
-> >         return ret;
-> >  }
-> >
->
-> But then we may skip an update if we goto abort, no? Imagine we have just
-> NOHZ_STATS_KICK, so we don't call any rebalance_domains(), and then as we
-> go through the last NOHZ CPU in the loop we hit need_resched(). We would
-> end in the abort part without any update to nohz.next_balance, despite
-> having accumulated relevant data in the local next_balance variable.
+On 5/4/20 8:13 PM, Evan Benn wrote:
+> This watchdog can be used on ARM systems with a Secure
+> Monitor firmware to forward watchdog operations to
+> firmware via a Secure Monitor Call.
+> 
+> Signed-off-by: Evan Benn <evanbenn@chromium.org>
+> 
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Yes but on the other end, the last CPU has not been able to run the
-rebalance_domain so we must not move  nohz.next_balance otherwise it
-will have to wait for at least another full period
-In fact, I think that we have a problem with current implementation
-because if we abort because  local cpu because busy we might end up
-skipping idle load balance for a lot of idle CPUs
-
-As an example, imagine that we have 10 idle CPUs with the same
-rq->next_balance which equal nohz.next_balance.  _nohz_idle_balance
-starts on CPU0, it processes idle lb for CPU1 but then has to abort
-because of need_resched. If we update nohz.next_balance like
-currently, the next idle load balance  will happen after a full
-balance interval whereas we still have 8 CPUs waiting for running an
-idle load balance.
-
-My proposal also fixes this problem
-
->
-> Also note that in this case, nohz_idle_balance() will still return true.
->
-> If we rip out just the one update we need from rebalance_domains(), then
-> perhaps we could go with what Peng was initially suggesting? i.e. something
-> like the below.
->
 > ---
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 46b7bd41573f..0a292e0a0731 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -9934,22 +9934,8 @@ static void rebalance_domains(struct rq *rq, enum cpu_idle_type idle)
->          * When the cpu is attached to null domain for ex, it will not be
->          * updated.
->          */
-> -       if (likely(update_next_balance)) {
-> +       if (likely(update_next_balance))
->                 rq->next_balance = next_balance;
-> -
-> -#ifdef CONFIG_NO_HZ_COMMON
-> -               /*
-> -                * If this CPU has been elected to perform the nohz idle
-> -                * balance. Other idle CPUs have already rebalanced with
-> -                * nohz_idle_balance() and nohz.next_balance has been
-> -                * updated accordingly. This CPU is now running the idle load
-> -                * balance for itself and we need to update the
-> -                * nohz.next_balance accordingly.
-> -                */
-> -               if ((idle == CPU_IDLE) && time_after(nohz.next_balance, rq->next_balance))
-> -                       nohz.next_balance = rq->next_balance;
-> -#endif
-> -       }
->  }
->
->  static inline int on_null_domain(struct rq *rq)
-> @@ -10315,6 +10301,11 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
->         if (flags & NOHZ_BALANCE_KICK)
->                 rebalance_domains(this_rq, CPU_IDLE);
->
-> +       if (time_after(next_balance, this_rq->next_balance)) {
-> +               next_balance = this_rq->next_balance;
-> +               update_next_balance = 1;
-> +       }
+> 
+> Changes in v6:
+> - Don't use dt default
+> 
+> Changes in v5:
+> - Change compatible to arm,smc-wdt
+> 
+> Changes in v4:
+> - Add arm,smc-id property
+> 
+> Changes in v3:
+> - Change name back to arm
+> 
+> Changes in v2:
+> - Change name arm > mt8173
+> 
+>  .../bindings/watchdog/arm-smc-wdt.yaml        | 37 +++++++++++++++++++
+>  MAINTAINERS                                   |  6 +++
+>  2 files changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/arm-smc-wdt.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/arm-smc-wdt.yaml b/Documentation/devicetree/bindings/watchdog/arm-smc-wdt.yaml
+> new file mode 100644
+> index 0000000000000..bec651541e0c8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/arm-smc-wdt.yaml
+> @@ -0,0 +1,37 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/watchdog/arm-smc-wdt.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
->         WRITE_ONCE(nohz.next_blocked,
->                 now + msecs_to_jiffies(LOAD_AVG_PERIOD));
->
-> @@ -10551,6 +10542,17 @@ static __latent_entropy void run_rebalance_domains(struct softirq_action *h)
->         /* normal load balance */
->         update_blocked_averages(this_rq->cpu);
->         rebalance_domains(this_rq, idle);
+> +title: ARM Secure Monitor Call based watchdog
 > +
-> +#ifdef CONFIG_NO_HZ_COMMON
-> +       /*
-> +        * NOHZ idle CPUs will be rebalanced with nohz_idle_balance() and thus
-> +        * nohz.next_balance will be updated accordingly. If there was no NOHZ
-> +        * kick, then we just need to update nohz.next_balance wrt *this* CPU.
-> +        */
-> +       if ((idle == CPU_IDLE) &&
-> +           time_after(nohz.next_balance, this_rq->next_balance))
-> +               nohz.next_balance = this_rq->next_balance;
-> +#endif
->  }
->
->  /*
-> ---
+> +allOf:
+> +  - $ref: "watchdog.yaml#"
+> +
+> +maintainers:
+> +  - Julius Werner <jwerner@chromium.org>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - arm,smc-wdt
+> +  arm,smc-id:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      The ATF smc function id used by the firmware.
+> +      Defaults to 0x82003D06 if unset.
+> +
+> +required:
+> +  - compatible
+> +
+> +examples:
+> +  - |
+> +    watchdog {
+> +      compatible = "arm,smc-wdt";
+> +      arm,smc-id = <0x82003D06>;
+> +      timeout-sec = <15>;
+> +    };
+> +
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index b816a453b10eb..0f2b39767bfa9 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1457,6 +1457,12 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/interrupt-controller/arm,vic.txt
+>  F:	drivers/irqchip/irq-vic.c
+>  
+> +ARM SMC WATCHDOG DRIVER
+> +M:	Julius Werner <jwerner@chromium.org>
+> +R:	Evan Benn <evanbenn@chromium.org>
+> +S:	Maintained
+> +F:	devicetree/bindings/watchdog/arm-smc-wdt.yaml
+> +
+>  ARM SMMU DRIVERS
+>  M:	Will Deacon <will@kernel.org>
+>  R:	Robin Murphy <robin.murphy@arm.com>
+> 
+
