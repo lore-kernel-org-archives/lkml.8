@@ -2,304 +2,748 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C43DC4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE22C47257
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E34282145D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A47720A8B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:26:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588778781;
+	bh=wpzB0u1DHoRV8ZlPqQw1EAoXsBr9lki3XTXvehqUP0E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0iAuufQibOCRnIE62YVkT/OZ/ICCzPX+oCoDxJVbnH5uXsUH/19ACXJdVFd/rXwN+
+	 XGUbKX9risMayJkpukHob7+3lI9eJOk8+sLosTJK8DjPxPmedmM2IiTz3qzZR6BLh1
+	 1mgDQEp/Pr+fGNcPG3PDtICAwP6kclOmxlMaIXIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730149AbgEFP0R (ORCPT
+        id S1730156AbgEFP0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:26:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:39160 "EHLO foss.arm.com"
+        Wed, 6 May 2020 11:26:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730114AbgEFP0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:26:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 55172101E;
-        Wed,  6 May 2020 08:26:02 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 54C163F68F;
-        Wed,  6 May 2020 08:26:01 -0700 (PDT)
-Date:   Wed, 6 May 2020 16:25:50 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Cristian Marussi <cristian.marussi@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Jonathan.Cameron@Huawei.com, james.quinlan@broadcom.com,
-        lukasz.luba@arm.com, sudeep.holla@arm.com
-Subject: Re: [PATCH v7 1/9] firmware: arm_scmi: Add notification
- protocol-registration
-Message-ID: <20200506152550.GA21779@arm.com>
-References: <20200504163855.54548-1-cristian.marussi@arm.com>
- <20200504163855.54548-2-cristian.marussi@arm.com>
+        id S1730118AbgEFP0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:26:04 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D180420CC7;
+        Wed,  6 May 2020 15:26:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588778762;
+        bh=wpzB0u1DHoRV8ZlPqQw1EAoXsBr9lki3XTXvehqUP0E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XQPlD1KtFzEjobdei3ma/jjfZwmSvcXPuSG4Qn2XRHAE4edz2rSDqLILNUQWFg1ny
+         WNL1JvUc0yx2ET9cjK5tA6QdFGmG9DQhk1uYAQDQBZnC5mo3kZKZv0fsNsw9SfL9Ko
+         t3SW4HpgZE0xxyrhbBYEDW7R8JoKPhRgsZGW+j9s=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCH 59/91] perf evsel: Rename *perf_evsel__*set_sample_*() to *evsel__*set_sample_*()
+Date:   Wed,  6 May 2020 12:22:02 -0300
+Message-Id: <20200506152234.21977-60-acme@kernel.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
+References: <20200506152234.21977-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504163855.54548-2-cristian.marussi@arm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 05:38:47PM +0100, Cristian Marussi wrote:
-> Add core SCMI Notifications protocol-registration support: allow protocols
-> to register their own set of supported events, during their initialization
-> phase. Notification core can track multiple platform instances by their
-> handles.
-> 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
-> ---
-> V4 --> V5
-> - fixed kernel-doc
-> - added barriers for registered protocols and events
-> - using kfifo_alloc and devm_add_action_or_reset
-> V3 --> V4
-> - removed scratch ISR buffer, move scratch BH buffer into protocol
->   descriptor
-> - converted registered_protocols and registered_events from hashtables
->   into bare fixed-sized arrays
-> - removed unregister protocols' routines (never called really)
-> V2 --> V3
-> - added scmi_notify_instance to track target platform instance
-> V1 --> V2
-> - splitted out of V1 patch 04
-> - moved from IDR maps to real HashTables to store events
-> - scmi_notifications_initialized is now an atomic_t
-> - reviewed protocol registration/unregistration to use devres
-> - fixed:
->   drivers/firmware/arm_scmi/notify.c:483:18-23: ERROR:
->   	reference preceded by free on line 482
-> 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reported-by: Julia Lawall <julia.lawall@lip6.fr>
-> ---
->  drivers/firmware/arm_scmi/Makefile |   2 +-
->  drivers/firmware/arm_scmi/common.h |   4 +
->  drivers/firmware/arm_scmi/notify.c | 444 +++++++++++++++++++++++++++++
->  drivers/firmware/arm_scmi/notify.h |  56 ++++
->  include/linux/scmi_protocol.h      |   3 +
->  5 files changed, 508 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/firmware/arm_scmi/notify.c
->  create mode 100644 drivers/firmware/arm_scmi/notify.h
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[...]
+As they are not 'struct evsel' methods, not part of tools/lib/perf/, aka
+libperf, to whom the perf_ prefix belongs.
 
-> diff --git a/drivers/firmware/arm_scmi/notify.c b/drivers/firmware/arm_scmi/notify.c
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/arch/arm/util/cs-etm.c    |  4 +-
+ tools/perf/arch/arm64/util/arm-spe.c | 12 ++--
+ tools/perf/arch/x86/util/intel-bts.c |  2 +-
+ tools/perf/arch/x86/util/intel-pt.c  | 20 +++----
+ tools/perf/builtin-annotate.c        |  2 +-
+ tools/perf/builtin-diff.c            |  2 +-
+ tools/perf/builtin-kvm.c             | 18 +++---
+ tools/perf/tests/hists_cumulate.c    |  8 +--
+ tools/perf/tests/mmap-basic.c        |  2 +-
+ tools/perf/tests/perf-record.c       |  6 +-
+ tools/perf/tests/switch-tracking.c   | 10 ++--
+ tools/perf/util/auxtrace.c           |  4 +-
+ tools/perf/util/evlist.c             |  4 +-
+ tools/perf/util/evsel.c              | 88 ++++++++++++++--------------
+ tools/perf/util/evsel.h              | 17 +++---
+ tools/perf/util/record.c             |  2 +-
+ tools/perf/util/sideband_evlist.c    |  2 +-
+ 17 files changed, 100 insertions(+), 103 deletions(-)
 
-[...]
+diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+index 53db3c20225b..97aa02c4491d 100644
+--- a/tools/perf/arch/arm/util/cs-etm.c
++++ b/tools/perf/arch/arm/util/cs-etm.c
+@@ -402,7 +402,7 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+ 	 * when a context switch happened.
+ 	 */
+ 	if (!perf_cpu_map__empty(cpus)) {
+-		perf_evsel__set_sample_bit(cs_etm_evsel, CPU);
++		evsel__set_sample_bit(cs_etm_evsel, CPU);
+ 
+ 		err = cs_etm_set_option(itr, cs_etm_evsel,
+ 					ETM_OPT_CTXTID | ETM_OPT_TS);
+@@ -426,7 +426,7 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+ 
+ 		/* In per-cpu case, always need the time of mmap events etc */
+ 		if (!perf_cpu_map__empty(cpus))
+-			perf_evsel__set_sample_bit(tracking_evsel, TIME);
++			evsel__set_sample_bit(tracking_evsel, TIME);
+ 	}
+ 
+ out:
+diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
+index 27653be24447..e3593063b3d1 100644
+--- a/tools/perf/arch/arm64/util/arm-spe.c
++++ b/tools/perf/arch/arm64/util/arm-spe.c
+@@ -120,9 +120,9 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
+ 	 */
+ 	perf_evlist__to_front(evlist, arm_spe_evsel);
+ 
+-	perf_evsel__set_sample_bit(arm_spe_evsel, CPU);
+-	perf_evsel__set_sample_bit(arm_spe_evsel, TIME);
+-	perf_evsel__set_sample_bit(arm_spe_evsel, TID);
++	evsel__set_sample_bit(arm_spe_evsel, CPU);
++	evsel__set_sample_bit(arm_spe_evsel, TIME);
++	evsel__set_sample_bit(arm_spe_evsel, TID);
+ 
+ 	/* Add dummy event to keep tracking */
+ 	err = parse_events(evlist, "dummy:u", NULL);
+@@ -134,9 +134,9 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
+ 
+ 	tracking_evsel->core.attr.freq = 0;
+ 	tracking_evsel->core.attr.sample_period = 1;
+-	perf_evsel__set_sample_bit(tracking_evsel, TIME);
+-	perf_evsel__set_sample_bit(tracking_evsel, CPU);
+-	perf_evsel__reset_sample_bit(tracking_evsel, BRANCH_STACK);
++	evsel__set_sample_bit(tracking_evsel, TIME);
++	evsel__set_sample_bit(tracking_evsel, CPU);
++	evsel__reset_sample_bit(tracking_evsel, BRANCH_STACK);
+ 
+ 	return 0;
+ }
+diff --git a/tools/perf/arch/x86/util/intel-bts.c b/tools/perf/arch/x86/util/intel-bts.c
+index 09f93800bffd..0dc09b5809c1 100644
+--- a/tools/perf/arch/x86/util/intel-bts.c
++++ b/tools/perf/arch/x86/util/intel-bts.c
+@@ -224,7 +224,7 @@ static int intel_bts_recording_options(struct auxtrace_record *itr,
+ 		 * AUX event.
+ 		 */
+ 		if (!perf_cpu_map__empty(cpus))
+-			perf_evsel__set_sample_bit(intel_bts_evsel, CPU);
++			evsel__set_sample_bit(intel_bts_evsel, CPU);
+ 	}
+ 
+ 	/* Add dummy event to keep tracking */
+diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
+index 6b888963c21c..3f7c20cc7b79 100644
+--- a/tools/perf/arch/x86/util/intel-pt.c
++++ b/tools/perf/arch/x86/util/intel-pt.c
+@@ -421,8 +421,8 @@ static int intel_pt_track_switches(struct evlist *evlist)
+ 
+ 	evsel = evlist__last(evlist);
+ 
+-	perf_evsel__set_sample_bit(evsel, CPU);
+-	perf_evsel__set_sample_bit(evsel, TIME);
++	evsel__set_sample_bit(evsel, CPU);
++	evsel__set_sample_bit(evsel, TIME);
+ 
+ 	evsel->core.system_wide = true;
+ 	evsel->no_aux_samples = true;
+@@ -802,10 +802,10 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
+ 				switch_evsel->no_aux_samples = true;
+ 				switch_evsel->immediate = true;
+ 
+-				perf_evsel__set_sample_bit(switch_evsel, TID);
+-				perf_evsel__set_sample_bit(switch_evsel, TIME);
+-				perf_evsel__set_sample_bit(switch_evsel, CPU);
+-				perf_evsel__reset_sample_bit(switch_evsel, BRANCH_STACK);
++				evsel__set_sample_bit(switch_evsel, TID);
++				evsel__set_sample_bit(switch_evsel, TIME);
++				evsel__set_sample_bit(switch_evsel, CPU);
++				evsel__reset_sample_bit(switch_evsel, BRANCH_STACK);
+ 
+ 				opts->record_switch_events = false;
+ 				ptr->have_sched_switch = 3;
+@@ -839,7 +839,7 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
+ 		 * AUX event.
+ 		 */
+ 		if (!perf_cpu_map__empty(cpus))
+-			perf_evsel__set_sample_bit(intel_pt_evsel, CPU);
++			evsel__set_sample_bit(intel_pt_evsel, CPU);
+ 	}
+ 
+ 	/* Add dummy event to keep tracking */
+@@ -863,11 +863,11 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
+ 
+ 		/* In per-cpu case, always need the time of mmap events etc */
+ 		if (!perf_cpu_map__empty(cpus)) {
+-			perf_evsel__set_sample_bit(tracking_evsel, TIME);
++			evsel__set_sample_bit(tracking_evsel, TIME);
+ 			/* And the CPU for switch events */
+-			perf_evsel__set_sample_bit(tracking_evsel, CPU);
++			evsel__set_sample_bit(tracking_evsel, CPU);
+ 		}
+-		perf_evsel__reset_sample_bit(tracking_evsel, BRANCH_STACK);
++		evsel__reset_sample_bit(tracking_evsel, BRANCH_STACK);
+ 	}
+ 
+ 	/*
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 6c0a0412502e..e0fbc13884df 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -433,7 +433,7 @@ static int __cmd_annotate(struct perf_annotate *ann)
+ 			total_nr_samples += nr_samples;
+ 			hists__collapse_resort(hists, NULL);
+ 			/* Don't sort callchain */
+-			perf_evsel__reset_sample_bit(pos, CALLCHAIN);
++			evsel__reset_sample_bit(pos, CALLCHAIN);
+ 			perf_evsel__output_resort(pos, NULL);
+ 
+ 			if (symbol_conf.event_group &&
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index b74a60f5813a..67d3adadcd5b 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -990,7 +990,7 @@ static void data_process(void)
+ 			data__fprintf();
+ 
+ 		/* Don't sort callchain for perf diff */
+-		perf_evsel__reset_sample_bit(evsel_base, CALLCHAIN);
++		evsel__reset_sample_bit(evsel_base, CALLCHAIN);
+ 
+ 		hists__process(hists_base);
+ 	}
+diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+index 577af4f3297a..ff74a9a0bbaa 100644
+--- a/tools/perf/builtin-kvm.c
++++ b/tools/perf/builtin-kvm.c
+@@ -1033,16 +1033,16 @@ static int kvm_live_open_events(struct perf_kvm_stat *kvm)
+ 		struct perf_event_attr *attr = &pos->core.attr;
+ 
+ 		/* make sure these *are* set */
+-		perf_evsel__set_sample_bit(pos, TID);
+-		perf_evsel__set_sample_bit(pos, TIME);
+-		perf_evsel__set_sample_bit(pos, CPU);
+-		perf_evsel__set_sample_bit(pos, RAW);
++		evsel__set_sample_bit(pos, TID);
++		evsel__set_sample_bit(pos, TIME);
++		evsel__set_sample_bit(pos, CPU);
++		evsel__set_sample_bit(pos, RAW);
+ 		/* make sure these are *not*; want as small a sample as possible */
+-		perf_evsel__reset_sample_bit(pos, PERIOD);
+-		perf_evsel__reset_sample_bit(pos, IP);
+-		perf_evsel__reset_sample_bit(pos, CALLCHAIN);
+-		perf_evsel__reset_sample_bit(pos, ADDR);
+-		perf_evsel__reset_sample_bit(pos, READ);
++		evsel__reset_sample_bit(pos, PERIOD);
++		evsel__reset_sample_bit(pos, IP);
++		evsel__reset_sample_bit(pos, CALLCHAIN);
++		evsel__reset_sample_bit(pos, ADDR);
++		evsel__reset_sample_bit(pos, READ);
+ 		attr->mmap = 0;
+ 		attr->comm = 0;
+ 		attr->task = 0;
+diff --git a/tools/perf/tests/hists_cumulate.c b/tools/perf/tests/hists_cumulate.c
+index 6367c8f6ca22..7a542f1c1c78 100644
+--- a/tools/perf/tests/hists_cumulate.c
++++ b/tools/perf/tests/hists_cumulate.c
+@@ -280,7 +280,7 @@ static int test1(struct evsel *evsel, struct machine *machine)
+ 
+ 	symbol_conf.use_callchain = false;
+ 	symbol_conf.cumulate_callchain = false;
+-	perf_evsel__reset_sample_bit(evsel, CALLCHAIN);
++	evsel__reset_sample_bit(evsel, CALLCHAIN);
+ 
+ 	setup_sorting(NULL);
+ 	callchain_register_param(&callchain_param);
+@@ -427,7 +427,7 @@ static int test2(struct evsel *evsel, struct machine *machine)
+ 
+ 	symbol_conf.use_callchain = true;
+ 	symbol_conf.cumulate_callchain = false;
+-	perf_evsel__set_sample_bit(evsel, CALLCHAIN);
++	evsel__set_sample_bit(evsel, CALLCHAIN);
+ 
+ 	setup_sorting(NULL);
+ 	callchain_register_param(&callchain_param);
+@@ -485,7 +485,7 @@ static int test3(struct evsel *evsel, struct machine *machine)
+ 
+ 	symbol_conf.use_callchain = false;
+ 	symbol_conf.cumulate_callchain = true;
+-	perf_evsel__reset_sample_bit(evsel, CALLCHAIN);
++	evsel__reset_sample_bit(evsel, CALLCHAIN);
+ 
+ 	setup_sorting(NULL);
+ 	callchain_register_param(&callchain_param);
+@@ -669,7 +669,7 @@ static int test4(struct evsel *evsel, struct machine *machine)
+ 
+ 	symbol_conf.use_callchain = true;
+ 	symbol_conf.cumulate_callchain = true;
+-	perf_evsel__set_sample_bit(evsel, CALLCHAIN);
++	evsel__set_sample_bit(evsel, CALLCHAIN);
+ 
+ 	setup_sorting(NULL);
+ 
+diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
+index e9c0c6498704..d4b8eb6e337a 100644
+--- a/tools/perf/tests/mmap-basic.c
++++ b/tools/perf/tests/mmap-basic.c
+@@ -86,7 +86,7 @@ int test__basic_mmap(struct test *test __maybe_unused, int subtest __maybe_unuse
+ 		}
+ 
+ 		evsels[i]->core.attr.wakeup_events = 1;
+-		perf_evsel__set_sample_id(evsels[i], false);
++		evsel__set_sample_id(evsels[i], false);
+ 
+ 		evlist__add(evlist, evsels[i]);
+ 
+diff --git a/tools/perf/tests/perf-record.c b/tools/perf/tests/perf-record.c
+index 2195fc205e72..83adfd846ccd 100644
+--- a/tools/perf/tests/perf-record.c
++++ b/tools/perf/tests/perf-record.c
+@@ -106,9 +106,9 @@ int test__PERF_RECORD(struct test *test __maybe_unused, int subtest __maybe_unus
+ 	 * Config the evsels, setting attr->comm on the first one, etc.
+ 	 */
+ 	evsel = evlist__first(evlist);
+-	perf_evsel__set_sample_bit(evsel, CPU);
+-	perf_evsel__set_sample_bit(evsel, TID);
+-	perf_evsel__set_sample_bit(evsel, TIME);
++	evsel__set_sample_bit(evsel, CPU);
++	evsel__set_sample_bit(evsel, TID);
++	evsel__set_sample_bit(evsel, TIME);
+ 	perf_evlist__config(evlist, &opts, NULL);
+ 
+ 	err = sched__get_first_possible_cpu(evlist->workload.pid, &cpu_mask);
+diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
+index fcb0d03dba4e..b08c8a0898d3 100644
+--- a/tools/perf/tests/switch-tracking.c
++++ b/tools/perf/tests/switch-tracking.c
+@@ -394,8 +394,8 @@ int test__switch_tracking(struct test *test __maybe_unused, int subtest __maybe_
+ 
+ 	switch_evsel = evlist__last(evlist);
+ 
+-	perf_evsel__set_sample_bit(switch_evsel, CPU);
+-	perf_evsel__set_sample_bit(switch_evsel, TIME);
++	evsel__set_sample_bit(switch_evsel, CPU);
++	evsel__set_sample_bit(switch_evsel, TIME);
+ 
+ 	switch_evsel->core.system_wide = true;
+ 	switch_evsel->no_aux_samples = true;
+@@ -412,8 +412,8 @@ int test__switch_tracking(struct test *test __maybe_unused, int subtest __maybe_
+ 		goto out_err;
+ 	}
+ 
+-	perf_evsel__set_sample_bit(cycles_evsel, CPU);
+-	perf_evsel__set_sample_bit(cycles_evsel, TIME);
++	evsel__set_sample_bit(cycles_evsel, CPU);
++	evsel__set_sample_bit(cycles_evsel, TIME);
+ 
+ 	/* Fourth event */
+ 	err = parse_events(evlist, "dummy:u", NULL);
+@@ -429,7 +429,7 @@ int test__switch_tracking(struct test *test __maybe_unused, int subtest __maybe_
+ 	tracking_evsel->core.attr.freq = 0;
+ 	tracking_evsel->core.attr.sample_period = 1;
+ 
+-	perf_evsel__set_sample_bit(tracking_evsel, TIME);
++	evsel__set_sample_bit(tracking_evsel, TIME);
+ 
+ 	/* Config events */
+ 	perf_evlist__config(evlist, &opts, NULL);
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index bd27f73b6d60..e12696fe6f65 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -705,10 +705,10 @@ static int auxtrace_validate_aux_sample_size(struct evlist *evlist,
+ 				pr_err("Cannot add AUX area sampling because group leader is not an AUX area event\n");
+ 				return -EINVAL;
+ 			}
+-			perf_evsel__set_sample_bit(evsel, AUX);
++			evsel__set_sample_bit(evsel, AUX);
+ 			opts->auxtrace_sample_mode = true;
+ 		} else {
+-			perf_evsel__reset_sample_bit(evsel, AUX);
++			evsel__reset_sample_bit(evsel, AUX);
+ 		}
+ 	}
+ 
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 8b691151bae3..58228a54ecd7 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -948,7 +948,7 @@ void __perf_evlist__set_sample_bit(struct evlist *evlist,
+ 	struct evsel *evsel;
+ 
+ 	evlist__for_each_entry(evlist, evsel)
+-		__perf_evsel__set_sample_bit(evsel, bit);
++		__evsel__set_sample_bit(evsel, bit);
+ }
+ 
+ void __perf_evlist__reset_sample_bit(struct evlist *evlist,
+@@ -957,7 +957,7 @@ void __perf_evlist__reset_sample_bit(struct evlist *evlist,
+ 	struct evsel *evsel;
+ 
+ 	evlist__for_each_entry(evlist, evsel)
+-		__perf_evsel__reset_sample_bit(evsel, bit);
++		__evsel__reset_sample_bit(evsel, bit);
+ }
+ 
+ int perf_evlist__apply_filters(struct evlist *evlist, struct evsel **err_evsel)
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 9b3db6d34d37..4f03500253e3 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -184,7 +184,7 @@ void evsel__calc_id_pos(struct evsel *evsel)
+ 	evsel->is_pos = __perf_evsel__calc_is_pos(evsel->core.attr.sample_type);
+ }
+ 
+-void __perf_evsel__set_sample_bit(struct evsel *evsel,
++void __evsel__set_sample_bit(struct evsel *evsel,
+ 				  enum perf_event_sample_format bit)
+ {
+ 	if (!(evsel->core.attr.sample_type & bit)) {
+@@ -194,7 +194,7 @@ void __perf_evsel__set_sample_bit(struct evsel *evsel,
+ 	}
+ }
+ 
+-void __perf_evsel__reset_sample_bit(struct evsel *evsel,
++void __evsel__reset_sample_bit(struct evsel *evsel,
+ 				    enum perf_event_sample_format bit)
+ {
+ 	if (evsel->core.attr.sample_type & bit) {
+@@ -204,14 +204,14 @@ void __perf_evsel__reset_sample_bit(struct evsel *evsel,
+ 	}
+ }
+ 
+-void perf_evsel__set_sample_id(struct evsel *evsel,
++void evsel__set_sample_id(struct evsel *evsel,
+ 			       bool can_sample_identifier)
+ {
+ 	if (can_sample_identifier) {
+-		perf_evsel__reset_sample_bit(evsel, ID);
+-		perf_evsel__set_sample_bit(evsel, IDENTIFIER);
++		evsel__reset_sample_bit(evsel, ID);
++		evsel__set_sample_bit(evsel, IDENTIFIER);
+ 	} else {
+-		perf_evsel__set_sample_bit(evsel, ID);
++		evsel__set_sample_bit(evsel, ID);
+ 	}
+ 	evsel->core.attr.read_format |= PERF_FORMAT_ID;
+ }
+@@ -689,7 +689,7 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
+ 	bool function = perf_evsel__is_function_event(evsel);
+ 	struct perf_event_attr *attr = &evsel->core.attr;
+ 
+-	perf_evsel__set_sample_bit(evsel, CALLCHAIN);
++	evsel__set_sample_bit(evsel, CALLCHAIN);
+ 
+ 	attr->sample_max_stack = param->max_stack;
+ 
+@@ -704,7 +704,7 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
+ 					   "to get user callchain information. "
+ 					   "Falling back to framepointers.\n");
+ 			} else {
+-				perf_evsel__set_sample_bit(evsel, BRANCH_STACK);
++				evsel__set_sample_bit(evsel, BRANCH_STACK);
+ 				attr->branch_sample_type = PERF_SAMPLE_BRANCH_USER |
+ 							PERF_SAMPLE_BRANCH_CALL_STACK |
+ 							PERF_SAMPLE_BRANCH_NO_CYCLES |
+@@ -718,8 +718,8 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
+ 
+ 	if (param->record_mode == CALLCHAIN_DWARF) {
+ 		if (!function) {
+-			perf_evsel__set_sample_bit(evsel, REGS_USER);
+-			perf_evsel__set_sample_bit(evsel, STACK_USER);
++			evsel__set_sample_bit(evsel, REGS_USER);
++			evsel__set_sample_bit(evsel, STACK_USER);
+ 			if (opts->sample_user_regs && DWARF_MINIMAL_REGS != PERF_REGS_MASK) {
+ 				attr->sample_regs_user |= DWARF_MINIMAL_REGS;
+ 				pr_warning("WARNING: The use of --call-graph=dwarf may require all the user registers, "
+@@ -755,16 +755,16 @@ perf_evsel__reset_callgraph(struct evsel *evsel,
+ {
+ 	struct perf_event_attr *attr = &evsel->core.attr;
+ 
+-	perf_evsel__reset_sample_bit(evsel, CALLCHAIN);
++	evsel__reset_sample_bit(evsel, CALLCHAIN);
+ 	if (param->record_mode == CALLCHAIN_LBR) {
+-		perf_evsel__reset_sample_bit(evsel, BRANCH_STACK);
++		evsel__reset_sample_bit(evsel, BRANCH_STACK);
+ 		attr->branch_sample_type &= ~(PERF_SAMPLE_BRANCH_USER |
+ 					      PERF_SAMPLE_BRANCH_CALL_STACK |
+ 					      PERF_SAMPLE_BRANCH_HW_INDEX);
+ 	}
+ 	if (param->record_mode == CALLCHAIN_DWARF) {
+-		perf_evsel__reset_sample_bit(evsel, REGS_USER);
+-		perf_evsel__reset_sample_bit(evsel, STACK_USER);
++		evsel__reset_sample_bit(evsel, REGS_USER);
++		evsel__reset_sample_bit(evsel, STACK_USER);
+ 	}
+ }
+ 
+@@ -788,32 +788,32 @@ static void apply_config_terms(struct evsel *evsel,
+ 			if (!(term->weak && opts->user_interval != ULLONG_MAX)) {
+ 				attr->sample_period = term->val.period;
+ 				attr->freq = 0;
+-				perf_evsel__reset_sample_bit(evsel, PERIOD);
++				evsel__reset_sample_bit(evsel, PERIOD);
+ 			}
+ 			break;
+ 		case PERF_EVSEL__CONFIG_TERM_FREQ:
+ 			if (!(term->weak && opts->user_freq != UINT_MAX)) {
+ 				attr->sample_freq = term->val.freq;
+ 				attr->freq = 1;
+-				perf_evsel__set_sample_bit(evsel, PERIOD);
++				evsel__set_sample_bit(evsel, PERIOD);
+ 			}
+ 			break;
+ 		case PERF_EVSEL__CONFIG_TERM_TIME:
+ 			if (term->val.time)
+-				perf_evsel__set_sample_bit(evsel, TIME);
++				evsel__set_sample_bit(evsel, TIME);
+ 			else
+-				perf_evsel__reset_sample_bit(evsel, TIME);
++				evsel__reset_sample_bit(evsel, TIME);
+ 			break;
+ 		case PERF_EVSEL__CONFIG_TERM_CALLGRAPH:
+ 			callgraph_buf = term->val.str;
+ 			break;
+ 		case PERF_EVSEL__CONFIG_TERM_BRANCH:
+ 			if (term->val.str && strcmp(term->val.str, "no")) {
+-				perf_evsel__set_sample_bit(evsel, BRANCH_STACK);
++				evsel__set_sample_bit(evsel, BRANCH_STACK);
+ 				parse_branch_str(term->val.str,
+ 						 &attr->branch_sample_type);
+ 			} else
+-				perf_evsel__reset_sample_bit(evsel, BRANCH_STACK);
++				evsel__reset_sample_bit(evsel, BRANCH_STACK);
+ 			break;
+ 		case PERF_EVSEL__CONFIG_TERM_STACK_USER:
+ 			dump_size = term->val.stack_user;
+@@ -892,8 +892,8 @@ static void apply_config_terms(struct evsel *evsel,
+ 		/* set perf-event callgraph */
+ 		if (param.enabled) {
+ 			if (sample_address) {
+-				perf_evsel__set_sample_bit(evsel, ADDR);
+-				perf_evsel__set_sample_bit(evsel, DATA_SRC);
++				evsel__set_sample_bit(evsel, ADDR);
++				evsel__set_sample_bit(evsel, DATA_SRC);
+ 				evsel->core.attr.mmap_data = track;
+ 			}
+ 			evsel__config_callchain(evsel, opts, &param);
+@@ -960,17 +960,17 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+ 	attr->inherit	    = !opts->no_inherit;
+ 	attr->write_backward = opts->overwrite ? 1 : 0;
+ 
+-	perf_evsel__set_sample_bit(evsel, IP);
+-	perf_evsel__set_sample_bit(evsel, TID);
++	evsel__set_sample_bit(evsel, IP);
++	evsel__set_sample_bit(evsel, TID);
+ 
+ 	if (evsel->sample_read) {
+-		perf_evsel__set_sample_bit(evsel, READ);
++		evsel__set_sample_bit(evsel, READ);
+ 
+ 		/*
+ 		 * We need ID even in case of single event, because
+ 		 * PERF_SAMPLE_READ process ID specific data.
+ 		 */
+-		perf_evsel__set_sample_id(evsel, false);
++		evsel__set_sample_id(evsel, false);
+ 
+ 		/*
+ 		 * Apply group format only if we belong to group
+@@ -989,7 +989,7 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+ 	if (!attr->sample_period || (opts->user_freq != UINT_MAX ||
+ 				     opts->user_interval != ULLONG_MAX)) {
+ 		if (opts->freq) {
+-			perf_evsel__set_sample_bit(evsel, PERIOD);
++			evsel__set_sample_bit(evsel, PERIOD);
+ 			attr->freq		= 1;
+ 			attr->sample_freq	= opts->freq;
+ 		} else {
+@@ -1009,7 +1009,7 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+ 	}
+ 
+ 	if (opts->sample_address) {
+-		perf_evsel__set_sample_bit(evsel, ADDR);
++		evsel__set_sample_bit(evsel, ADDR);
+ 		attr->mmap_data = track;
+ 	}
+ 
+@@ -1026,16 +1026,16 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+ 
+ 	if (opts->sample_intr_regs) {
+ 		attr->sample_regs_intr = opts->sample_intr_regs;
+-		perf_evsel__set_sample_bit(evsel, REGS_INTR);
++		evsel__set_sample_bit(evsel, REGS_INTR);
+ 	}
+ 
+ 	if (opts->sample_user_regs) {
+ 		attr->sample_regs_user |= opts->sample_user_regs;
+-		perf_evsel__set_sample_bit(evsel, REGS_USER);
++		evsel__set_sample_bit(evsel, REGS_USER);
+ 	}
+ 
+ 	if (target__has_cpu(&opts->target) || opts->sample_cpu)
+-		perf_evsel__set_sample_bit(evsel, CPU);
++		evsel__set_sample_bit(evsel, CPU);
+ 
+ 	/*
+ 	 * When the user explicitly disabled time don't force it here.
+@@ -1044,31 +1044,31 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+ 	    (!perf_missing_features.sample_id_all &&
+ 	    (!opts->no_inherit || target__has_cpu(&opts->target) || per_cpu ||
+ 	     opts->sample_time_set)))
+-		perf_evsel__set_sample_bit(evsel, TIME);
++		evsel__set_sample_bit(evsel, TIME);
+ 
+ 	if (opts->raw_samples && !evsel->no_aux_samples) {
+-		perf_evsel__set_sample_bit(evsel, TIME);
+-		perf_evsel__set_sample_bit(evsel, RAW);
+-		perf_evsel__set_sample_bit(evsel, CPU);
++		evsel__set_sample_bit(evsel, TIME);
++		evsel__set_sample_bit(evsel, RAW);
++		evsel__set_sample_bit(evsel, CPU);
+ 	}
+ 
+ 	if (opts->sample_address)
+-		perf_evsel__set_sample_bit(evsel, DATA_SRC);
++		evsel__set_sample_bit(evsel, DATA_SRC);
+ 
+ 	if (opts->sample_phys_addr)
+-		perf_evsel__set_sample_bit(evsel, PHYS_ADDR);
++		evsel__set_sample_bit(evsel, PHYS_ADDR);
+ 
+ 	if (opts->no_buffering) {
+ 		attr->watermark = 0;
+ 		attr->wakeup_events = 1;
+ 	}
+ 	if (opts->branch_stack && !evsel->no_aux_samples) {
+-		perf_evsel__set_sample_bit(evsel, BRANCH_STACK);
++		evsel__set_sample_bit(evsel, BRANCH_STACK);
+ 		attr->branch_sample_type = opts->branch_stack;
+ 	}
+ 
+ 	if (opts->sample_weight)
+-		perf_evsel__set_sample_bit(evsel, WEIGHT);
++		evsel__set_sample_bit(evsel, WEIGHT);
+ 
+ 	attr->task  = track;
+ 	attr->mmap  = track;
+@@ -1082,14 +1082,14 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+ 
+ 	if (opts->record_cgroup) {
+ 		attr->cgroup = track && !perf_missing_features.cgroup;
+-		perf_evsel__set_sample_bit(evsel, CGROUP);
++		evsel__set_sample_bit(evsel, CGROUP);
+ 	}
+ 
+ 	if (opts->record_switch_events)
+ 		attr->context_switch = track;
+ 
+ 	if (opts->sample_transaction)
+-		perf_evsel__set_sample_bit(evsel, TRANSACTION);
++		evsel__set_sample_bit(evsel, TRANSACTION);
+ 
+ 	if (opts->running_time) {
+ 		evsel->core.attr.read_format |=
+@@ -1152,9 +1152,9 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+ 	/* The --period option takes the precedence. */
+ 	if (opts->period_set) {
+ 		if (opts->period)
+-			perf_evsel__set_sample_bit(evsel, PERIOD);
++			evsel__set_sample_bit(evsel, PERIOD);
+ 		else
+-			perf_evsel__reset_sample_bit(evsel, PERIOD);
++			evsel__reset_sample_bit(evsel, PERIOD);
+ 	}
+ 
+ 	/*
+@@ -1163,7 +1163,7 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+ 	 * if BRANCH_STACK bit is set.
+ 	 */
+ 	if (opts->initial_delay && is_dummy_event(evsel))
+-		perf_evsel__reset_sample_bit(evsel, BRANCH_STACK);
++		evsel__reset_sample_bit(evsel, BRANCH_STACK);
+ }
+ 
+ int perf_evsel__set_filter(struct evsel *evsel, const char *filter)
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 82d2d308fa33..ecd3ea89e12c 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -214,19 +214,16 @@ const char *evsel__name(struct evsel *evsel);
+ const char *evsel__group_name(struct evsel *evsel);
+ int evsel__group_desc(struct evsel *evsel, char *buf, size_t size);
+ 
+-void __perf_evsel__set_sample_bit(struct evsel *evsel,
+-				  enum perf_event_sample_format bit);
+-void __perf_evsel__reset_sample_bit(struct evsel *evsel,
+-				    enum perf_event_sample_format bit);
++void __evsel__set_sample_bit(struct evsel *evsel, enum perf_event_sample_format bit);
++void __evsel__reset_sample_bit(struct evsel *evsel, enum perf_event_sample_format bit);
+ 
+-#define perf_evsel__set_sample_bit(evsel, bit) \
+-	__perf_evsel__set_sample_bit(evsel, PERF_SAMPLE_##bit)
++#define evsel__set_sample_bit(evsel, bit) \
++	__evsel__set_sample_bit(evsel, PERF_SAMPLE_##bit)
+ 
+-#define perf_evsel__reset_sample_bit(evsel, bit) \
+-	__perf_evsel__reset_sample_bit(evsel, PERF_SAMPLE_##bit)
++#define evsel__reset_sample_bit(evsel, bit) \
++	__evsel__reset_sample_bit(evsel, PERF_SAMPLE_##bit)
+ 
+-void perf_evsel__set_sample_id(struct evsel *evsel,
+-			       bool use_sample_identifier);
++void evsel__set_sample_id(struct evsel *evsel, bool use_sample_identifier);
+ 
+ int perf_evsel__set_filter(struct evsel *evsel, const char *filter);
+ int perf_evsel__append_tp_filter(struct evsel *evsel, const char *filter);
+diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
+index 18ce2cda462a..d297f4de253c 100644
+--- a/tools/perf/util/record.c
++++ b/tools/perf/util/record.c
+@@ -123,7 +123,7 @@ void perf_evlist__config(struct evlist *evlist, struct record_opts *opts,
+ 
+ 	if (sample_id) {
+ 		evlist__for_each_entry(evlist, evsel)
+-			perf_evsel__set_sample_id(evsel, use_sample_identifier);
++			evsel__set_sample_id(evsel, use_sample_identifier);
+ 	}
+ 
+ 	perf_evlist__set_id_pos(evlist);
+diff --git a/tools/perf/util/sideband_evlist.c b/tools/perf/util/sideband_evlist.c
+index bb3706fbcc0c..1580a3cbec2d 100644
+--- a/tools/perf/util/sideband_evlist.c
++++ b/tools/perf/util/sideband_evlist.c
+@@ -108,7 +108,7 @@ int perf_evlist__start_sb_thread(struct evlist *evlist, struct target *target)
+ 		bool can_sample_identifier = perf_can_sample_identifier();
+ 
+ 		evlist__for_each_entry(evlist, counter)
+-			perf_evsel__set_sample_id(counter, can_sample_identifier);
++			evsel__set_sample_id(counter, can_sample_identifier);
+ 
+ 		perf_evlist__set_id_pos(evlist);
+ 	}
+-- 
+2.21.1
 
-> +int scmi_register_protocol_events(const struct scmi_handle *handle,
-> +				  u8 proto_id, size_t queue_sz,
-> +				  const struct scmi_protocol_event_ops *ops,
-> +				  const struct scmi_event *evt, int num_events,
-> +				  int num_sources)
-> +{
-> +	int i;
-> +	size_t payld_sz = 0;
-> +	struct scmi_registered_protocol_events_desc *pd;
-> +	struct scmi_notify_instance *ni = handle->notify_priv;
-> +
-> +	if (!ops || !evt || proto_id >= SCMI_MAX_PROTO)
-> +		return -EINVAL;
-> +
-> +	/* Ensure atomic value is updated */
-> +	smp_mb__before_atomic();
-> +	if (unlikely(!ni || !atomic_read(&ni->initialized)))
-> +		return -EAGAIN;
-
-The atomics/barriers don't look quite right to me here.
-
-I'd have expected:
-
-scmi_register_protocol_events()
-{
-	if (atomic_read(&ni->initialized))
-		return -EAGAIN;
-	smp_mb_after_atomic();
-
-	/* ... */
-}
-
-to pair with:
-
-scmi_notification_init()
-{
-	/* ... */
-
-	smp_mb__before_atomic();
-	atomic_set(&ni->enabled, 1);
-}
-
-
-...however, do we need to allow these two functions to race with each
-other at all?  (I haven't tried to understand the wider context here,
-so if there really is no way to avoid initialisation racing with use I
-guess we may have to do something like this.  We don't want callers
-to dumbly spin on this function though.)
-
-
-In other patches in the series, calls to scmi_register_protocol_events()
-seem to be assuming there is no race: the return value is not checked.
-Possibly a bug?
-
-
-I'm not sure about scmi_notification_exit() (see below).
-
-> +
-> +	/* Attach to the notification main devres group */
-> +	if (!devres_open_group(ni->handle->dev, ni->gid, GFP_KERNEL))
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < num_events; i++)
-> +		payld_sz = max_t(size_t, payld_sz, evt[i].max_payld_sz);
-> +	pd = scmi_allocate_registered_protocol_desc(ni, proto_id, queue_sz,
-> +				    sizeof(struct scmi_event_header) + payld_sz,
-> +						    num_events, ops);
-> +	if (IS_ERR(pd))
-> +		goto err;
-> +
-> +	for (i = 0; i < num_events; i++, evt++) {
-> +		struct scmi_registered_event *r_evt;
-> +
-> +		r_evt = devm_kzalloc(ni->handle->dev, sizeof(*r_evt),
-> +				     GFP_KERNEL);
-> +		if (!r_evt)
-> +			goto err;
-> +		r_evt->proto = pd;
-> +		r_evt->evt = evt;
-> +
-> +		r_evt->sources = devm_kcalloc(ni->handle->dev, num_sources,
-> +					      sizeof(refcount_t), GFP_KERNEL);
-> +		if (!r_evt->sources)
-> +			goto err;
-> +		r_evt->num_sources = num_sources;
-> +		mutex_init(&r_evt->sources_mtx);
-> +
-> +		r_evt->report = devm_kzalloc(ni->handle->dev,
-> +					     evt->max_report_sz, GFP_KERNEL);
-> +		if (!r_evt->report)
-> +			goto err;
-> +
-> +		pd->registered_events[i] = r_evt;
-> +		/* Ensure events are updated */
-> +		smp_wmb();
-> +		pr_info("SCMI Notifications: registered event - %X\n",
-> +			MAKE_ALL_SRCS_KEY(r_evt->proto->id, r_evt->evt->id));
-> +	}
-> +
-> +	/* Register protocol and events...it will never be removed */
-> +	ni->registered_protocols[proto_id] = pd;
-> +	/* Ensure protocols are updated */
-> +	smp_wmb();
-> +
-> +	devres_close_group(ni->handle->dev, ni->gid);
-> +
-> +	return 0;
-> +
-> +err:
-> +	pr_warn("SCMI Notifications - Proto:%X - Registration Failed !\n",
-> +		proto_id);
-> +	/* A failing protocol registration does not trigger full failure */
-> +	devres_close_group(ni->handle->dev, ni->gid);
-> +
-> +	return -ENOMEM;
-> +}
-> +
-> +/**
-> + * scmi_notification_init()  - Initializes Notification Core Support
-> + * @handle: The handle identifying the platform instance to initialize
-> + *
-> + * This function lays out all the basic resources needed by the notification
-> + * core instance identified by the provided handle: once done, all of the
-> + * SCMI Protocols can register their events with the core during their own
-> + * initializations.
-> + *
-> + * Note that failing to initialize the core notifications support does not
-> + * cause the whole SCMI Protocols stack to fail its initialization.
-> + *
-> + * SCMI Notification Initialization happens in 2 steps:
-> + * * initialization: basic common allocations (this function) -> @initialized
-> + * * registration: protocols asynchronously come into life and registers their
-> + *		   own supported list of events with the core; this causes
-> + *		   further per-protocol allocations
-> + *
-> + * Any user's callback registration attempt, referring a still not registered
-> + * event, will be registered as pending and finalized later (if possible)
-> + * by scmi_protocols_late_init() work.
-> + * This allows for lazy initialization of SCMI Protocols due to late (or
-> + * missing) SCMI drivers' modules loading.
-> + *
-> + * Return: 0 on Success
-> + */
-> +int scmi_notification_init(struct scmi_handle *handle)
-> +{
-> +	void *gid;
-> +	struct scmi_notify_instance *ni;
-> +
-> +	gid = devres_open_group(handle->dev, NULL, GFP_KERNEL);
-> +	if (!gid)
-> +		return -ENOMEM;
-> +
-> +	ni = devm_kzalloc(handle->dev, sizeof(*ni), GFP_KERNEL);
-> +	if (!ni)
-> +		goto err;
-> +
-> +	ni->gid = gid;
-> +	ni->handle = handle;
-> +
-> +	ni->registered_protocols = devm_kcalloc(handle->dev, SCMI_MAX_PROTO,
-> +						sizeof(char *), GFP_KERNEL);
-> +	if (!ni->registered_protocols)
-> +		goto err;
-> +
-> +	handle->notify_priv = ni;
-> +
-> +	atomic_set(&ni->initialized, 1);
-> +	atomic_set(&ni->enabled, 1);
-> +	/* Ensure atomic values are updated */
-> +	smp_mb__after_atomic();
-> +
-> +	pr_info("SCMI Notifications Core Initialized.\n");
-> +
-> +	devres_close_group(handle->dev, ni->gid);
-> +
-> +	return 0;
-> +
-> +err:
-> +	pr_warn("SCMI Notifications - Initialization Failed.\n");
-> +	devres_release_group(handle->dev, NULL);
-> +	return -ENOMEM;
-> +}
-> +
-> +/**
-> + * scmi_notification_exit()  - Shutdown and clean Notification core
-> + * @handle: The handle identifying the platform instance to shutdown
-> + */
-> +void scmi_notification_exit(struct scmi_handle *handle)
-> +{
-> +	struct scmi_notify_instance *ni = handle->notify_priv;
-> +
-> +	if (unlikely(!ni || !atomic_read(&ni->initialized)))
-> +		return;
-> +
-> +	atomic_set(&ni->enabled, 0);
-> +	/* Ensure atomic values are updated */
-> +	smp_mb__after_atomic();
-
-If users can race with this, we're dead: the atomic by itself doesn't
-ensure that handle is not in use once we arrive here.  Should this
-be a refcount instead?
-
-If users can't race with this, we probably don't protection here.
-
-
-I may be misunderstanding what this code is doing...
-
-Cheers
----Dave
