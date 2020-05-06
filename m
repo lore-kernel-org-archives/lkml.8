@@ -2,131 +2,118 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8AAC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28470C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B93902075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFDA92075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:37:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FYshvVMM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GvDQ4ptk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728821AbgEFUfa (ORCPT
+        id S1728659AbgEFUh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 16:35:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51086 "EHLO
+        Wed, 6 May 2020 16:37:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726093AbgEFUf3 (ORCPT
+        by vger.kernel.org with ESMTP id S1726093AbgEFUh4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 16:35:29 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27A30C061A0F;
-        Wed,  6 May 2020 13:35:29 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49HSyh6XhJz9sRY;
-        Thu,  7 May 2020 06:35:24 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588797326;
-        bh=NwcnAUxzQxfI5RiY9l3BwK9CdPv/e/PbCfVJoOYWUoM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FYshvVMM/U1YFW6ccHtYPqBwXN9gzBFM6KbNPSf8D9LJya7mLJAZO09pReDd/HxBA
-         qC7nPQ/xsYpMdL72AnjM4zLiypLJkB7mjfwRq1NYtTTFKOftI3oiuVr1AK4gMUnzmP
-         lnaL+Nos6LzPqziaj9wE8D6vbZoZTMZm+GOZd7Sjl6knIQX9HnEeHCBKinav4ObBby
-         vjUD/eUfbhTTrWsdwuqV2hnrl3S3uxglxdDglaUajv1qVknQr9Jfr17np26FGH+OY5
-         DyN8h++jD9DsgOlQh3zbklaG4qEkdZEZRx16anIK7RPnJlKMGf85hFxYIWwnFRIgig
-         2TyJAKyoOAJOQ==
-Date:   Thu, 7 May 2020 06:35:24 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Amol Grover <frextrite@gmail.com>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        syzbot <syzbot+1519f497f2f9f08183c6@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>, kuba@kernel.org,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        "paul E. McKenney" <paulmck@kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: Re: linux-next boot error: WARNING: suspicious RCU usage in
- ipmr_get_table
-Message-ID: <20200507063524.5356b923@canb.auug.org.au>
-In-Reply-To: <1D570330-8E3E-4596-AD9B-21CE6A86F146@lca.pw>
-References: <000000000000df9a9805a455e07b@google.com>
-        <CACT4Y+YnjK+kq0pfb5fe-q1bqe2T1jq_mvKHf--Z80Z3wkyK1Q@mail.gmail.com>
-        <34558B83-103E-4205-8D3D-534978D5A498@lca.pw>
-        <20200507061635.449f9495@canb.auug.org.au>
-        <1D570330-8E3E-4596-AD9B-21CE6A86F146@lca.pw>
+        Wed, 6 May 2020 16:37:56 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D5CBC061A0F;
+        Wed,  6 May 2020 13:37:55 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id u16so4234779wmc.5;
+        Wed, 06 May 2020 13:37:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=PQJFoJ87sWErTNm0JkGMeGO3o6fQqvJbc6kV3H7rQsg=;
+        b=GvDQ4ptkRjDmQFS1+fjeJgo7M2daHg+GNJJxq7tln10vXF8NOEsrgcPTMjf3FVVTBa
+         /mgjfyAb//wio6wYuEytkzHhoRTzmGmF7/Fu+xfPUa0274kRGVtgVwMeCb8my75ifc+c
+         GjHwHejIq8rXesH4JwxQnkHQiqwDy3JFZCkjMKBuTuBkGYzlDHpaAI0ecyUIh07KhImh
+         +PfJGzocAjrqBjXPiKdtjNvU0iCNpx8ZtftNtrK6zxGGsHcYlLUn6T0vd8MQ2KRFUy9r
+         LxW/5TmEcGGo9KR6XBFAWuTwtSqcgCdUntaVZB4l2xKNSkoilvX8X76j1CTOwWZjCPae
+         ypPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=PQJFoJ87sWErTNm0JkGMeGO3o6fQqvJbc6kV3H7rQsg=;
+        b=PWML3xomUFHS8qvm1NhIBOYFfrp2Ef7X0wHKlZDzFjY4F4zEc8ZflHiksEsGC4RiuL
+         7MjFgvBbFRu4Yyt8VYFK6qO0VXX9p11L9W8By9pIhIVGYCDRtIAILO1VhPXxvrc0cyuT
+         Q2RUVi4NyW2XZagYZ82hsKs+tb0A/WncItV0p/igS38sHrIl6al0UChmUSPJz4gixDdS
+         To8FI7v/2Hi3+4aIkWYXk+kft31UigBwIHZ9FJJmO1nGovmVWrEfnmoKvjOK11MjQa2y
+         Lq53Ar4thZAQOIILaQZwBG9M66AeGlkoC7ZNVsFCFDJnIyZ1ynv5fX/K9huBHsd5/jzP
+         QIoQ==
+X-Gm-Message-State: AGi0PuZXgsiup2CrYsB4QPFvXd8MLXB2dpbeGKsBVpQ6oTDCEsxEXs7g
+        3uMA0j7fKTiyHNlTUA7RU7c=
+X-Google-Smtp-Source: APiQypKDi8twc0nfflr4h3paiCm8PJSLvSswEZpdnpDoMAKyXk0YA21IhpJ8Kw94yErIKcWgnt16cA==
+X-Received: by 2002:a1c:750a:: with SMTP id o10mr6259795wmc.124.1588797473769;
+        Wed, 06 May 2020 13:37:53 -0700 (PDT)
+Received: from felia ([2001:16b8:2df1:2500:444f:2681:799e:cf0b])
+        by smtp.gmail.com with ESMTPSA id y3sm4323742wrt.87.2020.05.06.13.37.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 13:37:52 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
+Date:   Wed, 6 May 2020 22:37:45 +0200 (CEST)
+X-X-Sender: lukas@felia
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: MAINTAINERS: Wrong ordering in S390 PCI SUBSYSTEM
+In-Reply-To: <CAHp75VeNiuJ7QXvNO2=W_TjEjjK3xRbg0-Don6HkSOHV5LXRbA@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.2005062232330.23358@felia>
+References: <alpine.DEB.2.21.2005060741520.7719@felia> <CAHp75VeNiuJ7QXvNO2=W_TjEjjK3xRbg0-Don6HkSOHV5LXRbA@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ucjhpYCb9TG.8NNMwqXguvb";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ucjhpYCb9TG.8NNMwqXguvb
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi Qian,
 
-On Wed, 6 May 2020 16:21:05 -0400 Qian Cai <cai@lca.pw> wrote:
->
-> > On May 6, 2020, at 4:16 PM, Stephen Rothwell <sfr@canb.auug.org.au> wro=
-te:
-> >=20
-> > Hi Qian,
-> >=20
-> > On Tue, 28 Apr 2020 09:56:59 -0400 Qian Cai <cai@lca.pw> wrote: =20
-> >>  =20
-> >>> On Apr 28, 2020, at 4:57 AM, Dmitry Vyukov <dvyukov@google.com> wrote=
-:   =20
-> >>>> net/ipv4/ipmr.c:136 RCU-list traversed in non-reader section!!   =20
-> >>=20
-> >> https://lore.kernel.org/netdev/20200222063835.14328-2-frextrite@gmail.=
-com/
-> >>=20
-> >> Never been picked up for a few months due to some reasons. You could p=
-robably
-> >> need to convince David, Paul, Steven or Linus to unblock the bot or ca=
-rry patches
-> >> on your own? =20
-> >=20
-> > Did you resubmit the patch series as Dave Miller asked you to (now that
-> > net-next is based on v5.7-rc1+)? =20
->=20
-> Actually, it was Amol not me who submit the patch, so let him to answer t=
-hat.
+On Wed, 6 May 2020, Andy Shevchenko wrote:
 
-Oops, sorry.
---=20
-Cheers,
-Stephen Rothwell
+> On Wed, May 6, 2020 at 8:46 AM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
+> >
+> > Hi Pierre,
+> >
+> > with your commit de267a7c71ba ("s390/pci: Documentation for zPCI"),
+> > visible on next-20200505, ./scripts/checkpatch.pl -f MAINTAINERS
+> > complains:
+> >
+> > WARNING: Misordered MAINTAINERS entry - list file patterns in alphabetic order
+> > #14723: FILE: MAINTAINERS:14723:
+> > +F:     drivers/pci/hotplug/s390_pci_hpc.c
+> > +F:     Documentation/s390/pci.rst
+> >
+> >
+> > This is due to wrong ordering of the entries in your submission. If you
+> > would like me to send you a patch fixing that, please just let me know.
+> >
+> > It is a recent addition to checkpatch.pl to report ordering problems in
+> > MAINTAINERS, so you might have not seen that at submission time.
+> 
+> Why not to send a patch?
+> Same for the rest of similar mails from you.
+> 
 
---Sig_/ucjhpYCb9TG.8NNMwqXguvb
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Well, the checkpatch warning is new, so I want to find out if and make 
+sure that the involved developers are generally okay getting those patches 
+or if there is a better way handling those patches to MAINTAINERS.
 
------BEGIN PGP SIGNATURE-----
+I do not expect that there are too many further cases of this warning 
+appearing soon in linux-next now that checkpatch already warns about it.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6zH4wACgkQAVBC80lX
-0Gw2Lgf/VFgex0t54wjG2dK6n/EDR0ThAd6SoZHRqdGtVbVRAHps0PhM62aD/GQ5
-D2KAQzZixnpRDBLLATL+ksUDeDCFm0xWDtuMy82wSSJXw4Klvflxu/PgsNmer104
-IrJ8SJ1JYPPmKdA/vdvXr054Hqp9/BRU8PuNV93NjZ/5iSLcYZWUR+WAh3lUrwm1
-b9hq27kuMuY7pKVbDZBHpMz7IXxhPjmnupnx/56TdkcPvyojbUCvkCC89fARxpTi
-5L+qvYr5PSUMYRiV5TcU4gg0Vq8KBIqhCQ2synBC7Phf6mFwrr8tcAhj0Girhtmg
-/KZz18qsGXOpST/GFHMe9qqS23VRqA==
-=P1M5
------END PGP SIGNATURE-----
-
---Sig_/ucjhpYCb9TG.8NNMwqXguvb--
+Lukas
