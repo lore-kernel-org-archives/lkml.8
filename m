@@ -4,26 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE946C4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4673DC4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A484D2078C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:09:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A97E206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:09:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728628AbgEFIJl (ORCPT
+        id S1728641AbgEFIJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 04:09:41 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:47503 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728217AbgEFIJk (ORCPT
+        Wed, 6 May 2020 04:09:45 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:35259 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728633AbgEFIJp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 04:09:40 -0400
+        Wed, 6 May 2020 04:09:45 -0400
+X-Originating-IP: 86.202.105.35
 Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 2964524002E;
-        Wed,  6 May 2020 08:08:15 +0000 (UTC)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 06D89C000D;
+        Wed,  6 May 2020 08:09:39 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
@@ -32,9 +33,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         kamel.bouhara@bootlin.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v3 3/9] ARM: dts: at91: sama5d2: add TCB GCLK
-Date:   Wed,  6 May 2020 10:05:48 +0200
-Message-Id: <20200506080554.283177-4-alexandre.belloni@bootlin.com>
+Subject: [PATCH v3 4/9] ARM: at91: add atmel tcb capabilities
+Date:   Wed,  6 May 2020 10:05:49 +0200
+Message-Id: <20200506080554.283177-5-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200506080554.283177-1-alexandre.belloni@bootlin.com>
 References: <20200506080554.283177-1-alexandre.belloni@bootlin.com>
@@ -45,47 +46,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sama5d2 tcbs take an extra input clock, their gclk.
+From: Kamel Bouhara <kamel.bouhara@bootlin.com>
 
+Some atmel socs have extra tcb capabilities that allow using a generic
+clock source or enabling a quadrature decoder.
+
+Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- arch/arm/boot/dts/sama5d2.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ include/soc/at91/atmel_tcb.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
-index ab550d69db91..996143e966d8 100644
---- a/arch/arm/boot/dts/sama5d2.dtsi
-+++ b/arch/arm/boot/dts/sama5d2.dtsi
-@@ -499,23 +499,23 @@ macb0: ethernet@f8008000 {
- 			};
+diff --git a/include/soc/at91/atmel_tcb.h b/include/soc/at91/atmel_tcb.h
+index c3c7200ce151..1d7071dc0bca 100644
+--- a/include/soc/at91/atmel_tcb.h
++++ b/include/soc/at91/atmel_tcb.h
+@@ -36,9 +36,14 @@ struct clk;
+ /**
+  * struct atmel_tcb_config - SoC data for a Timer/Counter Block
+  * @counter_width: size in bits of a timer counter register
++ * @has_gclk: boolean indicating if a timer counter has a generic clock
++ * @has_qdec: boolean indicating if a timer counter has a quadrature
++ * decoder.
+  */
+ struct atmel_tcb_config {
+ 	size_t	counter_width;
++	bool    has_gclk;
++	bool    has_qdec;
+ };
  
- 			tcb0: timer@f800c000 {
--				compatible = "atmel,at91sam9x5-tcb", "simple-mfd", "syscon";
-+				compatible = "atmel,sama5d2-tcb", "simple-mfd", "syscon";
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				reg = <0xf800c000 0x100>;
- 				interrupts = <35 IRQ_TYPE_LEVEL_HIGH 0>;
--				clocks = <&pmc PMC_TYPE_PERIPHERAL 35>, <&clk32k>;
--				clock-names = "t0_clk", "slow_clk";
-+				clocks = <&pmc PMC_TYPE_PERIPHERAL 35>, <&pmc PMC_TYPE_GCK 35>, <&clk32k>;
-+				clock-names = "t0_clk", "gclk", "slow_clk";
- 			};
- 
- 			tcb1: timer@f8010000 {
--				compatible = "atmel,at91sam9x5-tcb", "simple-mfd", "syscon";
-+				compatible = "atmel,sama5d2-tcb", "simple-mfd", "syscon";
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				reg = <0xf8010000 0x100>;
- 				interrupts = <36 IRQ_TYPE_LEVEL_HIGH 0>;
--				clocks = <&pmc PMC_TYPE_PERIPHERAL 36>, <&clk32k>;
--				clock-names = "t0_clk", "slow_clk";
-+				clocks = <&pmc PMC_TYPE_PERIPHERAL 36>, <&pmc PMC_TYPE_GCK 36>, <&clk32k>;
-+				clock-names = "t0_clk", "gclk", "slow_clk";
- 			};
- 
- 			hsmc: hsmc@f8014000 {
+ /**
 -- 
 2.26.2
 
