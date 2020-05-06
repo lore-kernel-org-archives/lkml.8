@@ -4,55 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29949C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E85EC4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 067DC2068E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D980320A8B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:27:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588778877;
-	bh=Ub+hs7ObfrDseE0HXZX5Az3sIufIGM2CLRUZG7uas4w=;
+	s=default; t=1588778879;
+	bh=UJP9UDgZosTOzGyCxhOJ49B9NFTN8ef3BH66WXZVCaU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KLRMnUzChgGFo4daeGDxcSUkFRDxY4vouF+CAetJAeBak2A3uV3+zPTj0pjPiC1qd
-	 9ndwQGsOBiqXZ/bTUB4bbQ9IFzGBdgR9nRHfN/23SnzAdVWFnBMWvbTZ9LMLUrZBzC
-	 tnPRwiZHHIQJfhdocP68hZFx2GUtVMBDiyPh90hI=
+	b=gh87BIIoLMfXxlNbbxXIS3XXyYa5L7R3Iaan4pflV1Qr5BDNCIu5+dxo38oEx4vjF
+	 3zFBbKe5Nn5zti6CqM0AqoIAEW5KPwQRufKBc6eixauwHB88jeTS5mpuIsnE158ByV
+	 oinP6QTVj7n5UwFrFSN5w4N/iEZBro7my/dN0IuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730385AbgEFP14 (ORCPT
+        id S1730331AbgEFP1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:27:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51248 "EHLO mail.kernel.org"
+        Wed, 6 May 2020 11:27:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730336AbgEFP1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:27:24 -0400
+        id S1729470AbgEFP1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:27:13 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E745D2145D;
-        Wed,  6 May 2020 15:27:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4C8821744;
+        Wed,  6 May 2020 15:27:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588778843;
-        bh=Ub+hs7ObfrDseE0HXZX5Az3sIufIGM2CLRUZG7uas4w=;
+        s=default; t=1588778832;
+        bh=UJP9UDgZosTOzGyCxhOJ49B9NFTN8ef3BH66WXZVCaU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JC7zZBL3XRU/lmsRBVSec7xXmobVr0WFu+RuB8OtO+uFA0ZGd1pZ/byEX2ISlSKqC
-         f7Fa4ykHdHStYPSiD5wYp249wfP2K7iuRUPPfAcMQtAfYdCtNhikJpOc2Xn9Zdes2Y
-         HNoJ0b021TMnOkPL7TfKLaK3rH4H05gql3HA4Ck0=
+        b=atSWk8nF16hHPpEJn3SaMvIQ+CbezRWLsmtpmZnw08dnVOdzbjhU7XUevIZlznO3I
+         ab5fQ7alSDGQ1UW0OBSElZPldd+XnBD73d3/BS+wIWK2PCF+uyOAyA4Kjex92tXK/Y
+         T2/+iYStLs5AqEK1JZrJQv4KH9h7WNkF/VmGjEU0=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 85/91] perf symbol: Fix kernel symbol address display
-Date:   Wed,  6 May 2020 12:22:28 -0300
-Message-Id: <20200506152234.21977-86-acme@kernel.org>
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCH 81/91] perf script: Rename perf_evsel__*() operating on 'struct evsel *' to evsel__*()
+Date:   Wed,  6 May 2020 12:22:24 -0300
+Message-Id: <20200506152234.21977-82-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
@@ -63,134 +60,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Running commands
+As those is a 'struct evsel' methods, not part of tools/lib/perf/, aka
+libperf, to whom the perf_ prefix belongs.
 
-   ./perf record -e rb0000 -- find .
-   ./perf report -v
-
-reveals symbol names and its addresses. There is a mismatch between
-kernel symbol and address. Here is an example for kernel symbol
-check_chain_key:
-
- 3.55%  find /lib/modules/.../build/vmlinux  0xf11ec  v [k] check_chain_key
-
-This address is off by 0xff000 as can be seen with:
-
-[root@t35lp46 ~]# fgrep check_chain_key /proc/kallsyms
-00000000001f00d0 t check_chain_key
-[root@t35lp46 ~]# objdump -t ~/linux/vmlinux| fgrep check_chain_key
-00000000001f00d0 l     F .text	00000000000001e8 check_chain_key
-[root@t35lp46 ~]#
-
-This function is located in main memory 0x1f00d0 - 0x1f02b4. It has
-several entries in the perf data file with the correct address:
-
-[root@t35lp46 perf]# ./perf report -D -i perf.data.find-bad | \
-				fgrep SAMPLE| fgrep 0x1f01ec
-PERF_RECORD_SAMPLE(IP, 0x1): 22228/22228: 0x1f01ec period: 1300000 addr: 0
-PERF_RECORD_SAMPLE(IP, 0x1): 22228/22228: 0x1f01ec period: 1300000 addr: 0
-
-The root cause happens when reading symbol tables during perf report.
-A long gdb call chain leads to
-
-   machine__deliver_events
-     perf_evlist__deliver_event
-       perf_evlist__deliver_sample
-         build_id__mark_dso_hits
-	   thread__find_map(1)      Read correct address from sample entry
-	     map__load
-	       dso__load            Some more functions to end up in
-	         ....
-		 dso__load_sym.
-
-Function dso__load_syms  checks for kernel relocation and symbol
-adjustment for the kernel and results in kernel map adjustment of
-	 kernel .text segment address (0x100000 on s390)
-	 kernel .text segment offset in file (0x1000 on s390).
-This results in all kernel symbol addresses to be changed by subtracting
-0xff000 (on s390). For the symbol check_chain_key we end up with
-
-    0x1f00d0 - 0x100000 + 0x1000 = 0xf11d0
-
-and this address is saved in the perf symbol table. This calculation is
-also applied by the mapping functions map__mapip() and map__unmapip()
-to map IP addresses to dso mappings.
-
-During perf report processing functions
-
-   process_sample_event    (builtin-report.c)
-     machine__resolve
-       thread__find_map
-     hist_entry_iter_add
-
-are called. Function thread__find_map(1)
-takes the correct sample address and applies the mapping function
-map__mapip() from the kernel dso and saves the modified address
-in struct addr_location for further reference. From now on this address
-is used.
-
-Funktion process_sample_event() then calls hist_entry_iter_add() to save
-the address in member ip of struct hist_entry.
-
-When samples are displayed using
-
-    perf_evlist__tty_browse_hists
-      hists__fprintf
-        hist_entry__fprintf
-	  hist_entry__snprintf
-	    __hist_entry__snprintf
-	      _hist_entry__sym_snprintf()
-
-This simply displays the address of the symbol and ignores the dso <-> map
-mappings done in function thread__find_map. This leads to the address
-mismatch.
-
-Output before:
-
-ot@t35lp46 perf]# ./perf report -v | fgrep check_chain_key
-     3.55%  find     /lib/modules/5.6.0d-perf+/build/vmlinux
-     						0xf11ec v [k] check_chain_key
-[root@t35lp46 perf]#
-
-Output after:
-
-[root@t35lp46 perf]# ./perf report -v | fgrep check_chain_key
-     3.55%  find     /lib/modules/5.6.0d-perf+/build/vmlinux
-     						0x1f01ec v [k] check_chain_key
-[root@t35lp46 perf]#
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Link: http://lore.kernel.org/lkml/20200415070744.59919-1-tmricht@linux.ibm.com
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/sort.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ tools/perf/builtin-script.c | 53 +++++++++++++------------------------
+ 1 file changed, 19 insertions(+), 34 deletions(-)
 
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index dc23b349fff9..c1f8879f92cc 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -300,8 +300,14 @@ static int _hist_entry__sym_snprintf(struct map_symbol *ms,
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index fee56474377b..56d7bcd12671 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -351,10 +351,8 @@ static const char *output_field2str(enum perf_output_field field)
  
- 	if (verbose > 0) {
- 		char o = map ? dso__symtab_origin(map->dso) : '!';
-+		u64 rip = ip;
-+
-+		if (map && map->dso && map->dso->kernel
-+		    && map->dso->adjust_symbols)
-+			rip = map->unmap_ip(map, ip);
-+
- 		ret += repsep_snprintf(bf, size, "%-#*llx %c ",
--				       BITS_PER_LONG / 4 + 2, ip, o);
-+				       BITS_PER_LONG / 4 + 2, rip, o);
+ #define PRINT_FIELD(x)  (output[output_type(attr->type)].fields & PERF_OUTPUT_##x)
+ 
+-static int perf_evsel__do_check_stype(struct evsel *evsel,
+-				      u64 sample_type, const char *sample_msg,
+-				      enum perf_output_field field,
+-				      bool allow_user_set)
++static int evsel__do_check_stype(struct evsel *evsel, u64 sample_type, const char *sample_msg,
++				 enum perf_output_field field, bool allow_user_set)
+ {
+ 	struct perf_event_attr *attr = &evsel->core.attr;
+ 	int type = output_type(attr->type);
+@@ -383,16 +381,13 @@ static int perf_evsel__do_check_stype(struct evsel *evsel,
+ 	return 0;
+ }
+ 
+-static int perf_evsel__check_stype(struct evsel *evsel,
+-				   u64 sample_type, const char *sample_msg,
+-				   enum perf_output_field field)
++static int evsel__check_stype(struct evsel *evsel, u64 sample_type, const char *sample_msg,
++			      enum perf_output_field field)
+ {
+-	return perf_evsel__do_check_stype(evsel, sample_type, sample_msg, field,
+-					  false);
++	return evsel__do_check_stype(evsel, sample_type, sample_msg, field, false);
+ }
+ 
+-static int perf_evsel__check_attr(struct evsel *evsel,
+-				  struct perf_session *session)
++static int perf_evsel__check_attr(struct evsel *evsel, struct perf_session *session)
+ {
+ 	struct perf_event_attr *attr = &evsel->core.attr;
+ 	bool allow_user_set;
+@@ -404,32 +399,28 @@ static int perf_evsel__check_attr(struct evsel *evsel,
+ 					       HEADER_AUXTRACE);
+ 
+ 	if (PRINT_FIELD(TRACE) &&
+-		!perf_session__has_traces(session, "record -R"))
++	    !perf_session__has_traces(session, "record -R"))
+ 		return -EINVAL;
+ 
+ 	if (PRINT_FIELD(IP)) {
+-		if (perf_evsel__check_stype(evsel, PERF_SAMPLE_IP, "IP",
+-					    PERF_OUTPUT_IP))
++		if (evsel__check_stype(evsel, PERF_SAMPLE_IP, "IP", PERF_OUTPUT_IP))
+ 			return -EINVAL;
  	}
  
- 	ret += repsep_snprintf(bf + ret, size - ret, "[%c] ", level);
+ 	if (PRINT_FIELD(ADDR) &&
+-		perf_evsel__do_check_stype(evsel, PERF_SAMPLE_ADDR, "ADDR",
+-					   PERF_OUTPUT_ADDR, allow_user_set))
++	    evsel__do_check_stype(evsel, PERF_SAMPLE_ADDR, "ADDR", PERF_OUTPUT_ADDR, allow_user_set))
+ 		return -EINVAL;
+ 
+ 	if (PRINT_FIELD(DATA_SRC) &&
+-		perf_evsel__check_stype(evsel, PERF_SAMPLE_DATA_SRC, "DATA_SRC",
+-					PERF_OUTPUT_DATA_SRC))
++	    evsel__check_stype(evsel, PERF_SAMPLE_DATA_SRC, "DATA_SRC", PERF_OUTPUT_DATA_SRC))
+ 		return -EINVAL;
+ 
+ 	if (PRINT_FIELD(WEIGHT) &&
+-		perf_evsel__check_stype(evsel, PERF_SAMPLE_WEIGHT, "WEIGHT",
+-					PERF_OUTPUT_WEIGHT))
++	    evsel__check_stype(evsel, PERF_SAMPLE_WEIGHT, "WEIGHT", PERF_OUTPUT_WEIGHT))
+ 		return -EINVAL;
+ 
+ 	if (PRINT_FIELD(SYM) &&
+-		!(evsel->core.attr.sample_type & (PERF_SAMPLE_IP|PERF_SAMPLE_ADDR))) {
++	    !(evsel->core.attr.sample_type & (PERF_SAMPLE_IP|PERF_SAMPLE_ADDR))) {
+ 		pr_err("Display of symbols requested but neither sample IP nor "
+ 			   "sample address\navailable. Hence, no addresses to convert "
+ 		       "to symbols.\n");
+@@ -441,7 +432,7 @@ static int perf_evsel__check_attr(struct evsel *evsel,
+ 		return -EINVAL;
+ 	}
+ 	if (PRINT_FIELD(DSO) &&
+-		!(evsel->core.attr.sample_type & (PERF_SAMPLE_IP|PERF_SAMPLE_ADDR))) {
++	    !(evsel->core.attr.sample_type & (PERF_SAMPLE_IP|PERF_SAMPLE_ADDR))) {
+ 		pr_err("Display of DSO requested but no address to convert.\n");
+ 		return -EINVAL;
+ 	}
+@@ -458,33 +449,27 @@ static int perf_evsel__check_attr(struct evsel *evsel,
+ 		return -EINVAL;
+ 	}
+ 	if ((PRINT_FIELD(PID) || PRINT_FIELD(TID)) &&
+-		perf_evsel__check_stype(evsel, PERF_SAMPLE_TID, "TID",
+-					PERF_OUTPUT_TID|PERF_OUTPUT_PID))
++	    evsel__check_stype(evsel, PERF_SAMPLE_TID, "TID", PERF_OUTPUT_TID|PERF_OUTPUT_PID))
+ 		return -EINVAL;
+ 
+ 	if (PRINT_FIELD(TIME) &&
+-		perf_evsel__check_stype(evsel, PERF_SAMPLE_TIME, "TIME",
+-					PERF_OUTPUT_TIME))
++	    evsel__check_stype(evsel, PERF_SAMPLE_TIME, "TIME", PERF_OUTPUT_TIME))
+ 		return -EINVAL;
+ 
+ 	if (PRINT_FIELD(CPU) &&
+-		perf_evsel__do_check_stype(evsel, PERF_SAMPLE_CPU, "CPU",
+-					   PERF_OUTPUT_CPU, allow_user_set))
++	    evsel__do_check_stype(evsel, PERF_SAMPLE_CPU, "CPU", PERF_OUTPUT_CPU, allow_user_set))
+ 		return -EINVAL;
+ 
+ 	if (PRINT_FIELD(IREGS) &&
+-		perf_evsel__check_stype(evsel, PERF_SAMPLE_REGS_INTR, "IREGS",
+-					PERF_OUTPUT_IREGS))
++	    evsel__check_stype(evsel, PERF_SAMPLE_REGS_INTR, "IREGS", PERF_OUTPUT_IREGS))
+ 		return -EINVAL;
+ 
+ 	if (PRINT_FIELD(UREGS) &&
+-		perf_evsel__check_stype(evsel, PERF_SAMPLE_REGS_USER, "UREGS",
+-					PERF_OUTPUT_UREGS))
++	    evsel__check_stype(evsel, PERF_SAMPLE_REGS_USER, "UREGS", PERF_OUTPUT_UREGS))
+ 		return -EINVAL;
+ 
+ 	if (PRINT_FIELD(PHYS_ADDR) &&
+-		perf_evsel__check_stype(evsel, PERF_SAMPLE_PHYS_ADDR, "PHYS_ADDR",
+-					PERF_OUTPUT_PHYS_ADDR))
++	    evsel__check_stype(evsel, PERF_SAMPLE_PHYS_ADDR, "PHYS_ADDR", PERF_OUTPUT_PHYS_ADDR))
+ 		return -EINVAL;
+ 
+ 	return 0;
 -- 
 2.21.1
 
