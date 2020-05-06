@@ -2,378 +2,191 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD77EC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F59C38A2A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACA19208D5
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE6D8208DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:55:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="m9HhLh3d"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="BJ7OS9iR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729308AbgEFOzE (ORCPT
+        id S1729347AbgEFOzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 10:55:04 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:43029 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729078AbgEFOzC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 10:55:02 -0400
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 2354022EEB;
-        Wed,  6 May 2020 16:54:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1588776897;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Y1HXOD90+xthCbcF5aODRvO5s4y3GjqVZeWMcm2C9hg=;
-        b=m9HhLh3dnD9BTg85PIRYHxEzW+9tKI8srVGI3MjgXJkJaWDcnUKGyPN86orzkyHrB0ai5O
-        VyiY7R2tdN04JifV18FNmxuUW/9Pc3kWUfo+q974YzVhTm0Tkrc3osn/smhyhl7PxpHZMl
-        VHiTEHII3umwamTkGQq8kpYUr38joLY=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH net-next v3 1/3] net: phy: add concept of shared storage for PHYs
-Date:   Wed,  6 May 2020 16:53:13 +0200
-Message-Id: <20200506145315.13967-2-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200506145315.13967-1-michael@walle.cc>
-References: <20200506145315.13967-1-michael@walle.cc>
+        Wed, 6 May 2020 10:55:22 -0400
+Received: from mail-mw2nam12on2134.outbound.protection.outlook.com ([40.107.244.134]:8417
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729078AbgEFOzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 10:55:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HXHqqxaH6ZfxRADm83kAwBvTeWP1vYRrtEwru3LgdiS77TLANUlOcQ3WoFwEXJ9Rz4HVbZo8JRivlVNRM3czR0TASb2IQk6n0SBJUTuVDbvVzjp3XAvGLdhLQiqDv+afkTLzRk1t9OA8tysMU5Y+wIKq/LUEEX1tVAyzrpP0vpZ7d4mQX4XqbmrWH0d81tA7xPcfT6m0Vg0BN5uFwxUOKdGIBcr1NzYdbf6sJTN09sfCV/QYmLT2CKcYPGSfKWpN7qozeD3/Rwul8v1aWPXC08H3IVSGfN6mbY+Ld/PjoKsGrT1O0xdgLXz5bA6KTkw8ykEcDp6IjIZWM4GMmrN1LQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HqwQ8BbzQwgPpbD/Ya5zBnjkVn6zMrsBhBGAo3r1qMk=;
+ b=YuRGmEgTufT/W0yNocant5TLFwyzLQW/u5Qz2wtHkGG2hcCweKroVWbxn8NbDdrfjn+KturVp1xTxKREONxuEAIi828mF0ibqaCHy7/IbMm3t3Cme9asvOs0500mjdVHgYCdJyg1yhYwhIaDoURo0TtVqT7NHsslau2t+C6iKiotjlRd+wNPOB0N9huXdtOYMBium3uYqYz5wUZVEofeOWHhACdlNdYF/u44jGPrEriUQaspDqmJ+oQGj/5+G/BDD4mGNXIaEc3DsR8Oir/m7BzeY81D1HqiALfuHC1HBsFnqmtZ5TLcY8UTKJHuCsKEXhn3PoREOL1rtg2TRiyhqA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HqwQ8BbzQwgPpbD/Ya5zBnjkVn6zMrsBhBGAo3r1qMk=;
+ b=BJ7OS9iRY/SIGQa1fNQRvvo9VcrBUOYuZ68VdTY7vV4McoVh9unhxW9GSf/iOlecfvqzsjip6YIFNvsjpyE7gX91Qv8qn3Hcm49V2TKcSwnjx0hSm9c5QbA8UwBWJwEY/QixDPTqx0/zXiongVzPDpDQ5mYLb38Ifj8GRn/3Y6M=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
+ by MW2PR2101MB0889.namprd21.prod.outlook.com (2603:10b6:302:10::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.11; Wed, 6 May
+ 2020 14:55:17 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::5a3:a5e0:1e3c:e950]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::5a3:a5e0:1e3c:e950%5]) with mapi id 15.20.3000.007; Wed, 6 May 2020
+ 14:55:17 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Wei Hu <weh@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: RE: [PATCH v2 1/2] PCI: hv: Fix the PCI HyperV probe failure path to
+ release resource properly
+Thread-Topic: [PATCH v2 1/2] PCI: hv: Fix the PCI HyperV probe failure path to
+ release resource properly
+Thread-Index: AQHWH3qC9OKP6NPAT0GaOvO53wpTCqiZnaWAgAD0DwCAAF0CgIAAJNkAgAAXKMA=
+Date:   Wed, 6 May 2020 14:55:17 +0000
+Message-ID: <MW2PR2101MB1052F033623F91A0FF991DE4D7A40@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200501053617.24689-1-weh@microsoft.com>
+ <20200505150315.GA16228@e121166-lin.cambridge.arm.com>
+ <SG2P153MB02136EA9764D340F3D81DF2DBBA40@SG2P153MB0213.APCP153.PROD.OUTLOOK.COM>
+ <20200506110930.GA31068@e121166-lin.cambridge.arm.com>
+ <SG2P153MB0213216D3C150AA4758FCBB8BBA40@SG2P153MB0213.APCP153.PROD.OUTLOOK.COM>
+In-Reply-To: <SG2P153MB0213216D3C150AA4758FCBB8BBA40@SG2P153MB0213.APCP153.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=weh@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-05-06T13:21:31.0626998Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d44992dc-f522-438b-bf8e-b8ba39ee1998;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: microsoft.com; dkim=none (message not signed)
+ header.d=none;microsoft.com; dmarc=none action=none
+ header.from=microsoft.com;
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: aaa35743-703f-40fb-2590-08d7f1cd7de2
+x-ms-traffictypediagnostic: MW2PR2101MB0889:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW2PR2101MB0889AF9829C86A8F29090AD8D7A40@MW2PR2101MB0889.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 03950F25EC
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: EkKRsd0UwJnr/IZ1t4HVmflMaPcbKmmFPaoMImkqZJ7f3Dthepo8cs+nHIqzQ/NQRC7taBgLg1axnxGMU2bnjdZ2jCQnP70cW7ReV3RCYBKsJ0f21PADn/ATM/47RVSYb8rUU21bbuuYtDmgeKzKxKjnf6wCNozQzcwHHCGeayQrSOCmb9SOIZuiKiKdqaaoDXMAIGfsNnFI+dMUVz5pdbtd23w5i2iyOJJI+QHu5ft1d1w7QPq2mdXbQnUXyOzsmZtM5aTYTAj3Bxt57QDCR7L0ov7PVt+druPSaPY21yoQuDMmtLZe6IuidvCXvAik3eKUXg0pLSM8uRdqeEVr9bLEpS7WvpDP+2t1kfjnQ1ZptvdCsV8BWnBCMJnh+9TR2oLJOXRvw5FriaPrsvbW+7n0vbIdPJ7RreAIf5s9H1di3MImKLHvRCh055WrrNGZfaiNR33c1i2PLkI6IQHGYQgHe66/EwX7V9gSGucYSnbcSkJZ9zx6fOv2ZQ1se/ZjbvHWtxHTSkDAVN3gEEk9dA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(396003)(366004)(39860400002)(136003)(33430700001)(5660300002)(2906002)(186003)(52536014)(7696005)(82950400001)(82960400001)(66946007)(110136005)(9686003)(54906003)(64756008)(66476007)(76116006)(71200400001)(8936002)(66446008)(8676002)(66556008)(86362001)(316002)(33656002)(55016002)(10290500003)(478600001)(8990500004)(107886003)(4326008)(53546011)(6506007)(33440700001)(26005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: sw212kwtl5+HR5+3Y/L5k7Myjb/sOrS2Qrt8OCMSzZvVZd8qJ830SuWCv9uvTOSNUeXMIYbSLddCDdzX9R5AlLKliqoTGkgmLM4aPkwqm8piQOtzfcNucVnvTQCyJg5QznN57D3KXUiXXJsrp3fWbikb8FHJuUEypyPmpXjdRVWzCuxB3z5IQStQOdHkEKmnkTv2jnuCBkEye/HaGyekpHpUOcWMf1BJQ9hWfQ1b1WoYy5nnN0p6V3NiJZ+E2HhOEza3iV+0k2ZnqLtHhYDuF/beJyyzIlycCfJncoYvbu63aPG7OegQtpKUiw0gYKQbFyxvcfUf+UD8tWcjHXep4PjvSgnxzEAU3ZlDBDIyLUJhZ96VfuOMPFmEdmiBWdLiu9JeSR6Mjv6HEHJ74P2O9Q8E0Z2627j9EFvAy2nNzqZONQg5z6sNTwqbADVk3Sndyxvnjc/X5Qsde3TzrPyE9SJAiISG/c/ubJgyWDNisDnpbJaLSQzPEKYFqRrizB/0aWZXP132GtP6jQ114UByhvcp68JoPpbX4QnYvsF+JwIvKttTvruApuLNLkkgKGOAJDaI8eNwZrLoBBp+/hqzhls0QP4InbtEGIgCs9y4xPi6hL6swK+HOezTrt8UASOc67yAK99wEHqxRMwZC5ZrPbFGA/9wAoR8ISWlptxDJSQRxGSlGJ6jmgbXfvEEwah0bTv/SqxnUUFdEUdl8KSSFXqVQDVXzzs1cxZR08fNPqCzQy4Xm2hvqbBX8N3dQCH+u2A5PPZcB2x63wVHyhCr3QTJ/GYzruHPO1+KT7llU+I=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam: Yes
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aaa35743-703f-40fb-2590-08d7f1cd7de2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2020 14:55:17.6558
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aukWFOhV02K6p/EUm3Ir0RHt73LaBkf77l8XwcW5RPd2uXgNWQkEASw+EESB9woG7WOwiGp1CW/jXT+lYXFgaIH0DpgWCOP0A+egcvdhzLU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0889
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are packages which contain multiple PHY devices, eg. a quad PHY
-transceiver. Provide functions to allocate and free shared storage.
-
-Usually, a quad PHY contains global registers, which don't belong to any
-PHY. Provide convenience functions to access these registers.
-
-Signed-off-by: Michael Walle <michael@walle.cc>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/net/phy/mdio_bus.c   |   1 +
- drivers/net/phy/phy_device.c | 138 +++++++++++++++++++++++++++++++++++
- include/linux/phy.h          |  89 ++++++++++++++++++++++
- 3 files changed, 228 insertions(+)
-
-diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
-index 3e79b96fa344..255fdfcc13a6 100644
---- a/drivers/net/phy/mdio_bus.c
-+++ b/drivers/net/phy/mdio_bus.c
-@@ -614,6 +614,7 @@ int __mdiobus_register(struct mii_bus *bus, struct module *owner)
- 	}
- 
- 	mutex_init(&bus->mdio_lock);
-+	mutex_init(&bus->shared_lock);
- 
- 	/* de-assert bus level PHY GPIO reset */
- 	gpiod = devm_gpiod_get_optional(&bus->dev, "reset", GPIOD_OUT_LOW);
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 7e1ddd5745d2..b1c5e4503bc4 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -1461,6 +1461,144 @@ bool phy_driver_is_genphy_10g(struct phy_device *phydev)
- }
- EXPORT_SYMBOL_GPL(phy_driver_is_genphy_10g);
- 
-+/**
-+ * phy_package_join - join a common PHY group
-+ * @phydev: target phy_device struct
-+ * @addr: cookie and PHY address for global register access
-+ * @priv_size: if non-zero allocate this amount of bytes for private data
-+ *
-+ * This joins a PHY group and provides a shared storage for all phydevs in
-+ * this group. This is intended to be used for packages which contain
-+ * more than one PHY, for example a quad PHY transceiver.
-+ *
-+ * The addr parameter serves as a cookie which has to have the same value
-+ * for all members of one group and as a PHY address to access generic
-+ * registers of a PHY package. Usually, one of the PHY addresses of the
-+ * different PHYs in the package provides access to these global registers.
-+ * The address which is given here, will be used in the phy_package_read()
-+ * and phy_package_write() convenience functions. If your PHY doesn't have
-+ * global registers you can just pick any of the PHY addresses.
-+ *
-+ * This will set the shared pointer of the phydev to the shared storage.
-+ * If this is the first call for a this cookie the shared storage will be
-+ * allocated. If priv_size is non-zero, the given amount of bytes are
-+ * allocated for the priv member.
-+ *
-+ * Returns < 1 on error, 0 on success. Esp. calling phy_package_join()
-+ * with the same cookie but a different priv_size is an error.
-+ */
-+int phy_package_join(struct phy_device *phydev, int addr, size_t priv_size)
-+{
-+	struct mii_bus *bus = phydev->mdio.bus;
-+	struct phy_package_shared *shared;
-+	int ret;
-+
-+	if (addr < 0 || addr >= PHY_MAX_ADDR)
-+		return -EINVAL;
-+
-+	mutex_lock(&bus->shared_lock);
-+	shared = bus->shared[addr];
-+	if (!shared) {
-+		ret = -ENOMEM;
-+		shared = kzalloc(sizeof(*shared), GFP_KERNEL);
-+		if (!shared)
-+			goto err_unlock;
-+		if (priv_size) {
-+			shared->priv = kzalloc(priv_size, GFP_KERNEL);
-+			if (!shared->priv)
-+				goto err_free;
-+			shared->priv_size = priv_size;
-+		}
-+		shared->addr = addr;
-+		refcount_set(&shared->refcnt, 1);
-+		bus->shared[addr] = shared;
-+	} else {
-+		ret = -EINVAL;
-+		if (priv_size && priv_size != shared->priv_size)
-+			goto err_unlock;
-+		refcount_inc(&shared->refcnt);
-+	}
-+	mutex_unlock(&bus->shared_lock);
-+
-+	phydev->shared = shared;
-+
-+	return 0;
-+
-+err_free:
-+	kfree(shared);
-+err_unlock:
-+	mutex_unlock(&bus->shared_lock);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(phy_package_join);
-+
-+/**
-+ * phy_package_leave - leave a common PHY group
-+ * @phydev: target phy_device struct
-+ *
-+ * This leaves a PHY group created by phy_package_join(). If this phydev
-+ * was the last user of the shared data between the group, this data is
-+ * freed. Resets the phydev->shared pointer to NULL.
-+ */
-+void phy_package_leave(struct phy_device *phydev)
-+{
-+	struct phy_package_shared *shared = phydev->shared;
-+	struct mii_bus *bus = phydev->mdio.bus;
-+
-+	if (!shared)
-+		return;
-+
-+	if (refcount_dec_and_mutex_lock(&shared->refcnt, &bus->shared_lock)) {
-+		bus->shared[shared->addr] = NULL;
-+		mutex_unlock(&bus->shared_lock);
-+		kfree(shared->priv);
-+		kfree(shared);
-+	}
-+
-+	phydev->shared = NULL;
-+}
-+EXPORT_SYMBOL_GPL(phy_package_leave);
-+
-+static void devm_phy_package_leave(struct device *dev, void *res)
-+{
-+	phy_package_leave(*(struct phy_device **)res);
-+}
-+
-+/**
-+ * devm_phy_package_join - resource managed phy_package_join()
-+ * @dev: device that is registering this PHY package
-+ * @phydev: target phy_device struct
-+ * @addr: cookie and PHY address for global register access
-+ * @priv_size: if non-zero allocate this amount of bytes for private data
-+ *
-+ * Managed phy_package_join(). Shared storage fetched by this function,
-+ * phy_package_leave() is automatically called on driver detach. See
-+ * phy_package_join() for more information.
-+ */
-+int devm_phy_package_join(struct device *dev, struct phy_device *phydev,
-+			  int addr, size_t priv_size)
-+{
-+	struct phy_device **ptr;
-+	int ret;
-+
-+	ptr = devres_alloc(devm_phy_package_leave, sizeof(*ptr),
-+			   GFP_KERNEL);
-+	if (!ptr)
-+		return -ENOMEM;
-+
-+	ret = phy_package_join(phydev, addr, priv_size);
-+
-+	if (!ret) {
-+		*ptr = phydev;
-+		devres_add(dev, ptr);
-+	} else {
-+		devres_free(ptr);
-+	}
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(devm_phy_package_join);
-+
- /**
-  * phy_detach - detach a PHY device from its network device
-  * @phydev: target phy_device struct
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index e2bfb9240587..1d36ac608159 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -25,6 +25,7 @@
- #include <linux/u64_stats_sync.h>
- #include <linux/irqreturn.h>
- #include <linux/iopoll.h>
-+#include <linux/refcount.h>
- 
- #include <linux/atomic.h>
- 
-@@ -227,6 +228,28 @@ struct mdio_bus_stats {
- 	struct u64_stats_sync syncp;
- };
- 
-+/* Represents a shared structure between different phydev's in the same
-+ * package, for example a quad PHY. See phy_package_join() and
-+ * phy_package_leave().
-+ */
-+struct phy_package_shared {
-+	int addr;
-+	refcount_t refcnt;
-+	unsigned long flags;
-+	size_t priv_size;
-+
-+	/* private data pointer */
-+	/* note that this pointer is shared between different phydevs and
-+	 * the user has to take care of appropriate locking. It is allocated
-+	 * and freed automatically by phy_package_join() and
-+	 * phy_package_leave().
-+	 */
-+	void *priv;
-+};
-+
-+/* used as bit number in atomic bitops */
-+#define PHY_SHARED_F_INIT_DONE 0
-+
- /*
-  * The Bus class for PHYs.  Devices which provide access to
-  * PHYs should register using this structure
-@@ -278,6 +301,12 @@ struct mii_bus {
- 	int reset_delay_us;
- 	/* RESET GPIO descriptor pointer */
- 	struct gpio_desc *reset_gpiod;
-+
-+	/* protect access to the shared element */
-+	struct mutex shared_lock;
-+
-+	/* shared state across different PHYs */
-+	struct phy_package_shared *shared[PHY_MAX_ADDR];
- };
- #define to_mii_bus(d) container_of(d, struct mii_bus, dev)
- 
-@@ -478,6 +507,10 @@ struct phy_device {
- 	/* For use by PHYs to maintain extra state */
- 	void *priv;
- 
-+	/* shared data pointer */
-+	/* For use by PHYs inside the same package that need a shared state. */
-+	struct phy_package_shared *shared;
-+
- 	/* Interrupt and Polling infrastructure */
- 	struct delayed_work state_queue;
- 
-@@ -1354,6 +1387,10 @@ int phy_ethtool_get_link_ksettings(struct net_device *ndev,
- int phy_ethtool_set_link_ksettings(struct net_device *ndev,
- 				   const struct ethtool_link_ksettings *cmd);
- int phy_ethtool_nway_reset(struct net_device *ndev);
-+int phy_package_join(struct phy_device *phydev, int addr, size_t priv_size);
-+void phy_package_leave(struct phy_device *phydev);
-+int devm_phy_package_join(struct device *dev, struct phy_device *phydev,
-+			  int addr, size_t priv_size);
- 
- #if IS_ENABLED(CONFIG_PHYLIB)
- int __init mdio_bus_init(void);
-@@ -1406,6 +1443,58 @@ static inline int phy_ethtool_get_stats(struct phy_device *phydev,
- 	return 0;
- }
- 
-+static inline int phy_package_read(struct phy_device *phydev, u32 regnum)
-+{
-+	struct phy_package_shared *shared = phydev->shared;
-+
-+	if (!shared)
-+		return -EIO;
-+
-+	return mdiobus_read(phydev->mdio.bus, shared->addr, regnum);
-+}
-+
-+static inline int __phy_package_read(struct phy_device *phydev, u32 regnum)
-+{
-+	struct phy_package_shared *shared = phydev->shared;
-+
-+	if (!shared)
-+		return -EIO;
-+
-+	return __mdiobus_read(phydev->mdio.bus, shared->addr, regnum);
-+}
-+
-+static inline int phy_package_write(struct phy_device *phydev,
-+				    u32 regnum, u16 val)
-+{
-+	struct phy_package_shared *shared = phydev->shared;
-+
-+	if (!shared)
-+		return -EIO;
-+
-+	return mdiobus_write(phydev->mdio.bus, shared->addr, regnum, val);
-+}
-+
-+static inline int __phy_package_write(struct phy_device *phydev,
-+				      u32 regnum, u16 val)
-+{
-+	struct phy_package_shared *shared = phydev->shared;
-+
-+	if (!shared)
-+		return -EIO;
-+
-+	return __mdiobus_write(phydev->mdio.bus, shared->addr, regnum, val);
-+}
-+
-+static inline bool phy_package_init_once(struct phy_device *phydev)
-+{
-+	struct phy_package_shared *shared = phydev->shared;
-+
-+	if (!shared)
-+		return false;
-+
-+	return !test_and_set_bit(PHY_SHARED_F_INIT_DONE, &shared->flags);
-+}
-+
- extern struct bus_type mdio_bus_type;
- 
- struct mdio_board_info {
--- 
-2.20.1
-
+RnJvbTogV2VpIEh1IDx3ZWhAbWljcm9zb2Z0LmNvbT4gIFNlbnQ6IFdlZG5lc2RheSwgTWF5IDYs
+IDIwMjAgNjoyMiBBTQ0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJvbTog
+TG9yZW56byBQaWVyYWxpc2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+DQo+ID4gU2VudDog
+V2VkbmVzZGF5LCBNYXkgNiwgMjAyMCA3OjEwIFBNDQo+ID4gVG86IFdlaSBIdSA8d2VoQG1pY3Jv
+c29mdC5jb20+DQo+ID4gQ2M6IEtZIFNyaW5pdmFzYW4gPGt5c0BtaWNyb3NvZnQuY29tPjsgSGFp
+eWFuZyBaaGFuZw0KPiA+IDxoYWl5YW5nekBtaWNyb3NvZnQuY29tPjsgU3RlcGhlbiBIZW1taW5n
+ZXIgPHN0aGVtbWluQG1pY3Jvc29mdC5jb20+Ow0KPiA+IHdlaS5saXVAa2VybmVsLm9yZzsgcm9i
+aEBrZXJuZWwub3JnOyBiaGVsZ2Fhc0Bnb29nbGUuY29tOyBsaW51eC0NCj4gPiBoeXBlcnZAdmdl
+ci5rZXJuZWwub3JnOyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4gPiBrZXJu
+ZWxAdmdlci5rZXJuZWwub3JnOyBEZXh1YW4gQ3VpIDxkZWN1aUBtaWNyb3NvZnQuY29tPjsgTWlj
+aGFlbCBLZWxsZXkNCj4gPiA8bWlrZWxsZXlAbWljcm9zb2Z0LmNvbT4NCj4gPiBTdWJqZWN0OiBS
+ZTogW1BBVENIIHYyIDEvMl0gUENJOiBodjogRml4IHRoZSBQQ0kgSHlwZXJWIHByb2JlIGZhaWx1
+cmUgcGF0aCB0bw0KPiA+IHJlbGVhc2UgcmVzb3VyY2UgcHJvcGVybHkNCj4gPg0KPiA+IE9uIFdl
+ZCwgTWF5IDA2LCAyMDIwIGF0IDA1OjM2OjQ2QU0gKzAwMDAsIFdlaSBIdSB3cm90ZToNCj4gPiA+
+IEhpIExvcmVuem8sDQo+ID4gPg0KPiA+ID4gVGhhbmtzIGZvciB5b3VyIHJldmlldy4gUGxlYXNl
+IHNlZSBteSBjb21tZW50cyBpbmxpbmUuDQo+ID4gPg0KPiA+ID4gPiAtLS0tLU9yaWdpbmFsIE1l
+c3NhZ2UtLS0tLQ0KPiA+ID4gPiBGcm9tOiBMb3JlbnpvIFBpZXJhbGlzaSA8bG9yZW56by5waWVy
+YWxpc2lAYXJtLmNvbT4NCj4gPiA+ID4gU2VudDogVHVlc2RheSwgTWF5IDUsIDIwMjAgMTE6MDMg
+UE0NCj4gPiA+ID4gVG86IFdlaSBIdSA8d2VoQG1pY3Jvc29mdC5jb20+DQo+ID4gPiA+IENjOiBL
+WSBTcmluaXZhc2FuIDxreXNAbWljcm9zb2Z0LmNvbT47IEhhaXlhbmcgWmhhbmcNCj4gPiA+ID4g
+PGhhaXlhbmd6QG1pY3Jvc29mdC5jb20+OyBTdGVwaGVuIEhlbW1pbmdlcg0KPiA+ID4gPiA8c3Ro
+ZW1taW5AbWljcm9zb2Z0LmNvbT47IHdlaS5saXVAa2VybmVsLm9yZzsgcm9iaEBrZXJuZWwub3Jn
+Ow0KPiA+ID4gPiBiaGVsZ2Fhc0Bnb29nbGUuY29tOyBsaW51eC0gaHlwZXJ2QHZnZXIua2VybmVs
+Lm9yZzsNCj4gPiA+ID4gbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgtIGtlcm5lbEB2
+Z2VyLmtlcm5lbC5vcmc7IERleHVhbiBDdWkNCj4gPiA+ID4gPGRlY3VpQG1pY3Jvc29mdC5jb20+
+OyBNaWNoYWVsIEtlbGxleSA8bWlrZWxsZXlAbWljcm9zb2Z0LmNvbT4NCj4gPiA+ID4gU3ViamVj
+dDogUmU6IFtQQVRDSCB2MiAxLzJdIFBDSTogaHY6IEZpeCB0aGUgUENJIEh5cGVyViBwcm9iZQ0K
+PiA+ID4gPiBmYWlsdXJlIHBhdGggdG8gcmVsZWFzZSByZXNvdXJjZSBwcm9wZXJseQ0KPiA+ID4g
+Pg0KPiA+ID4gPiBPbiBGcmksIE1heSAwMSwgMjAyMCBhdCAwMTozNjoxN1BNICswODAwLCBXZWkg
+SHUgd3JvdGU6DQo+ID4gPiA+ID4gU29tZSBlcnJvciBjYXNlcyBpbiBodl9wY2lfcHJvYmUoKSB3
+ZXJlIG5vdCBoYW5kbGVkLiBGaXggdGhlc2UNCj4gPiA+ID4gPiBlcnJvciBwYXRocyB0byByZWxl
+YXNlIHRoZSByZXNvdXJzZXMgYW5kIGNsZWFuIHVwIHRoZSBzdGF0ZSBwcm9wZXJseS4NCj4gPiA+
+ID4NCj4gPiA+ID4gVGhpcyBwYXRjaCBkb2VzIG1vcmUgdGhhbiB0aGF0LiBJdCBhZGRzIGEgdmFy
+aWFibGUgdG8gc3RvcmUgdGhlDQo+ID4gPiA+IG51bWJlciBvZiBzbG90cyBhY3R1YWxseSBhbGxv
+Y2F0ZWQgLSBJIHByZXN1bWUgdG8gZnJlZSBvbmx5IGFsbG9jYXRlZCBvbiBzbG90cw0KPiA+IG9u
+IHRoZSBleGl0IHBhdGguDQo+ID4gPiA+DQo+ID4gPiA+IFR3byBwYXRjaGVzIHJlcXVpcmVkIEkg
+YW0gYWZyYWlkLg0KPiA+ID4NCj4gPiA+IFdlbGwsIGFkZGluZyB0aGlzIHZhcmlhYmxlIGlzIG5l
+ZWRlZCB0byBtYWtlIHRoZSBjYWxsIG9mICIodm9pZCkNCj4gPiBodl9wY2lfYnVzX2V4aXQoaGRl
+diwgdHJ1ZSkiDQo+ID4NCj4gPiBJIGRvbid0IHVuZGVyc3RhbmQgd2h5IC0gaXQgaXMgbm90IGNs
+ZWFyIGZyb20gdGhlIGNvbW1pdCBsb2cgYW5kIHRoZSBjb2RlLA0KPiA+IHBsZWFzZSBleHBsYWlu
+IGl0IHNpbmNlIGl0IGlzIG5vdCBvYnZpb3VzLg0KPiA+DQo+IEh2X3BjaV9idXNfZXhpdCgpIGNh
+bGxzIGh2X3NlbmRfcmVzb3VyY2VzX3JlbGVhc2VkKCkgdG8gcmVsZWFzZSBhbGwgY2hpbGQgcmVz
+b3VyY2VzLg0KPiBUaGVzZSBjaGlsZCByZXNvdXJjZXMgd2VyZSBhbGxvY2F0ZWQgaW4gaHZfc2Vu
+ZF9yZXNvdXJjZXNfYWxsb2NhdGVkKCkuDQo+IEh2X3NlbmRfcmVzb3VyY2VzX2FsbG9jYXRlZCgp
+IGNvdWxkIGZhaWwgaW4gdGhlIG1pZGRsZSwgbGVhdmluZyBzb21lIGNoaWxkIHJlc291cmNlcw0K
+PiBhbGxvY2F0ZWQgYW5kIHJlc3Qgbm90LiBXaXRob3V0IGFkZGluZyB0aGlzIHZhcmlhYmxlIHRv
+IHJlY29yZCB0aGUgaGlnaGVzdCBzbG90IG51bWJlciB0aGF0DQo+IHJlc291cmNlIGhhcyBiZWVu
+IHN1Y2Nlc3NmdWxseSBhbGxvY2F0ZWQsIGNhbGxpbmcgaHZfc2VuZF9yZXNvdXJjZXNfcmVsZWFz
+ZWQoKSBjb3VsZA0KPiBjYXVzZSBzcHVyaW91cyByZXNvdXJjZSByZWxlYXNlIHJlcXVlc3RzIGJl
+aW5nIHNlbnQgdG8gaHlwZXJ2aXNvci4NCj4gDQo+IFRoaXMgaGFkIGJlZW4gZmluZSBzaW5jZSBo
+dl9wY2lfYnVzX2V4aXQoKSB3YXMgbmV2ZXIgY2FsbGVkIGluIGVycm9yIHBhdGggYmVmb3JlIHRo
+aXMgcGF0Y2gNCj4gd2FzDQo+IGludHJvZHVjZWQuIFRvIGFkZCB0aGlzIGNhbGwgdG8gY2xlYW4g
+dGhlIHBjaSBzdGF0ZSBpbiB0aGUgZXJyb3IgcGF0aCwgd2UgbmVlZCB0byBrbm93IHRoZQ0KPiBz
+dGFydGluZw0KPiBwb2ludCBpbiBjaGlsZCBkZXZpY2UgdGhhdCByZXNvdXJjZSBoYXMgbm90IGJl
+ZW4gYWxsb2NhdGVkLiBIZW5jZSB0aGlzIHZhcmlhYmxlDQo+IGlzIHVzZWQgaW4gaHZfc2VuZF9y
+ZXNvdXJjZXNfYWxsb2NhdGVkKCkgdG8gcmVjb3JkIHRoaXMgcG9pbnQgYW5kIGluDQo+IGh2X3Nl
+bmRfcmVzb3VyY2VfcmVsZWFzZWQoKSB0byBzdGFydCBkZWFsbG9jYXRpbmcgY2hpbGQgcmVzb3Vy
+Y2VzLg0KPiANCj4gSSBjYW4gYWRkIHRvIHRoZSBjb21taXQgbG9nIGlmIHlvdSBhcmUgZmluZSB3
+aXRoIHRoaXMgZXhwbGFuYXRpb24uDQo+IA0KDQpGV0lXLCBJIHRoaW5rIG9mIHRoaXMgcGF0Y2gg
+YXMgZm9sbG93czoNCg0KSW4gc29tZSBlcnJvciBjYXNlcyBpbiBodl9wY2lfcHJvYmUoKSwgYWxs
+b2NhdGVkIHJlc291cmNlcyBhcmUgbm90DQpmcmVlZC4gIEZpeCB0aGlzIGJ5IGFkZGluZyBhIGZp
+ZWxkIHRvIGtlZXAgdHJhY2sgb2YgdGhlIGhpZ2ggd2F0ZXIgbWFyaw0KZm9yIHNsb3RzIHRoYXQg
+aGF2ZSByZXNvdXJjZXMgYWxsb2NhdGVkIHRvIHRoZW0uICBJbiBjYXNlIG9mIGFuIGVycm9yLCB0
+aGlzDQpoaWdoIHdhdGVyIG1hcmsgaXMgdXNlZCB0byBrbm93IHdoaWNoIHNsb3RzIGhhdmUgcmVz
+b3VyY2VzIHRoYXQNCm11c3QgYmUgcmVsZWFzZWQuICBTaW5jZSBzbG90cyBhcmUgbnVtYmVyZWQg
+c3RhcnRpbmcgd2l0aCB6ZXJvLCBhDQp2YWx1ZSBvZiAtMSBpbmRpY2F0ZXMgbm8gc2xvdHMgaGF2
+ZSBiZWVuIGFsbG9jYXRlZCByZXNvdXJjZXMuICBUaGVyZQ0KbWF5IGJlIHVudXNlZCBzbG90cyBp
+biB0aGUgcmFuZ2UgYmV0d2VlbiBzbG90IDAgYW5kIHRoZSBoaWdoDQp3YXRlciBtYXJrIHNsb3Qs
+IGJ1dCB0aGVzZSBzbG90cyBhcmUgYWxyZWFkeSBpZ25vcmVkIGJ5IHRoZSBleGlzdGluZyBjb2Rl
+DQppbiB0aGUgYWxsb2NhdGUgYW5kIHJlbGVhc2UgbG9vcHMgd2l0aCB0aGUgY2FsbCB0byBnZXRf
+cGNpY2hpbGRfd3Nsb3QoKS4NCg0KTWljaGFlbA0K
