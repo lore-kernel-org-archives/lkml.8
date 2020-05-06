@@ -2,159 +2,141 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A53C4725E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B0DC47258
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B68E20747
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8626C20747
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:37:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aF0DgDhl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IGosKOOh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbgEFHfj (ORCPT
+        id S1728305AbgEFHhv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 03:35:39 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:51374 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728331AbgEFHfh (ORCPT
+        Wed, 6 May 2020 03:37:51 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27384 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727937AbgEFHhu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 03:35:37 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588750537; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=wrYpcoVK8IdDRtNBeHLzn6UFclCXY1INuT6aKv4B83U=;
- b=aF0DgDhlT8jz8g2jt37DqxPnOsE5ublK9Lr1n3czeC5/edj+Nk9O+TMz/qfllmO1z2VhjMhG
- VPQyaRwbIdqYvcidhGgd64vG+vsWHocAw/9zvpt2w7sLhQRBgtVmisweYQNWUMFcw+oMVZ8b
- xC6aOb7o6z7CeqVp/KUVMOJq2qE=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb268ba.7fd5852e1880-smtp-out-n01;
- Wed, 06 May 2020 07:35:22 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 23F7AC4478F; Wed,  6 May 2020 07:35:22 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7EFC3C433F2;
-        Wed,  6 May 2020 07:35:21 +0000 (UTC)
+        Wed, 6 May 2020 03:37:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588750668;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1DqHn9dPlmj80heFjYayVPfLacQlouJrbO3+dn30g+Y=;
+        b=IGosKOOhtur924OsjKmcDnLD1Co+WRdGMjZjU8XKvleAKVOpDZBRqnAZs4cYKveWm5PGRL
+        wYoC6n/164dbOuenEzD+SF6nSPP+y+AgjRygzhX8ZYBRAKxW8dI8/N6Y5JSEleZch8dNJS
+        6oz35GaK5vnBLxwzgSADBIpUq99+fu0=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-192-RMLvViSUPhmuJypugt_i9w-1; Wed, 06 May 2020 03:37:47 -0400
+X-MC-Unique: RMLvViSUPhmuJypugt_i9w-1
+Received: by mail-wr1-f69.google.com with SMTP id f2so874141wrm.9
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 00:37:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1DqHn9dPlmj80heFjYayVPfLacQlouJrbO3+dn30g+Y=;
+        b=AnIvqA8Pe2l3aVIFON19u/Xs6lGoLaqzxo8zB2XlpsKFePmvuy9dhjvBHkPjUDGytc
+         y/2zE+lmxFcV8UzmtDLq+sZE8veIr6QGXmUCrsA4uCmbut+1iudczXYFAuYJRVl0UQ71
+         b9zIe+TR6sGc1NjEDOvbiqyywr40nX6HJyremstL5kxXpKSnsC2FzghU6QkkTBJMZAjk
+         cvgX1DOjqkxiR/70CcOUNtejfGcrdN3rh/p1u9I1LrnoLHig80OoJwffdlb3jO8CSTAQ
+         RPrGacXYobfA9kYYTUgFNdKfuqIwt6CxLkTZGbP/RJy7ydyIQ+6a6AEtnfKEvAwiWi0P
+         RImA==
+X-Gm-Message-State: AGi0PuZbJIc93UAalC3mq9BHW7YvhNhF3evGMsKEOQIx85K885qDy0Ch
+        /UblXEScSsApxrwy9Q79XzcW/Qvv11P0rpviTV5W+ZLwQS8yLNnD6m8Bmg1QCC/Q3ibXYa4LtPH
+        yNw2i4vWn4ba3toYJW/XuL9ec
+X-Received: by 2002:adf:ce10:: with SMTP id p16mr7691543wrn.144.1588750665672;
+        Wed, 06 May 2020 00:37:45 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLylGfrIQvy8pwm2otNVLPO1o3cMHW4JbPm3GLxsqO+x+n/Q0pR35QnHj4F0DC4IEX6mTgYDA==
+X-Received: by 2002:adf:ce10:: with SMTP id p16mr7691526wrn.144.1588750665498;
+        Wed, 06 May 2020 00:37:45 -0700 (PDT)
+Received: from redhat.com (bzq-109-66-7-121.red.bezeqint.net. [109.66.7.121])
+        by smtp.gmail.com with ESMTPSA id 19sm1655337wmo.3.2020.05.06.00.37.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 00:37:45 -0700 (PDT)
+Date:   Wed, 6 May 2020 03:37:42 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Jesper Dangaard Brouer <brouer@redhat.com>
+Subject: Re: [PATCH net-next 2/2] virtio-net: fix the XDP truesize
+ calculation for mergeable buffers
+Message-ID: <20200506033259-mutt-send-email-mst@kernel.org>
+References: <20200506061633.16327-1-jasowang@redhat.com>
+ <20200506061633.16327-2-jasowang@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 06 May 2020 13:05:21 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mike Leach <mike.leach@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH] coresight: dynamic-replicator: Fix handling of multiple
- connections
-In-Reply-To: <ae0fe2050be01cc1403c7d53a0da8cb8@codeaurora.org>
-References: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org>
- <cf5852e9-c3c1-3d31-46f0-0370719947ab@arm.com>
- <CAJ9a7VgF3-Hdc7KSw9gVBeXSDHNguhqVhp60oK2XhCtr3DhDqg@mail.gmail.com>
- <84918e7d-c933-3fa1-a61e-0615d4b3cf2c@arm.com>
- <668ea1283a6dd6b34e701972f6f71034@codeaurora.org>
- <5b0f5d77c4eec22d8048bb0ffa078345@codeaurora.org>
- <759d47de-2101-39cf-2f1c-cfefebebd548@arm.com>
- <7d343e96cf0701d91152fd14c2fdec42@codeaurora.org>
- <CAJ9a7VgEiX19ukjwakNHBHDeZJ05f5Z7pAYG9iEnpXCuuDfBqg@mail.gmail.com>
- <a4bba03d41a2b0145b3c6c19d48698eb@codeaurora.org>
- <CAJ9a7Vj4eyv1n=RxuqfV=pdBN3SDG+ShYS5J4s40KJtqOnR7vw@mail.gmail.com>
- <ae0fe2050be01cc1403c7d53a0da8cb8@codeaurora.org>
-Message-ID: <b8c1cc35846d425a1677c73fddf5874d@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506061633.16327-2-jasowang@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suzuki, Mike,
-
-On 2020-04-29 22:41, Sai Prakash Ranjan wrote:
-> Hi Mike,
+On Wed, May 06, 2020 at 02:16:33PM +0800, Jason Wang wrote:
+> We should not exclude headroom and tailroom when XDP is set. So this
+> patch fixes this by initializing the truesize from PAGE_SIZE when XDP
+> is set.
 > 
-> On 2020-04-29 22:28, Mike Leach wrote:
->> Hi,
->> 
+> Cc: Jesper Dangaard Brouer <brouer@redhat.com>
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+
+Seems too aggressive, we do not use up the whole page for the size.
+
+
+
+> ---
+>  drivers/net/virtio_net.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
-> [...]
-> 
->>> >> > You need to find what is resetting the IDFILTERs to 0 for replicator1.
->>> >> >
->>> >>
->>> >> That is right.
->>> >>
->>> >
->>> > By default all replicators have the IDFILTER registers set to 0 out of
->>> > hardware reset. This ensures that programmable replicators behave in
->>> > the same way as non-programmable replicators out of reset.
->>> >
->>> > The  dynamic_replicator_reset() is of course a driver state reset -
->>> > which filters out all trace on the output ports. The trace is then
->>> > enabled when we set the trace path from source to sink.
->>> >
->>> 
->>> Thanks for these explanations.
->>> 
->>> > It seems to me that you have 2 problems that need solving here:
->>> >
->>> > 1) Why does the reset_replicator() called from probe() _not_ work
->>> > correctly on replicator 1? It seems to work later if you introduce a
->>> > reset after more of the system has powered and booted. This is
->>> > startiing to look a little like a PM / clocking issue.
->>> 
->>> reset_replicator() does work in probe correctly for both replicators,
->>> below logs is collected before and after reset in probe. It is later
->>> that it's set back to 0x0 and hence the suggestion to look at 
->>> firmware
->>> using this replicator1.
->>> 
->> OK - sorry I read your statement saying that replicator1 was 0 after
->> the reset in probe(), rather than look at the logs.
->> 
->> From the logs it is working at the time probe() occurs, but by the
->> time we come to enable the replicator later, something has reset these
->> registers / hardware outside the control of the replicator driver.
->> 
-> 
-> Yes, I will try to get some more information from the firmware side if
-> there is anything messing up.
-> 
+> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> index 98dd75b665a5..3f3aa8308918 100644
+> --- a/drivers/net/virtio_net.c
+> +++ b/drivers/net/virtio_net.c
+> @@ -1184,7 +1184,7 @@ static int add_recvbuf_mergeable(struct virtnet_info *vi,
+>  	char *buf;
+>  	void *ctx;
+>  	int err;
+> -	unsigned int len, hole;
+> +	unsigned int len, hole, truesize;
+>  
+>  	/* Extra tailroom is needed to satisfy XDP's assumption. This
+>  	 * means rx frags coalescing won't work, but consider we've
+> @@ -1194,6 +1194,7 @@ static int add_recvbuf_mergeable(struct virtnet_info *vi,
+>  	if (unlikely(!skb_page_frag_refill(len + room, alloc_frag, gfp)))
+>  		return -ENOMEM;
+>  
+> +	truesize = headroom ? PAGE_SIZE : len;
+>  	buf = (char *)page_address(alloc_frag->page) + alloc_frag->offset;
+>  	buf += headroom; /* advance address leaving hole at front of pkt */
+>  	get_page(alloc_frag->page);
 
-This turned out to be a clock/pm issue. To confirm, I just marked clk as 
-critical
-so that it won't be gated and I saw the replicator1(swao_replicator) 
-registers
-intact after probe. Also alternatively, I tried to comment out disabling 
-pclk
-to check if there is something wrong in amba pm and this keeps the 
-registers
-intact as well.
+Is this really just on the XDP path? Looks like a confusing way to
+detect that.
 
-@@ -288,7 +295,7 @@ static int amba_probe(struct device *dev)
-                 pm_runtime_set_suspended(dev);
-                 pm_runtime_put_noidle(dev);
 
--               amba_put_disable_pclk(pcdev);
-+               //amba_put_disable_pclk(pcdev);
-                 dev_pm_domain_detach(dev, true);
-         } while (0);
+> @@ -1205,11 +1206,12 @@ static int add_recvbuf_mergeable(struct virtnet_info *vi,
+>  		 * the current buffer.
+>  		 */
+>  		len += hole;
+> +		truesize += hole;
+>  		alloc_frag->offset += hole;
+>  	}
+>  
+>  	sg_init_one(rq->sg, buf, len);
+> -	ctx = mergeable_len_to_ctx(len, headroom);
+> +	ctx = mergeable_len_to_ctx(truesize, headroom);
+>  	err = virtqueue_add_inbuf_ctx(rq->vq, rq->sg, 1, buf, ctx, gfp);
+>  	if (err < 0)
+>  		put_page(virt_to_head_page(buf));
+> -- 
+> 2.20.1
 
-Thanks,
-Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
