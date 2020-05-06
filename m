@@ -2,500 +2,161 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59329C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF32CC47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE3A208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:35:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B836020708
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:36:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="G7+BXn9/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eVnVRn4S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730343AbgEFQfq (ORCPT
+        id S1730071AbgEFQgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:35:46 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:46990 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729658AbgEFQfm (ORCPT
+        Wed, 6 May 2020 12:36:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41912 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729789AbgEFQgt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:35:42 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 046GZdet026733;
-        Wed, 6 May 2020 11:35:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588782939;
-        bh=nmEZ4pVhYsJX4wbJGkNDX2MJ4Binj2UCBLHiwfYIqMw=;
-        h=From:To:Subject:Date:In-Reply-To:References;
-        b=G7+BXn9/EnqAhbWMGtyOT1zbKUulIJ2iJ0s1wcUQgt5QpTzLYqg5pDJCUWbDsSbwX
-         BcR/zU69CkqmLmfPZCoNuPJWX45+Rr/tt15j4Cd9+SZ3WcDYKixN5pz+bEEClxnrhQ
-         WmC85WA3R/lfXraP4451Oa5dZmCSfE/13W31HJeQ=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 046GZdE5110814;
-        Wed, 6 May 2020 11:35:39 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 6 May
- 2020 11:35:38 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 6 May 2020 11:35:38 -0500
-Received: from uda0868495.fios-router.home (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 046GZbQH128992;
-        Wed, 6 May 2020 11:35:38 -0500
-From:   Murali Karicheri <m-karicheri2@ti.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <nsekhar@ti.com>,
-        <grygorii.strashko@ti.com>
-Subject: [net-next RFC PATCH 1/2] add support for PRP similar to HSR
-Date:   Wed, 6 May 2020 12:35:36 -0400
-Message-ID: <20200506163537.3958-2-m-karicheri2@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200506163537.3958-1-m-karicheri2@ti.com>
-References: <20200506163537.3958-1-m-karicheri2@ti.com>
+        Wed, 6 May 2020 12:36:49 -0400
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96EB4C0610D5
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 09:36:49 -0700 (PDT)
+Received: by mail-vk1-xa41.google.com with SMTP id b14so694731vkk.10
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 09:36:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qEp/F3SbsRoDv1jpNGzhOxbfis7J4KDcT9P9z6XWkHg=;
+        b=eVnVRn4S8Hb7sl1mAhlDpCkwg2p7TvzKWg0qVVe/dWs+kNzu0dkUnF12cuHSLRfxJA
+         k1JsPhNHp6gpFvg3metDV/hPplaRlu3pQXHecw2lhBu91JqE8L0mSdp5Zmc9jNhUWqIB
+         1xGIHjkcCR9gqoJXy85LS+19SdMWYi5+Ih9W8LUXfrQqUUPxnoOEUhmxOrI+MLwWHhr+
+         E9RKn25uZiu4s/nZwk/EVD7PaM11znkaVIxenvyVhmirLDphTRgJue6k6ZZ0J3TwDTz6
+         0ZY1n1k1WDVUIhczz4M4qBDev1+txdlb4jFvLkVck7EDsXiBjF4LLHsLj3SpxlVGryrw
+         tIxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qEp/F3SbsRoDv1jpNGzhOxbfis7J4KDcT9P9z6XWkHg=;
+        b=R864htuUURutF030D/bprwyY3atIm/dSFy86sVvU6GRVVqfdLeWTBESL2hhYHp744j
+         DYpDO2oP66yxYiGPnzx9Jf6W0DiQ0Uv4i2AIy9/fn7h/57ki256YIMUBFVs4Wadl4Lq+
+         E8SCPFKGcONl8asTvV+ApvU3PXYLH2ZNtYjajC88CIGGIo3XkBlhEVQ5vZWM2NeNKg+q
+         p/ghalMwKhBUhresuBKtGQLReI0EyHoGm8yVm2OVhERG7kwG9ueRxgQdD14F9SoF8fdO
+         KjApzgpPosk8IINkmU61gGHru9qsNv5/1tz2tDnxRI7hVpJFQ2hq5omBZB4aE4Q7lwJk
+         ow7A==
+X-Gm-Message-State: AGi0PuYAS2hBfPCes1k5H0F4mKXFTvTnGu4uk8MgZb1D/N6fW3RUZ6sg
+        ekgmnuyJ5Jbx+xtShuOU2Arazfxd6QpzO8itJjml4w==
+X-Google-Smtp-Source: APiQypLm9f0btuKktuvMb+D03IME6dlX6dRX4NRiQ4NXE3O3t6sARzsGX6NfhfAe3VIx+4GZEIKh+9FQbLrJ4BJaBxM=
+X-Received: by 2002:a1f:8ccf:: with SMTP id o198mr8122974vkd.53.1588783008587;
+ Wed, 06 May 2020 09:36:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1588031768-23677-1-git-send-email-chun-hung.wu@mediatek.com>
+ <1588031768-23677-2-git-send-email-chun-hung.wu@mediatek.com> <9bc2454f-0b42-e256-7927-2564b56f369f@codeaurora.org>
+In-Reply-To: <9bc2454f-0b42-e256-7927-2564b56f369f@codeaurora.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 6 May 2020 18:36:12 +0200
+Message-ID: <CAPDyKFq7ffHeWg-S41tLvScg_BXCUULig=G=EzD_to1TG0NhVg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/5] mmc: core: Extend mmc_of_parse() to parse CQE bindings
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Cc:     Chun-Hung Wu <chun-hung.wu@mediatek.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Pan Bian <bianpan2016@163.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Kuohong Wang <kuohong.wang@mediatek.com>,
+        Yong Mao <yong.mao@mediatek.com>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        DTML <devicetree@vger.kernel.org>, wsd_upstream@mediatek.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PRP protocol is similar to HSR in many aspects and this patch add a
-command type prp to create prp interface using two slave interfaces
-similar to HSR
+On Wed, 6 May 2020 at 15:01, Veerabhadrarao Badiganti
+<vbadigan@codeaurora.org> wrote:
+>
+>
+> On 4/28/2020 5:26 AM, Chun-Hung Wu wrote:
+> > Parse CQE bindings "supports-cqe" and "disable-cqe-dcmd"
+> > in mmc_of_parse().
+> >
+> > Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+> > ---
+> >   drivers/mmc/core/host.c | 5 +++++
+> >   1 file changed, 5 insertions(+)
+> >
+> > diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+> > index c876872..47521c6 100644
+> > --- a/drivers/mmc/core/host.c
+> > +++ b/drivers/mmc/core/host.c
+> > @@ -302,6 +302,11 @@ int mmc_of_parse(struct mmc_host *host)
+> >               host->caps2 |= MMC_CAP2_NO_SD;
+> >       if (device_property_read_bool(dev, "no-mmc"))
+> >               host->caps2 |= MMC_CAP2_NO_MMC;
+> > +     if (device_property_read_bool(dev, "supports-cqe"))
+> > +             host->caps2 |= MMC_CAP2_CQE;
+>
+> This change is breaking emmc driver on qcom platforms where this dt
+> property is defined.
+>
+> [    1.543453]  cqhci_deactivate+0xc/0x38
+> [    1.545627]  sdhci_msm_reset+0x40/0x58
+> [    1.549447]  sdhci_do_reset+0x48/0x7c
+> [    1.553180]  __sdhci_read_caps+0x7c/0x214
+> [    1.556913]  sdhci_setup_host+0x58/0xce8
+> [    1.560905]  sdhci_msm_probe+0x588/0x8a4
+> [    1.564900]  platform_drv_probe+0x4c/0xb0
+>
+> So, we cant have this flag defined before sdhci_setup_host().
+>
+> I will have to clear this cap and re-enable it in our initialization.
 
-HSR and PRP interfaces are setup in a similar way in kernel as
-the protocols shares many similar attributes. So restructure
-the code to avoid duplication and use a unified netlink
-interface for both HSR and PRP
+Thanks for reporting! I have dropped all the four patches from
+Chun-Hung, so we can figure out how to fix this.
 
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
----
- include/uapi/linux/if_link.h |  16 ++++-
- ip/Makefile                  |   5 +-
- ip/iplink_hsr.c              | 111 +++-------------------------------
- ip/iplink_hsr_prp_common.c   | 114 +++++++++++++++++++++++++++++++++++
- ip/iplink_hsr_prp_common.h   |  24 ++++++++
- ip/iplink_prp.c              |  60 ++++++++++++++++++
- 6 files changed, 223 insertions(+), 107 deletions(-)
- create mode 100644 ip/iplink_hsr_prp_common.c
- create mode 100644 ip/iplink_hsr_prp_common.h
- create mode 100644 ip/iplink_prp.c
+Please help to review the next version of the series.
 
-diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
-index 978f98c76be1..30d9d2c9c12f 100644
---- a/include/uapi/linux/if_link.h
-+++ b/include/uapi/linux/if_link.h
-@@ -904,7 +904,6 @@ enum {
- 
- 
- /* HSR section */
--
- enum {
- 	IFLA_HSR_UNSPEC,
- 	IFLA_HSR_SLAVE1,
-@@ -915,7 +914,6 @@ enum {
- 	IFLA_HSR_VERSION,		/* HSR version */
- 	__IFLA_HSR_MAX,
- };
--
- #define IFLA_HSR_MAX (__IFLA_HSR_MAX - 1)
- 
- /* STATS section */
-@@ -1052,4 +1050,18 @@ struct ifla_rmnet_flags {
- 	__u32	mask;
- };
- 
-+/* HSR-PRP section */
-+enum {
-+	IFLA_HSR_PRP_UNSPEC,
-+	IFLA_HSR_PRP_SLAVE1,
-+	IFLA_HSR_PRP_SLAVE2,
-+	IFLA_HSR_PRP_SF_MC_ADDR_LSB,	/* Last byte of supervision addr */
-+	IFLA_HSR_PRP_SF_MC_ADDR,	/* Supervision frame multicast addr */
-+	IFLA_HSR_PRP_SEQ_NR,
-+	IFLA_HSR_PRP_VERSION,		/* HSR version */
-+	__IFLA_HSR_PRP_MAX,
-+};
-+
-+#define IFLA_HSR_PRP_MAX (__IFLA_HSR_PRP_MAX - 1)
-+
- #endif /* _LINUX_IF_LINK_H */
-diff --git a/ip/Makefile b/ip/Makefile
-index 5ab78d7d3b84..8dc72fbfb2b1 100644
---- a/ip/Makefile
-+++ b/ip/Makefile
-@@ -7,8 +7,9 @@ IPOBJ=ip.o ipaddress.o ipaddrlabel.o iproute.o iprule.o ipnetns.o \
-     iplink_vlan.o link_veth.o link_gre.o iplink_can.o iplink_xdp.o \
-     iplink_macvlan.o ipl2tp.o link_vti.o link_vti6.o link_xfrm.o \
-     iplink_vxlan.o tcp_metrics.o iplink_ipoib.o ipnetconf.o link_ip6tnl.o \
--    link_iptnl.o link_gre6.o iplink_bond.o iplink_bond_slave.o iplink_hsr.o \
--    iplink_bridge.o iplink_bridge_slave.o ipfou.o iplink_ipvlan.o \
-+    link_iptnl.o link_gre6.o iplink_bond.o iplink_bond_slave.o \
-+    iplink_hsr_prp_common.o iplink_hsr.o iplink_prp.o iplink_bridge.o \
-+    iplink_bridge_slave.o ipfou.o iplink_ipvlan.o \
-     iplink_geneve.o iplink_vrf.o iproute_lwtunnel.o ipmacsec.o ipila.o \
-     ipvrf.o iplink_xstats.o ipseg6.o iplink_netdevsim.o iplink_rmnet.o \
-     ipnexthop.o
-diff --git a/ip/iplink_hsr.c b/ip/iplink_hsr.c
-index 7d9167d4e6a3..d8a7f9a52267 100644
---- a/ip/iplink_hsr.c
-+++ b/ip/iplink_hsr.c
-@@ -11,15 +11,7 @@
-  *		Based on iplink_vlan.c by Patrick McHardy <kaber@trash.net>
-  */
- 
--#include <stdio.h>
--#include <stdlib.h>
--#include <string.h>
--#include <sys/socket.h>  /* Needed by linux/if.h for some reason */
--#include <linux/if.h>
--#include <linux/if_arp.h>
--#include "rt_names.h"
--#include "utils.h"
--#include "ip_common.h"
-+#include "iplink_hsr_prp_common.h"
- 
- static void print_usage(FILE *f)
- {
-@@ -46,100 +38,13 @@ static void usage(void)
- static int hsr_parse_opt(struct link_util *lu, int argc, char **argv,
- 			 struct nlmsghdr *n)
- {
--	int ifindex;
--	unsigned char multicast_spec;
--	unsigned char protocol_version;
-+	int ret;
- 
--	while (argc > 0) {
--		if (matches(*argv, "supervision") == 0) {
--			NEXT_ARG();
--			if (get_u8(&multicast_spec, *argv, 0))
--				invarg("ADDR-BYTE is invalid", *argv);
--			addattr_l(n, 1024, IFLA_HSR_MULTICAST_SPEC,
--				  &multicast_spec, 1);
--		} else if (matches(*argv, "version") == 0) {
--			NEXT_ARG();
--			if (!(get_u8(&protocol_version, *argv, 0) == 0 ||
--			      get_u8(&protocol_version, *argv, 0) == 1))
--				invarg("version is invalid", *argv);
--			addattr_l(n, 1024, IFLA_HSR_VERSION,
--				  &protocol_version, 1);
--		} else if (matches(*argv, "slave1") == 0) {
--			NEXT_ARG();
--			ifindex = ll_name_to_index(*argv);
--			if (ifindex == 0)
--				invarg("No such interface", *argv);
--			addattr_l(n, 1024, IFLA_HSR_SLAVE1, &ifindex, 4);
--		} else if (matches(*argv, "slave2") == 0) {
--			NEXT_ARG();
--			ifindex = ll_name_to_index(*argv);
--			if (ifindex == 0)
--				invarg("No such interface", *argv);
--			addattr_l(n, 1024, IFLA_HSR_SLAVE2, &ifindex, 4);
--		} else if (matches(*argv, "help") == 0) {
--			usage();
--			return -1;
--		} else {
--			fprintf(stderr, "hsr: what is \"%s\"?\n", *argv);
--			usage();
--			return -1;
--		}
--		argc--, argv++;
--	}
-+	ret = hsr_prp_parse_opt(true, lu, argc, argv, n);
-+	if (ret < 0)
-+		usage();
- 
--	return 0;
--}
--
--static void hsr_print_opt(struct link_util *lu, FILE *f, struct rtattr *tb[])
--{
--	SPRINT_BUF(b1);
--
--	if (!tb)
--		return;
--
--	if (tb[IFLA_HSR_SLAVE1] &&
--	    RTA_PAYLOAD(tb[IFLA_HSR_SLAVE1]) < sizeof(__u32))
--		return;
--	if (tb[IFLA_HSR_SLAVE2] &&
--	    RTA_PAYLOAD(tb[IFLA_HSR_SLAVE2]) < sizeof(__u32))
--		return;
--	if (tb[IFLA_HSR_SEQ_NR] &&
--	    RTA_PAYLOAD(tb[IFLA_HSR_SEQ_NR]) < sizeof(__u16))
--		return;
--	if (tb[IFLA_HSR_SUPERVISION_ADDR] &&
--	    RTA_PAYLOAD(tb[IFLA_HSR_SUPERVISION_ADDR]) < ETH_ALEN)
--		return;
--
--	if (tb[IFLA_HSR_SLAVE1])
--		print_string(PRINT_ANY,
--			     "slave1",
--			     "slave1 %s ",
--			     ll_index_to_name(rta_getattr_u32(tb[IFLA_HSR_SLAVE1])));
--	else
--		print_null(PRINT_ANY, "slave1", "slave1 %s ", "<none>");
--
--	if (tb[IFLA_HSR_SLAVE2])
--		print_string(PRINT_ANY,
--			     "slave2",
--			     "slave2 %s ",
--			     ll_index_to_name(rta_getattr_u32(tb[IFLA_HSR_SLAVE2])));
--	else
--		print_null(PRINT_ANY, "slave2", "slave2 %s ", "<none>");
--
--	if (tb[IFLA_HSR_SEQ_NR])
--		print_int(PRINT_ANY,
--			  "seq_nr",
--			  "sequence %d ",
--			  rta_getattr_u16(tb[IFLA_HSR_SEQ_NR]));
--
--	if (tb[IFLA_HSR_SUPERVISION_ADDR])
--		print_string(PRINT_ANY,
--			     "supervision_addr",
--			     "supervision %s ",
--			     ll_addr_n2a(RTA_DATA(tb[IFLA_HSR_SUPERVISION_ADDR]),
--					 RTA_PAYLOAD(tb[IFLA_HSR_SUPERVISION_ADDR]),
--					 ARPHRD_VOID,
--					 b1, sizeof(b1)));
-+	return ret;
- }
- 
- static void hsr_print_help(struct link_util *lu, int argc, char **argv,
-@@ -150,8 +55,8 @@ static void hsr_print_help(struct link_util *lu, int argc, char **argv,
- 
- struct link_util hsr_link_util = {
- 	.id		= "hsr",
--	.maxattr	= IFLA_HSR_MAX,
-+	.maxattr	= IFLA_HSR_PRP_MAX,
- 	.parse_opt	= hsr_parse_opt,
--	.print_opt	= hsr_print_opt,
-+	.print_opt	= hsr_prp_print_opt,
- 	.print_help	= hsr_print_help,
- };
-diff --git a/ip/iplink_hsr_prp_common.c b/ip/iplink_hsr_prp_common.c
-new file mode 100644
-index 000000000000..780c1cbb6a05
---- /dev/null
-+++ b/ip/iplink_hsr_prp_common.c
-@@ -0,0 +1,114 @@
-+/*
-+ * iplink_hsr_prp_common.c  Common utilities for hsr and prp
-+ *
-+ *		This program is free software; you can redistribute it and/or
-+ *		modify it under the terms of the GNU General Public License
-+ *		as published by the Free Software Foundation; either version
-+ *		2 of the License, or (at your option) any later version.
-+ *
-+ * Authors:	Murali Karicheri <m-karicheri2@ti.com>
-+ *
-+ *
-+ */
-+
-+#include "iplink_hsr_prp_common.h"
-+
-+int hsr_prp_parse_opt(bool hsr, struct link_util *lu, int argc, char **argv,
-+		      struct nlmsghdr *n)
-+{
-+	int ifindex;
-+	unsigned char multicast_spec;
-+	unsigned char protocol_version;
-+
-+	while (argc > 0) {
-+		if (matches(*argv, "supervision") == 0) {
-+			NEXT_ARG();
-+			if (get_u8(&multicast_spec, *argv, 0))
-+				invarg("ADDR-BYTE is invalid", *argv);
-+			addattr_l(n, 1024, IFLA_HSR_PRP_SF_MC_ADDR_LSB,
-+				  &multicast_spec, 1);
-+		} else if (hsr && matches(*argv, "version") == 0) {
-+			NEXT_ARG();
-+			if (!(get_u8(&protocol_version, *argv, 0) == 0 ||
-+			      get_u8(&protocol_version, *argv, 0) == 1))
-+				invarg("version is invalid", *argv);
-+			addattr_l(n, 1024, IFLA_HSR_PRP_VERSION,
-+				  &protocol_version, 1);
-+		} else if (matches(*argv, "slave1") == 0) {
-+			NEXT_ARG();
-+			ifindex = ll_name_to_index(*argv);
-+			if (ifindex == 0)
-+				invarg("No such interface", *argv);
-+			addattr_l(n, 1024, IFLA_HSR_PRP_SLAVE1, &ifindex, 4);
-+		} else if (matches(*argv, "slave2") == 0) {
-+			NEXT_ARG();
-+			ifindex = ll_name_to_index(*argv);
-+			if (ifindex == 0)
-+				invarg("No such interface", *argv);
-+			addattr_l(n, 1024, IFLA_HSR_PRP_SLAVE2, &ifindex, 4);
-+		} else if (matches(*argv, "help") == 0) {
-+			return -1;
-+		} else {
-+			if (hsr)
-+				fprintf(stderr, "hsr: what is \"%s\"?\n", *argv);
-+			else
-+				fprintf(stderr, "prp: what is \"%s\"?\n", *argv);
-+			return -1;
-+		}
-+		argc--, argv++;
-+	}
-+
-+	return 0;
-+}
-+
-+void hsr_prp_print_opt(struct link_util *lu, FILE *f, struct rtattr *tb[])
-+{
-+	SPRINT_BUF(b1);
-+
-+	if (!tb)
-+		return;
-+
-+	if (tb[IFLA_HSR_PRP_SLAVE1] &&
-+	    RTA_PAYLOAD(tb[IFLA_HSR_PRP_SLAVE1]) < sizeof(__u32))
-+		return;
-+	if (tb[IFLA_HSR_PRP_SLAVE2] &&
-+	    RTA_PAYLOAD(tb[IFLA_HSR_PRP_SLAVE2]) < sizeof(__u32))
-+		return;
-+	if (tb[IFLA_HSR_PRP_SEQ_NR] &&
-+	    RTA_PAYLOAD(tb[IFLA_HSR_PRP_SEQ_NR]) < sizeof(__u16))
-+		return;
-+	if (tb[IFLA_HSR_PRP_SF_MC_ADDR] &&
-+	    RTA_PAYLOAD(tb[IFLA_HSR_PRP_SF_MC_ADDR]) < ETH_ALEN)
-+		return;
-+
-+	if (tb[IFLA_HSR_PRP_SLAVE1])
-+		print_string(PRINT_ANY,
-+			     "slave1",
-+			     "slave1 %s ",
-+			     ll_index_to_name(rta_getattr_u32(tb[IFLA_HSR_PRP_SLAVE1])));
-+	else
-+		print_null(PRINT_ANY, "slave1", "slave1 %s ", "<none>");
-+
-+	if (tb[IFLA_HSR_PRP_SLAVE2])
-+		print_string(PRINT_ANY,
-+			     "slave2",
-+			     "slave2 %s ",
-+			     ll_index_to_name(rta_getattr_u32(tb[IFLA_HSR_PRP_SLAVE2])));
-+	else
-+		print_null(PRINT_ANY, "slave2", "slave2 %s ", "<none>");
-+
-+	if (tb[IFLA_HSR_PRP_SEQ_NR])
-+		print_int(PRINT_ANY,
-+			  "seq_nr",
-+			  "sequence %d ",
-+			  rta_getattr_u16(tb[IFLA_HSR_PRP_SEQ_NR]));
-+
-+	if (tb[IFLA_HSR_PRP_SF_MC_ADDR])
-+		print_string(PRINT_ANY,
-+			     "supervision_addr",
-+			     "supervision %s ",
-+			     ll_addr_n2a(RTA_DATA(tb[IFLA_HSR_PRP_SF_MC_ADDR]),
-+					 RTA_PAYLOAD(tb[IFLA_HSR_PRP_SF_MC_ADDR]),
-+					 ARPHRD_VOID,
-+					 b1, sizeof(b1)));
-+}
-diff --git a/ip/iplink_hsr_prp_common.h b/ip/iplink_hsr_prp_common.h
-new file mode 100644
-index 000000000000..a50bd7e532ee
---- /dev/null
-+++ b/ip/iplink_hsr_prp_common.h
-@@ -0,0 +1,24 @@
-+/*
-+ * iplink_hsr_prp_common.h	HSR/PRP common header file
-+ *
-+ *		This program is free software; you can redistribute it and/or
-+ *		modify it under the terms of the GNU General Public License
-+ *		as published by the Free Software Foundation; either version
-+ *		2 of the License, or (at your option) any later version.
-+ *
-+ * Authors:	Murali Karicheri <m-karicheri2@ti.com>
-+ *
-+ */
-+
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/socket.h>  /* Needed by linux/if.h for some reason */
-+#include <linux/if.h>
-+#include <linux/if_arp.h>
-+#include "rt_names.h"
-+#include "utils.h"
-+#include "ip_common.h"
-+int hsr_prp_parse_opt(bool hsr, struct link_util *lu, int argc, char **argv,
-+		      struct nlmsghdr *n);
-+void hsr_prp_print_opt(struct link_util *lu, FILE *f, struct rtattr *tb[]);
-diff --git a/ip/iplink_prp.c b/ip/iplink_prp.c
-new file mode 100644
-index 000000000000..eff8a0d215fa
---- /dev/null
-+++ b/ip/iplink_prp.c
-@@ -0,0 +1,60 @@
-+/*
-+ * iplink_prp.c	PRP device support
-+ *
-+ *		This program is free software; you can redistribute it and/or
-+ *		modify it under the terms of the GNU General Public License
-+ *		as published by the Free Software Foundation; either version
-+ *		2 of the License, or (at your option) any later version.
-+ *
-+ * Authors:	Murali Karicheri <m-karicheri2@ti.com>
-+ *
-+ *		Based on iplink_hsr.c by Arvid Brodin <arvid.brodin@alten.se>
-+ */
-+
-+#include "iplink_hsr_prp_common.h"
-+
-+static void print_usage(FILE *f)
-+{
-+	fprintf(f,
-+"Usage:\tip link add name NAME type prp slave1 SLAVE1-IF slave2 SLAVE2-IF\n"
-+"\t[ supervision ADDR-BYTE ]\n"
-+"\n"
-+"NAME\n"
-+"	name of new prp device (e.g. prp0)\n"
-+"SLAVE1-IF, SLAVE2-IF\n"
-+"	the two slave devices bound to the PRP device\n"
-+"ADDR-BYTE\n"
-+"	0-255; the last byte of the multicast address used for PRP supervision\n"
-+"	frames (default = 0)\n");
-+}
-+
-+static void usage(void)
-+{
-+	print_usage(stderr);
-+}
-+
-+static int prp_parse_opt(struct link_util *lu, int argc, char **argv,
-+			 struct nlmsghdr *n)
-+{
-+	int ret;
-+
-+	ret = hsr_prp_parse_opt(false, lu, argc, argv, n);
-+	if (ret < 0)
-+		usage();
-+
-+	return ret;
-+}
-+
-+static void prp_print_help(struct link_util *lu, int argc, char **argv,
-+	FILE *f)
-+{
-+	print_usage(f);
-+}
-+
-+struct link_util prp_link_util = {
-+	.id		= "prp",
-+	.maxattr	= IFLA_HSR_PRP_MAX,
-+	.parse_opt	= prp_parse_opt,
-+	.print_opt	= hsr_prp_print_opt,
-+	.print_help	= prp_print_help,
-+};
--- 
-2.17.1
+>
+> > +     if (!device_property_read_bool(dev, "disable-cqe-dcmd")) {
+> > +             host->caps2 |= MMC_CAP2_CQE_DCMD;
+> > +     }
+> >
+> >       /* Must be after "non-removable" check */
+> >       if (device_property_read_u32(dev, "fixed-emmc-driver-type", &drv_type) == 0) {
 
+Kind regards
+Uffe
