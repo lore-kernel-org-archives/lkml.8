@@ -2,118 +2,119 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8FCBC38A2A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B38F7C47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92223206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:32:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92E3420675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:33:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="XmHGbCjY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sMK2gxKz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728848AbgEFOci (ORCPT
+        id S1728978AbgEFOdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 10:32:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50544 "EHLO
+        Wed, 6 May 2020 10:33:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728357AbgEFOci (ORCPT
+        with ESMTP id S1728836AbgEFOdy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 10:32:38 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C55BFC061A10
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 07:32:36 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id l3so2065160edq.13
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 07:32:36 -0700 (PDT)
+        Wed, 6 May 2020 10:33:54 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE38C061A41
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 07:33:54 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id w137so1085384ybg.8
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 07:33:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=NO33uLD6Xr6XiFPTqsufLgQrcpAR6VqVSptPcb3vCPM=;
-        b=XmHGbCjY9XHs4RDllkZr7GYbW3x17Xp/d2ZM7/YMaE9ZkCbhONDDDa7HeD0HRh74bq
-         YKPQO2EzhiUxtaRm3oZTt9Nv6BDImxVv3K/GPUhcLI7IrOefAffsFHHm8ywD4W6iHudl
-         DxVysky4je4edF7Stgs34qe5gCbgZ/MPaICSiiGdE9juP74oXcpZZzAbnJxi27yhalhj
-         DLNxC+PxvCZNtG5SbSBAWnfQKlFEtwLVI52AIoZhVB0MEGeDLvuCRuEGHenVXh6RLeoN
-         TiHEnM2OzuqqixUAR0h5G+xnYX+ki23UyP6rJKLqPrD+mfb91EDxD7ZEKfmhNhlA8NkX
-         tzKg==
+        bh=XbqSj0zLlZxwhc6FbfH4AgPdBJNe+u7Ez5XFOAJ4dlE=;
+        b=sMK2gxKz00XlJrqT2IQRh3RVnLny1lQB0H+zg4sYGFloaiAo/v9DJLCWh3yavgGR9t
+         c9UH85bbgwNnZ8rYaAmhkL9RXQ0ojcvHwdGPEORoemyMdhnQh1F34HjrbRUWcPnC06if
+         XXQz6FU/rVCvlSYCU7ys0+0E0Twdld4F+lZM4DENbx1STo8XrEe+V2fdFnCkStrpVY/p
+         AtTCq68fOOYR2goQGPNTKBBoBU+ce30sIhhZuhLPmFihWqnJd1lOneugUIJwibLPGWmh
+         wHKs3CJjA3fRLTTjL74ocbYlbKhUsFm/Mv/m6kMUuQOJXTxOg2QqsPJd/cn1IoG3HMml
+         gn/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=NO33uLD6Xr6XiFPTqsufLgQrcpAR6VqVSptPcb3vCPM=;
-        b=BQt05l2+ZxO6hp9wo7MYJTsagAPytP+ZyTB9mDqosfVZ4Nawpa28cuVY2rIeugJN9C
-         IEKz27N4TmdmMvN4zH+LQ0/MJE0I8RPp/uDh2HdgIGAD7C3C3fTD2/MleAJe9smes1Wx
-         28kCf15xzcp5ezIR9+DDib9eeTeJYoZ8uSvBFJHIvAiFAxHcR4TJAm535LQL2gh6BqA3
-         FHwJ51FrucjCi0Y8Te+0baEb3vukS0cCbAcpEH+crOK2O0J7WANFov+rjDme6uuxj1fn
-         RWE06EfHxeFtIgxRcwdjmSJ5XVPWioLa1cprkdLF9WyGR5Oi+hpn/ls11rPdZpeNhcQy
-         5+8g==
-X-Gm-Message-State: AGi0PuafAVROjcVmJs+u+x2kI6M2UFFzvVxN7PQzk1kOkcQUmjJyf/a5
-        XjNC4AnoZHMi5+MzKotbicG+tphCmB88b3LaiBALy1C5
-X-Google-Smtp-Source: APiQypLadWKCh5cKd8+XAM3rxskPpXwANJdRLpqUHQap12ixTxs6zbMNEiCnqvUneUgX3f1gT3naBeyCuwqqUKi4tds=
-X-Received: by 2002:aa7:cfc3:: with SMTP id r3mr7469705edy.342.1588775555412;
- Wed, 06 May 2020 07:32:35 -0700 (PDT)
+        bh=XbqSj0zLlZxwhc6FbfH4AgPdBJNe+u7Ez5XFOAJ4dlE=;
+        b=CY5gjmT2P0vRU126EmpAoA1o1eB0gLzhi72iLe/HuPHMdx3cyT/DuTmNjBCUXLmEHF
+         pfvANbRr9L9cHyF/A28rYT7q95f1OILwY6SGKDvSsU4iPVq38PzbrM/lXRcuZueyxD54
+         GfJ6Jd8eElqsnzNXNyc6wf9Td9KhpYhyGY1cLoaiOtw/NWft0rMRsSsp10yMAA4mcyej
+         2NGddfyWYIGQfg6ZwKZQMEoiApvasnJq2ZdFjZax8aWbUKDZyGpH6aw/N889nU567QSu
+         pXbn49mYXh2ST5Xcl5Co2srSrNFVIg18kOmfH4rEXXrrvUzUrW4kjqge/lS4hvQNOxqx
+         KXIQ==
+X-Gm-Message-State: AGi0Puan0ExvSalVAcjjkaLLntksoZ8aJ7v/JQ/OH5PA2OvIY2UZLQyf
+        hlObrLx8uYkKwqjgQ2/DQqQ0gc+iInEAtOvhNj3Ueg==
+X-Google-Smtp-Source: APiQypLa55+6CY2rDCiL0pAlUnndI/LxWB5VFYnf5D/Y4Vob6Fja7SVSAFXSw3DhrjJqMzyBFM1EmuD9ZAmaq6mtXSQ=
+X-Received: by 2002:a25:bc53:: with SMTP id d19mr13792238ybk.395.1588775632988;
+ Wed, 06 May 2020 07:33:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200505154510.93506-1-pasha.tatashin@soleen.com>
- <20200505154510.93506-3-pasha.tatashin@soleen.com> <202005051444.14B6686@keescook>
- <20200506095239.11a76a76@gandalf.local.home>
-In-Reply-To: <20200506095239.11a76a76@gandalf.local.home>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Wed, 6 May 2020 10:31:59 -0400
-Message-ID: <CA+CK2bB-Qim9T2NKV97HdPbSER+RR5R4_rOCZ3JZgZ5FcU05Pg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] pstore/platform: pass max_reason to kmesg dump
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        James Morris <jmorris@namei.org>,
-        Sasha Levin <sashal@kernel.org>,
+References: <20200505184955.GO2869@paulmck-ThinkPad-P72> <20200506125926.29844-1-sjpark@amazon.com>
+In-Reply-To: <20200506125926.29844-1-sjpark@amazon.com>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Wed, 6 May 2020 07:33:41 -0700
+Message-ID: <CANn89iL2ZRa9CtypuZXL_+aGQmiqxP9q7eutozJ6G8b=QWjZKw@mail.gmail.com>
+Subject: Re: Re: Re: Re: Re: [PATCH net v2 0/2] Revert the 'socket_alloc' life
+ cycle change
+To:     SeongJae Park <sjpark@amazon.com>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        sj38.park@gmail.com, netdev <netdev@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        anton@enomsg.org, ccross@android.com,
-        Tony Luck <tony.luck@intel.com>, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
+        SeongJae Park <sjpark@amazon.de>, snu@amazon.com,
+        amit@kernel.org, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 6, 2020 at 9:52 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed, May 6, 2020 at 5:59 AM SeongJae Park <sjpark@amazon.com> wrote:
 >
-> On Tue, 5 May 2020 14:59:37 -0700
-> Kees Cook <keescook@chromium.org> wrote:
+> TL; DR: It was not kernel's fault, but the benchmark program.
 >
-> > > @@ -97,6 +97,8 @@ struct pstore_record {
-> > >   * @read_mutex:    serializes @open, @read, @close, and @erase callbacks
-> > >   * @flags: bitfield of frontends the backend can accept writes for
-> > >   * @data:  backend-private pointer passed back during callbacks
-> > > + * @max_reason: Used when PSTORE_FLAGS_DMESG is set. Contains the
-> > > + *              kmsg_dump_reason enum value.
-> >
-> > Nit: please move this above @data since it has a @flags dependency.
-> >
-> > >   *
-> > >   * Callbacks:
-> > >   *
-> > > @@ -180,6 +182,7 @@ struct pstore_info {
-> > >
-> > >     int             flags;
-> > >     void            *data;
-> > > +   int             max_reason;
+> So, the problem is reproducible using the lebench[1] only.  I carefully read
+> it's code again.
 >
-> Not to mention that moving max_reason above data will fill in the hole left
-> by a 32 bit int, followed by a 64 bit pointer.
+> Before running the problem occurred "poll big" sub test, lebench executes
+> "context switch" sub test.  For the test, it sets the cpu affinity[2] and
+> process priority[3] of itself to '0' and '-20', respectively.  However, it
+> doesn't restore the values to original value even after the "context switch" is
+> finished.  For the reason, "select big" sub test also run binded on CPU 0 and
+> has lowest nice value.  Therefore, it can disturb the RCU callback thread for
+> the CPU 0, which processes the deferred deallocations of the sockets, and as a
+> result it triggers the OOM.
+>
+> We confirmed the problem disappears by offloading the RCU callbacks from the
+> CPU 0 using rcu_nocbs=0 boot parameter or simply restoring the affinity and/or
+> priority.
+>
+> Someone _might_ still argue that this is kernel problem because the problem
+> didn't occur on the old kernels prior to the Al's patches.  However, setting
+> the affinity and priority was available because the program received the
+> permission.  Therefore, it would be reasonable to blame the system
+> administrators rather than the kernel.
+>
+> So, please ignore this patchset, apology for making confuse.  If you still has
+> some doubts or need more tests, please let me know.
+>
+> [1] https://github.com/LinuxPerfStudy/LEBench
+> [2] https://github.com/LinuxPerfStudy/LEBench/blob/master/TEST_DIR/OS_Eval.c#L820
+> [3] https://github.com/LinuxPerfStudy/LEBench/blob/master/TEST_DIR/OS_Eval.c#L822
+>
+>
+> Thanks,
+> SeongJae Park
 
-Good point. I will do it in the next version.
-
-Thank you,
-Pasha
-
->
-> -- Steve
->
->
-> > >
-> > >     int             (*open)(struct pstore_info *psi);
-> > >     int             (*close)(struct pstore_info *psi);
+No harm done, thanks for running more tests and root-causing the issue !
