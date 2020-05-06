@@ -2,167 +2,219 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7600CC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3F7C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52A7520714
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:34:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YZvlYW6U"
+	by mail.kernel.org (Postfix) with ESMTP id 1A95A20747
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:36:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588754210;
+	bh=50g+AtsmT/CiMEfaIWU4IUHfgtyLkycfmMYQagXxz4Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=MmPjndMEA/+KlSeMHIZ1GAhYDnjOE/9kHvAu9sInv1s9CiWrZCeSXFDngZuwl02VH
+	 leXQiJfo5knA1L2iH2MVG1sQnRQiqzyH3K305ve60Zqp7kDZInYKo1+uvwPweq5a15
+	 KiD1zBEOqxRe2F4V6sijLnE90Nkn4kS+2SHcKYRw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728886AbgEFIe6 (ORCPT
+        id S1728740AbgEFIgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 04:34:58 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32079 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728502AbgEFIe4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 04:34:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588754095;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NFF8NeJjiTbv8THqbxX8heqr35COUx8hMKarYhRqfLk=;
-        b=YZvlYW6UJNEeTtActEJG0ebEEqk12ngS+JQBEGcEf+qTLwo9dm41y45SFUzOsan3SOs7vB
-        LDJ0kz7VfdRydp4Om+9afJciWVitfPI0SZaYbdkF20tMUxFIDHp0V7F/tphAptEMRtTF81
-        az1vIT6mwH2jH8PFfYVcjZXcHvvsYyk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-168-QZzC-7xwPoeKQmxnCxlf7w-1; Wed, 06 May 2020 04:34:49 -0400
-X-MC-Unique: QZzC-7xwPoeKQmxnCxlf7w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 6 May 2020 04:36:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45870 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728502AbgEFIgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 04:36:49 -0400
+Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2DEF11005510;
-        Wed,  6 May 2020 08:34:48 +0000 (UTC)
-Received: from [10.72.13.165] (ovpn-13-165.pek2.redhat.com [10.72.13.165])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 963A460BEC;
-        Wed,  6 May 2020 08:34:38 +0000 (UTC)
-Subject: Re: [PATCH net-next 1/2] virtio-net: don't reserve space for vnet
- header for XDP
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     mst@redhat.com, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, "Jubran, Samih" <sameehj@amazon.com>
-References: <20200506061633.16327-1-jasowang@redhat.com>
- <20200506102123.739f1233@carbon>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <3ecb558b-5281-2497-db3c-6aae7d7f882b@redhat.com>
-Date:   Wed, 6 May 2020 16:34:36 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A1AA20714;
+        Wed,  6 May 2020 08:36:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588754208;
+        bh=50g+AtsmT/CiMEfaIWU4IUHfgtyLkycfmMYQagXxz4Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DjKgnWYPfjN9UjR2ssaDFyi62flWtTeDJmNhwAi9o72KEL4/ZKnECOcvokU0GrnN7
+         3UrPrJJzRWa9/jri80nkXB+EcU1cOgp/FLJIlbQB2ag5rd4YpHcRBRKoO8an5rabOM
+         5jnmU91IHeqrKcUi08Iy0qCjrQG+2J6Pa5/xBkFE=
+Date:   Wed, 6 May 2020 10:36:43 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+Cc:     "sean@mess.org" <sean@mess.org>,
+        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "skhan@linuxfoundation.org" <skhan@linuxfoundation.org>,
+        "linux-kernel-mentees@lists.linuxfoundation.org" 
+        <linux-kernel-mentees@lists.linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC, WIP, v4 08/11] media: vidtv: implement a PSI generator
+Message-ID: <20200506103643.699fe077@coco.lan>
+In-Reply-To: <81B965F9-3A09-40D0-87DF-611A153E744C@getmailspring.com>
+References: <20200503095105.6b8f0d3f@coco.lan>
+        <81B965F9-3A09-40D0-87DF-611A153E744C@getmailspring.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200506102123.739f1233@carbon>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Wed, 6 May 2020 03:28:17 -0300
+"Daniel W. S. Almeida" <dwlsalmeida@gmail.com> escreveu:
 
-On 2020/5/6 =E4=B8=8B=E5=8D=884:21, Jesper Dangaard Brouer wrote:
-> On Wed,  6 May 2020 14:16:32 +0800
-> Jason Wang <jasowang@redhat.com> wrote:
->
->> We tried to reserve space for vnet header before
->> xdp.data_hard_start. But this is useless since the packet could be
->> modified by XDP which may invalidate the information stored in the
->> header and
-> IMHO above statements are wrong. XDP cannot access memory before
-> xdp.data_hard_start. Thus, it is safe to store a vnet headers before
-> xdp.data_hard_start. (The sfc driver also use this "before" area).
+> >> +	/* Just a sanity check, should not really happen because we stuff
+> >> +	 * the packet when we finish a section, i.e. when we write the crc at
+> >> +	 * the end. But if this happens then we have messed up the logic
+> >> +	 * somewhere.
+> >> +	 */
+> >> +	WARN_ON(args.new_psi_section && !aligned); =20
+> > =20
+> > Please use a ratelimited printk instead (here and on all similar cases
+> > at the TS generator).
+> > =20
+> > Also, I think that, on such case, the driver should be filling the
+> > remaining frame with pad bytes. E. g.:
+> > =20
+> > 	/* =20
+> > 	 * Assuming that vidtv_memset() args from patch 06/11 were changed =20
+> > 	 * according with this prototype: =20
+> > 	 */
+> > 	size_t vidtv_memset(void *to, size_t to_offset, size_t to_size,
+> > 			    u8 c, size_t len);
+> > =20
+> > =20
+> > 	#define TS_FILL_BYTE 0xff
+> > =20
+> > 	if (args.new_psi_section && !aligned) {
+> > 		pr_warn_ratelimit("Warning: PSI not aligned. Re-aligning it\n");
+> > =20
+> > 		vidtv_memset(args.dest_buf,
+> > 			     args.dest_offset + nbytes_past_boundary,
+> > 			     args.dest_buf_sz,
+> > 			     TS_FILL_BYTE,	=09
+> > 			     TS_PACKET_LEN - nbytes_past_boundary);
+> > 		args.dest_offset +=3D TS_PACKET_LEN - nbytes_past_boundary;
+> > 		aligned =3D 1;
+> > 		nbytes_past_boundary =3D 0;
+> > 	}
+> >   =20
+>=20
+> Sure, that's fine then! Just to be clear this should not happen at all,
+> because the writes should go through one of these four functions (IIRC!):
+>=20
+> u32 vidtv_ts_null_write_into(struct null_packet_write_args args)
+> u32 vidtv_ts_pcr_write_into(struct pcr_write_args args)
+>=20
+> ...which will write a single packet at a time, thus leaving the buffer
+> aligned if it was already aligned to begin with,
+>=20
+> and
+>=20
+> u32 vidtv_pes_write_into(struct pes_write_args args)
+> static u32
+> vidtv_psi_ts_psi_write_into(struct psi_write_args args)
+>=20
+> ...which will pad when they finish writing a PES packet or a table
+> section, respectively.
+>=20
+> I left these warnings behind as a way to warn me if the padding logic
+> itself is broken.
 
+OK!
 
-The problem is if we place vnet header before data_hard_start,=20
-virtio-net will fail any header adjustment.
+> > Please use a ratelimited printk instead (here and on all similar cases
+> > at the TS generator). =20
+>=20
+> OK.
+>=20
+>=20
+>=20
+> >> +static void vidtv_psi_desc_to_be(struct vidtv_psi_desc *desc)
+> >> +{
+> >> +	/*
+> >> +	 * Convert descriptor endianness to big-endian on a field-by-field
+> >> basis
+> >> +	 * where applicable
+> >> +	 */
+> >> +
+> >> +	switch (desc->type) {
+> >> +	/* nothing do do */
+> >> +	case SERVICE_DESCRIPTOR:
+> >> +		break;
+> >> +	case REGISTRATION_DESCRIPTOR:
+> >> +		cpu_to_be32s(&((struct vidtv_psi_desc_registration *)
+> >> +			     desc)->format_identifier);
+> >> +		pr_alert("%s: descriptor type %d found\n",
+> >> +			 __func__,
+> >> +			 desc->type);
+> >> +		pr_alert("%s: change 'additional_info' endianness before
+> >> calling\n",
+> >> +			 __func__); =20
+> > =20
+> > The above pr_alert() calls sound weird. Why are you unconditionally
+> > calling it (and still doing the BE conversion) for all
+> > REGISTRATION_DESCRIPTOR types? =20
+>=20
+> To be honest, I did not know what to do. Here's what 13818-1 has to say
+> about registration descriptors:
+>=20
+> >2.6.9
+> > Semantic definition of fields in registration descriptor
+> >format_identifier =E2=80=93 The format_identifier is a 32-bit value obta=
+ined
+> >from a Registration Authority as designated by
+> >ISO/IEC JTC 1/SC 29.
+> >additional_identification_info =E2=80=93 The meaning of
+> >additional_identification_info bytes, if any, are defined by the
+> >assignee of that format_identifier, and once defined they shall not chan=
+ge. =20
+>=20
+> So I took the cue from libdvbv5 and defined the following struct for it,
+> with a flexible array member at the end:
 
-Or do you mean to copy vnet header before data_hard_start before=20
-processing XDP?
+Andr=C3=A9 (who re-wrote the libdvbv5 parsers to be more generic)
+preferred the approach of keeping the structs in CPU-endian, as it
+makes easier from application PoV, as the conversion happens only once
+at the library.
 
+That's not the case here. We can fill the structs in big endian,
+converting to CPU-endian only on the few places we may need to read
+back from it.
 
->
->> there's no way for XDP to know the existence of the vnet header curren=
-tly.
-> It is true that XDP is unaware of this area, which is the way it
-> should be.  Currently the area will survive after calling BPF/XDP.
-> After your change it will be overwritten in xdp_frame cases.
->
->
->> So let's just not reserve space for vnet header in this case.
-> I think this is a wrong approach!
->
-> We are working on supporting GRO multi-buffer for XDP.  The vnet header
-> contains GRO information (see pahole below sign).
+>=20
+> struct vidtv_psi_desc_registration {
+> 	u8 type;
+> 	u8 length;
+> 	struct vidtv_psi_desc *next;
+>=20
+> 	/*
+> 	 * The format_identifier is a 32-bit value obtained from a Registration
+> 	 * Authority as designated by ISO/IEC JTC 1/SC 29.
+> 	 */
+> 	u32 format_identifier;
+> 	/*
+> 	 * The meaning of additional_identification_info bytes, if any, are
+> 	 * defined by the assignee of that format_identifier, and once defined
+> 	 * they shall not change.
+> 	 */
+> 	u8 additional_identification_info[];
+> } __packed
+>=20
+>=20
+> As you know, I was changing the endianness from host to BE before
+> serializing and then changing back from BE to host. Given the struct
+> definition above, there was no way to do this to the
+> 'additional_identification_info' member, since we do not know its layout.
+>=20
+> If we go with your approach instead (i.e. using __be16, __be32...etc)
+> then I think we can remove these two functions (and more)
 
+Yep.=20
 
-Another note is that since we need reserve room for skb_shared_info, GRO=20
-for XDP may probably lead more frag list.
-
-
->   It is currently not
-> used in the XDP case, but we will be working towards using it.
-
-
-Good to know that, but I think it can only work when the packet is not=20
-modified by XDP?
-
-
-> There
-> are a lot of unanswered questions on how this will be implemented.
-> Thus, I cannot layout how we are going to leverage this info yet, but
-> your patch are killing this info, which IHMO is going in the wrong
-> direction.
-
-
-I can copy vnet header ahead of data_hard_start, does it work for you?
-
-Thanks
-
-
->
->
->> Cc: Jesper Dangaard Brouer <brouer@redhat.com>
->> Signed-off-by: Jason Wang <jasowang@redhat.com>
->> ---
->>   drivers/net/virtio_net.c | 6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
->> index 11f722460513..98dd75b665a5 100644
->> --- a/drivers/net/virtio_net.c
->> +++ b/drivers/net/virtio_net.c
->> @@ -684,8 +684,8 @@ static struct sk_buff *receive_small(struct net_de=
-vice *dev,
->>   			page =3D xdp_page;
->>   		}
->>  =20
->> -		xdp.data_hard_start =3D buf + VIRTNET_RX_PAD + vi->hdr_len;
->> -		xdp.data =3D xdp.data_hard_start + xdp_headroom;
->> +		xdp.data_hard_start =3D buf + VIRTNET_RX_PAD;
->> +		xdp.data =3D xdp.data_hard_start + xdp_headroom + vi->hdr_len;
->>   		xdp.data_end =3D xdp.data + len;
->>   		xdp.data_meta =3D xdp.data;
->>   		xdp.rxq =3D &rq->xdp_rxq;
->> @@ -845,7 +845,7 @@ static struct sk_buff *receive_mergeable(struct ne=
-t_device *dev,
->>   		 * the descriptor on if we get an XDP_TX return code.
->>   		 */
->>   		data =3D page_address(xdp_page) + offset;
->> -		xdp.data_hard_start =3D data - VIRTIO_XDP_HEADROOM + vi->hdr_len;
->> +		xdp.data_hard_start =3D data - VIRTIO_XDP_HEADROOM;
->>   		xdp.data =3D data + vi->hdr_len;
->>   		xdp.data_end =3D xdp.data + (len - vi->hdr_len);
->>   		xdp.data_meta =3D xdp.data;
->
->
-
+Thanks,
+Mauro
