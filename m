@@ -2,121 +2,144 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17016C4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8590AC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E20B82080D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53D3920836
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:21:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cFfehZzG"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="BC/sLKzD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729325AbgEFPUk (ORCPT
+        id S1729379AbgEFPU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:20:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58040 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728821AbgEFPUj (ORCPT
+        Wed, 6 May 2020 11:20:59 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:38474 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728821AbgEFPU7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:20:39 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68E0BC061A0F;
-        Wed,  6 May 2020 08:20:39 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x17so2674915wrt.5;
-        Wed, 06 May 2020 08:20:39 -0700 (PDT)
+        Wed, 6 May 2020 11:20:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=QhrpUsD5ZNq874T4rNnffIMvqkskOMzNbsR1E6VBIeA=;
-        b=cFfehZzGS3n7CWK8O1uNboha7loFK3c0+QdMWe7LPnCpVeLb0ZxGlU9/U3+A+RJKlC
-         TnaJXouxBMFC8vy4ntN+TEIh+KnP2zVf9O2rNerZkBIXPz9Y0CYB1mQ2pdfnqIiFdVhr
-         NP4TBekv+HV2gPSJ2YIzxb0+IH6QFT8bK3BT/bD9e5/eEGuq0iDz6YVjl7O/Awy38vkT
-         MA/F6DWIAvtrs5fe/JIBcMZWvtBNxfEMn2vSxvRTPNJmOs3GpYk5TUGZwO5+pXRKREr9
-         9CDnmdV9KPsj+Z2IOUK0azD4h/uhkCiUAfI+kh7LIPTqODdphNcJLxuUwlw9flMq9UOK
-         E1lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=QhrpUsD5ZNq874T4rNnffIMvqkskOMzNbsR1E6VBIeA=;
-        b=uYsINYA+GGBvThUWX3f5knnfKBJKrsRa65gd8jtI3a6mhsZD1HariKnCjQbRAurbnz
-         jHXT6bMiWvUq8GrhQ6gkux4wSftdtXPxP6Zohui8ONO9W8ktZJujpWxFM++8jyMYdVeG
-         lQef740FxUgJtLecynRj0xuv6fEOyEMyC9bOFwli/huIU0rMFJbiEaGqhm6jWwo+p1yR
-         XR1Tyt9QBcFuF0wxhWz+2QE1F8dUiCWpVbXX0S7ZFwrL38WjBoI2NLU866R1nUqMDcgg
-         00rjyM3pXYXWb7e3fpTGMA19MzcKJnbaSNtrrGIL6i7PDhuFXGuKUDJloRFVH8X6KHpF
-         mALw==
-X-Gm-Message-State: AGi0PuajUXB+Jb9dWtzKNA2ly+7qv+oNEu78BUjtFBZp43QPJ/cj5IUM
-        P8mplASJ3ims0axBNTaA2TFrBasWiLs=
-X-Google-Smtp-Source: APiQypLrNaNadDSaNH9ff3ofEIzCjPgAJ6OsG2lKZiftpy/CeNAuRBpSK2nKGRnQgqHle1SqjsvOJg==
-X-Received: by 2002:a5d:6082:: with SMTP id w2mr9930466wrt.163.1588778438140;
-        Wed, 06 May 2020 08:20:38 -0700 (PDT)
-Received: from [192.168.43.138] ([185.32.177.92])
-        by smtp.gmail.com with ESMTPSA id i6sm3224360wrw.97.2020.05.06.08.20.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 May 2020 08:20:37 -0700 (PDT)
-Subject: Re: [PATCH v7 6/7] tpm: Add YAML schema for TPM TIS I2C options
-To:     Rob Herring <robh@kernel.org>
-Cc:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
-        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
-        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org, benoit.houyere@st.com,
-        eajames@linux.ibm.com, joel@jms.id.au, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        oshri.alkoby@nuvoton.com, tmaimon77@gmail.com, gcwilson@us.ibm.com,
-        kgoldman@us.ibm.com, Dan.Morav@nuvoton.com,
-        oren.tanami@nuvoton.com, shmulik.hager@nuvoton.com,
-        amir.mizinski@nuvoton.com
-References: <20200427124931.115697-1-amirmizi6@gmail.com>
- <20200427124931.115697-7-amirmizi6@gmail.com> <20200505161226.GA555@bogus>
-From:   Amir Mizinski <amirmizi6@gmail.com>
-Message-ID: <c2760659-ec14-237e-e060-5d9a2d7c7e4a@gmail.com>
-Date:   Wed, 6 May 2020 15:20:30 +0000
-User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1588778458; x=1620314458;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=Qxz8YBQJMe0tFK5dHJ7HQYaq14w58zhXEZxLWPuYNeE=;
+  b=BC/sLKzDzARc1pQD/WzENadvk+JG4VV1rJZFWINw4+iGfN/1vkBz/vXW
+   RPsmLPCiyKzkOtQYD7r+1hTMugPzpgq6r+HHWSA5tpD7a7scq7OCXGetp
+   jrZxMWGf2f4vl/Mvy8pOTbTxTgEM8rrW/oJ4xb+uFBWzSWwhea76UzLDx
+   o=;
+IronPort-SDR: Ld8GMMi8Y88G+q0R5NC/a+LOiUcKRXJWMBHS1Vb9+4Qrjo2+QlB9FolQxA3SnFKWn7ta1QRKpi
+ +ozPwuTuHyJA==
+X-IronPort-AV: E=Sophos;i="5.73,359,1583193600"; 
+   d="scan'208";a="43082169"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 06 May 2020 15:20:56 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix) with ESMTPS id A05A4A2171;
+        Wed,  6 May 2020 15:20:52 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 6 May 2020 15:20:51 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.37) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 6 May 2020 15:20:43 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+CC:     SeongJae Park <sjpark@amazon.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        David Miller <davem@davemloft.net>,
+        "Al Viro" <viro@zeniv.linux.org.uk>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        <sj38.park@gmail.com>, netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        SeongJae Park <sjpark@amazon.de>, <snu@amazon.com>,
+        <amit@kernel.org>, <stable@vger.kernel.org>
+Subject: Re: Re: Re: Re: Re: Re: [PATCH net v2 0/2] Revert the 'socket_alloc' life cycle change
+Date:   Wed, 6 May 2020 17:20:25 +0200
+Message-ID: <20200506152025.22085-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200506144151.GZ2869@paulmck-ThinkPad-P72> (raw)
 MIME-Version: 1.0
-In-Reply-To: <20200505161226.GA555@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.37]
+X-ClientProxiedBy: EX13d09UWC004.ant.amazon.com (10.43.162.114) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 6 May 2020 07:41:51 -0700 "Paul E. McKenney" <paulmck@kernel.org> wrote:
 
-On 2020-05-05 16:12, Rob Herring wrote:
-> On Mon, Apr 27, 2020 at 03:49:30PM +0300, amirmizi6@gmail.com wrote:
->> From: Amir Mizinski <amirmizi6@gmail.com>
->>
->> Added a YAML schema to support tpm tis i2c related dt-bindings for the I2c
->> PTP based physical layer.
->>
->> This patch adds the documentation for corresponding device tree bindings of
->> I2C based Physical TPM.
->> Refer to the 'I2C Interface Definition' section in
->> 'TCG PC Client PlatformTPMProfile(PTP) Specification' publication
->> for specification.
->
-> Again, DT bindings describe h/w devices, not just a protocol. A device
-> is more than just a protocol interface. There's clocks, power rails,
-> resets, interrupts, firmware, etc.
->
-> Unless there's something special about TPM chips that makes none of this
-> applicable and no chip will ever have any quirks (or extensions) in
-> their protocol to work-around, then you need compatible string(s) that
-> are specific to the TPM chip. You can have tcg,tpm-tis-i2c as a
-> fallback, but you need specific compatible to handle any quirks.
->
-> Rob
+> On Wed, May 06, 2020 at 02:59:26PM +0200, SeongJae Park wrote:
+> > TL; DR: It was not kernel's fault, but the benchmark program.
+> > 
+> > So, the problem is reproducible using the lebench[1] only.  I carefully read
+> > it's code again.
+> > 
+> > Before running the problem occurred "poll big" sub test, lebench executes
+> > "context switch" sub test.  For the test, it sets the cpu affinity[2] and
+> > process priority[3] of itself to '0' and '-20', respectively.  However, it
+> > doesn't restore the values to original value even after the "context switch" is
+> > finished.  For the reason, "select big" sub test also run binded on CPU 0 and
+> > has lowest nice value.  Therefore, it can disturb the RCU callback thread for
+> > the CPU 0, which processes the deferred deallocations of the sockets, and as a
+> > result it triggers the OOM.
+> > 
+> > We confirmed the problem disappears by offloading the RCU callbacks from the
+> > CPU 0 using rcu_nocbs=0 boot parameter or simply restoring the affinity and/or
+> > priority.
+> > 
+> > Someone _might_ still argue that this is kernel problem because the problem
+> > didn't occur on the old kernels prior to the Al's patches.  However, setting
+> > the affinity and priority was available because the program received the
+> > permission.  Therefore, it would be reasonable to blame the system
+> > administrators rather than the kernel.
+> > 
+> > So, please ignore this patchset, apology for making confuse.  If you still has
+> > some doubts or need more tests, please let me know.
+> > 
+> > [1] https://github.com/LinuxPerfStudy/LEBench
+> > [2] https://github.com/LinuxPerfStudy/LEBench/blob/master/TEST_DIR/OS_Eval.c#L820
+> > [3] https://github.com/LinuxPerfStudy/LEBench/blob/master/TEST_DIR/OS_Eval.c#L822
+> 
+> Thank you for chasing this down!
+> 
+> I have had this sort of thing on my list as a potential issue, but given
+> that it is now really showing up, it sounds like it is time to bump
+> up its priority a bit.  Of course there are limits, so if userspace is
+> running at any of the real-time priorities, making sufficient CPU time
+> available to RCU's kthreads becomes userspace's responsibility.  But if
+> everything is running at SCHED_OTHER (which is this case here, correct?),
 
-Hello Rob, currently yes. All TPM chip are implemented according to the TGC specs and should use the same properties for this I2C driver.
-I can't say for sure that it will be the case in the future. Shouldn't we use the standard "tcg,tpm-tis-i2c" compatible, and if a specific TPM chip will deviate from the specs, the vendor should add an additional compatible string for it?
-Thank you,
-Amir
+Correct.
 
+> then it is reasonable for RCU to do some work to avoid this situation.
+
+That would be also great!
+
+> 
+> But still, yes, the immediate job is fixing the benchmark.  ;-)
+
+Totally agreed.
+
+> 
+> 							Thanx, Paul
+> 
+> PS.  Why not just attack all potential issues on my list?  Because I
+>      usually learn quite a bit from seeing the problem actually happen.
+>      And sometimes other changes in RCU eliminate the potential issue
+>      before it has a chance to happen.
+
+Sounds interesting, I will try some of those in my spare time ;)
+
+
+Thanks,
+SeongJae Park
