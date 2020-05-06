@@ -2,121 +2,202 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5818C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 03:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC12EC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 03:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61BC62073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 03:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D00D206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 03:45:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i66gvCd5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OKN4zkBY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgEFDhx (ORCPT
+        id S1726825AbgEFDp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 23:37:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33200 "EHLO
+        Tue, 5 May 2020 23:45:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726367AbgEFDhx (ORCPT
+        with ESMTP id S1725908AbgEFDp0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 23:37:53 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEB14C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 20:37:52 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id a7so23840uak.2
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 20:37:52 -0700 (PDT)
+        Tue, 5 May 2020 23:45:26 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D82CC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 20:45:26 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id k133so320010oih.12
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 20:45:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=/K450lb1lXZWNub5l53fuFTH1txZt+evZRmROoeb2I4=;
-        b=i66gvCd5ocghenQRtvgyBvO4MQYtXaaIOon567733AdAxnF0DIOSZhuFE+cORJxNdd
-         YOiB/UYnx7f7v6JjSC+TJ1pc8vKVmZNfKPXeEWf1v9B6zqt7HP9vcSutGuUvtL76kw/d
-         NRnLYDQmjUIKTL4GHRCv/IPLUMcq6VpL0657fCSVZAue++G46gIWtA3FF8w+OKQJJHue
-         /HzU8UFrua5SixBKkwyq3ECJrlKVnF0u9b+Fl5xYVE7qUfHT28DpioD8cBUApJROyv92
-         r5QixTZ42/4k7N9zgNQp0sQTwpsvIZBVX1BiACbxogmow4WaY9Wp1sXxvIb2yjv6LEZQ
-         XM/g==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zWB6cWjMNsKtRxqY/kkJuBnxLsHqY4CSraBHoWMjqp4=;
+        b=OKN4zkBYDIz62lBDvEf3XM4DOuCpBniwoB2/yAFzUSYvxGBnmfmk4quJbCwxjP8DU4
+         xLekmYvvK98w1NXnfe18epulQwaf2+My7yXmRnUncgTNHmX6BQEZFqAgF3JFDGeHWa8+
+         Wbau+QfB/sZDYuLIB3bjX1iQJUToyR1I+k0IZkqJm/07hUnUAQQ1vRXD5CJ+h0n/aq+L
+         3uf/30GOdRyiYkrNxBtM2huEyCGf5lQYugw3kkdLFna922yF/1J0v3s/y0DXrYoXzVzX
+         f9rUeMCQmbgu9sXAYqxrKEs8BEJWpnKOVhsxzZo5g2Pj2d9a0C3KmGNJIMHH4kQRfRLk
+         gY3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=/K450lb1lXZWNub5l53fuFTH1txZt+evZRmROoeb2I4=;
-        b=snN5xgQiRD04hE40BhRwqktstmUpNXZViGOnmsPgaZImghVSwWhiM+qAPsdpAig3iw
-         jQnX638SDt+potigkNeRo5XVjJ3A2tesT4J+ZbEoPuDDc0RXUf87+qcvxxC5AugdFx2K
-         JxHQfsUNp7ag9gnN2dY9syjUbJKGLHzQy32HIg9aMpUDeCIGTbEYDAlRoYYHA4wIENrH
-         mHCcxUb5ezM755SK/vu7IZy92C2ZoLVEGxXgfMeMe8TlNjvz/92Nr1BRPl8CucRFZKyB
-         I7N4/m8zpyu1TWnDuKOBD29adNmqX4UIKzP439wLKghY+7NoPmBX4ybBVseEZWo9lyHx
-         LcJQ==
-X-Gm-Message-State: AGi0PuYEAPZUTb/UkQKsUfGfiuCat2Kq7N9ntMoyYhZj521lDyayyXmC
-        z3NOtiQOQb0QghmYhsnWOMxRYUhfpp496HguVHGJDw==
-X-Google-Smtp-Source: APiQypJlf5KZKjLajfXJQSqAKZ6We6VVt8fBpwvc1g/C/PnGIfueFpC5UpeqG3DfA9rW0IDxilviVwOXRtieMJ6OVMw=
-X-Received: by 2002:a9f:2344:: with SMTP id 62mr5892977uae.7.1588736271638;
- Tue, 05 May 2020 20:37:51 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zWB6cWjMNsKtRxqY/kkJuBnxLsHqY4CSraBHoWMjqp4=;
+        b=YkYJYwNHKeej7uw/Ij+Rxfvsn42sMOhdvjllIguUHZbjfMLZ2Nyqc4s5i4XxdiO2eR
+         4ohIghuj/Zkxi7W98L0xHhZ4tnEUPkyHHMrZSTcgVKHxSa7oAbXIwVkkAKHdDjnRqGBj
+         poj+XmU5Ya64GlcbHsWua3FdOf439d+/wnV9ZwtjrWDTSfYRsn5LTG36lKLBx3/bdvaM
+         hEtRGbsDQ1c8KsdrHCeKwyDmY0oK6rst54ZsG8ysz8AzI+RdwpO9jawRi3EjEn4rSm0K
+         NxoTuGc30/fkT7tl2GSqGYVbxAoB5KiyAd8qYa/o9qNjYsMMV1qXDihiJ34C8atn+ErH
+         f5lQ==
+X-Gm-Message-State: AGi0PubsttBn6cJlVWliDpGn+IbJZqocuwOgecJieNIjrY9CswK5rf+B
+        NTkqwZVscOuWSHTj9+wsVio=
+X-Google-Smtp-Source: APiQypJeHUSXrgoOMLaldrkbNutzLGRo+2lOCXDoyA2v2XT/zC8q/zdCfYxUKlEywfZjTOMCYuVXBw==
+X-Received: by 2002:a54:409a:: with SMTP id i26mr1403854oii.50.1588736725456;
+        Tue, 05 May 2020 20:45:25 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id r6sm304439oom.26.2020.05.05.20.45.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 20:45:24 -0700 (PDT)
+Date:   Tue, 5 May 2020 20:45:23 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Torsten Duwe <duwe@lst.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        Torsten Duwe <duwe@suse.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Julien Thierry <jthierry@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Alexandre Ghiti <alex@ghiti.fr>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Ionela Voinescu <ionela.voinescu@arm.com>,
+        Steve Capper <steve.capper@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Fangrui Song <maskray@google.com>
+Subject: Re: [PATCH] arm64: disable patchable function entry on big-endian
+ clang builds
+Message-ID: <20200506034523.GA564255@ubuntu-s3-xlarge-x86>
+References: <20200505141257.707945-1-arnd@arndb.de>
+ <20200505142556.GF82823@C02TD0UTHF1T.local>
+ <20200505194243.5bfc6ec6@blackhole>
 MIME-Version: 1.0
-From:   Stephane Eranian <eranian@google.com>
-Date:   Tue, 5 May 2020 20:37:40 -0700
-Message-ID: <CABPqkBQ13AEPrV=pUcF1L6iYOaDgN2dsVanXBa8+AqgUh87kEQ@mail.gmail.com>
-Subject: callchain ABI change with commit 6cbc304f2f360
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Vince Weaver <vincent.weaver@maine.edu>, jpoimboe@redhat.com,
-        "Liang, Kan" <kan.liang@intel.com>, Andi Kleen <ak@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505194243.5bfc6ec6@blackhole>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
++ Fangrui, who implemented patchable_function_entry in LLVM/clang
 
-I have received reports from users who have noticed a change of
-behaviour caused by
-commit:
+On Tue, May 05, 2020 at 07:42:43PM +0200, Torsten Duwe wrote:
+> Hi Arnd, Mark and others,
+> 
+> this may not be worth arguing but I'm currently fighting excessive
+> workarounds in another area and so this triggers me, so I have to make
+> a remark ;-)
+> 
+> On Tue, 5 May 2020 15:25:56 +0100
+> Mark Rutland <mark.rutland@arm.com> wrote:
+> 
+> > On Tue, May 05, 2020 at 04:12:36PM +0200, Arnd Bergmann wrote:
+> > > Clang only supports the patchable_function_entry attribute on
+> > > little-endian arm64 builds, but not on big-endian:
+> > > 
+> > > include/linux/kasan-checks.h:16:8: error: unknown attribute
+> > > 'patchable_function_entry' ignored [-Werror,-Wunknown-attributes]
+> > > 
+> > > Disable that configuration with another dependency. Unfortunately
+> > > the existing check is not enough, as $(cc-option) at this point does
+> > > not pass the -mbig-endian flag.
+> > 
+> > Well that's unfortunate. :(
+> > 
+> > Do we know if this is deliberate and/or likely to change in future?
 
-6cbc304f2f360 ("perf/x86/intel: Fix unwind errors from PEBS entries (mk-II)")
+I am not sure this is deliberate, I don't see anything about endianness
+in the commits that added this:
 
-When using PEBS sampling on Intel processors.
+https://github.com/llvm/llvm-project/commit/4d1e23e3b3cd7c72a8b24dc5acb7e13c58a8de37
+https://github.com/llvm/llvm-project/commit/22467e259507f5ead2a87d989251b4c951a587e4
+https://github.com/llvm/llvm-project/commit/06b8e32d4fd3f634f793e3bc0bc4fdb885e7a3ac
 
-Doing simple profiling with:
-$ perf record -g -e cycles:pp ...
+> > This practically rules out a BE distro kernel with things like PAC,
+> > which isn't ideal.
 
-Before:
+To be fair, are there big endian AArch64 distros?
 
-1 1595951041120856 0x7f77f8 [0xe8]: PERF_RECORD_SAMPLE(IP, 0x4002):
-795385/690513: 0x558aa66a9607 period: 10000019 addr: 0
-... FP chain: nr:22
-.....  0: fffffffffffffe00
-.....  1: 0000558aa66a9607
-.....  2: 0000558aa66a8751
-.....  3: 0000558a984a3d4f
+https://wiki.debian.org/Arm64Port: "There is also a big-endian version
+of the architecture/ABI: aarch64_be-linux-gnu but we're not supporting
+that in Debian (so there is no corresponding Debian architecture name)
+and hopefully will never have to. Nevertheless you might want to check
+for this by way of completeness in upstream code."
 
-Entry 1: matches sampled IP 0x558aa66a9607.
+OpenSUSE and Fedora don't appear to have support for big endian.
 
-After:
+> But still better than cumulating workarounds. If clang's flags aren't
+> orthogonal then that's a bug in clang. If I get a vote here I'm against
+> it.
+> 
+> > > Fixes: 3b23e4991fb6 ("arm64: implement ftrace with regs")
+> > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > 
+> > This looks fine for now, and we can add a version check in future, so:
+>                                       ^^^^^^^^^^^^^^^^^^^
+> see what I mean? And in the end another line of code you'll never again
+> get rid of.
 
-3 487420973381085 0x2f797c0 [0x90]: PERF_RECORD_SAMPLE(IP, 0x4002):
-349591/146458: 0x559dcd2ef889 period: 10000019 addr: 0
-... FP chain: nr:11
-.....  0: fffffffffffffe00
-.....  1: 0000559dcd2ef88b
-.....  2: 0000559dcd19787d
-.....  3: 0000559dcd1cf1be
+That's a rather pessimistic attitude to have. We've been rather good
+about trying to fix stuff in the compiler rather than hacking up the
+kernel.
 
-entry 1 does not match sampled IP anymore.
+> I suggest to get a quote from clang folks first about their schedule and
+> regarded importance of patchable-function-entries on BE, and leave it as
+> is: broken on certain clang configurations. It's not the kernel's fault.
 
-Before the patch the kernel was stashing the sampled IP from PEBS into
-the callchain. After the patch it is stashing the interrupted IP, thus
-with the skid.
+We can file an upstream PR (https://bugs.llvm.org) to talk about this
+(although I've CC'd Fangrui) but you would rather the kernel fail to
+work properly than prevent the user from being able to select that
+option? Why even have the "select" or "depends on" keyword then?
 
-I am trying to understand whether this is an intentional change or not
-for the IP.
+That said, I do think we should hold off on this patch until we hear
+from the LLVM developers.
 
-It seems that stashing the interrupted IP would be more consistent across all
-sampling modes, i.e., with and without PEBS. Entry 1: would always be
-the interrupted IP.
-The changelog talks about ORC unwinder being more happy this the
-interrupted machine
-state, but not about the ABI expectation here.
-Could you clarify?
-Thanks.
+> > Acked-by: Mark Rutland <mark.rutland@arm.com>
+> > 
+> > Mark.
+> > 
+> > > ---
+> > >  arch/arm64/Kconfig | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> > > index 4b256fa6db7a..a33d6402b934 100644
+> > > --- a/arch/arm64/Kconfig
+> > > +++ b/arch/arm64/Kconfig
+> > > @@ -151,7 +151,7 @@ config ARM64
+> > >  	select HAVE_DMA_CONTIGUOUS
+> > >  	select HAVE_DYNAMIC_FTRACE
+> > >  	select HAVE_DYNAMIC_FTRACE_WITH_REGS \
+> > > -		if $(cc-option,-fies on y=2)
+> > > +		if $(cc-option,-fpatchable-function-entry=2) &&
+> > > !(CC_IS_CLANG && CPU_BIG_ENDIAN) select
+> > > HAVE_EFFICIENT_UNALIGNED_ACCESS select HAVE_FAST_GUP
+> > >  	select HAVE_FTRACE_MCOUNT_RECORD
+> > > -- 
+> > > 2.26.0
+> > > 
+> 
+
+Cheers,
+Nathan
