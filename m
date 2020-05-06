@@ -2,34 +2,34 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D955C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6277DC47257
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4D032075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BD582075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:58:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728747AbgEFX6w (ORCPT
+        id S1728769AbgEFX6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 19:58:52 -0400
+        Wed, 6 May 2020 19:58:54 -0400
 Received: from mga06.intel.com ([134.134.136.31]:27430 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728445AbgEFX6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 19:58:51 -0400
-IronPort-SDR: HVlQB4KZRhGhh/S/jDIjfcQ8SutAkTUrnqRx77sKqB08hfVzlqJQuc2ppkZpo70kY8OmBflG0p
- ncw3GHm9UfPQ==
+        id S1728379AbgEFX6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 19:58:52 -0400
+IronPort-SDR: GhQ3/yPORJAfzUsvuUi0R4xbH4/167TrP0iWAtknrvykMlAQqCQ14DG+I4aR94LTQakEg/WAOf
+ ghBqplo0rmbA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
   by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 16:58:51 -0700
-IronPort-SDR: 8nSc+RMIJMvcPTQETj0t5MsuXTF62MCTfopQuBcvBjCsA6OhOsrmofg5y184eAjOql0lUxE0kZ
- APhOHgWm+Owg==
+IronPort-SDR: r3TEfEBlGCQDnppSb0/B3ZOpwYIpUseXQsClVHbOqACJtHmEpNtf+cELG+aLZ8rdm9Hm3rYnpm
+ Q4VUnL8pFlAA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,361,1583222400"; 
-   d="scan'208";a="435086067"
+   d="scan'208";a="435086063"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
   by orsmga005.jf.intel.com with ESMTP; 06 May 2020 16:58:51 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -40,12 +40,10 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] KVM: nVMX: Skip IPBP when switching between vmcs01 and vmcs02, redux
-Date:   Wed,  6 May 2020 16:58:50 -0700
-Message-Id: <20200506235850.22600-3-sean.j.christopherson@intel.com>
+Subject: [PATCH 0/2] KVM: nVMX: Skip IPBP on nested VMCS switch
+Date:   Wed,  6 May 2020 16:58:48 -0700
+Message-Id: <20200506235850.22600-1-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200506235850.22600-1-sean.j.christopherson@intel.com>
-References: <20200506235850.22600-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -53,64 +51,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Skip the Indirect Branch Prediction Barrier that is triggered on a VMCS
-switch when temporarily loading vmcs02 to synchronize it to vmcs12, i.e.
-give copy_vmcs02_to_vmcs12_rare() the same treatment as
-vmx_switch_vmcs().
+Or as Jim would say, "Really skip IPBP on nested VMCS switch" :-D
 
-Make vmx_vcpu_load() static now that it's only referenced within vmx.c.
+Patch 1 is the delta between kvm/queue and v3 of the original patch[*],
+i.e. I just cherry-picked v3 and fixed the conflicts.
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/vmx/nested.c | 4 ++--
- arch/x86/kvm/vmx/vmx.c    | 2 +-
- arch/x86/kvm/vmx/vmx.h    | 1 -
- 3 files changed, 3 insertions(+), 4 deletions(-)
+Patch 2 applies the "no IPBP" logic to copy_vmcs02_to_vmcs12_rare().
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 7d1e19149ef46..4f770eed66cc9 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -3915,12 +3915,12 @@ static void copy_vmcs02_to_vmcs12_rare(struct kvm_vcpu *vcpu,
- 
- 	cpu = get_cpu();
- 	vmx->loaded_vmcs = &vmx->nested.vmcs02;
--	vmx_vcpu_load(&vmx->vcpu, cpu);
-+	vmx_vcpu_load_vmcs(vcpu, cpu, &vmx->vmcs01);
- 
- 	sync_vmcs02_to_vmcs12_rare(vcpu, vmcs12);
- 
- 	vmx->loaded_vmcs = &vmx->vmcs01;
--	vmx_vcpu_load(&vmx->vcpu, cpu);
-+	vmx_vcpu_load_vmcs(vcpu, cpu, &vmx->nested.vmcs02);
- 	put_cpu();
- }
- 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index ddbd8fae24927..bc5e5cf1d4cc8 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1383,7 +1383,7 @@ void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu,
-  * Switches to specified vcpu, until a matching vcpu_put(), but assumes
-  * vcpu mutex is already taken.
-  */
--void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
-+static void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index 4a6f382b05b49..298ddef79d009 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -322,7 +322,6 @@ struct kvm_vmx {
- bool nested_vmx_allowed(struct kvm_vcpu *vcpu);
- void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu,
- 			struct loaded_vmcs *buddy);
--void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu);
- int allocate_vpid(void);
- void free_vpid(int vpid);
- void vmx_set_constant_host_state(struct vcpu_vmx *vmx);
+Feel free to sqaush both of these to commit 7407a52f23732 ("KVM: nVMX:
+Skip IBPB when switching between vmcs01 and vmcs02") if you so desire.
+
+[*] https://lkml.kernel.org/r/20200505044644.16563-1-sean.j.christopherson@intel.com
+
+Sean Christopherson (2):
+  KVM: nVMX: Refactor IBPB handling on VMCS switch to genericize code
+  KVM: nVMX: Skip IPBP when switching between vmcs01 and vmcs02, redux
+
+ arch/x86/kvm/vmx/nested.c | 13 +++----------
+ arch/x86/kvm/vmx/vmx.c    | 19 ++++++++++++++-----
+ arch/x86/kvm/vmx/vmx.h    |  4 ++--
+ 3 files changed, 19 insertions(+), 17 deletions(-)
+
 -- 
 2.26.0
 
