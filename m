@@ -2,176 +2,116 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F32C38A2A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE06C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FD652075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0096D2075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:40:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hKkK6wQ0"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SWWR+Upk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730102AbgEFWjl (ORCPT
+        id S1730248AbgEFWk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 18:39:41 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:39970 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728888AbgEFWjk (ORCPT
+        Wed, 6 May 2020 18:40:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728173AbgEFWkZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 18:39:40 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046Md8fV084203;
-        Wed, 6 May 2020 22:39:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=aCIY+Io9IQgcDfA/xk5CfyLiRyvGAA+dPyySxT7CoMU=;
- b=hKkK6wQ0eZZ6OQVjb3f6tDu/lNqpxy3FIqrcWyI+ov2s/ycUFTKndQjhipREHsjOKYsl
- 3tjZ/q/Oijmo0zHu0gNERO0p3ExsbM+lq4wX2xTfa61+crGvm7JleOpyGEvVu0Jzlgnj
- 8js1oUgfHBvSEsL0h5ibLDkssUHGMWU7dvH2tG9brXU3Q4o84HHs4q4DVTzLPBnh5PAh
- xf+vCQ5G+i+O1rkABhZ4kfL4BDPQt6qayNJaQgewkiW57Rxh4QE8YJIwYW3brc9Lczk9
- nWFwNNGcj7yIuDLQlHoT1A2me/xKxbcKQJsx/b2is4S6Qqv6poNHVh+JEqlIGcM41YfX 1g== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 30s1gncwry-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 May 2020 22:39:08 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046MbX2i092751;
-        Wed, 6 May 2020 22:39:07 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 30sjnkxrba-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 May 2020 22:39:07 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 046Md1w3005656;
-        Wed, 6 May 2020 22:39:01 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 May 2020 15:39:01 -0700
-Date:   Wed, 6 May 2020 18:39:23 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
+        Wed, 6 May 2020 18:40:25 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 636A2C061A10
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 15:40:25 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id s10so1238132plr.1
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 15:40:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QdygR2A72/9LbEfVx2KFs3XOLDP2FAPzE7Df5641CTE=;
+        b=SWWR+UpkmvIE+5IkhyyAYX+75Y/7/mDnDtfjR2ghLwrvagpWXgIcXAMbXN0ctOmC7J
+         r0FxwlPF0uoG20mDKj/ixX1NIadS14OGfhEQm5Yy4h1fp3BkOTWg3wrCj17q6zI+ekN/
+         mDFNQPcrBFBtYUtdiJxBZH03mttId5kD4H4tA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QdygR2A72/9LbEfVx2KFs3XOLDP2FAPzE7Df5641CTE=;
+        b=YC4/aLy+tUTPfmlfu7pdMQBJHT5x0vFjmEw5lNoHDXBWVg/LlXhrxUm2aKITYLHolU
+         LGh+ZgCId+gFMvQrFnDHhPSXfVo+WPnkI0DOJ6wBKcltN7hYs0oX84NyHEaXGnKy4QGt
+         daXxFigObYE8uDl+yVZwtKXIGYcpJgKrZzjfZP+UWf6UaUcAga/rnZFcualn//Mdgrtt
+         u0zFiCW/Hac3WEghoslqO+prVwWS9vNHYnZVf97/+D6WuLHzSBgqkELIf96QK52LQ5bc
+         t9lrmm+m5rThersJcWVqOFvhS8HFnv8QQlziGJikiFaHuOU95Vvj8sJrub2rOTPABF+m
+         wlKw==
+X-Gm-Message-State: AGi0Pubmc7aGWK/zmvGkx+IbuHWrsVs20TOytSlLsfEQUEjoawPIGUVw
+        u0F26pHipwDlW5ne8vylm3GLCg==
+X-Google-Smtp-Source: APiQypLeKev/qpKuUfyxub8k75/PIRWV5N1ol74IL1rE5d96sthNE61DOXvqGS/dnem4REr+Biuuuw==
+X-Received: by 2002:a17:90a:280c:: with SMTP id e12mr11866676pjd.52.1588804824838;
+        Wed, 06 May 2020 15:40:24 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b140sm2819009pfb.119.2020.05.06.15.40.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 15:40:23 -0700 (PDT)
+Date:   Wed, 6 May 2020 15:40:22 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
         Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Michal Hocko <mhocko@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Tejun Heo <tj@kernel.org>, Zi Yan <ziy@nvidia.com>,
-        linux-crypto@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 5/7] mm: move zone iterator outside of
- deferred_init_maxorder()
-Message-ID: <20200506223923.z6cbixg2mhtjjlfo@ca-dmjordan1.us.oracle.com>
-References: <20200430201125.532129-1-daniel.m.jordan@oracle.com>
- <20200430201125.532129-6-daniel.m.jordan@oracle.com>
- <deadac9a-fbef-6c66-207c-83d251d2ef50@linux.intel.com>
- <20200501024539.tnjuybydwe3r4u2x@ca-dmjordan1.us.oracle.com>
- <CAKgT0Uctro3+PWeJTi=O3Yc2qUF8Oy+HrypzCUzkaCt=XH0Lkg@mail.gmail.com>
- <20200505005432.bohmaa6zeffhdkgn@ca-dmjordan1.us.oracle.com>
- <CAKgT0Uegw2vFSCOcsCMATfDu0Q8NP2ZVi-2Fgm8P2RwU_B2c3A@mail.gmail.com>
+        Rob Herring <robh+dt@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>, jmorris@namei.org,
+        sashal@kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 2/6] pstore/platform: Pass max_reason to kmesg dump
+Message-ID: <202005061540.88ECA85@keescook>
+References: <20200506211523.15077-1-keescook@chromium.org>
+ <20200506211523.15077-3-keescook@chromium.org>
+ <4cdeaa2af2fe0d6cc2ca8ce3a37608340799df8a.camel@perches.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKgT0Uegw2vFSCOcsCMATfDu0Q8NP2ZVi-2Fgm8P2RwU_B2c3A@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=2
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005060180
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=2 mlxscore=0
- spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0
- impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005060180
+In-Reply-To: <4cdeaa2af2fe0d6cc2ca8ce3a37608340799df8a.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 08:27:52AM -0700, Alexander Duyck wrote:
-> As it turns out that deferred_free_range will be setting the
-> migratetype for the page. In a sparse config the migratetype bits are
-> stored in the section bitmap. So to avoid cacheline bouncing it would
-> make sense to section align the tasks so that they only have one
-> thread touching one section rather than having the pageblock_flags
-> getting bounced between threads.
-
-That's a good point, I'll change the alignment.
-
-I kicked off some runs on the Skylake bare metal system to check how this did
-and the performance stayed the same, but see below.
-
-> It should also reduce the overhead
-> for having to parallelize the work in the first place since a section
-> is several times larger than a MAX_ORDER page and allows for more
-> batching of the work.
-
-I think you may be assuming that threads work in MAX_ORDER batches, maybe
-because that's the job's min_chunk, but padata works differently.  The
-min_chunk is a lower bound that establishes the smallest amount of work that
-makes sense for a thread to do in one go, so in this case it's useful to
-prevent starting large numbers of threads to initialize a tiny amount of pages.
-
-Internally padata uses total job size and min chunk to arrive at the chunk
-size, which on big machines will be much larger than min_chunk.  The idea is
-the chunk size should be large enough to minimize multithreading overhead but
-small enough to permit load balancing between threads.
-
-This is probably why the results didn't change much when aligning by section,
-but that doesn't mean other systems won't benefit.
-
-> > Maybe it's better to leave deferred_init_maxorder alone and adapt the
-> > multithreading to the existing implementation.  That'd mean dealing with the
-> > pesky opaque index somehow, so deferred_init_mem_pfn_range_in_zone() could be
-
-I should have been explicit, was thinking of @i from
-for_each_free_mem_pfn_range_in_zone_from() when mentioning the opaque index.
-
-> > generalized to find it in the thread function based on the start/end range, or
-> > it could be maintained as part of the range that padata passes to the thread
-> > function.
+On Wed, May 06, 2020 at 02:25:41PM -0700, Joe Perches wrote:
+> On Wed, 2020-05-06 at 14:15 -0700, Kees Cook wrote:
+> > From: Pavel Tatashin <pasha.tatashin@soleen.com>
+> > 
+> > Add a new member to struct pstore_info for passing information about
+> > kmesg dump maximum reason. This allows a finer control of what kmesg
+> > dumps are sent to pstore storage backends.
 > 
-> You may be better off just implementing your threads to operate like
-> deferred_grow_zone does. All your worker thread really needs then is
-> to know where to start performing the page initialization and then it
-> could go through and process an entire section worth of pages. The
-> other bit that would have to be changed is patch 6 so that you combine
-> any ranges that might span a single section instead of just splitting
-> the work up based on the ranges.
+> trivia:
+> 
+> > diff --git a/include/linux/pstore.h b/include/linux/pstore.h
+> []
+> > @@ -96,6 +96,12 @@ struct pstore_record {
+> >   *
+> >   * @read_mutex:	serializes @open, @read, @close, and @erase callbacks
+> >   * @flags:	bitfield of frontends the backend can accept writes for
+> > + * @max_reason:	Used when PSTORE_FLAGS_DMESG is set. Contains the
+> > + *		kmsg_dump_reason enum value. KMSG_DUMP_UNDEF means
+> > + *		"use existing kmsg_dump() filtering, based on the
+> > + *		printk.always_kmsg_dump boot param" (which is either
+> > + *		KMSG_DUMP_OOPS when false, or KMSG_DUMP_MAX when
+> > + *		tree); see printk.always_kmsg_dump for more details.
+> 
+> s/tree/true/
 
-How are you thinking of combining them?  I don't see a way to do it without
-storing an arbitrary number of ranges somewhere for each thread.
+Eek, thanks. I'll fix my typo. :)
 
-> If you are referring to the mo_pfn you shouldn't even need to think
-> about it.
-
-(clarified "opaque index" above)
-
-> All it is doing is guaranteeing you are processing at least
-> a full max order worth of pages. Without that the logic before was
-> either process a whole section, or just process all of memory
-> initializing it before it started freeing it. I found it made things
-> much more efficient to process only up to MAX_ORDER at a time as you
-> could squeeze that into the L2 cache for most x86 processors at least
-> and it reduced the memory bandwidth by quite a bit.
-
-Yes, that was clever, we should keep doing it that way.
+-- 
+Kees Cook
