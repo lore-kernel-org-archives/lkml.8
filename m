@@ -2,97 +2,180 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 625A6C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F53C47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 477822078C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C3B22075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:00:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729432AbgEFU7w (ORCPT
+        id S1729445AbgEFVAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 16:59:52 -0400
-Received: from smtprelay0133.hostedemail.com ([216.40.44.133]:46778 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728535AbgEFU7w (ORCPT
+        Wed, 6 May 2020 17:00:30 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:58120 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728535AbgEFVAa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 16:59:52 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 1DF73182D31F0;
-        Wed,  6 May 2020 20:59:51 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: scale25_72f58b20c6452
-X-Filterd-Recvd-Size: 2727
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf09.hostedemail.com (Postfix) with ESMTPA;
-        Wed,  6 May 2020 20:59:49 +0000 (UTC)
-Message-ID: <303818f9b6dc16880b3bc715c16144e4245022b8.camel@perches.com>
-Subject: Re: MAINTAINERS: Wrong ordering in S390 PCI SUBSYSTEM
-From:   Joe Perches <joe@perches.com>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Pierre Morel <pmorel@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        kernel-janitors@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Wed, 06 May 2020 13:59:48 -0700
-In-Reply-To: <alpine.DEB.2.21.2005062232330.23358@felia>
-References: <alpine.DEB.2.21.2005060741520.7719@felia>
-         <CAHp75VeNiuJ7QXvNO2=W_TjEjjK3xRbg0-Don6HkSOHV5LXRbA@mail.gmail.com>
-         <alpine.DEB.2.21.2005062232330.23358@felia>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Wed, 6 May 2020 17:00:30 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 66E942A22DB
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: Re: [PATCH v14 02/11] dt-bindings: soc: Add MT8183 power dt-bindings
+To:     Weiyi Lu <weiyi.lu@mediatek.com>,
+        Enric Balletbo Serra <eballetbo@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Rob Herring <robh@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>
+Cc:     James Liao <jamesjj.liao@mediatek.com>,
+        srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org,
+        Fan Chen <fan.chen@mediatek.com>,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        devicetree <devicetree@vger.kernel.org>
+References: <1588752963-19934-1-git-send-email-weiyi.lu@mediatek.com>
+ <1588752963-19934-3-git-send-email-weiyi.lu@mediatek.com>
+Message-ID: <30046b88-0fb7-5506-7460-bf0fba320c3d@collabora.com>
+Date:   Wed, 6 May 2020 23:00:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <1588752963-19934-3-git-send-email-weiyi.lu@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-05-06 at 22:37 +0200, Lukas Bulwahn wrote:
-> 
-> On Wed, 6 May 2020, Andy Shevchenko wrote:
-> 
-> > On Wed, May 6, 2020 at 8:46 AM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
-> > > Hi Pierre,
-> > > 
-> > > with your commit de267a7c71ba ("s390/pci: Documentation for zPCI"),
-> > > visible on next-20200505, ./scripts/checkpatch.pl -f MAINTAINERS
-> > > complains:
-> > > 
-> > > WARNING: Misordered MAINTAINERS entry - list file patterns in alphabetic order
-> > > #14723: FILE: MAINTAINERS:14723:
-> > > +F:     drivers/pci/hotplug/s390_pci_hpc.c
-> > > +F:     Documentation/s390/pci.rst
-> > > 
-> > > 
-> > > This is due to wrong ordering of the entries in your submission. If you
-> > > would like me to send you a patch fixing that, please just let me know.
-> > > 
-> > > It is a recent addition to checkpatch.pl to report ordering problems in
-> > > MAINTAINERS, so you might have not seen that at submission time.
-> > 
-> > Why not to send a patch?
-> > Same for the rest of similar mails from you.
-> > 
-> 
-> Well, the checkpatch warning is new, so I want to find out if and make 
-> sure that the involved developers are generally okay getting those patches 
-> or if there is a better way handling those patches to MAINTAINERS.
-> 
-> I do not expect that there are too many further cases of this warning 
-> appearing soon in linux-next now that checkpatch already warns about it.
+Hi Weiyi,
 
-Hey Lukas.
+Thank you for your patch. You should cc devicetree@vger.kernel.org, otherwise
+this patch might be ignored.
 
-Don't expect _too_ much as checkpatch has for a long time
-has done add/delete/move tests for files and emitted a
-"Does MAINTAINERS need updating" message that most have
-ignored or not seen as many patches are submitted without
-running checkpatch.
+On 6/5/20 10:15, Weiyi Lu wrote:
+> Add power dt-bindings of MT8183 and introduces "BASIC" and
+> "SUBSYS" clock types in binding document.
+> The "BASIC" type is compatible to the original power control with
+> clock name [a-z]+[0-9]*, e.g. mm, vpu1.
+> The "SUBSYS" type is used for bus protection control with clock
+> name [a-z]+-[0-9]+, e.g. isp-0, cam-1.
+> And add an optional smi-comm property for phandle to smi-common
+> controller.
+> 
+> Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+> ---
+>  .../devicetree/bindings/soc/mediatek/scpsys.txt    | 21 ++++++++++++++---
+>  include/dt-bindings/power/mt8183-power.h           | 26 ++++++++++++++++++++++
+>  2 files changed, 44 insertions(+), 3 deletions(-)
+>  create mode 100644 include/dt-bindings/power/mt8183-power.h
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+> index 2bc3677..5424e66 100644
+> --- a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+> +++ b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+> @@ -15,6 +15,7 @@ power/power-domain.yaml. It provides the power domains defined in
+>  - include/dt-bindings/power/mt2701-power.h
+>  - include/dt-bindings/power/mt2712-power.h
+>  - include/dt-bindings/power/mt7622-power.h
+> +- include/dt-bindings/power/mt8183-power.h
+>  
+>  Required properties:
+>  - compatible: Should be one of:
+> @@ -27,12 +28,16 @@ Required properties:
+>  	- "mediatek,mt7623a-scpsys": For MT7623A SoC
+>  	- "mediatek,mt7629-scpsys", "mediatek,mt7622-scpsys": For MT7629 SoC
+>  	- "mediatek,mt8173-scpsys"
+> +	- "mediatek,mt8183-scpsys"
+>  - #power-domain-cells: Must be 1
+>  - reg: Address range of the SCPSYS unit
+>  - infracfg: must contain a phandle to the infracfg controller
+> -- clock, clock-names: clocks according to the common clock binding.
+> -                      These are clocks which hardware needs to be
+> -                      enabled before enabling certain power domains.
+> +- clock, clock-names: Clocks according to the common clock binding.
+> +                      Some SoCs have to groups of clocks.
+> +                      BASIC clocks need to be enabled before enabling the
+> +                      corresponding power domain.
+> +                      SUBSYS clocks need to be enabled before releasing the
+> +                      bus protection.
+>  	Required clocks for MT2701 or MT7623: "mm", "mfg", "ethif"
+>  	Required clocks for MT2712: "mm", "mfg", "venc", "jpgdec", "audio", "vdec"
+>  	Required clocks for MT6765: MUX: "mm", "mfg"
+> @@ -43,6 +48,15 @@ Required properties:
+>  	Required clocks for MT7622 or MT7629: "hif_sel"
+>  	Required clocks for MT7623A: "ethif"
+>  	Required clocks for MT8173: "mm", "mfg", "venc", "venc_lt"
+> +	Required clocks for MT8183: BASIC: "audio", "mfg", "mm", "cam", "isp",
+> +					   "vpu", "vpu1", "vpu2", "vpu3"
+> +				    SUBSYS: "mm-0", "mm-1", "mm-2", "mm-3",
+> +					    "mm-4", "mm-5", "mm-6", "mm-7",
+> +					    "mm-8", "mm-9", "isp-0", "isp-1",
+> +					    "cam-0", "cam-1", "cam-2", "cam-3",
+> +					    "cam-4", "cam-5", "cam-6", "vpu-0",
+> +					    "vpu-1", "vpu-2", "vpu-3", "vpu-4",
+> +					    "vpu-5"
+>  
+>  Optional properties:
+>  - vdec-supply: Power supply for the vdec power domain
+> @@ -55,6 +69,7 @@ Optional properties:
+>  - mfg_async-supply: Power supply for the mfg_async power domain
+>  - mfg_2d-supply: Power supply for the mfg_2d power domain
+>  - mfg-supply: Power supply for the mfg power domain
+> +- smi_comm: a phandle to the smi-common controller
 
 
+I think that in device-tree hyphen are preferred and kind of a must for new
+properties, also I think you should prefix this property with "mediatek,". Can I
+suggest you to use "mediatek,smi" like is done in the mediatek,smi-larb binding?
+AFAICS is the same phandle right?
+
+Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt:
+- mediatek,smi : a phandle to the smi_common node.
+
+
+>  
+>  Example:
+>  
+> diff --git a/include/dt-bindings/power/mt8183-power.h b/include/dt-bindings/power/mt8183-power.h
+> new file mode 100644
+> index 0000000..d6b25f8
+> --- /dev/null
+> +++ b/include/dt-bindings/power/mt8183-power.h
+> @@ -0,0 +1,26 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2018 MediaTek Inc.
+
+You probably want to update the copyright to 2020.
+
+> + * Author: Weiyi Lu <weiyi.lu@mediatek.com>
+> + */
+> +
+> +#ifndef _DT_BINDINGS_POWER_MT8183_POWER_H
+> +#define _DT_BINDINGS_POWER_MT8183_POWER_H
+> +
+> +#define MT8183_POWER_DOMAIN_AUDIO	0
+> +#define MT8183_POWER_DOMAIN_CONN	1
+> +#define MT8183_POWER_DOMAIN_MFG_ASYNC	2
+> +#define MT8183_POWER_DOMAIN_MFG		3
+> +#define MT8183_POWER_DOMAIN_MFG_CORE0	4
+> +#define MT8183_POWER_DOMAIN_MFG_CORE1	5
+> +#define MT8183_POWER_DOMAIN_MFG_2D	6
+> +#define MT8183_POWER_DOMAIN_DISP	7
+> +#define MT8183_POWER_DOMAIN_CAM		8
+> +#define MT8183_POWER_DOMAIN_ISP		9
+> +#define MT8183_POWER_DOMAIN_VDEC	10
+> +#define MT8183_POWER_DOMAIN_VENC	11
+> +#define MT8183_POWER_DOMAIN_VPU_TOP	12
+> +#define MT8183_POWER_DOMAIN_VPU_CORE0	13
+> +#define MT8183_POWER_DOMAIN_VPU_CORE1	14
+> +
+> +#endif /* _DT_BINDINGS_POWER_MT8183_POWER_H */
+> 
