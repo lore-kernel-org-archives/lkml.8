@@ -2,60 +2,61 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 546FCC47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF88C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3641120735
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:50:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D75206F9
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:50:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ej7fOABB"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="M5y8/s3S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbgEFFuW (ORCPT
+        id S1727808AbgEFFub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 01:50:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53722 "EHLO
+        Wed, 6 May 2020 01:50:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726761AbgEFFuV (ORCPT
+        by vger.kernel.org with ESMTP id S1726924AbgEFFu3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 01:50:21 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5F04C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 22:50:21 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id v63so450364pfb.10
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 22:50:21 -0700 (PDT)
+        Wed, 6 May 2020 01:50:29 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9935C061A10
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 22:50:28 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id j21so613775pgb.7
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 22:50:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=POceMM7hG1Wtztbcwf3G6dremJIzPAmuZKv3zO2DdE0=;
-        b=Ej7fOABBLfr1SN0apV87KeMrwvbvxDU3i1UCROPXswmo0RGviza3edMx/g/ub/mlAC
-         6gOfyEncqNbhatR7uPY4Kb7OwU8Zwz7gAo4mNkPj8DQ0s+PW5zKLJGuglOQOv971ivPm
-         cm6gxqpNX715Mxq650ozR+wi9DzQEuEU2gZ9Y=
+        bh=xNX2Jw3bggOqG+5nYPa2uqxysBzOfcRV74MkeaFU514=;
+        b=M5y8/s3SulY3lzBKvRMnyiCfcyROkGDnu1LS8AmOMndWRhfVrQGhKS1f75nwyUlj2m
+         LN9x9SSQFlx2M59Jjjbiskhq82qGNXgQ7DfVz/16fbK5RjlBzmk+aiEDlZlLafSVsv5o
+         rtfjRNWfhaukA4aRZlleZGCroUu8cDGqfkUn0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=POceMM7hG1Wtztbcwf3G6dremJIzPAmuZKv3zO2DdE0=;
-        b=azg4DiWqLi7x30Jgvuf3UEe1FAo/9iUWlL0kAshUx7TeWFSR56+YW+DoPCGopS95Eo
-         A6ymeMj8ABcOYEQSOWptZlZP3n200qY3G04ZzkTpYafo1wLi+3B6QdXsA1MsJJslgqhn
-         cKoXO5b32tuuf7pmWxBP0zO+/hxMpfiS8P3fffP1/tjtM3idVxTXrcHVtqXRBhdEs830
-         fESkTNsy4n+H9qpa+cU7x3ZrPuVS3OqJ4VyiQOPx110smllVlbRULUd+bqoK/bnX0XFV
-         Rd3ihPrvMawBePkVzLgzEzsqrVzgtqWHL5fW1Tfe1gmPXRzmPQWrEfnWlEj1EfP4Y/lo
-         fFNA==
-X-Gm-Message-State: AGi0PuZuIPEiYEOmA8A6waEC2b4vInH5vvrBSkWSZNlQyT/Zc0oAsqhm
-        dAz+ebi4C+MJ1LA9NMZFQYwkibLIsCc=
-X-Google-Smtp-Source: APiQypLs34OzIA/qNT4zrjxM2MJ+J7wyvZaKQQqG+9wBc94UWI+Z0oBDVEUVVCUVLxdScKVA338gbg==
-X-Received: by 2002:a62:ae13:: with SMTP id q19mr6772243pff.310.1588744220983;
-        Tue, 05 May 2020 22:50:20 -0700 (PDT)
+        bh=xNX2Jw3bggOqG+5nYPa2uqxysBzOfcRV74MkeaFU514=;
+        b=NMwA3YEPHGz2/Lk/H0pTuBt92VcPbCq6+NT/MKWr/ugipjUbGVbKW4K+8ZG7NxGEcD
+         hOiMUkvtS6fYC1/8xQ3tRf60gbp9BuLMxKqtfKOtWwv5b69jdBt5mpFKudGzk0su8y6B
+         A1ywMHJ7scAn4dadeasKLINe9EqfoDnnxBY52KrxPGs3ZXwrD7GrA3+hNwg3Dv9slqt3
+         H6PM05NSFC5YlFE5BQWKhGF/oYnzUqQbLzB9TiA9whDx0jPMXLWW45BiZuj+AfK7Yx76
+         or7RuQLRLDNDajMh1C0zGT20aUTNplGAuT4dgigk9Uh9AnjpvMBrEZQRpvsGQySNFghX
+         QBzA==
+X-Gm-Message-State: AGi0Pua+SEABNGE6NDLyXOXvHX4VbeqYqGMPuxLSK0vS8gRa27re5bAa
+        ID9fL+xhcAAlPm+ij0tlUYpV8KOnYLY=
+X-Google-Smtp-Source: APiQypKlc/nYndVnKIEUfEb5mcot4tPrbEozcvijAAg8qzicqRQLv80bi22dUdsqMQmRh5vI0S6icA==
+X-Received: by 2002:a63:7214:: with SMTP id n20mr5863410pgc.437.1588744227993;
+        Tue, 05 May 2020 22:50:27 -0700 (PDT)
 Received: from localhost ([2401:fa00:9:14:a92f:c47d:76a8:b09e])
-        by smtp.gmail.com with ESMTPSA id f30sm3870470pje.29.2020.05.05.22.50.17
+        by smtp.gmail.com with ESMTPSA id r31sm730629pgl.86.2020.05.05.22.50.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2020 22:50:20 -0700 (PDT)
+        Tue, 05 May 2020 22:50:27 -0700 (PDT)
 From:   Eizan Miyamoto <eizan@chromium.org>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Eizan Miyamoto <eizan@chromium.org>,
@@ -66,9 +67,9 @@ Cc:     Eizan Miyamoto <eizan@chromium.org>,
         Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
         linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
         linux-mediatek@lists.infradead.org
-Subject: [PATCH v2 2/5] [media] mtk-mdp: handle vb2_dma_contig_set_max_seg_size errors during probe
-Date:   Wed,  6 May 2020 15:49:17 +1000
-Message-Id: <20200506154832.v2.2.If340fa06d86053aaea25841b36741fe69c3126dd@changeid>
+Subject: [PATCH v2 3/5] [media] mtk-mdp: handle vpu_wdt_reg_handler() errors during probe
+Date:   Wed,  6 May 2020 15:49:18 +1000
+Message-Id: <20200506154832.v2.3.Ia8efd7905e2fcfc81f547e27a51f06373624b3da@changeid>
 X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
 In-Reply-To: <20200506054920.109738-1-eizan@chromium.org>
 References: <20200506054920.109738-1-eizan@chromium.org>
@@ -88,26 +89,28 @@ Signed-off-by: Eizan Miyamoto <eizan@chromium.org>
 Changes in v1:
 - remove unnecessary error handling labels in favor of err_m2m_register
 
- drivers/media/platform/mtk-mdp/mtk_mdp_core.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/media/platform/mtk-mdp/mtk_mdp_core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-index aeaed2cf4458..9b24b8d46eb7 100644
+index 9b24b8d46eb7..17d155219ba2 100644
 --- a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
 +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-@@ -193,7 +193,11 @@ static int mtk_mdp_probe(struct platform_device *pdev)
+@@ -188,8 +188,12 @@ static int mtk_mdp_probe(struct platform_device *pdev)
+ 	}
  
- 	platform_set_drvdata(pdev, mdp);
- 
--	vb2_dma_contig_set_max_seg_size(&pdev->dev, DMA_BIT_MASK(32));
-+	ret = vb2_dma_contig_set_max_seg_size(&pdev->dev, DMA_BIT_MASK(32));
+ 	mdp->vpu_dev = vpu_get_plat_device(pdev);
+-	vpu_wdt_reg_handler(mdp->vpu_dev, mtk_mdp_reset_handler, mdp,
+-			    VPU_RST_MDP);
++	ret = vpu_wdt_reg_handler(mdp->vpu_dev, mtk_mdp_reset_handler, mdp,
++				  VPU_RST_MDP);
 +	if (ret) {
-+		dev_err(&pdev->dev, "Failed to set vb2 dma mag seg size\n");
++		dev_err(&pdev->dev, "Failed to register reset handler\n");
 +		goto err_m2m_register;
 +	}
  
- 	pm_runtime_enable(dev);
- 	dev_dbg(dev, "mdp-%d registered successfully\n", mdp->id);
+ 	platform_set_drvdata(pdev, mdp);
+ 
 -- 
 2.26.2.526.g744177e7f7-goog
 
