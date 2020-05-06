@@ -2,148 +2,147 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C48BC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 929FAC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB25B206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:40:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7224820B1F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:40:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rhjyr4lD"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="s1cPznPo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729568AbgEFPka (ORCPT
+        id S1729610AbgEFPke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:40:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32964 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728994AbgEFPk3 (ORCPT
+        Wed, 6 May 2020 11:40:34 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:32956 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729573AbgEFPkd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:40:29 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27EF6C061A0F;
-        Wed,  6 May 2020 08:40:29 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id g4so2881564ljl.2;
-        Wed, 06 May 2020 08:40:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=0VvaK4qV5Etc72CR3O+s6dMnkCvk9HbAf4bkxXWnjEk=;
-        b=rhjyr4lDLoMgtOYB2r0o+OivmiLZx9dTkjsQDZagRb9Q7LOphEreVu7j948kVIskqU
-         pB00zCfLrigfNDjQPvnSbpEA/3JH+bsvdictzcAByx3TSHu5HT3KKScX9HpYZoqbNRrQ
-         pIgLDvC0dsm8atptTDJKGNXibJCC/ogo956lYPMcAG5wHID8weG0LsxzEImi0VYMPBHQ
-         mM9r4Le4mdnH4VSA57t08E/b/8dRN6yq82Xwll0cEUhf/hWBrGgn7ywNMUTwIYFkN66c
-         Po4MLektX/wUlAOBRPGHIVL+M2z724VA17kk0iDqCb+m30OIJE/yi3wHB3A8pFWyvZNM
-         PGzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0VvaK4qV5Etc72CR3O+s6dMnkCvk9HbAf4bkxXWnjEk=;
-        b=tUXSgALTrehTRxwFxvJ1AChdI0Tqj7OwQtIpcz15sGjhp/oK/udaJHBvWtsHZU0h4u
-         ghRKBKRaLznpMi3NN4du0zVKlNpglNm79JJZ/ZQAcYPS5i2NBPN+tS6ymFPvYqXGPpWY
-         gX7ooIxaiREgrsZ4NsIyn0zzbpXR6WEKH0QWGSCqY8koXO+2pKoASNBsH62SqtbKve4U
-         0TKQsPQ/WRljarphI5de8hM1inklSljtxhQYgmHApSYyUOfiSKMPSel93dMqUqWXaEhf
-         4IYmI/W9o9NCjxO9dF8ZccaonCWhpCfLt/Vic+95jP90l0puDByKR30PBS45j7vjIkN4
-         FciA==
-X-Gm-Message-State: AGi0PubSUzXHi0yiZQ/vIRpNyzNcbSBNm4RZCzmgn5bQQsshWDbS88HL
-        XSVvvD22M5o/Xw6FKzdphmc=
-X-Google-Smtp-Source: APiQypJwNgzw4wq+U0P/io4z1Terb+WwllbnYJIXZLSDc1WfL/Fy5HRVyoHY9h17kjjk+8rpPHfUvw==
-X-Received: by 2002:a2e:6a08:: with SMTP id f8mr5671980ljc.8.1588779627589;
-        Wed, 06 May 2020 08:40:27 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id m15sm1557297lji.21.2020.05.06.08.40.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 May 2020 08:40:26 -0700 (PDT)
-Subject: Re: [PATCH] phy: tegra: Use PTR_ERR_OR_ZERO() to simplify code
-To:     Vidya Sagar <vidyas@nvidia.com>,
-        Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        Julia Lawall <julia.lawall@inria.fr>
-References: <20200505150058.17674-1-aishwaryarj100@gmail.com>
- <be185976-3d12-f49d-6131-39f5075e0190@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <d3397bc6-099e-591a-ff60-5e67da478526@gmail.com>
-Date:   Wed, 6 May 2020 18:40:25 +0300
+        Wed, 6 May 2020 11:40:33 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046Fbepv058881;
+        Wed, 6 May 2020 15:39:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=u9YRqhjsd5q90YS3XgAURj//X9gBQ/Yx8tv2Q2a0T94=;
+ b=s1cPznPoJAQuids8kpAzAPQOcoloJWuFkDIu4ui8VWolcvJjpJ7S2VX/Ib8KW2QMQRZM
+ 9I5hvxrwtwrVpGyNt/PTjTg5iJ0myvpbc1kXkT/vI5aDy31QqcfrmibxYPM9kXjR4DgD
+ rLZSM894fa744Bw0EtoxFd46sqp9hIbhx+4VoZ8EvVWJ3zNG4KwX05xF55VruAN3Cy9m
+ UXEkfOdYDOTjYR2mcH5CB1sYA62TXOuiWGUvfrfc2Uev/bBgeWgTvT3mV+N7ayWjWl4V
+ UvhxpMlhedsizNXdoyaI5ep93d5IeVSNJuXlndYC9s139GyZd+TOX84D4X1mmz24Aj4M NA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 30s09rb5vn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 May 2020 15:39:44 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046FbTTK156529;
+        Wed, 6 May 2020 15:39:44 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 30sjnjtw2r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 May 2020 15:39:43 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 046FdgZT013634;
+        Wed, 6 May 2020 15:39:42 GMT
+Received: from linux-1.home (/10.175.10.30)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 06 May 2020 08:39:42 -0700
+Subject: Re: [patch V4 part 1 15/36] kprobes: Lock kprobe_mutex while showing
+ kprobe_blacklist
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+References: <20200505131602.633487962@linutronix.de>
+ <20200505134059.571125195@linutronix.de>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Message-ID: <6cc6b979-c5e5-6898-5879-ba5dac413e61@oracle.com>
+Date:   Wed, 6 May 2020 17:38:32 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <be185976-3d12-f49d-6131-39f5075e0190@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200505134059.571125195@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
+ mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005060125
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1015 suspectscore=0
+ priorityscore=1501 malwarescore=0 mlxlogscore=999 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005060125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-06.05.2020 14:47, Vidya Sagar пишет:
-> Thanks for pushing this change.
-> I'm fine with this change as it is attempting to change only the last
-> occurrence of the (IS_ERR(...)) + PTR_ERR combination.
-> But, this code was initially written with PTR_ERR_OR_ZERO() itself but
-> later changed to use (IS_ERR(...)) + PTR_ERR based on the review comment
-> from Dmitry Osipenko ( https://lkml.org/lkml/2019/6/20/1457 )
+
+On 5/5/20 3:16 PM, Thomas Gleixner wrote:
+> From: Masami Hiramatsu <mhiramat@kernel.org>
 > 
-> Adding Dmitry as well to review the change.
+> Lock kprobe_mutex while showing kprobe_blacklist to prevent updating the
+> kprobe_blacklist.
 > 
-> I'm fine with this change.
-> Reviewed-by: Vidya Sagar <vidyas@nvidia.com>
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Link: https://lkml.kernel.org/r/158523417665.24735.10253198878535635600.stgit@devnote2
 > 
-> On 05-May-20 8:30 PM, Aishwarya Ramakrishnan wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> PTR_ERR_OR_ZERO contains if(IS_ERR(...)) + PTR_ERR.
->>
->> Generated by: scripts/coccinelle/api/ptr_ret.cocci
->>
->> Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
->> ---
->>   drivers/phy/tegra/phy-tegra194-p2u.c | 5 +----
->>   1 file changed, 1 insertion(+), 4 deletions(-)
->>
->> diff --git a/drivers/phy/tegra/phy-tegra194-p2u.c
->> b/drivers/phy/tegra/phy-tegra194-p2u.c
->> index 7042bed9feaa..42394d27f4cb 100644
->> --- a/drivers/phy/tegra/phy-tegra194-p2u.c
->> +++ b/drivers/phy/tegra/phy-tegra194-p2u.c
->> @@ -92,10 +92,7 @@ static int tegra_p2u_probe(struct platform_device
->> *pdev)
->>          phy_set_drvdata(generic_phy, phy);
->>
->>          phy_provider = devm_of_phy_provider_register(dev,
->> of_phy_simple_xlate);
->> -       if (IS_ERR(phy_provider))
->> -               return PTR_ERR(phy_provider);
->> -
->> -       return 0;
->> +       return PTR_ERR_OR_ZERO(phy_provider);
->>   }
+> ---
+>   kernel/kprobes.c |    8 +++++++-
+>   1 file changed, 7 insertions(+), 1 deletion(-)
 
-Quite some people think that such a change doesn't bring any benefits,
-it doesn't help readability of the code, it even makes harder to read
-the code for a human being.
+Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 
-IIRC, there were some requests in the past to remove that cocci rule to
-stop such auto-generated patches to re-occur over and over again.
+alex.
 
-The PTR_ERR_OR_ZERO is good to use in a cases where it's not returned
-directly, like this:
-
-phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-err = PTR_ERR_OR_ZERO(phy_provider);
-if (err)
-	return err;
-
-return 0;
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -2426,6 +2426,7 @@ static const struct file_operations debu
+>   /* kprobes/blacklist -- shows which functions can not be probed */
+>   static void *kprobe_blacklist_seq_start(struct seq_file *m, loff_t *pos)
+>   {
+> +	mutex_lock(&kprobe_mutex);
+>   	return seq_list_start(&kprobe_blacklist, *pos);
+>   }
+>   
+> @@ -2452,10 +2453,15 @@ static int kprobe_blacklist_seq_show(str
+>   	return 0;
+>   }
+>   
+> +static void kprobe_blacklist_seq_stop(struct seq_file *f, void *v)
+> +{
+> +	mutex_unlock(&kprobe_mutex);
+> +}
+> +
+>   static const struct seq_operations kprobe_blacklist_seq_ops = {
+>   	.start = kprobe_blacklist_seq_start,
+>   	.next  = kprobe_blacklist_seq_next,
+> -	.stop  = kprobe_seq_stop,	/* Reuse void function */
+> +	.stop  = kprobe_blacklist_seq_stop,
+>   	.show  = kprobe_blacklist_seq_show,
+>   };
+>   
+> 
