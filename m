@@ -2,29 +2,29 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B60CC4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B37C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAB76208CA
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:44:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 866D7208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:44:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729447AbgEFQob (ORCPT
+        id S1730270AbgEFQod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:44:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:41014 "EHLO foss.arm.com"
+        Wed, 6 May 2020 12:44:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:41042 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729819AbgEFQoX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:44:23 -0400
+        id S1730126AbgEFQo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 12:44:27 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB4C81042;
-        Wed,  6 May 2020 09:44:22 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC6181042;
+        Wed,  6 May 2020 09:44:25 -0700 (PDT)
 Received: from usa.arm.com (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8CD1E3F305;
-        Wed,  6 May 2020 09:44:21 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9E0DF3F305;
+        Wed,  6 May 2020 09:44:24 -0700 (PDT)
 From:   Sudeep Holla <sudeep.holla@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Sudeep Holla <sudeep.holla@arm.com>,
@@ -35,9 +35,9 @@ Cc:     Sudeep Holla <sudeep.holla@arm.com>,
         Steven Price <steven.price@arm.com>,
         linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         harb@amperecomputing.com
-Subject: [PATCH v3 3/7] firmware: smccc: Add the definition for SMCCCv1.2 version/error codes
-Date:   Wed,  6 May 2020 17:44:07 +0100
-Message-Id: <20200506164411.3284-4-sudeep.holla@arm.com>
+Subject: [PATCH v3 5/7] firmware: smccc: Refactor SMCCC specific bits into separate file
+Date:   Wed,  6 May 2020 17:44:09 +0100
+Message-Id: <20200506164411.3284-6-sudeep.holla@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200506164411.3284-1-sudeep.holla@arm.com>
 References: <20200506164411.3284-1-sudeep.holla@arm.com>
@@ -46,44 +46,210 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the definition for SMCCC v1.2 version and new error code added.
-While at it, also add a note that ARM DEN 0070A is deprecated and is
-now merged into the main SMCCC specification(ARM DEN 0028C).
+In order to add newer SMCCC v1.1+ functionality and to avoid cluttering
+PSCI firmware driver with SMCCC bits, let us move the SMCCC specific
+details under drivers/firmware/smccc/smccc.c
 
-Reviewed-by: Steven Price <steven.price@arm.com>
+We can also drop conduit and smccc_version from psci_operations structure
+as SMCCC was the sole user and now it maintains those.
+
+No functionality change in this patch though.
+
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- include/linux/arm-smccc.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ MAINTAINERS                     |  9 +++++++++
+ drivers/firmware/Makefile       |  3 ++-
+ drivers/firmware/psci/psci.c    | 19 ++++---------------
+ drivers/firmware/smccc/Makefile |  3 +++
+ drivers/firmware/smccc/smccc.c  | 26 ++++++++++++++++++++++++++
+ include/linux/arm-smccc.h       | 11 +++++++++++
+ include/linux/psci.h            |  2 --
+ 7 files changed, 55 insertions(+), 18 deletions(-)
+ create mode 100644 drivers/firmware/smccc/Makefile
+ create mode 100644 drivers/firmware/smccc/smccc.c
 
+Hi Mark, Lorenzo,
+
+I have replicated PSCI entry in MAINTAINERS file and added myself to
+for SMCCC entry. If you prefer I can merge it under PSCI. Let me know
+your preference along with other review comments.
+
+Regards,
+Sudeep
+
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2926327e4976..f32b0dfa49be 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15474,6 +15474,15 @@ M:	Nicolas Pitre <nico@fluxnic.net>
+ S:	Odd Fixes
+ F:	drivers/net/ethernet/smsc/smc91x.*
+ 
++SECURE MONITOR CALL(SMC) CALLING CONVENTION (SMCCC)
++M:	Mark Rutland <mark.rutland@arm.com>
++M:	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
++M:	Sudeep Holla <sudeep.holla@arm.com>
++L:	linux-arm-kernel@lists.infradead.org
++S:	Maintained
++F:	drivers/firmware/smccc/
++F:	include/linux/arm-smccc.h
++
+ SMIA AND SMIA++ IMAGE SENSOR DRIVER
+ M:	Sakari Ailus <sakari.ailus@linux.intel.com>
+ L:	linux-media@vger.kernel.org
+diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
+index e9fb838af4df..99510be9f5ed 100644
+--- a/drivers/firmware/Makefile
++++ b/drivers/firmware/Makefile
+@@ -23,12 +23,13 @@ obj-$(CONFIG_TRUSTED_FOUNDATIONS) += trusted_foundations.o
+ obj-$(CONFIG_TURRIS_MOX_RWTM)	+= turris-mox-rwtm.o
+ 
+ obj-$(CONFIG_ARM_SCMI_PROTOCOL)	+= arm_scmi/
+-obj-y				+= psci/
+ obj-y				+= broadcom/
+ obj-y				+= meson/
+ obj-$(CONFIG_GOOGLE_FIRMWARE)	+= google/
+ obj-$(CONFIG_EFI)		+= efi/
+ obj-$(CONFIG_UEFI_CPER)		+= efi/
+ obj-y				+= imx/
++obj-y				+= psci/
++obj-y				+= smccc/
+ obj-y				+= tegra/
+ obj-y				+= xilinx/
+diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+index 6a56d7196697..92013ecc2d9e 100644
+--- a/drivers/firmware/psci/psci.c
++++ b/drivers/firmware/psci/psci.c
+@@ -46,25 +46,14 @@
+  * require cooperation with a Trusted OS driver.
+  */
+ static int resident_cpu = -1;
++struct psci_operations psci_ops;
++static enum arm_smccc_conduit psci_conduit = SMCCC_CONDUIT_NONE;
+ 
+ bool psci_tos_resident_on(int cpu)
+ {
+ 	return cpu == resident_cpu;
+ }
+ 
+-struct psci_operations psci_ops = {
+-	.conduit = SMCCC_CONDUIT_NONE,
+-	.smccc_version = ARM_SMCCC_VERSION_1_0,
+-};
+-
+-enum arm_smccc_conduit arm_smccc_1_1_get_conduit(void)
+-{
+-	if (psci_ops.smccc_version < ARM_SMCCC_VERSION_1_1)
+-		return SMCCC_CONDUIT_NONE;
+-
+-	return psci_ops.conduit;
+-}
+-
+ typedef unsigned long (psci_fn)(unsigned long, unsigned long,
+ 				unsigned long, unsigned long);
+ static psci_fn *invoke_psci_fn;
+@@ -242,7 +231,7 @@ static void set_conduit(enum arm_smccc_conduit conduit)
+ 		WARN(1, "Unexpected PSCI conduit %d\n", conduit);
+ 	}
+ 
+-	psci_ops.conduit = conduit;
++	psci_conduit = conduit;
+ }
+ 
+ static int get_set_conduit_method(struct device_node *np)
+@@ -412,7 +401,7 @@ static void __init psci_init_smccc(void)
+ 		u32 ret;
+ 		ret = invoke_psci_fn(ARM_SMCCC_VERSION_FUNC_ID, 0, 0, 0);
+ 		if (ret >= ARM_SMCCC_VERSION_1_1) {
+-			psci_ops.smccc_version = ret;
++			arm_smccc_version_init(ret, psci_conduit);
+ 			ver = ret;
+ 		}
+ 	}
+diff --git a/drivers/firmware/smccc/Makefile b/drivers/firmware/smccc/Makefile
+new file mode 100644
+index 000000000000..6f369fe3f0b9
+--- /dev/null
++++ b/drivers/firmware/smccc/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++obj-$(CONFIG_HAVE_ARM_SMCCC_DISCOVERY)	+= smccc.o
+diff --git a/drivers/firmware/smccc/smccc.c b/drivers/firmware/smccc/smccc.c
+new file mode 100644
+index 000000000000..488699aae24f
+--- /dev/null
++++ b/drivers/firmware/smccc/smccc.c
+@@ -0,0 +1,26 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2020 Arm Limited
++ */
++
++#define pr_fmt(fmt) "smccc: " fmt
++
++#include <linux/arm-smccc.h>
++
++static u32 smccc_version = ARM_SMCCC_VERSION_1_0;
++static enum arm_smccc_conduit smccc_conduit = SMCCC_CONDUIT_NONE;
++
++void __init arm_smccc_version_init(u32 version, enum arm_smccc_conduit conduit)
++{
++	smccc_version = version;
++	smccc_conduit = conduit;
++}
++
++enum arm_smccc_conduit arm_smccc_1_1_get_conduit(void)
++{
++	if (smccc_version < ARM_SMCCC_VERSION_1_1)
++		return SMCCC_CONDUIT_NONE;
++
++	return smccc_conduit;
++}
++
 diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
-index 6c1d1eda3be4..9d9a2e42e919 100644
+index 9d9a2e42e919..11fb20bfa8f7 100644
 --- a/include/linux/arm-smccc.h
 +++ b/include/linux/arm-smccc.h
-@@ -56,6 +56,7 @@
+@@ -5,6 +5,7 @@
+ #ifndef __LINUX_ARM_SMCCC_H
+ #define __LINUX_ARM_SMCCC_H
  
- #define ARM_SMCCC_VERSION_1_0		0x10000
- #define ARM_SMCCC_VERSION_1_1		0x10001
-+#define ARM_SMCCC_VERSION_1_2		0x10002
- 
- #define ARM_SMCCC_VERSION_FUNC_ID					\
- 	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,				\
-@@ -314,10 +315,14 @@ asmlinkage void __arm_smccc_hvc(unsigned long a0, unsigned long a1,
-  */
- #define arm_smccc_1_1_hvc(...)	__arm_smccc_1_1(SMCCC_HVC_INST, __VA_ARGS__)
- 
--/* Return codes defined in ARM DEN 0070A */
-+/*
-+ * Return codes defined in ARM DEN 0070A
-+ * ARM DEN 0070A is now merged/consolidated into ARM DEN 0028C
-+ */
- #define SMCCC_RET_SUCCESS			0
- #define SMCCC_RET_NOT_SUPPORTED			-1
- #define SMCCC_RET_NOT_REQUIRED			-2
-+#define SMCCC_RET_INVALID_PARAMETER		-3
++#include <linux/init.h>
+ #include <uapi/linux/const.h>
  
  /*
-  * Like arm_smccc_1_1* but always returns SMCCC_RET_NOT_SUPPORTED.
+@@ -89,6 +90,16 @@ enum arm_smccc_conduit {
+ 	SMCCC_CONDUIT_HVC,
+ };
+ 
++/**
++ * arm_smccc_version_init() - Sets SMCCC version and conduit
++ * @version: SMCCC version v1.1 or above
++ * @conduit: SMCCC_CONDUIT_SMC or SMCCC_CONDUIT_HVC
++ *
++ * When SMCCCv1.1 or above is not present, defaults to ARM_SMCCC_VERSION_1_0
++ * and SMCCC_CONDUIT_NONE respectively.
++ */
++void __init arm_smccc_version_init(u32 version, enum arm_smccc_conduit conduit);
++
+ /**
+  * arm_smccc_1_1_get_conduit()
+  *
+diff --git a/include/linux/psci.h b/include/linux/psci.h
+index 29bd0671e5bb..14ad9b9ebcd6 100644
+--- a/include/linux/psci.h
++++ b/include/linux/psci.h
+@@ -30,8 +30,6 @@ struct psci_operations {
+ 	int (*affinity_info)(unsigned long target_affinity,
+ 			unsigned long lowest_affinity_level);
+ 	int (*migrate_info_type)(void);
+-	enum arm_smccc_conduit conduit;
+-	u32 smccc_version;
+ };
+ 
+ extern struct psci_operations psci_ops;
 -- 
 2.17.1
 
