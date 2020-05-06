@@ -2,262 +2,109 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90372C38A2A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE51C47257
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6820520736
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:24:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588807496;
-	bh=PRTrDKdE5/UWlqajRQ5UBqsVuVvaRhbdhBZIKDP+RfE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SDKJPEumvaO9N+E7OvezfnUlv+nlNYze5XbtFXMrQkJjf+OArMZVb4u1PjZStbgeP
-	 /W3ujsyQ2zXoj/aUzYpiNGZXCGvvlOMByWqVE/wM/2ApaCeVJJg58tL9PboNIHOBUc
-	 kz4deXZgblJ6VBddyR8YDnYwWvVIPb5tEy49fvMU=
+	by mail.kernel.org (Postfix) with ESMTP id 6862B20746
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:25:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tKbBOLIP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbgEFXYx (ORCPT
+        id S1727816AbgEFXZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 19:24:53 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:50665 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbgEFXYx (ORCPT
+        Wed, 6 May 2020 19:25:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbgEFXZu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 19:24:53 -0400
-Received: by mail-pj1-f66.google.com with SMTP id t9so1800814pjw.0;
-        Wed, 06 May 2020 16:24:51 -0700 (PDT)
+        Wed, 6 May 2020 19:25:50 -0400
+Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D549C061A0F;
+        Wed,  6 May 2020 16:25:50 -0700 (PDT)
+Received: by mail-il1-x135.google.com with SMTP id b18so146319ilf.2;
+        Wed, 06 May 2020 16:25:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+CNkpvoV+7/WGRtPvOLP3NxAkiDmtlvxq7O9LqthmvE=;
+        b=tKbBOLIPghXV1x039iYZ7x+Y1RJC0Q3+9P9/zbjar9hhlkyIVZaNWCRtt+5bpdtpj2
+         2PH3iRDmzDTcwt3YUNleGOprd4FzeRfsZvdTmfV76IQCNfCbkJaCRmwrbWyVqsCJ/kUy
+         5ubqTOshBUAdF9S8YvBtxyr4NbdlkP9poH6og27SiiH3yhaYDIuJQGy4tgJrXbzVUnQQ
+         y+cluAVE3JIOEWAC69AKY0sggp05g9O21cLCxFYCnzkdAIyPsXRLCj+qirmeH1z/5PG0
+         kq0zdTIPkFfiyfHPsDe2PPCh6YNleXoXgTSSmDr36SUGy9d2EjjUEvkl/v8kum+99b0K
+         d7HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uyjs7v1E7X5rVgzIyUeAKPIhZ3ctg8TK9ZgJrbngU+c=;
-        b=VUTz9fox/cd2ldkrDFq6aSvLvVRyAi8OcccPDdMICH+AotwtmAmBMedVnwOWuJ7lFC
-         lagtCiNQgmODdfACJCUj0DL0r6Bfu5hcpuASl2E2WfvklObCpfb63it955J2XdNq/D+a
-         kXhfkhwch9rfsgwB8Z+QyfhvsRJfPBJ9f2O6gtgtQvOvZYE3zvqB+UGvtYItqEaIckwc
-         s73QKTtvoTmv0i4yZUf9c2DI+M4/eZ/cnzpryQyiNO08Z5KnQFDDKwF3CHCV3w+acF3y
-         92neO+OrUypGlFvoNF+pGsYFG8CwYOYaKsA7rOvGOljmjJigLDmkvrRVNyhKrecTM4Z/
-         yzVw==
-X-Gm-Message-State: AGi0PuZRVkIT9xm2ywgf1ghwZpIeTrATa2L/Nhu4qMzA/f5S2V1a3OzV
-        3MQSttsv7DoAtN+QpHQhoqw=
-X-Google-Smtp-Source: APiQypJF7JgwMQGGqc5WoVBRTmeLPQFP3HCAUpgl/HK5RDaLMY4BaPZ3HEiEHMuxcEW8GnpABdKTXg==
-X-Received: by 2002:a17:902:8bc2:: with SMTP id r2mr10733856plo.42.1588807490411;
-        Wed, 06 May 2020 16:24:50 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id r78sm2438478pgr.40.2020.05.06.16.24.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 16:24:48 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 0F275403EA; Wed,  6 May 2020 23:24:48 +0000 (UTC)
-Date:   Wed, 6 May 2020 23:24:48 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Rafael Aquini <aquini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        dyoung@redhat.com, bhe@redhat.com, corbet@lwn.net,
-        keescook@chromium.org, akpm@linux-foundation.org, cai@lca.pw
-Subject: Re: [PATCH] kernel: add panic_on_taint
-Message-ID: <20200506232447.GW11244@42.do-not-panic.com>
-References: <20200506222815.274570-1-aquini@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+CNkpvoV+7/WGRtPvOLP3NxAkiDmtlvxq7O9LqthmvE=;
+        b=cxYqSYqmVw9k5vjdXRs/uTPB+D39ckn29GXoC/tE+s242z5D1QlJAI5EePS94i1MbL
+         kAeC0Sn3QPbE7HT5g+hJuW37O93c8wlh8SFo9lNNQPhABuaFuKA6oA1q2c6DJG3S4TES
+         ZDOYq0yhNMzVBx1K8KDyBQOwRSZ58hqpFpVOtgGaF1dbdthId+LiFGSIH701I0ZLTLJH
+         98WsVAoV2ImMvuYY0FqbsNZxVB2i9MdmqUFY4/4++DsEnxj0B6S0aEvNCy+LPIGKllGt
+         byG4tqd6OlqQWPOp/yC4DWWLSQC1lF19m8IL+YMPEduQSTjz62PKtgKtPijiUHeve5+3
+         vbWA==
+X-Gm-Message-State: AGi0PuYRbEqaJAiL5FXr/1BeUAv3oPTiQv95eIECd3eJbRWkrAPE9Zrl
+        Xx3L3EOve71GEAJpTlai1e7v/7pAxXT0H6v680k=
+X-Google-Smtp-Source: APiQypJd1bvaAZ6xswFa4gdRaiKe8L9dkI6mmjVGE7LVH0QLX2wsxeD9NAWt/rEvRTMYwN6igmGfQNkcIt0aPeN/008=
+X-Received: by 2002:a05:6e02:8ea:: with SMTP id n10mr11858252ilt.87.1588807549127;
+ Wed, 06 May 2020 16:25:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506222815.274570-1-aquini@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <8d29eba045ef18c5489e122b3668afc20431f15d.1588043236.git.baolin.wang7@gmail.com>
+ <4b224e7bb703e15469e5cd79a54f7bc00a790fc5.1588043236.git.baolin.wang7@gmail.com>
+ <CADBw62pDp4NByqNJ+ryUdBUi7GsW3tD8_vSN7iRGekThw0Xo+Q@mail.gmail.com>
+In-Reply-To: <CADBw62pDp4NByqNJ+ryUdBUi7GsW3tD8_vSN7iRGekThw0Xo+Q@mail.gmail.com>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Wed, 6 May 2020 18:25:38 -0500
+Message-ID: <CABb+yY2Pph4EeQtg9xSaCWHqcXr0mVNkrrFYm-E3x3f5xaxygg@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] mailbox: sprd: Add Spreadtrum mailbox driver
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 06:28:15PM -0400, Rafael Aquini wrote:
-> Analogously to the introduction of panic_on_warn, this patch
-> introduces a kernel option named panic_on_taint in order to
-> provide a simple and generic way to stop execution and catch
-> a coredump when the kernel gets tainted by any given taint flag.
-> 
-> This is useful for debugging sessions as it avoids rebuilding
-> the kernel to explicitly add calls to panic() or BUG() into
-> code sites that introduce the taint flags of interest.
-> Another, perhaps less frequent, use for this option would be
-> as a mean for assuring a security policy (in paranoid mode)
-> case where no single taint is allowed for the running system.
-> 
-> Suggested-by: Qian Cai <cai@lca.pw>
-> Signed-off-by: Rafael Aquini <aquini@redhat.com>
-> ---
->  Documentation/admin-guide/kdump/kdump.rst     | 10 ++++++
->  .../admin-guide/kernel-parameters.txt         |  3 ++
->  Documentation/admin-guide/sysctl/kernel.rst   | 36 +++++++++++++++++++
->  include/linux/kernel.h                        |  1 +
->  kernel/panic.c                                |  7 ++++
->  kernel/sysctl.c                               |  7 ++++
->  6 files changed, 64 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-> index ac7e131d2935..de3cf6d377cc 100644
-> --- a/Documentation/admin-guide/kdump/kdump.rst
-> +++ b/Documentation/admin-guide/kdump/kdump.rst
-> @@ -521,6 +521,16 @@ will cause a kdump to occur at the panic() call.  In cases where a user wants
->  to specify this during runtime, /proc/sys/kernel/panic_on_warn can be set to 1
->  to achieve the same behaviour.
->  
-> +Trigger Kdump on add_taint()
-> +============================
-> +
-> +The kernel parameter, panic_on_taint, calls panic() from within add_taint(),
-> +whenever the value set in this bitmask matches with the bit flag being set
-> +by add_taint(). This will cause a kdump to occur at the panic() call.
-> +In cases where a user wants to specify this during runtime,
-> +/proc/sys/kernel/panic_on_taint can be set to a respective bitmask value
-> +to achieve the same behaviour.
-> +
->  Contact
->  =======
->  
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 7bc83f3d9bdf..75c02c1841b2 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -3404,6 +3404,9 @@
->  	panic_on_warn	panic() instead of WARN().  Useful to cause kdump
->  			on a WARN().
->  
-> +	panic_on_taint	panic() when the kernel gets tainted, if the taint
-> +			flag being set matches with the assigned bitmask.
-> +
->  	crash_kexec_post_notifiers
->  			Run kdump after running panic-notifiers and dumping
->  			kmsg. This only for the users who doubt kdump always
-> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-> index 0d427fd10941..5b880102f2e3 100644
-> --- a/Documentation/admin-guide/sysctl/kernel.rst
-> +++ b/Documentation/admin-guide/sysctl/kernel.rst
-> @@ -658,6 +658,42 @@ a kernel rebuild when attempting to kdump at the location of a WARN().
->  = ================================================
->  
->  
-> +panic_on_taint
-> +==============
-> +
-> +Bitmask for calling panic() in the add_taint() path.
-> +This is useful to avoid a kernel rebuild when attempting to
-> +kdump at the insertion of any specific TAINT flags.
-> +When set to 0 (default) add_taint() default behavior is maintained.
-> +
-> +====== ============================
-> +bit  0 TAINT_PROPRIETARY_MODULE
-> +bit  1 TAINT_FORCED_MODULE
-> +bit  2 TAINT_CPU_OUT_OF_SPEC
-> +bit  3 TAINT_FORCED_RMMOD
-> +bit  4 TAINT_MACHINE_CHECK
-> +bit  5 TAINT_BAD_PAGE
-> +bit  6 TAINT_USER
-> +bit  7 TAINT_DIE
-> +bit  8 TAINT_OVERRIDDEN_ACPI_TABLE
-> +bit  9 TAINT_WARN
-> +bit 10 TAINT_CRAP
-> +bit 11 TAINT_FIRMWARE_WORKAROUND
-> +bit 12 TAINT_OOT_MODULE
-> +bit 13 TAINT_UNSIGNED_MODULE
-> +bit 14 TAINT_SOFTLOCKUP
-> +bit 15 TAINT_LIVEPATCH
-> +bit 16 TAINT_AUX
-> +bit 17 TAINT_RANDSTRUCT
-> +bit 18 TAINT_FLAGS_COUNT
-> +====== ============================
-> +
-> +So, for example, to panic if the kernel gets tainted due to
-> +occurrences of bad pages and/or machine check errors, a user can::
-> +
-> +  echo 48 > /proc/sys/kernel/panic_on_taint
-> +
-> +
->  panic_print
->  ===========
->  
-> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-> index 9b7a8d74a9d6..518b9fd381c2 100644
-> --- a/include/linux/kernel.h
-> +++ b/include/linux/kernel.h
-> @@ -528,6 +528,7 @@ extern int panic_on_oops;
->  extern int panic_on_unrecovered_nmi;
->  extern int panic_on_io_nmi;
->  extern int panic_on_warn;
-> +extern unsigned long panic_on_taint;
->  extern int sysctl_panic_on_rcu_stall;
->  extern int sysctl_panic_on_stackoverflow;
->  
-> diff --git a/kernel/panic.c b/kernel/panic.c
-> index b69ee9e76cb2..e2d4771ab911 100644
-> --- a/kernel/panic.c
-> +++ b/kernel/panic.c
-> @@ -44,6 +44,7 @@ static int pause_on_oops_flag;
->  static DEFINE_SPINLOCK(pause_on_oops_lock);
->  bool crash_kexec_post_notifiers;
->  int panic_on_warn __read_mostly;
-> +unsigned long panic_on_taint __read_mostly;
+On Wed, May 6, 2020 at 8:29 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
+>
+> Hi Jassi,
+>
+> On Tue, Apr 28, 2020 at 11:10 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> >
+> > From: Baolin Wang <baolin.wang@unisoc.com>
+> >
+> > The Spreadtrum mailbox controller supports 8 channels to communicate
+> > with MCUs, and it contains 2 different parts: inbox and outbox, which
+> > are used to send and receive messages by IRQ mode.
+> >
+> > Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
+> > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> > ---
+> > Changes from v3:
+> >  - Save the id in mbox_chan.con_priv and remove the 'sprd_mbox_chan'
+> >
+> > Changes from v2:
+> >  - None.
+> >
+> > Changes from v1:
+> >  - None
+>
+> Gentle ping, do you have any other comments? Thanks.
+>
+Yea, I am still not sure about the error returned in send_data().  It
+will either never hit or there will be no easy recovery from it. The
+api expects the driver to tell it the last-tx was done only when it
+can send the next message. (There may be case like sending depend on
+remote, which can't be ensured before hand).
 
-What justification do we have for using __read_mostly here?
-See patch I just sent out, hope that helps.
-
->  int panic_timeout = CONFIG_PANIC_TIMEOUT;
->  EXPORT_SYMBOL_GPL(panic_timeout);
-> @@ -434,6 +435,11 @@ void add_taint(unsigned flag, enum lockdep_ok lockdep_ok)
->  		pr_warn("Disabling lock debugging due to kernel taint\n");
->  
->  	set_bit(flag, &tainted_mask);
-> +
-> +	if (unlikely(tainted_mask & panic_on_taint)) {
-
-unlikely() is telling the merit may not be that strong?
-
-> +		panic_on_taint = 0;
-> +		panic("panic_on_taint set ...");
-> +	}
->  }
->  EXPORT_SYMBOL(add_taint);
->  
-> @@ -675,6 +681,7 @@ core_param(panic, panic_timeout, int, 0644);
->  core_param(panic_print, panic_print, ulong, 0644);
->  core_param(pause_on_oops, pause_on_oops, int, 0644);
->  core_param(panic_on_warn, panic_on_warn, int, 0644);
-> +core_param(panic_on_taint, panic_on_taint, ulong, 0644);
->  core_param(crash_kexec_post_notifiers, crash_kexec_post_notifiers, bool, 0644);
->  
->  static int __init oops_setup(char *s)
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index 8a176d8727a3..b80ab660d727 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -1217,6 +1217,13 @@ static struct ctl_table kern_table[] = {
->  		.extra1		= SYSCTL_ZERO,
->  		.extra2		= SYSCTL_ONE,
->  	},
-> +	{
-> +		.procname	= "panic_on_taint",
-> +		.data		= &panic_on_taint,
-> +		.maxlen		= sizeof(unsigned long),
-> +		.mode		= 0644,
-> +		.proc_handler	= proc_doulongvec_minmax,
-
-proc_doulongvec_minmax supports a min and max, do we want to
-set it so that we have a sanity check for values used? To see
-an example, refer to the file-max entry.
-
-That would allow for example to error our if a value was
-tried but it is a taint flag which we don't support on an older
-kernel.
-
-You know what would be *really* useful as well, is a way to
-cat out our current taint, and perhaps another that spits it
-out in English. This can allow scripts to check that for
-validity, instead of scraping kernel logs.
-
-For instance, I would love to easily just check if TAIN_WARN
-was hit on some tests I am working on, but I don't want to scrape
-the kernel log for this, as I think this is overkill.
-
-  Luis
+thnx
