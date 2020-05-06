@@ -2,139 +2,106 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E64C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79840C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E43320736
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:36:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588790219;
-	bh=FlQcsSvpVxDSnQ8rJGKRBiZ0LksnddG8dlM/MZLBisY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GhoCJgDfPQ6C1RinBJFFiqKryYGTCSVOKK7Ugw5aR0jRYKvKjsOkVjVMv5sdwas16
-	 MZvSaTLGbYfahcGYEcEKQhn90oHvKd6eIHEwj4BzFR423ndSIEzB0XH+P5y+rU5Pcu
-	 LR6FrbZoSCtWDjaoE2J47F4EYwcgqbTDOxVPWdYw=
+	by mail.kernel.org (Postfix) with ESMTP id 56EF22082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:37:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b8R8BXxV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730434AbgEFSg7 (ORCPT
+        id S1730459AbgEFShE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 14:36:59 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:54822 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729757AbgEFSg6 (ORCPT
+        Wed, 6 May 2020 14:37:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60848 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729757AbgEFShD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 14:36:58 -0400
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 046Iai4k018523;
-        Thu, 7 May 2020 03:36:45 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 046Iai4k018523
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1588790205;
-        bh=wbaIwcHbiAi9QFigRcq0m039Les723waOhEs26jAtfw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QGLf0HjL5TBDfB6xTHLb4X/nifP3TPUngISgC+amRyt5/ML+RJQ3n2vOpFueN7eQ5
-         xcfxiFnHD7wrASBMBcs9WRkNQ/Q5OMJgmgjzQiStTM/7cZlxRoIg/zVG19A7iRU+Jg
-         iRPHLFP1GIQxcks1i59Ldp30WkRO5roRHgqSUgIN3I/k1dM//Zw5Y1eP09fsEHfh6I
-         zy7v9mIhSw1lg7AsHjsZJfSHDbuORy8DYMnNI2BSz3Vex75VSHCQkgSFXg7ONFmQvF
-         Q8Eu40aEW5JoIR/v1IvjRuxZ0uq4K9sUEw0giZ1sU1N9ECbRwJWn9AEBN/UF5nwNpx
-         tpOIIKAGfBylw==
-X-Nifty-SrcIP: [209.85.217.42]
-Received: by mail-vs1-f42.google.com with SMTP id x136so1686052vsx.2;
-        Wed, 06 May 2020 11:36:45 -0700 (PDT)
-X-Gm-Message-State: AGi0PubDa/EIqUvR4+CU8ct6JrWWpF99awDP8OawI68nuvXXexu/k5k/
-        Jkmq77WsTfAcKW1XoyyRQtlBMKMU67M0FzYpkVI=
-X-Google-Smtp-Source: APiQypL5iC44zxMIBFb6/RIX6MwxQnnJIKgmBH9DgwLYEb77CykdC9frv1rVNu/5ZxNOx7Zti4t4uypODXIceNkBfo4=
-X-Received: by 2002:a05:6102:3c7:: with SMTP id n7mr8677259vsq.179.1588790204256;
- Wed, 06 May 2020 11:36:44 -0700 (PDT)
+        Wed, 6 May 2020 14:37:03 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 073B5C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 11:37:02 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id x2so347478ilp.13
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 11:37:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+SQS458OK5cEDlJQ1KUWYZtsylPRbVwiBUEmh5tlCnw=;
+        b=b8R8BXxVNvZvYXXiTbMCsRpDZGgc3jvvenhNrJX604kungvLvVRc62AbdokVNOPwtL
+         rsRXS/vrWau/KmBiRYzSlpvSep5rCgHY76rlEU+IaIWgxIJVQD8xU4qFhWi4h7jE3k4n
+         kv6CoyiAlOzD0QtEJHJzwHXn5gozFcjpIgKgAqNJPzuZuYeyy8/i5bDL6JeF+8CjhowN
+         pluwVl8T/69ZoZxC+VTWtoIheJZ+zPmaVgvIQAJFd8SJInmYqtuo6HjWHzJqLinVolMf
+         FUQy4XZkxdOQbHwe870KHTZDpoGKtk3I2c2KBV9lhuwoJ1yHLT59BTow9I9fuSSxU1/s
+         og7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+SQS458OK5cEDlJQ1KUWYZtsylPRbVwiBUEmh5tlCnw=;
+        b=sKdSXyyfwpKEEKzYRzEQhyLIX1ThyIgoHDegtfarrwwAcqkx9yTc3E6o3mReLaeK4M
+         jrEYVsWSGQgaMFPnz/e6PWICJnlAT/9yppI8CEdgPlSGI9KhQO74TzIIwT2EVkv2NOyQ
+         m4hdtV0Ih8fE17IP4lOIIBa06rPV6NYf12Hnem6nJhk4YF6qmIyj8LTeBHp7Nyacf/vK
+         QCfly8fmNB7YRq4HFT8LgPaiWy+5hGLjsrhCWZZutXaG7vKqxY3nQGC8apbm4QHKTKim
+         AOj/5zYxMBlGlQggRhHBEF69NEdv3VoypOqtSVo6OjS83yO975IDE5+2hxOyKMPdw2L7
+         j3IQ==
+X-Gm-Message-State: AGi0Puah0ggNJxOLbG20kUhHbyM8l1lYlXS15rdEyIPuKA+0+h7vvkt6
+        OUGOEuUxFo5U5bkpjCji9vL3fkA9UM7GPYdVzOhh4Q==
+X-Google-Smtp-Source: APiQypKxrod6BbhYUw9n6wJofRB8bXCS7KZdmIPqIP3eXq/lW+vUTQM0VHRaaNA1mibRTxoQfW+qS7CtmtAazGzb6bQ=
+X-Received: by 2002:a92:aa48:: with SMTP id j69mr10794636ili.16.1588790221975;
+ Wed, 06 May 2020 11:37:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200505115420.18765-1-anders.roxell@linaro.org>
-In-Reply-To: <20200505115420.18765-1-anders.roxell@linaro.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 7 May 2020 03:36:08 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR6MeBRhP1A3oc-UVATNN4r2Ru1LUp2=DqiLSKDL9gwOQ@mail.gmail.com>
-Message-ID: <CAK7LNAR6MeBRhP1A3oc-UVATNN4r2Ru1LUp2=DqiLSKDL9gwOQ@mail.gmail.com>
-Subject: Re: [PATCH] scripts: fix deprecated always and hostprogs-y
-To:     Anders Roxell <anders.roxell@linaro.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
+References: <20200504232132.23570-1-daniel.kiper@oracle.com>
+ <20200504232132.23570-13-daniel.kiper@oracle.com> <CACdnJuszO1_aNXdgKt0_5XigC-AeuBT=gKkECszk7xX2p2TpkA@mail.gmail.com>
+ <20200506133306.xrzplgdt4cckgrqc@tomti.i.net-space.pl>
+In-Reply-To: <20200506133306.xrzplgdt4cckgrqc@tomti.i.net-space.pl>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Wed, 6 May 2020 11:36:49 -0700
+Message-ID: <CACdnJuvsx_sRG=TAQzcgF6E+xdpcR_e0QURH6AnBSwJxVbOE1A@mail.gmail.com>
+Subject: Re: [GRUB PATCH RFC 12/18] i386/efi: Report UEFI Secure Boot status
+ to the Linux kernel
+To:     Daniel Kiper <daniel.kiper@oracle.com>
+Cc:     The development of GNU GRUB <grub-devel@gnu.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+        trenchboot-devel@googlegroups.com,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        alexander.burmashev@oracle.com,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "Daniel P. Smith" <dpsmith@apertussolutions.com>,
+        eric.snowberg@oracle.com,
+        Javier Martinez Canillas <javierm@redhat.com>,
+        kanth.ghatraju@oracle.com, konrad.wilk@oracle.com,
+        krystian.hebel@3mdeb.com, lukasz.hawrylko@linux.intel.com,
+        michal.zygowski@3mdeb.com,
+        "Vladimir 'phcoder' Serbinenko" <phcoder@gmail.com>,
+        pirot.krol@3mdeb.com, Peter Jones <pjones@redhat.com>,
+        Ross Philipson <ross.philipson@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 8:54 PM Anders Roxell <anders.roxell@linaro.org> wrote:
+On Wed, May 6, 2020 at 6:33 AM Daniel Kiper <daniel.kiper@oracle.com> wrote:
 >
-> When I did an allmodconfig build the following warning showed up:
+> On Tue, May 05, 2020 at 10:29:05AM -0700, Matthew Garrett wrote:
+> > On Mon, May 4, 2020 at 4:25 PM Daniel Kiper <daniel.kiper@oracle.com> wrote:
+> > >
+> > > Otherwise the kernel does not know its state and cannot enable various
+> > > security features depending on UEFI Secure Boot.
+> >
+> > I think this needs more context. If the kernel is loaded via the EFI
+> > boot stub, the kernel is aware of the UEFI secure boot state. Why
+> > duplicate this functionality in order to avoid the EFI stub?
 >
-> scripts/Makefile.lib:8: 'always' is deprecated. Please use 'always-y' instead
-> scripts/Makefile.lib:12: 'hostprogs-y' and 'hostprogs-m' are deprecated. Please use 'hostprogs' instead
->
-> Rework to use the new 'always-y' and 'hostprogs'.
->
-> Fixes: ee066c3ddf7b ("kbuild: warn if always, hostprogs-y, or hostprogs-m is used")
-> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+> It seems to me that this issue was discussed here [1] and here [2].
+> So, if you want me to improve the commit message I am OK with that.
 
-
-As Stephen Rothwell reported
-(https://lkml.org/lkml/2020/5/3/392),
-this warning appears by merging the
-two different trees.
-
-
-You sent this patch to the kbuild maintainers,
-but samples/watch_queue/Makefile does not exist
-in the kbuild tree.
-
-
-Also, please drop the fixes tag.
-The commit hash might change.
-
-
-> ---
->  samples/watch_queue/Makefile | 4 ++--
->  scripts/Makefile.build       | 1 -
->  2 files changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/samples/watch_queue/Makefile b/samples/watch_queue/Makefile
-> index eec00dd0a8df..8511fb6c53d2 100644
-> --- a/samples/watch_queue/Makefile
-> +++ b/samples/watch_queue/Makefile
-> @@ -1,7 +1,7 @@
->  # List of programs to build
-> -hostprogs-y := watch_test
-> +hostprogs := watch_test
->
->  # Tell kbuild to always build the programs
-> -always := $(hostprogs-y)
-> +always-y := $(hostprogs)
->
->  HOSTCFLAGS_watch_test.o += -I$(objtree)/usr/include
-> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-> index 3665b1a0bc8e..abdba70f33a1 100644
-> --- a/scripts/Makefile.build
-> +++ b/scripts/Makefile.build
-> @@ -15,7 +15,6 @@ obj-y :=
->  obj-m :=
->  lib-y :=
->  lib-m :=
-> -always :=
->  always-y :=
->  always-m :=
->  targets :=
-
-
-Why are you deleting 'always'?
-It would immediately break
-the downstream Makefiles immediately.
-
-
-
---
-Best Regards
-Masahiro Yamada
+Yes, I think just providing an explanation for why it's currently
+necessary for you to duplicate this is reasonable.
