@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29955C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14676C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 037EF20A8B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E627F20CC7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:25:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588778735;
-	bh=MxnNjbuzywBmmkj2/doKUHe/7DaYkxmqhrljPhsDuMk=;
+	s=default; t=1588778736;
+	bh=aBpiZ0CDnUe5OjSXDqD9oQ+ne/XZHBGUT1iXk3bbtdw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IjSa7u3BkNV3rMoPAnbfMmoV8+WFhPOyeju5vhpT91be5UISaA3tBAl+HRCwMWwLq
-	 sQHJUX7t/gXNT3hgSFP9QefeA/kzdfAzdVqSXwLW+J70WDjoGzNdEY1bcDpN37HRf/
-	 2vgGGO1esaE6kcXuhQZGFdaf53NBD0BxWew1pfVI=
+	b=j9lqJRYLpO/CYcJJF3KKzOdVvHKRwoh381Ip3OEdl5LskIEBBYyDzutTdinJb4R4M
+	 +9wPaOe2goENnUcm+OZ9rYUoxoVj4E4GA4C/k6uSVsaJy7iwm2lgmdrQhYy/2r0JYR
+	 6BLWgYNYjTGvh0NI9VucJOKYYlGaYIZxfuEQypyQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730039AbgEFPZe (ORCPT
+        id S1730048AbgEFPZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:25:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45806 "EHLO mail.kernel.org"
+        Wed, 6 May 2020 11:25:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729591AbgEFPZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:25:30 -0400
+        id S1730034AbgEFPZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:25:32 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0EE1215A4;
-        Wed,  6 May 2020 15:25:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85F8121744;
+        Wed,  6 May 2020 15:25:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588778729;
-        bh=MxnNjbuzywBmmkj2/doKUHe/7DaYkxmqhrljPhsDuMk=;
+        s=default; t=1588778732;
+        bh=aBpiZ0CDnUe5OjSXDqD9oQ+ne/XZHBGUT1iXk3bbtdw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jikBymjKBiwlMk1IewrOWMAzRc5rOnjAmvzOm3qfaSzKQAVxjOxn8zj+kwaSPIcGT
-         1CmYpv4zTc4IxiP44idovbjtwbIIy7vcftdpCaATmTaxboCI7eQLw2/a8Q84nq52C1
-         ddIJQC0nEqmDbZPqxTcSjLhk7ubghe2KC6Ldm5FM=
+        b=NMtHRH5C3GeJtljtvRlquwK242ItIKa69F2F58GS20ak/JAq9GTBN6Kiwz84pRVa+
+         fVh1zRrYO9bZEs7u1hNwc/AXXFascossbJ80rn38wS2t3y6+6NRpzJTCHOi3ho63iF
+         svlxt7uPszxWch7PLDwGOPWm4b4TMJFu7/Q67kfw=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -48,9 +48,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 46/91] perf intel-pt: Update documentation about itrace G and L options
-Date:   Wed,  6 May 2020 12:21:49 -0300
-Message-Id: <20200506152234.21977-47-acme@kernel.org>
+Subject: [PATCH 47/91] perf intel-pt: Update documentation about using /proc/kcore
+Date:   Wed,  6 May 2020 12:21:50 -0300
+Message-Id: <20200506152234.21977-48-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
@@ -63,88 +63,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Provide a little more information about the new G and L options,
-particularly the issue with large PEBs.
+Update documentation to reflect the advent of the --kcore option for
+'perf record'.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20200429150751.12570-9-adrian.hunter@intel.com
+Link: http://lore.kernel.org/lkml/20200429150751.12570-10-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/itrace.txt        |  4 +++
- tools/perf/Documentation/perf-intel-pt.txt | 35 ++++++++++++++++++++++
- 2 files changed, 39 insertions(+)
+ tools/perf/Documentation/perf-intel-pt.txt | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/Documentation/itrace.txt b/tools/perf/Documentation/itrace.txt
-index 0326050beebd..271484754fee 100644
---- a/tools/perf/Documentation/itrace.txt
-+++ b/tools/perf/Documentation/itrace.txt
-@@ -33,6 +33,10 @@
- 	Also the number of last branch entries (default 64, max. 1024) for
- 	instructions or transactions events can be specified.
- 
-+	Similar to options g and l, size may also be specified for options G and L.
-+	On x86, note that G and L work poorly when data has been recorded with
-+	large PEBS. Refer linkperf:perf-intel-pt[1] man page for details.
-+
- 	It is also possible to skip events generated (instructions, branches, transactions,
- 	ptwrite, power) at the beginning. This is useful to ignore initialization code.
- 
 diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
-index 456fdcbf26ac..782eb8a65caf 100644
+index 782eb8a65caf..eb8b7d42591a 100644
 --- a/tools/perf/Documentation/perf-intel-pt.txt
 +++ b/tools/perf/Documentation/perf-intel-pt.txt
-@@ -821,7 +821,9 @@ The letters are:
- 	e	synthesize tracing error events
- 	d	create a debug log
- 	g	synthesize a call chain (use with i or x)
-+	G	synthesize a call chain on existing event records
- 	l	synthesize last branch entries (use with i or x)
-+	L	synthesize last branch entries on existing event records
- 	s	skip initial number of events
+@@ -69,22 +69,22 @@ And profiled with 'perf report' e.g.
+ To also trace kernel space presents a problem, namely kernel self-modifying
+ code.  A fairly good kernel image is available in /proc/kcore but to get an
+ accurate image a copy of /proc/kcore needs to be made under the same conditions
+-as the data capture.  A script perf-with-kcore can do that, but beware that the
+-script makes use of 'sudo' to copy /proc/kcore.  If you have perf installed
+-locally from the source tree you can do:
++as the data capture. 'perf record' can make a copy of /proc/kcore if the option
++--kcore is used, but access to /proc/kcore is restricted e.g.
  
- "Instructions" events look like they were recorded by "perf record -e
-@@ -912,6 +914,39 @@ transactions events can be specified. e.g.
- Note that last branch entries are cleared for each sample, so there is no overlap
- from one sample to the next.
+-	~/libexec/perf-core/perf-with-kcore record pt_ls -e intel_pt// -- ls
++	sudo perf record -o pt_ls --kcore -e intel_pt// -- ls
  
-+The G and L options are designed in particular for sample mode, and work much
-+like g and l but add call chain and branch stack to the other selected events
-+instead of synthesized events. For example, to record branch-misses events for
-+'ls' and then add a call chain derived from the Intel PT trace:
-+
-+	perf record --aux-sample -e '{intel_pt//u,branch-misses:u}' -- ls
-+	perf report --itrace=Ge
-+
-+Although in fact G is a default for perf report, so that is the same as just:
-+
-+	perf report
-+
-+One caveat with the G and L options is that they work poorly with "Large PEBS".
-+Large PEBS means PEBS records will be accumulated by hardware and the written
-+into the event buffer in one go.  That reduces interrupts, but can give very
-+late timestamps.  Because the Intel PT trace is synchronized by timestamps,
-+the PEBS events do not match the trace.  Currently, Large PEBS is used only in
-+certain circumstances:
-+	- hardware supports it
-+	- PEBS is used
-+	- event period is specified, instead of frequency
-+	- the sample type is limited to the following flags:
-+		PERF_SAMPLE_IP | PERF_SAMPLE_TID | PERF_SAMPLE_ADDR |
-+		PERF_SAMPLE_ID | PERF_SAMPLE_CPU | PERF_SAMPLE_STREAM_ID |
-+		PERF_SAMPLE_DATA_SRC | PERF_SAMPLE_IDENTIFIER |
-+		PERF_SAMPLE_TRANSACTION | PERF_SAMPLE_PHYS_ADDR |
-+		PERF_SAMPLE_REGS_INTR | PERF_SAMPLE_REGS_USER |
-+		PERF_SAMPLE_PERIOD (and sometimes) | PERF_SAMPLE_TIME
-+Because Intel PT sample mode uses a different sample type to the list above,
-+Large PEBS is not used with Intel PT sample mode. To avoid Large PEBS in other
-+cases, avoid specifying the event period i.e. avoid the 'perf record' -c option,
-+--count option, or 'period' config term.
-+
- To disable trace decoding entirely, use the option --no-itrace.
+-which will create a directory named 'pt_ls' and put the perf.data file and
+-copies of /proc/kcore, /proc/kallsyms and /proc/modules into it.  Then to use
+-'perf report' becomes:
++which will create a directory named 'pt_ls' and put the perf.data file (named
++simply 'data') and copies of /proc/kcore, /proc/kallsyms and /proc/modules into
++it.  The other tools understand the directory format, so to use 'perf report'
++becomes:
  
- It is also possible to skip events generated (instructions, branches, transactions)
+-	~/libexec/perf-core/perf-with-kcore report pt_ls
++	sudo perf report -i pt_ls
+ 
+ Because samples are synthesized after-the-fact, the sampling period can be
+ selected for reporting. e.g. sample every microsecond
+ 
+-	~/libexec/perf-core/perf-with-kcore report pt_ls --itrace=i1usge
++	sudo perf report pt_ls --itrace=i1usge
+ 
+ See the sections below for more information about the --itrace option.
+ 
 -- 
 2.21.1
 
