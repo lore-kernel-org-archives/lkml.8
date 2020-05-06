@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBECC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B052C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9616B2080D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 480CE208DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:44:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730364AbgEFRoa (ORCPT
+        id S1730469AbgEFRox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 13:44:30 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:32852 "EHLO
+        Wed, 6 May 2020 13:44:53 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:32958 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730167AbgEFRo0 (ORCPT
+        with ESMTP id S1730349AbgEFRob (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 13:44:26 -0400
+        Wed, 6 May 2020 13:44:31 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 234AA8000B84;
-        Wed,  6 May 2020 17:44:21 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 6D5E08000BB3;
+        Wed,  6 May 2020 17:44:27 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Z08SmWcnA9yN; Wed,  6 May 2020 20:44:20 +0300 (MSK)
+        with ESMTP id DyI7IDSfg4EM; Wed,  6 May 2020 20:44:26 +0300 (MSK)
 From:   <Sergey.Semin@baikalelectronics.ru>
 To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
@@ -35,13 +35,14 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 15/20] mips: cdmm: Add mti,mips-cdmm dtb node support
-Date:   Wed, 6 May 2020 20:42:33 +0300
-Message-ID: <20200506174238.15385-16-Sergey.Semin@baikalelectronics.ru>
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 19/20] mips: cevt-r4k: Update the r4k-clockevent frequency in sync with CPU
+Date:   Wed, 6 May 2020 20:42:37 +0300
+Message-ID: <20200506174238.15385-20-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
  <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
@@ -56,64 +57,95 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-Since having and mapping the CDMM block is platform specific, then
-instead of just returning a zero-address, lets make the default CDMM
-base address search method (mips_cdmm_phys_base()) to do something
-useful. For instance to find the address in a dedicated dtb-node in
-order to support of-based platforms by default.
+Due to being embedded into the CPU cores MIPS count/compare timer
+frequency is changed together with the CPU clocks alteration.
+In case if frequency really changes the kernel clockevent framework
+must be notified, otherwise the kernel timers won't work correctly.
+Fix this by calling clockevents_update_freq() for each r4k clockevent
+handlers registered per available CPUs.
+
+Traditionally MIPS r4k-clock are clocked with CPU frequency divided by 2.
+But this isn't true for some of the platforms. Due to this we have to save
+the basic CPU frequency, so then use it to scale the initial timer
+frequency (mips_hpt_frequency) and pass the updated value further to the
+clockevent framework.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Paul Burton <paulburton@kernel.org>
 Cc: Ralf Baechle <ralf@linux-mips.org>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Olof Johansson <olof@lixom.net>
 Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
 Cc: linux-pm@vger.kernel.org
 Cc: devicetree@vger.kernel.org
 ---
- drivers/bus/mips_cdmm.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/mips/kernel/cevt-r4k.c | 44 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/drivers/bus/mips_cdmm.c b/drivers/bus/mips_cdmm.c
-index 1b14256376d2..7faa8c049f07 100644
---- a/drivers/bus/mips_cdmm.c
-+++ b/drivers/bus/mips_cdmm.c
-@@ -16,6 +16,8 @@
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- #include <linux/smp.h>
-+#include <linux/of_address.h>
-+#include <linux/of.h>
- #include <asm/cdmm.h>
- #include <asm/hazards.h>
- #include <asm/mipsregs.h>
-@@ -337,9 +339,22 @@ static phys_addr_t mips_cdmm_cur_base(void)
-  * Picking a suitable physical address at which to map the CDMM region is
-  * platform specific, so this weak function can be overridden by platform
-  * code to pick a suitable value if none is configured by the bootloader.
-+ * By default this method tries to find a CDMM-specific node in the system
-+ * dtb. Note that this won't work for early serial console.
+diff --git a/arch/mips/kernel/cevt-r4k.c b/arch/mips/kernel/cevt-r4k.c
+index 17a9cbb8b3df..f5b72fb7d5ee 100644
+--- a/arch/mips/kernel/cevt-r4k.c
++++ b/arch/mips/kernel/cevt-r4k.c
+@@ -8,6 +8,7 @@
   */
- phys_addr_t __weak mips_cdmm_phys_base(void)
- {
-+	struct device_node *np;
-+	struct resource res;
-+	int err;
-+
-+	np = of_find_compatible_node(NULL, NULL, "mti,mips-cdmm");
-+	if (np) {
-+		err = of_address_to_resource(np, 0, &res);
-+		if (!err)
-+			return res.start;
-+	}
-+
- 	return 0;
+ #include <linux/clockchips.h>
+ #include <linux/interrupt.h>
++#include <linux/cpufreq.h>
+ #include <linux/percpu.h>
+ #include <linux/smp.h>
+ #include <linux/irq.h>
+@@ -250,6 +251,49 @@ unsigned int __weak get_c0_compare_int(void)
+ 	return MIPS_CPU_IRQ_BASE + cp0_compare_irq;
  }
  
++#ifdef CONFIG_CPU_FREQ
++
++static unsigned long mips_ref_freq;
++
++static int cpufreq_callback(struct notifier_block *nb,
++			    unsigned long val, void *data)
++{
++	struct cpufreq_freqs *freq = data;
++	struct clock_event_device *cd;
++	unsigned long rate;
++	int cpu;
++
++	if (!mips_ref_freq)
++		mips_ref_freq = freq->old;
++
++	if (val == CPUFREQ_POSTCHANGE) {
++		rate = cpufreq_scale(mips_hpt_frequency, mips_ref_freq,
++				     freq->new);
++
++		for_each_cpu(cpu, freq->policy->cpus) {
++			cd = &per_cpu(mips_clockevent_device, cpu);
++
++			clockevents_update_freq(cd, rate);
++		}
++	}
++
++	return 0;
++}
++
++static struct notifier_block cpufreq_notifier = {
++	.notifier_call  = cpufreq_callback,
++};
++
++static int __init register_cpufreq_notifier(void)
++{
++	return cpufreq_register_notifier(&cpufreq_notifier,
++					 CPUFREQ_TRANSITION_NOTIFIER);
++
++}
++core_initcall(register_cpufreq_notifier);
++
++#endif /* !CONFIG_CPU_FREQ */
++
+ int r4k_clockevent_init(void)
+ {
+ 	unsigned long flags = IRQF_PERCPU | IRQF_TIMER | IRQF_SHARED;
 -- 
 2.25.1
 
