@@ -2,166 +2,106 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E89BC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A1AC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3387420708
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:41:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mJ76z3+F"
+	by mail.kernel.org (Postfix) with ESMTP id 4DB4320708
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:41:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729681AbgEFQlg (ORCPT
+        id S1729911AbgEFQlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:41:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42684 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729443AbgEFQlf (ORCPT
+        Wed, 6 May 2020 12:41:39 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:59562 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729447AbgEFQlh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:41:35 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A700C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 09:41:35 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id h6so1055908qvz.8
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 09:41:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ok/3tSMXGak9r9P1e44ajZ1e4j9R2uzhTZfXRx7Byqs=;
-        b=mJ76z3+FCKlKlyom3PyUumWbmA89VbLIHoSaqsP8MoYsDlJrVz+oD5rmZOrMKCHXYa
-         IieDnHe3OISmsR3AJDdBZ5bEaa1yv0GuU4IX4zmYe3SQT9KOgIoPuccUbw6PcRU9Fuub
-         Ik0sZ8Za38A0ELu8as2SjerJdss9KKFo+52ymtDIhWfCcl5NpcrmuGpSTR3LuiCBbpx1
-         S9og7KylBr45Jxrh/BrQqiFOsPIe3Dpdy70zqr55Clth6bdNgyjRZ3WLkDh2yr8GT0gQ
-         26uquGoAUQgCs2tjeN0Y2lH01V8PcDrsyG/8RTJuRwvps/hvU9NjZuLL6fQu8dR3I82y
-         nDCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ok/3tSMXGak9r9P1e44ajZ1e4j9R2uzhTZfXRx7Byqs=;
-        b=qMFuIfPJ3HITZJNm7140E9wXJECvD3V2FE4VutdZTv8wpWg8AUUG6DqH5Y3cgRqB9q
-         I5GjvwXpcfxgiNCXpKLEJhBabqweJv78C9Z9B8ELVw+MtzVyeBmjsgwWIqLEQy3a72RX
-         2mFVhNR6OYU4vBUYvB9F22/i5IO42Uo7N48AT1OHLCHtXiXdbAo0cvIzXXIPQVkiaj6N
-         W1D/2Tw8aNx6dXDFdXFDNaXCH7H1r4jOYt+8LCgOVzJpLIvhcvLe/QsOVQiNOyhkp/jI
-         amAMKNustLkP2+0Gp55g6wlyGy+gyLIKT7Tj0R6awCRp6otMA8L9yek7DYmVBOZiOBv5
-         K8lA==
-X-Gm-Message-State: AGi0PubV3y5WGpJtjxcf2aJ/ZJhrOjHhAIYSlozBwIqcemVLmdoJ/MXS
-        bqBEHiHqm92P4GYmbXH+El4=
-X-Google-Smtp-Source: APiQypJSH9Q65I1hZNzJSC3u3i50Te4XNGFndwEDAgn3AMfSNv2jIKbvi7qV1bENAOKqJ/ZtNMFFiA==
-X-Received: by 2002:ad4:5604:: with SMTP id ca4mr8923483qvb.6.1588783294264;
-        Wed, 06 May 2020 09:41:34 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id i5sm1830087qtw.97.2020.05.06.09.41.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 09:41:33 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 97513409A3; Wed,  6 May 2020 13:41:31 -0300 (-03)
-Date:   Wed, 6 May 2020 13:41:31 -0300
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     yshuiv7@gmail.com, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf-probe: Accept the instance number of kretprobe event
-Message-ID: <20200506164131.GB22183@kernel.org>
-References: <158877535215.26469.1113127926699134067.stgit@devnote2>
- <20200506161723.GA22183@kernel.org>
+        Wed, 6 May 2020 12:41:37 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 798738046E;
+        Wed,  6 May 2020 18:41:34 +0200 (CEST)
+Date:   Wed, 6 May 2020 18:41:33 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v5 2/6] drm/of: Make drm_of_find_panel_or_bridge() to
+ check graph's presence
+Message-ID: <20200506164133.GB19296@ravnborg.org>
+References: <20200418170703.1583-1-digetx@gmail.com>
+ <20200418170703.1583-3-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200506161723.GA22183@kernel.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200418170703.1583-3-digetx@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8 a=7gkXJVJtAAAA:8 a=e5mUnYsNAAAA:8
+        a=ZfXzQBuPKYn6lThc9qoA:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, May 06, 2020 at 01:17:23PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Wed, May 06, 2020 at 11:29:12PM +0900, Masami Hiramatsu escreveu:
-> > Since the commit 6a13a0d7b4d1 ("ftrace/kprobe: Show the
-> > maxactive number on kprobe_events") introduced to show the
-> > instance number of kretprobe events, the length of the 1st
-> > format of the kprobe event will not 1, but it can be longer.
-> > This caused a parser error in perf-probe.
+On Sat, Apr 18, 2020 at 08:06:59PM +0300, Dmitry Osipenko wrote:
+> When graph isn't defined in a device-tree, the of_graph_get_remote_node()
+> prints a noisy error message, telling that port node is not found. This is
+> undesirable behaviour in our case because absence of a panel/bridge graph
+> is a valid case. Let's check presence of the local port in a device-tree
+> before proceeding with parsing the graph.
 > 
-> Thanks for the quick fix!
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> ---
+>  drivers/gpu/drm/drm_of.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
 > 
-> I'll add this right after the Fixes tag:
-> 
-> Reported-by: yshuiv7@gmail.com
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207587
-
-Sorry, I didn't notice you added it as a Link: :-)
-
-> Ok?
-> 
-> yshuiv, can I have your name to add to that Reported-by tag? And if you
-> test it, please, I can add a Tested-by: tag as well, credits where
-> credits are due!
-> 
-> Thanks!
-> 
-> - Arnaldo
+> diff --git a/drivers/gpu/drm/drm_of.c b/drivers/gpu/drm/drm_of.c
+> index b50b44e76279..e0652c38f357 100644
+> --- a/drivers/gpu/drm/drm_of.c
+> +++ b/drivers/gpu/drm/drm_of.c
+> @@ -239,13 +239,24 @@ int drm_of_find_panel_or_bridge(const struct device_node *np,
+>  				struct drm_bridge **bridge)
+>  {
+>  	int ret = -EPROBE_DEFER;
+> -	struct device_node *remote;
+> +	struct device_node *local, *remote;
 >  
-> > Skip the length check the 1st format of the kprobe event
-> > to accept this instance number.
-> > 
-> > Without this fix:
-> > 
-> >   # perf probe -a vfs_read%return
-> >   Added new event:
-> >     probe:vfs_read__return (on vfs_read%return)
-> > 
-> >   You can now use it in all perf tools, such as:
-> > 
-> >   	perf record -e probe:vfs_read__return -aR sleep 1
-> > 
-> >   # perf probe -l
-> >   Semantic error :Failed to parse event name: r16:probe/vfs_read__return
-> >     Error: Failed to show event list.
-> > 
-> > And with this fixes:
-> > 
-> >   # perf probe -a vfs_read%return
-> >   ...
-> >   # perf probe -l
-> >     probe:vfs_read__return (on vfs_read%return)
-> > 
-> > 
-> > Fixes: 6a13a0d7b4d1 ("ftrace/kprobe: Show the maxactive number on kprobe_events")
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > Cc: stable@vger.kernel.org
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=207587
-> > ---
-> >  tools/perf/util/probe-event.c |    3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-> > index eea132f512b0..c6bcf5709564 100644
-> > --- a/tools/perf/util/probe-event.c
-> > +++ b/tools/perf/util/probe-event.c
-> > @@ -1765,8 +1765,7 @@ int parse_probe_trace_command(const char *cmd, struct probe_trace_event *tev)
-> >  	fmt1_str = strtok_r(argv0_str, ":", &fmt);
-> >  	fmt2_str = strtok_r(NULL, "/", &fmt);
-> >  	fmt3_str = strtok_r(NULL, " \t", &fmt);
-> > -	if (fmt1_str == NULL || strlen(fmt1_str) != 1 || fmt2_str == NULL
-> > -	    || fmt3_str == NULL) {
-> > +	if (fmt1_str == NULL || fmt2_str == NULL || fmt3_str == NULL) {
-> >  		semantic_error("Failed to parse event name: %s\n", argv[0]);
-> >  		ret = -EINVAL;
-> >  		goto out;
-> > 
-> 
+>  	if (!panel && !bridge)
+>  		return -EINVAL;
+>  	if (panel)
+>  		*panel = NULL;
+>  
+> +	/*
+> +	 * of_graph_get_remote_node() produces a noisy error message if port
+> +	 * node isn't found and the absence of the port is a legit case here,
+> +	 * so at first we silently check presence of the local port.
+> +	 */
+> +	local = of_graph_get_local_port(np);
+> +	if (!local)
+> +		return -ENODEV;
+> +
+> +	of_node_put(local);
+> +
+>  	remote = of_graph_get_remote_node(np, port, endpoint);
+>  	if (!remote)
+>  		return -ENODEV;
 > -- 
+> 2.26.0
 > 
-> - Arnaldo
-
--- 
-
-- Arnaldo
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
