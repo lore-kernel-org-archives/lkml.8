@@ -2,530 +2,373 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A97C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 210D0C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0A6F2080D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B82D720836
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:16:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KIEYz94Q"
+	dkim=pass (2048-bit key) header.d=mail.polimi.it header.i=@mail.polimi.it header.b="GLaS/zHJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729327AbgEFPQf (ORCPT
+        id S1729447AbgEFPQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:16:35 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:38556 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728936AbgEFPQe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:16:34 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046FDrsq022579;
-        Wed, 6 May 2020 15:15:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=GF3caFwh82XnzCWVa7B6j1XyROZlKiZ7JMui+Bc896o=;
- b=KIEYz94QAahiaS0mbFcVlhiYIaXF5uGrC7uVI1VteMSwu+X9w0EcLjmr+0naBZUcZJve
- xZEDwzA8TMSiGs01zn8QPiEbiCZqActtQdhjXobFkmFsDU1QnEByaKhzvzy6L4QVZKC6
- sWTBvCdLAXy7lQx+ttriYzBS+pIfGbiSramUVi7eT0jFkjjDNwhPij/8MnlztA8omW+q
- EihVLlEauAO7zLanPhdFtCK24UflrfWGxXJZNPku6YSIh9HVURq8++zuXSFpahpAxF8W
- gunaKN1YziUPLeQSoCWil5DVTN6xm86Ez4swi9FELba3qKxp11Dx8+VNT4k+UlvMAZOM Ig== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 30s09rb146-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 May 2020 15:15:17 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046FCoZD108398;
-        Wed, 6 May 2020 15:15:16 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 30sjdvqwk3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 May 2020 15:15:16 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 046FFBVs018169;
-        Wed, 6 May 2020 15:15:13 GMT
-Received: from linux-1.home (/10.175.10.30)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 May 2020 08:15:11 -0700
-Subject: Re: [patch V4 part 1 12/36] x86/kvm: Sanitize
- kvm_async_pf_task_wait()
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-References: <20200505131602.633487962@linutronix.de>
- <20200505134059.262701431@linutronix.de>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Message-ID: <9467bd0a-1d5f-82b5-f430-d9907aaed916@oracle.com>
-Date:   Wed, 6 May 2020 17:13:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200505134059.262701431@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Wed, 6 May 2020 11:16:47 -0400
+Received: from mail-vi1eur05on2071.outbound.protection.outlook.com ([40.107.21.71]:6185
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728936AbgEFPQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:16:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HGn8opfUZhKtzXKdci47ccAbRNbbS+1qoV4zNt/XA6EmI2LhMBZn4/XkuPniO2saiUHHm2AYBMrQ9XsPhYOEWW8AunTzdEDcpoO0Z74DrV99S2g0sOjagUXxyEmkSmgKE+NeOjPEvu6sRydUadDbsDF4I7SM6yT1MCX+43c0EA432IMo4VM6WGS9gOBMJ/PUVwmLMXGLPdKhfft6grJSkX8JBp5vvy4Fpb8X1z1qid8vZJU0dkqrMW/leRw4S2HwED6ZAGlnFyjq/QsH7YQg04N+qZmq1US5UHk2VOCEF40Pnz2AIbfNozyxp93Y2MSgDFI3WUjB2UYR+vJpV+zR1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GUrjSC1Cu6W2i2A3p59eHBJEAatCZgxGtOLwc3S5tE4=;
+ b=cnOem7yH1ik2wVKjdqCkqkPjEGLGNK4hWuHGlMfZK6g8ZrKTfWH/0gJv9c/O6b3JucKQsvFbvTmDsr+YlshGg/KNvkyCeh+ToEiYAz9T+v2JlwrRee55N3mjxK7rwD5tE+EGHAHzDbOIK5shRicYGlo638f1z2RUhCpNio4nKqNUYz9DD40uQGa0EESdYyw32eujFA61OQLiAkGsHTlViymgqtkNh8k8dG4ty0wb8AvUxP6C6thdiaVAbRYnIiEGgM8xxuBCoMo2fFgOkyx19K+1NBqsI9L044FJ2vNXmaxi7I6pcp1zhHUYP5m4cE/sglL/5AntRA8Bz6IlVsdMTg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mail.polimi.it; dmarc=pass action=none
+ header.from=mail.polimi.it; dkim=pass header.d=mail.polimi.it; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mail.polimi.it;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GUrjSC1Cu6W2i2A3p59eHBJEAatCZgxGtOLwc3S5tE4=;
+ b=GLaS/zHJty3mJ4vVQDxWK/QB03xiynsOoQlK2YtauLKtluqWF2crvY1j4I1rS/lKlOTuZ/tbgbM2Mxhb4I7eY5brEmIfdrtlCJBd+zjoRIJ5u4sclgMvUVFpyp6WP2qo5FzRD7IxSMlYeuk/iwnTCT/BjssoWmolzQ1M5kr8hzu+ph4i274Gneofvubvyqn+k9nL72gzKAEvQH9v1DRKSa/JR3yaaHkxqTmvUTKJG7a4w4LCNlf7BM9cnfkiQlz9dpHrwkIX90rfuVs+1eNHPAWtVdAjO+B2AcIYeYbqNUKyZKkXoxwP3L/ZWsbCsiaJdwHo6QPzYUuysPZKZSt1Og==
+Received: from HE1PR0602MB3355.eurprd06.prod.outlook.com (2603:10a6:7:88::18)
+ by HE1PR0602MB2874.eurprd06.prod.outlook.com (2603:10a6:3:da::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28; Wed, 6 May
+ 2020 15:16:41 +0000
+Received: from HE1PR0602MB3355.eurprd06.prod.outlook.com
+ ([fe80::c8f9:b9dc:df6d:aac5]) by HE1PR0602MB3355.eurprd06.prod.outlook.com
+ ([fe80::c8f9:b9dc:df6d:aac5%7]) with mapi id 15.20.2979.028; Wed, 6 May 2020
+ 15:16:40 +0000
+From:   Fabio Comolli <fabio.comolli@mail.polimi.it>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "luzmaximilian@gmail.com" <luzmaximilian@gmail.com>,
+        "robert.moore@intel.com" <robert.moore@intel.com>,
+        "rik.kaneda@intel.com" <rik.kaneda@intel.com>,
+        "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>
+Subject: [Regression] [Bisected] Commit
+ 6d232b29cfce65961db4a668c2c6c6987cd24d45 breaks some of the Fn-keys on my old
+ Sony Vaio VPCM13M1E.
+Thread-Topic: [Regression] [Bisected] Commit
+ 6d232b29cfce65961db4a668c2c6c6987cd24d45 breaks some of the Fn-keys on my old
+ Sony Vaio VPCM13M1E.
+Thread-Index: AQHWI7lXSJY5XR+OjUu+NwBW4MqUwA==
+Date:   Wed, 6 May 2020 15:16:40 +0000
+Message-ID: <HE1PR0602MB335553397CB175052E00EF70DAA40@HE1PR0602MB3355.eurprd06.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 mlxscore=0
- bulkscore=0 adultscore=0 phishscore=0 mlxlogscore=920 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005060123
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0
- lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1015 suspectscore=0
- priorityscore=1501 malwarescore=0 mlxlogscore=965 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005060123
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=mail.polimi.it;
+x-originating-ip: [2.36.136.74]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f3597324-018e-45ed-3a9b-08d7f1d07aa4
+x-ms-traffictypediagnostic: HE1PR0602MB2874:
+x-microsoft-antispam-prvs: <HE1PR0602MB28745372B719F57016E14462DAA40@HE1PR0602MB2874.eurprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2958;
+x-forefront-prvs: 03950F25EC
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: o81SjMLMwQOTQsnxUyobXrDfQUsX2NnYgJieWgNaLvZrde+ToXGQMhrr2U3XfVdz5cFVH9YEk3E0SjAIw1gVlmERVDeHGUdOLrBPW06FMsNpWMhHPuVX5UD2l+jZSeMm6EYaSmXJ0qrR37LoUGsMypXEzdhZ7sLyDjhvrw3jZjMYM2SIVZRi5FZW5P5J8S+PkdTHhqy6zwyfWxljRRDoNSc67ih8/aYADnS8O0mR7HG9PJpmU63x2f/ycNuf6g+9f9P3AUtwiW8jmowjnQIjlUwmMIqdVXXRSjsjLuCgtaFRbA4Z8czczWOX0gLpxj8eON6K18+53IoPw+f4Ksl6W3ZYIdKl18B//d4EakM5vBUZbn5FBraeB7lgzGs7N/p/Vl4LhmkNfJZZrZ/yjnPtmUDr5B05gKrUmEB0+VPYMVgzUGOTVGMagGSmlDy5rb1+Ho0qULHHfk1Qip+xUskeWzwufPMoW+zJ4hvaBNgrVl4XIPF3tlYPtovZLYOTg6JqpuStLN9n3/nBJ2TL6KKoeeYIZw2yDEiM/IhZZARE7+CPOYYMJM52FN4cBEPaEYz/NFX7sJpf/QhYCl34fsTHMom5zqQRgfKULsxDQP9SvKo=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0602MB3355.eurprd06.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(39860400002)(376002)(396003)(136003)(366004)(33430700001)(478600001)(45080400002)(55016002)(7696005)(44832011)(186003)(66446008)(66556008)(66476007)(66946007)(26005)(8676002)(6506007)(64756008)(76116006)(91956017)(86362001)(71200400001)(8936002)(30864003)(9686003)(966005)(786003)(316002)(2906002)(5660300002)(52536014)(33656002)(54906003)(4326008)(6916009)(33440700001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: SYa+C/00C4k52NvNOzApNbX60MTGJekuJWhLwnqEub+f6/t/tRaLf+CGFqAEmEEaVpKF8W3OPc3ZtkubBH24FR6C46TzhaBYhAUe4QL0fyzrqHAK0qj1ZxkpT5Vy8sH+ZyJICxYCry5k0nhcbkgui+86e1LkMBNdV8aou32gxSFkGo7/zg3RfaAt41dR2czoLHqTFHNY0NaxaMVDVylmSC7rKFz1o8WUkqdLE7u+QybxJruq5YtYoaf/8E3O2p9/C0+chBU8OnCBpw+eobn5p+vPKOItX+tYzklwZ4WwoWDUokO5svirSBstXrTq6Wd7x25GxdEDNxQ7Cq7hOYq/NBfyap7CU9WjiGw37xymuUzYyAKMCeFHOULELQxihHqSzBaKQKakM8VAObSapsvPXmhz/aFHluZMbeNvSvu/tX06gozMQZuELuDK5wSbsH5NmS2ryIlaR6tXNb/85KMLLS1xJWg/9civCP5crTxZ5vm1r6bnNBeYL16RmMsjLWWbReznh1oBCwV5ZSLbFuSo9Y1w9RzddH3ceAzvnyBpeS+l5GMj6MmWUX3cndd8jiYmJD05XTAiyP/JwRPbRlN7bgMx8+r1Sy5cx3eHxguvbBvKBjBPw5ZGr3k9mlkPJ7evexZD0FKwtXZ/Yg3b8P+EqMeVfdJkLUrm+TRliEPh/Uw6kRXVdzwBd5bOwePoeSPjBP/4QN3sW4obSU0MSqF05D1hYONJHCEqT8RCKVcxeeHRe754/MN/8YUe7fyW9wXT4vZ4lrs+t1YtgqtCLZBQff1WHBZx90kVA2iJZU7W0Zw=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: mail.polimi.it
+X-MS-Exchange-CrossTenant-Network-Message-Id: f3597324-018e-45ed-3a9b-08d7f1d07aa4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2020 15:16:40.6870
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0a17712b-6df3-425d-808e-309df28a5eeb
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Jvygq3UleH4K4o1Ivld02a/yHdWq6Tj/rMMjKU2HLYLhLFERaSuuYuwiZT1d/88s8r9qXj58bix+Ql4UKC5KIg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0602MB2874
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
+
+I updated my old Sony Vaio a few days ago and discovered that a few Fn-keys=
+ on my old Sony Vaio had stopped working.=20
+The bisection points at the commit in the subject and reverting it makes ev=
+erything work again even with current
+Linus' git.
+
+Full bug report below. Please CC: me as I'm not subscribed to lkml.
+
+Regards,
+Fabio
 
 
-On 5/5/20 3:16 PM, Thomas Gleixner wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
-> 
-> While working on the entry consolidation I stumbled over the KVM async page
-> fault handler and kvm_async_pf_task_wait() in particular. It took me a
-> while to realize that the randomly sprinkled around rcu_irq_enter()/exit()
-> invocations are just cargo cult programming. Several patches "fixed" RCU
-> splats by curing the symptoms without noticing that the code is flawed
-> from a design perspective.
-> 
-> The main problem is that this async injection is not based on a proper
-> handshake mechanism and only respects the minimal requirement, i.e. the
-> guest is not in a state where it has interrupts disabled.
-> 
-> Aside of that the actual code is a convoluted one fits it all swiss army
-> knife. It is invoked from different places with different RCU constraints:
-> 
->    1) Host side:
-> 
->       vcpu_enter_guest()
->         kvm_x86_ops->handle_exit()
->           kvm_handle_page_fault()
->             kvm_async_pf_task_wait()
-> 
->       The invocation happens from fully preemptible context.
-> 
->    2) Guest side:
-> 
->       The async page fault interrupted:
-> 
->           a) user space
-> 
-> 	 b) preemptible kernel code which is not in a RCU read side
-> 	    critical section
-> 
->       	 c) non-preemtible kernel code or a RCU read side critical section
-> 	    or kernel code with CONFIG_PREEMPTION=n which allows not to
-> 	    differentiate between #2b and #2c.
-> 
-> RCU is watching for:
-> 
->    #1  The vCPU exited and current is definitely not the idle task
-> 
->    #2a The #PF entry code on the guest went through enter_from_user_mode()
->        which reactivates RCU
-> 
->    #2b There is no preemptible, interrupts enabled code in the kernel
->        which can run with RCU looking away. (The idle task is always
->        non preemptible).
-> 
-> I.e. all schedulable states (#1, #2a, #2b) do not need any of this RCU
-> voodoo at all.
-> 
-> In #2c RCU is eventually not watching, but as that state cannot schedule
-> anyway there is no point to worry about it so it has to invoke
-> rcu_irq_enter() before running that code. This can be optimized, but this
-> will be done as an extra step in course of the entry code consolidation
-> work.
-> 
-> So the proper solution for this is to:
-> 
->    - Split kvm_async_pf_task_wait() into schedule and halt based waiting
->      interfaces which share the enqueueing code.
-> 
->    - Add comments (condensed form of this changelog) to spare others the
->      time waste and pain of reverse engineering all of this with the help of
->      uncomprehensible changelogs and code history.
-> 
->    - Invoke kvm_async_pf_task_wait_schedule() from kvm_handle_page_fault(),
->      user mode and schedulable kernel side async page faults (#1, #2a, #2b)
-> 
->    - Invoke kvm_async_pf_task_wait_halt() for the non schedulable kernel
->      case (#2c).
-> 
->      For this case also remove the rcu_irq_exit()/enter() pair around the
->      halt as it is just a pointless exercise:
-> 
->         - vCPUs can VMEXIT at any random point and can be scheduled out for
->           an arbitrary amount of time by the host and this is not any
->           different except that it voluntary triggers the exit via halt.
-> 
->         - The interrupted context could have RCU watching already. So the
-> 	 rcu_irq_exit() before the halt is not gaining anything aside of
-> 	 confusing the reader. Claiming that this might prevent RCU stalls
-> 	 is just an illusion.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
-> V2: Panic if async #PF is injected into an interrupt disabled region.
-> ---
->   arch/x86/include/asm/kvm_para.h |    4
->   arch/x86/kernel/kvm.c           |  201 ++++++++++++++++++++++++++++------------
->   arch/x86/kvm/mmu/mmu.c          |    2
->   3 files changed, 144 insertions(+), 63 deletions(-)
+-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-
 
+BIOS table is:
 
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+[    0.000000] DMI: Sony Corporation VPCM13M1E/VAIO, BIOS R0120Z4 05/12/201=
+0
+[    0.014701] ACPI: RSDP 0x00000000000F0410 000024 (v03 Sony  )
+[    0.014709] ACPI: XSDT 0x000000007F4DB078 00004C (v01 Sony   VAIO     20=
+100512 AMI  00010013)
+[    0.014724] ACPI: FACP 0x000000007F4E1388 0000F4 (v04 Sony   VAIO     20=
+100512 AMI  00010013)
+[    0.014740] ACPI: DSDT 0x000000007F4DB150 006231 (v02 Sony   VAIO     20=
+100512 INTL 20051117)
+[    0.014751] ACPI: FACS 0x000000007F509F40 000040
+[    0.014758] ACPI: FACS 0x000000007F509F80 000040
+[    0.014766] ACPI: APIC 0x000000007F4E1480 000072 (v01 Sony   VAIO     20=
+100512 AMI  00010013)
+[    0.014777] ACPI: MCFG 0x000000007F4E14F8 00003C (v01 Sony   VAIO     20=
+100512 MSFT 00000097)
+[    0.014787] ACPI: SLIC 0x000000007F4E1538 000176 (v01 Sony   VAIO     20=
+100512 Sony 01000000)
+[    0.014797] ACPI: HPET 0x000000007F4E16B0 000038 (v01 Sony   VAIO     20=
+100512 AMI. 00000003)
 
-alex.
+There are 7 Fn-keys available on this model:
 
+Mute
+Volume Down
+Volume Up
+Brightness Down
+Brightness Up
+External Video Output Switch
+Hibernate
 
-> --- a/arch/x86/include/asm/kvm_para.h
-> +++ b/arch/x86/include/asm/kvm_para.h
-> @@ -88,7 +88,7 @@ static inline long kvm_hypercall4(unsign
->   bool kvm_para_available(void);
->   unsigned int kvm_arch_para_features(void);
->   unsigned int kvm_arch_para_hints(void);
-> -void kvm_async_pf_task_wait(u32 token, int interrupt_kernel);
-> +void kvm_async_pf_task_wait_schedule(u32 token);
->   void kvm_async_pf_task_wake(u32 token);
->   u32 kvm_read_and_reset_pf_reason(void);
->   void kvm_disable_steal_time(void);
-> @@ -113,7 +113,7 @@ static inline void kvm_spinlock_init(voi
->   #endif /* CONFIG_PARAVIRT_SPINLOCKS */
->   
->   #else /* CONFIG_KVM_GUEST */
-> -#define kvm_async_pf_task_wait(T, I) do {} while(0)
-> +#define kvm_async_pf_task_wait_schedule(T) do {} while(0)
->   #define kvm_async_pf_task_wake(T) do {} while(0)
->   
->   static inline bool kvm_para_available(void)
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
-> @@ -75,7 +75,7 @@ struct kvm_task_sleep_node {
->   	struct swait_queue_head wq;
->   	u32 token;
->   	int cpu;
-> -	bool halted;
-> +	bool use_halt;
->   };
->   
->   static struct kvm_task_sleep_head {
-> @@ -98,75 +98,145 @@ static struct kvm_task_sleep_node *_find
->   	return NULL;
->   }
->   
-> -/*
-> - * @interrupt_kernel: Is this called from a routine which interrupts the kernel
-> - * 		      (other than user space)?
-> - */
-> -void kvm_async_pf_task_wait(u32 token, int interrupt_kernel)
-> +static bool kvm_async_pf_queue_task(u32 token, bool use_halt,
-> +				    struct kvm_task_sleep_node *n)
->   {
->   	u32 key = hash_32(token, KVM_TASK_SLEEP_HASHBITS);
->   	struct kvm_task_sleep_head *b = &async_pf_sleepers[key];
-> -	struct kvm_task_sleep_node n, *e;
-> -	DECLARE_SWAITQUEUE(wait);
-> -
-> -	rcu_irq_enter();
-> +	struct kvm_task_sleep_node *e;
->   
->   	raw_spin_lock(&b->lock);
->   	e = _find_apf_task(b, token);
->   	if (e) {
->   		/* dummy entry exist -> wake up was delivered ahead of PF */
->   		hlist_del(&e->link);
-> -		kfree(e);
->   		raw_spin_unlock(&b->lock);
-> +		kfree(e);
-> +		return false;
-> +	}
->   
-> -		rcu_irq_exit();
-> +	n->token = token;
-> +	n->cpu = smp_processor_id();
-> +	n->use_halt = use_halt;
-> +	init_swait_queue_head(&n->wq);
-> +	hlist_add_head(&n->link, &b->list);
-> +	raw_spin_unlock(&b->lock);
-> +	return true;
-> +}
-> +
-> +/*
-> + * kvm_async_pf_task_wait_schedule - Wait for pagefault to be handled
-> + * @token:	Token to identify the sleep node entry
-> + *
-> + * Invoked from the async pagefault handling code or from the VM exit page
-> + * fault handler. In both cases RCU is watching.
-> + */
-> +void kvm_async_pf_task_wait_schedule(u32 token)
-> +{
-> +	struct kvm_task_sleep_node n;
-> +	DECLARE_SWAITQUEUE(wait);
-> +
-> +	lockdep_assert_irqs_disabled();
-> +
-> +	if (!kvm_async_pf_queue_task(token, false, &n))
->   		return;
-> +
-> +	for (;;) {
-> +		prepare_to_swait_exclusive(&n.wq, &wait, TASK_UNINTERRUPTIBLE);
-> +		if (hlist_unhashed(&n.link))
-> +			break;
-> +
-> +		local_irq_enable();
-> +		schedule();
-> +		local_irq_disable();
->   	}
-> +	finish_swait(&n.wq, &wait);
-> +}
-> +EXPORT_SYMBOL_GPL(kvm_async_pf_task_wait_schedule);
->   
-> -	n.token = token;
-> -	n.cpu = smp_processor_id();
-> -	n.halted = is_idle_task(current) ||
-> -		   (IS_ENABLED(CONFIG_PREEMPT_COUNT)
-> -		    ? preempt_count() > 1 || rcu_preempt_depth()
-> -		    : interrupt_kernel);
-> -	init_swait_queue_head(&n.wq);
-> -	hlist_add_head(&n.link, &b->list);
-> -	raw_spin_unlock(&b->lock);
-> +/*
-> + * Invoked from the async page fault handler.
-> + */
-> +static void kvm_async_pf_task_wait_halt(u32 token)
-> +{
-> +	struct kvm_task_sleep_node n;
-> +
-> +	if (!kvm_async_pf_queue_task(token, true, &n))
-> +		return;
->   
->   	for (;;) {
-> -		if (!n.halted)
-> -			prepare_to_swait_exclusive(&n.wq, &wait, TASK_UNINTERRUPTIBLE);
->   		if (hlist_unhashed(&n.link))
->   			break;
-> +		/*
-> +		 * No point in doing anything about RCU here. Any RCU read
-> +		 * side critical section or RCU watching section can be
-> +		 * interrupted by VMEXITs and the host is free to keep the
-> +		 * vCPU scheduled out as long as it sees fit. This is not
-> +		 * any different just because of the halt induced voluntary
-> +		 * VMEXIT.
-> +		 *
-> +		 * Also the async page fault could have interrupted any RCU
-> +		 * watching context, so invoking rcu_irq_exit()/enter()
-> +		 * around this is not gaining anything.
-> +		 */
-> +		native_safe_halt();
-> +		local_irq_disable();
-> +	}
-> +}
->   
-> -		rcu_irq_exit();
-> +/* Invoked from the async page fault handler */
-> +static void kvm_async_pf_task_wait(u32 token, bool usermode)
-> +{
-> +	bool can_schedule;
->   
-> -		if (!n.halted) {
-> -			local_irq_enable();
-> -			schedule();
-> -			local_irq_disable();
-> -		} else {
-> -			/*
-> -			 * We cannot reschedule. So halt.
-> -			 */
-> -			native_safe_halt();
-> -			local_irq_disable();
-> -		}
-> +	/*
-> +	 * No need to check whether interrupts were disabled because the
-> +	 * host will (hopefully) only inject an async page fault into
-> +	 * interrupt enabled regions.
-> +	 *
-> +	 * If CONFIG_PREEMPTION is enabled then check whether the code
-> +	 * which triggered the page fault is preemptible. This covers user
-> +	 * mode as well because preempt_count() is obviously 0 there.
-> +	 *
-> +	 * The check for rcu_preempt_depth() is also required because
-> +	 * voluntary scheduling inside a rcu read locked section is not
-> +	 * allowed.
-> +	 *
-> +	 * The idle task is already covered by this because idle always
-> +	 * has a preempt count > 0.
-> +	 *
-> +	 * If CONFIG_PREEMPTION is disabled only allow scheduling when
-> +	 * coming from user mode as there is no indication whether the
-> +	 * context which triggered the page fault could schedule or not.
-> +	 */
-> +	if (IS_ENABLED(CONFIG_PREEMPTION))
-> +		can_schedule = preempt_count() + rcu_preempt_depth() == 0;
-> +	else
-> +		can_schedule = usermode;
->   
-> +	/*
-> +	 * If the kernel context is allowed to schedule then RCU is
-> +	 * watching because no preemptible code in the kernel is inside RCU
-> +	 * idle state. So it can be treated like user mode. User mode is
-> +	 * safe because the #PF entry invoked enter_from_user_mode().
-> +	 *
-> +	 * For the non schedulable case invoke rcu_irq_enter() for
-> +	 * now. This will be moved out to the pagefault entry code later
-> +	 * and only invoked when really needed.
-> +	 */
-> +	if (can_schedule) {
-> +		kvm_async_pf_task_wait_schedule(token);
-> +	} else {
->   		rcu_irq_enter();
-> +		kvm_async_pf_task_wait_halt(token);
-> +		rcu_irq_exit();
->   	}
-> -	if (!n.halted)
-> -		finish_swait(&n.wq, &wait);
-> -
-> -	rcu_irq_exit();
-> -	return;
->   }
-> -EXPORT_SYMBOL_GPL(kvm_async_pf_task_wait);
->   
->   static void apf_task_wake_one(struct kvm_task_sleep_node *n)
->   {
->   	hlist_del_init(&n->link);
-> -	if (n->halted)
-> +	if (n->use_halt)
->   		smp_send_reschedule(n->cpu);
->   	else if (swq_has_sleeper(&n->wq))
->   		swake_up_one(&n->wq);
-> @@ -177,12 +247,13 @@ static void apf_task_wake_all(void)
->   	int i;
->   
->   	for (i = 0; i < KVM_TASK_SLEEP_HASHSIZE; i++) {
-> -		struct hlist_node *p, *next;
->   		struct kvm_task_sleep_head *b = &async_pf_sleepers[i];
-> +		struct kvm_task_sleep_node *n;
-> +		struct hlist_node *p, *next;
-> +
->   		raw_spin_lock(&b->lock);
->   		hlist_for_each_safe(p, next, &b->list) {
-> -			struct kvm_task_sleep_node *n =
-> -				hlist_entry(p, typeof(*n), link);
-> +			n = hlist_entry(p, typeof(*n), link);
->   			if (n->cpu == smp_processor_id())
->   				apf_task_wake_one(n);
->   		}
-> @@ -223,8 +294,9 @@ void kvm_async_pf_task_wake(u32 token)
->   		n->cpu = smp_processor_id();
->   		init_swait_queue_head(&n->wq);
->   		hlist_add_head(&n->link, &b->list);
-> -	} else
-> +	} else {
->   		apf_task_wake_one(n);
-> +	}
->   	raw_spin_unlock(&b->lock);
->   	return;
->   }
-> @@ -246,23 +318,33 @@ NOKPROBE_SYMBOL(kvm_read_and_reset_pf_re
->   
->   bool __kvm_handle_async_pf(struct pt_regs *regs, u32 token)
->   {
-> -	/*
-> -	 * If we get a page fault right here, the pf_reason seems likely
-> -	 * to be clobbered.  Bummer.
-> -	 */
-> -	switch (kvm_read_and_reset_pf_reason()) {
-> +	u32 reason = kvm_read_and_reset_pf_reason();
-> +
-> +	switch (reason) {
-> +	case KVM_PV_REASON_PAGE_NOT_PRESENT:
-> +	case KVM_PV_REASON_PAGE_READY:
-> +		break;
->   	default:
->   		return false;
-> -	case KVM_PV_REASON_PAGE_NOT_PRESENT:
-> +	}
-> +
-> +	/*
-> +	 * If the host managed to inject an async #PF into an interrupt
-> +	 * disabled region, then die hard as this is not going to end well
-> +	 * and the host side is seriously broken.
-> +	 */
-> +	if (unlikely(!(regs->flags & X86_EFLAGS_IF)))
-> +		panic("Host injected async #PF in interrupt disabled region\n");
-> +
-> +	if (reason == KVM_PV_REASON_PAGE_NOT_PRESENT) {
->   		/* page is swapped out by the host. */
-> -		kvm_async_pf_task_wait(token, !user_mode(regs));
-> -		return true;
-> -	case KVM_PV_REASON_PAGE_READY:
-> +		kvm_async_pf_task_wait(token, user_mode(regs));
-> +	} else {
->   		rcu_irq_enter();
->   		kvm_async_pf_task_wake(token);
->   		rcu_irq_exit();
-> -		return true;
->   	}
-> +	return true;
->   }
->   NOKPROBE_SYMBOL(__kvm_handle_async_pf);
->   
-> @@ -326,12 +408,12 @@ static void kvm_guest_cpu_init(void)
->   
->   		wrmsrl(MSR_KVM_ASYNC_PF_EN, pa);
->   		__this_cpu_write(apf_reason.enabled, 1);
-> -		printk(KERN_INFO"KVM setup async PF for cpu %d\n",
-> -		       smp_processor_id());
-> +		pr_info("KVM setup async PF for cpu %d\n", smp_processor_id());
->   	}
->   
->   	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI)) {
->   		unsigned long pa;
-> +
->   		/* Size alignment is implied but just to make it explicit. */
->   		BUILD_BUG_ON(__alignof__(kvm_apic_eoi) < 4);
->   		__this_cpu_write(kvm_apic_eoi, 0);
-> @@ -352,8 +434,7 @@ static void kvm_pv_disable_apf(void)
->   	wrmsrl(MSR_KVM_ASYNC_PF_EN, 0);
->   	__this_cpu_write(apf_reason.enabled, 0);
->   
-> -	printk(KERN_INFO"Unregister pv shared memory for cpu %d\n",
-> -	       smp_processor_id());
-> +	pr_info("Unregister pv shared memory for cpu %d\n", smp_processor_id());
->   }
->   
->   static void kvm_pv_guest_cpu_reboot(void *unused)
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -4198,7 +4198,7 @@ int kvm_handle_page_fault(struct kvm_vcp
->   	case KVM_PV_REASON_PAGE_NOT_PRESENT:
->   		vcpu->arch.apf.host_apf_reason = 0;
->   		local_irq_disable();
-> -		kvm_async_pf_task_wait(fault_address, 0);
-> +		kvm_async_pf_task_wait_schedule(fault_address);
->   		local_irq_enable();
->   		break;
->   	case KVM_PV_REASON_PAGE_READY:
-> 
+-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-
+
+Working versions write this in the messages log at boot time:
+
+[   20.175244] input: Sony Vaio Keys as /devices/LNXSYSTM:00/LNXSYBUS:00/PN=
+P0A08:00/device:01/SNY5001:00/input/input5
+[   20.186497] input: Sony Vaio Jogdial as /devices/LNXSYSTM:00/LNXSYBUS:00=
+/PNP0A08:00/device:01/SNY5001:00/input/input6
+[   20.217724] sony_laptop: SNC setup done.
+
+The acpi_listen output is:
+
+button/mute MUTE 00000080 00000000 K
+button/volumedown VOLDN 00000080 00000000 K
+button/volumeup VOLUP 00000080 00000000 K
+video/brightnessdown BRTDN 00000087 00000000 K
+sony/hotkey SNY5001:00 00000001 00000010
+sony/hotkey SNY5001:00 00000001 0000003b
+video/brightnessup BRTUP 00000086 00000000 K
+sony/hotkey SNY5001:00 00000001 00000011
+sony/hotkey SNY5001:00 00000001 0000003b
+video/switchmode VMOD 00000080 00000000 K
+sony/hotkey SNY5001:00 00000001 00000012
+sony/hotkey SNY5001:00 00000001 0000003b
+
+-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-
+
+Broken versions write this in the messages log at boot time:
+
+[   19.143613] input: Sony Vaio Keys as /devices/LNXSYSTM:00/LNXSYBUS:00/PN=
+P0A08:00/device:01/SNY5001:00/input/input6
+[   19.158941] input: Sony Vaio Jogdial as /devices/LNXSYSTM:00/LNXSYBUS:00=
+/PNP0A08:00/device:01/SNY5001:00/input/input7
+[   19.180118] sony_laptop: Invalid acpi_object: expected 0x1 got 0x3
+[   19.184342] sony_laptop: Invalid acpi_object: expected 0x1 got 0x3
+[   19.186183] sony_laptop: Invalid acpi_object: expected 0x1 got 0x3
+[   19.188688] sony_laptop: SNC setup done.
+
+The acpi_listen output is:
+
+button/mute MUTE 00000080 00000000 K
+button/volumedown VOLDN 00000080 00000000 K
+button/volumeup VOLUP 00000080 00000000 K
+sony/hotkey SNY5001:00 00000001 00000092
+sony/hotkey SNY5001:00 00000001 00000092
+sony/hotkey SNY5001:00 00000001 00000092
+sony/hotkey SNY5001:00 00000001 00000092
+sony/hotkey SNY5001:00 00000001 00000092
+sony/hotkey SNY5001:00 00000001 00000092
+sony/hotkey SNY5001:00 00000001 00000092
+sony/hotkey SNY5001:00 00000001 00000092
+
+i.e. the brightness keys, the external output toggle and the hibernate butt=
+on are not recognised anymore. Every keypress generates two identical "sony=
+/hotkey SNY5001:00 00000001 00000092" in the acpi_listen output and the fol=
+lowing lines in the messages log:
+
+May  4 20:09:34 vaio kernel: sony_laptop: Invalid acpi_object: expected 0x1=
+ got 0x3
+May  4 20:09:34 vaio fcomolli[17675]: ACPI group/action undefined: sony/hot=
+key / SNY5001:00.
+
+The volume and mute button always work.
+
+-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-
+
+Bisection output:
+
+[fcomolli@vaio linux]$ git bisect good
+6d232b29cfce65961db4a668c2c6c6987cd24d45 is the first bad commit
+commit 6d232b29cfce65961db4a668c2c6c6987cd24d45
+Author: Maximilian Luz <luzmaximilian@gmail.com>
+Date:   Tue Dec 17 11:35:22 2019 -0800
+
+    ACPICA: Dispatcher: always generate buffer objects for ASL create_field=
+() operator
+   =20
+    ACPICA commit 79a466b64e6af36cc83102f05915e56cb7dd89ab
+   =20
+    According to table 19-419 of the ACPI 6.3 specification, buffer_fields
+    created using the ASL create_field() Operator have been treated as
+    integers if the buffer_field is small enough to fit inside of an ASL
+    integer (32-bits or 64-bits depending on the definition block
+    revision). If they are larger, buffer fields are treated as ASL
+    Buffer objects. However, this is not true for other AML interpreter
+    implementations.
+   =20
+    It has been discovered that other AML interpreters always treat
+    buffer fields created by create_field() as a buffer regardless of the
+    length of the buffer field.
+   =20
+    More specifically, the Microsoft AML interpreter always treats buffer
+    fields created by the create_field() operator as buffer. ACPICA
+    currently does this only when the field size is larger than the
+    maximum integer width. This causes problems with AML code shipped in
+    Microsoft Surface devices.
+   =20
+    More details:
+   =20
+    The control methods in these devices determine the success of an ASL
+    control method execution by examining the type resulting from storing
+    a buffer field created by a create_field() operator. On success, a
+    Buffer object is expected, on failure an Integer containing an error
+    code. This buffer object is created with a dynamic size via the
+    create_field() operator. Due to the difference in behavior, Buffer
+    values of small size are however converted to Integers and thus
+    interpreted by the control method as having failed, whereas in
+    reality it succeeded. Below is an example of a control method called
+    TEST that illustrates this behavior.
+   =20
+    Method (CBUF) // Create a Buffer field
+    {
+        /*
+         * Depending on the value of RAND, ACPICA interpreter will treat
+         * BF00 as an integer or buffer.
+         */
+        create_field (BUFF, 0, RAND, BF00)
+        return (BF00)
+    }
+   =20
+    Method (TEST)
+    {
+        /*
+         * Storing the value returned by CBUF to local0 will result in
+         * implicit type conversion outlined in the ACPI specification.
+         *
+         * ACPICA will treat local0 like an ASL integer if RAND is less
+         * than or equal to 64 or 32 (depending on the definition_block
+         * revision). If RAND is greater, it will be treated like an ASL
+         * buffer. Other implementations treat local0 like an ASL buffer
+         * regardless of the value of RAND.
+         */
+        local0 =3D CBUF()
+   =20
+        /*
+         * object_type of 0x03 represents an ASL Buffer
+         */
+        if (object_type (Local0) !=3D 0x03)
+        {
+            // Error on ACPICA if RAND is small enough
+        }
+        else
+        {
+            /*
+             * Success on APICA if RAND is large enough
+             * Other implementations always take this path because local0
+             * is always treated as a buffer.
+             */
+        }
+    }
+   =20
+    This change prohibits the previously mentioned integer conversion to
+    match other AML interpreter implementations (Microsoft) that do not
+    conform to the ACPI specification.
+   =20
+    Link: https://github.com/acpica/acpica/commit/79a466b6
+    Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+    Signed-off-by: Bob Moore <robert.moore@intel.com>
+    Signed-off-by: Erik Kaneda <erik.kaneda@intel.com>
+    Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+ drivers/acpi/acpica/acobject.h |  3 ++-
+ drivers/acpi/acpica/dsopcode.c |  2 ++
+ drivers/acpi/acpica/exfield.c  | 10 ++++++++--
+ 3 files changed, 12 insertions(+), 3 deletions(-)
+
+-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-
+
+[fcomolli@vaio linux]$ git bisect log
+git bisect start
+# bad: [7111951b8d4973bda27ff663f2cf18b663d15b48] Linux 5.6
+git bisect bad 7111951b8d4973bda27ff663f2cf18b663d15b48
+# good: [84df9525b0c27f3ebc2ebb1864fa62a97fdedb7d] Linux 4.19
+git bisect good 84df9525b0c27f3ebc2ebb1864fa62a97fdedb7d
+# good: [ee7dd7733b201c6201174f384a92dbadc9f3129c] sis900: remove TxIDLE
+git bisect good ee7dd7733b201c6201174f384a92dbadc9f3129c
+# good: [44bf67f32a6803339ac1ba721b158c3e2272cabe] Merge drm/drm-next into =
+drm-misc-next
+git bisect good 44bf67f32a6803339ac1ba721b158c3e2272cabe
+# good: [7214618c60e947b8cea12b47d8279bd4220f21bc] Merge tag 'riscv/for-v5.=
+5-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux
+git bisect good 7214618c60e947b8cea12b47d8279bd4220f21bc
+# bad: [4cadc60d6bcfee9c626d4b55e9dc1475d21ad3bb] Merge tag 'for-v5.6' of g=
+it://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply
+git bisect bad 4cadc60d6bcfee9c626d4b55e9dc1475d21ad3bb
+# bad: [a78208e2436963d0b2c7d186277d6e1a9755029a] Merge branch 'linus' of g=
+it://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6
+git bisect bad a78208e2436963d0b2c7d186277d6e1a9755029a
+# good: [9e1af7567b266dc6c3c8fd434ea807b3206bfdc1] Merge tag 'mmc-v5.6' of =
+git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc
+git bisect good 9e1af7567b266dc6c3c8fd434ea807b3206bfdc1
+# bad: [d99391ec2b42d827d92003dcdcb96fadac9d862b] Merge branch 'core-rcu-fo=
+r-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+git bisect bad d99391ec2b42d827d92003dcdcb96fadac9d862b
+# good: [6d277aca488fdf0a1e67cd14b5a58869f66197c9] Merge tag 'pm-5.6-rc1' o=
+f git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+git bisect good 6d277aca488fdf0a1e67cd14b5a58869f66197c9
+# bad: [534b0a8b677443c0aa8c4c71ff7887f08a2b9b41] Merge tag 'core-debugobje=
+cts-2020-01-28' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+git bisect bad 534b0a8b677443c0aa8c4c71ff7887f08a2b9b41
+# bad: [22a8f39c520fc577c02b4e5c99f8bb3b6017680b] Merge tag 'for-5.6/driver=
+s-2020-01-27' of git://git.kernel.dk/linux-block
+git bisect bad 22a8f39c520fc577c02b4e5c99f8bb3b6017680b
+# bad: [34dabd81160f7bfb18b67c1161b3c4d7ca6cab83] Merge tag 'pnp-5.6-rc1' o=
+f git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+git bisect bad 34dabd81160f7bfb18b67c1161b3c4d7ca6cab83
+# bad: [3dd855147feff375dfa6737331628ea919e9da59] Merge branches 'acpi-batt=
+ery', 'acpi-video', 'acpi-fan' and 'acpi-drivers'
+git bisect bad 3dd855147feff375dfa6737331628ea919e9da59
+# bad: [ff7a672f83b355365478a1fdfb60933ef34d8d02] Merge branch 'acpica'
+git bisect bad ff7a672f83b355365478a1fdfb60933ef34d8d02
+# bad: [ae6252d8dfeb21f5067a09a8f4a6dd30851d70c1] ACPICA: Update version to=
+ 20191213
+git bisect bad ae6252d8dfeb21f5067a09a8f4a6dd30851d70c1
+# good: [5ddbd77181dfca61b16d2e2222382ea65637f1b9] ACPICA: Disassembler: cr=
+eate buffer fields in ACPI_PARSE_LOAD_PASS1
+git bisect good 5ddbd77181dfca61b16d2e2222382ea65637f1b9
+# bad: [6d232b29cfce65961db4a668c2c6c6987cd24d45] ACPICA: Dispatcher: alway=
+s generate buffer objects for ASL create_field() operator
+git bisect bad 6d232b29cfce65961db4a668c2c6c6987cd24d45
+# good: [69e86e59ad2a2518704a31c35530e6e99963c358] ACPICA: acpisrc: add uni=
+x line ending support for non-windows build
+git bisect good 69e86e59ad2a2518704a31c35530e6e99963c358
+# first bad commit: [6d232b29cfce65961db4a668c2c6c6987cd24d45] ACPICA: Disp=
+atcher: always generate buffer objects for ASL create_field() operator
