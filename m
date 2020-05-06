@@ -2,135 +2,146 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5FAC4725A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65DFEC4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6691220A8B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 428E120CC7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:30:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tNHhsjrM"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Q/9X3Hqp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729930AbgEFPae (ORCPT
+        id S1729815AbgEFPai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:30:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59634 "EHLO
+        Wed, 6 May 2020 11:30:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729668AbgEFPad (ORCPT
+        with ESMTP id S1729931AbgEFPag (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:30:33 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 584B8C061A0F;
-        Wed,  6 May 2020 08:30:33 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id w65so1140549pfc.12;
-        Wed, 06 May 2020 08:30:33 -0700 (PDT)
+        Wed, 6 May 2020 11:30:36 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B22DC061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 08:30:36 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id q24so1045499pjd.1
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 08:30:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=EP/d1HVUIepNzw8vFBcWMMB05FDxcGMjkekQo0Yq7gw=;
-        b=tNHhsjrM0dAmJS6ZEQUvQLBG/b27NCjcBlDzYpOJHP52ow9LkjrbGeXN5/vKocc1K0
-         0cfZ3t6nV/vu+w9SMiNGn0bktZ53X95RUMGsc9m739K6oJwjyQaPpKHVVeXqIXu/9GrI
-         hQLdD8C+xRCcU9W8Yz5tRT7eeZ9ZwtTXX/umVexruwh8WEurArlhXMOpFKcZ0qQU6uyz
-         NDUXr/nttHjqmRYByBqaFwI3FGczRclDU6uWQMFUH4Tc4JAMWgeZ4qoHyJ04575AsJLm
-         YyihHPF9nK2UnR3+EHaEIDkiLYH9mSvC0NilZgQbFmOX2HEleOZ2sL1e+s0EM9Tf6rPP
-         cAlg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QdMtxniSWK3PkWXNKwBL1UPHuRFtnVNhLkmVLBdfg9k=;
+        b=Q/9X3HqpDpP1bpMyEce6+77MmK6MN+XVjRdiAxqecgTGYNf3lBxevqb2kiejal14bb
+         WjYaodQ0NtKSLfkI4ehZZNQCWbD4wu0b8/wpICLtZi+IHB10p/r0x/OfvVfBgznsLkHH
+         mBJthd/pdvQ9+cBWw2Oz5oYEAiMhlyPElCbek=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=EP/d1HVUIepNzw8vFBcWMMB05FDxcGMjkekQo0Yq7gw=;
-        b=XmUumE4RxPNXa6qJ4BqlZE70/4+IwWgy6GrWEr115+j0fm4t9KVvFa43rHhLCPbpQ3
-         xQUM6hhuT1xNLe8o2bEbOOvIDqhs3GdiIj34zRCXyyjXlnMnGXuAPNVdhsDEgAzrWzot
-         Om/7hBtQQwotPmiFD55XRW2U84Jo0zIc5IrIbCA7RwGP7nfNBQZkVuWzVLMlgIvN0pzc
-         1q053cc4DWmBYbMikmtzKjedqksebE/B9JerZWbdhA90RblACOC3aGxxnBDxX4AKDncZ
-         pa/Pl7XNTVaJ7CB5OkBxRE+2qPuFXO1JjHLK7uiNidjumml0CZN99ep0INF1dRDU/ATF
-         1WQw==
-X-Gm-Message-State: AGi0Pua57z2oMjTEJ/jxbwV4SyXZcOWnmwSyjCOFDywTEAaeqPwC0jlW
-        xJB53YYymXjsAtSNiT6nmFOhtZgEOps=
-X-Google-Smtp-Source: APiQypKf3niZEcjx0HEcbdP5WEHP3Ldg13i5E8FzO3Cvt0EdUS9ZPVrwpi0Xu0rGGCA39N9hVY+SEw==
-X-Received: by 2002:a63:31cc:: with SMTP id x195mr7131812pgx.100.1588779032394;
-        Wed, 06 May 2020 08:30:32 -0700 (PDT)
-Received: from [192.168.1.7] ([223.72.42.191])
-        by smtp.gmail.com with ESMTPSA id z25sm2151506pfa.213.2020.05.06.08.30.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 May 2020 08:30:31 -0700 (PDT)
-Subject: Re: [PATCH] media: usb: ttusb-dec: avoid buffer overflow in
- ttusb_dec_handle_irq() when DMA failures/attacks occur
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     mchehab@kernel.org, kstewart@linuxfoundation.org,
-        tomasbortoli@gmail.com, sean@mess.org, allison@lohutok.net,
-        tglx@linutronix.de, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200505142110.7620-1-baijiaju1990@gmail.com>
- <20200505181042.GD1199718@kroah.com>
- <0e4a86ee-8c4e-4ac3-8499-4e9a6ed7bd1e@gmail.com>
- <20200506110722.GA2975410@kroah.com>
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-Message-ID: <b3af10e3-8709-3da0-6841-e5ddd6b4a609@gmail.com>
-Date:   Wed, 6 May 2020 23:30:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QdMtxniSWK3PkWXNKwBL1UPHuRFtnVNhLkmVLBdfg9k=;
+        b=O5R+YuaAOTNTFQFpo7FdHVmGwM0Gtgfv4Mgqchci6y8HV4ebNB/f+3d6+J6BMJZO4d
+         17n54GWr4Fm2KO6KnSltnEVXiD129mIEH4RDNyJ+BmEOAm4qtoi7fpvoBctc3ZeqjKlM
+         SDutyj50QlhCU4MUUMjSnYV02UdCx+sRYQMedAS5R/7a39n1RE4gBwwuzhe53k2BnUG3
+         ILz+QsoQu7v4GXpmLwOIdl3MnjDFqXmmNIrEO8f1I44MnqKQEC8ykhnVWXuvN1BZ/K0U
+         SeuqN4klg3QV9daImGj/f2NNgrHHjIUmfF9ZkgUjgAQDx/Vxe1IotAL5Jc6/scwmG25I
+         D+Tg==
+X-Gm-Message-State: AGi0Puash/pJbOrpTFMUf9BEiWMJbzSK5s5AsPTtbIh2vv9IpscbYJhl
+        1Pe6CrrRf6wn1sMrEna0iVDb/g==
+X-Google-Smtp-Source: APiQypLr2NM9l03AagLLZo6M94o8eGZFpNOjjoclEjyQPblQQ32jPFWaWB507XPHEGNsAcVzeN19jg==
+X-Received: by 2002:a17:90a:21ce:: with SMTP id q72mr9815638pjc.0.1588779036158;
+        Wed, 06 May 2020 08:30:36 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 82sm2099813pfv.214.2020.05.06.08.30.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 08:30:34 -0700 (PDT)
+Date:   Wed, 6 May 2020 08:30:33 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 6/7] exec: Move most of setup_new_exec into flush_old_exec
+Message-ID: <202005060829.A09C366D0@keescook>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+ <87ftcei2si.fsf@x220.int.ebiederm.org>
+ <202005051354.C7E2278688@keescook>
+ <87368ddsc9.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-In-Reply-To: <20200506110722.GA2975410@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87368ddsc9.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 06, 2020 at 09:57:10AM -0500, Eric W. Biederman wrote:
+> Kees Cook <keescook@chromium.org> writes:
+> 
+> > On Tue, May 05, 2020 at 02:45:33PM -0500, Eric W. Biederman wrote:
+> >> 
+> >> The current idiom for the callers is:
+> >> 
+> >> flush_old_exec(bprm);
+> >> set_personality(...);
+> >> setup_new_exec(bprm);
+> >> 
+> >> In 2010 Linus split flush_old_exec into flush_old_exec and
+> >> setup_new_exec.  With the intention that setup_new_exec be what is
+> >> called after the processes new personality is set.
+> >> 
+> >> Move the code that doesn't depend upon the personality from
+> >> setup_new_exec into flush_old_exec.  This is to facilitate future
+> >> changes by having as much code together in one function as possible.
+> >
+> > Er, I *think* this is okay, but I have some questions below which
+> > maybe you already investigated (and should perhaps get called out in
+> > the changelog).
+> 
+> I will see if I can expand more on the review that I have done.
+> 
+> I saw this as moving thre lines and the personality setting later in the
+> code, rather than moving a bunch of lines up
+> 
+> AKA these lines:
+> >> +	arch_pick_mmap_layout(me->mm, &bprm->rlim_stack);
+> >> +
+> >> +	arch_setup_new_exec();
+> >> +
+> >> +	/* Set the new mm task size. We have to do that late because it may
+> >> +	 * depend on TIF_32BIT which is only updated in flush_thread() on
+> >> +	 * some architectures like powerpc
+> >> +	 */
+> >> +	me->mm->task_size = TASK_SIZE;
+> 
+> 
+> I verified carefully that only those three lines can depend upon the
+> personality changes.
+> 
+> Your concern if anything depends on those moved lines I haven't looked
+> at so closely so I will go back through and do that.  I don't actually
+> expect anything depends upon those three lines because they should only
+> be changing architecture specific state.  But that is general handwaving
+> not actually careful review which tends to turn up suprises in exec.
 
+Right -- I looked through all of it (see my last email) and I think it's
+all okay, but I was curious if you'd looked too. :)
 
-On 2020/5/6 19:07, Greg KH wrote:
-> On Wed, May 06, 2020 at 06:13:01PM +0800, Jia-Ju Bai wrote:
->> I have never modified DMA memory in the real world, but an attacker can use
->> a malicious device to do this.
->> There is a video that shows how to use the Inception tool to perform DMA
->> attacks and login in the Windows OS without password:
->> https://www.youtube.com/watch?v=HDhpy7RpUjM
-> If you have control over the hardware, and can write to any DMA memory,
-> again, there's almost nothing a kernel can do to protect from that.
+> Speaking of while I was looking through the lsm hooks again I just
+> realized that 613cc2b6f272 ("fs: exec: apply CLOEXEC before changing
+> dumpable task flags") only fixed half the problem.  So I am going to
+> take a quick detour fix that then come back to this.  As that directly
+> affects this code motion.
 
-I think that each device can only access its own DMA memory, instead of 
-any DMA memory for other hardware devices.
-Thus, it is dangerous that the whole kernel can be attacked via a simple 
-malicious device, through some vulnerabilities in the trusted driver.
+Oh yay. :) Thanks for catching it!
 
-A feasible example is that, the attacker inserts a malicious device via 
-PCI-E bus in a locked computer, when the owner of this computer leaves. 
-The attacker modifies the DMA memory of this malicious device, to 
-exploit the vulnerabilities in the trusted driver and steal key data 
-from the computer.
-I think this is possible, because many buses (such PCI-E bus) support 
-hot plugging now.
-Thus, to protect the kernel from such DMA attacks, these vulnerabilities 
-in the trusted driver had better be fixed.
-
-Besides, I think that a safe way is to only store data in DMA memory, 
-and this data is only passed to userspace and hardware, instead of 
-tainting kernel data...
-
->> Besides, not related to this patch, some drivers use DMA to send/receive
->> data (such as the URB used in USB drivers and ring descriptors used in
->> network drivers). In this case, if the data is malicious and used as an
->> array index through DMA, security problems may occur.
->>
->> In my opinion, similar to the data from userspace, the data from hardware
->> may be also malicious and should be checked.
->>
->> Maybe we could discuss this issue with DMA driver developers?
-> Sure, but I think that's outside the scope of this tiny patch :)
-
-Okay, in the discussion e-mail, I will introduce my opinion and give 
-several possible DMA issues that I found, thanks :)
-
-
-Best wishes,
-Jia-Ju Bai
+-- 
+Kees Cook
