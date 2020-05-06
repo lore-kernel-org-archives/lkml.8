@@ -2,160 +2,100 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3C7C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAC4C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C660206D5
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:55:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dKlj2sHv"
+	by mail.kernel.org (Postfix) with ESMTP id 0992B20661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:56:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbgEFHz2 (ORCPT
+        id S1728415AbgEFH4z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 03:55:28 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49279 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728317AbgEFHz2 (ORCPT
+        Wed, 6 May 2020 03:56:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45086 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728280AbgEFH4y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 03:55:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588751726;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=j5r8cUH87Cm8pn1J05aD8IU2r+ddBiUrzbcyrQ1rqlY=;
-        b=dKlj2sHvdCRotAUu6obIPOpzOhMz2x6P9GgOumXUl5uymjpQbbM6aViYWhlKZlXayllF7S
-        tBwKxjOTDQv1pEnKgqHZfqAwgkIeZojCN+w89gkkuQNv+ZFsSN7yeEBTB8a2YjuK6ksA7c
-        ZsdtykmnqTUufM90PDV37APeWJ61GQY=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-141-zq3Y9ouJMZW_arB2IhDVQw-1; Wed, 06 May 2020 03:55:24 -0400
-X-MC-Unique: zq3Y9ouJMZW_arB2IhDVQw-1
-Received: by mail-wr1-f71.google.com with SMTP id v17so887155wrq.8
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 00:55:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=j5r8cUH87Cm8pn1J05aD8IU2r+ddBiUrzbcyrQ1rqlY=;
-        b=TqFsZYPluXO72CmrvE2cgHxIL5Pa5SwrgnbX9gofNIyYjdwLOG39s/iFXvMzxeAoNH
-         QzXmNwtHJYE70y50Of4h76HXmbJlwpS+O/xB/RIxcEVyfw2D+OOr7hfNq/N52LdiRIfu
-         ie39nxwYhK4pDEuirnXBpyT1Cgn3Mcozzgo8RTVEFBU1tZsCzHTOfyFvbuniCfPE2QNb
-         d1usTmzq1ldiEN5f6i5inxkAf+S7AKpHREmVD/E2jTLShHelPDN821fdw8VFOO702cJJ
-         Er3xu4nC/xpx/wrWgdcQeEkXeE+lS+pPWsUQKXKs1+DlI+3SJn5M6pgxJeZ3p4c2UJvc
-         kKzQ==
-X-Gm-Message-State: AGi0Puae1aCWHxk+XQKn+xQ+G/z122zfuxUQDbjjynUtroSf4Tx4mtfo
-        Bk0eWOBx2eG0Du570zx8YLO0AHE+6v0yXhkqyay543tbyiIypoh9DSeVYbaBiIegUPf+UCr/29n
-        wfpQ7mSbAbND15zHqtWCFP9Lo
-X-Received: by 2002:adf:ca0e:: with SMTP id o14mr8688810wrh.254.1588751723674;
-        Wed, 06 May 2020 00:55:23 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIL+Ft4xqYKYiJ9ce/pssPSPl7vb4LMqt0EzMtrAHXoiKlJ7M20A89Huk0ZnMTW4xaQoVcVLA==
-X-Received: by 2002:adf:ca0e:: with SMTP id o14mr8688777wrh.254.1588751723416;
-        Wed, 06 May 2020 00:55:23 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:11d7:2f21:f38b:17e? ([2001:b07:6468:f312:11d7:2f21:f38b:17e])
-        by smtp.gmail.com with ESMTPSA id n12sm1483755wrj.95.2020.05.06.00.55.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 May 2020 00:55:22 -0700 (PDT)
-Subject: Re: [patch V4 part 2 14/18] x86/kvm/vmx: Add hardirq tracing to guest
- enter/exit
-To:     Thomas Gleixner <tglx@linutronix.de>,
+        Wed, 6 May 2020 03:56:54 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAB27C061A0F;
+        Wed,  6 May 2020 00:56:52 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jWEvB-0006V5-Kt; Wed, 06 May 2020 09:56:49 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E41081C0092;
+        Wed,  6 May 2020 09:56:48 +0200 (CEST)
+Date:   Wed, 06 May 2020 07:56:48 -0000
+From:   "tip-bot2 for Andrew Morton" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/build] x86/build: Use $(CONFIG_SHELL)
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-References: <20200505134112.272268764@linutronix.de>
- <20200505134341.471542318@linutronix.de>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <6217b923-fc1b-29c3-cab7-04b7d2d6a0fb@redhat.com>
-Date:   Wed, 6 May 2020 09:55:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+In-Reply-To: <20200505211932.GE6880@zn.tnic>
+References: <20200505211932.GE6880@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <20200505134341.471542318@linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Message-ID: <158875180875.8414.10395271850388166773.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/05/20 15:41, Thomas Gleixner wrote:
-> Add hardirq tracing to guest enter/exit functions in the same way as it
-> is done in the user mode enter/exit code.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/vmx/vmx.c |   25 +++++++++++++++++++++++--
->  1 file changed, 23 insertions(+), 2 deletions(-)
-> 
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -6604,9 +6604,19 @@ static void vmx_vcpu_run(struct kvm_vcpu
->  	x86_spec_ctrl_set_guest(vmx->spec_ctrl, 0);
->  
->  	/*
-> -	 * Tell context tracking that this CPU is about to enter guest mode.
-> +	 * VMENTER enables interrupts (host state), but the kernel state is
-> +	 * interrupts disabled when this is invoked. Also tell RCU about
-> +	 * it. This is the same logic as for exit_to_user_mode().
-> +	 *
-> +	 * 1) Trace interrupts on state
-> +	 * 2) Prepare lockdep with RCU on
-> +	 * 3) Invoke context tracking if enabled to adjust RCU state
-> +	 * 4) Tell lockdep that interrupts are enabled
->  	 */
-> +	trace_hardirqs_on_prepare();
-> +	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
->  	guest_enter_irqoff();
-> +	lockdep_hardirqs_on(CALLER_ADDR0);
->  
->  	/* L1D Flush includes CPU buffer clear to mitigate MDS */
->  	if (static_branch_unlikely(&vmx_l1d_should_flush))
-> @@ -6623,9 +6633,20 @@ static void vmx_vcpu_run(struct kvm_vcpu
->  	vcpu->arch.cr2 = read_cr2();
->  
->  	/*
-> -	 * Tell context tracking that this CPU is back.
-> +	 * VMEXIT disables interrupts (host state), but tracing and lockdep
-> +	 * have them in state 'on'. Same as enter_from_user_mode().
-> +	 *
-> +	 * 1) Tell lockdep that interrupts are disabled
-> +	 * 2) Invoke context tracking if enabled to reactivate RCU
-> +	 * 3) Trace interrupts off state
-> +	 *
-> +	 * This needs to be done before the below as native_read_msr()
-> +	 * contains a tracepoint and x86_spec_ctrl_restore_host() calls
-> +	 * into world and some more.
->  	 */
-> +	lockdep_hardirqs_off(CALLER_ADDR0);
->  	guest_exit_irqoff();
-> +	trace_hardirqs_off_prepare();
->  
->  	/*
->  	 * We do not use IBRS in the kernel. If this vCPU has used the
-> 
+The following commit has been merged into the x86/build branch of tip:
 
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Commit-ID:     950a37078aa0ab63a57673e7027e8735e73d4bc6
+Gitweb:        https://git.kernel.org/tip/950a37078aa0ab63a57673e7027e8735e73d4bc6
+Author:        Andrew Morton <akpm@linux-foundation.org>
+AuthorDate:    Tue, 05 May 2020 14:26:51 -07:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Wed, 06 May 2020 09:46:26 +02:00
 
+x86/build: Use $(CONFIG_SHELL)
+
+When scripts/x86-check-compiler.sh doesn't have the executable bit set:
+
+  q:/usr/src/25> make clean
+  make: execvp: ./scripts/x86-check-compiler.sh: Permission denied
+
+Fix this by using $(CONFIG_SHELL).
+
+This will happen if the user downloads and applies patch-5.7.tar.gz, since
+patch(1) doesn't preserve the x bit.
+
+Fixes: 73da86741e7f7 ("x86/build: Check whether the compiler is sane")
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200505211932.GE6880@zn.tnic
+---
+ arch/x86/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index 38d3eec..9e22791 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -2,7 +2,7 @@
+ # Unified Makefile for i386 and x86_64
+ 
+ #  Check the compiler
+-sane_compiler := $(shell $(srctree)/scripts/x86-check-compiler.sh $(CC))
++sane_compiler := $($(CONFIG_SHELL) $(srctree)/scripts/x86-check-compiler.sh $(CC))
+ $(if $(sane_compiler),$(error $(CC) check failed. Aborting),)
+ 
+ # select defconfig based on actual architecture
