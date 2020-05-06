@@ -2,102 +2,98 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC9AC47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DF4C38A2A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3ABA206D5
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:17:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ETbnGxm8"
+	by mail.kernel.org (Postfix) with ESMTP id 95A7B206D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:18:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728937AbgEFORh (ORCPT
+        id S1728959AbgEFOSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 10:17:37 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:57243 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728670AbgEFORh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 10:17:37 -0400
-Received: from [IPv6:2601:646:8600:3281:d9e2:e16d:2ce4:a5c3] ([IPv6:2601:646:8600:3281:d9e2:e16d:2ce4:a5c3])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 046EGISp3022440
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Wed, 6 May 2020 07:16:20 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 046EGISp3022440
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020042201; t=1588774580;
-        bh=2t81ix48+XEqIovy4/uuaiJNVpVfGfHkdc5n10MqWF4=;
-        h=Date:In-Reply-To:References:Subject:To:From:From;
-        b=ETbnGxm8J7xr65vxrUydccH3oDZPr6ssZbQrpdFDLaJeehBoK3COvrkjxemldJ7Kx
-         Sa52fbj6LykWgbqsauISnLs58GZlGFQSwp79DKsiE1odTeSOahoIzKxZbKYslRZtx0
-         leFQHs/2egU6BRZTlK0L2B6oIkbgaI2b94xuQ4hRk4PQFHIuoTwmGAvAjJP3lp8BMK
-         zUtyWynNJ6BlmrLVpoB2QgQIliA5HiCUHfX7pco+BKXdU7t7orRcmmE0/IvCMP0sE0
-         PY/U2uGwLk/0CeWvIzDjVdiuqMmSLvMaZFW9KlUXKXXlYlfF7y6ZcnDqnTxh9U/8cl
-         nnKRsNJVAHEHA==
-Date:   Wed, 06 May 2020 07:16:11 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200506140352.37154-1-yanaijie@huawei.com>
-References: <20200506140352.37154-1-yanaijie@huawei.com>
+        Wed, 6 May 2020 10:18:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:37474 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726114AbgEFOSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 10:18:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F0B6D6E;
+        Wed,  6 May 2020 07:18:01 -0700 (PDT)
+Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9EAA13F68F;
+        Wed,  6 May 2020 07:18:00 -0700 (PDT)
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v3 0/5] kselftest: Extend vDSO tests
+Date:   Wed,  6 May 2020 15:17:26 +0100
+Message-Id: <20200506141731.14660-1-vincenzo.frascino@arm.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2] bpf, i386: remove unneeded conversion to bool
-To:     Jason Yan <yanaijie@huawei.com>, davem@davemloft.net,
-        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, udknight@gmail.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        lukenels@cs.washington.edu, xi.wang@gmail.com,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   hpa@zytor.com
-Message-ID: <D11F36F6-BF28-4DEB-8AED-4486477130F8@zytor.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On May 6, 2020 7:03:52 AM PDT, Jason Yan <yanaijie@huawei=2Ecom> wrote:
->The '=3D=3D' expression itself is bool, no need to convert it to bool
->again=2E
->This fixes the following coccicheck warning:
->
->arch/x86/net/bpf_jit_comp32=2Ec:1478:50-55: WARNING: conversion to bool
->not needed here
->arch/x86/net/bpf_jit_comp32=2Ec:1479:50-55: WARNING: conversion to bool
->not needed here
->
->Signed-off-by: Jason Yan <yanaijie@huawei=2Ecom>
->---
-> v2: change the name 'x32' to 'i386'=2E
->
-> arch/x86/net/bpf_jit_comp32=2Ec | 4 ++--
-> 1 file changed, 2 insertions(+), 2 deletions(-)
->
->diff --git a/arch/x86/net/bpf_jit_comp32=2Ec
->b/arch/x86/net/bpf_jit_comp32=2Ec
->index 66cd150b7e54=2E=2E96fde03aa987 100644
->--- a/arch/x86/net/bpf_jit_comp32=2Ec
->+++ b/arch/x86/net/bpf_jit_comp32=2Ec
->@@ -1475,8 +1475,8 @@ static int do_jit(struct bpf_prog *bpf_prog, int
->*addrs, u8 *image,
-> 	for (i =3D 0; i < insn_cnt; i++, insn++) {
-> 		const s32 imm32 =3D insn->imm;
-> 		const bool is64 =3D BPF_CLASS(insn->code) =3D=3D BPF_ALU64;
->-		const bool dstk =3D insn->dst_reg =3D=3D BPF_REG_AX ? false : true;
->-		const bool sstk =3D insn->src_reg =3D=3D BPF_REG_AX ? false : true;
->+		const bool dstk =3D insn->dst_reg !=3D BPF_REG_AX;
->+		const bool sstk =3D insn->src_reg !=3D BPF_REG_AX;
-> 		const u8 code =3D insn->code;
-> 		const u8 *dst =3D bpf2ia32[insn->dst_reg];
-> 		const u8 *src =3D bpf2ia32[insn->src_reg];
+This series extends the kselftests for the vDSO library making sure: that
+they compile correctly on non x86 platforms, that they can be cross
+compiled and introducing new tests that verify the correctness of the
+library.
 
-"foo ? true : false" is also far better written !!foo when it isn't totall=
-y redundant=2E
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+The so extended vDSO kselftests have been verified on all the platforms
+supported by the unified vDSO library [1].
+
+The only new patch that this series introduces is the first one, patch 2 and
+patch 3 have already been reviewed in past as part of other series [2] [3].
+
+[1] https://lore.kernel.org/lkml/20190621095252.32307-1-vincenzo.frascino@arm.com
+[2] https://lore.kernel.org/lkml/20190621095252.32307-26-vincenzo.frascino@arm.com
+[3] https://lore.kernel.org/lkml/20190523112116.19233-4-vincenzo.frascino@arm.com
+
+Changes:
+--------
+v3:
+  - Added correctness test for clock_gettime64.
+  - Rebased on 5.7-rc4.
+v2:
+  - Addressed review comments from Andy.
+  - Rebased on 5.7-rc3.
+
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+
+Vincenzo Frascino (5):
+  kselftest: Enable vDSO test on non x86 platforms
+  kselftest: Extend vDSO selftest
+  kselftest: Extend vDSO selftest to clock_getres
+  kselftest: Move test_vdso to the vDSO test suite
+  kselftest: Extend vdso correctness test to clock_gettime64
+
+ tools/testing/selftests/Makefile              |   1 +
+ tools/testing/selftests/vDSO/Makefile         |  16 +-
+ .../selftests/vDSO/vdso_clock_getres.c        | 124 +++++++++
+ tools/testing/selftests/vDSO/vdso_config.h    |  92 +++++++
+ .../vdso_correctness_test.c}                  | 115 ++++++++-
+ tools/testing/selftests/vDSO/vdso_full_test.c | 244 ++++++++++++++++++
+ tools/testing/selftests/x86/Makefile          |   2 +-
+ 7 files changed, 586 insertions(+), 8 deletions(-)
+ create mode 100644 tools/testing/selftests/vDSO/vdso_clock_getres.c
+ create mode 100644 tools/testing/selftests/vDSO/vdso_config.h
+ rename tools/testing/selftests/{x86/test_vdso.c => vDSO/vdso_correctness_test.c} (73%)
+ create mode 100644 tools/testing/selftests/vDSO/vdso_full_test.c
+
+-- 
+2.26.2
+
