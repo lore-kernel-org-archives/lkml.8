@@ -2,133 +2,86 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED062C38A2A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD71C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB7E020753
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B01520753
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:03:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GFrtjBBR"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="XmQBFBEA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728663AbgEFKAZ (ORCPT
+        id S1728735AbgEFKDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 06:00:25 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21724 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728465AbgEFKAY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 06:00:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588759223;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=V+s+EVTjLJSoyQgVEndJ36QCIydluEdbqn+8ObHr7LM=;
-        b=GFrtjBBRSw0u6LrYQ9k7W3tMskFqCOQm9SHi4hclcoR5U6/QnWdijZmj54pcQD+T9DgM6f
-        LMIk+WdzGoRfa/mBawYCgWP3LrSVfRmoNtq9bXBfKJRaHUrsomdbwCEdSqY0jo4SWpV+AW
-        XEvkTWaP0ERlhRW7I+oxXWzbzZTKoeA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-358-FuhPtV1tOs20XK-JbOdIAQ-1; Wed, 06 May 2020 06:00:18 -0400
-X-MC-Unique: FuhPtV1tOs20XK-JbOdIAQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 6 May 2020 06:03:03 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:60164 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728314AbgEFKDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 06:03:03 -0400
+Received: from zn.tnic (p200300EC2F06960035CE382CC05E0B20.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:9600:35ce:382c:c05e:b20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F0B9B106B242;
-        Wed,  6 May 2020 10:00:17 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B92446294E;
-        Wed,  6 May 2020 10:00:14 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     peterx@redhat.com
-Subject: [PATCH] KVM: x86: pass correct DR6 for GD userspace exit
-Date:   Wed,  6 May 2020 06:00:14 -0400
-Message-Id: <20200506100014.7451-1-pbonzini@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E32101EC030F;
+        Wed,  6 May 2020 12:03:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1588759382;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=hisy4FfcANfVY69ugOc5P7tdWlvofA+codCJ8A0yxi8=;
+        b=XmQBFBEAiiKlfQyRzFFR90/blg4/TDHouBNQXaKylX6xkWGUrba+zsYjvLIOP91IcIV1iG
+        EwA907JiLyyOM2mmrK61zahgehT1R6L2f9Sn2S7AgLkkh/yWgXenkseXvC/cUzBt7sXxTY
+        2LBUo/C+wc62tXB4U72qcxy6uuNzliM=
+Date:   Wed, 6 May 2020 12:02:56 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: Re: [patch V4 part 1 03/36] sched: Clean up scheduler_ipi()
+Message-ID: <20200506100256.GC25532@zn.tnic>
+References: <20200505131602.633487962@linutronix.de>
+ <20200505134058.361859938@linutronix.de>
+ <20200506084019.GB25532@zn.tnic>
+ <87ftcdo29o.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87ftcdo29o.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When KVM_EXIT_DEBUG is raised for the disabled-breakpoints case (DR7.GD),
-DR6 was incorrectly copied from the value in the VM.  Instead,
-DR6.BD should be set in order to catch this case.
+On Wed, May 06, 2020 at 11:12:35AM +0200, Thomas Gleixner wrote:
+> It was NOP long ago. Now it's Minimal OPeration :)
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/vmx/vmx.c                        |  2 +-
- .../testing/selftests/kvm/x86_64/debug_regs.c | 24 ++++++++++++++++++-
- 2 files changed, 24 insertions(+), 2 deletions(-)
+LOL, a new instruction: MOP. I can think of a couple of x86 instructions
+which can be MOPs.
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 2384a2dbec44..ce534336c115 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4927,7 +4927,7 @@ static int handle_dr(struct kvm_vcpu *vcpu)
- 		 * guest debugging itself.
- 		 */
- 		if (vcpu->guest_debug & KVM_GUESTDBG_USE_HW_BP) {
--			vcpu->run->debug.arch.dr6 = vcpu->arch.dr6;
-+			vcpu->run->debug.arch.dr6 = DR6_BD | DR6_RTM | DR6_FIXED_1;
- 			vcpu->run->debug.arch.dr7 = dr7;
- 			vcpu->run->debug.arch.pc = kvm_get_linear_rip(vcpu);
- 			vcpu->run->debug.arch.exception = DB_VECTOR;
-diff --git a/tools/testing/selftests/kvm/x86_64/debug_regs.c b/tools/testing/selftests/kvm/x86_64/debug_regs.c
-index 2b7187db061d..ed94c0b3da35 100644
---- a/tools/testing/selftests/kvm/x86_64/debug_regs.c
-+++ b/tools/testing/selftests/kvm/x86_64/debug_regs.c
-@@ -11,10 +11,13 @@
- 
- #define VCPU_ID 0
- 
-+#define DR6_BD		(1 << 13)
-+#define DR7_GD		(1 << 13)
-+
- /* For testing data access debug BP */
- uint32_t guest_value;
- 
--extern unsigned char sw_bp, hw_bp, write_data, ss_start;
-+extern unsigned char sw_bp, hw_bp, write_data, ss_start, bd_start;
- 
- static void guest_code(void)
- {
-@@ -43,6 +46,8 @@ static void guest_code(void)
- 		     "rdmsr\n\t"
- 		     : : : "rax", "ecx");
- 
-+	/* DR6.BD test */
-+	asm volatile("bd_start: mov %%dr0, %%rax" : : : "rax");
- 	GUEST_DONE();
- }
- 
-@@ -165,6 +170,23 @@ int main(void)
- 			    target_dr6);
- 	}
- 
-+	/* Disable all debug controls, run to the end */
-+	CLEAR_DEBUG();
-+	debug.control = KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_HW_BP;
-+	debug.arch.debugreg[7] = 0x400 | DR7_GD;
-+	APPLY_DEBUG();
-+	vcpu_run(vm, VCPU_ID);
-+	target_dr6 = 0xffff0ff0 | DR6_BD;
-+	TEST_ASSERT(run->exit_reason == KVM_EXIT_DEBUG &&
-+		    run->debug.arch.exception == DB_VECTOR &&
-+		    run->debug.arch.pc == CAST_TO_RIP(bd_start) &&
-+		    run->debug.arch.dr6 == target_dr6,
-+			    "DR7.GD: exit %d exception %d rip 0x%llx "
-+			    "(should be 0x%llx) dr6 0x%llx (should be 0x%llx)",
-+			    run->exit_reason, run->debug.arch.exception,
-+			    run->debug.arch.pc, target_rip, run->debug.arch.dr6,
-+			    target_dr6);
-+
- 	/* Disable all debug controls, run to the end */
- 	CLEAR_DEBUG();
- 	APPLY_DEBUG();
+:-P
+
 -- 
-2.18.2
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
