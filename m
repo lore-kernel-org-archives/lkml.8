@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B00C47257
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42590C47257
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64317208DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17D1120936
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:11:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MNir8VKS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f1zstsF2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730224AbgEFQL0 (ORCPT
+        id S1730096AbgEFQK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:11:26 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39661 "EHLO
+        Wed, 6 May 2020 12:10:58 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35698 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730098AbgEFQLD (ORCPT
+        with ESMTP id S1729486AbgEFQK5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:11:03 -0400
+        Wed, 6 May 2020 12:10:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588781462;
+        s=mimecast20190719; t=1588781455;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=HwAIuhbI2U56dX/mN6y7nlnKrt0eeAS4CN/m9FbsZ4U=;
-        b=MNir8VKS/4bMH02t67aV4oCq30LpDRCChuXpzYkzfIJ5oGWpLT/4/fvazRS9jquywNGjMl
-        u0wyGAnZT0QT9RUdmOnuN76ah52nt36T/+zZAqH8mR75JldF6wzStQv95WCijHMdXyIB5o
-        QmrlhnmCMMRNh68IgBXsVenh1o8V9uA=
+        bh=kZPPxriWZX6GKqib57CUR0KHurjWMqJXVQoLVEPp5t4=;
+        b=f1zstsF2BwvoIVYFb+z+mQqgKv0mbca5HQ4uU7U5WS8cQ+tjqPxBm9Ap/XjWhbnlvo2WN6
+        habu9FoIJf3zomYkByzK9JLuy70p4stMiZIXznWXCqJZC8JvTlinlGf/Z9CHhCue4+IR57
+        4CQoEb4Q6DHxC/H2pSgMnZMSlaS1mXk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-224-qzZ-sPAZMDyWNnJRd4TIMw-1; Wed, 06 May 2020 12:10:57 -0400
-X-MC-Unique: qzZ-sPAZMDyWNnJRd4TIMw-1
+ us-mta-470-Pk5GFsTpPHCClfx87srNYQ-1; Wed, 06 May 2020 12:10:53 -0400
+X-MC-Unique: Pk5GFsTpPHCClfx87srNYQ-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9259E107ACCA;
-        Wed,  6 May 2020 16:10:56 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CFB2880058A;
+        Wed,  6 May 2020 16:10:51 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C90A8165F6;
-        Wed,  6 May 2020 16:10:55 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 81A2527C39;
+        Wed,  6 May 2020 16:10:50 +0000 (UTC)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     wanpengli@tencent.com, linxl3@wangsu.com,
         Haiwei Li <lihaiwei@tencent.com>
-Subject: [PATCH 6/7] KVM: X86: TSCDEADLINE MSR emulation fastpath
-Date:   Wed,  6 May 2020 12:10:47 -0400
-Message-Id: <20200506161048.28840-7-pbonzini@redhat.com>
+Subject: [PATCH 1/7] KVM: VMX: Introduce generic fastpath handler
+Date:   Wed,  6 May 2020 12:10:42 -0400
+Message-Id: <20200506161048.28840-2-pbonzini@redhat.com>
 In-Reply-To: <20200506161048.28840-1-pbonzini@redhat.com>
 References: <20200506161048.28840-1-pbonzini@redhat.com>
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
@@ -60,126 +60,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Wanpeng Li <wanpengli@tencent.com>
 
-This patch implements a fast path for emulation of writes to the TSCDEADLINE
-MSR.  Besides shortcutting various housekeeping tasks in the vCPU loop,
-the fast path can also deliver the timer interrupt directly without going
-through KVM_REQ_PENDING_TIMER because it runs in vCPU context.
+Introduce generic fastpath handler to handle MSR fastpath, VMX-preemption
+timer fastpath etc; move it after vmx_complete_interrupts() in order to
+catch events delivered to the guest, and abort the fast path in later
+patches.  While at it, move the kvm_exit tracepoint so that it is printed
+for fastpath vmexits as well.
+
+There is no observed performance effect for the IPI fastpath after this patch.
 
 Tested-by: Haiwei Li <lihaiwei@tencent.com>
 Cc: Haiwei Li <lihaiwei@tencent.com>
 Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-Message-Id: <1588055009-12677-7-git-send-email-wanpengli@tencent.com>
+Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Message-Id: <1588055009-12677-2-git-send-email-wanpengli@tencent.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/lapic.c | 18 ++++++++++++------
- arch/x86/kvm/x86.c   | 16 ++++++++++++++++
- 2 files changed, 28 insertions(+), 6 deletions(-)
+ arch/x86/kvm/vmx/vmx.c | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 73e51abca21d..2a3b57401a68 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1600,7 +1600,7 @@ static void kvm_apic_inject_pending_timer_irqs(struct kvm_lapic *apic)
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 13cdb8469848..ad57c4744b99 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -5907,8 +5907,6 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu,
+ 	u32 exit_reason = vmx->exit_reason;
+ 	u32 vectoring_info = vmx->idt_vectoring_info;
+ 
+-	trace_kvm_exit(exit_reason, vcpu, KVM_ISA_VMX);
+-
+ 	/*
+ 	 * Flush logged GPAs PML buffer, this will make dirty_bitmap more
+ 	 * updated. Another good is, in kvm_vm_ioctl_get_dirty_log, before
+@@ -6604,6 +6602,16 @@ void vmx_update_host_rsp(struct vcpu_vmx *vmx, unsigned long host_rsp)
  	}
  }
  
--static void apic_timer_expired(struct kvm_lapic *apic)
-+static void apic_timer_expired(struct kvm_lapic *apic, bool from_timer_fn)
- {
- 	struct kvm_vcpu *vcpu = apic->vcpu;
- 	struct kvm_timer *ktimer = &apic->lapic_timer;
-@@ -1611,6 +1611,12 @@ static void apic_timer_expired(struct kvm_lapic *apic)
- 	if (apic_lvtt_tscdeadline(apic) || ktimer->hv_timer_in_use)
- 		ktimer->expired_tscdeadline = ktimer->tscdeadline;
- 
-+	if (!from_timer_fn && vcpu->arch.apicv_active) {
-+		WARN_ON(kvm_get_running_vcpu() != vcpu);
-+		kvm_apic_inject_pending_timer_irqs(apic);
-+		return;
-+	}
-+
- 	if (kvm_use_posted_timer_interrupt(apic->vcpu)) {
- 		if (apic->lapic_timer.timer_advance_ns)
- 			__kvm_wait_lapic_expire(vcpu);
-@@ -1650,7 +1656,7 @@ static void start_sw_tscdeadline(struct kvm_lapic *apic)
- 		expire = ktime_sub_ns(expire, ktimer->timer_advance_ns);
- 		hrtimer_start(&ktimer->timer, expire, HRTIMER_MODE_ABS_HARD);
- 	} else
--		apic_timer_expired(apic);
-+		apic_timer_expired(apic, false);
- 
- 	local_irq_restore(flags);
- }
-@@ -1758,7 +1764,7 @@ static void start_sw_period(struct kvm_lapic *apic)
- 
- 	if (ktime_after(ktime_get(),
- 			apic->lapic_timer.target_expiration)) {
--		apic_timer_expired(apic);
-+		apic_timer_expired(apic, false);
- 
- 		if (apic_lvtt_oneshot(apic))
- 			return;
-@@ -1820,7 +1826,7 @@ static bool start_hv_timer(struct kvm_lapic *apic)
- 		if (atomic_read(&ktimer->pending)) {
- 			cancel_hv_timer(apic);
- 		} else if (expired) {
--			apic_timer_expired(apic);
-+			apic_timer_expired(apic, false);
- 			cancel_hv_timer(apic);
- 		}
- 	}
-@@ -1870,7 +1876,7 @@ void kvm_lapic_expired_hv_timer(struct kvm_vcpu *vcpu)
- 		goto out;
- 	WARN_ON(rcuwait_active(&vcpu->wait));
- 	cancel_hv_timer(apic);
--	apic_timer_expired(apic);
-+	apic_timer_expired(apic, false);
- 
- 	if (apic_lvtt_period(apic) && apic->lapic_timer.period) {
- 		advance_periodic_target_expiration(apic);
-@@ -2376,7 +2382,7 @@ static enum hrtimer_restart apic_timer_fn(struct hrtimer *data)
- 	struct kvm_timer *ktimer = container_of(data, struct kvm_timer, timer);
- 	struct kvm_lapic *apic = container_of(ktimer, struct kvm_lapic, lapic_timer);
- 
--	apic_timer_expired(apic);
-+	apic_timer_expired(apic, true);
- 
- 	if (lapic_is_periodic(apic)) {
- 		advance_periodic_target_expiration(apic);
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 98e5b79063b7..7e46027f405a 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1616,6 +1616,15 @@ static int handle_fastpath_set_x2apic_icr_irqoff(struct kvm_vcpu *vcpu, u64 data
- 	return 1;
- }
- 
-+static int handle_fastpath_set_tscdeadline(struct kvm_vcpu *vcpu, u64 data)
++static enum exit_fastpath_completion vmx_exit_handlers_fastpath(struct kvm_vcpu *vcpu)
 +{
-+	if (!kvm_can_use_hv_timer(vcpu))
-+		return 1;
-+
-+	kvm_set_lapic_tscdeadline_msr(vcpu, data);
-+	return 0;
++	switch (to_vmx(vcpu)->exit_reason) {
++	case EXIT_REASON_MSR_WRITE:
++		return handle_fastpath_set_msr_irqoff(vcpu);
++	default:
++		return EXIT_FASTPATH_NONE;
++	}
 +}
 +
- fastpath_t handle_fastpath_set_msr_irqoff(struct kvm_vcpu *vcpu)
- {
- 	u32 msr = kvm_rcx_read(vcpu);
-@@ -1630,6 +1639,13 @@ fastpath_t handle_fastpath_set_msr_irqoff(struct kvm_vcpu *vcpu)
- 			ret = EXIT_FASTPATH_EXIT_HANDLED;
-                }
- 		break;
-+	case MSR_IA32_TSCDEADLINE:
-+		data = kvm_read_edx_eax(vcpu);
-+		if (!handle_fastpath_set_tscdeadline(vcpu, data)) {
-+			kvm_skip_emulated_instruction(vcpu);
-+			ret = EXIT_FASTPATH_REENTER_GUEST;
-+		}
-+		break;
- 	default:
- 		break;
- 	}
+ bool __vmx_vcpu_run(struct vcpu_vmx *vmx, unsigned long *regs, bool launched);
+ 
+ static enum exit_fastpath_completion vmx_vcpu_run(struct kvm_vcpu *vcpu)
+@@ -6778,17 +6786,18 @@ static enum exit_fastpath_completion vmx_vcpu_run(struct kvm_vcpu *vcpu)
+ 	if (unlikely(vmx->exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY))
+ 		return EXIT_FASTPATH_NONE;
+ 
+-	if (!is_guest_mode(vcpu) && vmx->exit_reason == EXIT_REASON_MSR_WRITE)
+-		exit_fastpath = handle_fastpath_set_msr_irqoff(vcpu);
+-	else
+-		exit_fastpath = EXIT_FASTPATH_NONE;
+-
+ 	vmx->loaded_vmcs->launched = 1;
+ 	vmx->idt_vectoring_info = vmcs_read32(IDT_VECTORING_INFO_FIELD);
+ 
+ 	vmx_recover_nmi_blocking(vmx);
+ 	vmx_complete_interrupts(vmx);
+ 
++	trace_kvm_exit(vmx->exit_reason, vcpu, KVM_ISA_VMX);
++
++	if (is_guest_mode(vcpu))
++		return EXIT_FASTPATH_NONE;
++
++	exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
+ 	return exit_fastpath;
+ }
+ 
 -- 
 2.18.2
 
