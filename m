@@ -2,85 +2,112 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6293FC38A2A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B586C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 405F620746
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 274262076D
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:04:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Epuudgul"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729291AbgEFPDv (ORCPT
+        id S1729317AbgEFPEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:03:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55418 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727984AbgEFPDv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:03:51 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19061C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 08:03:51 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jWLZu-0005Ek-IM; Wed, 06 May 2020 17:03:18 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id CC1A81001F5; Wed,  6 May 2020 17:03:17 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>
-Subject: Re: [patch V4 part 1 03/36] sched: Clean up scheduler_ipi()
-In-Reply-To: <f969427d-a151-2c69-a779-a2b602e39d9e@oracle.com>
-References: <20200505131602.633487962@linutronix.de> <20200505134058.361859938@linutronix.de> <f969427d-a151-2c69-a779-a2b602e39d9e@oracle.com>
-Date:   Wed, 06 May 2020 17:03:17 +0200
-Message-ID: <874kstkswa.fsf@nanos.tec.linutronix.de>
+        Wed, 6 May 2020 11:04:49 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:45210 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727984AbgEFPEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:04:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=mtSXoTQRP1Sb6l8OBHDQ/gNgzFL8hOxkEZU6CFv5QaA=; b=EpuudgulpeLwlbhy7kggGcncP3
+        25WuVhkdmfbaeHu7DiTFFDZ/BpFY0EwnYHkaY94tk71B+zU5p5WOvThjlA5MA3+JYsMwVRft+bB2G
+        UqqNylwzgyoAB52my5KtUM4BXNSWJ/Tp1zbmi35q4VBC9pJYMqditgZ1pHAzdKhQvE2o=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jWLbB-00167z-QR; Wed, 06 May 2020 17:04:37 +0200
+Date:   Wed, 6 May 2020 17:04:37 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        David Jander <david@protonic.nl>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
+        Marek Vasut <marex@denx.de>,
+        Christian Herber <christian.herber@nxp.com>
+Subject: Re: [PATCH net-next v6 1/2] ethtool: provide UAPI for PHY
+ master/slave configuration.
+Message-ID: <20200506150437.GH224913@lunn.ch>
+References: <20200505063506.3848-1-o.rempel@pengutronix.de>
+ <20200505063506.3848-2-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505063506.3848-2-o.rempel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alexandre Chartre <alexandre.chartre@oracle.com> writes:
-> On 5/5/20 3:16 PM, Thomas Gleixner wrote:
->> @@ -10009,12 +10009,11 @@ static void kick_ilb(unsigned int flags)
->>   		return;
->>   
->>   	/*
->> -	 * Use smp_send_reschedule() instead of resched_cpu().
->> -	 * This way we generate a sched IPI on the target CPU which
->> +	 * This way we generate an IPI on the target CPU which
->>   	 * is idle. And the softirq performing nohz idle load balance
->>   	 * will be run before returning from the IPI.
->>   	 */
->> -	smp_send_reschedule(ilb_cpu);
->> +	smp_call_function_single_async(ilb_cpu, &cpu_rq(ilb_cpu)->wake_csd);
->
-> This should be nohz_csd instead of wake_csd, no? I.e.:
->
->         smp_call_function_single_async(ilb_cpu, &cpu_rq(ilb_cpu)->nohz_csd);
+On Tue, May 05, 2020 at 08:35:05AM +0200, Oleksij Rempel wrote:
+> This UAPI is needed for BroadR-Reach 100BASE-T1 devices. Due to lack of
+> auto-negotiation support, we needed to be able to configure the
+> MASTER-SLAVE role of the port manually or from an application in user
+> space.
+> 
+> The same UAPI can be used for 1000BASE-T or MultiGBASE-T devices to
+> force MASTER or SLAVE role. See IEEE 802.3-2018:
+> 22.2.4.3.7 MASTER-SLAVE control register (Register 9)
+> 22.2.4.3.8 MASTER-SLAVE status register (Register 10)
+> 40.5.2 MASTER-SLAVE configuration resolution
+> 45.2.1.185.1 MASTER-SLAVE config value (1.2100.14)
+> 45.2.7.10 MultiGBASE-T AN control 1 register (Register 7.32)
+> 
+> The MASTER-SLAVE role affects the clock configuration:
+> 
+> -------------------------------------------------------------------------------
+> When the  PHY is configured as MASTER, the PMA Transmit function shall
+> source TX_TCLK from a local clock source. When configured as SLAVE, the
+> PMA Transmit function shall source TX_TCLK from the clock recovered from
+> data stream provided by MASTER.
+> 
+> iMX6Q                     KSZ9031                XXX
+> ------\                /-----------\        /------------\
+>       |                |           |        |            |
+>  MAC  |<----RGMII----->| PHY Slave |<------>| PHY Master |
+>       |<--- 125 MHz ---+-<------/  |        | \          |
+> ------/                \-----------/        \------------/
+>                                                ^
+>                                                 \-TX_TCLK
+> 
+> -------------------------------------------------------------------------------
+> 
+> Since some clock or link related issues are only reproducible in a
+> specific MASTER-SLAVE-role, MAC and PHY configuration, it is beneficial
+> to provide generic (not 100BASE-T1 specific) interface to the user space
+> for configuration flexibility and trouble shooting.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
-Good catch!
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+One issue we might run into in the future is that there is a PHY which
+has standardized auto-neg, but not master/slave support. The PHY
+driver cannot override genphy_read_master_slave(phydev) and
+genphy_setup_master_slave(phydev). So we might need to provide ops for
+these in the driver structure. But we can delay this until we have
+such a device.
+
+    Andrew
