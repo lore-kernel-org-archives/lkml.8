@@ -2,100 +2,127 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A0AC4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 672D8C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB95208CA
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:51:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AN3uHAOG"
+	by mail.kernel.org (Postfix) with ESMTP id 4A497208CA
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:51:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730796AbgEFQvH (ORCPT
+        id S1730389AbgEFQsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:51:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43760 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730444AbgEFQsU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:48:20 -0400
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F83EC061A0F;
-        Wed,  6 May 2020 09:48:20 -0700 (PDT)
-Received: by mail-lj1-x22e.google.com with SMTP id a21so3087597ljb.9;
-        Wed, 06 May 2020 09:48:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=IlweazdekYqS94U1Xj1r4OmuyOC1Nv3qU7YSDeCBRlM=;
-        b=AN3uHAOGD4JKrw8xuzUE7vpMKBJ5J8AJ/7JmX91Bmlt+py0Z7v16qngoQx+tkwuEVh
-         gDpn6xF1T0uGoHJmF8E0ezr227yjEmehoFoC75hYmJJ+AMM2GsbPnaoWgepSJv+B/vXa
-         PJT/p93k7uV1awCS2I4lP5lov50nMdUvCqkj9GU8Ua4CVJMEViYfoc9UKixCMp1mU4x4
-         A7iQ4nCVxlfU8K+H5FOSAfPpL6x8VVJBBx6YGA5VM+/2oythOg7/4oVj6mxPOt4mGHwK
-         ZcfNzwyMyLlHugrgi58R2Dr/grZOWsFfQPr+lewnPi6AYqpI44xbxkbMWTTIDE5JyL9I
-         pMUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=IlweazdekYqS94U1Xj1r4OmuyOC1Nv3qU7YSDeCBRlM=;
-        b=uO4dendeLXG1enmS0QZc5KIIr+yCo+02YCdu8NKt10G6M9MKQyQum3bfOjuBcj/LkY
-         ul0kuFOiV1Q+bLsbV8NFiBesUXCCTaeiBI3SfmX2vN1J2NU4ysWl+u2ziFJPXZtQgn1C
-         Y1ScKLcs0VTedGZrDFvlQqObLNKKxM0MzGCXgPraDMIYAW4K0d5CE71QH5US/yNPVqjL
-         AbrcKJiUWOMMfIQ5ma3uV21v/0l7DcZhNzL5CJpfvInCPNvsNPjwfDE45OQqahZw2f0c
-         VB0ulBcjkadaSLOB21Vm0MjVp3odAG6Jj6Fj/m9yx4DLYXS2gFA+Nb5rv2sT0YY9D7Rb
-         BQlg==
-X-Gm-Message-State: AGi0PuYNXh4Qr5w2eWD5aD/Ai4ymzBWYpIJOq1Xq321d/DkNj32SIfpo
-        M7VKtellgQQy723UroGSAFHDn1gTF9SaeSIo1+CuCw==
-X-Google-Smtp-Source: APiQypI2hjOb8TJaiPFfUG3oI9wfgz7TFR6gbZ+bohBeA0V3R1j0LyOpgLqQFPK3JItM2/KSqOJkEQ1G8J7Bw/Zepdo=
-X-Received: by 2002:a2e:9011:: with SMTP id h17mr5839071ljg.138.1588783698970;
- Wed, 06 May 2020 09:48:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAADnVQJfD1dLVsfg4=c4f6ftRNF_4z0wELjFq8z=7voi-Ak=7w@mail.gmail.com>
- <CAADnVQ+GOn4ZRGMZ+RScdSvM8gpXD9xbe3EYHCcUHdSs=i_NGA@mail.gmail.com>
-In-Reply-To: <CAADnVQ+GOn4ZRGMZ+RScdSvM8gpXD9xbe3EYHCcUHdSs=i_NGA@mail.gmail.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Wed, 6 May 2020 09:48:07 -0700
-Message-ID: <CAADnVQLKuLu8wMJNO5w3AtFqyUTMmwzpctJMw0ORyUJM=M3bwA@mail.gmail.com>
-Subject: Re: pulling cap_perfmon
-To:     Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Network Development <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 6 May 2020 12:48:16 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:64342 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730125AbgEFQsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 12:48:11 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49HMwR6gPkz9tyfF;
+        Wed,  6 May 2020 18:48:07 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id CG2zr1My4I2d; Wed,  6 May 2020 18:48:07 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMwR5pjVz9tyf6;
+        Wed,  6 May 2020 18:48:07 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A57298B7C5;
+        Wed,  6 May 2020 18:48:09 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id M66xR1VnlJm5; Wed,  6 May 2020 18:48:09 +0200 (CEST)
+Received: from localhost.localdomain (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 42ED58B7C3;
+        Wed,  6 May 2020 18:48:09 +0200 (CEST)
+Received: by localhost.localdomain (Postfix, from userid 0)
+        id 1442C65911; Wed,  6 May 2020 16:48:09 +0000 (UTC)
+Message-Id: <0bf77158e9d5be4581a697fdf1cb52b2e12db24a.1588783498.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <cover.1588783498.git.christophe.leroy@csgroup.eu>
+References: <cover.1588783498.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH v2 04/45] powerpc/kasan: Remove unnecessary page table locking
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Wed,  6 May 2020 16:48:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 4, 2020 at 1:52 PM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Thu, Apr 30, 2020 at 11:03 AM Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
-> >
-> > Hi Ingo,
-> >
-> > I'd like to pull
-> > commit 980737282232 ("capabilities: Introduce CAP_PERFMON to kernel
-> > and user space")
-> > into bpf-next to base my CAP_BPF work on top of it.
-> > could you please prepare a stable tag for me to pull ?
-> > Last release cycle Thomas did a tag for bpf+rt prerequisite patches and
-> > it all worked well during the merge window.
-> > I think that one commit will suffice.
-> >
-> > Thanks!
->
-> Looks like Ingo is offline.
-> Thomas,
-> could you please create a branch for me to pull?
->
-> Thanks!
+Commit 45ff3c559585 ("powerpc/kasan: Fix parallel loading of
+modules.") added spinlocks to manage parallele module loading.
 
-ping
+Since then commit 47febbeeec44 ("powerpc/32: Force KASAN_VMALLOC for
+modules") converted the module loading to KASAN_VMALLOC.
+
+The spinlocking has then become unneeded and can be removed to
+simplify kasan_init_shadow_page_tables()
+
+Also remove inclusion of linux/moduleloader.h and linux/vmalloc.h
+which are not needed anymore since the removal of modules management.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ arch/powerpc/mm/kasan/kasan_init_32.c | 19 ++++---------------
+ 1 file changed, 4 insertions(+), 15 deletions(-)
+
+diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
+index b7c287adfd59..91e2ade75192 100644
+--- a/arch/powerpc/mm/kasan/kasan_init_32.c
++++ b/arch/powerpc/mm/kasan/kasan_init_32.c
+@@ -5,9 +5,7 @@
+ #include <linux/kasan.h>
+ #include <linux/printk.h>
+ #include <linux/memblock.h>
+-#include <linux/moduleloader.h>
+ #include <linux/sched/task.h>
+-#include <linux/vmalloc.h>
+ #include <asm/pgalloc.h>
+ #include <asm/code-patching.h>
+ #include <mm/mmu_decl.h>
+@@ -34,31 +32,22 @@ static int __init kasan_init_shadow_page_tables(unsigned long k_start, unsigned
+ {
+ 	pmd_t *pmd;
+ 	unsigned long k_cur, k_next;
+-	pte_t *new = NULL;
+ 
+ 	pmd = pmd_ptr_k(k_start);
+ 
+ 	for (k_cur = k_start; k_cur != k_end; k_cur = k_next, pmd++) {
++		pte_t *new;
++
+ 		k_next = pgd_addr_end(k_cur, k_end);
+ 		if ((void *)pmd_page_vaddr(*pmd) != kasan_early_shadow_pte)
+ 			continue;
+ 
+-		if (!new)
+-			new = memblock_alloc(PTE_FRAG_SIZE, PTE_FRAG_SIZE);
++		new = memblock_alloc(PTE_FRAG_SIZE, PTE_FRAG_SIZE);
+ 
+ 		if (!new)
+ 			return -ENOMEM;
+ 		kasan_populate_pte(new, PAGE_KERNEL);
+-
+-		smp_wmb(); /* See comment in __pte_alloc */
+-
+-		spin_lock(&init_mm.page_table_lock);
+-			/* Has another populated it ? */
+-		if (likely((void *)pmd_page_vaddr(*pmd) == kasan_early_shadow_pte)) {
+-			pmd_populate_kernel(&init_mm, pmd, new);
+-			new = NULL;
+-		}
+-		spin_unlock(&init_mm.page_table_lock);
++		pmd_populate_kernel(&init_mm, pmd, new);
+ 	}
+ 	return 0;
+ }
+-- 
+2.25.0
+
