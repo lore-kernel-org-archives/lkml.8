@@ -2,180 +2,182 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C44C4725C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 04:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 160D8C4725C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 04:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE0E320747
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 04:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC37E206D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 04:43:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pRdL+sME"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="hOBtEUPa";
+	dkim=temperror (0-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="GkOYxoHL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgEFEac (ORCPT
+        id S1726603AbgEFEnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 00:30:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41340 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbgEFEab (ORCPT
+        Wed, 6 May 2020 00:43:35 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:50960 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725892AbgEFEne (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 00:30:31 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80774C061A0F;
-        Tue,  5 May 2020 21:30:31 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id x10so634514oie.1;
-        Tue, 05 May 2020 21:30:31 -0700 (PDT)
+        Wed, 6 May 2020 00:43:34 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0464eN7T001370;
+        Tue, 5 May 2020 21:43:29 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : subject
+ : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=rj914uEQX03mXDW0Pzv9DuxXQlx+GLwJyYv8Gkj9dhI=;
+ b=hOBtEUPazr9lV1wYg92suoSSTbKDr13APWl+LDktjRc2tJyuNgngzJkWyfl2QM1o47wv
+ zf8GjmDNMaBmjhTnbiXk6mCHDFy9bgFc/Dve/OuQ3XZbrpsFdUU/navsDs8u6k0rnEZt
+ 7MqAnobb58smBn53sdQBojyEOtH4m9iKpm7PyHkAOzZX4esDq6jCC/xUwPBcBT5RzvGv
+ ZndvzJySpRYku5okkDWsH4dWm3G4vK7UG7rGH575YfqVQ5juHMo+taWFrdXvyrL4bEP6
+ 45R1lNa/lNxCJYN/3R5llRaWHgVrQoDEAwqzuj6GCQUQ4fv9/DcHYn9fP2WZRWTMNoN4 +g== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0a-0016f401.pphosted.com with ESMTP id 30uaukub7j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 05 May 2020 21:43:28 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 5 May
+ 2020 21:43:27 -0700
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 5 May
+ 2020 21:43:27 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (104.47.45.53) by
+ SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Tue, 5 May 2020 21:43:26 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SQHAgDLFTWrZ+hfikQPv869fZBBhC5NtIxqRErjntsCYt6aE8DMdtA/sGiY6X3QcmQGXbSOJuckg5XXJhfK5tEWArEcdHne7Fc23pMvKJ4OsrZMD8B835ge5fTSKMCp6k7bf+ZHF4o2YnXY21CPAj+GS0Zr1j33zQZqlwDO/bQnpi3RUkuA7gvib98o7cg2OQ9CrXWduoWe2dBuzPJZzlglIM20vRxcVS7uYiCKn8xEegpXynQkOGDuf43w0f0uR/fHJQrs56/T29dUhuaBMB6avpA2lENfR+aBtnkZ7u8mqqQIoguWNoPf8zeTSTDyYnYLkqZ6jmxzKFkladRw/3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rj914uEQX03mXDW0Pzv9DuxXQlx+GLwJyYv8Gkj9dhI=;
+ b=UqaxBAgxmalvrwZU+Z4AFQsf9atHhTn7vSnJ9nvhAdPC7OXi3b2brTPkdKmVk4qJNQBkuRs59n+bY1JExynxizNttwGPO95N6UsiAnvCxjDS7CzzJEFzmaBWGHRTfUAuaX+5/Yku94++PzCyrg+Uls+R4S3BaUxNfPaKzrrAmWVR7/RzG3EA47aM8Fu+2g6i+I0bgi8+ayUPCJJqmsmQ07uK7BnFnNK/rUp04pRkms6nL6GCIefro6XGY4W1qcEiy5r3qKxxf9lzCQuVYNomzYxA5GysrnsSuomUYiZ6A6cBUaFbG0kJ9oFJUgwPiZRhz15OdUN8ON1II0aQXSly2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xZONTa1LCuYbn7xKCYYHFEkVfOQmQt+9e4kIPuOoC/M=;
-        b=pRdL+sMEbjKfSWJ/5OMm/8fZScf5QshJvFb9rQTHmz9XZg/aAdibcbCQ+MzyGnuhM5
-         UQ7DdolQ3SM3iShOZgJpN9W8qaQe+DkllZdUbbHywdxWYA8P3F3mjyyZjZm/6R5N1wTd
-         vO11GUlE6tyTBRIIgK24l4S693u4/euXjUxDnny49hgG+tLgwjNntbzfqd46crTztT/q
-         Y83QRD1hHjLinA7cuLr5zFuh4KH3T6yTQuVuqhk4h1EyjhCgbedcRaAgT2xYs28VsAWR
-         PwlPGGqlhp3MBm2UVvjnJjsMITKw2txP4amcbTQMcLAtOSwvZMTAWiABFwtJ7TOjTcS0
-         LqdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xZONTa1LCuYbn7xKCYYHFEkVfOQmQt+9e4kIPuOoC/M=;
-        b=GaKZXOyrcnMDerHaWJjZUUXZBm3hc4nSpFW68+HXHg0cPfYS6s12GzZIRMWBzHjVq5
-         TNbnLQpiFl7tVlTWHceN9Z8LOdyh1P1TTbwweNzEvXNamwiAbf1QY9+Pw+emETnMVqSp
-         2dfWgp9bo23FPo3AdpjDGblOkGnhwbLUt6DUofMZXDF5trFpSC/z9Y/e23pbI8DlRRLh
-         DAnSsUzQuyHf1q4k8rquNfLtk5NhtgHSB9Nn1AqSbrY6RCQC3oDxLXs53kiVrrashrxU
-         sCjClasfdkOBrdiAiiOwTsWGEKl3jcTaRpYeZ3rLC0vhaiGGclepjp/NULNePNAiCg1B
-         IEyw==
-X-Gm-Message-State: AGi0PubQCE5gJowcf1/p6ORluj292Ehm+2GNKePkfq+6S2r4gzpkU/vc
-        e7rO3DPxr5PtP8vm7qrOUdo=
-X-Google-Smtp-Source: APiQypIPryKY+J4O5rbYmU8PKKioDfJfdoZqt8XnswMivCeRCT3jlVAfH7JCK/dF5/Om9yV18yPS2Q==
-X-Received: by 2002:a05:6808:919:: with SMTP id w25mr1358214oih.111.1588739430872;
-        Tue, 05 May 2020 21:30:30 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id k24sm280294otn.32.2020.05.05.21.30.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 21:30:30 -0700 (PDT)
-Date:   Tue, 5 May 2020 21:30:28 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Sedat Dilek <sedat.dilek@gmail.com>, stable@vger.kernel.org,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        "kernelci . org bot" <bot@kernelci.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Ilie Halip <ilie.halip@gmail.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] x86: bitops: fix build regression
-Message-ID: <20200506043028.GA663805@ubuntu-s3-xlarge-x86>
-References: <20200505174423.199985-1-ndesaulniers@google.com>
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rj914uEQX03mXDW0Pzv9DuxXQlx+GLwJyYv8Gkj9dhI=;
+ b=GkOYxoHLrmx0q9ZqNEkbRxD++xNEnlLidKLFDWUf2BO1KdgAxF/rHlOPFVWJepE3EnZ8ilH/7KPC3xsCg67QQdWfVV2fNhdCvgD7kZ+0xUUI+1PhNeru9in8wGpy3nANw7yTTcRgvcXvSe+w95LwOSNgjkLCBgWW1vIJPinPLRs=
+Received: from BYAPR18MB2998.namprd18.prod.outlook.com (2603:10b6:a03:136::14)
+ by BYAPR18MB2838.namprd18.prod.outlook.com (2603:10b6:a03:10a::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.27; Wed, 6 May
+ 2020 04:43:25 +0000
+Received: from BYAPR18MB2998.namprd18.prod.outlook.com
+ ([fe80::19cb:e318:d173:1221]) by BYAPR18MB2998.namprd18.prod.outlook.com
+ ([fe80::19cb:e318:d173:1221%5]) with mapi id 15.20.2958.032; Wed, 6 May 2020
+ 04:43:25 +0000
+From:   Manish Rangankar <mrangankar@marvell.com>
+To:     Jason Yan <yanaijie@huawei.com>,
+        "QLogic-Storage-Upstream@cavium.com" 
+        <QLogic-Storage-Upstream@cavium.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] [PATCH] scsi: qedi: remove Comparison of 0/1 to bool
+ variable
+Thread-Topic: [EXT] [PATCH] scsi: qedi: remove Comparison of 0/1 to bool
+ variable
+Thread-Index: AQHWHuli2Q3Dl6FLG06MBAsIf0Kgdqiag5sw
+Date:   Wed, 6 May 2020 04:43:25 +0000
+Message-ID: <BYAPR18MB299824A60D731DD4BFB8F840D8A40@BYAPR18MB2998.namprd18.prod.outlook.com>
+References: <20200430121706.14879-1-yanaijie@huawei.com>
+In-Reply-To: <20200430121706.14879-1-yanaijie@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: huawei.com; dkim=none (message not signed)
+ header.d=none;huawei.com; dmarc=none action=none header.from=marvell.com;
+x-originating-ip: [116.75.137.12]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1fc87cbe-9472-432c-8837-08d7f17803c4
+x-ms-traffictypediagnostic: BYAPR18MB2838:
+x-microsoft-antispam-prvs: <BYAPR18MB283852F932B8ABC169422480D8A40@BYAPR18MB2838.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 03950F25EC
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: b+hV3yHe/Fb/9ERJA6sPoBqWTb7VsIZmWq+f1v9+uaOuPMy7JDCdmZQkEgq5W9k+fbKdivn1Ig+kDqzlPWZgMDnLz6zMatPAFymRRTC3pyKhofKv9g/njEmHMzGs2om4vTsmQMtyCh9txSskE2Cfvk6jrDx6Utudh3vpcQJANGdBG1rjg5RARfou4pWkr4ER5qrN5AAJo4i0jhMuTWlHgDqyV91srBNA+NscbRQsBo7bT5i1fxuNBVqMNYt54Tm0wL58QIHo8MR+9EFHJU78rgiVY2ner/xMW3ryG6Sp46zYUNrVUTa09xGNuoLmbP+0tw8VBWMWDtrtZplTY0lm3RDwnBl4sd3HL1UJKMZ93sw1whi4VIOGmEQegtrSyGeh4wMSwjfh5ZIQaKcb7q1lQwZxH/sWonEPQxKD4jJxZLOVRP/7atENAC9dkcIEzDBvPj9o75JS0w5VqDQ5Q+QUOrxYP9TOGoZfIEBtzraeJbdThBZuErLidbYx8LqEqgYSgZw5N3/ukSTc61EHRBTR8A==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR18MB2998.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(136003)(376002)(396003)(39860400002)(33430700001)(33656002)(71200400001)(55236004)(186003)(6506007)(66556008)(8936002)(66946007)(7696005)(53546011)(66446008)(64756008)(76116006)(66476007)(26005)(5660300002)(110136005)(2906002)(52536014)(9686003)(55016002)(316002)(8676002)(86362001)(33440700001)(478600001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 3BlVgOE4EmommDn6RcgB8vOSYq3HxxB6On7sVA3YBE0dmLn94RTe1nVrS/uX1MflqAvRr2hUfpIWfvpGMKioIa4Y9XzAoOHW5VjMZ85hRz1IsOkk02kF7W1R8d7JiwmrENnGzITS4gujX5VgsacAOVgTXj9UP7BMGQ9mVhVq90tP9u6IZc3aL9SE+mE+tsr72umJhCrO9IGZDMmpThdUefsuk8fE3OChuA7jtz+GYVH5AhK2qBUJnA8vanueZ2Y/U4BaHgrpA4I4s3lsjLlW/N7vInFudc5zRndSej3D6cmJjL1wZA69ejvs75wIOxAOU/7kxrnXFa6dPE+2wFWM3/Z5wUAoH3agP7QqNw8Hl+4pr3OX4XYbZRjxYWLHNKYg8c6QJjGnrJxDfTEWwDYYhE2A6NiqziogQqC2OaYs7n9KvmcCwxdDzO98PuXwGzsP+Yr8EUOR9+auRrg6MN4VFzzxUS3saXW0ejq0Cj216gbvRqdRPZKzLveT0mk+HzclLR9tL6Gc/7ekJn3Yfcl5htLiN38NIU6/g7aPwwHt+GdkhMOrsmtsQNFAIv89w619FtdOnXAaSo/QtTRzGuMyN7KKxBET6XxmWcPkIOdx34ZwAaf8dGDz2MiWmYmGoO0QhqoBq8Pfxp56lXeJDDuGmxDGeV5YLlcBUt3G/W+YAkNhhsxpg2J/4OxHGKhNNIBotN3t1tndL79yJn1YCCZAm/ECHc+n6DVBedZ+5/Wh2k5BF4Q8YJqB0TwPuIq/yrGum9Uks2AFYAn8QwpA6Ag4lZ2swhOWccHKAIXThmiSWEI=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505174423.199985-1-ndesaulniers@google.com>
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1fc87cbe-9472-432c-8837-08d7f17803c4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2020 04:43:25.6726
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Wui1Yp9ABWl+8Gos4B/1GoeJr828RRWXfcbU+E0w1avhXVnEoTb8b6qF+HRxXMlvCA9TDtpheFUzPDJCo/C1VA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR18MB2838
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-06_01:2020-05-04,2020-05-06 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 10:44:22AM -0700, Nick Desaulniers wrote:
-> From: Sedat Dilek <sedat.dilek@gmail.com>
-> 
-> It turns out that if your config tickles __builtin_constant_p via
-> differences in choices to inline or not, this now produces invalid
-> assembly:
-> 
-> $ cat foo.c
-> long a(long b, long c) {
->   asm("orb\t%1, %0" : "+q"(c): "r"(b));
->   return c;
-> }
-> $ gcc foo.c
-> foo.c: Assembler messages:
-> foo.c:2: Error: `%rax' not allowed with `orb'
-> 
-> The "q" constraint only has meanting on -m32 otherwise is treated as
-> "r".
-> 
-> This is easily reproducible via Clang+CONFIG_STAGING=y+CONFIG_VT6656=m,
-> or Clang+allyesconfig.
 
-For what it's worth, I don't see this with allyesconfig.
-
-> Keep the masking operation to appease sparse (`make C=1`), add back the
-> cast in order to properly select the proper 8b register alias.
-> 
->  [Nick: reworded]
-> 
-> Cc: stable@vger.kernel.org
-
-The offending commit was added in 5.7-rc1; we shouldn't need to
-Cc stable since this should be picked up as an -rc fix.
-
-> Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>
-> Link: https://github.com/ClangBuiltLinux/linux/issues/961
-> Link: https://lore.kernel.org/lkml/20200504193524.GA221287@google.com/
-> Fixes: 1651e700664b4 ("x86: Fix bitops.h warning with a moved cast")
-> Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-> Reported-by: kernelci.org bot <bot@kernelci.org>
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-> Suggested-by: Ilie Halip <ilie.halip@gmail.com>
-
-Not to split hairs but this is Ilie's diff, he should probably be the
-author with Sedat's Reported-by/Tested-by.
-
-https://github.com/ClangBuiltLinux/linux/issues/961#issuecomment-608239458
-
-But eh, it's all a team effort plus that can only happen with Ilie's
-explicit consent for a Signed-off-by.
-
-I am currently doing a set of builds with clang-11 with this patch on
-top of 5.7-rc4 to make sure that all of the cases I have found work.
-Once that is done, I'll comment back with a tag.
-
-> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-> Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> -----Original Message-----
+> From: Jason Yan <yanaijie@huawei.com>
+> Sent: Thursday, April 30, 2020 5:47 PM
+> To: QLogic-Storage-Upstream@cavium.com; jejb@linux.ibm.com;
+> martin.petersen@oracle.com; Manish Rangankar
+> <mrangankar@marvell.com>; linux-scsi@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Cc: Jason Yan <yanaijie@huawei.com>
+> Subject: [EXT] [PATCH] scsi: qedi: remove Comparison of 0/1 to bool
+> variable
+>=20
+> External Email
+>=20
+> ----------------------------------------------------------------------
+> Fix the following coccicheck warning:
+>=20
+> drivers/scsi/qedi/qedi_main.c:1309:5-25: WARNING: Comparison of 0/1 to
+> bool variable
+> drivers/scsi/qedi/qedi_main.c:1315:5-25: WARNING: Comparison of 0/1 to
+> bool variable
+>=20
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
 > ---
->  arch/x86/include/asm/bitops.h | 4 ++--
+>  drivers/scsi/qedi/qedi_main.c | 4 ++--
 >  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-> index b392571c1f1d..139122e5b25b 100644
-> --- a/arch/x86/include/asm/bitops.h
-> +++ b/arch/x86/include/asm/bitops.h
-> @@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long *addr)
->  	if (__builtin_constant_p(nr)) {
->  		asm volatile(LOCK_PREFIX "orb %1,%0"
->  			: CONST_MASK_ADDR(nr, addr)
-> -			: "iq" (CONST_MASK(nr) & 0xff)
-> +			: "iq" ((u8)(CONST_MASK(nr) & 0xff))
->  			: "memory");
->  	} else {
->  		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
-> @@ -74,7 +74,7 @@ arch_clear_bit(long nr, volatile unsigned long *addr)
->  	if (__builtin_constant_p(nr)) {
->  		asm volatile(LOCK_PREFIX "andb %1,%0"
->  			: CONST_MASK_ADDR(nr, addr)
-> -			: "iq" (CONST_MASK(nr) ^ 0xff));
-> +			: "iq" ((u8)(CONST_MASK(nr) ^ 0xff)));
->  	} else {
->  		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
->  			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
-> -- 
-> 2.26.2.526.g744177e7f7-goog
-> 
+>=20
+> diff --git a/drivers/scsi/qedi/qedi_main.c b/drivers/scsi/qedi/qedi_main.=
+c
+> index 4dd965860c98..46584e16d635 100644
+> --- a/drivers/scsi/qedi/qedi_main.c
+> +++ b/drivers/scsi/qedi/qedi_main.c
+> @@ -1306,13 +1306,13 @@ static irqreturn_t qedi_msix_handler(int irq,
+> void *dev_id)
+>  			  "process already running\n");
+>  	}
+>=20
+> -	if (qedi_fp_has_work(fp) =3D=3D 0)
+> +	if (!qedi_fp_has_work(fp))
+>  		qed_sb_update_sb_idx(fp->sb_info);
+>=20
+>  	/* Check for more work */
+>  	rmb();
+>=20
+> -	if (qedi_fp_has_work(fp) =3D=3D 0)
+> +	if (!qedi_fp_has_work(fp))
+>  		qed_sb_ack(fp->sb_info, IGU_INT_ENABLE, 1);
+>  	else
+>  		goto process_again;
+> --
 
-Cheers,
-Nathan
+Thanks,
+Acked-by: Manish Rangankar <mrangankar@marvell.com>
