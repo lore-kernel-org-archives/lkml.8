@@ -2,127 +2,93 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FA8C4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F364EC47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BC482080D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:28:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588778933;
-	bh=nzV5wZFnEo1oF076nwRGgp9QzjEaRg95ZgofEOFVtII=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r2/dg8W2MtA0m8sXa4pcfPJ4FUJyDKgg1/ika3dmEe4SxqSnZdjdg1xVtZJHNfVCp
-	 ndFPvE8Y9k3f6acm53TXyRmYdEzXtxIeJt9WouXkr0lOz9uhS9BXXSISWTGDXir5HF
-	 sCUJozKO0Gio5NrnEzHECSWfQ2oaxg/YV6H2nChM=
+	by mail.kernel.org (Postfix) with ESMTP id C357E2068E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:28:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ei0k57VL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730103AbgEFPZ7 (ORCPT
+        id S1730414AbgEFP25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:25:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46662 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730082AbgEFPZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:25:48 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CE2621744;
-        Wed,  6 May 2020 15:25:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588778747;
-        bh=nzV5wZFnEo1oF076nwRGgp9QzjEaRg95ZgofEOFVtII=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hg/yc3Dmpv/HS9EFzV9+hqR56rOA4Bb+8L0JB7bK+/cb6n651DHSRk7WGE+Hqafup
-         Ih32CVvDhIMi07yOLevIIBgRBt7Ab8I4t70Wd5Ls6R/AWdqZE5gzHkUTFebF6Bd7TC
-         iFrC3gr4HCyt+62cXnOfH78MO1LddNa/aN3l5Z3k=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 53/91] perf evsel: Rename perf_evsel__exit() to evsel__exit()
-Date:   Wed,  6 May 2020 12:21:56 -0300
-Message-Id: <20200506152234.21977-54-acme@kernel.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
-References: <20200506152234.21977-1-acme@kernel.org>
+        Wed, 6 May 2020 11:28:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58888 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729639AbgEFPZx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:25:53 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2A54C061A0F;
+        Wed,  6 May 2020 08:25:53 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id e6so1032110pjt.4;
+        Wed, 06 May 2020 08:25:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uOcIBwBnUauldiWLndzVmwzZBKURfhS3mRHhqqKZPOs=;
+        b=Ei0k57VLk7N4E1tLvvZ/W7MHkb57jABqquZr5M0n8FHzv94us4sIsfRRTTjtwzJC3C
+         XZpXtiP/3hYpjwUSQyzP7ItePPVEhLJEFdi942IWT4mUMySrX+xg2Hl5R9txLGwkXqQm
+         /r+OvYPRXzuCALy7Rphp6MDbF2lYVmLEmiFiC7aLT2jhENPb2YSyi7A0hpWmZLMVDEBg
+         zf2ZdcRPeDbZ8JhtAI2YC8GjaVL9R45v/JCP1frBXL9Yz56FitLq8IqFvQiQ7HvhtubW
+         F9FxRsMODSAsct79wjZKuI+Nhp2PyaJLU9aXV8lhXbrBJEt+LVl1v8+QZA7HgV6laDK0
+         bYqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uOcIBwBnUauldiWLndzVmwzZBKURfhS3mRHhqqKZPOs=;
+        b=tS8b8qoG8xYBQXDaz/he1CcsuBn+uZE9qz9f8+GvYPothiZm/m0KOpkP2RJ4Bt8ypE
+         heEl4oJ4L9NEIVZERAkF3M/G7F2/gkiiK5fWiThGwuoPjQYsnCNMh9xtuf/mN1SS0lig
+         n79Y01NSCaZzkp9JkyhSuZFXX3Cb0lapUM81kXGk6ZSwmRGS0q7ezCHFGXlmRV23Xbf0
+         rysQr5YgHrJDq8qTyUsCrnly/xjRWGWDFa+7Uq7dztGs3fMZ0Kq1J2VEdQFYIEcqNskk
+         +LPy6oz8gBsVX0p25o0XYMJjFZ5/wmVtiQ9iHV9eWg42tPi9DCyZKGitzO4WU9B7ATD+
+         tDdA==
+X-Gm-Message-State: AGi0PuaXbp99uPURkuHY25NYl4CL+7VlCnvLGOph7y4vAkB2Qh3oTcBC
+        y+cPM4SNHLBLo+rtCSYiqMPC/a4jpTQlteAHiro=
+X-Google-Smtp-Source: APiQypL6R11GbtDukVgWq3NIFn7VvgbUZ3iiF6XhKRJwUfyY+0Iw+ZOcqDtJEjUYcXU7X5ra+HAqDCooSrMRgUlXWCY=
+X-Received: by 2002:a17:90a:fa81:: with SMTP id cu1mr10273546pjb.25.1588778753308;
+ Wed, 06 May 2020 08:25:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200325231422.1502366-1-heiko@sntech.de> <20200325231422.1502366-8-heiko@sntech.de>
+In-Reply-To: <20200325231422.1502366-8-heiko@sntech.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 6 May 2020 18:25:45 +0300
+Message-ID: <CAHp75Vef2Gu3Kz97FK6gQRS8dnAhnFFdWK1sqjZuf8tarx3LAw@mail.gmail.com>
+Subject: Re: [PATCH v2 7/7] serial: 8250_dw: add em485 support
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Matwey V. Kornilov" <matwey.kornilov@gmail.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        christoph.muellner@theobroma-systems.com,
+        Giulio Benetti <giulio.benetti@micronovasrl.com>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Thu, Mar 26, 2020 at 1:17 AM Heiko Stuebner <heiko@sntech.de> wrote:
 
-As it is a 'struct evsel' method, not part of tools/lib/perf/, aka
-libperf, to whom the perf_ prefix belongs.
+If it's not covered by either yours or Lukas' series, perhaps worth to
+address as well.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/evsel.c  | 4 ++--
- tools/perf/util/evsel.h  | 2 +-
- tools/perf/util/python.c | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+.../8250_port.c:1427: warning: Function parameter or member 'p
+' not described in 'serial8250_em485_stop_tx'
+.../8250_port.c:1427: warning: Excess function parameter 'up'
+description in 'serial8250_em485_stop_tx'
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index db6d2a5f9b3c..11e754746984 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1259,7 +1259,7 @@ static void perf_evsel__free_config_terms(struct evsel *evsel)
- 	}
- }
- 
--void perf_evsel__exit(struct evsel *evsel)
-+void evsel__exit(struct evsel *evsel)
- {
- 	assert(list_empty(&evsel->core.node));
- 	assert(evsel->evlist == NULL);
-@@ -1279,7 +1279,7 @@ void perf_evsel__exit(struct evsel *evsel)
- 
- void evsel__delete(struct evsel *evsel)
- {
--	perf_evsel__exit(evsel);
-+	evsel__exit(evsel);
- 	free(evsel);
- }
- 
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 6187dba21298..2facb16e9f12 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -183,7 +183,7 @@ struct evsel *perf_evsel__new_cycles(bool precise);
- struct tep_event *event_format__new(const char *sys, const char *name);
- 
- void evsel__init(struct evsel *evsel, struct perf_event_attr *attr, int idx);
--void perf_evsel__exit(struct evsel *evsel);
-+void evsel__exit(struct evsel *evsel);
- void evsel__delete(struct evsel *evsel);
- 
- struct callchain_param;
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 83212c65848b..67810d31f88d 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -801,7 +801,7 @@ static int pyrf_evsel__init(struct pyrf_evsel *pevsel,
- 
- static void pyrf_evsel__delete(struct pyrf_evsel *pevsel)
- {
--	perf_evsel__exit(&pevsel->evsel);
-+	evsel__exit(&pevsel->evsel);
- 	Py_TYPE(pevsel)->tp_free((PyObject*)pevsel);
- }
- 
 -- 
-2.21.1
-
+With Best Regards,
+Andy Shevchenko
