@@ -2,95 +2,199 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D55C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DA4C38A2A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D9982075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:10:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F2B52075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:10:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588799428;
+	bh=zki508vDte8jI4EKebOmcvesA3luXzs60n8vNDoAJj0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=N/v55c7peWewa8KlS/At2R8mQY2J8ZtZYYsDyf8me3AGtv5mu5g22meOCkzCH6wil
+	 D8Q7rqNWznKv4VJHsebtEuv4JYPILkAwFKcgge1Tf+6m28+oNFt5VFtcLG4Zt6ARN4
+	 SRtDTXAffnFtuheYtoXAV4nloB1rj3O4NBffPARk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729805AbgEFVK0 (ORCPT
+        id S1729855AbgEFVK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 17:10:26 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4834 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729614AbgEFVKX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 17:10:23 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 046L2uck009087;
-        Wed, 6 May 2020 17:10:15 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30ux6e5gpx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 May 2020 17:10:15 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 046L32AI009603;
-        Wed, 6 May 2020 17:10:15 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30ux6e5gnu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 May 2020 17:10:14 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 046L9irg032318;
-        Wed, 6 May 2020 21:10:12 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma01fra.de.ibm.com with ESMTP id 30s0g5c241-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 May 2020 21:10:12 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 046L90UQ66584994
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 6 May 2020 21:09:00 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 56C75A4054;
-        Wed,  6 May 2020 21:10:10 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0986BA405F;
-        Wed,  6 May 2020 21:10:09 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.197.80])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  6 May 2020 21:10:08 +0000 (GMT)
-Message-ID: <1588799408.4624.28.camel@linux.ibm.com>
-Subject: Re: [RFC][PATCH 1/3] evm: Move hooks outside LSM infrastructure
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>, david.safford@gmail.com,
-        viro@zeniv.linux.org.uk, jmorris@namei.org,
-        John Johansen <john.johansen@canonical.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com
-Date:   Wed, 06 May 2020 17:10:08 -0400
-In-Reply-To: <1588794293.4624.21.camel@linux.ibm.com>
-References: <20200429073935.11913-1-roberto.sassu@huawei.com>
-         <1588794293.4624.21.camel@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-06_09:2020-05-05,2020-05-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 mlxscore=0 bulkscore=0 mlxlogscore=951 malwarescore=0
- spamscore=0 suspectscore=0 phishscore=0 priorityscore=1501 clxscore=1015
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005060170
+        Wed, 6 May 2020 17:10:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43164 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729598AbgEFVKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 17:10:20 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF6682076D;
+        Wed,  6 May 2020 21:10:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588799420;
+        bh=zki508vDte8jI4EKebOmcvesA3luXzs60n8vNDoAJj0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=edtLBBPcqWjnDxL5cTONTtcf0+s4af1kkpqPbPXwjFev7IJhxQbnABP2Vp6OxVH15
+         djW1S/4/Az8Gy2EDn9MC6IHzl/lpbCzO8BMKyVzuXmIHt/S0pugN+RTLYK6m6O91Km
+         ufexdmpugeboApXPZ5DSguh/+4Px+1Zdv85P9ojc=
+Date:   Wed, 6 May 2020 16:10:18 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Pierre Morel <pmorel@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>
+Subject: Re: [RFC 1/2] PCI/IOV: Introduce pci_iov_sysfs_link() function
+Message-ID: <20200506211018.GA454697@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506154139.90609-2-schnelle@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-05-06 at 15:44 -0400, Mimi Zohar wrote:
-> Since copying the EVM HMAC or original signature isn't applicable, I
-> would prefer exploring an EVM portable and immutable signature only
-> solution.
+On Wed, May 06, 2020 at 05:41:38PM +0200, Niklas Schnelle wrote:
+> currently pci_iov_add_virtfn() scans the SR-IOV bars, adds the VF to the
+> bus and also creates the sysfs links between the newly added VF and its
+> parent PF.
 
-To prevent copying the EVM xattr, we added "security.evm" to
-/etc/xattr.conf.  To support copying just the EVM portable and
-immutable signatures will require a different solution.
+s/currently/Currently/
+s/bars/BARs/
 
-Mimi
+> With pdev->no_vf_scan fencing off the entire pci_iov_add_virtfn() call
+> s390 as the sole pdev->no_vf_scan user thus ends up missing these sysfs
+> links which are required for example by QEMU/libvirt.
+> Instead of duplicating the code introduce a new pci_iov_sysfs_link()
+> function for establishing sysfs links.
+
+This looks like two paragraphs missing the blank line between.
+
+This whole thing is not "introducing" any new functionality; it's
+"refactoring" to move existing functionality around and make it
+callable separately.
+
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+
+With the fixes above and a few below:
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+> ---
+>  drivers/pci/iov.c   | 36 ++++++++++++++++++++++++------------
+>  include/linux/pci.h |  8 ++++++++
+>  2 files changed, 32 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> index 4d1f392b05f9..d0ddf5f5484c 100644
+> --- a/drivers/pci/iov.c
+> +++ b/drivers/pci/iov.c
+> @@ -113,7 +113,6 @@ resource_size_t pci_iov_resource_size(struct pci_dev *dev, int resno)
+>  static void pci_read_vf_config_common(struct pci_dev *virtfn)
+>  {
+>  	struct pci_dev *physfn = virtfn->physfn;
+> -
+>  	/*
+>  	 * Some config registers are the same across all associated VFs.
+>  	 * Read them once from VF0 so we can skip reading them from the
+> @@ -133,12 +132,34 @@ static void pci_read_vf_config_common(struct pci_dev *virtfn)
+>  			     &physfn->sriov->subsystem_device);
+>  }
+>  
+> +int pci_iov_sysfs_link(struct pci_dev *dev,
+> +		struct pci_dev *virtfn, int id)
+> +{
+> +	int rc;
+> +	char buf[VIRTFN_ID_LEN];
+
+Swap the order so these are declared in the order they're used below.
+
+> +	sprintf(buf, "virtfn%u", id);
+> +	rc = sysfs_create_link(&dev->dev.kobj, &virtfn->dev.kobj, buf);
+> +	if (rc)
+> +		goto failed;
+> +	rc = sysfs_create_link(&virtfn->dev.kobj, &dev->dev.kobj, "physfn");
+> +	if (rc)
+> +		goto failed1;
+> +
+> +	kobject_uevent(&virtfn->dev.kobj, KOBJ_CHANGE);
+> +
+> +	return 0;
+
+Add a blank link here to separate the "success" return from the error
+paths.
+
+> +failed1:
+> +	sysfs_remove_link(&dev->dev.kobj, buf);
+> +failed:
+> +	return rc;
+> +}
+> +
+>  int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+>  {
+>  	int i;
+>  	int rc = -ENOMEM;
+>  	u64 size;
+> -	char buf[VIRTFN_ID_LEN];
+>  	struct pci_dev *virtfn;
+>  	struct resource *res;
+>  	struct pci_sriov *iov = dev->sriov;
+> @@ -182,23 +203,14 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+>  	}
+>  
+>  	pci_device_add(virtfn, virtfn->bus);
+> -
+> -	sprintf(buf, "virtfn%u", id);
+> -	rc = sysfs_create_link(&dev->dev.kobj, &virtfn->dev.kobj, buf);
+> +	rc = pci_iov_sysfs_link(dev, virtfn, id);
+>  	if (rc)
+>  		goto failed1;
+> -	rc = sysfs_create_link(&virtfn->dev.kobj, &dev->dev.kobj, "physfn");
+> -	if (rc)
+> -		goto failed2;
+> -
+> -	kobject_uevent(&virtfn->dev.kobj, KOBJ_CHANGE);
+>  
+>  	pci_bus_add_device(virtfn);
+>  
+>  	return 0;
+>  
+> -failed2:
+> -	sysfs_remove_link(&dev->dev.kobj, buf);
+>  failed1:
+>  	pci_stop_and_remove_bus_device(virtfn);
+>  	pci_dev_put(dev);
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 83ce1cdf5676..e97d27ac350a 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -2048,6 +2048,8 @@ int pci_iov_virtfn_devfn(struct pci_dev *dev, int id);
+>  
+>  int pci_enable_sriov(struct pci_dev *dev, int nr_virtfn);
+>  void pci_disable_sriov(struct pci_dev *dev);
+> +
+> +int pci_iov_sysfs_link(struct pci_dev *dev, struct pci_dev *virtfn, int id);
+>  int pci_iov_add_virtfn(struct pci_dev *dev, int id);
+>  void pci_iov_remove_virtfn(struct pci_dev *dev, int id);
+>  int pci_num_vf(struct pci_dev *dev);
+> @@ -2073,6 +2075,12 @@ static inline int pci_iov_virtfn_devfn(struct pci_dev *dev, int id)
+>  }
+>  static inline int pci_enable_sriov(struct pci_dev *dev, int nr_virtfn)
+>  { return -ENODEV; }
+> +
+> +static inline int pci_iov_sysfs_link(struct pci_dev *dev,
+> +		struct pci_dev *virtfn, int id)
+
+Align the second line with the args in the first line, as the rest of
+this file does.
+
+> +{
+> +	return -ENODEV;
+> +}
+>  static inline int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+>  {
+>  	return -ENOSYS;
+> -- 
+> 2.17.1
+> 
