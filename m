@@ -2,84 +2,133 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33272C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B826C38A2A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 030492075A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68E142076D
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:19:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TJP7GIcQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iT8/5tDZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729916AbgEFVTj (ORCPT
+        id S1730065AbgEFVT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 17:19:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58006 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728621AbgEFVTi (ORCPT
+        Wed, 6 May 2020 17:19:58 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46924 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729967AbgEFVT5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 17:19:38 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38F2CC061A10
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 14:19:37 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id i16so115913ils.12
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 14:19:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UdGUebmYhj34sXXz4/gfkMRluMVMoxZCbr/Vo1r6b6c=;
-        b=TJP7GIcQxDHhteVTcWcaKBaQRwSAgSvrCxtU2yu0ckEG4ewGHIaiIknnU3PqbsAqWl
-         lp5q7nfOwefULix+L6wn6rw2f7LTrQpIr61M4H/tfQfUxCBx9eoCGI5yepmGRT8TvUxK
-         ICxTwVAi9lvht2kvBxwbuaGCHWz/bLZ+YImAR6ak9lHVzmku09Ah7OKQ0LM7EefRFOVm
-         Q97lBhUrD5rY6dVebVEA2SgjApbkJZxhmNRM0zoHanGRI/5h0M9Fj4+7+sH0iRNqRBCo
-         DqQSIdRyC+i4BaxrCV9lPzc0cX4JzRXHztE7oprzUSHJguXMq/Mcy9qKSHj1YSzXubEK
-         j2LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UdGUebmYhj34sXXz4/gfkMRluMVMoxZCbr/Vo1r6b6c=;
-        b=TcEyQQp6UBne6b8TNJYI7nrighwWij3PgvxXn6O9D8Hu2OyWZnbQUPi5UFyQgb8gst
-         1bTg6pQaSvElbcA2n8VBZBQAFlXFKwa4HcQveteqUUiIeg9JjAJ1Ewer876JujA/hIQJ
-         lxWJJ5Ln1wNxphpc0t5Pr1RAHBaxhrOqOduOFGwPrxX+km87oCZDhfnhyAXRo8qwfswW
-         q8mBys4Kd+fNtbdh82bSMeAmShJLaDsP6msjwCr03LcKBapKF6VdkWJjPXtJP/vLH8hj
-         6jnb7iRFZ3L+i8m6xBGi5ne44RaDSRryp2tQMUf080jWcxieqKMsn9Uap5lsxFYm/AAG
-         D55g==
-X-Gm-Message-State: AGi0PuboaHJiKK3iI6hRgSnZjPdciKqrz05XHTvAMOSkjOdwpJSCOKzl
-        o0Q2HBMTmQeJ30u9/jRDE2Icn4+VCbMi3OfYwRLmBQ==
-X-Google-Smtp-Source: APiQypJwyeQORbeD/PvDFZY5unv3m+3b1J31pHftGy1dVo1BsJvrcLBXS6mbqchIrJMuAYFEH+SmaLP50wW049cWNGo=
-X-Received: by 2002:a92:3d85:: with SMTP id k5mr11534107ilf.26.1588799976294;
- Wed, 06 May 2020 14:19:36 -0700 (PDT)
+        Wed, 6 May 2020 17:19:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588799995;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=kLUveg/lfBXpIFrkJcbT6gNz4XvLtpAVItCEuZjrXyk=;
+        b=iT8/5tDZyJ/sZx8MTHIJDQknU7C4ChUHrJJ1dHigEY3+u2sHIJLYdhG1E4OO4dt74FaCtI
+        G1YpO8LD/MeUOsNvCe44pUWUjvEfYe8bdjdQPV1YqW4YExB13rSONEauk/X86Q7ScIC19N
+        gmHgJBa/xUdz9l76E7I9GabgB/4q/So=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-158-NLqgcf3gPoyVSTJu7v8WYg-1; Wed, 06 May 2020 17:19:52 -0400
+X-MC-Unique: NLqgcf3gPoyVSTJu7v8WYg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 52BF71005510;
+        Wed,  6 May 2020 21:19:50 +0000 (UTC)
+Received: from treble (ovpn-115-96.rdu2.redhat.com [10.10.115.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0C85B60CCC;
+        Wed,  6 May 2020 21:19:47 +0000 (UTC)
+Date:   Wed, 6 May 2020 16:19:45 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] bpf: Tweak BPF jump table optimizations for objtool
+ compatibility
+Message-ID: <20200506211945.4qhrxqplzmt4ul66@treble>
+References: <20200501195617.czrnfqqcxfnliz3k@treble>
+ <20200502030622.yrszsm54r6s6k6gq@ast-mbp.dhcp.thefacebook.com>
+ <20200502192105.xp2osi5z354rh4sm@treble>
+ <20200505174300.gech3wr5v6kkho35@ast-mbp.dhcp.thefacebook.com>
+ <20200505181108.hwcqanvw3qf5qyxk@treble>
+ <20200505195320.lyphpnprn3sjijf6@ast-mbp.dhcp.thefacebook.com>
+ <20200505202823.zkmq6t55fxspqazk@treble>
+ <20200505235939.utnmzqsn22cec643@ast-mbp.dhcp.thefacebook.com>
+ <20200506155343.7x3slq3uasponb6w@treble>
+ <CAADnVQJZ1rj1DB-Y=85itvfcHxnXVKjhJXpzqs6zZ6ZLpexhCQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200506204653.14683-1-sean.j.christopherson@intel.com>
-In-Reply-To: <20200506204653.14683-1-sean.j.christopherson@intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Wed, 6 May 2020 14:19:25 -0700
-Message-ID: <CALMp9eSbB=Hwy+uGik4SSSwe1_pu82XY9_SmAWYz2KLY_Ek7=Q@mail.gmail.com>
-Subject: Re: [PATCH] KVM: nVMX: Remove unused 'ops' param from nested_vmx_hardware_setup()
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAADnVQJZ1rj1DB-Y=85itvfcHxnXVKjhJXpzqs6zZ6ZLpexhCQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 6, 2020 at 1:46 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> Remove a 'struct kvm_x86_ops' param that got left behind when the nested
-> ops were moved to their own struct.
->
-> Fixes: 33b22172452f0 ("KVM: x86: move nested-related kvm_x86_ops to a separate struct")
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
+On Wed, May 06, 2020 at 09:45:01AM -0700, Alexei Starovoitov wrote:
+> On Wed, May 6, 2020 at 8:53 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> >
+> > On Tue, May 05, 2020 at 04:59:39PM -0700, Alexei Starovoitov wrote:
+> > > As far as workaround I prefer the following:
+> > > From 94bbc27c5a70d78846a5cb675df4cf8732883564 Mon Sep 17 00:00:00 2001
+> > > From: Alexei Starovoitov <ast@kernel.org>
+> > > Date: Tue, 5 May 2020 16:52:41 -0700
+> > > Subject: [PATCH] bpf,objtool: tweak interpreter compilation flags to help objtool
+> > >
+> > > tbd
+> > >
+> > > Fixes: 3193c0836f20 ("bpf: Disable GCC -fgcse optimization for ___bpf_prog_run()")
+> > > Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> > > Reported-by: Arnd Bergmann <arnd@arndb.de>
+> > > Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+> > > ---
+> > >  include/linux/compiler-gcc.h | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
+> > > index d7ee4c6bad48..05104c3cc033 100644
+> > > --- a/include/linux/compiler-gcc.h
+> > > +++ b/include/linux/compiler-gcc.h
+> > > @@ -171,4 +171,4 @@
+> > >  #define __diag_GCC_8(s)
+> > >  #endif
+> > >
+> > > -#define __no_fgcse __attribute__((optimize("-fno-gcse")))
+> > > +#define __no_fgcse __attribute__((optimize("-fno-gcse,-fno-omit-frame-pointer")))
+> > > --
+> > > 2.23.0
+> > >
+> > > I've tested it with gcc 8,9,10 and clang 11 with FP=y and with ORC=y.
+> > > All works.
+> > > I think it's safer to go with frame pointers even for ORC=y considering
+> > > all the pain this issue had caused. Even if objtool gets confused again
+> > > in the future __bpf_prog_run() will have frame pointers and kernel stack
+> > > unwinding can fall back from ORC to FP for that frame.
+> > > wdyt?
+> >
+> > It seems dangerous to me.  The GCC manual recommends against it.
+> 
+> The manual can says that it's broken. That won't stop the world from using it.
+> Just google projects that are using it. For example: qt, lz4, unreal engine, etc
+> Telling compiler to disable gcse via flag is a guaranteed way to avoid
+> that optimization that breaks objtool whereas messing with C code is nothing
+> but guess work. gcc can still do gcse.
+
+But the manual's right, it is broken.  How do you know other important
+flags won't also be stripped?
+
+-- 
+Josh
+
