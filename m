@@ -2,111 +2,116 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF406C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CF9C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2A6220746
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:27:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E676D208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:28:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="jUbD5UxL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728619AbgEFR16 (ORCPT
+        id S1728686AbgEFR22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 13:27:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49980 "EHLO
+        Wed, 6 May 2020 13:28:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727872AbgEFR15 (ORCPT
+        with ESMTP id S1728117AbgEFR21 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 13:27:57 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64761C061A0F;
-        Wed,  6 May 2020 10:27:57 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jWNpo-0000SB-Ei; Wed, 06 May 2020 19:27:52 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id EAE0C1C0092;
-        Wed,  6 May 2020 19:27:51 +0200 (CEST)
-Date:   Wed, 06 May 2020 17:27:51 -0000
-From:   "tip-bot2 for Kim Phillips" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/cpu/amd: Make erratum #1054 a legacy erratum
-Cc:     Andrew Cooper <andrew.cooper3@citrix.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200417143356.26054-1-kim.phillips@amd.com>
-References: <20200417143356.26054-1-kim.phillips@amd.com>
+        Wed, 6 May 2020 13:28:27 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 925B7C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 10:28:25 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id i16so2505059ils.12
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 10:28:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NkDAllS86i6Alq3z4SNts3BijlYyvPsoIcv+ue8aWg8=;
+        b=jUbD5UxLSRV1oJtdrH8l4vkJlOdaFnoDCwHggnvcWuO50ybSq4H19Kfsv+J6OoCZBZ
+         sDkT/r8bk5c9iq3n9GXxmVUfGvmok81rpK8dWKefeIZkGtgqLk0ORLppCUm/Z83KwTqA
+         pblZ2lMavzUAYyoBMy9esRjxeFbWN2wedYEoQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NkDAllS86i6Alq3z4SNts3BijlYyvPsoIcv+ue8aWg8=;
+        b=As/3OFptF+de5A2Yvhy0Bi1w/8pbacGtKowHVYB+vwGwfhIIZ/7yvsv2p3BVf9HUu3
+         X/285CJgVgy7jHuWArmeFWBKFBjFYiuqjHyAWE+YEQydrVBzaMM3cb2kZw+hpw3fH4TG
+         8d1yKV/xNOX0ylnU2XJjQ8DngnCj5sBN/DxxwHCBlQTeZaGkU5tH13BssQu1ZvE5b/nX
+         ufknlEffALRkqCL2kA/h9B+rPN17Zxi2d0KsV/Oc4dpEHXbKZgOR8SmecDjtj7q29v7C
+         a+U1FrWLOdQlpgKTbrOX0VYRSPlK+VBF8i3hv5YX+yF8Ck35OxKmILfGeu90DRLVELTx
+         8WrQ==
+X-Gm-Message-State: AGi0PuayYHlewaIrRI24iVvwt46ghVkUSEWeVI1M/c7CwfmNjm2hHtK/
+        IfrpaYZnheqQtplCzgDKQIpoHGlN1HuQWxp57xAmcw==
+X-Google-Smtp-Source: APiQypIMN4yue9z7yuqXCPD1oqgkfK+58GpdD8IRN9D/xWCQKzyTsf/cozLhBZXGqmf1/i2LcTY2+329eepl/SQwcu0=
+X-Received: by 2002:a92:3509:: with SMTP id c9mr10343042ila.262.1588786104558;
+ Wed, 06 May 2020 10:28:24 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <158878607182.8414.16785943595732058442.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200506172158.218366-1-bgeffon@google.com>
+In-Reply-To: <20200506172158.218366-1-bgeffon@google.com>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Wed, 6 May 2020 13:28:13 -0400
+Message-ID: <CAEXW_YQ+iC9tot+HbHARiXz_o_KrDU7LjvuyPkj46DVfGvSOng@mail.gmail.com>
+Subject: Re: [PATCH] userfaultfd: fix remap event with MREMAP_DONTUNMAP.
+To:     Brian Geffon <bgeffon@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cpu branch of tip:
+On Wed, May 6, 2020 at 1:22 PM Brian Geffon <bgeffon@google.com> wrote:
+>
+> A user is not required to set a new address when using
+> MREMAP_DONTUNMAP as it can be used without MREMAP_FIXED.
+> When doing so the remap event will use new_addr which may not
+> have been set and we didn't propagate it back other then
+> in the return value of remap_to.
+>
+> Because ret is always the new address it's probably more
+> correct to use it rather than new_addr on the remap_event_complete
+> call, and it resolves this bug.
+>
 
-Commit-ID:     3e2c1fd2022ccce96b6a05a6ab519d65769ee320
-Gitweb:        https://git.kernel.org/tip/3e2c1fd2022ccce96b6a05a6ab519d65769ee320
-Author:        Kim Phillips <kim.phillips@amd.com>
-AuthorDate:    Fri, 17 Apr 2020 09:33:56 -05:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Wed, 06 May 2020 19:18:24 +02:00
+Does it need Fixes: tag, and CC to stable? Going into a stable kernel
+will mean the stable kernel merges into ChromeOS also gets it.
 
-x86/cpu/amd: Make erratum #1054 a legacy erratum
+thanks,
 
-Commit
+ - Joel
 
-  21b5ee59ef18 ("x86/cpu/amd: Enable the fixed Instructions Retired
-		 counter IRPERF")
-
-mistakenly added erratum #1054 as an OS Visible Workaround (OSVW) ID 0.
-Erratum #1054 is not OSVW ID 0 [1], so make it a legacy erratum.
-
-There would never have been a false positive on older hardware that
-has OSVW bit 0 set, since the IRPERF feature was not available.
-
-However, save a couple of RDMSR executions per thread, on modern
-system configurations that correctly set non-zero values in their
-OSVW_ID_Length MSRs.
-
-[1] Revision Guide for AMD Family 17h Models 00h-0Fh Processors. The
-revision guide is available from the bugzilla link below.
-
-Fixes: 21b5ee59ef18 ("x86/cpu/amd: Enable the fixed Instructions Retired counter IRPERF")
-Reported-by: Andrew Cooper <andrew.cooper3@citrix.com>
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200417143356.26054-1-kim.phillips@amd.com
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
----
- arch/x86/kernel/cpu/amd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 547ad7b..6437381 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -1142,7 +1142,7 @@ static const int amd_erratum_383[] =
- 
- /* #1054: Instructions Retired Performance Counter May Be Inaccurate */
- static const int amd_erratum_1054[] =
--	AMD_OSVW_ERRATUM(0, AMD_MODEL_RANGE(0x17, 0, 0, 0x2f, 0xf));
-+	AMD_LEGACY_ERRATUM(AMD_MODEL_RANGE(0x17, 0, 0, 0x2f, 0xf));
- 
- 
- static bool cpu_has_amd_erratum(struct cpuinfo_x86 *cpu, const int *erratum)
+> Signed-off-by: Brian Geffon <bgeffon@google.com>
+> ---
+>  mm/mremap.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/mm/mremap.c b/mm/mremap.c
+> index c881abeba0bf..6aa6ea605068 100644
+> --- a/mm/mremap.c
+> +++ b/mm/mremap.c
+> @@ -794,7 +794,7 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
+>         if (locked && new_len > old_len)
+>                 mm_populate(new_addr + old_len, new_len - old_len);
+>         userfaultfd_unmap_complete(mm, &uf_unmap_early);
+> -       mremap_userfaultfd_complete(&uf, addr, new_addr, old_len);
+> +       mremap_userfaultfd_complete(&uf, addr, ret, old_len);
+>         userfaultfd_unmap_complete(mm, &uf_unmap);
+>         return ret;
+>  }
+> --
+> 2.26.2.526.g744177e7f7-goog
+>
