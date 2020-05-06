@@ -2,114 +2,104 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E408C47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66188C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3805F208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B6CE2080D
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:06:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730310AbgEFRGM (ORCPT
+        id S1730344AbgEFRGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 13:06:12 -0400
-Received: from mga17.intel.com ([192.55.52.151]:50199 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729414AbgEFRGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 13:06:12 -0400
-IronPort-SDR: jYsr5BRAERmabnP4Ig3OiKasNuJXhnWqOt/TNzbqMfhWRMi/9zj+lTLLNlAXxrtncWfFC4o8/v
- 0FIqeTHTy9Qw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 10:06:11 -0700
-IronPort-SDR: GOq6sHbpWl0hAI7nnkFqSmoHpX//b2n4UHYnpCorexV8zj5K42CJn3V1ngkjLCgf8KsshSvoDw
- GY5zAWmQbzKQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,360,1583222400"; 
-   d="scan'208";a="284690915"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.157]) ([10.237.72.157])
-  by fmsmga004.fm.intel.com with ESMTP; 06 May 2020 10:06:08 -0700
-Subject: Re: [PATCH V1 1/2] mmc: core: Check request type before completing
- the request
-To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        ulf.hansson@linaro.org
-Cc:     stummala@codeaurora.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        stable@vger.kernel.org, Baolin Wang <baolin.wang@linaro.org>,
-        Avri Altman <avri.altman@wdc.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Arnd Bergmann <arnd@arndb.de>
-References: <1588775643-18037-1-git-send-email-vbadigan@codeaurora.org>
- <1588775643-18037-2-git-send-email-vbadigan@codeaurora.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <e4f7515c-e52e-f909-174a-8835d7e9e445@intel.com>
-Date:   Wed, 6 May 2020 20:06:29 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 6 May 2020 13:06:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46598 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729414AbgEFRGQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 13:06:16 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92F11C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 10:06:16 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jWNUK-00008S-Rr; Wed, 06 May 2020 19:05:41 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id ECF241001F5; Wed,  6 May 2020 18:57:38 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [patch V4 part 1 20/36] vmlinux.lds.h: Create section for protection against instrumentation
+In-Reply-To: <20200506162848.GI5298@hirez.programming.kicks-ass.net>
+References: <20200505131602.633487962@linutronix.de> <20200505134100.075416272@linutronix.de> <20200506160831.GB3329@linux.intel.com> <20200506162848.GI5298@hirez.programming.kicks-ass.net>
+Date:   Wed, 06 May 2020 18:57:38 +0200
+Message-ID: <871rnxknlp.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <1588775643-18037-2-git-send-email-vbadigan@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/05/20 5:34 pm, Veerabhadrarao Badiganti wrote:
-> In the request completion path with CQE, request type is being checked
-> after the request is getting completed. This is resulting in returning
-> the wrong request type and leading to the IO hang issue.
-> 
-> ASYNC request type is getting returned for DCMD type requests.
-> Because of this mismatch, mq->cqe_busy flag is never getting cleared
-> and the driver is not invoking blk_mq_hw_run_queue. So requests are not
-> getting dispatched to the LLD from the block layer.
-> 
-> All these eventually leading to IO hang issues.
-> So, get the request type before completing the request.
-> 
-> Cc: <stable@vger.kernel.org> # v4.19+
+Peter Zijlstra <peterz@infradead.org> writes:
+> On Wed, May 06, 2020 at 09:08:31AM -0700, Sean Christopherson wrote:
+>> On Tue, May 05, 2020 at 03:16:22PM +0200, Thomas Gleixner wrote:
+>> > Provide also a set of markers: instr_begin()/end()
+>> > 
+>> > These are used to mark code inside a noinstr function which calls
+>> > into regular instrumentable text section as safe.
+>> 
+>> ...
+>> 
+>> > --- a/include/linux/compiler.h
+>> > +++ b/include/linux/compiler.h
+>> > @@ -120,10 +120,27 @@ void ftrace_likely_update(struct ftrace_
+>> >  /* Annotate a C jump table to allow objtool to follow the code flow */
+>> >  #define __annotate_jump_table __section(.rodata..c_jump_table)
+>> >  
+>> > +/* Begin/end of an instrumentation safe region */
+>> > +#define instr_begin() ({						\
+>> > +	asm volatile("%c0:\n\t"						\
+>> > +		     ".pushsection .discard.instr_begin\n\t"		\
+>> > +		     ".long %c0b - .\n\t"				\
+>> > +		     ".popsection\n\t" : : "i" (__COUNTER__));		\
+>> > +})
+>> > +
+>> > +#define instr_end() ({							\
+>> > +	asm volatile("%c0:\n\t"						\
+>> > +		     ".pushsection .discard.instr_end\n\t"		\
+>> > +		     ".long %c0b - .\n\t"				\
+>> > +		     ".popsection\n\t" : : "i" (__COUNTER__));		\
+>> > +})
+>> 
+>> Any chance we could spell these out, i.e. instrumentation_begin/end()?  I
+>> can't help but read these as "instruction_begin/end".  At a glance, the
+>> long names shouldn't cause any wrap/indentation issues.
+>
+> The kernel naming convention is insn for instruction, not instr. That
+> said, you're not the first to be confused by this.
 
-The fixed commit was in 4.16
-
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-
-Fixes: 1e8e55b67030 ("mmc: block: Add CQE support")
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-
-Thank you for finding this!
-
-> ---
->  drivers/mmc/core/block.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
-> index 8499b56..c5367e2 100644
-> --- a/drivers/mmc/core/block.c
-> +++ b/drivers/mmc/core/block.c
-> @@ -1370,6 +1370,7 @@ static void mmc_blk_cqe_complete_rq(struct mmc_queue *mq, struct request *req)
->  	struct mmc_request *mrq = &mqrq->brq.mrq;
->  	struct request_queue *q = req->q;
->  	struct mmc_host *host = mq->card->host;
-> +	enum mmc_issue_type issue_type = mmc_issue_type(mq, req);
->  	unsigned long flags;
->  	bool put_card;
->  	int err;
-> @@ -1399,7 +1400,7 @@ static void mmc_blk_cqe_complete_rq(struct mmc_queue *mq, struct request *req)
->  
->  	spin_lock_irqsave(&mq->lock, flags);
->  
-> -	mq->in_flight[mmc_issue_type(mq, req)] -= 1;
-> +	mq->in_flight[issue_type] -= 1;
->  
->  	put_card = (mmc_tot_in_flight(mq) == 0);
->  
-> 
-
+I'm happy to spell it out. Was just lazy I guess.
