@@ -2,132 +2,133 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D949C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC95C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C2DE2068E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:27:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m7COmbV1"
+	by mail.kernel.org (Postfix) with ESMTP id DA0C72068E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:27:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588778835;
+	bh=44XUKIVi/6k2wGeb2mPlZ9v42x3xytmKf7KdEkkac/A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=uel3qHSjJwvtUHn6QakCvOMMdtv1tyy3W/gpSnWin52eLTNTdF/tkQSNEdRVMOWPS
+	 saG31hg9ENFF0N+u/8V7eA+eMx0jA4fTnowngOkyQlPwFZCOyegarq2e7f1jJAq1Ej
+	 /BtUkxOFbIqiNDNG7Ocfz76uT4N2GhCWX7dABzNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729832AbgEFP1M (ORCPT
+        id S1730306AbgEFP1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:27:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729321AbgEFP1K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:27:10 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01621C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 08:27:10 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id j4so1652797otr.11
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 08:27:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eGCPGsfl7EJQhLcR9ZieFJstYFNUvzZMzq7K6tCpWfI=;
-        b=m7COmbV1y0NEdyCMq26y5R+ozIPQe1e9b1i1dIt42RXkxYKygKk8qebi6Q/me4A0lN
-         UBZZjUWKYbs09g2A8AdY9VzJbzoVXyX1pS05tF5EHI16MUIGnhdr3OzDZVPLGi2F54gx
-         BANbNSEVkW6CAZvM5hUZcSdYE5VcBvhdwfzsb/qspdMe5QXjukpCXM9p7CL2nAk0halH
-         aah8NiadUrFjK48eQYJ+lesiZK+6N1frpq0C8OlKq3VZYtOMzo2StzkCj4RvJR2uMK+U
-         IFuXePage1+LpAKZNDJmkjr0/dOu1yCOanPI8sPHexiN5vFJo+x7x8At2jxCFzloJnRW
-         LcFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eGCPGsfl7EJQhLcR9ZieFJstYFNUvzZMzq7K6tCpWfI=;
-        b=M6fZglTlxpXpU07fQyHtKUnIMZegMYeqzGRax6URe6ug2LN08S35ceD9WMX6LVkwd2
-         25QeEFds3SWCV58BUTrmD5fuhuZCmPwgfRqCrAE/ihKnxm3xMLp4sb5RnaZH+uTxTbyW
-         hKndA6pJLFhBt9eCfjzRfRbO0RNOSrmxYTnBkAkCRu/XPy/vHsiEG8SxR9BmFgTcfMyF
-         hO5PbZAY36YAQbMXNEqtKtLKihKLkD7liHjo1MuG77nf6xs9ihxH7yV2ITeTdII3uLzh
-         TdrUje9VaiZQVueLDG2qcwlXXGqHjsHWbYdXIFAo7G63aLFcSfhJL7mQomu//54QsQD9
-         WdBA==
-X-Gm-Message-State: AGi0PubtCCRCvonmBwaUsqEzdofl9PtUQDhuRN3FVNj4nCBUpZ4vuuI1
-        BVCIHh/hJJKdxb5cjE2Tl1G1ZsEO510bUYaa8Be1hQ==
-X-Google-Smtp-Source: APiQypIqZWUxuWlmvC0ioWT1YVFM8EdmBNF42IIaMVKHKcXRJP3qmACdQXoTRe722ZwPySImoGaL5yF47tWDjWNckhc=
-X-Received: by 2002:a9d:412:: with SMTP id 18mr7072719otc.233.1588778829122;
- Wed, 06 May 2020 08:27:09 -0700 (PDT)
+        Wed, 6 May 2020 11:27:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50358 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730286AbgEFP1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:27:08 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE95A2145D;
+        Wed,  6 May 2020 15:27:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588778827;
+        bh=44XUKIVi/6k2wGeb2mPlZ9v42x3xytmKf7KdEkkac/A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pjduP1yFcwY/KHAJcQYYhpVZZ2yoOM1nE1UmaPaxyCwYnWz0e5lmuNvzuVyVBW+4T
+         0Ka4GWtfOQXgOuhorwskaPaLsBOlJgETcohhbY4jvKpX71FlTlSsZsjF8ZwzQyC8ng
+         UJxRkl2AAyIgYvOVmrAlcpLMz0x30OxphmN5nQeE=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCH 79/91] perf lock: Rename perf_evsel__*() operating on 'struct evsel *' to evsel__*()
+Date:   Wed,  6 May 2020 12:22:22 -0300
+Message-Id: <20200506152234.21977-80-acme@kernel.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
+References: <20200506152234.21977-1-acme@kernel.org>
 MIME-Version: 1.0
-References: <20200506132816.GJ8043@willie-the-truck> <20200506143616.GY2869@paulmck-ThinkPad-P72>
- <20200506144141.GA12919@willie-the-truck>
-In-Reply-To: <20200506144141.GA12919@willie-the-truck>
-From:   Marco Elver <elver@google.com>
-Date:   Wed, 6 May 2020 17:26:56 +0200
-Message-ID: <CANpmjNP3ge49sXJZS-KaL5bpEq0rmc4CqepjGRbtbCVwm7rwpw@mail.gmail.com>
-Subject: Re: Please can I have a stable KCSAN branch for 5.8?
-To:     Will Deacon <will@kernel.org>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 May 2020 at 16:41, Will Deacon <will@kernel.org> wrote:
->
-> Hi Paul,
->
-> Cheers for the quick reply!
->
-> On Wed, May 06, 2020 at 07:36:16AM -0700, Paul E. McKenney wrote:
-> > On Wed, May 06, 2020 at 02:28:17PM +0100, Will Deacon wrote:
-> > > I'm looking to rebase my READ_ONCE() series [1] on top of the KCSAN patches
-> > > so that we can get them in for 5.8. However, tip/locking/kcsan seems to be
-> > > missing some bits:
-> > >
-> > >   * An update to checkpatch.pl to warn about missing comments for
-> > >     data_race():
-> > >
-> > >     https://lore.kernel.org/r/20200401101714.44781-1-elver@google.com
-> >
-> > For some reason, I thought this was going up some other tree, but I do
-> > not see it in -next.  So unless I hear otherwise, I will pull it into
-> > the v5.8 kcsan branch.
->
-> Brill, thanks.
->
-> > >   * I'm unable to apply these two patches from Marco that are needed for
-> > >     my READ_ONCE() work:
-> > >
-> > >     https://lore.kernel.org/lkml/20200424154730.190041-1-elver@google.com/
-> > >
-> > >     I think these depend on stuff that has been queued by Paul, and appears
-> > >     in linux-next, but to be honest with you I'm quite confused about what
-> > >     is queued for 5.8 and what isn't.
-> >
-> > This one is queued, but I currently have it in the v5.9 pile (but
-> > tentatively for v5.8).  Unless Marco tells me otherwise, I will move it
-> > to the v5.8 branch, which will be part of my pull request next week.
->
-> Great, then this would all show up on tip/locking/kscan, right?
->
-> > > What's the best base for me to use?
-> >
-> > The -next tree has the latter, but not yet the former.
->
-> That probably means -next is good enough for me to cook a new version of my
-> series, and then I can make a proper branch next week.
->
-> > Hopefully we can get this straightened out, and please accept my apologies
-> > for the hassle!
->
-> No need to apologise, I just couldn't figure out what was what and decided
-> it was easier to ask the experts ;)
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Just confirming that I don't see any issues with the plan -- the
-patches that Will needs are good to go into the v5.8 branch.
+As those is a 'struct evsel' methods, not part of tools/lib/perf/, aka
+libperf, to whom the perf_ prefix belongs.
 
-Thanks,
--- Marco
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/builtin-lock.c | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
+
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index 5a19dc2f1636..f0a1dbacb46c 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -657,32 +657,28 @@ static struct trace_lock_handler report_lock_ops  = {
+ 
+ static struct trace_lock_handler *trace_handler;
+ 
+-static int perf_evsel__process_lock_acquire(struct evsel *evsel,
+-					     struct perf_sample *sample)
++static int evsel__process_lock_acquire(struct evsel *evsel, struct perf_sample *sample)
+ {
+ 	if (trace_handler->acquire_event)
+ 		return trace_handler->acquire_event(evsel, sample);
+ 	return 0;
+ }
+ 
+-static int perf_evsel__process_lock_acquired(struct evsel *evsel,
+-					      struct perf_sample *sample)
++static int evsel__process_lock_acquired(struct evsel *evsel, struct perf_sample *sample)
+ {
+ 	if (trace_handler->acquired_event)
+ 		return trace_handler->acquired_event(evsel, sample);
+ 	return 0;
+ }
+ 
+-static int perf_evsel__process_lock_contended(struct evsel *evsel,
+-					      struct perf_sample *sample)
++static int evsel__process_lock_contended(struct evsel *evsel, struct perf_sample *sample)
+ {
+ 	if (trace_handler->contended_event)
+ 		return trace_handler->contended_event(evsel, sample);
+ 	return 0;
+ }
+ 
+-static int perf_evsel__process_lock_release(struct evsel *evsel,
+-					    struct perf_sample *sample)
++static int evsel__process_lock_release(struct evsel *evsel, struct perf_sample *sample)
+ {
+ 	if (trace_handler->release_event)
+ 		return trace_handler->release_event(evsel, sample);
+@@ -849,10 +845,10 @@ static void sort_result(void)
+ }
+ 
+ static const struct evsel_str_handler lock_tracepoints[] = {
+-	{ "lock:lock_acquire",	 perf_evsel__process_lock_acquire,   }, /* CONFIG_LOCKDEP */
+-	{ "lock:lock_acquired",	 perf_evsel__process_lock_acquired,  }, /* CONFIG_LOCKDEP, CONFIG_LOCK_STAT */
+-	{ "lock:lock_contended", perf_evsel__process_lock_contended, }, /* CONFIG_LOCKDEP, CONFIG_LOCK_STAT */
+-	{ "lock:lock_release",	 perf_evsel__process_lock_release,   }, /* CONFIG_LOCKDEP */
++	{ "lock:lock_acquire",	 evsel__process_lock_acquire,   }, /* CONFIG_LOCKDEP */
++	{ "lock:lock_acquired",	 evsel__process_lock_acquired,  }, /* CONFIG_LOCKDEP, CONFIG_LOCK_STAT */
++	{ "lock:lock_contended", evsel__process_lock_contended, }, /* CONFIG_LOCKDEP, CONFIG_LOCK_STAT */
++	{ "lock:lock_release",	 evsel__process_lock_release,   }, /* CONFIG_LOCKDEP */
+ };
+ 
+ static bool force;
+-- 
+2.21.1
+
