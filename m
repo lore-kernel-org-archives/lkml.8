@@ -2,289 +2,149 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,NUMERIC_HTTP_ADDR,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BE3C4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0883C47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C8E620B1F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF80A20A8B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:49:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XF2QLEqj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730602AbgEFQs7 (ORCPT
+        id S1730660AbgEFQtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:48:59 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:22955 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730526AbgEFQsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:48:41 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49HMx20lY0z9v4kM;
-        Wed,  6 May 2020 18:48:38 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id w7-tCsIA5J0B; Wed,  6 May 2020 18:48:38 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMx172kjz9v4kK;
-        Wed,  6 May 2020 18:48:37 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id CB2EB8B7C7;
-        Wed,  6 May 2020 18:48:39 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id oL4bd1jClBmj; Wed,  6 May 2020 18:48:39 +0200 (CEST)
-Received: from localhost.localdomain (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4851F8B7C5;
-        Wed,  6 May 2020 18:48:39 +0200 (CEST)
-Received: by localhost.localdomain (Postfix, from userid 0)
-        id 1421065911; Wed,  6 May 2020 16:48:39 +0000 (UTC)
-Message-Id: <07b3c395fd96377e999c17e951a2199b24839fb9.1588783498.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <cover.1588783498.git.christophe.leroy@csgroup.eu>
-References: <cover.1588783498.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v2 33/45] powerpc/8xx: Drop special handling of Linear and
- IMMR mappings in I/D TLB handlers
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed,  6 May 2020 16:48:39 +0000 (UTC)
+        Wed, 6 May 2020 12:49:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43862 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730600AbgEFQs6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 12:48:58 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BE48C061A0F;
+        Wed,  6 May 2020 09:48:58 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id s18so1033392pgl.12;
+        Wed, 06 May 2020 09:48:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=Q5IRPzLfDFc6zE5WNxwnTajRGP0x4b+ii1VC2EvdLBA=;
+        b=XF2QLEqjTD2QnOLJBp1OzwZJQQsiq+YIlYLWBtZj1eBnyNpi9Rcc1/30vzfG6oLAwT
+         /zJ8OM5+6cI4raADuZlzasemdSnMNlZ6U99dJ7FEB9Nqk1SlstQENZfCKXlctc4y3XH6
+         U98Vf3pAFefTaEDi+Xp4gG08BvFTS5MUsF9SL6hBlJSGXajQ7OW9sikF14xeT7a4Lpwu
+         tK/7OkUlJsNU0fcUf2N3wPB8qSoOKK6+ypn/jQdkTsXuQgiZ9+rFwAWAX80QTG7QN46D
+         niAESIK0pW4nhb0cDndJLW3lPgMm0DnwI/bbZLS5qHlkjeBWSt9zIS+gym7dkyrEizcv
+         oSMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=Q5IRPzLfDFc6zE5WNxwnTajRGP0x4b+ii1VC2EvdLBA=;
+        b=s41w2fmedGow7aObXRjz94/wu9HEbE32UuzZT0n/FohmwKN6xES7F3aFMhwxlACmzy
+         GwpqFlLujIIga2A2I5i7/Fx7ycoc1R4KiAV98XUnEAwJmdzTTGvRgItJMcIp6nI28vBx
+         78RI0Y3J4k3DtHw3fmmp5ECVW9G2cmUJ3yN9pMV2qd+4TWVSSaN6za5z3GtOw0gWoyJ7
+         hT9bmzBEwMkOPAn4xn1AE0Jd5MNRxZVUxhqf7e5y0DyWUuiIYh3EWuX/kPXcBzr7UPEQ
+         HSxHL7fAFsnE3pMisUVG/Cxt4MP6tWgLRseeQOtiBWVdxORqkFwzE90qVRHR/tVX1Q/J
+         O7Yg==
+X-Gm-Message-State: AGi0PuZ8kCmSqwQ6knMTToa4t46iBhLmvGVFAyavbpG1WYoLpic0bols
+        v3wNAjdMdKilmElkUxR/OG6otfGQq1g=
+X-Google-Smtp-Source: APiQypLBYRdgWEyw6Mj7pmR/T0S9WSt4ZK/eK79Wp+uv+ye4U97ZHumhHS2/tZ+YxVnjnsqT/VxpcQ==
+X-Received: by 2002:aa7:982b:: with SMTP id q11mr8890440pfl.260.1588783737640;
+        Wed, 06 May 2020 09:48:57 -0700 (PDT)
+Received: from [192.168.1.7] ([223.72.42.191])
+        by smtp.gmail.com with ESMTPSA id d20sm1928346pgl.72.2020.05.06.09.48.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 May 2020 09:48:56 -0700 (PDT)
+Subject: Re: [PATCH] media: usb: ttusb-dec: avoid buffer overflow in
+ ttusb_dec_handle_irq() when DMA failures/attacks occur
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     mchehab@kernel.org, kstewart@linuxfoundation.org,
+        tomasbortoli@gmail.com, sean@mess.org, allison@lohutok.net,
+        tglx@linutronix.de, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200505142110.7620-1-baijiaju1990@gmail.com>
+ <20200505181042.GD1199718@kroah.com>
+ <0e4a86ee-8c4e-4ac3-8499-4e9a6ed7bd1e@gmail.com>
+ <20200506110722.GA2975410@kroah.com>
+ <b3af10e3-8709-3da0-6841-e5ddd6b4a609@gmail.com>
+ <20200506155257.GB3537174@kroah.com>
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+Message-ID: <46615f6e-11ec-6546-42a9-3490414f9550@gmail.com>
+Date:   Thu, 7 May 2020 00:48:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200506155257.GB3537174@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Up to now, linear and IMMR mappings are managed via huge TLB entries
-through specific code directly in TLB miss handlers. This implies
-some patching of the TLB miss handlers at startup, and a lot of
-dedicated code.
 
-Remove all this specific dedicated code.
 
-For now we are back to normal handling via standard 4k pages. In the
-next patches, linear memory mapping and IMMR mapping will be managed
-through huge pages.
+On 2020/5/6 23:52, Greg KH wrote:
+> On Wed, May 06, 2020 at 11:30:22PM +0800, Jia-Ju Bai wrote:
+>>
+>> On 2020/5/6 19:07, Greg KH wrote:
+>>> On Wed, May 06, 2020 at 06:13:01PM +0800, Jia-Ju Bai wrote:
+>>>> I have never modified DMA memory in the real world, but an attacker can use
+>>>> a malicious device to do this.
+>>>> There is a video that shows how to use the Inception tool to perform DMA
+>>>> attacks and login in the Windows OS without password:
+>>>> https://www.youtube.com/watch?v=HDhpy7RpUjM
+>>> If you have control over the hardware, and can write to any DMA memory,
+>>> again, there's almost nothing a kernel can do to protect from that.
+>> I think that each device can only access its own DMA memory, instead of any
+>> DMA memory for other hardware devices.
+> That's not true at all for all systems that Linux runs on.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/kernel/head_8xx.S |  29 +--------
- arch/powerpc/mm/nohash/8xx.c   | 106 +--------------------------------
- 2 files changed, 3 insertions(+), 132 deletions(-)
+I am not sure to understand this.
+For example, a driver requests DMA memory with "len" size by using:
+    mem = dma_alloc_coherent(..., len, ...);
+I think that the driver can only access DMA memory between "mem" and 
+"mem + len", is it true?
+Can the driver access other DMA memory using some code like "mem + len * 
+10"?
 
-diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
-index b0cceee6405c..d1546f379757 100644
---- a/arch/powerpc/kernel/head_8xx.S
-+++ b/arch/powerpc/kernel/head_8xx.S
-@@ -207,31 +207,21 @@ InstructionTLBMiss:
- 	mfspr	r10, SPRN_SRR0	/* Get effective address of fault */
- 	INVALIDATE_ADJACENT_PAGES_CPU15(r10)
- 	mtspr	SPRN_MD_EPN, r10
--	/* Only modules will cause ITLB Misses as we always
--	 * pin the first 8MB of kernel memory */
- #ifdef ITLB_MISS_KERNEL
- 	mfcr	r11
--#if defined(SIMPLE_KERNEL_ADDRESS) && defined(CONFIG_PIN_TLB_TEXT)
-+#if defined(SIMPLE_KERNEL_ADDRESS)
- 	cmpi	cr0, r10, 0	/* Address >= 0x80000000 */
- #else
- 	rlwinm	r10, r10, 16, 0xfff8
- 	cmpli	cr0, r10, PAGE_OFFSET@h
--#ifndef CONFIG_PIN_TLB_TEXT
--	/* It is assumed that kernel code fits into the first 32M */
--0:	cmpli	cr7, r10, (PAGE_OFFSET + 0x2000000)@h
--	patch_site	0b, patch__itlbmiss_linmem_top
--#endif
- #endif
- #endif
- 	mfspr	r10, SPRN_M_TWB	/* Get level 1 table */
- #ifdef ITLB_MISS_KERNEL
--#if defined(SIMPLE_KERNEL_ADDRESS) && defined(CONFIG_PIN_TLB_TEXT)
-+#if defined(SIMPLE_KERNEL_ADDRESS)
- 	bge+	3f
- #else
- 	blt+	3f
--#endif
--#ifndef CONFIG_PIN_TLB_TEXT
--	blt	cr7, ITLBMissLinear
- #endif
- 	rlwinm	r10, r10, 0, 20, 31
- 	oris	r10, r10, (swapper_pg_dir - PAGE_OFFSET)@ha
-@@ -327,19 +317,9 @@ DataStoreTLBMiss:
- 	mfspr	r10, SPRN_MD_EPN
- 	rlwinm	r10, r10, 16, 0xfff8
- 	cmpli	cr0, r10, PAGE_OFFSET@h
--#ifndef CONFIG_PIN_TLB_IMMR
--	cmpli	cr6, r10, VIRT_IMMR_BASE@h
--#endif
--0:	cmpli	cr7, r10, (PAGE_OFFSET + 0x2000000)@h
--	patch_site	0b, patch__dtlbmiss_linmem_top
- 
- 	mfspr	r10, SPRN_M_TWB	/* Get level 1 table */
- 	blt+	3f
--#ifndef CONFIG_PIN_TLB_IMMR
--0:	beq-	cr6, DTLBMissIMMR
--	patch_site	0b, patch__dtlbmiss_immr_jmp
--#endif
--	blt	cr7, DTLBMissLinear
- 	rlwinm	r10, r10, 0, 20, 31
- 	oris	r10, r10, (swapper_pg_dir - PAGE_OFFSET)@ha
- 3:
-@@ -571,14 +551,9 @@ FixupDAR:/* Entry point for dcbx workaround. */
- 	cmpli	cr1, r11, PAGE_OFFSET@h
- 	mfspr	r11, SPRN_M_TWB	/* Get level 1 table */
- 	blt+	cr1, 3f
--	rlwinm	r11, r10, 16, 0xfff8
--
--0:	cmpli	cr7, r11, (PAGE_OFFSET + 0x1800000)@h
--	patch_site	0b, patch__fixupdar_linmem_top
- 
- 	/* create physical page address from effective address */
- 	tophys(r11, r10)
--	blt-	cr7, 201f
- 	mfspr	r11, SPRN_M_TWB	/* Get level 1 table */
- 	rlwinm	r11, r11, 0, 20, 31
- 	oris	r11, r11, (swapper_pg_dir - PAGE_OFFSET)@ha
-diff --git a/arch/powerpc/mm/nohash/8xx.c b/arch/powerpc/mm/nohash/8xx.c
-index 43578a8a8cad..d9f205d9a654 100644
---- a/arch/powerpc/mm/nohash/8xx.c
-+++ b/arch/powerpc/mm/nohash/8xx.c
-@@ -54,8 +54,6 @@ unsigned long p_block_mapped(phys_addr_t pa)
- 	return 0;
- }
- 
--#define LARGE_PAGE_SIZE_8M	(1<<23)
--
- /*
-  * MMU_init_hw does the chip-specific initialization of the MMU hardware.
-  */
-@@ -80,122 +78,20 @@ void __init mmu_mapin_immr(void)
- 		map_kernel_page(v + offset, p + offset, PAGE_KERNEL_NCG);
- }
- 
--static void mmu_patch_cmp_limit(s32 *site, unsigned long mapped)
--{
--	modify_instruction_site(site, 0xffff, (unsigned long)__va(mapped) >> 16);
--}
--
--static void mmu_patch_addis(s32 *site, long simm)
--{
--	unsigned int instr = *(unsigned int *)patch_site_addr(site);
--
--	instr &= 0xffff0000;
--	instr |= ((unsigned long)simm) >> 16;
--	patch_instruction_site(site, instr);
--}
--
--static void mmu_mapin_ram_chunk(unsigned long offset, unsigned long top, pgprot_t prot)
--{
--	unsigned long s = offset;
--	unsigned long v = PAGE_OFFSET + s;
--	phys_addr_t p = memstart_addr + s;
--
--	for (; s < top; s += PAGE_SIZE) {
--		map_kernel_page(v, p, prot);
--		v += PAGE_SIZE;
--		p += PAGE_SIZE;
--	}
--}
--
- unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
- {
--	unsigned long mapped;
--
- 	mmu_mapin_immr();
- 
--	if (__map_without_ltlbs) {
--		mapped = 0;
--		if (!IS_ENABLED(CONFIG_PIN_TLB_IMMR))
--			patch_instruction_site(&patch__dtlbmiss_immr_jmp, PPC_INST_NOP);
--		if (!IS_ENABLED(CONFIG_PIN_TLB_TEXT))
--			mmu_patch_cmp_limit(&patch__itlbmiss_linmem_top, 0);
--	} else {
--		unsigned long einittext8 = ALIGN(__pa(_einittext), SZ_8M);
--
--		mapped = top & ~(LARGE_PAGE_SIZE_8M - 1);
--		if (!IS_ENABLED(CONFIG_PIN_TLB_TEXT))
--			mmu_patch_cmp_limit(&patch__itlbmiss_linmem_top, einittext8);
--
--		/*
--		 * Populate page tables to:
--		 * - have them appear in /sys/kernel/debug/kernel_page_tables
--		 * - allow the BDI to find the pages when they are not PINNED
--		 */
--		mmu_mapin_ram_chunk(0, einittext8, PAGE_KERNEL_X);
--		mmu_mapin_ram_chunk(einittext8, mapped, PAGE_KERNEL);
--	}
--
--	mmu_patch_cmp_limit(&patch__dtlbmiss_linmem_top, mapped);
--	mmu_patch_cmp_limit(&patch__fixupdar_linmem_top, mapped);
--
--	/* If the size of RAM is not an exact power of two, we may not
--	 * have covered RAM in its entirety with 8 MiB
--	 * pages. Consequently, restrict the top end of RAM currently
--	 * allocable so that calls to the MEMBLOCK to allocate PTEs for "tail"
--	 * coverage with normal-sized pages (or other reasons) do not
--	 * attempt to allocate outside the allowed range.
--	 */
--	if (mapped)
--		memblock_set_current_limit(mapped);
--
--	block_mapped_ram = mapped;
--
--	return mapped;
-+	return 0;
- }
- 
- void mmu_mark_initmem_nx(void)
- {
--	if (IS_ENABLED(CONFIG_STRICT_KERNEL_RWX) && CONFIG_ETEXT_SHIFT < 23)
--		mmu_patch_addis(&patch__itlbmiss_linmem_top8,
--				-((long)_etext & ~(LARGE_PAGE_SIZE_8M - 1)));
--	if (!IS_ENABLED(CONFIG_PIN_TLB_TEXT)) {
--		unsigned long einittext8 = ALIGN(__pa(_einittext), SZ_8M);
--		unsigned long etext8 = ALIGN(__pa(_etext), SZ_8M);
--		unsigned long etext = __pa(_etext);
--
--		mmu_patch_cmp_limit(&patch__itlbmiss_linmem_top, __pa(_etext));
--
--		/* Update page tables for PTDUMP and BDI */
--		mmu_mapin_ram_chunk(0, einittext8, __pgprot(0));
--		if (IS_ENABLED(CONFIG_STRICT_KERNEL_RWX)) {
--			mmu_mapin_ram_chunk(0, etext, PAGE_KERNEL_TEXT);
--			mmu_mapin_ram_chunk(etext, einittext8, PAGE_KERNEL);
--		} else {
--			mmu_mapin_ram_chunk(0, etext8, PAGE_KERNEL_TEXT);
--			mmu_mapin_ram_chunk(etext8, einittext8, PAGE_KERNEL);
--		}
--	}
--	_tlbil_all();
- }
- 
- #ifdef CONFIG_STRICT_KERNEL_RWX
- void mmu_mark_rodata_ro(void)
- {
--	unsigned long sinittext = __pa(_sinittext);
--	unsigned long etext = __pa(_etext);
--
--	if (CONFIG_DATA_SHIFT < 23)
--		mmu_patch_addis(&patch__dtlbmiss_romem_top8,
--				-__pa(((unsigned long)_sinittext) &
--				      ~(LARGE_PAGE_SIZE_8M - 1)));
--	mmu_patch_addis(&patch__dtlbmiss_romem_top, -__pa(_sinittext));
--
--	_tlbil_all();
--
--	/* Update page tables for PTDUMP and BDI */
--	mmu_mapin_ram_chunk(0, sinittext, __pgprot(0));
--	mmu_mapin_ram_chunk(0, etext, PAGE_KERNEL_ROX);
--	mmu_mapin_ram_chunk(etext, sinittext, PAGE_KERNEL_RO);
- }
- #endif
- 
--- 
-2.25.0
+>
+>> A feasible example is that, the attacker inserts a malicious device via
+>> PCI-E bus in a locked computer, when the owner of this computer leaves.
+> This is a semi-well-known issue.  It's been described in the past
+> regarding thunderbolt devices, and odds are, more people will run across
+> it again in the future and also complain about it.
+>
+> The best solution is to solve this at the bus level, preventing
+> different devices access to other memory areas.
+>
+> And providing physical access control to systems that you care about
+> this type of attack for.
+>
+> Again, this isn't a new thing, but the ability for us to do much about
+> it depends on the specific hardware control, and how we set defaults up.
 
+Yes, I agree that this issue is not new, because DMA attacks are old 
+problems.
+But I am a little surprised that many current drivers are still 
+vulnerable to DMA attacks.
+
+>
+> If you trust a device enough to plug it in, well, you need to trust it
+> :)
+
+Well, maybe I need to trust all devices in my computer :)
+
+Anyway, thanks a lot for your patient explanation and reply.
+If you have encountered other kinds of DMA-related bugs/vulnerabilities, 
+maybe I can help to detect them using my static-analysis tool :)
+
+
+Best wishes,
+Jia-Ju Bai
