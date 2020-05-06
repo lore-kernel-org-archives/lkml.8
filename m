@@ -2,89 +2,99 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2728C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F63AC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC6A020752
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3382A20752
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:43:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588772628;
+	bh=ae3GP0U6pasVaUKLtgU6Vciyjz+k7sQFS9ZHzrnCFHM=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=2O3Y7bv/cQF154t3S1AA+0hOav3LIDNkjoauZJiYtQIZ4Bu5v21UyxrdLqDtx1fqp
+	 RsFRyVe0HrLO0JPFVLXn6y1Jk3Z6I2QO5cyitQEFqxZ3pm3G8rOeF9JEh+YKBPUhEP
+	 yUbJeEvbURtBWirG3jClXL491mXtGVtkVKASowyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbgEFNnn (ORCPT
+        id S1728769AbgEFNnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 6 May 2020 09:43:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50516 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728714AbgEFNnn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 6 May 2020 09:43:43 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3825 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728248AbgEFNnm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 09:43:42 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id AA80028CC3C2A4686EED;
-        Wed,  6 May 2020 21:43:36 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 6 May 2020 21:43:29 +0800
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-To:     <gregkh@linuxfoundation.org>, <simon@nikanor.nu>,
-        <jeremy@azazel.net>, <dan.carpenter@oracle.com>
-CC:     Wei Yongjun <weiyongjun1@huawei.com>, <devel@driverdev.osuosl.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next v2] staging: kpc2000: fix error return code in kp2000_pcie_probe()
-Date:   Wed, 6 May 2020 13:47:35 +0000
-Message-ID: <20200506134735.102041-1-weiyongjun1@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200506125255.90336-1-weiyongjun1@huawei.com>
-References: <20200506125255.90336-1-weiyongjun1@huawei.com>
-MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 179F32068E;
+        Wed,  6 May 2020 13:43:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588772622;
+        bh=ae3GP0U6pasVaUKLtgU6Vciyjz+k7sQFS9ZHzrnCFHM=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=rzc0nC+zJlDFCMYnNFoRcU1mMgvethdBUp285FEq2HQTA6OZdGS+GbTdPPdXlYG2l
+         YfQvJmifunxdaRK8ObfDGCcOPm9Gu7Iv44t/2305zxM4r/LbwHFF6leH9C1pDU1OV5
+         kxSH8u2xzbq94NHydjwEOOdW3157navLgyxx1ft0=
+Date:   Wed, 06 May 2020 14:43:40 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Akshu Agrawal <akshu.agrawal@amd.com>
+Cc:     "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>
+In-Reply-To: <20200506102602.140790-1-akshu.agrawal@amd.com>
+References: <20200506102602.140790-1-akshu.agrawal@amd.com>
+Subject: Re: [PATCH] ASoC: amd :High hw_level while simultaneous capture
+Message-Id: <158877262009.52279.13901500480638545510.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix to return a negative error code from the error handling
-case instead of 0, as done elsewhere in this function. Also
-removed var 'rv' since we can use 'err' instead.
+On Wed, 6 May 2020 15:56:00 +0530, Akshu Agrawal wrote:
+> Simultaneous capture on dmic and headset mic is having
+> issue with high hw_level being reported.
+> 
+> Issue Can be reproduced by:
+> arecord -D hw:2,0 -f dat -d 60 /tmp/test0 &
+> arecord -D hw:2,2 -f dat -d 60 /tmp/test1 &
+> cat /proc/asound/card2/pcm?c/sub0/status
+> 
+> [...]
 
-Fixes: 7dc7967fc39a ("staging: kpc2000: add initial set of Daktronics drivers")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
----
-v1 -> v2: fix code aligns and add fixes
----
- drivers/staging/kpc2000/kpc2000/core.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+Applied to
 
-diff --git a/drivers/staging/kpc2000/kpc2000/core.c b/drivers/staging/kpc2000/kpc2000/core.c
-index 7b00d7069e21..358d7b2f4ad1 100644
---- a/drivers/staging/kpc2000/kpc2000/core.c
-+++ b/drivers/staging/kpc2000/kpc2000/core.c
-@@ -298,7 +298,6 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
- {
- 	int err = 0;
- 	struct kp2000_device *pcard;
--	int rv;
- 	unsigned long reg_bar_phys_addr;
- 	unsigned long reg_bar_phys_len;
- 	unsigned long dma_bar_phys_addr;
-@@ -445,11 +444,11 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
- 	if (err < 0)
- 		goto err_release_dma;
- 
--	rv = request_irq(pcard->pdev->irq, kp2000_irq_handler, IRQF_SHARED,
--			 pcard->name, pcard);
--	if (rv) {
-+	err = request_irq(pcard->pdev->irq, kp2000_irq_handler, IRQF_SHARED,
-+			  pcard->name, pcard);
-+	if (err) {
- 		dev_err(&pcard->pdev->dev,
--			"%s: failed to request_irq: %d\n", __func__, rv);
-+			"%s: failed to request_irq: %d\n", __func__, err);
- 		goto err_disable_msi;
- 	}
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.7
 
+Thanks!
 
+[1/1] ASoC: amd :High hw_level while simultaneous capture
+      commit: 5a8117840a8c654c3cdf2f465e9406112d7e492d
 
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
