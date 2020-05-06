@@ -2,103 +2,129 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA1CC47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A88B7C47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 269462075A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:16:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588792594;
-	bh=b51VzMG3OO+itfYASvTzpPSytdOmuTAARbn/WG+utwU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tSdsH2/qew9VXEDGTpr58OtHD/KM+0IknuSja9UNjCKbVAhf60k6YgtFXF/wn3g4Q
-	 G7z/ER4FLupQGf0XWzJHGr3dFKpe3Ni6fX3UBWgAldYvlHCMNzt8YjZ95lLdHsMf3v
-	 odZXTRcyfda+adLgSgP3WXind0qrSfIZaNi+XV94=
+	by mail.kernel.org (Postfix) with ESMTP id 951012075A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:20:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbgEFTQd (ORCPT
+        id S1728531AbgEFTU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 15:16:33 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:45792 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728410AbgEFTQa (ORCPT
+        Wed, 6 May 2020 15:20:56 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:33468 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727975AbgEFTUz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 15:16:30 -0400
-Received: by mail-ot1-f67.google.com with SMTP id e20so2296647otk.12;
-        Wed, 06 May 2020 12:16:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RffY1VKIuHSTUWSQQaHo7x6JeP+WjY39egkTgOhujrc=;
-        b=c5UykAeQ1gYmZRITApNL+xBRUvKZG4l3oi1dw6GzoUZU1SC8p1CO+ToFirjqueEEU5
-         2IUKRUIp4+bZjenTvuWAxrqPtb+MhqlgKMNw8HLLfxuGuj+OTyrngX8DAZLLQ4ilTUNL
-         wyCpV83+qY0UOf3QrDEDPSlnlFxNfbmvycwTbw1nXH4GX7EmTtBue+LFFzxhiHwnJWII
-         9t1UysyHx5WRdR0YeXiXyKSpwO+Txd79E9xz9R7WtRuB6QwLjQmvaJC8Ww5PBihkMeDV
-         BzIrvEa7nHbsAZ5bY5iPD4SUph0bzyK9A1ZhGL88rAbt8Zaj+X5IVz3LMnTAxYXOTGR5
-         4GSw==
-X-Gm-Message-State: AGi0PubO8RHjiDSXrnK3HyNtsnI0IG3MdOkB8gaXGrKtdeHrDEVT+RP0
-        LYmx3YyeHQWlFf7XHHfBrA==
-X-Google-Smtp-Source: APiQypKX7Yv5OxxTXIw4EebyAUNARWZ7M2l2W40uhAxBhtZnJdkyt9oNdwaILP/riNyqVgTQ5qC/Hg==
-X-Received: by 2002:a9d:68d8:: with SMTP id i24mr7690098oto.371.1588792589363;
-        Wed, 06 May 2020 12:16:29 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f14sm726909otl.62.2020.05.06.12.16.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 12:16:28 -0700 (PDT)
-Received: (nullmailer pid 21925 invoked by uid 1000);
-        Wed, 06 May 2020 19:16:27 -0000
-Date:   Wed, 6 May 2020 14:16:27 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v12 1/2] dt-bindings: proximity: provide vcnl3020 device
- tree binding document
-Message-ID: <20200506191542.GA20381@bogus>
-References: <20200506010809.6348-1-i.mikhaylov@yadro.com>
- <20200506010809.6348-2-i.mikhaylov@yadro.com>
+        Wed, 6 May 2020 15:20:55 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 92CE48030808;
+        Wed,  6 May 2020 19:20:52 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Wr0HOHLMXTqE; Wed,  6 May 2020 22:20:51 +0300 (MSK)
+Date:   Wed, 6 May 2020 22:20:49 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Sam Ravnborg <sam@ravnborg.org>
+CC:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>, <linux-mips@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 03/20] dt-bindings: Add vendor prefix for Baikal
+ Electronics, JSC
+Message-ID: <20200506192049.bznhiwra5a43ao26@mobilestation>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506174238.15385-4-Sergey.Semin@baikalelectronics.ru>
+ <20200506175553.GA7775@ravnborg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200506010809.6348-2-i.mikhaylov@yadro.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200506175553.GA7775@ravnborg.org>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 May 2020 04:08:08 +0300, Ivan Mikhaylov wrote:
-> Mostly standard i2c driver with some additional led-current option
-> for vcnl3020.
+Hi Sam,
+
+On Wed, May 06, 2020 at 07:55:53PM +0200, Sam Ravnborg wrote:
+> Hi Sergey.
 > 
-> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
-> ---
->  .../iio/proximity/vishay,vcnl3020.yaml        | 65 +++++++++++++++++++
->  1 file changed, 65 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
+> On Wed, May 06, 2020 at 08:42:21PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > 
+> > Add "BAIKAL ELECTRONICS, JSC" to the list of devicetree vendor prefixes
+> > as "baikal".
+> > 
+> > Website: http://www.baikalelectronics.com
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Paul Burton <paulburton@kernel.org>
+> > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: linux-mips@vger.kernel.org
+> > Cc: linux-pm@vger.kernel.org
+> > 
+> > ---
+> > 
+> > Changelog v2:
+> > - Fix author and SoB emails mismatch.
+> 
+> > - Add 'baikal' vendor prefix instead of ambiguous 'be'.
+> Agree, much better.
+> 
+> > ---
+> >  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> > index d3891386d671..674c0d07c0ad 100644
+> > --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> > @@ -139,6 +139,8 @@ patternProperties:
+> >      description: Azoteq (Pty) Ltd
+> >    "^azw,.*":
+> >      description: Shenzhen AZW Technology Co., Ltd.
+> > +  "^baikal,.*":
+> > +    description: BAIKAL ELECTRONICS, JSC
+> Baikal do not use ALL UPPSECASE on their website for their name.
+> So please use same case use as they do themself.
 > 
 
-My bot found errors running 'make dt_binding_check' on your patch:
+It's not like me can't be considered as part of them.) I discussed the
+upper-case and normal version with our managers half a year ago and we
+came up to use the upper-case version. From Russian legal point of view
+it's also the upper-cased version what counts. I don't really know why
+the site use different naming, but in the internal documents it's always
+as submitted. Anyway I asked this question one more time to our managers.
+If they say to use as you suggest, then I'll resend an update in v3
+patchset, if v3 doesn't get to be necessary I'll send a followup patch
+with fix.
 
-Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml: $id: relative path/filename doesn't match actual path or filename
-	expected: http://devicetree.org/schemas/iio/proximity/vishay,vcnl3020.yaml#
+-Sergey
 
-See https://patchwork.ozlabs.org/patch/1284005
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+> 
+> 	Sam
+> 
+> >    "^bananapi,.*":
+> >      description: BIPAI KEJI LIMITED
+> >    "^beacon,.*":
+> > -- 
+> > 2.25.1
