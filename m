@@ -2,78 +2,118 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F9EC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E89FC47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C652A2496A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:24:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="sXGC/0l4";
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="sXGC/0l4"
+	by mail.kernel.org (Postfix) with ESMTP id 74B3120CC7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:24:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728852AbgEFTYH (ORCPT
+        id S1728983AbgEFTYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 15:24:07 -0400
-Received: from node.akkea.ca ([192.155.83.177]:50624 "EHLO node.akkea.ca"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727110AbgEFTYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 15:24:06 -0400
-X-Greylist: delayed 341 seconds by postgrey-1.27 at vger.kernel.org; Wed, 06 May 2020 15:24:06 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id 972204E204D;
-        Wed,  6 May 2020 19:18:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1588792705; bh=nJQ+uZEobk9pv0R9RtKOcEH3N7tNKBUrCdD5M9CPY54=;
-        h=From:To:Cc:Subject:Date;
-        b=sXGC/0l4sto0QB8MImtMcdGW6+pc8WCY7Niu0LCs/Beqy1mQdKi3mp7Oug4Uk5RPz
-         cv1LD3sOAFT/2UyDq95leVcq6r6Zm79tlnHqCxPPEM/PTIChF9BcsMleVDxYU9pN74
-         IehlQyTgvQVn9wNxUrYUXYbpZlwbEHqiAh1bMdf4=
-X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
-Received: from node.akkea.ca ([127.0.0.1])
-        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 6yC_2xNZ-Abi; Wed,  6 May 2020 19:18:25 +0000 (UTC)
-Received: from midas.localdomain (S0106788a2041785e.gv.shawcable.net [70.66.86.75])
-        by node.akkea.ca (Postfix) with ESMTPSA id EA9A24E2003;
-        Wed,  6 May 2020 19:18:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1588792705; bh=nJQ+uZEobk9pv0R9RtKOcEH3N7tNKBUrCdD5M9CPY54=;
-        h=From:To:Cc:Subject:Date;
-        b=sXGC/0l4sto0QB8MImtMcdGW6+pc8WCY7Niu0LCs/Beqy1mQdKi3mp7Oug4Uk5RPz
-         cv1LD3sOAFT/2UyDq95leVcq6r6Zm79tlnHqCxPPEM/PTIChF9BcsMleVDxYU9pN74
-         IehlQyTgvQVn9wNxUrYUXYbpZlwbEHqiAh1bMdf4=
-From:   Angus Ainslie <angus@akkea.ca>
-To:     angus@akkea.ca
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] tps6598x: add device tree hooks and document
-Date:   Wed,  6 May 2020 12:17:16 -0700
-Message-Id: <20200506191718.2144752-1-angus@akkea.ca>
-X-Mailer: git-send-email 2.25.1
+        Wed, 6 May 2020 15:24:38 -0400
+Received: from smtprelay0110.hostedemail.com ([216.40.44.110]:52916 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728770AbgEFTYi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 15:24:38 -0400
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave05.hostedemail.com (Postfix) with ESMTP id E692F18289F65;
+        Wed,  6 May 2020 19:24:36 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id D560118221882;
+        Wed,  6 May 2020 19:24:35 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: group10_aa59a2ed6d34
+X-Filterd-Recvd-Size: 3211
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf18.hostedemail.com (Postfix) with ESMTPA;
+        Wed,  6 May 2020 19:24:33 +0000 (UTC)
+Message-ID: <fd17302d94f6e2242d041268989e94a04df159de.camel@perches.com>
+Subject: Re: [PATCH 06/11] net: ethernet: mtk-eth-mac: new driver
+From:   Joe Perches <joe@perches.com>
+To:     Leon Romanovsky <leon@leon.nu>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Felix Fietkau <nbd@openwrt.org>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-netdev <netdev@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 06 May 2020 12:24:31 -0700
+In-Reply-To: <CALq1K=Lu0hv9UCgxgrwCVoOe9L7A4sgBEM=RW2d9JkizHmdBPQ@mail.gmail.com>
+References: <20200505140231.16600-1-brgl@bgdev.pl>
+         <20200505140231.16600-7-brgl@bgdev.pl>
+         <CALq1K=Lu0hv9UCgxgrwCVoOe9L7A4sgBEM=RW2d9JkizHmdBPQ@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device tree compatible string for tps6598x driver and create the dt binding doc for the driver
+On Wed, 2020-05-06 at 22:16 +0300, Leon Romanovsky wrote:
+> On Tue, May 5, 2020 at 5:03 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > 
+> > This adds the driver for the MediaTek Ethernet MAC used on the MT8* SoC
+> > family. For now we only support full-duplex.
+[]
+> > diff --git a/drivers/net/ethernet/mediatek/mtk_eth_mac.c b/drivers/net/ethernet/mediatek/mtk_eth_mac.c
+[]
+> > +struct mtk_mac_priv {
+> > +       struct regmap *regs;
+> > +       struct regmap *pericfg;
+> > +
+> > +       struct clk_bulk_data clks[MTK_MAC_NCLKS];
+> > +
+> > +       void *ring_base;
+> > +       struct mtk_mac_ring_desc *descs_base;
+> > +       dma_addr_t dma_addr;
+> > +       struct mtk_mac_ring tx_ring;
+> > +       struct mtk_mac_ring rx_ring;
+> > +       struct work_struct tx_work;
+> > +
+> > +       struct mii_bus *mii;
+> > +       struct napi_struct napi;
+> > +
+> > +       struct device_node *phy_node;
+> > +       phy_interface_t phy_intf;
+> > +       struct phy_device *phydev;
+> > +       unsigned int link;
+> > +       int speed;
+> > +       int duplex;
+> > +
+> > +       /* Protects against concurrent descriptor access. */
+> > +       spinlock_t lock;
+> > +       unsigned long lock_flags;
+> > +
+> > +       struct rtnl_link_stats64 stats;
+> > +};
+> > +
+> > +static struct net_device *mtk_mac_get_netdev(struct mtk_mac_priv *priv)
+> > +{
+> > +       char *ptr = (char *)priv;
+> > +
+> > +       return (struct net_device *)(ptr - ALIGN(sizeof(struct net_device),
+> > +                                                NETDEV_ALIGN));
+> > +}
 
-Angus Ainslie (2):
-  usb: typec: tps6598x: add device tree hooks
-  dt-bindings: usb: ti,tps6598x: add dt binding doc
+This code looks ugly/fragile.
+Why not store the struct net_device * in struct mtk_mac_priv ?
 
- .../devicetree/bindings/usb/ti,tps6598x.yaml  | 75 +++++++++++++++++++
- drivers/usb/typec/tps6598x.c                  |  7 ++
- 2 files changed, 82 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
-
--- 
-2.25.1
 
