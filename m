@@ -6,36 +6,37 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D65F6C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B91C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEFA92078C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDF9520747
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:23:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730058AbgEFSWY (ORCPT
+        id S1730383AbgEFSXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 14:22:24 -0400
-Received: from mga04.intel.com ([192.55.52.120]:39177 "EHLO mga04.intel.com"
+        Wed, 6 May 2020 14:23:00 -0400
+Received: from mga17.intel.com ([192.55.52.151]:56488 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728619AbgEFSWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 14:22:23 -0400
-IronPort-SDR: 1DArhKc3A+gQJluoir9519Yyy30ySSsoxfVADDOIkMOtUDRuFyPAvBaLnrFPpXClwbQwk4std8
- 2LO+Y8N5gcPw==
+        id S1729589AbgEFSW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 14:22:59 -0400
+IronPort-SDR: CkL0C40dW3Qie5e9x2+niSsWj6R7i7l+Ut+c+/UHaV8qDuXlJW1bEr0SrxBIXTEL2a2b/aMVmG
+ Q3IsdxN/X7wQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 11:22:23 -0700
-IronPort-SDR: ns4R22MnWHfFuIq+mrSPORk6soGLphBozU6velJdf/DC7Wqx1+J5NMW+UYcPaLZ4z4s9nfsFFd
- 0nsAs+azppXg==
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 11:22:59 -0700
+IronPort-SDR: jHEJIQ88DLuQwNUFUiHX3LTAT97MVx27mbbNCop4TdeOX+15ZPDF9BST2kmwMB2bMPF2fRi2sV
+ pib/Z1PPKd6w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,360,1583222400"; 
-   d="scan'208";a="260191972"
+   d="scan'208";a="296269303"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 06 May 2020 11:22:23 -0700
+  by orsmga008.jf.intel.com with ESMTP; 06 May 2020 11:22:59 -0700
 Received: from [10.249.228.227] (abudanko-mobl.ccr.corp.intel.com [10.249.228.227])
-        by linux.intel.com (Postfix) with ESMTP id 3591058048A;
-        Wed,  6 May 2020 11:22:21 -0700 (PDT)
-Subject: [PATCH v2 06/11] perf stat: introduce --ctl-fd[-ack] options
+        by linux.intel.com (Postfix) with ESMTP id 413A258043A;
+        Wed,  6 May 2020 11:22:57 -0700 (PDT)
+Subject: [PATCH v2 07/11] perf docs: extend stat mode docs with info on
+ --ctl-fd[-ack] options
 From:   Alexey Budankov <alexey.budankov@linux.intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@redhat.com>
@@ -47,8 +48,8 @@ Cc:     Namhyung Kim <namhyung@kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>
 References: <d582cc3d-2302-c7e2-70d3-bc7ab6f628c3@linux.intel.com>
 Organization: Intel Corp.
-Message-ID: <cd51a709-aecc-c79a-6d57-80a8cd008c2f@linux.intel.com>
-Date:   Wed, 6 May 2020 21:22:19 +0300
+Message-ID: <fb7c1fb9-2f6b-eb4b-d256-51253b29b4ac@linux.intel.com>
+Date:   Wed, 6 May 2020 21:22:55 +0300
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
@@ -62,70 +63,66 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Introduce --ctl-fd[-ack] options to pass open file descriptors
-numbers from command line.
+Extend perf-stat.txt file with --ctl-fd[-ack] options description.
+Document possible usage model introduced by --ctl-fd[-ack] options
+by providing example bash shell script.
 
 Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- tools/perf/builtin-stat.c | 10 ++++++++++
- tools/perf/util/stat.h    |  2 ++
- 2 files changed, 12 insertions(+)
+ tools/perf/Documentation/perf-stat.txt | 40 ++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 5aab3ff1bbea..60c0d9521f74 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -187,6 +187,8 @@ static struct perf_stat_config stat_config = {
- 	.metric_only_len	= METRIC_ONLY_LEN,
- 	.walltime_nsecs_stats	= &walltime_nsecs_stats,
- 	.big_num		= true,
-+	.ctl_fd			= -1,
-+	.ctl_fd_ack		= -1
- };
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 3fb5028aef08..19ed53e08294 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -164,6 +164,46 @@ with it.  --append may be used here.  Examples:
+      3>results  perf stat --log-fd 3          -- $cmd
+      3>>results perf stat --log-fd 3 --append -- $cmd
  
- static inline void diff_timespec(struct timespec *r, struct timespec *a,
-@@ -984,6 +986,10 @@ static struct option stat_options[] = {
- 		    "Use with 'percore' event qualifier to show the event "
- 		    "counts of one hardware thread by sum up total hardware "
- 		    "threads of same physical core"),
-+	OPT_INTEGER(0, "ctl-fd", &stat_config.ctl_fd,
-+		    "Listen on fd descriptor for command to control measurement ('e': enable events, 'd': disable events)"),
-+	OPT_INTEGER(0, "ctl-fd-ack", &stat_config.ctl_fd_ack,
-+		    "Send control command completion ('a') to fd ack descriptor"),
- 	OPT_END()
- };
- 
-@@ -2180,6 +2186,8 @@ int cmd_stat(int argc, const char **argv)
- 	signal(SIGALRM, skip_signal);
- 	signal(SIGABRT, skip_signal);
- 
-+	perf_evlist__initialize_ctlfd(evsel_list, stat_config.ctl_fd, stat_config.ctl_fd_ack);
++--ctl-fd::
++--ctl-fd-ack::
 +
- 	status = 0;
- 	for (run_idx = 0; forever || run_idx < stat_config.run_count; run_idx++) {
- 		if (stat_config.run_count != 1 && verbose > 0)
-@@ -2199,6 +2207,8 @@ int cmd_stat(int argc, const char **argv)
- 	if (!forever && status != -1 && !interval)
- 		print_counters(NULL, argc, argv);
- 
-+	perf_evlist__finalize_ctlfd(evsel_list);
++Listen on ctl-fd descriptor for command to control measurement ('e': enable events,
++'d': disable events). Optionally send control command completion ('a') to fd-ack
++descriptor to synchronize with the controlling process. Example of bash shell script
++to enable and disable events during measurements:
 +
- 	if (STAT_RECORD) {
- 		/*
- 		 * We synthesize the kernel mmap record just so that older tools
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index 027b9dcd902f..0b0fa3a2cde2 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -130,6 +130,8 @@ struct perf_stat_config {
- 	struct perf_cpu_map		*cpus_aggr_map;
- 	u64			*walltime_run;
- 	struct rblist		 metric_events;
-+	int			 ctl_fd;
-+	int			 ctl_fd_ack;
- };
- 
- void update_stats(struct stats *stats, u64 val);
++#!/bin/bash
++
++ctl_dir=/tmp/
++
++ctl_fifo=${ctl_dir}perf_ctl.fifo
++test -p ${ctl_fifo} && unlink ${ctl_fifo}
++mkfifo ${ctl_fifo}
++exec {ctl_fd}<>${ctl_fifo}
++
++ctl_ack_fifo=${ctl_dir}perf_ctl_ack.fifo
++test -p ${ctl_ack_fifo} && unlink ${ctl_ack_fifo}
++mkfifo ${ctl_ack_fifo}
++exec {ctl_fd_ack}<>${ctl_ack_fifo}
++
++perf stat -D -1 -e cpu-cycles -a -I 1000                \
++          --ctl-fd ${ctl_fd} --ctl-fd-ack ${ctl_fd_ack} \
++          -- sleep 30 &
++perf_pid=$!
++
++sleep 5  && echo 'e' >&${ctl_fd} && read -u ${ctl_fd_ack} e1 && echo "enabled(${e1})"
++sleep 10 && echo 'd' >&${ctl_fd} && read -u ${ctl_fd_ack} d1 && echo "disabled(${d1})"
++
++exec {ctl_fd_ack}>&-
++unlink ${ctl_ack_fifo}
++
++exec {ctl_fd}>&-
++unlink ${ctl_fifo}
++
++wait -n ${perf_pid}
++exit $?
++
++
+ --pre::
+ --post::
+ 	Pre and post measurement hooks, e.g.:
 -- 
 2.24.1
 
