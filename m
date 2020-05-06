@@ -2,281 +2,308 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBDEC4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAEDFC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 368BD20575
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 887AF20B1F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:33:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XXDepUHr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IsTfeYH8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729688AbgEFPdZ (ORCPT
+        id S1729751AbgEFPdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:33:25 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:48404 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729411AbgEFPdY (ORCPT
+        Wed, 6 May 2020 11:33:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729411AbgEFPdm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:33:24 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046FHpZL018896;
-        Wed, 6 May 2020 15:32:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=ksWL2BImAjFMUrmJfBHK8PrGlLoejtqO0zw1LKE1nTk=;
- b=XXDepUHrWUuluSxTMil7fnxBAMLCwtCKwFJiZi61Rsp19x9GyCZsKoFQxYpnetlKIQCd
- whjCJNJCW5KjBdgVc+PpMSb4mh+obkRUXznbaPmf4/WLRtZKn2zFyedYma5yB8732Tpw
- VrCPQLln0w03FaSdNltgWNJ5aSg5X5LShFE/A6xuv8/igvga+0Wq4ibxWgasV63b0OET
- dUuhAV3KmN0NXefDZuOM8+ib8vaTNNbh7qcUyMrSdx49YOa1EaPea0f6hgJlM6ktY2Gn
- ItT82Y4H2D0RhO8y9MsMkMEyhZR1rAE5SRuKHA9yWAf0QKLvG0BH2YjmtdEiFMvWudHz kw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 30s1gnawuq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 May 2020 15:32:35 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046FHTn9076493;
-        Wed, 6 May 2020 15:30:35 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 30sjnjt13k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 May 2020 15:30:33 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 046FUVtm007437;
-        Wed, 6 May 2020 15:30:31 GMT
-Received: from linux-1.home (/10.175.10.30)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 May 2020 08:30:31 -0700
-Subject: Re: [patch V4 part 1 13/36] x86/kvm: Restrict ASYNC_PF to user space
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-References: <20200505131602.633487962@linutronix.de>
- <20200505134059.369802541@linutronix.de>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Message-ID: <f52c0df3-943b-ef1a-092b-fa9621454d46@oracle.com>
-Date:   Wed, 6 May 2020 17:29:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 6 May 2020 11:33:42 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC485C061A0F;
+        Wed,  6 May 2020 08:33:41 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id c10so2379598qka.4;
+        Wed, 06 May 2020 08:33:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5aNB+Iw02ld5+/4wIdEOYftyvHXtMbzPLoPWT3yjBMk=;
+        b=IsTfeYH8grm//EGFXoDFN23AbhCqfLB/CQEPdtF08B1i6Al9CoIw889xpHN9kM4S3Q
+         JG5ai4a0MicfJrhGDuSa4DR2YPVoUxq8gdNuzg/ehlQy79Bf5CgsnjiC+dStxwycRbN+
+         sLZas8boySRpOpcgvDriQbHQAfHo+mNK9yQW+LQD2/HBlzpIktgFKd1DQ69phc3WKabn
+         3+NEk1HJ5ho7t3u1W+mgu3JCv0OjsYnYNl6+gW49UeGKtwyVHS9DKJLRFf1v6VdfTupP
+         cPv1ncTUUZzPhqNfjzja/WaGfIExuyRpQhYsUHUTc5BNhE4xq8kU654Jv0czsGwCPF2P
+         nBgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5aNB+Iw02ld5+/4wIdEOYftyvHXtMbzPLoPWT3yjBMk=;
+        b=XggAweW3ohMziVTnREDXmk4nzsg9Yykh7Fg8M7IQze9r5YmVbQf/3qapkcALK0D+mG
+         EWxBCXKbIdbqNPFykQgQxDV3HaunWUGbL8QxAqcf004JS7LPzQmr1os0x4WPI2nqWi9Q
+         L0Kn43YOHoSjamkg9dHFMHWnf9FbmwiY1QS24A7Hz3NIKEYkc9pBVUtfKu8+ck/37OHb
+         zWGwFFPH2bTdSGzq8xnrlYkK5k/+/CImql9dr8R+l5wBrdXOCtacoXhl5EtOB2jp1Lou
+         h1roMe20SnhPG/SJZGIpFDw6YmEjFIgYNrWxNXLq7g6HvH1JPhxyqt4qMy0HpwBhf+eD
+         3qoQ==
+X-Gm-Message-State: AGi0PuZKw2JtDGRIRC2lFoJ+ca7qAXN/3qulsdLXnCrGj60W0lfyZAlE
+        /mIrfHHnd/XCupPmnqqfI6sdFxIo2Bpdd68hIp4=
+X-Google-Smtp-Source: APiQypIy3/zvoIMiFNcOyiwIyoYNY3iPcQ6hCkEO2ikjFkgj/bIcdOxWs77/kL2Zmv6uLSssdnqVw/BtfRUyAD5lp1k=
+X-Received: by 2002:a37:6f47:: with SMTP id k68mr9522705qkc.341.1588779220920;
+ Wed, 06 May 2020 08:33:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200505134059.369802541@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005060124
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 mlxscore=0
- spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0
- impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005060124
+References: <20200506054920.109738-1-eizan@chromium.org> <20200506154832.v2.5.I1c85bddc262913b8572d892dd6bf9bc03fbe0ec7@changeid>
+In-Reply-To: <20200506154832.v2.5.I1c85bddc262913b8572d892dd6bf9bc03fbe0ec7@changeid>
+From:   Enric Balletbo Serra <eballetbo@gmail.com>
+Date:   Wed, 6 May 2020 17:33:29 +0200
+Message-ID: <CAFqH_50btHhvm_h=5d0Y7jA=tZsCREDB730i4ip7cieNsZjF_w@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] [media] mtk-mdp: Remove mtk_mdp_comp.id and
+ supporting functionality
+To:     Eizan Miyamoto <eizan@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Eizan,
 
-On 5/5/20 3:16 PM, Thomas Gleixner wrote:
-> The async page fault injection into kernel space creates more problems than
-> it solves. The host has absolutely no knowledge about the state of the
-> guest if the fault happens in CPL0. The only restriction for the host is
-> interrupt disabled state. If interrupts are enabled in the guest then the
-> exception can hit arbitrary code. The HALT based wait in non-preemotible
-> code is a hacky replacement for a proper hypercall.
-> 
-> For the ongoing work to restrict instrumentation and make the RCU idle
-> interaction well defined the required extra work for supporting async
-> pagefault in CPL0 is just not justified and creates complexity for a
-> dubious benefit.
-> 
-> The CPL3 injection is well defined and does not cause any issues as it is
-> more or less the same as a regular page fault from CPL3.
-> 
-> Suggested-by: Andy Lutomirski <luto@kernel.org>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Thank you for the patch. Two trivial comments
+
+Missatge de Eizan Miyamoto <eizan@chromium.org> del dia dc., 6 de maig
+2020 a les 7:51:
+>
+> Since components are registered in a list, the numeric component id that
+> specified a location in an array is not necessary.
+>
+> Signed-off-by: eizan@chromium.org
+
+ditto: Drop the above line.
+
+> Signed-off-by: Eizan Miyamoto <eizan@chromium.org>
 > ---
->   arch/x86/kernel/kvm.c |  100 +++-----------------------------------------------
->   1 file changed, 7 insertions(+), 93 deletions(-)
+>
+> Changes in v1:
+> - rebase onto linux-next/master to pick up
+>   757570f11fa4b0ce5472a6583de6f06e996a8527
+>
 
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+You probably should mention this in the cover-letter or as a comment
+here to make the maintainer aware of this dependency.
 
-alex.
-
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
-> @@ -75,7 +75,6 @@ struct kvm_task_sleep_node {
->   	struct swait_queue_head wq;
->   	u32 token;
->   	int cpu;
-> -	bool use_halt;
->   };
->   
->   static struct kvm_task_sleep_head {
-> @@ -98,8 +97,7 @@ static struct kvm_task_sleep_node *_find
->   	return NULL;
->   }
->   
-> -static bool kvm_async_pf_queue_task(u32 token, bool use_halt,
-> -				    struct kvm_task_sleep_node *n)
-> +static bool kvm_async_pf_queue_task(u32 token, struct kvm_task_sleep_node *n)
->   {
->   	u32 key = hash_32(token, KVM_TASK_SLEEP_HASHBITS);
->   	struct kvm_task_sleep_head *b = &async_pf_sleepers[key];
-> @@ -117,7 +115,6 @@ static bool kvm_async_pf_queue_task(u32
->   
->   	n->token = token;
->   	n->cpu = smp_processor_id();
-> -	n->use_halt = use_halt;
->   	init_swait_queue_head(&n->wq);
->   	hlist_add_head(&n->link, &b->list);
->   	raw_spin_unlock(&b->lock);
-> @@ -138,7 +135,7 @@ void kvm_async_pf_task_wait_schedule(u32
->   
->   	lockdep_assert_irqs_disabled();
->   
-> -	if (!kvm_async_pf_queue_task(token, false, &n))
-> +	if (!kvm_async_pf_queue_task(token, &n))
->   		return;
->   
->   	for (;;) {
-> @@ -154,91 +151,10 @@ void kvm_async_pf_task_wait_schedule(u32
->   }
->   EXPORT_SYMBOL_GPL(kvm_async_pf_task_wait_schedule);
->   
-> -/*
-> - * Invoked from the async page fault handler.
-> - */
-> -static void kvm_async_pf_task_wait_halt(u32 token)
+>  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c | 60 +++----------------
+>  drivers/media/platform/mtk-mdp/mtk_mdp_comp.h | 19 +-----
+>  drivers/media/platform/mtk-mdp/mtk_mdp_core.c | 10 +---
+>  3 files changed, 11 insertions(+), 78 deletions(-)
+>
+> diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
+> index da2bdad7a8d1..362fff924aef 100644
+> --- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
+> +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
+> @@ -14,46 +14,6 @@
+>  #include "mtk_mdp_comp.h"
+>
+>
+> -static const char * const mtk_mdp_comp_stem[MTK_MDP_COMP_TYPE_MAX] = {
+> -       "mdp-rdma",
+> -       "mdp-rsz",
+> -       "mdp-wdma",
+> -       "mdp-wrot",
+> -};
+> -
+> -struct mtk_mdp_comp_match {
+> -       enum mtk_mdp_comp_type type;
+> -       int alias_id;
+> -};
+> -
+> -static const struct mtk_mdp_comp_match mtk_mdp_matches[MTK_MDP_COMP_ID_MAX] = {
+> -       { MTK_MDP_RDMA, 0 },
+> -       { MTK_MDP_RDMA, 1 },
+> -       { MTK_MDP_RSZ,  0 },
+> -       { MTK_MDP_RSZ,  1 },
+> -       { MTK_MDP_RSZ,  2 },
+> -       { MTK_MDP_WDMA, 0 },
+> -       { MTK_MDP_WROT, 0 },
+> -       { MTK_MDP_WROT, 1 },
+> -};
+> -
+> -int mtk_mdp_comp_get_id(struct device *dev, struct device_node *node,
+> -                       enum mtk_mdp_comp_type comp_type)
 > -{
-> -	struct kvm_task_sleep_node n;
+> -       int id = of_alias_get_id(node, mtk_mdp_comp_stem[comp_type]);
+> -       int i;
 > -
-> -	if (!kvm_async_pf_queue_task(token, true, &n))
-> -		return;
+> -       for (i = 0; i < ARRAY_SIZE(mtk_mdp_matches); i++) {
+> -               if (comp_type == mtk_mdp_matches[i].type &&
+> -                   id == mtk_mdp_matches[i].alias_id)
+> -                       return i;
+> -       }
 > -
-> -	for (;;) {
-> -		if (hlist_unhashed(&n.link))
-> -			break;
-> -		/*
-> -		 * No point in doing anything about RCU here. Any RCU read
-> -		 * side critical section or RCU watching section can be
-> -		 * interrupted by VMEXITs and the host is free to keep the
-> -		 * vCPU scheduled out as long as it sees fit. This is not
-> -		 * any different just because of the halt induced voluntary
-> -		 * VMEXIT.
-> -		 *
-> -		 * Also the async page fault could have interrupted any RCU
-> -		 * watching context, so invoking rcu_irq_exit()/enter()
-> -		 * around this is not gaining anything.
-> -		 */
-> -		native_safe_halt();
-> -		local_irq_disable();
-> -	}
+> -       dev_err(dev, "Failed to get id. type: %d, id: %d\n", comp_type, id);
+> -
+> -       return -EINVAL;
 > -}
 > -
-> -/* Invoked from the async page fault handler */
-> -static void kvm_async_pf_task_wait(u32 token, bool usermode)
-> -{
-> -	bool can_schedule;
+>  void mtk_mdp_comp_clock_on(struct device *dev, struct mtk_mdp_comp *comp)
+>  {
+>         int i, err;
+> @@ -62,8 +22,8 @@ void mtk_mdp_comp_clock_on(struct device *dev, struct mtk_mdp_comp *comp)
+>                 err = mtk_smi_larb_get(comp->larb_dev);
+>                 if (err)
+>                         dev_err(dev,
+> -                               "failed to get larb, err %d. type:%d id:%d\n",
+> -                               err, comp->type, comp->id);
+> +                               "failed to get larb, err %d. type:%d\n",
+> +                               err, comp->type);
+>         }
+>
+>         for (i = 0; i < ARRAY_SIZE(comp->clk); i++) {
+> @@ -72,8 +32,8 @@ void mtk_mdp_comp_clock_on(struct device *dev, struct mtk_mdp_comp *comp)
+>                 err = clk_prepare_enable(comp->clk[i]);
+>                 if (err)
+>                         dev_err(dev,
+> -                       "failed to enable clock, err %d. type:%d id:%d i:%d\n",
+> -                               err, comp->type, comp->id, i);
+> +                       "failed to enable clock, err %d. type:%d i:%d\n",
+> +                               err, comp->type, i);
+>         }
+>  }
+>
+> @@ -92,21 +52,15 @@ void mtk_mdp_comp_clock_off(struct device *dev, struct mtk_mdp_comp *comp)
+>  }
+>
+>  int mtk_mdp_comp_init(struct device *dev, struct device_node *node,
+> -                     struct mtk_mdp_comp *comp, enum mtk_mdp_comp_id comp_id)
+> +                     struct mtk_mdp_comp *comp,
+> +                     enum mtk_mdp_comp_type comp_type)
+>  {
+>         struct device_node *larb_node;
+>         struct platform_device *larb_pdev;
+>         int i;
+>
+> -       if (comp_id < 0 || comp_id >= MTK_MDP_COMP_ID_MAX) {
+> -               dev_err(dev, "Invalid comp_id %d\n", comp_id);
+> -               return -EINVAL;
+> -       }
 > -
-> -	/*
-> -	 * No need to check whether interrupts were disabled because the
-> -	 * host will (hopefully) only inject an async page fault into
-> -	 * interrupt enabled regions.
-> -	 *
-> -	 * If CONFIG_PREEMPTION is enabled then check whether the code
-> -	 * which triggered the page fault is preemptible. This covers user
-> -	 * mode as well because preempt_count() is obviously 0 there.
-> -	 *
-> -	 * The check for rcu_preempt_depth() is also required because
-> -	 * voluntary scheduling inside a rcu read locked section is not
-> -	 * allowed.
-> -	 *
-> -	 * The idle task is already covered by this because idle always
-> -	 * has a preempt count > 0.
-> -	 *
-> -	 * If CONFIG_PREEMPTION is disabled only allow scheduling when
-> -	 * coming from user mode as there is no indication whether the
-> -	 * context which triggered the page fault could schedule or not.
-> -	 */
-> -	if (IS_ENABLED(CONFIG_PREEMPTION))
-> -		can_schedule = preempt_count() + rcu_preempt_depth() == 0;
-> -	else
-> -		can_schedule = usermode;
+> -       INIT_LIST_HEAD(&comp->node);
+>         comp->dev_node = of_node_get(node);
+> -       comp->id = comp_id;
+> -       comp->type = mtk_mdp_matches[comp_id].type;
+> +       comp->type = comp_type;
+>
+>         for (i = 0; i < ARRAY_SIZE(comp->clk); i++) {
+>                 comp->clk[i] = of_clk_get(node, i);
+> diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h
+> index 1f745891c6c3..1bf0242cce46 100644
+> --- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h
+> +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h
+> @@ -22,18 +22,6 @@ enum mtk_mdp_comp_type {
+>         MTK_MDP_COMP_TYPE_MAX,
+>  };
+>
+> -enum mtk_mdp_comp_id {
+> -       MTK_MDP_COMP_RDMA0,
+> -       MTK_MDP_COMP_RDMA1,
+> -       MTK_MDP_COMP_RSZ0,
+> -       MTK_MDP_COMP_RSZ1,
+> -       MTK_MDP_COMP_RSZ2,
+> -       MTK_MDP_COMP_WDMA,
+> -       MTK_MDP_COMP_WROT0,
+> -       MTK_MDP_COMP_WROT1,
+> -       MTK_MDP_COMP_ID_MAX,
+> -};
 > -
-> -	/*
-> -	 * If the kernel context is allowed to schedule then RCU is
-> -	 * watching because no preemptible code in the kernel is inside RCU
-> -	 * idle state. So it can be treated like user mode. User mode is
-> -	 * safe because the #PF entry invoked enter_from_user_mode().
-> -	 *
-> -	 * For the non schedulable case invoke rcu_irq_enter() for
-> -	 * now. This will be moved out to the pagefault entry code later
-> -	 * and only invoked when really needed.
-> -	 */
-> -	if (can_schedule) {
-> -		kvm_async_pf_task_wait_schedule(token);
-> -	} else {
-> -		rcu_irq_enter();
-> -		kvm_async_pf_task_wait_halt(token);
-> -		rcu_irq_exit();
-> -	}
-> -}
-> -
->   static void apf_task_wake_one(struct kvm_task_sleep_node *n)
->   {
->   	hlist_del_init(&n->link);
-> -	if (n->use_halt)
-> -		smp_send_reschedule(n->cpu);
-> -	else if (swq_has_sleeper(&n->wq))
-> +	if (swq_has_sleeper(&n->wq))
->   		swake_up_one(&n->wq);
->   }
->   
-> @@ -337,8 +253,10 @@ bool __kvm_handle_async_pf(struct pt_reg
->   		panic("Host injected async #PF in interrupt disabled region\n");
->   
->   	if (reason == KVM_PV_REASON_PAGE_NOT_PRESENT) {
-> -		/* page is swapped out by the host. */
-> -		kvm_async_pf_task_wait(token, user_mode(regs));
-> +		if (unlikely(!(user_mode(regs))))
-> +			panic("Host injected async #PF in kernel mode\n");
-> +		/* Page is swapped out by the host. */
-> +		kvm_async_pf_task_wait_schedule(token);
->   	} else {
->   		rcu_irq_enter();
->   		kvm_async_pf_task_wake(token);
-> @@ -397,10 +315,6 @@ static void kvm_guest_cpu_init(void)
->   		WARN_ON_ONCE(!static_branch_likely(&kvm_async_pf_enabled));
->   
->   		pa = slow_virt_to_phys(this_cpu_ptr(&apf_reason));
-> -
-> -#ifdef CONFIG_PREEMPTION
-> -		pa |= KVM_ASYNC_PF_SEND_ALWAYS;
-> -#endif
->   		pa |= KVM_ASYNC_PF_ENABLED;
->   
->   		if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF_VMEXIT))
-> 
+>  /**
+>   * struct mtk_mdp_comp - the MDP's function component data
+>   * @node:      list node to track sibing MDP components
+> @@ -41,7 +29,6 @@ enum mtk_mdp_comp_id {
+>   * @clk:       clocks required for component
+>   * @larb_dev:  SMI device required for component
+>   * @type:      component type
+> - * @id:                component ID
+>   */
+>  struct mtk_mdp_comp {
+>         struct list_head        node;
+> @@ -49,14 +36,12 @@ struct mtk_mdp_comp {
+>         struct clk              *clk[2];
+>         struct device           *larb_dev;
+>         enum mtk_mdp_comp_type  type;
+> -       enum mtk_mdp_comp_id    id;
+>  };
+>
+>  int mtk_mdp_comp_init(struct device *dev, struct device_node *node,
+> -                     struct mtk_mdp_comp *comp, enum mtk_mdp_comp_id comp_id);
+> +                     struct mtk_mdp_comp *comp,
+> +                     enum mtk_mdp_comp_type comp_type);
+>  void mtk_mdp_comp_deinit(struct device *dev, struct mtk_mdp_comp *comp);
+> -int mtk_mdp_comp_get_id(struct device *dev, struct device_node *node,
+> -                       enum mtk_mdp_comp_type comp_type);
+>  void mtk_mdp_comp_clock_on(struct device *dev, struct mtk_mdp_comp *comp);
+>  void mtk_mdp_comp_clock_off(struct device *dev, struct mtk_mdp_comp *comp);
+>
+> diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+> index 40b9fda8b03b..acbc5a01ae4c 100644
+> --- a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+> +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+> @@ -137,7 +137,6 @@ static int mtk_mdp_probe(struct platform_device *pdev)
+>         for_each_child_of_node(parent, node) {
+>                 const struct of_device_id *of_id;
+>                 enum mtk_mdp_comp_type comp_type;
+> -               int comp_id;
+>
+>                 of_id = of_match_node(mtk_mdp_comp_dt_ids, node);
+>                 if (!of_id)
+> @@ -150,12 +149,7 @@ static int mtk_mdp_probe(struct platform_device *pdev)
+>                 }
+>
+>                 comp_type = (enum mtk_mdp_comp_type)of_id->data;
+> -               comp_id = mtk_mdp_comp_get_id(dev, node, comp_type);
+> -               if (comp_id < 0) {
+> -                       dev_warn(dev, "Skipping unknown component %pOF\n",
+> -                                node);
+> -                       continue;
+> -               }
+> +
+
+Look like you are introducing a double line break, remove it.
+
+Other than that:
+
+Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+
+>
+>                 comp = devm_kzalloc(dev, sizeof(*comp), GFP_KERNEL);
+>                 if (!comp) {
+> @@ -164,7 +158,7 @@ static int mtk_mdp_probe(struct platform_device *pdev)
+>                         goto err_comp;
+>                 }
+>
+> -               ret = mtk_mdp_comp_init(dev, node, comp, comp_id);
+> +               ret = mtk_mdp_comp_init(dev, node, comp, comp_type);
+>                 if (ret) {
+>                         of_node_put(node);
+>                         goto err_comp;
+> --
+> 2.26.2.526.g744177e7f7-goog
+>
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
