@@ -2,129 +2,68 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A88B7C47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8D2C47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 951012075A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A5512076D
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:21:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728531AbgEFTU4 (ORCPT
+        id S1728642AbgEFTVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 15:20:56 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:33468 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727975AbgEFTUz (ORCPT
+        Wed, 6 May 2020 15:21:10 -0400
+Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:51993 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728592AbgEFTVK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 15:20:55 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 92CE48030808;
-        Wed,  6 May 2020 19:20:52 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Wr0HOHLMXTqE; Wed,  6 May 2020 22:20:51 +0300 (MSK)
-Date:   Wed, 6 May 2020 22:20:49 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Sam Ravnborg <sam@ravnborg.org>
-CC:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-mips@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 03/20] dt-bindings: Add vendor prefix for Baikal
- Electronics, JSC
-Message-ID: <20200506192049.bznhiwra5a43ao26@mobilestation>
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
- <20200506174238.15385-4-Sergey.Semin@baikalelectronics.ru>
- <20200506175553.GA7775@ravnborg.org>
+        Wed, 6 May 2020 15:21:10 -0400
+Received: from localhost.localdomain ([93.23.14.107])
+        by mwinf5d60 with ME
+        id bXM6220092JbCfx03XM6m5; Wed, 06 May 2020 21:21:07 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Wed, 06 May 2020 21:21:07 +0200
+X-ME-IP: 93.23.14.107
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     wsa+renesas@sang-engineering.com, peda@axentia.se, robh@kernel.org
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] i2c: mux: demux-pinctrl: Fix an error handling path in 'i2c_demux_pinctrl_probe()'
+Date:   Wed,  6 May 2020 21:21:00 +0200
+Message-Id: <20200506192100.194821-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200506175553.GA7775@ravnborg.org>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
+A call to 'i2c_demux_deactivate_master()' is missing in the error handling
+path, as already done in the remove function.
 
-On Wed, May 06, 2020 at 07:55:53PM +0200, Sam Ravnborg wrote:
-> Hi Sergey.
-> 
-> On Wed, May 06, 2020 at 08:42:21PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > 
-> > Add "BAIKAL ELECTRONICS, JSC" to the list of devicetree vendor prefixes
-> > as "baikal".
-> > 
-> > Website: http://www.baikalelectronics.com
-> > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: linux-mips@vger.kernel.org
-> > Cc: linux-pm@vger.kernel.org
-> > 
-> > ---
-> > 
-> > Changelog v2:
-> > - Fix author and SoB emails mismatch.
-> 
-> > - Add 'baikal' vendor prefix instead of ambiguous 'be'.
-> Agree, much better.
-> 
-> > ---
-> >  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> > index d3891386d671..674c0d07c0ad 100644
-> > --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> > @@ -139,6 +139,8 @@ patternProperties:
-> >      description: Azoteq (Pty) Ltd
-> >    "^azw,.*":
-> >      description: Shenzhen AZW Technology Co., Ltd.
-> > +  "^baikal,.*":
-> > +    description: BAIKAL ELECTRONICS, JSC
-> Baikal do not use ALL UPPSECASE on their website for their name.
-> So please use same case use as they do themself.
-> 
+Fixes: 50a5ba876908 ("i2c: mux: demux-pinctrl: add driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/i2c/muxes/i2c-demux-pinctrl.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-It's not like me can't be considered as part of them.) I discussed the
-upper-case and normal version with our managers half a year ago and we
-came up to use the upper-case version. From Russian legal point of view
-it's also the upper-cased version what counts. I don't really know why
-the site use different naming, but in the internal documents it's always
-as submitted. Anyway I asked this question one more time to our managers.
-If they say to use as you suggest, then I'll resend an update in v3
-patchset, if v3 doesn't get to be necessary I'll send a followup patch
-with fix.
+diff --git a/drivers/i2c/muxes/i2c-demux-pinctrl.c b/drivers/i2c/muxes/i2c-demux-pinctrl.c
+index 0e16490eb3a1..5365199a31f4 100644
+--- a/drivers/i2c/muxes/i2c-demux-pinctrl.c
++++ b/drivers/i2c/muxes/i2c-demux-pinctrl.c
+@@ -272,6 +272,7 @@ static int i2c_demux_pinctrl_probe(struct platform_device *pdev)
+ err_rollback_available:
+ 	device_remove_file(&pdev->dev, &dev_attr_available_masters);
+ err_rollback:
++	i2c_demux_deactivate_master(priv);
+ 	for (j = 0; j < i; j++) {
+ 		of_node_put(priv->chan[j].parent_np);
+ 		of_changeset_destroy(&priv->chan[j].chgset);
+-- 
+2.25.1
 
--Sergey
-
-> 
-> 	Sam
-> 
-> >    "^bananapi,.*":
-> >      description: BIPAI KEJI LIMITED
-> >    "^beacon,.*":
-> > -- 
-> > 2.25.1
