@@ -2,192 +2,129 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FF1C38A2A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A50C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B18420769
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:17:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3C812073A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:21:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BHr6Q2jz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GdUooXYh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgEFMRL (ORCPT
+        id S1728081AbgEFMVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 08:17:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57530 "EHLO
+        Wed, 6 May 2020 08:21:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725887AbgEFMRK (ORCPT
+        by vger.kernel.org with ESMTP id S1727804AbgEFMVy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 08:17:10 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F0FBC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 05:17:10 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id y19so548017qvv.4
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 05:17:10 -0700 (PDT)
+        Wed, 6 May 2020 08:21:54 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9315CC061A0F;
+        Wed,  6 May 2020 05:21:53 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id z22so1173532lfd.0;
+        Wed, 06 May 2020 05:21:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2a9aw64zHH2XF20M2Lyiu+UmzKecSTayjdQ/idjqxfY=;
-        b=BHr6Q2jzo+84lP6Z7rD+n92hBNK0J3xtLZiORVstiSPMFaJU2Q08ATAnMyiKLt7Iq/
-         WJow5rRUtuEqLl5IfJON+yyxZEvqPXXkHJ/N9UjYJK6fnTil18q6e5XcpOkjjLljW8Ka
-         5GeRpv26dpS8o+n/1Rczh3Mv/jLV4aSlNReTRicrUOzXSYO1WM1X/beJQvgIHG+AhF8n
-         M0BASyfeJuiA3B7amYptZ3U9XnZLWQUrQptic3LY4SIGh7ipe23bf9ss1Cn1cj8XWJql
-         HZnBp9AUiL8Dd9GGFT2ohEukPgv+URk1d6Hvonk751ChvkcIQYnzBbODSCLSPAj9kk3O
-         TH1Q==
+         :cc;
+        bh=VsdP3ulXyls4iZ204aQqnDn+7zgjMQGgDA3wThz23eU=;
+        b=GdUooXYhovThJskAw/3M7IDG7gj8w7tq0AF8FoQVdXBmDH9htFVSG68e9l293BiFde
+         yh1Ul30jzJ9AzeWJG+sv/pQQKqyUh0vreJXtd3vhdqGNuGGUxu2ad5G+875kvCm+aISC
+         XtnDaWgVfa0DXVuJp4e5Tm7VcXSTLygCpXXyNFC9K2iJp5Y2OAY2LBrtGsD9eeoXzmX6
+         3yZY//4YvL9ZdNin7luDMYtJU9ltTl2SeU2SjVC2vVSkNQpniXOZVlYDOskC16iDSKUl
+         z0lhPUm5LgoZ3ktFfc0tj3iDnDw+kOUvAhfM2/Cb4h0MKWldOXEXsAQdEMbqbvdrL/fD
+         xaow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2a9aw64zHH2XF20M2Lyiu+UmzKecSTayjdQ/idjqxfY=;
-        b=IywgaPsFS//EWV6XkUcvAkvFb19gVEwNjCELzNMv8HVv2QlVmUFOPrfxPI9Cy5s7Vt
-         onEaAKkX7ATB1dSBZXW/3RVX2582J0mdDWdJ5hy+SqYkPlb+vpmRvw6vBeQOcoXl+Qek
-         3tRDIdGNDm88N9188Fk1nXRCcbtU69/rAGLtSh7EALGgWqxwHH1nByPa9QEYtjuDDL8P
-         rlzkQbo9v62wTEZ4UsSyl6H0wUa3XK4zn1gXx7Ct02JDE63xSWSIS+mHFDTkReAas99r
-         t8u090qXUkQc8EhJlR9MMjEt1lb6asWLZnBnsOLb4YBXwtf6nmnv6832dstdd45gdSDY
-         pqVg==
-X-Gm-Message-State: AGi0Puburbp1r0RpkO7n60EUC0O7a9d7vmNTqWyk4OpBYXi09eLJuSF/
-        HjLfoNG4sx/gXNO8evgwmrI0rOpvf6fKzMoRaE41NA==
-X-Google-Smtp-Source: APiQypJbI2sDdte0KVJrP00sH4lrzaXCuhrc9uqDNq31LxmRU2w1Jfi7oSoFrR2PB+CFe6EOcMAP0hph9TTqo0L/XA0=
-X-Received: by 2002:ad4:4d06:: with SMTP id l6mr7710326qvl.34.1588767429553;
- Wed, 06 May 2020 05:17:09 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=VsdP3ulXyls4iZ204aQqnDn+7zgjMQGgDA3wThz23eU=;
+        b=PrklIlv4KdVcF0OxcedBElladLqXItQRqytrW4yucHSREv0w6ejWBRkw6I9cLUxT1A
+         7/xIMZnxRRx4Rpi0dZy8SgJBfs3cy2yXymDLAjO/fspJPYh5mY0OriN9qXBoczTNg+q1
+         xwlsGZMQLLVc0YbCfBShQLS2XiCWePBtXV4JVN7B8uM/Gu+j5eAWdVwUoxV/2TOwUEVO
+         b4T4sgzFbl8PVRQvXHGBGAlczgrTQQfRGufLEPVDt3E9zC1Zj5uwKCWpyVa0p14g9QDy
+         gmreVF4RFFbCp77nEX13mSAtv0Bofg2xkiQhMR8xrax9CwjogMzV6Lgh98PLW2znxuDn
+         BA8A==
+X-Gm-Message-State: AGi0PuZJfWC7UwjVtOZKkiOnNkefReIxMYstLvQWjpQeJIBTMSNkL+xE
+        nkpFPf6TYxISgXEs7aGDXDAhfi1Yj/tqexDrXtk=
+X-Google-Smtp-Source: APiQypJJaMxo7orst7A0rBZm7DSNbuQvBrp2dLcSV0b/jCmG9BTQfK0MRgFoKlDwi9W2mFj5ZkyMbM1dpu+2wGPtY0I=
+X-Received: by 2002:a19:84b:: with SMTP id 72mr4984198lfi.133.1588767712011;
+ Wed, 06 May 2020 05:21:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200506051853.14380-1-walter-zh.wu@mediatek.com>
- <2BF68E83-4611-48B2-A57F-196236399219@lca.pw> <1588746219.16219.10.camel@mtksdccf07>
- <CACT4Y+atTS6p4b23AH+G9LM-k2gU=kMdkKQdARSboxc-H8CLTQ@mail.gmail.com> <1588766510.23664.31.camel@mtksdccf07>
-In-Reply-To: <1588766510.23664.31.camel@mtksdccf07>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 6 May 2020 14:16:58 +0200
-Message-ID: <CACT4Y+baJtLf=ppLjjYtcZNQwPW0daQYcQLTmYe-WU2-FxPHEg@mail.gmail.com>
-Subject: Re: [PATCH 0/3] kasan: memorize and print call_rcu stack
-To:     Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Qian Cai <cai@lca.pw>, Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
+References: <1588706059-4208-1-git-send-email-jrdr.linux@gmail.com>
+ <0bfe4a8a-0d91-ef9b-066f-2ea7c68571b3@nvidia.com> <CAFqt6zZMsQkOdjAb2k1EjwX=DtZ8gKfbRzwvreHOX-0vJLngNg@mail.gmail.com>
+ <20200506100649.GI17863@quack2.suse.cz>
+In-Reply-To: <20200506100649.GI17863@quack2.suse.cz>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Wed, 6 May 2020 17:51:39 +0530
+Message-ID: <CAFqt6zYaNkJ4AfVzutXS=JsN4fE41ZAvnw03vHWpdyiRHY1m_w@mail.gmail.com>
+Subject: Re: [RFC] mm/gup.c: Updated return value of {get|pin}_user_pages_fast()
+To:     Jan Kara <jack@suse.cz>
+Cc:     John Hubbard <jhubbard@nvidia.com>,
+        Tony Luck <tony.luck@intel.com>, fenghua.yu@intel.com,
+        Rob Springer <rspringer@google.com>,
+        Todd Poynor <toddpoynor@google.com>, benchan@chromium.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        linux-mediatek@lists.infradead.org
+        santosh.shilimkar@oracle.com,
+        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
+        Ira Weiny <ira.weiny@intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        inux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        tee-dev@lists.linaro.org, Linux-MM <linux-mm@kvack.org>,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        rds-devel@oss.oracle.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 6, 2020 at 2:01 PM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+On Wed, May 6, 2020 at 3:36 PM Jan Kara <jack@suse.cz> wrote:
 >
-> On Wed, 2020-05-06 at 11:37 +0200, 'Dmitry Vyukov' via kasan-dev wrote:
-> > On Wed, May 6, 2020 at 8:23 AM Walter Wu <walter-zh.wu@mediatek.com> wr=
-ote:
-> > > > > This patchset improves KASAN reports by making them to have
-> > > > > call_rcu() call stack information. It is helpful for programmers
-> > > > > to solve use-after-free or double-free memory issue.
-> > > > >
-> > > > > The KASAN report was as follows(cleaned up slightly):
-> > > > >
-> > > > > BUG: KASAN: use-after-free in kasan_rcu_reclaim+0x58/0x60
-> > > > >
-> > > > > Freed by task 0:
-> > > > > save_stack+0x24/0x50
-> > > > > __kasan_slab_free+0x110/0x178
-> > > > > kasan_slab_free+0x10/0x18
-> > > > > kfree+0x98/0x270
-> > > > > kasan_rcu_reclaim+0x1c/0x60
-> > > > > rcu_core+0x8b4/0x10f8
-> > > > > rcu_core_si+0xc/0x18
-> > > > > efi_header_end+0x238/0xa6c
-> > > > >
-> > > > > First call_rcu() call stack:
-> > > > > save_stack+0x24/0x50
-> > > > > kasan_record_callrcu+0xc8/0xd8
-> > > > > call_rcu+0x190/0x580
-> > > > > kasan_rcu_uaf+0x1d8/0x278
-> > > > >
-> > > > > Last call_rcu() call stack:
-> > > > > (stack is not available)
-> > > > >
-> > > > >
-> > > > > Add new CONFIG option to record first and last call_rcu() call st=
-ack
-> > > > > and KASAN report prints two call_rcu() call stack.
-> > > > >
-> > > > > This option doesn't increase the cost of memory consumption. It i=
-s
-> > > > > only suitable for generic KASAN.
+> On Wed 06-05-20 02:06:56, Souptick Joarder wrote:
+> > On Wed, May 6, 2020 at 1:08 AM John Hubbard <jhubbard@nvidia.com> wrote:
+> > >
+> > > On 2020-05-05 12:14, Souptick Joarder wrote:
+> > > > Currently {get|pin}_user_pages_fast() have 3 return value 0, -errno
+> > > > and no of pinned pages. The only case where these two functions will
+> > > > return 0, is for nr_pages <= 0, which doesn't find a valid use case.
+> > > > But if at all any, then a -ERRNO will be returned instead of 0, which
+> > > > means {get|pin}_user_pages_fast() will have 2 return values -errno &
+> > > > no of pinned pages.
 > > > >
-> > > > I don=E2=80=99t understand why this needs to be a Kconfig option at=
- all. If call_rcu() stacks are useful in general, then just always gather t=
-hose information. How do developers judge if they need to select this optio=
-n or not?
+> > > > Update all the callers which deals with return value 0 accordingly.
 > > >
-> > > Because we don't want to increase slub meta-data size, so enabling th=
-is
-> > > option can print call_rcu() stacks, but the in-use slub object doesn'=
-t
-> > > print free stack. So if have out-of-bound issue, then it will not pri=
-nt
-> > > free stack. It is a trade-off, see [1].
-> > >
-> > > [1] https://bugzilla.kernel.org/show_bug.cgi?id=3D198437
+> > > Hmmm, seems a little shaky. In order to do this safely, I'd recommend
+> > > first changing gup_fast/pup_fast so so that they return -EINVAL if
+> > > the caller specified nr_pages==0, and of course auditing all callers,
+> > > to ensure that this won't cause problems.
 > >
-> > Hi Walter,
-> >
-> > Great you are tackling this!
-> >
-> > I have the same general sentiment as Qian. I would enable this
-> > unconditionally because:
-> >
-> > 1. We still can't get both rcu stack and free stack. I would assume
-> > most kernel testing systems need to enable this (we definitely enable
-> > on syzbot). This means we do not have free stack for allocation
-> > objects in any reports coming from testing systems. Which greatly
-> > diminishes the value of the other mode.
-> >
-> > 2. Kernel is undertested. Introducing any additional configuration
-> > options is a problem in such context. Chances are that some of the
-> > modes are not working or will break in future.
-> >
-> > 3. That free stack actually causes lots of confusion and I never found
-> > it useful:
-> > https://bugzilla.kernel.org/show_bug.cgi?id=3D198425
-> > If it's a very delayed UAF, either one may get another report for the
-> > same bug with not so delayed UAF, or if it's way too delayed, then the
-> > previous free stack is wrong as well.
-> >
-> > 4. Most users don't care that much about debugging tools to learn
-> > every bit of every debugging tool and spend time fine-tuning it for
-> > their context. Most KASAN users won't even be aware of this choice,
-> > and they will just use whatever is the default.
-> >
-> > 5. Each configuration option increases implementation complexity.
-> >
-> > What would have value is if we figure out how to make both of them
-> > work at the same time without increasing memory consumption. But I
-> > don't see any way to do this.
-> >
-> > I propose to make this the only mode. I am sure lots of users will
-> > find this additional stack useful, whereas the free stack is even
-> > frequently confusing.
-> >
+> > While auditing it was figured out, there are 5 callers which cares for
+> > return value
+> > 0 of gup_fast/pup_fast. What problem it might cause if we change
+> > gup_fast/pup_fast
+> > to return -EINVAL and update all the callers in a single commit ?
 >
-> Ok.
-> If we want to have a default enabling it, but it should only work in
-> generic KASAN, because we need to get object status(allocation or
-> freeing) from shadow memory, tag-based KASAN can't do it. So we should
-> have a default enabling it in generic KASAN?
+> Well, first I'd ask a different question: Why do you want to change the
+> current behavior? It's not like the current behavior is confusing.  Callers
+> that pass >0 pages can happily rely on the simple behavior of < 0 return on
+> error or > 0 return if we mapped some pages. Callers that can possibly ask
+> to map 0 pages can get 0 pages back - kind of expected - and I don't see
+> any benefit in trying to rewrite these callers to handle -EINVAL instead...
 
-Yes, let's do generic KASAN always memorizes rcu stack; tags KASAN
-never memorizes rcu stacks. No new configurations.
+Callers with a request to map 0 pages doesn't have a valid use case. But if any
+caller end up doing it mistakenly, -errno should be returned to caller
+rather than 0
+which will indicate more precisely that map 0 pages is not a valid
+request from caller.
+With these, 3rd return value 0, is no more needed.
+
+That was the thought behind this proposal.
