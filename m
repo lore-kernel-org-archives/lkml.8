@@ -2,75 +2,82 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A0DC4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 04:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99098C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 04:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80D6F20752
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 04:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F5AE2075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 04:06:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725821AbgEFEDD (ORCPT
+        id S1725858AbgEFEGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 00:03:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725300AbgEFEDD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 00:03:03 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53EC1C061A0F;
-        Tue,  5 May 2020 21:03:03 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jWBGm-001vcO-RN; Wed, 06 May 2020 04:02:53 +0000
-Date:   Wed, 6 May 2020 05:02:52 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] securityfs: Add missing d_delete() call on removal
-Message-ID: <20200506040252.GC23230@ZenIV.linux.org.uk>
-References: <202005051626.7648DC65@keescook>
- <20200506011431.GB23230@ZenIV.linux.org.uk>
- <202005052024.2D7626C742@keescook>
+        Wed, 6 May 2020 00:06:19 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33430 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725300AbgEFEGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 00:06:19 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id CE477F5CF4B481EBEA35;
+        Wed,  6 May 2020 12:06:16 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.55) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Wed, 6 May 2020
+ 12:06:13 +0800
+Subject: Re: [PATCH 1/4] block: Move SECTORS_PER_PAGE and
+ SECTORS_PER_PAGE_SHIFT definitions into <linux/blkdev.h>
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
+        "Sergey Senozhatsky" <sergey.senozhatsky.work@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>, Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        dm-devel <dm-devel@redhat.com>, Song Liu <song@kernel.org>,
+        linux-raid <linux-raid@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200505115543.1660-1-thunder.leizhen@huawei.com>
+ <20200505115543.1660-2-thunder.leizhen@huawei.com>
+ <20200505121043.GG16070@bombadil.infradead.org>
+From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Message-ID: <8ec2a734-d23a-83ef-fe06-6b2895a2d392@huawei.com>
+Date:   Wed, 6 May 2020 12:06:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202005052024.2D7626C742@keescook>
+In-Reply-To: <20200505121043.GG16070@bombadil.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.215.55]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 08:28:33PM -0700, Kees Cook wrote:
-> On Wed, May 06, 2020 at 02:14:31AM +0100, Al Viro wrote:
-> > On Tue, May 05, 2020 at 04:40:35PM -0700, Kees Cook wrote:
-> > > After using simple_unlink(), a call to d_delete() is needed in addition
-> > > to dput().
-> > > 
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > ---
-> > > Is this correct? I went looking around and there are a lot of variations
-> > > on the simple_unlink() pattern...
-> > > 
-> > > Many using explicit locking and combinations of d_drop(), __d_drop(), etc.
-> > 
-> > Quite a few of those should switch to simple_recursive_removal().  As for
-> > securityfs...  d_drop() is _probably_ a saner variant, but looking at the
-> > callers of that thing... at least IMA ones seem to be garbage.
-> 
-> Hmm, I dunno. I hadn't looked at these yet. I'm not sure what's needed
-> for those cases.
-> 
-> Is my patch to add d_delete() correct, though? I'm trying to construct
-> the right set of calls for pstore's filesystem, and I noticed that most
-> will do simple_unlink(), d_delete(), dput(), but securityfs seemed to be
-> missing it.
 
-d_drop().  d_delete() is for the situations when you want the sucker
-to become a hashed negative, if at all possible.
 
-Re pstore: context, please.
+On 2020/5/5 20:10, Matthew Wilcox wrote:
+> On Tue, May 05, 2020 at 07:55:40PM +0800, Zhen Lei wrote:
+>> +#ifndef SECTORS_PER_PAGE_SHIFT
+>> +#define SECTORS_PER_PAGE_SHIFT	(PAGE_SHIFT - SECTOR_SHIFT)
+>> +#endif
+>> +#ifndef SECTORS_PER_PAGE
+>> +#define SECTORS_PER_PAGE	(1 << SECTORS_PER_PAGE_SHIFT)
+>>  #endif
+> 
+> I find SECTORS_PER_PAGE_SHIFT quite hard to read.  I had a quick skim
+> of your other patches, and it seems to me that we could replace
+> '<< SECTORS_PER_PAGE_SHIFT' with '* SECTORS_PER_PAGE' and it would be
+> more readable in every case.
+
+OK, I will delete SECTORS_PER_PAGE_SHIFT, and replace the shift with {*|/} SECTORS_PER_PAGE if it's
+not suitable to be replaced by sectors_to_page()/page_to_sectors().
+
+> 
+> .
+> 
+
