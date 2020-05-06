@@ -2,122 +2,98 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5046DC4725A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C69AC4725B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34BA120661
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD14020661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:08:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728581AbgEFIIS (ORCPT
+        id S1728601AbgEFIId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 04:08:18 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:38515 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728522AbgEFIIR (ORCPT
+        Wed, 6 May 2020 04:08:33 -0400
+Received: from www62.your-server.de ([213.133.104.62]:35208 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728345AbgEFIIc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 04:08:17 -0400
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 338E6240009;
-        Wed,  6 May 2020 08:08:14 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        kamel.bouhara@bootlin.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v3 2/9] dt-bindings: microchip: atmel,at91rm9200-tcb: add sama5d2 compatible
-Date:   Wed,  6 May 2020 10:05:47 +0200
-Message-Id: <20200506080554.283177-3-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200506080554.283177-1-alexandre.belloni@bootlin.com>
-References: <20200506080554.283177-1-alexandre.belloni@bootlin.com>
+        Wed, 6 May 2020 04:08:32 -0400
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jWF6Q-0001an-HW; Wed, 06 May 2020 10:08:26 +0200
+Received: from [178.195.186.98] (helo=pc-9.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jWF6P-0005kQ-Vt; Wed, 06 May 2020 10:08:26 +0200
+Subject: Re: [PATCH bpf-next 0/4] RV64 BPF JIT Optimizations
+To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
+        Luke Nelson <lukenels@cs.washington.edu>
+Cc:     bpf <bpf@vger.kernel.org>, Luke Nelson <luke.r.nels@gmail.com>,
+        Xi Wang <xi.wang@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Netdev <netdev@vger.kernel.org>, linux-riscv@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200506000320.28965-1-luke.r.nels@gmail.com>
+ <CAJ+HfNgbuBoMTrU+TM3JCd1stEM1Zi3hG5k=PazT=CxAWa4wBQ@mail.gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <76105702-4f84-ead9-6568-48f718cf85c2@iogearbox.net>
+Date:   Wed, 6 May 2020 10:08:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <CAJ+HfNgbuBoMTrU+TM3JCd1stEM1Zi3hG5k=PazT=CxAWa4wBQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25803/Tue May  5 14:19:25 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sama5d2 TC block TIMER_CLOCK1 is different from the at91sam9x5 one.
-Instead of being MCK / 2, it is the TCB GCLK.
+On 5/6/20 9:08 AM, Björn Töpel wrote:
+> On Wed, 6 May 2020 at 02:03, Luke Nelson <lukenels@cs.washington.edu> wrote:
+>>
+>> This patch series introduces a set of optimizations to the BPF JIT
+>> on RV64. The optimizations are related to the verifier zero-extension
+>> optimization and BPF_JMP BPF_K.
+>>
+>> We tested the optimizations on a QEMU riscv64 virt machine, using
+>> lib/test_bpf and test_verifier, and formally verified their correctness
+>> using Serval.
+>>
+> 
+> Luke and Xi,
+> 
+> Thanks a lot for working on this! Very nice series!
+> 
+> For the series:
+> Reviewed-by: Björn Töpel <bjorn.topel@gmail.com>
+> Acked-by: Björn Töpel <bjorn.topel@gmail.com>
+> 
+>> Luke Nelson (4):
+>>    bpf, riscv: Enable missing verifier_zext optimizations on RV64
+>>    bpf, riscv: Optimize FROM_LE using verifier_zext on RV64
+>>    bpf, riscv: Optimize BPF_JMP BPF_K when imm == 0 on RV64
+>>    bpf, riscv: Optimize BPF_JSET BPF_K using andi on RV64
+>>
+>>   arch/riscv/net/bpf_jit_comp64.c | 64 ++++++++++++++++++++++-----------
+>>   1 file changed, 44 insertions(+), 20 deletions(-)
+>>
+>> Cc: Xi Wang <xi.wang@gmail.com>
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
-Cc: Rob Herring <robh+dt@kernel.org>
-
- .../soc/microchip/atmel,at91rm9200-tcb.yaml   | 36 +++++++++++++++----
- 1 file changed, 30 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml b/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
-index 4b683151265e..38403760f64d 100644
---- a/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
-+++ b/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
-@@ -19,6 +19,7 @@ properties:
-       - enum:
-           - atmel,at91rm9200-tcb
-           - atmel,at91sam9x5-tcb
-+          - atmel,sama5d2-tcb
-       - const: simple-mfd
-       - const: syscon
- 
-@@ -38,12 +39,6 @@ properties:
-       t1_clk and t2_clk if a clock per channel is available.
-     minItems: 2
-     maxItems: 4
--    items:
--      enum:
--        - t0_clk
--        - t1_clk
--        - t2_clk
--        - slow_clk
- 
-   clocks:
-     minItems: 2
-@@ -72,6 +67,35 @@ patternProperties:
-       - compatible
-       - reg
- 
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: atmel,sama5d2-tcb
-+    then:
-+      properties:
-+        clocks:
-+          minItems: 3
-+          maxItems: 3
-+        clock-names:
-+          items:
-+            - const: t0_clk
-+            - const: gclk
-+            - const: slow_clk
-+    else:
-+      properties:
-+        clocks:
-+          minItems: 2
-+          maxItems: 4
-+        clock-names:
-+          items:
-+            enum:
-+              - t0_clk
-+              - t1_clk
-+              - t2_clk
-+              - slow_clk
-+
- required:
-   - compatible
-   - reg
--- 
-2.26.2
-
+Applied, thanks everyone!
