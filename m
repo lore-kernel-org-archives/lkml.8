@@ -2,136 +2,140 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 755ADC47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DADC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 520D42073A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E785206D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:18:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mqWrSJf1"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="F0EiLJjV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbgEFNNa (ORCPT
+        id S1728403AbgEFNSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 09:13:30 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:58754 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728058AbgEFNNa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 09:13:30 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046D39SN158162;
-        Wed, 6 May 2020 13:12:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=YPanAL/gkvF9NhQLHyGdrj4xqiZSj4lYpKFmBT99yDM=;
- b=mqWrSJf1Y+lhd30yUeWljcWwrMrkr5EK9XQdiEYUOx0LxBu2DvvrWevOUmkIEQMA95sx
- VKbTha7y5mq52GszCHULXEMq6LBVf69uC2RS7Le2xQMlX5szxexqh2AfRZG5Gyf2tMpK
- jNEdEEdu89Jx9S0fTqEv/98qjwG5exsz54micPKPkfYbDOCMrEv/i0UqAjmJzq6NYdks
- VA9N/SBDna9pqXa6G4e/lzML6XLGx+LJoZPppFNlfNZ2HmPWCcEoKnoK6hAYMLFAIh8H
- 8suqulcPT+J5DoLHZWkuFeUnoZyf+VHAKawY45b4uwrIizT6+98WSDd8RjFdhS23BmuP jg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 30usgq1ayk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 May 2020 13:12:36 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046DBl05074875;
-        Wed, 6 May 2020 13:12:35 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 30t1r7t0b6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 May 2020 13:12:35 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 046DCWwv024873;
-        Wed, 6 May 2020 13:12:32 GMT
-Received: from linux-1.home (/10.175.10.30)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 May 2020 06:12:32 -0700
-Subject: Re: [patch V4 part 1 06/36] compiler: Simple READ/WRITE_ONCE()
- implementations
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-References: <20200505131602.633487962@linutronix.de>
- <20200505134058.651504242@linutronix.de>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Message-ID: <e5a33a9b-91f4-e56b-f455-c560af53e0b6@oracle.com>
-Date:   Wed, 6 May 2020 15:11:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 6 May 2020 09:18:20 -0400
+Received: from mail-dm6nam10on2041.outbound.protection.outlook.com ([40.107.93.41]:24036
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728058AbgEFNST (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 09:18:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BXee8xr9VexgtAMd2L7YvOrJAhd5m1Qhl6MFXfeFvSH60tFB1XnOSKMSwUlGPm86ggUs+iL9xb9BrTSiAc9QTQuP+uNWTnRxTxL83mQQvw1Qw8kS1K1FoHjoDfSjHCK0LpvfjEQpkCi83EMj+xhYAKkpjs+9/olOmSYdYFRJMzoFVS4tFWM0Rxj5IuFamEYONoMwePnmRLPeATZ8f7i+LNFyshsl301BkR89cMik/CH6NAIODJqszbsifkNmP7NOKcEKVF2WtkyFaxFWANU2Mx4qmUwBBOET0MjkSlR5W812Nakm1p8pif/TpK/cx+mCd7ldsScpWHGBd35lags/xA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TgZ7+vNXdghQPjoh51NjFBqLLho2bNsqf1chHxvfiUo=;
+ b=HfkuGg8ZkTmF5diZaYoFAVNWFZXdNsuZ2A4JXkUyQBMIeGCcCQyQdI0JTBIVD6qPXv5E6T/kZkWYKexzhlc6S13D8dfM94WydmfY3rOsdtSee9uI1QMJHlUXFBp6f2nWj+AIF/q90nadaCk/0rmPsOexJti0OjCyHwHfGhkTqTaVfRG0wxT5bIbtdgrtCfZov1jUCPFcjwsAiyoB8mUy3HwFntJiZOS1n6Pz1ZkSnQoatnO0bb2qerqcr+fKXC1rFC09y5VZU6H/dlBZYIHMt4PHQS9tVHlGgdY8qdpbXSGIR+QLUYCpcGcnYa3DRfmZ3q+hEB+V1HmFQkroZNRBUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TgZ7+vNXdghQPjoh51NjFBqLLho2bNsqf1chHxvfiUo=;
+ b=F0EiLJjVFhrlk561eIcCgfqvUngkUzWrG228MrmMmz5jl6ldACzDYeGiAqHHhd1UF7PzGLhGZ07YXb9Dj6J6JGtk0Dw/4L2VayTHcb5Wso63Brw/Z/k2hNxyJMn/2UitkoC0ixoO8t+6a2UDMciPx9qEezkmCHUmTWDCye8KxK0=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from DM5PR12MB1163.namprd12.prod.outlook.com (2603:10b6:3:7a::18) by
+ DM5PR12MB1228.namprd12.prod.outlook.com (2603:10b6:3:74::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2958.29; Wed, 6 May 2020 13:18:17 +0000
+Received: from DM5PR12MB1163.namprd12.prod.outlook.com
+ ([fe80::d061:4c5:954e:4744]) by DM5PR12MB1163.namprd12.prod.outlook.com
+ ([fe80::d061:4c5:954e:4744%4]) with mapi id 15.20.2958.030; Wed, 6 May 2020
+ 13:18:16 +0000
+From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     pbonzini@redhat.com, joro@8bytes.org, jon.grimm@amd.com,
+        mlevitsk@redhat.com,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Subject: [PATCH 3/4] KVM: SVM: Merge svm_enable_vintr into svm_set_vintr
+Date:   Wed,  6 May 2020 08:17:55 -0500
+Message-Id: <1588771076-73790-4-git-send-email-suravee.suthikulpanit@amd.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1588771076-73790-1-git-send-email-suravee.suthikulpanit@amd.com>
+References: <1588771076-73790-1-git-send-email-suravee.suthikulpanit@amd.com>
+Content-Type: text/plain
+X-ClientProxiedBy: DM5PR12CA0071.namprd12.prod.outlook.com
+ (2603:10b6:3:103::33) To DM5PR12MB1163.namprd12.prod.outlook.com
+ (2603:10b6:3:7a::18)
 MIME-Version: 1.0
-In-Reply-To: <20200505134058.651504242@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9612 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=0
- spamscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005060104
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9612 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 clxscore=1015
- mlxlogscore=999 spamscore=0 adultscore=0 bulkscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005060103
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ssuthiku-rhel7-ssp.amd.com (165.204.78.2) by DM5PR12CA0071.namprd12.prod.outlook.com (2603:10b6:3:103::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28 via Frontend Transport; Wed, 6 May 2020 13:18:15 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [165.204.78.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: e13ec9f6-87e1-4a61-b188-08d7f1bfefff
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1228:|DM5PR12MB1228:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR12MB12284C1B7A0434F4C1EECFEDF3A40@DM5PR12MB1228.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:628;
+X-Forefront-PRVS: 03950F25EC
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: TtyUGAF+y9GvL9pqo79rOEQfX0TfJUbaUWvWEg8F77b5wiETYIoAlu7F2M7ecfHtEJ62EJCVXBO9/5EvhwVMpYjcu9+4GU8XTXCUmuG1BExMV+6YDQpmK/4xFOEE2jg7N1TQnsxdomlRtsXVRdJjwRTLG06xKiNRrmJJbiMGp14FNAAq9y5PO0CI4bJo1TnTZuanWlgqcJtHKun0u5QuHocSvtOe4IU4DNRcgsdXjxEM1Tbjw3A7ujzm/sCtqkxz1UBAW14s5Mw4zfrxUE1OhQslFMjLV8D6yGgz7P6J7wIVKPgcWc8Rpj1MNCrxvxjnfEksmbk0+h5LcQFQgi2UzK2Wf+giwukqw52vg8L9yt66TBr5WxfjxRJaXjpdR+mrx+5Iag7H594d4Ze19ac4nISJPSKOXL7tk36DgbtwZ7sVFIwc/uH+KTtzen2haGwxJMyPwYFZ2IX8KQI6tf07YmACtMO33/24PCejAJFlHnYY+PnL6N2GxdTU/Lg5imhHIgwzVx56SxkgfauYvF5k3w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1163.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(376002)(136003)(396003)(366004)(33430700001)(478600001)(956004)(2616005)(52116002)(7696005)(316002)(2906002)(44832011)(8936002)(36756003)(4326008)(8676002)(186003)(5660300002)(26005)(6486002)(66946007)(33440700001)(16526019)(66556008)(86362001)(6666004)(66476007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: S3OEfU6Hy/x32D3XDXa7/8EP+omNMrBEfwPgZxzCtjOPlMAZsYPkrsWn6gI7uKx/7oQ5Hwqe5h+dy2ogNqP1wk7NHgF7q3wAmA5riwg/hOX0YwrL/a8FZDYTA64b2A63d1+A8QzyupLsukd32e0QzipeyiCCZSFieYQ9+EppSP1AqExO48RxrYqHeyQb0KM63Aqo7LILp/j2ydjjB684JwOtxRUoBcRJm8SJB3VTcACu6EEN8Y85lDFu7kzdXfT9Im8p7koE51q8O588+YcAJMw569T1hxxRoNjHkrupbX6pqW30mgs4twTLZKD8sLEqvlj/cPHPDdxPtjK3JrqueARPVdh7ypDce39YthsocR5LBhg+BGnYOMBj4+gJUTZEWA7vKwgA08PVCmoPoiXb+NehDHn3YVekRJhPiMwVw4HbO+O8MB8GqkVw3sARpWmpEREU5wjbbITnp/xe41Guk4yleYEwXSM0e4zNP4Ve5URJ9XG40qhYp7+fhKsRhjWnMsGmzXLVZDkcO/iSAskuQcEjoko1tFv0T/U9Ljjb6BbiQYV9LdZAdaNj718/P9p5ECTiZQYbjjdBZ0c8N+bRsBviPskq/0Y3vmIcXQ/DdEjUSNjX51TE5MeNH7Epm7e4aAAwdccogOndE9VBHPwWMLkmidVjEvGr+syFhA3iETcHv2E4bYNJ8k7U9XIKJJGAGXQ/6IMos064GFYPRUZZN8w8sXlw2GEhg4gCC3Ldq+WHBcSDCBptgZe+UBCrdUvCWjRTfD+c+LdHRxksZALZSKQjG0Tun1RpfREJ9sf3QwM=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e13ec9f6-87e1-4a61-b188-08d7f1bfefff
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2020 13:18:16.7852
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /sF0bIM7c/29VjQrtr2Q9mOn83+YXEE+ZyLRduJNinuJrNmznkVSZWRM1vDmXgXwxMD9nTnDPCmwZC9VCfhj3g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1228
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Code clean up and remove unnecessary intercept check for
+INTERCEPT_VINTR.
 
+Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+---
+ arch/x86/kvm/svm/svm.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-On 5/5/20 3:16 PM, Thomas Gleixner wrote:
-> READ/WRITE_ONCE_NOCHECK() is required for atomics in code which cannot be
-> instrumented like the x86 int3 text poke code. As READ/WRITE_ONCE() is
-> undergoing a rewrite, provide __{READ,WRITE}_ONCE_SCALAR().
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->   include/linux/compiler.h |    8 ++++++++
->   1 file changed, 8 insertions(+)
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index c2117cd..8ac00b2 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -1364,12 +1364,13 @@ static void svm_cache_reg(struct kvm_vcpu *vcpu, enum kvm_reg reg)
+ 	}
+ }
+ 
+-static inline void svm_enable_vintr(struct vcpu_svm *svm)
++static void svm_set_vintr(struct vcpu_svm *svm)
+ {
+ 	struct vmcb_control_area *control;
+ 
+ 	/* The following fields are ignored when AVIC is enabled */
+ 	WARN_ON(kvm_vcpu_apicv_active(&svm->vcpu));
++	set_intercept(svm, INTERCEPT_VINTR);
+ 
+ 	/*
+ 	 * This is just a dummy VINTR to actually cause a vmexit to happen.
+@@ -1383,13 +1384,6 @@ static inline void svm_enable_vintr(struct vcpu_svm *svm)
+ 	mark_dirty(svm->vmcb, VMCB_INTR);
+ }
+ 
+-static void svm_set_vintr(struct vcpu_svm *svm)
+-{
+-	set_intercept(svm, INTERCEPT_VINTR);
+-	if (is_intercept(svm, INTERCEPT_VINTR))
+-		svm_enable_vintr(svm);
+-}
+-
+ static void svm_clear_vintr(struct vcpu_svm *svm)
+ {
+ 	clr_intercept(svm, INTERCEPT_VINTR);
+-- 
+1.8.3.1
 
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-
-alex.
-
-> --- a/include/linux/compiler.h
-> +++ b/include/linux/compiler.h
-> @@ -313,6 +313,14 @@ unsigned long read_word_at_a_time(const
->   	__u.__val;					\
->   })
->   
-> +#define __READ_ONCE_SCALAR(x)				\
-> +	(*(const volatile typeof(x) *)&(x))
-> +
-> +#define __WRITE_ONCE_SCALAR(x, val)			\
-> +do {							\
-> +	*(volatile typeof(x) *)&(x) = val;		\
-> +} while (0)
-> +
->   /**
->    * data_race - mark an expression as containing intentional data races
->    *
-> 
