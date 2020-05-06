@@ -2,95 +2,93 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2817CC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82243C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E60B020936
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:21:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588782094;
-	bh=6ody89kj779DuishSNc4WgF9or+Kp0PLl0WI/a3+U/A=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=I9xantV8QFbCbEj+g84OfyxMo3G8t3+mgwYgaux2l40Hwe7eqnlWnheFp8wc5alHM
-	 U1+XiWf/AgzM+rmjrLOSdRtF1q0TX/4+UTzko6nBTpHEHD6EP7cwSpWoq0kQx+mGQz
-	 QLU2yolcTihj/gb1pR9RG00KEBgeog4UFYVaf/is=
+	by mail.kernel.org (Postfix) with ESMTP id 618C7208DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:21:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Axl7Tit4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729982AbgEFQVd (ORCPT
+        id S1730073AbgEFQVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:21:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50084 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729251AbgEFQVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:21:32 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 6 May 2020 12:21:51 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:47813 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729251AbgEFQVv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 12:21:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588782110;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=p5Nue4CqT9GXVjnCIT8OHUF4iLM5gQKu+kez1QsHUog=;
+        b=Axl7Tit4OEE47sRdsvtqDzDjKHo8h2CMDGeK3TePCXNWKXkW3mxAgF5X2XNUOk3CshivVd
+        sGk1F+tLfC7YA7GsGVoweQFgPTwFA6O+lm249OZ9c0yYwl56q4DWt6x371yNEJIk0YUsp+
+        T3Wmgi0VRhnCisW8TxYXgAfI9wV7qKs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-485-LS8u2htgPimpJkvK9uyYxQ-1; Wed, 06 May 2020 12:21:48 -0400
+X-MC-Unique: LS8u2htgPimpJkvK9uyYxQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E66FC206B9;
-        Wed,  6 May 2020 16:21:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588782092;
-        bh=6ody89kj779DuishSNc4WgF9or+Kp0PLl0WI/a3+U/A=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=RGE2eW/Cz9xWNS1o5nnQYukGWNJcSMJfUsYggG+0/vYsv6z34wu6QBkuIkz4wnCf/
-         EKrJmh4wz5E6nomgBilmxcDZttODl3Qz7c7Hhd/gbhpfju9+D/v8T+D7ud9S0b4+Go
-         medJkHZ+WxBZInnfINiQGI6Jmsr/53YJfggmvroU=
-Date:   Wed, 06 May 2020 17:21:29 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     perex@perex.cz, matthias.bgg@gmail.com,
-        Tang Bin <tangbin@cmss.chinamobile.com>, lgirdwood@gmail.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>,
-        alsa-devel@alsa-project.org, linux-mediatek@lists.infradead.org
-In-Reply-To: <20200506143009.13368-1-tangbin@cmss.chinamobile.com>
-References: <20200506143009.13368-1-tangbin@cmss.chinamobile.com>
-Subject: Re: [PATCH] ASoC: mediatek: Fix error handling
-Message-Id: <158878208991.2264.6627359892180140797.b4-ty@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2946F107B768;
+        Wed,  6 May 2020 16:21:46 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-116-141.rdu2.redhat.com [10.10.116.141])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E585B690E2;
+        Wed,  6 May 2020 16:21:44 +0000 (UTC)
+Subject: Re: [PATCH] doc: Fix some typo errors in ras.rst
+To:     Borislav Petkov <bp@alien8.de>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, Tony Luck <tony.luck@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        linux-edac@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200505151049.11134-1-longman@redhat.com>
+ <20200505154816.GH16070@bombadil.infradead.org>
+ <20200505160308.GA25446@zn.tnic>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <eaf7072f-16a8-7202-9c47-606afca7433c@redhat.com>
+Date:   Wed, 6 May 2020 12:21:44 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200505160308.GA25446@zn.tnic>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 May 2020 22:30:09 +0800, Tang Bin wrote:
-> If the function platform_get_irq() failed, the negative value
-> returned will not be detected here. So fix error handling in
-> mt6797_afe_pcm_dev_probe(). And when get irq failed, the function
-> platform_get_irq() logs an error message, so remove redundant
-> message here.
-> 
-> Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-> 
-> [...]
+On 5/5/20 12:03 PM, Borislav Petkov wrote:
+> On Tue, May 05, 2020 at 08:48:16AM -0700, Matthew Wilcox wrote:
+>> Usually a 64-bit system refers to the width of a pointer.  Here, it's
+>> referring to the width of the memory system, which is rather confusing.
+>> How about "In the above example" instead of "So, on 64 bit systems".
+> Yes, that should not talk about 64-bit systems but about the length of
+> the word the memory controller uses to create the ECC check bits out of.
+>
+> That whole doc needs checking/fixing.
 
-Applied to
+I am not knowledgeable enough to check/fix the whole document. This 
+patch is motivated primarily by the incorrect "74 bits" total width that 
+I saw. I will send a v2 to make the suggested edit. I will leave it to 
+you to do the full document check.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.8
+Cheers,
+Longman
 
-Thanks!
-
-[1/1] ASoC: mediatek: Fix error handling
-      commit: adb69968074a22376074aaa7f7971d93636b4332
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
