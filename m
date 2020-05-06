@@ -2,132 +2,168 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F09C47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C80C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 800D920575
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D83720A8B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:32:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="WfjfTtHy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ft34+Tuj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730222AbgEFPam (ORCPT
+        id S1729565AbgEFPcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:30:42 -0400
-Received: from mout.web.de ([217.72.192.78]:59323 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730082AbgEFPak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:30:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1588779007;
-        bh=g+f6vfgQjmv7bJu4M4nmtheEmi9EEiHRE5sTU3DVh4I=;
-        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
-        b=WfjfTtHyboxlV1ARE/Lbc933JbGwhTgN7YQEqgUJRyDoQUcgrz7NCSUpAYlKX+XHQ
-         kIgAfIR1Uxirbf2uTEEY1q1nhth2C+MMhMFyaZZ352v0gjRnRgAzsfwLWBCuPtPt4a
-         h3xDOLPWt7ezNnuGsID0Zz1JCRKwowkAD/77pfcc=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.162.166]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MPKFD-1jn2pO1uV3-00Pcgn; Wed, 06
- May 2020 17:30:07 +0200
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] iio: sca3000: Remove an erroneous get_device() call in
- sca3000_read_data()
-To:     Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
-        linux-iio@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <6e972e9b-c799-f0ad-91ac-144640b463f6@web.de>
-Date:   Wed, 6 May 2020 17:30:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 6 May 2020 11:32:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59862 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729003AbgEFPb7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:31:59 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97471C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 08:31:59 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id c3so1682292otp.8
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 08:31:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=HGob2W+jtJ1wxr5TyUwXRK5f3ACyssA5mwEkdojnzSc=;
+        b=ft34+Tuj1/EXggzTdLuevyBjykqE8Mo6BrUQeaVcw0R26trAW03x2IpOBwVX+aWtN+
+         zenPFzWx92ITkR0k2zz/kScA82yz+x+GJpQQ9bjvzKrl+llIb59Dw88EiShplEqNKGf5
+         QV7Zgmr9AiRNNRkhp257Q9EbG7UA/k8IA8smqoPoLeMlZc14E9IEsR446khqN8j0PzOz
+         e3enOxOtzg7qzTWl/NJv4tgCCBvCOMn0EwZl57xNr4a7I9QvqhNlM8UHOyPCxZP/4fu9
+         32fEWgM1q4dPoIPW9Mp/d3xx/l1PdjgM4oJGfPC+ZWvtFbKFgWr9sHtxu9ffO85zcG4X
+         50oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=HGob2W+jtJ1wxr5TyUwXRK5f3ACyssA5mwEkdojnzSc=;
+        b=aN8NEYy+Z8YgpFLw98rG4StbgWixw4uNu6YuTv3o49lamtZYNQ5I+tWCyHqZXc9mbP
+         ttElam/zahfpsWLfUZXWn0BaItdIgW4C7FF47j/KNK807jUl3AP+eayXtTt12VM2Ptr7
+         Owj/W9PUsBvzzom+A5lXyJPn+RQa1GeIBb5mgmN+F2DUw6pkOIKlK3bSOdtIdzEpVXUA
+         qMe9CtiWWHBd80AF+tbddGj9OdjGIsqirC4UFTJDYyW4gcr8/9MsDXIUSuiQiUmKWLI8
+         x6dLnPFrE0p7+N16mvVsWyLyWKei9W1sYH7GglnbjNz11DJwpGDzcCoC/IILByllw5yq
+         L/VA==
+X-Gm-Message-State: AGi0PubQeQqGVpiVVRV1ZRgUXN2X5Zkl7KTdotJgKJmrV4zk04C77wIU
+        t5Q0TnfVftE1HpH4bpMDCs0OxGkYJzg=
+X-Google-Smtp-Source: APiQypLu+rugV5iMHAMDUMStivxbyqze+0IvgUKVeYPMJwAz9l+XPCxlS3esB3VFosY4NfT4vVb8qA==
+X-Received: by 2002:a05:6830:1d9c:: with SMTP id y28mr7465935oti.280.1588779118864;
+        Wed, 06 May 2020 08:31:58 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id m189sm600819oig.12.2020.05.06.08.31.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 08:31:58 -0700 (PDT)
+Date:   Wed, 6 May 2020 08:31:56 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Torsten Duwe <duwe@lst.de>, Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        Torsten Duwe <duwe@suse.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Julien Thierry <jthierry@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Alexandre Ghiti <alex@ghiti.fr>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Ionela Voinescu <ionela.voinescu@arm.com>,
+        Steve Capper <steve.capper@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Fangrui Song <maskray@google.com>
+Subject: Re: [PATCH] arm64: disable patchable function entry on big-endian
+ clang builds
+Message-ID: <20200506153156.GA1213645@ubuntu-s3-xlarge-x86>
+References: <20200505141257.707945-1-arnd@arndb.de>
+ <20200505142556.GF82823@C02TD0UTHF1T.local>
+ <20200505194243.5bfc6ec6@blackhole>
+ <20200506034523.GA564255@ubuntu-s3-xlarge-x86>
+ <CAK8P3a24EiEvGAenL0FdgGakmwWi=giReOJuiisnzkgC_SuhZg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-X-Provags-ID: V03:K1:h3zmFkgIB3nbx8qAW1Uo09U00WHf1PaFnapI95hJHMaBEy4ccGu
- VRNyLnXUOjhtzhmufHFTHZHL46NrvFP7d4gSVzCsbAaBPyAwitJ8g08nDDnzhHt4Mq9B6Z8
- JyYlpVcwn/v/x1UoVOnmQraKWER+vIXg35nb2nQP4P87yc0d8/PxB3tdaUnVQptVjBa2OjO
- 3bx4Pt9Rv3gZFcULwxUrA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:OLQHm4Pv5vQ=:MNYLaEG0t4ubmGm5Phhxcm
- +a4Z89JnCPjqgZsl3isBC7OcA+j9ldHGv52nxiwdlDF+QMy0EwK+eJUbJZAJchXBDoXV9YZZG
- 1yzH6/lK0q8DVMgJNSnCumzJxqIo8BebqTzgdpyiRa5hNntx13gldE4M/OCJR5KXgBbuy0csI
- DsCU9qy5vqA6gPoHciPjVjrKlgxG61qyN9hwLv/VnIRda0xtYoXVTKtRwqO5zokPpJOncUXdW
- OL+HFQRytEWr+KPbEM0PxpKfEbCddP2F85Tikt7u+ZqecEHTgBeDGlIKMLv2osnqeV7rXy7hx
- eKqaKNWlrYOqt0JO+0yxeqr6HXciCEXnCKPoghqw9YwBFhXxUscShbku3cjp0iTJtrCD3fPy+
- KCv6ql/K/Fg3Wl5tdopQIL0n9SMers8677fsduKvR6gM0usWlYwRha1pc8NGXcdF5PINRZ8tA
- w/MYWHdrRZ24ZjiVNzCudkCJlp9DBCxFQ3Uy5O6xps8EiTYFhbOsDhNa+ZGwJ+GZ2zIHYG/Oy
- y/i63mgWA8J9Kmqoz2MX66CzSJKQlnGsXnCL1qgyZG/G76aoTCnEzonE5vfEkLUye5rM9pJ1s
- K3OQtij4Dn00eT+aDCs34UTVTsQplFipJiQTZdk0fCTvrzGd29uREt4qZIeQZX7knc9dpTf2Y
- bUs+oGrMW/SbsSkJir1mcVw1pznfXP60GcHK9a0gwKKN5WOx/kDo85UYVv3PYKwDUkkFKyCgf
- 7qGb4I5Bri0EXc/1xGNla5JAvNVhD0APM6uj/KQyhVBb1yof8gWFOY0mEGz0sz2asc/jlEsWX
- tXjgpcgICHIlqyYqeWYb0+/Nti7+RH98TMO7+WF7Nf7USxP2xuzuo2za1HhqhE2RZWyJ+e/Ag
- ci5qQmuiAQnsbRspp4u/OOaNzvQjQj5YgMw/GXRz/gnmZb+1o2My5n8EnmZHQ+wXeFBuRPaFC
- Xb4bNjnBfP9zqXMXvVaMcY3aqAOM9cujHNjiLchhWA7bpkmDF4RY9rdKclxotI1JPhE/2Z67W
- 8X8KMwbKqSJ7Qv8meyP1MJxUmbxyhiD/+k6fi7Dt8Ij4P2yMRDMk9sN1sSWrHh6W8jS42IZTH
- vAnXRlSptAR0fzmKaRB57V/S8RGuB2W5CPGqItsXtW1xyk5M7KWlX3x+ISsjy6U8bndU0D1po
- D72pE5G1fdJQNkFxGDNzncsX7hphR63mg9pz16rRJ/p/h4pQo8i0LYxkmRrXEiddQsZ6wyWIQ
- oclfZBlKB16qXkZ5Y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a24EiEvGAenL0FdgGakmwWi=giReOJuiisnzkgC_SuhZg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> This looks really unusual to have a 'get_device()' hidden in a 'dev_err()' call.
+On Wed, May 06, 2020 at 12:22:58PM +0200, Arnd Bergmann wrote:
+> On Wed, May 6, 2020 at 5:45 AM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> > On Tue, May 05, 2020 at 07:42:43PM +0200, Torsten Duwe wrote:
+> > > On Tue, 5 May 2020 15:25:56 +0100 Mark Rutland <mark.rutland@arm.com> wrote:
+> > > > On Tue, May 05, 2020 at 04:12:36PM +0200, Arnd Bergmann wrote:
+> > > > This practically rules out a BE distro kernel with things like PAC,
+> > > > which isn't ideal.
+> >
+> > To be fair, are there big endian AArch64 distros?
+> >
+> > https://wiki.debian.org/Arm64Port: "There is also a big-endian version
+> > of the architecture/ABI: aarch64_be-linux-gnu but we're not supporting
+> > that in Debian (so there is no corresponding Debian architecture name)
+> > and hopefully will never have to. Nevertheless you might want to check
+> > for this by way of completeness in upstream code."
+> >
+> > OpenSUSE and Fedora don't appear to have support for big endian.
+> 
+> I don't think any of the binary distros ship big endian ARM64. There are
+> a couple of users that tend to build everything from source using Yocto
+> or similar embedded distros, but as far as I can tell this is getting less
+> common over time as applications get ported to be compatible with
+> big-endian, or get phased out and replaced by code running on regular
+> little-endian systems.
+> 
+> The users we see today are likely in telco, military or aerospace
+> settings (While earth is mostly little-endian these days, space is
+> definitely big-endian) that got ported from big-endian hardware, but
+> often with a high degree of customization and long service life.
 
-Is there a need to prevent similar function calls by the means of
-advanced source code analysis?
+Ah yes, that makes sense, thanks for the information and background.
+Helps orient myself for the future.
 
-Regards,
-Markus
+> My policy for Arm specific kernel code submissions is generally that
+> it should be written so it can work on either big-endian or little-endian
+> using the available abstractions (just like any architecture independent
+> code), but I don't normally expect it to be tested on big endian.
+> 
+> There are some important examples of code that just doesn't work
+> on big-endian because it's far too hard, e.g. the UEFI runtime services.
+> That is also ok, if anyone really needs it, they can do the work.
+> 
+> > > I suggest to get a quote from clang folks first about their schedule and
+> > > regarded importance of patchable-function-entries on BE, and leave it as
+> > > is: broken on certain clang configurations. It's not the kernel's fault.
+> >
+> > We can file an upstream PR (https://bugs.llvm.org) to talk about this
+> > (although I've CC'd Fangrui) but you would rather the kernel fail to
+> > work properly than prevent the user from being able to select that
+> > option? Why even have the "select" or "depends on" keyword then?
+> 
+> I definitely want all randconfig kernels to build without warnings,
+> and I agree with you that making it just fail at build time is not
+> a good solution.
+> 
+> > That said, I do think we should hold off on this patch until we hear
+> > from the LLVM developers.
+> 
+> +1
+> 
+>       Arnd
+
+Glad we are on the same page.
+
+Cheers,
+Nathan
