@@ -2,179 +2,525 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 476F7C4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE53C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20C612082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A08E52082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:00:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="a6mx5bM2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MotalANw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727886AbgEFG7n (ORCPT
+        id S1727984AbgEFHAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 02:59:43 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:23052 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727803AbgEFG7n (ORCPT
+        Wed, 6 May 2020 03:00:19 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32271 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727803AbgEFHAT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 02:59:43 -0400
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200506065939epoutp0430b8b74e4b35f1e72d589a9d7f76a17e~MXjvm0_By2204322043epoutp04T
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 06:59:39 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200506065939epoutp0430b8b74e4b35f1e72d589a9d7f76a17e~MXjvm0_By2204322043epoutp04T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1588748379;
-        bh=lV2O+8iZ2/46R5+QG5laRwy2by68RqeSALI8AS4Fc/A=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=a6mx5bM24fDQD3a/VEqChD9sXCtscW9jdE2NEmhLoMG1/aMmberpPyw0v34tQNJTl
-         iVne9tBs1U9cRF4DIWhCzIih/4ZiVIFOIp6pJ69bT0YtyioGsIQvZkYJjyFncM+5Lo
-         ZiWQFtyS7v8nJXRrJi05fxNSFxKYcValPC5qO1Q4=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
-        20200506065939epcas2p338187b35d7e399b1400de1b8d3fff8c9~MXju-kI3Q2161321613epcas2p3A;
-        Wed,  6 May 2020 06:59:39 +0000 (GMT)
-Received: from epsmges2p1.samsung.com (unknown [182.195.40.188]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 49H6sN68BxzMqYm1; Wed,  6 May
-        2020 06:59:36 +0000 (GMT)
-Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
-        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        81.39.49908.85062BE5; Wed,  6 May 2020 15:59:36 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200506065936epcas2p4dec87b4a038006c26d8c66c151694cdb~MXjsT5Ybh1915819158epcas2p4l;
-        Wed,  6 May 2020 06:59:36 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200506065936epsmtrp17aae55cf1ad37c66d5e89f9f2cb72ab7~MXjsTEpZu2782027820epsmtrp1j;
-        Wed,  6 May 2020 06:59:36 +0000 (GMT)
-X-AuditID: b6c32a45-af9ff7000000c2f4-a7-5eb260581abe
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        CD.B8.18461.85062BE5; Wed,  6 May 2020 15:59:36 +0900 (KST)
-Received: from ishtar.dsn.sec.samsung.com (unknown [12.36.155.159]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200506065936epsmtip14160593c2788d15c268561091017ee03~MXjsI8YjG2294722947epsmtip1m;
-        Wed,  6 May 2020 06:59:36 +0000 (GMT)
-From:   Hyunki Koo <hyunki00.koo@samsung.com>
-To:     krzk@kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com,
-        robh+dt@kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Hyunki Koo <hyunki00.koo@samsung.com>
-Subject: [PATCH v9 0/3] 32-bit access for TX/RX hold registers for
- samsung_tty driver
-Date:   Wed,  6 May 2020 15:59:31 +0900
-Message-Id: <20200506065931.16648-1-hyunki00.koo@samsung.com>
-X-Mailer: git-send-email 2.15.0.rc1
+        Wed, 6 May 2020 03:00:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588748415;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ttJfNqOVDeYbx+zY/Yh6bogZnRBBxALBN7To/anB/RQ=;
+        b=MotalANwOjgJEHZ0xdtqmEsSjasS22GRMRzgiJ2nYVmI2IqaY3fwD1QJSnx7NTJj6EMUbh
+        X3KXSRv8J9Bk4hMF/7JboUmaPn2zuhCvIogLfAnY6ksIjM7uPqCUhKL+VxSjI6zcvOkiPZ
+        WU+53KnCA7pd0JmgRHuTTpnrJvPXKMI=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-304-TxK90WtHNAKVdeIScxvEUw-1; Wed, 06 May 2020 03:00:13 -0400
+X-MC-Unique: TxK90WtHNAKVdeIScxvEUw-1
+Received: by mail-wr1-f71.google.com with SMTP id q13so822590wrn.14
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 00:00:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ttJfNqOVDeYbx+zY/Yh6bogZnRBBxALBN7To/anB/RQ=;
+        b=jRw3cufQI80y/IqOpqkSD/cvomjFZLK9WRS6ZlW3RlXOFnwUcV/O1KnEGvu861gs0i
+         NvrUizBI/BkUX22X/vihVO8FDfqJ+IFlv7WHOJ108SZmLoJk3xNy0jZyGxZ883JmHpKc
+         D+3Eh4USLUTM4iSlyPm5u9vB6gNtnKWNB1H65KUnFIVoDkEmR3almMkOL2+nRuRktcuP
+         DIa0DT/T1fhLrVY5w10MT8EFMAnpN9dt1VBeAvuXuqK9FMo1d0fxlKedBjQuyxiHHjxB
+         Dqc4LMtaR3DN5tt1yAwkwPiHJYZysZHfavCzhDGk2V7Ee5p9L+qWvOc86HqjTWezS85w
+         8IqA==
+X-Gm-Message-State: AGi0PuY1Gox1kETDBW90lsUiYuG8TUCeSZ18Jdzay/hUs3y/RKILJhbZ
+        +NWrNZ9L1T11ckae4YQtPO4db2GOG6dguYSanimkdEo8ebOchsvsHQd5xlDwwaB0kqhaGKjL4t5
+        YIoY9+kBg81L6VCIwJkj9wSv4
+X-Received: by 2002:a7b:c74d:: with SMTP id w13mr2702964wmk.36.1588748411678;
+        Wed, 06 May 2020 00:00:11 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJjeHGqAGdZibd5I4XohC/PTD/mmIcijs6/MWZCCcL+2zziqIQ+O6zlXrZFHyEW6t99Z2z1UQ==
+X-Received: by 2002:a7b:c74d:: with SMTP id w13mr2702933wmk.36.1588748411271;
+        Wed, 06 May 2020 00:00:11 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:11d7:2f21:f38b:17e? ([2001:b07:6468:f312:11d7:2f21:f38b:17e])
+        by smtp.gmail.com with ESMTPSA id c190sm1606434wme.10.2020.05.06.00.00.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 May 2020 00:00:10 -0700 (PDT)
+Subject: Re: [patch V4 part 1 12/36] x86/kvm: Sanitize
+ kvm_async_pf_task_wait()
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+References: <20200505131602.633487962@linutronix.de>
+ <20200505134059.262701431@linutronix.de>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <7ec49ff9-c5f3-94a8-af72-37a679a0065a@redhat.com>
+Date:   Wed, 6 May 2020 09:00:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjm29l2jtbiOK2+RHIcK8lSN2t2tBaBmoMkxKJCqnnSg0q7sbPZ
-        hSDNmiapyYx0apo6wmGpc4pJGql0I3Vd1pUgzbSLhHaxGQltO4v897zP+z48z/t9L4YIG/nB
-        WK5aT+vUlJLg+3O7B9dLIw9k2A6LzwxGkvVDIzyysKmNT1otLxGysn2GQ46OtqOk7f1zHvm0
-        t5ZPVo32c8hHTaUoea5vCN3hL7dZz/Plt+taUXln82l5md0K5G12J1f+3bY6lZ+u3JZDU1m0
-        TkSrMzVZuepsGbFrjyJBIY0VSyIlceQWQqSmVLSMSExJjdyZq3QnI0R5lNLgplIphiGit2/T
-        aQx6WpSjYfQygtZmKbUSiTaKoVSMQZ0dlalRxUvE4hipezJDmdM/40S0rsDjw3PznHzQjJcA
-        Pwzim2HFk7OgBPhjQrwHwL7xd1y2+AZg8dO3fLaYA/Btyx/uP4nT+B5hG30ALpyZ9UlcADZ/
-        vgQ8U3x8A5z+VY14cBC+DxZYXvA8Qwg+AqCx4yrH0wjE98OOkkdezMXXwgnXL9SDBbgMVo40
-        IKxdGHR8beaxfAB8UD3hjYHgobCwq8YbA+IFGLzWcIvHChLhmNEBWBwIP9+zoywOhp/KjT58
-        GvYbK1BWfAHA+ZkPPvEmaJ4scosxt8N62NYb7YGeEEOvfb7LYPHgAsrSAlhsFLLCdfDG3EcO
-        i0Ng64den5McVnzq8a4ixA/BadNP3kUQal60jXnRNub/vg0AsYIVtJZRZdNMjFay+FttwHuf
-        EUk9oGokZQDgGCCWCsTJHYeFPCqPOaEaABBDiCDBUpebEmRRJ07SOo1CZ1DSzACQuh+7Agle
-        nqlxX7tar5BIY2JjxXFSUhobQxIrBZ1LXh0U4tmUnj5K01pa90/HwfyC80F4SVKGo8wpqrPY
-        ZnscRfEb/e7n1gtrTPawhsKmqbYE03Xb5cdv9v++c6orQDGeAYju+WrN5O7G4VNjS+SHTLKu
-        lU5Z2qqbJmJ8a9BYeuuEA9xdM/dD/SCiHD0X0jKVZyf8BqMNX7TO2qBjpYay8OG9lcL8Z1ei
-        LLfSXEcWHiYTXCaHkkQgOob6C8DSmWi1AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBLMWRmVeSWpSXmKPExsWy7bCSnG5EwqY4g1lHhSzmHznHatG8eD2b
-        xaqlN5gtpmz4wGRx/vwGdotNj6+xWlzeNYfNYsb5fUwWZxb3slu07j3C7sDlsWlVJ5vH/rlr
-        2D02L6n36NuyitFj/ZarLB6fN8kFsEVx2aSk5mSWpRbp2yVwZez7cJW54IdwxdlvP5kaGJcI
-        dDFyckgImEhcbXvM3MXIxSEksJtR4sCjS2wQCRmJCS+WMEPYwhL3W46wQhR9Y5R4u/QxK0iC
-        TUBb4s33mUBFHBwiAlESez76g9QwC1xhlFj4fgsjSI2wQKjE6xtLWUBsFgFViSc/vrOD2LwC
-        thJTzi2AWqAsceHdElaIuKDEyZlPWEBmMguoS6yfJwQSZhaQl2jeOpt5AiP/LCRVsxCqZiGp
-        WsDIvIpRMrWgODc9t9iwwDAvtVyvODG3uDQvXS85P3cTIzjwtTR3MG5f9UHvECMTB+MhRgkO
-        ZiURXp4fG+OEeFMSK6tSi/Lji0pzUosPMUpzsCiJ894oXBgnJJCeWJKanZpakFoEk2Xi4JRq
-        YEpOvCLx5Gj7UrWIRXpWF1Z0O6x5azpl7tuS6ZEXCx6oB1qovlvqp1rg6yV5ccbW579PV6XM
-        WO58i/PkvPTV4tNCjRb7+5xb7a5r9ajtekvZTkHu/u1TfRobkpviGZm2vCz2Us769uD7j6bj
-        h30VYvMFbfqtEjUE1qQ4tHDPWeqh7dWZXapQ/Lhj06aTjK2TZ5x7O/HD98NRrnvv5zn/vl01
-        Xbhm3ZNq8/y/js8mJOSHLRdLyJoefG3yVwUvb/WlDqxq2nGdSd+uKBW2VyrbZsy77Lp1Qejb
-        x1oLH5frGi5JjtNUckkMN3+/Z+LaskjvT9/99N/FfHBwn8miN62lpFX1Q0pptNDrZ8/iN6bG
-        KrEUZyQaajEXFScCAFOw1ojrAgAA
-X-CMS-MailID: 20200506065936epcas2p4dec87b4a038006c26d8c66c151694cdb
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200506065936epcas2p4dec87b4a038006c26d8c66c151694cdb
-References: <CGME20200506065936epcas2p4dec87b4a038006c26d8c66c151694cdb@epcas2p4.samsung.com>
+In-Reply-To: <20200505134059.262701431@linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change in v9:
-- move wr_reg_barrier into ifdef of CONFIG_SERIAL_SAMSUNG_CONSOLE
-  to fix following build error for x86 build
-  CC [M]  drivers/tty/serial/samsung_tty.o
-  drivers/tty/serial/samsung_tty.c:186:13: warning: ‘wr_reg_barrier’
-  defined but not used [-Wunused-function]
+On 05/05/20 15:16, Thomas Gleixner wrote:
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> While working on the entry consolidation I stumbled over the KVM async page
+> fault handler and kvm_async_pf_task_wait() in particular. It took me a
+> while to realize that the randomly sprinkled around rcu_irq_enter()/exit()
+> invocations are just cargo cult programming. Several patches "fixed" RCU
+> splats by curing the symptoms without noticing that the code is flawed 
+> from a design perspective.
+> 
+> The main problem is that this async injection is not based on a proper
+> handshake mechanism and only respects the minimal requirement, i.e. the
+> guest is not in a state where it has interrupts disabled.
+> 
+> Aside of that the actual code is a convoluted one fits it all swiss army
+> knife. It is invoked from different places with different RCU constraints:
+> 
+>   1) Host side:
+> 
+>      vcpu_enter_guest()
+>        kvm_x86_ops->handle_exit()
+>          kvm_handle_page_fault()
+>            kvm_async_pf_task_wait()
+> 
+>      The invocation happens from fully preemptible context.
+> 
+>   2) Guest side:
+> 
+>      The async page fault interrupted:
+> 
+>          a) user space
+> 
+> 	 b) preemptible kernel code which is not in a RCU read side
+> 	    critical section
+> 
+>      	 c) non-preemtible kernel code or a RCU read side critical section
+> 	    or kernel code with CONFIG_PREEMPTION=n which allows not to
+> 	    differentiate between #2b and #2c.
+> 
+> RCU is watching for:
+> 
+>   #1  The vCPU exited and current is definitely not the idle task
+> 
+>   #2a The #PF entry code on the guest went through enter_from_user_mode()
+>       which reactivates RCU
+> 
+>   #2b There is no preemptible, interrupts enabled code in the kernel
+>       which can run with RCU looking away. (The idle task is always
+>       non preemptible).
+> 
+> I.e. all schedulable states (#1, #2a, #2b) do not need any of this RCU
+> voodoo at all.
+> 
+> In #2c RCU is eventually not watching, but as that state cannot schedule
+> anyway there is no point to worry about it so it has to invoke
+> rcu_irq_enter() before running that code. This can be optimized, but this
+> will be done as an extra step in course of the entry code consolidation
+> work.
+> 
+> So the proper solution for this is to:
+> 
+>   - Split kvm_async_pf_task_wait() into schedule and halt based waiting
+>     interfaces which share the enqueueing code.
+> 
+>   - Add comments (condensed form of this changelog) to spare others the
+>     time waste and pain of reverse engineering all of this with the help of
+>     uncomprehensible changelogs and code history.
+> 
+>   - Invoke kvm_async_pf_task_wait_schedule() from kvm_handle_page_fault(),
+>     user mode and schedulable kernel side async page faults (#1, #2a, #2b)
+> 
+>   - Invoke kvm_async_pf_task_wait_halt() for the non schedulable kernel
+>     case (#2c).
+> 
+>     For this case also remove the rcu_irq_exit()/enter() pair around the
+>     halt as it is just a pointless exercise:
+> 
+>        - vCPUs can VMEXIT at any random point and can be scheduled out for
+>          an arbitrary amount of time by the host and this is not any
+>          different except that it voluntary triggers the exit via halt.
+> 
+>        - The interrupted context could have RCU watching already. So the
+> 	 rcu_irq_exit() before the halt is not gaining anything aside of
+> 	 confusing the reader. Claiming that this might prevent RCU stalls
+> 	 is just an illusion.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+> V2: Panic if async #PF is injected into an interrupt disabled region.
+> ---
+>  arch/x86/include/asm/kvm_para.h |    4 
+>  arch/x86/kernel/kvm.c           |  201 ++++++++++++++++++++++++++++------------
+>  arch/x86/kvm/mmu/mmu.c          |    2 
+>  3 files changed, 144 insertions(+), 63 deletions(-)
+> 
+> --- a/arch/x86/include/asm/kvm_para.h
+> +++ b/arch/x86/include/asm/kvm_para.h
+> @@ -88,7 +88,7 @@ static inline long kvm_hypercall4(unsign
+>  bool kvm_para_available(void);
+>  unsigned int kvm_arch_para_features(void);
+>  unsigned int kvm_arch_para_hints(void);
+> -void kvm_async_pf_task_wait(u32 token, int interrupt_kernel);
+> +void kvm_async_pf_task_wait_schedule(u32 token);
+>  void kvm_async_pf_task_wake(u32 token);
+>  u32 kvm_read_and_reset_pf_reason(void);
+>  void kvm_disable_steal_time(void);
+> @@ -113,7 +113,7 @@ static inline void kvm_spinlock_init(voi
+>  #endif /* CONFIG_PARAVIRT_SPINLOCKS */
+>  
+>  #else /* CONFIG_KVM_GUEST */
+> -#define kvm_async_pf_task_wait(T, I) do {} while(0)
+> +#define kvm_async_pf_task_wait_schedule(T) do {} while(0)
+>  #define kvm_async_pf_task_wake(T) do {} while(0)
+>  
+>  static inline bool kvm_para_available(void)
+> --- a/arch/x86/kernel/kvm.c
+> +++ b/arch/x86/kernel/kvm.c
+> @@ -75,7 +75,7 @@ struct kvm_task_sleep_node {
+>  	struct swait_queue_head wq;
+>  	u32 token;
+>  	int cpu;
+> -	bool halted;
+> +	bool use_halt;
+>  };
+>  
+>  static struct kvm_task_sleep_head {
+> @@ -98,75 +98,145 @@ static struct kvm_task_sleep_node *_find
+>  	return NULL;
+>  }
+>  
+> -/*
+> - * @interrupt_kernel: Is this called from a routine which interrupts the kernel
+> - * 		      (other than user space)?
+> - */
+> -void kvm_async_pf_task_wait(u32 token, int interrupt_kernel)
+> +static bool kvm_async_pf_queue_task(u32 token, bool use_halt,
+> +				    struct kvm_task_sleep_node *n)
+>  {
+>  	u32 key = hash_32(token, KVM_TASK_SLEEP_HASHBITS);
+>  	struct kvm_task_sleep_head *b = &async_pf_sleepers[key];
+> -	struct kvm_task_sleep_node n, *e;
+> -	DECLARE_SWAITQUEUE(wait);
+> -
+> -	rcu_irq_enter();
+> +	struct kvm_task_sleep_node *e;
+>  
+>  	raw_spin_lock(&b->lock);
+>  	e = _find_apf_task(b, token);
+>  	if (e) {
+>  		/* dummy entry exist -> wake up was delivered ahead of PF */
+>  		hlist_del(&e->link);
+> -		kfree(e);
+>  		raw_spin_unlock(&b->lock);
+> +		kfree(e);
+> +		return false;
+> +	}
+>  
+> -		rcu_irq_exit();
+> +	n->token = token;
+> +	n->cpu = smp_processor_id();
+> +	n->use_halt = use_halt;
+> +	init_swait_queue_head(&n->wq);
+> +	hlist_add_head(&n->link, &b->list);
+> +	raw_spin_unlock(&b->lock);
+> +	return true;
+> +}
+> +
+> +/*
+> + * kvm_async_pf_task_wait_schedule - Wait for pagefault to be handled
+> + * @token:	Token to identify the sleep node entry
+> + *
+> + * Invoked from the async pagefault handling code or from the VM exit page
+> + * fault handler. In both cases RCU is watching.
+> + */
+> +void kvm_async_pf_task_wait_schedule(u32 token)
+> +{
+> +	struct kvm_task_sleep_node n;
+> +	DECLARE_SWAITQUEUE(wait);
+> +
+> +	lockdep_assert_irqs_disabled();
+> +
+> +	if (!kvm_async_pf_queue_task(token, false, &n))
+>  		return;
+> +
+> +	for (;;) {
+> +		prepare_to_swait_exclusive(&n.wq, &wait, TASK_UNINTERRUPTIBLE);
+> +		if (hlist_unhashed(&n.link))
+> +			break;
+> +
+> +		local_irq_enable();
+> +		schedule();
+> +		local_irq_disable();
+>  	}
+> +	finish_swait(&n.wq, &wait);
+> +}
+> +EXPORT_SYMBOL_GPL(kvm_async_pf_task_wait_schedule);
+>  
+> -	n.token = token;
+> -	n.cpu = smp_processor_id();
+> -	n.halted = is_idle_task(current) ||
+> -		   (IS_ENABLED(CONFIG_PREEMPT_COUNT)
+> -		    ? preempt_count() > 1 || rcu_preempt_depth()
+> -		    : interrupt_kernel);
+> -	init_swait_queue_head(&n.wq);
+> -	hlist_add_head(&n.link, &b->list);
+> -	raw_spin_unlock(&b->lock);
+> +/*
+> + * Invoked from the async page fault handler.
+> + */
+> +static void kvm_async_pf_task_wait_halt(u32 token)
+> +{
+> +	struct kvm_task_sleep_node n;
+> +
+> +	if (!kvm_async_pf_queue_task(token, true, &n))
+> +		return;
+>  
+>  	for (;;) {
+> -		if (!n.halted)
+> -			prepare_to_swait_exclusive(&n.wq, &wait, TASK_UNINTERRUPTIBLE);
+>  		if (hlist_unhashed(&n.link))
+>  			break;
+> +		/*
+> +		 * No point in doing anything about RCU here. Any RCU read
+> +		 * side critical section or RCU watching section can be
+> +		 * interrupted by VMEXITs and the host is free to keep the
+> +		 * vCPU scheduled out as long as it sees fit. This is not
+> +		 * any different just because of the halt induced voluntary
+> +		 * VMEXIT.
+> +		 *
+> +		 * Also the async page fault could have interrupted any RCU
+> +		 * watching context, so invoking rcu_irq_exit()/enter()
+> +		 * around this is not gaining anything.
+> +		 */
+> +		native_safe_halt();
+> +		local_irq_disable();
+> +	}
+> +}
+>  
+> -		rcu_irq_exit();
+> +/* Invoked from the async page fault handler */
+> +static void kvm_async_pf_task_wait(u32 token, bool usermode)
+> +{
+> +	bool can_schedule;
+>  
+> -		if (!n.halted) {
+> -			local_irq_enable();
+> -			schedule();
+> -			local_irq_disable();
+> -		} else {
+> -			/*
+> -			 * We cannot reschedule. So halt.
+> -			 */
+> -			native_safe_halt();
+> -			local_irq_disable();
+> -		}
+> +	/*
+> +	 * No need to check whether interrupts were disabled because the
+> +	 * host will (hopefully) only inject an async page fault into
+> +	 * interrupt enabled regions.
+> +	 *
+> +	 * If CONFIG_PREEMPTION is enabled then check whether the code
+> +	 * which triggered the page fault is preemptible. This covers user
+> +	 * mode as well because preempt_count() is obviously 0 there.
+> +	 *
+> +	 * The check for rcu_preempt_depth() is also required because
+> +	 * voluntary scheduling inside a rcu read locked section is not
+> +	 * allowed.
+> +	 *
+> +	 * The idle task is already covered by this because idle always
+> +	 * has a preempt count > 0.
+> +	 *
+> +	 * If CONFIG_PREEMPTION is disabled only allow scheduling when
+> +	 * coming from user mode as there is no indication whether the
+> +	 * context which triggered the page fault could schedule or not.
+> +	 */
+> +	if (IS_ENABLED(CONFIG_PREEMPTION))
+> +		can_schedule = preempt_count() + rcu_preempt_depth() == 0;
+> +	else
+> +		can_schedule = usermode;
+>  
+> +	/*
+> +	 * If the kernel context is allowed to schedule then RCU is
+> +	 * watching because no preemptible code in the kernel is inside RCU
+> +	 * idle state. So it can be treated like user mode. User mode is
+> +	 * safe because the #PF entry invoked enter_from_user_mode().
+> +	 *
+> +	 * For the non schedulable case invoke rcu_irq_enter() for
+> +	 * now. This will be moved out to the pagefault entry code later
+> +	 * and only invoked when really needed.
+> +	 */
+> +	if (can_schedule) {
+> +		kvm_async_pf_task_wait_schedule(token);
+> +	} else {
+>  		rcu_irq_enter();
+> +		kvm_async_pf_task_wait_halt(token);
+> +		rcu_irq_exit();
+>  	}
+> -	if (!n.halted)
+> -		finish_swait(&n.wq, &wait);
+> -
+> -	rcu_irq_exit();
+> -	return;
+>  }
+> -EXPORT_SYMBOL_GPL(kvm_async_pf_task_wait);
+>  
+>  static void apf_task_wake_one(struct kvm_task_sleep_node *n)
+>  {
+>  	hlist_del_init(&n->link);
+> -	if (n->halted)
+> +	if (n->use_halt)
+>  		smp_send_reschedule(n->cpu);
+>  	else if (swq_has_sleeper(&n->wq))
+>  		swake_up_one(&n->wq);
+> @@ -177,12 +247,13 @@ static void apf_task_wake_all(void)
+>  	int i;
+>  
+>  	for (i = 0; i < KVM_TASK_SLEEP_HASHSIZE; i++) {
+> -		struct hlist_node *p, *next;
+>  		struct kvm_task_sleep_head *b = &async_pf_sleepers[i];
+> +		struct kvm_task_sleep_node *n;
+> +		struct hlist_node *p, *next;
+> +
+>  		raw_spin_lock(&b->lock);
+>  		hlist_for_each_safe(p, next, &b->list) {
+> -			struct kvm_task_sleep_node *n =
+> -				hlist_entry(p, typeof(*n), link);
+> +			n = hlist_entry(p, typeof(*n), link);
+>  			if (n->cpu == smp_processor_id())
+>  				apf_task_wake_one(n);
+>  		}
+> @@ -223,8 +294,9 @@ void kvm_async_pf_task_wake(u32 token)
+>  		n->cpu = smp_processor_id();
+>  		init_swait_queue_head(&n->wq);
+>  		hlist_add_head(&n->link, &b->list);
+> -	} else
+> +	} else {
+>  		apf_task_wake_one(n);
+> +	}
+>  	raw_spin_unlock(&b->lock);
+>  	return;
+>  }
+> @@ -246,23 +318,33 @@ NOKPROBE_SYMBOL(kvm_read_and_reset_pf_re
+>  
+>  bool __kvm_handle_async_pf(struct pt_regs *regs, u32 token)
+>  {
+> -	/*
+> -	 * If we get a page fault right here, the pf_reason seems likely
+> -	 * to be clobbered.  Bummer.
+> -	 */
+> -	switch (kvm_read_and_reset_pf_reason()) {
+> +	u32 reason = kvm_read_and_reset_pf_reason();
+> +
+> +	switch (reason) {
+> +	case KVM_PV_REASON_PAGE_NOT_PRESENT:
+> +	case KVM_PV_REASON_PAGE_READY:
+> +		break;
+>  	default:
+>  		return false;
+> -	case KVM_PV_REASON_PAGE_NOT_PRESENT:
+> +	}
+> +
+> +	/*
+> +	 * If the host managed to inject an async #PF into an interrupt
+> +	 * disabled region, then die hard as this is not going to end well
+> +	 * and the host side is seriously broken.
+> +	 */
+> +	if (unlikely(!(regs->flags & X86_EFLAGS_IF)))
+> +		panic("Host injected async #PF in interrupt disabled region\n");
+> +
+> +	if (reason == KVM_PV_REASON_PAGE_NOT_PRESENT) {
+>  		/* page is swapped out by the host. */
+> -		kvm_async_pf_task_wait(token, !user_mode(regs));
+> -		return true;
+> -	case KVM_PV_REASON_PAGE_READY:
+> +		kvm_async_pf_task_wait(token, user_mode(regs));
+> +	} else {
+>  		rcu_irq_enter();
+>  		kvm_async_pf_task_wake(token);
+>  		rcu_irq_exit();
+> -		return true;
+>  	}
+> +	return true;
+>  }
+>  NOKPROBE_SYMBOL(__kvm_handle_async_pf);
+>  
+> @@ -326,12 +408,12 @@ static void kvm_guest_cpu_init(void)
+>  
+>  		wrmsrl(MSR_KVM_ASYNC_PF_EN, pa);
+>  		__this_cpu_write(apf_reason.enabled, 1);
+> -		printk(KERN_INFO"KVM setup async PF for cpu %d\n",
+> -		       smp_processor_id());
+> +		pr_info("KVM setup async PF for cpu %d\n", smp_processor_id());
+>  	}
+>  
+>  	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI)) {
+>  		unsigned long pa;
+> +
+>  		/* Size alignment is implied but just to make it explicit. */
+>  		BUILD_BUG_ON(__alignof__(kvm_apic_eoi) < 4);
+>  		__this_cpu_write(kvm_apic_eoi, 0);
+> @@ -352,8 +434,7 @@ static void kvm_pv_disable_apf(void)
+>  	wrmsrl(MSR_KVM_ASYNC_PF_EN, 0);
+>  	__this_cpu_write(apf_reason.enabled, 0);
+>  
+> -	printk(KERN_INFO"Unregister pv shared memory for cpu %d\n",
+> -	       smp_processor_id());
+> +	pr_info("Unregister pv shared memory for cpu %d\n", smp_processor_id());
+>  }
+>  
+>  static void kvm_pv_guest_cpu_reboot(void *unused)
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -4198,7 +4198,7 @@ int kvm_handle_page_fault(struct kvm_vcp
+>  	case KVM_PV_REASON_PAGE_NOT_PRESENT:
+>  		vcpu->arch.apf.host_apf_reason = 0;
+>  		local_irq_disable();
+> -		kvm_async_pf_task_wait(fault_address, 0);
+> +		kvm_async_pf_task_wait_schedule(fault_address);
+>  		local_irq_enable();
+>  		break;
+>  	case KVM_PV_REASON_PAGE_READY:
+> 
 
-Change in v8:
-- spit into 3 patch
-  [1/3] create the new functions with no functional change to the code as-is.
-  Replace rd_regb/wr_regb with rd_reg/wr_reg for general usage.
-  [2/3] add the new binding reg-io-width in device tree
-  [3/3] add the new funtinality of rd_reg / wr_reg and wr_reg_barrier 
-        to support 32-bit access for the TX/RX hold registers UTXH and URXH.
-
-Change in v7:
-- [1/2] correct build error on running 'make dt_binding_check' 
-Documentation/devicetree/bindings/serial/samsung_uart.yaml:  mapping values are not allowed in this context
-  in "<unicode string>", line 36, column 13
-  Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/serial/samsung_uart.example.dts' failed
-  make[1]: *** [Documentation/devicetree/bindings/serial/samsung_uart.example.dts] Error 1
-  make[1]: *** Waiting for unfinished jobs....
-  Makefile:1262: recipe for target 'dt_binding_check' failed
-  make: *** [dt_binding_check] Error 2
-- [2/2] add commit message of reviewed by and tested by in commit message
-  Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-  Tested on Odroid HC1 (Exynos5422):
-  Tested-by: Krzysztof Kozlowski <krzk@kernel.org>
-
-Change in v6:
-- [2/2] clean description of reg-io-width
-  allOf is not needed. Just enum [1, 2] is enough.
-
-Changes in v5:
-- spit into 2 patch, newly added patch for dt-binding
-  [1/2] newly added dt-binding and go as first patch in this series.
-  [2/2] go as second patch in this series.
-
-Changes in v4:
-- correct variable types and change misleading function name
-
-Changes in v3:
-- line 2031: remove redundant init value  for ourport->port.iotype
-
-Changes in v2:
-- line 954 : change rd_regl to rd_reg in for backward compatibility.
-- line 2031: Add init value for ourport->port.iotype  to UPIO_MEM
-
-Hyunki Koo (3):
-  serial: samsung: Replace rd_regb/wr_regb with rd_reg/wr_reg
-  dt-bindings: serial: Add reg-io-width compatible
-  tty: samsung_tty: 32-bit access for TX/RX hold registers
-
- .../devicetree/bindings/serial/samsung_uart.yaml   |  8 +++
- drivers/tty/serial/samsung_tty.c                   | 76 ++++++++++++++++++----
- 2 files changed, 72 insertions(+), 12 deletions(-)
-
--- 
-2.15.0.rc1
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
 
