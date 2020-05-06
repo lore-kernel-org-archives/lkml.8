@@ -2,144 +2,104 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE9CC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9692BC47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5CC02076D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73B582076D
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:06:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="npqa6IgL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipAclyHS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729374AbgEFPGO (ORCPT
+        id S1729376AbgEFPGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:06:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55788 "EHLO
+        Wed, 6 May 2020 11:06:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729048AbgEFPGO (ORCPT
+        with ESMTP id S1728428AbgEFPGf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:06:14 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1118C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 08:06:13 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x17so2615430wrt.5
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 08:06:13 -0700 (PDT)
+        Wed, 6 May 2020 11:06:35 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D71F6C061A0F;
+        Wed,  6 May 2020 08:06:34 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id l25so1213108pgc.5;
+        Wed, 06 May 2020 08:06:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=XkU2IfxEMFIBK8H+k9ssjVS2oIzqzYZTgrhsr6AigAM=;
-        b=npqa6IgLiZJF6NVdHMawWGS9zek/ZPPNICAvxHyZcerAg3LlKC3hp7NMVz4DdDPrmj
-         TgU2PQvtrtLz6M4/UJ53N5ClhyptBhtKVUEbWQtugGXrz0N8ZXiDpQzCQlQPQpAMEZFa
-         Po46nJE+RclPLc6A5M0b+q04reLnoXvFxZmJrfpGi+oSxBrSh1UrBza+ZB1MMWfGE45e
-         1SizfD5twDyO6jVjIDEaXfPPArRul2pqGMmuZirCcO7Lzz6IdV13LCJOVPJJpCbdmS9T
-         pS+4o90sWVv+3W+cn113tu1BAk+vlThVcB1XqCjY1ri89el1HO9etl6PYmzfWAg544Jd
-         rfJQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=eGi1L9urtaKBeDDvITR0UZqtmPEwGeW5Feo5TNhoZDY=;
+        b=ipAclyHS2TH4DohF7rE2zwbG6ue8HaSV1QL+S7svkhP5ku3RZGC/NDpML1g82C7o9e
+         VMX9vLSxxMroeLVOdJVyqmOaaSTt4fBkf5laIHqdhG3rKqbNEpEGf3+OfO9UxoFFAqgJ
+         NcGfqu0tFw3JSorEWfrJxu7puP7QC806g3mV93zzCU5mI+EK5jhlpEuirwoWOl8r1SMH
+         Kp5PA8BPsaVUNO6b6OJef1J1pxIbIF0tF9VaITj2kdUCeyGx5emB0S77w+WFe/U2q2bJ
+         FtjXaAZfi/H90mACFFHSEwBp+eZkOtSV5iIFVul3suUcTz4OtBtkuBTEUBVadSH/h2U8
+         vQQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XkU2IfxEMFIBK8H+k9ssjVS2oIzqzYZTgrhsr6AigAM=;
-        b=S9+wegk5Tv4+mFbKGA+SZ5b6z1EIej07aXR9yzkTaC3sEhrWB0WBcslwPe8Qn8vDcB
-         kV0Tgza+c3kq8kMrlRFKyyHRgSRXjqj7S0EqHgi9XFKxIwVkL95GG0ydyYtlr4FmwJo5
-         EC1vMJpdbhQH2pVLz/V+0BbM7zhYPBFfjfr3UyrczQk4bAhWod0Rhz+weWc2rahSucfw
-         CTXBXRFzVXUahIBW9xMFTiyA7ykBcv2zfdKAotf146Q1auyFpUEB9eU4/ZrNHP3QiMqh
-         Gs3+mH/pLEqGmCFSByFE2aGXdBvodlL/Ltq1lSlCwikDyUkzzhpFGix6zyGJFJuwgI6G
-         sgkA==
-X-Gm-Message-State: AGi0PubIWnGEPNlb2eo35t3b21BQ8YWMbMY/VqrpNfh+ZIlShPmoxiuJ
-        uMuaSirGt13vAix/XzJtCt9FfQ==
-X-Google-Smtp-Source: APiQypJsiRqkKLp7nVfuEm6QRdUvRTQVYCCMh+alAFwNSHkEzDiZiewVAFCAZezDpAesFLQQwnHImQ==
-X-Received: by 2002:adf:f4d1:: with SMTP id h17mr9632031wrp.69.1588777572367;
-        Wed, 06 May 2020 08:06:12 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id c190sm3591094wme.10.2020.05.06.08.06.11
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=eGi1L9urtaKBeDDvITR0UZqtmPEwGeW5Feo5TNhoZDY=;
+        b=tASrxi/1iRNoVY1yiaB9eekErPg3gi0iLxY4AMaEPw0O/5TqaZJp7bO/6EK8zYG6zw
+         AkSsqbSWVW6EDP073ZU2H68TVtYXbC9hLAi9zPPZeAl6v3YuR+aMwi4mGWWm2biF7P7R
+         PIV1z51P/hTfxehMo29mPcWGkwTZMvaR3ef6bXxaxG1K+WCL9ywCSOhl9QNDZZCHzwrm
+         AoKfkxOWS7but+9Dsef354HYomi/uqOKrj9Qz58OpnYkwAzOV8A1VGTvypZuoil8MPna
+         UImhrWpDNCwNVtnwY+FJeyXZ/ARWkA7KrUiuqQfT24SgSQdBrbUaGvN+xC3WioAIHQj4
+         Owzw==
+X-Gm-Message-State: AGi0PuZK0kUWM4HmfvvTOuJhP6cyfWzQUM8h6l41e2B2yWB8XSseMDmi
+        YJ3vUGDBaxjIeVp894Swznw=
+X-Google-Smtp-Source: APiQypJzopv1LfupQ5DisVLznReQcQbfRpVCydPqhzCm2nKxQ6CPn7126fMo1Ei12s8d7fHU7jse0A==
+X-Received: by 2002:a63:da01:: with SMTP id c1mr7678309pgh.121.1588777594380;
+        Wed, 06 May 2020 08:06:34 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:712:fa06:497c:9578:5fd7:4b29])
+        by smtp.gmail.com with ESMTPSA id u13sm5050259pjb.45.2020.05.06.08.06.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 08:06:11 -0700 (PDT)
-Date:   Wed, 6 May 2020 16:06:09 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        patches@linaro.org
-Subject: Re: [PATCH v2] arm64: cacheflush: Fix KGDB trap detection
-Message-ID: <20200506150609.kya3nygfvdwvimad@holly.lan>
-References: <20200504170518.2959478-1-daniel.thompson@linaro.org>
- <20200504204803.GA5657@willie-the-truck>
- <20200505141529.2qb35fbqudtac3ys@holly.lan>
- <20200505150916.GC24239@willie-the-truck>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505150916.GC24239@willie-the-truck>
+        Wed, 06 May 2020 08:06:33 -0700 (PDT)
+From:   Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+X-Google-Original-From: Aishwarya Ramakrishnan <raishwar@visteon.com>
+To:     gregkh@linuxfoundation.org
+Cc:     aishwaryarj100@gmail.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Ondrej Jirman <megous@megous.com>,
+        =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Input: edt-ft5x06: Use DEFINE_DEBUGFS_ATTRIBUTE to define debugfs fops
+Date:   Wed,  6 May 2020 20:36:22 +0530
+Message-Id: <20200506150623.3841-1-raishwar@visteon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200505153325.20113-1-aishwaryarj100@gmail.com>
+References: <20200505153325.20113-1-aishwaryarj100@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 04:09:16PM +0100, Will Deacon wrote:
-> On Tue, May 05, 2020 at 03:15:29PM +0100, Daniel Thompson wrote:
-> > On Mon, May 04, 2020 at 09:48:04PM +0100, Will Deacon wrote:
-> > > On Mon, May 04, 2020 at 06:05:18PM +0100, Daniel Thompson wrote:
-> > > > diff --git a/arch/arm64/include/asm/cacheflush.h b/arch/arm64/include/asm/cacheflush.h
-> > > > index e6cca3d4acf7..ce50c1f1f1ea 100644
-> > > > --- a/arch/arm64/include/asm/cacheflush.h
-> > > > +++ b/arch/arm64/include/asm/cacheflush.h
-> > > > @@ -79,7 +79,7 @@ static inline void flush_icache_range(unsigned long start, unsigned long end)
-> > > >  	 * IPI all online CPUs so that they undergo a context synchronization
-> > > >  	 * event and are forced to refetch the new instructions.
-> > > >  	 */
-> > > > -#ifdef CONFIG_KGDB
-> > > > +
-> > > >  	/*
-> > > >  	 * KGDB performs cache maintenance with interrupts disabled, so we
-> > > >  	 * will deadlock trying to IPI the secondary CPUs. In theory, we can
-> > > > @@ -89,9 +89,9 @@ static inline void flush_icache_range(unsigned long start, unsigned long end)
-> > > >  	 * the patching operation, so we don't need extra IPIs here anyway.
-> > > >  	 * In which case, add a KGDB-specific bodge and return early.
-> > > >  	 */
-> > > > -	if (kgdb_connected && irqs_disabled())
-> > > > +	if (in_dbg_master())
-> > > 
-> > > Does this imply that irqs are disabled?
-> > 
-> > Yes.
+From: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
 
-Except for bugs...
+On Tue, May 5, 2020 at 11:49 PM Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+> On Tue, May 05, 2020 at 09:03:24PM +0530, Aishwarya Ramakrishnan wrote:
+>> It is more clear to use DEFINE_DEBUGFS_ATTRIBUTE to define debugfs file
+>> operation rather than DEFINE_SIMPLE_ATTRIBUTE.
 
+> No it is not, why do you think so?
 
-> > 
-> > Assuming CONFIG_KGDB is enabled then in_dbg_master() expands to:
-> > 
-> >     (raw_smp_processor_id() == atomic_read(&kgdb_active))
-> 
-> Aha, so this can drop the raw_ prefix and call smp_processor_id() instead?
+This change is suggested by Coccinelle software.
+Generated by: scripts/coccinelle/api/debugfs/debugfs_simple_attr.cocci
 
-We need to allow in_dbg_master() to be called from preemptible contexts
-(because its job it to disclose information about our executions
-context) but given irqs are always disabled when we in_dbg_master()
-then I think we can make this and rely on short-circuit eval to
-avoid PREEMPT_DEBUG errors:
+> The two defines do different things, that is why we have 2 different
+> defines.  You can not just replace one with the other without
+> understanding why one was used and not the other one.
 
-    (irqs_disabled() && (smp_processor_id() == atomic_read(&kgdb_active)))
+> Did you test this change to verify that everything still works
+> properly?  Why is it needed to be changed at all?
 
-
-> I can queue the arm64 patch regardless.
-
-I don't want to hide anything... when I looked closer I realized
-that the above change also eliminates a small window where the original
-macro can spuriously evaluate to true.
-
-Specifically if we migrate to a new core after reading the processor
-id and the previous core takes a breakpoint then we would evaluate
-true if we read kgdb_active before we get the IPI to bring us to halt.
-
-Sorry for overlooking this in my reply yesterday! I'll have a patch out
-for this shortly.
-
-
-Daniel.
+DEFINE_SIMPLE_ATTRIBUTE + debugfs_create_file()
+imposes some significant overhead as compared to
+DEFINE_DEBUGFS_ATTRIBUTE + debugfs_create_file_unsafe().
+But I missed to use debugfs_create_file_unsafe() function in the patch.
