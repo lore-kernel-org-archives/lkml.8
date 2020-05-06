@@ -2,182 +2,252 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6681C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB1BC47258
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DD5D20735
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB1E0206D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:51:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Zi8HNhSm"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="TmPt9OdW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbgEFHvZ (ORCPT
+        id S1728477AbgEFHve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 03:51:25 -0400
-Received: from mail-eopbgr50084.outbound.protection.outlook.com ([40.107.5.84]:60132
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728280AbgEFHvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 03:51:24 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=a1NSzTetUY4EIHos+47/RitOwtkfE/ZztdQXNaQZNRg/WXgHR75NpbqMF++Fiy1PvQBk67H0YpSUztR+kKEqqWZBqyQJN4mHMu7+m1dHXoJGw7sSPK4wy+KmKoTd0PCq3LPj1V2Yhsn0oLbkBPARePXSw+fqfG9sSpy7ykZr3ZaSC5qZrSmDGDGX8dXEk0OxYEPrHa4kiKHyNVcO39SQUoDAqdg17p7Yxc4RB7riJbPeF6v1f6Wgm1/GCnhRcXdEW9OhICVoG1N+yhQe6VoJRkz8HfQiU+jbVwCyuxlu+vYI4ITtv0LPJOoalMajM6lodT5BdS9NH/ttdefgSM4vtA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MwJQWaaBo4mW5VUiK7kyMhVuoNI9j8TtU6veieTHh8k=;
- b=E9yc5m/8mNZrsdqXtaOQAFl/0ojpZVnI7aDcbsPb7raAaPzgKoRAaYDlcqbzcMU+W3qfH4ruZCr+mZmH/GaKXSrPD7KnZEOro5r+d5+ISaZVa8ukKuJnvwV76qAWRaKUFIB8eUd/Vm8V0DyDu+vb9F78fwh52iTSL2XnxLYoPspt7RO+T9Fgn22yZtRfns/lDh+Feb9LwtJUyWe/3YXvd5NoA2cD2tIiCyLlRPsFxRB+z+gFfVqFGpDtZr4nURvWN6vCwzJUFWgDE5Dp64HdKsYF+JhtMlKzrXJscymVChYrJBy6BMu2AWlNr5nfgvpa3iYxXJSa6qVO670EPJB8/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MwJQWaaBo4mW5VUiK7kyMhVuoNI9j8TtU6veieTHh8k=;
- b=Zi8HNhSmnKG5k7pIqP+t9uD9H3FhpKR/6LWwJomJmajz7uQSlTFu5IqImhjSz1bgizSIzowv+Nf/fSqYAjJdN8WWTTH7xbStpMsYnfZN9zumL4+y/X9SPXvkcjS9RKE8gFdSL+lRNFs8q6yGwfX21sUv9rocPTYov+TlKiIZgXY=
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (2603:10a6:20b:118::20)
- by AM7PR04MB7190.eurprd04.prod.outlook.com (2603:10a6:20b:115::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Wed, 6 May
- 2020 07:51:18 +0000
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::7c34:7ade:17d0:b792]) by AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::7c34:7ade:17d0:b792%9]) with mapi id 15.20.2979.028; Wed, 6 May 2020
- 07:51:18 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     Jeremy Linton <jeremy.linton@arm.com>
-CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
-        "git@thegavinli.com" <git@thegavinli.com>,
-        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>
-Subject: Re: [PATCH v2] usb: usbfs: correct kernel->user page attribute
- mismatch
-Thread-Topic: [PATCH v2] usb: usbfs: correct kernel->user page attribute
- mismatch
-Thread-Index: AQHWIlCQKCNSJB0Ze0OFrgpi79LmXKiasbyA
-Date:   Wed, 6 May 2020 07:51:18 +0000
-Message-ID: <20200506075143.GC30237@b29397-desktop>
-References: <20200504201348.1183246-1-jeremy.linton@arm.com>
-In-Reply-To: <20200504201348.1183246-1-jeremy.linton@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 642030e4-2dd5-4d28-1e3e-08d7f19242db
-x-ms-traffictypediagnostic: AM7PR04MB7190:
-x-microsoft-antispam-prvs: <AM7PR04MB7190B1D95C0D19F9CADC5D638BA40@AM7PR04MB7190.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-forefront-prvs: 03950F25EC
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Tm99XNnGQ6iVV0fwDayLqalTHqfInibtNagJgNzhZdqYAqUTbnRQZ2utagixzrKcApr9h2e8sz+t1BvETUeyH3TCS9kSy7tI18nMJMU+dOdWp00HDGqAHzJp522z2ygwMCheZQZHXr7v+iy9bxC729BLEZZHikcEhPYb1vuredTy4r3DQk2teGHcM71iYVWufvTgkMwJwyf3NmpIpc/u+yzD8zkcN+TUZW8QoeRpq+bncaSENx7SDA0rMbz5dHqJR/oj9g/mS6fifHzOyvcsv9nEI+HDM9Mj6vjYK6lsiSgur/H1minvCjGE1TVKK9Zp3qKM+Vslbz/VwHLIzbWQPbSO3r880RsKQalna08NXJ5wk4oOQFtmVMpMKfVsYAMDdlGKaHM8NeQZbKW8U5RUaDh+9+Dn70nsFdMgr32MoY6U9MtxnYoLK6LPUTy7r24G7DEUEeh8AYw4G70k2uu1How33TJuVsPuIAZbqT+0AXzcKk8EsLMNl0Z66G8VQdFrcyx4CFGQLxsuG8tkFvSJRrSb6e8hD+wMe9P+XUcNFEEFLMoEMpIf4/H9CIr0DgRN+dUTG1QlUHmtPZy6N2YL4WOMHoorvzU7eoAPSDzt75s=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(7916004)(366004)(396003)(376002)(346002)(136003)(39860400002)(33430700001)(4326008)(66446008)(1076003)(44832011)(64756008)(26005)(7416002)(186003)(76116006)(33656002)(91956017)(316002)(66946007)(6916009)(54906003)(71200400001)(66556008)(53546011)(8936002)(6512007)(66476007)(45080400002)(5660300002)(9686003)(33440700001)(8676002)(478600001)(6486002)(86362001)(33716001)(2906002)(6506007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: mqMFodWAZjnSgFhsz9F+UitckepftOqGoeQM+wGbHBcqqYHLDC+mVCcp1fayRX3m/2u8pQDeieF56pUy05NXDjfc8KYFu3iu2C+QxNKRCZt8EPZHd9DiAjmN/Eb6yDNY9nPKbf4WAcNgf2pm0C1Id/EEs1QP+N8C573tK3gszcVpydyZZYTPcvDys/hz7kb47mDE1WxAxNHodoJQEfvvmtecmS1XavppFtJwTi+KmI9/BnsVTzWbB2KzbzjtGC+GuvxpktZEbWMg0EDTFQQqvIwnTELaNrb3gcXEphvU+XnH3UtAvVaZ4oQ/z3zYkHee86VF6ir7CVeJ8KWe2MHGB0YZWfZ5pPu42HJYi3ZPV7Cf8mczJ1IFyPen7tHxLft+iXr6zk44AQ2+FFtZkaChC4V/2Uy3jsGOolGlF8/sGz7IofnVO0XCLlnFKOcXhr6sQLyMPxrpO3cd4i03pDJOd+7tW0Hq14EyUA9e/WPI7+Gydjs2F3DWchY2hlyoGRnE0c5T40RXiki+W6lTZLYaxpdoiE50Bpfy8Ne5UuENanCfW7DC2CO72ctXu1WuxR418NYajBi5y1/IldB4tLgqF5ERKAlxs+liUyFBM7026NWRnfvUweyzH747m+1SCNoYC8dUBCHTSOvRwFLvzigBSMr8GZcOZ9jq3I4JFZeHaqXMU6LoB8rtGNOvZhi2oL55Otjjx1fBRpUXTu+EH+bMQb+ZC2Ike0eBRNmTOAuIN52RrIA7RQxQGiVvgw/wt7FDajzTQhkpg4TxTADqcQbZmOhnM+dRf04CbvImyzP6zmw=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3D04C5076955E44790E54A8BFA0EB3D7@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 6 May 2020 03:51:34 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:16096 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728280AbgEFHvd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 03:51:33 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0467lFIq007704;
+        Wed, 6 May 2020 09:51:23 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=EbDaiplmg1Q7XCQNBmWnN701UTyThBLfH9pJeg2q7Xw=;
+ b=TmPt9OdWjeDx2Qy8hrSQ8t8yMu9/hqJ6WGYk47/V6GVLv/itHMS7cEqt27Tirk6ry9mc
+ dTMKumNGAGA6utdhiSGSrVlshNekl3Qavw2cssPaec5ujaLVGMjGz7/6BOkDzw/xqRZM
+ 9SEcNJ+n8qPoFxYt0Fk4bcQ8xmIz4RuwW8tNbvJZY9mh9NcpCaK29ZYc/WeLZcXebFZp
+ NbkG0hF53LniJlvELWcscLjLgKr3YF1/s7OTuOmwBYmkxZD4HAjwY/bdmYHMMATaGAGi
+ TwVMPQVAYTI/6u8B7H/mDHJvPNIb+0PKipw4al9BJdznWq2is7rya5q+Zk2wR9losiQd 6w== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30rxb24mwf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 May 2020 09:51:23 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 09EED10002A;
+        Wed,  6 May 2020 09:51:23 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id ED5FE2A6CD9;
+        Wed,  6 May 2020 09:51:22 +0200 (CEST)
+Received: from lmecxl0889.tpe.st.com (10.75.127.49) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 6 May
+ 2020 09:51:21 +0200
+Subject: Re: [PATCH v3 10/14] remoteproc: Deal with synchronisation when
+ shutting down
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
+        <loic.pallardy@st.com>, <s-anna@ti.com>,
+        <linux-remoteproc@vger.kernel.org>, <corbet@lwn.net>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200424200135.28825-1-mathieu.poirier@linaro.org>
+ <20200424200135.28825-11-mathieu.poirier@linaro.org>
+ <d2eeb480-6ba1-de12-53ba-cdf9c61b94b0@st.com> <20200430202312.GE17031@xps15>
+ <04b8f860-2b01-7e4f-cdea-08a3cf8af26c@st.com> <20200505220327.GB18333@xps15>
+From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Message-ID: <2aac2d9e-bd2f-d60a-a0ac-3b8541a9cde2@st.com>
+Date:   Wed, 6 May 2020 09:51:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 642030e4-2dd5-4d28-1e3e-08d7f19242db
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2020 07:51:18.4742
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nCeRC0I0LSk9B2gUjx4U7d2V9TpJLm8gbq8wdegALMiNREK4tlWFk/jhIURvDSGyZgS9hs8YEjP8udzWYbpBFw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7190
+In-Reply-To: <20200505220327.GB18333@xps15>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-06_02:2020-05-04,2020-05-06 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-05-04 15:13:48, Jeremy Linton wrote:
-> On some architectures (e.g. arm64) requests for
-> IO coherent memory may use non-cachable attributes if
-> the relevant device isn't cache coherent. If these
-> pages are then remapped into userspace as cacheable,
-> they may not be coherent with the non-cacheable mappings.
->=20
-> In particular this happens with libusb, when it attempts
-> to create zero-copy buffers for use by rtl-sdr
-> (https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgith=
-ub.com%2Fosmocom%2Frtl-sdr%2F&amp;data=3D02%7C01%7Cpeter.chen%40nxp.com%7Cb=
-088a6f1a4d5462d65e808d7f067b1b2%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C1%=
-7C637242200467457447&amp;sdata=3DnPbLuHBIWqKSc0h4UGqRBv7W7wcQ0SYwq51ggLVcBV=
-s%3D&amp;reserved=3D0). On low end arm
-> devices with non-coherent USB ports, the application will
-> be unexpectedly killed, while continuing to work fine on
-> arm machines with coherent USB controllers.
->=20
-> This bug has been discovered/reported a few times over
-> the last few years. In the case of rtl-sdr a compile time
-> option to enable/disable zero copy was implemented to
-> work around it.
->=20
-> Rather than relaying on application specific workarounds,
-> dma_mmap_coherent() can be used instead of remap_pfn_range().
-> The page cache/etc attributes will then be correctly set in
-> userspace to match the kernel mapping.
->=20
-> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-> ---
-> v1->v2:
-> 	Update commit message and change to dma_mmap_coherent()
-> 	from dma_mmap_attr(,,,0) which are the same.
->=20
->  drivers/usb/core/devio.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
-> index 6833c918abce..b9db9812d6c5 100644
-> --- a/drivers/usb/core/devio.c
-> +++ b/drivers/usb/core/devio.c
-> @@ -217,6 +217,7 @@ static int usbdev_mmap(struct file *file, struct vm_a=
-rea_struct *vma)
->  {
->  	struct usb_memory *usbm =3D NULL;
->  	struct usb_dev_state *ps =3D file->private_data;
-> +	struct usb_hcd *hcd =3D bus_to_hcd(ps->dev->bus);
->  	size_t size =3D vma->vm_end - vma->vm_start;
->  	void *mem;
->  	unsigned long flags;
-> @@ -250,9 +251,7 @@ static int usbdev_mmap(struct file *file, struct vm_a=
-rea_struct *vma)
->  	usbm->vma_use_count =3D 1;
->  	INIT_LIST_HEAD(&usbm->memlist);
-> =20
-> -	if (remap_pfn_range(vma, vma->vm_start,
-> -			virt_to_phys(usbm->mem) >> PAGE_SHIFT,
-> -			size, vma->vm_page_prot) < 0) {
-> +	if (dma_mmap_coherent(hcd->self.sysdev, vma, mem, dma_handle, size)) {
->  		dec_usb_memory_use_count(usbm, &usbm->vma_use_count);
->  		return -EAGAIN;
->  	}
-> --=20
-> 2.24.1
->=20
 
-Tested at NXP imx8qm (ARM64) platform, it fixes mmap issue for using
-libusb.
 
-I am not sure if it covers all use cases at hcd_buffer_alloc.
+On 5/6/20 12:03 AM, Mathieu Poirier wrote:
+> On Mon, May 04, 2020 at 01:34:43PM +0200, Arnaud POULIQUEN wrote:
+>>
+>>
+>> On 4/30/20 10:23 PM, Mathieu Poirier wrote:
+>>> On Wed, Apr 29, 2020 at 10:19:49AM +0200, Arnaud POULIQUEN wrote:
+>>>>
+>>>>
+>>>> On 4/24/20 10:01 PM, Mathieu Poirier wrote:
+>>>>> The remoteproc core must not allow function rproc_shutdown() to
+>>>>> proceed if currently synchronising with a remote processor and
+>>>>> the synchronisation operations of that remote processor does not
+>>>>> support it.  Also part of the process is to set the synchronisation
+>>>>> flag so that the remoteproc core can make the right decisions when
+>>>>> restarting the system.
+>>>>>
+>>>>> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+>>>>> ---
+>>>>>  drivers/remoteproc/remoteproc_core.c     | 32 ++++++++++++++++++++++++
+>>>>>  drivers/remoteproc/remoteproc_internal.h |  7 ++++++
+>>>>>  2 files changed, 39 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+>>>>> index 3a84a38ba37b..48afa1f80a8f 100644
+>>>>> --- a/drivers/remoteproc/remoteproc_core.c
+>>>>> +++ b/drivers/remoteproc/remoteproc_core.c
+>>>>> @@ -1849,6 +1849,27 @@ int rproc_boot(struct rproc *rproc)
+>>>>>  }
+>>>>>  EXPORT_SYMBOL(rproc_boot);
+>>>>>  
+>>>>> +static bool rproc_can_shutdown(struct rproc *rproc)
+>>>>> +{
+>>>>> +	/*
+>>>>> +	 * The remoteproc core is the lifecycle manager, no problem
+>>>>> +	 * calling for a shutdown.
+>>>>> +	 */
+>>>>> +	if (!rproc_needs_syncing(rproc))
+>>>>> +		return true;
+>>>>> +
+>>>>> +	/*
+>>>>> +	 * The remoteproc has been loaded by another entity (as per above
+>>>>> +	 * condition) and the platform code has given us the capability
+>>>>> +	 * of stopping it.
+>>>>> +	 */
+>>>>> +	if (rproc->sync_ops->stop)
+>>>>> +		return true;
+>>>>
+>>>> This means that if rproc->sync_ops->stop is null rproc_stop_subdevices will not
+>>>> be called? seems not symmetric with the start sequence.
+>>>
+>>> If rproc->sync_ops->stop is not provided then the remoteproc core can't stop the
+>>> remote processor at all after it has synchronised with it.  If a usecase
+>>> requires some kind of soft reset then a stop() function that uses a mailbox
+>>> notification or some other mechanism can be provided to tell the remote
+>>> processor to put itself back in startup mode again.
+>>>
+>>> Is this fine with you or there is still something I don't get?
+>>
+>> My point here is more around the subdevices. But perhaps i missed something...
+>>
+>> In rproc_start rproc_start_subdevices is called, even if sync_start is null.
+> 
+> Here I'll take that you mean sync_ops::start()
+> 
+>> But in rproc_shutdown rproc_stop is not called, if sync_ops->stop is null.
+>> So rproc_stop_subdevices is not called in this case.
+> 
+> Correct.  I am pretty sure some people don't want the remoteproc core to be able
+> to do anything other than synchronise with a remote processor, be it at boot
+> time or when the remote processor has crashed.
+> 
+> I can also see scenarios where people want to be able to start and stop
+> subdevices from the remoteproc core, but _not_ power cycle the remote processor.
+> In such cases the sync_ops::stop() should be some kind of notification telling
+> the remote processor to put itself back in initialisation mode and
+> sync_flags.after_stop should be set to true.
+> 
+>> Then if sync_flags.after_stop is false, it looks like that something will go wrong
+>> at next start.
+> 
+> If sync_ops::stop is NULL then the value of sync_flags.after_stop becomes
+> irrelevant because that state can't be reached. Let me know if you found a
+> condition where this isn't the case and I will correct it. 
 
---=20
+The only condition i have in mind is that the sync_ops::stop() can not implemented
+in platform driver, just because nothing to do. But i don't know if it is a realistic
+use case and having a dummy stop function looks to me acceptable in this particular
+use case.
 
-Thanks,
-Peter Chen=
+This triggers me another comment :)
+the rproc_ops struct description is relevant for the "normal" ops but not adapted
+for the sync_ops. For instance the start & stop are mandatory for ops, optional for sync_ops
+As this description is a reference (at least for me) to determine optional and mandatory ops
+would be useful to update  it.
+
+Regards,
+Arnaud
+> 
+>>
+>>>
+>>>> Probably not useful to test it here as condition is already handled in rproc_stop_device...
+>>>>
+>>>> Regards
+>>>> Arnaud
+>>>>> +
+>>>>> +	/* Any other condition should not be allowed */
+>>>>> +	return false;
+>>>>> +}
+>>>>> +
+>>>>>  /**
+>>>>>   * rproc_shutdown() - power off the remote processor
+>>>>>   * @rproc: the remote processor
+>>>>> @@ -1879,6 +1900,9 @@ void rproc_shutdown(struct rproc *rproc)
+>>>>>  		return;
+>>>>>  	}
+>>>>>  
+>>>>> +	if (!rproc_can_shutdown(rproc))
+>>>>> +		goto out;
+>>>>> +
+>>>>>  	/* if the remote proc is still needed, bail out */
+>>>>>  	if (!atomic_dec_and_test(&rproc->power))
+>>>>>  		goto out;
+>>>>> @@ -1898,6 +1922,14 @@ void rproc_shutdown(struct rproc *rproc)
+>>>>>  	kfree(rproc->cached_table);
+>>>>>  	rproc->cached_table = NULL;
+>>>>>  	rproc->table_ptr = NULL;
+>>>>> +
+>>>>> +	/*
+>>>>> +	 * The remote processor has been switched off - tell the core what
+>>>>> +	 * operation to use from hereon, i.e whether an external entity will
+>>>>> +	 * reboot the remote processor or it is now the remoteproc core's
+>>>>> +	 * responsability.
+>>>>> +	 */
+>>>>> +	rproc_set_sync_flag(rproc, RPROC_SYNC_STATE_SHUTDOWN);
+>>>>>  out:
+>>>>>  	mutex_unlock(&rproc->lock);
+>>>>>  }
+>>>>> diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
+>>>>> index 61500981155c..7dcc0a26892b 100644
+>>>>> --- a/drivers/remoteproc/remoteproc_internal.h
+>>>>> +++ b/drivers/remoteproc/remoteproc_internal.h
+>>>>> @@ -27,6 +27,9 @@ struct rproc_debug_trace {
+>>>>>  /*
+>>>>>   * enum rproc_sync_states - remote processsor sync states
+>>>>>   *
+>>>>> + * @RPROC_SYNC_STATE_SHUTDOWN	state to use after the remoteproc core
+>>>>> + *				has shutdown (rproc_shutdown()) the
+>>>>> + *				remote processor.
+>>>>>   * @RPROC_SYNC_STATE_CRASHED	state to use after the remote processor
+>>>>>   *				has crashed but has not been recovered by
+>>>>>   *				the remoteproc core yet.
+>>>>> @@ -36,6 +39,7 @@ struct rproc_debug_trace {
+>>>>>   * operation to use.
+>>>>>   */
+>>>>>  enum rproc_sync_states {
+>>>>> +	RPROC_SYNC_STATE_SHUTDOWN,
+>>>>>  	RPROC_SYNC_STATE_CRASHED,
+>>>>>  };
+>>>>>  
+>>>>> @@ -43,6 +47,9 @@ static inline void rproc_set_sync_flag(struct rproc *rproc,
+>>>>>  				       enum rproc_sync_states state)
+>>>>>  {
+>>>>>  	switch (state) {
+>>>>> +	case RPROC_SYNC_STATE_SHUTDOWN:
+>>>>> +		rproc->sync_with_rproc = rproc->sync_flags.after_stop;
+>>>>> +		break;
+>>>>>  	case RPROC_SYNC_STATE_CRASHED:
+>>>>>  		rproc->sync_with_rproc = rproc->sync_flags.after_crash;
+>>>>>  		break;
+>>>>>
