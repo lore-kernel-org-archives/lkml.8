@@ -2,162 +2,100 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 307E8C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1652EC47258
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07F3920747
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:23:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iphw8LOH"
+	by mail.kernel.org (Postfix) with ESMTP id E251B207DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:24:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588749849;
+	bh=x7OyI4ujQqJw0j0GzC4hS3Aq2xvKqYQlLnWoJNviDjI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=2hGQQdln/mjCW7skCPuqZDSqR5pOxdEC0An8eGlLDlisTuAkWrAPMTcZeWXvWVkhn
+	 aTP+czuDLFSleQUD8tllsBrlgvZaIJwaReQxaLAyh21iGP923eSKTyHuC0B7/2jGjv
+	 ywZKdz2XpJ7849U7IUUl4BdB3G8gKXO3obW6JH9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbgEFHXm (ORCPT
+        id S1728357AbgEFHYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 03:23:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39982 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727842AbgEFHXk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 03:23:40 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29EAFC061A10
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 00:23:39 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id x77so574523pfc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 00:23:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5LGrd0GCp2GzoXCciri6QP/vYjybcGcRtj9Gm0aAra8=;
-        b=iphw8LOHvc14me23EkcDGAveepL+5oyVXgA/7aVqeoEgbqB/kHqW7UDZshvRhYen0n
-         Phl9jDxNaaJWm//QIjLLLSHud5Tr5atoUUu0Gu+K+/HzYd0qIGMH+h04d3AooOrF2bEU
-         84xw9tqPnkasKhkgaE0aNrQBUtzcxyTwUu7Qs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5LGrd0GCp2GzoXCciri6QP/vYjybcGcRtj9Gm0aAra8=;
-        b=TmU8qDRkDZP6OGAJbuCTPMXyXFPKhQBeMLpe9I30ue0Ys6y4nhh2xSPxyCFhr7+quv
-         OTUpFw4d187/iLClddIDFIysi6+fydXjHDM8UWCQjJ5leqyjuLMxyyzFyXSHhqDwNXM+
-         58/z4OAwZOE56q2snUSLdoGLXYxHlGD0xxU3LdillVXtwCu7ewkI2042FC+xbLVQImpq
-         Sw3gC2pacnpY10ryHbXIWn7lrtCKQhFHKy8ajIJrtwmsQIb+CtXkH7PFFNgBRVa/oPW8
-         jSQphkl3kNi3iiBNRNBJjW8pfrYok5ll8xRak506ChpfSR5ocy5VUnhdnJV7PD36NSjG
-         TuTg==
-X-Gm-Message-State: AGi0Puaf+hMxHztFqcnIQJZS3scrcG9syrzuH2bM/z2Dw5kAkH3DvOY6
-        OV4I9UnOpabWd1gaCcCZCjLrbg==
-X-Google-Smtp-Source: APiQypKo1Sd/AT6g8MTRHUbLALuWztAtTilmBnoQG2IBw8cdHyWnDYPoOcoAWJvi465bvD3/LJF4qA==
-X-Received: by 2002:aa7:982a:: with SMTP id q10mr6950169pfl.212.1588749818693;
-        Wed, 06 May 2020 00:23:38 -0700 (PDT)
-Received: from localhost ([2401:fa00:1:10:3db2:76bf:938b:be05])
-        by smtp.gmail.com with ESMTPSA id i18sm3980351pjx.33.2020.05.06.00.23.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 May 2020 00:23:38 -0700 (PDT)
-From:   Claire Chang <tientzu@chromium.org>
-To:     robh@kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com,
-        long.cheng@mediatek.com, changqi.hu@mediatek.com
-Cc:     linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Claire Chang <tientzu@chromium.org>
-Subject: [PATCH 3/3] uart: mediatek: move the in-band wakeup logic to core
-Date:   Wed,  6 May 2020 15:23:14 +0800
-Message-Id: <20200506072314.112409-4-tientzu@chromium.org>
-X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-In-Reply-To: <20200506072314.112409-1-tientzu@chromium.org>
-References: <20200506072314.112409-1-tientzu@chromium.org>
+        Wed, 6 May 2020 03:24:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33324 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727832AbgEFHYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 03:24:07 -0400
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1542E2075A;
+        Wed,  6 May 2020 07:24:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588749847;
+        bh=x7OyI4ujQqJw0j0GzC4hS3Aq2xvKqYQlLnWoJNviDjI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2dF/3JTTgUTXkPe00eAGP+i/UrEb6At13z6L8h0yfrl/xzNk2Y5LE5dG3bFPy3gsV
+         PanOXrzYPZqsVHdv4gTC1p54m9U/IrzFxdW0PPJ6mB4mrKWoHAmCzVMzr1tCUx8MbD
+         mgM6oToSjO1sRXefqDLWUFwvnbNkWAeT0wdLMaio=
+Received: by mail-io1-f43.google.com with SMTP id k18so1201848ion.0;
+        Wed, 06 May 2020 00:24:07 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYoT4ZZstg3sPL6oQwiLuTiKNjIDIeCqxshoR6lAX/ZSnl3ww0A
+        /Pdf8tA7K/oPGQ8sXyaiAIwRFquy7Pnog8qw7fg=
+X-Google-Smtp-Source: APiQypIDZYGhT0LIyzlWMf02JIHTT0d22XLa8P8k+ofCUy3V1mbu/iTR9hb+bBCzJxHhbqT4z3ia2IzftQLl9LWc4FA=
+X-Received: by 2002:a02:8247:: with SMTP id q7mr6901558jag.68.1588749846416;
+ Wed, 06 May 2020 00:24:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200505190016.4350-1-lszubowi@redhat.com>
+In-Reply-To: <20200505190016.4350-1-lszubowi@redhat.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 6 May 2020 09:23:55 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHsvy09V0rK2Qh0eiR4Vi5ZDn=5ordNvEBH4c-Xk00QgQ@mail.gmail.com>
+Message-ID: <CAMj1kXHsvy09V0rK2Qh0eiR4Vi5ZDn=5ordNvEBH4c-Xk00QgQ@mail.gmail.com>
+Subject: Re: [PATCH] efi/libstub/x86: Free EFI map buffer in allocate_e820()
+To:     Lenny Szubowicz <lszubowi@redhat.com>
+Cc:     eric.snowberg@oracle.com, Ingo Molnar <mingo@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the in-band wakeup logic to core so that we can control the wakeup
-behavior by serdev controller's power/wakeup node and align with other
-serial drivers.
+On Tue, 5 May 2020 at 21:00, Lenny Szubowicz <lszubowi@redhat.com> wrote:
+>
+> In allocate_e820(), free the EFI map buffer that has been returned
+> by efi_get_memory_map(). The returned size of the EFI map buffer
+> is used to allocate an adequately sized e820ext buffer, if it's
+> needed. But the contents of that EFI map buffer is not used at all
+> and the local pointer to it is gone on return from allocate_e820().
+>
+> Signed-off-by: Lenny Szubowicz <lszubowi@redhat.com>
+> ---
+>  drivers/firmware/efi/libstub/x86-stub.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+> index 05ccb229fb45..4efe3e7a218d 100644
+> --- a/drivers/firmware/efi/libstub/x86-stub.c
+> +++ b/drivers/firmware/efi/libstub/x86-stub.c
+> @@ -623,6 +623,9 @@ static efi_status_t allocate_e820(struct boot_params *params,
+>         if (status != EFI_SUCCESS)
+>                 return status;
+>
+> +       /* Allocated EFI map buf is not used here. Just need its size. */
+> +       efi_bs_call(free_pool, map);
+> +
 
-Signed-off-by: Claire Chang <tientzu@chromium.org>
----
- drivers/tty/serial/8250/8250_mtk.c | 24 +++---------------------
- 1 file changed, 3 insertions(+), 21 deletions(-)
+Wouldn't it be better to call BS->GetMemoryMap() directly here, with a
+zero size for the input buffer?
 
-diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
-index f839380c2f4c1..52cb41e4e493d 100644
---- a/drivers/tty/serial/8250/8250_mtk.c
-+++ b/drivers/tty/serial/8250/8250_mtk.c
-@@ -71,7 +71,6 @@ struct mtk8250_data {
- #ifdef CONFIG_SERIAL_8250_DMA
- 	enum dma_rx_status	rx_status;
- #endif
--	int			rx_wakeup_irq;
- };
- 
- /* flow control mode */
-@@ -496,6 +495,8 @@ static int mtk8250_probe(struct platform_device *pdev)
- 	struct uart_8250_port uart = {};
- 	struct resource *regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	struct resource *irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-+	struct resource *wakeup_irq =
-+		platform_get_resource(pdev, IORESOURCE_IRQ, 1);
- 	struct mtk8250_data *data;
- 	int err;
- 
-@@ -525,6 +526,7 @@ static int mtk8250_probe(struct platform_device *pdev)
- 	spin_lock_init(&uart.port.lock);
- 	uart.port.mapbase = regs->start;
- 	uart.port.irq = irq->start;
-+	uart.port.wakeup_irq = wakeup_irq ? wakeup_irq->start : -ENXIO;
- 	uart.port.pm = mtk8250_do_pm;
- 	uart.port.type = PORT_16550;
- 	uart.port.flags = UPF_BOOT_AUTOCONF | UPF_FIXED_PORT;
-@@ -556,8 +558,6 @@ static int mtk8250_probe(struct platform_device *pdev)
- 	if (data->line < 0)
- 		return data->line;
- 
--	data->rx_wakeup_irq = platform_get_irq_optional(pdev, 1);
--
- 	return 0;
- }
- 
-@@ -581,23 +581,9 @@ static int mtk8250_remove(struct platform_device *pdev)
- static int __maybe_unused mtk8250_suspend(struct device *dev)
- {
- 	struct mtk8250_data *data = dev_get_drvdata(dev);
--	int irq = data->rx_wakeup_irq;
--	int err;
- 
- 	serial8250_suspend_port(data->line);
--
- 	pinctrl_pm_select_sleep_state(dev);
--	if (irq >= 0) {
--		err = enable_irq_wake(irq);
--		if (err) {
--			dev_err(dev,
--				"failed to enable irq wake on IRQ %d: %d\n",
--				irq, err);
--			pinctrl_pm_select_default_state(dev);
--			serial8250_resume_port(data->line);
--			return err;
--		}
--	}
- 
- 	return 0;
- }
-@@ -605,12 +591,8 @@ static int __maybe_unused mtk8250_suspend(struct device *dev)
- static int __maybe_unused mtk8250_resume(struct device *dev)
- {
- 	struct mtk8250_data *data = dev_get_drvdata(dev);
--	int irq = data->rx_wakeup_irq;
- 
--	if (irq >= 0)
--		disable_irq_wake(irq);
- 	pinctrl_pm_select_default_state(dev);
--
- 	serial8250_resume_port(data->line);
- 
- 	return 0;
--- 
-2.26.2.526.g744177e7f7-goog
-
+>         nr_desc = buff_size / desc_size;
+>
+>         if (nr_desc > ARRAY_SIZE(params->e820_table)) {
+> --
+> 2.18.4
+>
