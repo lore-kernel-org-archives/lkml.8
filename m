@@ -2,93 +2,84 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CADC38A2A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85459C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3E2720752
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:43:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59B99206D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:44:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588769051;
+	bh=+gcTcBT0NPIx2nr2eSmROSlsvJsG9S9rJhJoXYKKGNE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Li7y6MX6b4WoyBRkj1vJEyq3hiSt1livpJKz3nTYpAWtLLrIxRRRqbWkH5vxIGLY1
+	 li6NnPVtkoc+B97esnVwL3RmHUndnSVfvvrc6XTgV2X2TNAcQg9qavVz45oB8qn2T9
+	 4KLo/Tmfaon6QdEkfBnXf/W54T6gzUpM4Ip9WASY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728278AbgEFMnI (ORCPT
+        id S1728299AbgEFMoK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 08:43:08 -0400
-Received: from mail-m17613.qiye.163.com ([59.111.176.13]:22691 "EHLO
-        mail-m17613.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbgEFMnH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 08:43:07 -0400
-Received: from ubuntu.localdomain (unknown [157.0.31.122])
-        by mail-m17613.qiye.163.com (Hmail) with ESMTPA id 6308D48281A;
-        Wed,  6 May 2020 20:43:01 +0800 (CST)
-From:   Bernard Zhao <bernard@vivo.com>
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     opensource.kernel@vivo.com, Bernard Zhao <bernard@vivo.com>
-Subject: [PATCH] drm/mediatek: eliminate the magic number in array size
-Date:   Wed,  6 May 2020 05:42:55 -0700
-Message-Id: <20200506124255.9477-1-bernard@vivo.com>
-X-Mailer: git-send-email 2.26.2
+        Wed, 6 May 2020 08:44:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55644 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727995AbgEFMoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 08:44:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95BBE206D5;
+        Wed,  6 May 2020 12:44:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588769050;
+        bh=+gcTcBT0NPIx2nr2eSmROSlsvJsG9S9rJhJoXYKKGNE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dYr8UHTxSEsUWMcnhr8FLGjnrE/kAOk5eKtOlRros9ROhSCclYNEJO2NihQ7K4iJH
+         rNXtw2zF0gtenWp9Tzes5GLDZ2bYL/UbYmC5ault4szvPBW46i+Rd+oPg3WDvs4u9P
+         31lR507adE2cPfMKZFHQlrAWPZzfBtFgKF41cHwM=
+Date:   Wed, 6 May 2020 14:44:07 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     youngjun <her0gyugyu@gmail.com>
+Cc:     Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs: kernfs: fix possible null pointer dereferences
+Message-ID: <20200506124407.GA3142038@kroah.com>
+References: <20200430112046.53721-1-her0gyugyu@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VPQ01CQkJCQ0NOTk5CSllXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mhw6KRw6FDg2Tjg5DBVNOhhR
-        Ag8wCjlVSlVKTkNDTE1DQkNKTU5OVTMWGhIXVRkeCRUaCR87DRINFFUYFBZFWVdZEgtZQVlKTkxV
-        S1VISlVKSUlZV1kIAVlBSUxISjcG
-X-HM-Tid: 0a71ea02c25d93bakuws6308d48281a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430112046.53721-1-her0gyugyu@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Eiminate the magic number in array size, there macro defines in
-hdmi.h.
+On Thu, Apr 30, 2020 at 04:20:46AM -0700, youngjun wrote:
+> kernfs_path_from_node_locked checks buf is NULL.
+> But, two cases below are not covered.
+> 
+> if(!kn_to)			<--- case1 (buf can be NULL)
+> 	return strlcpy(buf, "(null)", buflen);
+> 
+> if(kn_from == kn_to)		<--- case2 (buf can be NULL)
+> 	return strlcpy(buf, "/", buflen);
+> 
+> if (!buf)			<--- checked here.
+> 	return -EINVAL;
+> 
+> buf NULL case needs to be checked first.
+> 
+> Signed-off-by: youngjun <her0gyugyu@gmail.com>
+> ---
+>  fs/kernfs/dir.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
-Signed-off-by: Bernard Zhao <bernard@vivo.com>
----
- drivers/gpu/drm/mediatek/mtk_hdmi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+I have 3 patches here from you, with the same subject lines, yet they do
+different things.
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-index ff43a3d80410..4c962c7f06e5 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-@@ -982,7 +982,7 @@ static int mtk_hdmi_setup_avi_infoframe(struct mtk_hdmi *hdmi,
- 					struct drm_display_mode *mode)
- {
- 	struct hdmi_avi_infoframe frame;
--	u8 buffer[17];
-+	u8 buffer[HDMI_INFOFRAME_HEADER_SIZE + HDMI_AVI_INFOFRAME_SIZE];
- 	ssize_t err;
- 
- 	err = drm_hdmi_avi_infoframe_from_display_mode(&frame,
-@@ -1008,7 +1008,7 @@ static int mtk_hdmi_setup_spd_infoframe(struct mtk_hdmi *hdmi,
- 					const char *product)
- {
- 	struct hdmi_spd_infoframe frame;
--	u8 buffer[29];
-+	u8 buffer[HDMI_INFOFRAME_HEADER_SIZE + HDMI_SPD_INFOFRAME_SIZE];
- 	ssize_t err;
- 
- 	err = hdmi_spd_infoframe_init(&frame, vendor, product);
-@@ -1031,7 +1031,7 @@ static int mtk_hdmi_setup_spd_infoframe(struct mtk_hdmi *hdmi,
- static int mtk_hdmi_setup_audio_infoframe(struct mtk_hdmi *hdmi)
- {
- 	struct hdmi_audio_infoframe frame;
--	u8 buffer[14];
-+	u8 buffer[HDMI_INFOFRAME_HEADER_SIZE + HDMI_AUDIO_INFOFRAME_SIZE];
- 	ssize_t err;
- 
- 	err = hdmi_audio_infoframe_init(&frame);
--- 
-2.26.2
+I'm dropping them all, can you please resend a patch series of the
+remaining patches you wish us to review for kernfs?
 
+thanks,
+
+greg k-h
