@@ -2,114 +2,112 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEC4C47257
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F0CC47257
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17D0A20870
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:10:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="T+Tqy3V3"
+	by mail.kernel.org (Postfix) with ESMTP id 226DA20735
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:14:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588806841;
+	bh=L1whZPJK8jTIvUhmCfpL75dR7YBqlLcL7dBaJ2GYTaY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Y3n107dY/73Z/OOD3kFx1eA3pQgjoT5qxoFh4sPPZ0UauK27HHv27jMyhKoWeFZGn
+	 z1BI8bOu1X2W4lHTK2duegZzftriWkEgUKJW2E/u6ppVOIKO7bdKWg9F28pRjOpwaX
+	 /X03TdhzHJMzrHoh2YRGSkait06x/VHoPRyeXoRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbgEFXKN (ORCPT
+        id S1727088AbgEFXN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 19:10:13 -0400
-Received: from ozlabs.org ([203.11.71.1]:59205 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbgEFXKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 19:10:12 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49HXPG6MQ3z9sRY;
-        Thu,  7 May 2020 09:10:10 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588806611;
-        bh=NKbfujZOrLKWiiQan91ejfOyxp39jVb/mWO081cKRBs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=T+Tqy3V3UEci8qprSLZ2J2rGNBVYGDgYx5V4f+9k7dT1dCt5wiVo9UXn17TF5jo8j
-         8ozNA87gyfNrBiVJfHyiz1llOWdFQNaBNvqrkmFMuBHMtJRWxgHGl1BxF1OawogVRk
-         /JKEZbluevfh6Ro6X4dijZX6KqS6cK0/PdCXw8XUXRxId39GiaFAhtivks+7vXr2rx
-         mXBLgGR5SUi3yNWdgd/UH3NSQy2qUtFCAi1gRm8SkOSb48fcTyRbKIBJM1BXCB6VGi
-         C6SwpjLrocsBGGzTrVlaa8Ee5Np13rMwHQXI7ezhsHnav/7ffRJxxzt0P+dlE8aOvG
-         pKZTyOfWq5+4g==
-Date:   Thu, 7 May 2020 09:10:08 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>,
-        Andrew Jeffery <andrew@aj.id.au>, Vijay Khemka <vkhemka@fb.com>
-Subject: linux-next: build warning after merge of the aspeed tree
-Message-ID: <20200507091008.1bd38185@canb.auug.org.au>
+        Wed, 6 May 2020 19:13:59 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35999 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbgEFXN6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 19:13:58 -0400
+Received: by mail-pg1-f196.google.com with SMTP id d22so1905981pgk.3;
+        Wed, 06 May 2020 16:13:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yNC3GM3ywGXGoZzk8/YUTPNRyoicVYswjVnBQiUzaYs=;
+        b=gyNHFGXtO+bRy10kSQnOFHiuKnpiqxqI/tir6hskR7d6mMoC1Le41qHBv/7SZRB+qN
+         fmoGEE68vFwzQEUdj6atkKL8FGWOsAGoFL9QO8FiO7bSV4TkqjLgfavfVC6GEnyuhlvt
+         xr5nJGUwpcLqyteJzA6M1/Fm2l6H89xE/JKCmXjIC5krtEoqtti8FkjgqXwX2d0N6+1f
+         c82JVef/3dvAYwxBwuraS05Cf/vNWOrUejZqRKNzJtcngptYuXq1GIjIlmWktPHPRh+i
+         gW8Dq1gSRANZRM2hdXtGDap04zXxKXEgP3dtQTOxcBSpFa6jcDLETsy2RWC7edwkM1lc
+         PlXA==
+X-Gm-Message-State: AGi0PubeZOCAvHwGE4gHE6Ld27/RHpOS1LDv9pvxlM3Qg8Y6hPAQRnrZ
+        MxKB28wW87FQu8+a3bqU9kI=
+X-Google-Smtp-Source: APiQypI1cZz5e5aUdny1xt+BmLGd0u9WZ/XOxzZEhrSJwWx5Olumva6WOJu2WNhYATPEGbj5pYvHsA==
+X-Received: by 2002:a62:1994:: with SMTP id 142mr180656pfz.259.1588806837760;
+        Wed, 06 May 2020 16:13:57 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id f6sm2924188pfn.189.2020.05.06.16.13.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 16:13:56 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 505C5403EA; Wed,  6 May 2020 23:13:55 +0000 (UTC)
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     cl@linux.com, akpm@linux-foundation.org
+Cc:     arnd@arndb.de, willy@infradead.org, aquini@redhat.com,
+        keescook@chromium.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Luis Chamberlain <mcgrof@kernel.org>
+Subject: [PATCH] mm: expland documentation over __read_mostly
+Date:   Wed,  6 May 2020 23:13:53 +0000
+Message-Id: <20200506231353.32451-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.23.0.rc1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/fVJI0q5=a9ABUMQKFYa7GSl";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/fVJI0q5=a9ABUMQKFYa7GSl
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+__read_mostly can easily be misused by folks, its not meant for
+just read-only data. There are performance reasons for using it, but
+we also don't provide any guidance about its use. Provide a bit more
+guidance over it use.
 
-Hi all,
+Acked-by: Christoph Lameter <cl@linux.com>
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+---
 
-After merging the aspeed tree, today's linux-next build (arm
-multi_v7_defconfig) produced this warning:
+I sent this 2 years ago, but it fell through the cracks. This time
+I'm adding Andrew Morton now, the fix0r-of-falling-through-the-cracks.
 
-arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:126.11-130.4: Warning =
-(i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10: I2C bus unit addr=
-ess format error, expected "40000010"
-arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:128.3-30: Warning (i2c=
-_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10:reg: I2C address must =
-be less than 10-bits, got "0x40000010"
-arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:137.11-141.4: Warning =
-(i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@100/ipmb3@10: I2C bus unit add=
-ress format error, expected "40000010"
-arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:139.3-30: Warning (i2c=
-_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@100/ipmb3@10:reg: I2C address must=
- be less than 10-bits, got "0x40000010"
-arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:148.11-152.4: Warning =
-(i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@180/ipmb5@10: I2C bus unit add=
-ress format error, expected "40000010"
-arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:150.3-30: Warning (i2c=
-_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@180/ipmb5@10:reg: I2C address must=
- be less than 10-bits, got "0x40000010"
-arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:159.11-163.4: Warning =
-(i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@300/ipmb7@10: I2C bus unit add=
-ress format error, expected "40000010"
-arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:161.3-30: Warning (i2c=
-_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@300/ipmb7@10:reg: I2C address must=
- be less than 10-bits, got "0x40000010"
+Resending as I just saw a patch which doesn't clearly justifiy the
+merits of the use of __read_mostly on it.
 
-Introduced by commit
+ include/linux/cache.h | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-  266056d3c61d ("ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC")
+diff --git a/include/linux/cache.h b/include/linux/cache.h
+index 750621e41d1c..8106fb304fa7 100644
+--- a/include/linux/cache.h
++++ b/include/linux/cache.h
+@@ -15,8 +15,14 @@
+ 
+ /*
+  * __read_mostly is used to keep rarely changing variables out of frequently
+- * updated cachelines. If an architecture doesn't support it, ignore the
+- * hint.
++ * updated cachelines. Its use should be reserved for data that is used
++ * frequently in hot paths. Performance traces can help decide when to use
++ * this. You want __read_mostly data to be tightly packed, so that in the
++ * best case multiple frequently read variables for a hot path will be next
++ * to each other in order to reduce the number of cachelines needed to
++ * execute a critial path. We should be mindful and selective of its use.
++ * ie: if you're going to use it please supply a *good* justification in your
++ * commit log
+  */
+ #ifndef __read_mostly
+ #define __read_mostly
+-- 
+2.25.1
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/fVJI0q5=a9ABUMQKFYa7GSl
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6zQ9AACgkQAVBC80lX
-0Gw1lAf/RlzuiNx5cyhETGU6NBKJPZjTeo6NIRHXVwQ7q7exJrzYb+nhDQ4bFbPj
-2TbXoFijAIsATRED8hktXA081LSC/MzJo0rX6qHNmhDQWvO/RtGvKRvSloTHzB6E
-21JlC8zQpy64HJAmpMRHax8/1ITQwjtpPUng/a6lXoC4RpkRQYE5jZIFkkMG2OS7
-p/AojtKjN+NorqWc/G66jNh2P68/jmsq21yvXRB/lq08nPS4rA1Kg3s128hQ717Q
-P50gum7/hJmmbixaphk+xyylDgL1hJS2ObkPtjEnDAux/7hulXahT8Ib7Jxysrao
-eilmKFe2gYF0DaD/jzuInK8j/JWgLQ==
-=8pUC
------END PGP SIGNATURE-----
-
---Sig_/fVJI0q5=a9ABUMQKFYa7GSl--
