@@ -2,74 +2,90 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92059C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE946C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7964D20661
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:09:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A484D2078C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:09:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728542AbgEFIJQ (ORCPT
+        id S1728628AbgEFIJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 04:09:16 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3859 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728217AbgEFIJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 04:09:16 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2A4DF91E451E0C16612A;
-        Wed,  6 May 2020 16:09:14 +0800 (CST)
-Received: from linux-lmwb.huawei.com (10.175.103.112) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 6 May 2020 16:09:07 +0800
-From:   Samuel Zou <zou_wei@huawei.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <mripard@kernel.org>, <wens@csie.org>
-CC:     <alsa-devel@alsa-project.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Samuel Zou <zou_wei@huawei.com>
-Subject: [PATCH -next] ASoC: sun4i-i2s: Use PTR_ERR_OR_ZERO() to simplify code
-Date:   Wed, 6 May 2020 16:15:12 +0800
-Message-ID: <1588752912-37596-1-git-send-email-zou_wei@huawei.com>
-X-Mailer: git-send-email 2.6.2
+        Wed, 6 May 2020 04:09:41 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:47503 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728217AbgEFIJk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 04:09:40 -0400
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 2964524002E;
+        Wed,  6 May 2020 08:08:15 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        kamel.bouhara@bootlin.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v3 3/9] ARM: dts: at91: sama5d2: add TCB GCLK
+Date:   Wed,  6 May 2020 10:05:48 +0200
+Message-Id: <20200506080554.283177-4-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200506080554.283177-1-alexandre.belloni@bootlin.com>
+References: <20200506080554.283177-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.103.112]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes coccicheck warning:
+The sama5d2 tcbs take an extra input clock, their gclk.
 
-sound/soc/sunxi/sun4i-i2s.c:1177:1-3: WARNING: PTR_ERR_OR_ZERO can be used
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Samuel Zou <zou_wei@huawei.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- sound/soc/sunxi/sun4i-i2s.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/arm/boot/dts/sama5d2.dtsi | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index d0a8d58..72012a6 100644
---- a/sound/soc/sunxi/sun4i-i2s.c
-+++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -1174,10 +1174,8 @@ static int sun4i_i2s_init_regmap_fields(struct device *dev,
- 	i2s->field_fmt_sr =
- 			devm_regmap_field_alloc(dev, i2s->regmap,
- 						i2s->variant->field_fmt_sr);
--	if (IS_ERR(i2s->field_fmt_sr))
--		return PTR_ERR(i2s->field_fmt_sr);
+diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
+index ab550d69db91..996143e966d8 100644
+--- a/arch/arm/boot/dts/sama5d2.dtsi
++++ b/arch/arm/boot/dts/sama5d2.dtsi
+@@ -499,23 +499,23 @@ macb0: ethernet@f8008000 {
+ 			};
  
--	return 0;
-+	return PTR_ERR_OR_ZERO(i2s->field_fmt_sr);
- }
+ 			tcb0: timer@f800c000 {
+-				compatible = "atmel,at91sam9x5-tcb", "simple-mfd", "syscon";
++				compatible = "atmel,sama5d2-tcb", "simple-mfd", "syscon";
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				reg = <0xf800c000 0x100>;
+ 				interrupts = <35 IRQ_TYPE_LEVEL_HIGH 0>;
+-				clocks = <&pmc PMC_TYPE_PERIPHERAL 35>, <&clk32k>;
+-				clock-names = "t0_clk", "slow_clk";
++				clocks = <&pmc PMC_TYPE_PERIPHERAL 35>, <&pmc PMC_TYPE_GCK 35>, <&clk32k>;
++				clock-names = "t0_clk", "gclk", "slow_clk";
+ 			};
  
- static int sun4i_i2s_probe(struct platform_device *pdev)
+ 			tcb1: timer@f8010000 {
+-				compatible = "atmel,at91sam9x5-tcb", "simple-mfd", "syscon";
++				compatible = "atmel,sama5d2-tcb", "simple-mfd", "syscon";
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				reg = <0xf8010000 0x100>;
+ 				interrupts = <36 IRQ_TYPE_LEVEL_HIGH 0>;
+-				clocks = <&pmc PMC_TYPE_PERIPHERAL 36>, <&clk32k>;
+-				clock-names = "t0_clk", "slow_clk";
++				clocks = <&pmc PMC_TYPE_PERIPHERAL 36>, <&pmc PMC_TYPE_GCK 36>, <&clk32k>;
++				clock-names = "t0_clk", "gclk", "slow_clk";
+ 			};
+ 
+ 			hsmc: hsmc@f8014000 {
 -- 
-2.6.2
+2.26.2
 
