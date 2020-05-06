@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEC8C47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B95C6C38A24
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3D0B20936
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CEC82075A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:24:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="jWuvWWHI";
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="jWuvWWHI"
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="OjZ76XOO";
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="OjZ76XOO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728867AbgEFTYI (ORCPT
+        id S1728898AbgEFTYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 6 May 2020 15:24:08 -0400
-Received: from node.akkea.ca ([192.155.83.177]:50628 "EHLO node.akkea.ca"
+Received: from node.akkea.ca ([192.155.83.177]:50632 "EHLO node.akkea.ca"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728772AbgEFTYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728770AbgEFTYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 6 May 2020 15:24:06 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id 65B5E4E200C;
-        Wed,  6 May 2020 19:18:26 +0000 (UTC)
+        by node.akkea.ca (Postfix) with ESMTP id DA09F4E204E;
+        Wed,  6 May 2020 19:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1588792706; bh=LHoulxi1vTiKQKmc4GVw+S12/3VEaL+Jud01OzrChlU=;
+        t=1588792705; bh=hgjDEbhHP+Rph+2Z4aYps749rxVfZblv9VmXbTlQqC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=jWuvWWHIIGzaT0qvMjH/2HdacRQlCU0aGAG3XWwW4cC60lZxoTlmwGxrn0ZDYwV2f
-         rS2MsrMBebv8GOjo/h4OSTiZiQXut5VIQPQWWeWxiiUrOmc/XsQUlxlrFSl5K2pGya
-         awNKgKrogmqhKocm7IvPTKvvbJfxeKqdOnW9b0I8=
+        b=OjZ76XOO5EZxild9iF5h+jy2KH3fPzl7hRzKIi9guV9GTHz2C8woj1xFXcez36Zsm
+         VkqPlVah9hQB44vMZfd+drgjfx5PliK4ZVvtOSRABq2HQHfopHuWggrX5Z3u/Lgmbq
+         z4NSRUbeFx1dfhQ0FYDigyFOZ906O6Et8sHb1sKw=
 X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
 Received: from node.akkea.ca ([127.0.0.1])
         by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 410gAoNv7bRR; Wed,  6 May 2020 19:18:26 +0000 (UTC)
+        with ESMTP id cLgU-atzt1fn; Wed,  6 May 2020 19:18:25 +0000 (UTC)
 Received: from midas.localdomain (S0106788a2041785e.gv.shawcable.net [70.66.86.75])
-        by node.akkea.ca (Postfix) with ESMTPSA id BFB5E4E2003;
+        by node.akkea.ca (Postfix) with ESMTPSA id 5B66F4E2006;
         Wed,  6 May 2020 19:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1588792706; bh=LHoulxi1vTiKQKmc4GVw+S12/3VEaL+Jud01OzrChlU=;
+        t=1588792705; bh=hgjDEbhHP+Rph+2Z4aYps749rxVfZblv9VmXbTlQqC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=jWuvWWHIIGzaT0qvMjH/2HdacRQlCU0aGAG3XWwW4cC60lZxoTlmwGxrn0ZDYwV2f
-         rS2MsrMBebv8GOjo/h4OSTiZiQXut5VIQPQWWeWxiiUrOmc/XsQUlxlrFSl5K2pGya
-         awNKgKrogmqhKocm7IvPTKvvbJfxeKqdOnW9b0I8=
+        b=OjZ76XOO5EZxild9iF5h+jy2KH3fPzl7hRzKIi9guV9GTHz2C8woj1xFXcez36Zsm
+         VkqPlVah9hQB44vMZfd+drgjfx5PliK4ZVvtOSRABq2HQHfopHuWggrX5Z3u/Lgmbq
+         z4NSRUbeFx1dfhQ0FYDigyFOZ906O6Et8sHb1sKw=
 From:   Angus Ainslie <angus@akkea.ca>
 To:     angus@akkea.ca
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -52,9 +52,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>,
         linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] dt-bindings: usb: ti,tps6598x: add dt binding doc
-Date:   Wed,  6 May 2020 12:17:18 -0700
-Message-Id: <20200506191718.2144752-3-angus@akkea.ca>
+Subject: [PATCH 1/2] usb: typec: tps6598x: add device tree hooks
+Date:   Wed,  6 May 2020 12:17:17 -0700
+Message-Id: <20200506191718.2144752-2-angus@akkea.ca>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200506191718.2144752-1-angus@akkea.ca>
 References: <20200506191718.2144752-1-angus@akkea.ca>
@@ -65,95 +65,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the tps6598x driver
+Add a compatible string for the devicetree.
 
 Signed-off-by: Angus Ainslie <angus@akkea.ca>
 ---
- .../devicetree/bindings/usb/ti,tps6598x.yaml  | 75 +++++++++++++++++++
- 1 file changed, 75 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
+ drivers/usb/typec/tps6598x.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/ti,tps6598x.yaml b/Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
-new file mode 100644
-index 000000000000..925db38aaf84
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
-@@ -0,0 +1,75 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/usb/ti,tps6598x.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/usb/typec/tps6598x.c b/drivers/usb/typec/tps6598x.c
+index f661d8722ee0..2e71a35cc9d8 100644
+--- a/drivers/usb/typec/tps6598x.c
++++ b/drivers/usb/typec/tps6598x.c
+@@ -981,9 +981,16 @@ static const struct i2c_device_id tps6598x_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, tps6598x_id);
+ 
++static const struct of_device_id tps6598x_of_match[] = {
++	{ .compatible = "ti,tps6598x", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, tps6598x_of_match);
 +
-+title: TI tps6598x driver
-+
-+maintainers:
-+  -
-+
-+properties:
-+  $nodename:
-+    pattern: '^usb-pd@.*'
-+
-+  compatible:
-+    oneOf:
-+      - enum:
-+        - ti,tps6598x
-+      - items:
-+        - const: ti,tps6598x
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  connector:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    typec_pd: usb-pd@3f {
-+      compatible = "ti,tps6598x";
-+      reg = <0x3f>;
-+      pinctrl-names = "default";
-+      pinctrl-0 = <&pinctrl_typec>, <&pinctrl_tcpc>;
-+      interrupt-parent = <&gpio1>;
-+      interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
-+
-+      connector {
-+        compatible = "usb-c-connector";
-+        label = "USB-C";
-+        data-role = "dual";
-+
-+        ports {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+
-+          port@0 {
-+            reg = <0>;
-+
-+            usb_con_hs: endpoint {
-+              remote-endpoint = <&typec_hs>;
-+            };
-+          };
-+
-+          port@1 {
-+            reg = <1>;
-+
-+            usb_con_ss: endpoint {
-+              remote-endpoint = <&typec_ss>;
-+            };
-+          };
-+        };
-+      };
-+    };
+ static struct i2c_driver tps6598x_i2c_driver = {
+ 	.driver = {
+ 		.name = "tps6598x",
++		.of_match_table = of_match_ptr(tps6598x_of_match),
+ 	},
+ 	.probe_new = tps6598x_probe,
+ 	.remove = tps6598x_remove,
 -- 
 2.25.1
 
