@@ -6,40 +6,40 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD86EC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CECC1C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B76AA20735
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B969D20735
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:20:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728865AbgEFITx (ORCPT
+        id S1728915AbgEFIUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 04:19:53 -0400
-Received: from mga12.intel.com ([192.55.52.136]:35426 "EHLO mga12.intel.com"
+        Wed, 6 May 2020 04:20:16 -0400
+Received: from mga12.intel.com ([192.55.52.136]:35429 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728712AbgEFITt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 04:19:49 -0400
-IronPort-SDR: cVAWsG3BIuqihxI7rEXhv/daE/oDKudioThd3dj4wxyJVEEdJF58UgSqPvKKJlq2XgEwH5huPe
- 2cEMse+QjpSQ==
+        id S1728854AbgEFITw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 04:19:52 -0400
+IronPort-SDR: NQSpQL17mCtDv9aSWTWLnQ+52DXmMc5WiGiYytbxJSiuhsvdHo+LiIkYWngBMeeCzpruOuj1e8
+ NJs2ZChE3zWQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 01:19:48 -0700
-IronPort-SDR: hrgJYBBPPtcTpIv0lz6Ley/L/1lI3uFYZWZDa9zLPv3o1VgeEN/am13KQZcIcUU6kr9dJz3gsa
- jp10tzITKOMw==
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 01:19:52 -0700
+IronPort-SDR: 6o+mFvBClAJS4P9dL6sceBwW6UdVsgoyXFLr77jjchDhzzKHE4mRHx6c8qyVi91KjGu/n9myho
+ ABA77TFdqibA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,358,1583222400"; 
-   d="scan'208";a="260030122"
+   d="scan'208";a="260030135"
 Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
-  by orsmga003.jf.intel.com with ESMTP; 06 May 2020 01:19:46 -0700
+  by orsmga003.jf.intel.com with ESMTP; 06 May 2020 01:19:50 -0700
 From:   Yang Weijiang <weijiang.yang@intel.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         pbonzini@redhat.com, sean.j.christopherson@intel.com,
         jmattson@google.com
 Cc:     yu.c.zhang@linux.intel.com, Yang Weijiang <weijiang.yang@intel.com>
-Subject: [PATCH v12 08/10] KVM: VMX: Add VMCS dump and sanity check for CET states
-Date:   Wed,  6 May 2020 16:21:07 +0800
-Message-Id: <20200506082110.25441-9-weijiang.yang@intel.com>
+Subject: [PATCH v12 10/10] KVM: x86: Enable CET virtualization and advertise CET to userspace
+Date:   Wed,  6 May 2020 16:21:09 +0800
+Message-Id: <20200506082110.25441-11-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20200506082110.25441-1-weijiang.yang@intel.com>
 References: <20200506082110.25441-1-weijiang.yang@intel.com>
@@ -48,70 +48,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dump CET VMCS states for debug purpose. Since CET kernel protection is
-not enabled, if related MSRs in host are filled by mistake, warn once on
-detecting it.
+Set the feature bits so that CET capabilities can be seen in guest via
+CPUID enumeration. Add CR4.CET bit support in order to allow guest set CET
+master control bit(CR4.CET).
 
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ arch/x86/include/asm/kvm_host.h | 3 ++-
+ arch/x86/kvm/cpuid.c            | 5 +++--
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 32893573b630..70cb2d4a1391 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -5941,6 +5941,12 @@ void dump_vmcs(void)
- 		pr_err("InterruptStatus = %04x\n",
- 		       vmcs_read16(GUEST_INTR_STATUS));
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index f68c825e94ad..21f3c89d8c70 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -95,7 +95,8 @@
+ 			  | X86_CR4_PGE | X86_CR4_PCE | X86_CR4_OSFXSR | X86_CR4_PCIDE \
+ 			  | X86_CR4_OSXSAVE | X86_CR4_SMEP | X86_CR4_FSGSBASE \
+ 			  | X86_CR4_OSXMMEXCPT | X86_CR4_LA57 | X86_CR4_VMXE \
+-			  | X86_CR4_SMAP | X86_CR4_PKE | X86_CR4_UMIP))
++			  | X86_CR4_SMAP | X86_CR4_PKE | X86_CR4_UMIP \
++			  | X86_CR4_CET))
  
-+	if (vmentry_ctl & VM_ENTRY_LOAD_CET_STATE) {
-+		pr_err("S_CET = 0x%016lx\n", vmcs_readl(GUEST_S_CET));
-+		pr_err("SSP = 0x%016lx\n", vmcs_readl(GUEST_SSP));
-+		pr_err("SSP TABLE = 0x%016lx\n",
-+		       vmcs_readl(GUEST_INTR_SSP_TABLE));
-+	}
- 	pr_err("*** Host State ***\n");
- 	pr_err("RIP = 0x%016lx  RSP = 0x%016lx\n",
- 	       vmcs_readl(HOST_RIP), vmcs_readl(HOST_RSP));
-@@ -6023,6 +6029,12 @@ void dump_vmcs(void)
- 	if (secondary_exec_control & SECONDARY_EXEC_ENABLE_VPID)
- 		pr_err("Virtual processor ID = 0x%04x\n",
- 		       vmcs_read16(VIRTUAL_PROCESSOR_ID));
-+	if (vmexit_ctl & VM_EXIT_LOAD_CET_STATE) {
-+		pr_err("S_CET = 0x%016lx\n", vmcs_readl(HOST_S_CET));
-+		pr_err("SSP = 0x%016lx\n", vmcs_readl(HOST_SSP));
-+		pr_err("SSP TABLE = 0x%016lx\n",
-+		       vmcs_readl(HOST_INTR_SSP_TABLE));
-+	}
- }
+ #define CR8_RESERVED_BITS (~(unsigned long)X86_CR8_TPR)
  
- /*
-@@ -8075,6 +8087,7 @@ static __init int hardware_setup(void)
- 	unsigned long host_bndcfgs;
- 	struct desc_ptr dt;
- 	int r, i, ept_lpage_level;
-+	u64 cet_msr;
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 984ab2b395b3..333a9e0d7cdf 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -344,7 +344,8 @@ void kvm_set_cpu_caps(void)
+ 		F(AVX512VBMI) | F(LA57) | 0 /*PKU*/ | 0 /*OSPKE*/ | F(RDPID) |
+ 		F(AVX512_VPOPCNTDQ) | F(UMIP) | F(AVX512_VBMI2) | F(GFNI) |
+ 		F(VAES) | F(VPCLMULQDQ) | F(AVX512_VNNI) | F(AVX512_BITALG) |
+-		F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | 0 /*WAITPKG*/
++		F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | 0 /*WAITPKG*/ |
++		F(SHSTK)
+ 	);
+ 	/* Set LA57 based on hardware capability. */
+ 	if (cpuid_ecx(7) & F(LA57))
+@@ -353,7 +354,7 @@ void kvm_set_cpu_caps(void)
+ 	kvm_cpu_cap_mask(CPUID_7_EDX,
+ 		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
+ 		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
+-		F(MD_CLEAR) | F(AVX512_VP2INTERSECT) | F(FSRM)
++		F(MD_CLEAR) | F(AVX512_VP2INTERSECT) | F(FSRM) | F(IBT)
+ 	);
  
- 	store_idt(&dt);
- 	host_idt_base = dt.address;
-@@ -8236,6 +8249,16 @@ static __init int hardware_setup(void)
- 			return r;
- 	}
- 
-+	if (boot_cpu_has(X86_FEATURE_IBT) || boot_cpu_has(X86_FEATURE_SHSTK)) {
-+		rdmsrl(MSR_IA32_S_CET, cet_msr);
-+		WARN_ONCE(cet_msr, "KVM: CET S_CET in host will be lost!\n");
-+	}
-+
-+	if (boot_cpu_has(X86_FEATURE_SHSTK)) {
-+		rdmsrl(MSR_IA32_PL0_SSP, cet_msr);
-+		WARN_ONCE(cet_msr, "KVM: CET PL0_SSP in host will be lost!\n");
-+	}
-+
- 	vmx_set_cpu_caps();
- 
- 	r = alloc_kvm_area();
+ 	/* TSC_ADJUST and ARCH_CAPABILITIES are emulated in software. */
 -- 
 2.17.2
 
