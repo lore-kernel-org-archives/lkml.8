@@ -2,122 +2,187 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C259BC47259
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD6FC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A125E208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:41:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588776115;
-	bh=O3LspY81ApWe1Iq+AqJ0X2EUV2ZVKqQhPFqaiCs4ILI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=FQsh+pcifmCA5l/m7lf2TM7DE1DFxXnc0VFTO/2XdpGi9EvsX2t1gvZ21QCaQknNV
-	 U8iGzhOuV9iXtsMVftDHAZSv4WlFn4qMGBO2KhM+eXcj8FpE0TGpJphUmqSl6H4MHp
-	 vPVGvlIoKwiTLbJyA0f8W3tlEqbrPJOjM3mRZD0o=
+	by mail.kernel.org (Postfix) with ESMTP id 78F6320836
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:42:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VrB6p4Xy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729225AbgEFOlz (ORCPT
+        id S1729239AbgEFOmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 10:41:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43626 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729181AbgEFOlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 10:41:52 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 6 May 2020 10:42:07 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:52297 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729226AbgEFOmH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 10:42:07 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588776125; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=cx846LpCI/mxVQVVyh+RuRGtZ75GrHh3+ShglsOfGD4=;
+ b=VrB6p4Xy5AKLQxHK+mf/kPuXe8nDfUWFmgjtCDK/h6EpSAToQsSp3VDfDbK3/BrGvh5VHFd3
+ dCobiEkVI0ORhRhXaWcydrHcufZvetJSym7qNQL0KT/aWc4wf/xj4aPQZ1aYHt5s/g/JaH4r
+ Y1arxWt5q3mTsPEo5kxBIau4RXM=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb2ccb5.7f1064742c70-smtp-out-n02;
+ Wed, 06 May 2020 14:41:57 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E0711C44791; Wed,  6 May 2020 14:41:55 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 002D920836;
-        Wed,  6 May 2020 14:41:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588776112;
-        bh=O3LspY81ApWe1Iq+AqJ0X2EUV2ZVKqQhPFqaiCs4ILI=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Ek/Ios8sbnUGAl4FTAV3pJyGZgasnE9YxGPtG+67Q0R7KYyZMJukCv+ENy9bLUZFQ
-         bhKpISS+lmAXCIODlGZBWXZSSd4TteVaO/KWFz8KhcVBNNFXO2qv9G5cAtM+zoGdwU
-         +y9UJXxGWC2L/q0AUGWLIPzDmmD97n0QjFL1iIJI=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id DCDEA35227D0; Wed,  6 May 2020 07:41:51 -0700 (PDT)
-Date:   Wed, 6 May 2020 07:41:51 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     SeongJae Park <sjpark@amazon.com>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        David Miller <davem@davemloft.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        sj38.park@gmail.com, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>, snu@amazon.com,
-        amit@kernel.org, stable@vger.kernel.org
-Subject: Re: Re: Re: Re: Re: [PATCH net v2 0/2] Revert the 'socket_alloc'
- life cycle change
-Message-ID: <20200506144151.GZ2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200505184955.GO2869@paulmck-ThinkPad-P72>
- <20200506125926.29844-1-sjpark@amazon.com>
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 887D4C433F2;
+        Wed,  6 May 2020 14:41:54 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506125926.29844-1-sjpark@amazon.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 06 May 2020 20:11:54 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Nishanth Menon <nm@ti.com>, Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH v4 00/12] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
+In-Reply-To: <CAHLCerM_wdHDwzEDN7YxU9pBdHo3KvNyJeRWMC6seTG6aCH7nw@mail.gmail.com>
+References: <20200504202243.5476-1-sibis@codeaurora.org>
+ <CAHLCerM_wdHDwzEDN7YxU9pBdHo3KvNyJeRWMC6seTG6aCH7nw@mail.gmail.com>
+Message-ID: <87126044e367432ee8722ec2346d1dd5@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 02:59:26PM +0200, SeongJae Park wrote:
-> TL; DR: It was not kernel's fault, but the benchmark program.
-> 
-> So, the problem is reproducible using the lebench[1] only.  I carefully read
-> it's code again.
-> 
-> Before running the problem occurred "poll big" sub test, lebench executes
-> "context switch" sub test.  For the test, it sets the cpu affinity[2] and
-> process priority[3] of itself to '0' and '-20', respectively.  However, it
-> doesn't restore the values to original value even after the "context switch" is
-> finished.  For the reason, "select big" sub test also run binded on CPU 0 and
-> has lowest nice value.  Therefore, it can disturb the RCU callback thread for
-> the CPU 0, which processes the deferred deallocations of the sockets, and as a
-> result it triggers the OOM.
-> 
-> We confirmed the problem disappears by offloading the RCU callbacks from the
-> CPU 0 using rcu_nocbs=0 boot parameter or simply restoring the affinity and/or
-> priority.
-> 
-> Someone _might_ still argue that this is kernel problem because the problem
-> didn't occur on the old kernels prior to the Al's patches.  However, setting
-> the affinity and priority was available because the program received the
-> permission.  Therefore, it would be reasonable to blame the system
-> administrators rather than the kernel.
-> 
-> So, please ignore this patchset, apology for making confuse.  If you still has
-> some doubts or need more tests, please let me know.
-> 
-> [1] https://github.com/LinuxPerfStudy/LEBench
-> [2] https://github.com/LinuxPerfStudy/LEBench/blob/master/TEST_DIR/OS_Eval.c#L820
-> [3] https://github.com/LinuxPerfStudy/LEBench/blob/master/TEST_DIR/OS_Eval.c#L822
+Hey Amit,
+Thanks for taking time to review
+the series!
 
-Thank you for chasing this down!
+On 2020-05-06 18:08, Amit Kucheria wrote:
+> On Tue, May 5, 2020 at 1:54 AM Sibi Sankar <sibis@codeaurora.org> 
+> wrote:
+>> 
+>> This patch series aims to extend cpu based scaling support to L3/DDR 
+>> on
+>> SDM845 and SC7180 SoCs.
+>> 
+>> Patches [1-3] - Blacklist SDM845 and SC7180 in cpufreq-dt-platdev
+>> Patches [4-8] - Update bw levels based on cpu frequency change
+>> Patches [9-10] - Add tag setting support to OPP
+>> Patches [11-12] - Add the cpu opp tables for SDM845 and SC7180 SoCs.
+>> 
+>> Depends on the following series:
+>> https://lore.kernel.org/patchwork/cover/1230626/
+> 
+> Are there any other dependencies for this series? I tried applying
+> this on top of Georgi's series on v5.7-rc3. Patch 12 didn't apply
+> cleanly and needed a manual fixup for the include change.
+> 
 
-I have had this sort of thing on my list as a potential issue, but given
-that it is now really showing up, it sounds like it is time to bump
-up its priority a bit.  Of course there are limits, so if userspace is
-running at any of the real-time priorities, making sufficient CPU time
-available to RCU's kthreads becomes userspace's responsibility.  But if
-everything is running at SCHED_OTHER (which is this case here, correct?),
-then it is reasonable for RCU to do some work to avoid this situation.
+When I posted out it was based on
+next-20200428 tree, there shouldn't
+be any other dependency needed.
 
-But still, yes, the immediate job is fixing the benchmark.  ;-)
+> Compilation failed with:
+> Error:
+> /home/amit/work/sources/worktree-review-pipeline/arch/arm64/boot/dts/qcom/sc7180.dtsi:101.30-31
+> syntax error
+> FATAL ERROR: Unable to parse input tree
+> 
+> I've been squinting at the offending lines with no success:
+>                         interconnects = <&gem_noc MASTER_APPSS_PROC
+> &mc_virt SLAVE_EBI1>,
+>                                         <&osm_l3 MASTER_OSM_L3_APPS
+> &osm_l3 SLAVE_OSM_L3>;
+> 
 
-							Thanx, Paul
+#include <dt-bindings/interconnect/qcom,sc7180.h>
+You are probably missing ^^ which
+is present in next.
 
-PS.  Why not just attack all potential issues on my list?  Because I
-     usually learn quite a bit from seeing the problem actually happen.
-     And sometimes other changes in RCU eliminate the potential issue
-     before it has a chance to happen.
+>> Georgi,
+>>  Would it make sense to include tag support patches [9-10] in your 
+>> next
+>>  re-spin?
+>> 
+>> V4:
+>>  * Migrate to using Georgi's new bindings
+>>  * Misc fixups based on Matthias comments
+>>  * API fixups based on Bjorn's comments on v2
+>>  * Picked up a few R-bs from Matthias
+>> 
+>> v3:
+>>  * Migrated to using Saravana's opp-kBps bindings [1]
+>>  * Fixed some misc comments from Rajendra
+>>  * Added support for SC7180
+>> 
+>> v2:
+>>  * Incorporated Viresh's comments from:
+>>  
+>> https://lore.kernel.org/lkml/20190410102429.r6j6brm5kspmqxc3@vireshk-i7/
+>>  
+>> https://lore.kernel.org/lkml/20190410112516.gnh77jcwawvld6et@vireshk-i7/
+>>  * Dropped cpufreq-map passive governor
+>> 
+>> Sibi Sankar (12):
+>>   arm64: dts: qcom: sdm845: Add SoC compatible to MTP
+>>   cpufreq: blacklist SDM845 in cpufreq-dt-platdev
+>>   cpufreq: blacklist SC7180 in cpufreq-dt-platdev
+>>   OPP: Add and export helper to update voltage
+>>   OPP: Add and export helper to set bandwidth
+>>   cpufreq: qcom: Update the bandwidth levels on frequency change
+>>   OPP: Add and export helper to get icc path count
+>>   cpufreq: qcom: Disable fast switch when scaling ddr/l3
+>>   dt-bindings: interconnect: Add interconnect-tags bindings
+>>   OPP: Add support for setting interconnect-tags
+>>   arm64: dts: qcom: sdm845: Add cpu OPP tables
+>>   arm64: dts: qcom: sc7180: Add cpu OPP tables
+>> 
+>>  .../bindings/interconnect/interconnect.txt    |   5 +
+>>  arch/arm64/boot/dts/qcom/sc7180.dtsi          | 168 ++++++++++++
+>>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts       |   2 +-
+>>  arch/arm64/boot/dts/qcom/sdm845.dtsi          | 258 
+>> ++++++++++++++++++
+>>  drivers/cpufreq/cpufreq-dt-platdev.c          |   2 +
+>>  drivers/cpufreq/qcom-cpufreq-hw.c             |  89 +++++-
+>>  drivers/opp/core.c                            | 114 ++++++++
+>>  drivers/opp/of.c                              |  25 +-
+>>  include/linux/pm_opp.h                        |  22 ++
+>>  9 files changed, 675 insertions(+), 10 deletions(-)
+>> 
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
