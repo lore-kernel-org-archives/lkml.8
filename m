@@ -2,115 +2,104 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F82C47257
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA00EC47257
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60BF42075A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:30:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RLt2BxSd"
+	by mail.kernel.org (Postfix) with ESMTP id 917F620753
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:32:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588757542;
+	bh=AMxPTMYo4HLJFvCUqpt7NEszW4rzZ2Uy3h2nSaRurRI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xZtJtki9R3SYUIa/e9Fb02LU0UVYesk15KJvC4wKR0xMlnXZmYS9VR/kAosjKCg/j
+	 paYcwVgPADd3HYT3sa8s3WhENrPWybF/P3lmrSWZ2MHPxP0jSiN0d8PNJy5fjiF+dt
+	 Y39guqlPGY7aXAq/UlOAjebqd7l6eR/6Ekw6WZI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729070AbgEFJal (ORCPT
+        id S1729051AbgEFJcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 05:30:41 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40661 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728952AbgEFJak (ORCPT
+        Wed, 6 May 2020 05:32:21 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45669 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728640AbgEFJcV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 05:30:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588757438;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KRDsoW4PqOKDTvl02CnBAXvAH/isXXOqF537drR3NpQ=;
-        b=RLt2BxSd1U0s2Rxno8/WoGJ0yA7iFTaU+cxB249jnGOQD8SuYKgdkeTz5Udhmd/O2/jdyA
-        Z/2HrSsLN2W6+FnkrD8JvmxQNrY4NEsyi639/5xX6aAGo8AwgtmOgki0dsmFi12pDiccnQ
-        GC2yf102YjoNy90r8xwDs6IORcYEVtc=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-61-Y_X15eDWNXWIgA012FnxTg-1; Wed, 06 May 2020 05:30:36 -0400
-X-MC-Unique: Y_X15eDWNXWIgA012FnxTg-1
-Received: by mail-wr1-f70.google.com with SMTP id 30so991346wrp.22
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 02:30:36 -0700 (PDT)
+        Wed, 6 May 2020 05:32:21 -0400
+Received: by mail-oi1-f194.google.com with SMTP id k133so942340oih.12;
+        Wed, 06 May 2020 02:32:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KRDsoW4PqOKDTvl02CnBAXvAH/isXXOqF537drR3NpQ=;
-        b=V0hwGoD1XVwThiBvl6sAZTp91OtT6LtoLS6GZwntYhWZBscfTttCSpkd+NJCOmECU4
-         0PcZdnyurrGjLMourpOVKP1wK/9sqC6PvZN0kSWAkvHGOsbO3UIGAgIJZ6ROU4TIo73v
-         3LsmK/AwDWFrdxi7RbpWvY+lBBZOqId6VRxMp2xKfXDy+FDb2X+KWtywsURxpkv2YrLK
-         FcRVfV+gMtV12UBIpajn0ehSvFQU53WU7G/qxFl9nj4l2edMEvHwixlrgUysmuFm19y7
-         QLzTp2gzkd/6GpUKrnF+wM7t95I0M+s9wlAszJYdSw/9BLBCxLJxgjAwm0ll+xjJYRUY
-         zduw==
-X-Gm-Message-State: AGi0PubIJrG2EyEIH3eLhjrXsMC4bB9r1HOdvNb3fm7Uj0ei4Vx5T3F9
-        Argk+8RrlwZc7crM+Hc6v1ZUU0zk9ioQrCTxf1fMv/qxYqV3Y6y7pLAc6+FzaVtaDCr3683igcl
-        XyMPz7D2RU1Z7QNp9aHvhqufd
-X-Received: by 2002:adf:80ee:: with SMTP id 101mr8745386wrl.156.1588757435330;
-        Wed, 06 May 2020 02:30:35 -0700 (PDT)
-X-Google-Smtp-Source: APiQypK1zeUGnOlegWT/WV63eeUClJZUURP0CVxjtygCGm2d+x+81dM3Mdu5VfF57GS88O4fQlC22A==
-X-Received: by 2002:adf:80ee:: with SMTP id 101mr8745370wrl.156.1588757435104;
-        Wed, 06 May 2020 02:30:35 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:11d7:2f21:f38b:17e? ([2001:b07:6468:f312:11d7:2f21:f38b:17e])
-        by smtp.gmail.com with ESMTPSA id a67sm2275700wmc.30.2020.05.06.02.30.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 May 2020 02:30:34 -0700 (PDT)
-Subject: Re: [PATCH 0/3] KVM: X86: Two fixes for KVM_SET_GUEST_DEBUG, and a
- selftest
-To:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-References: <20200505205000.188252-1-peterx@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <a16352f2-73ef-b2fa-44e0-82b52dab8466@redhat.com>
-Date:   Wed, 6 May 2020 11:30:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e0cp8+eLp6spEAhT31IJ6eCca6B3J7assOLUD7HR8XU=;
+        b=ASaBVk67DvMTi2+DmnWBpZupZskxPEGDCsHZYCYYmD+Ug5FqK18H9TzP9m+pGJRA7d
+         MHEr8L1ozcFxT51jDNFVdZE6tovC8GjlgTBPB2sEg5Eo8lNewp90uJcE+7qHjd0BCi31
+         as/AtJ9i/oJWTZzaYqGapDGOmy/V/qNQaG0ugi2Oymm9hs+/hq2GXpaS0dAbHUXq2GJ9
+         j/pMGZggpgt4EhjoiAF5Lz5MOr/VbNXECkGrOxZG/b1mGv1hpAP8bNBqvuYlv/vuXVyl
+         fTcKwbiPEEPrlfq3JZL6La8o9QRhnve7QEWoTxxsmonqX/jWU7Risw4TxO3JNW20k6Li
+         WsUA==
+X-Gm-Message-State: AGi0PuZgEqEJ/Bie5m196SSfVKa51m8TSiM4xie/LM0/yPyjra0APyFg
+        derZSwJbnc8lgUi0utPkoFgZf0OV81BU2eLeyRo=
+X-Google-Smtp-Source: APiQypIvjg0Am7EUmhUrz0AaZ4tmVQl5/G+7G+iuFYkVzyTGE/IxGboIafUsn2RcIUL5am2aQRDYAEyt18kcX1ivlhU=
+X-Received: by 2002:aca:c441:: with SMTP id u62mr2161265oif.110.1588757539104;
+ Wed, 06 May 2020 02:32:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200505205000.188252-1-peterx@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAB4CAwdqo7=MvyG_PE+PGVfeA17AHF5i5JucgaKqqMX6mjArbQ@mail.gmail.com>
+In-Reply-To: <CAB4CAwdqo7=MvyG_PE+PGVfeA17AHF5i5JucgaKqqMX6mjArbQ@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 6 May 2020 11:32:07 +0200
+Message-ID: <CAJZ5v0gZH61ui04Howzif-_Xc3-X9GyAx7FgZ=ZS2X=4KotEng@mail.gmail.com>
+Subject: Re: System fails to exit s2idle by a keystroke on my laptop
+To:     Chris Chiu <chiu@endlessm.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        seth.forshee@canonical.com, Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/05/20 22:49, Peter Xu wrote:
-> The first two patches try to fix two issues I found (I think) with the
-> selftest.  The 3rd patch is the test itself.  Note, we need below patches to be
-> applied too for the test to work:
-> 
->         KVM: X86: Declare KVM_CAP_SET_GUEST_DEBUG properly
->         KVM: selftests: Fix build for evmcs.h
-> 
-> Please review, thanks.
-> 
-> Peter Xu (3):
->   KVM: X86: Set RTM for DB_VECTOR too for KVM_EXIT_DEBUG
->   KVM: X86: Fix single-step with KVM_SET_GUEST_DEBUG
->   KVM: selftests: Add KVM_SET_GUEST_DEBUG test
-> 
->  arch/x86/kvm/vmx/vmx.c                        |   2 +-
->  arch/x86/kvm/x86.c                            |   2 +-
->  tools/testing/selftests/kvm/Makefile          |   1 +
->  .../testing/selftests/kvm/include/kvm_util.h  |   2 +
->  tools/testing/selftests/kvm/lib/kvm_util.c    |   9 +
->  .../testing/selftests/kvm/x86_64/debug_regs.c | 180 ++++++++++++++++++
->  6 files changed, 194 insertions(+), 2 deletions(-)
->  create mode 100644 tools/testing/selftests/kvm/x86_64/debug_regs.c
-> 
+On Mon, May 4, 2020 at 7:09 PM Chris Chiu <chiu@endlessm.com> wrote:
+>
+> Hi,
+>     I have an Intel X5-Z8350 laptop which used to work fine on s2idle
+> enter/exit with kernel 5.3. After upgrading to kernel 5.4 and later,
+> the system can still exit s2idle by power button. However, if I try to
+> wake it up from a keystroke, the system will freeze and then no longer
+> respond even to the power button. I can only shut it down and power on
+> again.
+>
+>     I tried to 'git bisect' to find out which commit causes the
+> difference, it shows me the commit "ACPI: PM: s2idle: Prevent spurious
+> SCIs from waking up the system". My laptop can work as usual to exit
+> s2idle by a keystroke with reverting it on kernel 5.4.
+>
+>     Then I tried to check whether I can reproduce it on the latest
+> mainline kernel, the same problem still there. But I can not fix it by
+> simply reverting. I found the acpi_s2idle_wake() has been refined on
+> the latest mainline kernel, and I have to make modifications as
+> follows to make my laptop work.
 
-Queued, thanks.
+Thanks for the report, the issue evidently is EC-related.
 
-Paolo
+> @@ -1024,7 +1024,7 @@ static bool acpi_s2idle_wake(void)
+>                  * regarded as a spurious one.
+>                  */
+>                 if (!acpi_ec_dispatch_gpe())
+> -                       return false;
+> +                       return true;
 
+Have you tried commenting out simply removing the if () check and the
+following return statement?
+
+If not, can you please try this and see what happens?
+
+>
+>                 /*
+>                  * Cancel the wakeup and process all pending events in case
+>
