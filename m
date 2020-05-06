@@ -2,127 +2,201 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D60C4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EADC4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6320C20708
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 211CA208CA
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:44:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N5lLph8j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729981AbgEFQnN (ORCPT
+        id S1729996AbgEFQoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:43:13 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:59734 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727984AbgEFQnN (ORCPT
+        Wed, 6 May 2020 12:44:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43090 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727984AbgEFQoM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:43:13 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id CFD69804B9;
-        Wed,  6 May 2020 18:43:09 +0200 (CEST)
-Date:   Wed, 6 May 2020 18:43:08 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v5 4/6] drm/tegra: output: Support DRM bridges
-Message-ID: <20200506164308.GD19296@ravnborg.org>
-References: <20200418170703.1583-1-digetx@gmail.com>
- <20200418170703.1583-5-digetx@gmail.com>
+        Wed, 6 May 2020 12:44:12 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87B11C061A0F;
+        Wed,  6 May 2020 09:44:12 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id o16so1542270qtb.13;
+        Wed, 06 May 2020 09:44:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=t7CgGDakZ6HBwLoyEuXzHSsFPvnCyBpRS/YoqjnzK6M=;
+        b=N5lLph8jiTGnSBatLuURZEb4yy06JEJ+bZRmXyC1PWnHC8sDPqjgr3/SqpyoJZA1DC
+         oV9HWnMj/XijqO2WVyWHSfC72ZE3oPq2liwvU6O39+3dbXsr/JLoSGjs9t5KtgrlUi+a
+         iPqZtalYYRB58LucAh7ylY2zUFmfXyAtWTi+8Tr9RwLiO8ZkXzqwXmv9t2NA1xdqQLR9
+         h5pd0V50OWPI4ALsdQJFxYQ1uiqLAbRnHTCIv6FtAHsewcu7DjA1HNpPDiNsRI0GbKOL
+         ox4FgFawO0NA0InSmxWKyAoSWFW02HC5ivRfLwXYYOjSL4CkC4oKilvcQReqotv0gNCo
+         tn6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=t7CgGDakZ6HBwLoyEuXzHSsFPvnCyBpRS/YoqjnzK6M=;
+        b=TOXu13XYGRhWBKMSf6l4pexBZ0UbgXRJTm6+N6Y15d7nyJmbYPmbBjQJErUR/Jc6as
+         anVJ7RqEB4FROLIhgU9FCuGUHrldwwrPRXIWJDradlj16pZKTecNITZ3/eX6GZ+mjEPN
+         Dikz8SDOk/rg61ltsVp/X5xF43zo5AkWBSIQwujYXdamKV3ANPSMy9/Bu7A7xzDVcC5A
+         2NNHXAGwgPIApqqw6yWyQHAjAsd3FYZF9GulYhWO5GUzImCuK5teu5zchnv8lATn0Wbc
+         XS3mHpWDa48+Lwr05QYNAawNqirJxIkqQ8DOf72+NB6zB0vrqH4oewKpJrJgmtFia9nL
+         nnXA==
+X-Gm-Message-State: AGi0PuZHb6r510KrrnQfrn6SrbR1ZDOSsgf40JQiOQbI0rhF/xO1GOyA
+        0399zB/isACZ5luB+NegEBFHxW2TCbA=
+X-Google-Smtp-Source: APiQypLpWj1Wxz1UeUcc7dMbxUPCp3rCGxhahy7fC/kMvfQlUpBR02ObZReFLwHMP51ydu8/wM5n2g==
+X-Received: by 2002:ac8:2783:: with SMTP id w3mr8989034qtw.265.1588783451454;
+        Wed, 06 May 2020 09:44:11 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id c7sm2031704qko.55.2020.05.06.09.44.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 09:44:10 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id CBE2A409A3; Wed,  6 May 2020 13:44:08 -0300 (-03)
+Date:   Wed, 6 May 2020 13:44:08 -0300
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 1/3] perf-probe: Fix to check blacklist address correctly
+Message-ID: <20200506164408.GA4323@kernel.org>
+References: <158763965400.30755.14484569071233923742.stgit@devnote2>
+ <158763966411.30755.5882376357738273695.stgit@devnote2>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200418170703.1583-5-digetx@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8 a=7gkXJVJtAAAA:8 a=e5mUnYsNAAAA:8
-        a=EUr2AM-oRzLbqJR9WOUA:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
-        a=Vxmtnl_E_bksehYqCbjh:22
+In-Reply-To: <158763966411.30755.5882376357738273695.stgit@devnote2>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 08:07:01PM +0300, Dmitry Osipenko wrote:
-> Newer Tegra device-trees will specify a video output graph which involves
-> a bridge. This patch adds initial support for the DRM bridges to the Tegra
-> DRM output.
+Em Thu, Apr 23, 2020 at 08:01:04PM +0900, Masami Hiramatsu escreveu:
+> Fix to check kprobe blacklist address correctly with
+> relocated address by adjusting debuginfo address.
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+> Since the address in the debuginfo is same as objdump,
+> it is different from relocated kernel address with KASLR.
+> Thus, the perf-probe always misses to catch the
+> blacklisted addresses.
+
+Thanks, applied, sorry for the delay,
+
+- Arnaldo
+ 
+> Without this patch, perf probe can not detect the blacklist
+> addresses on KASLR enabled kernel.
+> 
+> =========
+>   # perf probe kprobe_dispatcher
+>   Failed to write event: Invalid argument
+>     Error: Failed to add events.
+> =========
+> 
+> With this patch, it correctly shows the error message.
+> 
+> =========
+>   # perf probe kprobe_dispatcher
+>   kprobe_dispatcher is blacklisted function, skip it.
+>   Probe point 'kprobe_dispatcher' not found.
+>     Error: Failed to add events.
+> =========
+> 
+> Fixes: 9aaf5a5f479b ("perf probe: Check kprobes blacklist when adding new events")
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: stable@vger.kernel.org
 > ---
->  drivers/gpu/drm/tegra/drm.h    |  2 ++
->  drivers/gpu/drm/tegra/output.c | 12 ++++++++++++
->  2 files changed, 14 insertions(+)
+>  tools/perf/util/probe-event.c |   21 +++++++++++++++------
+>  1 file changed, 15 insertions(+), 6 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/tegra/drm.h b/drivers/gpu/drm/tegra/drm.h
-> index 804869799305..cccd368b6752 100644
-> --- a/drivers/gpu/drm/tegra/drm.h
-> +++ b/drivers/gpu/drm/tegra/drm.h
-> @@ -12,6 +12,7 @@
->  #include <linux/of_gpio.h>
+> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+> index eea132f512b0..f75df63309be 100644
+> --- a/tools/perf/util/probe-event.c
+> +++ b/tools/perf/util/probe-event.c
+> @@ -102,7 +102,7 @@ void exit_probe_symbol_maps(void)
+>  	symbol__exit();
+>  }
 >  
->  #include <drm/drm_atomic.h>
-> +#include <drm/drm_bridge.h>
->  #include <drm/drm_edid.h>
->  #include <drm/drm_encoder.h>
->  #include <drm/drm_fb_helper.h>
-> @@ -116,6 +117,7 @@ struct tegra_output {
->  	struct device_node *of_node;
->  	struct device *dev;
->  
-> +	struct drm_bridge *bridge;
->  	struct drm_panel *panel;
->  	struct i2c_adapter *ddc;
->  	const struct edid *edid;
-> diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
-> index a6a711d54e88..ccd1421f1b24 100644
-> --- a/drivers/gpu/drm/tegra/output.c
-> +++ b/drivers/gpu/drm/tegra/output.c
-> @@ -5,6 +5,7 @@
->   */
->  
->  #include <drm/drm_atomic_helper.h>
-> +#include <drm/drm_of.h>
->  #include <drm/drm_panel.h>
->  #include <drm/drm_simple_kms_helper.h>
->  
-> @@ -99,8 +100,19 @@ int tegra_output_probe(struct tegra_output *output)
->  	if (!output->of_node)
->  		output->of_node = output->dev->of_node;
->  
-> +	err = drm_of_find_panel_or_bridge(output->of_node, -1, -1,
-> +					  &output->panel, &output->bridge);
-> +	if (err && err != -ENODEV)
-> +		return err;
+> -static struct ref_reloc_sym *kernel_get_ref_reloc_sym(void)
+> +static struct ref_reloc_sym *kernel_get_ref_reloc_sym(struct map **pmap)
+>  {
+>  	/* kmap->ref_reloc_sym should be set if host_machine is initialized */
+>  	struct kmap *kmap;
+> @@ -114,6 +114,10 @@ static struct ref_reloc_sym *kernel_get_ref_reloc_sym(void)
+>  	kmap = map__kmap(map);
+>  	if (!kmap)
+>  		return NULL;
 > +
->  	panel = of_parse_phandle(output->of_node, "nvidia,panel", 0);
->  	if (panel) {
+> +	if (pmap)
+> +		*pmap = map;
+> +
+>  	return kmap->ref_reloc_sym;
+>  }
+>  
+> @@ -125,7 +129,7 @@ static int kernel_get_symbol_address_by_name(const char *name, u64 *addr,
+>  	struct map *map;
+>  
+>  	/* ref_reloc_sym is just a label. Need a special fix*/
+> -	reloc_sym = kernel_get_ref_reloc_sym();
+> +	reloc_sym = kernel_get_ref_reloc_sym(NULL);
+>  	if (reloc_sym && strcmp(name, reloc_sym->name) == 0)
+>  		*addr = (reloc) ? reloc_sym->addr : reloc_sym->unrelocated_addr;
+>  	else {
+> @@ -745,6 +749,7 @@ post_process_kernel_probe_trace_events(struct probe_trace_event *tevs,
+>  				       int ntevs)
+>  {
+>  	struct ref_reloc_sym *reloc_sym;
+> +	struct map *map;
+>  	char *tmp;
+>  	int i, skipped = 0;
+>  
+> @@ -753,7 +758,7 @@ post_process_kernel_probe_trace_events(struct probe_trace_event *tevs,
+>  		return post_process_offline_probe_trace_events(tevs, ntevs,
+>  						symbol_conf.vmlinux_name);
+>  
+> -	reloc_sym = kernel_get_ref_reloc_sym();
+> +	reloc_sym = kernel_get_ref_reloc_sym(&map);
+>  	if (!reloc_sym) {
+>  		pr_warning("Relocated base symbol is not found!\n");
+>  		return -EINVAL;
+> @@ -764,9 +769,13 @@ post_process_kernel_probe_trace_events(struct probe_trace_event *tevs,
+>  			continue;
+>  		if (tevs[i].point.retprobe && !kretprobe_offset_is_supported())
+>  			continue;
+> -		/* If we found a wrong one, mark it by NULL symbol */
 > +		/*
-> +		 * Don't mix nvidia,panel phandle with the graph in a
-> +		 * device-tree.
+> +		 * If we found a wrong one, mark it by NULL symbol.
+> +		 * Since addresses in debuginfo is same as objdump, we need
+> +		 * to convert it to addresses on memory.
 > +		 */
-> +		WARN_ON(output->panel || output->bridge);
-> +
->  		output->panel = of_drm_find_panel(panel);
->  		of_node_put(panel);
->  
-> -- 
-> 2.26.0
+>  		if (kprobe_warn_out_range(tevs[i].point.symbol,
+> -					  tevs[i].point.address)) {
+> +			map__objdump_2mem(map, tevs[i].point.address))) {
+>  			tmp = NULL;
+>  			skipped++;
+>  		} else {
+> @@ -2936,7 +2945,7 @@ static int find_probe_trace_events_from_map(struct perf_probe_event *pev,
+>  	/* Note that the symbols in the kmodule are not relocated */
+>  	if (!pev->uprobes && !pev->target &&
+>  			(!pp->retprobe || kretprobe_offset_is_supported())) {
+> -		reloc_sym = kernel_get_ref_reloc_sym();
+> +		reloc_sym = kernel_get_ref_reloc_sym(NULL);
+>  		if (!reloc_sym) {
+>  			pr_warning("Relocated base symbol is not found!\n");
+>  			ret = -EINVAL;
 > 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+-- 
+
+- Arnaldo
