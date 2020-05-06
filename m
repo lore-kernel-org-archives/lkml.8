@@ -2,141 +2,153 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC2CC38A2A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C27AAC38A2A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9FA12076D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 920D020746
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:02:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aGCSAnRS"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LU/8X2og"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730414AbgEFWwf (ORCPT
+        id S1730323AbgEFXCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 18:52:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44312 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730252AbgEFWwb (ORCPT
+        Wed, 6 May 2020 19:02:01 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:58308 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730228AbgEFXCA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 18:52:31 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9420C061A10
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 15:52:31 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id o8so742616ybc.11
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 15:52:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=41sdg7Fqp0L398L6Jcqw7Uls0o1vtYT6lkwEqB/show=;
-        b=aGCSAnRS4ufZWa/Hdtn/oXVbdCAKXqMfRSovLmO4cTwAs5WGQ8G4K1Z5+bRDZrBStt
-         Z4qsWWWYcy9ro3d38qVZSmsAdSRqyVR699x1XRwL3ODJR/aJifJuKYrQ/BWpFP9oDa2m
-         icPtnh5okmjsKkslbzj30uAQV0GxFbJpTUERIcO86EBZeuFWPuJM5GHf7KMMeu9wptqe
-         1883/TqkOspDZKDqYSLKMcQxTEUKgi4uMcrSIs6k9LPI1RFpWA3tXnxZMQYK/EtqumFF
-         cBZBMNYSzl87gJRJN6fwCZDJOLbqx/QTWXm58pIaID7MZ7d+xm9kQWUhBeh6B702rux5
-         2DRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=41sdg7Fqp0L398L6Jcqw7Uls0o1vtYT6lkwEqB/show=;
-        b=aFM3JJbMdA/l9gNtJmmNzgGWRX3pmEGHCHrK9G/GVIXx2eIHKuaZ5Bqwy0ST87XHZd
-         BfRiZdvyPymtmbg4fTkXzWW3rba+Mx51DQkj/NbedgiMufixWKyz8ZPWi/oHMfKtkY/c
-         BvhohI93/aeGEpQYiE6dpUriYz265D+HkgId+zL28g0Ui3PqrxPkdGhhtRuTU3LGt6Em
-         votvwj16VoeG3/oAHHAgsKMoPxyKKy/bDMwgkquZpp63iL/Ov64NenEfggrGJFM2tZMi
-         DS5gz6f+ID3vnR+KZXh9IVayZ0Il/1O6nSaw/RifgP1NqTPxQLWBs4TBVKYJZQVDfPHc
-         NgGQ==
-X-Gm-Message-State: AGi0PubIUHoWjAnELPpIY0UuEGtxLeYOayu2WFlgNA+Zch+MAbnfJbPu
-        82/NusxrKoOh+twiq9Sz+UsoDWS54PZWK8QiBoWEQQ==
-X-Google-Smtp-Source: APiQypInNJQQLjZ8f+y1CbKBWXGiHGzJMFKsWtO22R4vKOoix4Z833p1QHbzPpyzlMm8cgkbKDtwY4H5oHleTblRWkY=
-X-Received: by 2002:a25:4443:: with SMTP id r64mr16715090yba.41.1588805550497;
- Wed, 06 May 2020 15:52:30 -0700 (PDT)
+        Wed, 6 May 2020 19:02:00 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046Mvl6A141076;
+        Wed, 6 May 2020 23:01:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=b20tuqEZWMS3xbLdEetDOfYwGb0aFxf2MGC5L4I9mYw=;
+ b=LU/8X2ogceI0aRT+iPTv3y5AR7MLQ/zyDBCGoRzr4SwwYatnyLviW1jD9bjOBDKl8X0a
+ RPGMy7xgjk02IbAU0EJKWCfdKLT+z8E0COtwjbl2DQ6Z90ky58g4JcYeTVnkT1jzx/B8
+ BwND+NE/JfVGsOB9Vt7xXNzT9C+kS0xOVsdpVojX7/Rix2hqmNTL8Ih/qmVJAyRLlIin
+ qZqdIoxI99AtH6j1ja84ShOOkKzN33V1oTroNRKrZWI22qdlVjvOhYpKKE0oAvD3UDq/
+ XROjiLpzwnZOgVk+9+Vo0HoLegAVKFUyxzajeHEooP53FCTP2tIVvwl74+6LxeH/nnmc hA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 30s1gncyrc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 May 2020 23:01:31 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046Mucts019798;
+        Wed, 6 May 2020 23:01:31 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 30us7numv8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 May 2020 23:01:31 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 046N1RGX018232;
+        Wed, 6 May 2020 23:01:27 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 06 May 2020 16:01:26 -0700
+Date:   Wed, 6 May 2020 19:01:48 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Tejun Heo <tj@kernel.org>, Zi Yan <ziy@nvidia.com>,
+        linux-crypto@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 6/7] mm: parallelize deferred_init_memmap()
+Message-ID: <20200506230148.44yytsociprgenf4@ca-dmjordan1.us.oracle.com>
+References: <20200430201125.532129-7-daniel.m.jordan@oracle.com>
+ <CAKgT0Uf7e5514SOi8dmkB5oXUK9bwqD_z-5KJ_F3MUn3CAQyPQ@mail.gmail.com>
+ <3C3C62BE-6363-41C3-834C-C3124EB3FFAB@joshtriplett.org>
+ <CAKgT0UdBv-Wj98P2wMFGDSihPLKWFsqpu77ZmO+eA51uteZ-Ag@mail.gmail.com>
+ <20200505014844.ulp4rtih7adtcicm@ca-dmjordan1.us.oracle.com>
+ <20200505020916.mve4ijrg4z5h7eh5@ca-dmjordan1.us.oracle.com>
+ <CAKgT0UdE1ex_aAyMeR3PWtVcmXL8cUtjqy0J8hLpnFm42yn82w@mail.gmail.com>
+ <20200506222127.l3p2a2vjavwz2bdl@ca-dmjordan1.us.oracle.com>
+ <CAKgT0UcZhnCtM4YP3L9kbtghNp9vOzSpVm5WC1164OVmRHLaMA@mail.gmail.com>
+ <20200506224335.gv3as7vuik3rtt5w@ca-dmjordan1.us.oracle.com>
 MIME-Version: 1.0
-References: <20200422220430.254014-1-irogers@google.com> <20200422220430.254014-6-irogers@google.com>
- <20200423112915.GH1136647@krava> <CAP-5=fU7=FvpRr+PMsc_xebiETBgbNcv7U2jX3pJT87X7LAdtQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fU7=FvpRr+PMsc_xebiETBgbNcv7U2jX3pJT87X7LAdtQ@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 6 May 2020 15:52:19 -0700
-Message-ID: <CAP-5=fXkQnXZKXKyJfpP6PM409J=DxhU4SvxiA5VcP6e7REdOg@mail.gmail.com>
-Subject: Re: [PATCH v2 05/11] perf expr: increase max other
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Haiyan Song <haiyanx.song@intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Paul Clarke <pc@us.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506224335.gv3as7vuik3rtt5w@ca-dmjordan1.us.oracle.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=0
+ mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005060183
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 mlxscore=0
+ spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005060183
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 7:23 AM Ian Rogers <irogers@google.com> wrote:
->
-> On Thu, Apr 23, 2020 at 4:29 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> >
-> > On Wed, Apr 22, 2020 at 03:04:24PM -0700, Ian Rogers wrote:
-> > > Large metrics such as Branch_Misprediction_Cost_SMT on x86 broadwell
-> > > need more space.
+On Wed, May 06, 2020 at 06:43:35PM -0400, Daniel Jordan wrote:
+> On Wed, May 06, 2020 at 03:36:54PM -0700, Alexander Duyck wrote:
+> > On Wed, May 6, 2020 at 3:21 PM Daniel Jordan <daniel.m.jordan@oracle.com> wrote:
 > > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > >  tools/perf/util/expr.h | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > On Tue, May 05, 2020 at 07:55:43AM -0700, Alexander Duyck wrote:
+> > > > One question about this data. What is the power management
+> > > > configuration on the systems when you are running these tests? I'm
+> > > > just curious if CPU frequency scaling, C states, and turbo are
+> > > > enabled?
 > > >
-> > > diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-> > > index 0938ad166ece..4938bfc608b7 100644
-> > > --- a/tools/perf/util/expr.h
-> > > +++ b/tools/perf/util/expr.h
-> > > @@ -2,7 +2,7 @@
-> > >  #ifndef PARSE_CTX_H
-> > >  #define PARSE_CTX_H 1
+> > > Yes, intel_pstate is loaded in active mode without hwp and with turbo enabled
+> > > (those power management docs are great by the way!) and intel_idle is in use
+> > > too.
 > > >
-> > > -#define EXPR_MAX_OTHER 20
-> > > +#define EXPR_MAX_OTHER 64
-> > >  #define MAX_PARSE_ID EXPR_MAX_OTHER
+> > > > I ask because that is what I have seen usually make the
+> > > > difference in these kind of workloads as the throughput starts
+> > > > dropping off as you start seeing the core frequency lower and more
+> > > > cores become active.
 > > >
-> > >  struct expr_parse_id {
-> > > --
-> > > 2.26.2.303.gf8c07b1a785-goog
-> > >
-> >
-> > ok, and we should probably start to think about what Andi suggested
-> > in here: https://lore.kernel.org/lkml/20200224210308.GQ160988@tassilo.jf.intel.com/
->
-> Agreed, a hash table would make sense. This was the smallest value
-> that would let the test on x86 pass.
+> > > If I follow, you're saying there's a chance performance would improve with the
+> > > above disabled, but how often would a system be configured that way?  Even if
+> > > it were faster, the machine is configured how it's configured, or am I missing
+> > > your point?
+> > 
+> > I think you might be missing my point. What I was getting at is that I
+> > know for performance testing sometimes C states and P states get
+> > disabled in order to get consistent results between runs, it sounds
+> > like you have them enabled though. I was just wondering if you had
+> > disabled them or not. If they were disabled then you wouldn't get the
+> > benefits of turbo and as such adding more cores wouldn't come at a
+> > penalty, while with it enabled the first few cores should start to
+> > slow down as they fell out of turbo mode. So it may be part of the
+> > reason why you are only hitting about 10x at full core count.
 
-Fwiw, I have done this based on tools/lib/bpf/hashmap.h in CLs
-following on from this patch set. I'm holding off sending so I can
-rebase on acme's perf/next when the CLs acked by Jirka land:
-https://lore.kernel.org/lkml/20200503221650.GA1916255@krava/
-The libbpf dependency for a hashmap is counter intuitive, so maybe
-there's something better to do there.
+I checked the memory bandwidth of the biggest system, the Skylake.  Couldn't
+find official specs for it, all I could quickly find were stream results from a
+blog post of ours that quoted a range of about 123-145 GB/s over both nodes
+when compiling with gcc.  That's with all CPUs.
 
-Thanks,
-Ian
-
-> Thanks,
-> Ian
->
-> > jirka
-> >
+Again using all CPUs, multithreaded page init is doing 41 GiB/s per node
+assuming it's just touching the 64 bytes of each page struct, so assuming
+there's more memory traffic than just struct page, it seems another part of the
+reason for only 10x is we're bottlenecked on memory bandwidth.
