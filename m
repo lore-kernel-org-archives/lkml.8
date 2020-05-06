@@ -2,127 +2,156 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E53C47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E039EC4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 751FF208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF70020936
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:14:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="TKAlvhn2"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UpM8Rhwj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729365AbgEFPMk (ORCPT
+        id S1729403AbgEFPOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:12:40 -0400
-Received: from mout.web.de ([212.227.17.12]:35243 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728991AbgEFPMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:12:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1588777951;
-        bh=0vnNfdzJ/+OWZAUbbv1VGEHAn+XpJdc7Movwb/kchIE=;
-        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
-        b=TKAlvhn2Slsp9eCiEUJrhH6dEnR2SATBKNjxuBNPLeHEbWZ0LR35v9/TyFy/b/r/m
-         rYeuI2koe9y1n/oqvlBS/rbhR2F4YgKayi1EalwZU/GfZj2EiCsyxJSZiGDpSRLlq9
-         A7ayYqyz2MVFykDSy+JwaBapqNnLh/+tLQwq0TFY=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.162.166]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1Mrfp8-1ikw5S3mCa-00njRL; Wed, 06
- May 2020 17:12:31 +0200
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, Guan Xuetao <gxt@pku.edu.cn>
-Subject: Re: [PATCH] i2c: puv3: Fix an error handling path in puv3_i2c_probe()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
-        linux-i2c@vger.kernel.org
-Message-ID: <dbdba794-a6d5-0f37-a675-389681b03c34@web.de>
-Date:   Wed, 6 May 2020 17:12:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 6 May 2020 11:14:51 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:37050 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729290AbgEFPOu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:14:50 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 046FEZiO005090;
+        Wed, 6 May 2020 10:14:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588778075;
+        bh=IdCq3HhGfnXfKkkCRXngzOs6oMP/9HZj8dRoQcBYPD4=;
+        h=From:To:CC:Subject:Date;
+        b=UpM8RhwjCOiyYW/f+2iUu+a9AQ0iY0A/4tMZ5v1PsuBxtSP9O+L77yuzPriBqmGSY
+         5QyLVMMh31ySXmxbUgstorR1nfMwZa4HvSw5B8RYdq4vzLzFzo5FdNZshYhWuxbuI7
+         pBhJji5t7BE6V4AXXrKM+HldYu2yaSlbAAElFvVk=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 046FEYnI099464
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 6 May 2020 10:14:34 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 6 May
+ 2020 10:14:34 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 6 May 2020 10:14:34 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 046FEUg6119457;
+        Wed, 6 May 2020 10:14:31 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Tom Joseph <tjoseph@cadence.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kishon@ti.com>
+Subject: [PATCH v4 00/14] Add PCIe support to TI's J721E SoC
+Date:   Wed, 6 May 2020 20:44:15 +0530
+Message-ID: <20200506151429.12255-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:9ul9Wt4bi9vTI+Xdpp6hNw8iF0jYpvI946iI07Uyo0yQn1u7eUM
- WBX/f9iHYrz3y8aUVA0tRgWtCGS/UCFX69gSoUnKWBV5ha/c+Xn6KVLr5gRPpbmMbVYymah
- XTHhcoVf9hFw7XVuDIGWAMViIuOSi6nTeUGXeFFCBqKP2ha3xPiDt1bkLBh1fDP5kwqfuor
- BMgM/EIXEO8Tt3XarfWNg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:UKhtddFYyaY=:l9cblQXDdoNFN/P9WToy95
- RMsIi2Drvz9BDN7Ab9XX/NS8XgWXKRZT7lN/dcyE+Czb/x7+OKRXESUVjw5M9wNgcJWB6Ev+Y
- mBFRC1URmjmIWem2/cK6Pkp+rXpgcjdTCLxBjDuINpCjLiSyUYQ4HFz1NKeyBlyUlmODs1FjT
- dRG7o8M4d7jgq3gBRLO9/eQbdcNEYwxIdd6xTsNR3WMfGL29jXFOnau0okYXx8cO4J3O9Hovs
- wl5ACzFvK7RuKIUIMEUjBYSbTssJ+rDT96fqx6B9+Loz9RJj++nAUTEvlY0rS4DWj4SETjJOu
- gbddurAF4VEWEHAHdaV0sfAfJ/+gNJ0YM+1nGrlr/BbV+Gs3hWfCPkkrprVklrq8b+ehv+6kd
- T0zexFGFemKOEkj/KlsmCADeii46BnCrXJ5fDGvwt6SvhNys25pecgHrk/bnzRosMkLaowtvo
- C/sqshCd8urg5mNq29x4PXJge3b/z+hx5CH0CzTM6I5fnuknTPXdhhk+qcMZYa2z0QzqgdNsP
- oroE5Z8NB0nCUnWvNDR//I7qI1NXKrwDu91LJPa86fnQV2mNeMg7k93wPfeazwbAZhTmWsvkb
- dZjPddPlyRQRui3BkXInmj+0WAOcfnTRXF8ptPwxIuPpUyZGi8yGYzPkNmIKKblEw3UFCa9zS
- stcMSSoyFGlhbLp3itJMQbJHaLJ9sq+bev4wmCv6H+IIVBjp0453cPF3RJ6vVJxyWmUlRLbNb
- nZXbg/fpXVERXvN9ETnFbGjt++JoHGWSegOI1RQRr660Ce0I8AOInBnjBXXX6lTUrUyPzzmZF
- iSNT2uDzd96QnGXIcGdNSQ5vyL71Yq1C0zhjCzRK3P5cC6cpX5vPwojJcrE0QMUc+X05E6LyE
- e5MzqwkFgVs54jNmuvN8NBk9C6cOWRZuwTU9bbUJisHJcbje6IJudQ2zEOUkEMAXcyFLVkziv
- 7EQWrKMV9YeAuogPch2co0N8zufmmH3g0sx+lefEwgj1bPxNiJnuMzeqL+LR+gMYLi1s+v53g
- CBmtF1W+rjvPnVAkHhMtpQX2frllQpJKb6pBoznpNeq1GsFrosoucLWGGDwZnyXHkSMoPWEm6
- RU0/yjOSKfS9kEhpBt53GiS7IxIywFSzadEzQcRk3QGz0syLchDPs8GoGClP83erhaMUf9K2n
- Sh7qifpF6aupSg+fbCwGppUgPjdBkD/j2bFBX1kvTN9C0vymksvK9iizD3jyOQ9TYESB8ki1h
- a16pJAyY2yPutt1fS
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> There is a spurious 'put_device()' in the remove function.
+TI's J721E SoC uses Cadence PCIe core to implement both RC mode
+and EP mode.
 
-Do you find differences in the clean-up of system resources suspicious
-between the implementations of the functions =E2=80=9Cpuv3_i2c_remove=E2=
-=80=9D and =E2=80=9Cpuv3_i2c_probe=E2=80=9D?
+The high level features are:
+  *) Supports Legacy, MSI and MSI-X interrupt
+  *) Supports upto GEN4 speed mode
+  *) Supports SR-IOV
+  *) Supports multiple physical function
+  *) Ability to route all transactions via SMMU
 
-Regards,
-Markus
+This patch series
+  *) Add support in Cadence PCIe core to be used for TI's J721E SoC
+  *) Add a driver for J721E PCIe wrapper
+
+v1 of the series can be found @ [1]
+v2 of the series can be found @ [2]
+v3 of the series can be found @ [5]
+
+Changes from v3:
+1) Changed the order of files in MAINTAINTERS file to fix Joe's comments
+2) Fixed indentation and added Reviewed-by: Rob Herring <robh@kernel.org>
+3) Cleaned up computing msix_tbl
+4) Fixed RobH's comment on J721E driver
+
+Changes from v2:
+1) Converting Cadence binding to YAML schema was done as a 
+   separate series [3] & [4]. [3] is merged and [4] is
+   pending.
+2) Included MSI-X support in this series
+3) Added link down interrupt handling (only error message)
+4) Rebased to latest 5.7-rc1
+5) Adapted TI J721E binding to [3] & [4] 
+
+Changes from v1:
+1) Added DT schemas cdns-pcie-host.yaml, cdns-pcie-ep.yaml and
+   cdns-pcie.yaml for Cadence PCIe core and included it in
+   TI's PCIe DT schema.
+2) Added cpu_addr_fixup() for Cadence Platform driver.
+3) Fixed subject/description/renamed functions as commented by
+   Andrew Murray.
+
+[1] -> http://lore.kernel.org/r/20191209092147.22901-1-kishon@ti.com
+[2] -> http://lore.kernel.org/r/20200106102058.19183-1-kishon@ti.com
+[3] -> http://lore.kernel.org/r/20200305103017.16706-1-kishon@ti.com
+[4] -> http://lore.kernel.org/r/20200417114322.31111-1-kishon@ti.com
+[5] -> http://lore.kernel.org/r/20200417125753.13021-1-kishon@ti.com
+
+Alan Douglas (1):
+  PCI: cadence: Add MSI-X support to Endpoint driver
+
+Kishon Vijay Abraham I (13):
+  PCI: cadence: Fix cdns_pcie_{host|ep}_setup() error path
+  linux/kernel.h: Add PTR_ALIGN_DOWN macro
+  PCI: cadence: Add support to use custom read and write accessors
+  PCI: cadence: Add support to start link and verify link status
+  PCI: cadence: Add read/write accessors to perform only 32-bit accesses
+  PCI: cadence: Allow pci_host_bridge to have custom pci_ops
+  PCI: cadence: Add new *ops* for CPU addr fixup
+  PCI: cadence: Fix updating Vendor ID and Subsystem Vendor ID register
+  dt-bindings: PCI: Add host mode dt-bindings for TI's J721E SoC
+  dt-bindings: PCI: Add EP mode dt-bindings for TI's J721E SoC
+  PCI: j721e: Add TI J721E PCIe driver
+  misc: pci_endpoint_test: Add J721E in pci_device_id table
+  MAINTAINERS: Add Kishon Vijay Abraham I for TI J721E SoC PCIe
+
+ .../bindings/pci/ti,j721e-pci-ep.yaml         |  89 ++++
+ .../bindings/pci/ti,j721e-pci-host.yaml       | 113 ++++
+ MAINTAINERS                                   |   4 +-
+ drivers/misc/pci_endpoint_test.c              |   9 +
+ drivers/pci/controller/cadence/Kconfig        |  23 +
+ drivers/pci/controller/cadence/Makefile       |   1 +
+ drivers/pci/controller/cadence/pci-j721e.c    | 492 ++++++++++++++++++
+ .../pci/controller/cadence/pcie-cadence-ep.c  | 125 ++++-
+ .../controller/cadence/pcie-cadence-host.c    |  59 ++-
+ .../controller/cadence/pcie-cadence-plat.c    |  13 +
+ drivers/pci/controller/cadence/pcie-cadence.c |  48 +-
+ drivers/pci/controller/cadence/pcie-cadence.h | 158 +++++-
+ include/linux/kernel.h                        |   1 +
+ 13 files changed, 1093 insertions(+), 42 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+ create mode 100644 drivers/pci/controller/cadence/pci-j721e.c
+
+-- 
+2.17.1
+
