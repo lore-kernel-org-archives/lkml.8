@@ -1,120 +1,72 @@
-Return-Path: <SRS0=e3tL=6T=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52AF4C47254
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D6D8C47247
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 00:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2507E206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 May 2020 23:59:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dR428xa5"
+	by mail.kernel.org (Postfix) with ESMTP id E6D7C20752
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 00:00:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588723206;
+	bh=T+9FucEjzlqEq7iY5IxvUC9kEJdDWt/xNoEqIXS8dxA=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=SditRxf9BQoQ+yAAdLOPkrNkbRl1ym/K2kcK9Jg7iBw4fZIs2aUcEzC/1G34EliEA
+	 EhKEURvcp1l2y536OwRl2QVxP0eptshNH0PQ8aHRkGaC0HaZogNiw28v7NnHiVW1EK
+	 g4fUpFaKudMW/R7sf0ctDh97TeNERSatsa+BkrDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729612AbgEEX7z (ORCPT
+        id S1729633AbgEFAAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 19:59:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55918 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728875AbgEEX7y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 19:59:54 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCB6FC061A0F;
-        Tue,  5 May 2020 16:59:54 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id c3so3299015otp.8;
-        Tue, 05 May 2020 16:59:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M/lOXwJ10lZREjH/g0nBHnRAQAxDlzXtqSNjgFSkMmY=;
-        b=dR428xa5XKa4gysK0zL+lRz9rkpXqI7TLC1PUnRmhcGUU4RtTcCOdSrHvB3Ouqd1xI
-         9HTlwQXl8kQY9tIToyHqvb874JrRAeNX/MXafaq6hJIro/mudyF75ROZo0AQ9V4lGFT1
-         t+QFnAnfZx8JxmcPZMNNVJar1Navzxsca+uNgfuwbL7vMgKUt2OSFhA8kDMOXOmd/bsZ
-         1EBdehvkuMw2cVSVZ2fg3Ssb68lOlJyf0PJkIGQpA9WlCt3F6u4S8ziZiL+XM/t8lUoq
-         b6gl4TuLYyFe+SAnkrj2dh6APEoqsWiejVzy0tp7SyIpf17OvZQQSLriI3WuFm1m1gbe
-         c3mA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M/lOXwJ10lZREjH/g0nBHnRAQAxDlzXtqSNjgFSkMmY=;
-        b=a4j5RVd7+K+USkxNwKmcgLcmNTkEpCRF2yEm9nK8O3YaU/vjPHwoL2uJhAlfrDydwY
-         AVPEFjrL4G4S1/zX8xGXHvawfDp6pdxXXBSWPXh5VF4J+cDN6WAwKU/v/pwFHaJ7qxLb
-         j3JyCkSjTOqs9kHkucfk2JnokY4dkIlK6WtxJXiAFxBxeooBF7iiPyEixnezoLtEdfc/
-         N89wfYGik3873On59JrZhNhXagg3RUGoJEhi2MCgbO4diJtSODfNecHc+lvIi5PicvOx
-         dc2HW4ER9clmFCn6TCGCBKAcCAwivA2cYP5IGxM8bEk6VichDn/TdUqcZMxowPNwQZes
-         A4Ww==
-X-Gm-Message-State: AGi0PuZ8lahE3IkB9qxGnjkASXMTO1h5ZQPB0vAWrk5g35UB9F47TeKd
-        AgrgWlS6BrqltcP1uj2+GmLAvLDDyeap6PTU+vfUFi1i
-X-Google-Smtp-Source: APiQypK5yu0INLelHDFEoDo2+85jy01veAwNyMWOG+XMporp0ozwgFbu+F8lCl/ZC3al+2cvPkWwB3ZetGlbfobhZ6A=
-X-Received: by 2002:a9d:57cb:: with SMTP id q11mr4639813oti.11.1588723194213;
- Tue, 05 May 2020 16:59:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200414115512.1.I9dd050ead919f2cc3ef83d4e866de537c7799cf3@changeid>
- <DF70A2DA-9E5F-4524-8F20-2EC7CF70597F@holtmann.org>
-In-Reply-To: <DF70A2DA-9E5F-4524-8F20-2EC7CF70597F@holtmann.org>
-From:   Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date:   Tue, 5 May 2020 16:59:43 -0700
-Message-ID: <CABBYNZ+1XLttkvoBzLR6iCguB2Atrr0+PA5isnD9Cg2af2TFKA@mail.gmail.com>
-Subject: Re: [PATCH] Bluetooth: Terminate the link if pairing is cancelled
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     Manish Mandlik <mmandlik@google.com>,
-        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
-        ChromeOS Bluetooth Upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        Alain Michaud <alainm@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
+        Tue, 5 May 2020 20:00:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51640 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728875AbgEFAAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 20:00:05 -0400
+Subject: Re: [GIT PULL] platform-drivers-x86 for 5.7-2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588723205;
+        bh=T+9FucEjzlqEq7iY5IxvUC9kEJdDWt/xNoEqIXS8dxA=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=GbwNGao5RRp188D0y9L7nY9k0pzg/9YBTAwoR5SUUyPxoBKbKqZ/eNSoH0fvSqfdF
+         fEQyOFtYPdD6B79NMH9aLvKgn1uYi2euCZq6l/fQyis5opi4syBV16d5t2OM1jWAVq
+         V6NOpD9B+yblrSU7Ti45A+nN09SSvzanu45gVEYo=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200505172104.GA1157275@smile.fi.intel.com>
+References: <20200505172104.GA1157275@smile.fi.intel.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200505172104.GA1157275@smile.fi.intel.com>
+X-PR-Tracked-Remote: git://git.infradead.org/linux-platform-drivers-x86.git
+ tags/platform-drivers-x86-v5.7-2
+X-PR-Tracked-Commit-Id: f8a31eca47bec197f5ec5dc40ad675450c2058a5
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: dc56c5acd8505e1e7f776d62650f3850ad2ce8e7
+Message-Id: <158872320548.717.7313717404519876849.pr-tracker-bot@kernel.org>
+Date:   Wed, 06 May 2020 00:00:05 +0000
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Manish, Marcel,
+The pull request you sent on Tue, 5 May 2020 20:21:04 +0300:
 
-On Tue, Apr 28, 2020 at 2:38 AM Marcel Holtmann <marcel@holtmann.org> wrote:
->
-> Hi Manish,
->
-> > If user decides to cancel ongoing pairing process (e.g. by clicking
-> > the cancel button on the pairing/passkey window), abort any ongoing
-> > pairing and then terminate the link.
-> >
-> > Signed-off-by: Manish Mandlik <mmandlik@google.com>
-> > ---
-> > Hello Linux-Bluetooth,
-> >
-> >  This patch aborts any ongoing pairing and then terminates the link
-> >  by calling hci_abort_conn() in cancel_pair_device() function.
-> >
-> >  However, I'm not very sure if hci_abort_conn() should be called here
-> >  in cancel_pair_device() or in smp for example to terminate the link
-> >  after it had sent the pairing failed PDU.
-> >
+> git://git.infradead.org/linux-platform-drivers-x86.git tags/platform-drivers-x86-v5.7-2
 
-Id recommend leaving the hci_abort_conn out since that is a policy
-decision the userspace should be in charge to decide if the link
-should be disconnected or not.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/dc56c5acd8505e1e7f776d62650f3850ad2ce8e7
 
-> >  Please share your thoughts on this.
->
-> I am look into this. Just bare with me for a bit to verify the call chain.
->
-> Regards
->
-> Marcel
->
-
+Thank you!
 
 -- 
-Luiz Augusto von Dentz
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
