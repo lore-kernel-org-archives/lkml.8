@@ -2,61 +2,82 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 759AEC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 916E5C47257
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 492A02075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B6E1207DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:50:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730090AbgEFVuU (ORCPT
+        id S1730129AbgEFVuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 17:50:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34610 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728888AbgEFVuU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 17:50:20 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39E79C061A0F;
-        Wed,  6 May 2020 14:50:20 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id B6B831273C3A6;
-        Wed,  6 May 2020 14:50:16 -0700 (PDT)
-Date:   Wed, 06 May 2020 14:50:15 -0700 (PDT)
-Message-Id: <20200506.145015.1852712055909777150.davem@davemloft.net>
-To:     antoine.tenart@bootlin.com
-Cc:     sd@queasysnail.net, mstarovoitov@marvell.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: macsec: fix rtnl locking issue
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200506135830.587297-1-antoine.tenart@bootlin.com>
-References: <20200506135830.587297-1-antoine.tenart@bootlin.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 06 May 2020 14:50:17 -0700 (PDT)
+        Wed, 6 May 2020 17:50:50 -0400
+Received: from mga07.intel.com ([134.134.136.100]:37627 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728888AbgEFVuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 17:50:50 -0400
+IronPort-SDR: y3MzUdw3dkY54h0YwHTpUJomQUweU4DP0C14xEAFPSRk5SbEG0CHSHQDrzfRuN3ybDAr8XEokQ
+ hnRQ2pqHS7bA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 14:50:49 -0700
+IronPort-SDR: 5G8XdY4tOiPdm5joHaumsRQOl1rwSd60LdKvY92emy6QysvcKS/4UQOijPUKbKzaZgoKC1GklO
+ WmCLCGbaYPQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,360,1583222400"; 
+   d="scan'208";a="249902291"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga007.fm.intel.com with ESMTP; 06 May 2020 14:50:48 -0700
+Date:   Wed, 6 May 2020 14:50:48 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com
+Subject: Re: [PATCH v29 14/20] x86/sgx: ptrace() support for the SGX driver
+Message-ID: <20200506215048.GJ3329@linux.intel.com>
+References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
+ <20200421215316.56503-15-jarkko.sakkinen@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421215316.56503-15-jarkko.sakkinen@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antoine Tenart <antoine.tenart@bootlin.com>
-Date: Wed,  6 May 2020 15:58:30 +0200
-
-> netdev_update_features() must be called with the rtnl lock taken. Not
-> doing so triggers a warning, as ASSERT_RTNL() is used in
-> __netdev_update_features(), the first function called by
-> netdev_update_features(). Fix this.
+On Wed, Apr 22, 2020 at 12:53:10AM +0300, Jarkko Sakkinen wrote:
+> Add VMA callbacks for ptrace() that can be used with debug enclaves.
+> With debug enclaves data can be read and write the memory word at a time
+> by using ENCLS(EDBGRD) and ENCLS(EDBGWR) leaf instructions.
 > 
-> Fixes: c850240b6c41 ("net: macsec: report real_dev features when HW offloading is enabled")
-> Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> ---
+>  arch/x86/kernel/cpu/sgx/encl.c | 88 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 88 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/cpu/sgx/encl.c b/arch/x86/kernel/cpu/sgx/encl.c
+> index fe7dbca40bb4..0c5ea2968868 100644
+> --- a/arch/x86/kernel/cpu/sgx/encl.c
+> +++ b/arch/x86/kernel/cpu/sgx/encl.c
+> @@ -326,6 +326,7 @@ int sgx_encl_may_map(struct sgx_encl *encl, unsigned long start,
+>  	return 0;
+>  }
+>  
+> +
 
-Applied, thank you.
+Unnecessary whitespace change.
+
+>  static int sgx_vma_mprotect(struct vm_area_struct *vma, unsigned long start,
+>  			    unsigned long end, unsigned long prot)
+>  {
