@@ -2,218 +2,190 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B831C38A2A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CACC47257
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D79A92075A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:16:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5234E2075A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:17:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lzkk0XPi"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YYwwgrSQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729876AbgEFVQG (ORCPT
+        id S1729798AbgEFVRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 17:16:06 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50440 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730010AbgEFVQC (ORCPT
+        Wed, 6 May 2020 17:17:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728888AbgEFVRb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 17:16:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588799760;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=7DyNQyHWzxz6uGwnYuDMaMxKcoBgqV2azBIQN2WlEbE=;
-        b=Lzkk0XPiz/rIXY4mx8nYhnQW8pyi26qpHoaa0SQPPc/BeUO94nhrTXSXtKx3Pk18IO0H9L
-        b2YDMyghovFz1V4akvz85RAyctfe6M4N4tE79YoFh1UNK4OPOH/wbdRNFOO+8X0SRaV9Kf
-        m/THqYpyonKQjgM+UoEoy8ed9wvH4Gg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-368-4EyUww1uN9-HEr2kbOQ9Eg-1; Wed, 06 May 2020 17:15:56 -0400
-X-MC-Unique: 4EyUww1uN9-HEr2kbOQ9Eg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 854D1A0BD8;
-        Wed,  6 May 2020 21:15:54 +0000 (UTC)
-Received: from treble (ovpn-115-96.rdu2.redhat.com [10.10.115.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B71E4707A5;
-        Wed,  6 May 2020 21:15:49 +0000 (UTC)
-Date:   Wed, 6 May 2020 16:15:47 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, pbonzini@redhat.com,
-        mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH v4 16/18] static_call: Allow early init
-Message-ID: <20200506211547.2vnuhkfzhgbi27dm@treble>
-References: <20200501202849.647891881@infradead.org>
- <20200501202944.706674211@infradead.org>
+        Wed, 6 May 2020 17:17:31 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30AFEC061A41
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 14:17:31 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id b8so991213plm.11
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 14:17:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bHL3TCbZSVY2fY8pK4XpL92L8KHu3Q1pRXqDpleq+io=;
+        b=YYwwgrSQvQ9dTd1lotXO8pdQekhEC2A1cd0Sx4H5u9eyKmscleQOuRfvk8MoYW80cU
+         0Ch/u9M3kotYkExS+646CjlVMuQYoUSUZNUfJ2mmRvudHnmG9c2neAaeLpSB5c74ZjbF
+         LADPNADiw6WfWiGIUGy8MgNcS6UTYgRNw4nrs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bHL3TCbZSVY2fY8pK4XpL92L8KHu3Q1pRXqDpleq+io=;
+        b=jncDLOjQ9td0FKw5gxZJ11WDCXXjRE8RZGzn/LIm7etakxggxDY512jIwj/lX1o/VG
+         +0SlEFgi+D9hJsEMkNJmZ1GpXzedi2E2XnfTDgPu+IwlqdpOuffCPNETOiRtTNSHyK+g
+         /oW7qSoTk2rLvWssrgNYUgWlHzxIY8Nwc7qUbc+T1Ed11DERy9HXpd8ABgBK1RyJK7Y0
+         Qk3wkSeBp4sAHHRyHOIzoMcCWbKmqpq09Pl0qZdKiric1Qj3dn1LCJCzVZETx0EQLV6j
+         UmhoguZ+R/habsHLsuCNHJNXepcNQPFyxniGykqnkivP3+OKxauo++VTgIeMb5kRS/Is
+         /j7A==
+X-Gm-Message-State: AGi0PuZb4tXju01JPzK0hCwlfPEUX3JFdQ3k6ImCQkKqnrI8/5gpkvy7
+        nXIe5RwvFIeU34SINRUmYXG8zA==
+X-Google-Smtp-Source: APiQypIO+MV5rfj61rKq9gZ6jFXrGGOrTEad7gG6HHHLb2+aMV1Qk523+Rt+BnExFpt2ko7aQbfPSQ==
+X-Received: by 2002:a17:90b:19d6:: with SMTP id nm22mr8651002pjb.225.1588799850551;
+        Wed, 06 May 2020 14:17:30 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id g184sm2667391pfb.80.2020.05.06.14.17.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 14:17:29 -0700 (PDT)
+Date:   Wed, 6 May 2020 14:17:28 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>, jmorris@namei.org,
+        sashal@kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 4/6] pstore/ram: Introduce max_reason and convert
+ dump_oops
+Message-ID: <202005061416.4A6114910@keescook>
+References: <20200506211523.15077-1-keescook@chromium.org>
+ <20200506211523.15077-5-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200501202944.706674211@infradead.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <20200506211523.15077-5-keescook@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 10:29:05PM +0200, Peter Zijlstra wrote:
-> In order to use static_call() to wire up x86_pmu, we need to
-> initialize earlier; copy some of the tricks from jump_label to enable
-> this.
+On Wed, May 06, 2020 at 02:15:21PM -0700, Kees Cook wrote:
+> From: Pavel Tatashin <pasha.tatashin@soleen.com>
 > 
-> Primarily we overload key->next to store a sites pointer when there
-> are no modules, this avoids having to use kmalloc() to initialize the
-> sites and allows us to run much earlier.
+> Now that pstore_register() can correctly pass max_reason to the kmesg
+> dump facility, introduce a new "max_reason" module parameter and
+> "max-reason" Device Tree field.
 > 
-> (arguably, this is much much earlier than needed for perf, but it
-> might allow other uses.)
+> The "dump_oops" module parameter and "dump-oops" Device
+> Tree field are now considered deprecated, but are now automatically
+> converted to their corresponding max_reason values when present, though
+> the new max_reason setting has precedence.
 > 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> For struct ramoops_platform_data, the "dump_oops" member is entirely
+> replaced by a new "max_reason" member, with the only existing user
+> updated in place.
+> 
+> Additionally remove the "reason" filter logic from ramoops_pstore_write(),
+> as that is not specifically needed anymore, though technically
+> this is a change in behavior for any ramoops users also setting the
+> printk.always_kmsg_dump boot param, which will cause ramoops to behave as
+> if max_reason was set to KMSG_DUMP_MAX.
+> 
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Link: https://lore.kernel.org/r/20200505154510.93506-4-pasha.tatashin@soleen.com
+> Link: https://lore.kernel.org/r/20200505154510.93506-5-pasha.tatashin@soleen.com
+> Co-developed-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->  arch/x86/kernel/setup.c       |    2 +
->  arch/x86/kernel/static_call.c |    8 +++++-
->  include/linux/static_call.h   |   15 ++++++++++--
->  kernel/static_call.c          |   52 +++++++++++++++++++++++++++++++++++++++---
->  4 files changed, 71 insertions(+), 6 deletions(-)
+>  Documentation/admin-guide/ramoops.rst     | 14 +++++--
+>  drivers/platform/chrome/chromeos_pstore.c |  2 +-
+>  fs/pstore/ram.c                           | 51 +++++++++++++++--------
+>  include/linux/pstore_ram.h                |  2 +-
+>  4 files changed, 45 insertions(+), 24 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/ramoops.rst b/Documentation/admin-guide/ramoops.rst
+> index 6dbcc5481000..a60a96218ba9 100644
+> --- a/Documentation/admin-guide/ramoops.rst
+> +++ b/Documentation/admin-guide/ramoops.rst
+> @@ -32,11 +32,17 @@ memory to be mapped strongly ordered, and atomic operations on strongly ordered
+>  memory are implementation defined, and won't work on many ARMs such as omaps.
+>  
+>  The memory area is divided into ``record_size`` chunks (also rounded down to
+> -power of two) and each oops/panic writes a ``record_size`` chunk of
+> +power of two) and each kmesg dump writes a ``record_size`` chunk of
+>  information.
+>  
+> -Dumping both oopses and panics can be done by setting 1 in the ``dump_oops``
+> -variable while setting 0 in that variable dumps only the panics.
+> +Limiting which kinds of kmsg dumps are stored can be controlled via
+> +the ``max_reason`` value, as defined in include/linux/kmsg_dump.h's
+> +``enum kmsg_dump_reason``. For example, to store both Oopses and Panics,
+> +``max_reason`` should be set to 2 (KMSG_DUMP_OOPS), to store only Panics
+> +``max_reason`` should be set to 1 (KMSG_DUMP_PANIC). Setting this to 0
+> +(KMSG_DUMP_UNDEF), means the reason filtering will be controlled by the
+> +``printk.always_kmsg_dump`` boot param: if unset, it'll be KMSG_DUMP_OOPS,
+> +otherwise KMSG_DUMP_MAX.
+>  
+>  The module uses a counter to record multiple dumps but the counter gets reset
+>  on restart (i.e. new dumps after the restart will overwrite old ones).
+> @@ -90,7 +96,7 @@ Setting the ramoops parameters can be done in several different manners:
+>          .mem_address            = <...>,
+>          .mem_type               = <...>,
+>          .record_size            = <...>,
+> -        .dump_oops              = <...>,
+> +        .max_reason             = <...>,
+>          .ecc                    = <...>,
+>    };
+>  
+> diff --git a/drivers/platform/chrome/chromeos_pstore.c b/drivers/platform/chrome/chromeos_pstore.c
+> index d13770785fb5..fa51153688b4 100644
+> --- a/drivers/platform/chrome/chromeos_pstore.c
+> +++ b/drivers/platform/chrome/chromeos_pstore.c
+> @@ -57,7 +57,7 @@ static struct ramoops_platform_data chromeos_ramoops_data = {
+>  	.record_size	= 0x40000,
+>  	.console_size	= 0x20000,
+>  	.ftrace_size	= 0x20000,
+> -	.dump_oops	= 1,
+> +	.max_reason	= KMSG_DUMP_OOPS,
+>  };
+>  
+>  static struct platform_device chromeos_ramoops = {
+> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+> index c2f76b650f91..b8dac1d04e96 100644
+> --- a/fs/pstore/ram.c
+> +++ b/fs/pstore/ram.c
+> @@ -57,10 +57,15 @@ module_param(mem_type, uint, 0600);
+>  MODULE_PARM_DESC(mem_type,
+>  		"set to 1 to try to use unbuffered memory (default 0)");
+>  
+> -static int dump_oops = 1;
+> -module_param(dump_oops, int, 0600);
+> +static int ramoops_dump_oops = -1;
+> +module_param_named(dump_oops, ramoops_dump_oops, int, 0400);
+>  MODULE_PARM_DESC(dump_oops,
+> -		"set to 1 to dump oopses, 0 to only dump panics (default 1)");
+> +		 "set to 1 to dump oopses & panics, 0 to only dump panics (deprecated: use max_reason instead)");
+> +
+> +static int ramoops_max_reason = KMESG_DUMP_OOPS;
 
-This doesn't work when the key is defined in a module.  In
-__static_call_update(), first.site_mod->mod is NULL, but
-static_call_key_sites() points to the module's call sites.
+This is what I get for a "quick change right before sending". This
+is a typo and should be KMSG_DUMP_OOPS. :|
 
-This seems to fix it (sorry, also has the 'next' -> 'mods' rename).
-The actual fix is in static_call_key_sites() and static_call_key_mods().
-
-diff --git a/include/linux/static_call.h b/include/linux/static_call.h
-index e112553cfce6..ee55075707f1 100644
---- a/include/linux/static_call.h
-+++ b/include/linux/static_call.h
-@@ -110,9 +110,10 @@ struct static_call_mod {
- struct static_call_key {
- 	void *func;
- 	union {
--		/* bit0 => 0 - next, 1 - sites */
-+		/* bit 0: 0 = mods; 1 = sites */
- 		unsigned long type;
--		struct static_call_mod *next;
-+
-+		struct static_call_mod *mods;
- 		struct static_call_site *sites;
- 	};
- };
-diff --git a/kernel/static_call.c b/kernel/static_call.c
-index 783953db28c4..d78e50c5b8a3 100644
---- a/kernel/static_call.c
-+++ b/kernel/static_call.c
-@@ -94,23 +94,23 @@ static inline void static_call_sort_entries(struct static_call_site *start,
- 	     static_call_site_cmp, static_call_site_swap);
- }
- 
--static inline bool static_call_key_has_next(struct static_call_key *key)
-+static inline bool static_call_key_has_mods(struct static_call_key *key)
- {
- 	return !(key->type & 1);
- }
- 
--static inline struct static_call_mod *static_call_key_next(struct static_call_key *key)
-+static inline struct static_call_mod *static_call_key_mods(struct static_call_key *key)
- {
--	if (static_call_key_has_next(key))
--		return key->next->next;
-+	if (!static_call_key_has_mods(key))
-+		return NULL;
- 
--	return NULL;
-+	return key->mods;
- }
- 
- static inline struct static_call_site *static_call_key_sites(struct static_call_key *key)
- {
--	if (static_call_key_has_next(key))
--		return key->next->sites;
-+	if (static_call_key_has_mods(key))
-+		return NULL;
- 
- 	return (struct static_call_site *)(key->type & ~1);
- }
-@@ -118,7 +118,12 @@ static inline struct static_call_site *static_call_key_sites(struct static_call_
- void __static_call_update(struct static_call_key *key, void *tramp, void *func)
- {
- 	struct static_call_site *site, *stop;
--	struct static_call_mod *site_mod, first;
-+	struct static_call_mod *site_mod;
-+	struct static_call_mod first = {
-+		.next = static_call_key_mods(key),
-+		.mod = NULL,
-+		.sites = static_call_key_sites(key),
-+	};
- 
- 	cpus_read_lock();
- 	static_call_lock();
-@@ -137,17 +142,14 @@ void __static_call_update(struct static_call_key *key, void *tramp, void *func)
- 	if (WARN_ON_ONCE(!static_call_initialized))
- 		goto done;
- 
--	first = (struct static_call_mod){
--		.next = static_call_key_next(key),
--		.mod = NULL,
--		.sites = static_call_key_sites(key),
--	};
--
- 	for (site_mod = &first; site_mod; site_mod = site_mod->next) {
- 		if (!site_mod->sites) {
- 			/*
- 			 * This can happen if the static call key is defined in
- 			 * a module which doesn't use it.
-+			 *
-+			 * It also happens in the has_mods case, where the
-+			 * 'first' entry has no sites associated with it.
- 			 */
- 			continue;
- 		}
-@@ -228,12 +230,12 @@ static int __static_call_init(struct module *mod,
- 			if (!site_mod)
- 				return -ENOMEM;
- 
--			if (!static_call_key_has_next(key)) {
-+			if (!static_call_key_has_mods(key)) {
- 				site_mod->mod = NULL;
- 				site_mod->next = NULL;
- 				site_mod->sites = static_call_key_sites(key);
- 
--				key->next = site_mod;
-+				key->mods = site_mod;
- 
- 				site_mod = kzalloc(sizeof(*site_mod), GFP_KERNEL);
- 				if (!site_mod)
-@@ -242,8 +244,8 @@ static int __static_call_init(struct module *mod,
- 
- 			site_mod->mod = mod;
- 			site_mod->sites = site;
--			site_mod->next = key->next;
--			key->next = site_mod;
-+			site_mod->next = key->mods;
-+			key->mods = site_mod;
- 		}
- 
- do_transform:
-@@ -328,7 +330,7 @@ static void static_call_del_module(struct module *mod)
- 
- 		prev_key = key;
- 
--		for (prev = &key->next, site_mod = key->next;
-+		for (prev = &key->mods, site_mod = key->mods;
- 		     site_mod && site_mod->mod != mod;
- 		     prev = &site_mod->next, site_mod = site_mod->next)
- 			;
-
+-- 
+Kees Cook
