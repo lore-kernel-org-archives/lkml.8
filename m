@@ -2,101 +2,70 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3672FC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D44FAC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 079CC20735
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:47:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588747641;
-	bh=N4qdH4OxIaQgxglHU2KrfcqJnuqVbOOhzNp8eDLs7cA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O416lIHv67uZ2lxEuoclXLxxXBKP73wHoUYHOm6BwJdO4PA7ncCyc0cEndgf32jy1
-	 6v2Xy6kjTX8FxJkVCoJOlB0bDa5aHfUdOFfUgYG4NGm8cQNtdvo249ea5Dy0zf1pFz
-	 D2iMOqeZNPLiNuPi9nMqFvj8sGnAQGODiuoot8qg=
+	by mail.kernel.org (Postfix) with ESMTP id B54DD2073A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:47:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgEFGrU (ORCPT
+        id S1728162AbgEFGr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 02:47:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34332 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727812AbgEFGrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 02:47:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E42E820714;
-        Wed,  6 May 2020 06:47:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588747639;
-        bh=N4qdH4OxIaQgxglHU2KrfcqJnuqVbOOhzNp8eDLs7cA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aaCtrUnoxK/t+p/gX3MACzVfu6fXeGjp1x/VjQTWZYC3kNxGjOKEwd+6pNCyUFd+T
-         dd+BkwFu4NNMv5m58jhy698NXJGwWgnRjOy9VzMpb9NS7TE+zCiLgbM2hiF2eLwjSG
-         dOOPJUpt9uq0qFqWUr+pZBQwcf5j2jfz9lStbokI=
-Date:   Wed, 6 May 2020 08:47:17 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     ashwin-h <ashwinh@vmware.com>
-Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com, davem@davemloft.net,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, srivatsab@vmware.com,
-        srivatsa@csail.mit.edu, rostedt@goodmis.org, srostedt@vmware.com,
-        ashwin.hiranniah@gmail.com, Xin Long <lucien.xin@gmail.com>
-Subject: Re: [PATCH 2/2] sctp: implement memory accounting on rx path
-Message-ID: <20200506064717.GB2273049@kroah.com>
-References: <cover.1588242081.git.ashwinh@vmware.com>
- <b2d9886afc672b4120f101eeb9217e68abb61471.1588242081.git.ashwinh@vmware.com>
+        Wed, 6 May 2020 02:47:26 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3812 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727812AbgEFGrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 02:47:24 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8D592D9CC630AC67649E;
+        Wed,  6 May 2020 14:47:19 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 6 May 2020 14:47:13 +0800
+From:   Samuel Zou <zou_wei@huawei.com>
+To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <x86@kernel.org>, <hpa@zytor.com>
+CC:     <linux-kernel@vger.kernel.org>, Samuel Zou <zou_wei@huawei.com>
+Subject: [PATCH -next] x86/platform/uv: Use false for return type bool
+Date:   Wed, 6 May 2020 14:53:10 +0800
+Message-ID: <1588747990-36348-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b2d9886afc672b4120f101eeb9217e68abb61471.1588242081.git.ashwinh@vmware.com>
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 07:50:54PM +0530, ashwin-h wrote:
-> From: Xin Long <lucien.xin@gmail.com>
-> 
-> commit 9dde27de3e5efa0d032f3c891a0ca833a0d31911 upstream.
-> 
-> sk_forward_alloc's updating is also done on rx path, but to be consistent
-> we change to use sk_mem_charge() in sctp_skb_set_owner_r().
-> 
-> In sctp_eat_data(), it's not enough to check sctp_memory_pressure only,
-> which doesn't work for mem_cgroup_sockets_enabled, so we change to use
-> sk_under_memory_pressure().
-> 
-> When it's under memory pressure, sk_mem_reclaim() and sk_rmem_schedule()
-> should be called on both RENEGE or CHUNK DELIVERY path exit the memory
-> pressure status as soon as possible.
-> 
-> Note that sk_rmem_schedule() is using datalen to make things easy there.
-> 
-> Reported-by: Matteo Croce <mcroce@redhat.com>
-> Tested-by: Matteo Croce <mcroce@redhat.com>
-> Acked-by: Neil Horman <nhorman@tuxdriver.com>
-> Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-> Signed-off-by: Xin Long <lucien.xin@gmail.com>
-> Signed-off-by: David S. Miller <davem@davemloft.net>
-> Signed-off-by: Ashwin H <ashwinh@vmware.com>
-> ---
->  include/net/sctp/sctp.h |  2 +-
->  net/sctp/sm_statefuns.c |  6 ++++--
->  net/sctp/ulpevent.c     | 19 ++++++++-----------
->  net/sctp/ulpqueue.c     |  3 ++-
->  4 files changed, 15 insertions(+), 15 deletions(-)
+Fix the following coccicheck warning:
 
-<formletter>
+arch/x86/include/asm/uv/uv.h:45:53-54: WARNING: return of 0/1
+in function 'is_early_uv_system' with return type bool
 
-This is not the correct way to submit patches for inclusion in the
-stable kernel tree.  Please read:
-    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-for how to do this properly.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Samuel Zou <zou_wei@huawei.com>
+---
+ arch/x86/include/asm/uv/uv.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-</formletter>
+diff --git a/arch/x86/include/asm/uv/uv.h b/arch/x86/include/asm/uv/uv.h
+index 91e088a..334da92 100644
+--- a/arch/x86/include/asm/uv/uv.h
++++ b/arch/x86/include/asm/uv/uv.h
+@@ -42,7 +42,7 @@ extern const struct cpumask *uv_flush_tlb_others(const struct cpumask *cpumask,
+ #else	/* X86_UV */
+ 
+ static inline enum uv_system_type get_uv_system_type(void) { return UV_NONE; }
+-static inline bool is_early_uv_system(void)	{ return 0; }
++static inline bool is_early_uv_system(void)	{ return false; }
+ static inline int is_uv_system(void)	{ return 0; }
+ static inline int is_uv_hubbed(int uv)	{ return 0; }
+ static inline int is_uv_hubless(int uv) { return 0; }
+-- 
+2.6.2
+
