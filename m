@@ -2,212 +2,334 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51092C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 03:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC90C47259
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 03:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 236472075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 03:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E4BF206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 03:58:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="B5Z+Q2Xy"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ULz29ywe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726904AbgEFD4N (ORCPT
+        id S1726776AbgEFD6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 23:56:13 -0400
-Received: from mail-mw2nam10on2040.outbound.protection.outlook.com ([40.107.94.40]:6189
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726451AbgEFD4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 23:56:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EePHOYSG+GJVKMPtuhF7wefSdG/qxWFSnpD6vZEx+X1rmUdRRSX1d+J2KartYSYwK741VUDR45DJDUIX/x7QMZsMLyDGU5dwooee93C0NH7S8GeK4T5L8U7LL8F9gzjKMMVCfRGh33b1/wocpzaNMDpdXGLJPL5SmVxApqHxMX0rXRtgJrDE/079OktsZZKPJdAQRgRo8Wl/B28Py5S+438hmJvAzq/PaywZ1It1pAD1cIGrlbTJA3hBPxHs0O/CeQYav28LvYTtDhGGxdgghSGtEOND98zIHx1PZI30VLDrrzBg3VacHyg10uI7RBeNNxjko0qyOU3ILBQWj/jt9g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TMr+xfMmDD5mwfkSVorR5igAduiTlas6PsSNzWKtcTM=;
- b=QnrcnpdLEDr8uOdc1fQusgoZu7qFvjSfN0ylu1KgUDWy8dDEIijqbvskxDNAG+4/1oP3f0m9ZByXp/PUaTh6/hVMfRHyeYRGcFlM87KAZX+yZbWu/lNebqb7ytkXhBdIce3bUZo4rQg5GAUNbPDXiars+NTWmpuT8ec5b0ekZe0KyzsY4x07jKVmS3Ig50HfbJya+g3chzkud9ow4XxkliU5tuAEfl55D42VdaM0NCYAP1lGqkp1hh604XTFM1bYeYDDRxaLLN29yuv6XfwPzaIrTKZVk6kq9YO6OLrEvJpjPEs5rhfzdN37K4bkwI2c8W6+eXswDYzjrCRh+UkozQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
- dkim=pass header.d=sifive.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TMr+xfMmDD5mwfkSVorR5igAduiTlas6PsSNzWKtcTM=;
- b=B5Z+Q2XyOFAAK6XFtWvt67Ytyifuce2SJ0GWwDMJD9yQaJWJxeLEyvnpiPEsF8NfdAAzD+AiVYCsuEXnBNjdL3WW8tsoLIphgPTAhl9RY5xFw79C/rcoXaf80zcsChswRsmUE6hCFgYvr06+vViaw+kpIlu/QrX7yyD5SqjcWTE=
-Received: from BYAPR13MB2614.namprd13.prod.outlook.com (2603:10b6:a03:b4::12)
- by BYAPR13MB2821.namprd13.prod.outlook.com (2603:10b6:a03:f5::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.23; Wed, 6 May
- 2020 03:56:04 +0000
-Received: from BYAPR13MB2614.namprd13.prod.outlook.com
- ([fe80::c0fc:30a3:5e5f:c2b6]) by BYAPR13MB2614.namprd13.prod.outlook.com
- ([fe80::c0fc:30a3:5e5f:c2b6%7]) with mapi id 15.20.2979.025; Wed, 6 May 2020
- 03:56:04 +0000
-From:   Sagar Kadam <sagar.kadam@sifive.com>
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-CC:     "tudor.ambarus@microchip.com" <tudor.ambarus@microchip.com>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "richard@nod.at" <richard@nod.at>,
-        "vigneshr@ti.com" <vigneshr@ti.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
-Subject: RE: [PATCH 1/2] riscv: defconfig: enable spi nor on Hifive Unleashed
- A00 board.
-Thread-Topic: [PATCH 1/2] riscv: defconfig: enable spi nor on Hifive Unleashed
- A00 board.
-Thread-Index: AQHWHtYDB/cpTmsjKkuAl+bHjseykqiYg+KAgABe/XCAAUf3gIAASp8Q
-Date:   Wed, 6 May 2020 03:56:03 +0000
-Message-ID: <BYAPR13MB2614FE811C8DD83BBDD3A26599A40@BYAPR13MB2614.namprd13.prod.outlook.com>
-References: <BN8PR13MB2611968A7252308925FF18B399A70@BN8PR13MB2611.namprd13.prod.outlook.com>
- <mhng-29e22ca7-538a-4094-923f-8fbc0fd327b9@palmerdabbelt-glaptop1>
-In-Reply-To: <mhng-29e22ca7-538a-4094-923f-8fbc0fd327b9@palmerdabbelt-glaptop1>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dabbelt.com; dkim=none (message not signed)
- header.d=none;dabbelt.com; dmarc=none action=none header.from=sifive.com;
-x-originating-ip: [116.74.144.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6ba8cc5a-ea1f-4447-095b-08d7f1716601
-x-ms-traffictypediagnostic: BYAPR13MB2821:
-x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR13MB2821BCDFEA785476F3FC779E99A40@BYAPR13MB2821.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-forefront-prvs: 03950F25EC
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: T46jBO/HAy+nkznpmlHXgg89vbQHrKaOfoLLW7jY5f/izzjmvqKWcaBGWN+PPH7QyPZXSLgI3xU3psfrMDntM2DRJAQSn8t9uy2ugnH2zpx/xKlCpHGera0IOqXhHUxCvKVWZ8uv8seVNWJ4ofBy19uhsuAJEZRW2Fx0dg4HYYlkcEcpMRwDNRZ4ZcIC5RAR7FwkPjG3cDVkoCtGDmhMrwSLXqA/Zg9NwRY+fyGAarYQDXQMQQKpwNa2B/azaQgBGnRpbAztKG9IfLGJhHzbZvg3NHHngYFv6dWdkbpSjRRSLPvCNr2EBNLsfXvC/Gzh+/07FV0qe/nsEqdcGl1Pz+7rFTdoOUVmjxB8BlIp8r4323BVl9Ie1UnW95H1AwFlcKJ+IqNcEtCnJOac6xWaBqgoLbiH3QBKV2cOME85fj/PzdshlAt/MVbj2csK64cGa1+be2ERBw8yNmhk16r6RCwBr60el10Rm8UjuRzYc5UkdJoS9X4ibDlC5a91AZ6yTY6xFOZ3YFoo4rRT8eHgPg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR13MB2614.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(136003)(376002)(346002)(39850400004)(396003)(33430700001)(64756008)(66446008)(86362001)(2906002)(52536014)(8676002)(8936002)(33440700001)(26005)(66946007)(76116006)(186003)(66476007)(66556008)(4326008)(44832011)(6506007)(33656002)(55236004)(7696005)(316002)(54906003)(9686003)(71200400001)(55016002)(478600001)(5660300002)(53546011)(6916009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: Dc3ZddpYcevwexUKJDogtPKir4s18evR6R/B17PaP/0NxuV+fQSfFjjxDMdHvBJNfqiu/5d1aFdjw0Ia4X8RIUOuIxp7bupiwnEDLzotNu/c2ZADCMqZcn1Sk5fDZv9pAfptLJlgSIiJfeJjz0qU3ESek46Kwc9fZWg9c2YjyYaH2NePI/Uz4K8DCBKKo1BPRBOX+N5RjiNXG/1EXDqpqghHdJCxe1n4snap9QxjvRvQTn7bqrSieXaek7BzHGhZ6tDSOegroj7Siq+8+NbzywH5c+F3wbRFx+MvQuda9V4lSjNFOIjax5FhcAvO9D3jw9a4BRVxE9soLBmBSl5+vDDtkRSgNhBpDXbTkYccI2VO1RYG3Ke2RgXXcoOrOiCNSYtEbUTRTJHWlkTlb7Q5socpDGCRsQNCKESkXKJeEtJsa+NXMSt82vVcTTiGHwbWJkWZDbiV8OloLLFBfrqygA7z36VZR6t2X1ZUvB+rGsIegAb1bjpfBJDSxfkuou9lqaxOb7VTd76FWzZZ+TdLyjn2AAu70xnMPSyUK/EoJdph5c5IMz5TVRK9l8xq6YpxSj5/xOifg4cXQPHqE0HFH8f9eLY72dRe39e2iYyySWz69IjFAjnMdazHrgnM2RL97oktpyBs7xaOSwalHnN9O9yZlrmK6mZxVENhEB38xrTOhd9/goDkImTKpBtIsTlu7qW3m2AUtjSNTaalMKOkdnYewaa5Fzh0diOXu3SBpJdWcWITiuqYuwpGCp4GcVgcTJwPW167VbbxnwoTf2cOGZEhwDN6ad1x0YFmqKEbRtw=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 5 May 2020 23:58:54 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:51784 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726470AbgEFD6x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 23:58:53 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0463wdx5027411;
+        Tue, 5 May 2020 22:58:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588737519;
+        bh=ioF3iSJVCSnwzTj0wpu+KnJH+jJ1lmKv93d7SQHV6PQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ULz29ywenFYblGByrkQztGVRI2EBWozyA7lBptl/oyXGVwFz9x79huXUZE0+N7yNY
+         m5Oq6h7fiq6+DtCf90v7j7vy8z3hDt1QNmZD5VGzJAck9o13j+NYOMqzRa2mhYK4O3
+         234xpvAxuz89MWBZfVOg7L88Qu5kvm2kMyaxI3Ew=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0463wdWO123072
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 5 May 2020 22:58:39 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 5 May
+ 2020 22:58:39 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 5 May 2020 22:58:39 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0463wZ8N034434;
+        Tue, 5 May 2020 22:58:36 -0500
+Subject: Re: [PATCH v3 09/14] PCI: cadence: Add MSI-X support to Endpoint
+ driver
+To:     Rob Herring <robh@kernel.org>
+CC:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200417125753.13021-1-kishon@ti.com>
+ <20200417125753.13021-10-kishon@ti.com> <20200430015521.GA6344@bogus>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <15337911-8561-ed41-c6ca-80ea1e92929e@ti.com>
+Date:   Wed, 6 May 2020 09:28:35 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: sifive.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ba8cc5a-ea1f-4447-095b-08d7f1716601
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2020 03:56:03.8718
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ojcdPBVNsi9ZHYlPv2ljcbVWsq8IMmzjlb16GeMbxr3K0vxe67xpxl8lRtKPgfb8VCE1BHmbbAryOZv9qA1sAw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR13MB2821
+In-Reply-To: <20200430015521.GA6344@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUGFsbWVyLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFBhbG1l
-ciBEYWJiZWx0IDxwYWxtZXJAZGFiYmVsdC5jb20+DQo+IFNlbnQ6IFdlZG5lc2RheSwgTWF5IDYs
-IDIwMjAgNDo1NCBBTQ0KPiBUbzogU2FnYXIgS2FkYW0gPHNhZ2FyLmthZGFtQHNpZml2ZS5jb20+
-DQo+IENjOiB0dWRvci5hbWJhcnVzQG1pY3JvY2hpcC5jb207IG1pcXVlbC5yYXluYWxAYm9vdGxp
-bi5jb207DQo+IHJpY2hhcmRAbm9kLmF0OyB2aWduZXNockB0aS5jb207IFBhdWwgV2FsbXNsZXkN
-Cj4gPHBhdWwud2FsbXNsZXlAc2lmaXZlLmNvbT47IGxpbnV4LXJpc2N2QGxpc3RzLmluZnJhZGVh
-ZC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1tdGRAbGlzdHMu
-aW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBSRTogW1BBVENIIDEvMl0gcmlzY3Y6IGRlZmNvbmZp
-ZzogZW5hYmxlIHNwaSBub3Igb24gSGlmaXZlIFVubGVhc2hlZA0KPiBBMDAgYm9hcmQuDQo+IA0K
-PiBbRXh0ZXJuYWwgRW1haWxdIERvIG5vdCBjbGljayBsaW5rcyBvciBhdHRhY2htZW50cyB1bmxl
-c3MgeW91IHJlY29nbml6ZSB0aGUNCj4gc2VuZGVyIGFuZCBrbm93IHRoZSBjb250ZW50IGlzIHNh
-ZmUNCj4gDQo+IE9uIFR1ZSwgMDUgTWF5IDIwMjAgMDA6MTg6NDUgUERUICgtMDcwMCksIHNhZ2Fy
-LmthZGFtQHNpZml2ZS5jb20gd3JvdGU6DQo+ID4gSGVsbG8gUGFsbWVyLA0KPiA+DQo+ID4+IC0t
-LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+IEZyb206IFBhbG1lciBEYWJiZWx0IDxwYWxt
-ZXJAZGFiYmVsdC5jb20+DQo+ID4+IFNlbnQ6IFR1ZXNkYXksIE1heSA1LCAyMDIwIDM6NDAgQU0N
-Cj4gPj4gVG86IFNhZ2FyIEthZGFtIDxzYWdhci5rYWRhbUBzaWZpdmUuY29tPg0KPiA+PiBDYzog
-dHVkb3IuYW1iYXJ1c0BtaWNyb2NoaXAuY29tOyBtaXF1ZWwucmF5bmFsQGJvb3RsaW4uY29tOw0K
-PiA+PiByaWNoYXJkQG5vZC5hdDsgdmlnbmVzaHJAdGkuY29tOyBQYXVsIFdhbG1zbGV5DQo+ID4+
-IDxwYXVsLndhbG1zbGV5QHNpZml2ZS5jb20+OyBsaW51eC1yaXNjdkBsaXN0cy5pbmZyYWRlYWQu
-b3JnOyBsaW51eC0NCj4gPj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtbXRkQGxpc3Rz
-LmluZnJhZGVhZC5vcmc7IFNhZ2FyIEthZGFtDQo+ID4+IDxzYWdhci5rYWRhbUBzaWZpdmUuY29t
-Pg0KPiA+PiBTdWJqZWN0OiBSZTogW1BBVENIIDEvMl0gcmlzY3Y6IGRlZmNvbmZpZzogZW5hYmxl
-IHNwaSBub3Igb24gSGlmaXZlDQo+IFVubGVhc2hlZA0KPiA+PiBBMDAgYm9hcmQuDQo+ID4+DQo+
-ID4+IFtFeHRlcm5hbCBFbWFpbF0gRG8gbm90IGNsaWNrIGxpbmtzIG9yIGF0dGFjaG1lbnRzIHVu
-bGVzcyB5b3UgcmVjb2duaXplDQo+IHRoZQ0KPiA+PiBzZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRl
-bnQgaXMgc2FmZQ0KPiA+Pg0KPiA+PiBPbiBUaHUsIDMwIEFwciAyMDIwIDAyOjU4OjUxIFBEVCAo
-LTA3MDApLCBzYWdhci5rYWRhbUBzaWZpdmUuY29tDQo+IHdyb3RlOg0KPiA+PiA+IEVuYWJsZSBN
-VEQgYmFzZWQgU1BJLU5PUiBmcmFtZXdvcmsgaW4gb3JkZXIgdG8gdXNlIHNwaSBmbGFzaA0KPiBh
-dmFpbGFibGUNCj4gPj4gPiBvbiBIaUZpdmUgVW5sZWFzaGVkIEEwMCBib2FyZC4NCj4gPj4gPg0K
-PiA+PiA+IFNpZ25lZC1vZmYtYnk6IFNhZ2FyIFNocmlrYW50IEthZGFtIDxzYWdhci5rYWRhbUBz
-aWZpdmUuY29tPg0KPiA+PiA+IC0tLQ0KPiA+PiA+ICBhcmNoL3Jpc2N2L2NvbmZpZ3MvZGVmY29u
-ZmlnIHwgMiArKw0KPiA+PiA+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspDQo+ID4+
-ID4NCj4gPj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9yaXNjdi9jb25maWdzL2RlZmNvbmZpZw0KPiA+
-PiA+IGIvYXJjaC9yaXNjdi9jb25maWdzL2RlZmNvbmZpZyBpbmRleCA0ZGE0ODg2Li45NzA1ODBi
-IDEwMDY0NA0KPiA+PiA+IC0tLSBhL2FyY2gvcmlzY3YvY29uZmlncy9kZWZjb25maWcNCj4gPj4g
-PiArKysgYi9hcmNoL3Jpc2N2L2NvbmZpZ3MvZGVmY29uZmlnDQo+ID4+ID4gQEAgLTgwLDYgKzgw
-LDggQEAgQ09ORklHX1VTQl9TVE9SQUdFPXkgIENPTkZJR19VU0JfVUFTPXkNCj4gPj4gQ09ORklH
-X01NQz15DQo+ID4+ID4gQ09ORklHX01NQ19TUEk9eQ0KPiA+PiA+ICtDT05GSUdfTVREPXkNCj4g
-Pj4gPiArQ09ORklHX01URF9TUElfTk9SPXkNCj4gPj4gPiAgQ09ORklHX1JUQ19DTEFTUz15DQo+
-ID4+ID4gIENPTkZJR19WSVJUSU9fUENJPXkNCj4gPj4gPiAgQ09ORklHX1ZJUlRJT19CQUxMT09O
-PXkNCj4gPj4NCj4gPj4gRnJvbSB0aGUgc2Vjb25kIHBhdGNoJ3MgZGVzY3JpcHRpb24gSSdtIGFz
-c3VtaW5nIHRoYXQgTVREIHN0aWxsDQo+IGZ1bmN0aW9ucw0KPiA+PiBjb3JyZWN0bHkgd2l0aG91
-dCB0aGF0IGNoYW5nZT8NCj4gPg0KPiA+IFllcyBQYWxtZXIsIHRoZSBzZWNvbmQgcGF0Y2ggaXMg
-dG8gZW5hYmxlIFFVQUQgd3JpdGUgdG8gbm9yIGZsYXNoLi4NCj4gPiBNVEQgIGZ1bmN0aW9uJ3Mg
-Y29ycmVjdGx5IHdpdGhvdXQgc2Vjb25kIHBhdGNoLg0KPiA+DQo+ID4gVXNpbmcgdGhlIGNoYXJh
-Y3RlciBpbnRlcmZhY2UgKC9kZXYvbXRkMCkgbXRkX3V0aWxzIChtdGRfZGVidWcgOg0KPiBlcmFz
-ZS9yZWFkL3dyaXRlKSB3b3JrIGZpbmUuDQo+ID4gV2UgbWlnaHQgcmVxdWlyZSBDT05GSUdfTVRE
-X0JMT0NLLCBDT05GSUdfTVREX0NNRExJTkVfUEFSVFMNCj4gaW4gb3JkZXIgdG8gdXNlIE1URCBw
-YXJ0aXRpb25pbmcuDQo+ID4gSU1ITyBpdCBjYW4gYmUgYXQgdXNlcidzIGNob2ljZSB3ZWF0aGVy
-IHRvIHVzZSBmbGFzaCBwYXJ0aXRpb25zIG9yIG5vdCwgc28gSQ0KPiBoYXZlIG5vdCBlbmFibGVk
-LiBQbGVhc2UgbGV0IG1lDQo+ID4ga25vdyBpZiBJIHNob3VsZCBlbmFibGUgdGhlc2UgZmVhdHVy
-ZXMgYXMgd2VsbC4NCj4gDQo+IExvb2tzIGxpa2UgYXJtNjQgaGFzIHRoZXNlOg0KPiANCj4gYXJj
-aC9hcm02NC9jb25maWdzL2RlZmNvbmZpZzpDT05GSUdfTVREPXkNCj4gYXJjaC9hcm02NC9jb25m
-aWdzL2RlZmNvbmZpZzpDT05GSUdfTVREX0JMT0NLPXkNCj4gYXJjaC9hcm02NC9jb25maWdzL2Rl
-ZmNvbmZpZzpDT05GSUdfTVREX0NGST15DQo+IGFyY2gvYXJtNjQvY29uZmlncy9kZWZjb25maWc6
-Q09ORklHX01URF9DRklfQURWX09QVElPTlM9eQ0KPiBhcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29u
-ZmlnOkNPTkZJR19NVERfQ0ZJX0lOVEVMRVhUPXkNCj4gYXJjaC9hcm02NC9jb25maWdzL2RlZmNv
-bmZpZzpDT05GSUdfTVREX0NGSV9BTURTVEQ9eQ0KPiBhcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29u
-ZmlnOkNPTkZJR19NVERfQ0ZJX1NUQUE9eQ0KPiBhcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmln
-OkNPTkZJR19NVERfUEhZU01BUD15DQo+IGFyY2gvYXJtNjQvY29uZmlncy9kZWZjb25maWc6Q09O
-RklHX01URF9QSFlTTUFQX09GPXkNCj4gYXJjaC9hcm02NC9jb25maWdzL2RlZmNvbmZpZzpDT05G
-SUdfTVREX0RBVEFGTEFTSD15DQo+IGFyY2gvYXJtNjQvY29uZmlncy9kZWZjb25maWc6Q09ORklH
-X01URF9TU1QyNUw9eQ0KPiBhcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnOkNPTkZJR19NVERf
-UkFXX05BTkQ9eQ0KPiBhcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnOkNPTkZJR19NVERfTkFO
-RF9ERU5BTElfRFQ9eQ0KPiBhcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnOkNPTkZJR19NVERf
-TkFORF9NQVJWRUxMPXkNCj4gYXJjaC9hcm02NC9jb25maWdzL2RlZmNvbmZpZzpDT05GSUdfTVRE
-X05BTkRfRlNMX0lGQz15DQo+IGFyY2gvYXJtNjQvY29uZmlncy9kZWZjb25maWc6Q09ORklHX01U
-RF9OQU5EX1FDT009eQ0KPiBhcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnOkNPTkZJR19NVERf
-U1BJX05PUj15DQo+IA0KPiBzbyBJIHRoaW5rIHdlJ3JlIGdvb2Qgd2l0aCBqdXN0IHdoYXQgeW91
-IGhhdmUgaGVyZTogTVREX0JMT0NLIGRvZXNuJ3QNCj4gc2VlbSB0aGF0DQo+IHVzZWZ1bCwgYW5k
-IHRoZSByZXN0IGFyZSBkcml2ZXJzLiAgVGhhdCBzYWlkLCB0aGVzZSAoYWxvbmcgd2l0aCBTUEkg
-YW5kDQo+IFNQSV9TSUZJVkUpIHNob3VsZCByZWFsbHkgYmUgaW4gS2NvbmZpZy5zb2NzIHJhdGhl
-ciB0aGFuIGRlZmNvbmZpZy4gIENhbiB5b3UNCj4gc2VuZCBhIHBhdGNoIHRoYXQgZG9lcyB0aGF0
-Pw0KPiANCg0KWWVzIHN1cmUsIEkgd2lsbCBzZW5kIGEgVjIgc2VyaWVzLCB3aGVyZSBTUEksICBT
-UElfU0lGSVZFLCAgTVRELCANCmFuZCBNVERfU1BJX05PUiB3aWxsIGJlIGEgcGFydCBvZiBLY29u
-ZmlnLnNvY3MuDQoNClRoYW5rcyAmIEJSLA0KU2FnYXIgS2FkYW0NCg0KPiA+DQo+ID4gVG8gZGVt
-b25zdHJhdGUgYSBiaXQgbW9yZSB3aXRoIGxpbnV4IDUuNy1yYzMNCj4gPg0KPiA+IFNwZWNpZnkg
-b24gVS1ib290IHByb21wdDoNCj4gPiAjIHNldGVudiBib290YXJncyAicm9vdD0vZGV2L3JhbSBy
-dyBjb25zb2xlPXR0eVNJRjANCj4gbXRkcGFydHM9c3BpMC4wOjEwMjRrKGxvYWRlcjEpLDQwOTZL
-KGxvYWRlcjIpLDI2TShyb290ZnMpIg0KPiA+DQo+ID4gQWZ0ZXIgYm9vdGluZyBsaW51eCB3aWxs
-IGVudW1lcmF0ZSBtdGQgcGFydGl0aW9uczoNCj4gPiAjIGNhdCAvcHJvYy9tdGQNCj4gPiBkZXY6
-ICAgIHNpemUgICBlcmFzZXNpemUgIG5hbWUNCj4gPiBtdGQwOiAwMDEwMDAwMCAwMDAwMTAwMCAi
-bG9hZGVyMSINCj4gPiBtdGQxOiAwMDQwMDAwMCAwMDAwMTAwMCAibG9hZGVyMiINCj4gPiBtdGQy
-OiAwMWEwMDAwMCAwMDAwMTAwMCAicm9vdGZzIg0KPiA+DQo+ID4gIyBjYXQgL3Byb2MvcGFydGl0
-aW9ucw0KPiA+IG1ham9yIG1pbm9yICAjYmxvY2tzICBuYW1lDQo+ID4gICAzMSAgICAgICAgMCAg
-ICAgICAxMDI0IG10ZGJsb2NrMA0KPiA+ICAgMzEgICAgICAgIDEgICAgICAgNDA5NiBtdGRibG9j
-azENCj4gPiAgIDMxICAgICAgICAyICAgICAgMjY2MjQgbXRkYmxvY2syDQo+ID4NCj4gPiAjRm9y
-bWF0IG10ZGJsb2NrMiB3aXRoIG1rZnMuZXh0My80IGFuZCBtb3VudCByZXN1bHRzIGluDQo+ID4g
-IyBta2ZzLmV4dDMgL2Rldi9tdGRibG9jazINCj4gPiBta2UyZnMgMS40NC41ICgxNS1EZWMtMjAx
-OCkNCj4gPiAvZGV2L210ZGJsb2NrMiBjb250YWlucyBhIGV4dDMgZmlsZSBzeXN0ZW0NCj4gPiAg
-ICAgICAgIGxhc3QgbW91bnRlZCBvbiAvbW50IG9uIFRodSBKYW4gIDEgMDA6MDA6MTQgMTk3MA0K
-PiA+IFByb2NlZWQgYW55d2F5PyAoeSxOKSB5DQo+ID4gQ3JlYXRpbmcgZmlsZXN5c3RlbSB3aXRo
-IDI2NjI0IDFrIGJsb2NrcyBhbmQgNjY1NiBpbm9kZXMNCj4gPiBGaWxlc3lzdGVtIFVVSUQ6IDFi
-MDkyNTJkLWUzMTMtNDMwYy05ZWNiLTc5YjBjZWYwMDNjYQ0KPiA+IFN1cGVyYmxvY2sgYmFja3Vw
-cyBzdG9yZWQgb24gYmxvY2tzOg0KPiA+ICAgICAgICAgODE5MywgMjQ1NzcNCj4gPg0KPiA+IEFs
-bG9jYXRpbmcgZ3JvdXAgdGFibGVzOiBkb25lDQo+ID4gV3JpdGluZyBpbm9kZSB0YWJsZXM6IGRv
-bmUNCj4gPiBDcmVhdGluZyBqb3VybmFsICgxMDI0IGJsb2Nrcyk6IGRvbmUNCj4gPiBXcml0aW5n
-IHN1cGVyYmxvY2tzIGFuZCBmaWxlc3lzdGVtIGFjY291bnRpbmcgaW5mb3JtYXRpb246IGRvbmUN
-Cj4gPg0KPiA+ICMgbW91bnQNCj4gPiBub25lIG9uIC8gdHlwZSByb290ZnMgKHJ3KQ0KPiA+IHBy
-b2Mgb24gL3Byb2MgdHlwZSBwcm9jIChydyxyZWxhdGltZSkNCj4gPiBkZXZwdHMgb24gL2Rldi9w
-dHMgdHlwZSBkZXZwdHMNCj4gKHJ3LHJlbGF0aW1lLGdpZD01LG1vZGU9NjIwLHB0bXhtb2RlPTY2
-NikNCj4gPiB0bXBmcyBvbiAvZGV2L3NobSB0eXBlIHRtcGZzIChydyxyZWxhdGltZSxtb2RlPTc3
-NykNCj4gPiB0bXBmcyBvbiAvdG1wIHR5cGUgdG1wZnMgKHJ3LHJlbGF0aW1lKQ0KPiA+IHRtcGZz
-IG9uIC9ydW4gdHlwZSB0bXBmcyAocncsbm9zdWlkLG5vZGV2LHJlbGF0aW1lLG1vZGU9NzU1KQ0K
-PiA+IHN5c2ZzIG9uIC9zeXMgdHlwZSBzeXNmcyAocncscmVsYXRpbWUpDQo+ID4gL2Rldi9tdGRi
-bG9jazIgb24gL21udCB0eXBlIGV4dDMgKHJ3LHJlbGF0aW1lKQ0KPiA+DQo+ID4gVGhhbmtzICYg
-QlIsDQo+ID4gU2FnYXIgS2FkYW0NCg0K
+Hi Rob,
+
+On 4/30/2020 7:25 AM, Rob Herring wrote:
+> On Fri, Apr 17, 2020 at 06:27:48PM +0530, Kishon Vijay Abraham I wrote:
+>> From: Alan Douglas <adouglas@cadence.com>
+>>
+>> Implement ->set_msix() and ->get_msix() callback functions in order
+>> to configure MSIX capability in the PCIe endpoint controller.
+>>
+>> Add cdns_pcie_ep_send_msix_irq() to send MSIX interrupts to Host.
+>> cdns_pcie_ep_send_msix_irq() gets the MSIX table address (virtual
+>> address) from "struct cdns_pcie_epf" that gets initialized in
+>> ->set_bar() call back function.
+>>
+>> [kishon@ti.com: Re-implement MSIX support in accordance with the
+>>  re-designed core MSI-X interfaces]
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> Signed-off-by: Alan Douglas <adouglas@cadence.com>
+> 
+> Your Sob should be last.
+
+Will fix this!
+
+Thanks
+Kishon
+> 
+>> ---
+>>  .../pci/controller/cadence/pcie-cadence-ep.c  | 112 +++++++++++++++++-
+>>  drivers/pci/controller/cadence/pcie-cadence.h |  10 ++
+>>  2 files changed, 121 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+>> index 14021d760482..c43340ca0630 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+>> @@ -51,6 +51,7 @@ static int cdns_pcie_ep_set_bar(struct pci_epc *epc, u8 fn,
+>>  				struct pci_epf_bar *epf_bar)
+>>  {
+>>  	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+>> +	struct cdns_pcie_epf *epf = &ep->epf[fn];
+>>  	struct cdns_pcie *pcie = &ep->pcie;
+>>  	dma_addr_t bar_phys = epf_bar->phys_addr;
+>>  	enum pci_barno bar = epf_bar->barno;
+>> @@ -111,6 +112,8 @@ static int cdns_pcie_ep_set_bar(struct pci_epc *epc, u8 fn,
+>>  		CDNS_PCIE_LM_EP_FUNC_BAR_CFG_BAR_CTRL(b, ctrl));
+>>  	cdns_pcie_writel(pcie, reg, cfg);
+>>  
+>> +	epf->epf_bar[bar] = epf_bar;
+>> +
+>>  	return 0;
+>>  }
+>>  
+>> @@ -118,6 +121,7 @@ static void cdns_pcie_ep_clear_bar(struct pci_epc *epc, u8 fn,
+>>  				   struct pci_epf_bar *epf_bar)
+>>  {
+>>  	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+>> +	struct cdns_pcie_epf *epf = &ep->epf[fn];
+>>  	struct cdns_pcie *pcie = &ep->pcie;
+>>  	enum pci_barno bar = epf_bar->barno;
+>>  	u32 reg, cfg, b, ctrl;
+>> @@ -139,6 +143,8 @@ static void cdns_pcie_ep_clear_bar(struct pci_epc *epc, u8 fn,
+>>  
+>>  	cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_EP_FUNC_BAR_ADDR0(fn, bar), 0);
+>>  	cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_EP_FUNC_BAR_ADDR1(fn, bar), 0);
+>> +
+>> +	epf->epf_bar[bar] = NULL;
+>>  }
+>>  
+>>  static int cdns_pcie_ep_map_addr(struct pci_epc *epc, u8 fn, phys_addr_t addr,
+>> @@ -224,6 +230,50 @@ static int cdns_pcie_ep_get_msi(struct pci_epc *epc, u8 fn)
+>>  	return mme;
+>>  }
+>>  
+>> +static int cdns_pcie_ep_get_msix(struct pci_epc *epc, u8 func_no)
+>> +{
+>> +	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+>> +	struct cdns_pcie *pcie = &ep->pcie;
+>> +	u32 cap = CDNS_PCIE_EP_FUNC_MSIX_CAP_OFFSET;
+>> +	u32 val, reg;
+>> +
+>> +	reg = cap + PCI_MSIX_FLAGS;
+>> +	val = cdns_pcie_ep_fn_readw(pcie, func_no, reg);
+>> +	if (!(val & PCI_MSIX_FLAGS_ENABLE))
+>> +		return -EINVAL;
+>> +
+>> +	val &= PCI_MSIX_FLAGS_QSIZE;
+>> +
+>> +	return val;
+>> +}
+>> +
+>> +static int cdns_pcie_ep_set_msix(struct pci_epc *epc, u8 fn, u16 interrupts,
+>> +				 enum pci_barno bir, u32 offset)
+>> +{
+>> +	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+>> +	struct cdns_pcie *pcie = &ep->pcie;
+>> +	u32 cap = CDNS_PCIE_EP_FUNC_MSIX_CAP_OFFSET;
+>> +	u32 val, reg;
+>> +
+>> +	reg = cap + PCI_MSIX_FLAGS;
+>> +	val = cdns_pcie_ep_fn_readw(pcie, fn, reg);
+>> +	val &= ~PCI_MSIX_FLAGS_QSIZE;
+>> +	val |= interrupts;
+>> +	cdns_pcie_ep_fn_writew(pcie, fn, reg, val);
+>> +
+>> +	/* Set MSIX BAR and offset */
+>> +	reg = cap + PCI_MSIX_TABLE;
+>> +	val = offset | bir;
+>> +	cdns_pcie_ep_fn_writel(pcie, fn, reg, val);
+>> +
+>> +	/* Set PBA BAR and offset.  BAR must match MSIX BAR */
+>> +	reg = cap + PCI_MSIX_PBA;
+>> +	val = (offset + (interrupts * PCI_MSIX_ENTRY_SIZE)) | bir;
+>> +	cdns_pcie_ep_fn_writel(pcie, fn, reg, val);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static void cdns_pcie_ep_assert_intx(struct cdns_pcie_ep *ep, u8 fn,
+>>  				     u8 intx, bool is_asserted)
+>>  {
+>> @@ -330,6 +380,56 @@ static int cdns_pcie_ep_send_msi_irq(struct cdns_pcie_ep *ep, u8 fn,
+>>  	return 0;
+>>  }
+>>  
+>> +static int cdns_pcie_ep_send_msix_irq(struct cdns_pcie_ep *ep, u8 fn,
+>> +				      u16 interrupt_num)
+>> +{
+>> +	u32 cap = CDNS_PCIE_EP_FUNC_MSIX_CAP_OFFSET;
+>> +	u32 tbl_offset, msg_data, reg, vec_ctrl;
+>> +	struct cdns_pcie *pcie = &ep->pcie;
+>> +	struct pci_epf_msix_tbl *msix_tbl;
+>> +	struct pci_epf_bar *epf_bar;
+>> +	struct cdns_pcie_epf *epf;
+>> +	u64 pci_addr_mask = 0xff;
+>> +	u64 msg_addr;
+>> +	u16 flags;
+>> +	u8 bir;
+>> +
+>> +	/* Check whether the MSI-X feature has been enabled by the PCI host. */
+>> +	flags = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_MSIX_FLAGS);
+>> +	if (!(flags & PCI_MSIX_FLAGS_ENABLE))
+>> +		return -EINVAL;
+>> +
+>> +	reg = cap + PCI_MSIX_TABLE;
+>> +	tbl_offset = cdns_pcie_ep_fn_readl(pcie, fn, reg);
+>> +	bir = tbl_offset & PCI_MSIX_TABLE_BIR;
+>> +	tbl_offset &= PCI_MSIX_TABLE_OFFSET;
+>> +
+>> +	epf = &ep->epf[fn];
+>> +	epf_bar = epf->epf_bar[bir];
+>> +	msix_tbl = epf_bar->addr;
+>> +	msix_tbl = (struct pci_epf_msix_tbl *)((char *)msix_tbl + tbl_offset);
+>> +
+>> +	msg_addr = msix_tbl[(interrupt_num - 1)].msg_addr;
+>> +	msg_data = msix_tbl[(interrupt_num - 1)].msg_data;
+>> +	vec_ctrl = msix_tbl[(interrupt_num - 1)].vector_ctrl;
+>> +
+>> +	/* Set the outbound region if needed. */
+>> +	if (ep->irq_pci_addr != (msg_addr & ~pci_addr_mask) ||
+>> +	    ep->irq_pci_fn != fn) {
+>> +		/* First region was reserved for IRQ writes. */
+>> +		cdns_pcie_set_outbound_region(pcie, fn, 0,
+>> +					      false,
+>> +					      ep->irq_phys_addr,
+>> +					      msg_addr & ~pci_addr_mask,
+>> +					      pci_addr_mask + 1);
+>> +		ep->irq_pci_addr = (msg_addr & ~pci_addr_mask);
+>> +		ep->irq_pci_fn = fn;
+>> +	}
+>> +	writel(msg_data, ep->irq_cpu_addr + (msg_addr & pci_addr_mask));
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static int cdns_pcie_ep_raise_irq(struct pci_epc *epc, u8 fn,
+>>  				  enum pci_epc_irq_type type,
+>>  				  u16 interrupt_num)
+>> @@ -343,6 +443,9 @@ static int cdns_pcie_ep_raise_irq(struct pci_epc *epc, u8 fn,
+>>  	case PCI_EPC_IRQ_MSI:
+>>  		return cdns_pcie_ep_send_msi_irq(ep, fn, interrupt_num);
+>>  
+>> +	case PCI_EPC_IRQ_MSIX:
+>> +		return cdns_pcie_ep_send_msix_irq(ep, fn, interrupt_num);
+>> +
+>>  	default:
+>>  		break;
+>>  	}
+>> @@ -380,7 +483,7 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
+>>  static const struct pci_epc_features cdns_pcie_epc_features = {
+>>  	.linkup_notifier = false,
+>>  	.msi_capable = true,
+>> -	.msix_capable = false,
+>> +	.msix_capable = true,
+>>  };
+>>  
+>>  static const struct pci_epc_features*
+>> @@ -397,6 +500,8 @@ static const struct pci_epc_ops cdns_pcie_epc_ops = {
+>>  	.unmap_addr	= cdns_pcie_ep_unmap_addr,
+>>  	.set_msi	= cdns_pcie_ep_set_msi,
+>>  	.get_msi	= cdns_pcie_ep_get_msi,
+>> +	.set_msix	= cdns_pcie_ep_set_msix,
+>> +	.get_msix	= cdns_pcie_ep_get_msix,
+>>  	.raise_irq	= cdns_pcie_ep_raise_irq,
+>>  	.start		= cdns_pcie_ep_start,
+>>  	.get_features	= cdns_pcie_ep_get_features,
+>> @@ -455,6 +560,11 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
+>>  	if (of_property_read_u8(np, "max-functions", &epc->max_functions) < 0)
+>>  		epc->max_functions = 1;
+>>  
+>> +	ep->epf = devm_kcalloc(dev, epc->max_functions, sizeof(*ep->epf),
+>> +			       GFP_KERNEL);
+>> +	if (!ep->epf)
+>> +		return -ENOMEM;
+>> +
+>>  	ret = pci_epc_mem_init(epc, pcie->mem_res->start,
+>>  			       resource_size(pcie->mem_res));
+>>  	if (ret < 0) {
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+>> index 16a6b0ee547c..ea850290a602 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+>> @@ -99,6 +99,7 @@
+>>  #define CDNS_PCIE_EP_FUNC_BASE(fn)	(((fn) << 12) & GENMASK(19, 12))
+>>  
+>>  #define CDNS_PCIE_EP_FUNC_MSI_CAP_OFFSET	0x90
+>> +#define CDNS_PCIE_EP_FUNC_MSIX_CAP_OFFSET	0xb0
+>>  
+>>  /*
+>>   * Root Port Registers (PCI configuration space for the root port function)
+>> @@ -280,6 +281,14 @@ struct cdns_pcie_rc {
+>>  	u32			device_id;
+>>  };
+>>  
+>> +/**
+>> + * struct cdns_pcie_epf - Structure to hold info about endpoint function
+>> + * @epf_bar: reference to the pci_epf_bar for the six Base Address Registers
+>> + */
+>> +struct cdns_pcie_epf {
+>> +	struct pci_epf_bar *epf_bar[PCI_STD_NUM_BARS];
+>> +};
+>> +
+>>  /**
+>>   * struct cdns_pcie_ep - private data for this PCIe endpoint controller driver
+>>   * @pcie: Cadence PCIe controller
+>> @@ -307,6 +316,7 @@ struct cdns_pcie_ep {
+>>  	u64			irq_pci_addr;
+>>  	u8			irq_pci_fn;
+>>  	u8			irq_pending;
+>> +	struct cdns_pcie_epf	*epf;
+>>  };
+>>  
+>>  
+>> -- 
+>> 2.17.1
+>>
