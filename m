@@ -2,136 +2,112 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED054C47257
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9379C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBA772075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:56:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n/kzFmwE"
+	by mail.kernel.org (Postfix) with ESMTP id CF50C2075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:57:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729979AbgEFV4a (ORCPT
+        id S1729743AbgEFV5P convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 17:56:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35576 "EHLO
+        Wed, 6 May 2020 17:57:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726927AbgEFV43 (ORCPT
+        by vger.kernel.org with ESMTP id S1726927AbgEFV5P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 17:56:29 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84AB6C061A0F;
-        Wed,  6 May 2020 14:56:29 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id q13so2988018qtp.7;
-        Wed, 06 May 2020 14:56:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aBCiVVZEpJWRYd7epspD5olBcNsS+jZLiGB12vTlPJ0=;
-        b=n/kzFmwEJyYkO9ldTqSkf7R/Yy7OqGmNcDVU8GEQizholP9steDnVou2QWWWDccrg+
-         sic3e+clFU3UKJovfLUY3aneEcWmSnucNVF3YdOnviRoXdhA4FLM/cBicuS5uwK/4RtI
-         q5fLMKyJZk+JYqO429wZdWZKoENTBwVJUi4Q+2mBzXXATv72RikKhuqvs4f4uOFOg7OE
-         E6vY7lvSQPyBtJL47ASNUlyAyPmELWMYoECwS3FvY7ICNjQMF+aS2MrgamfRnm81Cu80
-         dUCBkXHAmwos/sf8NZFPytrAGqxsgnOoIszFejTO7GpR2sPHAUeeqOhdJSCL2HvzevQF
-         bsSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aBCiVVZEpJWRYd7epspD5olBcNsS+jZLiGB12vTlPJ0=;
-        b=G1vNm3fxSWDxIYjb332B7XR+YQHFm/85I2vSlzHS0deBgkLpQnHbcWLty5hD5cqans
-         lIAj+LLC2ZTlSzOQ0+1xyOaJD8wp/Yt7mhC2uSBSrmK1m/RQ39pb2wpcaVhQGudH4dTz
-         1hUDq/v7DanTtsCPSW7CUnkQXACP5YhE6SpUBSfjln7RdHcngq84rAUCQL8KjOTmI1oP
-         vZvfBZPJcn+ntDZHgU5XunE8r8h6C1+dyy+4k2h+p2cFsyASv9H1v07oGj1ehbOaTJGF
-         PvHOi+e97mf0JCtcZuGIGyEvf3W7HqoaUbkLCWZhch/CtXyntuoLwVaWXwYwdgL4AZF7
-         de1w==
-X-Gm-Message-State: AGi0Pua/OZrVpj6tQ+2gLlDc1oqUDfgK5AlToxzPBqGBA67hhIr3yydx
-        EAofM/5H1hiPqUU70TNjDaJTyeiuRFxg4WYU7pA=
-X-Google-Smtp-Source: APiQypK4NoKr538iX+W9Wacx4prmGnbwutNe7LOltABa0SwhYN8wYMurbB6deVOp9aDSqEPBGCyIIDsde3En5uPnqRY=
-X-Received: by 2002:ac8:468d:: with SMTP id g13mr10390645qto.59.1588802188756;
- Wed, 06 May 2020 14:56:28 -0700 (PDT)
+        Wed, 6 May 2020 17:57:15 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CD95C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 14:57:15 -0700 (PDT)
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1jWS2T-0004iz-5R; Wed, 06 May 2020 23:57:13 +0200
+Date:   Wed, 6 May 2020 23:57:13 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Stephen Berman <stephen.berman@gmx.net>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
+Message-ID: <20200506215713.qoo4enq32ckcjmz7@linutronix.de>
+References: <87bln7ves7.fsf@gmx.net>
 MIME-Version: 1.0
-References: <20200506205257.8964-1-irogers@google.com> <20200506205257.8964-2-irogers@google.com>
- <CAEf4BzZRmiEds_8R8g4vaAeWvJzPb4xYLnpF0X2VNY8oTzkphQ@mail.gmail.com> <CAP-5=fXUxcGZbrJMONLBasui2S=pvta7YZENEqSkenvZis58VA@mail.gmail.com>
-In-Reply-To: <CAP-5=fXUxcGZbrJMONLBasui2S=pvta7YZENEqSkenvZis58VA@mail.gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 6 May 2020 14:56:17 -0700
-Message-ID: <CAEf4BzYxTTND7T7X0dLr2CbkEvUuKtarOeoJYYROefij+qds0w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] lib/bpf hashmap: increase portability
-To:     Ian Rogers <irogers@google.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <87bln7ves7.fsf@gmx.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 6, 2020 at 2:47 PM Ian Rogers <irogers@google.com> wrote:
->
-> On Wed, May 6, 2020 at 2:33 PM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Wed, May 6, 2020 at 1:54 PM Ian Rogers <irogers@google.com> wrote:
-> > >
-> > > Don't include libbpf_internal.h as it is unused and has conflicting
-> > > definitions, for example, with tools/perf/util/debug.h.
-> > > Fix a non-glibc include path.
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > >  tools/lib/bpf/hashmap.h | 3 +--
-> > >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > >
-> > > diff --git a/tools/lib/bpf/hashmap.h b/tools/lib/bpf/hashmap.h
-> > > index bae8879cdf58..d5ef212a55ba 100644
-> > > --- a/tools/lib/bpf/hashmap.h
-> > > +++ b/tools/lib/bpf/hashmap.h
-> > > @@ -13,9 +13,8 @@
-> > >  #ifdef __GLIBC__
-> > >  #include <bits/wordsize.h>
-> > >  #else
-> > > -#include <bits/reg.h>
-> > > +#include <linux/bitops.h>
-> >
-> > why this change? It might be ok for libbpf built from kernel source,
-> > but it will break Github libbpf.
->
-> Without this change my debian based machine wasn't able to build
-> within the kernel tree. I see bits/wordsize.h on the machine. Perhaps
-> the __WORDSIZE computation could just be based on __LP64__ to remove
-> any #include?
+On 2020-05-01 17:46:48 [+0200], Stephen Berman wrote:
+> I'm experiencing a delay or hang in powering off my computer after `halt
+> -d -f -i -p' and I've bisected it to this commit in the mainline tree:
 
-It might work. Do you mind forking https://github.com/libbpf/libbpf
-and trying to execute travis CI tests with such change? It compiles
-across a range of distros and arches. You might need to set up Travis
-CI login, hope that's not a problem. Thanks!
+You refer to a normal "poweroff" or is this some kind of "shutdown now"
+kind of thing? Unless I'm mistaken, the `halt' command above will turn
+off the machine without stopping user tasks (as in "reaching shutdown
+level").
 
->
+…
+> The delays have varied in length from ~20 seconds to seeminingly
+> indefinitely long (the longest I've waited before pressing the start
+> button on the machine is 6 minutes).  With kernels prior to this commit,
+> my machine powers off within 4 seconds after the halt invocation.
+
+So you say that normally the machine shuts down immediately but now it
+takes 20secs+ if it shuts down at all?
+
+…
+>   sr 5:0:0:0: tag#21 timing out command, waited 120s
+
+The CD-drive is polled regularly so it notices when a CD us inserted /
+removed. It seems that one of the requests wasn't answered and it ended
+up in timeout.
+
+…
+> minutes.  But after running emacs in a tty (and then killing it), the
+> delay was seemingly indefinite, as it is with my usual workflow with X,
+> emacs, firefox, etc. running (but I always kill them before invoking
+> `shutdown -h now' from a tty).  During the bisection I tested each
+> kernel build by running startx, emacs, firefox, killing these, then
+> `shutdown -h now'.  I've attached the git log of the bisection augmented
+> with power-off timing notes.  (FWIW, when I reboot the machine with
+> `shutdown -r now' there is no delay with the problematic kernels.)
+
+So reboot is not affected, just the halt. Could you please check if the
+"poweroff" variant is also affected?
+
+…
+> Another pointer I got was to the recent commit 62849a96, which fixes a
+> bug due to the commit that causes my problem.  I applied 62849a96 to
+> 5.6.4, but it did not prevent the delay/hang.
+
+You should see a warning if you were facing the problem described in the
+commit.
+
+…
+>                                     Please let me know if there's any
+> other information I can provide or anything else I can do to help with
+> debugging this issue.  I hope you can fix it.
+
+Can you send dmesg output of the system / lspci -k? I'm mainly
+interested what drivers are bound to storage devices (you can send it
+offlist if you want).
+
+Can you log the output on the serial console?
+
+If the commit you cited is really the problem then it would mean that a
+worker isn't scheduled for some reason. Could you please enable
+CONFIG_WQ_WATCHDOG to see if workqueue core code notices that a worker
+isn't making progress?
+
 > Thanks,
-> Ian
->
-> > >  #endif
-> > > -#include "libbpf_internal.h"
-> >
-> > Dropping this seems ok, don't remember why I had it here in the first place.
-> >
-> > >
-> > >  static inline size_t hash_bits(size_t h, int bits)
-> > >  {
-> > > --
-> > > 2.26.2.526.g744177e7f7-goog
-> > >
+> Steve Berman
+
+Sebastian
