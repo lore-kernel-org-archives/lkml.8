@@ -3,234 +3,213 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,NUMERIC_HTTP_ADDR,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E84C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7024AC4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6D2B208CA
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57905208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:50:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730709AbgEFQuE (ORCPT
+        id S1730717AbgEFQuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:50:04 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:53309 "EHLO pegase1.c-s.fr"
+        Wed, 6 May 2020 12:50:10 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:4068 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730531AbgEFQsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:48:41 -0400
+        id S1730503AbgEFQsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 12:48:36 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49HMx30S0Xz9v4kF;
-        Wed,  6 May 2020 18:48:39 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 49HMww6vGfz9v4kF;
+        Wed,  6 May 2020 18:48:32 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id A_ojo4U-QKIf; Wed,  6 May 2020 18:48:38 +0200 (CEST)
+        with ESMTP id 4s47-937F22T; Wed,  6 May 2020 18:48:32 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMx25RsHz9v4kK;
-        Wed,  6 May 2020 18:48:38 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMww5w5Bz9v4kD;
+        Wed,  6 May 2020 18:48:32 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9B4718B7C5;
-        Wed,  6 May 2020 18:48:40 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7E3BF8B7C6;
+        Wed,  6 May 2020 18:48:34 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id CfiWEJpgWZlW; Wed,  6 May 2020 18:48:40 +0200 (CEST)
+        with ESMTP id jyaIQaUTZ88b; Wed,  6 May 2020 18:48:34 +0200 (CEST)
 Received: from localhost.localdomain (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4C14A8B7C3;
-        Wed,  6 May 2020 18:48:40 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 16A928B7C5;
+        Wed,  6 May 2020 18:48:34 +0200 (CEST)
 Received: by localhost.localdomain (Postfix, from userid 0)
-        id 18C8365911; Wed,  6 May 2020 16:48:40 +0000 (UTC)
-Message-Id: <59213d48028b6b4985b059c6bb20c7256f2ff1b5.1588783498.git.christophe.leroy@csgroup.eu>
+        id D732065911; Wed,  6 May 2020 16:48:33 +0000 (UTC)
+Message-Id: <1c47f05b620290c182d02b08992a2bbd23083132.1588783498.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 References: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v2 34/45] powerpc/8xx: Remove now unused TLB miss functions
+Subject: [PATCH v2 28/45] powerpc/8xx: MM_SLICE is not needed anymore
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed,  6 May 2020 16:48:40 +0000 (UTC)
+Date:   Wed,  6 May 2020 16:48:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The code to setup linear and IMMR mapping via huge TLB entries is
-not called anymore. Remove it.
+As the 8xx now manages 512k pages in standard page tables,
+it doesn't need CONFIG_PPC_MM_SLICES anymore.
 
-Also remove the handling of removed code exits in the perf driver.
+Don't select it anymore and remove all related code.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/include/asm/nohash/32/mmu-8xx.h |  8 +-
- arch/powerpc/kernel/head_8xx.S               | 83 --------------------
- arch/powerpc/perf/8xx-pmu.c                  | 10 ---
- 3 files changed, 1 insertion(+), 100 deletions(-)
+ arch/powerpc/include/asm/nohash/32/mmu-8xx.h | 64 --------------------
+ arch/powerpc/include/asm/nohash/32/slice.h   | 20 ------
+ arch/powerpc/include/asm/slice.h             |  2 -
+ arch/powerpc/platforms/Kconfig.cputype       |  1 -
+ 4 files changed, 87 deletions(-)
+ delete mode 100644 arch/powerpc/include/asm/nohash/32/slice.h
 
 diff --git a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
-index 4d3ef3841b00..e82368838416 100644
+index 26b7cee34dfe..a092e6434bda 100644
 --- a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
 +++ b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
-@@ -240,13 +240,7 @@ static inline unsigned int mmu_psize_to_shift(unsigned int mmu_psize)
- }
+@@ -176,12 +176,6 @@
+  */
+ #define SPRN_M_TW	799
  
- /* patch sites */
--extern s32 patch__itlbmiss_linmem_top, patch__itlbmiss_linmem_top8;
--extern s32 patch__dtlbmiss_linmem_top, patch__dtlbmiss_immr_jmp;
--extern s32 patch__fixupdar_linmem_top;
--extern s32 patch__dtlbmiss_romem_top, patch__dtlbmiss_romem_top8;
+-#ifdef CONFIG_PPC_MM_SLICES
+-#include <asm/nohash/32/slice.h>
+-#define SLICE_ARRAY_SIZE	(1 << (32 - SLICE_LOW_SHIFT - 1))
+-#define LOW_SLICE_ARRAY_SZ	SLICE_ARRAY_SIZE
+-#endif
 -
--extern s32 patch__itlbmiss_exit_1, patch__itlbmiss_exit_2;
--extern s32 patch__dtlbmiss_exit_1, patch__dtlbmiss_exit_2, patch__dtlbmiss_exit_3;
-+extern s32 patch__itlbmiss_exit_1, patch__dtlbmiss_exit_1;
- extern s32 patch__itlbmiss_perf, patch__dtlbmiss_perf;
+ #if defined(CONFIG_PPC_4K_PAGES)
+ #define mmu_virtual_psize	MMU_PAGE_4K
+ #elif defined(CONFIG_PPC_16K_PAGES)
+@@ -199,71 +193,13 @@
  
- #endif /* !__ASSEMBLY__ */
-diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
-index d1546f379757..fb5d17187772 100644
---- a/arch/powerpc/kernel/head_8xx.S
-+++ b/arch/powerpc/kernel/head_8xx.S
-@@ -278,33 +278,6 @@ InstructionTLBMiss:
- 	rfi
+ #include <linux/mmdebug.h>
+ 
+-struct slice_mask {
+-	u64 low_slices;
+-	DECLARE_BITMAP(high_slices, 0);
+-};
+-
+ typedef struct {
+ 	unsigned int id;
+ 	unsigned int active;
+ 	unsigned long vdso_base;
+-#ifdef CONFIG_PPC_MM_SLICES
+-	u16 user_psize;		/* page size index */
+-	unsigned char low_slices_psize[SLICE_ARRAY_SIZE];
+-	unsigned char high_slices_psize[0];
+-	unsigned long slb_addr_limit;
+-	struct slice_mask mask_base_psize; /* 4k or 16k */
+-	struct slice_mask mask_512k;
+-	struct slice_mask mask_8m;
+-#endif
+ 	void *pte_frag;
+ } mm_context_t;
+ 
+-#ifdef CONFIG_PPC_MM_SLICES
+-static inline u16 mm_ctx_user_psize(mm_context_t *ctx)
+-{
+-	return ctx->user_psize;
+-}
+-
+-static inline void mm_ctx_set_user_psize(mm_context_t *ctx, u16 user_psize)
+-{
+-	ctx->user_psize = user_psize;
+-}
+-
+-static inline unsigned char *mm_ctx_low_slices(mm_context_t *ctx)
+-{
+-	return ctx->low_slices_psize;
+-}
+-
+-static inline unsigned char *mm_ctx_high_slices(mm_context_t *ctx)
+-{
+-	return ctx->high_slices_psize;
+-}
+-
+-static inline unsigned long mm_ctx_slb_addr_limit(mm_context_t *ctx)
+-{
+-	return ctx->slb_addr_limit;
+-}
+-
+-static inline void mm_ctx_set_slb_addr_limit(mm_context_t *ctx, unsigned long limit)
+-{
+-	ctx->slb_addr_limit = limit;
+-}
+-
+-static inline struct slice_mask *slice_mask_for_size(mm_context_t *ctx, int psize)
+-{
+-	if (psize == MMU_PAGE_512K)
+-		return &ctx->mask_512k;
+-	if (psize == MMU_PAGE_8M)
+-		return &ctx->mask_8m;
+-
+-	BUG_ON(psize != mmu_virtual_psize);
+-
+-	return &ctx->mask_base_psize;
+-}
+-#endif /* CONFIG_PPC_MM_SLICE */
+-
+ #define PHYS_IMMR_BASE (mfspr(SPRN_IMMR) & 0xfff80000)
+ #define VIRT_IMMR_BASE (__fix_to_virt(FIX_IMMR_BASE))
+ 
+diff --git a/arch/powerpc/include/asm/nohash/32/slice.h b/arch/powerpc/include/asm/nohash/32/slice.h
+deleted file mode 100644
+index 39eb0154ae2d..000000000000
+--- a/arch/powerpc/include/asm/nohash/32/slice.h
++++ /dev/null
+@@ -1,20 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef _ASM_POWERPC_NOHASH_32_SLICE_H
+-#define _ASM_POWERPC_NOHASH_32_SLICE_H
+-
+-#ifdef CONFIG_PPC_MM_SLICES
+-
+-#define SLICE_LOW_SHIFT		26	/* 64 slices */
+-#define SLICE_LOW_TOP		(0x100000000ull)
+-#define SLICE_NUM_LOW		(SLICE_LOW_TOP >> SLICE_LOW_SHIFT)
+-#define GET_LOW_SLICE_INDEX(addr)	((addr) >> SLICE_LOW_SHIFT)
+-
+-#define SLICE_HIGH_SHIFT	0
+-#define SLICE_NUM_HIGH		0ul
+-#define GET_HIGH_SLICE_INDEX(addr)	(addr & 0)
+-
+-#define SLB_ADDR_LIMIT_DEFAULT	DEFAULT_MAP_WINDOW
+-
+-#endif /* CONFIG_PPC_MM_SLICES */
+-
+-#endif /* _ASM_POWERPC_NOHASH_32_SLICE_H */
+diff --git a/arch/powerpc/include/asm/slice.h b/arch/powerpc/include/asm/slice.h
+index c6f466f4c241..0bdd9c62eca0 100644
+--- a/arch/powerpc/include/asm/slice.h
++++ b/arch/powerpc/include/asm/slice.h
+@@ -4,8 +4,6 @@
+ 
+ #ifdef CONFIG_PPC_BOOK3S_64
+ #include <asm/book3s/64/slice.h>
+-#elif defined(CONFIG_PPC_MMU_NOHASH_32)
+-#include <asm/nohash/32/slice.h>
  #endif
  
--#ifndef CONFIG_PIN_TLB_TEXT
--ITLBMissLinear:
--	mtcr	r11
--#if defined(CONFIG_STRICT_KERNEL_RWX) && CONFIG_ETEXT_SHIFT < 23
--	patch_site	0f, patch__itlbmiss_linmem_top8
--
--	mfspr	r10, SPRN_SRR0
--0:	subis	r11, r10, (PAGE_OFFSET - 0x80000000)@ha
--	rlwinm	r11, r11, 4, MI_PS8MEG ^ MI_PS512K
--	ori	r11, r11, MI_PS512K | MI_SVALID
--	rlwinm	r10, r10, 0, 0x0ff80000	/* 8xx supports max 256Mb RAM */
--#else
--	/* Set 8M byte page and mark it valid */
--	li	r11, MI_PS8MEG | MI_SVALID
--	rlwinm	r10, r10, 20, 0x0f800000	/* 8xx supports max 256Mb RAM */
--#endif
--	mtspr	SPRN_MI_TWC, r11
--	ori	r10, r10, 0xf0 | MI_SPS16K | _PAGE_SH | _PAGE_DIRTY | \
--			  _PAGE_PRESENT
--	mtspr	SPRN_MI_RPN, r10	/* Update TLB entry */
--
--0:	mfspr	r10, SPRN_SPRG_SCRATCH0
--	mfspr	r11, SPRN_SPRG_SCRATCH1
--	rfi
--	patch_site	0b, patch__itlbmiss_exit_2
--#endif
--
- 	. = 0x1200
- DataStoreTLBMiss:
- 	mtspr	SPRN_DAR, r10
-@@ -371,62 +344,6 @@ DataStoreTLBMiss:
- 	rfi
- 	patch_site	0b, patch__dtlbmiss_exit_1
+ #ifndef __ASSEMBLY__
+diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
+index 27a81c291be8..5774a55a9c58 100644
+--- a/arch/powerpc/platforms/Kconfig.cputype
++++ b/arch/powerpc/platforms/Kconfig.cputype
+@@ -55,7 +55,6 @@ config PPC_8xx
+ 	select SYS_SUPPORTS_HUGETLBFS
+ 	select PPC_HAVE_KUEP
+ 	select PPC_HAVE_KUAP
+-	select PPC_MM_SLICES if HUGETLB_PAGE
+ 	select HAVE_ARCH_VMAP_STACK
  
--DTLBMissIMMR:
--	mtcr	r11
--	/* Set 512k byte guarded page and mark it valid */
--	li	r10, MD_PS512K | MD_GUARDED | MD_SVALID
--	mtspr	SPRN_MD_TWC, r10
--	mfspr	r10, SPRN_IMMR			/* Get current IMMR */
--	rlwinm	r10, r10, 0, 0xfff80000		/* Get 512 kbytes boundary */
--	ori	r10, r10, 0xf0 | MD_SPS16K | _PAGE_SH | _PAGE_DIRTY | \
--			  _PAGE_PRESENT | _PAGE_NO_CACHE
--	mtspr	SPRN_MD_RPN, r10	/* Update TLB entry */
--
--	li	r11, RPN_PATTERN
--
--0:	mfspr	r10, SPRN_DAR
--	mtspr	SPRN_DAR, r11	/* Tag DAR */
--	mfspr	r11, SPRN_M_TW
--	rfi
--	patch_site	0b, patch__dtlbmiss_exit_2
--
--DTLBMissLinear:
--	mtcr	r11
--	rlwinm	r10, r10, 20, 0x0f800000	/* 8xx supports max 256Mb RAM */
--#if defined(CONFIG_STRICT_KERNEL_RWX) && CONFIG_DATA_SHIFT < 23
--	patch_site	0f, patch__dtlbmiss_romem_top8
--
--0:	subis	r11, r10, (PAGE_OFFSET - 0x80000000)@ha
--	rlwinm	r11, r11, 0, 0xff800000
--	neg	r10, r11
--	or	r11, r11, r10
--	rlwinm	r11, r11, 4, MI_PS8MEG ^ MI_PS512K
--	ori	r11, r11, MI_PS512K | MI_SVALID
--	mfspr	r10, SPRN_MD_EPN
--	rlwinm	r10, r10, 0, 0x0ff80000	/* 8xx supports max 256Mb RAM */
--#else
--	/* Set 8M byte page and mark it valid */
--	li	r11, MD_PS8MEG | MD_SVALID
--#endif
--	mtspr	SPRN_MD_TWC, r11
--#ifdef CONFIG_STRICT_KERNEL_RWX
--	patch_site	0f, patch__dtlbmiss_romem_top
--
--0:	subis	r11, r10, 0
--	rlwimi	r10, r11, 11, _PAGE_RO
--#endif
--	ori	r10, r10, 0xf0 | MD_SPS16K | _PAGE_SH | _PAGE_DIRTY | \
--			  _PAGE_PRESENT
--	mtspr	SPRN_MD_RPN, r10	/* Update TLB entry */
--
--	li	r11, RPN_PATTERN
--
--0:	mfspr	r10, SPRN_DAR
--	mtspr	SPRN_DAR, r11	/* Tag DAR */
--	mfspr	r11, SPRN_M_TW
--	rfi
--	patch_site	0b, patch__dtlbmiss_exit_3
--
- /* This is an instruction TLB error on the MPC8xx.  This could be due
-  * to many reasons, such as executing guarded memory or illegal instruction
-  * addresses.  There is nothing to do but handle a big time error fault.
-diff --git a/arch/powerpc/perf/8xx-pmu.c b/arch/powerpc/perf/8xx-pmu.c
-index 1ad03c55c88c..0c56b42a4f91 100644
---- a/arch/powerpc/perf/8xx-pmu.c
-+++ b/arch/powerpc/perf/8xx-pmu.c
-@@ -99,9 +99,6 @@ static int mpc8xx_pmu_add(struct perf_event *event, int flags)
- 			unsigned long target = patch_site_addr(&patch__itlbmiss_perf);
- 
- 			patch_branch_site(&patch__itlbmiss_exit_1, target, 0);
--#ifndef CONFIG_PIN_TLB_TEXT
--			patch_branch_site(&patch__itlbmiss_exit_2, target, 0);
--#endif
- 		}
- 		val = itlb_miss_counter;
- 		break;
-@@ -110,8 +107,6 @@ static int mpc8xx_pmu_add(struct perf_event *event, int flags)
- 			unsigned long target = patch_site_addr(&patch__dtlbmiss_perf);
- 
- 			patch_branch_site(&patch__dtlbmiss_exit_1, target, 0);
--			patch_branch_site(&patch__dtlbmiss_exit_2, target, 0);
--			patch_branch_site(&patch__dtlbmiss_exit_3, target, 0);
- 		}
- 		val = dtlb_miss_counter;
- 		break;
-@@ -174,9 +169,6 @@ static void mpc8xx_pmu_del(struct perf_event *event, int flags)
- 					    __PPC_SPR(SPRN_SPRG_SCRATCH0);
- 
- 			patch_instruction_site(&patch__itlbmiss_exit_1, insn);
--#ifndef CONFIG_PIN_TLB_TEXT
--			patch_instruction_site(&patch__itlbmiss_exit_2, insn);
--#endif
- 		}
- 		break;
- 	case PERF_8xx_ID_DTLB_LOAD_MISS:
-@@ -186,8 +178,6 @@ static void mpc8xx_pmu_del(struct perf_event *event, int flags)
- 					    __PPC_SPR(SPRN_DAR);
- 
- 			patch_instruction_site(&patch__dtlbmiss_exit_1, insn);
--			patch_instruction_site(&patch__dtlbmiss_exit_2, insn);
--			patch_instruction_site(&patch__dtlbmiss_exit_3, insn);
- 		}
- 		break;
- 	}
+ config 40x
 -- 
 2.25.0
 
