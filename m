@@ -2,162 +2,114 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2C1C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E408C47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 384652080D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:06:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vpdo5MHE"
+	by mail.kernel.org (Postfix) with ESMTP id 3805F208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:06:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730204AbgEFRGE (ORCPT
+        id S1730310AbgEFRGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 13:06:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46554 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729414AbgEFRGD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 13:06:03 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 501BBC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 10:06:02 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 186so3366031ybq.1
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 10:06:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=38D9XAXV7mzVHBBpOcAS7ARBaUBu+dmzE+ZxtJSi07k=;
-        b=Vpdo5MHEmM/Z+zw+EZQC/et7d3BOBcK04yt396UAXf4EYchp8p81hgVpWWHHtvD+dw
-         VKpdIoiUMGfavJAcMjRkTu/ew5mzMiMbAuESyzFmO94XO1clTnQNFqO9TXMTprL2jAhb
-         5nR3rK+jblYJcry7j/dtvDXsLOAJu+I8EiljrGJAF+IkMFzLIvd+AZlbAmKHEoHeWIbn
-         quoFL4QuPqfcAuLvFlpaEon62y3uS+iWRxLU+zbJ15Muo5P7sXmSSTvqt6g78AQ0W+2B
-         Wa6KcU8oXNrKFVNBpecTO+rJjMjVL3kXNuSghLpR5TN0h4Ww8tbIlo4M4snmTdg1O/js
-         xF3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=38D9XAXV7mzVHBBpOcAS7ARBaUBu+dmzE+ZxtJSi07k=;
-        b=K4iLuyCFAahVAvfV8WeHGw5Z9M7dFJQdakFBpkbXiSH426UQaDT+ep0eUT8TIIzlNU
-         cu/oIZ30lbg233JP76WMDxdcaHc8LKHF7ap0ZMznmggVcqmnL31BZWzXVPkixwoJvYj0
-         /bBA6Q34NblP/ddZi0T5eVuKi/6DgrjpL9NYfpwo5uMsgnSgM1cddCv0k2HetlR7tmSW
-         dMK0INFBC/6BYA96ma/TWBzi12ko73Ms7AvKn3DBoSo2GKTkxV8eUs9d/E/AdwOxbF7M
-         BlnHMRF4n8bsBs3PWjDWAg6gwrohyUCousTGzV8xSClNvtVYR7OEsqxm6temcSljJnBz
-         +JLA==
-X-Gm-Message-State: AGi0PuZeOKkoi5OKG1NChAMM+iblLCOr78OsynUelxKutjY0pMqw7mzD
-        04pz9DHv+mjfMgRYR/PJj6iOr3Ql4PoQxtWKe6o=
-X-Google-Smtp-Source: APiQypInt/BU46jq8wi/ZYhimpxLP1JDFvRJo0w9nF7/qQSi68WKYGdFx2xxov+fb/dQbp4j01QIGkm7s+50ON1DxsY=
-X-Received: by 2002:a25:3555:: with SMTP id c82mr15199015yba.378.1588784761448;
- Wed, 06 May 2020 10:06:01 -0700 (PDT)
-Date:   Wed,  6 May 2020 10:05:53 -0700
-In-Reply-To: <CAHFW8PQ1jusUS9xNUmiwwTU3x=GCqL3AJwwirhJOAgZUjx9wVA@mail.gmail.com>
-Message-Id: <20200506170554.54635-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-References: <CAHFW8PQ1jusUS9xNUmiwwTU3x=GCqL3AJwwirhJOAgZUjx9wVA@mail.gmail.com>
-X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-Subject: [PATCH v2] x86: bitops: fix build regression
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc:     Ilie Halip <ilie.halip@gmail.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        "kernelci . org bot" <bot@kernelci.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 6 May 2020 13:06:12 -0400
+Received: from mga17.intel.com ([192.55.52.151]:50199 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729414AbgEFRGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 13:06:12 -0400
+IronPort-SDR: jYsr5BRAERmabnP4Ig3OiKasNuJXhnWqOt/TNzbqMfhWRMi/9zj+lTLLNlAXxrtncWfFC4o8/v
+ 0FIqeTHTy9Qw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 10:06:11 -0700
+IronPort-SDR: GOq6sHbpWl0hAI7nnkFqSmoHpX//b2n4UHYnpCorexV8zj5K42CJn3V1ngkjLCgf8KsshSvoDw
+ GY5zAWmQbzKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,360,1583222400"; 
+   d="scan'208";a="284690915"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.157]) ([10.237.72.157])
+  by fmsmga004.fm.intel.com with ESMTP; 06 May 2020 10:06:08 -0700
+Subject: Re: [PATCH V1 1/2] mmc: core: Check request type before completing
+ the request
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        ulf.hansson@linaro.org
+Cc:     stummala@codeaurora.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        stable@vger.kernel.org, Baolin Wang <baolin.wang@linaro.org>,
+        Avri Altman <avri.altman@wdc.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Arnd Bergmann <arnd@arndb.de>
+References: <1588775643-18037-1-git-send-email-vbadigan@codeaurora.org>
+ <1588775643-18037-2-git-send-email-vbadigan@codeaurora.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <e4f7515c-e52e-f909-174a-8835d7e9e445@intel.com>
+Date:   Wed, 6 May 2020 20:06:29 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <1588775643-18037-2-git-send-email-vbadigan@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilie Halip <ilie.halip@gmail.com>
+On 6/05/20 5:34 pm, Veerabhadrarao Badiganti wrote:
+> In the request completion path with CQE, request type is being checked
+> after the request is getting completed. This is resulting in returning
+> the wrong request type and leading to the IO hang issue.
+> 
+> ASYNC request type is getting returned for DCMD type requests.
+> Because of this mismatch, mq->cqe_busy flag is never getting cleared
+> and the driver is not invoking blk_mq_hw_run_queue. So requests are not
+> getting dispatched to the LLD from the block layer.
+> 
+> All these eventually leading to IO hang issues.
+> So, get the request type before completing the request.
+> 
+> Cc: <stable@vger.kernel.org> # v4.19+
 
-It turns out that if your config tickles __builtin_constant_p via
-differences in choices to inline or not, this now produces invalid
-assembly:
+The fixed commit was in 4.16
 
-$ cat foo.c
-long a(long b, long c) {
-  asm("orb\t%1, %0" : "+q"(c): "r"(b));
-  return c;
-}
-$ gcc foo.c
-foo.c: Assembler messages:
-foo.c:2: Error: `%rax' not allowed with `orb'
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 
-The "q" constraint only has meanting on -m32 otherwise is treated as
-"r".
+Fixes: 1e8e55b67030 ("mmc: block: Add CQE support")
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-This is easily reproducible via Clang+CONFIG_STAGING=y+CONFIG_VT6656=m.
+Thank you for finding this!
 
-Without the cast to u8, gcc and clang will not select low-8-bit
-registers required for the `b` suffix on `orb` and `andb`, which results
-in an assembler error.  Without the mask, sparse will warn about the
-upper bytes of the value being truncated.
-
- [Nick: reworded]
-
-Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/961
-Link: https://lore.kernel.org/lkml/20200504193524.GA221287@google.com/
-Fixes: 1651e700664b4 ("x86: Fix bitops.h warning with a moved cast")
-Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-Reported-by: kernelci.org bot <bot@kernelci.org>
-Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-Suggested-by: Ilie Halip <ilie.halip@gmail.com>
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
----
-Changes V1 -> V2:
-* change authorship/signed-off-by to Ilie
-* add Nathan's Tested by/reviewed by
-* update commit message slightly with info sent to HPA.
-
- arch/x86/include/asm/bitops.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-index b392571c1f1d..139122e5b25b 100644
---- a/arch/x86/include/asm/bitops.h
-+++ b/arch/x86/include/asm/bitops.h
-@@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long *addr)
- 	if (__builtin_constant_p(nr)) {
- 		asm volatile(LOCK_PREFIX "orb %1,%0"
- 			: CONST_MASK_ADDR(nr, addr)
--			: "iq" (CONST_MASK(nr) & 0xff)
-+			: "iq" ((u8)(CONST_MASK(nr) & 0xff))
- 			: "memory");
- 	} else {
- 		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
-@@ -74,7 +74,7 @@ arch_clear_bit(long nr, volatile unsigned long *addr)
- 	if (__builtin_constant_p(nr)) {
- 		asm volatile(LOCK_PREFIX "andb %1,%0"
- 			: CONST_MASK_ADDR(nr, addr)
--			: "iq" (CONST_MASK(nr) ^ 0xff));
-+			: "iq" ((u8)(CONST_MASK(nr) ^ 0xff)));
- 	} else {
- 		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
- 			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
--- 
-2.26.2.526.g744177e7f7-goog
+> ---
+>  drivers/mmc/core/block.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
+> index 8499b56..c5367e2 100644
+> --- a/drivers/mmc/core/block.c
+> +++ b/drivers/mmc/core/block.c
+> @@ -1370,6 +1370,7 @@ static void mmc_blk_cqe_complete_rq(struct mmc_queue *mq, struct request *req)
+>  	struct mmc_request *mrq = &mqrq->brq.mrq;
+>  	struct request_queue *q = req->q;
+>  	struct mmc_host *host = mq->card->host;
+> +	enum mmc_issue_type issue_type = mmc_issue_type(mq, req);
+>  	unsigned long flags;
+>  	bool put_card;
+>  	int err;
+> @@ -1399,7 +1400,7 @@ static void mmc_blk_cqe_complete_rq(struct mmc_queue *mq, struct request *req)
+>  
+>  	spin_lock_irqsave(&mq->lock, flags);
+>  
+> -	mq->in_flight[mmc_issue_type(mq, req)] -= 1;
+> +	mq->in_flight[issue_type] -= 1;
+>  
+>  	put_card = (mmc_tot_in_flight(mq) == 0);
+>  
+> 
 
