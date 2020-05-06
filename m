@@ -2,161 +2,191 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C17C47257
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF94C38A2A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D89D42075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF19B2075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:36:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tsm34CKs"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="DYUT6FUx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730307AbgEFWgn (ORCPT
+        id S1730340AbgEFWg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 18:36:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41866 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729675AbgEFWgm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 18:36:42 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22BCEC061A0F;
-        Wed,  6 May 2020 15:36:42 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id h4so4150727ljg.12;
-        Wed, 06 May 2020 15:36:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=B+lR9RibOagVSsl39LZ9OK8akQe4JLP7xJR19GpLf1o=;
-        b=Tsm34CKsvSLpR0vTdnP3NXEIfocWbivLXWk8w+tAJE4vffmJ6ALKGmPAv3YVr6sNTJ
-         PZhbhmMAaEJIGzYHbhPiJhHEcc3P37y+LVjHDK11d/zgxezjvH1QIiHmKvMoSMWkso+F
-         p9iRxQbECLqV26uxb4vt/iaRUo0fe68iCd2eQJXK51S3tYRbCQQUDyELDVHtlMplWRNW
-         irFmAnBBMMqbfnHmGW3cJyIwJGM1Pxx4RSYQMyd9fYnCp+iUIqYBaZwM9HpTy2VzOZIz
-         eDFakF5MmrzMKhoY8RzaeIbBgiMHs/uPr8z5P2yWV6A8M/DD3+sBc68tVFny5VTRfxSO
-         q+Iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=B+lR9RibOagVSsl39LZ9OK8akQe4JLP7xJR19GpLf1o=;
-        b=jdV95793K56F2VxemgqF4SBIs0eE6YIQHOSwaDBlYNtM2rGGF3dQw7ZZJLKRxHVm1K
-         zH+4+qS3TDeXdsW2G6+v8f3ElXAvMkE6dwFHT6grG0M4u6jCvIUsnqjEZ++NvuO+hwma
-         3K9xMmIa6RxBbpOi8/aLCw7S6cKNbtVqkaZA6snSuk7N6S+fw4Oh59SNwTT5DQG40bxg
-         QAhPg9VrbkJNUH8eC/a5IuEnYgF6JlmOcewbN++xY3y4ImI/UuKW8X6Xeezq8T6mHDX2
-         BKhq651gY5VRkrBuvSeVyrY+tPDucARZWH08A/EOxknBJicoY2jJqtmQBdC76pORY9nz
-         u00w==
-X-Gm-Message-State: AGi0PubTqOBRW2uVSFCrKnlOECXMUUWltAIPW1ElaedLROplcSrij9AZ
-        q/UMVvhW62Z+dptQJ/kzFow=
-X-Google-Smtp-Source: APiQypIn3b6fKkJd20UjwwrJFveGF8cjFc17xH6wdHxzh2I3WM+a3Zo4qxNiMUlQ/0tz6anyOynLdA==
-X-Received: by 2002:a2e:9b13:: with SMTP id u19mr6438685lji.161.1588804600577;
-        Wed, 06 May 2020 15:36:40 -0700 (PDT)
-Received: from mobilestation ([176.213.3.142])
-        by smtp.gmail.com with ESMTPSA id j19sm404666lfh.19.2020.05.06.15.36.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 15:36:39 -0700 (PDT)
-Date:   Thu, 7 May 2020 01:36:36 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Michael Walle <michael@walle.cc>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Tony Xie <tony.xie@rock-chips.com>, Wen He <wen.he_1@nxp.com>,
-        Mike Looijmans <mike.looijmans@topic.nl>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Joel Stanley <joel@jms.id.au>, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] clk: Add Baikal-T1 CCU PLLs driver
-Message-ID: <20200506223636.pgegmxc2z4uqbnbg@mobilestation>
-References: <20200306130053.BCBFC803078F@mail.baikalelectronics.ru>
- <20200506222300.30895-1-Sergey.Semin@baikalelectronics.ru>
- <20200506222300.30895-4-Sergey.Semin@baikalelectronics.ru>
- <9259445e-86a8-8e4a-58c9-822bd00d62f8@infradead.org>
+        Wed, 6 May 2020 18:36:56 -0400
+Received: from mout.gmx.net ([212.227.17.21]:37845 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730313AbgEFWgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 18:36:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1588804597;
+        bh=jMqTPLplV3feDysjlHGaAHOsRH2Ey6JsMC0NKjgtrfM=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=DYUT6FUxuw9qQ1wAYbAe6qjKFNWYfbXkGhDXd5/F0XVIVHXHHApscpdoOe78IE2iF
+         9rytMwth/vTVtfzxZN7onK1bpx4TGDVRkrKTQAl50/h0O5HYQ24Ezh3F+XwcSpANv9
+         fp+gp7YVL1FfrYqHhmE+XZ9gMDeGskEUPvZLJ1b8=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from hsiangkao-HP-ZHAN-66-Pro-G1 ([120.242.76.42]) by mail.gmx.com
+ (mrgmx105 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 1N7iCg-1j1GTO2bYo-014kRU; Thu, 07 May 2020 00:36:37 +0200
+Date:   Thu, 7 May 2020 06:36:26 +0800
+From:   Gao Xiang <hsiangkao@gmx.com>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [PATCH] f2fs: get parent inode when recovering pino
+Message-ID: <20200506223623.GA27760@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20200505153139.201697-1-jaegeuk@kernel.org>
+ <20200505165847.GA98848@gmail.com>
+ <20200505181323.GA55221@google.com>
+ <20200505181941.GC98848@gmail.com>
+ <20200506001403.GA2101@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20200506012428.GG128280@sol.localdomain>
+ <20200506015813.GA9256@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20200506064709.GA25482@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20200506191613.GB842@sol.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9259445e-86a8-8e4a-58c9-822bd00d62f8@infradead.org>
+In-Reply-To: <20200506191613.GB842@sol.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:ri2UJfRqCi9CrS2zGaKMZ6aJn281d6XAnbJ9XZIUIviP96/s9Eu
+ IYngQM4ftXQDiHgqRWZCkQeQyAh1AqJM8f3K8+21t5Y0FFFfNO9OX+ZmMTu0KAtYJtFKzPk
+ xrnQ98ASz/SJsokxdl++9IL6cNU4Uuj+GWqrkeYGfsk82Uw9C9/g2KRr9MxfiEAPiYrQQPy
+ O1CLYUyrWGH8CikI5M6mw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:B+lt3r38RYQ=:D2ZUtIJvYc/qkhW/+EPb34
+ 0mUY5T0xNv7hjQfW990tRbucCEcrq2+FSe0p6gHEVyY2DZOHiGDkrE6wrceIypmVJJmBu76Pc
+ 6/YrApjWNH3DCambBH9hcvvYJnu2U4ti8BjQ2uZREt01FTuTqSMSmXO1Szdrch0k1ExFeh8H7
+ jnks4ZfOpQ/Pk7aWu4SI/TyL0Z/JdQcLquFqtDOAO8W6ajGAUEz69oRXca7OLmVwJKnqxpTVW
+ OjwpDTNe2b0AUimzzT6C5rCJUDD/aVj9i7BZuYdIuWhgkpPdZ8sA1huiZ+xfZ69F7zFLr1m1V
+ Iho7aOoEt7Lqb7PzjGxoYTs7nvWJn4HA5M9OWWYZQ2T4N2xSUo5kr0aPks2FTO/1g2a4JC/M/
+ /ygoqzTOJSATnPrv/rkXFObRCdO+T/OkCsLj6ud1+RFaE/P3zWKaFGQTkEZkKSemP3QR3ZEIL
+ DdYDBN9n+mu1Fnyt3n59azTt4+SjcKOUpOJcUG/qPlx56xeefk1qDi1AoU2h1vOcJyQFun1wL
+ yHM6nmYnLnJsZA7UB8TrRz73Iv62gNGgGQLJQpbTWfhyAxk6tpabr7DllcY1IJ78oJtggo0k8
+ Fq0KbAfrTojKmIj9m84HdvOkxV35jm1TuAMvRw5vsVf8ruvbS1tWTEruub2I/UHFi4BpaMLU7
+ j3LlRwF5POt0y8JrvbNrh4CSIa1SbGNJVVvdjbOzivANycXOJDGBU2JqXBf4d03sQO/1PA9Y/
+ Kg76huCQx+S0YvrROR04LDwTEP3EXYNifLqm5R7xYFKK0N4byibFzWN5M/H8MRy7G1zu9uS6o
+ 5GQeu6TT9LOPFQwhtKGLt6Ksf33tRmA/U+51DjUpdt3T+K7wpJENVwq3H6vUJ79QgffLuFTIn
+ omaDP4mZct7qMBUZi8ToC6jDjO9fpOyri8+goGVqO+7p/po9cBLlXRTdO+G/p7I8vVDKOF0Hu
+ VE8+m6hFHDyk0MLagOi9kEyvZSjo9l1JYVv98THoyToNozfc5bXZxAtIgaC03SWRw1GnCiOP1
+ ov7mTCxlXgCjjo63OISXzstJPBr4dYvUMSKdL3y83pFeLSL/AIwZajb6KuuhUoQNKLPaP0MZf
+ bhKEGoUh8cz5hDG1cU6H2YOawbC0shB/+m/XFP1fPSjBSZDvSHngN1ACQDawZ9pzeaNQaQK6K
+ NEtIZEjSN/yVLHjkKeLZOoJN9tdcS6MwQEazlCn/5JLzgfpe64Y5wsXd6lTBVNf9pPG0tUHSF
+ +EJ/ZlGWO9wRl7rT6
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, May 06, 2020 at 12:16:13PM -0700, Eric Biggers wrote:
+> On Wed, May 06, 2020 at 02:47:19PM +0800, Gao Xiang wrote:
+> > On Wed, May 06, 2020 at 09:58:22AM +0800, Gao Xiang wrote:
+> > > On Tue, May 05, 2020 at 06:24:28PM -0700, Eric Biggers wrote:
+> > > > On Wed, May 06, 2020 at 08:14:07AM +0800, Gao Xiang wrote:
+> > > > > >
+> > > > > > Actually, I think this is wrong because the fsync can be done =
+via a file
+> > > > > > descriptor that was opened to a now-deleted link to the file.
+> > > > >
+> > > > > I'm still confused about this...
+> > > > >
+> > > > > I don't know what's wrong with this version from my limited know=
+ledge?
+> > > > >  inode itself is locked when fsyncing, so
+> > > > >
+> > > > >    if the fsync inode->i_nlink =3D=3D 1, this inode has only one=
+ hard link
+> > > > >    (not deleted yet) and should belong to a single directory; an=
+d
+> > > > >
+> > > > >    the only one parent directory would not go away (not deleted =
+as well)
+> > > > >    since there are some dirents in it (not empty).
+> > > > >
+> > > > > Could kindly explain more so I would learn more about this scena=
+rio?
+> > > > > Thanks a lot!
+> > > >
+> > > > i_nlink =3D=3D 1 just means that there is one non-deleted link.  T=
+here can be links
+> > > > that have since been deleted, and file descriptors can still be op=
+en to them.
+> > >
+> > > Thanks for your inspiration. You are right, thanks.
+> > >
+> > > Correct my words... I didn't check f2fs code just now, it seems f2fs=
+ doesn't
+> > > take inode_lock as some other fs like __generic_file_fsync or ubifs_=
+fsync.
+> > >
+> > > And i_sem locks nlink / try_to_fix_pino similarly in some extent. It=
+ seems
+> > > no race by using d_find_alias here. Thanks again.
+> > >
+> >
+> > (think more little bit just now...)
+> >
+> >  Thread 1:                                           Thread 2 (fsync):
+> >   vfs_unlink                                          try_to_fix_pino
+> >     f2fs_unlink
+> >        f2fs_delete_entry
+> >          f2fs_drop_nlink  (i_sem, inode->i_nlink =3D 1)
+> >
+> >   (...   but this dentry still hashed)                  i_sem, check i=
+node->i_nlink =3D 1
+> >                                                         i_sem d_find_a=
+lias
+> >
+> >   d_delete
+> >
+> > I'm not sure if fsync could still use some wrong alias by chance..
+> > completely untested, maybe just noise...
+> >
+>
+> Right, good observation.  My patch makes it better, but it's still broke=
+n.
+>
+> I don't know how to fix it.  If we see i_nlink =3D=3D 1 and multiple has=
+hed
+> dentries, there doesn't appear to be a way to distingush which one corre=
+sponds
+> to the remaining link on-disk (if any; it may not even be in the dcache)=
+, and
+> which correspond to links that vfs_unlink() has deleted from disk but ha=
+sn't yet
+> done d_delete() on.
+>
+> One idea would be choose one, then take inode_lock_shared(dir) and do
+> __f2fs_find_entry() to check if the dentry is really still on-disk.  Tha=
+t's
+> heavyweight and error-prone though, and the locking could cause problems=
+.
+>
+> I'm wondering though, does f2fs really need try_to_fix_pino() at all, an=
+d did it
+> ever really work?  It never actually updates the f2fs_inode::i_name to m=
+atch the
+> new directory.  So independently of this bug with deleted links, I don't=
+ see how
+> it can possibly work as intended.
 
-On Wed, May 06, 2020 at 03:27:57PM -0700, Randy Dunlap wrote:
-> Hi,
-> 
-> Typo(s):
-> 
-> On 5/6/20 3:22 PM, Serge Semin wrote:
-> > diff --git a/drivers/clk/baikal-t1/Kconfig b/drivers/clk/baikal-t1/Kconfig
-> > new file mode 100644
-> > index 000000000000..e1257af9f49e
-> > --- /dev/null
-> > +++ b/drivers/clk/baikal-t1/Kconfig
-> > @@ -0,0 +1,30 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +config CLK_BAIKAL_T1
-> > +	bool "Baikal-T1 Clocks Control Unit interface"
-> > +	depends on (MIPS_BAIKAL_T1 && OF) || COMPILE_TEST
-> > +	default MIPS_BAIKAL_T1
-> > +	help
-> > +	  Clocks Control Unit is the core of Baikal-T1 SoC System Controller
-> > +	  responsible for the chip subsystems clocking and resetting. It
-> > +	  consists of multiple global clock domains, which can be reset by
-> > +	  means of the CCU control registers. These domains and devices placed
-> > +	  in them are fed with clocks generated by a hierarchy of PLLs,
-> > +	  configurable and fixed clock dividers. Enable this option to be able
-> > +	  to select Baikal-T1 CCU PLLs and Dividers drivers.
-> > +
-> > +if CLK_BAIKAL_T1
-> > +
-> > +config CLK_BT1_CCU_PLL
-> > +	bool "Baikal-T1 CCU PLLs support"
-> > +	select MFD_SYSCON
-> > +	default MIPS_BAIKAL_T1
-> > +	help
-> > +	  Enable this to support the PLLs embedded into the Baikal-T1 SoC
-> > +	  System Controller. These are five PLLs placed at the root of the
-> > +	  clocks hierarchy, right after an external reference osciallator
-> 
-> 	                                                      oscillator
+Part of my humble opinion would be "update pino in rename/unlink/link... s=
+uch ops
+instead of in fsync" (maybe it makes better sense of locking)... But actua=
+lly I'm
+not a f2fs folk now, just curious about what the original patch resolved w=
+ith
+these new extra igrab/iput (as I said before, I could not find some clue p=
+reviously).
 
-Fixed. Thanks.
+Thanks,
+Gao Xiang
 
-> 
-> > +	  (normally of 25MHz). They are used to generate high frequency
-> > +	  signals, which are either directly wired to the consumers (like
-> > +	  CPUs, DDR, etc) or passed over the clock dividers to be only then
-> 
-> and while you are here:
-> 
->                      etc.)
-
-Thanks again.
-
--Sergey
-
-> 
-> > +	  used as an individual reference clock of a target device.
-> > +
-> > +endif
-> 
-> thanks.
-> -- 
-> ~Randy
-> 
+>
+> - Eric
