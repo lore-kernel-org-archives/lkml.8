@@ -2,101 +2,144 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B777BC47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A6CC4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A9BC208DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C71EC20936
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:43:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588787031;
+	bh=YZsANvSKjkoobhC/OjUVOA5jZyPR7sjiwNq8DDRVE/U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aV+JyJLSVJuXZe52epcUwfrChQs1Eo/twB/5Yit68iZbHLF9P+d2Js3pBSvIEg7US
+	 h1o9QzkeElrlgeJKnqUQKlMnZmnTmfFedvU2vxh4s38cOaRe8AgfgRb03P1tIL5ztJ
+	 tiGtfGfS6dSL7t6QrIQnNBj4Xvq+V0WwvoEd8Vfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729976AbgEFRnn (ORCPT
+        id S1730012AbgEFRnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 13:43:43 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:60712 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729366AbgEFRna (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 13:43:30 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id A8A1480307C2;
-        Wed,  6 May 2020 17:43:27 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id gy1-Mn2vu5hz; Wed,  6 May 2020 20:43:27 +0300 (MSK)
-From:   <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Markos Chandras <markos.chandras@imgtec.com>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 04/20] mips: cm: Fix an invalid error code of INTVN_*_ERR
-Date:   Wed, 6 May 2020 20:42:22 +0300
-Message-ID: <20200506174238.15385-5-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+        Wed, 6 May 2020 13:43:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59098 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728094AbgEFRnu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 13:43:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CB86208DB;
+        Wed,  6 May 2020 17:43:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588787028;
+        bh=YZsANvSKjkoobhC/OjUVOA5jZyPR7sjiwNq8DDRVE/U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VCtirk6C29s2nVSDVOrYapTNbzYm63MyYgr17LGRvuO6vCElDhTgO1+AuvxTipmqG
+         hU7lSDiUy+reDa0qGe66XRwl8SHOYbjhgb/xFm/pdU41rZZlTXynq8HoV2/srgybxE
+         TuY+I2rNtSNHafGqhznobx5MCHS1gADJdc3idqQE=
+Date:   Wed, 6 May 2020 19:43:45 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc:     mchehab@kernel.org, kstewart@linuxfoundation.org,
+        tomasbortoli@gmail.com, sean@mess.org, allison@lohutok.net,
+        tglx@linutronix.de, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: usb: ttusb-dec: avoid buffer overflow in
+ ttusb_dec_handle_irq() when DMA failures/attacks occur
+Message-ID: <20200506174345.GA3711921@kroah.com>
+References: <20200505142110.7620-1-baijiaju1990@gmail.com>
+ <20200505181042.GD1199718@kroah.com>
+ <0e4a86ee-8c4e-4ac3-8499-4e9a6ed7bd1e@gmail.com>
+ <20200506110722.GA2975410@kroah.com>
+ <b3af10e3-8709-3da0-6841-e5ddd6b4a609@gmail.com>
+ <20200506155257.GB3537174@kroah.com>
+ <46615f6e-11ec-6546-42a9-3490414f9550@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <46615f6e-11ec-6546-42a9-3490414f9550@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+On Thu, May 07, 2020 at 12:48:47AM +0800, Jia-Ju Bai wrote:
+> 
+> 
+> On 2020/5/6 23:52, Greg KH wrote:
+> > On Wed, May 06, 2020 at 11:30:22PM +0800, Jia-Ju Bai wrote:
+> > > 
+> > > On 2020/5/6 19:07, Greg KH wrote:
+> > > > On Wed, May 06, 2020 at 06:13:01PM +0800, Jia-Ju Bai wrote:
+> > > > > I have never modified DMA memory in the real world, but an attacker can use
+> > > > > a malicious device to do this.
+> > > > > There is a video that shows how to use the Inception tool to perform DMA
+> > > > > attacks and login in the Windows OS without password:
+> > > > > https://www.youtube.com/watch?v=HDhpy7RpUjM
+> > > > If you have control over the hardware, and can write to any DMA memory,
+> > > > again, there's almost nothing a kernel can do to protect from that.
+> > > I think that each device can only access its own DMA memory, instead of any
+> > > DMA memory for other hardware devices.
+> > That's not true at all for all systems that Linux runs on.
+> 
+> I am not sure to understand this.
+> For example, a driver requests DMA memory with "len" size by using:
+>    mem = dma_alloc_coherent(..., len, ...);
+> I think that the driver can only access DMA memory between "mem" and "mem +
+> len", is it true?
+> Can the driver access other DMA memory using some code like "mem + len *
+> 10"?
 
-Commit 3885c2b463f6 ("MIPS: CM: Add support for reporting CM cache
-errors") adds cm2_causes[] array with map of error type ID and
-pointers to the short description string. There is a mistake in
-the table, since according to MIPS32 manual CM2_ERROR_TYPE = {17,18}
-correspond to INTVN_WR_ERR and INTVN_RD_ERR, while the table
-claims they have {0x17,0x18} codes. This is obviously hex-dec
-copy-paste bug. Moreover codes {0x18 - 0x1a} indicate L2 ECC errors.
+Depends on the hardware platform.
 
-Fixes: 3885c2b463f6 ("MIPS: CM: Add support for reporting CM cache errors")
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-pm@vger.kernel.org
-Cc: devicetree@vger.kernel.org
----
- arch/mips/kernel/mips-cm.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> > > A feasible example is that, the attacker inserts a malicious device via
+> > > PCI-E bus in a locked computer, when the owner of this computer leaves.
+> > This is a semi-well-known issue.  It's been described in the past
+> > regarding thunderbolt devices, and odds are, more people will run across
+> > it again in the future and also complain about it.
+> > 
+> > The best solution is to solve this at the bus level, preventing
+> > different devices access to other memory areas.
+> > 
+> > And providing physical access control to systems that you care about
+> > this type of attack for.
+> > 
+> > Again, this isn't a new thing, but the ability for us to do much about
+> > it depends on the specific hardware control, and how we set defaults up.
+> 
+> Yes, I agree that this issue is not new, because DMA attacks are old
+> problems.
+> But I am a little surprised that many current drivers are still vulnerable
+> to DMA attacks.
 
-diff --git a/arch/mips/kernel/mips-cm.c b/arch/mips/kernel/mips-cm.c
-index cdb93ed91cde..361bfc91a0e6 100644
---- a/arch/mips/kernel/mips-cm.c
-+++ b/arch/mips/kernel/mips-cm.c
-@@ -119,9 +119,9 @@ static char *cm2_causes[32] = {
- 	"COH_RD_ERR", "MMIO_WR_ERR", "MMIO_RD_ERR", "0x07",
- 	"0x08", "0x09", "0x0a", "0x0b",
- 	"0x0c", "0x0d", "0x0e", "0x0f",
--	"0x10", "0x11", "0x12", "0x13",
--	"0x14", "0x15", "0x16", "INTVN_WR_ERR",
--	"INTVN_RD_ERR", "0x19", "0x1a", "0x1b",
-+	"0x10", "INTVN_WR_ERR", "INTVN_RD_ERR", "0x13",
-+	"0x14", "0x15", "0x16", "0x17",
-+	"0x18", "0x19", "0x1a", "0x1b",
- 	"0x1c", "0x1d", "0x1e", "0x1f"
- };
- 
--- 
-2.25.1
+Given that the attack vector is very hard to actually do, that's not
+a suprise.
 
+It's only a very recent thing that Linux drivers have started to work on
+"we don't trust the data coming from the hardware" path.  Previously we
+always trusted that, but did not trust data coming from userspace.  So
+work on fixing up drivers in this area is always encouraged.
+
+An example of this would be all of the fuzzing that USB drivers have
+been getting with custom loop-back interfaces and the like over the past
+year or so.  Expanding that to "we don't trust PCI device data" should
+be the next step on this, and would help out your area as well.
+
+> > If you trust a device enough to plug it in, well, you need to trust it
+> > :)
+> 
+> Well, maybe I need to trust all devices in my computer :)
+> 
+> Anyway, thanks a lot for your patient explanation and reply.
+> If you have encountered other kinds of DMA-related bugs/vulnerabilities,
+> maybe I can help to detect them using my static-analysis tool :)
+
+Did you only find a problem in this one driver?  Have you run it on any
+more "complex" drivers and gotten any good results showing either that
+we are programming defensively in this area, or not?
+
+thanks,
+
+greg k-h
