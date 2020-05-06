@@ -2,86 +2,75 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D592C47257
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FB0C47257
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65D222075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17B262075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:37:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729096AbgEFJgs (ORCPT
+        id S1729110AbgEFJhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 05:36:48 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:42187 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728640AbgEFJgs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 05:36:48 -0400
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 0C349240028;
-        Wed,  6 May 2020 09:34:41 +0000 (UTC)
-Date:   Wed, 6 May 2020 11:34:41 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Samuel Zou <zou_wei@huawei.com>
-Cc:     a.zummo@towertech.it, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] rtc: pcf8523: Use PTR_ERR_OR_ZERO() to simplify
- code
-Message-ID: <20200506093441.GB34497@piout.net>
-References: <1588757640-39044-1-git-send-email-zou_wei@huawei.com>
+        Wed, 6 May 2020 05:37:03 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:40032 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728640AbgEFJhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 05:37:03 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 75286179B7B14BBF5296;
+        Wed,  6 May 2020 17:36:58 +0800 (CST)
+Received: from [127.0.0.1] (10.166.213.93) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Wed, 6 May 2020
+ 17:36:52 +0800
+Subject: Re: [RFC PATCH] cpufreq: add support for HiSilicon SoC HIP09
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        Xiongfeng Wang <wangxiongfeng2@huawei.com>
+CC:     <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <john.garry@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>
+References: <1588227599-46438-1-git-send-email-wangxiongfeng2@huawei.com>
+ <20200430095559.GB28579@bogus>
+From:   Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <3ba950dd-4065-e4a5-d406-dc5c6c1781a7@huawei.com>
+Date:   Wed, 6 May 2020 17:36:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588757640-39044-1-git-send-email-zou_wei@huawei.com>
+In-Reply-To: <20200430095559.GB28579@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.213.93]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Sudeep,
 
-On 06/05/2020 17:34:00+0800, Samuel Zou wrote:
-> Fixes coccicheck warning:
+On 2020/4/30 17:55, Sudeep Holla wrote:
+> On Thu, Apr 30, 2020 at 02:19:59PM +0800, Xiongfeng Wang wrote:
+>> HiSilicon SoC has a separate System Control Processor(SCP) dedicated for
+>> clock frequency adjustment and has been using the cpufreq driver
+>> 'cppc-cpufreq'. New HiSilicon SoC HIP09 add support for CPU Boost, but
+>> ACPI CPPC doesn't support this. In HiSilicon SoC HIP09, each core has
+>> its own clock domain. It is better for the core itself to adjust its
+>> frequency when we require fast response. In this patch, we add a
+>> separate cpufreq driver for HiSilicon SoC HIP09.
+>>
 > 
-> drivers/rtc/rtc-pcf8523.c:361:1-3: WARNING: PTR_ERR_OR_ZERO can be used
-> 
+> I disagree with this approach unless you have tried to extend the CPPC
+> in ACPI to accommodate this boost feature you need. Until you show those
+> efforts and disagreement to do that from ASWG, I am NACKing this approach.
 
-I'm not taking this change because it is useless and will have to be
-revert as soon as the probe function changes (and it will).
+Unfortunately we are not in ASWG at now, could you please give some
+help about extending CPPC in ACPI to support boost feature?
 
-Does it really simplifies the code? I very much doubt so.
+Thanks
+Hanjun
 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Samuel Zou <zou_wei@huawei.com>
-> ---
->  drivers/rtc/rtc-pcf8523.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/rtc/rtc-pcf8523.c b/drivers/rtc/rtc-pcf8523.c
-> index 47e0f41..da8889a 100644
-> --- a/drivers/rtc/rtc-pcf8523.c
-> +++ b/drivers/rtc/rtc-pcf8523.c
-> @@ -358,10 +358,8 @@ static int pcf8523_probe(struct i2c_client *client,
->  
->  	rtc = devm_rtc_device_register(&client->dev, DRIVER_NAME,
->  				       &pcf8523_rtc_ops, THIS_MODULE);
-> -	if (IS_ERR(rtc))
-> -		return PTR_ERR(rtc);
->  
-> -	return 0;
-> +	return PTR_ERR_OR_ZERO(rtc);
->  }
->  
->  static const struct i2c_device_id pcf8523_id[] = {
-> -- 
-> 2.6.2
-> 
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
