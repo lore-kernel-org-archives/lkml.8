@@ -2,141 +2,127 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EFCCC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE527C38A2A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7821D2078C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:47:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588801649;
-	bh=pwEohbYHGlKysyVm5Ggs8tQ4+bgqMAuynBLkm9EKyHU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=i8+v1v2amjIt6p+45LWd0xWEOmrpLZgI1OZTrUUtZEGQ8XQHjKPiSdw7Y2stcLmjc
-	 H1OyvKIHhcV5kA9eoNw/Oi085sN0qPn5NW+KRUccCnAbyvyZ+j4udEG7MgoPMfRIKO
-	 bp/g8LCy9gM2i7uinRxkg6IJ+ulaWuyY34S0wOeM=
+	by mail.kernel.org (Postfix) with ESMTP id CBF252075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:47:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q0NTsDSt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729700AbgEFVr2 (ORCPT
+        id S1729981AbgEFVr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 17:47:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41542 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729114AbgEFVr2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 17:47:28 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B295F2075E;
-        Wed,  6 May 2020 21:47:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588801647;
-        bh=pwEohbYHGlKysyVm5Ggs8tQ4+bgqMAuynBLkm9EKyHU=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=a34qa2NUKmuV6/hEeCmIkxDPCJsIyTLjAw5XdFte4rLFicBSKKWgPnY4QgF2hUp5B
-         JX8fxZDOGdNx+5x+xQSfwtCc0KB+scHgRqje2CukS+vgHtg64iGHhWc0yCu0AOFQGP
-         6SKJ4O4u2R+8SM7EVSHa4NNS1pAXmt99zeenC3m8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 94E64352269D; Wed,  6 May 2020 14:47:27 -0700 (PDT)
-Date:   Wed, 6 May 2020 14:47:27 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Please can I have a stable KCSAN branch for 5.8?
-Message-ID: <20200506214727.GA27039@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200506132816.GJ8043@willie-the-truck>
- <20200506143616.GY2869@paulmck-ThinkPad-P72>
- <20200506144141.GA12919@willie-the-truck>
- <CANpmjNP3ge49sXJZS-KaL5bpEq0rmc4CqepjGRbtbCVwm7rwpw@mail.gmail.com>
- <20200506180232.GB2869@paulmck-ThinkPad-P72>
- <CANpmjNP1v8wORd_nfQb7hVH2EY5P565uJYsRFt0dXi4KZvQ46A@mail.gmail.com>
- <20200506193713.GG2869@paulmck-ThinkPad-P72>
+        Wed, 6 May 2020 17:47:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34218 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729114AbgEFVr5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 17:47:57 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E5E5C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 14:47:57 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id f5so1805305ybo.4
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 14:47:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XDCm9CTFpoK5/Dz09DifiPd0oVvuVU4Sq+Ix5lhMoGE=;
+        b=q0NTsDStrOr+UQIXdfTWe7lCFEPZiokqO93iTV1gRM883GSUZ9ii/vpxrQIQN0A1PK
+         kmCVpFj4K1Wr+lTRujOHHRTB4kiJZi8t3XloESG1fmKMuogXgT0nI9GowWm5nbl4P+u6
+         YrT/O2jhg2DCT2+tNFqIjMSWwtAJiR4iCKGdC8F2VYCH0k2/y1+0WpCrqwTe4pAWaXJR
+         DsY0q6AmpcDoIQchhkdMYSGImFRrLr9irByz7Ivdtscp3LcbCT8qlddV6wfTeYMK3YEB
+         N9/bzhPxi5xmXNlMsQCoV7wW4bKDp8K4J6KH/gS8CDHHYYBrwOP42prp/zge31Yv3f+r
+         sOnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XDCm9CTFpoK5/Dz09DifiPd0oVvuVU4Sq+Ix5lhMoGE=;
+        b=kwCjgi/5CprXXXmLctM/GDYpTPhN4Oxw04/lQGwvOSrPpif/WUvTbMZyxkiXt7zRHA
+         TNpPKVkfPvAUgkB9jrlzpbG4yO3+DthoywalFVF1GXLdBM3Y0UKqv7HxVIeNylTzLFHH
+         lJoBW/FB1Mlu7yRooBYkkDAZJQQ5mCEUwXC/obftZ7/UQPCWd9AH5mFS7F2k6WENLh3x
+         2G6CYisN11DVvWYo73GvuXp1yRi73pwMcVcmSTye4fx5gMPEeEaodmdT8vcvcI6x+Iu2
+         03hqOa1HJSYMajEj2W5kXPqRxfD4X2/N6JT9Mf6JE51c+kbl0eFgrPoP5u+jXoM2hjsK
+         SLzA==
+X-Gm-Message-State: AGi0PuaPckkpzWcnetN/TBA7sSsauI9CKnmYKkYOqmQzR/6IYFuCFuLB
+        kRpOc7s1BFsci1Yh+1jDmWkgIMq9+BUPglCsQ16SEw==
+X-Google-Smtp-Source: APiQypJdAjh8wJuI5rwPq5qfKo9myLWhJ28U+nrCFELrn/pn42TV8D9nQAhbiTKLkEzwpEtffuLetg891d5szEVZBbU=
+X-Received: by 2002:a25:be81:: with SMTP id i1mr16844255ybk.184.1588801676046;
+ Wed, 06 May 2020 14:47:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506193713.GG2869@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200506205257.8964-1-irogers@google.com> <20200506205257.8964-2-irogers@google.com>
+ <CAEf4BzZRmiEds_8R8g4vaAeWvJzPb4xYLnpF0X2VNY8oTzkphQ@mail.gmail.com>
+In-Reply-To: <CAEf4BzZRmiEds_8R8g4vaAeWvJzPb4xYLnpF0X2VNY8oTzkphQ@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 6 May 2020 14:47:44 -0700
+Message-ID: <CAP-5=fXUxcGZbrJMONLBasui2S=pvta7YZENEqSkenvZis58VA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] lib/bpf hashmap: increase portability
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 12:37:13PM -0700, Paul E. McKenney wrote:
-> On Wed, May 06, 2020 at 09:11:23PM +0200, Marco Elver wrote:
-> > On Wed, 6 May 2020 at 20:02, Paul E. McKenney <paulmck@kernel.org> wrote:
-> > >
-> > > On Wed, May 06, 2020 at 05:26:56PM +0200, Marco Elver wrote:
-> > > > On Wed, 6 May 2020 at 16:41, Will Deacon <will@kernel.org> wrote:
-> > > > >
-> > > > > Hi Paul,
-> > > > >
-> > > > > Cheers for the quick reply!
-> > > > >
-> > > > > On Wed, May 06, 2020 at 07:36:16AM -0700, Paul E. McKenney wrote:
-> > > > > > On Wed, May 06, 2020 at 02:28:17PM +0100, Will Deacon wrote:
-> > > > > > > I'm looking to rebase my READ_ONCE() series [1] on top of the KCSAN patches
-> > > > > > > so that we can get them in for 5.8. However, tip/locking/kcsan seems to be
-> > > > > > > missing some bits:
-> > > > > > >
-> > > > > > >   * An update to checkpatch.pl to warn about missing comments for
-> > > > > > >     data_race():
-> > > > > > >
-> > > > > > >     https://lore.kernel.org/r/20200401101714.44781-1-elver@google.com
-> > > > > >
-> > > > > > For some reason, I thought this was going up some other tree, but I do
-> > > > > > not see it in -next.  So unless I hear otherwise, I will pull it into
-> > > > > > the v5.8 kcsan branch.
-> > > > >
-> > > > > Brill, thanks.
-> > > > >
-> > > > > > >   * I'm unable to apply these two patches from Marco that are needed for
-> > > > > > >     my READ_ONCE() work:
-> > > > > > >
-> > > > > > >     https://lore.kernel.org/lkml/20200424154730.190041-1-elver@google.com/
-> > > > > > >
-> > > > > > >     I think these depend on stuff that has been queued by Paul, and appears
-> > > > > > >     in linux-next, but to be honest with you I'm quite confused about what
-> > > > > > >     is queued for 5.8 and what isn't.
-> > > > > >
-> > > > > > This one is queued, but I currently have it in the v5.9 pile (but
-> > > > > > tentatively for v5.8).  Unless Marco tells me otherwise, I will move it
-> > > > > > to the v5.8 branch, which will be part of my pull request next week.
-> > > > >
-> > > > > Great, then this would all show up on tip/locking/kscan, right?
-> > > > >
-> > > > > > > What's the best base for me to use?
-> > > > > >
-> > > > > > The -next tree has the latter, but not yet the former.
-> > > > >
-> > > > > That probably means -next is good enough for me to cook a new version of my
-> > > > > series, and then I can make a proper branch next week.
-> > > > >
-> > > > > > Hopefully we can get this straightened out, and please accept my apologies
-> > > > > > for the hassle!
-> > > > >
-> > > > > No need to apologise, I just couldn't figure out what was what and decided
-> > > > > it was easier to ask the experts ;)
-> > > >
-> > > > Just confirming that I don't see any issues with the plan -- the
-> > > > patches that Will needs are good to go into the v5.8 branch.
-> > >
-> > > OK, I have updated -rcu's kcsan and kcsan-dev branches.  Could you please
-> > > double-check, given that pull-request time is quite soon?
-> > 
-> > I believe "objtool, kcsan: Add kcsan_disable_current() and
-> > kcsan_enable_current_nowarn()" is missing, which should go after
-> > "kcsan: Add __kcsan_{enable,disable}_current() variants".
-> 
-> Thank you for checking!  I will move that one also.
+On Wed, May 6, 2020 at 2:33 PM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
+> On Wed, May 6, 2020 at 1:54 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > Don't include libbpf_internal.h as it is unused and has conflicting
+> > definitions, for example, with tools/perf/util/debug.h.
+> > Fix a non-glibc include path.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/lib/bpf/hashmap.h | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> >
+> > diff --git a/tools/lib/bpf/hashmap.h b/tools/lib/bpf/hashmap.h
+> > index bae8879cdf58..d5ef212a55ba 100644
+> > --- a/tools/lib/bpf/hashmap.h
+> > +++ b/tools/lib/bpf/hashmap.h
+> > @@ -13,9 +13,8 @@
+> >  #ifdef __GLIBC__
+> >  #include <bits/wordsize.h>
+> >  #else
+> > -#include <bits/reg.h>
+> > +#include <linux/bitops.h>
+>
+> why this change? It might be ok for libbpf built from kernel source,
+> but it will break Github libbpf.
 
-And it is moved.  FYI, I will likely be sending my KCSAN pull request
-late tomorrow (Thursday) Pacific Time, a few days earlier than normal.
+Without this change my debian based machine wasn't able to build
+within the kernel tree. I see bits/wordsize.h on the machine. Perhaps
+the __WORDSIZE computation could just be based on __LP64__ to remove
+any #include?
 
-							Thanx, Paul
+Thanks,
+Ian
+
+> >  #endif
+> > -#include "libbpf_internal.h"
+>
+> Dropping this seems ok, don't remember why I had it here in the first place.
+>
+> >
+> >  static inline size_t hash_bits(size_t h, int bits)
+> >  {
+> > --
+> > 2.26.2.526.g744177e7f7-goog
+> >
