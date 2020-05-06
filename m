@@ -2,134 +2,120 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C56C9C38A2A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D337C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A03D620753
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:43:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588761786;
-	bh=qjFxbQJhwnjLswkECG7XON/LpTe8nEe02+5NBDCvjtA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=t4qIL1asPaFWPQ98IH/n31j67zx0Ny55hoSEx59J3HH0BNb38xJ5Dkv5e+mSEI2jl
-	 ELqhLV0mRl4zYZuShO94X8bYcOgKw3eGzHitwSQuEq2KR7JFwDo8cRuiLoV8hIvHab
-	 jt1JF88Ub8z1QQcQGeFBoDx91tCezR0NxKjU+xnU=
+	by mail.kernel.org (Postfix) with ESMTP id 163802070B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:43:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nLPzDp2N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729222AbgEFKnG (ORCPT
+        id S1727857AbgEFKnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 06:43:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37414 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725824AbgEFKnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 06:43:05 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9094220663;
-        Wed,  6 May 2020 10:43:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588761784;
-        bh=qjFxbQJhwnjLswkECG7XON/LpTe8nEe02+5NBDCvjtA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=cSbK4h9sQzP5m7pYiJdwdOo8ET3iaMr1rZpcO1x03ZxG4zrp7HgG27gc5E7iKlYBV
-         z2CtAHjpeUw4uiCUovjFTfPrPUqzcEN6baYqdqmiSR5ifUKXGAwuafruomAwTALY0U
-         9LXU2MHGZNFu4pBSupEbhF2T4zGWwTpkr0kniM8g=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jWHW2-009vEj-UY; Wed, 06 May 2020 11:43:03 +0100
-Date:   Wed, 6 May 2020 11:43:01 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Kevin Hilman <khilman@baylibre.com>,
-        Yue Wang <yue.wang@Amlogic.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH] PCI: amlogic: meson: Don't use FAST_LINK_MODE to set up
- link
-Message-ID: <20200506114301.7288c02d@why>
-In-Reply-To: <20200429164230.309922-1-maz@kernel.org>
-References: <20200429164230.309922-1-maz@kernel.org>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 6 May 2020 06:43:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43004 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725824AbgEFKng (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 06:43:36 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE19CC061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 03:43:34 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id z6so2075949wml.2
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 03:43:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=8kGM2QZr0ji3lOKAwGd4O6nutmjEybLwciOOExBgdNA=;
+        b=nLPzDp2NQRB3L4ieT1/ZT+s8ig5YUjtbiVv50gPxzYvx6+WeKm3aEtuH/ErfRYD/hU
+         qyJRP8lul9aql8KvjEZArYPjaLi4WGb3tZDjhksUTiv7NXR+OWL+3BGh+YMIE3H3WzM8
+         5ZlwVdIiQNFjsOGAdlb1YmiARwWEjzcfUukqrVQP+DnJNKYKclhgAQ7wkCnMTktiq1zS
+         cZ/YFSRSGhD7z7qlxNsPf4OUMYLUOGw63RKW+8Jz1P7BkcA3ackpgWzgMykOdraiS0a2
+         beerSP1nqzpPK2O/wHgtPO5pBrKe6dAvShkE4Pn+OdjK24vVVmSXnz/cVUJbVC9GVj3d
+         e2pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=8kGM2QZr0ji3lOKAwGd4O6nutmjEybLwciOOExBgdNA=;
+        b=NTf/0tDAz6gPE+1ixztA4t6tnx/8r4shnibKjjk2BnKyiRX6qDLFJoPDlVNd1ntYWe
+         tqFEYgfu8Rjxc9c8n4KPYusQD+bpnAAMHh7c/S7qcgRPprKuraCYeXx7kOblrQQbFY9y
+         FILNvjWwN5GLnKEuP8BKPJOJD9ypdMpTc1Jsx25gPpYMtDCxmFnTVOnPod02OqZghZzI
+         n7CCyj7K90WC7C0Ef7jOOvfhmDml6g1G1T0kjkIi5XJ+w36ic/84UnzcFnprY9aZKJOf
+         76/OVF/qu/OwakCJn3Vju8tAZqUcWE6bU9p9FHkM8UO3PbYte9Yzu6a95Lob7FrHWAse
+         T6VQ==
+X-Gm-Message-State: AGi0PuZ3jGpGo4Nro+kdfcaySfOydRL4v9BqgVDv9FaqxK4mRalbRJYt
+        zGTlL+a9F8M/69UiI980H17di6T5
+X-Google-Smtp-Source: APiQypKrkm8dOqjUBo6N9uzx4YIqwV7W9iFBlZcfF1Bng8zzCqEmLqOip2YNbtd7hAqVqs0FwmiyMQ==
+X-Received: by 2002:a1c:32c7:: with SMTP id y190mr3899234wmy.13.1588761813741;
+        Wed, 06 May 2020 03:43:33 -0700 (PDT)
+Received: from akira-laptop.home ([2a01:cb19:8b28:7600:a0b9:1c6f:cfba:2b21])
+        by smtp.gmail.com with ESMTPSA id j16sm2055445wru.13.2020.05.06.03.43.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 03:43:33 -0700 (PDT)
+Message-ID: <56b06ae0d110d650e65e4ed72fd44f870997893f.camel@gmail.com>
+Subject: Re: [PATCH v4 1/9] w1_therm: creating w1_therm.h
+From:   Akira shimahara <akira215corp@gmail.com>
+To:     Greg KH <greg@kroah.com>
+Cc:     zbr@ioremap.net, linux-kernel@vger.kernel.org
+Date:   Wed, 06 May 2020 12:43:31 +0200
+In-Reply-To: <20200506065134.GA2279499@kroah.com>
+References: <20200429225915.198956-1-akira215corp@gmail.com>
+         <20200505144811.GD838641@kroah.com>
+         <d4a8e881f2f715f17254a840a9a05b088146c2aa.camel@gmail.com>
+         <20200506065134.GA2279499@kroah.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bhelgaas@google.com, robh@kernel.org, lorenzo.pieralisi@arm.com, khilman@baylibre.com, yue.wang@Amlogic.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020 17:42:30 +0100
-Marc Zyngier <maz@kernel.org> wrote:
+Le mercredi 06 mai 2020 à 08:51 +0200, Greg KH a écrit :
+> > > Why is this function needed to be declared in this .h file?
+> > > Why is any of this needed?  For some reason I thought you needed
+> > > a .h
+> > > file to make things simpler for other .c files, but if all of
+> > > this is
+> > > static, it's not needed at all, right?
+> > > thanks,
+> > > greg k-h
+> > Hello,
+> > Yes, you are right, header file could be avoided. But we separate
+> > it
+> > from .c for clarity purpose, and to ease future developpment (for
+> > example adding support of new devices).
+> > If you absolutely want to put everything in the .c file, I can do
+> > it,
+> > let me know.
+> 
+> 
+> Keep it all in a .c file, only use .h files for when you need to
+> share
+> 
+> it across multiple .c files, otherwise it's not needed.
+> 
+> 
+> 
+> thanks,
+> 
+> 
+> 
+> greg k-h
 
-> My vim3l board stubbornly refuses to play ball with a bog
-> standard PCIe switch (ASM1184e), spitting all kind of errors
-> ranging from link never coming up to crazy things like downstream
-> ports falling off the face of the planet.
-> 
-> Upon investigating how the PCIe RC is configured, I found the
-> following nugget: the Sysnopsys DWC PCIe Reference Manual, in the
-> section dedicated to the PLCR register, describes bit 7 (FAST_LINK_MODE)
-> as:
-> 
-> "Sets all internal timers to fast mode for simulation purposes."
-> 
-> I completely understand the need for setting this bit from a simulation
-> perspective, but what I have on my desk is actual silicon, which
-> expects timers to have a nominal value (and I expect this is the
-> case for most people).
-> 
-> Making sure the FAST_LINK_MODE bit is cleared when configuring the RC
-> solves this problem.
-> 
-> Fixes: 9c0ef6d34fdb ("PCI: amlogic: Add the Amlogic Meson PCIe controller driver")
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
->  drivers/pci/controller/dwc/pci-meson.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-> index 3715dceca1bf..ca59ba9e0ecd 100644
-> --- a/drivers/pci/controller/dwc/pci-meson.c
-> +++ b/drivers/pci/controller/dwc/pci-meson.c
-> @@ -289,11 +289,11 @@ static void meson_pcie_init_dw(struct meson_pcie *mp)
->  	meson_cfg_writel(mp, val, PCIE_CFG0);
->  
->  	val = meson_elb_readl(mp, PCIE_PORT_LINK_CTRL_OFF);
-> -	val &= ~LINK_CAPABLE_MASK;
-> +	val &= ~(LINK_CAPABLE_MASK | FAST_LINK_MODE);
->  	meson_elb_writel(mp, val, PCIE_PORT_LINK_CTRL_OFF);
->  
->  	val = meson_elb_readl(mp, PCIE_PORT_LINK_CTRL_OFF);
-> -	val |= LINK_CAPABLE_X1 | FAST_LINK_MODE;
-> +	val |= LINK_CAPABLE_X1;
->  	meson_elb_writel(mp, val, PCIE_PORT_LINK_CTRL_OFF);
->  
->  	val = meson_elb_readl(mp, PCIE_GEN2_CTRL_OFF);
+Hi, 
 
-Yue, Kevin: any comment on this?
+Ok well noted, I will do it tomorrow, and keep it as 8 patches.
 
-I found that the issue is reproducible even without a PCIe switch,
-depending on the single device I plug in this machine (an Intel SSD
-works fine, while a Marvell Ethernet adapter never shows up) as the
-LTSSM times out much earlier than it really should (HW timers running
-too quickly). Applying this patch makes every single device I have
-lying around work fine.
+Thanks for your time
 
-Thanks,
+Akira Shimahara
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
