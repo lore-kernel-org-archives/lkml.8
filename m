@@ -2,149 +2,132 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C93EAC38A2A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3FE2C54E49
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A68B720746
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C92F20735
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:33:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QdjVM5Ul"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iMykq6d1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgEFXdK (ORCPT
+        id S1728060AbgEFXdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 19:33:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50680 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbgEFXdK (ORCPT
+        Wed, 6 May 2020 19:33:15 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21036 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728025AbgEFXdO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 19:33:10 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66179C061A0F;
-        Wed,  6 May 2020 16:33:10 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id z1so1986941pfn.3;
-        Wed, 06 May 2020 16:33:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=JjMAyO4tLtAmhwV/k9L9sSW04zGeh8HxdZQAYEG4VoQ=;
-        b=QdjVM5UlTNqjrwlvQ986J0UXLLGo+1dLtobwrQZQ4upd5rLRtGAP6EPxakQ6azs23H
-         YdPS15KLLvDutw5Oodla6OPPC4dyprA7KXsA6BckMxD22jBVmOnjuuFdTOrhF4mjm5sR
-         F2ePfcsd0b3pjfbACz5giT7H1GJEVF79DEoMkYcV5T9jYM+A+eXD9ewLVLxcElHAfbHl
-         sju3zPBHP5G7lpByn7kETGsf7RjIsH8VQBhKTjwTHgkV020wIqiPdB8DwT08SuHPSRCJ
-         MpQ5neNt1OIqKjKn7iLOdzF9uTVCzl80vih6B6WkesaZCdG3pRJ+HKUyrhcs6vu+Tct2
-         d4Og==
+        Wed, 6 May 2020 19:33:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588807991;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0pfQoeEa1kW6MG/2DtjypUr2NTPIec15JxFs4Iomupo=;
+        b=iMykq6d1BNov1Hd1a6EUzuBJCyFGR58UGgOuNf2cEUwt8GAzJwUkrYnFqTfXQa3i+eH1J2
+        jZ0D9g5L7kmGww6JmHU8MDOrdY8Ml0VqsMeH84d5Qa8DhBGGNhjKRzaKBtH1rIiXKGXazF
+        hZALDV1O809ToyvwWgF4DPbeoqY5ycU=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-336-QMKne2mWM3ORP7InAk7zcQ-1; Wed, 06 May 2020 19:33:10 -0400
+X-MC-Unique: QMKne2mWM3ORP7InAk7zcQ-1
+Received: by mail-qk1-f198.google.com with SMTP id x8so3630262qkf.3
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 16:33:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=JjMAyO4tLtAmhwV/k9L9sSW04zGeh8HxdZQAYEG4VoQ=;
-        b=gQd59t/FrxFjk/0ehf2ie/l+deCKg6OmJp5YWxvMDRPL7WfzJeQxlsONf75VOOSWCL
-         56IkK8VC9YWV1UpGsfzs8mdhn2NBj7J1TBSMMkNIJSIJ4XTnPjHK9CiSxMFaBzgHskwh
-         xEvO2UbJC3k+b2PyLWaDlD4bVBSLVufFAGeT5chPagLtRjbKK6QLLtLz2g0S+1w+Bpsg
-         2eircCwULsQAIoNBqLUI2wFgBRmheAY+iI4bIXbgfzi13QrsVVDbYxvoxfPWAQIF+x2t
-         2SIGTWt6AgTWUXDeiqVY7yyEoNG7WWITc9U41VA8jUuT+zJb8xChKnc9rutmlkK9NdNN
-         2n9g==
-X-Gm-Message-State: AGi0PuYO0L92pJhQ9jUw8juU91FrBexivjgWqxPIoN8nN4n3AimMJjf/
-        swrRc5/Lw3YL6ZlRfmJmWkc=
-X-Google-Smtp-Source: APiQypJD92evuW6PsqCb4b+CNaSBoXZV67yCaBLIOsXAwbF5B3yXxXX1rC/eMZ8rZ+3deuQNTWyIog==
-X-Received: by 2002:a63:3006:: with SMTP id w6mr8752880pgw.18.1588807989768;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=0pfQoeEa1kW6MG/2DtjypUr2NTPIec15JxFs4Iomupo=;
+        b=CoaN1B459ETw1FiPBOr8sKj0CsM6MrON7eCWOkIspXXpNPdDQsMmwJTeyBG/MeS3gX
+         1qrwno2PptgIQnyeeY7ksss+xj9BxzSWcvarl2ClBa8GlUGjOSSwBFj40mBf0pqzcGqf
+         s+7U/ZDB1+5z3JANXyAQMln2ucZXUSXSDTpl2cP3HXIMrqNkmSXIoljZeOAVe8nsFTIL
+         fo3amT9zei8x3FKENfXWpLO7eozJdU2dzqq5VF/iu1/3a6WKqlJVjLPgBSzH9GiaV5u6
+         usz8HMN/4iCwAhIVaeSqNuv3CtCfvvGSB6IjAlE4qQgeypDAHKqKn09oHMl30RHS7Aoc
+         W5Uw==
+X-Gm-Message-State: AGi0PubSaSMlJMjx/rw9Pi536Tfizgj0lezH9uyIT+auQR0R9WHMHYf2
+        0ziZt+w7LzGfGY3FT67lt1YOOTpFr1HvJ+v8cX2MYy0k9OH4NanI+6aCmxao1Afuwc9UXieGTOl
+        QQpttWNbz2xotq+8uYDm6ba/K
+X-Received: by 2002:a37:b8c4:: with SMTP id i187mr11796117qkf.410.1588807989280;
         Wed, 06 May 2020 16:33:09 -0700 (PDT)
-Received: from athina.mtv.corp.google.com ([2620:15c:211:0:c786:d9fd:ab91:6283])
-        by smtp.gmail.com with ESMTPSA id u188sm2957158pfu.33.2020.05.06.16.33.08
+X-Google-Smtp-Source: APiQypKCtvx8XlGYnE5dBf5nozBgNURfUeYYut3pjIFFmgxex5jv3IeFSkfP+0AIP3lxsLENailb4g==
+X-Received: by 2002:a37:b8c4:: with SMTP id i187mr11796083qkf.410.1588807988877;
+        Wed, 06 May 2020 16:33:08 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id 66sm925492qkk.31.2020.05.06.16.33.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 06 May 2020 16:33:08 -0700 (PDT)
-From:   =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <zenczykowski@gmail.com>
-To:     =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Linux Network Development Mailing List <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        BPF Mailing List <bpf@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: [PATCH v2] net: bpf: permit redirect from L3 to L2 devices at near max mtu
-Date:   Wed,  6 May 2020 16:32:59 -0700
-Message-Id: <20200506233259.112545-1-zenczykowski@gmail.com>
-X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-In-Reply-To: <20200420231427.63894-1-zenczykowski@gmail.com>
-References: <20200420231427.63894-1-zenczykowski@gmail.com>
+Date:   Wed, 6 May 2020 19:33:06 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH 8/9] KVM: x86, SVM: do not clobber guest DR6 on
+ KVM_EXIT_DEBUG
+Message-ID: <20200506233306.GE228260@xz-x1>
+References: <20200506111034.11756-1-pbonzini@redhat.com>
+ <20200506111034.11756-9-pbonzini@redhat.com>
+ <20200506181515.GR6299@xz-x1>
+ <8f7f319c-4093-0ddc-f9f5-002c41d5622c@redhat.com>
+ <20200506211356.GD228260@xz-x1>
+ <20200506212047.GI3329@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200506212047.GI3329@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maciej Żenczykowski <maze@google.com>
+On Wed, May 06, 2020 at 02:20:47PM -0700, Sean Christopherson wrote:
+> On Wed, May 06, 2020 at 05:13:56PM -0400, Peter Xu wrote:
+> > Oh... so is dr6 going to have some leftover bit set in the GD test if without
+> > this patch for AMD?  Btw, I noticed a small difference on Intel/AMD spec for
+> > this case, e.g., B[0-3] definitions on such leftover bits...
+> > 
+> > Intel says:
+> > 
+> >         B0 through B3 (breakpoint condition detected) flags (bits 0 through 3)
+> >         — Indicates (when set) that its associated breakpoint condition was met
+> >         when a debug exception was generated. These flags are set if the
+> >         condition described for each breakpoint by the LENn, and R/Wn flags in
+> >         debug control register DR7 is true. They may or may not be set if the
+> >         breakpoint is not enabled by the Ln or the Gn flags in register
+> >         DR7. Therefore on a #DB, a debug handler should check only those B0-B3
+> >         bits which correspond to an enabled breakpoint.
+> > 
+> > AMD says:
+> > 
+> >         Breakpoint-Condition Detected (B3–B0)—Bits 3:0. The processor updates
+> >         these four bits on every debug breakpoint or general-detect
+> >         condition. A bit is set to 1 if the corresponding address- breakpoint
+> >         register detects an enabled breakpoint condition, as specified by the
+> >         DR7 Ln, Gn, R/Wn and LENn controls, and is cleared to 0 otherwise. For
+> >         example, B1 (bit 1) is set to 1 if an address- breakpoint condition is
+> >         detected by DR1.
+> > 
+> > I'm not sure whether it means AMD B[0-3] bits are more strict on the Intel ones
+> > (if so, then the selftest could be a bit too strict to VMX).
+> 
+> If the question is "can DR6 bits 3:0 be set on Intel CPUs even if the
+> associated breakpoint is disabled?", then the answer is yes.  I haven't
+> looked at the selftest, but if it's checking DR6 then it should ignore
+> bits corresponding to disabled breakpoints.
 
-__bpf_skb_max_len(skb) is used from:
-  bpf_skb_adjust_room
-  __bpf_skb_change_tail
-  __bpf_skb_change_head
+Currently the selftest will also check that the B[0-3] is cleared when specific
+BP is disabled.  We can loose that.  The thing is this same test can also run
+on AMD hosts, so logically on the other hand we should still check those bits
+as cleared to follow the AMD spec (and it never failed for me even on Intel..).
 
-but in the case of forwarding we're likely calling these functions
-during receive processing on ingress and bpf_redirect()'ing at
-a later point in time to egress on another interface, thus these
-mtu checks are for the wrong device (input instead of output).
+Thanks,
 
-This is particularly problematic if we're receiving on an L3 1500 mtu
-cellular interface, trying to add an L2 header and forwarding to
-an L3 mtu 1500 mtu wifi/ethernet device (which is thus L2 1514).
-
-The mtu check prevents us from adding the 14 byte ethernet header prior
-to forwarding the packet.
-
-After the packet has already been redirected, we'd need to add
-an additional 2nd ebpf program on the target device's egress tc hook,
-but then we'd also see non-redirected traffic and have no easy
-way to tell apart normal egress with ethernet header packets
-from forwarded ethernet headerless packets.
-
-Credits to Alexei Starovoitov for the suggestion on how to 'fix' this.
-
-This probably should be further fixed up *somehow*, just
-not at all clear how.  This does at least make things work.
-
-Cc: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Maciej Żenczykowski <maze@google.com>
----
- net/core/filter.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
-
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 7d6ceaa54d21..811aba77e24b 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -3159,8 +3159,20 @@ static int bpf_skb_net_shrink(struct sk_buff *skb, u32 off, u32 len_diff,
- 
- static u32 __bpf_skb_max_len(const struct sk_buff *skb)
- {
--	return skb->dev ? skb->dev->mtu + skb->dev->hard_header_len :
--			  SKB_MAX_ALLOC;
-+	if (skb->dev) {
-+		unsigned short header_len = skb->dev->hard_header_len;
-+
-+		/* HACK: Treat 0 as ETH_HLEN to allow redirect while
-+		 * adding ethernet header from an L3 (tun, rawip, cellular)
-+		 * to an L2 device (tap, ethernet, wifi)
-+		 */
-+		if (!header_len)
-+			header_len = ETH_HLEN;
-+
-+		return skb->dev->mtu + header_len;
-+	} else {
-+		return SKB_MAX_ALLOC;
-+	}
- }
- 
- BPF_CALL_4(bpf_skb_adjust_room, struct sk_buff *, skb, s32, len_diff,
 -- 
-2.26.2.526.g744177e7f7-goog
+Peter Xu
 
