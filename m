@@ -4,201 +4,150 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B27C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5106BC47257
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D842C2078C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B76020659
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:44:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KOvnW73n"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Lho8OH4E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730248AbgEFWnb (ORCPT
+        id S1730310AbgEFWoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 18:43:31 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59613 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729226AbgEFWnb (ORCPT
+        Wed, 6 May 2020 18:44:02 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:43416 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728888AbgEFWoC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 18:43:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588805009;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7z9HLYS+z6m/b1mcYfh3E6ao+IPJSv0pn9CqJYGPito=;
-        b=KOvnW73njyTznCB2+GGY5XpAPE/Lm76WJSDzmudfBs2ivTPa4IsuCaUW8Iz3kqNFl/W2vP
-        FTHW4i+1NkMntQS4BH30EGhn08VdgF8zcU4hidei2ZtoaVCUVZYmxzAREuU1jzMBDoaV3C
-        7lpXANl6YU2L7yWBU/WUgdIcmxt1GVs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-495-EZ3RCm1nOE6vlhn3NtOmOQ-1; Wed, 06 May 2020 18:43:27 -0400
-X-MC-Unique: EZ3RCm1nOE6vlhn3NtOmOQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9DAB0926E88;
-        Wed,  6 May 2020 22:42:45 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.3.128.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0C82170460;
-        Wed,  6 May 2020 22:42:36 +0000 (UTC)
-Date:   Wed, 6 May 2020 18:42:33 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Steve Grubb <sgrubb@redhat.com>
-Cc:     Paul Moore <paul@paul-moore.com>,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, omosnace@redhat.com, fw@strlen.de,
-        twoerner@redhat.com, Eric Paris <eparis@parisplace.org>,
-        ebiederm@xmission.com, tgraf@infradead.org
-Subject: Re: [PATCH ghak25 v4 3/3] audit: add subj creds to NETFILTER_CFG
- record to cover async unregister
-Message-ID: <20200506224233.najv6ltb5gzcicqb@madcap2.tricolour.ca>
-References: <cover.1587500467.git.rgb@redhat.com>
- <3348737.k9gCtgYObn@x2>
- <20200429213247.6ewxqf66i2apgyuz@madcap2.tricolour.ca>
- <3250272.v6NOfJhyum@x2>
+        Wed, 6 May 2020 18:44:02 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046MfRPL087376;
+        Wed, 6 May 2020 22:43:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=qxCl0w8RFM4/l1IN+gQYmT3V1Br1VTWD4aTDDTrdu0I=;
+ b=Lho8OH4E9JeoPeXdTBqyyIkroI5DsWGoyuxXe+VY1VwWtD9AgbXIcaTfJnCNQ7oyBFTp
+ YDBO9KDN6JTRuCcu17qG78qycIp7J/wEUPcvI2RLtR06CUWFPswCp2NJb7iTaHKXy5mT
+ JgbJVcdFIY4dXthIlsjEBUJ8YEu+4xKqbvO0bxs0NmWTAidlr6gm4scfbFvSAJYavceA
+ 9GLTRKyz58PxU0/fTkqHil2b+7Yih4BgzapKMC5S1XXk8He8ydNAYKRE33qfVypZcQAy
+ yJyeCNCKv0fq427GXrqlzo7ZAYvAmH8oOAMwG9g/I7pJlOmT8CmlO9K6/jV/21zibl2O 4Q== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 30s1gncx6g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 May 2020 22:43:32 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046MhVFq125753;
+        Wed, 6 May 2020 22:43:32 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 30sjnky4s4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 May 2020 22:43:31 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 046MhDlZ011089;
+        Wed, 6 May 2020 22:43:13 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 06 May 2020 15:43:13 -0700
+Date:   Wed, 6 May 2020 18:43:35 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Tejun Heo <tj@kernel.org>, Zi Yan <ziy@nvidia.com>,
+        linux-crypto@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 6/7] mm: parallelize deferred_init_memmap()
+Message-ID: <20200506224335.gv3as7vuik3rtt5w@ca-dmjordan1.us.oracle.com>
+References: <20200430201125.532129-1-daniel.m.jordan@oracle.com>
+ <20200430201125.532129-7-daniel.m.jordan@oracle.com>
+ <CAKgT0Uf7e5514SOi8dmkB5oXUK9bwqD_z-5KJ_F3MUn3CAQyPQ@mail.gmail.com>
+ <3C3C62BE-6363-41C3-834C-C3124EB3FFAB@joshtriplett.org>
+ <CAKgT0UdBv-Wj98P2wMFGDSihPLKWFsqpu77ZmO+eA51uteZ-Ag@mail.gmail.com>
+ <20200505014844.ulp4rtih7adtcicm@ca-dmjordan1.us.oracle.com>
+ <20200505020916.mve4ijrg4z5h7eh5@ca-dmjordan1.us.oracle.com>
+ <CAKgT0UdE1ex_aAyMeR3PWtVcmXL8cUtjqy0J8hLpnFm42yn82w@mail.gmail.com>
+ <20200506222127.l3p2a2vjavwz2bdl@ca-dmjordan1.us.oracle.com>
+ <CAKgT0UcZhnCtM4YP3L9kbtghNp9vOzSpVm5WC1164OVmRHLaMA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3250272.v6NOfJhyum@x2>
+In-Reply-To: <CAKgT0UcZhnCtM4YP3L9kbtghNp9vOzSpVm5WC1164OVmRHLaMA@mail.gmail.com>
 User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
+ mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005060181
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 mlxscore=0
+ spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005060180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-06 17:26, Steve Grubb wrote:
-> On Wednesday, April 29, 2020 5:32:47 PM EDT Richard Guy Briggs wrote:
-> > On 2020-04-29 14:47, Steve Grubb wrote:
-> > > On Wednesday, April 29, 2020 10:31:46 AM EDT Richard Guy Briggs wro=
-te:
-> > > > On 2020-04-28 18:25, Paul Moore wrote:
-> > > > > On Wed, Apr 22, 2020 at 5:40 PM Richard Guy Briggs <rgb@redhat.=
-com>
-> > >=20
-> > > wrote:
-> > > > > > Some table unregister actions seem to be initiated by the ker=
-nel to
-> > > > > > garbage collect unused tables that are not initiated by any
-> > > > > > userspace
-> > > > > > actions.  It was found to be necessary to add the subject
-> > > > > > credentials
-> > > > > > to  cover this case to reveal the source of these actions.  A
-> > > > > > sample
-> > > > > > record:
-> > > > > > type=3DNETFILTER_CFG msg=3Daudit(2020-03-11 21:25:21.491:269)=
- :
-> > > > > > table=3Dnat
-> > > > > > family=3Dbridge entries=3D0 op=3Dunregister pid=3D153 uid=3Dr=
-oot auid=3Dunset
-> > > > > > tty=3D(none) ses=3Dunset subj=3Dsystem_u:system_r:kernel_t:s0
-> > > > > > comm=3Dkworker/u4:2 exe=3D(null)>
-> > > > >=20
-> > > > > [I'm going to comment up here instead of in the code because it=
- is a
-> > > > > bit easier for everyone to see what the actual impact might be =
-on the
-> > > > > records.]
-> > > > >=20
-> > > > > Steve wants subject info in this case, okay, but let's try to t=
-rim
-> > > > > out
-> > > > > some of the fields which simply don't make sense in this record=
-; I'm
-> > > > > thinking of fields that are unset/empty in the kernel case and =
-are
-> > > > > duplicates of other records in the userspace/syscall case.  I t=
-hink
-> > > > > that means we can drop "tty", "ses", "comm", and "exe" ... yes?
-> > > >=20
-> > > > From the ghak28 discussion, this list and order was selected due =
-to
-> > > > Steve's preference for the "kernel" record convention, so deviati=
-ng
-> > > > from this will create yet a new field list.  I'll defer to Steve =
-on
-> > > > this. It also has to do with the searchability of fields if they =
-are
-> > > > missing.
-> > > >=20
-> > > > I do agree that some fields will be superfluous in the kernel cas=
-e.
-> > > > The most important field would be "subj", but then "pid" and "com=
-m", I
-> > > > would think.  Based on this contents of the "subj" field, I'd thi=
-nk
-> > > > that "uid", "auid", "tty", "ses" and "exe" are not needed.
-> > >=20
-> > > We can't be adding deleting fields based on how its triggered. If t=
-hey
-> > > are unset, that is fine. The main issue is they have to behave the =
-same.
-> >=20
-> > I don't think the intent was to have fields swing in and out dependin=
-g
-> > on trigger.  The idea is to potentially permanently not include them =
-in
-> > this record type only.  The justification is that where they aren't
-> > needed for the kernel trigger situation it made sense to delete them
-> > because if it is a user context event it will be accompanied by a
-> > syscall record that already has that information and there would be n=
-o
-> > sense in duplicating it.
->=20
-> We should not be adding syscall records to anything that does not resul=
-t from=20
-> a syscall rule triggering the event. Its very wasteful. More wasteful t=
-han=20
-> just adding the necessary fields.
+On Wed, May 06, 2020 at 03:36:54PM -0700, Alexander Duyck wrote:
+> On Wed, May 6, 2020 at 3:21 PM Daniel Jordan <daniel.m.jordan@oracle.com> wrote:
+> >
+> > On Tue, May 05, 2020 at 07:55:43AM -0700, Alexander Duyck wrote:
+> > > One question about this data. What is the power management
+> > > configuration on the systems when you are running these tests? I'm
+> > > just curious if CPU frequency scaling, C states, and turbo are
+> > > enabled?
+> >
+> > Yes, intel_pstate is loaded in active mode without hwp and with turbo enabled
+> > (those power management docs are great by the way!) and intel_idle is in use
+> > too.
+> >
+> > > I ask because that is what I have seen usually make the
+> > > difference in these kind of workloads as the throughput starts
+> > > dropping off as you start seeing the core frequency lower and more
+> > > cores become active.
+> >
+> > If I follow, you're saying there's a chance performance would improve with the
+> > above disabled, but how often would a system be configured that way?  Even if
+> > it were faster, the machine is configured how it's configured, or am I missing
+> > your point?
+> 
+> I think you might be missing my point. What I was getting at is that I
+> know for performance testing sometimes C states and P states get
+> disabled in order to get consistent results between runs, it sounds
+> like you have them enabled though. I was just wondering if you had
+> disabled them or not. If they were disabled then you wouldn't get the
+> benefits of turbo and as such adding more cores wouldn't come at a
+> penalty, while with it enabled the first few cores should start to
+> slow down as they fell out of turbo mode. So it may be part of the
+> reason why you are only hitting about 10x at full core count.
 
-So what you are saying is you want all the fields that are being
-proposed to be added to this record?
+All right, that makes way more sense.
 
-If the records are all from one event, they all should all have the same
-timestamp/serial number so that the records are kept together and not
-mistaken for multiple events.  One reason for having information in
-seperate records is to be able to filter them either in kernel or in
-userspace if you don't need certain records.
+> As it stands I think your code may speed up a bit if you split the
+> work up based on section instead of max order. That would get rid of
+> any cache bouncing you may be doing on the pageblock flags and reduce
+> the overhead for splitting the work up into individual pieces since
+> each piece will be bigger.
 
-> I also wished we had a coding specification that put this in writing so=
- that=20
-> every event is not a committee decision. That anyone can look at the do=
-cument=20
-> and Do The Right Thing =E2=84=A2.
->=20
-> If I add a section to Writing-Good-Events outlining the expected orderi=
-ng of=20
-> fields, would that be enough that we do not have long discussions about=
- event=20
-> format? I'm thinking this would also help new people that want to contr=
-ibute.
-
-If you add this expected ordering of fields, can we re-factor all the
-kernel code to use this order because the userspace parser won't care
-what order they are in?
-
-I realize this isn't what you are saying, but having a clear description
-in that document that talks about the different classes of events and
-what each one needs in terms of minimum to full subject attributes and
-object attributes would help a lot.  It would also help for new records
-to be able to decide if it should follow the format of an existing
-related or similar record, or a new class with the expected standard orde=
-r.
-
-> -Steve
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
-
+See my other mail.
