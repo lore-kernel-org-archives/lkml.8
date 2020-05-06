@@ -2,99 +2,121 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18912C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED2BC47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8B412075A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:38:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="oUpD9vvl"
+	by mail.kernel.org (Postfix) with ESMTP id 9FE8320747
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:45:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729398AbgEFTiv (ORCPT
+        id S1729432AbgEFTpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 15:38:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42254 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729364AbgEFTiu (ORCPT
+        Wed, 6 May 2020 15:45:07 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50670 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729402AbgEFTpH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 15:38:50 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60F37C061A10
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 12:38:50 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id n14so3429283qke.8
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 12:38:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cbJdFNNUj8YFhOecTKRGNRonN2B9d8cRZOa5IORn8+s=;
-        b=oUpD9vvl4JJHe8DNGfzpMqvkPO+kzlUmoQqGhCdKw75+BI+m7bXNiv0klYJ1vmX+94
-         SNHt8MpihfCXwN4Z56qeRYu0LAyxnp+k7Px0vLHITqwP0wlRSnhB31NPROnJ3/41GLIE
-         8LzeXjZ7rqUKYT+T2xX5LIKLB67UGfmR/j4sNdo/ssrYfmZfNVuqGR1y0A1+vg+dZrld
-         FfP8FCjPIr47dsdu0G/k2pGVobmX8iInb1Iiot3eGvaF3WeZCyo26qG/N2QLcuxZWk+H
-         ySXdAKPvaeLynl26s7lfFZS06XYtAjyktDeZ5Xo93TLymwQg2aJjkp+41G5KyRJuGWpe
-         gAXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cbJdFNNUj8YFhOecTKRGNRonN2B9d8cRZOa5IORn8+s=;
-        b=Zw32GqGlYJndlnzGCL2Y4pv91sbw4Gr/oujcEAE6omuiezNt184DPc+ug+Gm34BShQ
-         HxOXQ0dIERDym3T0d48+yC5e9GVilBuHtcT7bH61opPhhNViZKeOURaAQAdUFsCybk3O
-         6ywWYIe6eu908MWDfRouNBaby3YmW79kT4xR8NsbxuJnzVOagP837cP5CD7trE1gl+jM
-         KhhyEJyeBSK3ChGrsthK7OgDSye3WLRGsVyypcWzMD0kpUHCHYiYyASTbnAmSSBssm+b
-         53le34cSSGx6ecbvbovGOKTM/3AVnePAwBrH91GYnpMZMZjGvlKtZgSp4vOa3XO5rwc3
-         FaOg==
-X-Gm-Message-State: AGi0Pua1w9QcgXNt6kcNaZHI4Bp8dyBClcYzoYbQkPmK9mYv2ujQqKnC
-        403bMJuXqOMMMhKS3/1DgYsLNg==
-X-Google-Smtp-Source: APiQypIAFAMJdD8EpoR2nj1ZvH3BkodGgOPCjTKcRgjsY9FCZUpW+jCbWXWHG2FeYsHBVvGZjyABkg==
-X-Received: by 2002:a05:620a:490:: with SMTP id 16mr10411517qkr.203.1588793929550;
-        Wed, 06 May 2020 12:38:49 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id c41sm2445201qta.96.2020.05.06.12.38.48
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 06 May 2020 12:38:49 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jWPsW-0004Xq-Fp; Wed, 06 May 2020 16:38:48 -0300
-Date:   Wed, 6 May 2020 16:38:48 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     linux-rdma@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH v10 0/3] mm/hmm/test: add self tests for HMM
-Message-ID: <20200506193848.GA17442@ziepe.ca>
-References: <20200422195028.3684-1-rcampbell@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422195028.3684-1-rcampbell@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 6 May 2020 15:45:07 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 046JebdV000769;
+        Wed, 6 May 2020 15:45:00 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30u8t7a58p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 May 2020 15:45:00 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 046JeaWT000630;
+        Wed, 6 May 2020 15:44:59 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30u8t7a57n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 May 2020 15:44:59 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 046JUXjf028572;
+        Wed, 6 May 2020 19:44:57 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma03ams.nl.ibm.com with ESMTP id 30s0g5sugr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 May 2020 19:44:56 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 046Jisow524580
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 6 May 2020 19:44:54 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A9D294203F;
+        Wed,  6 May 2020 19:44:54 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8BA9542045;
+        Wed,  6 May 2020 19:44:53 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.197.80])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  6 May 2020 19:44:53 +0000 (GMT)
+Message-ID: <1588794293.4624.21.camel@linux.ibm.com>
+Subject: Re: [RFC][PATCH 1/3] evm: Move hooks outside LSM infrastructure
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>, david.safford@gmail.com,
+        viro@zeniv.linux.org.uk, jmorris@namei.org,
+        John Johansen <john.johansen@canonical.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com
+Date:   Wed, 06 May 2020 15:44:53 -0400
+In-Reply-To: <20200429073935.11913-1-roberto.sassu@huawei.com>
+References: <20200429073935.11913-1-roberto.sassu@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-06_09:2020-05-05,2020-05-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 suspectscore=0 bulkscore=0 spamscore=0 mlxlogscore=999
+ malwarescore=0 priorityscore=1501 phishscore=0 clxscore=1011
+ impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005060154
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 12:50:25PM -0700, Ralph Campbell wrote:
-> This series adds basic self tests for HMM and are intended for Jason
-> Gunthorpe's rdma tree since he is making some HMM related changes that
-> this can help test.
+[Cc: John Johansen] 
+
+On Wed, 2020-04-29 at 09:39 +0200, Roberto Sassu wrote:
+> EVM is a module for the protection of the integrity of file metadata. It
+> protects security-relevant extended attributes, and some file attributes
+> such as the UID and the GID. It protects their integrity with an HMAC or
+> with a signature.
 > 
-> Changes v9 -> v10:
-> Patches 1 & 2 include Jason's changes from his cover letter:
-> https://lkml.org/lkml/2020/4/21/1320
-> Patch 3 now adds the files alphbetically and removed the outdated
-> reference to include/uapi/linux.
+> What makes EVM different from other LSMs is that it makes a security
+> decision depending on multiple pieces of information, which cannot be
+> managed atomically by the system.
+> 
+> Example: cp -a file.orig file.dest
+> 
+> If security.selinux, security.ima and security.evm must be preserved, cp
+> will invoke setxattr() for each xattr, and EVM performs a verification
+> during each operation. The problem is that copying security.evm from
+> file.orig to file.dest will likely break the following EVM verifications if
+> some metadata still have to be copied. EVM has no visibility on the
+> metadata of the source file, so it cannot determine when the copy can be
+> considered complete.
 
-Applied to hmm.git, thanks
+I remember having a similar discussion in the past.  At the time,
+there wasn't EVM portable and immutable signature support, just the
+HMAC and original signature types.  Neither of these EVM xattrs types
+should be copied.
 
-Jason
+Calling evm_verifyxattr() is not limited to IMA, but may be called by
+other LSMs/subsystems as well.  At some point, there was some
+discussion about AppArmor calling it directly.  Not sure if that is
+still being discussed.
+
+Since copying the EVM HMAC or original signature isn't applicable, I
+would prefer exploring an EVM portable and immutable signature only
+solution.
+
+Mimi
