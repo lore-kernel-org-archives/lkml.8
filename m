@@ -2,116 +2,203 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE06C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B27C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0096D2075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D842C2078C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:43:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SWWR+Upk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KOvnW73n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730248AbgEFWk0 (ORCPT
+        id S1730248AbgEFWnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 18:40:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42442 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728173AbgEFWkZ (ORCPT
+        Wed, 6 May 2020 18:43:31 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59613 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729226AbgEFWnb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 18:40:25 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 636A2C061A10
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 15:40:25 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id s10so1238132plr.1
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 15:40:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QdygR2A72/9LbEfVx2KFs3XOLDP2FAPzE7Df5641CTE=;
-        b=SWWR+UpkmvIE+5IkhyyAYX+75Y/7/mDnDtfjR2ghLwrvagpWXgIcXAMbXN0ctOmC7J
-         r0FxwlPF0uoG20mDKj/ixX1NIadS14OGfhEQm5Yy4h1fp3BkOTWg3wrCj17q6zI+ekN/
-         mDFNQPcrBFBtYUtdiJxBZH03mttId5kD4H4tA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QdygR2A72/9LbEfVx2KFs3XOLDP2FAPzE7Df5641CTE=;
-        b=YC4/aLy+tUTPfmlfu7pdMQBJHT5x0vFjmEw5lNoHDXBWVg/LlXhrxUm2aKITYLHolU
-         LGh+ZgCId+gFMvQrFnDHhPSXfVo+WPnkI0DOJ6wBKcltN7hYs0oX84NyHEaXGnKy4QGt
-         daXxFigObYE8uDl+yVZwtKXIGYcpJgKrZzjfZP+UWf6UaUcAga/rnZFcualn//Mdgrtt
-         u0zFiCW/Hac3WEghoslqO+prVwWS9vNHYnZVf97/+D6WuLHzSBgqkELIf96QK52LQ5bc
-         t9lrmm+m5rThersJcWVqOFvhS8HFnv8QQlziGJikiFaHuOU95Vvj8sJrub2rOTPABF+m
-         wlKw==
-X-Gm-Message-State: AGi0Pubmc7aGWK/zmvGkx+IbuHWrsVs20TOytSlLsfEQUEjoawPIGUVw
-        u0F26pHipwDlW5ne8vylm3GLCg==
-X-Google-Smtp-Source: APiQypLeKev/qpKuUfyxub8k75/PIRWV5N1ol74IL1rE5d96sthNE61DOXvqGS/dnem4REr+Biuuuw==
-X-Received: by 2002:a17:90a:280c:: with SMTP id e12mr11866676pjd.52.1588804824838;
-        Wed, 06 May 2020 15:40:24 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b140sm2819009pfb.119.2020.05.06.15.40.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 15:40:23 -0700 (PDT)
-Date:   Wed, 6 May 2020 15:40:22 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>, jmorris@namei.org,
-        sashal@kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 2/6] pstore/platform: Pass max_reason to kmesg dump
-Message-ID: <202005061540.88ECA85@keescook>
-References: <20200506211523.15077-1-keescook@chromium.org>
- <20200506211523.15077-3-keescook@chromium.org>
- <4cdeaa2af2fe0d6cc2ca8ce3a37608340799df8a.camel@perches.com>
+        Wed, 6 May 2020 18:43:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588805009;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7z9HLYS+z6m/b1mcYfh3E6ao+IPJSv0pn9CqJYGPito=;
+        b=KOvnW73njyTznCB2+GGY5XpAPE/Lm76WJSDzmudfBs2ivTPa4IsuCaUW8Iz3kqNFl/W2vP
+        FTHW4i+1NkMntQS4BH30EGhn08VdgF8zcU4hidei2ZtoaVCUVZYmxzAREuU1jzMBDoaV3C
+        7lpXANl6YU2L7yWBU/WUgdIcmxt1GVs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-495-EZ3RCm1nOE6vlhn3NtOmOQ-1; Wed, 06 May 2020 18:43:27 -0400
+X-MC-Unique: EZ3RCm1nOE6vlhn3NtOmOQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9DAB0926E88;
+        Wed,  6 May 2020 22:42:45 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.3.128.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0C82170460;
+        Wed,  6 May 2020 22:42:36 +0000 (UTC)
+Date:   Wed, 6 May 2020 18:42:33 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Steve Grubb <sgrubb@redhat.com>
+Cc:     Paul Moore <paul@paul-moore.com>,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org, omosnace@redhat.com, fw@strlen.de,
+        twoerner@redhat.com, Eric Paris <eparis@parisplace.org>,
+        ebiederm@xmission.com, tgraf@infradead.org
+Subject: Re: [PATCH ghak25 v4 3/3] audit: add subj creds to NETFILTER_CFG
+ record to cover async unregister
+Message-ID: <20200506224233.najv6ltb5gzcicqb@madcap2.tricolour.ca>
+References: <cover.1587500467.git.rgb@redhat.com>
+ <3348737.k9gCtgYObn@x2>
+ <20200429213247.6ewxqf66i2apgyuz@madcap2.tricolour.ca>
+ <3250272.v6NOfJhyum@x2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <4cdeaa2af2fe0d6cc2ca8ce3a37608340799df8a.camel@perches.com>
+In-Reply-To: <3250272.v6NOfJhyum@x2>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 02:25:41PM -0700, Joe Perches wrote:
-> On Wed, 2020-05-06 at 14:15 -0700, Kees Cook wrote:
-> > From: Pavel Tatashin <pasha.tatashin@soleen.com>
-> > 
-> > Add a new member to struct pstore_info for passing information about
-> > kmesg dump maximum reason. This allows a finer control of what kmesg
-> > dumps are sent to pstore storage backends.
-> 
-> trivia:
-> 
-> > diff --git a/include/linux/pstore.h b/include/linux/pstore.h
-> []
-> > @@ -96,6 +96,12 @@ struct pstore_record {
-> >   *
-> >   * @read_mutex:	serializes @open, @read, @close, and @erase callbacks
-> >   * @flags:	bitfield of frontends the backend can accept writes for
-> > + * @max_reason:	Used when PSTORE_FLAGS_DMESG is set. Contains the
-> > + *		kmsg_dump_reason enum value. KMSG_DUMP_UNDEF means
-> > + *		"use existing kmsg_dump() filtering, based on the
-> > + *		printk.always_kmsg_dump boot param" (which is either
-> > + *		KMSG_DUMP_OOPS when false, or KMSG_DUMP_MAX when
-> > + *		tree); see printk.always_kmsg_dump for more details.
-> 
-> s/tree/true/
+On 2020-05-06 17:26, Steve Grubb wrote:
+> On Wednesday, April 29, 2020 5:32:47 PM EDT Richard Guy Briggs wrote:
+> > On 2020-04-29 14:47, Steve Grubb wrote:
+> > > On Wednesday, April 29, 2020 10:31:46 AM EDT Richard Guy Briggs wro=
+te:
+> > > > On 2020-04-28 18:25, Paul Moore wrote:
+> > > > > On Wed, Apr 22, 2020 at 5:40 PM Richard Guy Briggs <rgb@redhat.=
+com>
+> > >=20
+> > > wrote:
+> > > > > > Some table unregister actions seem to be initiated by the ker=
+nel to
+> > > > > > garbage collect unused tables that are not initiated by any
+> > > > > > userspace
+> > > > > > actions.  It was found to be necessary to add the subject
+> > > > > > credentials
+> > > > > > to  cover this case to reveal the source of these actions.  A
+> > > > > > sample
+> > > > > > record:
+> > > > > > type=3DNETFILTER_CFG msg=3Daudit(2020-03-11 21:25:21.491:269)=
+ :
+> > > > > > table=3Dnat
+> > > > > > family=3Dbridge entries=3D0 op=3Dunregister pid=3D153 uid=3Dr=
+oot auid=3Dunset
+> > > > > > tty=3D(none) ses=3Dunset subj=3Dsystem_u:system_r:kernel_t:s0
+> > > > > > comm=3Dkworker/u4:2 exe=3D(null)>
+> > > > >=20
+> > > > > [I'm going to comment up here instead of in the code because it=
+ is a
+> > > > > bit easier for everyone to see what the actual impact might be =
+on the
+> > > > > records.]
+> > > > >=20
+> > > > > Steve wants subject info in this case, okay, but let's try to t=
+rim
+> > > > > out
+> > > > > some of the fields which simply don't make sense in this record=
+; I'm
+> > > > > thinking of fields that are unset/empty in the kernel case and =
+are
+> > > > > duplicates of other records in the userspace/syscall case.  I t=
+hink
+> > > > > that means we can drop "tty", "ses", "comm", and "exe" ... yes?
+> > > >=20
+> > > > From the ghak28 discussion, this list and order was selected due =
+to
+> > > > Steve's preference for the "kernel" record convention, so deviati=
+ng
+> > > > from this will create yet a new field list.  I'll defer to Steve =
+on
+> > > > this. It also has to do with the searchability of fields if they =
+are
+> > > > missing.
+> > > >=20
+> > > > I do agree that some fields will be superfluous in the kernel cas=
+e.
+> > > > The most important field would be "subj", but then "pid" and "com=
+m", I
+> > > > would think.  Based on this contents of the "subj" field, I'd thi=
+nk
+> > > > that "uid", "auid", "tty", "ses" and "exe" are not needed.
+> > >=20
+> > > We can't be adding deleting fields based on how its triggered. If t=
+hey
+> > > are unset, that is fine. The main issue is they have to behave the =
+same.
+> >=20
+> > I don't think the intent was to have fields swing in and out dependin=
+g
+> > on trigger.  The idea is to potentially permanently not include them =
+in
+> > this record type only.  The justification is that where they aren't
+> > needed for the kernel trigger situation it made sense to delete them
+> > because if it is a user context event it will be accompanied by a
+> > syscall record that already has that information and there would be n=
+o
+> > sense in duplicating it.
+>=20
+> We should not be adding syscall records to anything that does not resul=
+t from=20
+> a syscall rule triggering the event. Its very wasteful. More wasteful t=
+han=20
+> just adding the necessary fields.
 
-Eek, thanks. I'll fix my typo. :)
+So what you are saying is you want all the fields that are being
+proposed to be added to this record?
 
--- 
-Kees Cook
+If the records are all from one event, they all should all have the same
+timestamp/serial number so that the records are kept together and not
+mistaken for multiple events.  One reason for having information in
+seperate records is to be able to filter them either in kernel or in
+userspace if you don't need certain records.
+
+> I also wished we had a coding specification that put this in writing so=
+ that=20
+> every event is not a committee decision. That anyone can look at the do=
+cument=20
+> and Do The Right Thing =E2=84=A2.
+>=20
+> If I add a section to Writing-Good-Events outlining the expected orderi=
+ng of=20
+> fields, would that be enough that we do not have long discussions about=
+ event=20
+> format? I'm thinking this would also help new people that want to contr=
+ibute.
+
+If you add this expected ordering of fields, can we re-factor all the
+kernel code to use this order because the userspace parser won't care
+what order they are in?
+
+I realize this isn't what you are saying, but having a clear description
+in that document that talks about the different classes of events and
+what each one needs in terms of minimum to full subject attributes and
+object attributes would help a lot.  It would also help for new records
+to be able to decide if it should follow the format of an existing
+related or similar record, or a new class with the expected standard orde=
+r.
+
+> -Steve
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
+
