@@ -2,245 +2,185 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 655CFC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D1BC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D139206F9
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:17:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JBozcdxg"
+	by mail.kernel.org (Postfix) with ESMTP id 861CD206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:19:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728789AbgEFIRU (ORCPT
+        id S1728542AbgEFITd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 04:17:20 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54614 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728217AbgEFIRT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 04:17:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588753038;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xS/VsQIrf9pi+XL1Epo3nFIdOG1XWNf591vQGhiBo2A=;
-        b=JBozcdxggfN0pMpr4hzzK6vEJHVOTqr9rGqHaLyJ42HPFuR2/9DnWjWkcsdInNpjuJmC7h
-        k2P2/WLzZeYxGUaf3fXByuOrrmEJRRvg6MfasJEemK0rRjO46gjH7A8sTYwuWURhbT3hmk
-        p0H7aKtsXT8o4WiPCxCKyLZwreVsFM0=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-68-zeDjKpcINZ612fVEVPtPKg-1; Wed, 06 May 2020 04:17:14 -0400
-X-MC-Unique: zeDjKpcINZ612fVEVPtPKg-1
-Received: by mail-wr1-f72.google.com with SMTP id g10so917657wrr.10
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 01:17:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xS/VsQIrf9pi+XL1Epo3nFIdOG1XWNf591vQGhiBo2A=;
-        b=USSLTyYIAFsCSELd3Y3oh7QmxNnmWdBG7mtP0GDL8fqrK6i4gbC36kkrhsUlLhS+dC
-         pbVJSBGoYQHduXweJB66Hk3dkfZ8GGtuOobHKc4uWwO1iAqozAnb2AEG8QeTqISy3Rrt
-         d49K2NV9pp2XbXULylXZ5tbtYd8zA7FfbjLw3iQbmTYwm6AOHs5pCIUjkRmTNaAceATr
-         zbTI6T/hWPNRfkPGLh8Nzx2dWR2lHLH0edIlA3Nolq0e/2z1HGvoU9xz+NfWHD16AMKH
-         bRptph+lSc1BGZokvCMfvj9HiST9wtFUDRI3nbeGINTHysJWIab0FzLU4dr8BBRelZwm
-         ojwA==
-X-Gm-Message-State: AGi0PuZUD6AdeBghZ2r/jpkSHq6KBC53MRCdT7dyl+J9b5dolOPgs8sY
-        CqiijSMX1qBsuofeGBWhxHzs1da12ahELMd0jfHPC10VrwXGAxsy5DoHDVtuozHF6Ng/6+/xOtx
-        0GHcaJrtjDFWd5qDjMfol9jiD
-X-Received: by 2002:a1c:1b88:: with SMTP id b130mr2932820wmb.75.1588753033376;
-        Wed, 06 May 2020 01:17:13 -0700 (PDT)
-X-Google-Smtp-Source: APiQypI3TSis+O9q/ERs839RPx/dho0l9F3vlL4AQgND2HXbI9kI8SOzd/9mohF7xXrJQfqu2UYXWA==
-X-Received: by 2002:a1c:1b88:: with SMTP id b130mr2932788wmb.75.1588753033096;
-        Wed, 06 May 2020 01:17:13 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:11d7:2f21:f38b:17e? ([2001:b07:6468:f312:11d7:2f21:f38b:17e])
-        by smtp.gmail.com with ESMTPSA id a205sm1896308wmh.29.2020.05.06.01.17.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 May 2020 01:17:12 -0700 (PDT)
-Subject: Re: [patch V4 part 2 18/18] x86/kvm/svm: Move guest enter/exit into
- .noinstr.text
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-References: <20200505134112.272268764@linutronix.de>
- <20200505134341.873785437@linutronix.de>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <55792329-b457-8bc6-f102-2501aafd16be@redhat.com>
-Date:   Wed, 6 May 2020 10:17:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200505134341.873785437@linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 6 May 2020 04:19:33 -0400
+Received: from mga12.intel.com ([192.55.52.136]:35417 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727956AbgEFITc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 04:19:32 -0400
+IronPort-SDR: wh/LuNdsM6dh97y4DoXDqvxQtWgCLksPxFzBcdWtG4RVWm8tQa+gIf1MbIv9gjVciVrNXrUHlh
+ 5HexSBCW3i+Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 01:19:31 -0700
+IronPort-SDR: 0sJdlU5Eqrq/1EZ0PUrt4wZ7aBHhsOBfYytUeHSPfQgqCv7xnT7xVOh38Hy/9rkq5nGniSlo57
+ YYQQwDm42Vyw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,358,1583222400"; 
+   d="scan'208";a="260030045"
+Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
+  by orsmga003.jf.intel.com with ESMTP; 06 May 2020 01:19:29 -0700
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, sean.j.christopherson@intel.com,
+        jmattson@google.com
+Cc:     yu.c.zhang@linux.intel.com, Yang Weijiang <weijiang.yang@intel.com>
+Subject: [PATCH v12 00/10] Introduce support for guest CET feature
+Date:   Wed,  6 May 2020 16:20:59 +0800
+Message-Id: <20200506082110.25441-1-weijiang.yang@intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/05/20 15:41, Thomas Gleixner wrote:
-> Move the functions which are inside the RCU off region into the
-> non-instrumentable text section.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/svm/svm.c     |  102 ++++++++++++++++++++++++---------------------
->  arch/x86/kvm/svm/vmenter.S |    2 
->  2 files changed, 57 insertions(+), 47 deletions(-)
-> 
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -3278,6 +3278,61 @@ static void svm_cancel_injection(struct
->  
->  void __svm_vcpu_run(unsigned long vmcb_pa, unsigned long *regs);
->  
-> +static noinstr void svm_vcpu_enter_exit(struct kvm_vcpu *vcpu,
-> +					struct vcpu_svm *svm)
-> +{
-> +	/*
-> +	 * VMENTER enables interrupts (host state), but the kernel state is
-> +	 * interrupts disabled when this is invoked. Also tell RCU about
-> +	 * it. This is the same logic as for exit_to_user_mode().
-> +	 *
-> +	 * 1) Trace interrupts on state
-> +	 * 2) Prepare lockdep with RCU on
-> +	 * 3) Invoke context tracking if enabled to adjust RCU state
-> +	 * 4) Tell lockdep that interrupts are enabled
-> +	 *
-> +	 * This has to be after x86_spec_ctrl_set_guest() because that can
-> +	 * take locks (lockdep needs RCU) and calls into world and some
-> +	 * more.
-> +	 */
-> +	instr_begin();
-> +	trace_hardirqs_on_prepare();
-> +	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
-> +	instr_end();
-> +	guest_enter_irqoff();
-> +	lockdep_hardirqs_on(CALLER_ADDR0);
-> +
-> +	__svm_vcpu_run(svm->vmcb_pa, (unsigned long *)&svm->vcpu.arch.regs);
-> +
-> +#ifdef CONFIG_X86_64
-> +	native_wrmsrl(MSR_GS_BASE, svm->host.gs_base);
-> +#else
-> +	loadsegment(fs, svm->host.fs);
-> +#ifndef CONFIG_X86_32_LAZY_GS
-> +	loadsegment(gs, svm->host.gs);
-> +#endif
-> +#endif
-> +
-> +	/*
-> +	 * VMEXIT disables interrupts (host state, see the CLI in the ASM
-> +	 * above), but tracing and lockdep have them in state 'on'. Same as
-> +	 * enter_from_user_mode().
-> +	 *
-> +	 * 1) Tell lockdep that interrupts are disabled
-> +	 * 2) Invoke context tracking if enabled to reactivate RCU
-> +	 * 3) Trace interrupts off state
-> +	 *
-> +	 * This needs to be done before the below as native_read_msr()
-> +	 * contains a tracepoint and x86_spec_ctrl_restore_host() calls
-> +	 * into world and some more.
-> +	 */
-> +	lockdep_hardirqs_off(CALLER_ADDR0);
-> +	guest_exit_irqoff();
-> +	instr_begin();
-> +	trace_hardirqs_off_prepare();
-> +	instr_end();
-> +}
-> +
->  static void svm_vcpu_run(struct kvm_vcpu *vcpu)
->  {
->  	struct vcpu_svm *svm = to_svm(vcpu);
-> @@ -3330,52 +3385,7 @@ static void svm_vcpu_run(struct kvm_vcpu
->  	 */
->  	x86_spec_ctrl_set_guest(svm->spec_ctrl, svm->virt_spec_ctrl);
->  
-> -	/*
-> -	 * VMENTER enables interrupts (host state), but the kernel state is
-> -	 * interrupts disabled when this is invoked. Also tell RCU about
-> -	 * it. This is the same logic as for exit_to_user_mode().
-> -	 *
-> -	 * 1) Trace interrupts on state
-> -	 * 2) Prepare lockdep with RCU on
-> -	 * 3) Invoke context tracking if enabled to adjust RCU state
-> -	 * 4) Tell lockdep that interrupts are enabled
-> -	 *
-> -	 * This has to be after x86_spec_ctrl_set_guest() because that can
-> -	 * take locks (lockdep needs RCU) and calls into world and some
-> -	 * more.
-> -	 */
-> -	trace_hardirqs_on_prepare();
-> -	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
-> -	guest_enter_irqoff();
-> -	lockdep_hardirqs_on(CALLER_ADDR0);
-> -
-> -	__svm_vcpu_run(svm->vmcb_pa, (unsigned long *)&svm->vcpu.arch.regs);
-> -
-> -#ifdef CONFIG_X86_64
-> -	wrmsrl(MSR_GS_BASE, svm->host.gs_base);
-> -#else
-> -	loadsegment(fs, svm->host.fs);
-> -#ifndef CONFIG_X86_32_LAZY_GS
-> -	loadsegment(gs, svm->host.gs);
-> -#endif
-> -#endif
-> -
-> -	/*
-> -	 * VMEXIT disables interrupts (host state, see the CLI in the ASM
-> -	 * above), but tracing and lockdep have them in state 'on'. Same as
-> -	 * enter_from_user_mode().
-> -	 *
-> -	 * 1) Tell lockdep that interrupts are disabled
-> -	 * 2) Invoke context tracking if enabled to reactivate RCU
-> -	 * 3) Trace interrupts off state
-> -	 *
-> -	 * This needs to be done before the below as native_read_msr()
-> -	 * contains a tracepoint and x86_spec_ctrl_restore_host() calls
-> -	 * into world and some more.
-> -	 */
-> -	lockdep_hardirqs_off(CALLER_ADDR0);
-> -	guest_exit_irqoff();
-> -	trace_hardirqs_off_prepare();
-> +	svm_vcpu_enter_exit(vcpu, svm);
->  
->  	/*
->  	 * We do not use IBRS in the kernel. If this vCPU has used the
-> --- a/arch/x86/kvm/svm/vmenter.S
-> +++ b/arch/x86/kvm/svm/vmenter.S
-> @@ -27,7 +27,7 @@
->  #define VCPU_R15	__VCPU_REGS_R15 * WORD_SIZE
->  #endif
->  
-> -	.text
-> +.section .noinstr.text, "ax"
->  
->  /**
->   * __svm_vcpu_run - Run a vCPU via a transition to SVM guest mode
-> 
+Control-flow Enforcement Technology (CET) provides protection against
+Return/Jump-Oriented Programming (ROP/JOP) attack. There're two CET
+sub-features: Shadow Stack (SHSTK) and Indirect Branch Tracking (IBT).
+SHSTK is to prevent ROP programming and IBT is to prevent JOP programming.
 
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Several parts in KVM have been updated to provide VM CET support, including:
+CPUID/XSAVES config, MSR pass-through, user space MSR access interface, 
+vmentry/vmexit config, nested VM etc. These patches have dependency on CET
+kernel patches for xsaves support and CET definitions, e.g., MSR and related
+feature flags.
+
+CET kernel patches are here:
+https://lkml.kernel.org/r/20200429220732.31602-1-yu-cheng.yu@intel.com
+
+v12:
+- Fixed a few issues per Sean and Paolo's review feeback.
+- Refactored patches to make them properly arranged.
+- Removed unnecessary hard-coded CET states for host/guest.
+- Added compile-time assertions for vmcs_field_to_offset_table to detect
+  mismatch of the field type and field encoding number.
+- Added a custom MSR MSR_KVM_GUEST_SSP for guest active SSP save/restore.
+- Rebased patches to 5.7-rc3.
+
+v11:
+- Fixed a guest vmentry failure issue when guest reboots.
+- Used vm_xxx_control_{set, clear}bit() to avoid side effect, it'll
+  clear cached data instead of pure VMCS field bits.
+- Added vcpu->arch.guest_supported_xss dedidated for guest runtime mask,
+  this avoids supported_xss overwritten issue caused by an old qemu.
+- Separated vmentry/vmexit state setting with CR0/CR4 dependency check
+  to make the patch more clear.
+- Added CET VMCS states in dump_vmcs() for debugging purpose.
+- Other refactor based on testing.
+- This patch serial is built on top of below branch and CET kernel patches
+  for seeking xsaves support:
+  https://git.kernel.org/pub/scm/virt/kvm/kvm.git/log/?h=cpu-caps
+
+v10:
+- Refactored code per Sean's review feedback.
+- Added CET support for nested VM.
+- Removed fix-patch for CPUID(0xd,N) enumeration as this part is done
+  by Paolo and Sean.
+- This new patchset is based on Paolo's queued cpu_caps branch.
+- Modified patch per XSAVES related change.
+- Consolidated KVM unit-test patch with KVM patches.
+
+v9:
+- Refactored msr-check functions per Sean's feedback.
+- Fixed a few issues per Sean's suggestion.
+- Rebased patch to kernel-v5.4.
+- Moved CET CPUID feature bits and CR4.CET to last patch.
+
+v8:
+- Addressed Jim and Sean's feedback on: 1) CPUID(0xD,i) enumeration. 2)
+  sanity check when configure guest CET. 3) function improvement.
+- Added more sanity check functions.
+- Set host vmexit default status so that guest won't leak CET status to
+  host when vmexit.
+- Added CR0.WP vs. CR4.CET mutual constrains.
+
+v7:
+- Rebased patch to kernel v5.3
+- Sean suggested to change CPUID(0xd, n) enumeration code as alined with
+  existing one, and I think it's better to make the fix as an independent patch 
+  since XSS MSR are being used widely on X86 platforms.
+- Check more host and guest status before configure guest CET
+  per Sean's feedback.
+- Add error-check before guest accesses CET MSRs per Sean's feedback.
+- Other minor fixes suggested by Sean.
+
+v6:
+- Rebase patch to kernel v5.2.
+- Move CPUID(0xD, n>=1) helper to a seperate patch.
+- Merge xsave size fix with other patch.
+- Other minor fixes per community feedback.
+
+v5:
+- Rebase patch to kernel v5.1.
+- Wrap CPUID(0xD, n>=1) code to a helper function.
+- Pass through MSR_IA32_PL1_SSP and MSR_IA32_PL2_SSP to Guest.
+- Add Co-developed-by expression in patch description.
+- Refine patch description.
+
+v4:
+- Add Sean's patch for loading Guest fpu state before access XSAVES
+  managed CET MSRs.
+- Melt down CET bits setting into CPUID configuration patch.
+- Add VMX interface to query Host XSS.
+- Check Host and Guest XSS support bits before set Guest XSS.
+- Make Guest SHSTK and IBT feature enabling independent.
+- Do not report CET support to Guest when Host CET feature is Disabled.
+
+v3:
+- Modified patches to make Guest CET independent to Host enabling.
+- Added patch 8 to add user space access for Guest CET MSR access.
+- Modified code comments and patch description to reflect changes.
+
+v2:
+- Re-ordered patch sequence, combined one patch.
+- Added more description for CET related VMCS fields.
+- Added Host CET capability check while enabling Guest CET loading bit.
+- Added Host CET capability check while reporting Guest CPUID(EAX=7, EXC=0).
+- Modified code in reporting Guest CPUID(EAX=D,ECX>=1), make it clearer.
+- Added Host and Guest XSS mask check while setting bits for Guest XSS.
+
+
+
+Sean Christopherson (1):
+  KVM: x86: Load guest fpu state when access MSRs managed by XSAVES
+
+Yang Weijiang (9):
+  KVM: VMX: Introduce CET VMCS fields and flags
+  KVM: VMX: Set guest CET MSRs per KVM and host configuration
+  KVM: VMX: Configure CET settings upon guest CR0/4 changing
+  KVM: x86: Refresh CPUID once guest changes XSS bits
+  KVM: x86: Add userspace access interface for CET MSRs
+  KVM: VMX: Enable CET support for nested VM
+  KVM: VMX: Add VMCS dump and sanity check for CET states
+  KVM: x86: Add #CP support in guest exception dispatch
+  KVM: x86: Enable CET virtualization and advertise CET to userspace
+
+ arch/x86/include/asm/kvm_host.h      |   4 +-
+ arch/x86/include/asm/vmx.h           |   8 +
+ arch/x86/include/uapi/asm/kvm.h      |   1 +
+ arch/x86/include/uapi/asm/kvm_para.h |   7 +-
+ arch/x86/kvm/cpuid.c                 |  28 ++-
+ arch/x86/kvm/vmx/capabilities.h      |   5 +
+ arch/x86/kvm/vmx/nested.c            |  34 ++++
+ arch/x86/kvm/vmx/vmcs12.c            | 275 ++++++++++++++++-----------
+ arch/x86/kvm/vmx/vmcs12.h            |  14 +-
+ arch/x86/kvm/vmx/vmx.c               | 257 ++++++++++++++++++++++++-
+ arch/x86/kvm/x86.c                   |  42 +++-
+ arch/x86/kvm/x86.h                   |   2 +-
+ 12 files changed, 546 insertions(+), 131 deletions(-)
+
+-- 
+2.17.2
 
