@@ -2,152 +2,224 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8893BC38A2A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 11:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 138C6C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 11:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A8EB20757
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 11:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D711B20752
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 11:51:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lcrEA0GG"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="E17m3b/g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbgEFLvF (ORCPT
+        id S1727844AbgEFLv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 07:51:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53470 "EHLO
+        Wed, 6 May 2020 07:51:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726778AbgEFLvE (ORCPT
+        by vger.kernel.org with ESMTP id S1726778AbgEFLv6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 07:51:04 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30485C061A10
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 04:51:04 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id d184so888963pfd.4
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 04:51:04 -0700 (PDT)
+        Wed, 6 May 2020 07:51:58 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37161C061A10
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 04:51:58 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id e26so2241439wmk.5
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 04:51:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NCWVLraG9Z8gnxmAn0SmeF0f40Gs+IBXqSv5TRfXTeo=;
-        b=lcrEA0GGS/ODMtk1F9EbQgx/zhTGO7HwxM1q3YwRF1yV7sz+TG/gC9gvwnsxPQWUl5
-         JzJDdag0D4HdVsx00o/HcFoqylOGBpDNPCWbqQ/5lsZ5Sj9+rB8rWUcyx2SqsNwKdLq8
-         BRigHnSvx7Vx35Rhg2+39JJe9beD0dmVijEfEI5qklWM9IkysJcJsh92eP1QXtfb1/gB
-         MpDZquvW1w0za/4eaHctNyYMhfXiCTbYy7yX0Fye2B7xdAqne9CJx8jqDuQgCCjKk5JG
-         Rwed3oTTBNks+c1PQ37hE8Do/pVC9jiUjJdHmhoGcK51qUlm/m7+vArPv65nyVvo/gqc
-         6lMg==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=XBB+wIQ1zosOEyZvUXCM3lOhjUniZxLo8oqY31+qJpE=;
+        b=E17m3b/g5zV4eYdkmltAKLSJ1i4A2fJqd/ngHggp+2V7nFIM8XkHPRivmN/+W3cpQe
+         tZVuTJiGLPtSQPKaRYm3WHdquhC60DjHC7oyZ6sPj9oCXoWmayMiIwyCwF9PMpQbuzLs
+         CqZFz4Km8f2kYkl5DCk/PStAaytK2uaI0jSwfc11bv+d9MrCRH3pAO6Jp6iKy0SM2gJ4
+         YOaNhZbEoGTnboj5PPCUp7LfhoWtioG5DX1KLx7eVPPwt1Fp7axkek6HSyrxGIWSyVus
+         hHopPI99mbqnVAJ+44ylzldfc9iqFzzIFHNirirt9gB7dGuq7H63BI1/4mdT6SIJt++3
+         Hmow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NCWVLraG9Z8gnxmAn0SmeF0f40Gs+IBXqSv5TRfXTeo=;
-        b=CKlGhsdmPkvxnkmg1fuq7pwteeZLjHqyGfMhiri0/3gkW7gNnxuvITilp1xgzxAGaK
-         ij3MFLEXzC4SBO9Ep7LzAf3BHPR4wQ3wPbPm/CTOHgVyRzZ99Z/VQ0skALTY9SA+AT1s
-         YB7kCMXBdbUUBYx1y5tBVh/Ad0xsudVBwY21VOm9zmWO7TodGSBQgFsMYhCABmUts0QK
-         qV87MNslZMCehq1xBndkdvsyqz9o1jW6ndfuDV3xDGl49P4TIA5LiB49V9drBTFYfF9a
-         IMQXMlUWAAPnDdg+tQRcNkZmtsn8A24d0/Fvx7x15nLP+SJKX6vm4/mWcvMcct0tS+25
-         tCLQ==
-X-Gm-Message-State: AGi0PuZ8jbaRdELYtG8AXxJVZ4JEWrXpZHiLDpOHXLTMcV4kozVoeHXR
-        k3LOHUnHL+w+HDqmVUtgclVir47Cr3xQhFuWK/hIoQ==
-X-Google-Smtp-Source: APiQypLbnuslSjWfPJCL6GH8TRgkchj+mtZa+8D31hKdGt3QwTAT7sKf3dYFt1pz5KQgKBc84Vw4pl1Pwk8as9editc=
-X-Received: by 2002:a63:a61:: with SMTP id z33mr6595886pgk.440.1588765863165;
- Wed, 06 May 2020 04:51:03 -0700 (PDT)
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=XBB+wIQ1zosOEyZvUXCM3lOhjUniZxLo8oqY31+qJpE=;
+        b=E0NxHAscMRoGm46L9B60KClZtjUThsBo2ay38vdI5XIJo5ePAcmnHlQh7a0qT0fzpn
+         M+rE5yWdJvxud/QNees+4q5hhTNkKDJzJ62koILTXuDD0eN35N4cid6Z4tAp+lgE7SGu
+         wyJ8u7VsGB15WdhFTJa3uH2UeKM4UTWtzNxksWThCgj0rZpLABDWQtubzyUGZa9FLwlr
+         mYbIbyhFIeInOP3UraWxYyVB8QXGOLYD9ROQRtFqzdUTSBhrw1kVZxFuAcYF3VqKtVn0
+         CvsjpTnXlFGTibCPwQzUw5Bb4r6sdvwhEkMWAfbEoKVNsYIwKiYXLQ933IOCX62dISuM
+         Bt8g==
+X-Gm-Message-State: AGi0PuZUF1dhHdlbcB/109C6n6IYpQi7w+sh7Ufq4pPjdQCxU3Sd4cwb
+        mzY/1lFUX+qSUDTQsEy3YY2JuQ==
+X-Google-Smtp-Source: APiQypJYPcTh+DtH5BqedeYpWvgWCBS2f6MPqH4pLuBqKuAFbyeb/wh4FxRArj1tPcWJin+/LHBMSg==
+X-Received: by 2002:a1c:2ed3:: with SMTP id u202mr1482386wmu.77.1588765916800;
+        Wed, 06 May 2020 04:51:56 -0700 (PDT)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id w18sm2167174wrn.55.2020.05.06.04.51.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 04:51:56 -0700 (PDT)
+References: <1588250483-10014-1-git-send-email-spujar@nvidia.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Sameer Pujar <spujar@nvidia.com>, broonie@kernel.org,
+        perex@perex.cz, tiwai@suse.com, kuninori.morimoto.gx@renesas.com
+Cc:     nicoleotsuka@gmail.com, alsa-devel@alsa-project.org,
+        swarren@nvidia.com, linux-kernel@vger.kernel.org,
+        nwartikar@nvidia.com, lgirdwood@gmail.com, jonathanh@nvidia.com,
+        viswanathl@nvidia.com, sharadg@nvidia.com,
+        thierry.reding@gmail.com, atalambedu@nvidia.com,
+        linux-tegra@vger.kernel.org, digetx@gmail.com,
+        rlokhande@nvidia.com, mkumard@nvidia.com, dramesh@nvidia.com
+Subject: Re: [RFC] DPCM for Tegra
+In-reply-to: <1588250483-10014-1-git-send-email-spujar@nvidia.com>
+Date:   Wed, 06 May 2020 13:51:54 +0200
+Message-ID: <1jzhalffhh.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-References: <00000000000039420505a14e4951@google.com> <1588755226.13662.17.camel@suse.com>
-In-Reply-To: <1588755226.13662.17.camel@suse.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 6 May 2020 13:50:52 +0200
-Message-ID: <CAAeHK+zOdghTAu647iKBEU+0LqkYYOk0f7gPk_4T6BjNi=2sAQ@mail.gmail.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in hfa384x_usbin_callback
-To:     Oliver Neukum <oneukum@suse.com>
-Cc:     syzbot <syzbot+7d42d68643a35f71ac8a@syzkaller.appspotmail.com>,
-        devel@driverdev.osuosl.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>, nishkadg.linux@gmail.com,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: multipart/mixed; boundary="000000000000e870ed05a4f96035"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---000000000000e870ed05a4f96035
-Content-Type: text/plain; charset="UTF-8"
 
-On Wed, May 6, 2020 at 10:54 AM Oliver Neukum <oneukum@suse.com> wrote:
+On Thu 30 Apr 2020 at 14:41, Sameer Pujar <spujar@nvidia.com> wrote:
+
+> At a high level Tegra Audio HW is depicted as below.
 >
-> Am Freitag, den 20.03.2020, 12:28 -0700 schrieb syzbot:
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    e17994d1 usb: core: kcov: collect coverage from usb comple..
-> > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=11d74573e00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=5d64370c438bc60
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=7d42d68643a35f71ac8a
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15fa561de00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15d74573e00000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+7d42d68643a35f71ac8a@syzkaller.appspotmail.com
-> >
+> |     Front End PCMs     |  SoC DSP   |     Back End DAIs    |
 >
-> Hi,
+>                          *************
+> ADMAIF<0> <------------> *           * <----DAI<0>-----> I2S
+>                          *           *
+> ADMAIF<1> <------------> *           * <----DAI<1>-----> DMIC
+>                          *    XBAR   *
+> ADMAIF<2> <------------> *           * <----DAI<2>-----> DSPK
+>                          *           *
+> ADMAIF<N> <------------> *           * <----DAI<3>-----> SFC (Resampler)
+>                          *           *
+>                          *           * <----DAI<4>-----> MIXER
+>                          *           *
+>                          *           * <----DAI<N>-----> ...
+>                          *************
 >
-> is this bug still active and can a test be run on it? I requested one
-> yesterday. If my analysis is correct this bug has security
-> implications, so it is kind of important.
 
-I see your request in the queue and it's been registered and
-completed, but for some reason syzbot didn't send an email with a
-response.
+>
+>
+> Follow up queries
+> =================
+> Based on the above experience I do have few follow up queries and request
+> for your inputs on this.
+>
+>  a) Can I use a DAPM Mux control to activate a BE path? This in turn can
+>     program required switch in XBAR.
 
-Let me try this once again:
+My 2 cents:
+DPCM should activate any BE which has:
+* a valid DAPM path from the current FE
+* a valid BE stream (ex: can handle the stream direction)
 
-#syz test: https://github.com/google/kasan.git e17994d1
+AFAIK, you can use any combination of DAPM elements to model your
+components, including the XBAR. Then, it is the job of the card driver to
+link the DAPM widgets of the different components together and bring the
+system to life.
 
---000000000000e870ed05a4f96035
-Content-Type: application/octet-stream; 
-	name="0001-hfa384x_usb-fix-buffer-overflow.patch"
-Content-Disposition: attachment; 
-	filename="0001-hfa384x_usb-fix-buffer-overflow.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k9va5uf00>
-X-Attachment-Id: f_k9va5uf00
+If your XBAR is widgets are not provided by a component which also
+provides a dai_link in the sound card, you'll need to add the component
+to the auxiliary device list of the card for the widget to be available
+in the card.
 
-RnJvbSA2ZGJjYWM4YzRiNjQ1NjAwMTYxZmVhZmM1NTc2NjU3OTA1ZjE1ZDY1IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBPbGl2ZXIgTmV1a3VtIDxvbmV1a3VtQHN1c2UuY29tPgpEYXRl
-OiBUdWUsIDUgTWF5IDIwMjAgMTM6NDY6MjYgKzAyMDAKU3ViamVjdDogW1BBVENIXSBoZmEzODR4
-X3VzYjogZml4IGJ1ZmZlciBvdmVyZmxvdwoKVGhlIGRyaXZlciB0cnVzdHMgdGhlIGRhdGFfbGVu
-IGNvbWluZyBmcm9tIHRoZSBoYXJkd2FyZQp3aXRob3V0IHZlcmlmaWNhdGlvbi4gVGhhdCBtZWFu
-cyB0aGF0IHRoaXMgb3BlbnMKYSB2ZWN0b3IgYnkgd2hpY2ggYW4gYXR0YWNrZXIgY2FuIHNtYXNo
-IDY0SyBvZiB0aGUgaGVhcC4KClNpZ25lZC1vZmYtYnk6IE9saXZlciBOZXVrdW0gPG9uZXVrdW1A
-c3VzZS5jb20+Ci0tLQogZHJpdmVycy9zdGFnaW5nL3dsYW4tbmcvaGZhMzg0eF91c2IuYyB8IDEy
-ICsrKysrKystLS0tLQogMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlv
-bnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL3N0YWdpbmcvd2xhbi1uZy9oZmEzODR4X3VzYi5j
-IGIvZHJpdmVycy9zdGFnaW5nL3dsYW4tbmcvaGZhMzg0eF91c2IuYwppbmRleCBmYTFiZjhiMDY5
-ZmQuLjViNjQ5N2Q4YzllMiAxMDA2NDQKLS0tIGEvZHJpdmVycy9zdGFnaW5nL3dsYW4tbmcvaGZh
-Mzg0eF91c2IuYworKysgYi9kcml2ZXJzL3N0YWdpbmcvd2xhbi1uZy9oZmEzODR4X3VzYi5jCkBA
-IC0zMzUzLDkgKzMzNTMsOSBAQCBzdGF0aWMgdm9pZCBoZmEzODR4X2ludF9yeG1vbml0b3Ioc3Ry
-dWN0IHdsYW5kZXZpY2UgKndsYW5kZXYsCiAJCQkJICBzdHJ1Y3QgaGZhMzg0eF91c2Jfcnhmcm0g
-KnJ4ZnJtKQogewogCXN0cnVjdCBoZmEzODR4X3J4X2ZyYW1lICpyeGRlc2MgPSAmcnhmcm0tPmRl
-c2M7Ci0JdW5zaWduZWQgaW50IGhkcmxlbiA9IDA7Ci0JdW5zaWduZWQgaW50IGRhdGFsZW4gPSAw
-OwotCXVuc2lnbmVkIGludCBza2JsZW4gPSAwOworCXVuc2lnbmVkIGludCBoZHJsZW47CisJdW5z
-aWduZWQgaW50IGRhdGFsZW47CisJdW5zaWduZWQgaW50IHNrYmxlbjsKIAl1OCAqZGF0YXA7CiAJ
-dTE2IGZjOwogCXN0cnVjdCBza19idWZmICpza2I7CkBAIC0zNDEzLDggKzM0MTMsMTAgQEAgc3Rh
-dGljIHZvaWQgaGZhMzg0eF9pbnRfcnhtb25pdG9yKHN0cnVjdCB3bGFuZGV2aWNlICp3bGFuZGV2
-LAogCSAqLwogCXNrYl9wdXRfZGF0YShza2IsICZyeGRlc2MtPmZyYW1lX2NvbnRyb2wsIGhkcmxl
-bik7CiAKLQkvKiBJZiBhbnksIGNvcHkgdGhlIGRhdGEgZnJvbSB0aGUgY2FyZCB0byB0aGUgc2ti
-ICovCi0JaWYgKGRhdGFsZW4gPiAwKSB7CisJLyogSWYgYW55LCBjb3B5IHRoZSBkYXRhIGZyb20g
-dGhlIGNhcmQgdG8gdGhlIHNrYiwKKwkgKiBhcyBsb25nIGFzIGl0IGZpdHMsIGxlc3Qgd2Ugc21h
-c2ggYSBidWZmZXIKKwkgKi8KKwlpZiAoZGF0YWxlbiA+IDAgJiYgZGF0YWxlbiA8PSBza2JsZW4g
-LSBoZHJsZW4pIHsKIAkJZGF0YXAgPSBza2JfcHV0X2RhdGEoc2tiLCByeGZybS0+ZGF0YSwgZGF0
-YWxlbik7CiAKIAkJLyogY2hlY2sgZm9yIHVuZW5jcnlwdGVkIHN0dWZmIGlmIFdFUCBiaXQgc2V0
-LiAqLwotLSAKMi4xNi40Cgo=
---000000000000e870ed05a4f96035--
+>
+>     This is needed for following reasons:
+>
+>     - For an open platform like Jetson, we want to give maximum flexibility
+>       for a user to customize their audio paths. Number of connected
+>       components and order of these can vary depending on a use case.
+>
+>     - Allow re-use of audio components across multiple use cases.
+>       For example, number of SFC instances are lesser than PCM playback or
+>       capture devices.
+>
+>  b) I have modelled SFC and MIXER as backends. Is this allowed?
+>
+>     This was done to include SFC or MIXER HW components as part of the
+>     sound card and use like below in one of the audio use cases.
+>  
+>     ADMAIF1(FE) --> SFC(BE1) --> I2S(BE2) ... OR
+>     ADMAIF2(FE) --> SFC(BE1) --> I2S(BE2) ...
+
+What your are trying to achieve here is DAI chaining. From the DAPM
+perspective, it is alright. Unfortunately this kind of chaining are
+not supported (not yet, at least) from the dai_link perspective, even
+with DPCM.
+
+
+From the DPCM perspective, I think your patch does the following:
+
+ADMAIF1(FE) ---> SFC(BE1)
+            |--> I2S(BE2)
+ADMAIF2(FE) ---> SFC(BE1)
+            |--> I2S(BE2)
+
+Your DAIs are not chained, but put in parallel. Maybe all your DAI
+callbacks are called in a way that is convinient enough for your
+use cases, but it is not what you intended.
+
+For the example, the rate passed to 'I2S(BE2)' in hw_params() will
+be the one provided by the 'ADMAIF', not the output rate of the 'SFC'.
+
+>
+>     I used following workaround to connect multiple BE components.
+>     With this I can see PCM callbacks happen for all BE DAIs along the DAPM
+>     path. The obective was to connect multiple components together and (a)
+>     was used to connect one component to another. Each "-->" here connects
+>     two components and it is a switch in XBAR. 
+>
+>     ---
+>       sound/soc/soc-pcm.c | 2 +-
+>       1 file changed, 1 insertion(+), 1 deletion(-)
+>
+>       diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+>       index e256d43..ee7af55 100644
+>       --- a/sound/soc/soc-pcm.c
+>       +++ b/sound/soc/soc-pcm.c
+>       @@ -1494,7 +1494,7 @@ int dpcm_path_get(struct snd_soc_pcm_runtime *fe,
+>  
+>  	  /* get number of valid DAI paths and their widgets */
+>  	  paths = snd_soc_dapm_dai_get_connected_widgets(cpu_dai, stream, list,
+>       -			dpcm_end_walk_at_be);
+>       +			NULL);
+>  
+>  	dev_dbg(fe->dev, "ASoC: found %d audio %s paths\n", paths,
+>  			stream ? "capture" : "playback");
+>     -- 
+>
+>  c) Hostless mode did NOT work:
+>      - Following audio path was intended to be tested:
+>        I2S1 --> SFC --> I2S2
+>
+>      - [3] offers two options:
+>          * CODEC<->CODEC: If I were to use a separate DAI link for each BE to BE
+>            connection, then it will result in a similar design what we have
+>            currently.
+>
+>          * Hostless: I did not come across references for this.
+>            (Any references in this regard will be helpful)
+>
+>
+> May be the current Tegra ASoC design is more suitable for component model as you
+> had previously mentioned. I wanted to understand if above, especially (a) and (b),
+> are acceptable in this regard or if there are better options to interconnect
+> multiple ASoC components.
+>
+> Looking forward for your feedback.
+>
+> Thanks,
+> Sameer.
+>
+> References
+> ==========
+> [0] http://patchwork.ozlabs.org/project/linux-tegra/list/?series=159664&archive=both&state=*
+> [1] http://patchwork.ozlabs.org/project/linux-tegra/patch/1582180492-25297-6-git-send-email-spujar@nvidia.com/
+> [2] http://patchwork.ozlabs.org/project/linux-tegra/patch/1582180492-25297-4-git-send-email-spujar@nvidia.com/
+> [3] https://www.kernel.org/doc/html/v5.6/sound/soc/dpcm.html
+
