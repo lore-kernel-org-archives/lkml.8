@@ -2,177 +2,124 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16180C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4886C47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB9E320708
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:46:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TcJwiF9P"
+	by mail.kernel.org (Postfix) with ESMTP id 8F02420708
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:46:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588779976;
+	bh=zIzO6N2aIHBBQfpze5U1m0raY9nb61DLTvoRlnF4tv0=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=JLN/JScx36wTXM/CGiO9abqP23DVwKAnlZVISvBAJ3vHc0PO1W9f7qypVapU+nSxl
+	 sNSSq853WlDRYh3YZ6cEG+D+AbkHTgRX3cFlY9XF8WB7fI80mqcX/BlFX+jSs2P1/O
+	 IjKy9alkByXPvdWojOn/CBVpFStxqc+w8mWe9UZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbgEFPqD (ORCPT
+        id S1729686AbgEFPqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:46:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33834 "EHLO
+        Wed, 6 May 2020 11:46:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729148AbgEFPqD (ORCPT
+        with ESMTP id S1729148AbgEFPqP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:46:03 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02C0EC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 08:46:02 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id a5so1091479pjh.2
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 08:46:01 -0700 (PDT)
+        Wed, 6 May 2020 11:46:15 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6058C061A10
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 08:46:13 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id c18so2194757ile.5
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 08:46:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+AoWjl9qm/9ONcKycsC0yd4jPr3qRbLth7/5z1t+XVo=;
-        b=TcJwiF9PZJ7weYuO7y5YljNF/n80dtvLxhRuBe3ZyDkIc/4wV5E/MZPhnlFGn9ocv4
-         YBYDfadH8szxYIYL+r6z3W09w6cEDJ31wp9dskHioIjVDyTmJnX8M552EwQya9gu/Bre
-         y0h/R9JdLaMiA7vpQqitsz//Jlmpx24z9YOnUanV53vffwnQFN7feRX2i7F8P4idZ83n
-         QzEmaQYeuFB5RrPn9Y1BdikXDWTZeODBAvMsoyXrEXkXMQZk4flzNsBdDU6Zx9DC68Kp
-         BGrmdrPw7B4Tary1iOpPmeQTbFSYfQMLTiCvuZrXWGLHQ3mif0aEXth1jdbIkLMwVrKM
-         6kUg==
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QT2YN6oqKqg6700ugZaaaxIxPh7KJTUan3y27PnGKts=;
+        b=J/GhKerOoarXIYXI3Rx+JWkjRs7CCOiRPgY+0225MXwMQMVB0it64dmgW6lpUI5o0Q
+         yH6/E22JHPpFY7NS7CnEvTyK9tFqq1yV9g6N4rAbwlqaUOry02ETNNre4XdxElRL19F2
+         pNHdP5k4fWMSt7askz6QOiDDWXSO/VoIe0Fh0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+AoWjl9qm/9ONcKycsC0yd4jPr3qRbLth7/5z1t+XVo=;
-        b=ngdHrPPp+ys0Uz5hCtvYvVHFL9U7jQqx7vTb97nox1sYygxE4cUR6aW08JNPL4yQOn
-         MFfCRz3CyQRpnG7q++PzHgFrnKVWBgDUjlFIDzvhXZzBL9QSXQB4SQ99hxMrnLAhNgg2
-         Xa6pjDlxBx5svpsfjPOnwGosC8do++AW9MQUgHYgYsZ53yvPNlzLyXDP1Hdb/7UJzCa9
-         wgDH0m3hSeU7UyxFvLz8jEkevMOtskDSuRAGodNG7sfi6lfqWE2trcKhQ6OoME+1CbBB
-         wWjMiltLjRpzuGirGuwUK757w1hP3wlbpWbKNYHa30exhz9thUr0OQt+a7wUQn0G0i//
-         3Aqg==
-X-Gm-Message-State: AGi0PuawQy11RYIWLMPE+skvcS/sU/BDw4JIuJJs1A3f5uBTrL7Al38k
-        WylvzcKYthHsNnaINv5Ru58scA==
-X-Google-Smtp-Source: APiQypLqUZX1ljzKvY3YflM7oBKNSvZrofamAqbFh6JhKo4XNOgo9b/+6kkq7eJMh6gxLe+YbfKl5Q==
-X-Received: by 2002:a17:90a:a888:: with SMTP id h8mr10608900pjq.174.1588779961070;
-        Wed, 06 May 2020 08:46:01 -0700 (PDT)
-Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
-        by smtp.gmail.com with ESMTPSA id i18sm5217925pjx.33.2020.05.06.08.45.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 08:46:00 -0700 (PDT)
-Date:   Wed, 6 May 2020 08:45:56 -0700
-From:   Fangrui Song <maskray@google.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Torsten Duwe <duwe@lst.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        Torsten Duwe <duwe@suse.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Julien Thierry <jthierry@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Alexandre Ghiti <alex@ghiti.fr>,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        Ionela Voinescu <ionela.voinescu@arm.com>,
-        Steve Capper <steve.capper@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] arm64: disable patchable function entry on big-endian
- clang builds
-Message-ID: <20200506154556.5fsxzs3vbfwixggd@google.com>
-References: <20200505141257.707945-1-arnd@arndb.de>
- <20200505142556.GF82823@C02TD0UTHF1T.local>
- <20200505194243.5bfc6ec6@blackhole>
- <20200506034523.GA564255@ubuntu-s3-xlarge-x86>
- <CAK8P3a24EiEvGAenL0FdgGakmwWi=giReOJuiisnzkgC_SuhZg@mail.gmail.com>
- <20200506153156.GA1213645@ubuntu-s3-xlarge-x86>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QT2YN6oqKqg6700ugZaaaxIxPh7KJTUan3y27PnGKts=;
+        b=n/yDQ0AQTh3RQ7cY/++6QGES2AmsFvIqQnL7WoPfMtuYf8KXngYpGEGPFsbgibi/NJ
+         vfq3NFewl2S74oG/U8n2prOE4+fftqs3+eObq60Eh/mkkGrNDOevv6nb2hpj8iXMpUPR
+         Ddn3Wk/b8eOIjzQTzG7ta7+T9ztNBNaRzkTqWHavVcXymZiyuZMCdo3fMXGkwwSy4XXi
+         iHjUavifucuLSGOVhe0AVF0KJ0/Qq2ZyK6vkllPXjvET/Jr6ml9lm00f/jTDQcbfo6Cg
+         FdJcItn+un5RTiQmdGUZatazWzBCbjwxZ/GVQ2sg37z1p6w2KQxfcqYZNTmWA/CGiTZ0
+         +7YA==
+X-Gm-Message-State: AGi0Pua00LNUkdHOw8t+g6gYKxAfQ+EgILh2gQhPgD00K/9zvfD9HjDP
+        hvMbrbxmAhH9t0EcI/64ZP8G1w==
+X-Google-Smtp-Source: APiQypIkBH8t6x3OXeefHkp9yWiD5BTjf+mpTuKXbtUT2nXa+csoEMlMwpIi8Fir10PaPz6LZpH1Cg==
+X-Received: by 2002:a92:1949:: with SMTP id e9mr9877680ilm.106.1588779973174;
+        Wed, 06 May 2020 08:46:13 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id t1sm1208096iln.4.2020.05.06.08.46.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 May 2020 08:46:11 -0700 (PDT)
+Subject: Re: [PATCH] selftests/ftrace: mark irqsoff_tracer.tc test as
+ unresolved if the test module does not exist
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Po-Hsu Lin <po-hsu.lin@canonical.com>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shuah <shuah@kernel.org>, mingo@redhat.com,
+        Masami Hiramatsu <mhiramat@kernel.org>, joel@joelfernandes.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20200505101445.27063-1-po-hsu.lin@canonical.com>
+ <20200505090912.7114f420@gandalf.local.home>
+ <CAMy_GT8r8H21Ly3N5VFkiPi0qUCkPCvy8SU3Ns2vesaS8xvffQ@mail.gmail.com>
+ <20200506114351.1b45e82f@gandalf.local.home>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <ac9c5f4a-3288-0f6a-dbb7-1b7dcd0c7a87@linuxfoundation.org>
+Date:   Wed, 6 May 2020 09:46:10 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200506153156.GA1213645@ubuntu-s3-xlarge-x86>
+In-Reply-To: <20200506114351.1b45e82f@gandalf.local.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-06, Nathan Chancellor wrote:
->On Wed, May 06, 2020 at 12:22:58PM +0200, Arnd Bergmann wrote:
->> On Wed, May 6, 2020 at 5:45 AM Nathan Chancellor
->> <natechancellor@gmail.com> wrote:
->> > On Tue, May 05, 2020 at 07:42:43PM +0200, Torsten Duwe wrote:
->> > > On Tue, 5 May 2020 15:25:56 +0100 Mark Rutland <mark.rutland@arm.com> wrote:
->> > > > On Tue, May 05, 2020 at 04:12:36PM +0200, Arnd Bergmann wrote:
->> > > > This practically rules out a BE distro kernel with things like PAC,
->> > > > which isn't ideal.
->> >
->> > To be fair, are there big endian AArch64 distros?
->> >
->> > https://wiki.debian.org/Arm64Port: "There is also a big-endian version
->> > of the architecture/ABI: aarch64_be-linux-gnu but we're not supporting
->> > that in Debian (so there is no corresponding Debian architecture name)
->> > and hopefully will never have to. Nevertheless you might want to check
->> > for this by way of completeness in upstream code."
->> >
->> > OpenSUSE and Fedora don't appear to have support for big endian.
->>
->> I don't think any of the binary distros ship big endian ARM64. There are
->> a couple of users that tend to build everything from source using Yocto
->> or similar embedded distros, but as far as I can tell this is getting less
->> common over time as applications get ported to be compatible with
->> big-endian, or get phased out and replaced by code running on regular
->> little-endian systems.
->>
->> The users we see today are likely in telco, military or aerospace
->> settings (While earth is mostly little-endian these days, space is
->> definitely big-endian) that got ported from big-endian hardware, but
->> often with a high degree of customization and long service life.
->
->Ah yes, that makes sense, thanks for the information and background.
->Helps orient myself for the future.
->
->> My policy for Arm specific kernel code submissions is generally that
->> it should be written so it can work on either big-endian or little-endian
->> using the available abstractions (just like any architecture independent
->> code), but I don't normally expect it to be tested on big endian.
->>
->> There are some important examples of code that just doesn't work
->> on big-endian because it's far too hard, e.g. the UEFI runtime services.
->> That is also ok, if anyone really needs it, they can do the work.
->>
->> > > I suggest to get a quote from clang folks first about their schedule and
->> > > regarded importance of patchable-function-entries on BE, and leave it as
->> > > is: broken on certain clang configurations. It's not the kernel's fault.
->> >
->> > We can file an upstream PR (https://bugs.llvm.org) to talk about this
->> > (although I've CC'd Fangrui) but you would rather the kernel fail to
->> > work properly than prevent the user from being able to select that
->> > option? Why even have the "select" or "depends on" keyword then?
+On 5/6/20 9:43 AM, Steven Rostedt wrote:
+> On Wed, 6 May 2020 09:46:21 +0800
+> Po-Hsu Lin <po-hsu.lin@canonical.com> wrote:
+> 
+>> On Tue, May 5, 2020 at 9:09 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>>>
+>>>
+>>> You keep forgetting to Cc Shuah's other email.
+>> Thanks!
+>> I got the recipients list from the get_mainter.pl.
+> 
+> Hmm.
+> 
+> Seems like that is what get_maintainer.pl does:
+> 
+> Steven Rostedt <rostedt@goodmis.org> (maintainer:TRACING)
+> Ingo Molnar <mingo@redhat.com> (maintainer:TRACING)
+> Shuah Khan <shuah@kernel.org> (maintainer:KERNEL SELFTEST FRAMEWORK)
+> linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK)
+> linux-kernel@vger.kernel.org (open list)
+> 
+> And looking at the code, it appears it will only take the first email
+> address found in the file.
+> 
+> Shuah, if you prefer the linuxfoundation.org email, you need to update
+> MAINTAINERS file to have that one first.
+> 
 
-Created https://reviews.llvm.org/D79495 to allow the function attribute
-'patchable_function_entry' on aarch64_be.
-I think -fpatchable-function-entry= just works.
+When I updated the MAINTAINERS file, I was hoping both addresses will be
+in the output. It doesn't appear to be working the way I assumed it
+would. I will send in patch to update to switch them.
 
-Note, LLD does not support aarch64_be
-(https://github.com/ClangBuiltLinux/linux/issues/380).
-
->> I definitely want all randconfig kernels to build without warnings,
->> and I agree with you that making it just fail at build time is not
->> a good solution.
->>
->> > That said, I do think we should hold off on this patch until we hear
->> > from the LLVM developers.
->>
->> +1
->>
->>       Arnd
->
->Glad we are on the same page.
->
->Cheers,
->Nathan
+thanks,
+-- Shuah
