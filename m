@@ -6,312 +6,81 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D9CC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8458AC47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D72D7208CA
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62A37208CA
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:50:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730074AbgEFQuW (ORCPT
+        id S1730488AbgEFQsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:50:22 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:14946 "EHLO pegase1.c-s.fr"
+        Wed, 6 May 2020 12:48:30 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:56659 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730492AbgEFQse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:48:34 -0400
+        id S1730345AbgEFQsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 12:48:16 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49HMwt5Bjhz9v4kM;
-        Wed,  6 May 2020 18:48:30 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 49HMwX759cz9v4kH;
+        Wed,  6 May 2020 18:48:12 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id FR0XOs3i7pJ9; Wed,  6 May 2020 18:48:30 +0200 (CEST)
+        with ESMTP id 1bDyWmD9Jm9o; Wed,  6 May 2020 18:48:12 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMwt4QZlz9v4kD;
-        Wed,  6 May 2020 18:48:30 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMwX6BBHz9v4kF;
+        Wed,  6 May 2020 18:48:12 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 76D4C8B7C6;
-        Wed,  6 May 2020 18:48:32 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id AD53E8B7C5;
+        Wed,  6 May 2020 18:48:14 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id DQHSUdnH1Sgn; Wed,  6 May 2020 18:48:32 +0200 (CEST)
+        with ESMTP id 9VR0lFsgttgO; Wed,  6 May 2020 18:48:14 +0200 (CEST)
 Received: from localhost.localdomain (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 085358B7C5;
-        Wed,  6 May 2020 18:48:32 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6C17A8B7C3;
+        Wed,  6 May 2020 18:48:14 +0200 (CEST)
 Received: by localhost.localdomain (Postfix, from userid 0)
-        id CAB1F65911; Wed,  6 May 2020 16:48:31 +0000 (UTC)
-Message-Id: <235a05911eb3f60109a0c2f0227f622cee644798.1588783498.git.christophe.leroy@csgroup.eu>
+        id 3BBC065911; Wed,  6 May 2020 16:48:14 +0000 (UTC)
+Message-Id: <7d5c395d29e342455ce02ba9b8db1845628edc07.1588783498.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 References: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v2 26/45] powerpc/8xx: Manage 512k huge pages as standard
- pages.
+Subject: [PATCH v2 09/45] powerpc/ptdump: Add _PAGE_COHERENT flag
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed,  6 May 2020 16:48:31 +0000 (UTC)
+Date:   Wed,  6 May 2020 16:48:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At the time being, 512k huge pages are handled through hugepd page
-tables. The PMD entry is flagged as a hugepd pointer and it
-means that only 512k hugepages can be managed in that 4M block.
-However, the hugepd table has the same size as a normal page
-table, and 512k entries can therefore be nested with normal pages.
-
-On the 8xx, TLB loading is performed by software and allthough the
-page tables are organised to match the L1 and L2 level defined by
-the HW, all TLB entries have both L1 and L2 independent entries.
-It means that even if two TLB entries are associated with the same
-PMD entry, they can be loaded with different values in L1 part.
-
-The L1 entry contains the page size (PS field):
-- 00 for 4k and 16 pages
-- 01 for 512k pages
-- 11 for 8M pages
-
-By adding a flag for hugepages in the PTE (_PAGE_HUGE) and copying it
-into the lower bit of PS, we can then manage 512k pages with normal
-page tables:
-- PMD entry has PS=11 for 8M pages
-- PMD entry has PS=00 for other pages.
-
-As a PMD entry covers 4M areas, a PMD will either point to a hugepd
-table having a single entry to an 8M page, or the PMD will point to
-a standard page table which will have either entries to 4k or 16k or
-512k pages. For 512k pages, as the L1 entry will not know it is a
-512k page before the PTE is read, there will be 128 entries in the
-PTE as if it was 4k pages. But when loading the TLB, it will be
-flagged as a 512k page.
-
-Note that we can't use pmd_ptr() in asm/nohash/32/pgtable.h because
-it is not defined yet.
-
-In ITLB miss, we keep the possibility to opt it out as when kernel
-text is pinned and no user hugepages are used, we can save several
-instruction by not using r11.
-
-In DTLB miss, that's just one instruction so it's not worth bothering
-with it.
+For platforms using shared.c (4xx, Book3e, Book3s/32),
+also handle the _PAGE_COHERENT flag with corresponds to the
+M bit of the WIMG flags.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/include/asm/nohash/32/pgtable.h | 10 ++++++---
- arch/powerpc/include/asm/nohash/32/pte-8xx.h |  4 +++-
- arch/powerpc/include/asm/nohash/pgtable.h    |  2 +-
- arch/powerpc/kernel/head_8xx.S               | 12 +++++------
- arch/powerpc/mm/hugetlbpage.c                | 22 +++++++++++++++++---
- arch/powerpc/mm/pgtable.c                    | 10 ++++++++-
- 6 files changed, 44 insertions(+), 16 deletions(-)
+ arch/powerpc/mm/ptdump/shared.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/powerpc/include/asm/nohash/32/pgtable.h b/arch/powerpc/include/asm/nohash/32/pgtable.h
-index 1a86d20b58f3..1504af38a9a8 100644
---- a/arch/powerpc/include/asm/nohash/32/pgtable.h
-+++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
-@@ -229,8 +229,9 @@ static inline void pmd_clear(pmd_t *pmdp)
-  * those implementations.
-  *
-  * On the 8xx, the page tables are a bit special. For 16k pages, we have
-- * 4 identical entries. For other page sizes, we have a single entry in the
-- * table.
-+ * 4 identical entries. For 512k pages, we have 128 entries as if it was
-+ * 4k pages, but they are flagged as 512k pages for the hardware.
-+ * For other page sizes, we have a single entry in the table.
-  */
- #ifdef CONFIG_PPC_8xx
- static inline pte_basic_t pte_update(struct mm_struct *mm, unsigned long addr, pte_t *p,
-@@ -240,13 +241,16 @@ static inline pte_basic_t pte_update(struct mm_struct *mm, unsigned long addr, p
- 	pte_basic_t old = pte_val(*p);
- 	pte_basic_t new = (old & ~(pte_basic_t)clr) | set;
- 	int num, i;
-+	pmd_t *pmd = pmd_offset(pud_offset(pgd_offset(mm, addr), addr), addr);
- 
- 	if (!huge)
- 		num = PAGE_SIZE / SZ_4K;
-+	else if ((pmd_val(*pmd) & _PMD_PAGE_MASK) != _PMD_PAGE_8M)
-+		num = SZ_512K / SZ_4K;
- 	else
- 		num = 1;
- 
--	for (i = 0; i < num; i++, entry++)
-+	for (i = 0; i < num; i++, entry++, new += SZ_4K)
- 		*entry = new;
- 
- 	return old;
-diff --git a/arch/powerpc/include/asm/nohash/32/pte-8xx.h b/arch/powerpc/include/asm/nohash/32/pte-8xx.h
-index c9e4b2d90f65..66f403a7da44 100644
---- a/arch/powerpc/include/asm/nohash/32/pte-8xx.h
-+++ b/arch/powerpc/include/asm/nohash/32/pte-8xx.h
-@@ -46,6 +46,8 @@
- #define _PAGE_NA	0x0200	/* Supervisor NA, User no access */
- #define _PAGE_RO	0x0600	/* Supervisor RO, User no access */
- 
-+#define _PAGE_HUGE	0x0800	/* Copied to L1 PS bit 29 */
-+
- /* cache related flags non existing on 8xx */
- #define _PAGE_COHERENT	0
- #define _PAGE_WRITETHRU	0
-@@ -128,7 +130,7 @@ static inline pte_t pte_mkuser(pte_t pte)
- 
- static inline pte_t pte_mkhuge(pte_t pte)
- {
--	return __pte(pte_val(pte) | _PAGE_SPS);
-+	return __pte(pte_val(pte) | _PAGE_SPS | _PAGE_HUGE);
- }
- 
- #define pte_mkhuge pte_mkhuge
-diff --git a/arch/powerpc/include/asm/nohash/pgtable.h b/arch/powerpc/include/asm/nohash/pgtable.h
-index 7fed9dc0f147..f27c967d9269 100644
---- a/arch/powerpc/include/asm/nohash/pgtable.h
-+++ b/arch/powerpc/include/asm/nohash/pgtable.h
-@@ -267,7 +267,7 @@ extern pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
- static inline int hugepd_ok(hugepd_t hpd)
- {
- #ifdef CONFIG_PPC_8xx
--	return ((hpd_val(hpd) & 0x4) != 0);
-+	return ((hpd_val(hpd) & _PMD_PAGE_MASK) == _PMD_PAGE_8M);
- #else
- 	/* We clear the top bit to indicate hugepd */
- 	return (hpd_val(hpd) && (hpd_val(hpd) & PD_HUGE) == 0);
-diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
-index adad8baadcf5..423465b10c82 100644
---- a/arch/powerpc/kernel/head_8xx.S
-+++ b/arch/powerpc/kernel/head_8xx.S
-@@ -239,7 +239,6 @@ InstructionTLBMiss:
- #endif
- #ifdef CONFIG_HUGETLBFS
- 	lwz	r11, (swapper_pg_dir-PAGE_OFFSET)@l(r10)	/* Get level 1 entry */
--	mtspr	SPRN_MI_TWC, r11	/* Set segment attributes */
- 	mtspr	SPRN_MD_TWC, r11
- #else
- 	lwz	r10, (swapper_pg_dir-PAGE_OFFSET)@l(r10)	/* Get level 1 entry */
-@@ -248,6 +247,10 @@ InstructionTLBMiss:
- #endif
- 	mfspr	r10, SPRN_MD_TWC
- 	lwz	r10, 0(r10)	/* Get the pte */
-+#ifdef CONFIG_HUGETLBFS
-+	rlwimi	r11, r10, 32 - 9, _PMD_PAGE_512K
-+	mtspr	SPRN_MI_TWC, r11
-+#endif
- #ifdef CONFIG_SWAP
- 	rlwinm	r11, r10, 32-5, _PAGE_PRESENT
- 	and	r11, r11, r10
-@@ -353,6 +356,7 @@ DataStoreTLBMiss:
- 	 * above.
- 	 */
- 	rlwimi	r11, r10, 0, _PAGE_GUARDED
-+	rlwimi	r11, r10, 32 - 9, _PMD_PAGE_512K
- 	mtspr	SPRN_MD_TWC, r11
- 
- 	/* Both _PAGE_ACCESSED and _PAGE_PRESENT has to be set.
-@@ -584,7 +588,6 @@ FixupDAR:/* Entry point for dcbx workaround. */
- 	mfspr	r11, SPRN_MD_TWC
- 	lwz	r11, 0(r11)	/* Get the pte */
- 	bt	28,200f		/* bit 28 = Large page (8M) */
--	bt	29,202f		/* bit 29 = Large page (8M or 512K) */
- 	/* concat physical page address(r11) and page offset(r10) */
- 	rlwimi	r11, r10, 0, 32 - PAGE_SHIFT, 31
- 201:	lwz	r11,0(r11)
-@@ -611,11 +614,6 @@ FixupDAR:/* Entry point for dcbx workaround. */
- 	rlwimi	r11, r10, 0, 32 - PAGE_SHIFT_8M, 31
- 	b	201b
- 
--202:
--	/* concat physical page address(r11) and page offset(r10) */
--	rlwimi	r11, r10, 0, 32 - PAGE_SHIFT_512K, 31
--	b	201b
--
- 144:	mfspr	r10, SPRN_DSISR
- 	rlwinm	r10, r10,0,7,5	/* Clear store bit for buggy dcbst insn */
- 	mtspr	SPRN_DSISR, r10
-diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
-index edf511c2a30a..35eb29584b54 100644
---- a/arch/powerpc/mm/hugetlbpage.c
-+++ b/arch/powerpc/mm/hugetlbpage.c
-@@ -189,6 +189,9 @@ pte_t *huge_pte_alloc(struct mm_struct *mm, unsigned long addr, unsigned long sz
- 	if (!hpdp)
- 		return NULL;
- 
-+	if (IS_ENABLED(CONFIG_PPC_8xx) && sz == SZ_512K)
-+		return pte_alloc_map(mm, (pmd_t *)hpdp, addr);
-+
- 	BUG_ON(!hugepd_none(*hpdp) && !hugepd_ok(*hpdp));
- 
- 	if (hugepd_none(*hpdp) && __hugepte_alloc(mm, hpdp, addr,
-@@ -331,13 +334,20 @@ static void free_hugepd_range(struct mmu_gather *tlb, hugepd_t *hpdp, int pdshif
- 
- 	if (shift >= pdshift)
- 		hugepd_free(tlb, hugepte);
--	else if (IS_ENABLED(CONFIG_PPC_8xx))
--		pgtable_free_tlb(tlb, hugepte, 0);
- 	else
- 		pgtable_free_tlb(tlb, hugepte,
- 				 get_hugepd_cache_index(pdshift - shift));
- }
- 
-+static void hugetlb_free_pte_range(struct mmu_gather *tlb, pmd_t *pmd, unsigned long addr)
-+{
-+	pgtable_t token = pmd_pgtable(*pmd);
-+
-+	pmd_clear(pmd);
-+	pte_free_tlb(tlb, token, addr);
-+	mm_dec_nr_ptes(tlb->mm);
-+}
-+
- static void hugetlb_free_pmd_range(struct mmu_gather *tlb, pud_t *pud,
- 				   unsigned long addr, unsigned long end,
- 				   unsigned long floor, unsigned long ceiling)
-@@ -353,11 +363,17 @@ static void hugetlb_free_pmd_range(struct mmu_gather *tlb, pud_t *pud,
- 		pmd = pmd_offset(pud, addr);
- 		next = pmd_addr_end(addr, end);
- 		if (!is_hugepd(__hugepd(pmd_val(*pmd)))) {
-+			if (pmd_none_or_clear_bad(pmd))
-+				continue;
-+
- 			/*
- 			 * if it is not hugepd pointer, we should already find
- 			 * it cleared.
- 			 */
--			WARN_ON(!pmd_none_or_clear_bad(pmd));
-+			WARN_ON(!IS_ENABLED(CONFIG_PPC_8xx));
-+
-+			hugetlb_free_pte_range(tlb, pmd, addr);
-+
- 			continue;
- 		}
- 		/*
-diff --git a/arch/powerpc/mm/pgtable.c b/arch/powerpc/mm/pgtable.c
-index 214a5f4beb6c..60c4b8ff046c 100644
---- a/arch/powerpc/mm/pgtable.c
-+++ b/arch/powerpc/mm/pgtable.c
-@@ -264,6 +264,12 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
- #if defined(CONFIG_PPC_8xx)
- void set_huge_pte_at(struct mm_struct *mm, unsigned long addr, pte_t *ptep, pte_t pte)
- {
-+	pmd_t *pmd = pmd_ptr(mm, addr);
-+	pte_basic_t val;
-+	pte_basic_t *entry = &ptep->pte;
-+	int num = is_hugepd(*((hugepd_t *)pmd)) ? 1 : SZ_512K / SZ_4K;
-+	int i;
-+
- 	/*
- 	 * Make sure hardware valid bit is not set. We don't do
- 	 * tlb flush for this update.
-@@ -274,7 +280,9 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr, pte_t *ptep, pte_
- 
- 	pte = set_pte_filter(pte);
- 
--	ptep->pte = pte_val(pte);
-+	val = pte_val(pte);
-+	for (i = 0; i < num; i++, entry++, val += SZ_4K)
-+		*entry = val;
- }
- #endif
- #endif /* CONFIG_HUGETLB_PAGE */
+diff --git a/arch/powerpc/mm/ptdump/shared.c b/arch/powerpc/mm/ptdump/shared.c
+index dab5d8028a9b..634b83aa3487 100644
+--- a/arch/powerpc/mm/ptdump/shared.c
++++ b/arch/powerpc/mm/ptdump/shared.c
+@@ -40,6 +40,11 @@ static const struct flag_info flag_array[] = {
+ 		.val	= _PAGE_NO_CACHE,
+ 		.set	= "i",
+ 		.clear	= " ",
++	}, {
++		.mask	= _PAGE_COHERENT,
++		.val	= _PAGE_COHERENT,
++		.set	= "m",
++		.clear	= " ",
+ 	}, {
+ 		.mask	= _PAGE_GUARDED,
+ 		.val	= _PAGE_GUARDED,
 -- 
 2.25.0
 
