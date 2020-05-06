@@ -2,110 +2,139 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B975C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA6AC38A2A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14B7920575
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:44:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05F4F2070B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:44:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="SrAiDA2t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nwKkH16L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729172AbgEFJoI (ORCPT
+        id S1729230AbgEFJoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 05:44:08 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:47044 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728663AbgEFJoH (ORCPT
+        Wed, 6 May 2020 05:44:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33702 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729173AbgEFJod (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 05:44:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1588758247; x=1620294247;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zuKmMeWgZ/UFqq1rP7zWa/wg5C9p4yCyko5/mVu0JcE=;
-  b=SrAiDA2tnZpefq9ardbX68VMzxjTy9GT5bV5cSbc2FBt49ZvseAwN5fG
-   HTaX30y/lgLNyZAEFqZeFRNIWwKqKecWgzqjNwSYHDdCA2rnP3j3aZKPg
-   Ij6y5DJTwil04A92ydLaZNzAvxeE/LERBSpe2H7/o7oYcap6p65GSPP0R
-   DfTVbppjIK7y66UWhm/i7NKWqj58xncwIOIH7KXFZnhDr//MzzEhXYzwZ
-   9GNpBWGqbmCCIk9b21vtNv4G4OdKP/13MXJLd884QqtefAT8/9vI0HcQH
-   XLjH2Z73wxSFyhxVOxvMEowZQ7s+niOjNcvvAkzFyTHlJvRW+vxQdjL/6
-   w==;
-IronPort-SDR: 8diXjE1BHUCwR7ruJb2Js1oQxx0NR1FxldPu2olFVYsbtwhEjA2IX5vVtD7hMdpcje4QuVxrya
- U0qvMjPIrnkOLvfsY6HIz8V+ounKPbUlIq7AazdCN/BCU8WCG6e/mAWNoQ7o0e9bNRtGeLE/2b
- Vizg3pTMDwOApMBNkDnoxyRNp8d7LJQ6JoWisGN3QkwnO3hr/NcYANbuFN9FgmyROeuHlaeWQ4
- SsFqn/3nkkU/TJeV2vVeNpaDg4KnGww+ZJgonrQ0Ictd0jQZdk+LL/EIDPKxYVmm0vThUr9MEQ
- zmw=
-X-IronPort-AV: E=Sophos;i="5.73,358,1583218800"; 
-   d="scan'208";a="75696370"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 May 2020 02:43:46 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 6 May 2020 02:43:46 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Wed, 6 May 2020 02:43:46 -0700
-Date:   Wed, 6 May 2020 11:43:45 +0200
-From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
-To:     Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
-CC:     <po.liu@nxp.com>, <claudiu.manoil@nxp.com>,
-        <alexandru.marginean@nxp.com>, <vladimir.oltean@nxp.com>,
-        <leoyang.li@nxp.com>, <mingkai.hu@nxp.com>, <andrew@lunn.ch>,
-        <f.fainelli@gmail.com>, <vivien.didelot@gmail.com>,
-        <davem@davemloft.net>, <jiri@resnulli.us>, <idosch@idosch.org>,
-        <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <horatiu.vultur@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <joergen.andreasen@microchip.com>,
-        <UNGLinuxDriver@microchip.com>, <nikolay@cumulusnetworks.com>,
-        <roopa@cumulusnetworks.com>, <linux-devel@linux.nxdi.nxp.com>
-Subject: Re: [PATCH v1 net-next 4/6] net: mscc: ocelot: VCAP IS1 support
-Message-ID: <20200506094345.n4zdgjvctwiz4pkh@ws.localdomain>
-References: <20200506074900.28529-1-xiaoliang.yang_1@nxp.com>
- <20200506074900.28529-5-xiaoliang.yang_1@nxp.com>
+        Wed, 6 May 2020 05:44:33 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5E5EC061A0F;
+        Wed,  6 May 2020 02:44:31 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id i15so960644wrx.10;
+        Wed, 06 May 2020 02:44:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zogrk4yKNPGjGulfAcYpBrIv088QASAAIJAwuPc2cMc=;
+        b=nwKkH16LhWlT+bRmDLOqlb62L7lMOBj0lVHGmMoYjf9KKOPZxhGT+veeUtA8edrqhV
+         DaQxZ77L9pT8ZFbKIQ2twphPpWq+YRHSny61w6yS1mBJQVHGPMFypuN2Ih+XzYQqkd47
+         jXUNaoJzkfNBFF5xpT2FREDat5xloD6IAvdaYpXDdmyqpLJHwHp4pW+8ciJ/UnKuLLfe
+         3DU4b/SkgyPwyMtIyvEH3CejIUprI3VIgsjContx4T5R2j3fh12z0R7L/hEvqvXam33j
+         zpYn835hwfGOZJw41AgyawJ4ZR2TFfk3SHt2kvAbK/37lpXS3ttcAJ//jdxqDWOGROdx
+         yw6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zogrk4yKNPGjGulfAcYpBrIv088QASAAIJAwuPc2cMc=;
+        b=If0bhn+Uxcn2dc2nUPax2pQwIDKNJRbpHRsAoGZLl7MntjUbPtc6M0pLiFcVje/ghX
+         cjjE+D+/KDunWKpX1e1YeB7xXS9qmrM054KSbSLb0WB/wmubDZXNfloA+/XueB/5kOCj
+         MOhhXir53QNSLYfk89f20hVbMiVJO77HmT+CMluYqn92QlfLg1uZGoCusFcWzPI0dD8W
+         qqqnhDwZfb4Rb5UZmnoLsOucxjCaONqfjawL2A6dcUAU1510/yeZKjS5c8wMfAR9oIP0
+         OCXYbLvlEqZ+gs3fR5Unyun1dscu4j7Hn+v6Jr2HH0vViVKbeAvVdITDTCBvI1GwV66c
+         GHXA==
+X-Gm-Message-State: AGi0PuaEHWTBI7ggsigqnk9gsqHS4OadJDDQefuFAnvbM+lecesp09mv
+        tvQQaIa+YVhhRHFjxZ9Osu3+ZAIh
+X-Google-Smtp-Source: APiQypJ5g4ZBJNyJkYTa3cLcRX63ovlHVbsJD9mSh0LKDOqUMhT6uYN+uW0OeMr72zLKmm7geZtWhA==
+X-Received: by 2002:a5d:5230:: with SMTP id i16mr9271796wra.71.1588758270228;
+        Wed, 06 May 2020 02:44:30 -0700 (PDT)
+Received: from ?IPv6:2001:a61:2482:101:a081:4793:30bf:f3d5? ([2001:a61:2482:101:a081:4793:30bf:f3d5])
+        by smtp.gmail.com with ESMTPSA id d27sm1939555wra.30.2020.05.06.02.44.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 May 2020 02:44:29 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, narayan@google.com, zezeozue@google.com,
+        kernel-team@android.com, maco@google.com, bvanassche@acm.org,
+        Chaitanya.Kulkarni@wdc.com, jaegeuk@kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [PATCH v4 10/10] loop: Add LOOP_CONFIGURE ioctl
+To:     Martijn Coenen <maco@android.com>, axboe@kernel.dk, hch@lst.de,
+        ming.lei@redhat.com
+References: <20200429140341.13294-1-maco@android.com>
+ <20200429140341.13294-11-maco@android.com>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <7d73bafe-5228-b02e-5b53-4a41543aebe3@gmail.com>
+Date:   Wed, 6 May 2020 11:44:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200506074900.28529-5-xiaoliang.yang_1@nxp.com>
+In-Reply-To: <20200429140341.13294-11-maco@android.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xiaoliang,
+Hi Martijn,
 
-On 06.05.2020 15:48, Xiaoliang Yang wrote:
->VCAP IS1 is a VCAP module which can filter MAC, IP, VLAN, protocol, and
->TCP/UDP ports keys, and do Qos and VLAN retag actions.
->This patch added VCAP IS1 support in ocelot ace driver, which can supports
->vlan modify action of tc filter.
->Usage:
->        tc qdisc add dev swp0 ingress
->        tc filter add dev swp0 protocol 802.1Q parent ffff: flower \
->        skip_sw vlan_id 1 vlan_prio 1 action vlan modify id 2 priority 2
-I skimmed skimmed through the patch serie, and the way I understood it
-is that you look at the action, and if it is a VLAN operation, then you
-put it in IS1 and if it is one of the other then put it in IS2.
+On 4/29/20 4:03 PM, Martijn Coenen wrote:
+> This allows userspace to completely setup a loop device with a single
+> ioctl, removing the in-between state where the device can be partially
+> configured - eg the loop device has a backing file associated with it,
+> but is reading from the wrong offset.
+> 
+> Besides removing the intermediate state, another big benefit of this
+> ioctl is that LOOP_SET_STATUS can be slow; the main reason for this
+> slowness is that LOOP_SET_STATUS(64) calls blk_mq_freeze_queue() to
+> freeze the associated queue; this requires waiting for RCU
+> synchronization, which I've measured can take about 15-20ms on this
+> device on average.
+> 
+> In addition to doing what LOOP_SET_STATUS can do, LOOP_CONFIGURE can
+> also be used to:
+> - Set the correct block size immediately by setting
+>   loop_config.block_size (avoids LOOP_SET_BLOCK_SIZE)
+> - Explicitly request direct I/O mode by setting LO_FLAGS_DIRECT_IO
+>   in loop_config.info.lo_flags (avoids LOOP_SET_DIRECT_IO)
+> - Explicitly request read-only mode by setting LO_FLAGS_READ_ONLY
+>   in loop_config.info.lo_flags
+> 
+> Here's setting up ~70 regular loop devices with an offset on an x86
+> Android device, using LOOP_SET_FD and LOOP_SET_STATUS:
+> 
+> vsoc_x86:/system/apex # time for i in `seq 30 100`;
+> do losetup -r -o 4096 /dev/block/loop$i com.android.adbd.apex; done
+>     0m03.40s real     0m00.02s user     0m00.03s system
+> 
+> Here's configuring ~70 devices in the same way, but using a modified
+> losetup that uses the new LOOP_CONFIGURE ioctl:
+> 
+> vsoc_x86:/system/apex # time for i in `seq 30 100`;
+> do losetup -r -o 4096 /dev/block/loop$i com.android.adbd.apex; done
+>     0m01.94s real     0m00.01s user     0m00.01s system
+> 
+> Signed-off-by: Martijn Coenen <maco@android.com>
 
-This is how the HW is designed - I'm aware of that.
 
-But how will this work if you have 2 rules, 1 modifying the VLAN and
-another rule dropping certain packets?
+Can we have also a patch for the loop.4 manual page please?
 
-The SW model have these two rules in the same table, and can stop
-process at the first match. SW will do the action of the first frame
-matching.
+Thanks,
 
-The HW will how-ever do both, as they are in independent TCAMs.
+Michael
 
-If we want to enable all the TCAM lookups in Ocelot/Felix, then we need
-to find a way where we will get the same results when doing the
-operation in HW and in SW.
 
-/Allan
-
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
