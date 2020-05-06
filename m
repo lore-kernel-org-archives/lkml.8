@@ -2,182 +2,113 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF89C38A2A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BC9C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31D942068E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:19:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xFXp8/aS"
+	by mail.kernel.org (Postfix) with ESMTP id 429912068E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:19:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728770AbgEFKTW (ORCPT
+        id S1728886AbgEFKT1 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 06:19:22 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:51851 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726354AbgEFKTV (ORCPT
+        Wed, 6 May 2020 06:19:27 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:50207 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728465AbgEFKTX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 06:19:21 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588760361; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=IcUq3JaTDMqeMJ20mOeLmSvjfCk1bKlvregH4GOb4ZI=; b=xFXp8/aStK9cBqyvLoUAQLqtCHI2CdD0mQaWlhM6zNeRomXXdK6qTTtiOurBmuBAjp6NsGTF
- AIjly7dZjwjxbL0jmnS+6uS/I5V09rcX297+Z70dL/AYdSChk4mJVCLRyCvNG5Iv/D4Akavg
- DReFws3WUfjB8AExR1+CNYx3P7Y=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8E989C432C2; Wed,  6 May 2020 10:19:17 +0000 (UTC)
-Received: from [10.131.199.84] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B5D44C433F2;
-        Wed,  6 May 2020 10:19:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B5D44C433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v4 6/6] spi: spi-qcom-qspi: Use OPP API to set clk/perf
- state
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Alok Chauhan <alokc@codeaurora.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        linux-spi@vger.kernel.org
-References: <1588507469-31889-1-git-send-email-rnayak@codeaurora.org>
- <1588507469-31889-7-git-send-email-rnayak@codeaurora.org>
- <20200505163811.GW4525@google.com>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <66551105-c296-36ce-0ca7-2240c2af7db0@codeaurora.org>
-Date:   Wed, 6 May 2020 15:49:10 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 6 May 2020 06:19:23 -0400
+X-Originating-IP: 90.76.143.236
+Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 442881BF238;
+        Wed,  6 May 2020 10:16:41 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200505163811.GW4525@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200504213136.26458-4-michael@walle.cc>
+References: <20200504213136.26458-1-michael@walle.cc> <20200504213136.26458-4-michael@walle.cc>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Michael Walle <michael@walle.cc>
+Subject: Re: [PATCH net-next v2 3/3] net: phy: mscc: use phy_package_shared
+To:     Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+Message-ID: <158876019421.468345.17020929384276599315@kwain>
+Date:   Wed, 06 May 2020 12:16:35 +0200
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Michael,
 
-On 5/5/2020 10:08 PM, Matthias Kaehlcke wrote:
-> Hi Rajendra,
+Quoting Michael Walle (2020-05-04 23:31:36)
 > 
-> On Sun, May 03, 2020 at 05:34:29PM +0530, Rajendra Nayak wrote:
->> QSPI needs to vote on a performance state of a power domain depending on
->> the clock rate. Add support for it by specifying the perf state/clock rate
->> as an OPP table in device tree.
->>
->> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->> Cc: Mark Brown <broonie@kernel.org>
->> Cc: Alok Chauhan <alokc@codeaurora.org>
->> Cc: Akash Asthana <akashast@codeaurora.org>
->> Cc: linux-spi@vger.kernel.org
->> ---
->>   drivers/spi/spi-qcom-qspi.c | 29 ++++++++++++++++++++++++++++-
->>   1 file changed, 28 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/spi/spi-qcom-qspi.c b/drivers/spi/spi-qcom-qspi.c
->> index 3c4f83b..eb53c00 100644
->> --- a/drivers/spi/spi-qcom-qspi.c
->> +++ b/drivers/spi/spi-qcom-qspi.c
->> @@ -8,6 +8,7 @@
->>   #include <linux/of.h>
->>   #include <linux/of_platform.h>
->>   #include <linux/pm_runtime.h>
->> +#include <linux/pm_opp.h>
->>   #include <linux/spi/spi.h>
->>   #include <linux/spi/spi-mem.h>
->>   
->> @@ -139,6 +140,8 @@ struct qcom_qspi {
->>   	struct device *dev;
->>   	struct clk_bulk_data *clks;
->>   	struct qspi_xfer xfer;
->> +	struct opp_table *opp_table;
->> +	bool has_opp_table;
->>   	/* Lock to protect xfer and IRQ accessed registers */
->>   	spinlock_t lock;
->>   };
->> @@ -235,7 +238,7 @@ static int qcom_qspi_transfer_one(struct spi_master *master,
->>   		speed_hz = xfer->speed_hz;
->>   
->>   	/* In regular operation (SBL_EN=1) core must be 4x transfer clock */
->> -	ret = clk_set_rate(ctrl->clks[QSPI_CLK_CORE].clk, speed_hz * 4);
->> +	ret = dev_pm_opp_set_rate(ctrl->dev, speed_hz * 4);
->>   	if (ret) {
->>   		dev_err(ctrl->dev, "Failed to set core clk %d\n", ret);
->>   		return ret;
->> @@ -481,6 +484,20 @@ static int qcom_qspi_probe(struct platform_device *pdev)
->>   	master->handle_err = qcom_qspi_handle_err;
->>   	master->auto_runtime_pm = true;
->>   
->> +	ctrl->opp_table = dev_pm_opp_set_clkname(&pdev->dev, "core");
->> +	if (IS_ERR(ctrl->opp_table)) {
->> +		ret = PTR_ERR(ctrl->opp_table);
->> +		goto exit_probe_master_put;
->> +	}
->> +	/* OPP table is optional */
->> +	ret = dev_pm_opp_of_add_table(&pdev->dev);
->> +	if (!ret) {
->> +		ctrl->has_opp_table = true;
->> +	} else if (ret != -ENODEV) {
->> +		dev_err(&pdev->dev, "invalid OPP table in device tree\n");
->> +		goto exit_probe_master_put;
->> +	}
->> +
->>   	pm_runtime_enable(dev);
->>   
->>   	ret = spi_register_master(master);
->> @@ -488,6 +505,9 @@ static int qcom_qspi_probe(struct platform_device *pdev)
->>   		return 0;
->>   
->>   	pm_runtime_disable(dev);
->> +	if (ctrl->has_opp_table)
->> +		dev_pm_opp_of_remove_table(&pdev->dev);
->> +	dev_pm_opp_put_clkname(ctrl->opp_table);
->>   
->>   exit_probe_master_put:
->>   	spi_master_put(master);
->> @@ -498,6 +518,11 @@ static int qcom_qspi_probe(struct platform_device *pdev)
->>   static int qcom_qspi_remove(struct platform_device *pdev)
->>   {
->>   	struct spi_master *master = platform_get_drvdata(pdev);
->> +	struct qcom_qspi *ctrl = spi_master_get_devdata(master);
->> +
->> +	if (ctrl->has_opp_table)
->> +		dev_pm_opp_of_remove_table(&pdev->dev);
->> +	dev_pm_opp_put_clkname(ctrl->opp_table);
-> 
-> IIUC there can still be active transfers before the controller is
-> unregistered. If that is correct the above should be done after the
-> spi_unregister_master() call below.
+> diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
+> index 5391acdece05..a505286b2195 100644
+> --- a/drivers/net/phy/mscc/mscc_main.c
+> +++ b/drivers/net/phy/mscc/mscc_main.c
+> -static bool vsc8584_is_pkg_init(struct phy_device *phydev, bool reversed)
+> +static void vsc8584_get_base_addr(struct phy_device *phydev)
+>  {
+> -       struct mii_bus *bus = phydev->mdio.bus;
+> -       struct vsc8531_private *vsc8531;
+> -       struct phy_device *phy;
+> -       int i, addr;
+> -
+> -       /* VSC8584 is a Quad PHY */
+> -       for (i = 0; i < 4; i++) {
+> -               vsc8531 = phydev->priv;
+> -
+> -               if (reversed)
+> -                       addr = vsc8531->base_addr - i;
+> -               else
+> -                       addr = vsc8531->base_addr + i;
+> -
+> -               phy = mdiobus_get_phy(bus, addr);
+> -               if (!phy)
+> -                       continue;
+> +       struct vsc8531_private *vsc8531 = phydev->priv;
+> +       u16 val, addr;
+>  
+> -               if ((phy->phy_id & phydev->drv->phy_id_mask) !=
+> -                   (phydev->drv->phy_id & phydev->drv->phy_id_mask))
+> -                       continue;
+> +       mutex_lock(&phydev->mdio.bus->mdio_lock);
+> +       __phy_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_EXTENDED);
+>  
+> -               vsc8531 = phy->priv;
+> +       addr = __phy_read(phydev, MSCC_PHY_EXT_PHY_CNTL_4);
+> +       addr >>= PHY_CNTL_4_ADDR_POS;
+>  
+> -               if (vsc8531 && vsc8531->pkg_init)
+> -                       return true;
+> -       }
+> +       val = __phy_read(phydev, MSCC_PHY_ACTIPHY_CNTL);
 
-ah, true. i should have read the comment below :)
+You should restore the page to MSCC_PHY_PAGE_STANDARD here.
 
->>   
->>   	/* Unregister _before_ disabling pm_runtime() so we stop transfers */
->>   	spi_unregister_master(master);
->> @@ -512,6 +537,8 @@ static int __maybe_unused qcom_qspi_runtime_suspend(struct device *dev)
->>   	struct spi_master *master = dev_get_drvdata(dev);
->>   	struct qcom_qspi *ctrl = spi_master_get_devdata(master);
->>   
->> +	/* Drop the performance state vote */
->> +	dev_pm_opp_set_rate(dev, 0);
->>   	clk_bulk_disable_unprepare(QSPI_NUM_CLKS, ctrl->clks);
->>   
->>   	return 0;
+> +       mutex_unlock(&phydev->mdio.bus->mdio_lock);
+>  
+> -       return false;
+> +       if (val & PHY_ADDR_REVERSED)
+> +               vsc8531->base_addr = phydev->mdio.addr + addr;
+> +       else
+> +               vsc8531->base_addr = phydev->mdio.addr - addr;
+>  }
+
+Thanks for the series!
+Antoine
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Antoine Ténart, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
