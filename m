@@ -2,113 +2,115 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1097EC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C860C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D95F6206D5
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:16:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BokniRZ7"
+	by mail.kernel.org (Postfix) with ESMTP id 3429F2063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:18:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728698AbgEFUQo (ORCPT
+        id S1728728AbgEFUSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 16:16:44 -0400
-Received: from ozlabs.org ([203.11.71.1]:51295 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726538AbgEFUQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 16:16:43 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49HSY1481kz9sRY;
-        Thu,  7 May 2020 06:16:37 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588796201;
-        bh=XCFvNjeS2kjOQNihxDVpNQIvU0ggraBRLa25yNrgmPY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BokniRZ7+PcvdLb7ypmiIA8wgN0IOJfe3dM8POjJgVycNSMpvg9Zn7kKU+ia7W5k6
-         BqRL/Zs5TAbIF+20AYROSV9p+ixyBmhX9I4WI2p304ardBN3ljflftW6wzhmT4KRCf
-         BwyypipOaS9qUy+8lST7hVeaKAaF08EKd2Yv79UNIO2xB8HjT+fQn0M+UL90nWresL
-         FL2HBEXZNfdhXeeEDa2Mq7Pj+/yIUguFmpxUS/GcagrlRrzb0jB7fFnZV41xrp/xly
-         kCjWVv6iX2xIESNojwW6Q8XrCoR19mZycXIzGD7KTt9KLfXjN6Qi6xVUMqrMtUEJvG
-         vY1V0z56ckH1g==
-Date:   Thu, 7 May 2020 06:16:35 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Amol Grover <frextrite@gmail.com>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        syzbot <syzbot+1519f497f2f9f08183c6@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>, kuba@kernel.org,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        "paul E. McKenney" <paulmck@kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: Re: linux-next boot error: WARNING: suspicious RCU usage in
- ipmr_get_table
-Message-ID: <20200507061635.449f9495@canb.auug.org.au>
-In-Reply-To: <34558B83-103E-4205-8D3D-534978D5A498@lca.pw>
-References: <000000000000df9a9805a455e07b@google.com>
-        <CACT4Y+YnjK+kq0pfb5fe-q1bqe2T1jq_mvKHf--Z80Z3wkyK1Q@mail.gmail.com>
-        <34558B83-103E-4205-8D3D-534978D5A498@lca.pw>
+        Wed, 6 May 2020 16:18:37 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:33638 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726927AbgEFUSf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 16:18:35 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 124AB803087B;
+        Wed,  6 May 2020 20:18:32 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id LskWpPVdEHP7; Wed,  6 May 2020 23:18:31 +0300 (MSK)
+Date:   Wed, 6 May 2020 23:18:30 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Sam Ravnborg <sam@ravnborg.org>
+CC:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>, <linux-mips@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 03/20] dt-bindings: Add vendor prefix for Baikal
+ Electronics, JSC
+Message-ID: <20200506201830.tmul56h5nci434n5@mobilestation>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506174238.15385-4-Sergey.Semin@baikalelectronics.ru>
+ <20200506175553.GA7775@ravnborg.org>
+ <20200506192049.bznhiwra5a43ao26@mobilestation>
+ <20200506192653.GA30135@ravnborg.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/YytghheW+C8MhpkfUUQolXM";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200506192653.GA30135@ravnborg.org>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/YytghheW+C8MhpkfUUQolXM
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, May 06, 2020 at 09:26:53PM +0200, Sam Ravnborg wrote:
+> Hi Sergey
+> > > > +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> > > > @@ -139,6 +139,8 @@ patternProperties:
+> > > >      description: Azoteq (Pty) Ltd
+> > > >    "^azw,.*":
+> > > >      description: Shenzhen AZW Technology Co., Ltd.
+> > > > +  "^baikal,.*":
+> > > > +    description: BAIKAL ELECTRONICS, JSC
+> > > Baikal do not use ALL UPPSECASE on their website for their name.
+> > > So please use same case use as they do themself.
+> > > 
+> > 
+> > It's not like me can't be considered as part of them.) I discussed the
+> > upper-case and normal version with our managers half a year ago and we
+> > came up to use the upper-case version. From Russian legal point of view
+> > it's also the upper-cased version what counts. I don't really know why
+> > the site use different naming, but in the internal documents it's always
+> > as submitted. Anyway I asked this question one more time to our managers.
+> > If they say to use as you suggest, then I'll resend an update in v3
+> > patchset, if v3 doesn't get to be necessary I'll send a followup patch
+> > with fix.
+> 
+> I had expected it was upper case because others used upper case.
+> But there is a good explanation and then all is fine wiht me.
+> 
+> And it is an alphabetic order - so
+> Acked-by: Sam Ravnborg <sam@ravnborg.org>
 
-Hi Qian,
+Great. Thanks. I've just got an answer from our legal department:
+"The Company has a Charter in which the name in English is:
+“BAIKAL ELECTRONICS, JSC.” Charter is the only thing you need to focus on
+when specifying the name."
 
-On Tue, 28 Apr 2020 09:56:59 -0400 Qian Cai <cai@lca.pw> wrote:
->
-> > On Apr 28, 2020, at 4:57 AM, Dmitry Vyukov <dvyukov@google.com> wrote: =
-=20
-> >> net/ipv4/ipmr.c:136 RCU-list traversed in non-reader section!! =20
->=20
-> https://lore.kernel.org/netdev/20200222063835.14328-2-frextrite@gmail.com/
->=20
-> Never been picked up for a few months due to some reasons. You could prob=
-ably
-> need to convince David, Paul, Steven or Linus to unblock the bot or carry=
- patches
-> on your own?
+I also pointed out that it would be good to have the site updated if the
+upper-cased name is required by the Charter. Hope it will be done soon.)
 
-Did you resubmit the patch series as Dave Miller asked you to (now that
-net-next is based on v5.7-rc1+)?
+-Sergey
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/YytghheW+C8MhpkfUUQolXM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6zGyMACgkQAVBC80lX
-0GxkPAgAgtdMC+N8fp+9bijZVMliMNmdDUaF1yrYtfT6QMbxZ0GvHpootI5oO9nj
-YyXZglK3aoFmMKvCkX2bf4MubylQ7dX6Xq4fnj+qY+8gjrvSlT5NUWNLReMDKnYy
-7DkIlvXQMBW7UJ/KZ1kUqBfgG3CgA8bB5cL51GK3mpMb1pE0+Uf49U0Ep5EcmoJq
-F1/fj4yGCv3OdC3romgceBDhd5twJdd0xatlM/6gTf5U3fHZZf07dVksUt4PwfPz
-MK4m5LJQUDpBpknmNVAtVY/a/Ku3ym7js6Nlq8A0aUVg6SQPW8gMBu81Q2RjTLsl
-Op+hURRi9SaJ/J4NDnnJ2GpuSYjlAA==
-=4TP7
------END PGP SIGNATURE-----
-
---Sig_/YytghheW+C8MhpkfUUQolXM--
+> 
+> > 
+> > -Sergey
+> > 
+> > > 
+> > > 	Sam
+> > > 
+> > > >    "^bananapi,.*":
+> > > >      description: BIPAI KEJI LIMITED
+> > > >    "^beacon,.*":
+> > > > -- 
+> > > > 2.25.1
