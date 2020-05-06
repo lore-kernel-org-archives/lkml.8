@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A01C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11EB1C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 482D4215A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFBD72080D
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:22:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YL2uiFT8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YAI1tjUp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729552AbgEFPWT (ORCPT
+        id S1729567AbgEFPW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:22:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58236 "EHLO
+        Wed, 6 May 2020 11:22:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729403AbgEFPVr (ORCPT
+        with ESMTP id S1729408AbgEFPVp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:21:47 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8518C061A10
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 08:21:47 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x15so1151952pfa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 08:21:47 -0700 (PDT)
+        Wed, 6 May 2020 11:21:45 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39D65C061A10
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 08:21:45 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id y6so1061301pjc.4
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 08:21:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=yYP6yxdymrxxL7hUVPNJiyuT/lyDa/+W7RPc1DbYPHc=;
-        b=YL2uiFT8hDsK5U6H0DNA4rGJ4iLiS87bkVFGZgceoC5OLrZspZqhasZRGqHyw9vEAa
-         s9XlnM/1Fn3F/Ij8OzmWwOgALL0FbKAuMoB8IBWoKEAcP5kn3DFrNWqQ5Y4KvvjCiS9O
-         hKo3tqEoLGUCkJFXiNPcPscNPZHFDHpi3hemI=
+        bh=qWlHBN/3hvShJu+ITQ2VKsWR3g9HqwgdpXyZ5LX21CA=;
+        b=YAI1tjUpn5zlOwDJnOxslc63NeKw2d0jLqjUJCgbRGMZA943VBl6kX3k03mQxcjLGv
+         22f4mSlg/0BhX87quVIuQPUAv18gpArdRPDfpa/FpFcPw5PrFmHA0eEAKJH4ccKb581/
+         M24qxeyX0yfrodUDuJBMqJqCofeYKccEC4yts=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=yYP6yxdymrxxL7hUVPNJiyuT/lyDa/+W7RPc1DbYPHc=;
-        b=WCLbnpYJ2wn76Zwd1rmYjXAseK/dpBTw8lf7pyet5CpYV+zCTtTpOPMUm7hV07LuBC
-         kXSdenqos5wJxHu+D9wNk2LnrzAR8aAAHt+2bvw4dBapmyJIYne3TzE1SensmTIgz9ZZ
-         UC+hMWvbnneDWFKlfA3R0Q1IgQ/IbaBWkQSdg9TE9BJyoxX+Ua2aTcmdTRPlhaDvi8wY
-         wyFoYUrHbjutm3TtTYlKdnk/Y/0rvFitpiTxFF+6gRweP6zFVNXNbc4shlzhhVzIda3+
-         8YgqRqaclKRmvjbYxCvaEN946bUTXibNBPk3RXaRo7ICy0qOmtGiSXGpESiS0gEwR6qc
-         DSsg==
-X-Gm-Message-State: AGi0PuY7yA+1tT7hkNjc0mNHRIUAQy2ueaRsiQXndUlLeFR1IDNjpVZJ
-        80f9dnsKlHzPxycwbOsOgeJrHA==
-X-Google-Smtp-Source: APiQypKsPGQTXvWajEoICKm/o+r5Lp4Itu7fJOsuFBcfRstMYwMcoK8cNblDOotBDBm6wLDOYj2HBw==
-X-Received: by 2002:a62:f247:: with SMTP id y7mr8793849pfl.200.1588778507388;
-        Wed, 06 May 2020 08:21:47 -0700 (PDT)
+        bh=qWlHBN/3hvShJu+ITQ2VKsWR3g9HqwgdpXyZ5LX21CA=;
+        b=n7O5OKm/sP17IGCOxnW/AMpNqMc58jB7+yMkO/0NUM7W7hYXw7aWN7jtNGCSpD1UtY
+         4w1K+gcCtMa9uK9cXTUJVKWvuIbiS5xve8o1fsE36u+tgJV3SC+3jDkYw8fL+K8Zhdlz
+         adO9EhxXCGp2rpZdfnKhd5QjQkUTvQnMgSAHh/t25fp2A9ur1G3Ve+J3vNDz695sp1Z4
+         SKzmk9IP/paF6y8upKmDfJIthKFIocTh+5vG+8Ni2QlyBrGbCpZ07qntzVX0DsIps6zZ
+         el2QnyA2TAryRIOfB0dQxD9mvvUncaD0rBYYZfnqQZeCsjZxjlFo5JSZNMWt6EViSTug
+         FonQ==
+X-Gm-Message-State: AGi0Pua0IiMTcDFRuclzlKmwirKq7D9zyrd5QKJdsDJo882mjKEvH/yx
+        J+xKHQuDvJqH3Byung635VOfKg==
+X-Google-Smtp-Source: APiQypJf9kdgVvoj0G+zgWGJk7pqjABqsOyRmjsvqCmtvNdvOOBYHPzccyhJuHcyfrjpNp0gSNS4oA==
+X-Received: by 2002:a17:902:b187:: with SMTP id s7mr9027685plr.0.1588778504733;
+        Wed, 06 May 2020 08:21:44 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t80sm2231606pfc.23.2020.05.06.08.21.43
+        by smtp.gmail.com with ESMTPSA id l1sm5048438pjr.17.2020.05.06.08.21.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 08:21:45 -0700 (PDT)
+        Wed, 06 May 2020 08:21:41 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -63,9 +63,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Colin Cross <ccross@android.com>,
         Tony Luck <tony.luck@intel.com>,
         Luis Henriques <lhenriques@suse.com>
-Subject: [PATCH 07/10] pstore: Refactor pstorefs record list removal
-Date:   Wed,  6 May 2020 08:21:11 -0700
-Message-Id: <20200506152114.50375-8-keescook@chromium.org>
+Subject: [PATCH 04/10] pstore: Rename "allpstore" to "records_list"
+Date:   Wed,  6 May 2020 08:21:08 -0700
+Message-Id: <20200506152114.50375-5-keescook@chromium.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200506152114.50375-1-keescook@chromium.org>
 References: <20200506152114.50375-1-keescook@chromium.org>
@@ -76,63 +76,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "unlink" handling should perform list removal (which can also make
-sure records don't get double-erased), and the "evict" handling should
-be responsible only for memory freeing.
+The name "allpstore" doesn't carry much meaning, so rename it to what it
+actually is: the list of all records present in the filesystem. The lock
+is also renamed accordingly.
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- fs/pstore/inode.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ fs/pstore/inode.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
-index 92ebcc75434f..5f08b21b7a46 100644
+index d99b5d39aa90..5cc09cb315f9 100644
 --- a/fs/pstore/inode.c
 +++ b/fs/pstore/inode.c
-@@ -177,10 +177,21 @@ static int pstore_unlink(struct inode *dir, struct dentry *dentry)
- {
- 	struct pstore_private *p = d_inode(dentry)->i_private;
- 	struct pstore_record *record = p->record;
-+	int rc = 0;
+@@ -29,8 +29,8 @@
  
- 	if (!record->psi->erase)
- 		return -EPERM;
+ #define	PSTORE_NAMELEN	64
  
-+	/* Make sure we can't race while removing this file. */
-+	mutex_lock(&records_list_lock);
-+	if (!list_empty(&p->list))
-+		list_del_init(&p->list);
-+	else
-+		rc = -ENOENT;
-+	mutex_unlock(&records_list_lock);
-+	if (rc)
-+		return rc;
-+
- 	mutex_lock(&record->psi->read_mutex);
- 	record->psi->erase(record);
- 	mutex_unlock(&record->psi->read_mutex);
-@@ -193,12 +204,7 @@ static void pstore_evict_inode(struct inode *inode)
- 	struct pstore_private	*p = inode->i_private;
+-static DEFINE_SPINLOCK(allpstore_lock);
+-static LIST_HEAD(allpstore);
++static DEFINE_SPINLOCK(records_list_lock);
++static LIST_HEAD(records_list);
+ 
+ struct pstore_private {
+ 	struct list_head list;
+@@ -196,9 +196,9 @@ static void pstore_evict_inode(struct inode *inode)
  
  	clear_inode(inode);
--	if (p) {
--		mutex_lock(&records_list_lock);
--		list_del(&p->list);
--		mutex_unlock(&records_list_lock);
--		free_pstore_private(p);
--	}
-+	free_pstore_private(p);
+ 	if (p) {
+-		spin_lock_irqsave(&allpstore_lock, flags);
++		spin_lock_irqsave(&records_list_lock, flags);
+ 		list_del(&p->list);
+-		spin_unlock_irqrestore(&allpstore_lock, flags);
++		spin_unlock_irqrestore(&records_list_lock, flags);
+ 		free_pstore_private(p);
+ 	}
  }
+@@ -302,8 +302,8 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
  
- static const struct inode_operations pstore_dir_inode_operations = {
-@@ -417,6 +423,7 @@ static void pstore_kill_sb(struct super_block *sb)
- {
- 	kill_litter_super(sb);
- 	pstore_sb = NULL;
-+	INIT_LIST_HEAD(&records_list);
- }
+ 	WARN_ON(!inode_is_locked(d_inode(root)));
  
- static struct file_system_type pstore_fs_type = {
+-	spin_lock_irqsave(&allpstore_lock, flags);
+-	list_for_each_entry(pos, &allpstore, list) {
++	spin_lock_irqsave(&records_list_lock, flags);
++	list_for_each_entry(pos, &records_list, list) {
+ 		if (pos->record->type == record->type &&
+ 		    pos->record->id == record->id &&
+ 		    pos->record->psi == record->psi) {
+@@ -311,7 +311,7 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
+ 			break;
+ 		}
+ 	}
+-	spin_unlock_irqrestore(&allpstore_lock, flags);
++	spin_unlock_irqrestore(&records_list_lock, flags);
+ 	if (rc)
+ 		return rc;
+ 
+@@ -343,9 +343,9 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
+ 
+ 	d_add(dentry, inode);
+ 
+-	spin_lock_irqsave(&allpstore_lock, flags);
+-	list_add(&private->list, &allpstore);
+-	spin_unlock_irqrestore(&allpstore_lock, flags);
++	spin_lock_irqsave(&records_list_lock, flags);
++	list_add(&private->list, &records_list);
++	spin_unlock_irqrestore(&records_list_lock, flags);
+ 
+ 	return 0;
+ 
 -- 
 2.20.1
 
