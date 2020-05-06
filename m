@@ -2,101 +2,74 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23139C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B37C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0836E206E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1BFA206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:37:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="myJHeLrN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbgEFGgX (ORCPT
+        id S1727872AbgEFGhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 02:36:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:56884 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726558AbgEFGgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 02:36:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BB09830E;
-        Tue,  5 May 2020 23:36:21 -0700 (PDT)
-Received: from [10.163.71.196] (unknown [10.163.71.196])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AB4A83F68F;
-        Tue,  5 May 2020 23:36:19 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [PATCH V3 10/16] arm64/cpufeature: Add remaining feature bits in
- ID_AA64PFR0 register
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org
-References: <1588426445-24344-1-git-send-email-anshuman.khandual@arm.com>
- <1588426445-24344-11-git-send-email-anshuman.khandual@arm.com>
- <f5e8b407-c731-7ff9-df47-fc54182f2d25@arm.com>
-Message-ID: <7116fd7d-eb16-c5c4-c8e4-ffdc71b0983c@arm.com>
-Date:   Wed, 6 May 2020 12:05:50 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <f5e8b407-c731-7ff9-df47-fc54182f2d25@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 6 May 2020 02:37:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725873AbgEFGhY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 02:37:24 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22737C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 23:37:24 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id d184so516872pfd.4
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 23:37:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=rIPn6skz9+CHSHwUFC2MWOYr0F1v/VhKVMihvs/Yn2I=;
+        b=myJHeLrNnuX96MEy+Ht1sxEO3nat0eNyp43GrBz1UV9or6MePLmuXspff6fNrPOJli
+         uaK7UDE9CELgO8T/n5hweWcOYGQlVJ2W1VjGpdfHBkXxBe/hhMFvP3b9brncj9jg66QT
+         vgfvN6ZqDxY0+/eEuZbi+pAEU9tK091NnoRaafqNwVwLRefKGtImCAbehEmqeV0oUXha
+         5CDa6BnJFZ/GVtthtpc18kqa2XdMM7r9yL2Avgmev8hhJSobCgjMFvE/yeLyiN9hF4UP
+         ucCDWVEECvfkpCKsmuI+dD5okt+9dWJUGmcsFAf/wE6/Lh02xbg5XdDDxmNIz5JWbA0B
+         fDYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=rIPn6skz9+CHSHwUFC2MWOYr0F1v/VhKVMihvs/Yn2I=;
+        b=WzPynWlA0ETv3Gi19nZI53XUOt/eK0daCSHlumWt8xAFZaSZjnB1tVCotL2JQAvPTS
+         edpYIxMdOYN/RRuLzkXf96hfw1ndQ39FcPOewSxGz3ng3Fuvmxueux1g8wbMF4gw/MB7
+         qUroL9rxlckFDE+yBsfYZL8lmCmiUQM3NAETWU2OUifusZV0QiGfVAxERLWE9R5ASQaS
+         28zj7PBNnmFo/3JzU4Xa2rgphkSGY0OotvP8qIrG7ObnqEiNNWIdygoYPIF/F9BlOrEm
+         u7BKK16POakFPZfhkdqcRIGaXMrHc+mmLgTOauWrN7d9Ac2EnjfUqmMl+YDXhGofHzGn
+         UW3Q==
+X-Gm-Message-State: AGi0Puavq0SmWXrm8aXgN/wuanLtrxMl3AA+W3/I45V2yTg3HERqNKX5
+        KL2ZyTntu6QLbtZhzwbhI5Q=
+X-Google-Smtp-Source: APiQypJEf/R2iKSuVCdwxeAuyZgpQKI7r0/Np98az14Yv13VQZPHyObMBygThGu1TSCu5L7uaNH+3A==
+X-Received: by 2002:aa7:9811:: with SMTP id e17mr6476248pfl.70.1588747043563;
+        Tue, 05 May 2020 23:37:23 -0700 (PDT)
+Received: from fmin-OptiPlex-7060.nreal.work ([103.206.190.146])
+        by smtp.gmail.com with ESMTPSA id y63sm773289pfg.138.2020.05.05.23.37.21
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 May 2020 23:37:23 -0700 (PDT)
+From:   dillon.minfei@gmail.com
+To:     thierry.reding@gmail.com, sam@ravnborg.org, airlied@linux.ie,
+        daniel@ffwll.ch, alexandre.torgue@st.com
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 3/4] drm/panel: Add Ilitek ILI9341 driver 
+Date:   Wed,  6 May 2020 14:37:16 +0800
+Message-Id: <1588747037-31198-1-git-send-email-dillon.minfei@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-
-On 05/05/2020 10:29 AM, Suzuki K Poulose wrote:
-> On 05/02/2020 02:33 PM, Anshuman Khandual wrote:
->> Enable MPAM and SEL2 features bits in ID_AA64PFR0 register as per ARM DDI
->> 0487F.a specification.
->>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->>
->> Suggested-by: Will Deacon <will@kernel.org>
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->>   arch/arm64/include/asm/sysreg.h | 2 ++
->>   arch/arm64/kernel/cpufeature.c  | 2 ++
->>   2 files changed, 4 insertions(+)
->>
->> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
->> index 40eaf89f1032..c93ea6613f51 100644
->> --- a/arch/arm64/include/asm/sysreg.h
->> +++ b/arch/arm64/include/asm/sysreg.h
->> @@ -641,6 +641,8 @@
->>   #define ID_AA64PFR0_CSV2_SHIFT        56
->>   #define ID_AA64PFR0_DIT_SHIFT        48
->>   #define ID_AA64PFR0_AMU_SHIFT        44
->> +#define ID_AA64PFR0_MPAM_SHIFT        40
->> +#define ID_AA64PFR0_SEL2_SHIFT        36
->>   #define ID_AA64PFR0_SVE_SHIFT        32
->>   #define ID_AA64PFR0_RAS_SHIFT        28
->>   #define ID_AA64PFR0_GIC_SHIFT        24
->> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
->> index dbedcae28061..f5a39e040804 100644
->> --- a/arch/arm64/kernel/cpufeature.c
->> +++ b/arch/arm64/kernel/cpufeature.c
->> @@ -217,6 +217,8 @@ static const struct arm64_ftr_bits ftr_id_aa64pfr0[] = {
->>       ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64PFR0_CSV2_SHIFT, 4, 0),
->>       ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR0_DIT_SHIFT, 4, 0),
->>       ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64PFR0_AMU_SHIFT, 4, 0),
->> +    ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR0_MPAM_SHIFT, 4, 0),
->> +    ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR0_SEL2_SHIFT, 4, 0),
-> 
-> Both of them must be hidden. And also need to check the impact of exposing this to the guests, especially MPAM.
-
-Just trying to understand. We should make both MPAM and SEL2, FTR_HIDDEN for
-now, in which case they should not be visible to the userspace or guests. But
-we would need to check impact of their exposure to guests before they can be
-made visible later on. Is that correct ?
+Add drm panel driver ilitek ili9341 , based on panel/panel-ilitek-ili9322.c
+currently just support rgb input only
