@@ -2,100 +2,85 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1652EC47258
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE60EC47259
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E251B207DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:24:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588749849;
-	bh=x7OyI4ujQqJw0j0GzC4hS3Aq2xvKqYQlLnWoJNviDjI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2hGQQdln/mjCW7skCPuqZDSqR5pOxdEC0An8eGlLDlisTuAkWrAPMTcZeWXvWVkhn
-	 aTP+czuDLFSleQUD8tllsBrlgvZaIJwaReQxaLAyh21iGP923eSKTyHuC0B7/2jGjv
-	 ywZKdz2XpJ7849U7IUUl4BdB3G8gKXO3obW6JH9U=
+	by mail.kernel.org (Postfix) with ESMTP id D9D3C20663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:27:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbgEFHYI (ORCPT
+        id S1728191AbgEFH0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 03:24:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33324 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727832AbgEFHYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 03:24:07 -0400
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 6 May 2020 03:26:49 -0400
+Received: from mail-out.m-online.net ([212.18.0.10]:34449 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727067AbgEFH0t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 03:26:49 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 49H7Sj70s3z1rx7x;
+        Wed,  6 May 2020 09:26:45 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 49H7Sj52Hxz1qqkL;
+        Wed,  6 May 2020 09:26:45 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id LgHs-hPbv2Fl; Wed,  6 May 2020 09:26:44 +0200 (CEST)
+X-Auth-Info: 2z9cDoItip41685WZkAmKeL5Dft+6xIYW+Pc0QNYXAd0dhdAMI46HXdeyiZo6LBw
+Received: from igel.home (ppp-46-244-183-249.dynamic.mnet-online.de [46.244.183.249])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1542E2075A;
-        Wed,  6 May 2020 07:24:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588749847;
-        bh=x7OyI4ujQqJw0j0GzC4hS3Aq2xvKqYQlLnWoJNviDjI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2dF/3JTTgUTXkPe00eAGP+i/UrEb6At13z6L8h0yfrl/xzNk2Y5LE5dG3bFPy3gsV
-         PanOXrzYPZqsVHdv4gTC1p54m9U/IrzFxdW0PPJ6mB4mrKWoHAmCzVMzr1tCUx8MbD
-         mgM6oToSjO1sRXefqDLWUFwvnbNkWAeT0wdLMaio=
-Received: by mail-io1-f43.google.com with SMTP id k18so1201848ion.0;
-        Wed, 06 May 2020 00:24:07 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYoT4ZZstg3sPL6oQwiLuTiKNjIDIeCqxshoR6lAX/ZSnl3ww0A
-        /Pdf8tA7K/oPGQ8sXyaiAIwRFquy7Pnog8qw7fg=
-X-Google-Smtp-Source: APiQypIDZYGhT0LIyzlWMf02JIHTT0d22XLa8P8k+ofCUy3V1mbu/iTR9hb+bBCzJxHhbqT4z3ia2IzftQLl9LWc4FA=
-X-Received: by 2002:a02:8247:: with SMTP id q7mr6901558jag.68.1588749846416;
- Wed, 06 May 2020 00:24:06 -0700 (PDT)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Wed,  6 May 2020 09:26:44 +0200 (CEST)
+Received: by igel.home (Postfix, from userid 1000)
+        id 1B3342C0D4E; Wed,  6 May 2020 09:26:44 +0200 (CEST)
+From:   Andreas Schwab <schwab@linux-m68k.org>
+To:     Anup Patel <anup@brainfault.org>
+Cc:     Sagar Kadam <sagar.kadam@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        "vigneshr@ti.com" <vigneshr@ti.com>,
+        "tudor.ambarus@microchip.com" <tudor.ambarus@microchip.com>,
+        "richard@nod.at" <richard@nod.at>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+Subject: Re: [PATCH 1/2] riscv: defconfig: enable spi nor on Hifive
+ Unleashed A00 board.
+References: <BN8PR13MB2611968A7252308925FF18B399A70@BN8PR13MB2611.namprd13.prod.outlook.com>
+        <mhng-29e22ca7-538a-4094-923f-8fbc0fd327b9@palmerdabbelt-glaptop1>
+        <BYAPR13MB2614FE811C8DD83BBDD3A26599A40@BYAPR13MB2614.namprd13.prod.outlook.com>
+        <CAAhSdy2-ECrOP=kZOTXxj1t+f8NrcYjbXKDRwPB3KU36mDmWWg@mail.gmail.com>
+X-Yow:  I feel like I'm in a Toilet Bowl with a thumbtack in my forehead!!
+Date:   Wed, 06 May 2020 09:26:44 +0200
+In-Reply-To: <CAAhSdy2-ECrOP=kZOTXxj1t+f8NrcYjbXKDRwPB3KU36mDmWWg@mail.gmail.com>
+        (Anup Patel's message of "Wed, 6 May 2020 10:39:39 +0530")
+Message-ID: <87d07h8qx7.fsf@igel.home>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.0.91 (gnu/linux)
 MIME-Version: 1.0
-References: <20200505190016.4350-1-lszubowi@redhat.com>
-In-Reply-To: <20200505190016.4350-1-lszubowi@redhat.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 6 May 2020 09:23:55 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHsvy09V0rK2Qh0eiR4Vi5ZDn=5ordNvEBH4c-Xk00QgQ@mail.gmail.com>
-Message-ID: <CAMj1kXHsvy09V0rK2Qh0eiR4Vi5ZDn=5ordNvEBH4c-Xk00QgQ@mail.gmail.com>
-Subject: Re: [PATCH] efi/libstub/x86: Free EFI map buffer in allocate_e820()
-To:     Lenny Szubowicz <lszubowi@redhat.com>
-Cc:     eric.snowberg@oracle.com, Ingo Molnar <mingo@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 May 2020 at 21:00, Lenny Szubowicz <lszubowi@redhat.com> wrote:
->
-> In allocate_e820(), free the EFI map buffer that has been returned
-> by efi_get_memory_map(). The returned size of the EFI map buffer
-> is used to allocate an adequately sized e820ext buffer, if it's
-> needed. But the contents of that EFI map buffer is not used at all
-> and the local pointer to it is gone on return from allocate_e820().
->
-> Signed-off-by: Lenny Szubowicz <lszubowi@redhat.com>
-> ---
->  drivers/firmware/efi/libstub/x86-stub.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-> index 05ccb229fb45..4efe3e7a218d 100644
-> --- a/drivers/firmware/efi/libstub/x86-stub.c
-> +++ b/drivers/firmware/efi/libstub/x86-stub.c
-> @@ -623,6 +623,9 @@ static efi_status_t allocate_e820(struct boot_params *params,
->         if (status != EFI_SUCCESS)
->                 return status;
->
-> +       /* Allocated EFI map buf is not used here. Just need its size. */
-> +       efi_bs_call(free_pool, map);
-> +
+On Mai 06 2020, Anup Patel wrote:
 
-Wouldn't it be better to call BS->GetMemoryMap() directly here, with a
-zero size for the input buffer?
+> We had build issues in past by selecting major driver subsystems
+> in Kconfig.socs
+>
+> I suggest to select SPI_SIFIVE from Kconfig.socs
 
->         nr_desc = buff_size / desc_size;
->
->         if (nr_desc > ARRAY_SIZE(params->e820_table)) {
-> --
-> 2.18.4
->
+SPI_SIFIVE can be m, don't override that.
+
+Andreas.
+
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
