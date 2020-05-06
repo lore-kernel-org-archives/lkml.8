@@ -2,100 +2,92 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DE3C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8B3C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79385208DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:06:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WSM959kN"
+	by mail.kernel.org (Postfix) with ESMTP id 8A2B0208CA
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:08:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588781293;
+	bh=ayuwIV50Cs9v+urgIKa4LpRwdjMuo9qV+UjzqNRQlnA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=B8BpruB/ghZH1UbPPOvGU4n82QYqOBad6WczpLplLxu5TCZ1dLsVzheGHiIRVFu7A
+	 sxkYSx0avXvfGSS0As8MNNwRtsyaDYnl+QZq1tBK3knwD0CbdKnnWOtXW8qyj2TNOx
+	 HksQhMNOh4NJN7qmd0gR4RoSNg7g5HvVtSHCcSBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730015AbgEFQG3 (ORCPT
+        id S1729911AbgEFQIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:06:29 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56716 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729418AbgEFQG3 (ORCPT
+        Wed, 6 May 2020 12:08:12 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35300 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729418AbgEFQIM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:06:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588781188;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Z+3t3+wbayhKG8ZXNezVyF4RkQnz2wqH6eG7rnJ3rL4=;
-        b=WSM959kNlX54aVlI9ICmv4C0Z+n07VzejcL6swFopxJKyFEW2SCUWoxTZZHWtmhhZLr2JV
-        BDzgvoqKXd8HoQEMfZDQm0QabLQZjy0nO4DGck7wmwSxOusLL7h6PzbTMkYl8vZMVeC3GD
-        F/hP1rRicAhooBUmw5dzLUUmH9uc9yI=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-70-PAALFTapOl-0qmtUMm-N-w-1; Wed, 06 May 2020 12:06:25 -0400
-X-MC-Unique: PAALFTapOl-0qmtUMm-N-w-1
-Received: by mail-qv1-f72.google.com with SMTP id p12so2553391qvm.21
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 09:06:25 -0700 (PDT)
+        Wed, 6 May 2020 12:08:12 -0400
+Received: by mail-wm1-f68.google.com with SMTP id r26so3374464wmh.0;
+        Wed, 06 May 2020 09:08:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Z+3t3+wbayhKG8ZXNezVyF4RkQnz2wqH6eG7rnJ3rL4=;
-        b=E3NYKv0SaLDwmdbCL7U8VNnqspq7L90juAdrj8QAo3nPuFY80JdZXuMG1UpjU+Cvqf
-         9RRjn5ZX9rHmZCbQapDqvF25oC0MPdd6/Ev0mxCtCFEEq/ZlZrBsZDLN+UQ9AffKhqh4
-         CaMGF9wgONQr69aszhDldIhtcdy2BcGYbJE+xzi6h/RBNy4js7b4PsRy30mabfNYUYgV
-         x+toctwpacuMbLEOXsdM0sHXd1VyCuAj/t29ZZyTuaX43DEhFp/NGWPj2tT73+3PYMca
-         DxdJ76twoU6YTG3yOfnquscwV0qj8wsR7fvJ+SOq8zm4dU11R53VmkfdXT8nVWPzOko7
-         FjKQ==
-X-Gm-Message-State: AGi0PuZtxF2zXj6NuCEyWnqI6neVzdASuBg8ihkYJ3EXS4bbSceJXwzD
-        +7UnBC0De2BY40kUJegoCissQs1GmdyVhF3QDWjtYVx/PvK33LAZDecJceuVD732Sh6A+C7dQhs
-        3zXMoDBLHylBnuRAeumlJJKB0
-X-Received: by 2002:a37:688c:: with SMTP id d134mr9717421qkc.450.1588781185497;
-        Wed, 06 May 2020 09:06:25 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLrcd8xS+ttqTUL6EUvZBMmsM8/E0ENKYL/qimkT3zmv3LL8KFrfLcKfTeF0a+trZnV5sTZNw==
-X-Received: by 2002:a37:688c:: with SMTP id d134mr9717398qkc.450.1588781185252;
-        Wed, 06 May 2020 09:06:25 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id a27sm1912587qtb.26.2020.05.06.09.06.24
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HG4juwLkpA3lPMHgXzAH+5UcLg1AB2lQeps7Ou5A7I4=;
+        b=hs2Eew4EbrR7fqyTeQR7qgvilYC6hKFlj84PKVvxTFd8yOSwHC/X4xCsSh9FSfX/r/
+         9vkEpIp6zV9Jou58gp71q8+eiwa8n6iYp3n2bfdX9ZcYhPTiHATOi+W7bjTKT/gsuGSi
+         T8msLpjxc1x1R2G00UVsETtsJqdSISsPT/mm3QakFxyMTqig8RfvIUJ+v+k2JIedoX/z
+         qCpqSK+8r/3vHSl02amhWL03Du2GtSejBHOsdNjgk0oJ1R2eK+oFvLdKXn+qCU2zlLLe
+         mMC8RGkJPG/gQReJViKgOftjlQowEthwqspBKxPb/80fpAMRm3QFn9CeIozpGdUtgdNw
+         EY+w==
+X-Gm-Message-State: AGi0Pubuykj06ILspGZf48tZB6zKh1br9Qja3omdfk7tuEeRfVDg7p4a
+        sw3uvb5Yn8XuqB/OB6Llb0LncwaS
+X-Google-Smtp-Source: APiQypJ9Msc2eoTwoHeh58vNZgD8yGEzKZTMjuCYxPO32gZYLSHjNsJdk1SWChD6SLVoOZODPfseYA==
+X-Received: by 2002:a7b:cb0c:: with SMTP id u12mr5648769wmj.137.1588781289856;
+        Wed, 06 May 2020 09:08:09 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id l16sm3355699wrp.91.2020.05.06.09.08.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 09:06:24 -0700 (PDT)
-Date:   Wed, 6 May 2020 12:06:23 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH 7/9] KVM: x86: simplify dr6 accessors in kvm_x86_ops
-Message-ID: <20200506160623.GO6299@xz-x1>
-References: <20200506111034.11756-1-pbonzini@redhat.com>
- <20200506111034.11756-8-pbonzini@redhat.com>
+        Wed, 06 May 2020 09:08:09 -0700 (PDT)
+From:   Wei Liu <wei.liu@kernel.org>
+To:     linux-hyperv@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>
+Subject: [PATCH] Driver: hv: vmbus: drop a no long applicable comment
+Date:   Wed,  6 May 2020 16:08:05 +0000
+Message-Id: <20200506160806.118965-1-wei.liu@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200506111034.11756-8-pbonzini@redhat.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 07:10:32AM -0400, Paolo Bonzini wrote:
-> kvm_x86_ops.set_dr6 is only ever called with vcpu->arch.dr6 as the
-> second argument, and for both SVM and VMX the VMCB value is kept
-> synchronized with vcpu->arch.dr6 on #DB; we can therefore remove the
-> read accessor.
-> 
-> For the write accessor we can avoid the retpoline penalty on Intel
-> by accepting a NULL value and just skipping the call in that case.
-> 
-> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+None of the things mentioned in the comment is initialized in hv_init.
+They've been moved elsewhere.
 
-(I think this patch and the previous one seem to be the same as the previous
- version.  Anyway...)
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
+---
+ drivers/hv/vmbus_drv.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Reviewed-by: Peter Xu <peterx@redhat.com>
-
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 3a27f6c5f3de..7efdcadc335e 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -1396,7 +1396,6 @@ static int vmbus_bus_init(void)
+ {
+ 	int ret;
+ 
+-	/* Hypervisor initialization...setup hypercall page..etc */
+ 	ret = hv_init();
+ 	if (ret != 0) {
+ 		pr_err("Unable to initialize the hypervisor - 0x%x\n", ret);
 -- 
-Peter Xu
+2.20.1
 
