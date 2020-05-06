@@ -2,146 +2,132 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65DFEC4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F09C47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 428E120CC7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 800D920575
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:30:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Q/9X3Hqp"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="WfjfTtHy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729815AbgEFPai (ORCPT
+        id S1730222AbgEFPam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:30:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729931AbgEFPag (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:30:36 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B22DC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 08:30:36 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id q24so1045499pjd.1
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 08:30:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QdMtxniSWK3PkWXNKwBL1UPHuRFtnVNhLkmVLBdfg9k=;
-        b=Q/9X3HqpDpP1bpMyEce6+77MmK6MN+XVjRdiAxqecgTGYNf3lBxevqb2kiejal14bb
-         WjYaodQ0NtKSLfkI4ehZZNQCWbD4wu0b8/wpICLtZi+IHB10p/r0x/OfvVfBgznsLkHH
-         mBJthd/pdvQ9+cBWw2Oz5oYEAiMhlyPElCbek=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QdMtxniSWK3PkWXNKwBL1UPHuRFtnVNhLkmVLBdfg9k=;
-        b=O5R+YuaAOTNTFQFpo7FdHVmGwM0Gtgfv4Mgqchci6y8HV4ebNB/f+3d6+J6BMJZO4d
-         17n54GWr4Fm2KO6KnSltnEVXiD129mIEH4RDNyJ+BmEOAm4qtoi7fpvoBctc3ZeqjKlM
-         SDutyj50QlhCU4MUUMjSnYV02UdCx+sRYQMedAS5R/7a39n1RE4gBwwuzhe53k2BnUG3
-         ILz+QsoQu7v4GXpmLwOIdl3MnjDFqXmmNIrEO8f1I44MnqKQEC8ykhnVWXuvN1BZ/K0U
-         SeuqN4klg3QV9daImGj/f2NNgrHHjIUmfF9ZkgUjgAQDx/Vxe1IotAL5Jc6/scwmG25I
-         D+Tg==
-X-Gm-Message-State: AGi0Puash/pJbOrpTFMUf9BEiWMJbzSK5s5AsPTtbIh2vv9IpscbYJhl
-        1Pe6CrrRf6wn1sMrEna0iVDb/g==
-X-Google-Smtp-Source: APiQypLr2NM9l03AagLLZo6M94o8eGZFpNOjjoclEjyQPblQQ32jPFWaWB507XPHEGNsAcVzeN19jg==
-X-Received: by 2002:a17:90a:21ce:: with SMTP id q72mr9815638pjc.0.1588779036158;
-        Wed, 06 May 2020 08:30:36 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 82sm2099813pfv.214.2020.05.06.08.30.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 08:30:34 -0700 (PDT)
-Date:   Wed, 6 May 2020 08:30:33 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 6/7] exec: Move most of setup_new_exec into flush_old_exec
-Message-ID: <202005060829.A09C366D0@keescook>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
- <87ftcei2si.fsf@x220.int.ebiederm.org>
- <202005051354.C7E2278688@keescook>
- <87368ddsc9.fsf@x220.int.ebiederm.org>
+        Wed, 6 May 2020 11:30:42 -0400
+Received: from mout.web.de ([217.72.192.78]:59323 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730082AbgEFPak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:30:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1588779007;
+        bh=g+f6vfgQjmv7bJu4M4nmtheEmi9EEiHRE5sTU3DVh4I=;
+        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
+        b=WfjfTtHyboxlV1ARE/Lbc933JbGwhTgN7YQEqgUJRyDoQUcgrz7NCSUpAYlKX+XHQ
+         kIgAfIR1Uxirbf2uTEEY1q1nhth2C+MMhMFyaZZ352v0gjRnRgAzsfwLWBCuPtPt4a
+         h3xDOLPWt7ezNnuGsID0Zz1JCRKwowkAD/77pfcc=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.162.166]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MPKFD-1jn2pO1uV3-00Pcgn; Wed, 06
+ May 2020 17:30:07 +0200
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] iio: sca3000: Remove an erroneous get_device() call in
+ sca3000_read_data()
+To:     Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
+        linux-iio@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <6e972e9b-c799-f0ad-91ac-144640b463f6@web.de>
+Date:   Wed, 6 May 2020 17:30:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87368ddsc9.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+X-Provags-ID: V03:K1:h3zmFkgIB3nbx8qAW1Uo09U00WHf1PaFnapI95hJHMaBEy4ccGu
+ VRNyLnXUOjhtzhmufHFTHZHL46NrvFP7d4gSVzCsbAaBPyAwitJ8g08nDDnzhHt4Mq9B6Z8
+ JyYlpVcwn/v/x1UoVOnmQraKWER+vIXg35nb2nQP4P87yc0d8/PxB3tdaUnVQptVjBa2OjO
+ 3bx4Pt9Rv3gZFcULwxUrA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:OLQHm4Pv5vQ=:MNYLaEG0t4ubmGm5Phhxcm
+ +a4Z89JnCPjqgZsl3isBC7OcA+j9ldHGv52nxiwdlDF+QMy0EwK+eJUbJZAJchXBDoXV9YZZG
+ 1yzH6/lK0q8DVMgJNSnCumzJxqIo8BebqTzgdpyiRa5hNntx13gldE4M/OCJR5KXgBbuy0csI
+ DsCU9qy5vqA6gPoHciPjVjrKlgxG61qyN9hwLv/VnIRda0xtYoXVTKtRwqO5zokPpJOncUXdW
+ OL+HFQRytEWr+KPbEM0PxpKfEbCddP2F85Tikt7u+ZqecEHTgBeDGlIKMLv2osnqeV7rXy7hx
+ eKqaKNWlrYOqt0JO+0yxeqr6HXciCEXnCKPoghqw9YwBFhXxUscShbku3cjp0iTJtrCD3fPy+
+ KCv6ql/K/Fg3Wl5tdopQIL0n9SMers8677fsduKvR6gM0usWlYwRha1pc8NGXcdF5PINRZ8tA
+ w/MYWHdrRZ24ZjiVNzCudkCJlp9DBCxFQ3Uy5O6xps8EiTYFhbOsDhNa+ZGwJ+GZ2zIHYG/Oy
+ y/i63mgWA8J9Kmqoz2MX66CzSJKQlnGsXnCL1qgyZG/G76aoTCnEzonE5vfEkLUye5rM9pJ1s
+ K3OQtij4Dn00eT+aDCs34UTVTsQplFipJiQTZdk0fCTvrzGd29uREt4qZIeQZX7knc9dpTf2Y
+ bUs+oGrMW/SbsSkJir1mcVw1pznfXP60GcHK9a0gwKKN5WOx/kDo85UYVv3PYKwDUkkFKyCgf
+ 7qGb4I5Bri0EXc/1xGNla5JAvNVhD0APM6uj/KQyhVBb1yof8gWFOY0mEGz0sz2asc/jlEsWX
+ tXjgpcgICHIlqyYqeWYb0+/Nti7+RH98TMO7+WF7Nf7USxP2xuzuo2za1HhqhE2RZWyJ+e/Ag
+ ci5qQmuiAQnsbRspp4u/OOaNzvQjQj5YgMw/GXRz/gnmZb+1o2My5n8EnmZHQ+wXeFBuRPaFC
+ Xb4bNjnBfP9zqXMXvVaMcY3aqAOM9cujHNjiLchhWA7bpkmDF4RY9rdKclxotI1JPhE/2Z67W
+ 8X8KMwbKqSJ7Qv8meyP1MJxUmbxyhiD/+k6fi7Dt8Ij4P2yMRDMk9sN1sSWrHh6W8jS42IZTH
+ vAnXRlSptAR0fzmKaRB57V/S8RGuB2W5CPGqItsXtW1xyk5M7KWlX3x+ISsjy6U8bndU0D1po
+ D72pE5G1fdJQNkFxGDNzncsX7hphR63mg9pz16rRJ/p/h4pQo8i0LYxkmRrXEiddQsZ6wyWIQ
+ oclfZBlKB16qXkZ5Y
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 09:57:10AM -0500, Eric W. Biederman wrote:
-> Kees Cook <keescook@chromium.org> writes:
-> 
-> > On Tue, May 05, 2020 at 02:45:33PM -0500, Eric W. Biederman wrote:
-> >> 
-> >> The current idiom for the callers is:
-> >> 
-> >> flush_old_exec(bprm);
-> >> set_personality(...);
-> >> setup_new_exec(bprm);
-> >> 
-> >> In 2010 Linus split flush_old_exec into flush_old_exec and
-> >> setup_new_exec.  With the intention that setup_new_exec be what is
-> >> called after the processes new personality is set.
-> >> 
-> >> Move the code that doesn't depend upon the personality from
-> >> setup_new_exec into flush_old_exec.  This is to facilitate future
-> >> changes by having as much code together in one function as possible.
-> >
-> > Er, I *think* this is okay, but I have some questions below which
-> > maybe you already investigated (and should perhaps get called out in
-> > the changelog).
-> 
-> I will see if I can expand more on the review that I have done.
-> 
-> I saw this as moving thre lines and the personality setting later in the
-> code, rather than moving a bunch of lines up
-> 
-> AKA these lines:
-> >> +	arch_pick_mmap_layout(me->mm, &bprm->rlim_stack);
-> >> +
-> >> +	arch_setup_new_exec();
-> >> +
-> >> +	/* Set the new mm task size. We have to do that late because it may
-> >> +	 * depend on TIF_32BIT which is only updated in flush_thread() on
-> >> +	 * some architectures like powerpc
-> >> +	 */
-> >> +	me->mm->task_size = TASK_SIZE;
-> 
-> 
-> I verified carefully that only those three lines can depend upon the
-> personality changes.
-> 
-> Your concern if anything depends on those moved lines I haven't looked
-> at so closely so I will go back through and do that.  I don't actually
-> expect anything depends upon those three lines because they should only
-> be changing architecture specific state.  But that is general handwaving
-> not actually careful review which tends to turn up suprises in exec.
+> This looks really unusual to have a 'get_device()' hidden in a 'dev_err()' call.
 
-Right -- I looked through all of it (see my last email) and I think it's
-all okay, but I was curious if you'd looked too. :)
+Is there a need to prevent similar function calls by the means of
+advanced source code analysis?
 
-> Speaking of while I was looking through the lsm hooks again I just
-> realized that 613cc2b6f272 ("fs: exec: apply CLOEXEC before changing
-> dumpable task flags") only fixed half the problem.  So I am going to
-> take a quick detour fix that then come back to this.  As that directly
-> affects this code motion.
-
-Oh yay. :) Thanks for catching it!
-
--- 
-Kees Cook
+Regards,
+Markus
