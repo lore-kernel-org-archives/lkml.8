@@ -2,135 +2,205 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF96C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F890C47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF172075A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:28:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588789738;
-	bh=wZc8GE0Iy2gyxMgpOHL9RTIZW0KwAwAYkEbYTQG3M24=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=e1i8Tb/o6IMnweqV0ZisZEMS3SwMxTm1QK4PsSH6RlwwouCoHgSzE0SAMf4AOZzym
-	 glRPTE1Cl/EBjfPCwuiwzIYEDB0g4CsX2Tk9yc75/IZmrbPuPxOczCtQIwKSLWbCXE
-	 CAumu+HhBiTFFzBgZMqyUxvPuYoG/xD5nfJ1Firg=
+	by mail.kernel.org (Postfix) with ESMTP id 15E5A2082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:29:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B2G2eQWb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730089AbgEFS25 (ORCPT
+        id S1730263AbgEFS3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 14:28:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34028 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729313AbgEFS25 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 14:28:57 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20EE020708;
-        Wed,  6 May 2020 18:28:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588789736;
-        bh=wZc8GE0Iy2gyxMgpOHL9RTIZW0KwAwAYkEbYTQG3M24=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=qo8WuAbK9clfsd5xkAs+kEy2nfWEE+FJejg+4kv4+p05N4aCxt0M8Td/qebmw6Ti7
-         a69avL7vupXS4pJtza7UeVXQmhYPsMUFdGyy3AdRDFCGBcPjbRNadkSM5nfq0OzvXh
-         EXedyliq9dadDN/WzVIbqhnZwzYg/KgsNZCXzJVY=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 09D92352306C; Wed,  6 May 2020 11:28:56 -0700 (PDT)
-Date:   Wed, 6 May 2020 11:28:56 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Wed, 6 May 2020 14:29:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59620 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729313AbgEFS3J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 14:29:09 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E296C061A0F;
+        Wed,  6 May 2020 11:29:09 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id 188so2186848lfa.10;
+        Wed, 06 May 2020 11:29:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=8uFfjmJQ34Ru3+2rUtoTfL18MZiFWub+orW6ZjEFZRo=;
+        b=B2G2eQWb2vvv7fGShDkInZMoYpb5intPAkogP/WM+B1lyOz6hgaR+2isDwT+Ua0RGs
+         DKUjdW3hd7Czozq5VmF6WA8w0ETsyD4juwlKXUWM0HhHJTybEaISjD+NSDPKKb5WM8P0
+         gwGQdM2F3Lt7Rn0B8/F0eFcTyRJWxvESRPSiGUj8KW0ON6nQbK+ZXVCrRhlpWrF4/Tfj
+         orT06Ya+LJeldPqwet+suG8UAF7Q513Yt2ugIpkrbTvZZAaSrOzNNoXoi23t8cXH2hHa
+         qxlX1m4v/1hDvdNWBbyxD6j4G3mWbCijMhO5wIcvxzL7XBeD7mvMpCpI6xl++o1hEP6c
+         nzXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=8uFfjmJQ34Ru3+2rUtoTfL18MZiFWub+orW6ZjEFZRo=;
+        b=prfNsNf5Fks9fc0S48jtbVv8bwfpgY5fM5vSoDPksVEx9xyRzxg6WtlxKftbrWBvr1
+         SXoibio06ScwvfDNF0BYLIHOscZAgsxMXIhjz5anit98HN38lOstrNaYR5YH8WNdz6Nn
+         eu5eCaKIiSQ5fcoe+ct7ZvjOQpd9rTJ4yjWuDkFxpId+jUL2B8dCQj/vybA/RmRWqFzt
+         5PDBtluqXUNaz45aglQ9Di2MJVT1yi4it2H0AgzEb6s2RLVnV12LKS88CcJYf6MxnCVu
+         Kvanw8mwanPipRuLQFWQZ6EdIcDCO+XkBJzRgN33JYPWXZtQtDANCWDvphK4blPNP70E
+         X0Cw==
+X-Gm-Message-State: AGi0PuZkJ8fVC+X9HSDd0tnj2qUQGiciANxec9bO6jvnK1Mqk+9T3/nl
+        o4klIzVzgJ5Jtm/k4Ia70WQ=
+X-Google-Smtp-Source: APiQypL1LY97fVbP2+jltuM+HvwXjcF4mVPnXUQNAfSzdtg6CT3iunNViZ4JrqjCI8ILfl0mNb58eA==
+X-Received: by 2002:a19:5053:: with SMTP id z19mr6231192lfj.177.1588789747650;
+        Wed, 06 May 2020 11:29:07 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id x24sm1812474lji.52.2020.05.06.11.29.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 11:29:04 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Wed, 6 May 2020 20:29:02 +0200
+To:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>
+Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
         Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [patch V4 part 1 03/36] sched: Clean up scheduler_ipi()
-Message-ID: <20200506182856.GD2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200505131602.633487962@linutronix.de>
- <20200505134058.361859938@linutronix.de>
- <f969427d-a151-2c69-a779-a2b602e39d9e@oracle.com>
- <20200506153300.GB5281@hirez.programming.kicks-ass.net>
+        RCU <rcu@vger.kernel.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH 21/24] rcu/tiny: move kvfree_call_rcu() out of header
+Message-ID: <20200506182902.GA2570@pc636>
+References: <20200428205903.61704-1-urezki@gmail.com>
+ <20200428205903.61704-22-urezki@gmail.com>
+ <20200501230359.GH7560@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200506153300.GB5281@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200501230359.GH7560@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 05:33:00PM +0200, Peter Zijlstra wrote:
-> On Wed, May 06, 2020 at 02:37:19PM +0200, Alexandre Chartre wrote:
-> > On 5/5/20 3:16 PM, Thomas Gleixner wrote:
-> > > @@ -650,6 +655,16 @@ static inline bool got_nohz_idle_kick(vo
-> > >   	return false;
-> > >   }
-> > > +static void nohz_csd_func(void *info)
-> > > +{
-> > > +	struct rq *rq = info;
-> > > +
-> > > +	if (got_nohz_idle_kick()) {
-> > > +		rq->idle_balance = 1;
-> > > +		raise_softirq_irqoff(SCHED_SOFTIRQ);
-> > > +	}
-> > > +}
-> > > +
-> > >   #else /* CONFIG_NO_HZ_COMMON */
-> > >   static inline bool got_nohz_idle_kick(void)
-> 
-> > >   #ifdef CONFIG_NO_HZ_COMMON
-> > >   		rq->last_blocked_load_update_tick = jiffies;
-> > >   		atomic_set(&rq->nohz_flags, 0);
-> > > +
-> > > +		rq_csd_init(rq, &rq->nohz_csd, nohz_csd_func);
-> > >   #endif
-> > >   #endif /* CONFIG_SMP */
-> > >   		hrtick_rq_init(rq);
-> > > --- a/kernel/sched/fair.c
-> > > +++ b/kernel/sched/fair.c
-> > > @@ -10009,12 +10009,11 @@ static void kick_ilb(unsigned int flags)
-> > >   		return;
-> > >   	/*
-> > > -	 * Use smp_send_reschedule() instead of resched_cpu().
-> > > -	 * This way we generate a sched IPI on the target CPU which
-> > > +	 * This way we generate an IPI on the target CPU which
-> > >   	 * is idle. And the softirq performing nohz idle load balance
-> > >   	 * will be run before returning from the IPI.
-> > >   	 */
-> > > -	smp_send_reschedule(ilb_cpu);
-> > > +	smp_call_function_single_async(ilb_cpu, &cpu_rq(ilb_cpu)->wake_csd);
+Hello, Paul, Joel.
+
+> > Move inlined kvfree_call_rcu() function out of the
+> > header file. This step is a preparation for head-less
+> > support.
 > > 
-> > This should be nohz_csd instead of wake_csd, no? I.e.:
+> > Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> > ---
+> >  include/linux/rcutiny.h | 6 +-----
+> >  kernel/rcu/tiny.c       | 6 ++++++
+> >  2 files changed, 7 insertions(+), 5 deletions(-)
 > > 
-> >        smp_call_function_single_async(ilb_cpu, &cpu_rq(ilb_cpu)->nohz_csd);
+> > diff --git a/include/linux/rcutiny.h b/include/linux/rcutiny.h
+> > index 0c6315c4a0fe..7eb66909ae1b 100644
+> > --- a/include/linux/rcutiny.h
+> > +++ b/include/linux/rcutiny.h
+> > @@ -34,11 +34,7 @@ static inline void synchronize_rcu_expedited(void)
+> >  	synchronize_rcu();
+> >  }
+> >  
+> > -static inline void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+> > -{
+> > -	call_rcu(head, func);
+> > -}
+> > -
+> > +void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func);
+> >  void rcu_qs(void);
+> >  
+> >  static inline void rcu_softirq_qs(void)
+> > diff --git a/kernel/rcu/tiny.c b/kernel/rcu/tiny.c
+> > index aa897c3f2e92..508c82faa45c 100644
+> > --- a/kernel/rcu/tiny.c
+> > +++ b/kernel/rcu/tiny.c
+> > @@ -177,6 +177,12 @@ void call_rcu(struct rcu_head *head, rcu_callback_t func)
+> >  }
+> >  EXPORT_SYMBOL_GPL(call_rcu);
+> >  
+> > +void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+> > +{
+> > +	call_rcu(head, func);
+> > +}
+> > +EXPORT_SYMBOL_GPL(kvfree_call_rcu);
 > 
-> You figured correctly. Thanks!
+> This increases the size of Tiny RCU.  Plus in Tiny RCU, the overhead of
+> synchronize_rcu() is exactly zero.  So why not make the single-argument
+> kvfree_call_rcu() just unconditionally do synchronize_rcu() followed by
+> kvfree() or whatever?  That should go just fine into the header file.
+> 
+Seems it does not go well if i do it in header file:
 
-And this does get rid of the smp_call_function splats I was seeing
-earlier, thank you!
+<snip>
+diff --git a/include/linux/rcutiny.h b/include/linux/rcutiny.h
+index 0c6315c4a0fe..76b7ad053218 100644
+--- a/include/linux/rcutiny.h
++++ b/include/linux/rcutiny.h
+@@ -13,6 +13,7 @@
+ #define __LINUX_TINY_H
+ 
+ #include <asm/param.h> /* for HZ */
++#include <linux/mm.h>
+ 
+ /* Never flag non-existent other CPUs! */
+ static inline bool rcu_eqs_special_set(int cpu) { return false; }
+@@ -36,7 +37,15 @@ static inline void synchronize_rcu_expedited(void)
+ 
+ static inline void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+ {
+-       call_rcu(head, func);
++       if (head) {
++               call_rcu(head, func);
++               return;
++       }
++
++       // kvfree_rcu(one_arg) call.
++       might_sleep();
++       synchronize_rcu();
++       kvfree((void *) func);
+ }
+<snip> 
 
-I still see warnings of the form "leave instruction with modified stack
-frame" from older complilers and of the form "undefined stack state"
-from newer compilers.  I am running stock objtool versions, so I am
-guessing that this is at least one reason for these warnings.
+kvfree() is defined in <linux/mm.h> as extern void kvfree(const void *addr); 
+If i just include <linux/mm.h> i get many errors related to "implicit declaration
+of function" like:
 
-							Thanx, Paul
+<snip>
+rcu_read_lock()
+compound_mapcount_ptr()
+rcu_assign_pointer()
+...
+<snip>
+
+and many other messages like:
+
+<snip>
+warning: returning ‘int’ from a function with return type
+error: unknown type name ‘vm_fault_t’; did you mean ‘pmdval_t’?
+error: implicit declaration of function ‘RB_EMPTY_ROOT’
+...
+<snip>
+
+Please see full log here: ftp://vps418301.ovh.net/incoming/include_mm_h_output.txt
+
+I can fix it by adding the kvfree() declaration to the rcutiny.h also:
+extern void kvfree(const void *addr);
+
+what seems wired to me? Also it can be fixed if i move it to the tiny.c
+so it will be aligned with the way how it is done for tree-RCU.
+
+Any valuable proposals?
+
+--
+Vlad Rezki
