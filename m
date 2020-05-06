@@ -2,86 +2,136 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A64B8C47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2EBC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8920B20747
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE6912076D
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:37:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588793797;
-	bh=uAMQvip1+58/TgaaSbFxo+PJakeM582Z+rHAF7IZJf8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=foTwdt3fiZ2ghD8xa2Mfw1vIw4DUc/MjwjjZbeJCOZ/ICF0r1zv3cBPSMvDIdBHbP
-	 61qZystfzVjFgW954S1oTyby1Qr50xWv3JvhIQybQGaKr/sqJDi3EflTXkESW1xNcL
-	 DUueuNbzvQIgHh/qwH00qUgx0Oj0NfXNRgpcLrzs=
+	s=default; t=1588793836;
+	bh=d8kE2FciPli87V4YhQ7IP/bZuwFccaqkbZSCbAm8Y6Q=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=oTqwJWHXzfThICt0ivUn/sQzgIA4lvXEI05ip39JnJzwc9r0Uw6dMyt5hHvHmnjNB
+	 lg3kynIg1IgMg70DMVWhmma7kdklsGF+mRTJ1/12wspQvnxRktCoTz+Xl8yZZL2xzb
+	 u3I3IfMCmqHqyQGKLqJzyNPs6gZALPkwsAhcZA/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729207AbgEFTgh (ORCPT
+        id S1729271AbgEFThP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 15:36:37 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46284 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728531AbgEFTgg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 15:36:36 -0400
-Received: by mail-oi1-f193.google.com with SMTP id c124so2620735oib.13;
-        Wed, 06 May 2020 12:36:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rnfpFrTk6qQXOr8sM3/2W6CmEzipxR2+8pAqFytyXqI=;
-        b=pYMSbESToWSZRgzeGNHGjAWZbELb7qL3F9lB6ZzfFbpNN2bj1+u0ns5tN4xophy300
-         8BN/dcaWq5Gzs8qkHtiim0xNbfjJN7nH/amAXl9yv8bNcobucSI4+Bi3bTzv2TPGy7me
-         HHpZyxcJJfnC1jxufTxrooaoFmkGBRvEKVzlDPAnh4mCj5MWZUa87H5Op8M3+r1kIDvG
-         FJ/t32QcwZd5+BEs+wzm8koAPtNCu3KAR/PR7BF/Ga+NJ8/Gxej0TbNCBpiSBE0rOHWh
-         NsaOK075ZfDD80RyS9oEQRkvGYuzfditjNP9whMw77mnIoh2Ynp+YH6mXL9hYCYh584V
-         T2tw==
-X-Gm-Message-State: AGi0PuYTEWGXRo0UaqERlZcxD0ApmFWcEZzaWHCThRtjDyqClsXXE754
-        60Ff0yOrzP7YDDyderc35Q==
-X-Google-Smtp-Source: APiQypK/PKmOgedCZiIdqA69OthKkxGU0LMfRCwhmWEdBjKXwWsK4lkiQOyMamTfj38oAd46ZV0DbA==
-X-Received: by 2002:aca:4541:: with SMTP id s62mr4017103oia.100.1588793795634;
-        Wed, 06 May 2020 12:36:35 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s69sm770207otb.4.2020.05.06.12.36.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 12:36:34 -0700 (PDT)
-Received: (nullmailer pid 21850 invoked by uid 1000);
-        Wed, 06 May 2020 19:36:34 -0000
-Date:   Wed, 6 May 2020 14:36:34 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org, joel@jms.id.au,
-        andrew@aj.id.au, eajames@linux.ibm.com
-Subject: Re: [PATCH v11 1/8] dt-bindings: soc: Add Aspeed XDMA Engine
-Message-ID: <20200506193634.GA21647@bogus>
-References: <1588697905-23444-1-git-send-email-eajames@linux.ibm.com>
- <1588697905-23444-2-git-send-email-eajames@linux.ibm.com>
+        Wed, 6 May 2020 15:37:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60782 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729251AbgEFThO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 15:37:14 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C800820747;
+        Wed,  6 May 2020 19:37:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588793833;
+        bh=d8kE2FciPli87V4YhQ7IP/bZuwFccaqkbZSCbAm8Y6Q=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=thcdmZvmQwIDx//g+mvuHeTTue5JJr6n/LIDsH9WiS4Hg/gFXppnoX0mBBgkMjhSL
+         poKkUlSEgSC8qUJsKND4AffcYB60IGCctWzWKU9J2SGLPRSb97MdhtBDmrvH0//HJo
+         zFNOA6+erlv1asGrINlrLMRSChBCEGTcrUcX1jho=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id AAF8D35230A1; Wed,  6 May 2020 12:37:13 -0700 (PDT)
+Date:   Wed, 6 May 2020 12:37:13 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Please can I have a stable KCSAN branch for 5.8?
+Message-ID: <20200506193713.GG2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200506132816.GJ8043@willie-the-truck>
+ <20200506143616.GY2869@paulmck-ThinkPad-P72>
+ <20200506144141.GA12919@willie-the-truck>
+ <CANpmjNP3ge49sXJZS-KaL5bpEq0rmc4CqepjGRbtbCVwm7rwpw@mail.gmail.com>
+ <20200506180232.GB2869@paulmck-ThinkPad-P72>
+ <CANpmjNP1v8wORd_nfQb7hVH2EY5P565uJYsRFt0dXi4KZvQ46A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1588697905-23444-2-git-send-email-eajames@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CANpmjNP1v8wORd_nfQb7hVH2EY5P565uJYsRFt0dXi4KZvQ46A@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  5 May 2020 11:58:18 -0500, Eddie James wrote:
-> Document the bindings for the Aspeed AST25XX and AST26XX XDMA engine.
+On Wed, May 06, 2020 at 09:11:23PM +0200, Marco Elver wrote:
+> On Wed, 6 May 2020 at 20:02, Paul E. McKenney <paulmck@kernel.org> wrote:
+> >
+> > On Wed, May 06, 2020 at 05:26:56PM +0200, Marco Elver wrote:
+> > > On Wed, 6 May 2020 at 16:41, Will Deacon <will@kernel.org> wrote:
+> > > >
+> > > > Hi Paul,
+> > > >
+> > > > Cheers for the quick reply!
+> > > >
+> > > > On Wed, May 06, 2020 at 07:36:16AM -0700, Paul E. McKenney wrote:
+> > > > > On Wed, May 06, 2020 at 02:28:17PM +0100, Will Deacon wrote:
+> > > > > > I'm looking to rebase my READ_ONCE() series [1] on top of the KCSAN patches
+> > > > > > so that we can get them in for 5.8. However, tip/locking/kcsan seems to be
+> > > > > > missing some bits:
+> > > > > >
+> > > > > >   * An update to checkpatch.pl to warn about missing comments for
+> > > > > >     data_race():
+> > > > > >
+> > > > > >     https://lore.kernel.org/r/20200401101714.44781-1-elver@google.com
+> > > > >
+> > > > > For some reason, I thought this was going up some other tree, but I do
+> > > > > not see it in -next.  So unless I hear otherwise, I will pull it into
+> > > > > the v5.8 kcsan branch.
+> > > >
+> > > > Brill, thanks.
+> > > >
+> > > > > >   * I'm unable to apply these two patches from Marco that are needed for
+> > > > > >     my READ_ONCE() work:
+> > > > > >
+> > > > > >     https://lore.kernel.org/lkml/20200424154730.190041-1-elver@google.com/
+> > > > > >
+> > > > > >     I think these depend on stuff that has been queued by Paul, and appears
+> > > > > >     in linux-next, but to be honest with you I'm quite confused about what
+> > > > > >     is queued for 5.8 and what isn't.
+> > > > >
+> > > > > This one is queued, but I currently have it in the v5.9 pile (but
+> > > > > tentatively for v5.8).  Unless Marco tells me otherwise, I will move it
+> > > > > to the v5.8 branch, which will be part of my pull request next week.
+> > > >
+> > > > Great, then this would all show up on tip/locking/kscan, right?
+> > > >
+> > > > > > What's the best base for me to use?
+> > > > >
+> > > > > The -next tree has the latter, but not yet the former.
+> > > >
+> > > > That probably means -next is good enough for me to cook a new version of my
+> > > > series, and then I can make a proper branch next week.
+> > > >
+> > > > > Hopefully we can get this straightened out, and please accept my apologies
+> > > > > for the hassle!
+> > > >
+> > > > No need to apologise, I just couldn't figure out what was what and decided
+> > > > it was easier to ask the experts ;)
+> > >
+> > > Just confirming that I don't see any issues with the plan -- the
+> > > patches that Will needs are good to go into the v5.8 branch.
+> >
+> > OK, I have updated -rcu's kcsan and kcsan-dev branches.  Could you please
+> > double-check, given that pull-request time is quite soon?
 > 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
->  .../devicetree/bindings/soc/aspeed/xdma.yaml       | 103 +++++++++++++++++++++
->  MAINTAINERS                                        |   6 ++
->  2 files changed, 109 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/aspeed/xdma.yaml
-> 
+> I believe "objtool, kcsan: Add kcsan_disable_current() and
+> kcsan_enable_current_nowarn()" is missing, which should go after
+> "kcsan: Add __kcsan_{enable,disable}_current() variants".
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Thank you for checking!  I will move that one also.
+
+							Thanx, Paul
