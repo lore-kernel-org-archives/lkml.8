@@ -2,75 +2,82 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D312C47258
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CB9C47258
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2108E206E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:38:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588750714;
-	bh=Y1LEEe+kkf6vU7B4UsWqodC8jLCx0BRsN/zYtJeEjvE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yc9MyusCA0s0Y3Z5JIe2VKYd9LSVdlp29oWWZ9v3s2Tw7Smw6mxxz/+938ajO3sd1
-	 PHYFO1Fxxaojzfe2U22GK+a5BiGpVQfvccM+qjzJbkpY+ma+kSwUWrXnI1wLMLmFKj
-	 TTa+Nw8V1C1LLU/STb4uGdHkMlu3Q+PrNKg8yI8U=
+	by mail.kernel.org (Postfix) with ESMTP id BD039206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:40:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728361AbgEFHid (ORCPT
+        id S1728317AbgEFHkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 03:38:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38472 "EHLO mail.kernel.org"
+        Wed, 6 May 2020 03:40:21 -0400
+Received: from mga05.intel.com ([192.55.52.43]:36587 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727067AbgEFHid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 03:38:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B216220735;
-        Wed,  6 May 2020 07:32:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588750376;
-        bh=Y1LEEe+kkf6vU7B4UsWqodC8jLCx0BRsN/zYtJeEjvE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=I5feX9SVlod6nQUrokIJem+6I1ByfhYGOk+CesqWuk2wyAkt4RXSZAzsX7v1+XHzw
-         4DHHxD+eEyyVXNUeQgoKdApHpR2IzkSgNtvuBR/5AtvjmSXKGWNQuEdjTsPn/kaqLI
-         9lKQllYCeCb3g9sV3dmmZ0E2yTndn+rdkJrAGN70=
-Date:   Wed, 6 May 2020 09:32:53 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Hyunki Koo <hyunki00.koo@samsung.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 2/3] dt-bindings: serial: Add reg-io-width compatible
-Message-ID: <20200506073253.GB2336830@kroah.com>
-References: <20200506070009.16809-1-hyunki00.koo@samsung.com>
- <CGME20200506070024epcas2p2868e11349d2fee83d340df7fa181f704@epcas2p2.samsung.com>
- <20200506070009.16809-2-hyunki00.koo@samsung.com>
+        id S1726897AbgEFHkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 03:40:20 -0400
+IronPort-SDR: zFFu9M223WP0/MMosOpIwwvy7gNJt+Sjab1hBN8ElUy2a5R3CuKTGRK3Tj0C2X+8rzOYhcFPvt
+ eCRfF9dRP8pg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 00:40:19 -0700
+IronPort-SDR: QirAKY4LxgsJS8I4FdkzFFbfa513ClR/a4N5rxqtKlnQNz8Mz423RJZrNTJ9kiB9uoLAP3i3Ot
+ Xtdn6vKb03ng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,358,1583222400"; 
+   d="scan'208";a="251127777"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 06 May 2020 00:40:18 -0700
+Received: from [10.213.154.130] (ekotax-mobl.gar.corp.intel.com [10.213.154.130])
+        by linux.intel.com (Postfix) with ESMTP id 50A6658048A;
+        Wed,  6 May 2020 00:40:16 -0700 (PDT)
+Subject: Re: [PATCH 1/4] spi: lantiq: Synchronize interrupt handlers and
+ transfers
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Daniel Schwierzeck <daniel.schwierzeck@gmail.com>, robh@kernel.org,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hauke@hauke-m.de,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+References: <cover.1587702428.git.eswara.kota@linux.intel.com>
+ <3bf88d24b9cad9f3df1da8ed65bf55c05693b0f2.1587702428.git.eswara.kota@linux.intel.com>
+ <310ca761-e7ae-1192-99fd-a1960697806b@gmail.com>
+ <46f31699-e781-ae33-3ee5-d51e6940ee43@linux.intel.com>
+ <20200429121310.GH4201@sirena.org.uk>
+ <28f6511e-fe85-a834-1652-fd70def9ca88@linux.intel.com>
+ <20200505112339.GC5377@sirena.org.uk>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <fce0b146-9ffc-839f-d34a-cb37206a0699@linux.intel.com>
+Date:   Wed, 6 May 2020 15:40:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506070009.16809-2-hyunki00.koo@samsung.com>
+In-Reply-To: <20200505112339.GC5377@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 04:00:06PM +0900, Hyunki Koo wrote:
-> Add a description for reg-io-width options for the samsung serial
-> UART peripheral.
-> 
-> Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
-> ---
->  Documentation/devicetree/bindings/serial/samsung_uart.yaml | 8 ++++++++
->  1 file changed, 8 insertions(+)
 
-You dropped the reviewed-by tag that Rob gave on the previous version of
-this patch.
+On 5/5/2020 7:23 PM, Mark Brown wrote:
+> On Mon, May 04, 2020 at 06:15:47PM +0800, Dilip Kota wrote:
+>> On 4/29/2020 8:13 PM, Mark Brown wrote:
+>
+>> I just tried to get the history of removing workqueue in SPI driver, on
+>> GRX500 (earlier chipset of LGM) the SPI transfers got timedout with
+>> workqueues during regression testing. Once changed to threaded IRQs
+>> transfers are working successfully.
+> That doesn't really explain why though, it just explains what.
+I didnt find more information about it. I will work to reproduce the 
+issue and share the detailed information sooner i get the accessibility 
+of the SoC (because of covid19 doing wfh)
 
-Please put that back and resend.
-
-thanks,
-
-greg k-h
+Regards,
+Dilip
