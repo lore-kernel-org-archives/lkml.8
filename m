@@ -2,120 +2,92 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C23DBC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9C6C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E0F020575
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96C8C20575
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:18:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QJnPZ/fH"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ye8U8cvx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729076AbgEFOSc (ORCPT
+        id S1729096AbgEFOS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 10:18:32 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51454 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728555AbgEFOSc (ORCPT
+        Wed, 6 May 2020 10:18:56 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:39102 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728555AbgEFOS4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 10:18:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588774710;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=Xx8NZJaUL0RR3l7R3ci+3F53w2H1axeM8TrTtW6I+X0=;
-        b=QJnPZ/fHM4Top9JQZEpt3wkiyTOxIp2c6lx9VoRKPX7c8IESVT12465b1t6EQ77SkWqFGV
-        gpEPUDylOVUZeLr8OR2vWhgWFYlv0EItMmeM0WjWLQnE+Dl1T9rqVDZI7E4bFbwXT+wYX2
-        UrojG37pAkIRE79IxZWYvRA5cnYDg2w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-468-fr5VGyzUPta0zP_gqPMaqg-1; Wed, 06 May 2020 10:18:27 -0400
-X-MC-Unique: fr5VGyzUPta0zP_gqPMaqg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2809B835B41;
-        Wed,  6 May 2020 14:18:26 +0000 (UTC)
-Received: from lorien.usersys.redhat.com (ovpn-114-141.phx2.redhat.com [10.3.114.141])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C9FFF5F7E2;
-        Wed,  6 May 2020 14:18:22 +0000 (UTC)
-Date:   Wed, 6 May 2020 10:18:21 -0400
-From:   Phil Auld <pauld@redhat.com>
-To:     peterz@infradead.org
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
-        vincent.guittot@linaro.org, juri.lelli@redhat.com
-Subject: [PATCH] sched/fair: Fix enqueue_task_fair warning some more
-Message-ID: <20200506141821.GA9773@lorien.usersys.redhat.com>
+        Wed, 6 May 2020 10:18:56 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046EHlit110031;
+        Wed, 6 May 2020 14:18:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=3R5fRWwWCvg3X2Ej0wqK3qbEy6u+JOq3Eumk9SuBbLg=;
+ b=Ye8U8cvxibIG5QD9Mmcsyn0VPNdBvJbyVXf+SspKBigDwU2LyWoCQR6d8NYETdtowlYt
+ DQ2nmqErdpNronhN5Uu5DrmhSjPxdQZREkOCJ1nZ2+zheEmxbT+czspV4RkrJXkq828s
+ rUgHQyvGvgVq3swp9pXxc6mKU+cJEyT2QOj30OymaydiYmEEw+dQh6P14n9a7VgCvM/d
+ 3lAtpJ8a+Lu3nAuZ7Xp/oLjPMkWhk/641sl/KRqVOefu4x/kq4/BZugFVsYfRftZPif5
+ 2EVC4xffJx+o4AEjOCSn1e+5KxNG3qqmZckX2RfmqXZ2CBtBVmKaCfBaa2QThg2R0rZ5 Ww== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 30s09ranjv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 May 2020 14:18:38 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046EGoFH054388;
+        Wed, 6 May 2020 14:18:37 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 30sjdvma1s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 May 2020 14:18:37 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 046EIaeu029292;
+        Wed, 6 May 2020 14:18:36 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 06 May 2020 07:18:35 -0700
+Date:   Wed, 6 May 2020 17:18:29 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Wei Yongjun <weiyongjun1@huawei.com>
+Cc:     gregkh@linuxfoundation.org, simon@nikanor.nu, jeremy@azazel.net,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH -next v2] staging: kpc2000: fix error return code in
+ kp2000_pcie_probe()
+Message-ID: <20200506141829.GM1992@kadam>
+References: <20200506125255.90336-1-weiyongjun1@huawei.com>
+ <20200506134735.102041-1-weiyongjun1@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <20200506134735.102041-1-weiyongjun1@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9612 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 mlxscore=0
+ bulkscore=0 adultscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005060115
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9612 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1015 suspectscore=0
+ priorityscore=1501 malwarescore=0 mlxlogscore=999 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005060115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sched/fair: Fix enqueue_task_fair warning some more
+Fantastic.  Thanks!
 
-The recent patch, fe61468b2cb (sched/fair: Fix enqueue_task_fair warning)
-did not fully resolve the issues with the (rq->tmp_alone_branch !=
-&rq->leaf_cfs_rq_list) warning in enqueue_task_fair. There is a case where
-the first for_each_sched_entity loop exits due to on_rq, having incompletely
-updated the list.  In this case the second for_each_sched_entity loop can
-further modify se. The later code to fix up the list management fails to do
-what is needed because se does not point to the sched_entity which broke out
-of the first loop.
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Address this issue by saving the se pointer when the first loop exits and
-resetting it before doing the fix up, if needed.
-
-Signed-off-by: Phil Auld <pauld@redhat.com>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Juri Lelli <juri.lelli@redhat.com>
----
- kernel/sched/fair.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 02f323b85b6d..719c996317e3 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5432,6 +5432,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- {
- 	struct cfs_rq *cfs_rq;
- 	struct sched_entity *se = &p->se;
-+	struct sched_entity *saved_se = NULL;
- 	int idle_h_nr_running = task_has_idle_policy(p);
- 
- 	/*
-@@ -5466,6 +5467,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 		flags = ENQUEUE_WAKEUP;
- 	}
- 
-+	saved_se = se;
- 	for_each_sched_entity(se) {
- 		cfs_rq = cfs_rq_of(se);
- 
-@@ -5510,6 +5512,8 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 		 * leaf list maintenance, resulting in triggering the assertion
- 		 * below.
- 		 */
-+		if (saved_se)
-+			se = saved_se;
- 		for_each_sched_entity(se) {
- 			cfs_rq = cfs_rq_of(se);
- 
--- 
-2.18.0
-
-
-Cheers,
-Phil
+regards,
+dan carpenter
 
