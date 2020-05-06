@@ -7,54 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9108CC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC49C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 707242068E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B3702068E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:28:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588778923;
-	bh=+aoTR50oTeff/5UiwNRJwuvxV3yl6pNhljsh5pM+ZKM=;
+	s=default; t=1588778925;
+	bh=/T+K2BW2Xnws6T4LNrkd8EECzdr6wtRhZPTYtvRQP0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SmsGvJFn1GwsgWpXqwfIGD6Y8+O8s1OisMH2s4pBSJCC8Z0B5JYfzzZvEhxnrgw+P
-	 lZK+tzT0YOlmk5BzceUOYmjyf1pbD/HHtpFmq0Zc8/QW5Os8n00BhnoFEJt+Rf7MI6
-	 FLn9OnazkGmXNwFUgPxD4f6iEpjOlSKdKxkbNaug=
+	b=P4OhFYEnOk+zD5DkZhBxc+tj6wq+9T9Sa6bjQ0KfugyMn1DMyWURVt2HTUw3o6nkS
+	 taVPqMxkkJHGRxEiBnkdldZi6qkVCANiCD2K/z27Qhf9SYleXN3JOC1reuJWZEqv3M
+	 kLrJIN5f8pxJZtQ+mxwH0rfTUWeSXXsi/fs9M3eE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730399AbgEFP2l (ORCPT
+        id S1730135AbgEFP0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:28:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47908 "EHLO mail.kernel.org"
+        Wed, 6 May 2020 11:26:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730143AbgEFP0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:26:14 -0400
+        id S1730101AbgEFP0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:26:01 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE2CC20CC7;
-        Wed,  6 May 2020 15:26:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 541D921744;
+        Wed,  6 May 2020 15:25:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588778774;
-        bh=+aoTR50oTeff/5UiwNRJwuvxV3yl6pNhljsh5pM+ZKM=;
+        s=default; t=1588778760;
+        bh=/T+K2BW2Xnws6T4LNrkd8EECzdr6wtRhZPTYtvRQP0E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WyMSV3ZT2Xyazn7qIaO0XZ7+ApI7RzPkI2eLI2/0s2QzN9bGKf9hxIdM4DmGNzWVH
-         Iro2Rxm6Lf9DcJ70E6bM12ybX+NLJ6pN1mpuBILna1HjP3Uo1xmN5AaQt0P7kh76Ii
-         8R7mQMEsi5LQ/GzlclMQpmW6CJqRQ5bmezXj/Zek=
+        b=w6/OsdwGxvm4cLPbF2uaXKdv9GoIJdbMqwQK2eZlSCVcz6SwjCL350Q/tGrSuEBeB
+         +RFskNoVY09/n0SJJy9YI6GhYLmL+wWWNImdWo3lp3NExCkoXdMzTETEPhevrtKIUN
+         hEB9NzaTPZOE2XsBL/QJjyHW/lDkceUbJGWe+nck=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        clang-built-linux@googlegroups.com,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 63/91] perf mem2node: Avoid double free related to realloc
-Date:   Wed,  6 May 2020 12:22:06 -0300
-Message-Id: <20200506152234.21977-64-acme@kernel.org>
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCH 58/91] perf evsel: Rename perf_evsel__group_desc() to evsel__group_desc()
+Date:   Wed,  6 May 2020 12:22:01 -0300
+Message-Id: <20200506152234.21977-59-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
@@ -65,80 +60,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Realloc of size zero is a free not an error, avoid this causing a double
-free. Caught by clang's address sanitizer:
+As it is a 'struct evsel' method, not part of tools/lib/perf/, aka
+libperf, to whom the perf_ prefix belongs.
 
-==2634==ERROR: AddressSanitizer: attempting double-free on 0x6020000015f0 in thread T0:
-    #0 0x5649659297fd in free llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:123:3
-    #1 0x5649659e9251 in __zfree tools/lib/zalloc.c:13:2
-    #2 0x564965c0f92c in mem2node__exit tools/perf/util/mem2node.c:114:2
-    #3 0x564965a08b4c in perf_c2c__report tools/perf/builtin-c2c.c:2867:2
-    #4 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
-    #5 0x564965944348 in run_builtin tools/perf/perf.c:312:11
-    #6 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
-    #7 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
-    #8 0x564965942e41 in main tools/perf/perf.c:538:3
-
-0x6020000015f0 is located 0 bytes inside of 1-byte region [0x6020000015f0,0x6020000015f1)
-freed by thread T0 here:
-    #0 0x564965929da3 in realloc third_party/llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:164:3
-    #1 0x564965c0f55e in mem2node__init tools/perf/util/mem2node.c:97:16
-    #2 0x564965a08956 in perf_c2c__report tools/perf/builtin-c2c.c:2803:8
-    #3 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
-    #4 0x564965944348 in run_builtin tools/perf/perf.c:312:11
-    #5 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
-    #6 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
-    #7 0x564965942e41 in main tools/perf/perf.c:538:3
-
-previously allocated by thread T0 here:
-    #0 0x564965929c42 in calloc third_party/llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:154:3
-    #1 0x5649659e9220 in zalloc tools/lib/zalloc.c:8:9
-    #2 0x564965c0f32d in mem2node__init tools/perf/util/mem2node.c:61:12
-    #3 0x564965a08956 in perf_c2c__report tools/perf/builtin-c2c.c:2803:8
-    #4 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
-    #5 0x564965944348 in run_builtin tools/perf/perf.c:312:11
-    #6 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
-    #7 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
-    #8 0x564965942e41 in main tools/perf/perf.c:538:3
-
-v2: add a WARN_ON_ONCE when the free condition arises.
-
-Signed-off-by: Ian Rogers <irogers@google.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: clang-built-linux@googlegroups.com
-Link: http://lore.kernel.org/lkml/20200320182347.87675-1-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/mem2node.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/builtin-report.c | 2 +-
+ tools/perf/ui/gtk/hists.c   | 2 +-
+ tools/perf/util/annotate.c  | 4 ++--
+ tools/perf/util/evsel.c     | 2 +-
+ tools/perf/util/evsel.h     | 2 +-
+ tools/perf/util/hist.c      | 2 +-
+ 6 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/mem2node.c b/tools/perf/util/mem2node.c
-index 797d86a1ab09..c84f5841c7ab 100644
---- a/tools/perf/util/mem2node.c
-+++ b/tools/perf/util/mem2node.c
-@@ -1,5 +1,6 @@
- #include <errno.h>
- #include <inttypes.h>
-+#include <asm/bug.h>
- #include <linux/bitmap.h>
- #include <linux/kernel.h>
- #include <linux/zalloc.h>
-@@ -95,7 +96,7 @@ int mem2node__init(struct mem2node *map, struct perf_env *env)
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index b5dd93a76aa1..e00f6244cbda 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -462,7 +462,7 @@ static size_t hists__fprintf_nr_sample_events(struct hists *hists, struct report
+ 	if (perf_evsel__is_group_event(evsel)) {
+ 		struct evsel *pos;
  
- 	/* Cut unused entries, due to merging. */
- 	tmp_entries = realloc(entries, sizeof(*entries) * j);
--	if (tmp_entries)
-+	if (tmp_entries || WARN_ON_ONCE(j == 0))
- 		entries = tmp_entries;
+-		perf_evsel__group_desc(evsel, buf, size);
++		evsel__group_desc(evsel, buf, size);
+ 		evname = buf;
  
- 	for (i = 0; i < j; i++) {
+ 		for_each_group_member(pos, evsel) {
+diff --git a/tools/perf/ui/gtk/hists.c b/tools/perf/ui/gtk/hists.c
+index 50c072d2f3d3..40b52ae6ca6a 100644
+--- a/tools/perf/ui/gtk/hists.c
++++ b/tools/perf/ui/gtk/hists.c
+@@ -646,7 +646,7 @@ int perf_evlist__gtk_browse_hists(struct evlist *evlist,
+ 				continue;
+ 
+ 			if (pos->core.nr_members > 1) {
+-				perf_evsel__group_desc(pos, buf, size);
++				evsel__group_desc(pos, buf, size);
+ 				evname = buf;
+ 			}
+ 		}
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 37d95627c65f..7d03563b608b 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -2370,7 +2370,7 @@ int symbol__annotate_printf(struct map_symbol *ms, struct evsel *evsel,
+ 
+ 	if (perf_evsel__is_group_event(evsel)) {
+ 		width *= evsel->core.nr_members;
+-		perf_evsel__group_desc(evsel, buf, sizeof(buf));
++		evsel__group_desc(evsel, buf, sizeof(buf));
+ 		evsel_name = buf;
+ 	}
+ 
+@@ -2519,7 +2519,7 @@ int map_symbol__annotation_dump(struct map_symbol *ms, struct evsel *evsel,
+ 		goto out_free_filename;
+ 
+ 	if (perf_evsel__is_group_event(evsel)) {
+-		perf_evsel__group_desc(evsel, buf, sizeof(buf));
++		evsel__group_desc(evsel, buf, sizeof(buf));
+ 		ev_name = buf;
+ 	}
+ 
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 167599e8b794..9b3db6d34d37 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -663,7 +663,7 @@ const char *evsel__group_name(struct evsel *evsel)
+  *  For record -e 'cycles,instructions' and report --group
+  *    'cycles:u, instructions:u'
+  */
+-int perf_evsel__group_desc(struct evsel *evsel, char *buf, size_t size)
++int evsel__group_desc(struct evsel *evsel, char *buf, size_t size)
+ {
+ 	int ret = 0;
+ 	struct evsel *pos;
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 7160f3d49d6c..82d2d308fa33 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -212,7 +212,7 @@ int __evsel__hw_cache_type_op_res_name(u8 type, u8 op, u8 result, char *bf, size
+ const char *evsel__name(struct evsel *evsel);
+ 
+ const char *evsel__group_name(struct evsel *evsel);
+-int perf_evsel__group_desc(struct evsel *evsel, char *buf, size_t size);
++int evsel__group_desc(struct evsel *evsel, char *buf, size_t size);
+ 
+ void __perf_evsel__set_sample_bit(struct evsel *evsel,
+ 				  enum perf_event_sample_format bit);
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index fa77574f12ca..bce49ae97532 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -2698,7 +2698,7 @@ int __hists__scnprintf_title(struct hists *hists, char *bf, size_t size, bool sh
+ 	if (perf_evsel__is_group_event(evsel)) {
+ 		struct evsel *pos;
+ 
+-		perf_evsel__group_desc(evsel, buf, buflen);
++		evsel__group_desc(evsel, buf, buflen);
+ 		ev_name = buf;
+ 
+ 		for_each_group_member(pos, evsel) {
 -- 
 2.21.1
 
