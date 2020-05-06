@@ -2,100 +2,116 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8551C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7275C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E66F220714
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:43:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588751001;
-	bh=CNBwwDwBOdMK1xYnzJC73BfdILtwbAZgrZjht4vqeyc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e3bMaWTEc5HiFlhRdKJKp5Jhri1z4Wjg+Aqu9pk1HHmGvc0AdmoilYhJtZc6+NHRl
-	 6Kj4+9Nh0uMK0SkR0ZQgOk0OT+K+HhjcH2Is/6fOYzCoe10+eYQtNxbs+eVpYPHs/y
-	 U2Bx7WAUVzzn8NBXvEpJzOkeniCZZttkPp89dcBU=
+	by mail.kernel.org (Postfix) with ESMTP id BA119206D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:45:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728469AbgEFHnV (ORCPT
+        id S1728353AbgEFHpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 03:43:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39996 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728069AbgEFHnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 03:43:20 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F5D2206E6;
-        Wed,  6 May 2020 07:43:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588751000;
-        bh=CNBwwDwBOdMK1xYnzJC73BfdILtwbAZgrZjht4vqeyc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QUUm8BzZ8znSKBEEsbsVuGQDziUF1EF3dxO8+Wevy2T47Isn6Mbj360Qi8dfDWRM6
-         fC4aJjGy4P7u43fwidS4zRE7/mmwnuYl1NTJYv7o/rTJqRtli2t/D66lUvn+IkgD+N
-         dqEi3vJpYxPZOSFMOjzlXG1EF17kaCVBRkm2E5zM=
-Date:   Wed, 6 May 2020 08:43:16 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 1/3] arm64/mm: Drop __HAVE_ARCH_HUGE_PTEP_GET
-Message-ID: <20200506074315.GD7021@willie-the-truck>
-References: <1588745534-24418-1-git-send-email-anshuman.khandual@arm.com>
- <1588745534-24418-2-git-send-email-anshuman.khandual@arm.com>
+        Wed, 6 May 2020 03:45:52 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3813 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728301AbgEFHpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 03:45:51 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D4F1DBA18A7654661CE1;
+        Wed,  6 May 2020 15:45:45 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 6 May 2020
+ 15:45:43 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: change maximum zstd compression buffer
+ size
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>
+CC:     <kernel-team@android.com>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20200504143039.155644-1-jaegeuk@kernel.org>
+ <7177aab9-630e-e077-7005-0023c93134b3@kernel.org>
+ <20200505230559.GA203407@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <9aaeac5e-4511-5c81-653c-23a85b3c335a@huawei.com>
+Date:   Wed, 6 May 2020 15:45:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588745534-24418-2-git-send-email-anshuman.khandual@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200505230559.GA203407@google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 11:42:12AM +0530, Anshuman Khandual wrote:
-> Platform specific huge_ptep_get() is required only when fetching the huge
-> PTE involves more than just dereferencing the page table pointer. This is
-> not the case on arm64 platform. Hence huge_ptep_pte() can be dropped along
-> with it's __HAVE_ARCH_HUGE_PTEP_GET subscription.
+On 2020/5/6 7:05, Jaegeuk Kim wrote:
+> On 05/05, Chao Yu wrote:
+>> On 2020-5-4 22:30, Jaegeuk Kim wrote:
+>>> From: Daeho Jeong <daehojeong@google.com>
+>>>
+>>> Current zstd compression buffer size is one page and header size less
+>>> than cluster size. By this, zstd compression always succeeds even if
+>>> the real compression data is failed to fit into the buffer size, and
+>>> eventually reading the cluster returns I/O error with the corrupted
+>>> compression data.
+>>
+>> What's the root cause of this issue? I didn't get it.
+>>
+>>>
+>>> Signed-off-by: Daeho Jeong <daehojeong@google.com>
+>>> ---
+>>>  fs/f2fs/compress.c | 4 ++--
+>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+>>> index 4c7eaeee52336..a9fa8049b295f 100644
+>>> --- a/fs/f2fs/compress.c
+>>> +++ b/fs/f2fs/compress.c
+>>> @@ -313,7 +313,7 @@ static int zstd_init_compress_ctx(struct compress_ctx *cc)
+>>>  	cc->private = workspace;
+>>>  	cc->private2 = stream;
+>>>
+>>> -	cc->clen = cc->rlen - PAGE_SIZE - COMPRESS_HEADER_SIZE;
+>>> +	cc->clen = ZSTD_compressBound(PAGE_SIZE << cc->log_cluster_size);
+>>
+>> In my machine, the value is 66572 which is much larger than size of dst
+>> buffer, so, in where we can tell the real size of dst buffer to zstd
+>> compressor? Otherwise, if compressed data size is larger than dst buffer
+>> size, when we flush compressed data into dst buffer, we may suffer overflow.
 > 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->  arch/arm64/include/asm/hugetlb.h | 6 ------
->  1 file changed, 6 deletions(-)
+> Could you give it a try compress_log_size=2 and check decompression works?
+
+I tried some samples before submitting the patch, did you encounter app's data
+corruption when using zstd algorithm? If so, let me check this issue.
+
+Thanks,
+
 > 
-> diff --git a/arch/arm64/include/asm/hugetlb.h b/arch/arm64/include/asm/hugetlb.h
-> index 2eb6c234d594..b88878ddc88b 100644
-> --- a/arch/arm64/include/asm/hugetlb.h
-> +++ b/arch/arm64/include/asm/hugetlb.h
-> @@ -17,12 +17,6 @@
->  extern bool arch_hugetlb_migration_supported(struct hstate *h);
->  #endif
->  
-> -#define __HAVE_ARCH_HUGE_PTEP_GET
-> -static inline pte_t huge_ptep_get(pte_t *ptep)
-> -{
-> -	return READ_ONCE(*ptep);
-> -}
-
-Hmm, I'm nervous about dropping the READ_ONCE() here. We added them after
-running into page-table issues with THP [1] and it's really important to
-use them consistently to avoid hitting that again.
-
-If the generic code used READ_ONCE(), I'd be happy to switch to it.
-
-Will
-
-[1] https://lore.kernel.org/lkml/1506527369-19535-1-git-send-email-will.deacon@arm.com/
+>>
+>>>  	return 0;
+>>>  }
+>>>
+>>> @@ -330,7 +330,7 @@ static int zstd_compress_pages(struct compress_ctx *cc)
+>>>  	ZSTD_inBuffer inbuf;
+>>>  	ZSTD_outBuffer outbuf;
+>>>  	int src_size = cc->rlen;
+>>> -	int dst_size = src_size - PAGE_SIZE - COMPRESS_HEADER_SIZE;
+>>> +	int dst_size = cc->clen;
+>>>  	int ret;
+>>>
+>>>  	inbuf.pos = 0;
+>>>
+> 
+> 
+> _______________________________________________
+> Linux-f2fs-devel mailing list
+> Linux-f2fs-devel@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+> .
+> 
