@@ -2,198 +2,85 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8777C4725B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9749C47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6DE320A8B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F16F2145D
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:47:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730346AbgEFRo1 (ORCPT
+        id S1729625AbgEFRrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 13:44:27 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:60990 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730153AbgEFRoW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 13:44:22 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 2A8788000831;
-        Wed,  6 May 2020 17:44:17 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 73NzIKq5gM-N; Wed,  6 May 2020 20:44:16 +0300 (MSK)
-From:   <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zhou Yanjie <zhouyanjie@zoho.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
+        Wed, 6 May 2020 13:47:52 -0400
+Received: from verein.lst.de ([213.95.11.211]:42252 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728566AbgEFRrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 13:47:51 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id C3AAB68C7B; Wed,  6 May 2020 19:47:47 +0200 (CEST)
+Date:   Wed, 6 May 2020 19:47:47 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 12/20] mips: MAAR: Add XPA mode support
-Date:   Wed, 6 May 2020 20:42:30 +0300
-Message-ID: <20200506174238.15385-13-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+        linux-parisc@vger.kernel.org,
+        linux-um <linux-um@lists.infradead.org>,
+        Netdev <netdev@vger.kernel.org>, bpf@vger.kernel.org,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 08/15] maccess: rename strnlen_unsafe_user to
+ strnlen_user_unsafe
+Message-ID: <20200506174747.GA7549@lst.de>
+References: <20200506062223.30032-1-hch@lst.de> <20200506062223.30032-9-hch@lst.de> <CAHk-=wj3T6u_kj8r9f3aGXCjuyN210_gJC=AXPFm9=wL-dGALA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wj3T6u_kj8r9f3aGXCjuyN210_gJC=AXPFm9=wL-dGALA@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+On Wed, May 06, 2020 at 10:44:15AM -0700, Linus Torvalds wrote:
+> So while I think using a consistent convention is good, and it's true
+> that there is a difference in the convention between the two cases
+> ("unsafe" at the beginning vs end), one of them is actually about the
+> safety and security of the operation (and we have automated logic
+> these days to verify it on x86), the other has nothing to do with
+> "safety", really.
+> 
+> Would it be better to standardize around a "probe_xyz()" naming?
 
-When XPA mode is enabled the normally 32-bits MAAR pair registers
-are extended to be of 64-bits width as in pure 64-bits MIPS
-architecture. In this case the MAAR registers can enable the
-speculative loads/stores for addresses of up to 39-bits width.
-But in this case the process of the MAAR initialization changes a bit.
-The upper 32-bits of the registers are supposed to be accessed by mean
-of the dedicated instructions mfhc0/mthc0 and there is a CP0.MAAR.VH
-bit which should be set together with CP0.MAAR.VL as indication
-of the boundary validity. All of these peculiarities were taken into
-account in this commit so the speculative loads/stores would work
-when XPA mode is enabled.
+So:
 
-Co-developed-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-pm@vger.kernel.org
-Cc: devicetree@vger.kernel.org
----
- arch/mips/include/asm/maar.h     | 17 +++++++++++++++--
- arch/mips/include/asm/mipsregs.h | 10 ++++++++++
- arch/mips/mm/init.c              |  8 +++++++-
- 3 files changed, 32 insertions(+), 3 deletions(-)
+  probe_strncpy, probe_strncpy_user, probe_strnlen_user?
 
-diff --git a/arch/mips/include/asm/maar.h b/arch/mips/include/asm/maar.h
-index 6908b93c4ff9..99f1c3e4b11f 100644
---- a/arch/mips/include/asm/maar.h
-+++ b/arch/mips/include/asm/maar.h
-@@ -32,7 +32,7 @@ unsigned platform_maar_init(unsigned num_pairs);
-  * @upper:	The highest address that the MAAR pair will affect. Must be
-  *		aligned to one byte before a 2^16 byte boundary.
-  * @attrs:	The accessibility attributes to program, eg. MIPS_MAAR_S. The
-- *		MIPS_MAAR_VL attribute will automatically be set.
-+ *		MIPS_MAAR_VL/MIPS_MAAR_VH attributes will automatically be set.
-  *
-  * Program the pair of MAAR registers specified by idx to apply the attributes
-  * specified by attrs to the range of addresses from lower to higher.
-@@ -48,17 +48,30 @@ static inline void write_maar_pair(unsigned idx, phys_addr_t lower,
- 	/* Automatically set MIPS_MAAR_VL */
- 	attrs |= MIPS_MAAR_VL;
- 
--	/* Write the upper address & attributes (only MIPS_MAAR_VL matters) */
-+	/*
-+	 * Write the upper address & attributes (both MIPS_MAAR_VL and
-+	 * MIPS_MAAR_VH matter)
-+	 */
- 	write_c0_maari(idx << 1);
- 	back_to_back_c0_hazard();
- 	write_c0_maar(((upper >> 4) & MIPS_MAAR_ADDR) | attrs);
- 	back_to_back_c0_hazard();
-+#ifdef CONFIG_XPA
-+	upper >>= MIPS_MAARX_ADDR_SHIFT;
-+	writex_c0_maar(((upper >> 4) & MIPS_MAARX_ADDR) | MIPS_MAARX_VH);
-+	back_to_back_c0_hazard();
-+#endif
- 
- 	/* Write the lower address & attributes */
- 	write_c0_maari((idx << 1) | 0x1);
- 	back_to_back_c0_hazard();
- 	write_c0_maar((lower >> 4) | attrs);
- 	back_to_back_c0_hazard();
-+#ifdef CONFIG_XPA
-+	lower >>= MIPS_MAARX_ADDR_SHIFT;
-+	writex_c0_maar(((lower >> 4) & MIPS_MAARX_ADDR) | MIPS_MAARX_VH);
-+	back_to_back_c0_hazard();
-+#endif
- }
- 
- /**
-diff --git a/arch/mips/include/asm/mipsregs.h b/arch/mips/include/asm/mipsregs.h
-index 165f6318d861..aa8599962ea3 100644
---- a/arch/mips/include/asm/mipsregs.h
-+++ b/arch/mips/include/asm/mipsregs.h
-@@ -779,6 +779,14 @@
- #define MIPS_MAAR_ADDR_SHIFT	12
- #define MIPS_MAAR_S		(_ULCAST_(1) << 1)
- #define MIPS_MAAR_VL		(_ULCAST_(1) << 0)
-+#ifdef CONFIG_XPA
-+#define MIPS_MAAR_V		(MIPS_MAAR_VH | MIPS_MAAR_VL)
-+#else
-+#define MIPS_MAAR_V		MIPS_MAAR_VL
-+#endif
-+#define MIPS_MAARX_VH		(_ULCAST_(1) << 31)
-+#define MIPS_MAARX_ADDR		0xF
-+#define MIPS_MAARX_ADDR_SHIFT	32
- 
- /* MAARI bit definitions */
- #define MIPS_MAARI_INDEX	(_ULCAST_(0x3f) << 0)
-@@ -1739,6 +1747,8 @@ do {									\
- #define write_c0_lladdr(val)	__write_ulong_c0_register($17, 0, val)
- #define read_c0_maar()		__read_ulong_c0_register($17, 1)
- #define write_c0_maar(val)	__write_ulong_c0_register($17, 1, val)
-+#define readx_c0_maar()		__readx_32bit_c0_register($17, 1)
-+#define writex_c0_maar(val)	__writex_32bit_c0_register($17, 1, val)
- #define read_c0_maari()		__read_32bit_c0_register($17, 2)
- #define write_c0_maari(val)	__write_32bit_c0_register($17, 2, val)
- 
-diff --git a/arch/mips/mm/init.c b/arch/mips/mm/init.c
-index 79684000de0e..620ebfa45ec1 100644
---- a/arch/mips/mm/init.c
-+++ b/arch/mips/mm/init.c
-@@ -358,17 +358,23 @@ void maar_init(void)
- 		write_c0_maari(i);
- 		back_to_back_c0_hazard();
- 		upper = read_c0_maar();
-+#ifdef CONFIG_XPA
-+		upper |= (phys_addr_t)readx_c0_maar() << MIPS_MAARX_ADDR_SHIFT;
-+#endif
- 
- 		write_c0_maari(i + 1);
- 		back_to_back_c0_hazard();
- 		lower = read_c0_maar();
-+#ifdef CONFIG_XPA
-+		lower |= (phys_addr_t)readx_c0_maar() << MIPS_MAARX_ADDR_SHIFT;
-+#endif
- 
- 		attr = lower & upper;
- 		lower = (lower & MIPS_MAAR_ADDR) << 4;
- 		upper = ((upper & MIPS_MAAR_ADDR) << 4) | 0xffff;
- 
- 		pr_info("  [%d]: ", i / 2);
--		if (!(attr & MIPS_MAAR_VL)) {
-+		if ((attr & MIPS_MAAR_V) != MIPS_MAAR_V) {
- 			pr_cont("disabled\n");
- 			continue;
- 		}
--- 
-2.25.1
+Sounds weird, but at least it is consistent.
 
+> Or perhaps a "xyz_nofault()" naming?
+
+That sounds a little better:
+
+   strncpy_nofault, strncpy_user_nofault, strnlen_user_nofault
+
+> I realize this is nit-picky, and I think the patch series as-is is
+> already an improvement, but I do think our naming in this area is
+> really quite bad.
+
+Always open for improvements :)
+
+> The fact that we have "probe_kernel_read()" but then
+> "strncpy_from_user_unsafe()" for the _same_ conceptual difference
+> really tells me how inconsistent the naming for these kinds of "we
+> can't take page faults" is. No?
+
+True.  If we wanted to do _nofaul, what would the basic read/write
+versions be?
