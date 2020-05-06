@@ -2,150 +2,92 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9830AC4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DFAC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 750A820575
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48D9B20A8B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:36:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tifmsMUF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nJNoq/YX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729687AbgEFPfx (ORCPT
+        id S1729414AbgEFPgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:35:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60474 "EHLO
+        Wed, 6 May 2020 11:36:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727984AbgEFPfx (ORCPT
+        with ESMTP id S1729219AbgEFPgR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:35:53 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F517C061A0F;
-        Wed,  6 May 2020 08:35:53 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id z25so1580395otq.13;
-        Wed, 06 May 2020 08:35:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ckjD+FqBC50sSOZnIMh6YuZzBECHbpinchtFk/oKQF4=;
-        b=tifmsMUFw9bEuTEv2gjVfZHkd1NY2XfzRLvDQefmRMGi1NWZoJuf5ItxXUGdp3zVm4
-         dq+AgmcDZlfhHz14d9uTRmy7IgS4zbA/ZoqI+sDhjmK0WKhoqiQ6Xmr9wmwqTvxMYm5c
-         cdc7rZ0Bzzb4i2JHMyYfKGECz9Am32LMNaXNygAHL9Fmyqir+QWeppkJ4OSFz6fvLXmy
-         l6uPTF/s2mJBh1nY4zOU5TzKYxndCEMdW4aT4iqurU70QKeC+nFioUl/lh5iu9IwVpyf
-         YL3fIL3swQhF7rCu14kBo0t/KmIemnTuyfV1BAdW/8vvo+yiY37nol6xvqbElHyOIBcG
-         h4xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ckjD+FqBC50sSOZnIMh6YuZzBECHbpinchtFk/oKQF4=;
-        b=AweIZ2x4l6ZMyfFMcHek61jUX/iiGa6Q6XmEYox44kpIX+vOQ538yJNElJjPEX1kdv
-         Wwpf653kv00qmfVKKLcYUHhuxrThci5WP8YEGmKx0Csr2X/Nv26rONnpqyMqdEaPqyRB
-         8/Zt/Tk5CHqwfQGlXYRN3Qy3brZXM4Mc8SwY/jE/pEV4zjU9+E1TGbw6XOZKeQHSDtgX
-         093c1f0jCtO0d1OQrhYa0I0PIE56m3Krb4jpdmihUp56m4mK92yifI2Bm8lJ5Mx6LocT
-         f6r06PSB2wThYmnBYagPVKPctkhkwB5Js3ro8XChB8f5rfu23Cf9sm1NSPGTeXcer6rW
-         Z2bQ==
-X-Gm-Message-State: AGi0Puam/IyGOOmv6YsuLvDPmQj0Lq87+VpUTK0z9mdWSuUUy+hpFYxi
-        EDo7A8VZARDP+YGHuMlU0xg=
-X-Google-Smtp-Source: APiQypJB16GivY77dA72L6q2je+mXnq7kxlSwCV722zlkaQ9FQBpPDIV87Khv7+RFTaKPEi2TMBDhQ==
-X-Received: by 2002:a05:6830:1e49:: with SMTP id e9mr6817601otj.184.1588779352509;
-        Wed, 06 May 2020 08:35:52 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id t15sm672971oov.32.2020.05.06.08.35.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 08:35:51 -0700 (PDT)
-Date:   Wed, 6 May 2020 08:35:50 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Bryan Wu <bryan.wu@canonical.com>,
-        "G.Shark Jeong" <gshark.jeong@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-leds@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] leds: lm355x: avoid enum conversion warning
-Message-ID: <20200506153550.GB1213645@ubuntu-s3-xlarge-x86>
-References: <20200505141928.923428-1-arnd@arndb.de>
- <20200506024416.GB415100@ubuntu-s3-xlarge-x86>
- <CAK8P3a3wqiXAx2GuKJjY90qLGNnyBNTst6LW7n6tRDvzvBQVVQ@mail.gmail.com>
+        Wed, 6 May 2020 11:36:17 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE61FC061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 08:36:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Lkbi0V0mxfen0EUXPkli1HhZu245Pv1mIUCvQhgJgMQ=; b=nJNoq/YXU6Bid3fUxuDaOdV4dQ
+        CQKWe6bkZ1bVvgCSRA3TprhJ7SCivVITZ9SkaJrdonM7ZvzU32OhiV6NOG+nhu83Ml/jOM3HZa15n
+        PnUN/JrAvbRTvLteVPibhj/iT4UY6RUxAF+xR+lhJq+BGIDFmqxCLa7Nz6NItpH4GjETCIAfnwJpf
+        BOEWIv9DMwyogJHsD085Gc4lvpzbJGgEdTGnfOdTm6ybRzU9tWZronacdz4mtusVUnWmGTxmGRtIY
+        Z/ewislj2uMEZ4Xlmb+KMtrsNaTAML9qSYyN9xEYXJd7u9o2ivc8YpTwNajqXUksXVnMcVadyqjxV
+        6LzAzJig==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jWM55-0004n1-Gw; Wed, 06 May 2020 15:35:31 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 491B1301EFB;
+        Wed,  6 May 2020 17:35:28 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 97AC6203ECDC3; Wed,  6 May 2020 17:35:28 +0200 (CEST)
+Date:   Wed, 6 May 2020 17:35:28 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [patch V4 part 1 05/36] x86/entry: Flip _TIF_SIGPENDING and
+ _TIF_NOTIFY_RESUME handling
+Message-ID: <20200506153528.GC5281@hirez.programming.kicks-ass.net>
+References: <20200505131602.633487962@linutronix.de>
+ <20200505134058.560059744@linutronix.de>
+ <alpine.LSU.2.21.2005061352050.20724@pobox.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a3wqiXAx2GuKJjY90qLGNnyBNTst6LW7n6tRDvzvBQVVQ@mail.gmail.com>
+In-Reply-To: <alpine.LSU.2.21.2005061352050.20724@pobox.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 04:19:45PM +0200, Arnd Bergmann wrote:
-> On Wed, May 6, 2020 at 4:44 AM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >
-> > On Tue, May 05, 2020 at 04:19:17PM +0200, Arnd Bergmann wrote:
-> > > clang points out that doing arithmetic between diffent enums is usually
-> >                                                  ^ different
-> > > a mistake:
-> > >
-> > > drivers/leds/leds-lm355x.c:167:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
-> > >                 reg_val = pdata->pin_tx2 | pdata->ntc_pin;
-> > >                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
-> > > drivers/leds/leds-lm355x.c:178:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
-> > >                 reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
-> > >                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
-> > >
-> > > In this driver, it is intentional, so add a cast to hide the false-positive
-> >
-> > Not sure that I would call this a false positive. The warning is correct
-> > that there is a bitwise operation between different enumeration types
-> > but we do not care since we are just using the enumerated type for its
-> > integer value in lieu of a #define VAR value.
+On Wed, May 06, 2020 at 01:53:36PM +0200, Miroslav Benes wrote:
+> On Tue, 5 May 2020, Thomas Gleixner wrote:
 > 
-> Right, I meant that the code works as intended and said "false positive"
-> to avoid claiming the driver is broken when this was a deliberate
-> design point.
-
-Ack.
-
-> We do want clang to warn about this though as you say, so I can
-> rephrase it to explain that both the driver and the compiler work
-> as intended but they clash in their views of how to do it ;-)
-
-Yes, that would be good if we don't go a different direction based on
-your commends below.
-
-> > > -             reg_val = pdata->pass_mode;
-> > > +             reg_val = (u32)pdata->pass_mode;
-> >
-> > Is this cast needed? I don't think there should be warning from going
-> > from an enumerated type to unsigned int.
+> > Make sure task_work runs before any kind of userspace -- very much
+> > including signals -- is invoked.
 > 
-> This cast is not needed for warnings, I added it for consistency because
-> it seemed odd to cast only four of the five enums. I can remove if though
-> if you think it's clearer without the cast.
+> I might be missing something, but isn't this guaranteed by 
+> do_signal()->get_signal()->task_work_run() path?
 
-I don't really have a strong opinion but I do think that not having the
-cast makes the patch a little more specific/precise.
-
-> There may also be a different solution in completely removing the
-> lm355x_chip_init() function, as it was added at a time when we
-> were converting the last board files into devicetree, and there has
-> never been a board file defining lm355x_platform_data.
-> 
-> There is unfortunately no DT support either in it, so I assume we
-> could just remove the driver completely, or change it to use a
-> DT binding similar to
-> Documentation/devicetree/bindings/leds/leds-lm36*.txt
-> 
-> LED maintainers, any opinions on this?
-> 
->      Arnd
-
-Cheers,
-Nathan
+Yes, that too, that 'hack' can now be removed I suppose.
