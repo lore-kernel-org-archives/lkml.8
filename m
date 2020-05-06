@@ -2,105 +2,123 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84668C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 636BDC47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 603172070B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:53:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588780396;
-	bh=61SzP6jYuIR+DjFGG/3AzUM3hopX9KA2QA96YzJI/5I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CsOBCdChGFCIDOMWI5HWVnxCfklKgcJSt4+v9FvOdNQUD+2sRI+0rvhvj35DZuiVR
-	 37XEpYjhR8pmsUN7FdvYwxhgcSvpXfhl4FgxBJdhg9YAKB0x1YAOjSfAN4T7815IBE
-	 agmeENxQeR+IUuRv/Z203a45nIaOyDo5cKJZOkkQ=
+	by mail.kernel.org (Postfix) with ESMTP id 406C620708
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:53:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LoJoT1s8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729666AbgEFPxP (ORCPT
+        id S1729723AbgEFPxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:53:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728991AbgEFPxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:53:15 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 6 May 2020 11:53:52 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21851 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729477AbgEFPxw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:53:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588780431;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=IIPWhemhWOivhkyMoHAaTDjhY+Cd4+/PKB7r/lBHTsk=;
+        b=LoJoT1s8Gqvmd5zulQGPC2YjSv8cEKxqZqEfJO4++94L8YG5D1prRWnwGXHRUSiygm0U+F
+        puy6u8PvgbfAxknCZEEAsA6KMFMVSI3C7cFo5DP2EG7mFLdO4Tm1njTK8ibf57GoBGxcxd
+        l2TXQubHcomzgvjByu7ua3IP8u1Co1c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-313-lZeX6d8kP4GU7xA9uNEoKg-1; Wed, 06 May 2020 11:53:49 -0400
+X-MC-Unique: lZeX6d8kP4GU7xA9uNEoKg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF25F20708;
-        Wed,  6 May 2020 15:53:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588780394;
-        bh=61SzP6jYuIR+DjFGG/3AzUM3hopX9KA2QA96YzJI/5I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=n02M6rTfUPMddeoyC4siuILDTmJjZuaqWDo9upgcwpX6XKADKRGtnaaaFXzg73kw2
-         UTXti58uJIzNXeNOa9fT46C9sy4lArpmqerVdZVU4B0zSBh97JZ3U+qADxqYn/HoY0
-         v5ePdk+ien+u/L70HvI+C4ynIJEXVFuEBmpFzUxg=
-Date:   Wed, 6 May 2020 16:53:11 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
-        kuninori.morimoto.gx@renesas.com, nicoleotsuka@gmail.com,
-        alsa-devel@alsa-project.org, swarren@nvidia.com,
-        linux-kernel@vger.kernel.org, nwartikar@nvidia.com,
-        lgirdwood@gmail.com, jonathanh@nvidia.com, viswanathl@nvidia.com,
-        sharadg@nvidia.com, thierry.reding@gmail.com,
-        atalambedu@nvidia.com, linux-tegra@vger.kernel.org,
-        digetx@gmail.com, rlokhande@nvidia.com, mkumard@nvidia.com,
-        dramesh@nvidia.com
-Subject: Re: [RFC] DPCM for Tegra
-Message-ID: <20200506155311.GG5299@sirena.org.uk>
-References: <1588250483-10014-1-git-send-email-spujar@nvidia.com>
- <1jzhalffhh.fsf@starbuckisacylon.baylibre.com>
- <fe842d81-22da-fbbe-b5e2-9872cefb9d8b@nvidia.com>
- <1jwo5pf7de.fsf@starbuckisacylon.baylibre.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 42FE145F;
+        Wed,  6 May 2020 15:53:47 +0000 (UTC)
+Received: from treble (ovpn-115-96.rdu2.redhat.com [10.10.115.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C1D605D9C5;
+        Wed,  6 May 2020 15:53:45 +0000 (UTC)
+Date:   Wed, 6 May 2020 10:53:43 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] bpf: Tweak BPF jump table optimizations for objtool
+ compatibility
+Message-ID: <20200506155343.7x3slq3uasponb6w@treble>
+References: <20200501192204.cepwymj3fln2ngpi@treble>
+ <20200501194053.xyahhknjjdu3gqix@ast-mbp.dhcp.thefacebook.com>
+ <20200501195617.czrnfqqcxfnliz3k@treble>
+ <20200502030622.yrszsm54r6s6k6gq@ast-mbp.dhcp.thefacebook.com>
+ <20200502192105.xp2osi5z354rh4sm@treble>
+ <20200505174300.gech3wr5v6kkho35@ast-mbp.dhcp.thefacebook.com>
+ <20200505181108.hwcqanvw3qf5qyxk@treble>
+ <20200505195320.lyphpnprn3sjijf6@ast-mbp.dhcp.thefacebook.com>
+ <20200505202823.zkmq6t55fxspqazk@treble>
+ <20200505235939.utnmzqsn22cec643@ast-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="BzCohdixPhurzSK4"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1jwo5pf7de.fsf@starbuckisacylon.baylibre.com>
-X-Cookie: Not recommended for children.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200505235939.utnmzqsn22cec643@ast-mbp.dhcp.thefacebook.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 05, 2020 at 04:59:39PM -0700, Alexei Starovoitov wrote:
+> As far as workaround I prefer the following:
+> From 94bbc27c5a70d78846a5cb675df4cf8732883564 Mon Sep 17 00:00:00 2001
+> From: Alexei Starovoitov <ast@kernel.org>
+> Date: Tue, 5 May 2020 16:52:41 -0700
+> Subject: [PATCH] bpf,objtool: tweak interpreter compilation flags to help objtool
+> 
+> tbd
+> 
+> Fixes: 3193c0836f20 ("bpf: Disable GCC -fgcse optimization for ___bpf_prog_run()")
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Reported-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+> ---
+>  include/linux/compiler-gcc.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
+> index d7ee4c6bad48..05104c3cc033 100644
+> --- a/include/linux/compiler-gcc.h
+> +++ b/include/linux/compiler-gcc.h
+> @@ -171,4 +171,4 @@
+>  #define __diag_GCC_8(s)
+>  #endif
+> 
+> -#define __no_fgcse __attribute__((optimize("-fno-gcse")))
+> +#define __no_fgcse __attribute__((optimize("-fno-gcse,-fno-omit-frame-pointer")))
+> --
+> 2.23.0
+> 
+> I've tested it with gcc 8,9,10 and clang 11 with FP=y and with ORC=y.
+> All works.
+> I think it's safer to go with frame pointers even for ORC=y considering
+> all the pain this issue had caused. Even if objtool gets confused again
+> in the future __bpf_prog_run() will have frame pointers and kernel stack
+> unwinding can fall back from ORC to FP for that frame.
+> wdyt?
 
---BzCohdixPhurzSK4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+It seems dangerous to me.  The GCC manual recommends against it.
 
-On Wed, May 06, 2020 at 04:47:09PM +0200, Jerome Brunet wrote:
-> On Wed 06 May 2020 at 16:12, Sameer Pujar <spujar@nvidia.com> wrote:
+And how do we know what other flags are getting removed for various
+arches (now or in the future)?
 
-> > XBAR currently exports all routing widgets which can be used to
-> > interconnect multiple components and thus implements Mux widgets. Fixing
-> > the routing paths in driver would limit anyone to try a different
-> > combination as per the need, unless driver is modified.
+-- 
+Josh
 
-> I did not mean that you should restrict the routing ability of your SoC,
-> quite the opposite actually.
-
-> You should just expose it correctly
-
-Yes, it's going to be less effort in the long run if nothing else.
-
---BzCohdixPhurzSK4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6y3WcACgkQJNaLcl1U
-h9C+9wf9FhV0+uWoqDcuQBDbDmaqyavUV8uakHgopXF3Q9Ny3WMoj1EBaIpxOOM1
-nFLZGkaXGkbOEDxuixc2ptvMvML5c8WccOrS3J9Ux6K16BbXpwjFsqClUrzpix0O
-r40xsg0q81/pSxIFOWU0BKmFebz8wLG3NGGV2d7ZMW//kIG7LVAb8oB6epKkeKYY
-sACMClQ7QsGOeWqteFWq91phXk4OL9KJ4SileYVgTcMBoeN8xgIytv+v7unCTKhk
-aJALdHiBajto60CLYG6UPUoIZ3FRLWEoybSOdI7uQz2MmWctYmzn5OQu3lGGlM4l
-XM3B0/3XWGsyGhK+XM1JqWoi9cz1tw==
-=tJVE
------END PGP SIGNATURE-----
-
---BzCohdixPhurzSK4--
