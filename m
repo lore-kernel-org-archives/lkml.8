@@ -2,201 +2,103 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EADC4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEC9C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 211CA208CA
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:44:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N5lLph8j"
+	by mail.kernel.org (Postfix) with ESMTP id 6BED220A8B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:44:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729996AbgEFQoN (ORCPT
+        id S1730072AbgEFQoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:44:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727984AbgEFQoM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:44:12 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87B11C061A0F;
-        Wed,  6 May 2020 09:44:12 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id o16so1542270qtb.13;
-        Wed, 06 May 2020 09:44:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=t7CgGDakZ6HBwLoyEuXzHSsFPvnCyBpRS/YoqjnzK6M=;
-        b=N5lLph8jiTGnSBatLuURZEb4yy06JEJ+bZRmXyC1PWnHC8sDPqjgr3/SqpyoJZA1DC
-         oV9HWnMj/XijqO2WVyWHSfC72ZE3oPq2liwvU6O39+3dbXsr/JLoSGjs9t5KtgrlUi+a
-         iPqZtalYYRB58LucAh7ylY2zUFmfXyAtWTi+8Tr9RwLiO8ZkXzqwXmv9t2NA1xdqQLR9
-         h5pd0V50OWPI4ALsdQJFxYQ1uiqLAbRnHTCIv6FtAHsewcu7DjA1HNpPDiNsRI0GbKOL
-         ox4FgFawO0NA0InSmxWKyAoSWFW02HC5ivRfLwXYYOjSL4CkC4oKilvcQReqotv0gNCo
-         tn6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=t7CgGDakZ6HBwLoyEuXzHSsFPvnCyBpRS/YoqjnzK6M=;
-        b=TOXu13XYGRhWBKMSf6l4pexBZ0UbgXRJTm6+N6Y15d7nyJmbYPmbBjQJErUR/Jc6as
-         anVJ7RqEB4FROLIhgU9FCuGUHrldwwrPRXIWJDradlj16pZKTecNITZ3/eX6GZ+mjEPN
-         Dikz8SDOk/rg61ltsVp/X5xF43zo5AkWBSIQwujYXdamKV3ANPSMy9/Bu7A7xzDVcC5A
-         2NNHXAGwgPIApqqw6yWyQHAjAsd3FYZF9GulYhWO5GUzImCuK5teu5zchnv8lATn0Wbc
-         XS3mHpWDa48+Lwr05QYNAawNqirJxIkqQ8DOf72+NB6zB0vrqH4oewKpJrJgmtFia9nL
-         nnXA==
-X-Gm-Message-State: AGi0PuZHb6r510KrrnQfrn6SrbR1ZDOSsgf40JQiOQbI0rhF/xO1GOyA
-        0399zB/isACZ5luB+NegEBFHxW2TCbA=
-X-Google-Smtp-Source: APiQypLpWj1Wxz1UeUcc7dMbxUPCp3rCGxhahy7fC/kMvfQlUpBR02ObZReFLwHMP51ydu8/wM5n2g==
-X-Received: by 2002:ac8:2783:: with SMTP id w3mr8989034qtw.265.1588783451454;
-        Wed, 06 May 2020 09:44:11 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id c7sm2031704qko.55.2020.05.06.09.44.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 09:44:10 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CBE2A409A3; Wed,  6 May 2020 13:44:08 -0300 (-03)
-Date:   Wed, 6 May 2020 13:44:08 -0300
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 1/3] perf-probe: Fix to check blacklist address correctly
-Message-ID: <20200506164408.GA4323@kernel.org>
-References: <158763965400.30755.14484569071233923742.stgit@devnote2>
- <158763966411.30755.5882376357738273695.stgit@devnote2>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <158763966411.30755.5882376357738273695.stgit@devnote2>
-X-Url:  http://acmel.wordpress.com
+        Wed, 6 May 2020 12:44:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:40976 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729747AbgEFQoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 12:44:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3FA98D6E;
+        Wed,  6 May 2020 09:44:18 -0700 (PDT)
+Received: from usa.arm.com (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E3DD63F305;
+        Wed,  6 May 2020 09:44:16 -0700 (PDT)
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Steven Price <steven.price@arm.com>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        harb@amperecomputing.com
+Subject: [PATCH v3 0/7] firmware: smccc: Add basic SMCCC v1.2 + ARCH_SOC_ID support
+Date:   Wed,  6 May 2020 17:44:04 +0100
+Message-Id: <20200506164411.3284-1-sudeep.holla@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Apr 23, 2020 at 08:01:04PM +0900, Masami Hiramatsu escreveu:
-> Fix to check kprobe blacklist address correctly with
-> relocated address by adjusting debuginfo address.
-> 
-> Since the address in the debuginfo is same as objdump,
-> it is different from relocated kernel address with KASLR.
-> Thus, the perf-probe always misses to catch the
-> blacklisted addresses.
+Hi,
 
-Thanks, applied, sorry for the delay,
+This patch series adds support for SMCCCv1.2 ARCH_SOC_ID.
+This doesn't add other changes added in SMCCC v1.2 yet. They will
+follow these soon along with its first user SPCI/PSA-FF.
 
-- Arnaldo
- 
-> Without this patch, perf probe can not detect the blacklist
-> addresses on KASLR enabled kernel.
-> 
-> =========
->   # perf probe kprobe_dispatcher
->   Failed to write event: Invalid argument
->     Error: Failed to add events.
-> =========
-> 
-> With this patch, it correctly shows the error message.
-> 
-> =========
->   # perf probe kprobe_dispatcher
->   kprobe_dispatcher is blacklisted function, skip it.
->   Probe point 'kprobe_dispatcher' not found.
->     Error: Failed to add events.
-> =========
-> 
-> Fixes: 9aaf5a5f479b ("perf probe: Check kprobes blacklist when adding new events")
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: stable@vger.kernel.org
-> ---
->  tools/perf/util/probe-event.c |   21 +++++++++++++++------
->  1 file changed, 15 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-> index eea132f512b0..f75df63309be 100644
-> --- a/tools/perf/util/probe-event.c
-> +++ b/tools/perf/util/probe-event.c
-> @@ -102,7 +102,7 @@ void exit_probe_symbol_maps(void)
->  	symbol__exit();
->  }
->  
-> -static struct ref_reloc_sym *kernel_get_ref_reloc_sym(void)
-> +static struct ref_reloc_sym *kernel_get_ref_reloc_sym(struct map **pmap)
->  {
->  	/* kmap->ref_reloc_sym should be set if host_machine is initialized */
->  	struct kmap *kmap;
-> @@ -114,6 +114,10 @@ static struct ref_reloc_sym *kernel_get_ref_reloc_sym(void)
->  	kmap = map__kmap(map);
->  	if (!kmap)
->  		return NULL;
-> +
-> +	if (pmap)
-> +		*pmap = map;
-> +
->  	return kmap->ref_reloc_sym;
->  }
->  
-> @@ -125,7 +129,7 @@ static int kernel_get_symbol_address_by_name(const char *name, u64 *addr,
->  	struct map *map;
->  
->  	/* ref_reloc_sym is just a label. Need a special fix*/
-> -	reloc_sym = kernel_get_ref_reloc_sym();
-> +	reloc_sym = kernel_get_ref_reloc_sym(NULL);
->  	if (reloc_sym && strcmp(name, reloc_sym->name) == 0)
->  		*addr = (reloc) ? reloc_sym->addr : reloc_sym->unrelocated_addr;
->  	else {
-> @@ -745,6 +749,7 @@ post_process_kernel_probe_trace_events(struct probe_trace_event *tevs,
->  				       int ntevs)
->  {
->  	struct ref_reloc_sym *reloc_sym;
-> +	struct map *map;
->  	char *tmp;
->  	int i, skipped = 0;
->  
-> @@ -753,7 +758,7 @@ post_process_kernel_probe_trace_events(struct probe_trace_event *tevs,
->  		return post_process_offline_probe_trace_events(tevs, ntevs,
->  						symbol_conf.vmlinux_name);
->  
-> -	reloc_sym = kernel_get_ref_reloc_sym();
-> +	reloc_sym = kernel_get_ref_reloc_sym(&map);
->  	if (!reloc_sym) {
->  		pr_warning("Relocated base symbol is not found!\n");
->  		return -EINVAL;
-> @@ -764,9 +769,13 @@ post_process_kernel_probe_trace_events(struct probe_trace_event *tevs,
->  			continue;
->  		if (tevs[i].point.retprobe && !kretprobe_offset_is_supported())
->  			continue;
-> -		/* If we found a wrong one, mark it by NULL symbol */
-> +		/*
-> +		 * If we found a wrong one, mark it by NULL symbol.
-> +		 * Since addresses in debuginfo is same as objdump, we need
-> +		 * to convert it to addresses on memory.
-> +		 */
->  		if (kprobe_warn_out_range(tevs[i].point.symbol,
-> -					  tevs[i].point.address)) {
-> +			map__objdump_2mem(map, tevs[i].point.address))) {
->  			tmp = NULL;
->  			skipped++;
->  		} else {
-> @@ -2936,7 +2945,7 @@ static int find_probe_trace_events_from_map(struct perf_probe_event *pev,
->  	/* Note that the symbols in the kmodule are not relocated */
->  	if (!pev->uprobes && !pev->target &&
->  			(!pp->retprobe || kretprobe_offset_is_supported())) {
-> -		reloc_sym = kernel_get_ref_reloc_sym();
-> +		reloc_sym = kernel_get_ref_reloc_sym(NULL);
->  		if (!reloc_sym) {
->  			pr_warning("Relocated base symbol is not found!\n");
->  			ret = -EINVAL;
-> 
+This is tested using upstream TF-A + the patch[2] fixing the original
+implementation there.
+
+
+v1[0]->v2[1]:
+	- Incorporated comments from Steven Price in patch 5/5
+	- Fixed build for CONFIG_PSCI_FW=n on some arm32 platforms
+	- Added Steven Price's review tags
+
+v2[1]->v3:
+	- Incorporated additional comments from Steven Price in patch 5/5
+	  and added his review tags
+	- Refactored SMCCC code from PSCI and moved it under
+	  drivers/firmware/smccc/smccc.c
+	- Also moved soc_id.c under drivers/firmware/smccc
+
+Regards,
+Sudeep
+
+[0] https://lore.kernel.org/r/20200430114814.14116-1-sudeep.holla@arm.com/
+[1] https://lore.kernel.org/r/20200504092905.10580-1-sudeep.holla@arm.com/
+[2] https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/4002
+
+Sudeep Holla (7):
+  firmware: smccc: Add HAVE_ARM_SMCCC_DISCOVERY to identify SMCCC v1.1 and above
+  firmware: smccc: Update link to latest SMCCC specification
+  firmware: smccc: Add the definition for SMCCCv1.2 version/error codes
+  firmware: smccc: Drop smccc_version enum and use ARM_SMCCC_VERSION_1_x instead
+  firmware: smccc: Refactor SMCCC specific bits into separate file
+  firmware: smccc: Add function to fetch SMCCC version
+  firmware: smccc: Add ARCH_SOC_ID support
+
+ MAINTAINERS                     |   9 ++
+ arch/arm64/kernel/paravirt.c    |   2 +-
+ drivers/firmware/Kconfig        |   6 +-
+ drivers/firmware/Makefile       |   3 +-
+ drivers/firmware/psci/psci.c    |  21 +---
+ drivers/firmware/smccc/Kconfig  |  25 +++++
+ drivers/firmware/smccc/Makefile |   4 +
+ drivers/firmware/smccc/smccc.c  |  30 ++++++
+ drivers/firmware/smccc/soc_id.c | 168 ++++++++++++++++++++++++++++++++
+ include/linux/arm-smccc.h       |  34 ++++++-
+ include/linux/psci.h            |   7 --
+ 11 files changed, 278 insertions(+), 31 deletions(-)
+ create mode 100644 drivers/firmware/smccc/Kconfig
+ create mode 100644 drivers/firmware/smccc/Makefile
+ create mode 100644 drivers/firmware/smccc/smccc.c
+ create mode 100644 drivers/firmware/smccc/soc_id.c
 
 -- 
+2.17.1
 
-- Arnaldo
