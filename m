@@ -2,180 +2,81 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B11BC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF997C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54399206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:07:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="e2XxZSMn"
+	by mail.kernel.org (Postfix) with ESMTP id 9A64B206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:07:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727971AbgEFMHI (ORCPT
+        id S1727932AbgEFMHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 6 May 2020 08:07:08 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:38440 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726516AbgEFMHI (ORCPT
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55964 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727099AbgEFMHI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 6 May 2020 08:07:08 -0400
-X-UUID: ff308a5594514d7bbe8000d0922390e2-20200506
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=xiv1xlLmws1dThuPdvPP+yLmXez/7eZ0aRvlqDySsPo=;
-        b=e2XxZSMnri4PGs4d0tHZpMtLFBkjSeJ8b8tNp8Tt/6WF+d1cU95isafgH0lF8TcBQSGkOjC12VR5tR6sLUYGHGvdDAZfLyTdfGeEFoHBsIUX7SU9OVV/ZVbGvbXSDBBtOQjHGn/L+tIu/9scTTd9wE7eLhs9GxecVs7j8xu8tK0=;
-X-UUID: ff308a5594514d7bbe8000d0922390e2-20200506
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 939732597; Wed, 06 May 2020 20:07:03 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 6 May 2020 20:06:58 +0800
-Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 6 May 2020 20:06:58 +0800
-Message-ID: <1588766821.7534.3.camel@mtksdccf07>
-Subject: Re: [PATCH 2/3] kasan: record and print the free track
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Wed, 6 May 2020 20:07:01 +0800
-In-Reply-To: <CACT4Y+bOxe+Y8BuzC=0k6rmkDiJ7PBnVcsY=jzZe1trVj476fg@mail.gmail.com>
-References: <20200506052155.14515-1-walter-zh.wu@mediatek.com>
-         <CACT4Y+ajKJpwNXd1V17bOT_ZShXm8h2eepxx_g4hAqk78SxCDA@mail.gmail.com>
-         <1588766193.23664.28.camel@mtksdccf07>
-         <CACT4Y+bOxe+Y8BuzC=0k6rmkDiJ7PBnVcsY=jzZe1trVj476fg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20942C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 05:07:08 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jWIoq-00029u-8m; Wed, 06 May 2020 14:06:32 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 7F6761001F5; Wed,  6 May 2020 14:06:31 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>
+Subject: Re: [patch V4 part 1 05/36] x86/entry: Flip _TIF_SIGPENDING and _TIF_NOTIFY_RESUME handling
+In-Reply-To: <alpine.LSU.2.21.2005061352050.20724@pobox.suse.cz>
+Date:   Wed, 06 May 2020 14:06:31 +0200
+Message-ID: <87k11pl12w.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: C775F1E3319AFBF59C1D207AB67E55811CC5F8909591D57E3E5AFA2BB1C54DE42000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA1LTA2IGF0IDEzOjU5ICswMjAwLCBEbWl0cnkgVnl1a292IHdyb3RlOg0K
-PiBPbiBXZWQsIE1heSA2LCAyMDIwIGF0IDE6NTYgUE0gV2FsdGVyIFd1IDx3YWx0ZXItemgud3VA
-bWVkaWF0ZWsuY29tPiB3cm90ZToNCj4gPg0KPiA+IE9uIFdlZCwgMjAyMC0wNS0wNiBhdCAxMTo1
-MCArMDIwMCwgRG1pdHJ5IFZ5dWtvdiB3cm90ZToNCj4gPiA+IE9uIFdlZCwgTWF5IDYsIDIwMjAg
-YXQgNzoyMiBBTSBXYWx0ZXIgV3UgPHdhbHRlci16aC53dUBtZWRpYXRlay5jb20+IHdyb3RlOg0K
-PiA+ID4gPg0KPiA+ID4gPiBXZSBhZGQgbmV3IEtBU0FOX1JDVV9TVEFDS19SRUNPUkQgY29uZmln
-dXJhdGlvbiBvcHRpb24uIEl0IHdpbGwgbW92ZQ0KPiA+ID4gPiBmcmVlIHRyYWNrIGZyb20gc2x1
-YiBtZXRhLWRhdGEgKHN0cnVjdCBrYXNhbl9hbGxvY19tZXRhKSBpbnRvIGZyZWVkIG9iamVjdC4N
-Cj4gPiA+ID4gQmVjYXVzZSB3ZSBob3BlIHRoaXMgb3B0aW9ucyBkb2Vzbid0IGVubGFyZ2Ugc2x1
-YiBtZXRhLWRhdGEgc2l6ZS4NCj4gPiA+ID4NCj4gPiA+ID4gVGhpcyBvcHRpb24gZG9lc24ndCBl
-bmxhcmdlIHN0cnVjdCBrYXNhbl9hbGxvY19tZXRhIHNpemUuDQo+ID4gPiA+IC0gYWRkIHR3byBj
-YWxsX3JjdSgpIGNhbGwgc3RhY2sgaW50byBrYXNhbl9hbGxvY19tZXRhLCBzaXplIGlzIDggYnl0
-ZXMuDQo+ID4gPiA+IC0gcmVtb3ZlIGZyZWUgdHJhY2sgZnJvbSBrYXNhbl9hbGxvY19tZXRhLCBz
-aXplIGlzIDggYnl0ZXMuDQo+ID4gPiA+DQo+ID4gPiA+IFRoaXMgb3B0aW9uIGlzIG9ubHkgc3Vp
-dGFibGUgZm9yIGdlbmVyaWMgS0FTQU4sIGJlY2F1c2Ugd2UgbW92ZSBmcmVlIHRyYWNrDQo+ID4g
-PiA+IGludG8gdGhlIGZyZWVkIG9iamVjdCwgc28gZnJlZSB0cmFjayBpcyB2YWxpZCBpbmZvcm1h
-dGlvbiBvbmx5IHdoZW4gaXQNCj4gPiA+ID4gZXhpc3RzIGluIHF1YXJhbnRpbmUuIElmIHRoZSBv
-YmplY3QgaXMgaW4tdXNlIHN0YXRlLCB0aGVuIHRoZSBLQVNBTiByZXBvcnQNCj4gPiA+ID4gZG9l
-c24ndCBwcmludCBjYWxsX3JjdSgpIGZyZWUgdHJhY2sgaW5mb3JtYXRpb24uDQo+ID4gPiA+DQo+
-ID4gPiA+IFsxXWh0dHBzOi8vYnVnemlsbGEua2VybmVsLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MTk4
-NDM3DQo+ID4gPiA+DQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IFdhbHRlciBXdSA8d2FsdGVyLXpo
-Lnd1QG1lZGlhdGVrLmNvbT4NCj4gPiA+ID4gQ2M6IEFuZHJleSBSeWFiaW5pbiA8YXJ5YWJpbmlu
-QHZpcnR1b3p6by5jb20+DQo+ID4gPiA+IENjOiBEbWl0cnkgVnl1a292IDxkdnl1a292QGdvb2ds
-ZS5jb20+DQo+ID4gPiA+IENjOiBBbGV4YW5kZXIgUG90YXBlbmtvIDxnbGlkZXJAZ29vZ2xlLmNv
-bT4NCj4gPiA+ID4gLS0tDQo+ID4gPiA+ICBtbS9rYXNhbi9jb21tb24uYyB8IDEwICsrKysrKysr
-Ky0NCj4gPiA+ID4gIG1tL2thc2FuL3JlcG9ydC5jIHwgMjQgKysrKysrKysrKysrKysrKysrKysr
-LS0tDQo+ID4gPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDMwIGluc2VydGlvbnMoKyksIDQgZGVsZXRp
-b25zKC0pDQo+ID4gPiA+DQo+ID4gPiA+IGRpZmYgLS1naXQgYS9tbS9rYXNhbi9jb21tb24uYyBi
-L21tL2thc2FuL2NvbW1vbi5jDQo+ID4gPiA+IGluZGV4IDMyZDQyMmJkZjEyNy4uMTNlYzAzZTIy
-NWE3IDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9tbS9rYXNhbi9jb21tb24uYw0KPiA+ID4gPiArKysg
-Yi9tbS9rYXNhbi9jb21tb24uYw0KPiA+ID4gPiBAQCAtMzIxLDggKzMyMSwxNSBAQCB2b2lkIGth
-c2FuX3JlY29yZF9jYWxscmN1KHZvaWQgKmFkZHIpDQo+ID4gPiA+ICAgICAgICAgICAgICAgICAv
-KiByZWNvcmQgbGFzdCBjYWxsX3JjdSgpIGNhbGwgc3RhY2sgKi8NCj4gPiA+ID4gICAgICAgICAg
-ICAgICAgIGFsbG9jX2luZm8tPnJjdV9mcmVlX3N0YWNrWzFdID0gc2F2ZV9zdGFjayhHRlBfTk9X
-QUlUKTsNCj4gPiA+ID4gIH0NCj4gPiA+ID4gLSNlbmRpZg0KPiA+ID4gPg0KPiA+ID4gPiArc3Rh
-dGljIHZvaWQga2FzYW5fc2V0X2ZyZWVfaW5mbyhzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUsDQo+
-ID4gPiA+ICsgICAgICAgICAgICAgICB2b2lkICpvYmplY3QsIHU4IHRhZykNCj4gPiA+ID4gK3sN
-Cj4gPiA+ID4gKyAgICAgICAvKiBzdG9yZSBmcmVlIHRyYWNrIGludG8gZnJlZWQgb2JqZWN0ICov
-DQo+ID4gPiA+ICsgICAgICAgc2V0X3RyYWNrKChzdHJ1Y3Qga2FzYW5fdHJhY2sgKikob2JqZWN0
-ICsgQllURVNfUEVSX1dPUkQpLCBHRlBfTk9XQUlUKTsNCj4gPiA+ID4gK30NCj4gPiA+ID4gKw0K
-PiA+ID4gPiArI2Vsc2UNCj4gPiA+ID4gIHN0YXRpYyB2b2lkIGthc2FuX3NldF9mcmVlX2luZm8o
-c3RydWN0IGttZW1fY2FjaGUgKmNhY2hlLA0KPiA+ID4gPiAgICAgICAgICAgICAgICAgdm9pZCAq
-b2JqZWN0LCB1OCB0YWcpDQo+ID4gPiA+ICB7DQo+ID4gPiA+IEBAIC0zMzksNiArMzQ2LDcgQEAg
-c3RhdGljIHZvaWQga2FzYW5fc2V0X2ZyZWVfaW5mbyhzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUs
-DQo+ID4gPiA+DQo+ID4gPiA+ICAgICAgICAgc2V0X3RyYWNrKCZhbGxvY19tZXRhLT5mcmVlX3Ry
-YWNrW2lkeF0sIEdGUF9OT1dBSVQpOw0KPiA+ID4gPiAgfQ0KPiA+ID4gPiArI2VuZGlmDQo+ID4g
-PiA+DQo+ID4gPiA+ICB2b2lkIGthc2FuX3BvaXNvbl9zbGFiKHN0cnVjdCBwYWdlICpwYWdlKQ0K
-PiA+ID4gPiAgew0KPiA+ID4gPiBkaWZmIC0tZ2l0IGEvbW0va2FzYW4vcmVwb3J0LmMgYi9tbS9r
-YXNhbi9yZXBvcnQuYw0KPiA+ID4gPiBpbmRleCA3YWFjY2M3MGI2NWIuLmYyYjBjNmI5ZGZmYSAx
-MDA2NDQNCj4gPiA+ID4gLS0tIGEvbW0va2FzYW4vcmVwb3J0LmMNCj4gPiA+ID4gKysrIGIvbW0v
-a2FzYW4vcmVwb3J0LmMNCj4gPiA+ID4gQEAgLTE3NSw4ICsxNzUsMjMgQEAgc3RhdGljIHZvaWQg
-a2FzYW5fcHJpbnRfcmN1X2ZyZWVfc3RhY2soc3RydWN0IGthc2FuX2FsbG9jX21ldGEgKmFsbG9j
-X2luZm8pDQo+ID4gPiA+ICAgICAgICAgcHJpbnRfdHJhY2soJmZyZWVfdHJhY2ssICJMYXN0IGNh
-bGxfcmN1KCkgY2FsbCBzdGFjayIsIHRydWUpOw0KPiA+ID4gPiAgICAgICAgIHByX2VycigiXG4i
-KTsNCj4gPiA+ID4gIH0NCj4gPiA+ID4gLSNlbmRpZg0KPiA+ID4gPg0KPiA+ID4gPiArc3RhdGlj
-IHN0cnVjdCBrYXNhbl90cmFjayAqa2FzYW5fZ2V0X2ZyZWVfdHJhY2soc3RydWN0IGttZW1fY2Fj
-aGUgKmNhY2hlLA0KPiA+ID4gPiArICAgICAgICAgICAgICAgdm9pZCAqb2JqZWN0LCB1OCB0YWcs
-IGNvbnN0IHZvaWQgKmFkZHIpDQo+ID4gPiA+ICt7DQo+ID4gPiA+ICsgICAgICAgdTggKnNoYWRv
-d19hZGRyID0gKHU4ICopa2FzYW5fbWVtX3RvX3NoYWRvdyhhZGRyKTsNCj4gPiA+ID4gKw0KPiA+
-ID4gPiArICAgICAgIC8qDQo+ID4gPiA+ICsgICAgICAgICogT25seSB0aGUgZnJlZWQgb2JqZWN0
-IGNhbiBnZXQgZnJlZSB0cmFjaywNCj4gPiA+ID4gKyAgICAgICAgKiBiZWNhdXNlIGZyZWUgdHJh
-Y2sgaW5mb3JtYXRpb24gaXMgc3RvcmVkIHRvIGZyZWVkIG9iamVjdC4NCj4gPiA+ID4gKyAgICAg
-ICAgKi8NCj4gPiA+ID4gKyAgICAgICBpZiAoKnNoYWRvd19hZGRyID09IEtBU0FOX0tNQUxMT0Nf
-RlJFRSkNCj4gPiA+ID4gKyAgICAgICAgICAgICAgIHJldHVybiAoc3RydWN0IGthc2FuX3RyYWNr
-ICopKG9iamVjdCArIEJZVEVTX1BFUl9XT1JEKTsNCj4gPiA+DQo+ID4gPiBIdW1tLi4uIHRoZSBv
-dGhlciBwYXRjaCBkZWZpbmVzIEJZVEVTX1BFUl9XT1JEIGFzIDQuLi4gSSB3b3VsZCBhc3N1bWUN
-Cj4gPiA+IHNlZWluZyA4IChvciBzaXplb2YobG9uZykpIGhlcmUuIFdoeSA0Pw0KPiA+IEl0IHNo
-b3VsZCBiZSBhIHBvaW50ZXIgc2l6ZSwgbWF5YmUgc2l6ZW9mKGxvbmcpIG1ha2VzIG1vcmUgc2Vu
-c2UuDQo+ID4NCj4gPiA+IEhhdmUgeW91IHRlc3RlZCBhbGwgNCBtb2RlcyAoUkNVL25vLVJDVSB4
-IFNMQUIvU0xVQik/IEFzIGZhciBhcyBJDQo+ID4gPiByZW1lbWJlciBvbmUgb2YgdGhlIGFsbG9j
-YXRvcnMgc3RvcmVkIHNvbWV0aGluZyBpbiB0aGUgb2JqZWN0Lg0KPiA+IEdvb2QgcXVlc3Rpb24s
-IEkgb25seSB0ZXN0ZWQgaW4gUkNVIHggU0xVQiwgd291bGQgeW91IHRlbGwgbWV3IGhvdyBkbw0K
-PiA+IG5vLVJDVT8gSSB3aWxsIHRlc3QgdGhlbSBpbiB2MiBwYXRoc2V0Lg0KPiANCj4gSSBtZWFu
-dCB3aXRoIENPTkZJR19LQVNBTl9SQ1VfU1RBQ0tfUkVDT1JEPXkgYW5kIHdpdGgNCj4gQ09ORklH
-X0tBU0FOX1JDVV9TVEFDS19SRUNPUkQgbm90IHNldC4NCj4gQnV0IGlmIHdlIGRyb3AgQ09ORklH
-X0tBU0FOX1JDVV9TVEFDS19SRUNPUkQgY29uZmlnLCB0aGVuIGl0IGhhbHZlcw0KPiB0aGUgbnVt
-YmVyIG9mIGNvbmZpZ3VyYXRpb25zIHRvIHRlc3QgOykNCj4gDQpPaywgSSBoYXZlIGJlIHRlc3Rl
-ZCBieSBSQ1UgeFNMVUIgYW5kIG5vX1JDVXhTTFVCLCBJdCBpcyB3b3JrYWJsZS4gU28gSQ0Kb25s
-eSBtaXNzIHRoaXMgU0xBQiBjb21iaW5hdGlvbi4gDQoNCj4gDQo+ID4gPg0KPiA+ID4gQWxzbywg
-ZG9lcyB0aGlzIHdvcmsgd2l0aCBvYmplY3RzIHdpdGggY3RvcnMgYW5kIHNsYWJzIGRlc3Ryb3ll
-ZCBieQ0KPiA+ID4gcmN1PyBrYXNhbl90cmFjayBtYXkgc21hc2ggb3RoZXIgdGhpbmdzIGluIHRo
-ZXNlIGNhc2VzLg0KPiA+ID4gSGF2ZSB5b3UgbG9va2VkIGF0IHRoZSBLQVNBTiBpbXBsZW1lbnRh
-dGlvbiB3aGVuIGZyZWVfdHJhY2sgd2FzDQo+ID4gPiByZW1vdmVkPyBUaGF0IG1heSBoYXZlIHVz
-ZWZ1bCBkZXRhaWxzIDopDQo+ID4gU2V0IGZyZWVfdHJhY2sgYmVmb3JlIHB1dCBpbnRvIHF1YXJh
-bnRpbmUsIGZyZWVfdHJhY2sgc2hvdWxkIG5vdCBoYXZlIHRvDQo+ID4gYmUgcmVtb3ZlZCwgaXQg
-b25seSBoYXZlIHRvIG92ZXJ3aXJ0ZSBpdHNlbGYuDQo+ID4NCj4gPiA+DQo+ID4gPg0KPiA+ID4g
-PiArICAgICAgIGVsc2UNCj4gPiA+ID4gKyAgICAgICAgICAgICAgIHJldHVybiBOVUxMOw0KPiA+
-ID4gPiArfQ0KPiA+ID4gPiArDQo+ID4gPiA+ICsjZWxzZQ0KPiA+ID4gPiAgc3RhdGljIHN0cnVj
-dCBrYXNhbl90cmFjayAqa2FzYW5fZ2V0X2ZyZWVfdHJhY2soc3RydWN0IGttZW1fY2FjaGUgKmNh
-Y2hlLA0KPiA+ID4gPiAgICAgICAgICAgICAgICAgdm9pZCAqb2JqZWN0LCB1OCB0YWcsIGNvbnN0
-IHZvaWQgKmFkZHIpDQo+ID4gPiA+ICB7DQo+ID4gPiA+IEBAIC0xOTYsNiArMjExLDcgQEAgc3Rh
-dGljIHN0cnVjdCBrYXNhbl90cmFjayAqa2FzYW5fZ2V0X2ZyZWVfdHJhY2soc3RydWN0IGttZW1f
-Y2FjaGUgKmNhY2hlLA0KPiA+ID4gPg0KPiA+ID4gPiAgICAgICAgIHJldHVybiAmYWxsb2NfbWV0
-YS0+ZnJlZV90cmFja1tpXTsNCj4gPiA+ID4gIH0NCj4gPiA+ID4gKyNlbmRpZg0KPiA+ID4gPg0K
-PiA+ID4gPiAgc3RhdGljIHZvaWQgZGVzY3JpYmVfb2JqZWN0KHN0cnVjdCBrbWVtX2NhY2hlICpj
-YWNoZSwgdm9pZCAqb2JqZWN0LA0KPiA+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIGNvbnN0IHZvaWQgKmFkZHIsIHU4IHRhZykNCj4gPiA+ID4gQEAgLTIwOCw4ICsyMjQsMTAg
-QEAgc3RhdGljIHZvaWQgZGVzY3JpYmVfb2JqZWN0KHN0cnVjdCBrbWVtX2NhY2hlICpjYWNoZSwg
-dm9pZCAqb2JqZWN0LA0KPiA+ID4gPiAgICAgICAgICAgICAgICAgcHJpbnRfdHJhY2soJmFsbG9j
-X2luZm8tPmFsbG9jX3RyYWNrLCAiQWxsb2NhdGVkIiwgZmFsc2UpOw0KPiA+ID4gPiAgICAgICAg
-ICAgICAgICAgcHJfZXJyKCJcbiIpOw0KPiA+ID4gPiAgICAgICAgICAgICAgICAgZnJlZV90cmFj
-ayA9IGthc2FuX2dldF9mcmVlX3RyYWNrKGNhY2hlLCBvYmplY3QsIHRhZywgYWRkcik7DQo+ID4g
-PiA+IC0gICAgICAgICAgICAgICBwcmludF90cmFjayhmcmVlX3RyYWNrLCAiRnJlZWQiLCBmYWxz
-ZSk7DQo+ID4gPiA+IC0gICAgICAgICAgICAgICBwcl9lcnIoIlxuIik7DQo+ID4gPiA+ICsgICAg
-ICAgICAgICAgICBpZiAoZnJlZV90cmFjaykgew0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICBwcmludF90cmFjayhmcmVlX3RyYWNrLCAiRnJlZWQiLCBmYWxzZSk7DQo+ID4gPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgIHByX2VycigiXG4iKTsNCj4gPiA+ID4gKyAgICAgICAgICAg
-ICAgIH0NCj4gPiA+ID4gICNpZmRlZiBDT05GSUdfS0FTQU5fUkNVX1NUQUNLX1JFQ09SRA0KPiA+
-ID4gPiAgICAgICAgICAgICAgICAga2FzYW5fcHJpbnRfcmN1X2ZyZWVfc3RhY2soYWxsb2NfaW5m
-byk7DQo+ID4gPiA+ICAjZW5kaWYNCj4gPiA+ID4gLS0NCj4gPiA+ID4gMi4xOC4wDQoNCg==
+Miroslav Benes <mbenes@suse.cz> writes:
 
+> On Tue, 5 May 2020, Thomas Gleixner wrote:
+>
+>> Make sure task_work runs before any kind of userspace -- very much
+>> including signals -- is invoked.
+>
+> I might be missing something, but isn't this guaranteed by 
+> do_signal()->get_signal()->task_work_run() path?
+
+The changelog is misleading. This is not about task_work it's about
+TIF_NOTIFY_RESUME. Will fix.
+
+Thanks,
+
+        tglx
