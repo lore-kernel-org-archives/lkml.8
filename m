@@ -2,73 +2,141 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76832C47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 04:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D093BC4725D
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 04:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59EB320838
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 04:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE403206F9
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 04:56:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vRIXKSQQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbgEFExC (ORCPT
+        id S1726495AbgEFE4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 00:53:02 -0400
-Received: from verein.lst.de ([213.95.11.211]:38744 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725771AbgEFExC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 00:53:02 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 46CD968C4E; Wed,  6 May 2020 06:52:59 +0200 (CEST)
-Date:   Wed, 6 May 2020 06:52:58 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Stefan Haberland <sth@linux.ibm.com>
-Cc:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
-        linux-block@vger.kernel.org, hoeppner@linux.ibm.com,
-        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com,
-        linux-kernel@vger.kernel.org,
-        Peter Oberparleiter <oberpar@linux.ibm.com>
-Subject: Re: [PATCH 1/1] s390/dasd: remove ioctl_by_bdev from DASD driver
-Message-ID: <20200506045258.GB9846@lst.de>
-References: <20200430111754.98508-1-sth@linux.ibm.com> <20200430111754.98508-2-sth@linux.ibm.com> <20200430131351.GA24813@lst.de> <4ab11558-9f2b-02ee-d191-c9a5cc38de0f@linux.ibm.com> <70f541fe-a678-8952-0753-32707d21e337@linux.ibm.com> <20200505124423.GA26313@lst.de> <a6c99eba-44f2-2944-a135-50ed75ef2c55@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a6c99eba-44f2-2944-a135-50ed75ef2c55@linux.ibm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        Wed, 6 May 2020 00:56:51 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:50949 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725796AbgEFE4u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 00:56:50 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588741010; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=QX8Zhtt2ZI9PyrjDSVNOucmxgJDf+kNLava4CsP69mA=; b=vRIXKSQQm2StiUTR8CBjEO+0n/t6z7X4bo6NIaTDDF4scnPnAji3sqiM8w5xK8J0hmYATCNB
+ fgA/Bad3XAkDmI7HTFNvISBGnlrKSg7iArNdOlnVunAWhNyVEyf/fObMXRTL+67rUCf6S5sh
+ SrZj16E2v/mW1Mk77kgjcop7v8Y=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6DB40C44792; Wed,  6 May 2020 04:56:44 +0000 (UTC)
+Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A6838C433D2;
+        Wed,  6 May 2020 04:56:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A6838C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        stanley.chu@mediatek.com, alim.akhtar@samsung.com,
+        beanhuo@micron.com, Avri.Altman@wdc.com,
+        bjorn.andersson@linaro.org, bvanassche@acm.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
+Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v4 1/1] scsi: pm: Balance pm_only counter of request queue during system resume
+Date:   Tue,  5 May 2020 21:55:35 -0700
+Message-Id: <1588740936-28846-1-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 05:09:56PM +0200, Stefan Haberland wrote:
-> OK, thanks for the hint.I did not have this in mind. And I still have
-> to look up how this is working at all.
-> But isn't this only a real issue for devices with more than 16 minors
-> or partitions? So it should not be a problem for DASDs with our limit
-> of 3 partitions and the fixed amount of minors, right?
-> 
-> Just tested with CONFIG_DEBUG_BLOCK_EXT_DEVT enabled and about 1000
-> unlabeled devices. Did not see an issue.
-> 
-> While I see the SCSI devices with MAJOR 259 and quite a random MINOR
-> all the DASD devices keep their MAJOR 94 and ascending MINOR.
+During system resume, scsi_resume_device() decreases a request queue's
+pm_only counter if the scsi device was quiesced before. But after that,
+if the scsi device's RPM status is RPM_SUSPENDED, the pm_only counter is
+still held (non-zero). Current scsi resume hook only sets the RPM status
+of the scsi device and its request queue to RPM_ACTIVE, but leaves the
+pm_only counter unchanged. This may make the request queue's pm_only
+counter remain non-zero after resume hook returns, hence those who are
+waiting on the mq_freeze_wq would never be woken up. Fix this by calling
+blk_post_runtime_resume() if a sdev's RPM status was RPM_SUSPENDED.
 
-Looks like it only changes the minors, and not the majors.  Still
-checking for major and relying on a shared structure define in different
-places just doesn't look maintainable.
+(struct request_queue)0xFFFFFF815B69E938
+	pm_only = (counter = 2),
+	rpm_status = 0,
+	dev = 0xFFFFFF815B0511A0,
 
-> > And compared to all the complications I think the biodasdinfo method
-> > is the least of all those evils.
-> 
-> Are you talking about your first patch suggestion?Then I disagree.
-> I still do not like to force the driver to be built in if there is an
-> alternative.
+((struct device)0xFFFFFF815B0511A0)).power
+	is_suspended = FALSE,
+	runtime_status = RPM_ACTIVE,
 
-No, I mean the series that I actually sent out:
+(struct scsi_device)0xffffff815b051000
+	request_queue = 0xFFFFFF815B69E938,
+	sdev_state = SDEV_RUNNING,
+	quiesced_by = 0x0,
 
-https://lkml.org/lkml/2020/4/21/66
-https://lkml.org/lkml/2020/4/21/68
-https://lkml.org/lkml/2020/4/21/69
+B::v.f_/task_0xFFFFFF810C246940
+-000|__switch_to(prev = 0xFFFFFF810C246940, next = 0xFFFFFF80A49357C0)
+-001|context_switch(inline)
+-001|__schedule(?)
+-002|schedule()
+-003|blk_queue_enter(q = 0xFFFFFF815B69E938, flags = 0)
+-004|generic_make_request(?)
+-005|submit_bio(bio = 0xFFFFFF80A8195B80)
+
+Signed-off-by: Can Guo <cang@codeaurora.org>
+---
+
+Change since v3:
+- Instead of relying on pm_only counter, rely on the runtime status of a sdev. (Based on the discussion with Bart)
+
+Change since v2:
+- Rebased on 5.8-scsi-queue
+
+Change since v1:
+- Added more debugging context info
+
+ drivers/scsi/scsi_pm.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/scsi/scsi_pm.c b/drivers/scsi/scsi_pm.c
+index 3717eea..5f0ad8b 100644
+--- a/drivers/scsi/scsi_pm.c
++++ b/drivers/scsi/scsi_pm.c
+@@ -80,6 +80,10 @@ static int scsi_dev_type_resume(struct device *dev,
+ 	dev_dbg(dev, "scsi resume: %d\n", err);
+ 
+ 	if (err == 0) {
++		bool was_runtime_suspended;
++
++		was_runtime_suspended = pm_runtime_suspended(dev);
++
+ 		pm_runtime_disable(dev);
+ 		err = pm_runtime_set_active(dev);
+ 		pm_runtime_enable(dev);
+@@ -93,8 +97,10 @@ static int scsi_dev_type_resume(struct device *dev,
+ 		 */
+ 		if (!err && scsi_is_sdev_device(dev)) {
+ 			struct scsi_device *sdev = to_scsi_device(dev);
+-
+-			blk_set_runtime_active(sdev->request_queue);
++			if (was_runtime_suspended)
++				blk_post_runtime_resume(sdev->request_queue, 0);
++			else
++				blk_set_runtime_active(sdev->request_queue);
+ 		}
+ 	}
+ 
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+
