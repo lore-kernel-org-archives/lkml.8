@@ -2,144 +2,225 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A6CC4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEAC6C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C71EC20936
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:43:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588787031;
-	bh=YZsANvSKjkoobhC/OjUVOA5jZyPR7sjiwNq8DDRVE/U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aV+JyJLSVJuXZe52epcUwfrChQs1Eo/twB/5Yit68iZbHLF9P+d2Js3pBSvIEg7US
-	 h1o9QzkeElrlgeJKnqUQKlMnZmnTmfFedvU2vxh4s38cOaRe8AgfgRb03P1tIL5ztJ
-	 tiGtfGfS6dSL7t6QrIQnNBj4Xvq+V0WwvoEd8Vfs=
+	by mail.kernel.org (Postfix) with ESMTP id B8E3D208DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:44:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730012AbgEFRnv (ORCPT
+        id S1730073AbgEFRn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 13:43:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59098 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728094AbgEFRnu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 13:43:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CB86208DB;
-        Wed,  6 May 2020 17:43:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588787028;
-        bh=YZsANvSKjkoobhC/OjUVOA5jZyPR7sjiwNq8DDRVE/U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VCtirk6C29s2nVSDVOrYapTNbzYm63MyYgr17LGRvuO6vCElDhTgO1+AuvxTipmqG
-         hU7lSDiUy+reDa0qGe66XRwl8SHOYbjhgb/xFm/pdU41rZZlTXynq8HoV2/srgybxE
-         TuY+I2rNtSNHafGqhznobx5MCHS1gADJdc3idqQE=
-Date:   Wed, 6 May 2020 19:43:45 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     mchehab@kernel.org, kstewart@linuxfoundation.org,
-        tomasbortoli@gmail.com, sean@mess.org, allison@lohutok.net,
-        tglx@linutronix.de, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: usb: ttusb-dec: avoid buffer overflow in
- ttusb_dec_handle_irq() when DMA failures/attacks occur
-Message-ID: <20200506174345.GA3711921@kroah.com>
-References: <20200505142110.7620-1-baijiaju1990@gmail.com>
- <20200505181042.GD1199718@kroah.com>
- <0e4a86ee-8c4e-4ac3-8499-4e9a6ed7bd1e@gmail.com>
- <20200506110722.GA2975410@kroah.com>
- <b3af10e3-8709-3da0-6841-e5ddd6b4a609@gmail.com>
- <20200506155257.GB3537174@kroah.com>
- <46615f6e-11ec-6546-42a9-3490414f9550@gmail.com>
+        Wed, 6 May 2020 13:43:59 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:60814 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728094AbgEFRn7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 13:43:59 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id B2315803078D;
+        Wed,  6 May 2020 17:43:53 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id p502n0RRUOrS; Wed,  6 May 2020 20:43:53 +0300 (MSK)
+From:   <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Alexander Lobakin <alobakin@dlink.ru>,
+        Huacai Chen <chenhc@lemote.com>,
+        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
+        =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>,
+        Ard Biesheuvel <ardb@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 07/20] mips: Add MIPS Warrior P5600 support
+Date:   Wed, 6 May 2020 20:42:25 +0300
+Message-ID: <20200506174238.15385-8-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <46615f6e-11ec-6546-42a9-3490414f9550@gmail.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 12:48:47AM +0800, Jia-Ju Bai wrote:
-> 
-> 
-> On 2020/5/6 23:52, Greg KH wrote:
-> > On Wed, May 06, 2020 at 11:30:22PM +0800, Jia-Ju Bai wrote:
-> > > 
-> > > On 2020/5/6 19:07, Greg KH wrote:
-> > > > On Wed, May 06, 2020 at 06:13:01PM +0800, Jia-Ju Bai wrote:
-> > > > > I have never modified DMA memory in the real world, but an attacker can use
-> > > > > a malicious device to do this.
-> > > > > There is a video that shows how to use the Inception tool to perform DMA
-> > > > > attacks and login in the Windows OS without password:
-> > > > > https://www.youtube.com/watch?v=HDhpy7RpUjM
-> > > > If you have control over the hardware, and can write to any DMA memory,
-> > > > again, there's almost nothing a kernel can do to protect from that.
-> > > I think that each device can only access its own DMA memory, instead of any
-> > > DMA memory for other hardware devices.
-> > That's not true at all for all systems that Linux runs on.
-> 
-> I am not sure to understand this.
-> For example, a driver requests DMA memory with "len" size by using:
->    mem = dma_alloc_coherent(..., len, ...);
-> I think that the driver can only access DMA memory between "mem" and "mem +
-> len", is it true?
-> Can the driver access other DMA memory using some code like "mem + len *
-> 10"?
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-Depends on the hardware platform.
+This is a MIPS32 Release 5 based IP core with XPA, EVA, dual/quad issue
+exec pipes, MMU with two-levels TLB, UCA, MSA, MDU core level features
+and system level features like up to six P5600 calculation cores, CM2
+with L2 cache, IOCU/IOMMU (though might be unused depending on the
+system-specific IP core configuration), GIC, CPC, virtualisation module,
+eJTAG and PDtrace.
 
-> > > A feasible example is that, the attacker inserts a malicious device via
-> > > PCI-E bus in a locked computer, when the owner of this computer leaves.
-> > This is a semi-well-known issue.  It's been described in the past
-> > regarding thunderbolt devices, and odds are, more people will run across
-> > it again in the future and also complain about it.
-> > 
-> > The best solution is to solve this at the bus level, preventing
-> > different devices access to other memory areas.
-> > 
-> > And providing physical access control to systems that you care about
-> > this type of attack for.
-> > 
-> > Again, this isn't a new thing, but the ability for us to do much about
-> > it depends on the specific hardware control, and how we set defaults up.
-> 
-> Yes, I agree that this issue is not new, because DMA attacks are old
-> problems.
-> But I am a little surprised that many current drivers are still vulnerable
-> to DMA attacks.
+As being MIPS32 Release 5 based core it provides all the features
+available by the CPU_MIPS32_R5 config, while adding a few more like
+UCA attribute support, availability of CPU-freq (by means of L2/CM
+clock ratio setting), EI/VI GIC modes detection at runtime.
 
-Given that the attack vector is very hard to actually do, that's not
-a suprise.
+In addition to this if P5600 architecture is enabled modern GNU GCC
+provides a specific tuning for P5600 processors with respect to the
+classic MIPS32 Release 5. First of all branch-likely avoidance is
+activated only when the code is compiled with the speed optimization
+(avoidance is always enabled for the pure MIPS32 Release 5
+architecture). Secondly the madd/msub avoidance is enabled since
+madd/msub utilization isn't profitable due to overhead of getting the
+result out of the HI/LO registers. Multiply-accumulate instructions are
+activated and utilized together with the necessary code reorder when
+multiply-add/multiply-subtract statements are met. Finally load/store
+bonding is activated by default. All of these optimizations may make
+the code relatively faster than if just MIP32 release 5 architecture
+was requested.
 
-It's only a very recent thing that Linux drivers have started to work on
-"we don't trust the data coming from the hardware" path.  Previously we
-always trusted that, but did not trust data coming from userspace.  So
-work on fixing up drivers in this area is always encouraged.
+Co-developed-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-pm@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+---
+ arch/mips/Kconfig                | 38 +++++++++++++++++++++++++++-----
+ arch/mips/Makefile               |  1 +
+ arch/mips/include/asm/vermagic.h |  2 ++
+ 3 files changed, 36 insertions(+), 5 deletions(-)
 
-An example of this would be all of the fuzzing that USB drivers have
-been getting with custom loop-back interfaces and the like over the past
-year or so.  Expanding that to "we don't trust PCI device data" should
-be the next step on this, and would help out your area as well.
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 55c3dbfea336..e3b780a389a9 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -1665,6 +1665,28 @@ config CPU_MIPS64_R6
+ 	  family, are based on a MIPS64r6 processor. If you own an older
+ 	  processor, you probably need to select MIPS64r1 or MIPS64r2 instead.
+ 
++config CPU_P5600
++	bool "MIPS Warrior P5600"
++	depends on SYS_HAS_CPU_P5600
++	select CPU_HAS_PREFETCH
++	select CPU_SUPPORTS_32BIT_KERNEL
++	select CPU_SUPPORTS_HIGHMEM
++	select CPU_SUPPORTS_MSA
++	select CPU_SUPPORTS_UNCACHED_ACCELERATED
++	select CPU_SUPPORTS_CPUFREQ
++	select CPU_MIPSR2_IRQ_VI
++	select CPU_MIPSR2_IRQ_EI
++	select HAVE_KVM
++	select MIPS_O32_FP64_SUPPORT
++	help
++	  Choose this option to build a kernel for MIPS Warrior P5600 CPU.
++	  It's based on MIPS32r5 ISA with XPA, EVA, dual/quad issue exec pipes,
++	  MMU with two-levels TLB, UCA, MSA, MDU core level features and system
++	  level features like up to six P5600 calculation cores, CM2 with L2
++	  cache, IOCU/IOMMU (though might be unused depending on the system-
++	  specific IP core configuration), GIC, CPC, virtualisation module,
++	  eJTAG and PDtrace.
++
+ config CPU_R3000
+ 	bool "R3000"
+ 	depends on SYS_HAS_CPU_R3000
+@@ -1841,7 +1863,8 @@ endchoice
+ config CPU_MIPS32_3_5_FEATURES
+ 	bool "MIPS32 Release 3.5 Features"
+ 	depends on SYS_HAS_CPU_MIPS32_R3_5
+-	depends on CPU_MIPS32_R2 || CPU_MIPS32_R5 || CPU_MIPS32_R6
++	depends on CPU_MIPS32_R2 || CPU_MIPS32_R5 || CPU_MIPS32_R6 || \
++		   CPU_P5600
+ 	help
+ 	  Choose this option to build a kernel for release 2 or later of the
+ 	  MIPS32 architecture including features from the 3.5 release such as
+@@ -1861,7 +1884,7 @@ config CPU_MIPS32_3_5_EVA
+ config CPU_MIPS32_R5_FEATURES
+ 	bool "MIPS32 Release 5 Features"
+ 	depends on SYS_HAS_CPU_MIPS32_R5
+-	depends on CPU_MIPS32_R2 || CPU_MIPS32_R5
++	depends on CPU_MIPS32_R2 || CPU_MIPS32_R5 || CPU_P5600
+ 	help
+ 	  Choose this option to build a kernel for release 2 or later of the
+ 	  MIPS32 architecture including features from release 5 such as
+@@ -2016,6 +2039,10 @@ config SYS_HAS_CPU_MIPS64_R6
+ 	bool
+ 	select ARCH_HAS_SYNC_DMA_FOR_CPU if DMA_NONCOHERENT
+ 
++config SYS_HAS_CPU_P5600
++	bool
++	select ARCH_HAS_SYNC_DMA_FOR_CPU if DMA_NONCOHERENT
++
+ config SYS_HAS_CPU_R3000
+ 	bool
+ 
+@@ -2100,7 +2127,7 @@ endmenu
+ config CPU_MIPS32
+ 	bool
+ 	default y if CPU_MIPS32_R1 || CPU_MIPS32_R2 || CPU_MIPS32_R5 || \
+-		     CPU_MIPS32_R6
++		     CPU_MIPS32_R6 || CPU_P5600
+ 
+ config CPU_MIPS64
+ 	bool
+@@ -2122,7 +2149,7 @@ config CPU_MIPSR2
+ 
+ config CPU_MIPSR5
+ 	bool
+-	default y if CPU_MIPS32_R5
++	default y if CPU_MIPS32_R5 || CPU_P5600
+ 	select CPU_HAS_RIXI
+ 	select CPU_HAS_DIEI if !CPU_DIEI_BROKEN
+ 	select MIPS_SPRAM
+@@ -2733,7 +2760,8 @@ config RELOCATABLE
+ 	bool "Relocatable kernel"
+ 	depends on SYS_SUPPORTS_RELOCATABLE
+ 	depends on CPU_MIPS32_R2 || CPU_MIPS64_R2 || CPU_MIPS32_R5 || \
+-		   CPU_MIPS32_R6 || CPU_MIPS64_R6 || CAVIUM_OCTEON_SOC
++		   CPU_MIPS32_R6 || CPU_MIPS64_R6 || CPU_P5600 || \
++		   CAVIUM_OCTEON_SOC
+ 	help
+ 	  This builds a kernel image that retains relocation information
+ 	  so it can be loaded someplace besides the default 1MB.
+diff --git a/arch/mips/Makefile b/arch/mips/Makefile
+index 9172fb0f630b..264dead560f4 100644
+--- a/arch/mips/Makefile
++++ b/arch/mips/Makefile
+@@ -176,6 +176,7 @@ cflags-$(CONFIG_CPU_MIPS32_R6)	+= -march=mips32r6 -Wa,--trap -modd-spreg
+ cflags-$(CONFIG_CPU_MIPS64_R1)	+= -march=mips64 -Wa,--trap
+ cflags-$(CONFIG_CPU_MIPS64_R2)	+= -march=mips64r2 -Wa,--trap
+ cflags-$(CONFIG_CPU_MIPS64_R6)	+= -march=mips64r6 -Wa,--trap
++cflags-$(CONFIG_CPU_P5600)	+= -march=p5600 -Wa,--trap -modd-spreg
+ cflags-$(CONFIG_CPU_R5000)	+= -march=r5000 -Wa,--trap
+ cflags-$(CONFIG_CPU_R5500)	+= $(call cc-option,-march=r5500,-march=r5000) \
+ 			-Wa,--trap
+diff --git a/arch/mips/include/asm/vermagic.h b/arch/mips/include/asm/vermagic.h
+index 5a0e739f597a..d03f97350f91 100644
+--- a/arch/mips/include/asm/vermagic.h
++++ b/arch/mips/include/asm/vermagic.h
+@@ -48,6 +48,8 @@
+ #define MODULE_PROC_FAMILY "LOONGSON64 "
+ #elif defined CONFIG_CPU_CAVIUM_OCTEON
+ #define MODULE_PROC_FAMILY "OCTEON "
++#elif defined CONFIG_CPU_P5600
++#define MODULE_PROC_FAMILY "P5600 "
+ #elif defined CONFIG_CPU_XLR
+ #define MODULE_PROC_FAMILY "XLR "
+ #elif defined CONFIG_CPU_XLP
+-- 
+2.25.1
 
-> > If you trust a device enough to plug it in, well, you need to trust it
-> > :)
-> 
-> Well, maybe I need to trust all devices in my computer :)
-> 
-> Anyway, thanks a lot for your patient explanation and reply.
-> If you have encountered other kinds of DMA-related bugs/vulnerabilities,
-> maybe I can help to detect them using my static-analysis tool :)
-
-Did you only find a problem in this one driver?  Have you run it on any
-more "complex" drivers and gotten any good results showing either that
-we are programming defensively in this area, or not?
-
-thanks,
-
-greg k-h
