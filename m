@@ -7,41 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67961C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD77EC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CE9C20936
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACA19208D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:55:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="kb7HUTVa"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="m9HhLh3d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729330AbgEFOzK (ORCPT
+        id S1729308AbgEFOzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 10:55:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54044 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729078AbgEFOzE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 6 May 2020 10:55:04 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDCA7C061A0F;
-        Wed,  6 May 2020 07:55:03 -0700 (PDT)
+Received: from ssl.serverraum.org ([176.9.125.105]:43029 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729078AbgEFOzC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 10:55:02 -0400
 Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 09A4722F2D;
-        Wed,  6 May 2020 16:55:00 +0200 (CEST)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 2354022EEB;
+        Wed,  6 May 2020 16:54:57 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1588776900;
+        t=1588776897;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=J8hcAbR2qDHUTRYs1cD3GEXXzgGSjE1TOh9xiHScmok=;
-        b=kb7HUTVa+F73wHdsxmoRjbga2em6hf8xgAtGJ1W9i97rElHWmdq7KuWLkzaBAD6sdPNKAQ
-        iUE5WNEagDyFeyhFg0760OY1SXtIVCY1VRRRA+SOC0viPFs4CDqM/gWxGXYMUuZ2o609Oi
-        lTS02OBzgL12nnVtwj4/opmsDAt62kY=
+        bh=Y1HXOD90+xthCbcF5aODRvO5s4y3GjqVZeWMcm2C9hg=;
+        b=m9HhLh3dnD9BTg85PIRYHxEzW+9tKI8srVGI3MjgXJkJaWDcnUKGyPN86orzkyHrB0ai5O
+        VyiY7R2tdN04JifV18FNmxuUW/9Pc3kWUfo+q974YzVhTm0Tkrc3osn/smhyhl7PxpHZMl
+        VHiTEHII3umwamTkGQq8kpYUr38joLY=
 From:   Michael Walle <michael@walle.cc>
 To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 Cc:     Andrew Lunn <andrew@lunn.ch>,
@@ -52,9 +49,9 @@ Cc:     Andrew Lunn <andrew@lunn.ch>,
         Vladimir Oltean <vladimir.oltean@nxp.com>,
         Antoine Tenart <antoine.tenart@bootlin.com>,
         Michael Walle <michael@walle.cc>
-Subject: [PATCH net-next v3 3/3] net: phy: mscc: use phy_package_shared
-Date:   Wed,  6 May 2020 16:53:15 +0200
-Message-Id: <20200506145315.13967-4-michael@walle.cc>
+Subject: [PATCH net-next v3 1/3] net: phy: add concept of shared storage for PHYs
+Date:   Wed,  6 May 2020 16:53:13 +0200
+Message-Id: <20200506145315.13967-2-michael@walle.cc>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200506145315.13967-1-michael@walle.cc>
 References: <20200506145315.13967-1-michael@walle.cc>
@@ -66,246 +63,317 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new phy_package_shared common storage to ease the package
-initialization and to access the global registers.
+There are packages which contain multiple PHY devices, eg. a quad PHY
+transceiver. Provide functions to allocate and free shared storage.
+
+Usually, a quad PHY contains global registers, which don't belong to any
+PHY. Provide convenience functions to access these registers.
 
 Signed-off-by: Michael Walle <michael@walle.cc>
-Tested-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/net/phy/mscc/mscc.h      |   1 -
- drivers/net/phy/mscc/mscc_main.c | 101 ++++++++++---------------------
- 2 files changed, 32 insertions(+), 70 deletions(-)
+ drivers/net/phy/mdio_bus.c   |   1 +
+ drivers/net/phy/phy_device.c | 138 +++++++++++++++++++++++++++++++++++
+ include/linux/phy.h          |  89 ++++++++++++++++++++++
+ 3 files changed, 228 insertions(+)
 
-diff --git a/drivers/net/phy/mscc/mscc.h b/drivers/net/phy/mscc/mscc.h
-index 030bf8b600df..acdd8ee61a39 100644
---- a/drivers/net/phy/mscc/mscc.h
-+++ b/drivers/net/phy/mscc/mscc.h
-@@ -353,7 +353,6 @@ struct vsc8531_private {
- 	const struct vsc85xx_hw_stat *hw_stats;
- 	u64 *stats;
- 	int nstats;
--	bool pkg_init;
- 	/* For multiple port PHYs; the MDIO address of the base PHY in the
- 	 * package.
- 	 */
-diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
-index 5391acdece05..6508d6536134 100644
---- a/drivers/net/phy/mscc/mscc_main.c
-+++ b/drivers/net/phy/mscc/mscc_main.c
-@@ -691,27 +691,23 @@ static int vsc85xx_eee_init_seq_set(struct phy_device *phydev)
- /* phydev->bus->mdio_lock should be locked when using this function */
- static int phy_base_write(struct phy_device *phydev, u32 regnum, u16 val)
- {
--	struct vsc8531_private *priv = phydev->priv;
--
- 	if (unlikely(!mutex_is_locked(&phydev->mdio.bus->mdio_lock))) {
- 		dev_err(&phydev->mdio.dev, "MDIO bus lock not held!\n");
- 		dump_stack();
+diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
+index 3e79b96fa344..255fdfcc13a6 100644
+--- a/drivers/net/phy/mdio_bus.c
++++ b/drivers/net/phy/mdio_bus.c
+@@ -614,6 +614,7 @@ int __mdiobus_register(struct mii_bus *bus, struct module *owner)
  	}
  
--	return __mdiobus_write(phydev->mdio.bus, priv->base_addr, regnum, val);
-+	return __phy_package_write(phydev, regnum, val);
+ 	mutex_init(&bus->mdio_lock);
++	mutex_init(&bus->shared_lock);
+ 
+ 	/* de-assert bus level PHY GPIO reset */
+ 	gpiod = devm_gpiod_get_optional(&bus->dev, "reset", GPIOD_OUT_LOW);
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 7e1ddd5745d2..b1c5e4503bc4 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -1461,6 +1461,144 @@ bool phy_driver_is_genphy_10g(struct phy_device *phydev)
  }
+ EXPORT_SYMBOL_GPL(phy_driver_is_genphy_10g);
  
- /* phydev->bus->mdio_lock should be locked when using this function */
- static int phy_base_read(struct phy_device *phydev, u32 regnum)
- {
--	struct vsc8531_private *priv = phydev->priv;
--
- 	if (unlikely(!mutex_is_locked(&phydev->mdio.bus->mdio_lock))) {
- 		dev_err(&phydev->mdio.dev, "MDIO bus lock not held!\n");
- 		dump_stack();
- 	}
- 
--	return __mdiobus_read(phydev->mdio.bus, priv->base_addr, regnum);
-+	return __phy_package_read(phydev, regnum);
- }
- 
- /* bus->mdio_lock should be locked when using this function */
-@@ -1287,65 +1283,38 @@ static int vsc8584_config_pre_init(struct phy_device *phydev)
- 	return ret;
- }
- 
--/* Check if one PHY has already done the init of the parts common to all PHYs
-- * in the Quad PHY package.
-- */
--static bool vsc8584_is_pkg_init(struct phy_device *phydev, bool reversed)
-+static void vsc8584_get_base_addr(struct phy_device *phydev)
- {
--	struct mii_bus *bus = phydev->mdio.bus;
--	struct vsc8531_private *vsc8531;
--	struct phy_device *phy;
--	int i, addr;
--
--	/* VSC8584 is a Quad PHY */
--	for (i = 0; i < 4; i++) {
--		vsc8531 = phydev->priv;
--
--		if (reversed)
--			addr = vsc8531->base_addr - i;
--		else
--			addr = vsc8531->base_addr + i;
-+	struct vsc8531_private *vsc8531 = phydev->priv;
-+	u16 val, addr;
- 
--		phy = mdiobus_get_phy(bus, addr);
--		if (!phy)
--			continue;
-+	mutex_lock(&phydev->mdio.bus->mdio_lock);
-+	__phy_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_EXTENDED);
- 
--		if ((phy->phy_id & phydev->drv->phy_id_mask) !=
--		    (phydev->drv->phy_id & phydev->drv->phy_id_mask))
--			continue;
-+	addr = __phy_read(phydev, MSCC_PHY_EXT_PHY_CNTL_4);
-+	addr >>= PHY_CNTL_4_ADDR_POS;
- 
--		vsc8531 = phy->priv;
-+	val = __phy_read(phydev, MSCC_PHY_ACTIPHY_CNTL);
- 
--		if (vsc8531 && vsc8531->pkg_init)
--			return true;
--	}
-+	__phy_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_STANDARD);
-+	mutex_unlock(&phydev->mdio.bus->mdio_lock);
- 
--	return false;
-+	if (val & PHY_ADDR_REVERSED)
-+		vsc8531->base_addr = phydev->mdio.addr + addr;
-+	else
-+		vsc8531->base_addr = phydev->mdio.addr - addr;
- }
- 
- static int vsc8584_config_init(struct phy_device *phydev)
- {
- 	struct vsc8531_private *vsc8531 = phydev->priv;
--	u16 addr, val;
- 	int ret, i;
-+	u16 val;
- 
- 	phydev->mdix_ctrl = ETH_TP_MDI_AUTO;
- 
- 	mutex_lock(&phydev->mdio.bus->mdio_lock);
- 
--	__mdiobus_write(phydev->mdio.bus, phydev->mdio.addr,
--			MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_EXTENDED);
--	addr = __mdiobus_read(phydev->mdio.bus, phydev->mdio.addr,
--			      MSCC_PHY_EXT_PHY_CNTL_4);
--	addr >>= PHY_CNTL_4_ADDR_POS;
--
--	val = __mdiobus_read(phydev->mdio.bus, phydev->mdio.addr,
--			     MSCC_PHY_ACTIPHY_CNTL);
--	if (val & PHY_ADDR_REVERSED)
--		vsc8531->base_addr = phydev->mdio.addr + addr;
--	else
--		vsc8531->base_addr = phydev->mdio.addr - addr;
--
- 	/* Some parts of the init sequence are identical for every PHY in the
- 	 * package. Some parts are modifying the GPIO register bank which is a
- 	 * set of registers that are affecting all PHYs, a few resetting the
-@@ -1359,7 +1328,7 @@ static int vsc8584_config_init(struct phy_device *phydev)
- 	 * do the correct init sequence for all PHYs that are package-critical
- 	 * in this pre-init function.
- 	 */
--	if (!vsc8584_is_pkg_init(phydev, val & PHY_ADDR_REVERSED ? 1 : 0)) {
-+	if (phy_package_init_once(phydev)) {
- 		/* The following switch statement assumes that the lowest
- 		 * nibble of the phy_id_mask is always 0. This works because
- 		 * the lowest nibble of the PHY_ID's below are also 0.
-@@ -1388,8 +1357,6 @@ static int vsc8584_config_init(struct phy_device *phydev)
- 			goto err;
- 	}
- 
--	vsc8531->pkg_init = true;
--
- 	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS,
- 		       MSCC_PHY_PAGE_EXTENDED_GPIO);
- 
-@@ -1427,7 +1394,8 @@ static int vsc8584_config_init(struct phy_device *phydev)
- 
- 	/* Disable SerDes for 100Base-FX */
- 	ret = vsc8584_cmd(phydev, PROC_CMD_FIBER_MEDIA_CONF |
--			  PROC_CMD_FIBER_PORT(addr) | PROC_CMD_FIBER_DISABLE |
-+			  PROC_CMD_FIBER_PORT(vsc8531->base_addr) |
-+			  PROC_CMD_FIBER_DISABLE |
- 			  PROC_CMD_READ_MOD_WRITE_PORT |
- 			  PROC_CMD_RST_CONF_PORT | PROC_CMD_FIBER_100BASE_FX);
- 	if (ret)
-@@ -1435,7 +1403,8 @@ static int vsc8584_config_init(struct phy_device *phydev)
- 
- 	/* Disable SerDes for 1000Base-X */
- 	ret = vsc8584_cmd(phydev, PROC_CMD_FIBER_MEDIA_CONF |
--			  PROC_CMD_FIBER_PORT(addr) | PROC_CMD_FIBER_DISABLE |
-+			  PROC_CMD_FIBER_PORT(vsc8531->base_addr) |
-+			  PROC_CMD_FIBER_DISABLE |
- 			  PROC_CMD_READ_MOD_WRITE_PORT |
- 			  PROC_CMD_RST_CONF_PORT | PROC_CMD_FIBER_1000BASE_X);
- 	if (ret)
-@@ -1750,26 +1719,14 @@ static int vsc8514_config_init(struct phy_device *phydev)
- {
- 	struct vsc8531_private *vsc8531 = phydev->priv;
- 	unsigned long deadline;
--	u16 val, addr;
- 	int ret, i;
-+	u16 val;
- 	u32 reg;
- 
- 	phydev->mdix_ctrl = ETH_TP_MDI_AUTO;
- 
- 	mutex_lock(&phydev->mdio.bus->mdio_lock);
- 
--	__phy_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_EXTENDED);
--
--	addr = __phy_read(phydev, MSCC_PHY_EXT_PHY_CNTL_4);
--	addr >>= PHY_CNTL_4_ADDR_POS;
--
--	val = __phy_read(phydev, MSCC_PHY_ACTIPHY_CNTL);
--
--	if (val & PHY_ADDR_REVERSED)
--		vsc8531->base_addr = phydev->mdio.addr + addr;
--	else
--		vsc8531->base_addr = phydev->mdio.addr - addr;
--
- 	/* Some parts of the init sequence are identical for every PHY in the
- 	 * package. Some parts are modifying the GPIO register bank which is a
- 	 * set of registers that are affecting all PHYs, a few resetting the
-@@ -1781,11 +1738,9 @@ static int vsc8514_config_init(struct phy_device *phydev)
- 	 * do the correct init sequence for all PHYs that are package-critical
- 	 * in this pre-init function.
- 	 */
--	if (!vsc8584_is_pkg_init(phydev, val & PHY_ADDR_REVERSED ? 1 : 0))
-+	if (phy_package_init_once(phydev))
- 		vsc8514_config_pre_init(phydev);
- 
--	vsc8531->pkg_init = true;
--
- 	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS,
- 		       MSCC_PHY_PAGE_EXTENDED_GPIO);
- 
-@@ -1991,6 +1946,10 @@ static int vsc8514_probe(struct phy_device *phydev)
- 
- 	phydev->priv = vsc8531;
- 
-+	vsc8584_get_base_addr(phydev);
-+	devm_phy_package_join(&phydev->mdio.dev, phydev,
-+			      vsc8531->base_addr, 0);
++/**
++ * phy_package_join - join a common PHY group
++ * @phydev: target phy_device struct
++ * @addr: cookie and PHY address for global register access
++ * @priv_size: if non-zero allocate this amount of bytes for private data
++ *
++ * This joins a PHY group and provides a shared storage for all phydevs in
++ * this group. This is intended to be used for packages which contain
++ * more than one PHY, for example a quad PHY transceiver.
++ *
++ * The addr parameter serves as a cookie which has to have the same value
++ * for all members of one group and as a PHY address to access generic
++ * registers of a PHY package. Usually, one of the PHY addresses of the
++ * different PHYs in the package provides access to these global registers.
++ * The address which is given here, will be used in the phy_package_read()
++ * and phy_package_write() convenience functions. If your PHY doesn't have
++ * global registers you can just pick any of the PHY addresses.
++ *
++ * This will set the shared pointer of the phydev to the shared storage.
++ * If this is the first call for a this cookie the shared storage will be
++ * allocated. If priv_size is non-zero, the given amount of bytes are
++ * allocated for the priv member.
++ *
++ * Returns < 1 on error, 0 on success. Esp. calling phy_package_join()
++ * with the same cookie but a different priv_size is an error.
++ */
++int phy_package_join(struct phy_device *phydev, int addr, size_t priv_size)
++{
++	struct mii_bus *bus = phydev->mdio.bus;
++	struct phy_package_shared *shared;
++	int ret;
 +
- 	vsc8531->nleds = 4;
- 	vsc8531->supp_led_modes = VSC85XX_SUPP_LED_MODES;
- 	vsc8531->hw_stats = vsc85xx_hw_stats;
-@@ -2046,6 +2005,10 @@ static int vsc8584_probe(struct phy_device *phydev)
- 
- 	phydev->priv = vsc8531;
- 
-+	vsc8584_get_base_addr(phydev);
-+	devm_phy_package_join(&phydev->mdio.dev, phydev,
-+			      vsc8531->base_addr, 0);
++	if (addr < 0 || addr >= PHY_MAX_ADDR)
++		return -EINVAL;
 +
- 	vsc8531->nleds = 4;
- 	vsc8531->supp_led_modes = VSC8584_SUPP_LED_MODES;
- 	vsc8531->hw_stats = vsc8584_hw_stats;
++	mutex_lock(&bus->shared_lock);
++	shared = bus->shared[addr];
++	if (!shared) {
++		ret = -ENOMEM;
++		shared = kzalloc(sizeof(*shared), GFP_KERNEL);
++		if (!shared)
++			goto err_unlock;
++		if (priv_size) {
++			shared->priv = kzalloc(priv_size, GFP_KERNEL);
++			if (!shared->priv)
++				goto err_free;
++			shared->priv_size = priv_size;
++		}
++		shared->addr = addr;
++		refcount_set(&shared->refcnt, 1);
++		bus->shared[addr] = shared;
++	} else {
++		ret = -EINVAL;
++		if (priv_size && priv_size != shared->priv_size)
++			goto err_unlock;
++		refcount_inc(&shared->refcnt);
++	}
++	mutex_unlock(&bus->shared_lock);
++
++	phydev->shared = shared;
++
++	return 0;
++
++err_free:
++	kfree(shared);
++err_unlock:
++	mutex_unlock(&bus->shared_lock);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(phy_package_join);
++
++/**
++ * phy_package_leave - leave a common PHY group
++ * @phydev: target phy_device struct
++ *
++ * This leaves a PHY group created by phy_package_join(). If this phydev
++ * was the last user of the shared data between the group, this data is
++ * freed. Resets the phydev->shared pointer to NULL.
++ */
++void phy_package_leave(struct phy_device *phydev)
++{
++	struct phy_package_shared *shared = phydev->shared;
++	struct mii_bus *bus = phydev->mdio.bus;
++
++	if (!shared)
++		return;
++
++	if (refcount_dec_and_mutex_lock(&shared->refcnt, &bus->shared_lock)) {
++		bus->shared[shared->addr] = NULL;
++		mutex_unlock(&bus->shared_lock);
++		kfree(shared->priv);
++		kfree(shared);
++	}
++
++	phydev->shared = NULL;
++}
++EXPORT_SYMBOL_GPL(phy_package_leave);
++
++static void devm_phy_package_leave(struct device *dev, void *res)
++{
++	phy_package_leave(*(struct phy_device **)res);
++}
++
++/**
++ * devm_phy_package_join - resource managed phy_package_join()
++ * @dev: device that is registering this PHY package
++ * @phydev: target phy_device struct
++ * @addr: cookie and PHY address for global register access
++ * @priv_size: if non-zero allocate this amount of bytes for private data
++ *
++ * Managed phy_package_join(). Shared storage fetched by this function,
++ * phy_package_leave() is automatically called on driver detach. See
++ * phy_package_join() for more information.
++ */
++int devm_phy_package_join(struct device *dev, struct phy_device *phydev,
++			  int addr, size_t priv_size)
++{
++	struct phy_device **ptr;
++	int ret;
++
++	ptr = devres_alloc(devm_phy_package_leave, sizeof(*ptr),
++			   GFP_KERNEL);
++	if (!ptr)
++		return -ENOMEM;
++
++	ret = phy_package_join(phydev, addr, priv_size);
++
++	if (!ret) {
++		*ptr = phydev;
++		devres_add(dev, ptr);
++	} else {
++		devres_free(ptr);
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(devm_phy_package_join);
++
+ /**
+  * phy_detach - detach a PHY device from its network device
+  * @phydev: target phy_device struct
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index e2bfb9240587..1d36ac608159 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -25,6 +25,7 @@
+ #include <linux/u64_stats_sync.h>
+ #include <linux/irqreturn.h>
+ #include <linux/iopoll.h>
++#include <linux/refcount.h>
+ 
+ #include <linux/atomic.h>
+ 
+@@ -227,6 +228,28 @@ struct mdio_bus_stats {
+ 	struct u64_stats_sync syncp;
+ };
+ 
++/* Represents a shared structure between different phydev's in the same
++ * package, for example a quad PHY. See phy_package_join() and
++ * phy_package_leave().
++ */
++struct phy_package_shared {
++	int addr;
++	refcount_t refcnt;
++	unsigned long flags;
++	size_t priv_size;
++
++	/* private data pointer */
++	/* note that this pointer is shared between different phydevs and
++	 * the user has to take care of appropriate locking. It is allocated
++	 * and freed automatically by phy_package_join() and
++	 * phy_package_leave().
++	 */
++	void *priv;
++};
++
++/* used as bit number in atomic bitops */
++#define PHY_SHARED_F_INIT_DONE 0
++
+ /*
+  * The Bus class for PHYs.  Devices which provide access to
+  * PHYs should register using this structure
+@@ -278,6 +301,12 @@ struct mii_bus {
+ 	int reset_delay_us;
+ 	/* RESET GPIO descriptor pointer */
+ 	struct gpio_desc *reset_gpiod;
++
++	/* protect access to the shared element */
++	struct mutex shared_lock;
++
++	/* shared state across different PHYs */
++	struct phy_package_shared *shared[PHY_MAX_ADDR];
+ };
+ #define to_mii_bus(d) container_of(d, struct mii_bus, dev)
+ 
+@@ -478,6 +507,10 @@ struct phy_device {
+ 	/* For use by PHYs to maintain extra state */
+ 	void *priv;
+ 
++	/* shared data pointer */
++	/* For use by PHYs inside the same package that need a shared state. */
++	struct phy_package_shared *shared;
++
+ 	/* Interrupt and Polling infrastructure */
+ 	struct delayed_work state_queue;
+ 
+@@ -1354,6 +1387,10 @@ int phy_ethtool_get_link_ksettings(struct net_device *ndev,
+ int phy_ethtool_set_link_ksettings(struct net_device *ndev,
+ 				   const struct ethtool_link_ksettings *cmd);
+ int phy_ethtool_nway_reset(struct net_device *ndev);
++int phy_package_join(struct phy_device *phydev, int addr, size_t priv_size);
++void phy_package_leave(struct phy_device *phydev);
++int devm_phy_package_join(struct device *dev, struct phy_device *phydev,
++			  int addr, size_t priv_size);
+ 
+ #if IS_ENABLED(CONFIG_PHYLIB)
+ int __init mdio_bus_init(void);
+@@ -1406,6 +1443,58 @@ static inline int phy_ethtool_get_stats(struct phy_device *phydev,
+ 	return 0;
+ }
+ 
++static inline int phy_package_read(struct phy_device *phydev, u32 regnum)
++{
++	struct phy_package_shared *shared = phydev->shared;
++
++	if (!shared)
++		return -EIO;
++
++	return mdiobus_read(phydev->mdio.bus, shared->addr, regnum);
++}
++
++static inline int __phy_package_read(struct phy_device *phydev, u32 regnum)
++{
++	struct phy_package_shared *shared = phydev->shared;
++
++	if (!shared)
++		return -EIO;
++
++	return __mdiobus_read(phydev->mdio.bus, shared->addr, regnum);
++}
++
++static inline int phy_package_write(struct phy_device *phydev,
++				    u32 regnum, u16 val)
++{
++	struct phy_package_shared *shared = phydev->shared;
++
++	if (!shared)
++		return -EIO;
++
++	return mdiobus_write(phydev->mdio.bus, shared->addr, regnum, val);
++}
++
++static inline int __phy_package_write(struct phy_device *phydev,
++				      u32 regnum, u16 val)
++{
++	struct phy_package_shared *shared = phydev->shared;
++
++	if (!shared)
++		return -EIO;
++
++	return __mdiobus_write(phydev->mdio.bus, shared->addr, regnum, val);
++}
++
++static inline bool phy_package_init_once(struct phy_device *phydev)
++{
++	struct phy_package_shared *shared = phydev->shared;
++
++	if (!shared)
++		return false;
++
++	return !test_and_set_bit(PHY_SHARED_F_INIT_DONE, &shared->flags);
++}
++
+ extern struct bus_type mdio_bus_type;
+ 
+ struct mdio_board_info {
 -- 
 2.20.1
 
