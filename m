@@ -2,103 +2,123 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1183EC4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7972DC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE3C52080D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5312F2080D
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:21:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KwX6/DXe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729391AbgEFPVe (ORCPT
+        id S1729393AbgEFPVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:21:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:38946 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729264AbgEFPVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:21:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F2E2CD6E;
-        Wed,  6 May 2020 08:21:32 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6BA333F68F;
-        Wed,  6 May 2020 08:21:31 -0700 (PDT)
-Date:   Wed, 6 May 2020 16:21:26 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Wei Hu <weh@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: Re: [PATCH v2 1/2] PCI: hv: Fix the PCI HyperV probe failure path to
- release resource properly
-Message-ID: <20200506152126.GA2911@e121166-lin.cambridge.arm.com>
-References: <20200501053617.24689-1-weh@microsoft.com>
- <20200505150315.GA16228@e121166-lin.cambridge.arm.com>
- <SG2P153MB02136EA9764D340F3D81DF2DBBA40@SG2P153MB0213.APCP153.PROD.OUTLOOK.COM>
- <20200506110930.GA31068@e121166-lin.cambridge.arm.com>
- <SG2P153MB0213216D3C150AA4758FCBB8BBA40@SG2P153MB0213.APCP153.PROD.OUTLOOK.COM>
- <MW2PR2101MB1052F033623F91A0FF991DE4D7A40@MW2PR2101MB1052.namprd21.prod.outlook.com>
+        Wed, 6 May 2020 11:21:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58210 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728821AbgEFPVn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:21:43 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E492AC061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 08:21:42 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id y6so1061254pjc.4
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 08:21:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0GrsnLomqX5Yv3Tom3gIH7C/pCQ9LgRpoJPzGqJICzI=;
+        b=KwX6/DXeNIsWsWlTUx2Lg/+bGBqtRwjeQ/X4DL9YgbOhA9d/lBCEIBp3b/fQ0YELmd
+         mpAXQ5mJx36IzvHTcFqzSez/beBvtlCZ/ax0p/OKpzb4sYSZw6NEdMJcdB1uR5fwMtGX
+         rlKVbttCR4kfIy8VdJPR8LCi8kESkUr09VpFw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=0GrsnLomqX5Yv3Tom3gIH7C/pCQ9LgRpoJPzGqJICzI=;
+        b=hj2yk4iSPqQJ6ddhR3+gtW1zHQXXgyANrKKyotJ1lB32wWA7qi3k5ItPreAlJePPHQ
+         6zlhR0f8vQ5hI9Sjo1bcnHIl4AabulkJj08vtTQGKli04QlHNQ96o9yNutzMW1leP3uP
+         ZxKYPLYE1jyCSCcw+KkANCfF7lDpDVTzOKU1wu15l/yClfHTZ8HOZpDgHmlsnPn2zaeu
+         H8pMpwn42j34gRicDbZpWi5p6R7aMCNY/TvZt+We4tSq6lVq23tC5OAR+Sdr9v7cX5dh
+         vlsDzixIk1dxWW8SJZPiCgMcj83R788ux+tbwJJtGwYsPu4AgF7Ybke3dTevyukFrsz6
+         +qrQ==
+X-Gm-Message-State: AGi0PuZKwXasLQ2ejgfFCltzQOwSUvuXlz9r4gr8DBbCsZu+Ok7dxTT7
+        rLk+6IsHeUIaxBi6rErycdU0UzUNn8c=
+X-Google-Smtp-Source: APiQypL1hTpo9FfJpbePD6l9WWohDd139O1SoPM9Xu90TAINWMR+B4rfGx5aoPGQ2ExTdUcYl6HEIQ==
+X-Received: by 2002:a17:90a:1941:: with SMTP id 1mr9515679pjh.65.1588778502424;
+        Wed, 06 May 2020 08:21:42 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a22sm2085212pfg.169.2020.05.06.08.21.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 08:21:41 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Luis Henriques <lhenriques@suse.com>
+Subject: [PATCH 01/10] pstore: Drop useless try_module_get() for backend
+Date:   Wed,  6 May 2020 08:21:05 -0700
+Message-Id: <20200506152114.50375-2-keescook@chromium.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200506152114.50375-1-keescook@chromium.org>
+References: <20200506152114.50375-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MW2PR2101MB1052F033623F91A0FF991DE4D7A40@MW2PR2101MB1052.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 02:55:17PM +0000, Michael Kelley wrote:
+There is no reason to be doing a module get/put in pstore_register(),
+since the module calling pstore_register() cannot be unloaded since it
+hasn't finished its initialization. Remove it so there is no confusion
+about how registration ordering works.
 
-[...]
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ fs/pstore/platform.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
-> > Hv_pci_bus_exit() calls hv_send_resources_released() to release all child resources.
-> > These child resources were allocated in hv_send_resources_allocated().
-> > Hv_send_resources_allocated() could fail in the middle, leaving some child resources
-> > allocated and rest not. Without adding this variable to record the highest slot number that
-> > resource has been successfully allocated, calling hv_send_resources_released() could
-> > cause spurious resource release requests being sent to hypervisor.
-> > 
-> > This had been fine since hv_pci_bus_exit() was never called in error path before this patch
-> > was
-> > introduced. To add this call to clean the pci state in the error path, we need to know the
-> > starting
-> > point in child device that resource has not been allocated. Hence this variable
-> > is used in hv_send_resources_allocated() to record this point and in
-> > hv_send_resource_released() to start deallocating child resources.
-> > 
-> > I can add to the commit log if you are fine with this explanation.
-> > 
-> 
-> FWIW, I think of this patch as follows:
-> 
-> In some error cases in hv_pci_probe(), allocated resources are not
-> freed.  Fix this by adding a field to keep track of the high water mark
-> for slots that have resources allocated to them.  In case of an error, this
-> high water mark is used to know which slots have resources that
-> must be released.  Since slots are numbered starting with zero, a
-> value of -1 indicates no slots have been allocated resources.  There
-> may be unused slots in the range between slot 0 and the high
-> water mark slot, but these slots are already ignored by the existing code
-> in the allocate and release loops with the call to get_pcichild_wslot().
+diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
+index 408277ee3cdb..44f8b9742263 100644
+--- a/fs/pstore/platform.c
++++ b/fs/pstore/platform.c
+@@ -555,8 +555,6 @@ static int pstore_write_user_compat(struct pstore_record *record,
+  */
+ int pstore_register(struct pstore_info *psi)
+ {
+-	struct module *owner = psi->owner;
+-
+ 	if (backend && strcmp(backend, psi->name)) {
+ 		pr_warn("ignoring unexpected backend '%s'\n", psi->name);
+ 		return -EPERM;
+@@ -591,10 +589,6 @@ int pstore_register(struct pstore_info *psi)
+ 	sema_init(&psinfo->buf_lock, 1);
+ 	spin_unlock(&pstore_lock);
+ 
+-	if (owner && !try_module_get(owner)) {
+-		psinfo = NULL;
+-		return -EINVAL;
+-	}
+ 
+ 	if (psi->flags & PSTORE_FLAGS_DMESG)
+ 		allocate_buf_for_compression();
+@@ -626,8 +620,6 @@ int pstore_register(struct pstore_info *psi)
+ 
+ 	pr_info("Registered %s as persistent store backend\n", psi->name);
+ 
+-	module_put(owner);
+-
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(pstore_register);
+-- 
+2.20.1
 
-That's much clearer now - please add these bits of info to the commit
-log, it is essential that developers can find an explanation for a
-change like this one there IMO.
-
-Overall the code changes are fine, I am not a big fan of the (void)
-cast (I don't think error codes should be ignored) but it is acceptable,
-in this context.
-
-Thank you for taking some time to review the code together.
-
-Lorenzo
