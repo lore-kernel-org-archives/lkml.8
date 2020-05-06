@@ -2,222 +2,178 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1EBC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A3CC4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C03420708
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2703720A8B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:16:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="t+8NSH81";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="DHrGY3Gm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729598AbgEFRQR (ORCPT
+        id S1729494AbgEFRQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 13:16:17 -0400
-Received: from mga01.intel.com ([192.55.52.88]:55139 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725799AbgEFRQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 13:16:17 -0400
-IronPort-SDR: JZiZOhXHPO8roHD5zsIcpU4Ecc/Cm5Dr92z82CQ0MmWVCkqBvJ2PSe3LDRTfkCBSz2ebLeGlVt
- ztA6v3Psm2hw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 10:16:13 -0700
-IronPort-SDR: 8GMkJ0IwKqfes7ax+V+jV+bh8iJp/P/4zHzD1dSLKooKzVjHVczptuoRa+T5iMGIzgSVqLiZk8
- gtBkVFQUMGdA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,360,1583222400"; 
-   d="scan'208";a="296252742"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 06 May 2020 10:16:13 -0700
-Received: from [10.249.228.227] (abudanko-mobl.ccr.corp.intel.com [10.249.228.227])
-        by linux.intel.com (Postfix) with ESMTP id 4020458043A;
-        Wed,  6 May 2020 10:16:11 -0700 (PDT)
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v2 00/11] perf: support enable and disable commands in stat
- and record modes
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Organization: Intel Corp.
-Message-ID: <d582cc3d-2302-c7e2-70d3-bc7ab6f628c3@linux.intel.com>
-Date:   Wed, 6 May 2020 20:16:10 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Wed, 6 May 2020 13:16:50 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:13588 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725799AbgEFRQt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 13:16:49 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 046HFf3A012841;
+        Wed, 6 May 2020 10:16:37 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=proofpoint;
+ bh=dJy/LMohT4O+Fq6WtjyAILPqPwccX4Ptu8+lVfyVAPQ=;
+ b=t+8NSH81Cye/ygQ9SDwnB6Ny8t35LUF15+MQEp3DmUmq1oxRh/g4MBPDX4KiXNNDbOKN
+ nmDQ7TeFAeSJwPbjLgEQ+GZweKbEC72pdYJiofmI7Hh5KY0mOltyuGvaVKPGjoezy2rX
+ Vh3s03e0Tuz5xhjHBN1XTDF5JmPhOLcxb3X3dvRcVeEwsIakw7cmHmExMA34IbBJuicq
+ P9bUIC6xgC9g2E1Y5B26Q4XAn2yVqmb824T5oawvfjZmYM5q4ui+Thoo+V67Q9Y9uxfn
+ NfJETcGOAUsjvpYArJ/RFFH3ad4IVgGtM5frlb2g7vIVMHoOi2NnTowA1XkXD/h90ZVr 9Q== 
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2170.outbound.protection.outlook.com [104.47.56.170])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 30s4exs9k1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 May 2020 10:16:37 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NYZglAYql8zDy+JYdJR5Ox5k3JLPxdhvT+z3uDRw9La3nuuusnGuMUETlWpEVHBMTrEBDSiP18eLGi3e3O4XFZjE723Hbgk4JzOmIUMVAUrJaAXABW6Ap4jHyDOVlzKfwwaq5WWN9PXcIGZZgdJRZzGWQ6LlMEeJjqtOTGImQVhtDM9G7RlWNv8ib5hMTNEiC9pY6Ly80H2EpfUre1Qe0LXyOuER+2yo+fjP/A4oAmHOe79vF7MEXX2AGnRJV7ZBLi+YHJoJPGjM+bh5jbEFv8f47Qyun/UGDenz8s6lAatGISgy079oPVgc/GIqlTrBxb0gNvcVZE34IL9Zr31hHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dJy/LMohT4O+Fq6WtjyAILPqPwccX4Ptu8+lVfyVAPQ=;
+ b=OEcEYrJVNHsV+wQ8qxZKIvQZGUQHfM7Y54kutGHdEMZqTz0Kz2xACCSZLsEP7HAO/qVGRrUl/c7v12FMHKNOhlEzaw97hxrdtZMGvBDOk+HpVTRDI4iPhuP3CeQM+s4Voq8qlc6ppuM9fB5MXna9+Eny/oX27dnN39fbv7PVgIZn0ttboXPF3RprSe82Hxry4B1zN3O27KEqWp9qd/51oY1Pn5A3+fnCNRwG41pmceoRG5nP4yFYe5aiFOk73C1x3G5P+XysjUrf/JKKQjxnGhVA1qOuwjzkEJLhT1fxrMe74VgQrjoLJr/2kvBiA5HYLjC/ugQEHCgAtVC8fuJWHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
+ dkim=pass header.d=cadence.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dJy/LMohT4O+Fq6WtjyAILPqPwccX4Ptu8+lVfyVAPQ=;
+ b=DHrGY3Gm1gLNT5J2pVSLcm6tHmI877sSV++NlMFETPVGD1tlQK5tCyKlXDINElVpQ1tlFQhWVqHsZwfnvYbq5mSk9vDQ/qRkZo2EmM5xNvXECqwyEYXnVaqpXmLdRZiqm3GMda6IibwwM8qkk6WbvrvGePqF3XX7UIAMgFY2PX4=
+Received: from MN2PR07MB6208.namprd07.prod.outlook.com (2603:10b6:208:111::32)
+ by MN2PR07MB6750.namprd07.prod.outlook.com (2603:10b6:208:169::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Wed, 6 May
+ 2020 17:16:33 +0000
+Received: from MN2PR07MB6208.namprd07.prod.outlook.com
+ ([fe80::715c:e8d2:508a:e2e1]) by MN2PR07MB6208.namprd07.prod.outlook.com
+ ([fe80::715c:e8d2:508a:e2e1%6]) with mapi id 15.20.2958.030; Wed, 6 May 2020
+ 17:16:32 +0000
+From:   Tom Joseph <tjoseph@cadence.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 0/4] PCI: cadence: Deprecate inbound/outbound specific
+ bindings
+Thread-Topic: [PATCH v2 0/4] PCI: cadence: Deprecate inbound/outbound specific
+ bindings
+Thread-Index: AQHWFK1tK73RrSoXgkaVdJGJCCW8UqibaZ5w
+Date:   Wed, 6 May 2020 17:16:32 +0000
+Message-ID: <MN2PR07MB620800FD7334E8FCE795722AA1A40@MN2PR07MB6208.namprd07.prod.outlook.com>
+References: <20200417114322.31111-1-kishon@ti.com>
+In-Reply-To: <20200417114322.31111-1-kishon@ti.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcdGpvc2VwaFxhcHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJhMjllMzViXG1zZ3NcbXNnLTUzNGMzMzVhLThmYmQtMTFlYS04OTI3LTUwN2I5ZDg0NGVhMlxhbWUtdGVzdFw1MzRjMzM1Yi04ZmJkLTExZWEtODkyNy01MDdiOWQ4NDRlYTJib2R5LnR4dCIgc3o9IjIxOTQiIHQ9IjEzMjMzMjU4OTkwODMwNDU4MCIgaD0iV0s4NisvOEtjUkhFUVBOaXNvdU8rYTg0eUZnPSIgaWQ9IiIgYmw9IjAiIGJvPSIxIi8+PC9tZXRhPg==
+x-dg-rorf: true
+authentication-results: ti.com; dkim=none (message not signed)
+ header.d=none;ti.com; dmarc=none action=none header.from=cadence.com;
+x-originating-ip: [185.217.253.59]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6b2161ed-4f1c-4445-aa70-08d7f1e13961
+x-ms-traffictypediagnostic: MN2PR07MB6750:
+x-microsoft-antispam-prvs: <MN2PR07MB6750CFD99E080CDBF6469A21A1A40@MN2PR07MB6750.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 03950F25EC
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: W9FqwN9lZSjmtiZBiM2BHA5XJDvLGX1gvfbKkKilrd14Rwbtckw6hkBqDXm9Pl7/nmf0km55pGws+25oFwsk8B6kTx9/JAgIdW0/Bv8SEUaefkdxqFyxD1NcULbsGGiPOOqpVdU5B5d0qg7kiJpIXlLUp6CYD7drFqoWTtZBFTVBEhZK82q4yUk7Wka6GibhYZ8dEG2ZnXNAqt98HcLv9qExvoYA+TfzHhdzR0P+FUkf0b48JVixPNBMv6genHodCDuvcaMbildPfAzTx+cdF3UgcWk4/6O9mmeBsR/mUFwKmRx9MoqWvg4pNWfqvhE+C1ToidnNQp1TrlACo62u3jf7SNN61rKTTP5FdzNz6I4l3ZRh3hSeeuaWE0jM+Q1yn+IydEVlbQ31LKZmO2O+ENQW0hOZJumGFpKW/fc02kIYusDg8i0jY4UZDpIxzgv4nGHDVC0mksphDfBASXfLfrQ0GzmKZ4/HdVhba857YsFa7BXIcfYzx7iwejcAD3+pnUtz6KqUOMTkDrPJ8tucS9hcSkBg47IGIi6Tc/DqEzokBFE0KkaSPL+eGT0IO5r7BMtILQCepvYp0jovr/itwrmQUHW+1TOOBFiPqkwCU9iBF4j07QmiC6E8qZnoEQyAnPOMO3PPtlU4ZHssB1z5OQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR07MB6208.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(36092001)(33430700001)(54906003)(7696005)(55016002)(71200400001)(4326008)(9686003)(110136005)(8936002)(8676002)(26005)(66476007)(5660300002)(66946007)(76116006)(52536014)(66556008)(33656002)(66446008)(2906002)(64756008)(33440700001)(53546011)(86362001)(6506007)(186003)(966005)(498600001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: SXGc2b4Mhqprjnr7oE2PZpCs+0Meiva8NmZgWAHi2CEJapQRJ4FiJcZ3X3WYyypIKdv4+TBr7vY/YZUaYUqpG9goiPcnIzOXTQWdZOufzTQDNkL1BIleex8zhbxx72fAA1BxrKnGr4HYeis8c5vRRzAEKmd6+uv24zlybYFE7ekkmhQvRsFhge3ahMX4Zc6y0itqWPh3A+UTi/AxjeFF7xLecKZP6ZyLDE6Dyx5ZzCUGYtHr4KWaYBG1QhYvG+axAjuH2kjtoFt2R8y1+Z+PU5hgJ6LqT2Ia9HxLl6zvqxTmzZuR7O/uoQbIFCZ45FAYcYIhnSAwzXU2MKkBKlrqAcU5dgyDNZ+dxVUt5GWbTqdLUI/D0HHF2GpIoIRLSr8+Ii1/atnqm5tpvEciRIPr91cjzSI3uOEetjKTJtbP6s4SqIj4TPa7KF3jp+WPlBh+HPInyrV3CsRdCn1Id8Smcm9+ZZwxHThtkyeMohQExDOhBoPgokBKuiUZTI3Om5FvMJegqiyBdTFpoMNAjQ22hYT+B/0Kq4K/FOk9g7WOk2QsM5I6Gqd/+vBSz/Rc53kqjsKicIRaPyO11ysT5e7NdBJWswLwayyHgRkKlWnwLy2QF0j6Hubn/VtkROjeH2VKR0sXHyC8RVFHc5u+8j8kJPkmbOudKaHSXPNfb8+GoILZhs9zRKG1PzCRf9BG3q+sFv1fXzTAsJiMe3T2ioqA+RGnAjRbnxRm31TVYQOQ21HHakmeCaKn3Tdi8DtFfBgAyv/PLbS2X/tkojnj+WQn1uVXJDhQx9nGai9q50btvGg=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b2161ed-4f1c-4445-aa70-08d7f1e13961
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2020 17:16:32.6383
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kpGRBz/vmLRASao01r+gUU1euke3YPLK+dHhT0VuCpsCEpjuIiMErgKRBcpS5DTAhaRhcPk8qZFfTOwjAgFFnJWFmeEzbjXoKbqvlGGHZWM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR07MB6750
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-06_09:2020-05-05,2020-05-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 suspectscore=0
+ malwarescore=0 adultscore=0 mlxscore=0 mlxlogscore=999 spamscore=0
+ priorityscore=1501 lowpriorityscore=0 bulkscore=0 phishscore=0
+ impostorscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2005060140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Changes in v2:
-- renamed resume and pause commands to enable and disable ones, renamed
-  CTL_CMD_RESUME and CTL_CMD_PAUSE to CTL_CMD_ENABLE and CTL_CMD_DISABLE
-  to fit to the appropriate ioctls and avoid mixing up with PAUSE_OUTPUT
-  ioctl;
-- factored out event handling loop into a handle_events() for stat mode;
-- separated -D,--delay=-1 into separate patches for stat and record modes;
+> -----Original Message-----
+> From: Kishon Vijay Abraham I <kishon@ti.com>
+> Sent: 17 April 2020 12:43
+> To: Tom Joseph <tjoseph@cadence.com>; Bjorn Helgaas
+> <bhelgaas@google.com>; Rob Herring <robh+dt@kernel.org>; Lorenzo
+> Pieralisi <lorenzo.pieralisi@arm.com>; Andrew Murray
+> <amurray@thegoodpenguin.co.uk>
+> Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Subject: [PATCH v2 0/4] PCI: cadence: Deprecate inbound/outbound specific
+> bindings
+>=20
+>=20
+> This series is a result of comments given by Rob Herring @ [1].
+> Patch series changes the DT bindings and makes the corresponding driver
+> changes.
+>=20
+> [1] ->
+> https://urldefense.com/v3/__http://lore.kernel.org/r/20200219202700.GA2
+> 1908@bogus__;!!EHscmS1ygiU1lA!WloWcIaUFQabEO5FFWQOtNXLI_LZm6w
+> 5hMqRP7KjVX7QEGHBX7W13D1hEXnRbEg$
+>=20
+> Changes from v1:
+> 1) Added Reviewed-by: Rob Herring <robh@kernel.org> for dt-binding patch
+> 2) Fixed nitpick comments from Bjorn Helgaas
+> 3) Added a patch to read 32-bit Vendor ID/Device ID property from DT
+>=20
+> Kishon Vijay Abraham I (4):
+>   dt-bindings: PCI: cadence: Deprecate inbound/outbound specific
+>     bindings
+>   PCI: cadence: Use "dma-ranges" instead of "cdns,no-bar-match-nbits"
+>     property
+>   PCI: cadence: Remove "cdns,max-outbound-regions" DT property
+>   PCI: cadence: Fix to read 32-bit Vendor ID/Device ID property from DT
+>=20
+>  .../bindings/pci/cdns,cdns-pcie-ep.yaml       |  2 +-
+>  .../bindings/pci/cdns,cdns-pcie-host.yaml     |  3 +--
+>  .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 25 +++++++++++++++++++
+>  .../bindings/pci/cdns-pcie-host.yaml          | 10 ++++++++
+>  .../devicetree/bindings/pci/cdns-pcie.yaml    |  8 ------
+>  .../controller/cadence/pcie-cadence-host.c    | 21 +++++++++-------
+>  drivers/pci/controller/cadence/pcie-cadence.h |  6 ++---
+>  7 files changed, 51 insertions(+), 24 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-
+> ep.yaml
+>=20
+> --
+> 2.17.1
 
-v1: https://lore.kernel.org/lkml/825a5132-b58d-c0b6-b050-5a6040386ec7@linux.intel.com/
-
-repo: tip of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/core
-
-The patch set implements handling of 'start disabled', 'enable' and 'disable'
-external control commands which can be provided for stat and record modes
-of the tool from an external controlling process. 'start disabled' command
-can be used to postpone enabling of events in the beginning of a monitoring
-session. 'enable' and 'disable' commands can be used to enable and disable
-events correspondingly any time after the start of the session.
-
-The 'start disabled', 'enable' and 'disable' external control commands can be
-used to focus measurement on specially selected time intervals of workload
-execution. Focused measurement reduces tool intrusion and influence on
-workload behavior, reduces distortion and amount of collected and stored
-data, mitigates data accuracy loss because measurement and data capturing
-happen only during intervals of interest.
-
-A controlling process can be a bash shell script [1], native executable or
-any other language program that can directly work with file descriptors,
-e.g. pipes [2], and spawn a process, specially the tool one.
-
--D,--delay <val> option is extended with -1 value to skip events enabling
-in the beginning of a monitoring session ('start disabled' command). --ctl-fd
-and --ctl-fd-ack command line options are introduced to provide the tool
-with a pair of file descriptors to listen to control commands and reply to
-the controlling process on the completion of received commands.
-
-The tool reads two byte control command message from ctl-fd descriptor,
-handles the command and optionally replies two bytes acknowledgement message
-to fd-ack descriptor, if it is specified on the command line. 'enable'
-command is recognized as 'e' character message and 'disable' command is
-recognized as 'd' character message both received from ctl-fd descriptor.
-Completion message is 'a''\n' and sent to fd-ack descriptor.
-
-example bash script demonstrating simple use case:
-
-#!/bin/bash
-
-ctl_dir=/tmp/
-
-ctl_fifo=${ctl_dir}perf_ctl.fifo
-test -p ${ctl_fifo} && unlink ${ctl_fifo}
-mkfifo ${ctl_fifo} && exec {ctl_fd}<>${ctl_fifo}
-
-ctl_ack_fifo=${ctl_dir}perf_ctl_ack.fifo
-test -p ${ctl_ack_fifo} && unlink ${ctl_ack_fifo}
-mkfifo ${ctl_ack_fifo} && exec {ctl_fd_ack}<>${ctl_ack_fifo}
-
-perf stat -D -1 -e cpu-cycles -a -I 1000                \
-          --ctl-fd ${ctl_fd} --ctl-fd-ack ${ctl_fd_ack} \
-          -- sleep 40 &
-perf_pid=$!
-
-sleep 5  && echo 'e' >&${ctl_fd} && read -u ${ctl_fd_ack} e1 && echo "enabled(${e1})"
-sleep 10 && echo 'd' >&${ctl_fd} && read -u ${ctl_fd_ack} d1 && echo "disabled(${d1})"
-sleep 5  && echo 'e' >&${ctl_fd} && read -u ${ctl_fd_ack} e2 && echo "enabled(${e2})"
-sleep 10 && echo 'd' >&${ctl_fd} && read -u ${ctl_fd_ack} d2 && echo "disabled(${d2})"
-
-exec {ctl_fd_ack}>&- && unlink ${ctl_ack_fifo}
-exec {ctl_fd}>&- && unlink ${ctl_fifo}
-
-wait -n ${perf_pid}
-exit $?
-
-
-Script output:
-
-[root@host acme] example
-Events disabled
-#           time             counts unit events
-     1.001101062      <not counted>      cpu-cycles                                                  
-     2.002994944      <not counted>      cpu-cycles                                                  
-     3.004864340      <not counted>      cpu-cycles                                                  
-     4.006727177      <not counted>      cpu-cycles                                                  
-Events enabled
-enabled(a)
-     4.993808464          3,124,246      cpu-cycles                                                  
-     5.008597004          3,325,624      cpu-cycles                                                  
-     6.010387483         83,472,992      cpu-cycles                                                  
-     7.012266598         55,877,621      cpu-cycles                                                  
-     8.014175695         97,892,729      cpu-cycles                                                  
-     9.016056093         68,461,242      cpu-cycles                                                  
-    10.017937507         55,449,643      cpu-cycles                                                  
-    11.019830154         68,938,167      cpu-cycles                                                  
-    12.021719952         55,164,101      cpu-cycles                                                  
-    13.023627550         70,535,720      cpu-cycles                                                  
-    14.025580995         53,240,125      cpu-cycles                                                  
-disabled(a)
-    14.997518260         53,558,068      cpu-cycles                                                  
-Events disabled
-    15.027216416      <not counted>      cpu-cycles                                                  
-    16.029052729      <not counted>      cpu-cycles                                                  
-    17.030904762      <not counted>      cpu-cycles                                                  
-    18.032073424      <not counted>      cpu-cycles                                                  
-    19.033805074      <not counted>      cpu-cycles                                                  
-Events enabled
-enabled(a)
-    20.001279097          3,021,022      cpu-cycles                                                  
-    20.035044381          6,434,367      cpu-cycles                                                  
-    21.036923813         89,358,251      cpu-cycles                                                  
-    22.038825169         72,516,351      cpu-cycles                                                  
-#           time             counts unit events
-    23.040715596         55,046,157      cpu-cycles                                                  
-    24.042643757         78,128,649      cpu-cycles                                                  
-    25.044558535         61,052,428      cpu-cycles                                                  
-    26.046452785         62,142,806      cpu-cycles                                                  
-    27.048353021         74,477,971      cpu-cycles                                                  
-    28.050241286         61,001,623      cpu-cycles                                                  
-    29.052149961         61,653,502      cpu-cycles                                                  
-disabled(a)
-    30.004980264         82,729,640      cpu-cycles                                                  
-Events disabled
-    30.053516176      <not counted>      cpu-cycles                                                  
-    31.055348366      <not counted>      cpu-cycles                                                  
-    32.057202097      <not counted>      cpu-cycles                                                  
-    33.059040702      <not counted>      cpu-cycles                                                  
-    34.060843288      <not counted>      cpu-cycles                                                  
-    35.000888624      <not counted>      cpu-cycles                                                  
-[root@host acme]# 
-
-[1] http://man7.org/linux/man-pages/man1/bash.1.html
-[2] http://man7.org/linux/man-pages/man2/pipe.2.html
-
----
-Alexey Budankov (11):
-  perf evlist: introduce control file descriptors
-  perf evlist: implement control command handling functions
-  perf stat: factor out event handling loop into a function
-  perf stat: extend -D,--delay option with -1 value
-  perf stat: implement control commands handling
-  perf stat: introduce --ctl-fd[-ack] options
-  perf docs: extend stat mode docs with info on --ctl-fd[-ack] options
-  perf record: extend -D,--delay option with -1 value
-  perf record: implement control commands handling
-  perf record: introduce --ctl-fd[-ack] options
-  perf docs: extend record mode docs with info on --ctl-fd[-ack] options
-
- tools/perf/Documentation/perf-record.txt |  39 +++++++
- tools/perf/Documentation/perf-stat.txt   |  40 +++++++
- tools/perf/builtin-record.c              |  39 ++++++-
- tools/perf/builtin-stat.c                | 137 ++++++++++++++++-------
- tools/perf/builtin-trace.c               |   2 +-
- tools/perf/util/evlist.c                 | 103 +++++++++++++++++
- tools/perf/util/evlist.h                 |  18 +++
- tools/perf/util/record.h                 |   4 +-
- tools/perf/util/stat.h                   |   4 +-
- 9 files changed, 339 insertions(+), 47 deletions(-)
-
--- 
-2.24.1
-
+Acked-by: Tom Joseph <tjoseph@cadence.com>
