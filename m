@@ -2,141 +2,83 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D67A0C47247
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 00:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 811E0C47254
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 00:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B469420659
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 00:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56B7820721
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 00:34:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cuQ2w4hF"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sZ9fySB+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729571AbgEFAc6 (ORCPT
+        id S1729620AbgEFAeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 20:32:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32876 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728512AbgEFAc5 (ORCPT
+        Tue, 5 May 2020 20:34:09 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:28644 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728512AbgEFAeJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 20:32:57 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40106C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 17:32:57 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id u10so1567418pls.8
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 17:32:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Y9zuKvlUePaRKCcBUvJhmjYkDpj49I67K3FTRShwtUw=;
-        b=cuQ2w4hFuOAp5SPmwkXQA3d7zpA3nOpK+tpMpaUccVfEdFhAYLkOSZKmoq70Mmb/G8
-         jJf7rPIEOW2i5o+RUZaKyAfT0DGXUi2QTXN1XdKB3Bny6hvpfblXDMcc8ZpyT0NkG5yo
-         eiaOpfwqLoLG0Zv5VKd8HK/OkL8Dc8aooZaXfkC/pw7/SG6TbLW1GvU4Az+5FyvSXNHN
-         OYjZBwnkNOUglIXk3w/SRhkw8hSAUbz0GBpxIy2eutHb6qZ1czfTeBiHlgIRYJOLYmBn
-         eD1DSZbBFZ2YNJt1aUuBv0yXd5TRhMuO6fxhGmNaNrciRaIvZEM4iv0a/EOLILxygP+T
-         z9Jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Y9zuKvlUePaRKCcBUvJhmjYkDpj49I67K3FTRShwtUw=;
-        b=TbqXopVqUok/4jqBEFsYXf16sRqXqtJAoD/cL2tVLcODCsHAYpR/P38QpTplQIXXkQ
-         y4J/M7OCNq1PimB4t95fLjKeFsApRSQ8zA1xrY8mW7k6FhzoTAAUaNkqru4fqYmd1IqA
-         k9j5/bu9mqgSYh/i+N0zEoeaZTITY5LJRCIkLbRmOaUb8jyn+moiPGlFUpkRnfl/mkMi
-         FZNMkGbIaODLutoeWjBfYHU/5v44qpXBr+CfQveAAwnb2ojv7Y2h26jAAiBDXrQNk8i+
-         RqctP2KhAnux63mmEKZENu9BGb0ngoAK6ejMzUmH/6U+2xvmBqhkDbGoFw7ygiebajRH
-         ewsg==
-X-Gm-Message-State: AGi0PubJUf6zQckuvxIXYwCXiSSkK6ERLbU9rtQUc9VrdBIliA1EXqbF
-        NRRBma6l0JIsUbWZDJbmlmAWMQ==
-X-Google-Smtp-Source: APiQypKmfqHYDq43uE5ZHs0fFzHfdRm9ymJuzwc4d1Km5l72JwpMpLECHMUpOF1jGLvA3LLYYiGasg==
-X-Received: by 2002:a17:902:56d:: with SMTP id 100mr5853353plf.123.1588725176491;
-        Tue, 05 May 2020 17:32:56 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id y21sm10907pfm.219.2020.05.05.17.32.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 17:32:55 -0700 (PDT)
-Date:   Tue, 5 May 2020 17:33:41 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     ohad@wizery.com, loic.pallardy@st.com, arnaud.pouliquen@st.com,
-        s-anna@ti.com, linux-remoteproc@vger.kernel.org, corbet@lwn.net,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 05/14] remoteproc: Refactor function rproc_fw_boot()
-Message-ID: <20200506003341.GD2329931@builder.lan>
-References: <20200424200135.28825-1-mathieu.poirier@linaro.org>
- <20200424200135.28825-6-mathieu.poirier@linaro.org>
+        Tue, 5 May 2020 20:34:09 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588725248; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=z/jABXqPP5ZITSWE+wzLng9/Rfx9IcUqoPAPBImRD0I=; b=sZ9fySB++ZPWByTLSzuFMi2RuITUgArKaN4uliD/Bl6gIpZAlX7/nFQvYZeeEJOGA61Lunzi
+ kOSpYLM8EuFmkay6Xs57uOATDKpvtcZ59WGO19GJSdsr9MbSbAUytGpheB0KO70k2t9kwxUK
+ AXmUBnb3TcfAJPau2Vi8oNFrPMM=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb205f3.7f853363cdf8-smtp-out-n03;
+ Wed, 06 May 2020 00:33:55 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BFB32C432C2; Wed,  6 May 2020 00:33:54 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E0914C433D2;
+        Wed,  6 May 2020 00:33:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E0914C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v6 8/8] bus: mhi: core: Ensure non-zero session or
+ sequence ID values are used
+To:     Bhaumik Bhatt <bbhatt@codeaurora.org>, mani@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hemantk@codeaurora.org
+References: <1588718832-4891-1-git-send-email-bbhatt@codeaurora.org>
+ <1588718832-4891-9-git-send-email-bbhatt@codeaurora.org>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <f0079ae7-869c-90ee-1645-115e1d9066d9@codeaurora.org>
+Date:   Tue, 5 May 2020 18:33:52 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200424200135.28825-6-mathieu.poirier@linaro.org>
+In-Reply-To: <1588718832-4891-9-git-send-email-bbhatt@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 24 Apr 13:01 PDT 2020, Mathieu Poirier wrote:
-
-> Refactor function rproc_fw_boot() in order to better reflect the work
-> that is done when supporting scenarios where the remoteproc core is
-> synchronising with a remote processor.
+On 5/5/2020 4:47 PM, Bhaumik Bhatt wrote:
+> While writing any sequence or session identifiers, it is possible that
+> the host could write a zero value, whereas only non-zero values should
+> be supported writes to those registers. Ensure that the host does not
+> write a non-zero value for them and also log them in debug messages.
 > 
-> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
 > ---
->  drivers/remoteproc/remoteproc_core.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index a02593b75bec..e90a21de9de1 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -1370,9 +1370,9 @@ static int rproc_start(struct rproc *rproc, const struct firmware *fw)
->  }
->  
->  /*
-> - * take a firmware and boot a remote processor with it.
-> + * boot or synchronise with a remote processor.
->   */
-> -static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
-> +static int rproc_actuate_device(struct rproc *rproc, const struct firmware *fw)
 
-Per patch 4 this function will if rproc_needs_syncing() be called with
-fw == NULL, it's not obvious to me that the various operations on "fw"
-in this function are valid anymore.
+Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
 
->  {
->  	struct device *dev = &rproc->dev;
->  	const char *name = rproc->firmware;
-> @@ -1382,7 +1382,9 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
->  	if (ret)
->  		return ret;
->  
-> -	dev_info(dev, "Booting fw image %s, size %zd\n", name, fw->size);
-> +	if (!rproc_needs_syncing(rproc))
-
-Can't we make this check on fw, to make the relationship "if we where
-passed a firmware object, we're going to load and boot that firmware"?
-
-Regards,
-Bjorn
-
-> +		dev_info(dev, "Booting fw image %s, size %zd\n",
-> +			 name, fw->size);
->  
->  	/*
->  	 * if enabling an IOMMU isn't relevant for this rproc, this is
-> @@ -1818,7 +1820,7 @@ int rproc_boot(struct rproc *rproc)
->  		}
->  	}
->  
-> -	ret = rproc_fw_boot(rproc, firmware_p);
-> +	ret = rproc_actuate_device(rproc, firmware_p);
->  
->  	release_firmware(firmware_p);
->  
-> -- 
-> 2.20.1
-> 
+-- 
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
