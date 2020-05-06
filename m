@@ -2,110 +2,136 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 302DEC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A387C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0678120B1F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:25:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588778711;
-	bh=L2ExiaFaaJ7NWX2ZeWy30+rPSKc5qvFJX+4HTwcNHAk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J0eXUhFAPZw7ALaN9Ir3Yzh3iw6wcdzmd3flFTfd2DrA+hMFM2JtdCRvUgz2nsQIL
-	 T3jVHZN0FXMiz7Fo6059GGjXBn0HS/pW+XodQbqEyhjDWH5LdZeADrlWdA2OKvF3Dd
-	 zQwxR4Q+p0OYmDLmoOdWRKSaKSlQH50CHT5DR+UE=
+	by mail.kernel.org (Postfix) with ESMTP id 51ACE20A8B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:25:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k1r4mxpe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729970AbgEFPZK (ORCPT
+        id S1729977AbgEFPZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:25:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44374 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729455AbgEFPZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:25:06 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26057215A4;
-        Wed,  6 May 2020 15:25:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588778705;
-        bh=L2ExiaFaaJ7NWX2ZeWy30+rPSKc5qvFJX+4HTwcNHAk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sBwkKPsqo2ezpXRLVukNGNcdKjcTLfUX9AuVGhhZocvNQ3Bp1POS5hdesfGBN5cSx
-         S+nQBr2ZYBunUnemKuWJFiTJWUSEBFCL7MHriR4EQfbCefLeRExNa6EPtgDgyksIgl
-         47U1c9pgcb77sp3V9zOUrVyfwDtSog64kjCL5o5o=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Andi Kleen <ak@linux.intel.com>,
-        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 38/91] perf tools: Simplify checking if SMT is active.
-Date:   Wed,  6 May 2020 12:21:41 -0300
-Message-Id: <20200506152234.21977-39-acme@kernel.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
-References: <20200506152234.21977-1-acme@kernel.org>
+        Wed, 6 May 2020 11:25:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729059AbgEFPZH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:25:07 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C3CFC061A0F;
+        Wed,  6 May 2020 08:25:07 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id t3so2359308qkg.1;
+        Wed, 06 May 2020 08:25:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2rKUJoVCstS8j+217iqzpL0arUK/6LFCBfMeZ1DLw34=;
+        b=k1r4mxpeI+EmP8nUVlONZx45dwe25zNrS7sa/tPEShURitcx+P1p2e9KLZOugr4Dmn
+         LFSdKpg6yKHiXk3XWmkdLRd71m7BeSD0HQHpmGjEk/0IRVrFkIHMJ9ucnyih7SJgpfnf
+         6hGB0lTi6BzYjHtv+ByIqvryFbllvlshoWpqVDaoPnF6l0hNRwPT5yqdSfj4n4XW/nio
+         L7e2gguZj/8WBw9++jwHEZXh/nui9vo9UbwLjsDIsuPEZPcfpVnEkGEjHxBklXOIEt1s
+         8zN9jL2f1PFcF67Bijq6NXSHeL24FVl2bxBxPG8D4U1AcywcVLCjl94k40aYI5wE0ylE
+         60hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2rKUJoVCstS8j+217iqzpL0arUK/6LFCBfMeZ1DLw34=;
+        b=LFPtLfkyslSXy2yY1scU1WwfX+RXOPHSizvPp9e4LRBhKQYxhtNkdnkeMBw3aOzS1P
+         fHWqoEjc7hlVUJniFXhU6Q7soHvIq4RwFXRccqlkH9b8wOgQFE19cgygh6aRzAuD6Bqt
+         8p0/acgRv3LW30OpS/fEWjDi1T+7aPOixbef7K/+Sn/t1yvWgNI68QWgmd2ew3tJB8mT
+         aQ59LiFMlUjsc1KkBdX+JpRwGPgR32Q//wxKrGfCTQ27JOE17wji5x5LwQehdQB1DhWt
+         ng+78d6G1la+igJKJgj2H8goP4yOCUYlD+rZtZvBKxqDL6eginBhjgjRurGr6cdPoAwH
+         MN0Q==
+X-Gm-Message-State: AGi0PuahUM/aV7kmmESMkcPDzhEnP8ksYCPxXEBRskDXRqRrK0NUAs2f
+        DB5MtKZV5meFsBEVEhB1HNYA2QBZ8umRSOV0/gM=
+X-Google-Smtp-Source: APiQypLN8pqWxzhOjoSavD/Blq7jrlAhL4/SdXZMluNjCSenj8jZiR8ivhrWbzxp8MtF270/m2d7r/XhrXZQ+gkQYrk=
+X-Received: by 2002:a37:6c81:: with SMTP id h123mr9142170qkc.290.1588778706429;
+ Wed, 06 May 2020 08:25:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200506054920.109738-1-eizan@chromium.org> <20200506154832.v2.3.Ia8efd7905e2fcfc81f547e27a51f06373624b3da@changeid>
+In-Reply-To: <20200506154832.v2.3.Ia8efd7905e2fcfc81f547e27a51f06373624b3da@changeid>
+From:   Enric Balletbo Serra <eballetbo@gmail.com>
+Date:   Wed, 6 May 2020 17:24:55 +0200
+Message-ID: <CAFqH_531xmZDTCdF2=rHP7fu5=9w_CiOafHQKpcmjNwYBK+gnA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] [media] mtk-mdp: handle vpu_wdt_reg_handler()
+ errors during probe
+To:     Eizan Miyamoto <eizan@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Hi Eizan,
 
-SMT now could be disabled via "/sys/devices/system/cpu/smt/control".
+Thank you for your patch.
 
-Status is shown in "/sys/devices/system/cpu/smt/active" simply as "0" / "1".
+Missatge de Eizan Miyamoto <eizan@chromium.org> del dia dc., 6 de maig
+2020 a les 7:51:
+>
+> This is a cleanup to better handle errors during MDP probe.
+>
+> Signed-off-by: eizan@chromium.org
 
-If this knob isn't here then fallback to checking topology as before.
+ditto, remove the above line.
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/158817741394.748034.9273604089138009552.stgit@buzz
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/smt.c | 4 ++++
- 1 file changed, 4 insertions(+)
+> Signed-off-by: Eizan Miyamoto <eizan@chromium.org>
+> ---
 
-diff --git a/tools/perf/util/smt.c b/tools/perf/util/smt.c
-index 8481842e9edb..20bacd5972ad 100644
---- a/tools/perf/util/smt.c
-+++ b/tools/perf/util/smt.c
-@@ -15,6 +15,9 @@ int smt_on(void)
- 	if (cached)
- 		return cached_result;
- 
-+	if (sysfs__read_int("devices/system/cpu/smt/active", &cached_result) > 0)
-+		goto done;
-+
- 	ncpu = sysconf(_SC_NPROCESSORS_CONF);
- 	for (cpu = 0; cpu < ncpu; cpu++) {
- 		unsigned long long siblings;
-@@ -42,6 +45,7 @@ int smt_on(void)
- 	}
- 	if (!cached) {
- 		cached_result = 0;
-+done:
- 		cached = true;
- 	}
- 	return cached_result;
--- 
-2.21.1
+Other than that:
 
+Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+
+>
+> Changes in v1:
+> - remove unnecessary error handling labels in favor of err_m2m_register
+>
+>  drivers/media/platform/mtk-mdp/mtk_mdp_core.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+> index 9b24b8d46eb7..17d155219ba2 100644
+> --- a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+> +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+> @@ -188,8 +188,12 @@ static int mtk_mdp_probe(struct platform_device *pdev)
+>         }
+>
+>         mdp->vpu_dev = vpu_get_plat_device(pdev);
+> -       vpu_wdt_reg_handler(mdp->vpu_dev, mtk_mdp_reset_handler, mdp,
+> -                           VPU_RST_MDP);
+> +       ret = vpu_wdt_reg_handler(mdp->vpu_dev, mtk_mdp_reset_handler, mdp,
+> +                                 VPU_RST_MDP);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "Failed to register reset handler\n");
+> +               goto err_m2m_register;
+> +       }
+>
+>         platform_set_drvdata(pdev, mdp);
+>
+> --
+> 2.26.2.526.g744177e7f7-goog
+>
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
