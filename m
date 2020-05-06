@@ -2,80 +2,96 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F01AC38A24
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DCCC38A24
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A1EC20575
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C107A20575
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:49:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HKgt/yuc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbgEFMtn (ORCPT
+        id S1728542AbgEFMtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 08:49:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:35878 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728081AbgEFMtm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 08:49:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B00411FB;
-        Wed,  6 May 2020 05:49:41 -0700 (PDT)
-Received: from bogus (unknown [10.37.8.198])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 62EE53F68F;
-        Wed,  6 May 2020 05:49:39 -0700 (PDT)
-Date:   Wed, 6 May 2020 13:49:32 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Hanjun Guo <guohanjun@huawei.com>
-Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, john.garry@huawei.com,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Souvik Chakravarty <Souvik.Chakravarty@arm.com>,
-        Thanu Rangarajan <Thanu.Rangarajan@arm.com>
-Subject: Re: [RFC PATCH] cpufreq: add support for HiSilicon SoC HIP09
-Message-ID: <20200506124932.GA20426@bogus>
-References: <1588227599-46438-1-git-send-email-wangxiongfeng2@huawei.com>
- <20200430095559.GB28579@bogus>
- <3ba950dd-4065-e4a5-d406-dc5c6c1781a7@huawei.com>
+        Wed, 6 May 2020 08:49:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34428 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728522AbgEFMtu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 08:49:50 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B29FCC061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 05:49:49 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h4so2180566ljg.12
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 05:49:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vGrAL221U5LNFhyomdWD44/6fcd1PnVHrarNM3q/rB4=;
+        b=HKgt/yucHxP3oL+g7rj+nOg7Qg8kMDg6w4PXkk9Qk5J32RYqKhXSzTfL2UusXRkZ9r
+         O2StDPBYRDXKb+J1PtGUc24f0sARXZnS89BtEMms1cXY+5flaKRfapQ9K7V3s03lll89
+         codd1AN2XQZhUsdeXdFmiRNpoBYDAUcyiS0479s0pfBTTnLJwWpyBLJj5SZ+mIJ9zFCj
+         PEtcVypA6N3FwlvTcob+epUPeNM+uiS+Cnl3BN1CpVJGlbKygZgVmT8OMBCL1Aos2QIv
+         4/mPn1QV6hB/SLg2g4Q0UmozH8hGwGVOYINA418+STfObX11M7ZQPiR/e0tttmUtjlBR
+         ddxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vGrAL221U5LNFhyomdWD44/6fcd1PnVHrarNM3q/rB4=;
+        b=EVgBoC6JlkXqohsTMJOC0o/NeFy7UR7pE048UZAti89eZSjThlG6QkxC9U3wiTaodk
+         xZTUPgdpDAeI3m6V+0Vb33dyzrRqUdJ5T4kb23YKp+xutrlfRQuT8PkRBZM2k20Kipik
+         e+WFnYAaffmMJ2NzsIe6PjbplOKzemwaSJX1fr1NCDUQgnGYaAs7D+E8rOWcqC65sfNP
+         nuVVYK+UuPBc7AaOQXwCkMizU/GHaM7F7vvAZeYkjnob2EFi13Gx+CTKe+6BYypzhWGx
+         7f3MfSn62P+RlFn1s3geNxzFp1Wb6fDJ9oR1Fj6lNJbGJPcz5l2NMuxUCJAgzjqpeqdo
+         PX6A==
+X-Gm-Message-State: AGi0PuYAaBmEtcWGwskb3vsasUZle99eDsWZGo+mHqXrX9wQbsG5goDO
+        uCQGvWbkjImOLpniCaXkFshblRZZIZlWFuEchwg+TQ==
+X-Google-Smtp-Source: APiQypKsFo3w+1HtO8wBxx6yf4L26hGpogFQ0SkxurfXqdzs9iDJ62nzs6zcG/VDKtCJyrzv6laayACPUSjDv3/Lfjo=
+X-Received: by 2002:a2e:8087:: with SMTP id i7mr4455713ljg.99.1588769387748;
+ Wed, 06 May 2020 05:49:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3ba950dd-4065-e4a5-d406-dc5c6c1781a7@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200503172206.13782-1-xc-racer2@live.ca> <BN6PR04MB06609033B2E0AB157A228989A3A90@BN6PR04MB0660.namprd04.prod.outlook.com>
+In-Reply-To: <BN6PR04MB06609033B2E0AB157A228989A3A90@BN6PR04MB0660.namprd04.prod.outlook.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 6 May 2020 14:49:36 +0200
+Message-ID: <CACRpkdY7aSe-MWdWvL-2NC0RKohpgibnod9dnNiS_Wr9eHL-_Q@mail.gmail.com>
+Subject: Re: [PATCH 4/5] dt-bindings: iio: accel: Add required regulators to bma180
+To:     Jonathan Bakker <xc-racer2@live.ca>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Input <linux-input@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Thanu, Souvik who work with ASWG
+On Sun, May 3, 2020 at 7:22 PM Jonathan Bakker <xc-racer2@live.ca> wrote:
 
-On Wed, May 06, 2020 at 05:36:51PM +0800, Hanjun Guo wrote:
-> Hi Sudeep,
+> The bma180 and related chips should have two registers attached to
+> them.  The IIO driver currently uses them, document them here as
+> well.
 >
-> On 2020/4/30 17:55, Sudeep Holla wrote:
-> > On Thu, Apr 30, 2020 at 02:19:59PM +0800, Xiongfeng Wang wrote:
-> > > HiSilicon SoC has a separate System Control Processor(SCP) dedicated for
-> > > clock frequency adjustment and has been using the cpufreq driver
-> > > 'cppc-cpufreq'. New HiSilicon SoC HIP09 add support for CPU Boost, but
-> > > ACPI CPPC doesn't support this. In HiSilicon SoC HIP09, each core has
-> > > its own clock domain. It is better for the core itself to adjust its
-> > > frequency when we require fast response. In this patch, we add a
-> > > separate cpufreq driver for HiSilicon SoC HIP09.
-> > >
-> >
-> > I disagree with this approach unless you have tried to extend the CPPC
-> > in ACPI to accommodate this boost feature you need. Until you show those
-> > efforts and disagreement to do that from ASWG, I am NACKing this approach.
->
-> Unfortunately we are not in ASWG at now, could you please give some
-> help about extending CPPC in ACPI to support boost feature?
->
+> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
 
-You may have to provide more details than the commit log for sure as I
-haven't understood the boost feature and what is missing in ACPI CPPC.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
---
-Regards,
-Sudeep
+Yours,
+Linus Walleij
