@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8683BC47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E647DC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6361D208DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2DB5208DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:11:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DneIpyOl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OEwCYDBV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730189AbgEFQLH (ORCPT
+        id S1729832AbgEFQLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:11:07 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:26104 "EHLO
+        Wed, 6 May 2020 12:11:11 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:60943 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730141AbgEFQLB (ORCPT
+        by vger.kernel.org with ESMTP id S1730181AbgEFQLH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:11:01 -0400
+        Wed, 6 May 2020 12:11:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588781460;
+        s=mimecast20190719; t=1588781466;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=r4rhVilOhruX4XKG1ij307CAZ6f9s9Do/ND2GQqMS9Y=;
-        b=DneIpyOlwc2b74RFAtueUpTMwytsRVUQpbG3ndMhZJkMkyXArWATtm+9NPQiqNkPETSK8Q
-        moFdzxyZdUJPS7qajWDtMtPZDooUhM55fTxC4oDhcthCl20k+00WHlRRCTIufeGoG8fpGm
-        TGz3M8avJZOBau+qUOKCTMEd4hiwVcM=
+        bh=lLoDUV9kJciFEwN3SeREjB95wIUd6dwGcflYwkY6iE0=;
+        b=OEwCYDBVi+44CJ8o9LcSIf0PpyluAdfJ1h8eKO0FDcKOyH73065QCIJBuWxVJwoaIOR9Z2
+        3LyDzvfecYP5Rlfw8bf5WZUdTFdR5gebaOQPOmDsssgq9OR3+kWxRNFV1bRxxWtbPacuBn
+        U3Pc0SKf8CQaGGkN7jVTLyJyLy+vIuU=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-31-bBD4DxCrOTqO_mJt42tz8Q-1; Wed, 06 May 2020 12:10:56 -0400
-X-MC-Unique: bBD4DxCrOTqO_mJt42tz8Q-1
+ us-mta-40-BHHAx-5aNTyydbcvJV2p_g-1; Wed, 06 May 2020 12:10:58 -0400
+X-MC-Unique: BHHAx-5aNTyydbcvJV2p_g-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BA65145F;
-        Wed,  6 May 2020 16:10:54 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8C56D80BE32;
+        Wed,  6 May 2020 16:10:57 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F0A27165F6;
-        Wed,  6 May 2020 16:10:53 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C1C17165F6;
+        Wed,  6 May 2020 16:10:56 +0000 (UTC)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     wanpengli@tencent.com, linxl3@wangsu.com,
         Haiwei Li <lihaiwei@tencent.com>
-Subject: [PATCH 4/7] KVM: VMX: Optimize posted-interrupt delivery for timer fastpath
-Date:   Wed,  6 May 2020 12:10:45 -0400
-Message-Id: <20200506161048.28840-5-pbonzini@redhat.com>
+Subject: [PATCH 7/7] KVM: VMX: Handle preemption timer fastpath
+Date:   Wed,  6 May 2020 12:10:48 -0400
+Message-Id: <20200506161048.28840-8-pbonzini@redhat.com>
 In-Reply-To: <20200506161048.28840-1-pbonzini@redhat.com>
 References: <20200506161048.28840-1-pbonzini@redhat.com>
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
@@ -60,65 +60,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Wanpeng Li <wanpengli@tencent.com>
 
-While optimizing posted-interrupt delivery especially for the timer
-fastpath scenario, I measured kvm_x86_ops.deliver_posted_interrupt()
-to introduce substantial latency because the processor has to perform
-all vmentry tasks, ack the posted interrupt notification vector,
-read the posted-interrupt descriptor etc.
+This patch implements a fastpath for the preemption timer vmexit.  The vmexit
+can be handled quickly so it can be performed with interrupts off and going
+back directly to the guest.
 
-This is not only slow, it is also unnecessary when delivering an
-interrupt to the current CPU (as is the case for the LAPIC timer) because
-PIR->IRR and IRR->RVI synchronization is already performed on vmentry
-Therefore skip kvm_vcpu_trigger_posted_interrupt in this case, and
-instead do vmx_sync_pir_to_irr() on the EXIT_FASTPATH_REENTER_GUEST
-fastpath as well.
+Testing on SKX Server.
+
+cyclictest in guest(w/o mwait exposed, adaptive advance lapic timer is default -1):
+
+5540.5ns -> 4602ns       17%
+
+kvm-unit-test/vmexit.flat:
+
+w/o avanced timer:
+tscdeadline_immed: 3028.5  -> 2494.75  17.6%
+tscdeadline:       5765.7  -> 5285      8.3%
+
+w/ adaptive advance timer default -1:
+tscdeadline_immed: 3123.75 -> 2583     17.3%
+tscdeadline:       4663.75 -> 4537      2.7%
 
 Tested-by: Haiwei Li <lihaiwei@tencent.com>
 Cc: Haiwei Li <lihaiwei@tencent.com>
-Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-Message-Id: <1588055009-12677-6-git-send-email-wanpengli@tencent.com>
+Message-Id: <1588055009-12677-8-git-send-email-wanpengli@tencent.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 4 +++-
- virt/kvm/kvm_main.c    | 1 +
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ arch/x86/kvm/vmx/vmx.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 215ae9682da1..b980481436e9 100644
+index 60065e01f1cd..d5f5a212f2b3 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -3928,7 +3928,8 @@ static int vmx_deliver_posted_interrupt(struct kvm_vcpu *vcpu, int vector)
- 	if (pi_test_and_set_on(&vmx->pi_desc))
- 		return 0;
- 
--	if (!kvm_vcpu_trigger_posted_interrupt(vcpu, false))
-+	if (vcpu != kvm_get_running_vcpu() &&
-+	    !kvm_vcpu_trigger_posted_interrupt(vcpu, false))
- 		kvm_vcpu_kick(vcpu);
- 
- 	return 0;
-@@ -6803,6 +6804,7 @@ static fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 			 * but it would incur the cost of a retpoline for now.
- 			 * Revisit once static calls are available.
- 			 */
-+			vmx_sync_pir_to_irr(vcpu);
- 			goto reenter_guest;
- 		}
- 		exit_fastpath = EXIT_FASTPATH_EXIT_HANDLED;
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 825d501df158..7f675d525981 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -4638,6 +4638,7 @@ struct kvm_vcpu *kvm_get_running_vcpu(void)
- 
- 	return vcpu;
+@@ -5575,14 +5575,22 @@ static int handle_pml_full(struct kvm_vcpu *vcpu)
+ 	return 1;
  }
-+EXPORT_SYMBOL_GPL(kvm_get_running_vcpu);
  
- /**
-  * kvm_get_running_vcpus - get the per-CPU array of currently running vcpus.
+-static int handle_preemption_timer(struct kvm_vcpu *vcpu)
++static fastpath_t handle_fastpath_preemption_timer(struct kvm_vcpu *vcpu)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 
+ 	if (!vmx->req_immediate_exit &&
+-	    !unlikely(vmx->loaded_vmcs->hv_timer_soft_disabled))
++	    !unlikely(vmx->loaded_vmcs->hv_timer_soft_disabled)) {
+ 		kvm_lapic_expired_hv_timer(vcpu);
++		return EXIT_FASTPATH_REENTER_GUEST;
++	}
++
++	return EXIT_FASTPATH_NONE;
++}
+ 
++static int handle_preemption_timer(struct kvm_vcpu *vcpu)
++{
++	handle_fastpath_preemption_timer(vcpu);
+ 	return 1;
+ }
+ 
+@@ -6605,6 +6613,8 @@ static fastpath_t vmx_exit_handlers_fastpath(struct kvm_vcpu *vcpu)
+ 	switch (to_vmx(vcpu)->exit_reason) {
+ 	case EXIT_REASON_MSR_WRITE:
+ 		return handle_fastpath_set_msr_irqoff(vcpu);
++	case EXIT_REASON_PREEMPTION_TIMER:
++		return handle_fastpath_preemption_timer(vcpu);
+ 	default:
+ 		return EXIT_FASTPATH_NONE;
+ 	}
 -- 
 2.18.2
-
 
