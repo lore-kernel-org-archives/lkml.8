@@ -2,104 +2,142 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78391C47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9CCC47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 528C82080D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DD8B20708
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:45:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="REacQYlB"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="R7lsSWur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730476AbgEFSnu (ORCPT
+        id S1730478AbgEFSp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 14:43:50 -0400
-Received: from ozlabs.org ([203.11.71.1]:59747 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729895AbgEFSnu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 14:43:50 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49HQTw23cvz9sPF;
-        Thu,  7 May 2020 04:43:48 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588790628;
-        bh=Kb9QXt5c/WUVsgI56tsRvsSeMMeypPUJr8pMEZ5RH8c=;
-        h=Date:From:To:Cc:Subject:From;
-        b=REacQYlBU7UmvFKbEZApzyGCC3DA9ZWZEleXizuUnAbcM9c2ud4S/RZMviMCwO7KI
-         pbUD118UAAcsfcwnD+rj7+qSv+jcKBf+Y/Bsj7v13Q3EDkaKcWbFruvf7n6ELOUd6D
-         s/fW4w4cfQYzonwiGS5z5E58n5M2IVUPykAce5IlhDoC5MXvFmfB96CZoneECK5s46
-         Ml1kpGAypmO7vKbZ6cfQ3lF7Yq4xVIVWl3BbzW70Dl4XBkvutbirl/2jXT0wXzutpV
-         VZqKVzaWC+UMQWcYxjIW471BhoIV73X7uag7cBT/JswZHtMd346/lHcb1eYhG8DWDO
-         Lfp69L3xGQzMg==
-Date:   Thu, 7 May 2020 04:43:47 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Paolo Bonzini <pbonzini@redhat.com>, KVM <kvm@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Subject: linux-next: Fixes tag needs some work in the kvm-fixes tree
-Message-ID: <20200507044347.2ddd5b0d@canb.auug.org.au>
+        Wed, 6 May 2020 14:45:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729895AbgEFSp3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 14:45:29 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFE46C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 11:45:27 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id g16so2384066qtp.11
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 11:45:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Xp4PtIWSbFjNlCqFouJe0yrPGUY2LlWC8culMqw4W34=;
+        b=R7lsSWur/AS2+mWO7IfggMu+O6gDIpHb5fsBvc2LXsH3PmDGNjMK0zpysOcb4Eb+cz
+         mf1+TNibVmiOreGgMt3vNl0KRwbfkShNrsiJbn/DxYcbSmXH5gNZ2gXIH9fCOUIYt2rx
+         uufl1oq3YEnO5fNw5YpjjaxL6Z++oij1nCST3wT/cti8pRbhvx/M4SzbZD4RgxRFb8j/
+         a+zbity4CLj+uAm+lxJ1UlFhn4tfneJczLNr2kYjP8d52NCpunCB2utDdguPKw1NtyIw
+         xRCnoJJk0pa86wmw4nQiE5mnB14UQ13vcfrECf72UWGBC29459PJrqkAuJYkcOi1aUv5
+         XJJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Xp4PtIWSbFjNlCqFouJe0yrPGUY2LlWC8culMqw4W34=;
+        b=rA8iTDAiOu7S7ZyZZ9aZisVyZMiSDchK7btvpEEy7CFJpPnkB65IdO1VvXh9br7tMe
+         +mUpMq0mEbUKkvAL5ov77P1Ap7xqzc0zFT5pg6s340gRaxjyl/zX9hayFF9SfP6J/ZO6
+         lUmz2c4UyEOdhHPrOa//RTAOLsxvwgSTRJMZKIzATQ9+Xx+r+tUhfmh0oFjpqRTrpopY
+         rcfpgkPzlezCw7Ammc2zEtlMTlU9nO5iAZDsQO/FfYMPRTmCCBvZUAgonaS4QN901Tcm
+         xQjqcdo0r2whTrYXLKdGxNwTn5WXXdXVlxYryWvsAN9uYCXGDoVSbjZUbLxIkZN8batw
+         uK3w==
+X-Gm-Message-State: AGi0PuZDrz6BwiZbI9jcFr9F6rZVTl+Qt3ILVfOQdq+1VFU6AC6/atyJ
+        /L7FFDhYz/qeq5DhVmyFgEorYA==
+X-Google-Smtp-Source: APiQypL616xxVLy7sIJ2gUjjzq8FfTN3eeP1TOOdrppMGZHDTaCWu7Efs5+lgJDGx3ZLUW9Bw/3rtw==
+X-Received: by 2002:ac8:4d06:: with SMTP id w6mr9559957qtv.180.1588790727109;
+        Wed, 06 May 2020 11:45:27 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id x5sm715097qtx.35.2020.05.06.11.45.26
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 06 May 2020 11:45:26 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jWP2s-0002GJ-3V; Wed, 06 May 2020 15:45:26 -0300
+Date:   Wed, 6 May 2020 15:45:26 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     linux-mm@kvack.org, Ralph Campbell <rcampbell@nvidia.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        amd-gfx@lists.freedesktop.org, Ben Skeggs <bskeggs@redhat.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        dri-devel@lists.freedesktop.org,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Christoph Hellwig <hch@lst.de>,
+        intel-gfx@lists.freedesktop.org,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-kernel@vger.kernel.org,
+        Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
+        nouveau@lists.freedesktop.org, "Yang, Philip" <Philip.Yang@amd.com>
+Subject: Re: [PATCH hmm v2 0/5] Adjust hmm_range_fault() API
+Message-ID: <20200506184526.GA8668@ziepe.ca>
+References: <0-v2-b4e84f444c7d+24f57-hmm_no_flags_jgg@mellanox.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/2pA4XuH_JTnuZoRmrBEDmtu";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0-v2-b4e84f444c7d+24f57-hmm_no_flags_jgg@mellanox.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/2pA4XuH_JTnuZoRmrBEDmtu
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, May 01, 2020 at 03:20:43PM -0300, Jason Gunthorpe wrote:
+> From: Jason Gunthorpe <jgg@mellanox.com>
+> 
+> The API is a bit complicated for the uses we actually have, and
+> disucssions for simplifying have come up a number of times.
+> 
+> This small series removes the customizable pfn format and simplifies the
+> return code of hmm_range_fault()
+> 
+> All the drivers are adjusted to process in the simplified format.
+> I would appreciated tested-by's for the two drivers, thanks!
+> 
+> v2:
+>  - Move call chain to commit message
+>  - Fix typo of HMM_PFN_REQ_FAULT
+>  - Move nouveau_hmm_convert_pfn() to nouveau_svm.c
+>  - Add acks and tested-bys
+> v1: https://lore.kernel.org/r/0-v1-4eb72686de3c+5062-hmm_no_flags_jgg@mellanox.com
+> 
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: Jérôme Glisse <jglisse@redhat.com>
+> Cc: Ben Skeggs <bskeggs@redhat.com>
+> To: Ralph Campbell <rcampbell@nvidia.com>
+> Cc: nouveau@lists.freedesktop.org
+> Cc: Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>
+> Cc: intel-gfx@lists.freedesktop.org
+> Cc: "Kuehling, Felix" <Felix.Kuehling@amd.com>
+> Cc: Alex Deucher <alexander.deucher@amd.com>
+> Cc: "Christian König" <christian.koenig@amd.com>
+> Cc: "David (ChunMing) Zhou" <David1.Zhou@amd.com>
+> Cc: amd-gfx@lists.freedesktop.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: "Yang, Philip" <Philip.Yang@amd.com>
+> To: linux-mm@kvack.org
+> 
+> Jason Gunthorpe (5):
+>   mm/hmm: make CONFIG_DEVICE_PRIVATE into a select
+>   mm/hmm: make hmm_range_fault return 0 or -1
+>   drm/amdgpu: remove dead code after hmm_range_fault()
+>   mm/hmm: remove HMM_PFN_SPECIAL
+>   mm/hmm: remove the customizable pfn format from hmm_range_fault
 
-Hi all,
+Applied to hmm.git, thanks
 
-In commit
-
-  637543a8d61c ("KVM: x86: Fixes posted interrupt check for IRQs delivery m=
-odes")
-
-Fixes tag
-
-  Fixes: (fdcf75621375 'KVM: x86: Disable posted interrupts for non-standar=
-d IRQs delivery modes')
-
-has these problem(s):
-
-  - No SHA1 recognised
-
-It should just be
-
-Fixes: fdcf75621375 ("KVM: x86: Disable posted interrupts for non-standard =
-IRQs delivery modes")
-
-as generated by
-
-git log -1 --format=3D'Fixes: %h ("%s")' fdcf75621375
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/2pA4XuH_JTnuZoRmrBEDmtu
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6zBWMACgkQAVBC80lX
-0GyioAf/em///SuEcj6kfVU8/tbM23yHQ6BMJw6AVuhjbFcNhBjSoRHTVgHJrN2Z
-VVuZS5yOOp0UmSAPG6eV19ie/F5svJfQ1p3CT10+I6BwUMkeR7LXhULGCO5EYK0w
-t1T/OH7YDxkLEYHhA7c1ur4kdBkU1aRc/zRzWIsdb1hqEzkhvQh7f5Y/i+Hxow75
-H70bVgtAkaek21t4uw67rvbzj2Kg0Rod3UEmxFAgzKNhJAhHsANNLEoI4jP1iZGV
-FYBps1Kntf1kMp3BLA4nmhYhtsBXul17VBxmGFQviAhfi4/vnFRBQh+YXZhE4J/i
-3SIqBhd8cgKqmF9meUm+xNxZGNWPSQ==
-=/A2g
------END PGP SIGNATURE-----
-
---Sig_/2pA4XuH_JTnuZoRmrBEDmtu--
+Jason
