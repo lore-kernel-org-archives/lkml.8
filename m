@@ -2,117 +2,113 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7261C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1097EC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C65F02075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D95F6206D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:16:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oAASn2fh"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BokniRZ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728617AbgEFUNF (ORCPT
+        id S1728698AbgEFUQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 16:13:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47590 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728051AbgEFUNE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 16:13:04 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C4B5C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 13:13:04 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id y24so4196017wma.4
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 13:13:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CQXu6qiBdsMbiwQs775wLdxHmIoYyYCw2HkkXI8iCiM=;
-        b=oAASn2fhX1d3fS49Xxknj9yfTPO8EnNtsxycBdCmDaz2giaGlhBUl+TEQ+eLSHsRfI
-         SJkK96frJS5FeUw4N92TIkhpAsJ4oqkP05mQFjWKvgaliut6re99sRdYevKEnwoy0mpQ
-         wCTSLcWCrVx5rdu9TQB178NxpHnDZNpKXoFMoT27QAAYzMvf7cX5RZQzF5t7w7csCaa/
-         LtczzmVONdcX62q2D4DLg3vfvndOpdnH249U9yAVawxFQFhj7/ImXr0fsOP4OPtG/JDx
-         Tgh849qZ0dwHSczdxxLL7XnBwTFS3wCaOBHlYfm/RmjLMsQu13RyvdhgBn6AfazZDNbY
-         2OLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CQXu6qiBdsMbiwQs775wLdxHmIoYyYCw2HkkXI8iCiM=;
-        b=Mh5HUzNzM25qEaHliOPB/qPxlQZbd/Kkwk1ci0cXpuIno3Ns43DwpMJJHK9bZWzOG1
-         T6xpbbktLOqeZaTLCOQbIBalTPt7uG1pZiBiFWPLkJWV/yHsBKduSB7sKJyAWudc7goH
-         jI5C47oXHx0FQlfY868ChBIDq4XYdaL4WiKbhYB7qykprBlizk88lNsAVKQx9NBXS6eV
-         D2zxPoFPtE9XEjTVPBZPMbW3j4He4LOucCL7+/IILyyRTwgCc0zOMsxwCeqOVkBNfa9v
-         pUu7CvW0fOX10YbgPc/ivvIq11cxeMTrmxT7iLdwDbaYu265iZlzVWdGFcZDDV+Q82yH
-         LhfQ==
-X-Gm-Message-State: AGi0PuaK0ADuJ5NW4mRAn7AbRi16aKVuhWPWBRPsnIWFdEvbA/Q/CAuY
-        YTjjiK9qZyzVsMIQx/Q9q+f30dXqt7H50tRu7zJOTQ==
-X-Google-Smtp-Source: APiQypKRQKO3Q2/p/FaxM8K5gRA/oIF6pQM3VKqfrTZiKjtlPwJ6lWke1sLNT//hyz8pZpScmcU3O3TUJH3cHKy4kUk=
-X-Received: by 2002:a05:600c:243:: with SMTP id 3mr2490507wmj.73.1588795982735;
- Wed, 06 May 2020 13:13:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200506051113.223327-1-chentao107@huawei.com>
-In-Reply-To: <20200506051113.223327-1-chentao107@huawei.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 6 May 2020 16:12:51 -0400
-Message-ID: <CADnq5_Nz4LjOwfgA6---RSQmMjXOPjii4M-3qYmXW7ECbjdcwg@mail.gmail.com>
-Subject: Re: [PATCH -next] drm/amdgpu/navi10: fix unsigned comparison with 0
-To:     ChenTao <chentao107@huawei.com>
-Cc:     Dave Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Wed, 6 May 2020 16:16:44 -0400
+Received: from ozlabs.org ([203.11.71.1]:51295 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726538AbgEFUQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 16:16:43 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49HSY1481kz9sRY;
+        Thu,  7 May 2020 06:16:37 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588796201;
+        bh=XCFvNjeS2kjOQNihxDVpNQIvU0ggraBRLa25yNrgmPY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BokniRZ7+PcvdLb7ypmiIA8wgN0IOJfe3dM8POjJgVycNSMpvg9Zn7kKU+ia7W5k6
+         BqRL/Zs5TAbIF+20AYROSV9p+ixyBmhX9I4WI2p304ardBN3ljflftW6wzhmT4KRCf
+         BwyypipOaS9qUy+8lST7hVeaKAaF08EKd2Yv79UNIO2xB8HjT+fQn0M+UL90nWresL
+         FL2HBEXZNfdhXeeEDa2Mq7Pj+/yIUguFmpxUS/GcagrlRrzb0jB7fFnZV41xrp/xly
+         kCjWVv6iX2xIESNojwW6Q8XrCoR19mZycXIzGD7KTt9KLfXjN6Qi6xVUMqrMtUEJvG
+         vY1V0z56ckH1g==
+Date:   Thu, 7 May 2020 06:16:35 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Amol Grover <frextrite@gmail.com>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        syzbot <syzbot+1519f497f2f9f08183c6@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>, kuba@kernel.org,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
         LKML <linux-kernel@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        "paul E. McKenney" <paulmck@kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: Re: linux-next boot error: WARNING: suspicious RCU usage in
+ ipmr_get_table
+Message-ID: <20200507061635.449f9495@canb.auug.org.au>
+In-Reply-To: <34558B83-103E-4205-8D3D-534978D5A498@lca.pw>
+References: <000000000000df9a9805a455e07b@google.com>
+        <CACT4Y+YnjK+kq0pfb5fe-q1bqe2T1jq_mvKHf--Z80Z3wkyK1Q@mail.gmail.com>
+        <34558B83-103E-4205-8D3D-534978D5A498@lca.pw>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/YytghheW+C8MhpkfUUQolXM";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 6, 2020 at 3:03 AM ChenTao <chentao107@huawei.com> wrote:
->
-> Fixes warning because size is uint32_t and can never be negtative
->
-> drivers/gpu/drm/amd/amdgpu/../powerplay/navi10_ppt.c:1296:12: warning:
-> comparison of unsigned expression < 0 is always false [-Wtype-limits]
->    if (size < 0)
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: ChenTao <chentao107@huawei.com>
+--Sig_/YytghheW+C8MhpkfUUQolXM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied.  Thanks!
+Hi Qian,
 
-Alex
+On Tue, 28 Apr 2020 09:56:59 -0400 Qian Cai <cai@lca.pw> wrote:
+>
+> > On Apr 28, 2020, at 4:57 AM, Dmitry Vyukov <dvyukov@google.com> wrote: =
+=20
+> >> net/ipv4/ipmr.c:136 RCU-list traversed in non-reader section!! =20
+>=20
+> https://lore.kernel.org/netdev/20200222063835.14328-2-frextrite@gmail.com/
+>=20
+> Never been picked up for a few months due to some reasons. You could prob=
+ably
+> need to convince David, Paul, Steven or Linus to unblock the bot or carry=
+ patches
+> on your own?
 
-> ---
->  drivers/gpu/drm/amd/powerplay/navi10_ppt.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/powerplay/navi10_ppt.c b/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
-> index 2184d247a9f7..0c9be864d072 100644
-> --- a/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
-> +++ b/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
-> @@ -1293,8 +1293,6 @@ static int navi10_set_power_profile_mode(struct smu_context *smu, long *input, u
->         }
->
->         if (smu->power_profile_mode == PP_SMC_POWER_PROFILE_CUSTOM) {
-> -               if (size < 0)
-> -                       return -EINVAL;
->
->                 ret = smu_update_table(smu,
->                                        SMU_TABLE_ACTIVITY_MONITOR_COEFF, WORKLOAD_PPLIB_CUSTOM_BIT,
-> --
-> 2.22.0
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Did you resubmit the patch series as Dave Miller asked you to (now that
+net-next is based on v5.7-rc1+)?
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/YytghheW+C8MhpkfUUQolXM
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6zGyMACgkQAVBC80lX
+0GxkPAgAgtdMC+N8fp+9bijZVMliMNmdDUaF1yrYtfT6QMbxZ0GvHpootI5oO9nj
+YyXZglK3aoFmMKvCkX2bf4MubylQ7dX6Xq4fnj+qY+8gjrvSlT5NUWNLReMDKnYy
+7DkIlvXQMBW7UJ/KZ1kUqBfgG3CgA8bB5cL51GK3mpMb1pE0+Uf49U0Ep5EcmoJq
+F1/fj4yGCv3OdC3romgceBDhd5twJdd0xatlM/6gTf5U3fHZZf07dVksUt4PwfPz
+MK4m5LJQUDpBpknmNVAtVY/a/Ku3ym7js6Nlq8A0aUVg6SQPW8gMBu81Q2RjTLsl
+Op+hURRi9SaJ/J4NDnnJ2GpuSYjlAA==
+=4TP7
+-----END PGP SIGNATURE-----
+
+--Sig_/YytghheW+C8MhpkfUUQolXM--
