@@ -2,89 +2,74 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E54C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92059C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D6C820661
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:08:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X5aij9Dc"
+	by mail.kernel.org (Postfix) with ESMTP id 7964D20661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:09:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbgEFIIi (ORCPT
+        id S1728542AbgEFIJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 04:08:38 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27356 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728345AbgEFIIe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 04:08:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588752513;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=CBWxp/RqrAZHRhIdtBhb3xri0XLzwh+Ch7QU+ftNF34=;
-        b=X5aij9Dcg2c93UiXjCx3F/VgGLUlK7pOUCYpH/bYM3QYiDkBSGh0H+oceIGQiF7O03vaEV
-        tAM8Jk8uRuPne4OoGVMRylpzKyTsqwfgTWG3njDnYngWMNqaZ2x5ZG5UaL+8YXkyqaIw5v
-        GGwZCsCSe+cvN9YtNFcYgdbqxo+4S5M=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-481-e_77Q8SLMRGJkrACzdZ5ug-1; Wed, 06 May 2020 04:08:32 -0400
-X-MC-Unique: e_77Q8SLMRGJkrACzdZ5ug-1
-Received: by mail-wm1-f70.google.com with SMTP id q5so787592wmc.9
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 01:08:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=CBWxp/RqrAZHRhIdtBhb3xri0XLzwh+Ch7QU+ftNF34=;
-        b=eW1AXyYQgISw3ms2BqjiOMhV+ad7ze5GLRhWxoK4Woesyro+8sdFetBACiSpd43DZp
-         XhBL7k471Kp6NP/AmXpWGnYJzJXWN18Sx0LV43DBGc4FCE6YJwx9wdGwCrDAJKkpd2+a
-         U0RmVMxfjDuffxuPWMAq6RDHASujOtz7GvgMpx44hSGp3fxrxIpuySpqo2cWTAW6f+nk
-         HoQ0/1qH5rcVCgE9JYs6pGeR+owS36ayFZReYZ2LEt6HyXPPG7N9MTI/jm1WEdsqyqEN
-         KJKKgMJHS9ZO9YwFbbdVQlUoRy0OGuVcOr2AxC1mFzbexolqumJvpG1EtjN5fZqCE4aM
-         1nqA==
-X-Gm-Message-State: AGi0Pua7wW61eX6OeX18OLpscphouBtKlr9S+Hronp9xQvd9aLu+jMbE
-        3vBWiQIZNnmYDih2BXI685yjrK9YTVRocLMGFv7ddlC7Dqxn49llTHt46pyVEjDcM6yFd1K/yYb
-        UQ/XEm/lgwvZ002gvGKx0odUB
-X-Received: by 2002:a5d:54c4:: with SMTP id x4mr8713636wrv.73.1588752511065;
-        Wed, 06 May 2020 01:08:31 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKoYFzRFdcs5OUqDOntDuXyJrKD5k/C6ihqMqcjU/DctdS4/KReL94LfbKFGzcZw7Aen1K6xw==
-X-Received: by 2002:a5d:54c4:: with SMTP id x4mr8713617wrv.73.1588752510881;
-        Wed, 06 May 2020 01:08:30 -0700 (PDT)
-Received: from redhat.com (bzq-109-66-7-121.red.bezeqint.net. [109.66.7.121])
-        by smtp.gmail.com with ESMTPSA id g25sm1724902wmh.24.2020.05.06.01.08.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 01:08:30 -0700 (PDT)
-Date:   Wed, 6 May 2020 04:08:27 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Eugenio Perez Martin <eperezma@redhat.com>
-Subject: performance bug in virtio net xdp
-Message-ID: <20200506035704-mutt-send-email-mst@kernel.org>
+        Wed, 6 May 2020 04:09:16 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3859 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728217AbgEFIJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 04:09:16 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 2A4DF91E451E0C16612A;
+        Wed,  6 May 2020 16:09:14 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 6 May 2020 16:09:07 +0800
+From:   Samuel Zou <zou_wei@huawei.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <mripard@kernel.org>, <wens@csie.org>
+CC:     <alsa-devel@alsa-project.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Samuel Zou <zou_wei@huawei.com>
+Subject: [PATCH -next] ASoC: sun4i-i2s: Use PTR_ERR_OR_ZERO() to simplify code
+Date:   Wed, 6 May 2020 16:15:12 +0800
+Message-ID: <1588752912-37596-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So for mergeable bufs, we use ewma machinery to guess the correct buffer
-size. If we don't guess correctly, XDP has to do aggressive copies.
+Fixes coccicheck warning:
 
-Problem is, xdp paths do not update the ewma at all, except
-sometimes with XDP_PASS. So whatever we happen to have
-before we attach XDP, will mostly stay around.
+sound/soc/sunxi/sun4i-i2s.c:1177:1-3: WARNING: PTR_ERR_OR_ZERO can be used
 
-The fix is probably to update ewma unconditionally.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Samuel Zou <zou_wei@huawei.com>
+---
+ sound/soc/sunxi/sun4i-i2s.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
+diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+index d0a8d58..72012a6 100644
+--- a/sound/soc/sunxi/sun4i-i2s.c
++++ b/sound/soc/sunxi/sun4i-i2s.c
+@@ -1174,10 +1174,8 @@ static int sun4i_i2s_init_regmap_fields(struct device *dev,
+ 	i2s->field_fmt_sr =
+ 			devm_regmap_field_alloc(dev, i2s->regmap,
+ 						i2s->variant->field_fmt_sr);
+-	if (IS_ERR(i2s->field_fmt_sr))
+-		return PTR_ERR(i2s->field_fmt_sr);
+ 
+-	return 0;
++	return PTR_ERR_OR_ZERO(i2s->field_fmt_sr);
+ }
+ 
+ static int sun4i_i2s_probe(struct platform_device *pdev)
 -- 
-MST
+2.6.2
 
