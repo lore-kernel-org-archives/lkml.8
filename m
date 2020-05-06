@@ -2,202 +2,142 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3C0C47257
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D82F9C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C16F22078C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFD15207DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:11:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="c5USd9Si"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wves+/+X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728278AbgEFTKg (ORCPT
+        id S1728213AbgEFTLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 15:10:36 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:46766 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725915AbgEFTKf (ORCPT
+        Wed, 6 May 2020 15:11:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38026 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725915AbgEFTLg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 15:10:35 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 046JATR1025746;
-        Wed, 6 May 2020 14:10:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588792229;
-        bh=y91BBsQ57bVF9REySvrUgz895w+ukgRT8Z+er1kUntc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=c5USd9SijAl0GB88Xk18IuhI9Z+ZmZFrqv2RsPq+Psc4dNDeXEXiR5RJYFdflZAVL
-         e+yWnTkj0Rqjjk3Ic2O/f0/yVJVprZAguuDDVkEpIit9QSKUCp1vJddtnU5xbWZsdF
-         uj2xHCnRvHBdbmOXudFt9tR+Wui8Oc/S5xRLWPE8=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 046JATcE086681
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 6 May 2020 14:10:29 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 6 May
- 2020 14:10:29 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 6 May 2020 14:10:29 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 046JAOLR036216;
-        Wed, 6 May 2020 14:10:25 -0500
-Subject: Re: [PATCH net-next 1/7] dt-binding: ti: am65x: document common
- platform time sync cpts module
-To:     Rob Herring <robh@kernel.org>
-CC:     Richard Cochran <richardcochran@gmail.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Tero Kristo <t-kristo@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        netdev <netdev@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, Nishanth Menon <nm@ti.com>
-References: <20200501205011.14899-1-grygorii.strashko@ti.com>
- <20200501205011.14899-2-grygorii.strashko@ti.com>
- <20200505040419.GA8509@bogus> <b8bb1076-e345-5146-62d3-e1da1d35da4f@ti.com>
- <CAL_Jsq+P_OEFDBbAsvyCCOKZnQuAUYYnyDDwm7aNudN3pRK78g@mail.gmail.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <c401b0fe-c946-af11-9b1d-fcc28cc8ee19@ti.com>
-Date:   Wed, 6 May 2020 22:10:23 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 6 May 2020 15:11:36 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEFE2C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 12:11:35 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id r25so2773326oij.4
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 12:11:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=M1S9qPXBUJql9JmKoVhTWc9F3kKNmnoGb/SmJ6xO5Fs=;
+        b=Wves+/+XLXygjtxkWvW3RBKz34DM6vuEPqF0sDZQYhW+P/zfKecqzhJ30qSYBKt5gT
+         Z2b6EL6Aehoe3uKYIQmYSPZFiNsLntlO1GyZ5FS084kysMY6DSKzoUS1EXRNdcTSXVTy
+         sKPtcwE0bL93LwlHv+dE6zhPTtGBDm6vF8njlTdYP1n/urMy8GDNo03HuIojVBE0vbW4
+         NbBay64XpACnPE6YHE3CCwWN0RIwE/MXtFG9PiRX1m8VYSvN6ck1bqMup8O/Ztt7IMtv
+         Y8C60zeyBGQ/MSgrdeJX0P2buUxKULO8qrHNlJDbQ4WU95Pvb2l2XuHLD0WybYhaqxez
+         CZXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M1S9qPXBUJql9JmKoVhTWc9F3kKNmnoGb/SmJ6xO5Fs=;
+        b=SH84k3TwbhCMJ3WsqxoNzBJHWZbLT+7QzD7Oy0rB8S22wAj2EcNHuNsgb+sCCxC/nf
+         hPPhRyCPiXgL6aK54fIHHWFAbYSjXdWCrvH5QCVZYNCWQpzPvXTi1/L5qt2DYhHRdsk2
+         IQcvs69qtyPJsWHluOxSeEoyMZTDsTM42TK6dCSYwJd1biOoaKg2IDpbF/A9WXp8oh97
+         qOW/ZfenI4ZdJymuL0IVaVFWQK8Bip+pM6fUpeZugI4htXIbpYZFNWsf6uXVy40ISc/6
+         J1BU6F/likOKxmF7p2/7Lynf0a+jnoAwCQxZbvF8UZfFXKBNQkesTi+1IHz6iQHxF8HL
+         xd8g==
+X-Gm-Message-State: AGi0PubrMrYr2PNhOFfEMwr4GhM0+yu24Y70RDNwu/vSbi4xisF6sWwd
+        KbooIiHi/OwBnPnZRtVuEkXLvuLvImZkoVsygBJBwpW/1LA=
+X-Google-Smtp-Source: APiQypLdL6vl6Mi1sC5j4woNIvCmulwIhICzfUgyQcKzymmV6NSaI6fBdShg0F2/WBDryDL/LL3KeqLtGhNizIcJBz0=
+X-Received: by 2002:a05:6808:b36:: with SMTP id t22mr3881236oij.121.1588792294261;
+ Wed, 06 May 2020 12:11:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+P_OEFDBbAsvyCCOKZnQuAUYYnyDDwm7aNudN3pRK78g@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200506132816.GJ8043@willie-the-truck> <20200506143616.GY2869@paulmck-ThinkPad-P72>
+ <20200506144141.GA12919@willie-the-truck> <CANpmjNP3ge49sXJZS-KaL5bpEq0rmc4CqepjGRbtbCVwm7rwpw@mail.gmail.com>
+ <20200506180232.GB2869@paulmck-ThinkPad-P72>
+In-Reply-To: <20200506180232.GB2869@paulmck-ThinkPad-P72>
+From:   Marco Elver <elver@google.com>
+Date:   Wed, 6 May 2020 21:11:23 +0200
+Message-ID: <CANpmjNP1v8wORd_nfQb7hVH2EY5P565uJYsRFt0dXi4KZvQ46A@mail.gmail.com>
+Subject: Re: Please can I have a stable KCSAN branch for 5.8?
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 6 May 2020 at 20:02, Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> On Wed, May 06, 2020 at 05:26:56PM +0200, Marco Elver wrote:
+> > On Wed, 6 May 2020 at 16:41, Will Deacon <will@kernel.org> wrote:
+> > >
+> > > Hi Paul,
+> > >
+> > > Cheers for the quick reply!
+> > >
+> > > On Wed, May 06, 2020 at 07:36:16AM -0700, Paul E. McKenney wrote:
+> > > > On Wed, May 06, 2020 at 02:28:17PM +0100, Will Deacon wrote:
+> > > > > I'm looking to rebase my READ_ONCE() series [1] on top of the KCSAN patches
+> > > > > so that we can get them in for 5.8. However, tip/locking/kcsan seems to be
+> > > > > missing some bits:
+> > > > >
+> > > > >   * An update to checkpatch.pl to warn about missing comments for
+> > > > >     data_race():
+> > > > >
+> > > > >     https://lore.kernel.org/r/20200401101714.44781-1-elver@google.com
+> > > >
+> > > > For some reason, I thought this was going up some other tree, but I do
+> > > > not see it in -next.  So unless I hear otherwise, I will pull it into
+> > > > the v5.8 kcsan branch.
+> > >
+> > > Brill, thanks.
+> > >
+> > > > >   * I'm unable to apply these two patches from Marco that are needed for
+> > > > >     my READ_ONCE() work:
+> > > > >
+> > > > >     https://lore.kernel.org/lkml/20200424154730.190041-1-elver@google.com/
+> > > > >
+> > > > >     I think these depend on stuff that has been queued by Paul, and appears
+> > > > >     in linux-next, but to be honest with you I'm quite confused about what
+> > > > >     is queued for 5.8 and what isn't.
+> > > >
+> > > > This one is queued, but I currently have it in the v5.9 pile (but
+> > > > tentatively for v5.8).  Unless Marco tells me otherwise, I will move it
+> > > > to the v5.8 branch, which will be part of my pull request next week.
+> > >
+> > > Great, then this would all show up on tip/locking/kscan, right?
+> > >
+> > > > > What's the best base for me to use?
+> > > >
+> > > > The -next tree has the latter, but not yet the former.
+> > >
+> > > That probably means -next is good enough for me to cook a new version of my
+> > > series, and then I can make a proper branch next week.
+> > >
+> > > > Hopefully we can get this straightened out, and please accept my apologies
+> > > > for the hassle!
+> > >
+> > > No need to apologise, I just couldn't figure out what was what and decided
+> > > it was easier to ask the experts ;)
+> >
+> > Just confirming that I don't see any issues with the plan -- the
+> > patches that Will needs are good to go into the v5.8 branch.
+>
+> OK, I have updated -rcu's kcsan and kcsan-dev branches.  Could you please
+> double-check, given that pull-request time is quite soon?
 
+I believe "objtool, kcsan: Add kcsan_disable_current() and
+kcsan_enable_current_nowarn()" is missing, which should go after
+"kcsan: Add __kcsan_{enable,disable}_current() variants".
 
-On 06/05/2020 22:07, Rob Herring wrote:
-> On Tue, May 5, 2020 at 10:01 AM Grygorii Strashko
-> <grygorii.strashko@ti.com> wrote:
->>
->>
->>
->> On 05/05/2020 07:04, Rob Herring wrote:
->>> On Fri, May 01, 2020 at 11:50:05PM +0300, Grygorii Strashko wrote:
->>>> Document device tree bindings for TI AM654/J721E SoC The Common Platform
->>>> Time Sync (CPTS) module. The CPTS module is used to facilitate host control
->>>> of time sync operations. Main features of CPTS module are:
->>>>     - selection of multiple external clock sources
->>>>     - 64-bit timestamp mode in ns with ppm and nudge adjustment.
->>>>     - control of time sync events via interrupt or polling
->>>>     - hardware timestamp of ext. events (HWx_TS_PUSH)
->>>>     - periodic generator function outputs (TS_GENFx)
->>>>     - PPS in combination with timesync router
->>>>     - Depending on integration it enables compliance with the IEEE 1588-2008
->>>> standard for a precision clock synchronization protocol, Ethernet Enhanced
->>>> Scheduled Traffic Operations (CPTS_ESTFn) and PCIe Subsystem Precision Time
->>>> Measurement (PTM).
->>>>
->>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->>>> ---
->>>>    .../bindings/net/ti,k3-am654-cpsw-nuss.yaml   |   7 +
->>>>    .../bindings/net/ti,k3-am654-cpts.yaml        | 152 ++++++++++++++++++
->>>>    2 files changed, 159 insertions(+)
->>>>    create mode 100644 Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml b/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
->>>> index 78bf511e2892..0f3fde45e200 100644
->>>> --- a/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
->>>> +++ b/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
->>>> @@ -144,6 +144,13 @@ patternProperties:
->>>>        description:
->>>>          CPSW MDIO bus.
->>>>
->>>> +  "^cpts$":
->>
->> ok
->>
->>>
->>> Fixed strings go under 'properties'.
->>>
->>>> +    type: object
->>>> +    allOf:
->>>> +      - $ref: "ti,am654-cpts.yaml#"
->>>> +    description:
->>>> +      CPSW Common Platform Time Sync (CPTS) module.
->>>> +
->>>>    required:
->>>>      - compatible
->>>>      - reg
->>>> diff --git a/Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml b/Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml
->>>> new file mode 100644
->>>> index 000000000000..1b535d41e5c6
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml
->>>> @@ -0,0 +1,152 @@
->>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>> +%YAML 1.2
->>>> +---
->>>> +$id: http://devicetree.org/schemas/net/ti,am654-cpts.yaml#
->>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>> +
->>>> +title: The TI AM654x/J721E Common Platform Time Sync (CPTS) module Device Tree Bindings
->>>> +
->>>> +maintainers:
->>>> +  - Grygorii Strashko <grygorii.strashko@ti.com>
->>>> +  - Sekhar Nori <nsekhar@ti.com>
->>>> +
->>>> +description: |+
->>>> +  The TI AM654x/J721E CPTS module is used to facilitate host control of time
->>>> +  sync operations.
->>>> +  Main features of CPTS module are
->>>> +  - selection of multiple external clock sources
->>>> +  - Software control of time sync events via interrupt or polling
->>>> +  - 64-bit timestamp mode in ns with PPM and nudge adjustment.
->>>> +  - hardware timestamp push inputs (HWx_TS_PUSH)
->>>> +  - timestamp counter compare output (TS_COMP)
->>>> +  - timestamp counter bit output (TS_SYNC)
->>>> +  - periodic Generator function outputs (TS_GENFx)
->>>> +  - Ethernet Enhanced Scheduled Traffic Operations (CPTS_ESTFn) (TSN)
->>>> +  - external hardware timestamp push inputs (HWx_TS_PUSH) timestamping
->>>> +
->>>> +   Depending on integration it enables compliance with the IEEE 1588-2008
->>>> +   standard for a precision clock synchronization protocol, Ethernet Enhanced
->>>> +   Scheduled Traffic Operations (CPTS_ESTFn) and PCIe Subsystem Precision Time
->>>> +   Measurement (PTM).
->>>> +
->>>> +  TI AM654x/J721E SoCs has several similar CPTS modules integrated into the
->>>> +  different parts of the system which could be synchronized with each other
->>>> +  - Main CPTS
->>>> +  - MCU CPSW CPTS with IEEE 1588-2008 support
->>>> +  - PCIe subsystem CPTS for PTM support
->>>> +
->>>> +  Depending on CPTS module integration and when CPTS is integral part of
->>>> +  another module (MCU CPSW for example) "compatible" and "reg" can
->>>> +  be omitted - parent module is fully responsible for CPTS enabling and
->>>> +  configuration.
->>>
->>> That's fine, but you should still have compatible and reg.
->>
->> I'll add reg as below. But compatible is an issue, because
->> k3-am654-cpsw-nuss call of_platform_populate() to create mdio device.
->> But for CPTS I do not want to create device as k3-am654-cpsw-nuss uses direct
->> function calls to CPTS.
->>
->> Will it be correct to switch to of_platform_device_create() instead of
->> of_platform_populate()?
-> 
-> That should be fine I think.
-
-Thanks. I've sent follow up patches.
-
--- 
-Best regards,
-grygorii
+Thanks,
+-- Marco
