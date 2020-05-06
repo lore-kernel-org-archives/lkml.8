@@ -2,45 +2,45 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 443BCC47259
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF1CC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1964A20708
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C584F20870
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:58:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="ScSH9kOL"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="X1XpkUTR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729945AbgEFP60 (ORCPT
+        id S1729965AbgEFP62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:58:26 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:15794 "EHLO
+        Wed, 6 May 2020 11:58:28 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:40256 "EHLO
         mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728991AbgEFP6H (ORCPT
+        by vger.kernel.org with ESMTP id S1729431AbgEFP6H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 6 May 2020 11:58:07 -0400
 Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 046Fv9kE002695;
-        Wed, 6 May 2020 10:58:01 -0500
+        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 046Fv9kD002695;
+        Wed, 6 May 2020 10:58:00 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-type; s=PODMain02222019;
- bh=D8lxO0jOF7dymb3aMu0u4/x0Qs85pik+E1CjBWhgIjg=;
- b=ScSH9kOL+LTw6wjkkzR4WahRechL1NT4+ND6HgY2IP/PNs2ecOuuMfkehmxcZ0pZoXFD
- a6Ln7kA0MUYjYGsBQC9QS/x1K8w6+FEgYB/o08TOIQDR9aWH9UZm088bW0ok4F/g04Ya
- LNURygZhBp8sI4Nd+m5VaR8IiWkC1Hohs5jrg8d/GyPpyFAwGBm8gGD+AuWSoJPD2AW4
- 9ex9rzMuv6qQAgj8JQNTWRNTNSWnWVgWRi7y87HW8Vul/YmV5Sftt5CbLiNERq82ifPh
- XKBdm2oFNokaNz1Nt+i8mtIuotLy+YauVy7MHZiCQtSGZzBdb4hlBSCblAw6nvmPDyOu TQ== 
+ bh=RXYKMKi+QEbFQDflMloDHZ74pkpU04OaQGCgNtwOO9I=;
+ b=X1XpkUTRXsckl4hdGAQvtQr+v3fBBsSliqUgq0UZswpmYvmoaYjiHzUPpDfzzwnAq53J
+ GZVpUfnVIsVE6rxsI/Rl3wKWTKSST+qm4w6/aOou29IkfJAsHfUgk1OHsWZIcZc4zKny
+ u5Ijq07M/njJH2xfN79+fu+GDtOY9MD72T14uV2uLhXRkQGvhLTGirbl2cpnPb/b1R0R
+ HUotdIOkFUw+JzbOllzz4zLp9r/oRtMO+74/oq2BE1EFGmf8l1D/Jo65O7s0aEw/GKEO
+ kWap6YsDV/oGQNtTYOd+BHs33UCbIczV8WcCuugJiY4G9DzQw7JyfEniZnkn8s9cDZe5 ZA== 
 Authentication-Results: ppops.net;
         spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
 Received: from ediex01.ad.cirrus.com ([87.246.76.36])
-        by mx0b-001ae601.pphosted.com with ESMTP id 30s59pqch3-2
+        by mx0b-001ae601.pphosted.com with ESMTP id 30s59pqch3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 06 May 2020 10:58:01 -0500
+        Wed, 06 May 2020 10:58:00 -0500
 Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
  (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 6 May 2020
@@ -49,7 +49,7 @@ Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
  (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
  Transport; Wed, 6 May 2020 16:57:59 +0100
 Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 3919245D;
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 4ADA92C8;
         Wed,  6 May 2020 15:57:59 +0000 (UTC)
 From:   Charles Keepax <ckeepax@opensource.cirrus.com>
 To:     <cw00.choi@samsung.com>, <robh+dt@kernel.org>,
@@ -58,9 +58,9 @@ To:     <cw00.choi@samsung.com>, <robh+dt@kernel.org>,
 CC:     <myungjoo.ham@samsung.com>, <lgirdwood@gmail.com>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <patches@opensource.cirrus.com>
-Subject: [PATCH v2 4/7] mfd: arizona: Move binding over to dtschema
-Date:   Wed, 6 May 2020 16:57:55 +0100
-Message-ID: <20200506155758.14643-4-ckeepax@opensource.cirrus.com>
+Subject: [PATCH v2 5/7] ASoC: madera: Move binding over to dtschema
+Date:   Wed, 6 May 2020 16:57:56 +0100
+Message-ID: <20200506155758.14643-5-ckeepax@opensource.cirrus.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20200506155758.14643-1-ckeepax@opensource.cirrus.com>
 References: <20200506155758.14643-1-ckeepax@opensource.cirrus.com>
@@ -82,451 +82,210 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 ---
 
-Changes since v1:
- - Removed some description that duplicates constraints
- - Added some blank lines for readability
+New since v1, putting in the same series as Arizona since they share the
+same regulator binding.
 
 Thanks,
 Charles
 
- Documentation/devicetree/bindings/mfd/arizona.txt  | 101 -------
- .../devicetree/bindings/mfd/wlf,arizona.yaml       | 298 +++++++++++++++++++++
- MAINTAINERS                                        |   8 +-
- 3 files changed, 302 insertions(+), 105 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mfd/arizona.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/wlf,arizona.yaml
+ .../devicetree/bindings/sound/cirrus,madera.yaml   | 113 +++++++++++++++++++++
+ Documentation/devicetree/bindings/sound/madera.txt |  67 ------------
+ 2 files changed, 113 insertions(+), 67 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/cirrus,madera.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/madera.txt
 
-diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-deleted file mode 100644
-index 148ef621a5e5d..0000000000000
---- a/Documentation/devicetree/bindings/mfd/arizona.txt
-+++ /dev/null
-@@ -1,101 +0,0 @@
--Cirrus Logic/Wolfson Microelectronics Arizona class audio SoCs
--
--These devices are audio SoCs with extensive digital capabilities and a range
--of analogue I/O.
--
--Required properties:
--
--  - compatible : One of the following chip-specific strings:
--        "cirrus,cs47l24"
--        "wlf,wm5102"
--        "wlf,wm5110"
--        "wlf,wm8280"
--        "wlf,wm8997"
--        "wlf,wm8998"
--        "wlf,wm1814"
--        "wlf,wm1831"
--
--  - reg : I2C slave address when connected using I2C, chip select number when
--    using SPI.
--
--  - interrupts : The interrupt line the /IRQ signal for the device is
--    connected to.
--  - interrupt-controller : Arizona class devices contain interrupt controllers
--    and may provide interrupt services to other devices.
--  - #interrupt-cells: the number of cells to describe an IRQ, this should be 2.
--    The first cell is the IRQ number.
--    The second cell is the flags, encoded as the trigger masks from
--    Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
--
--  - gpio-controller : Indicates this device is a GPIO controller.
--  - #gpio-cells : Must be 2. The first cell is the pin number and the
--    second cell is used to specify optional parameters, see ../gpio/gpio.txt
--    for details.
--
--  - AVDD-supply, DBVDD1-supply, CPVDD-supply : Power supplies for the device,
--    as covered in Documentation/devicetree/bindings/regulator/regulator.txt
--
--  - DBVDD2-supply, DBVDD3-supply : Additional databus power supplies (wm5102,
--    wm5110, wm8280, wm8998, wm1814)
--
--  - SPKVDDL-supply, SPKVDDR-supply : Speaker driver power supplies (wm5102,
--    wm5110, wm8280, wm8998, wm1814)
--
--  - SPKVDD-supply : Speaker driver power supply (wm8997)
--
--  - DCVDD-supply : Main power supply (cs47l24, wm1831)
--
--  - MICVDD-supply : Microphone power supply (cs47l24, wm1831)
--
--Optional properties:
--
--  - reset-gpios : GPIO specifier for the GPIO controlling /RESET
--
--  - clocks: Should reference the clocks supplied on MCLK1 and MCLK2
--  - clock-names: Should contains two strings:
--      "mclk1" for the clock supplied on MCLK1, recommended to be a high
--      quality audio reference clock
--      "mclk2" for the clock supplied on MCLK2, recommended to be an always on
--      32k clock
--
--  - wlf,gpio-defaults : A list of GPIO configuration register values. Defines
--    for the appropriate values can found in <dt-bindings/mfd/arizona.txt>. If
--    absent, no configuration of these registers is performed. If any entry has
--    a value that is out of range for a 16 bit register then the chip default
--    will be used. If present exactly five values must be specified.
--
--  - DCVDD-supply, MICVDD-supply : Power supplies, only need to be specified if
--    they are being externally supplied. As covered in
--    Documentation/devicetree/bindings/regulator/regulator.txt
--    (wm5102, wm5110, wm8280, wm8997, wm8998, wm1814)
--
--Deprecated properties:
--
--  - wlf,reset : GPIO specifier for the GPIO controlling /RESET
--
--Also see child specific device properties:
--  Regulator - ../regulator/arizona-regulator.txt
--  Extcon    - ../extcon/extcon-arizona.txt
--  Sound     - ../sound/wlf,arizona.txt
--
--Example:
--
--codec: wm5102@1a {
--	compatible = "wlf,wm5102";
--	reg = <0x1a>;
--	interrupts = <347>;
--	interrupt-controller;
--	#interrupt-cells = <2>;
--        interrupt-parent = <&gic>;
--
--	gpio-controller;
--	#gpio-cells = <2>;
--
--	wlf,gpio-defaults = <
--		ARIZONA_GP_FN_TXLRCLK
--		ARIZONA_GP_DEFAULT
--		ARIZONA_GP_DEFAULT
--		ARIZONA_GP_DEFAULT
--		ARIZONA_GP_DEFAULT
--	>;
--};
-diff --git a/Documentation/devicetree/bindings/mfd/wlf,arizona.yaml b/Documentation/devicetree/bindings/mfd/wlf,arizona.yaml
+diff --git a/Documentation/devicetree/bindings/sound/cirrus,madera.yaml b/Documentation/devicetree/bindings/sound/cirrus,madera.yaml
 new file mode 100644
-index 0000000000000..49e4f37fdd8b3
+index 0000000000000..c4cd58b5acd46
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/wlf,arizona.yaml
-@@ -0,0 +1,298 @@
++++ b/Documentation/devicetree/bindings/sound/cirrus,madera.yaml
+@@ -0,0 +1,113 @@
 +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/mfd/wlf,arizona.yaml#
++$id: http://devicetree.org/schemas/sound/cirrus,madera.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Cirrus Logic/Wolfson Microelectronics Arizona class audio SoCs
++title: Cirrus Logic Madera class audio CODECs
 +
 +maintainers:
 +  - patches@opensource.cirrus.com
 +
 +description: |
-+  These devices are audio SoCs with extensive digital capabilities and a
-+  range of analogue I/O.
++  This describes audio configuration bindings for these codecs.
 +
-+allOf:
-+  - $ref: /schemas/sound/wlf,arizona.yaml#
-+  - $ref: /schemas/regulator/wlf,arizona.yaml#
-+  - $ref: /schemas/extcon/wlf,arizona.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - cirrus,cs47l24
-+              - wlf,wm1831
-+    then:
-+      required:
-+        - DCVDD-supply
-+        - MICVDD-supply
-+    else:
-+      properties:
-+        LDOVDD-supply:
-+          description:
-+            Digital power supply, used internally to generate DCVDD when
-+            internally supplied.
-+          $ref: /schemas/types.yaml#/definitions/phandle
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - wlf,wm1814
-+              - wlf,wm5102
-+              - wlf,wm5110
-+              - wlf,wm8280
-+              - wlf,wm8997
-+              - wlf,wm8998
-+    then:
-+      properties:
-+        DBVDD2-supply:
-+          description:
-+            Databus power supply.
-+          $ref: /schemas/types.yaml#/definitions/phandle
++  See also the core bindings for the parent MFD driver:
 +
-+      required:
-+        - DBVDD2-supply
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - wlf,wm1814
-+              - wlf,wm5102
-+              - wlf,wm5110
-+              - wlf,wm8280
-+              - wlf,wm8998
-+    then:
-+      properties:
-+        DBVDD3-supply:
-+          description:
-+            Databus power supply.
-+          $ref: /schemas/types.yaml#/definitions/phandle
++    Documentation/devicetree/bindings/mfd/cirrus,madera.yaml
 +
-+      required:
-+        - DBVDD3-supply
-+  - if:
-+     properties:
-+       compatible:
-+         contains:
-+           enum:
-+             - cirrus,cs47l24
-+             - wlf,wm1831
-+             - wlf,wm8997
-+    then:
-+      properties:
-+        SPKVDD-supply:
-+          description:
-+            Mono speaker driver power supply.
-+          $ref: /schemas/types.yaml#/definitions/phandle
++  and defines for values used in these bindings:
 +
-+      required:
-+        - SPKVDD-supply
-+    else:
-+      properties:
-+        SPKVDDL-supply:
-+          description:
-+            Left speaker driver power supply.
-+          $ref: /schemas/types.yaml#/definitions/phandle
++    include/dt-bindings/sound/madera.h
 +
-+        SPKVDDR-supply:
-+          description:
-+            Right speaker driver power supply.
-+          $ref: /schemas/types.yaml#/definitions/phandle
-+
-+      required:
-+        - SPKVDDL-supply
-+        - SPKVDDR-supply
++  The properties are all contained in the parent MFD node.
 +
 +properties:
-+  compatible:
-+    enum:
-+      - cirrus,cs47l24
-+      - wlf,wm1814
-+      - wlf,wm1831
-+      - wlf,wm5102
-+      - wlf,wm5110
-+      - wlf,wm8280
-+      - wlf,wm8997
-+      - wlf,wm8998
-+
-+  reg:
-+    maxItems: 1
-+
-+  AVDD-supply:
++  '#sound-dai-cells':
 +    description:
-+      Analogue power supply.
-+    $ref: /schemas/types.yaml#/definitions/phandle
++      The first cell indicating the audio interface.
++    const: 1
 +
-+  CPVDD-supply:
++  cirrus,inmode:
 +    description:
-+      Charge pump power supply.
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  DBVDD1-supply:
-+    description:
-+      Databus power supply.
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  DCVDD-supply:
-+    description:
-+      Digital power supply, normally supplied internally except on cs47l24,
-+      wm1831 where it is mandatory.
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  MICVDD-supply:
-+    description:
-+      Microphone power supply, normally supplied internally except on
-+      cs47l24, wm1831 where it is mandatory.
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  gpio-controller:
-+    description:
-+      Indicates this device is a GPIO controller.
-+
-+  '#gpio-cells':
-+    description:
-+      The first cell is the pin number and the second cell is used to
-+      specify optional parameters.
-+    const: 2
-+
-+  wlf,gpio-defaults:
-+    description:
-+      A list of GPIO configuration register values. Defines for the
-+      appropriate values can found in dt-bindings/mfd/arizona.h. If
-+      absent, no configuration of these registers is performed. If any
-+      entry has a value that is out of range for a 16 bit register then the
-+      chip default will be used. If present exactly five values must be
-+      specified.
-+    $ref: "/schemas/types.yaml#/definitions/uint32-array"
++      A list of input mode settings for each input. A maximum
++      of 24 cells, with four cells per input in the order INnAL,
++      INnAR INnBL INnBR.  For non-muxed inputs the first two cells
++      for that input set the mode for the left and right channel
++      and the second two cells must be 0.  For muxed inputs the
++      first two cells for that input set the mode of the left and
++      right A inputs and the second two cells set the mode of the
++      left and right B inputs.  Valid mode values are one of the
++      MADERA_INMODE_xxx. If the array is shorter than the number
++      of inputs the unspecified inputs default to MADERA_INMODE_DIFF.
++    $ref: /schemas/types.yaml#/definitions/uint32-array
 +    minItems: 1
-+    maxItems: 5
++    maxItems: 24
++    items:
++      minimum: 0
++      maximum: 1
++      default: 0
 +
-+  interrupt-controller:
++  cirrus,out-mono:
 +    description:
-+      Arizona class devices contain interrupt controllers and may provide
-+      interrupt services to other devices.
-+
-+  '#interrupt-cells':
-+    description:
-+      The first cell is the IRQ number.  The second cell is the flags,
-+      encoded as trigger masks.
-+    const: 2
-+
-+  interrupts:
-+    description:
-+      The interrupt line the /IRQ signal for the device is connected to.
-+
-+  clocks:
-+    description:
-+      Should reference the clocks supplied on MCLK1 and MCLK2.
++      Mono bit for each output, maximum of six cells if the array
++      is shorter outputs will be set to stereo.
++    $ref: /schemas/types.yaml#/definitions/uint32-array
 +    minItems: 1
++    maxItems: 6
++    items:
++      minimum: 0
++      maximum: 1
++      default: 0
++
++  cirrus,dmic-ref:
++    description: |
++      Indicates how the MICBIAS pins have been externally connected
++      to DMICs on each input, one cell per input.
++
++        <IN1 IN2 IN3 ...>
++
++      A value of 0 indicates MICVDD and is the default,
++      other values depend on the codec: For CS47L35 one of the
++      CS47L35_DMIC_REF_xxx values For all other codecs one of
++      the MADERA_DMIC_REF_xxx values Also see the datasheet for a
++      description of the INn_DMIC_SUP field.
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    minItems: 1
++    maxItems: 6
++    items:
++      minimum: 0
++      maximum: 3
++      default: 0
++
++  cirrus,max-channels-clocked:
++    description:
++      Maximum number of channels that I2S clocks will be generated
++      for. Useful when clock master for systems where the I2S bus
++      has multiple data lines.  One cell for each AIF, use a value
++      of zero for AIFs that should be handled normally.
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    minItems: 1
++    maxItems: 4
++    items:
++      default: 0
++
++  cirrus,pdm-fmt:
++    description:
++      PDM speaker data format, must contain 2 cells (OUT5 and
++      OUT6). See the PDM_SPKn_FMT field in the datasheet for a
++      description of this value. The second cell is ignored for
++      codecs that do not have OUT6.
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    minItems: 2
 +    maxItems: 2
 +
-+  clock-names:
-+    description:
-+      Should contains two strings mclk1 for the clock supplied on MCLK1,
-+      recommended to be a high quality audio reference clock mclk2 for the
-+      clock supplied on MCLK2, recommended to be an always on 32k clock.
-+    oneOf:
-+      - items:
-+        - const: mclk1
-+      - items:
-+        - const: mclk2
-+      - items:
-+        - const: mclk1
-+        - const: mclk2
-+
-+  reset-gpios:
-+    description:
-+      GPIO specifier for the GPIO controlling RESET
-+    maxItems: 1
-+
-+  wlf,reset:
-+    description:
-+      GPIO specifier for the GPIO controlling RESET
-+    deprecated: true
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - AVDD-supply
-+  - CPVDD-supply
-+  - DBVDD1-supply
-+  - gpio-controller
-+  - '#gpio-cells'
-+  - interrupt-controller
-+  - '#interrupt-cells'
-+  - interrupts
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/mfd/arizona.h>
-+    i2c@e0004000 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        reg = <0xe0004000 0x1000>;
-+
-+        wm5102: codec@1a {
-+            compatible = "wlf,wm5102";
-+            reg = <0x1a>;
-+
-+            reset-gpios = <&gpio 0>;
-+            wlf,ldoena = <&gpio 1>;
-+
-+            AVDD-supply = <&vdd1v8>;
-+            DBVDD1-supply = <&vdd1v8>;
-+            DBVDD2-supply = <&vdd1v8>;
-+            DBVDD3-supply = <&vdd1v8>;
-+            CPVDD-supply = <&vdd1v8>;
-+            LDOVDD-supply = <&vdd1v8>;
-+            SPKVDDL-supply = <&vdd5v>;
-+            SPKVDDR-supply = <&vdd5v>;
-+
-+            interrupts = <347>;
-+            interrupt-controller;
-+            #interrupt-cells = <2>;
-+            interrupt-parent = <&gic>;
-+
-+            gpio-controller;
-+            #gpio-cells = <2>;
-+
-+            #sound-dai-cells = <1>;
-+
-+            wlf,gpio-defaults = <
-+                ARIZONA_GP_FN_TXLRCLK
-+                ARIZONA_GP_DEFAULT
-+                ARIZONA_GP_DEFAULT
-+                ARIZONA_GP_DEFAULT
-+                ARIZONA_GP_DEFAULT
-+            >;
-+
-+            clocks = <&clks 0>, <&clks 1>;
-+            clock-names = "mclk1", "mclk2";
-+
-+            wlf,inmode = <ARIZONA_INMODE_DIFF ARIZONA_INMODE_DMIC>;
-+            wlf,dmic-ref = <ARIZONA_DMIC_MICBIAS1 ARIZONA_DMIC_MICBIAS3>;
-+
-+            wlf,use-jd2;
-+            wlf,use-jd2-nopull;
-+            wlf,jd-invert;
-+
-+            wlf,micd-software-compare;
-+            wlf,micd-detect-debounce = <0>;
-+            wlf,micd-pol-gpio = <&codec 2 0>;
-+            wlf,micd-rate = <ARIZONA_MICD_TIME_8MS>;
-+            wlf,micd-dbtime = <4>;
-+            wlf,micd-timeout-ms = <100>;
-+            wlf,micd-force-micbias;
-+            wlf,micd-configs = <0 ARIZONA_DMIC_MICBIAS1 0>,
-+                               <0x2000 ARIZONA_DMIC_MICBIAS2 1>;
-+
-+            wlf,gpsw = <ARIZONA_GPSW_OPEN>;
-+        };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 91bf1fbe98c8e..92a96cc0ea734 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18257,11 +18257,11 @@ L:	patches@opensource.cirrus.com
- S:	Supported
- W:	https://github.com/CirrusLogic/linux-drivers/wiki
- T:	git https://github.com/CirrusLogic/linux-drivers.git
--F:	Documentation/devicetree/bindings/extcon/extcon-arizona.txt
--F:	Documentation/devicetree/bindings/mfd/arizona.txt
-+F:	Documentation/devicetree/bindings/extcon/wlf,arizona.yaml
-+F:	Documentation/devicetree/bindings/mfd/wlf,arizona.yaml
- F:	Documentation/devicetree/bindings/mfd/wm831x.txt
--F:	Documentation/devicetree/bindings/regulator/arizona-regulator.txt
--F:	Documentation/devicetree/bindings/sound/wlf,arizona.txt
-+F:	Documentation/devicetree/bindings/regulator/wlf,arizona.yaml
-+F:	Documentation/devicetree/bindings/sound/wlf,arizona.yaml
- F:	Documentation/hwmon/wm83??.rst
- F:	arch/arm/mach-s3c64xx/mach-crag6410*
- F:	drivers/clk/clk-wm83*.c
++  cirrus,pdm-mute:
++    description: |
++      PDM mute format, must contain 2 cells (OUT5 and OUT6). See the
++      PDM_SPKn_CTRL_1 register in the datasheet for a description
++      of this value.  The second cell is ignored for codecs that
++      do not have OUT6.
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    minItems: 2
++    maxItems: 2
+diff --git a/Documentation/devicetree/bindings/sound/madera.txt b/Documentation/devicetree/bindings/sound/madera.txt
+deleted file mode 100644
+index 5e669ce552f47..0000000000000
+--- a/Documentation/devicetree/bindings/sound/madera.txt
++++ /dev/null
+@@ -1,67 +0,0 @@
+-Cirrus Logic Madera class audio codecs
+-
+-This describes audio configuration bindings for these codecs.
+-
+-See also the core bindings for the parent MFD driver:
+-See Documentation/devicetree/bindings/mfd/madera.txt
+-
+-and defines for values used in these bindings:
+-include/dt-bindings/sound/madera.h
+-
+-These properties are all contained in the parent MFD node.
+-
+-Optional properties:
+-  - cirrus,dmic-ref : Indicates how the MICBIAS pins have been externally
+-    connected to DMICs on each input, one cell per input.
+-    <IN1 IN2 IN3 ...>
+-    A value of 0 indicates MICVDD and is the default, other values depend on the
+-    codec:
+-    For CS47L35 one of the CS47L35_DMIC_REF_xxx values
+-    For all other codecs one of the MADERA_DMIC_REF_xxx values
+-    Also see the datasheet for a description of the INn_DMIC_SUP field.
+-
+-  - cirrus,inmode : A list of input mode settings for each input. A maximum of
+-    16 cells, with four cells per input in the order INnAL, INnAR INnBL INnBR.
+-    For non-muxed inputs the first two cells for that input set the mode for
+-    the left and right channel and the second two cells must be 0.
+-    For muxed inputs the first two cells for that input set the mode of the
+-    left and right A inputs and the second two cells set the mode of the left
+-    and right B inputs.
+-    Valid mode values are one of the MADERA_INMODE_xxx. If the array is shorter
+-    than the number of inputs the unspecified inputs default to
+-    MADERA_INMODE_DIFF.
+-
+-  - cirrus,out-mono : Mono bit for each output, maximum of six cells if the
+-    array is shorter outputs will be set to stereo.
+-
+-  - cirrus,max-channels-clocked : Maximum number of channels that I2S clocks
+-    will be generated for. Useful when clock master for systems where the I2S
+-    bus has multiple data lines.
+-    One cell for each AIF, use a value of zero for AIFs that should be handled
+-    normally.
+-
+-  - cirrus,pdm-fmt : PDM speaker data format, must contain 2 cells
+-    (OUT5 and OUT6). See the PDM_SPKn_FMT field in the datasheet for a
+-    description of this value.
+-    The second cell is ignored for codecs that do not have OUT6.
+-
+-  - cirrus,pdm-mute : PDM mute format, must contain 2 cells
+-    (OUT5 and OUT6). See the PDM_SPKn_CTRL_1 register in the datasheet for a
+-    description of this value.
+-    The second cell is ignored for codecs that do not have OUT6.
+-
+-Example:
+-
+-cs47l35@0 {
+-	compatible = "cirrus,cs47l35";
+-
+-	cirrus,dmic-ref = <0 0 CS47L35_DMIC_REF_MICBIAS1B 0>;
+-	cirrus,inmode = <
+-		MADERA_INMODE_DMIC MADERA_INMODE_DMIC /* IN1A digital */
+-		MADERA_INMODE_SE   MADERA_INMODE_SE   /* IN1B single-ended */
+-		MADERA_INMODE_DIFF MADERA_INMODE_DIFF /* IN2 differential */
+-		0 0 	/* not used on this codec */
+-	>;
+-	cirrus,out-mono = <0 0 0 0 0 0>;
+-	cirrus,max-channels-clocked = <2 0 0>;
+-};
 -- 
 2.11.0
 
