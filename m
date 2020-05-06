@@ -2,124 +2,97 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1560BC38A2A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B69F6C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFC29206D5
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:20:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 955C2206D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:24:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ACHaDpy3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729106AbgEFOUG (ORCPT
+        id S1728983AbgEFOYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 10:20:06 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:52635 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726114AbgEFOUF (ORCPT
+        Wed, 6 May 2020 10:24:44 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:45679 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728947AbgEFOYo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 10:20:05 -0400
-Received: from mail-qt1-f170.google.com ([209.85.160.170]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1Miqzy-1itiIJ17Qq-00er3s; Wed, 06 May 2020 16:20:03 +0200
-Received: by mail-qt1-f170.google.com with SMTP id s30so1576546qth.2;
-        Wed, 06 May 2020 07:20:03 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYzDRUmZCYTen71ciC7oV3hJaXVkIuxQxCG4i8E0AN7Jb8r6ys1
-        49nx+IHuHa6UIuvCvRtsYAQSVin9wxYEp5L5TWY=
-X-Google-Smtp-Source: APiQypLJ17dX5DND6148Q5+UsfiLvZmQnsYZDHytTDg94TtFOaytjQi5WUV0VjyWP4Byu0WvwHN6f9unq/lDikTgDy8=
-X-Received: by 2002:ac8:6696:: with SMTP id d22mr1418683qtp.304.1588774802043;
- Wed, 06 May 2020 07:20:02 -0700 (PDT)
+        Wed, 6 May 2020 10:24:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588775082;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dbddwc8AWoCH822EokkiRcp0XFOdJXpCOboNl38sqMs=;
+        b=ACHaDpy3T+8vAeh8aoJigXXeFPOf9C4HwA/U5jqHOKpbI6hZEFqZh3pVyMtZ0zLTGkJbE1
+        tBgTpG6hPgN7FRvJGPe1fHd6xT8qSvFW+rzk2gr9YuwBKK9W0hl/YXkvRNFgyli78q4Dly
+        eQ04N0YhT7FJfN+aoiDkfRESNnLn0MU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-308-7dSlh3iYM9GY009Ms9gsRQ-1; Wed, 06 May 2020 10:24:39 -0400
+X-MC-Unique: 7dSlh3iYM9GY009Ms9gsRQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E1CE281CBE1;
+        Wed,  6 May 2020 14:24:36 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-118-225.rdu2.redhat.com [10.10.118.225])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2557E6299C;
+        Wed,  6 May 2020 14:24:32 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200506110942.GL16070@bombadil.infradead.org>
+References: <20200506110942.GL16070@bombadil.infradead.org> <20200505115946.GF16070@bombadil.infradead.org> <158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk> <158861253957.340223.7465334678444521655.stgit@warthog.procyon.org.uk> <683739.1588751878@warthog.procyon.org.uk>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     dhowells@redhat.com, Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Jeff Layton <jlayton@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 54/61] afs: Wait on PG_fscache before modifying/releasing a page
 MIME-Version: 1.0
-References: <20200505141928.923428-1-arnd@arndb.de> <20200506024416.GB415100@ubuntu-s3-xlarge-x86>
-In-Reply-To: <20200506024416.GB415100@ubuntu-s3-xlarge-x86>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 6 May 2020 16:19:45 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3wqiXAx2GuKJjY90qLGNnyBNTst6LW7n6tRDvzvBQVVQ@mail.gmail.com>
-Message-ID: <CAK8P3a3wqiXAx2GuKJjY90qLGNnyBNTst6LW7n6tRDvzvBQVVQ@mail.gmail.com>
-Subject: Re: [PATCH] leds: lm355x: avoid enum conversion warning
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Bryan Wu <bryan.wu@canonical.com>,
-        "G.Shark Jeong" <gshark.jeong@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-leds@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:pYyoI1J8gUpxFMCxSUeaYinOPFIEeeQlBbkGh3K6lFnYpDltend
- mIq0SdiuAkBpiLbiUnt6WAQLzmHBUQFt7ITZWTYaNUtTnI+gxMEiMO1jlZDBSNAWVH9risA
- BToUfGEEpJWmbfl9uNBqsZxYfJV7n9sHBXHby0zmL4Mr9JhxdmNWVxd2nt0EPqhAcYvGb7p
- qJ3Z+R2CeT/oeLYOHv54A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:rl8sl2ocEX0=:fWAp15AHmNUBDQ4Kc91v6H
- eNMhxChT/NuaVG5ZgTUzh3LalFtIb6cYMrjgXpidFfR7zJ4BHs2NLY/O/JGqvyj293a3nVEeD
- cxl3XFfWpQGee6YVxgcVNOQl3jGguKuWMbVw2pcw2vhZqVMkiJGyMPN40Dub5K2l6elXKDlMZ
- TNDfDgv2u6h30hzeA//dObmanDC8ISJ84+kL7dPoR+KobkLq2695AbdZ4J6gpJqMmagkNLJAK
- QpCXdaTXg885dRM0lQXlB5ouiCsbAujjbdGD5eDKRGjNwlTyEanZgLBaiw8Tg1zjcl9p8VvFB
- cHC/gNzmggBvhZhz/VzdnzaaNgbOxIq7MV+RaDE/gFXzt0x2jQw59VSv+AMllYHt6SdkvZJDy
- fmdTGaYs+1Ar4SFlRVfbyq6a9nhzgv4CXljt8fyDxOQMDLF5GWWp4xYnki2T/Drw/UnRIRY/F
- YucLLobC/ahth/Tf1Rf2ZgoVQtf3Kh31/jra7URrd2jLa4jaTuoaTiLAMv9gJobqPJizJB8cR
- PKWTUlC3GikG4KlhVFnEUWTRx3FwgplKJ5JgZK0rFMZ5vufMEabdVJ5aSh82WaUdEAJgGzXWr
- hLHuExw62YpWllT8YgEDVzFKCCc/2bZYxCMlYrHpNGgCnxYXUFn/lx9mP10umMp1EkO2GUQWB
- ufv91TnMeGFJ1ckmch3Mu8HSAyVYZw5hOLe+poZQ0dlMXxBUqx6YgKRAtEbrsw9umQdBGdsbt
- J+eJBYchyq2ytYiE5+4M+jnGzLVH3clsnPKf3X04jRyFboSlBGLo8lo/zhs/+qga4fHkT4842
- Tty52xMn5FpR7pa88Iq6U+t5EtA9MkU2mZo+whzVr6tSwHFTA4=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <713140.1588775072.1@warthog.procyon.org.uk>
+Date:   Wed, 06 May 2020 15:24:32 +0100
+Message-ID: <713141.1588775072@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 6, 2020 at 4:44 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Tue, May 05, 2020 at 04:19:17PM +0200, Arnd Bergmann wrote:
-> > clang points out that doing arithmetic between diffent enums is usually
->                                                  ^ different
-> > a mistake:
-> >
-> > drivers/leds/leds-lm355x.c:167:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
-> >                 reg_val = pdata->pin_tx2 | pdata->ntc_pin;
-> >                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
-> > drivers/leds/leds-lm355x.c:178:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
-> >                 reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
-> >                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
-> >
-> > In this driver, it is intentional, so add a cast to hide the false-positive
->
-> Not sure that I would call this a false positive. The warning is correct
-> that there is a bitwise operation between different enumeration types
-> but we do not care since we are just using the enumerated type for its
-> integer value in lieu of a #define VAR value.
+Matthew Wilcox <willy@infradead.org> wrote:
 
-Right, I meant that the code works as intended and said "false positive"
-to avoid claiming the driver is broken when this was a deliberate
-design point.
+> > Won't that screw up ITER_MAPPING?  Does that mean that ITER_MAPPING isn't
+> > viable?
+> 
+> Can you remind me why ITER_MAPPING needs:
+> 
+> "The caller must guarantee that the pages are all present and they must be
+> locked using PG_locked, PG_writeback or PG_fscache to prevent them from
+> going away or being migrated whilst they're being accessed."
+> 
+> An elevated refcount prevents migration, and it also prevents the pages
+> from being freed.  It doesn't prevent them from being truncated out of
+> the file, but it does ensure the pages aren't reallocated.
 
-We do want clang to warn about this though as you say, so I can
-rephrase it to explain that both the driver and the compiler work
-as intended but they clash in their views of how to do it ;-)
+ITER_MAPPING relies on the mapping to maintain the pointers to the pages so
+that it can find them rather than being like ITER_BVEC where there's a
+separate list.
 
-> > -             reg_val = pdata->pass_mode;
-> > +             reg_val = (u32)pdata->pass_mode;
->
-> Is this cast needed? I don't think there should be warning from going
-> from an enumerated type to unsigned int.
+Truncate removes the pages from the mapping - at which point ITER_MAPPING can
+no longer find them.
 
-This cast is not needed for warnings, I added it for consistency because
-it seemed odd to cast only four of the five enums. I can remove if though
-if you think it's clearer without the cast.
+David
 
-There may also be a different solution in completely removing the
-lm355x_chip_init() function, as it was added at a time when we
-were converting the last board files into devicetree, and there has
-never been a board file defining lm355x_platform_data.
-
-There is unfortunately no DT support either in it, so I assume we
-could just remove the driver completely, or change it to use a
-DT binding similar to
-Documentation/devicetree/bindings/leds/leds-lm36*.txt
-
-LED maintainers, any opinions on this?
-
-     Arnd
