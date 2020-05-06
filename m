@@ -2,193 +2,146 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C978C38A2A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD439C38A2A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C2D82075A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A52FF2075A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:16:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="YExOBa0C"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cq9duf0K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730038AbgEFVP5 (ORCPT
+        id S1730062AbgEFVQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 17:15:57 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:27581 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730010AbgEFVPz (ORCPT
+        Wed, 6 May 2020 17:16:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57348 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729268AbgEFVPc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 17:15:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1588799754; x=1620335754;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=T+Ll8tZc9vYZAorA7aIZMRWepCCE5u9iReBymxXDYg4=;
-  b=YExOBa0Ch2lsnTIEv/S2mEh8T46XKYqyMARqFAr69/rKuamBopfLTTLK
-   aerPG8KU595F0DczxIGp8ebK+tTozNpXL0BIKcCUiqZlkBLTXg8TpFVs/
-   HnDltDCkQgsykFEzJBgbzzdsrS//6nLqHpqwBybVS2ommFPkmtfG4bQOW
-   mKKkzclZp/9jkZFRPrJrAIrb1xqg3SFDycWK3iOWI5EXPBM84m+jWRNf7
-   hsNVGubs0kjP/TSqppG+tGnu5vEVeWPfLuo1aYpfqcvAc7NzcOky5MTxU
-   x1FjBgFnjLpTHLXPYMfaKNjZ04VXAU7o1Zi+yAeTckxRA/OQ5i+qF1Mud
-   w==;
-IronPort-SDR: FAxJtZKujh/IpUWRggqLlWrFDVr26ZPMRf8zPt/VsCzUf9getOXlzsPn7K/I4p/GlbYUgNblYn
- jINB5g8TEnmy86dtrqlFYQca+eBxKXYN7AqCPhwDggg38p/i9OLbgurop55ZXXhIqit23sLHkf
- wXDlFz57QhcFDL4INrSq5UDtkE/Ei5qewuIyETqp0hNYW9l1F0nb6v4FCviMWpyA6nOB+loiUp
- rOxY0/VR5mPFW50sX0glTzpHkFLtNMcWmWFEpDSfyprVaZkjsrGizGB1NFR0IRZQjWeulJYjH2
- aIA=
-X-IronPort-AV: E=Sophos;i="5.73,360,1583218800"; 
-   d="scan'208";a="74455046"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 May 2020 14:15:53 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 6 May 2020 14:15:55 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Wed, 6 May 2020 14:15:54 -0700
-Date:   Wed, 6 May 2020 23:15:51 +0200
-From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-CC:     Xiaoliang Yang <xiaoliang.yang_1@nxp.com>, Po Liu <po.liu@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        "Li Yang" <leoyang.li@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Jiri Pirko" <jiri@resnulli.us>, Ido Schimmel <idosch@idosch.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Joergen Andreasen <joergen.andreasen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        <linux-devel@linux.nxdi.nxp.com>
-Subject: Re: [PATCH v1 net-next 4/6] net: mscc: ocelot: VCAP IS1 support
-Message-ID: <20200506211551.cf6mlad7ysmuqfvq@ws.localdomain>
-References: <20200506074900.28529-1-xiaoliang.yang_1@nxp.com>
- <20200506074900.28529-5-xiaoliang.yang_1@nxp.com>
- <20200506094345.n4zdgjvctwiz4pkh@ws.localdomain>
- <CA+h21hoqJC_CJB=Sg=-JanXw3S_WANgjsfYjU+ffqn6YCDMzrA@mail.gmail.com>
+        Wed, 6 May 2020 17:15:32 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95B07C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 14:15:32 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id w65so1745865pfc.12
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 14:15:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=UTadiU/eZ1q2VGZ0zHQqmJyy/ggoeusOcwyRzYvVDUc=;
+        b=cq9duf0KIITAA+Ma8qYIxaZ1ZPr3t1w/UF75OOETMqQdQmgs22XTCQOGl6oiQEjz7p
+         BgKpBL77SS7JZ5xo55zIXSOsqMrKyT1b27dFGHrBuSz/quzXybhAwKS4r8OJ1QwyxhGQ
+         B7rHm2bNXagzf+t9CQEiLLeU6Hp5erNLSitjg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=UTadiU/eZ1q2VGZ0zHQqmJyy/ggoeusOcwyRzYvVDUc=;
+        b=FGmU9CtAgneH1iY8KMjpqw+eSR/7vq5Oy7DPmIOa4DxCo24kBMFxXqpmO5+hhMlYeP
+         OLSOM2x0PmlpuhPEFi1FvPw08X3LXu7qlp4qkdZBOPCpKPn5Nr7DyK5LWeH1Sjlox/2u
+         7LZUPPd6zp7ZoXS9BqGj/l45yxAdeR1MwrMCFs9sSJYbxetl0UcdBz8niH3URJKYXTsJ
+         mUvjR+xydLq/b7RvqGAISEPm1Z22j0l2FfsVoZhd7LHm8uEf9FgSwE4phH8v2JrorxKP
+         oCEwBjCxfuQHR9fprFxZ/gjYbeaaRqtfx2loq9d3IPqq6VlK/XNzv8MRYkscqbFJtv/A
+         I/eQ==
+X-Gm-Message-State: AGi0PuYa8ROHnAccD9lPkuPigEiHeF6fB26cqKM1u9soA5DwSXGUgpLL
+        Czk38SWQx2QIecrdKywjOLdbXQ==
+X-Google-Smtp-Source: APiQypJMGq3U5ddizQcOsBKxOLGbBmDpeYTINpkjDXZZ8zOo3aE8YDsIBWjDo4JQqzR3y3Z1flDR4Q==
+X-Received: by 2002:aa7:9546:: with SMTP id w6mr10197340pfq.114.1588799732130;
+        Wed, 06 May 2020 14:15:32 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id m19sm5619332pjv.30.2020.05.06.14.15.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 14:15:29 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>, jmorris@namei.org,
+        sashal@kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v3 1/6] printk: honor the max_reason field in kmsg_dumper
+Date:   Wed,  6 May 2020 14:15:18 -0700
+Message-Id: <20200506211523.15077-2-keescook@chromium.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200506211523.15077-1-keescook@chromium.org>
+References: <20200506211523.15077-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CA+h21hoqJC_CJB=Sg=-JanXw3S_WANgjsfYjU+ffqn6YCDMzrA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vladimir,
+From: Pavel Tatashin <pasha.tatashin@soleen.com>
 
-On 06.05.2020 13:53, Vladimir Oltean wrote:
->On Wed, 6 May 2020 at 12:45, Allan W. Nielsen
-><allan.nielsen@microchip.com> wrote:
->>
->> Hi Xiaoliang,
->>
->> On 06.05.2020 15:48, Xiaoliang Yang wrote:
->> >VCAP IS1 is a VCAP module which can filter MAC, IP, VLAN, protocol, and
->> >TCP/UDP ports keys, and do Qos and VLAN retag actions.
->> >This patch added VCAP IS1 support in ocelot ace driver, which can supports
->> >vlan modify action of tc filter.
->> >Usage:
->> >        tc qdisc add dev swp0 ingress
->> >        tc filter add dev swp0 protocol 802.1Q parent ffff: flower \
->> >        skip_sw vlan_id 1 vlan_prio 1 action vlan modify id 2 priority 2
->> I skimmed skimmed through the patch serie, and the way I understood it
->> is that you look at the action, and if it is a VLAN operation, then you
->> put it in IS1 and if it is one of the other then put it in IS2.
->>
->> This is how the HW is designed - I'm aware of that.
->>
->> But how will this work if you have 2 rules, 1 modifying the VLAN and
->> another rule dropping certain packets?
->>
->
->At the moment, the driver does not support more than 1 action. We
->might need to change that, but we can still install more filters with
->the same key and still be fine (see more below). When there is more
->than 1 action, the IS1 stuff will be combined into a single rule
->programmed into IS1, and the IS2 stuff will be combined into a single
->new rule with the same keys installed into VCAP IS2. Would that not
->work?
->
->> The SW model have these two rules in the same table, and can stop
->> process at the first match. SW will do the action of the first frame
->> matching.
->>
->
->Actually I think this is an incorrect assumption - software stops at
->the first action only if told to do so. Let me copy-paste a text from
->a different email thread.
+kmsg_dump() allows to dump kmesg buffer for various system events: oops,
+panic, reboot, etc. It provides an interface to register a callback call
+for clients, and in that callback interface there is a field "max_reason"
+which gets ignored unless always_kmsg_dump is passed as kernel parameter.
 
-I'm still not able to see how this proposal will give us the same
-behavioral in SW and in HW.
+Allow clients to decide max_reason, and keep the current behavior when
+max_reason is not set.
 
-A simple example:
+Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+Link: https://lore.kernel.org/r/20200505154510.93506-2-pasha.tatashin@soleen.com
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ include/linux/kmsg_dump.h |  1 +
+ kernel/printk/printk.c    | 15 +++++++++++----
+ 2 files changed, 12 insertions(+), 4 deletions(-)
 
-tc qdisc add dev enp0s3 ingress
-tc filter add dev enp0s3 protocol 802.1Q parent ffff: \
-     prio 10 flower vlan_id 5 action vlan modify id 10
-tc filter add dev enp0s3 protocol 802.1Q parent ffff: \
-     prio 20 flower src_mac 00:00:00:00:00:08 action drop
-
-We can then inject a frame with VID 5 and smac ::08:
-$ ef tx tap0 eth smac 00:00:00:00:00:08 ctag vid 5 
-
-We can then check the filter and see that it only hit the first rule:
-
-$ tc -s filter show dev enp0s3 ingress
-filter protocol 802.1Q pref 10 flower chain 0
-filter protocol 802.1Q pref 10 flower chain 0 handle 0x1
-   vlan_id 5
-   not_in_hw
-         action order 1: vlan  modify id 10 protocol 802.1Q priority 0 pipe
-          index 1 ref 1 bind 1 installed 19 sec used 6 sec
-         Action statistics:
-         Sent 42 bytes 1 pkt (dropped 0, overlimits 0 requeues 0)
-         backlog 0b 0p requeues 0
-
-filter protocol 802.1Q pref 20 flower chain 0
-filter protocol 802.1Q pref 20 flower chain 0 handle 0x1
-   src_mac 00:00:00:00:00:08
-   not_in_hw
-         action order 1: gact action drop
-          random type none pass val 0
-          index 1 ref 1 bind 1 installed 11 sec used 11 sec
-         Action statistics:
-         Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0)
-         backlog 0b 0p requeues 0
-
-If this was done with the proposed HW offload, then both rules would
-have been hit and we would have a different behavioral.
-
-This can be fixed by adding the "continue" action to the first rule:
-
-tc filter add dev enp0s3 protocol 802.1Q parent ffff: \
-     prio 10 flower vlan_id 5 action vlan modify id 10 continue
-tc filter add dev enp0s3 protocol 802.1Q parent ffff: \
-     prio 20 flower src_mac 00:00:00:00:00:08 action drop
-
-But that would again break if we add 2 rules manipulating the VLAN (as
-the HW does not continue with in a single TCAM).
-
-My point is: I do not think we can hide the fact that this is done
-in independent TCAMs in the silicon.
-
-I think it is possible to do this with the chain feature (even though it
-is not a perfect match), but it would require more analysis.
-
-/Allan
+diff --git a/include/linux/kmsg_dump.h b/include/linux/kmsg_dump.h
+index 2e7a1e032c71..cfc042066be7 100644
+--- a/include/linux/kmsg_dump.h
++++ b/include/linux/kmsg_dump.h
+@@ -28,6 +28,7 @@ enum kmsg_dump_reason {
+ 	KMSG_DUMP_RESTART,
+ 	KMSG_DUMP_HALT,
+ 	KMSG_DUMP_POWEROFF,
++	KMSG_DUMP_MAX
+ };
+ 
+ /**
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 9a9b6156270b..1aab69a8a2bf 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -3157,12 +3157,19 @@ void kmsg_dump(enum kmsg_dump_reason reason)
+ 	struct kmsg_dumper *dumper;
+ 	unsigned long flags;
+ 
+-	if ((reason > KMSG_DUMP_OOPS) && !always_kmsg_dump)
+-		return;
+-
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(dumper, &dump_list, list) {
+-		if (dumper->max_reason && reason > dumper->max_reason)
++		enum kmsg_dump_reason cur_reason = dumper->max_reason;
++
++		/*
++		 * If client has not provided a specific max_reason, default
++		 * to KMSG_DUMP_OOPS, unless always_kmsg_dump was set.
++		 */
++		if (cur_reason == KMSG_DUMP_UNDEF) {
++			cur_reason = always_kmsg_dump ? KMSG_DUMP_MAX :
++							KMSG_DUMP_OOPS;
++		}
++		if (reason > cur_reason)
+ 			continue;
+ 
+ 		/* initialize iterator with data about the stored records */
+-- 
+2.20.1
 
