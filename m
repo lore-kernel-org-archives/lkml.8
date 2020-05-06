@@ -2,104 +2,156 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F09D2C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CAD0C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D36072068E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 144BF2068E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:29:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729146AbgEFK3J convert rfc822-to-8bit (ORCPT
+        id S1729184AbgEFK3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 06:29:09 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:60075 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728338AbgEFK3I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 06:29:08 -0400
-Received: from mail-qk1-f169.google.com ([209.85.222.169]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MD9Ox-1jNmq203jl-0095nl for <linux-kernel@vger.kernel.org>; Wed, 06 May
- 2020 12:29:07 +0200
-Received: by mail-qk1-f169.google.com with SMTP id 23so1354370qkf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 03:29:06 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZ9rqVWW2WDFNBR01tVoBGyKzybHwIZcCnfLwH67ZnSUOGZhZam
-        TgjTtEczLpTsqEagNizFu5gV4hkb23YBInvh3gI=
-X-Google-Smtp-Source: APiQypLplZDjvgilEtNOvewSJ4/Rigx9zKpijezGZjbjJHJFpHNinyeAHrYJil4GkKYLbPsidhx2J3DNgSsgw1MT/WA=
-X-Received: by 2002:a37:aa82:: with SMTP id t124mr7608771qke.3.1588760945935;
- Wed, 06 May 2020 03:29:05 -0700 (PDT)
+        Wed, 6 May 2020 06:29:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:33274 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728338AbgEFK3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 06:29:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D5F8730E;
+        Wed,  6 May 2020 03:29:13 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8658D3F71F;
+        Wed,  6 May 2020 03:29:12 -0700 (PDT)
+References: <20200503083407.GA27766@iZj6chx1xj0e0buvshuecpZ> <CAKfTPtCNG9Y4xNA-iLd+JRRsUCA1+SkkFFRbbzk5n7q6v401tw@mail.gmail.com> <20200505134056.GA31680@iZj6chx1xj0e0buvshuecpZ> <20200505142711.GA12952@vingu-book>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Peng Liu <iwtbavbm@gmail.com>, dietmar.eggemann@arm.com,
+        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/fair: Fix nohz.next_balance update
+In-reply-to: <20200505142711.GA12952@vingu-book>
+Date:   Wed, 06 May 2020 11:29:10 +0100
+Message-ID: <jhjftcd1hmx.mognet@arm.com>
 MIME-Version: 1.0
-References: <20200505141546.824573-1-arnd@arndb.de> <30d49e6d-570b-f6fd-3a6f-628abcc8b127@suse.com>
- <CAK8P3a0mWH=Zcq180+cTRMpqOkGt05xDP1+kCTP6yc9grAg2VQ@mail.gmail.com>
- <48893239-dde9-4e94-040d-859f4348816d@suse.com> <CAK8P3a2_7+_a_cwDK1cwfrJX4azQJhd_Y0xB18cCUn6=p7fVsg@mail.gmail.com>
- <2c6e4b36-6618-1889-55c4-16eeb1ef6f57@suse.com>
-In-Reply-To: <2c6e4b36-6618-1889-55c4-16eeb1ef6f57@suse.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 6 May 2020 12:28:49 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a05wLCy0GT88mc451h3uXuU86aZ7XC=YXYXi12J0dFJkw@mail.gmail.com>
-Message-ID: <CAK8P3a05wLCy0GT88mc451h3uXuU86aZ7XC=YXYXi12J0dFJkw@mail.gmail.com>
-Subject: Re: [PATCH] xenbus: avoid stack overflow warning
-To:     =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Yan Yankovskyi <yyankovskyi@gmail.com>, Wei Liu <wl@xen.org>,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:6DGL6ePIVowI5ADFNHUf0pHfFmh8vfXmng/tiZDheNg7HItF0uc
- V9nFJQKI+OY2IlkhsI7Hg+n9znchrD4Rr9BTtD/njpbhgTu27mASA5TBwweXNBc+J6cimPH
- uMqIENvy722zYcx95zageDUmQhf/LYhYl3J991l2fQx0+PlgzvDqOxztW6qvZQqFObhqzwU
- 2gImdXAy6zEhlhVvb86MQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:by0lQNdOh9A=:5m76rTrjSeCd3UnHmfkMOI
- bwZzCevCBF83rtZveOFMlMJoAi+PsKryA6m6jco2p0tRSrlhdeSTit+hlvQFPebx2vTOqO3eN
- OD6NwInbLRu3WjwloYAGZu65f0FKMwNB2KpAmniVbg+0+MVWmOmZRzHhbs7lMIXRzWUSYCtmb
- sJH/QMKcCWRlC4xEHcuOhNenW7qdndX2gjZrYKXma8JChmJUst5wz1J2Wa9IKf9BYXOlWvX+I
- jE4GXKGhbjmKPnNVgvr8x7tDK/3hzLfb5DUDAOVxC+Gp1AHbMB3Gr1cr9nlQtbsAvXDf+EXLk
- x9Ud7VHYeBMolir0yPH1Jss7sWU3TBWGZbpzy830p7dzCq8q4RANaRywVFsSLXkuevPsWbK+a
- G6pVbeyXP5qROdik6eRzoz3fnlVD9RSuLOB9teXqjxI8Vz9sFTgQlavfWd95XYyajVKPLe0kl
- kCukU86c9YY9jIqu0MHGBXV7HjZh0WnCjZAC5jokWs9WS/jt2QMYuVIpn+tmfiqaPntMaLPUt
- J1D3+6RzhwIn88A0uya04Attp6KFJBOaqJJa/U+4XGU0/LL5z9L32W0/Rdh/vA4BfH2IPUqbp
- TFKCJPWBxTdtC3LbmAbqdHgtmlWm4nGUNuP88q5aQvffpiU5lHvv2zJuECcgqSEoprkWdLLEl
- eH8VieVjDKwlTXLopLR8mjDuV9Uqavn17miO+6YsobwUWOxu5V5WcHQYEqRqyPGl0jOz5PyN2
- kKK9+3fKufbLEr9WveEaTP6TkvqIMw2i7lumow18lMOxXFr5eZx3uXiKx4c9yYM7LJuAvaT0q
- 6v/IZbYodTHLnEBarc8KAhPr41LmueiIFppLEn9mm8Iv3qDA2s=
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 6, 2020 at 7:12 AM Jürgen Groß <jgross@suse.com> wrote:
->
-> On 05.05.20 22:57, Arnd Bergmann wrote:
-> > On Tue, May 5, 2020 at 6:02 PM Jürgen Groß <jgross@suse.com> wrote:
-> >> On 05.05.20 17:01, Arnd Bergmann wrote:
-> >>> On Tue, May 5, 2020 at 4:34 PM Jürgen Groß <jgross@suse.com> wrote:
-> >>>> On 05.05.20 16:15, Arnd Bergmann wrote:
-> >>>
-> >>> I considered that as well, and don't really mind either way. I think it does
-> >>> get a bit ugly whatever we do. If you prefer the union, I can respin the
-> >>> patch that way.
-> >>
-> >> Hmm, thinking more about it I think the real clean solution would be to
-> >> extend struct map_ring_valloc_hvm to cover the pv case, too, to add the
-> >> map and unmap arrays (possibly as a union) to it and to allocate it
-> >> dynamically instead of having it on the stack.
-> >>
-> >> Would you be fine doing this?
-> >
-> > This is a little more complex than I'd want to do without doing any testing
-> > (and no, I don't want to do the testing either) ;-)
-> >
-> > It does sound like a better approach though.
->
-> I take this as you are fine with me writing the patch and adding you as
-> "Reported-by:"?
 
-Yes, definitely. Thanks!
+On 05/05/20 15:27, Vincent Guittot wrote:
+> So I would be in favor of something as simple as :
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 04098d678f3b..e028bc1c4744 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -10457,6 +10457,14 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
+>                 }
+>         }
+>
+> +       /*
+> +        * next_balance will be updated only when there is a need.
+> +        * When the CPU is attached to null domain for ex, it will not be
+> +        * updated.
+> +        */
+> +       if (likely(update_next_balance))
+> +               nohz.next_balance = next_balance;
+> +
+>         /* Newly idle CPU doesn't need an update */
+>         if (idle != CPU_NEWLY_IDLE) {
+>                 update_blocked_averages(this_cpu);
+> @@ -10477,14 +10485,6 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
+>         if (has_blocked_load)
+>                 WRITE_ONCE(nohz.has_blocked, 1);
+>
+> -       /*
+> -        * next_balance will be updated only when there is a need.
+> -        * When the CPU is attached to null domain for ex, it will not be
+> -        * updated.
+> -        */
+> -       if (likely(update_next_balance))
+> -               nohz.next_balance = next_balance;
+> -
+>         return ret;
+>  }
+>
 
-     Arnd
+But then we may skip an update if we goto abort, no? Imagine we have just
+NOHZ_STATS_KICK, so we don't call any rebalance_domains(), and then as we
+go through the last NOHZ CPU in the loop we hit need_resched(). We would
+end in the abort part without any update to nohz.next_balance, despite
+having accumulated relevant data in the local next_balance variable.
+
+Also note that in this case, nohz_idle_balance() will still return true.
+
+If we rip out just the one update we need from rebalance_domains(), then
+perhaps we could go with what Peng was initially suggesting? i.e. something
+like the below.
+
+---
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 46b7bd41573f..0a292e0a0731 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -9934,22 +9934,8 @@ static void rebalance_domains(struct rq *rq, enum cpu_idle_type idle)
+         * When the cpu is attached to null domain for ex, it will not be
+         * updated.
+         */
+-	if (likely(update_next_balance)) {
++	if (likely(update_next_balance))
+                rq->next_balance = next_balance;
+-
+-#ifdef CONFIG_NO_HZ_COMMON
+-		/*
+-		 * If this CPU has been elected to perform the nohz idle
+-		 * balance. Other idle CPUs have already rebalanced with
+-		 * nohz_idle_balance() and nohz.next_balance has been
+-		 * updated accordingly. This CPU is now running the idle load
+-		 * balance for itself and we need to update the
+-		 * nohz.next_balance accordingly.
+-		 */
+-		if ((idle == CPU_IDLE) && time_after(nohz.next_balance, rq->next_balance))
+-			nohz.next_balance = rq->next_balance;
+-#endif
+-	}
+ }
+
+ static inline int on_null_domain(struct rq *rq)
+@@ -10315,6 +10301,11 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
+        if (flags & NOHZ_BALANCE_KICK)
+                rebalance_domains(this_rq, CPU_IDLE);
+
++	if (time_after(next_balance, this_rq->next_balance)) {
++		next_balance = this_rq->next_balance;
++		update_next_balance = 1;
++	}
++
+        WRITE_ONCE(nohz.next_blocked,
+                now + msecs_to_jiffies(LOAD_AVG_PERIOD));
+
+@@ -10551,6 +10542,17 @@ static __latent_entropy void run_rebalance_domains(struct softirq_action *h)
+        /* normal load balance */
+        update_blocked_averages(this_rq->cpu);
+        rebalance_domains(this_rq, idle);
++
++#ifdef CONFIG_NO_HZ_COMMON
++	/*
++	 * NOHZ idle CPUs will be rebalanced with nohz_idle_balance() and thus
++	 * nohz.next_balance will be updated accordingly. If there was no NOHZ
++	 * kick, then we just need to update nohz.next_balance wrt *this* CPU.
++	 */
++	if ((idle == CPU_IDLE) &&
++	    time_after(nohz.next_balance, this_rq->next_balance))
++		nohz.next_balance = this_rq->next_balance;
++#endif
+ }
+
+ /*
+---
