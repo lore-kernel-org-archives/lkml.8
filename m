@@ -2,158 +2,129 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 251DAC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2541C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F19D9208DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0DF5206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:18:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fh8E4r6C"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="CDYYUXVy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729968AbgEFQR2 (ORCPT
+        id S1730055AbgEFQS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:17:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38810 "EHLO
+        Wed, 6 May 2020 12:18:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729239AbgEFQR1 (ORCPT
+        by vger.kernel.org with ESMTP id S1729521AbgEFQS1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:17:27 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C609C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 09:17:27 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id k81so2544123qke.5
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 09:17:27 -0700 (PDT)
+        Wed, 6 May 2020 12:18:27 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C08D5C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 09:18:26 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id q13so1849508qtp.7
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 09:18:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fGkPYRk8l8ktb7AayxCCEJ990sWSMDNqHa+b2P0mvdY=;
-        b=fh8E4r6C0xtUupCSdzDPYomQSkHNWxSIVTwypdohgmzY7+jyAIJQVVbsmbW8pLlNTy
-         8tln5F3NsfkSZMKyHlSLAF1moAVFy218cx3FEUpSpX2U8f+mx3S+Ac6hanD88feMdTcE
-         Md0nU98NXPnGjpKNPXsM2BoepQr0aIHC6HlxwmL+tzyfW4+ym0ZPBsaEE5asNsx4/2Xk
-         WxMfMvWDA3fFBCDpjzlR90g07jCGjb5K/SR30ggcMAUKEz6r2zNdknQqnwNaknfqZPtl
-         oHY/R7YQMWbl9Mle9l2mUTC7mZFMPgxd93Bj1DtnS54jnfDhm+77/e4CvCr3kA89YwDQ
-         NhMQ==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dI/8k01wqNtPsEMN3JryPuexKMUAM9GFAPsiKlMJOgs=;
+        b=CDYYUXVytFKURB46DxLbtSQhLKEUVHOamKg4N6ws/VeYuZqe48aW2fVU4DY/h9Bp0C
+         oxPsar9OJVyyfKYewl2b61UAK/iYMJhUOEztf6FyAWUPWMHx6K52Ms3zjFawc0T82Nl1
+         7Xt+P1aPijxMvudfHiyJNFg5C9ZFGxb7Xq5W8dbwJ21FJwxC/q1Blc/Rw7qi4EBtZ7QU
+         QsgB9ERVVjUURncAAw80TIEnHnDpJ9Brzd9+PloSZTbvOPoos60r/CIiiaGLTHr18jlp
+         z1hKejvJ2XMgEhTqjmxxET3DODSbvUQWlTA4t/TK35N6seBmGymATrWanur938yEOAM8
+         A/+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fGkPYRk8l8ktb7AayxCCEJ990sWSMDNqHa+b2P0mvdY=;
-        b=DIHxGVDgcrONxnau3Wmb/iyuVIreADh5htxk5UpmaL0k6eRajo1j2T5CCWIlFUf7PQ
-         2ZJSnzbgq92zqmvfLG6ninuVB7BKYfzlXun2Reb3FnTM9U88/Fg4pp6Otd827NC/m5dr
-         Vtc/fWiONq2rJvODe6HhTzFOEK3h0aLBIpS9VBtk1QeSnFYsKcvzh00Uv2CX/YHkhJqe
-         zm0Gd3IJNfcl0j+wGR91q7w11xv2cBT7iSFfLaj0jhBLBfxDEAYdAWoUMlVH+Wkvai4y
-         8lPottEoDFFWCSQf3F8sas55S7yqjdC1ZaDK/DyyR6pm/Af47l7eOUDPYWEg7VffFRWN
-         6sQA==
-X-Gm-Message-State: AGi0PubJU3ThM5JLeaKNNbyGdK5cdPxJCgs2JqsigqqlVtNDa8jX+p86
-        TU8RdvrfYlOohTwm3XzrPOs=
-X-Google-Smtp-Source: APiQypLBRebhOnYrxSCbcCtAG/3mi4UZY/m8AmOx83yvnX99bF/u97ZquulgYxonkM96m0/tI20Zsw==
-X-Received: by 2002:ae9:ebcb:: with SMTP id b194mr9395006qkg.391.1588781846644;
-        Wed, 06 May 2020 09:17:26 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id c19sm1734851qtn.94.2020.05.06.09.17.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 09:17:25 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 23A77409A3; Wed,  6 May 2020 13:17:23 -0300 (-03)
-Date:   Wed, 6 May 2020 13:17:23 -0300
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     yshuiv7@gmail.com, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf-probe: Accept the instance number of kretprobe event
-Message-ID: <20200506161723.GA22183@kernel.org>
-References: <158877535215.26469.1113127926699134067.stgit@devnote2>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dI/8k01wqNtPsEMN3JryPuexKMUAM9GFAPsiKlMJOgs=;
+        b=DIRayEjvVcxXyOLbZixl7+FMNDesJqUGKGNZTcwzy3F9wkwz9Yo0CLw9aAIoKo311H
+         ZDaMmaYWBN2+CGI9AxcTZ7dVvTjeq7isU72Mb3posRW9YGmKh610c4LBZw3QIOFM0qJY
+         HHQnvVBBb9utTyfPjHBmepGErx9fA81MiAQ1V88ewkg9yDKXi5szvTUsDpWntAkHr6sj
+         +c8X3rZpSbFTFE4rPvTZiXz7YFZQIqFvXcbDPEStceCB3unS0NBAMaNHOaym1SEpLyqn
+         JZ9BNuJibyIOHIKOwkO0diMzxJI1fc1LCYQROBSfOYe9edd/SSbLSO4mChQkAEHaxE8a
+         SdNQ==
+X-Gm-Message-State: AGi0PuaVXOVZaeFyIKGfRiNg4nref4gUerdkXPy3LfeWbf41Ti6XHpXC
+        wC/Lcd0DPnxVgEaInv9NGCUfKA==
+X-Google-Smtp-Source: APiQypKyDRDNEzprm+gsfACpH0aQyfocl+/L2XhuNJKEuZItD8tyLPJ84MVvdGkrVM9/6D8550tNkg==
+X-Received: by 2002:aed:2e83:: with SMTP id k3mr9101168qtd.2.1588781906015;
+        Wed, 06 May 2020 09:18:26 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id h13sm1895261qti.32.2020.05.06.09.18.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 06 May 2020 09:18:25 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jWMka-0002ut-Lq; Wed, 06 May 2020 13:18:24 -0300
+Date:   Wed, 6 May 2020 13:18:24 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+Cc:     linux-mm@kvack.org, Alex Deucher <alexander.deucher@amd.com>,
+        amd-gfx@lists.freedesktop.org, Ben Skeggs <bskeggs@redhat.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        dri-devel@lists.freedesktop.org,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Christoph Hellwig <hch@lst.de>,
+        intel-gfx@lists.freedesktop.org,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-kernel@vger.kernel.org,
+        Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
+        nouveau@lists.freedesktop.org, "Yang, Philip" <Philip.Yang@amd.com>
+Subject: Re: [PATCH hmm v2 5/5] mm/hmm: remove the customizable pfn format
+ from hmm_range_fault
+Message-ID: <20200506161824.GG26002@ziepe.ca>
+References: <5-v2-b4e84f444c7d+24f57-hmm_no_flags_jgg@mellanox.com>
+ <3c06a94c-c17f-dc31-537e-f3f6e1ace9a2@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <158877535215.26469.1113127926699134067.stgit@devnote2>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <3c06a94c-c17f-dc31-537e-f3f6e1ace9a2@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, May 06, 2020 at 11:29:12PM +0900, Masami Hiramatsu escreveu:
-> Since the commit 6a13a0d7b4d1 ("ftrace/kprobe: Show the
-> maxactive number on kprobe_events") introduced to show the
-> instance number of kretprobe events, the length of the 1st
-> format of the kprobe event will not 1, but it can be longer.
-> This caused a parser error in perf-probe.
+On Fri, May 01, 2020 at 05:53:26PM -0700, Ralph Campbell wrote:
+> > Acked-by: Felix Kuehling <Felix.Kuehling@amd.com>
+> > Tested-by: Ralph Campbell <rcampbell@nvidia.com>
+> > Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> >   Documentation/vm/hmm.rst                |  26 ++--
+> >   drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c |  35 ++----
+> >   drivers/gpu/drm/nouveau/nouveau_dmem.c  |  27 +---
+> >   drivers/gpu/drm/nouveau/nouveau_dmem.h  |   3 +-
+> >   drivers/gpu/drm/nouveau/nouveau_svm.c   |  87 ++++++++-----
+> >   include/linux/hmm.h                     |  99 ++++++---------
+> >   mm/hmm.c                                | 160 +++++++++++-------------
+> >   7 files changed, 192 insertions(+), 245 deletions(-)
+> > 
+> 
+> ...snip...
+> 
+> > +static void nouveau_hmm_convert_pfn(struct nouveau_drm *drm,
+> > +				    struct hmm_range *range, u64 *ioctl_addr)
+> > +{
+> > +	unsigned long i, npages;
+> > +
+> > +	/*
+> > +	 * The ioctl_addr prepared here is passed through nvif_object_ioctl()
+> > +	 * to an eventual DMA map in something like gp100_vmm_pgt_pfn()
+> > +	 *
+> > +	 * This is all just encoding the internal hmm reprensetation into a
+> 
+> s/reprensetation/representation/
+> 
+> Looks good and still tests OK with nouveau.
 
-Thanks for the quick fix!
+Got it, thanks
 
-I'll add this right after the Fixes tag:
-
-Reported-by: yshuiv7@gmail.com
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207587
-
-Ok?
-
-yshuiv, can I have your name to add to that Reported-by tag? And if you
-test it, please, I can add a Tested-by: tag as well, credits where
-credits are due!
-
-Thanks!
-
-- Arnaldo
- 
-> Skip the length check the 1st format of the kprobe event
-> to accept this instance number.
-> 
-> Without this fix:
-> 
->   # perf probe -a vfs_read%return
->   Added new event:
->     probe:vfs_read__return (on vfs_read%return)
-> 
->   You can now use it in all perf tools, such as:
-> 
->   	perf record -e probe:vfs_read__return -aR sleep 1
-> 
->   # perf probe -l
->   Semantic error :Failed to parse event name: r16:probe/vfs_read__return
->     Error: Failed to show event list.
-> 
-> And with this fixes:
-> 
->   # perf probe -a vfs_read%return
->   ...
->   # perf probe -l
->     probe:vfs_read__return (on vfs_read%return)
-> 
-> 
-> Fixes: 6a13a0d7b4d1 ("ftrace/kprobe: Show the maxactive number on kprobe_events")
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: stable@vger.kernel.org
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=207587
-> ---
->  tools/perf/util/probe-event.c |    3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-> index eea132f512b0..c6bcf5709564 100644
-> --- a/tools/perf/util/probe-event.c
-> +++ b/tools/perf/util/probe-event.c
-> @@ -1765,8 +1765,7 @@ int parse_probe_trace_command(const char *cmd, struct probe_trace_event *tev)
->  	fmt1_str = strtok_r(argv0_str, ":", &fmt);
->  	fmt2_str = strtok_r(NULL, "/", &fmt);
->  	fmt3_str = strtok_r(NULL, " \t", &fmt);
-> -	if (fmt1_str == NULL || strlen(fmt1_str) != 1 || fmt2_str == NULL
-> -	    || fmt3_str == NULL) {
-> +	if (fmt1_str == NULL || fmt2_str == NULL || fmt3_str == NULL) {
->  		semantic_error("Failed to parse event name: %s\n", argv[0]);
->  		ret = -EINVAL;
->  		goto out;
-> 
-
--- 
-
-- Arnaldo
+Jason
