@@ -2,106 +2,98 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9208C4725D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 04:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68726C4725C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 04:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88E1A206F9
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 04:45:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dNYljanB"
+	by mail.kernel.org (Postfix) with ESMTP id 47D6B20721
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 04:50:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbgEFEpR (ORCPT
+        id S1726480AbgEFEuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 00:45:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43596 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbgEFEpQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 00:45:16 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23D41C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 21:45:16 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id u16so857520wmc.5
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 21:45:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Iqotp4Pzqr9RQqsgLMpXGPLAwQseruKWmRPMUXLKxY4=;
-        b=dNYljanBzrbTS1pIe5fVzt2wPBuZEBnSMI5xTqSjKCm5pBWo45oj87/rEcsvAj+fyG
-         ejziA6igQ3J1BuLiRKf7QfkZovsocQgMp7sfLa2hkfS5hSRp+Wd2n3TSCIahHFKxf+0F
-         wXePzIJqbhUN3fJiQ6SC+EL5KmtH4nSwA6ytYDVwk7yA1GiOZqg7u6EiiMFWHTue8CRR
-         j2WbBxKtVthNdffzVFJ5fd9tvadNHjoj6WD+CjYQF7e6CRfUzH2hhOfAjkeiTpzIdn/R
-         qZ23jkSjPLJh8rzPu7EAVlBU2EZszA9/qDPGv6JWLZbZe6mChM3IfVVGyR1QzfVJlNy0
-         /Upw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Iqotp4Pzqr9RQqsgLMpXGPLAwQseruKWmRPMUXLKxY4=;
-        b=U8U2mNEdRvfX27CHf+5/1n4WTnwnaAC1oQx+kFaAR2z2DbkCYTBlxICdNzv5tjrV1C
-         z1GlKfXGowTygdXM+U10Iw4nVNXUC42gv/kp0Ke8l3Xv0ymvJrjZLxY04QieH/jqf72A
-         t+hmcocaD4vaUCpORplpKtqx42vsQBnrwT3qln5dVdkrakruk7T29gSpvd5s7XRjTI9l
-         mC9MJm1IazGC3z5ak+X2bP9J5bI17R4ZPAmw5hl5x/PN+lwxFh0KZWDinrMRtpeKq2OH
-         +oUuGpPxkFpIO35JmsE8TpPQKQtZZ9TT2pwFUvYrIPrxt8wlTJX3MKOG7U7BGUnFrf64
-         bKFw==
-X-Gm-Message-State: AGi0Pua2B+J+eO6izmgShMsR0f2aofU31JA5XU21UrNxu2X8UaSS1wOB
-        S37aYaACJILg8sexxIpAGJZdghHyK25YCE2eAr9elQ==
-X-Google-Smtp-Source: APiQypLlWoyB8MsiBPPwrCnj6rFRlzdL+3LDkvIkmUwWB4W78Fye3W+wePNZ9OADmwbwWZLxi6pRuvX3lw5wcg7eR1Y=
-X-Received: by 2002:a1c:1fcf:: with SMTP id f198mr2157051wmf.16.1588740314500;
- Tue, 05 May 2020 21:45:14 -0700 (PDT)
+        Wed, 6 May 2020 00:50:01 -0400
+Received: from mga14.intel.com ([192.55.52.115]:6958 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725824AbgEFEuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 00:50:01 -0400
+IronPort-SDR: lQvoyz6/dMNd3c7VwliJIrBA19aIgG8XBOI9n5rpAPH93k7tz0ysL35B5/hngjNcdksG2XR0bb
+ 4Or9Os78d4TQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 21:49:59 -0700
+IronPort-SDR: eK/QP5LYGQoMkJEtBPf/KZ045KB1pglMGxS4TWondVqVPK4sw2Iky+msWBbRjRJu0FWGWBQTDv
+ DI+FLtLJ+BuQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,357,1583222400"; 
+   d="scan'208";a="304688353"
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 05 May 2020 21:49:59 -0700
+Received: from [10.215.165.195] (rtanwar-mobl.gar.corp.intel.com [10.215.165.195])
+        by linux.intel.com (Postfix) with ESMTP id 67C45580609;
+        Tue,  5 May 2020 21:49:58 -0700 (PDT)
+Subject: Re: [PATCH] serial: lantiq: Add x86 in Kconfig dependencies for
+ Lantiq serial driver
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com
+References: <96fd193c0a8939d27641ff93573545c02313048f.1588577002.git.rahul.tanwar@linux.intel.com>
+ <20200505142504.GA832370@kroah.com>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <3aa4aac0-a9d2-5ab2-e9c9-c7f3bd16da96@linux.intel.com>
+Date:   Wed, 6 May 2020 12:49:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200505182821.47708-1-elver@google.com>
-In-Reply-To: <20200505182821.47708-1-elver@google.com>
-From:   David Gow <davidgow@google.com>
-Date:   Wed, 6 May 2020 12:45:03 +0800
-Message-ID: <CABVgOSmg8z1TpMh7NPy0M+9Gs2JT097-j_XGBRGhKk_3y2J-oA@mail.gmail.com>
-Subject: Re: [PATCH v2] kcsan: Add test suite
-To:     Marco Elver <elver@google.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200505142504.GA832370@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 6, 2020 at 2:30 AM Marco Elver <elver@google.com> wrote:
+
+On 5/5/2020 10:25 pm, Greg KH wrote:
+> On Mon, May 04, 2020 at 04:03:52PM +0800, Rahul Tanwar wrote:
+>> Lantiq serial driver/IP is reused for a x86 based SoC as well.
+>> Update the Kconfig accordingly.
+>>
+>> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+>> ---
+>>  drivers/tty/serial/Kconfig | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+>> index 0aea76cd67ff..4b0a7b98f8c7 100644
+>> --- a/drivers/tty/serial/Kconfig
+>> +++ b/drivers/tty/serial/Kconfig
+>> @@ -1035,7 +1035,7 @@ config SERIAL_SIFIVE_CONSOLE
+>>  
+>>  config SERIAL_LANTIQ
+>>  	bool "Lantiq serial driver"
+>> -	depends on LANTIQ
+>> +	depends on (LANTIQ || X86) || COMPILE_TEST
+>>  	select SERIAL_CORE
+>>  	select SERIAL_CORE_CONSOLE
+>>  	select SERIAL_EARLYCON
+>> -- 
+>> 2.11.0
+>>
+> Any reason this can't also be a module?
+
+Thanks a lot for accepting the patch. This driver is also used for
+console during bootup so we always have it as built in.
+
+Regards,
+Rahul
+
+> thanks,
 >
-> This adds KCSAN test focusing on behaviour of the integrated runtime.
-> Tests various race scenarios, and verifies the reports generated to
-> console. Makes use of KUnit for test organization, and the Torture
-> framework for test thread control.
->
-> Signed-off-by: Marco Elver <elver@google.com>
+> greg k-h
 
-Thanks, this works much better on my setup: having an explicit error
-for there not being enough CPUs is a lot better than hanging. It'd
-still be nice to have these be "skipped" rather than "failed" at some
-stage, but that's a nice-to-have for the future once we've implemented
-such a thing in KUnit.
-
-I'm still a little hesitant about non-deterministic tests in general =E2=80=
-=94
-even if they're only run when CONFIG_KCSAN is enabled, it's possible
-that a future CI system could run under KCSAN and report false
-breakages on unrelated patches. Given no such setup exists yet,
-though, I think it's probably a problem for the future rather than a
-blocker at the moment.
-
-Regardless, I hit no unexpected issues in my testing, so,
-
-Tested-by: David Gow <davidgow@google.com>
-
--- David
