@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C2AC38A24
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFFAC38A24
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 339A320663
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECBD52068E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:33:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bs2Q1swc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dnZSNxq1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbgEFMdh (ORCPT
+        id S1728289AbgEFMdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 08:33:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60100 "EHLO
+        Wed, 6 May 2020 08:33:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728230AbgEFMdf (ORCPT
+        by vger.kernel.org with ESMTP id S1728267AbgEFMdj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 08:33:35 -0400
-Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A788C0610D5
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 05:33:35 -0700 (PDT)
-Received: by mail-vk1-xa44.google.com with SMTP id j127so468992vke.4
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 05:33:35 -0700 (PDT)
+        Wed, 6 May 2020 08:33:39 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59980C061A10
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 05:33:39 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id a7so411786uak.2
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 05:33:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3bX4H3SHet9hEaEY2R/CcawnJOfM8m99AFlVmYLIN7Q=;
-        b=bs2Q1swc0Z7CzycUADk1C52HoAOiFigeUgR6iRD/IaEVUpqskoK0XPgBV8BxU+JBpU
-         uVAxQCebM/+qcl3U5WENV0wtVIrvgZ1X8HgaY3pCMVs3C4PhJnblGlb+yeHmWv+ng0DN
-         zwEse5UtkB8MCvu3zF4Sei+D1Od9uLQ4UbBi+s8Xoxf7im9W7oqU++Fd3UpnFrA+5ir4
-         N3pKmtFIeL9WLBz0y1HUFaR4k84UYpWHP8wRnvamIChXNQGrMf54fwOBdS6yHTiViZZT
-         NZK8iqWatHq+qpWCuWWHNenAMA4k2nSTsMghX3gkzOeubeAx08olb/5gABkjPFSTLVOv
-         JXHA==
+        bh=5LNx4Wc9blb1DcjzxZXPgf6VvynZVdtQoFzUO9GFyIU=;
+        b=dnZSNxq1MOfwWV0DhZOLqcqt5nxyCmi4COsd0q26YX3TCkmySGYtXy59TFkZq8AH/K
+         wcdaW1tBtUcMu3PXDx6RsBcFR00an0NohK1GPXZvgEBTZo9DI8WsJjGdCiy0nZJkrTeD
+         iVAIhNIn+F0MPoweEIqgCzAc+YQMQTIrhbnx5bA9KszYoiAGlk82oi+Ta5v0zDWt8bUy
+         JbWYhy+gVijpoQq67H+I8EHAfBtWefsV/ZVbIWwfhYx2nx86GyTw0/undVAg2jmcWaNt
+         ISTc+UiC9QUKysGEziueI7iF5clLy6TORDdjAOz7UT5ctDkGxsLJ4zEysaV+JwWSEpOT
+         UHng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3bX4H3SHet9hEaEY2R/CcawnJOfM8m99AFlVmYLIN7Q=;
-        b=F3XWSPTeh/8EENo4FMks9UKhGm1yi117S55PQm7yXrnjSexR4yRbZCgCA2XgdZ1HCG
-         +fDudhBEoz0+stcBewbFl9dMijr7ObPbQXmI5HSwk8H5h/zJ/Buft0z/P/xdTZ8oRvMs
-         a6xL/X2ygUO9mWbAdXPbC9/yXUlX+JJ/2guaJaaO8VUiKjz27zcVuULGsK1aoheNw8mf
-         lNw/mfmRS+Seq5dmNhwi4a76Bcnt5jW9bYpFrcJXmsN4MuQtYFisY47SgFKZSDEhzN98
-         uL0UsKvSK8j1dpaV2Xn1n2FwndS9rQE3iX/ZNYX4Yp0XmE1KxhMTr5STPNnR9JKLLy41
-         rOPA==
-X-Gm-Message-State: AGi0PuZ0sqdUJWpC1qGgFxzOuw2wabZ7O2L/Bd+cKH0Wr3Qc0qnDuq7q
-        oeLRHif8yRMvZGWcuYLYqRY0sXN6it04QJbwaIpEpZ8CR/s=
-X-Google-Smtp-Source: APiQypJ8ySkE9MyP8aKuTdXnUNaUlx5nX44KM48t0myuuXVzfd9ErOa0ab3rJfFanLwy2XYmgWClPX7dMfg+uL2NO6g=
-X-Received: by 2002:a1f:2a13:: with SMTP id q19mr6510137vkq.73.1588768414310;
- Wed, 06 May 2020 05:33:34 -0700 (PDT)
+        bh=5LNx4Wc9blb1DcjzxZXPgf6VvynZVdtQoFzUO9GFyIU=;
+        b=VehbU7mgausGZSVtW/1PNUoJVFI1cisGf4JSwFcKv/HhE1T65qHcQOP5Xr5KhqeRd4
+         247b+alf2x0Uv5MU7CrGXDwedjmXXKqsnPU9Ar7IfSQbnbA51Xp5ZVKgbecg3B6YIEBB
+         CGQkC5glsyEczPK3wHYhPSrCw8ipu3k8Raw1n6Wi81HpFq+iC76dlKihpIwndIbu1o4C
+         oaHSH4spbkj77hfNA9xrrYfat9e7gp5WGutX5irf23J356urbcqKa9NjWKMPB6OAU8Ee
+         THBr1KvMs3jSWy6UX2lvrVvVBpQyHqRmAvHStrdnb76jYtd542aFRG/PbyTzjRqYWt4G
+         SySw==
+X-Gm-Message-State: AGi0Pubeh76ag8N5iWpIqjzcMkkItEvidnlLygbaPmKeF62UdOxtnpWi
+        BnzdV0a2D9M79uNwrO9uDVo+Yeyk8KRKooGOJJaluw==
+X-Google-Smtp-Source: APiQypI09QQY7Pn50itTbgG6lqDrpWNXbn4waFW53TrzYJUfodEl+IMQQpGvewcqt9v/JY+0wZRt8Sl+/XXSTXHRwfg=
+X-Received: by 2002:ab0:624b:: with SMTP id p11mr6455651uao.94.1588768418419;
+ Wed, 06 May 2020 05:33:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200504202243.5476-1-sibis@codeaurora.org> <20200504202243.5476-3-sibis@codeaurora.org>
-In-Reply-To: <20200504202243.5476-3-sibis@codeaurora.org>
+References: <20200504202243.5476-1-sibis@codeaurora.org> <20200504202243.5476-4-sibis@codeaurora.org>
+In-Reply-To: <20200504202243.5476-4-sibis@codeaurora.org>
 From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Wed, 6 May 2020 18:02:59 +0530
-Message-ID: <CAHLCerPb+xT7bEZj0f49LKUN60ToUFXEWcCc8K3-FmUXFzP_GQ@mail.gmail.com>
-Subject: Re: [PATCH v4 02/12] cpufreq: blacklist SDM845 in cpufreq-dt-platdev
+Date:   Wed, 6 May 2020 18:03:04 +0530
+Message-ID: <CAHLCerNg5QoQ4RSx_ZY-ExpW1CPgCzpScqwohNijo1=2OwU-oA@mail.gmail.com>
+Subject: Re: [PATCH v4 03/12] cpufreq: blacklist SC7180 in cpufreq-dt-platdev
 To:     Sibi Sankar <sibis@codeaurora.org>
 Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
         Stephen Boyd <sboyd@kernel.org>,
@@ -91,14 +91,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Tue, May 5, 2020 at 1:54 AM Sibi Sankar <sibis@codeaurora.org> wrote:
 >
-> Add SDM845 to cpufreq-dt-platdev blacklist since the actual scaling is
+> Add SC7180 to cpufreq-dt-platdev blacklist since the actual scaling is
 > handled by the 'qcom-cpufreq-hw' driver.
 >
 > Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 
 Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-
 
 > ---
 >
@@ -110,17 +109,17 @@ Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 >  1 file changed, 1 insertion(+)
 >
 > diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-> index 5c8baf603e056..6ed68bc906f8d 100644
+> index 6ed68bc906f8d..15410b15015f4 100644
 > --- a/drivers/cpufreq/cpufreq-dt-platdev.c
 > +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
 > @@ -131,6 +131,7 @@ static const struct of_device_id blacklist[] __initconst = {
 >         { .compatible = "qcom,apq8096", },
 >         { .compatible = "qcom,msm8996", },
 >         { .compatible = "qcom,qcs404", },
-> +       { .compatible = "qcom,sdm845", },
+> +       { .compatible = "qcom,sc7180", },
+>         { .compatible = "qcom,sdm845", },
 >
 >         { .compatible = "st,stih407", },
->         { .compatible = "st,stih410", },
 > --
 > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 > a Linux Foundation Collaborative Project
