@@ -2,159 +2,122 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B18C5C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9691FC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6396020714
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6751A20714
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:51:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="rLUNpPmE";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FZ2B42/P"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="jmPtxFCS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbgEFGvl (ORCPT
+        id S1728212AbgEFGvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 02:51:41 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:51685 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727067AbgEFGvl (ORCPT
+        Wed, 6 May 2020 02:51:50 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:47306 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727067AbgEFGvu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 02:51:41 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.west.internal (Postfix) with ESMTP id 6696F7B0;
-        Wed,  6 May 2020 02:51:38 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Wed, 06 May 2020 02:51:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=L
-        jf9NVpB6+fQn2DUe7yPpp8SyonqgkHzd+GrRNImkaA=; b=rLUNpPmE4erFO1IyF
-        7QG3TU2eRvDuv73H0xXrbJXFHTi8ko+ePF+kfOb2V/WuEX+60DUtWjWtq3l9wivo
-        /ZL9cAfHwgp4ZQFjWvamLWlFYPh3KWLDSUS1CHrT0oygFX3WFop3oWEIH+iEHI8q
-        PxqYkt2wjsCVsEjv8Ba2MzrtyFsYph3U+kldtd0WvSkn4L2DU07IkoGr50ye7YsZ
-        ZKJCJiv/hKcS0UKahTRo9rMObFLpi9zkkC47V5v1dLe53CJDlcwm8mbU1vo9zs2R
-        wZx8R7fQXOuDXa0zaW8K8zfSdTK5TdH/Oj/iYLA7yDZR6Eb4hYdplmR7gdEC7zP/
-        q4g5Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=Ljf9NVpB6+fQn2DUe7yPpp8SyonqgkHzd+GrRNImk
-        aA=; b=FZ2B42/PjXAFwfpsYgYAYcE3ajtcJrLqPIFyGXfLNdEOT2BWGoyjm/Jbn
-        JEh2Yr2gV3ZN54Jduv4SJmo7TpcBCqT4gRP3kH2jEajq8OXfeN6RH6OK1TKaeHMG
-        v9XZqgh5c+jAaqwqfF3/jNNdfXsoVYLX+2xzI6+xFuCaiCTQAshNzmxwhjhglpdz
-        k+2FSgMFP/BBUwUYbyx8NTqm4lu4mGadoeHymJj6njPFdwPRPFEB1HRLWI0yr7V1
-        8Bc6QcBMK4vdrXJh8LqEeNrlN89h3mOQOg1mekmwAXMf/wD71S0wrxkJFINwTD2J
-        a2nvfiCj6Txuj2gsVV1y9d2Abydiw==
-X-ME-Sender: <xms:eV6yXj_Xx1apATZ3rQsEsNH8eBMDK9lDFIHq16GEG8aMy72L2VnKBQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrjeejgddufeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkfhggtggugfgjsehtke
-    ertddttddunecuhfhrohhmpefirhgvghcumffjuceoghhrvghgsehkrhhorghhrdgtohhm
-    qeenucggtffrrghtthgvrhhnpeevtdeileeuteeggefgueefhfevgfdttefgtefgtddvge
-    ejheeiuddvtdekffehffenucfkphepkeefrdekiedrkeelrddutdejnecuvehluhhsthgv
-    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrd
-    gtohhm
-X-ME-Proxy: <xmx:eV6yXgauPB1D9nkz_2ZQsJEmkLiLERgYz3fJbWkHhmiA4gq8wCsgPA>
-    <xmx:eV6yXvNQbOC3NMP1RoA3PjQDZvZ0KcQ9euyD9AwrfCqmRyWtiCEwyQ>
-    <xmx:eV6yXkApKotVI9mxd4_xipG2ELrIx7LqP8oio-0xwZPecBOC_X2-yw>
-    <xmx:el6yXnXFEnnvVT27O07FRAdKxIS3nqQX62K-VB-NqVGtg_huGc5slw>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4BBD43066106;
-        Wed,  6 May 2020 02:51:37 -0400 (EDT)
-Date:   Wed, 6 May 2020 08:51:34 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Akira shimahara <akira215corp@gmail.com>
-Cc:     zbr@ioremap.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/9] w1_therm: creating w1_therm.h
-Message-ID: <20200506065134.GA2279499@kroah.com>
-References: <20200429225915.198956-1-akira215corp@gmail.com>
- <20200505144811.GD838641@kroah.com>
- <d4a8e881f2f715f17254a840a9a05b088146c2aa.camel@gmail.com>
+        Wed, 6 May 2020 02:51:50 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0466obNF024884;
+        Tue, 5 May 2020 23:51:42 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pfpt0818;
+ bh=Km5/CeIEqBjHP0XZ0NaG6evT3ht/yRToAPcg7Fim9gQ=;
+ b=jmPtxFCSHGHmFWvt97nhzompPPbdB/3UUDk3s3SHDqqdTu/EGi2uRCyWZeNoZRFrTzkE
+ W8uULhambB4xpv89jRQ+FUqIQII9ROTZ9inUmoMU+YDF67yoDBvWpmMRRjeSIp4cqZWv
+ QCMThpDFY5jNG9N/9onu7MczvRNRrmBo22dgf/nYCp21FN6dfYj5g6SDFmOzJg3Ks2Cz
+ bEjFph8elD7C4FhcTafL+rcp+GsY8ZOuIPKOFNoySgv3+fytlX/mqTSH4IbMytq4XfwV
+ z5ARLBa2c6Bua/U3ICj+XBOGwn0fQchfxqnwbdJkn+k2uBrn8oBQE1wiQCliQtVXZTWR xg== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0a-0016f401.pphosted.com with ESMTP id 30uaukus8r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 05 May 2020 23:51:42 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 5 May
+ 2020 23:51:40 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 5 May 2020 23:51:40 -0700
+Received: from [10.193.46.2] (unknown [10.193.46.2])
+        by maili.marvell.com (Postfix) with ESMTP id 22BA93F703F;
+        Tue,  5 May 2020 23:51:36 -0700 (PDT)
+Subject: Re: [EXT] [PATCH 1/2] net: qed*: Reduce RX and TX default ring count
+ when running inside kdump kernel
+To:     Bhupesh Sharma <bhsharma@redhat.com>, <netdev@vger.kernel.org>
+CC:     <bhupesh.linux@gmail.com>, <kexec@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Ariel Elior <aelior@marvell.com>,
+        GR-everest-linux-l2 <GR-everest-linux-l2@marvell.com>,
+        Manish Chopra <manishc@marvell.com>, <davem@davemloft.net>,
+        Alok Prasad <palok@marvell.com>
+References: <1588705481-18385-1-git-send-email-bhsharma@redhat.com>
+ <1588705481-18385-2-git-send-email-bhsharma@redhat.com>
+From:   Igor Russkikh <irusskikh@marvell.com>
+Message-ID: <5ddc169b-f837-e478-43d9-4d6cf587aa05@marvell.com>
+Date:   Wed, 6 May 2020 09:51:35 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:76.0) Gecko/20100101
+ Thunderbird/76.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d4a8e881f2f715f17254a840a9a05b088146c2aa.camel@gmail.com>
+In-Reply-To: <1588705481-18385-2-git-send-email-bhsharma@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-06_02:2020-05-04,2020-05-06 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 11:04:39PM +0200, Akira shimahara wrote:
-> Le mardi 05 mai 2020 à 16:48 +0200, Greg KH a écrit :
-> > > Creating w1_therm.h header to organize code. Organize the
-> > > w1_therm.c file
-> > > to gather hardware functions, device specific functions, interface
-> > > functions and sysfs functions.
-> > > Signed-off-by: Akira Shimahara <akira215corp@gmail.com>
-> > > ---
-> > >   drivers/w1/slaves/w1_therm.c | 302 +++++++++++++++---------------
-> > > -----
-> > >   drivers/w1/slaves/w1_therm.h | 138 ++++++++++++++++
-> > >   2 files changed, 269 insertions(+), 171 deletions(-)
-> > >   create mode 100644 drivers/w1/slaves/w1_therm.h
-> > 
-> > 
-> > Wait, why is a .h file needed for just a single .c file?
-> > 
-> > 
-> > 
-> > 
-> > 
-> > <snip>
-> > 
-> > 
-> > 
-> > >   static ssize_t read_therm(struct device *device,
-> > 
-> > 
-> > 
-> > 
-> > > +/** read_therm()
-> > > + * @param sl pointer to the slave to read
-> > > + * @param info pointer to a structure to store the read results
-> > > + * @return 0 if success, -kernel error code otherwise
-> > > + */
-> > > +static ssize_t read_therm(struct device *device,
-> > > +                     struct w1_slave *sl, struct therm_info
-> > > *info);
-> > > +
-> > 
-> > 
-> > Why is this function needed to be declared in this .h file?
-> > 
-> > 
-> > 
-> > Why is any of this needed?  For some reason I thought you needed a .h
-> > 
-> > file to make things simpler for other .c files, but if all of this is
-> > 
-> > static, it's not needed at all, right?
-> > 
-> > 
-> > 
-> > thanks,
-> > 
-> > 
-> > 
-> > greg k-h
-> 
-> Hello,
-> 
-> Yes, you are right, header file could be avoided. But we separate it
-> from .c for clarity purpose, and to ease future developpment (for
-> example adding support of new devices).
-> 
-> If you absolutely want to put everything in the .c file, I can do it,
-> let me know.
 
-Keep it all in a .c file, only use .h files for when you need to share
-it across multiple .c files, otherwise it's not needed.
 
-thanks,
+>  #include <linux/compiler.h>
+> +#include <linux/crash_dump.h>
+>  #include <linux/version.h>
+>  #include <linux/workqueue.h>
+>  #include <linux/netdevice.h>
+> @@ -574,13 +575,13 @@ int qede_add_tc_flower_fltr(struct qede_dev *edev,
+> __be16 proto,
+>  #define RX_RING_SIZE		((u16)BIT(RX_RING_SIZE_POW))
+>  #define NUM_RX_BDS_MAX		(RX_RING_SIZE - 1)
+>  #define NUM_RX_BDS_MIN		128
+> -#define NUM_RX_BDS_DEF		((u16)BIT(10) - 1)
+> +#define NUM_RX_BDS_DEF		((is_kdump_kernel()) ? ((u16)BIT(6) - 1) :
+> ((u16)BIT(10) - 1))
+>  
+>  #define TX_RING_SIZE_POW	13
+>  #define TX_RING_SIZE		((u16)BIT(TX_RING_SIZE_POW))
+>  #define NUM_TX_BDS_MAX		(TX_RING_SIZE - 1)
+>  #define NUM_TX_BDS_MIN		128
+> -#define NUM_TX_BDS_DEF		NUM_TX_BDS_MAX
+> +#define NUM_TX_BDS_DEF		((is_kdump_kernel()) ? ((u16)BIT(6) - 1) :
+> NUM_TX_BDS_MAX)
+>  
 
-greg k-h
+Hi Bhupesh,
+
+Thanks for looking into this. We are also analyzing how to reduce qed* memory
+usage even more.
+
+Patch is good, but may I suggest not to introduce conditional logic into the
+defines but instead just add two new defines like NUM_[RT]X_BDS_MIN and check
+for is_kdump_kernel() in the code explicitly?
+
+if (is_kdump_kernel()) {
+	edev->q_num_rx_buffers = NUM_RX_BDS_MIN;
+	edev->q_num_tx_buffers = NUM_TX_BDS_MIN;
+} else {
+	edev->q_num_rx_buffers = NUM_RX_BDS_DEF;
+	edev->q_num_tx_buffers = NUM_TX_BDS_DEF;
+}
+
+This may make configuration logic more explicit. If future we may want adding
+more specific configs under this `if`.
+
+Regards
+  Igor
