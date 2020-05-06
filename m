@@ -2,86 +2,167 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6814BC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7600CC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA3820714
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:33:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52A7520714
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:34:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vNUN8bUL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YZvlYW6U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbgEFIdr (ORCPT
+        id S1728886AbgEFIe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 04:33:47 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:15298 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728865AbgEFIdq (ORCPT
+        Wed, 6 May 2020 04:34:58 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32079 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728502AbgEFIe4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 04:33:46 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588754026; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=OYPocL6ZxseLuWGxFBZEyax0vx9qJqRECyqW/QbfKx8=;
- b=vNUN8bULq9pl2kMYyWlqdSO1Z7yLNm3taOnTDY8NwmI7D/2/ZWP+ZZ0Z6cKx0mL7Fdski48S
- GMesmNoeeZ2MlevrphX0E+6/aouNyRr1v7zGl0svuJ6RPUxMaiVgKPQTbhyCEGAjmVUAYG5E
- uf2B6vvMfQQQi5djS5sxjb/zDI0=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb27665.7fc66887c6f8-smtp-out-n05;
- Wed, 06 May 2020 08:33:41 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7EA5FC43637; Wed,  6 May 2020 08:33:41 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 6 May 2020 04:34:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588754095;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=NFF8NeJjiTbv8THqbxX8heqr35COUx8hMKarYhRqfLk=;
+        b=YZvlYW6UJNEeTtActEJG0ebEEqk12ngS+JQBEGcEf+qTLwo9dm41y45SFUzOsan3SOs7vB
+        LDJ0kz7VfdRydp4Om+9afJciWVitfPI0SZaYbdkF20tMUxFIDHp0V7F/tphAptEMRtTF81
+        az1vIT6mwH2jH8PFfYVcjZXcHvvsYyk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-168-QZzC-7xwPoeKQmxnCxlf7w-1; Wed, 06 May 2020 04:34:49 -0400
+X-MC-Unique: QZzC-7xwPoeKQmxnCxlf7w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E8935C433BA;
-        Wed,  6 May 2020 08:33:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E8935C433BA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2DEF11005510;
+        Wed,  6 May 2020 08:34:48 +0000 (UTC)
+Received: from [10.72.13.165] (ovpn-13-165.pek2.redhat.com [10.72.13.165])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 963A460BEC;
+        Wed,  6 May 2020 08:34:38 +0000 (UTC)
+Subject: Re: [PATCH net-next 1/2] virtio-net: don't reserve space for vnet
+ header for XDP
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     mst@redhat.com, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, "Jubran, Samih" <sameehj@amazon.com>
+References: <20200506061633.16327-1-jasowang@redhat.com>
+ <20200506102123.739f1233@carbon>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <3ecb558b-5281-2497-db3c-6aae7d7f882b@redhat.com>
+Date:   Wed, 6 May 2020 16:34:36 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v2] ray_cs: use true,false for bool variable
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200426103709.6730-1-yanaijie@huawei.com>
-References: <20200426103709.6730-1-yanaijie@huawei.com>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     <davem@davemloft.net>, <adobriyan@gmail.com>, <tglx@linutronix.de>,
-        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <sergei.shtylyov@cogentembedded.com>,
-        Jason Yan <yanaijie@huawei.com>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200506083341.7EA5FC43637@smtp.codeaurora.org>
-Date:   Wed,  6 May 2020 08:33:41 +0000 (UTC)
+In-Reply-To: <20200506102123.739f1233@carbon>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jason Yan <yanaijie@huawei.com> wrote:
 
-> Fix the following coccicheck warning:
-> 
-> drivers/net/wireless/ray_cs.c:2797:5-14: WARNING: Comparison of 0/1 to
-> bool variable
-> drivers/net/wireless/ray_cs.c:2798:2-11: WARNING: Assignment of 0/1 to
-> bool variable
-> 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+On 2020/5/6 =E4=B8=8B=E5=8D=884:21, Jesper Dangaard Brouer wrote:
+> On Wed,  6 May 2020 14:16:32 +0800
+> Jason Wang <jasowang@redhat.com> wrote:
+>
+>> We tried to reserve space for vnet header before
+>> xdp.data_hard_start. But this is useless since the packet could be
+>> modified by XDP which may invalidate the information stored in the
+>> header and
+> IMHO above statements are wrong. XDP cannot access memory before
+> xdp.data_hard_start. Thus, it is safe to store a vnet headers before
+> xdp.data_hard_start. (The sfc driver also use this "before" area).
 
-Patch applied to wireless-drivers-next.git, thanks.
 
-1f15d7c8f3fc ray_cs: use true,false for bool variable
+The problem is if we place vnet header before data_hard_start,=20
+virtio-net will fail any header adjustment.
 
--- 
-https://patchwork.kernel.org/patch/11510389/
+Or do you mean to copy vnet header before data_hard_start before=20
+processing XDP?
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
+>
+>> there's no way for XDP to know the existence of the vnet header curren=
+tly.
+> It is true that XDP is unaware of this area, which is the way it
+> should be.  Currently the area will survive after calling BPF/XDP.
+> After your change it will be overwritten in xdp_frame cases.
+>
+>
+>> So let's just not reserve space for vnet header in this case.
+> I think this is a wrong approach!
+>
+> We are working on supporting GRO multi-buffer for XDP.  The vnet header
+> contains GRO information (see pahole below sign).
+
+
+Another note is that since we need reserve room for skb_shared_info, GRO=20
+for XDP may probably lead more frag list.
+
+
+>   It is currently not
+> used in the XDP case, but we will be working towards using it.
+
+
+Good to know that, but I think it can only work when the packet is not=20
+modified by XDP?
+
+
+> There
+> are a lot of unanswered questions on how this will be implemented.
+> Thus, I cannot layout how we are going to leverage this info yet, but
+> your patch are killing this info, which IHMO is going in the wrong
+> direction.
+
+
+I can copy vnet header ahead of data_hard_start, does it work for you?
+
+Thanks
+
+
+>
+>
+>> Cc: Jesper Dangaard Brouer <brouer@redhat.com>
+>> Signed-off-by: Jason Wang <jasowang@redhat.com>
+>> ---
+>>   drivers/net/virtio_net.c | 6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+>> index 11f722460513..98dd75b665a5 100644
+>> --- a/drivers/net/virtio_net.c
+>> +++ b/drivers/net/virtio_net.c
+>> @@ -684,8 +684,8 @@ static struct sk_buff *receive_small(struct net_de=
+vice *dev,
+>>   			page =3D xdp_page;
+>>   		}
+>>  =20
+>> -		xdp.data_hard_start =3D buf + VIRTNET_RX_PAD + vi->hdr_len;
+>> -		xdp.data =3D xdp.data_hard_start + xdp_headroom;
+>> +		xdp.data_hard_start =3D buf + VIRTNET_RX_PAD;
+>> +		xdp.data =3D xdp.data_hard_start + xdp_headroom + vi->hdr_len;
+>>   		xdp.data_end =3D xdp.data + len;
+>>   		xdp.data_meta =3D xdp.data;
+>>   		xdp.rxq =3D &rq->xdp_rxq;
+>> @@ -845,7 +845,7 @@ static struct sk_buff *receive_mergeable(struct ne=
+t_device *dev,
+>>   		 * the descriptor on if we get an XDP_TX return code.
+>>   		 */
+>>   		data =3D page_address(xdp_page) + offset;
+>> -		xdp.data_hard_start =3D data - VIRTIO_XDP_HEADROOM + vi->hdr_len;
+>> +		xdp.data_hard_start =3D data - VIRTIO_XDP_HEADROOM;
+>>   		xdp.data =3D data + vi->hdr_len;
+>>   		xdp.data_end =3D xdp.data + (len - vi->hdr_len);
+>>   		xdp.data_meta =3D xdp.data;
+>
+>
+
