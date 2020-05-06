@@ -2,122 +2,80 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9691FC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2D5C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6751A20714
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:51:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="jmPtxFCS"
+	by mail.kernel.org (Postfix) with ESMTP id B08FD206F9
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:52:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbgEFGvu (ORCPT
+        id S1728227AbgEFGwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 02:51:50 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:47306 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727067AbgEFGvu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 02:51:50 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0466obNF024884;
-        Tue, 5 May 2020 23:51:42 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pfpt0818;
- bh=Km5/CeIEqBjHP0XZ0NaG6evT3ht/yRToAPcg7Fim9gQ=;
- b=jmPtxFCSHGHmFWvt97nhzompPPbdB/3UUDk3s3SHDqqdTu/EGi2uRCyWZeNoZRFrTzkE
- W8uULhambB4xpv89jRQ+FUqIQII9ROTZ9inUmoMU+YDF67yoDBvWpmMRRjeSIp4cqZWv
- QCMThpDFY5jNG9N/9onu7MczvRNRrmBo22dgf/nYCp21FN6dfYj5g6SDFmOzJg3Ks2Cz
- bEjFph8elD7C4FhcTafL+rcp+GsY8ZOuIPKOFNoySgv3+fytlX/mqTSH4IbMytq4XfwV
- z5ARLBa2c6Bua/U3ICj+XBOGwn0fQchfxqnwbdJkn+k2uBrn8oBQE1wiQCliQtVXZTWR xg== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0a-0016f401.pphosted.com with ESMTP id 30uaukus8r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 23:51:42 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 5 May
- 2020 23:51:40 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 5 May 2020 23:51:40 -0700
-Received: from [10.193.46.2] (unknown [10.193.46.2])
-        by maili.marvell.com (Postfix) with ESMTP id 22BA93F703F;
-        Tue,  5 May 2020 23:51:36 -0700 (PDT)
-Subject: Re: [EXT] [PATCH 1/2] net: qed*: Reduce RX and TX default ring count
- when running inside kdump kernel
-To:     Bhupesh Sharma <bhsharma@redhat.com>, <netdev@vger.kernel.org>
-CC:     <bhupesh.linux@gmail.com>, <kexec@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Ariel Elior <aelior@marvell.com>,
-        GR-everest-linux-l2 <GR-everest-linux-l2@marvell.com>,
-        Manish Chopra <manishc@marvell.com>, <davem@davemloft.net>,
-        Alok Prasad <palok@marvell.com>
-References: <1588705481-18385-1-git-send-email-bhsharma@redhat.com>
- <1588705481-18385-2-git-send-email-bhsharma@redhat.com>
-From:   Igor Russkikh <irusskikh@marvell.com>
-Message-ID: <5ddc169b-f837-e478-43d9-4d6cf587aa05@marvell.com>
-Date:   Wed, 6 May 2020 09:51:35 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:76.0) Gecko/20100101
- Thunderbird/76.0
-MIME-Version: 1.0
-In-Reply-To: <1588705481-18385-2-git-send-email-bhsharma@redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-06_02:2020-05-04,2020-05-06 signatures=0
+        Wed, 6 May 2020 02:52:03 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:3793 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727067AbgEFGwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 02:52:03 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49H6hc4tZRz9tyLM;
+        Wed,  6 May 2020 08:52:00 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id lfELA5zHptK2; Wed,  6 May 2020 08:52:00 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49H6hZ5HGmz9tyLL;
+        Wed,  6 May 2020 08:51:58 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B86BF8B7BB;
+        Wed,  6 May 2020 08:51:59 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id u1G0VEPPKTCA; Wed,  6 May 2020 08:51:59 +0200 (CEST)
+Received: from localhost.localdomain (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7D0D68B777;
+        Wed,  6 May 2020 08:51:59 +0200 (CEST)
+Received: by localhost.localdomain (Postfix, from userid 0)
+        id 350CC658FB; Wed,  6 May 2020 06:51:59 +0000 (UTC)
+Message-Id: <9fd0f9a827ebbeae64ad7a6f6c595d242f4dd5fc.1588747860.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH] powerpc/8xx: Update email address in MAINTAINERS
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Wed,  6 May 2020 06:51:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Since 01 May 2020, our email adresses have changed to @csgroup.eu
 
+Update MAINTAINERS accordingly.
 
->  #include <linux/compiler.h>
-> +#include <linux/crash_dump.h>
->  #include <linux/version.h>
->  #include <linux/workqueue.h>
->  #include <linux/netdevice.h>
-> @@ -574,13 +575,13 @@ int qede_add_tc_flower_fltr(struct qede_dev *edev,
-> __be16 proto,
->  #define RX_RING_SIZE		((u16)BIT(RX_RING_SIZE_POW))
->  #define NUM_RX_BDS_MAX		(RX_RING_SIZE - 1)
->  #define NUM_RX_BDS_MIN		128
-> -#define NUM_RX_BDS_DEF		((u16)BIT(10) - 1)
-> +#define NUM_RX_BDS_DEF		((is_kdump_kernel()) ? ((u16)BIT(6) - 1) :
-> ((u16)BIT(10) - 1))
->  
->  #define TX_RING_SIZE_POW	13
->  #define TX_RING_SIZE		((u16)BIT(TX_RING_SIZE_POW))
->  #define NUM_TX_BDS_MAX		(TX_RING_SIZE - 1)
->  #define NUM_TX_BDS_MIN		128
-> -#define NUM_TX_BDS_DEF		NUM_TX_BDS_MAX
-> +#define NUM_TX_BDS_DEF		((is_kdump_kernel()) ? ((u16)BIT(6) - 1) :
-> NUM_TX_BDS_MAX)
->  
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hi Bhupesh,
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2926327e4976..e8714328cc90 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9794,7 +9794,7 @@ F:	arch/powerpc/platforms/83xx/
+ F:	arch/powerpc/platforms/85xx/
+ 
+ LINUX FOR POWERPC EMBEDDED PPC8XX
+-M:	Christophe Leroy <christophe.leroy@c-s.fr>
++M:	Christophe Leroy <christophe.leroy@csgroup.eu>
+ L:	linuxppc-dev@lists.ozlabs.org
+ S:	Maintained
+ F:	arch/powerpc/platforms/8xx/
+-- 
+2.25.0
 
-Thanks for looking into this. We are also analyzing how to reduce qed* memory
-usage even more.
-
-Patch is good, but may I suggest not to introduce conditional logic into the
-defines but instead just add two new defines like NUM_[RT]X_BDS_MIN and check
-for is_kdump_kernel() in the code explicitly?
-
-if (is_kdump_kernel()) {
-	edev->q_num_rx_buffers = NUM_RX_BDS_MIN;
-	edev->q_num_tx_buffers = NUM_TX_BDS_MIN;
-} else {
-	edev->q_num_rx_buffers = NUM_RX_BDS_DEF;
-	edev->q_num_tx_buffers = NUM_TX_BDS_DEF;
-}
-
-This may make configuration logic more explicit. If future we may want adding
-more specific configs under this `if`.
-
-Regards
-  Igor
