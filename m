@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CE4C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B09EC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B5FF20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 661DB2068E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:27:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588778855;
-	bh=a3OTCDv00SmTgNXoEnE0LION6/b25IMWv2cDonKdNqE=;
+	s=default; t=1588778859;
+	bh=6VL1jyARxbluo0/AT4ri3QbZDHzDnA1PTlrdegkKUVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I4qvofjjXx8qznpJRIz4D1HlEDwOHeTdlQXtKhaX417H++SpoW59lUrPXJG9bfRBy
-	 1J+Znb2rg1MEo673qwX2AcrgpNZegjrNeIcZDn3Ng5S3LqcRXi0im64A0we7NBOy4A
-	 rx3ppju1jCSCiRcN4lYcjE4d956eg58MCKLoAmig=
+	b=afPMSLK83lr0vY++Mm39prX0oH4X78+hKOK/ehBKVelnDQMEs52ESweniqpnqnFPK
+	 V6W91KsRmqmcXVrG4Eh7QtsJAA0lxT2IFabx703fFOOCnTKG/QP1HKIDMfI931Yhqv
+	 PizTtG7FEet3C+bUkjFnY++ZchQUmSUNU7AdU1CM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730355AbgEFP1e (ORCPT
+        id S1730364AbgEFP1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:27:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51520 "EHLO mail.kernel.org"
+        Wed, 6 May 2020 11:27:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730347AbgEFP1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:27:31 -0400
+        id S1729683AbgEFP1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:27:35 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5D7721655;
-        Wed,  6 May 2020 15:27:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20FA521582;
+        Wed,  6 May 2020 15:27:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588778850;
-        bh=a3OTCDv00SmTgNXoEnE0LION6/b25IMWv2cDonKdNqE=;
+        s=default; t=1588778854;
+        bh=6VL1jyARxbluo0/AT4ri3QbZDHzDnA1PTlrdegkKUVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=igkY5c/hP/kBfxOpHj/Ex/bA/zRA+ck7M9KS0d1km76uCdXvlNbC+ofkjUfBDt5EX
-         YhfqptbJd5/1YKMgKXNLmsoR4p3N4vprTORHbIcjFNaogX6SAc9mklD1qsywO3Wfas
-         6XjNaVlElsdbAbAisniROaD3zFLfQbY5my+9+4rs=
+        b=lo8F1tROAkhGdvDlujCNpJ+uyNGE+cqP1VY2D6fu3MJd4wGswitRI9iWN+7RUn35P
+         yz3g0igT33h4vncPHnwxllJEOj3lalwCcNEUPRBSc+hVekB3BpSQ9xT2xUO4TRvNsA
+         /jll7+/sxQ4LKTiFkcO0gUjmbkYb9cQy0e3d8HH4=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -52,9 +52,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Stephane Eranian <eranian@google.com>
-Subject: [PATCH 87/91] perf bench: Add kallsyms parsing
-Date:   Wed,  6 May 2020 12:22:30 -0300
-Message-Id: <20200506152234.21977-88-acme@kernel.org>
+Subject: [PATCH 88/91] libsymbols kallsyms: Parse using io api
+Date:   Wed,  6 May 2020 12:22:31 -0300
+Message-Id: <20200506152234.21977-89-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
@@ -67,47 +67,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ian Rogers <irogers@google.com>
 
-Add a benchmark for kallsyms parsing. Example output:
+'perf record' will call kallsyms__parse 4 times during startup and
+process megabytes of data. This changes kallsyms__parse to use the io
+library rather than fgets to improve performance of the user code by
+over 8%.
+
+Before:
 
   Running 'internals/kallsyms-parse' benchmark:
-  Average kallsyms__parse took: 103.971 ms (+- 0.121 ms)
+  Average kallsyms__parse took: 103.988 ms (+- 0.203 ms)
 
-Committer testing:
+After:
 
-Test Machine: AMD Ryzen 5 3600X 6-Core Processor
+  Running 'internals/kallsyms-parse' benchmark:
+  Average kallsyms__parse took: 95.571 ms (+- 0.006 ms)
+
+For a workload like:
+
+  $ perf record /bin/true
+  Run under 'perf record -e cycles:u -g' the time goes from:
+  Before
+  30.10%     1.67%  perf     perf                [.] kallsyms__parse
+  After
+  25.55%    20.04%  perf     perf                [.] kallsyms__parse
+
+So a little under 5% of the start-up time is removed. A lot of what
+remains is on the kernel side, but caching kallsyms within perf would at
+least impact memory footprint.
+
+Committer notes:
+
+The internal/kallsyms-parse bench is run using:
 
   [root@five ~]# perf bench internals kallsyms-parse
   # Running 'internals/kallsyms-parse' benchmark:
-    Average kallsyms__parse took: 79.692 ms (+- 0.101 ms)
-  [root@five ~]# perf stat -r5 perf bench internals kallsyms-parse
-  # Running 'internals/kallsyms-parse' benchmark:
-    Average kallsyms__parse took: 80.563 ms (+- 0.079 ms)
-  # Running 'internals/kallsyms-parse' benchmark:
-    Average kallsyms__parse took: 81.046 ms (+- 0.155 ms)
-  # Running 'internals/kallsyms-parse' benchmark:
-    Average kallsyms__parse took: 80.874 ms (+- 0.104 ms)
-  # Running 'internals/kallsyms-parse' benchmark:
-    Average kallsyms__parse took: 81.173 ms (+- 0.133 ms)
-  # Running 'internals/kallsyms-parse' benchmark:
-    Average kallsyms__parse took: 81.169 ms (+- 0.074 ms)
-
-   Performance counter stats for 'perf bench internals kallsyms-parse' (5 runs):
-
-            8,093.54 msec task-clock                #    0.999 CPUs utilized            ( +-  0.14% )
-               3,165      context-switches          #    0.391 K/sec                    ( +-  0.18% )
-                  10      cpu-migrations            #    0.001 K/sec                    ( +- 23.13% )
-                 744      page-faults               #    0.092 K/sec                    ( +-  0.21% )
-      34,551,564,954      cycles                    #    4.269 GHz                      ( +-  0.05% )  (83.33%)
-       1,160,584,308      stalled-cycles-frontend   #    3.36% frontend cycles idle     ( +-  1.60% )  (83.33%)
-      14,974,323,985      stalled-cycles-backend    #   43.34% backend cycles idle      ( +-  0.24% )  (83.33%)
-      58,712,905,705      instructions              #    1.70  insn per cycle
-                                                    #    0.26  stalled cycles per insn  ( +-  0.01% )  (83.34%)
-      14,136,433,778      branches                  # 1746.632 M/sec                    ( +-  0.01% )  (83.33%)
-         141,943,217      branch-misses             #    1.00% of all branches          ( +-  0.04% )  (83.33%)
-
-              8.1040 +- 0.0115 seconds time elapsed  ( +-  0.14% )
-
+    Average kallsyms__parse took: 80.381 ms (+- 0.115 ms)
   [root@five ~]#
+
+And this pre-existing test uses these routines to parse kallsyms and
+then compare with the info obtained from the matching ELF symtab:
+
+  [root@five ~]# perf test vmlinux
+   1: vmlinux symtab matches kallsyms                       : Ok
+  [root@five ~]#
+
+Also we can't remove hex2u64() in this patch as this breaks the build:
+
+  /usr/bin/ld: /tmp/build/perf/perf-in.o: in function `modules__parse':
+  /home/acme/git/perf/tools/perf/util/symbol.c:607: undefined reference to `hex2u64'
+  /usr/bin/ld: /home/acme/git/perf/tools/perf/util/symbol.c:607: undefined reference to `hex2u64'
+  /usr/bin/ld: /tmp/build/perf/perf-in.o: in function `dso__load_perf_map':
+  /home/acme/git/perf/tools/perf/util/symbol.c:1477: undefined reference to `hex2u64'
+  /usr/bin/ld: /home/acme/git/perf/tools/perf/util/symbol.c:1483: undefined reference to `hex2u64'
+  collect2: error: ld returned 1 exit status
+
+Leave it there, move it in the next patch.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
@@ -118,133 +132,162 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Stephane Eranian <eranian@google.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lore.kernel.org/lkml/20200501221315.54715-2-irogers@google.com
+Link: http://lore.kernel.org/lkml/20200501221315.54715-3-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/bench/Build            |  1 +
- tools/perf/bench/bench.h          |  1 +
- tools/perf/bench/kallsyms-parse.c | 75 +++++++++++++++++++++++++++++++
- tools/perf/builtin-bench.c        |  1 +
- 4 files changed, 78 insertions(+)
- create mode 100644 tools/perf/bench/kallsyms-parse.c
+ tools/lib/api/io.h          |  3 ++
+ tools/lib/symbol/kallsyms.c | 93 +++++++++++++++++++------------------
+ 2 files changed, 51 insertions(+), 45 deletions(-)
 
-diff --git a/tools/perf/bench/Build b/tools/perf/bench/Build
-index 042827385c87..768e408757a0 100644
---- a/tools/perf/bench/Build
-+++ b/tools/perf/bench/Build
-@@ -9,6 +9,7 @@ perf-y += futex-lock-pi.o
- perf-y += epoll-wait.o
- perf-y += epoll-ctl.o
- perf-y += synthesize.o
-+perf-y += kallsyms-parse.o
+diff --git a/tools/lib/api/io.h b/tools/lib/api/io.h
+index b7e55b5f8a4a..777c20f6b604 100644
+--- a/tools/lib/api/io.h
++++ b/tools/lib/api/io.h
+@@ -7,6 +7,9 @@
+ #ifndef __API_IO__
+ #define __API_IO__
  
- perf-$(CONFIG_X86_64) += mem-memcpy-x86-64-lib.o
- perf-$(CONFIG_X86_64) += mem-memcpy-x86-64-asm.o
-diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
-index 4d669c803237..61cae4966cae 100644
---- a/tools/perf/bench/bench.h
-+++ b/tools/perf/bench/bench.h
-@@ -44,6 +44,7 @@ int bench_futex_lock_pi(int argc, const char **argv);
- int bench_epoll_wait(int argc, const char **argv);
- int bench_epoll_ctl(int argc, const char **argv);
- int bench_synthesize(int argc, const char **argv);
-+int bench_kallsyms_parse(int argc, const char **argv);
- 
- #define BENCH_FORMAT_DEFAULT_STR	"default"
- #define BENCH_FORMAT_DEFAULT		0
-diff --git a/tools/perf/bench/kallsyms-parse.c b/tools/perf/bench/kallsyms-parse.c
-new file mode 100644
-index 000000000000..2b0d0f980ae9
---- /dev/null
-+++ b/tools/perf/bench/kallsyms-parse.c
-@@ -0,0 +1,75 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Benchmark of /proc/kallsyms parsing.
-+ *
-+ * Copyright 2020 Google LLC.
-+ */
 +#include <stdlib.h>
-+#include "bench.h"
-+#include "../util/stat.h"
-+#include <linux/time64.h>
-+#include <subcmd/parse-options.h>
-+#include <symbol/kallsyms.h>
++#include <unistd.h>
 +
-+static unsigned int iterations = 100;
-+
-+static const struct option options[] = {
-+	OPT_UINTEGER('i', "iterations", &iterations,
-+		"Number of iterations used to compute average"),
-+	OPT_END()
-+};
-+
-+static const char *const bench_usage[] = {
-+	"perf bench internals kallsyms-parse <options>",
-+	NULL
-+};
-+
-+static int bench_process_symbol(void *arg __maybe_unused,
-+				const char *name __maybe_unused,
-+				char type __maybe_unused,
-+				u64 start __maybe_unused)
+ struct io {
+ 	/* File descriptor being read/ */
+ 	int fd;
+diff --git a/tools/lib/symbol/kallsyms.c b/tools/lib/symbol/kallsyms.c
+index 1a7a9f877095..a5edc75c346c 100644
+--- a/tools/lib/symbol/kallsyms.c
++++ b/tools/lib/symbol/kallsyms.c
+@@ -1,7 +1,9 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include "symbol/kallsyms.h"
++#include "api/io.h"
+ #include <stdio.h>
+-#include <stdlib.h>
++#include <sys/stat.h>
++#include <fcntl.h>
+ 
+ u8 kallsyms2elf_type(char type)
+ {
+@@ -9,12 +11,6 @@ u8 kallsyms2elf_type(char type)
+ 	return (type == 't' || type == 'w') ? STT_FUNC : STT_OBJECT;
+ }
+ 
+-bool kallsyms__is_function(char symbol_type)
+-{
+-	symbol_type = toupper(symbol_type);
+-	return symbol_type == 'T' || symbol_type == 'W';
+-}
+-
+ /*
+  * While we find nice hex chars, build a long_val.
+  * Return number of chars processed.
+@@ -28,61 +24,68 @@ int hex2u64(const char *ptr, u64 *long_val)
+ 	return p - ptr;
+ }
+ 
++bool kallsyms__is_function(char symbol_type)
 +{
-+	return 0;
++	symbol_type = toupper(symbol_type);
++	return symbol_type == 'T' || symbol_type == 'W';
 +}
 +
-+static int do_kallsyms_parse(void)
++static void read_to_eol(struct io *io)
 +{
-+	struct timeval start, end, diff;
-+	u64 runtime_us;
-+	unsigned int i;
-+	double time_average, time_stddev;
++	int ch;
++
++	for (;;) {
++		ch = io__get_char(io);
++		if (ch < 0 || ch == '\n')
++			return;
++	}
++}
++
+ int kallsyms__parse(const char *filename, void *arg,
+ 		    int (*process_symbol)(void *arg, const char *name,
+ 					  char type, u64 start))
+ {
+-	char *line = NULL;
+-	size_t n;
+-	int err = -1;
+-	FILE *file = fopen(filename, "r");
+-
+-	if (file == NULL)
+-		goto out_failure;
+-
+-	err = 0;
++	struct io io;
++	char bf[BUFSIZ];
 +	int err;
-+	struct stats time_stats;
-+
-+	init_stats(&time_stats);
-+
-+	for (i = 0; i < iterations; i++) {
-+		gettimeofday(&start, NULL);
-+		err = kallsyms__parse("/proc/kallsyms", NULL,
-+				bench_process_symbol);
-+		if (err)
-+			return err;
-+
-+		gettimeofday(&end, NULL);
-+		timersub(&end, &start, &diff);
-+		runtime_us = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
-+		update_stats(&time_stats, runtime_us);
-+	}
-+
-+	time_average = avg_stats(&time_stats) / USEC_PER_MSEC;
-+	time_stddev = stddev_stats(&time_stats) / USEC_PER_MSEC;
-+	printf("  Average kallsyms__parse took: %.3f ms (+- %.3f ms)\n",
-+		time_average, time_stddev);
-+	return 0;
-+}
-+
-+int bench_kallsyms_parse(int argc, const char **argv)
-+{
-+	argc = parse_options(argc, argv, options, bench_usage, 0);
-+	if (argc) {
-+		usage_with_options(bench_usage, options);
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	return do_kallsyms_parse();
-+}
-diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
-index 11c79a8d85d6..083273209c88 100644
---- a/tools/perf/builtin-bench.c
-+++ b/tools/perf/builtin-bench.c
-@@ -78,6 +78,7 @@ static struct bench epoll_benchmarks[] = {
  
- static struct bench internals_benchmarks[] = {
- 	{ "synthesize", "Benchmark perf event synthesis",	bench_synthesize	},
-+	{ "kallsyms-parse", "Benchmark kallsyms parsing",	bench_kallsyms_parse	},
- 	{ NULL,		NULL,					NULL			}
- };
+-	while (!feof(file)) {
+-		u64 start;
+-		int line_len, len;
+-		char symbol_type;
+-		char *symbol_name;
++	io.fd = open(filename, O_RDONLY, 0);
  
+-		line_len = getline(&line, &n, file);
+-		if (line_len < 0 || !line)
+-			break;
++	if (io.fd < 0)
++		return -1;
+ 
+-		line[--line_len] = '\0'; /* \n */
++	io__init(&io, io.fd, bf, sizeof(bf));
+ 
+-		len = hex2u64(line, &start);
++	err = 0;
++	while (!io.eof) {
++		__u64 start;
++		int ch;
++		size_t i;
++		char symbol_type;
++		char symbol_name[KSYM_NAME_LEN + 1];
+ 
+-		/* Skip the line if we failed to parse the address. */
+-		if (!len)
++		if (io__get_hex(&io, &start) != ' ') {
++			read_to_eol(&io);
+ 			continue;
+-
+-		len++;
+-		if (len + 2 >= line_len)
++		}
++		symbol_type = io__get_char(&io);
++		if (io__get_char(&io) != ' ') {
++			read_to_eol(&io);
+ 			continue;
+-
+-		symbol_type = line[len];
+-		len += 2;
+-		symbol_name = line + len;
+-		len = line_len - len;
+-
+-		if (len >= KSYM_NAME_LEN) {
+-			err = -1;
+-			break;
+ 		}
++		for (i = 0; i < sizeof(symbol_name); i++) {
++			ch = io__get_char(&io);
++			if (ch < 0 || ch == '\n')
++				break;
++			symbol_name[i]  = ch;
++		}
++		symbol_name[i]  = '\0';
+ 
+ 		err = process_symbol(arg, symbol_name, symbol_type, start);
+ 		if (err)
+ 			break;
+ 	}
+ 
+-	free(line);
+-	fclose(file);
++	close(io.fd);
+ 	return err;
+-
+-out_failure:
+-	return -1;
+ }
 -- 
 2.21.1
 
