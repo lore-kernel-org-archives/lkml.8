@@ -2,172 +2,158 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C07C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2616C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D61C120735
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:59:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TZBzbczY"
+	by mail.kernel.org (Postfix) with ESMTP id DAEAE208DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:59:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729830AbgEFR71 (ORCPT
+        id S1729914AbgEFR7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 13:59:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54970 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728082AbgEFR71 (ORCPT
+        Wed, 6 May 2020 13:59:35 -0400
+Received: from smtprelay0095.hostedemail.com ([216.40.44.95]:58586 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728082AbgEFR7e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 13:59:27 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2044AC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 10:59:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=46gIvuh3m5ttMTLg33SSv4jAWgstAfDston+xkQue2w=; b=TZBzbczYZufgPt8ibCZCv/Mv72
-        gagKhxN7EHkHY9LLNGieHsKUIKLa929R89NkZSsfhBdBteM/f+JkgmV7Aouz0ofTsRLT+U+WrP8Th
-        +D2A2sNSz2/ZS7g4F7Tsc3BbMSBSQ1TJnsB1IjTnmKYBGHxq4DLQ0PJMH3iXu3iqys3rZ+kDIqNV0
-        wYoEexxYrnEJhoHYVF5ahX6l6jaPPZvvYe+CU9t2Gfkv22wRvV4EJ5D+qpN9p8w9xfp8UXrr39kOc
-        Or5EQ9SCuMhWG7cgfPK9fMLn21VJmnOj4Kg5aB97sbKWYsQWBjele5l9dmif3oVBqw4eh1ZbOUgYa
-        M7lJt8rw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jWOJr-0000Rw-EB; Wed, 06 May 2020 17:58:55 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BE5B3301DFC;
-        Wed,  6 May 2020 19:58:52 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A9AF32B87C191; Wed,  6 May 2020 19:58:52 +0200 (CEST)
-Date:   Wed, 6 May 2020 19:58:52 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, pbonzini@redhat.com,
-        mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH v4 14/18] static_call: Add static_cond_call()
-Message-ID: <20200506175852.GW3762@hirez.programming.kicks-ass.net>
-References: <20200501202849.647891881@infradead.org>
- <20200501202944.593400184@infradead.org>
- <20200506172455.ho5em2mtzn7qqfjl@treble>
+        Wed, 6 May 2020 13:59:34 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 6D120100F0730;
+        Wed,  6 May 2020 17:59:33 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: goose43_8d7d6b1af7508
+X-Filterd-Recvd-Size: 4257
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf02.hostedemail.com (Postfix) with ESMTPA;
+        Wed,  6 May 2020 17:59:32 +0000 (UTC)
+Message-ID: <4ca58f594156d1311f2207d755da89879e060333.camel@perches.com>
+Subject: [PATCH] clocksource: davinci: Use a more common logging style
+From:   Joe Perches <joe@perches.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Date:   Wed, 06 May 2020 10:59:30 -0700
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506172455.ho5em2mtzn7qqfjl@treble>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 12:24:55PM -0500, Josh Poimboeuf wrote:
-> On Fri, May 01, 2020 at 10:29:03PM +0200, Peter Zijlstra wrote:
-> > +++ b/arch/x86/include/asm/static_call.h
-> > @@ -30,4 +30,14 @@
-> >  	    ".size " STATIC_CALL_TRAMP_STR(name) ", . - " STATIC_CALL_TRAMP_STR(name) " \n" \
-> >  	    ".popsection					\n")
-> >  
-> > +#define ARCH_DEFINE_STATIC_CALL_RETTRAMP(name)				\
-> > +	asm(".pushsection .static_call.text, \"ax\"		\n"	\
-> > +	    ".align 4						\n"	\
-> > +	    ".globl " STATIC_CALL_TRAMP_STR(name) "		\n"	\
-> > +	    STATIC_CALL_TRAMP_STR(name) ":			\n"	\
-> > +	    "	ret; nop; nop; nop; nop;			\n"	\
-> > +	    ".type " STATIC_CALL_TRAMP_STR(name) ", @function	\n"	\
-> > +	    ".size " STATIC_CALL_TRAMP_STR(name) ", . - " STATIC_CALL_TRAMP_STR(name) " \n" \
-> > +	    ".popsection					\n")
-> > +
-> 
-> The boilerplate in these two trampoline macros is identical except for
-> the actual instructions, maybe there could be a shared
-> __ARCH_DEFINE_STATIC_CALL_TRAMP(name, insns) macro which does most of
-> the dirty work.
+This code is using a newline termination on a #define pr_fmt but
+pr_<level> uses have a terminating newline on the format.
 
-I'm afraid that'll just make it less readable :/
+Remove the newline from the pr_fmt and add it to the pr_<level> uses.
 
-> >  #endif /* _ASM_STATIC_CALL_H */
-> > --- a/arch/x86/kernel/static_call.c
-> > +++ b/arch/x86/kernel/static_call.c
-> > @@ -4,19 +4,41 @@
-> >  #include <linux/bug.h>
-> >  #include <asm/text-patching.h>
-> >  
-> > -static void __static_call_transform(void *insn, u8 opcode, void *func)
-> > +enum insn_type {
-> > +	call = 0, /* site call */
-> > +	nop = 1,  /* site cond-call */
-> > +	jmp = 2,  /* tramp / site tail-call */
-> > +	ret = 3,  /* tramp / site cond-tail-call */
-> > +};
-> 
-> The lowercase enums threw me for a loop, I thought they were variables a
-> few times.  Starting a new enum trend? :-)
+Miscellanea:
 
-I can UPPERCASE them I suppose, not sure where this came from.
+o Remove an unnecessary OOM message as a dump_stack() is already
+  done by the kernel memory subsystem on these allocation failures
 
-> >  void arch_static_call_transform(void *site, void *tramp, void *func)
-> > @@ -24,10 +46,10 @@ void arch_static_call_transform(void *si
-> >  	mutex_lock(&text_mutex);
-> >  
-> >  	if (tramp)
-> > -		__static_call_transform(tramp, JMP32_INSN_OPCODE, func);
-> > +		__static_call_transform(tramp, jmp + !func, func);
-> >  
-> >  	if (IS_ENABLED(CONFIG_HAVE_STATIC_CALL_INLINE) && site)
-> > -		__static_call_transform(site, CALL_INSN_OPCODE, func);
-> > +		__static_call_transform(site, !func, func);
-> 
-> Clever enum math, but probably more robust to be ignorant of the values:
-> 
-> 	if (tramp)
-> 		__static_call_transform(tramp, func ? jmp : ret, func);
-> 
->   	if (IS_ENABLED(CONFIG_HAVE_STATIC_CALL_INLINE) && site)
-> 		__static_call_transform(site, func ? call : nop, func);
-> 
+Signed-off-by: Joe Perches <joe@perches.com>
+---
+ drivers/clocksource/timer-davinci.c | 22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
-That is more readable, and I checked, GCC is clever enough to not
-actually emit branches for that, so w00t.
+diff --git a/drivers/clocksource/timer-davinci.c b/drivers/clocksource/timer-davinci.c
+index e421946a91c5..aae938368230 100644
+--- a/drivers/clocksource/timer-davinci.c
++++ b/drivers/clocksource/timer-davinci.c
+@@ -18,7 +18,7 @@
+ #include <clocksource/timer-davinci.h>
+ 
+ #undef pr_fmt
+-#define pr_fmt(fmt) "%s: " fmt "\n", __func__
++#define pr_fmt(fmt) "%s: " fmt, __func__
+ 
+ #define DAVINCI_TIMER_REG_TIM12			0x10
+ #define DAVINCI_TIMER_REG_TIM34			0x14
+@@ -250,20 +250,20 @@ int __init davinci_timer_register(struct clk *clk,
+ 
+ 	rv = clk_prepare_enable(clk);
+ 	if (rv) {
+-		pr_err("Unable to prepare and enable the timer clock");
++		pr_err("Unable to prepare and enable the timer clock\n");
+ 		return rv;
+ 	}
+ 
+ 	if (!request_mem_region(timer_cfg->reg.start,
+ 				resource_size(&timer_cfg->reg),
+ 				"davinci-timer")) {
+-		pr_err("Unable to request memory region");
++		pr_err("Unable to request memory region\n");
+ 		return -EBUSY;
+ 	}
+ 
+ 	base = ioremap(timer_cfg->reg.start, resource_size(&timer_cfg->reg));
+ 	if (!base) {
+-		pr_err("Unable to map the register range");
++		pr_err("Unable to map the register range\n");
+ 		return -ENOMEM;
+ 	}
+ 
+@@ -271,10 +271,8 @@ int __init davinci_timer_register(struct clk *clk,
+ 	tick_rate = clk_get_rate(clk);
+ 
+ 	clockevent = kzalloc(sizeof(*clockevent), GFP_KERNEL | __GFP_NOFAIL);
+-	if (!clockevent) {
+-		pr_err("Error allocating memory for clockevent data");
++	if (!clockevent)
+ 		return -ENOMEM;
+-	}
+ 
+ 	clockevent->dev.name = "tim12";
+ 	clockevent->dev.features = CLOCK_EVT_FEAT_ONESHOT;
+@@ -298,7 +296,7 @@ int __init davinci_timer_register(struct clk *clk,
+ 			 davinci_timer_irq_timer, IRQF_TIMER,
+ 			 "clockevent/tim12", clockevent);
+ 	if (rv) {
+-		pr_err("Unable to request the clockevent interrupt");
++		pr_err("Unable to request the clockevent interrupt\n");
+ 		return rv;
+ 	}
+ 
+@@ -325,7 +323,7 @@ int __init davinci_timer_register(struct clk *clk,
+ 
+ 	rv = clocksource_register_hz(&davinci_clocksource.dev, tick_rate);
+ 	if (rv) {
+-		pr_err("Unable to register clocksource");
++		pr_err("Unable to register clocksource\n");
+ 		return rv;
+ 	}
+ 
+@@ -343,20 +341,20 @@ static int __init of_davinci_timer_register(struct device_node *np)
+ 
+ 	rv = of_address_to_resource(np, 0, &timer_cfg.reg);
+ 	if (rv) {
+-		pr_err("Unable to get the register range for timer");
++		pr_err("Unable to get the register range for timer\n");
+ 		return rv;
+ 	}
+ 
+ 	rv = of_irq_to_resource_table(np, timer_cfg.irq,
+ 				      DAVINCI_TIMER_NUM_IRQS);
+ 	if (rv != DAVINCI_TIMER_NUM_IRQS) {
+-		pr_err("Unable to get the interrupts for timer");
++		pr_err("Unable to get the interrupts for timer\n");
+ 		return rv;
+ 	}
+ 
+ 	clk = of_clk_get(np, 0);
+ 	if (IS_ERR(clk)) {
+-		pr_err("Unable to get the timer clock");
++		pr_err("Unable to get the timer clock\n");
+ 		return PTR_ERR(clk);
+ 	}
+ 
 
-> > +++ b/include/linux/static_call.h
-> > @@ -16,7 +16,9 @@
-> >   *
-> >   *   DECLARE_STATIC_CALL(name, func);
-> >   *   DEFINE_STATIC_CALL(name, func);
-> > + *   DEFINE_STATIC_COND_CALL(name, typename);
-> >   *   static_call(name)(args...);
-> > + *   static_cond_call(name)(args...)
-> >   *   static_call_update(name, func);
-> 
-> Missing semicolon, also an updated description/example would be useful.
 
-Yes, I already promised Rasmus more documentation.
-
-> On that note, what do you think about tweaking the naming from
-> 
->   DEFINE_STATIC_COND_CALL(name, typename);
->   static_cond_call(name)(args...);
-> 
-> to
-> 
->   DEFINE_STATIC_CALL_NO_FUNC(name, typename);
->   static_call_if_func(name)(args...);
-> 
-> ?
-> 
-> Seems clearer to me.  They're still STATIC_CALLs, so it seems logical to
-> keep those two words together.  And NO_FUNC clarifies the initialized
-> value.
-> 
-> Similarly RETTRAMP could be ARCH_DEFINE_STATIC_CALL_NO_FUNC.
-
-What can I say, I'm sorta used to the old naming by now, but sure, any
-other opinions before I edit things?
