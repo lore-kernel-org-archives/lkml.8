@@ -7,117 +7,208 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D64BDC47247
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 00:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E95C47254
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 00:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B19CB206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 00:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26C0B206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 00:15:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="QrZYmVWb"
+	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="Wnv9h8DF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729617AbgEFAPV (ORCPT
+        id S1729590AbgEFAPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 20:15:21 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:50385 "EHLO mail.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727989AbgEFAPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 20:15:21 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id be89da68;
-        Wed, 6 May 2020 00:02:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=from:to:cc
-        :subject:date:message-id:in-reply-to:references:mime-version
-        :content-transfer-encoding; s=mail; bh=W0BXXU08zoHh3hSor9TA2hhTz
-        is=; b=QrZYmVWbd0Bc4YajW9Xe0WaZ5bIKFMeYqnJj/oRZFwb1BV85dcXnDdu52
-        q5q0nsxOn0lHwhxJusJIyYNYyh2JrCsOpIZKjWYKMnuXe49RHj5DpDFJxYJY/2Ch
-        X4viGdBESMwT/Lkst7xIPOOB5KvyaRutHCJEAxoZCT6uDtuo5Jk2jAc+JNs52mdE
-        GfrvhjJHwHn+kWDwLXpTWgA32WkYqpPeM98tLw1an9XcqUfIAcIv7xOi2oPcjRWX
-        Fuj9ix2LJ4Eqp+Aw4CIkKwY+TRFReiFdU8rZSbdBEHO9m3/GtZm7CprY6CYaG7Vz
-        FdTSWZCQXv77bq/Gj7uTEEIUq5Fxw==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id bc6ea39a (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Wed, 6 May 2020 00:02:40 +0000 (UTC)
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-To:     linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        arnd@arndb.de
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Kees Cook <keescook@chromium.org>,
-        George Burgess <gbiv@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: [PATCH v2] security: disable FORTIFY_SOURCE on clang
-Date:   Tue,  5 May 2020 18:14:53 -0600
-Message-Id: <20200506001453.764332-1-Jason@zx2c4.com>
-In-Reply-To: <202005051617.F9B32B5526@keescook>
-References: <202005051617.F9B32B5526@keescook>
+        Tue, 5 May 2020 20:15:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58450 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728642AbgEFAPv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 20:15:51 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E739C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 17:15:51 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f13so50867wrm.13
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 17:15:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atishpatra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c2hLm6+zbJEAyEVfAYowpOyewzOW+kIv+YTbZQ2i84M=;
+        b=Wnv9h8DFu6J1kDi8bq3i9rgHlErQOSO5b2nOTXCK2bc54VFNTOkk5Kd/ClmcCuHm4Q
+         VwfRWOEr1NhchIQ8XeAqwgX4bGh1orWeSO4dAmSha799JFEOKbletI8XUJ7QmZdDatsG
+         kqU09jDULZN8sx1sg/VAu8E3+7D6iQ374zGLU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c2hLm6+zbJEAyEVfAYowpOyewzOW+kIv+YTbZQ2i84M=;
+        b=B7+XOwWcfRcLiCAnSijMTAUqgDH+LsmP3IN2mXflxZ+kex7awXg0iKbIQEYGKMAllk
+         Fo2CKiR/Ogmu8D6dLZL7DM2Th7Bdke0URdzhTzMuh9dAAj1D19IjEVLDes9odTouyF0m
+         O7vpw/WRzkrS7SH49zEtUsnhy7wTrXqUA8CnfCOaahG9FFOyS7onQQBAMWOIyIA8JB0W
+         eAE/4j9NQpS+ZW+JikuFWOwp4AbIuKszwnYhCyMnkm9owreyjLAZ+c1gCYcwmRvLTqJ4
+         q2e1wyU6AnqY8OviaLi/jP20wJolzPJEaLqqaYLcaXgGe0SzNL9kCFEXAy6i3xsDPCr4
+         5Zrg==
+X-Gm-Message-State: AGi0Pub3EQB0HNB4hHUOdGlReQGEfUIS9pzkkoWKyX2p1x505ri/QEg0
+        yPDqd/jVLLxZAAFmu8WouU5Ewuu2DCAfN1ONvNb/
+X-Google-Smtp-Source: APiQypJ1u2GBFKhtFoqPNkbEjRt4MRHKXVYXGuuImjbH5C0ppvHZvK7OPliGzhwpMWEylhO8hEeXVUJxUpx+Nj3jUXE=
+X-Received: by 2002:a5d:5703:: with SMTP id a3mr6910168wrv.53.1588724150121;
+ Tue, 05 May 2020 17:15:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAOnJCUJtnVjYwfaHbiUdO4SqPk8rY0q0uYckNJpQpc7jK0Pz7g@mail.gmail.com>
+ <mhng-3b48ef6b-d427-40af-b8f7-1bdccc117927@palmerdabbelt-glaptop1>
+In-Reply-To: <mhng-3b48ef6b-d427-40af-b8f7-1bdccc117927@palmerdabbelt-glaptop1>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Tue, 5 May 2020 17:15:38 -0700
+Message-ID: <CAOnJCU+LrLSbf2HqFJY6PkOYqt6_dHSj_zwKrEHYQCvmKrZQaQ@mail.gmail.com>
+Subject: Re: [PATCH] RISC-V: Remove unused code from STRICT_KERNEL_RWX
+To:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Nick Kossifidis <mick@ics.forth.gr>
+Cc:     Atish Patra <Atish.Patra@wdc.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Zong Li <zong.li@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang-10 has a broken optimization stage that doesn't allow the
-compiler to prove at compile time that certain memcpys are within
-bounds, and thus the outline memcpy is always called, resulting in
-horrific performance, and in some cases, excessive stack frame growth.
-Here's a simple reproducer:
+On Tue, May 5, 2020 at 5:03 PM Palmer Dabbelt <palmer@dabbelt.com> wrote:
+>
+> On Tue, 05 May 2020 17:00:05 PDT (-0700), atishp@atishpatra.org wrote:
+> > On Tue, May 5, 2020 at 4:55 PM Palmer Dabbelt <palmer@dabbelt.com> wrote:
+> >>
+> >> On Sun, 03 May 2020 21:03:19 PDT (-0700), Atish Patra wrote:
+> >> > This patch removes the unused functions set_kernel_text_rw/ro.
+> >> > Currently, it is not being invoked from anywhere and no other architecture
+> >> > (except arm) uses this code. Even in ARM, these functions are not invoked
+> >> > from anywhere currently.
+> >> >
+> >> > Fixes: d27c3c90817e ("riscv: add STRICT_KERNEL_RWX support")
+> >> >
+> >> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> >> > ---
+> >> >  arch/riscv/mm/init.c | 16 ----------------
+> >> >  1 file changed, 16 deletions(-)
+> >> >
+> >> > diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> >> > index b55be44ff9bd..ba60a581e9b6 100644
+> >> > --- a/arch/riscv/mm/init.c
+> >> > +++ b/arch/riscv/mm/init.c
+> >> > @@ -501,22 +501,6 @@ static inline void setup_vm_final(void)
+> >> >  #endif /* CONFIG_MMU */
+> >> >
+> >> >  #ifdef CONFIG_STRICT_KERNEL_RWX
+> >> > -void set_kernel_text_rw(void)
+> >> > -{
+> >> > -     unsigned long text_start = (unsigned long)_text;
+> >> > -     unsigned long text_end = (unsigned long)_etext;
+> >> > -
+> >> > -     set_memory_rw(text_start, (text_end - text_start) >> PAGE_SHIFT);
+> >> > -}
+> >> > -
+> >> > -void set_kernel_text_ro(void)
+> >> > -{
+> >> > -     unsigned long text_start = (unsigned long)_text;
+> >> > -     unsigned long text_end = (unsigned long)_etext;
+> >> > -
+> >> > -     set_memory_ro(text_start, (text_end - text_start) >> PAGE_SHIFT);
+> >> > -}
+> >> > -
+> >> >  void mark_rodata_ro(void)
+> >> >  {
+> >> >       unsigned long text_start = (unsigned long)_text;
+> >>
+> >> Thanks, this is on fixes.  Are you going to remove the ARM code as well?
+> >>
+> >
+> > Yeah and also I realized that I forgot to remove the declarations from
+> > the header file.
+> > My bad. I will send out a v2. Please drop this one and take v2.
+>
+> I just fixed it up
+>
 
-    typedef unsigned long size_t;
-    void *c(void *dest, const void *src, size_t n) __asm__("memcpy");
-    extern inline __attribute__((gnu_inline)) void *memcpy(void *dest, const void *src, size_t n) { return c(dest, src, n); }
-    void blah(char *a)
-    {
-      unsigned long long b[10], c[10];
-      int i;
+Thanks. I was going over the code again and found one usage for
+set_kernel_text_rw for ARM.
+It is used in kexec while set_kernel_text_ro is not invoked anywhere.
+I am not sure if it is required
+for kexec implementation for RISC-V.
 
-      memcpy(b, a, sizeof(b));
-      for (i = 0; i < 10; ++i)
-        c[i] = b[i] ^ b[9 - i];
-      for (i = 0; i < 10; ++i)
-        b[i] = c[i] ^ a[i];
-      memcpy(a, b, sizeof(b));
-    }
+@nick: Can you please comment ?
 
-Compile this with clang-9 and clang-10 and observe:
+> commit 73cb8e2a5863ccc5215660f5123db621bd57dff7
+> gpg: Signature made Tue 05 May 2020 05:02:17 PM PDT
+> gpg:                using RSA key 2B3C3747446843B24A943A7A2E1319F35FBB1889
+> gpg:                issuer "palmer@dabbelt.com"
+> gpg: Good signature from "Palmer Dabbelt <palmer@dabbelt.com>" [ultimate]
+> gpg:                 aka "Palmer Dabbelt <palmerdabbelt@google.com>" [ultimate]
+> Author: Atish Patra <atish.patra@wdc.com>
+> Date:   Sun May 3 21:03:19 2020 -0700
+>
+>     RISC-V: Remove unused code from STRICT_KERNEL_RWX
+>
+>     This patch removes the unused functions set_kernel_text_rw/ro.
+>     Currently, it is not being invoked from anywhere and no other architecture
+>     (except arm) uses this code. Even in ARM, these functions are not invoked
+>     from anywhere currently.
+>
+>     Fixes: d27c3c90817e ("riscv: add STRICT_KERNEL_RWX support")
+>     Signed-off-by: Atish Patra <atish.patra@wdc.com>
+>     Reviewed-by: Zong Li <zong.li@sifive.com>
+>     Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+>
+> diff --git a/arch/riscv/include/asm/set_memory.h b/arch/riscv/include/asm/set_memory.h
+> index c38df4771c09..4c5bae7ca01c 100644
+> --- a/arch/riscv/include/asm/set_memory.h
+> +++ b/arch/riscv/include/asm/set_memory.h
+> @@ -22,14 +22,6 @@ static inline int set_memory_x(unsigned long addr, int numpages) { return 0; }
+>  static inline int set_memory_nx(unsigned long addr, int numpages) { return 0; }
+>  #endif
+>
+> -#ifdef CONFIG_STRICT_KERNEL_RWX
+> -void set_kernel_text_ro(void);
+> -void set_kernel_text_rw(void);
+> -#else
+> -static inline void set_kernel_text_ro(void) { }
+> -static inline void set_kernel_text_rw(void) { }
+> -#endif
+> -
+>  int set_direct_map_invalid_noflush(struct page *page);
+>  int set_direct_map_default_noflush(struct page *page);
+>
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index 5b813532db59..27a334106708 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -502,22 +502,6 @@ static inline void setup_vm_final(void)
+>  #endif /* CONFIG_MMU */
+>
+>  #ifdef CONFIG_STRICT_KERNEL_RWX
+> -void set_kernel_text_rw(void)
+> -{
+> -       unsigned long text_start = (unsigned long)_text;
+> -       unsigned long text_end = (unsigned long)_etext;
+> -
+> -       set_memory_rw(text_start, (text_end - text_start) >> PAGE_SHIFT);
+> -}
+> -
+> -void set_kernel_text_ro(void)
+> -{
+> -       unsigned long text_start = (unsigned long)_text;
+> -       unsigned long text_end = (unsigned long)_etext;
+> -
+> -       set_memory_ro(text_start, (text_end - text_start) >> PAGE_SHIFT);
+> -}
+> -
+>  void mark_rodata_ro(void)
+>  {
+>         unsigned long text_start = (unsigned long)_text;
+>
 
-zx2c4@thinkpad /tmp/curve25519-hacl64-stack-frame-size-test $ clang-10 -Wframe-larger-than=0 -O3 -c b.c -o c10.o
-b.c:5:6: warning: stack frame size of 104 bytes in function 'blah' [-Wframe-larger-than=]
-void blah(char *a)
-     ^
-1 warning generated.
-zx2c4@thinkpad /tmp/curve25519-hacl64-stack-frame-size-test $ clang-9 -Wframe-larger-than=0 -O3 -c b.c -o c9.o
 
-Looking at the disassembly of c10.o and c9.o, one can see that c9.o is
-properly optimized in the obvious way one would expect, while c10.o has
-blown up and includes extern calls to memcpy.
-
-But actually, for versions of clang earlier than 10, fortify source
-mostly does nothing. So, between being broken and doing nothing, it
-probably doesn't make sense to pretend to offer this option. So, this
-commit just disables it entirely when compiling with clang.
-
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Cc: clang-built-linux <clang-built-linux@googlegroups.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: George Burgess <gbiv@google.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Link: https://bugs.llvm.org/show_bug.cgi?id=45802
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
----
- security/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/security/Kconfig b/security/Kconfig
-index cd3cc7da3a55..76bcfb3eb16f 100644
---- a/security/Kconfig
-+++ b/security/Kconfig
-@@ -191,6 +191,7 @@ config HARDENED_USERCOPY_PAGESPAN
- config FORTIFY_SOURCE
- 	bool "Harden common str/mem functions against buffer overflows"
- 	depends on ARCH_HAS_FORTIFY_SOURCE
-+	depends on !CC_IS_CLANG
- 	help
- 	  Detect overflows of buffers in common string and memory functions
- 	  where the compiler can determine and validate the buffer sizes.
 -- 
-2.26.2
-
+Regards,
+Atish
