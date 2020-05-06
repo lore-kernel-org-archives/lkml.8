@@ -2,95 +2,115 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA998C47257
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3BDC47257
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C42292070B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6DAD2070B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:33:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="x/JTzjYI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JzpDNdPY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729855AbgEFVbM (ORCPT
+        id S1730085AbgEFVdu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 17:31:12 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50710 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726927AbgEFVbM (ORCPT
+        Wed, 6 May 2020 17:33:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60266 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728621AbgEFVdt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 17:31:12 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 046LV8NS099833;
-        Wed, 6 May 2020 16:31:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588800668;
-        bh=1E4Aar7eIyqkUMWdPEbVw1rTuDiTTWmcpK8rxV5WG2g=;
-        h=From:To:Subject:Date;
-        b=x/JTzjYIe4Scls675CEJQvpuOinkt2f0uV+O3b4+0TVQYr8gN1+nzMZr6vJCNKAZL
-         qpqYN81Yw6kdoGfdGCv3inv8/LNyjAP0NG+BivKHx2YhYdxrL2/wv+h2wc3XceTcWN
-         3rr/I3OkXUGsv/H+1OevYMKt6qCt1zo4Wd46E5+o=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 046LV8p3056330
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 6 May 2020 16:31:08 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 6 May
- 2020 16:31:08 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 6 May 2020 16:31:08 -0500
-Received: from uda0868495.fios-router.home (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 046LV7UB025450;
-        Wed, 6 May 2020 16:31:08 -0500
-From:   Murali Karicheri <m-karicheri2@ti.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [net PATCH v2] net: hsr: fix incorrect type usage for protocol variable
-Date:   Wed, 6 May 2020 17:31:07 -0400
-Message-ID: <20200506213107.28291-1-m-karicheri2@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 6 May 2020 17:33:49 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 510A0C061A0F;
+        Wed,  6 May 2020 14:33:49 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id q13so2923016qtp.7;
+        Wed, 06 May 2020 14:33:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Oxq/+H+xeQ+mv0tMvO5y3IYe9t01YqrY24EF/jtyldM=;
+        b=JzpDNdPYTPxFaUJBI4wO/veVbXFJgJkPrBP/OfGrsNnX8LGz5nuLs4oG3lltFk3/Fx
+         TEa+XtZ6C0J+Hesq1mQ2zPg28GjbJLBMCRvNxplqEgB6fxuIlW71tmMwP3ug/tsjYI35
+         BbqKWHvsh59x1F5iv5dzK8HfxhUPWKpJu1KKqZR5+/SYKaZbCopPzJ8XQUjQ2PG4Z5jp
+         V/qHPrTnifNUjqOi+es8cWAkIx4x6zk03HngHsEV/Q+x3gVZdIXnoxFLWlpYhCIMOCaV
+         4RVshHt6yYWgeEwypEmCLp8j62Fr/jWtYYe+AQi6nK1nYSSu/KGmCN7bVEzpY2sAsn+u
+         PBFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Oxq/+H+xeQ+mv0tMvO5y3IYe9t01YqrY24EF/jtyldM=;
+        b=bTH5j1wh4Bkn0QNlueRx+l9NFL0UcDEkTaMr9cT5WzlsipG6JNG9yBsAvv8ML6cO/u
+         jafQF3DisB9OP3UvB3b3F9D0g43XTtCGboVpRi1pxM7mzyQ4bYSEzfQ0qIp+THlQRfOK
+         0KWeWFZqMJcmf1bO4TfREAZwJM3uD06hbUWfyc8iQux8+hYESY08vo18kfc+zK2JDArC
+         XQ+Z1K4DBpJA8zJTo7+eImI8EzATFvDhhXf1BrN9PRf0nGeh1NDwDyvLnhqHPV4llst6
+         4/bRHjT3VJHUdEY98McDLDI2E3sPMhJF6fn+h2ujfxi7RZRdHPaLV1Va+7Zvc0tLgy+x
+         NsNg==
+X-Gm-Message-State: AGi0PubLH42G3jDfXvrlANdCaJziN2V1BOzVs6UiciQG0cOO6S9kUBnI
+        JzQd8yNTrhgJbIbcBlyoX5B7GhBKyEFghvR6g0I=
+X-Google-Smtp-Source: APiQypJpsaSQT2qGJ86FLuFicIlyv3y+HBRJHzXrPJic7JUYJNR9KUObIce/p0SIw7yu2XjUcR0G7ZmOo+OyrDJyboo=
+X-Received: by 2002:aed:2e24:: with SMTP id j33mr10425153qtd.117.1588800828042;
+ Wed, 06 May 2020 14:33:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200506205257.8964-1-irogers@google.com> <20200506205257.8964-2-irogers@google.com>
+In-Reply-To: <20200506205257.8964-2-irogers@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 6 May 2020 14:33:37 -0700
+Message-ID: <CAEf4BzZRmiEds_8R8g4vaAeWvJzPb4xYLnpF0X2VNY8oTzkphQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] lib/bpf hashmap: increase portability
+To:     Ian Rogers <irogers@google.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix following sparse checker warning:-
+On Wed, May 6, 2020 at 1:54 PM Ian Rogers <irogers@google.com> wrote:
+>
+> Don't include libbpf_internal.h as it is unused and has conflicting
+> definitions, for example, with tools/perf/util/debug.h.
+> Fix a non-glibc include path.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/lib/bpf/hashmap.h | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/tools/lib/bpf/hashmap.h b/tools/lib/bpf/hashmap.h
+> index bae8879cdf58..d5ef212a55ba 100644
+> --- a/tools/lib/bpf/hashmap.h
+> +++ b/tools/lib/bpf/hashmap.h
+> @@ -13,9 +13,8 @@
+>  #ifdef __GLIBC__
+>  #include <bits/wordsize.h>
+>  #else
+> -#include <bits/reg.h>
+> +#include <linux/bitops.h>
 
-net/hsr/hsr_slave.c:38:18: warning: incorrect type in assignment (different base types)
-net/hsr/hsr_slave.c:38:18:    expected unsigned short [unsigned] [usertype] protocol
-net/hsr/hsr_slave.c:38:18:    got restricted __be16 [usertype] h_proto
-net/hsr/hsr_slave.c:39:25: warning: restricted __be16 degrades to integer
-net/hsr/hsr_slave.c:39:57: warning: restricted __be16 degrades to integer
+why this change? It might be ok for libbpf built from kernel source,
+but it will break Github libbpf.
 
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
----
- v2 : Added Acked-by from Vinicius Costa Gomes
- net/hsr/hsr_slave.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>  #endif
+> -#include "libbpf_internal.h"
 
-diff --git a/net/hsr/hsr_slave.c b/net/hsr/hsr_slave.c
-index f4b9f7a3ce51..25b6ffba26cd 100644
---- a/net/hsr/hsr_slave.c
-+++ b/net/hsr/hsr_slave.c
-@@ -18,7 +18,7 @@ static rx_handler_result_t hsr_handle_frame(struct sk_buff **pskb)
- {
- 	struct sk_buff *skb = *pskb;
- 	struct hsr_port *port;
--	u16 protocol;
-+	__be16 protocol;
- 
- 	if (!skb_mac_header_was_set(skb)) {
- 		WARN_ONCE(1, "%s: skb invalid", __func__);
--- 
-2.17.1
+Dropping this seems ok, don't remember why I had it here in the first place.
 
+>
+>  static inline size_t hash_bits(size_t h, int bits)
+>  {
+> --
+> 2.26.2.526.g744177e7f7-goog
+>
