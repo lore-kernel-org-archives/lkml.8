@@ -2,167 +2,137 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD0CC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 11:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E80C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 11:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0A4520746
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 11:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9200F20714
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 11:57:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PXJKEtd2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CvuSTjeY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbgEFL4l (ORCPT
+        id S1727935AbgEFL5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 07:56:41 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:38462 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725985AbgEFL4l (ORCPT
+        Wed, 6 May 2020 07:57:20 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:39838 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725985AbgEFL5U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 07:56:41 -0400
-X-UUID: 02a666bec23c4b3eb4474929ed893b68-20200506
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=MNY7QjHyK2N8v2XPbveR8rY3W7ehZggZwWilVhYjlQw=;
-        b=PXJKEtd2EYOa4rA2Hb0vETIQGIbuaIRWoqj+ZhgwmE/kBOQWSyUVFAKUrIGXIxS16PZF+Zsez8211XRDgJtX9345+lZf2IlW7Zb5mvobDYAQXAAQ+D+vQErewCeuq7qeEII5tuzpDqUeJQqy9MpYZ9dns9lh7M5eAaQ6368JM1M=;
-X-UUID: 02a666bec23c4b3eb4474929ed893b68-20200506
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2131291375; Wed, 06 May 2020 19:56:35 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 6 May 2020 19:56:31 +0800
-Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 6 May 2020 19:56:30 +0800
-Message-ID: <1588766193.23664.28.camel@mtksdccf07>
-Subject: Re: [PATCH 2/3] kasan: record and print the free track
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Wed, 6 May 2020 19:56:33 +0800
-In-Reply-To: <CACT4Y+ajKJpwNXd1V17bOT_ZShXm8h2eepxx_g4hAqk78SxCDA@mail.gmail.com>
-References: <20200506052155.14515-1-walter-zh.wu@mediatek.com>
-         <CACT4Y+ajKJpwNXd1V17bOT_ZShXm8h2eepxx_g4hAqk78SxCDA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 6 May 2020 07:57:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588766238;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7sOis2/3Mg9JApCu6b61p44e2yvITngtwxXPAS7QTXw=;
+        b=CvuSTjeYh9RN4U4Co+W7qGuwKeVyx+YpK+VuACy+Xu1Plq/Yzc59CwbGl6ruYbn1ZR+HOb
+        EUcV4G9yXKtlR86AiFlV9eg05T8jiFbuGzPvagLgP04f9xmwps9D277l0Z82sD7XyO8g/H
+        yEhDyID7eSKUt/7OOxTX7aNqn3XSiEs=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-23-WyQekCQsNIm_ldKtMXmKJA-1; Wed, 06 May 2020 07:57:14 -0400
+X-MC-Unique: WyQekCQsNIm_ldKtMXmKJA-1
+Received: by mail-wr1-f70.google.com with SMTP id o6so1200757wrn.0
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 04:57:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7sOis2/3Mg9JApCu6b61p44e2yvITngtwxXPAS7QTXw=;
+        b=c5yMSvtzIiK+w63RgPedp6BcJnMSxlDjHf4rzHlffYqUkTy+oA0DIZsV1jOyPfaUg8
+         oDAxQ4/aJHWCZK3/Zbq0+4QyASpW3BnjP4lPCDSWb11eF3MRJG58azN1oBw5czJNpNJR
+         p78Lxd6/0ch/SueBPMXXi2yj2OCNOVSfTHxySpR5dc9yqvZAF6wzZoixnubGENBXFsw+
+         2oFPmAemwhICxTeFIsGwYiOFRcdnwFWSCvyfhlmNonDMLQe8cl/1eCuZ8rVzWwx5ylsn
+         34F4kVdHxwuzRmnvKD0PbN+IYyN6Jy/iPBUIGVuMnu5pTK0BLN9gsnkSjZtyLBFiq7yc
+         M52g==
+X-Gm-Message-State: AGi0PubhokieW/aMQeXQ2L8AW8hdQDAi/zvTeG0EU4YZoI0t0fcvKhue
+        9px9Ky7fofFsmxU0IHYyy8GB9j8Lj78DAHHmiMYP0R6K7d1UXGl+JkjWuvEixT5PpRWwDUmDpE9
+        G6HYYkAdeTJqTzOX4rGaA1bx5
+X-Received: by 2002:adf:8162:: with SMTP id 89mr8736330wrm.387.1588766233796;
+        Wed, 06 May 2020 04:57:13 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKH40QoEgrQmuxv8rKi91gxvjeAgTSB72BOZzkNW3MxEIsk2JLG9yyMv1mIo8Hc/alFqaSzSg==
+X-Received: by 2002:adf:8162:: with SMTP id 89mr8736315wrm.387.1588766233499;
+        Wed, 06 May 2020 04:57:13 -0700 (PDT)
+Received: from redhat.com (bzq-109-66-7-121.red.bezeqint.net. [109.66.7.121])
+        by smtp.gmail.com with ESMTPSA id w4sm2398660wro.28.2020.05.06.04.57.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 04:57:12 -0700 (PDT)
+Date:   Wed, 6 May 2020 07:57:10 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Eugenio Perez Martin <eperezma@redhat.com>
+Subject: Re: performance bug in virtio net xdp
+Message-ID: <20200506075226-mutt-send-email-mst@kernel.org>
+References: <20200506035704-mutt-send-email-mst@kernel.org>
+ <20200506103757.4bc78b3a@carbon>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506103757.4bc78b3a@carbon>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA1LTA2IGF0IDExOjUwICswMjAwLCBEbWl0cnkgVnl1a292IHdyb3RlOg0K
-PiBPbiBXZWQsIE1heSA2LCAyMDIwIGF0IDc6MjIgQU0gV2FsdGVyIFd1IDx3YWx0ZXItemgud3VA
-bWVkaWF0ZWsuY29tPiB3cm90ZToNCj4gPg0KPiA+IFdlIGFkZCBuZXcgS0FTQU5fUkNVX1NUQUNL
-X1JFQ09SRCBjb25maWd1cmF0aW9uIG9wdGlvbi4gSXQgd2lsbCBtb3ZlDQo+ID4gZnJlZSB0cmFj
-ayBmcm9tIHNsdWIgbWV0YS1kYXRhIChzdHJ1Y3Qga2FzYW5fYWxsb2NfbWV0YSkgaW50byBmcmVl
-ZCBvYmplY3QuDQo+ID4gQmVjYXVzZSB3ZSBob3BlIHRoaXMgb3B0aW9ucyBkb2Vzbid0IGVubGFy
-Z2Ugc2x1YiBtZXRhLWRhdGEgc2l6ZS4NCj4gPg0KPiA+IFRoaXMgb3B0aW9uIGRvZXNuJ3QgZW5s
-YXJnZSBzdHJ1Y3Qga2FzYW5fYWxsb2NfbWV0YSBzaXplLg0KPiA+IC0gYWRkIHR3byBjYWxsX3Jj
-dSgpIGNhbGwgc3RhY2sgaW50byBrYXNhbl9hbGxvY19tZXRhLCBzaXplIGlzIDggYnl0ZXMuDQo+
-ID4gLSByZW1vdmUgZnJlZSB0cmFjayBmcm9tIGthc2FuX2FsbG9jX21ldGEsIHNpemUgaXMgOCBi
-eXRlcy4NCj4gPg0KPiA+IFRoaXMgb3B0aW9uIGlzIG9ubHkgc3VpdGFibGUgZm9yIGdlbmVyaWMg
-S0FTQU4sIGJlY2F1c2Ugd2UgbW92ZSBmcmVlIHRyYWNrDQo+ID4gaW50byB0aGUgZnJlZWQgb2Jq
-ZWN0LCBzbyBmcmVlIHRyYWNrIGlzIHZhbGlkIGluZm9ybWF0aW9uIG9ubHkgd2hlbiBpdA0KPiA+
-IGV4aXN0cyBpbiBxdWFyYW50aW5lLiBJZiB0aGUgb2JqZWN0IGlzIGluLXVzZSBzdGF0ZSwgdGhl
-biB0aGUgS0FTQU4gcmVwb3J0DQo+ID4gZG9lc24ndCBwcmludCBjYWxsX3JjdSgpIGZyZWUgdHJh
-Y2sgaW5mb3JtYXRpb24uDQo+ID4NCj4gPiBbMV1odHRwczovL2J1Z3ppbGxhLmtlcm5lbC5vcmcv
-c2hvd19idWcuY2dpP2lkPTE5ODQzNw0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogV2FsdGVyIFd1
-IDx3YWx0ZXItemgud3VAbWVkaWF0ZWsuY29tPg0KPiA+IENjOiBBbmRyZXkgUnlhYmluaW4gPGFy
-eWFiaW5pbkB2aXJ0dW96em8uY29tPg0KPiA+IENjOiBEbWl0cnkgVnl1a292IDxkdnl1a292QGdv
-b2dsZS5jb20+DQo+ID4gQ2M6IEFsZXhhbmRlciBQb3RhcGVua28gPGdsaWRlckBnb29nbGUuY29t
-Pg0KPiA+IC0tLQ0KPiA+ICBtbS9rYXNhbi9jb21tb24uYyB8IDEwICsrKysrKysrKy0NCj4gPiAg
-bW0va2FzYW4vcmVwb3J0LmMgfCAyNCArKysrKysrKysrKysrKysrKysrKystLS0NCj4gPiAgMiBm
-aWxlcyBjaGFuZ2VkLCAzMCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4g
-ZGlmZiAtLWdpdCBhL21tL2thc2FuL2NvbW1vbi5jIGIvbW0va2FzYW4vY29tbW9uLmMNCj4gPiBp
-bmRleCAzMmQ0MjJiZGYxMjcuLjEzZWMwM2UyMjVhNyAxMDA2NDQNCj4gPiAtLS0gYS9tbS9rYXNh
-bi9jb21tb24uYw0KPiA+ICsrKyBiL21tL2thc2FuL2NvbW1vbi5jDQo+ID4gQEAgLTMyMSw4ICsz
-MjEsMTUgQEAgdm9pZCBrYXNhbl9yZWNvcmRfY2FsbHJjdSh2b2lkICphZGRyKQ0KPiA+ICAgICAg
-ICAgICAgICAgICAvKiByZWNvcmQgbGFzdCBjYWxsX3JjdSgpIGNhbGwgc3RhY2sgKi8NCj4gPiAg
-ICAgICAgICAgICAgICAgYWxsb2NfaW5mby0+cmN1X2ZyZWVfc3RhY2tbMV0gPSBzYXZlX3N0YWNr
-KEdGUF9OT1dBSVQpOw0KPiA+ICB9DQo+ID4gLSNlbmRpZg0KPiA+DQo+ID4gK3N0YXRpYyB2b2lk
-IGthc2FuX3NldF9mcmVlX2luZm8oc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlLA0KPiA+ICsgICAg
-ICAgICAgICAgICB2b2lkICpvYmplY3QsIHU4IHRhZykNCj4gPiArew0KPiA+ICsgICAgICAgLyog
-c3RvcmUgZnJlZSB0cmFjayBpbnRvIGZyZWVkIG9iamVjdCAqLw0KPiA+ICsgICAgICAgc2V0X3Ry
-YWNrKChzdHJ1Y3Qga2FzYW5fdHJhY2sgKikob2JqZWN0ICsgQllURVNfUEVSX1dPUkQpLCBHRlBf
-Tk9XQUlUKTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArI2Vsc2UNCj4gPiAgc3RhdGljIHZvaWQga2Fz
-YW5fc2V0X2ZyZWVfaW5mbyhzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUsDQo+ID4gICAgICAgICAg
-ICAgICAgIHZvaWQgKm9iamVjdCwgdTggdGFnKQ0KPiA+ICB7DQo+ID4gQEAgLTMzOSw2ICszNDYs
-NyBAQCBzdGF0aWMgdm9pZCBrYXNhbl9zZXRfZnJlZV9pbmZvKHN0cnVjdCBrbWVtX2NhY2hlICpj
-YWNoZSwNCj4gPg0KPiA+ICAgICAgICAgc2V0X3RyYWNrKCZhbGxvY19tZXRhLT5mcmVlX3RyYWNr
-W2lkeF0sIEdGUF9OT1dBSVQpOw0KPiA+ICB9DQo+ID4gKyNlbmRpZg0KPiA+DQo+ID4gIHZvaWQg
-a2FzYW5fcG9pc29uX3NsYWIoc3RydWN0IHBhZ2UgKnBhZ2UpDQo+ID4gIHsNCj4gPiBkaWZmIC0t
-Z2l0IGEvbW0va2FzYW4vcmVwb3J0LmMgYi9tbS9rYXNhbi9yZXBvcnQuYw0KPiA+IGluZGV4IDdh
-YWNjYzcwYjY1Yi4uZjJiMGM2YjlkZmZhIDEwMDY0NA0KPiA+IC0tLSBhL21tL2thc2FuL3JlcG9y
-dC5jDQo+ID4gKysrIGIvbW0va2FzYW4vcmVwb3J0LmMNCj4gPiBAQCAtMTc1LDggKzE3NSwyMyBA
-QCBzdGF0aWMgdm9pZCBrYXNhbl9wcmludF9yY3VfZnJlZV9zdGFjayhzdHJ1Y3Qga2FzYW5fYWxs
-b2NfbWV0YSAqYWxsb2NfaW5mbykNCj4gPiAgICAgICAgIHByaW50X3RyYWNrKCZmcmVlX3RyYWNr
-LCAiTGFzdCBjYWxsX3JjdSgpIGNhbGwgc3RhY2siLCB0cnVlKTsNCj4gPiAgICAgICAgIHByX2Vy
-cigiXG4iKTsNCj4gPiAgfQ0KPiA+IC0jZW5kaWYNCj4gPg0KPiA+ICtzdGF0aWMgc3RydWN0IGth
-c2FuX3RyYWNrICprYXNhbl9nZXRfZnJlZV90cmFjayhzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUs
-DQo+ID4gKyAgICAgICAgICAgICAgIHZvaWQgKm9iamVjdCwgdTggdGFnLCBjb25zdCB2b2lkICph
-ZGRyKQ0KPiA+ICt7DQo+ID4gKyAgICAgICB1OCAqc2hhZG93X2FkZHIgPSAodTggKilrYXNhbl9t
-ZW1fdG9fc2hhZG93KGFkZHIpOw0KPiA+ICsNCj4gPiArICAgICAgIC8qDQo+ID4gKyAgICAgICAg
-KiBPbmx5IHRoZSBmcmVlZCBvYmplY3QgY2FuIGdldCBmcmVlIHRyYWNrLA0KPiA+ICsgICAgICAg
-ICogYmVjYXVzZSBmcmVlIHRyYWNrIGluZm9ybWF0aW9uIGlzIHN0b3JlZCB0byBmcmVlZCBvYmpl
-Y3QuDQo+ID4gKyAgICAgICAgKi8NCj4gPiArICAgICAgIGlmICgqc2hhZG93X2FkZHIgPT0gS0FT
-QU5fS01BTExPQ19GUkVFKQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gKHN0cnVjdCBrYXNh
-bl90cmFjayAqKShvYmplY3QgKyBCWVRFU19QRVJfV09SRCk7DQo+IA0KPiBIdW1tLi4uIHRoZSBv
-dGhlciBwYXRjaCBkZWZpbmVzIEJZVEVTX1BFUl9XT1JEIGFzIDQuLi4gSSB3b3VsZCBhc3N1bWUN
-Cj4gc2VlaW5nIDggKG9yIHNpemVvZihsb25nKSkgaGVyZS4gV2h5IDQ/DQpJdCBzaG91bGQgYmUg
-YSBwb2ludGVyIHNpemUsIG1heWJlIHNpemVvZihsb25nKSBtYWtlcyBtb3JlIHNlbnNlLg0KDQo+
-IEhhdmUgeW91IHRlc3RlZCBhbGwgNCBtb2RlcyAoUkNVL25vLVJDVSB4IFNMQUIvU0xVQik/IEFz
-IGZhciBhcyBJDQo+IHJlbWVtYmVyIG9uZSBvZiB0aGUgYWxsb2NhdG9ycyBzdG9yZWQgc29tZXRo
-aW5nIGluIHRoZSBvYmplY3QuDQpHb29kIHF1ZXN0aW9uLCBJIG9ubHkgdGVzdGVkIGluIFJDVSB4
-IFNMVUIsIHdvdWxkIHlvdSB0ZWxsIG1ldyBob3cgZG8NCm5vLVJDVT8gSSB3aWxsIHRlc3QgdGhl
-bSBpbiB2MiBwYXRoc2V0Lg0KDQo+IA0KPiBBbHNvLCBkb2VzIHRoaXMgd29yayB3aXRoIG9iamVj
-dHMgd2l0aCBjdG9ycyBhbmQgc2xhYnMgZGVzdHJveWVkIGJ5DQo+IHJjdT8ga2FzYW5fdHJhY2sg
-bWF5IHNtYXNoIG90aGVyIHRoaW5ncyBpbiB0aGVzZSBjYXNlcy4NCj4gSGF2ZSB5b3UgbG9va2Vk
-IGF0IHRoZSBLQVNBTiBpbXBsZW1lbnRhdGlvbiB3aGVuIGZyZWVfdHJhY2sgd2FzDQo+IHJlbW92
-ZWQ/IFRoYXQgbWF5IGhhdmUgdXNlZnVsIGRldGFpbHMgOikNClNldCBmcmVlX3RyYWNrIGJlZm9y
-ZSBwdXQgaW50byBxdWFyYW50aW5lLCBmcmVlX3RyYWNrIHNob3VsZCBub3QgaGF2ZSB0bw0KYmUg
-cmVtb3ZlZCwgaXQgb25seSBoYXZlIHRvIG92ZXJ3aXJ0ZSBpdHNlbGYuDQoNCj4gDQo+IA0KPiA+
-ICsgICAgICAgZWxzZQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gTlVMTDsNCj4gPiArfQ0K
-PiA+ICsNCj4gPiArI2Vsc2UNCj4gPiAgc3RhdGljIHN0cnVjdCBrYXNhbl90cmFjayAqa2FzYW5f
-Z2V0X2ZyZWVfdHJhY2soc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlLA0KPiA+ICAgICAgICAgICAg
-ICAgICB2b2lkICpvYmplY3QsIHU4IHRhZywgY29uc3Qgdm9pZCAqYWRkcikNCj4gPiAgew0KPiA+
-IEBAIC0xOTYsNiArMjExLDcgQEAgc3RhdGljIHN0cnVjdCBrYXNhbl90cmFjayAqa2FzYW5fZ2V0
-X2ZyZWVfdHJhY2soc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlLA0KPiA+DQo+ID4gICAgICAgICBy
-ZXR1cm4gJmFsbG9jX21ldGEtPmZyZWVfdHJhY2tbaV07DQo+ID4gIH0NCj4gPiArI2VuZGlmDQo+
-ID4NCj4gPiAgc3RhdGljIHZvaWQgZGVzY3JpYmVfb2JqZWN0KHN0cnVjdCBrbWVtX2NhY2hlICpj
-YWNoZSwgdm9pZCAqb2JqZWN0LA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-Y29uc3Qgdm9pZCAqYWRkciwgdTggdGFnKQ0KPiA+IEBAIC0yMDgsOCArMjI0LDEwIEBAIHN0YXRp
-YyB2b2lkIGRlc2NyaWJlX29iamVjdChzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUsIHZvaWQgKm9i
-amVjdCwNCj4gPiAgICAgICAgICAgICAgICAgcHJpbnRfdHJhY2soJmFsbG9jX2luZm8tPmFsbG9j
-X3RyYWNrLCAiQWxsb2NhdGVkIiwgZmFsc2UpOw0KPiA+ICAgICAgICAgICAgICAgICBwcl9lcnIo
-IlxuIik7DQo+ID4gICAgICAgICAgICAgICAgIGZyZWVfdHJhY2sgPSBrYXNhbl9nZXRfZnJlZV90
-cmFjayhjYWNoZSwgb2JqZWN0LCB0YWcsIGFkZHIpOw0KPiA+IC0gICAgICAgICAgICAgICBwcmlu
-dF90cmFjayhmcmVlX3RyYWNrLCAiRnJlZWQiLCBmYWxzZSk7DQo+ID4gLSAgICAgICAgICAgICAg
-IHByX2VycigiXG4iKTsNCj4gPiArICAgICAgICAgICAgICAgaWYgKGZyZWVfdHJhY2spIHsNCj4g
-PiArICAgICAgICAgICAgICAgICAgICAgICBwcmludF90cmFjayhmcmVlX3RyYWNrLCAiRnJlZWQi
-LCBmYWxzZSk7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcHJfZXJyKCJcbiIpOw0KPiA+
-ICsgICAgICAgICAgICAgICB9DQo+ID4gICNpZmRlZiBDT05GSUdfS0FTQU5fUkNVX1NUQUNLX1JF
-Q09SRA0KPiA+ICAgICAgICAgICAgICAgICBrYXNhbl9wcmludF9yY3VfZnJlZV9zdGFjayhhbGxv
-Y19pbmZvKTsNCj4gPiAgI2VuZGlmDQo+ID4gLS0NCj4gPiAyLjE4LjANCj4gPg0KPiA+IC0tDQo+
-ID4gWW91IHJlY2VpdmVkIHRoaXMgbWVzc2FnZSBiZWNhdXNlIHlvdSBhcmUgc3Vic2NyaWJlZCB0
-byB0aGUgR29vZ2xlIEdyb3VwcyAia2FzYW4tZGV2IiBncm91cC4NCj4gPiBUbyB1bnN1YnNjcmli
-ZSBmcm9tIHRoaXMgZ3JvdXAgYW5kIHN0b3AgcmVjZWl2aW5nIGVtYWlscyBmcm9tIGl0LCBzZW5k
-IGFuIGVtYWlsIHRvIGthc2FuLWRldit1bnN1YnNjcmliZUBnb29nbGVncm91cHMuY29tLg0KPiA+
-IFRvIHZpZXcgdGhpcyBkaXNjdXNzaW9uIG9uIHRoZSB3ZWIgdmlzaXQgaHR0cHM6Ly9ncm91cHMu
-Z29vZ2xlLmNvbS9kL21zZ2lkL2thc2FuLWRldi8yMDIwMDUwNjA1MjE1NS4xNDUxNS0xLXdhbHRl
-ci16aC53dSU0MG1lZGlhdGVrLmNvbS4NCg0K
+On Wed, May 06, 2020 at 10:37:57AM +0200, Jesper Dangaard Brouer wrote:
+> On Wed, 6 May 2020 04:08:27 -0400
+> "Michael S. Tsirkin" <mst@redhat.com> wrote:
+> 
+> > So for mergeable bufs, we use ewma machinery to guess the correct buffer
+> > size. If we don't guess correctly, XDP has to do aggressive copies.
+> > 
+> > Problem is, xdp paths do not update the ewma at all, except
+> > sometimes with XDP_PASS. So whatever we happen to have
+> > before we attach XDP, will mostly stay around.
+> > 
+> > The fix is probably to update ewma unconditionally.
+> 
+> I personally find the code hard to follow, and (I admit) that it took
+> me some time to understand this code path (so I might still be wrong).
+> 
+> In patch[1] I tried to explain (my understanding):
+> 
+>   In receive_mergeable() the frame size is more dynamic. There are two
+>   basic cases: (1) buffer size is based on a exponentially weighted
+>   moving average (see DECLARE_EWMA) of packet length. Or (2) in case
+>   virtnet_get_headroom() have any headroom then buffer size is
+>   PAGE_SIZE. The ctx pointer is this time used for encoding two values;
+>   the buffer len "truesize" and headroom. In case (1) if the rx buffer
+>   size is underestimated, the packet will have been split over more
+>   buffers (num_buf info in virtio_net_hdr_mrg_rxbuf placed in top of
+>   buffer area). If that happens the XDP path does a xdp_linearize_page
+>   operation.
+> 
+> 
+> The EWMA code is not used when headroom is defined, which e.g. gets
+> enabled when running XDP.
+> 
+> 
+> [1] https://lore.kernel.org/netdev/158824572816.2172139.1358700000273697123.stgit@firesoul/
+
+You are right.
+So I guess the problem is just inconsistency?
+
+When XDP program returns XDP_PASS, and it all fits in one page,
+then we trigger
+	        ewma_pkt_len_add(&rq->mrg_avg_pkt_len, head_skb->len);
+
+if it does not trigger XDP_PASS, or does not fit in one page,
+then we don't.
+
+Given XDP does not use ewma for sizing, let's not update the average
+either.
+
+
+> -- 
+> Best regards,
+>   Jesper Dangaard Brouer
+>   MSc.CS, Principal Kernel Engineer at Red Hat
+>   LinkedIn: http://www.linkedin.com/in/brouer
 
