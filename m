@@ -2,78 +2,80 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 099A6C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F01AC38A24
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0EB920575
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A1EC20575
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:49:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728485AbgEFMtj (ORCPT
+        id S1728535AbgEFMtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 08:49:39 -0400
-Received: from m176150.mail.qiye.163.com ([59.111.176.150]:22429 "EHLO
-        m176150.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728081AbgEFMti (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 08:49:38 -0400
-Received: from vivo.com (wm-10.qy.internal [127.0.0.1])
-        by m176150.mail.qiye.163.com (Hmail) with ESMTP id 6E7471A31C1;
-        Wed,  6 May 2020 20:49:03 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <AMkACAAICCLCcgaekrYcyKoA.1.1588769343436.Hmail.bernard@vivo.com>
-To:     Inki Dae <inki.dae@samsung.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     opensource.kernel@vivo.com, Bernard Zhao <bernard@vivo.com>
-Subject: =?UTF-8?B?W1BBVENIXSBkcm0vZXh5bm9zOiByZW1vdmUgbm8gbmVlZCBkZXZtX2tmcmVlIGluIHByb2JlIFtyZS1zZW5kLCB3ZWxjb21lIGFueSBjb21tZW50c10=?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 157.0.31.122
+        Wed, 6 May 2020 08:49:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:35878 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728081AbgEFMtm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 08:49:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B00411FB;
+        Wed,  6 May 2020 05:49:41 -0700 (PDT)
+Received: from bogus (unknown [10.37.8.198])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 62EE53F68F;
+        Wed,  6 May 2020 05:49:39 -0700 (PDT)
+Date:   Wed, 6 May 2020 13:49:32 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Hanjun Guo <guohanjun@huawei.com>
+Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, john.garry@huawei.com,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Souvik Chakravarty <Souvik.Chakravarty@arm.com>,
+        Thanu Rangarajan <Thanu.Rangarajan@arm.com>
+Subject: Re: [RFC PATCH] cpufreq: add support for HiSilicon SoC HIP09
+Message-ID: <20200506124932.GA20426@bogus>
+References: <1588227599-46438-1-git-send-email-wangxiongfeng2@huawei.com>
+ <20200430095559.GB28579@bogus>
+ <3ba950dd-4065-e4a5-d406-dc5c6c1781a7@huawei.com>
 MIME-Version: 1.0
-Received: from bernard@vivo.com( [157.0.31.122) ] by ajax-webmail ( [127.0.0.1] ) ; Wed, 6 May 2020 20:49:03 +0800 (GMT+08:00)
-From:   Bernard <bernard@vivo.com>
-Date:   Wed, 6 May 2020 20:49:03 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VPQ0NCQkJDT0hOQkxPSllXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQQ8JDh5XWRIfHhUPWUFZRzo2EDo4OjoyODg3OBgcGh4QCSIY
-        AjAUOlVKVUpOQ0NMTUJIT0hOSkpVMxYaEhdVGR4JFRoJHzsNEg0UVRgUFkVZV1kSC1lBWUpOTFVL
-        VUhKVUpJSVlXWQgBWUFITUlDNwY+
-X-HM-Tid: 0a71ea0847e793b4kuws6e7471a31c1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3ba950dd-4065-e4a5-d406-dc5c6c1781a7@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UmVtb3ZlIG5vIG5lZWQgZGV2bV9rZnJlZSBpbiBwcm9iZS4KVGhlIGNoYW5nZSBpcyB0byBtYWtl
-IHRoZSBjb2RlIGEgYml0IG1vcmUgcmVhZGFibGUKClNpZ25lZC1vZmYtYnk6IEJlcm5hcmQgWmhh
-byA8YmVybmFyZEB2aXZvLmNvbT4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19k
-cm1fZHBpLmMgfCAxMCArKystLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCsp
-LCA3IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5
-bm9zX2RybV9kcGkuYyBiL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9kcGkuYwpp
-bmRleCA0M2ZhMGYyNmMwNTIuLmUwNmY3ZDdhNjY5NSAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUv
-ZHJtL2V4eW5vcy9leHlub3NfZHJtX2RwaS5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9leHlub3Mv
-ZXh5bm9zX2RybV9kcGkuYwpAQCAtMTgxLDEwICsxODEsOCBAQCBzdGF0aWMgaW50IGV4eW5vc19k
-cGlfcGFyc2VfZHQoc3RydWN0IGV4eW5vc19kcGkgKmN0eCkKIAkJCXJldHVybiAtRU5PTUVNOwog
-CiAJCXJldCA9IG9mX2dldF92aWRlb21vZGUoZG4sIHZtLCAwKTsKLQkJaWYgKHJldCA8IDApIHsK
-LQkJCWRldm1fa2ZyZWUoZGV2LCB2bSk7CisJCWlmIChyZXQgPCAwKQogCQkJcmV0dXJuIHJldDsK
-LQkJfQogCiAJCWN0eC0+dm0gPSB2bTsKIApAQCAtMjMzLDEwICsyMzEsOCBAQCBzdHJ1Y3QgZHJt
-X2VuY29kZXIgKmV4eW5vc19kcGlfcHJvYmUoc3RydWN0IGRldmljZSAqZGV2KQogCWN0eC0+ZGV2
-ID0gZGV2OwogCiAJcmV0ID0gZXh5bm9zX2RwaV9wYXJzZV9kdChjdHgpOwotCWlmIChyZXQgPCAw
-KSB7Ci0JCWRldm1fa2ZyZWUoZGV2LCBjdHgpOwotCQlyZXR1cm4gTlVMTDsKLQl9CisJaWYgKHJl
-dCA8IDApCisJCXJldHVybiBFUlJfUFRSKHJldCk7CiAKIAlpZiAoY3R4LT5wYW5lbF9ub2RlKSB7
-CiAJCWN0eC0+cGFuZWwgPSBvZl9kcm1fZmluZF9wYW5lbChjdHgtPnBhbmVsX25vZGUpOwotLSAK
-Mi4yNi4yCgoKW3JlLXNlbmQsIHdlbGNvbWUgYW55IGNvbW1lbnRzXQpSZWdhcmRzLApCZXJuYXJk
-CgoKDQoNCg==
++ Thanu, Souvik who work with ASWG
+
+On Wed, May 06, 2020 at 05:36:51PM +0800, Hanjun Guo wrote:
+> Hi Sudeep,
+>
+> On 2020/4/30 17:55, Sudeep Holla wrote:
+> > On Thu, Apr 30, 2020 at 02:19:59PM +0800, Xiongfeng Wang wrote:
+> > > HiSilicon SoC has a separate System Control Processor(SCP) dedicated for
+> > > clock frequency adjustment and has been using the cpufreq driver
+> > > 'cppc-cpufreq'. New HiSilicon SoC HIP09 add support for CPU Boost, but
+> > > ACPI CPPC doesn't support this. In HiSilicon SoC HIP09, each core has
+> > > its own clock domain. It is better for the core itself to adjust its
+> > > frequency when we require fast response. In this patch, we add a
+> > > separate cpufreq driver for HiSilicon SoC HIP09.
+> > >
+> >
+> > I disagree with this approach unless you have tried to extend the CPPC
+> > in ACPI to accommodate this boost feature you need. Until you show those
+> > efforts and disagreement to do that from ASWG, I am NACKing this approach.
+>
+> Unfortunately we are not in ASWG at now, could you please give some
+> help about extending CPPC in ACPI to support boost feature?
+>
+
+You may have to provide more details than the commit log for sure as I
+haven't understood the boost feature and what is missing in ACPI CPPC.
+
+--
+Regards,
+Sudeep
