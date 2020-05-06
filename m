@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A81B3C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D8CC47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81D7B20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A47520936
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:23:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588778578;
-	bh=57079+qnXPUNMO3c6YCLvvIFq90fxJ/NQOEsELRQXB8=;
+	s=default; t=1588778580;
+	bh=KPtPuwMrowCZsSzUJwgI6G9tX8MZ+9l+rfTrqJRVdfM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IAPglG6OslRPKRGsj43C1iT8uUX6H+M+V99RzXtgboiVvzZkIC/LKQNBMBl9J5LUv
-	 Mw0z2Gl4RCtzAuRYKDBZUvP3X9BNYIN1uXbeD6PrNZ9jKPO6j3UG2phVoOArG2tYKK
-	 fZhg7QhK1Lp639CSr5739vW6ffdipoJ/nSx4WaKM=
+	b=DQLV7TF5GhbtITwmB5TyvvoujmRqWbqYzVPaJIBBIn7bqLHpE7LaMOSL0s9gM5hEd
+	 igF51CttGf44xIZptRA+n1QvIDainF2y6fQA7mDrjrvZs7dHDlzJK2Fwzy86YV7aLR
+	 J/hrTA9Tu6dG782vg3KI2+zESZ/BIw+Smt2Ml8kw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729613AbgEFPW5 (ORCPT
+        id S1729625AbgEFPW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:22:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37682 "EHLO mail.kernel.org"
+        Wed, 6 May 2020 11:22:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729251AbgEFPWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:22:54 -0400
+        id S1729614AbgEFPW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:22:57 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC3B52145D;
-        Wed,  6 May 2020 15:22:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74AAE20CC7;
+        Wed,  6 May 2020 15:22:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588778574;
-        bh=57079+qnXPUNMO3c6YCLvvIFq90fxJ/NQOEsELRQXB8=;
+        s=default; t=1588778577;
+        bh=KPtPuwMrowCZsSzUJwgI6G9tX8MZ+9l+rfTrqJRVdfM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0nzpQdYR3XX/fLVUUF9iOloyVxjrr5RxjwxhIrcGoKWWDKl/QArlCQIBbyQC0NGaM
-         sX408xIpgUDJIKKzIfuQfPTgQIwm6mdfx68y0o+TKqUwOr24aY4H3QC9wiWiXqhKTN
-         5Ud+vH9liGJsVKGUUsfA85yAcdvpJhF/Fkoz1hKM=
+        b=bu7UAlBYKJ5l/o6QFSTybyeXGgC2Umnuv11cCQbxVYVpqPlrYkM/ZgqA0Znz0QQlq
+         5OdxtcSqATQKAw8xN3rR20l0a5P2+YXiQ3cNsVob5IVSYqHi11YnuiJQ3N3VcXai5y
+         MgOfdGkBdo3yD3AOjikgvhyeJPLV0cGgOsTa5lJQ=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Jagadeesh Pagadala <jagdsh.linux@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 03/91] perf evlist: Remove duplicate headers
-Date:   Wed,  6 May 2020 12:21:06 -0300
-Message-Id: <20200506152234.21977-4-acme@kernel.org>
+Subject: [PATCH 04/91] perf script: Avoid NULL dereference on symbol
+Date:   Wed,  6 May 2020 12:21:07 -0300
+Message-Id: <20200506152234.21977-5-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
@@ -61,34 +64,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+From: Ian Rogers <irogers@google.com>
 
-Code cleanup: Remove duplicate headers which are included twice.
+al->sym may be NULL given current if conditions and may cause a segv.
 
-Signed-off-by: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Link: http://lore.kernel.org/lkml/1587276836-17088-1-git-send-email-jagdsh.linux@gmail.com
+Fixes: d2bedb7863e9 ("perf script: Allow --symbol to accept hexadecimal addresses")
+Signed-off-by: Ian Rogers <irogers@google.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lore.kernel.org/lkml/20200421004329.43109-1-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/perf/evlist.c | 2 --
- 1 file changed, 2 deletions(-)
+ tools/perf/util/event.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-index 5b9f2ca50591..def55054c55b 100644
---- a/tools/lib/perf/evlist.c
-+++ b/tools/lib/perf/evlist.c
-@@ -11,10 +11,8 @@
- #include <internal/mmap.h>
- #include <internal/cpumap.h>
- #include <internal/threadmap.h>
--#include <internal/xyarray.h>
- #include <internal/lib.h>
- #include <linux/zalloc.h>
--#include <sys/ioctl.h>
- #include <stdlib.h>
- #include <errno.h>
- #include <unistd.h>
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index dc0e11214ae1..f581550a3015 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -626,7 +626,7 @@ int machine__resolve(struct machine *machine, struct addr_location *al,
+ 			ret = strlist__has_entry(symbol_conf.sym_list,
+ 						al->sym->name);
+ 		}
+-		if (!(ret && al->sym)) {
++		if (!ret && al->sym) {
+ 			snprintf(al_addr_str, sz, "0x%"PRIx64,
+ 				al->map->unmap_ip(al->map, al->sym->start));
+ 			ret = strlist__has_entry(symbol_conf.sym_list,
 -- 
 2.21.1
 
