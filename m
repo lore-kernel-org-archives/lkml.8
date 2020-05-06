@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC95C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31950C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA0C72068E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 120F221582
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:27:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588778835;
-	bh=44XUKIVi/6k2wGeb2mPlZ9v42x3xytmKf7KdEkkac/A=;
+	s=default; t=1588778840;
+	bh=dXhCXXY2ZW+kWGma87ESoXkSdg8h8CDl5lv+yquUJqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uel3qHSjJwvtUHn6QakCvOMMdtv1tyy3W/gpSnWin52eLTNTdF/tkQSNEdRVMOWPS
-	 saG31hg9ENFF0N+u/8V7eA+eMx0jA4fTnowngOkyQlPwFZCOyegarq2e7f1jJAq1Ej
-	 /BtUkxOFbIqiNDNG7Ocfz76uT4N2GhCWX7dABzNg=
+	b=bcilS3618x1ZHUAi0C0Wp23w1AWy+M/3k0dR9inw1eYWUS+yHt31RV2zvEEuYi4jN
+	 +n11LrPBVg0QX8bpy8857XcCnvC6jXyMlhEUIHbYUon7z1M+/9BlWiuV+NfKaKJjc6
+	 RAk25zOxJUM7bvczv8JMTjzjung8Nfnv1zbD0nJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730306AbgEFP1P (ORCPT
+        id S1730314AbgEFP1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:27:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50358 "EHLO mail.kernel.org"
+        Wed, 6 May 2020 11:27:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730286AbgEFP1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:27:08 -0400
+        id S1729717AbgEFP1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:27:11 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE95A2145D;
-        Wed,  6 May 2020 15:27:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5842221835;
+        Wed,  6 May 2020 15:27:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588778827;
-        bh=44XUKIVi/6k2wGeb2mPlZ9v42x3xytmKf7KdEkkac/A=;
+        s=default; t=1588778830;
+        bh=dXhCXXY2ZW+kWGma87ESoXkSdg8h8CDl5lv+yquUJqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pjduP1yFcwY/KHAJcQYYhpVZZ2yoOM1nE1UmaPaxyCwYnWz0e5lmuNvzuVyVBW+4T
-         0Ka4GWtfOQXgOuhorwskaPaLsBOlJgETcohhbY4jvKpX71FlTlSsZsjF8ZwzQyC8ng
-         UJxRkl2AAyIgYvOVmrAlcpLMz0x30OxphmN5nQeE=
+        b=vk+9/XCgGD5bgu6llKhfNe7DysODaZXiL62/BEjVXxCIOIsvKrtjcqLagrp8mzi2/
+         LLwtaJpxhJyjemuPH9/adHPTpSn+mzwj0bLl00XG6hINBegj+ktbnTyM1tNB3GaYQ5
+         uG3wbjduOGMg72DaRHunI6lQMVTmcfE6y3Zv75P8=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 79/91] perf lock: Rename perf_evsel__*() operating on 'struct evsel *' to evsel__*()
-Date:   Wed,  6 May 2020 12:22:22 -0300
-Message-Id: <20200506152234.21977-80-acme@kernel.org>
+Subject: [PATCH 80/91] perf sched: Rename perf_evsel__*() operating on 'struct evsel *' to evsel__*()
+Date:   Wed,  6 May 2020 12:22:23 -0300
+Message-Id: <20200506152234.21977-81-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
@@ -70,65 +70,74 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-lock.c | 20 ++++++++------------
- 1 file changed, 8 insertions(+), 12 deletions(-)
+ tools/perf/builtin-sched.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index 5a19dc2f1636..f0a1dbacb46c 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -657,32 +657,28 @@ static struct trace_lock_handler report_lock_ops  = {
- 
- static struct trace_lock_handler *trace_handler;
- 
--static int perf_evsel__process_lock_acquire(struct evsel *evsel,
--					     struct perf_sample *sample)
-+static int evsel__process_lock_acquire(struct evsel *evsel, struct perf_sample *sample)
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index b99398031131..459e4229945e 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -1848,7 +1848,7 @@ static inline void print_sched_time(unsigned long long nsecs, int width)
+  * returns runtime data for event, allocating memory for it the
+  * first time it is used.
+  */
+-static struct evsel_runtime *perf_evsel__get_runtime(struct evsel *evsel)
++static struct evsel_runtime *evsel__get_runtime(struct evsel *evsel)
  {
- 	if (trace_handler->acquire_event)
- 		return trace_handler->acquire_event(evsel, sample);
- 	return 0;
+ 	struct evsel_runtime *r = evsel->priv;
+ 
+@@ -1863,10 +1863,9 @@ static struct evsel_runtime *perf_evsel__get_runtime(struct evsel *evsel)
+ /*
+  * save last time event was seen per cpu
+  */
+-static void perf_evsel__save_time(struct evsel *evsel,
+-				  u64 timestamp, u32 cpu)
++static void evsel__save_time(struct evsel *evsel, u64 timestamp, u32 cpu)
+ {
+-	struct evsel_runtime *r = perf_evsel__get_runtime(evsel);
++	struct evsel_runtime *r = evsel__get_runtime(evsel);
+ 
+ 	if (r == NULL)
+ 		return;
+@@ -1890,9 +1889,9 @@ static void perf_evsel__save_time(struct evsel *evsel,
  }
  
--static int perf_evsel__process_lock_acquired(struct evsel *evsel,
--					      struct perf_sample *sample)
-+static int evsel__process_lock_acquired(struct evsel *evsel, struct perf_sample *sample)
+ /* returns last time this event was seen on the given cpu */
+-static u64 perf_evsel__get_time(struct evsel *evsel, u32 cpu)
++static u64 evsel__get_time(struct evsel *evsel, u32 cpu)
  {
- 	if (trace_handler->acquired_event)
- 		return trace_handler->acquired_event(evsel, sample);
- 	return 0;
+-	struct evsel_runtime *r = perf_evsel__get_runtime(evsel);
++	struct evsel_runtime *r = evsel__get_runtime(evsel);
+ 
+ 	if ((r == NULL) || (r->last_time == NULL) || (cpu >= r->ncpu))
+ 		return 0;
+@@ -2548,7 +2547,7 @@ static int timehist_sched_change_event(struct perf_tool *tool,
+ 		goto out;
+ 	}
+ 
+-	tprev = perf_evsel__get_time(evsel, sample->cpu);
++	tprev = evsel__get_time(evsel, sample->cpu);
+ 
+ 	/*
+ 	 * If start time given:
+@@ -2631,7 +2630,7 @@ static int timehist_sched_change_event(struct perf_tool *tool,
+ 		tr->ready_to_run = 0;
+ 	}
+ 
+-	perf_evsel__save_time(evsel, sample->time, sample->cpu);
++	evsel__save_time(evsel, sample->time, sample->cpu);
+ 
+ 	return rc;
  }
+@@ -2941,7 +2940,7 @@ static int timehist_check_attr(struct perf_sched *sched,
+ 	struct evsel_runtime *er;
  
--static int perf_evsel__process_lock_contended(struct evsel *evsel,
--					      struct perf_sample *sample)
-+static int evsel__process_lock_contended(struct evsel *evsel, struct perf_sample *sample)
- {
- 	if (trace_handler->contended_event)
- 		return trace_handler->contended_event(evsel, sample);
- 	return 0;
- }
- 
--static int perf_evsel__process_lock_release(struct evsel *evsel,
--					    struct perf_sample *sample)
-+static int evsel__process_lock_release(struct evsel *evsel, struct perf_sample *sample)
- {
- 	if (trace_handler->release_event)
- 		return trace_handler->release_event(evsel, sample);
-@@ -849,10 +845,10 @@ static void sort_result(void)
- }
- 
- static const struct evsel_str_handler lock_tracepoints[] = {
--	{ "lock:lock_acquire",	 perf_evsel__process_lock_acquire,   }, /* CONFIG_LOCKDEP */
--	{ "lock:lock_acquired",	 perf_evsel__process_lock_acquired,  }, /* CONFIG_LOCKDEP, CONFIG_LOCK_STAT */
--	{ "lock:lock_contended", perf_evsel__process_lock_contended, }, /* CONFIG_LOCKDEP, CONFIG_LOCK_STAT */
--	{ "lock:lock_release",	 perf_evsel__process_lock_release,   }, /* CONFIG_LOCKDEP */
-+	{ "lock:lock_acquire",	 evsel__process_lock_acquire,   }, /* CONFIG_LOCKDEP */
-+	{ "lock:lock_acquired",	 evsel__process_lock_acquired,  }, /* CONFIG_LOCKDEP, CONFIG_LOCK_STAT */
-+	{ "lock:lock_contended", evsel__process_lock_contended, }, /* CONFIG_LOCKDEP, CONFIG_LOCK_STAT */
-+	{ "lock:lock_release",	 evsel__process_lock_release,   }, /* CONFIG_LOCKDEP */
- };
- 
- static bool force;
+ 	list_for_each_entry(evsel, &evlist->core.entries, core.node) {
+-		er = perf_evsel__get_runtime(evsel);
++		er = evsel__get_runtime(evsel);
+ 		if (er == NULL) {
+ 			pr_err("Failed to allocate memory for evsel runtime data\n");
+ 			return -1;
 -- 
 2.21.1
 
