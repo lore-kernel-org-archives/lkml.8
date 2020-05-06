@@ -2,93 +2,197 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB729C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 492EAC4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95F7E20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:41:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bAatsS2z"
+	by mail.kernel.org (Postfix) with ESMTP id 319D3206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:41:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729647AbgEFPlM (ORCPT
+        id S1729683AbgEFPlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:41:12 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:52748 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729391AbgEFPlM (ORCPT
+        Wed, 6 May 2020 11:41:46 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5074 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729066AbgEFPlq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:41:12 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 046Ff8dl104430;
-        Wed, 6 May 2020 10:41:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588779668;
-        bh=6nWDbJgIfHVMYHr00BNhoOQF9D8Xop5E0as19GqWrzc=;
-        h=From:To:Subject:Date;
-        b=bAatsS2zxkUhlHOrAa+kuNuAejsyF4BSbED039TamP4Bd5qNC09UFPaHaqGzIN6XJ
-         DVicJ4l/rT9/OwS37MOO+eAflVyBzpZFRLmzipXnog8U5JVa3QO82GRM695nd5CwM/
-         XNTEY94iZ9X7/VymsKUTe0yyy44Bzcth89zKoD0E=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 046Ff86L022647
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 6 May 2020 10:41:08 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 6 May
- 2020 10:41:08 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 6 May 2020 10:41:08 -0500
-Received: from uda0868495.fios-router.home (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 046Ff8k7028145;
-        Wed, 6 May 2020 10:41:08 -0500
-From:   Murali Karicheri <m-karicheri2@ti.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [net-next PATCH] net: hsr: fix incorrect type usage for protocol variable
-Date:   Wed, 6 May 2020 11:41:07 -0400
-Message-ID: <20200506154107.575-1-m-karicheri2@ti.com>
+        Wed, 6 May 2020 11:41:46 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 046FbpnH174173;
+        Wed, 6 May 2020 11:41:45 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30uf8j4gae-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 May 2020 11:41:45 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 046Fderj182107;
+        Wed, 6 May 2020 11:41:45 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30uf8j4g9e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 May 2020 11:41:45 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 046Ff07a027815;
+        Wed, 6 May 2020 15:41:43 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma03ams.nl.ibm.com with ESMTP id 30s0g5sg8h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 May 2020 15:41:42 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 046FeUUu58130916
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 6 May 2020 15:40:30 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 509F3A404D;
+        Wed,  6 May 2020 15:41:40 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1E203A4053;
+        Wed,  6 May 2020 15:41:40 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  6 May 2020 15:41:40 +0000 (GMT)
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>
+Subject: [RFC 1/2] PCI/IOV: Introduce pci_iov_sysfs_link() function
+Date:   Wed,  6 May 2020 17:41:38 +0200
+Message-Id: <20200506154139.90609-2-schnelle@linux.ibm.com>
 X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20200506154139.90609-1-schnelle@linux.ibm.com>
+References: <20200506154139.90609-1-schnelle@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-06_08:2020-05-05,2020-05-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0 mlxscore=0
+ lowpriorityscore=0 adultscore=0 mlxlogscore=999 phishscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005060122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix following sparse checker warning:-
+currently pci_iov_add_virtfn() scans the SR-IOV bars, adds the VF to the
+bus and also creates the sysfs links between the newly added VF and its
+parent PF.
 
-net/hsr/hsr_slave.c:38:18: warning: incorrect type in assignment (different base types)
-net/hsr/hsr_slave.c:38:18:    expected unsigned short [unsigned] [usertype] protocol
-net/hsr/hsr_slave.c:38:18:    got restricted __be16 [usertype] h_proto
-net/hsr/hsr_slave.c:39:25: warning: restricted __be16 degrades to integer
-net/hsr/hsr_slave.c:39:57: warning: restricted __be16 degrades to integer
+With pdev->no_vf_scan fencing off the entire pci_iov_add_virtfn() call
+s390 as the sole pdev->no_vf_scan user thus ends up missing these sysfs
+links which are required for example by QEMU/libvirt.
+Instead of duplicating the code introduce a new pci_iov_sysfs_link()
+function for establishing sysfs links.
 
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
 ---
- net/hsr/hsr_slave.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/iov.c   | 36 ++++++++++++++++++++++++------------
+ include/linux/pci.h |  8 ++++++++
+ 2 files changed, 32 insertions(+), 12 deletions(-)
 
-diff --git a/net/hsr/hsr_slave.c b/net/hsr/hsr_slave.c
-index f4b9f7a3ce51..25b6ffba26cd 100644
---- a/net/hsr/hsr_slave.c
-+++ b/net/hsr/hsr_slave.c
-@@ -18,7 +18,7 @@ static rx_handler_result_t hsr_handle_frame(struct sk_buff **pskb)
+diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+index 4d1f392b05f9..d0ddf5f5484c 100644
+--- a/drivers/pci/iov.c
++++ b/drivers/pci/iov.c
+@@ -113,7 +113,6 @@ resource_size_t pci_iov_resource_size(struct pci_dev *dev, int resno)
+ static void pci_read_vf_config_common(struct pci_dev *virtfn)
  {
- 	struct sk_buff *skb = *pskb;
- 	struct hsr_port *port;
--	u16 protocol;
-+	__be16 protocol;
+ 	struct pci_dev *physfn = virtfn->physfn;
+-
+ 	/*
+ 	 * Some config registers are the same across all associated VFs.
+ 	 * Read them once from VF0 so we can skip reading them from the
+@@ -133,12 +132,34 @@ static void pci_read_vf_config_common(struct pci_dev *virtfn)
+ 			     &physfn->sriov->subsystem_device);
+ }
  
- 	if (!skb_mac_header_was_set(skb)) {
- 		WARN_ONCE(1, "%s: skb invalid", __func__);
++int pci_iov_sysfs_link(struct pci_dev *dev,
++		struct pci_dev *virtfn, int id)
++{
++	int rc;
++	char buf[VIRTFN_ID_LEN];
++
++	sprintf(buf, "virtfn%u", id);
++	rc = sysfs_create_link(&dev->dev.kobj, &virtfn->dev.kobj, buf);
++	if (rc)
++		goto failed;
++	rc = sysfs_create_link(&virtfn->dev.kobj, &dev->dev.kobj, "physfn");
++	if (rc)
++		goto failed1;
++
++	kobject_uevent(&virtfn->dev.kobj, KOBJ_CHANGE);
++
++	return 0;
++failed1:
++	sysfs_remove_link(&dev->dev.kobj, buf);
++failed:
++	return rc;
++}
++
+ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+ {
+ 	int i;
+ 	int rc = -ENOMEM;
+ 	u64 size;
+-	char buf[VIRTFN_ID_LEN];
+ 	struct pci_dev *virtfn;
+ 	struct resource *res;
+ 	struct pci_sriov *iov = dev->sriov;
+@@ -182,23 +203,14 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+ 	}
+ 
+ 	pci_device_add(virtfn, virtfn->bus);
+-
+-	sprintf(buf, "virtfn%u", id);
+-	rc = sysfs_create_link(&dev->dev.kobj, &virtfn->dev.kobj, buf);
++	rc = pci_iov_sysfs_link(dev, virtfn, id);
+ 	if (rc)
+ 		goto failed1;
+-	rc = sysfs_create_link(&virtfn->dev.kobj, &dev->dev.kobj, "physfn");
+-	if (rc)
+-		goto failed2;
+-
+-	kobject_uevent(&virtfn->dev.kobj, KOBJ_CHANGE);
+ 
+ 	pci_bus_add_device(virtfn);
+ 
+ 	return 0;
+ 
+-failed2:
+-	sysfs_remove_link(&dev->dev.kobj, buf);
+ failed1:
+ 	pci_stop_and_remove_bus_device(virtfn);
+ 	pci_dev_put(dev);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 83ce1cdf5676..e97d27ac350a 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2048,6 +2048,8 @@ int pci_iov_virtfn_devfn(struct pci_dev *dev, int id);
+ 
+ int pci_enable_sriov(struct pci_dev *dev, int nr_virtfn);
+ void pci_disable_sriov(struct pci_dev *dev);
++
++int pci_iov_sysfs_link(struct pci_dev *dev, struct pci_dev *virtfn, int id);
+ int pci_iov_add_virtfn(struct pci_dev *dev, int id);
+ void pci_iov_remove_virtfn(struct pci_dev *dev, int id);
+ int pci_num_vf(struct pci_dev *dev);
+@@ -2073,6 +2075,12 @@ static inline int pci_iov_virtfn_devfn(struct pci_dev *dev, int id)
+ }
+ static inline int pci_enable_sriov(struct pci_dev *dev, int nr_virtfn)
+ { return -ENODEV; }
++
++static inline int pci_iov_sysfs_link(struct pci_dev *dev,
++		struct pci_dev *virtfn, int id)
++{
++	return -ENODEV;
++}
+ static inline int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+ {
+ 	return -ENOSYS;
 -- 
 2.17.1
 
