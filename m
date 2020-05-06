@@ -2,80 +2,170 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB03C47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BC4C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E927820747
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:10:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UhypDkam"
+	by mail.kernel.org (Postfix) with ESMTP id 099AF20735
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:11:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730383AbgEFSKW (ORCPT
+        id S1730097AbgEFSLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 14:10:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56684 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728892AbgEFSKW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 14:10:22 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 426D4C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 11:10:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=gHpMvr4vTAmGCPgtEsIXaDhEQrCbi3uAV67KLEVjxes=; b=UhypDkamACtZ+4CG4QVVyWh796
-        P0iO5/rVAtlEEzkWLelMKQOAEWBw6d0TJXc7XmilP9xSjHlsfsud4856OToJHY4HQUujDj7bvsocA
-        dq7AHaDpI31TP0w6ewyFhM0MH6fYXM9iFkec4JhawvwZJhgeUpZ4z8SGEIk6A8AxfE4PlSpQqptkK
-        JBG45/lCxDlTV9aMVwCJLR032iok3mlewjy1fd2+JbCzC/WJpA9irWjvrAddwxur/frUQnlBo+ISt
-        IG9l1UBEZOQVpZ1PY09Icf8BaH/gGekkFzRulgXlQjrz5XKRiB/42MOi7eEf2LXu+TJZFQFi82z9m
-        xL+D7CzQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jWOUi-0008OX-Gg; Wed, 06 May 2020 18:10:08 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D8363301EFB;
-        Wed,  6 May 2020 20:10:05 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BF06229DE2DD0; Wed,  6 May 2020 20:10:05 +0200 (CEST)
-Date:   Wed, 6 May 2020 20:10:05 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
-        pbonzini@redhat.com, mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH v4 15/18] static_call: Handle tail-calls
-Message-ID: <20200506181005.GY3762@hirez.programming.kicks-ass.net>
-References: <20200501202849.647891881@infradead.org>
- <20200501202944.650069893@infradead.org>
+        Wed, 6 May 2020 14:11:12 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:64066 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728566AbgEFSLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 14:11:11 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49HPmF4SHWz9tydw;
+        Wed,  6 May 2020 20:11:09 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id MSwJMDiKYnKC; Wed,  6 May 2020 20:11:09 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49HPmF3L1qz9tydv;
+        Wed,  6 May 2020 20:11:09 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 832418B7C3;
+        Wed,  6 May 2020 20:11:09 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 22Wr2QyqA4Bj; Wed,  6 May 2020 20:11:09 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A0ED88B777;
+        Wed,  6 May 2020 20:11:08 +0200 (CEST)
+Subject: Re: [PATCH v4 1/2] powerpc/uaccess: Implement unsafe_put_user() using
+ 'asm goto'
+To:     Segher Boessenkool <segher@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, npiggin@gmail.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <23e680624680a9a5405f4b88740d2596d4b17c26.1587143308.git.christophe.leroy@c-s.fr>
+ <87sggecv81.fsf@mpe.ellerman.id.au>
+ <20200505153245.GN31009@gate.crashing.org>
+ <87pnbhdgkw.fsf@mpe.ellerman.id.au>
+ <20200506175849.GT31009@gate.crashing.org>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <bd336b0f-9cf7-e2ce-e0a8-1891599638d1@csgroup.eu>
+Date:   Wed, 6 May 2020 20:10:57 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501202944.650069893@infradead.org>
+In-Reply-To: <20200506175849.GT31009@gate.crashing.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 10:29:04PM +0200, Peter Zijlstra wrote:
->  	if (IS_ENABLED(CONFIG_HAVE_STATIC_CALL_INLINE) && site)
-> -		__static_call_transform(site, !func, func);
-> +		__static_call_transform(site, 2*tail + !func, func);
 
-I'm having trouble making that more readable though... that !func can be
-exanded like proposed in 14 without code-gen changes, but:
 
-	__static_call_transform(site, tail ? (func ? JMP : RET)
-					   : (func ? CALL : NOP), func);
+Le 06/05/2020 à 19:58, Segher Boessenkool a écrit :
+> On Wed, May 06, 2020 at 10:58:55AM +1000, Michael Ellerman wrote:
+>>>> The "m<>" here is breaking GCC 4.6.3, which we allegedly still support.
+>>>
+>>> [ You shouldn't use 4.6.3, there has been 4.6.4 since a while.  And 4.6
+>>>    is nine years old now.  Most projects do not support < 4.8 anymore, on
+>>>    any architecture.  ]
+>>
+>> Moving up to 4.6.4 wouldn't actually help with this though would it?
+> 
+> Nope.  But 4.6.4 is a bug-fix release, 91 bugs fixed since 4.6.3, so you
+> should switch to it if you can :-)
+> 
+>> Also I have 4.6.3 compilers already built, I don't really have time to
+>> rebuild them for 4.6.4.
+>>
+>> The kernel has a top-level minimum version, which I'm not in charge of, see:
+>>
+>> https://www.kernel.org/doc/html/latest/process/changes.html?highlight=gcc
+> 
+> Yes, I know.  And it is much preferred not to have stricter requirements
+> for Power, I know that too.  Something has to give though :-/
+> 
+>> There were discussions about making 4.8 the minimum, but I'm not sure
+>> where they got to.
+> 
+> Yeah, just petered out I think?
+> 
+> All significant distros come with a 4.8 as system compiler.
+> 
+>>>> Plain "m" works, how much does the "<>" affect code gen in practice?
+>>>>
+>>>> A quick diff here shows no difference from removing "<>".
+>>>
+>>> It will make it impossible to use update-form instructions here.  That
+>>> probably does not matter much at all, in this case.
+>>>
+>>> If you remove the "<>" constraints, also remove the "%Un" output modifier?
+>>
+>> So like this?
+>>
+>> diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
+>> index 62cc8d7640ec..ca847aed8e45 100644
+>> --- a/arch/powerpc/include/asm/uaccess.h
+>> +++ b/arch/powerpc/include/asm/uaccess.h
+>> @@ -207,10 +207,10 @@ do {								\
+>>   
+>>   #define __put_user_asm_goto(x, addr, label, op)			\
+>>   	asm volatile goto(					\
+>> -		"1:	" op "%U1%X1 %0,%1	# put_user\n"	\
+>> +		"1:	" op "%X1 %0,%1	# put_user\n"		\
+>>   		EX_TABLE(1b, %l2)				\
+>>   		:						\
+>> -		: "r" (x), "m<>" (*addr)				\
+>> +		: "r" (x), "m" (*addr)				\
+>>   		:						\
+>>   		: label)
+> 
+> Like that.  But you will have to do that to *all* places we use the "<>"
+> constraints, or wait for more stuff to fail?  And, there probably are
+> places we *do* want update form insns used (they do help in some loops,
+> for example)?
+> 
 
-generates a right old mess.
+AFAICT, git grep "m<>" provides no result.
+
+However many places have %Ux:
+
+arch/powerpc/boot/io.h:	__asm__ __volatile__("lbz%U1%X1 %0,%1; twi 
+0,%0,0; isync"
+arch/powerpc/boot/io.h:	__asm__ __volatile__("stb%U0%X0 %1,%0; sync"
+arch/powerpc/boot/io.h:	__asm__ __volatile__("lhz%U1%X1 %0,%1; twi 
+0,%0,0; isync"
+arch/powerpc/boot/io.h:	__asm__ __volatile__("sth%U0%X0 %1,%0; sync"
+arch/powerpc/boot/io.h:	__asm__ __volatile__("lwz%U1%X1 %0,%1; twi 
+0,%0,0; isync"
+arch/powerpc/boot/io.h:	__asm__ __volatile__("stw%U0%X0 %1,%0; sync"
+arch/powerpc/include/asm/atomic.h:	__asm__ __volatile__("lwz%U1%X1 
+%0,%1" : "=r"(t) : "m"(v->counter));
+arch/powerpc/include/asm/atomic.h:	__asm__ __volatile__("stw%U0%X0 
+%1,%0" : "=m"(v->counter) : "r"(i));
+arch/powerpc/include/asm/atomic.h:	__asm__ __volatile__("ld%U1%X1 %0,%1" 
+: "=r"(t) : "m"(v->counter));
+arch/powerpc/include/asm/atomic.h:	__asm__ __volatile__("std%U0%X0 
+%1,%0" : "=m"(v->counter) : "r"(i));
+arch/powerpc/include/asm/book3s/32/pgtable.h:		stw%U0%X0 %2,%0\n\
+arch/powerpc/include/asm/book3s/32/pgtable.h:		stw%U0%X0 %L2,%1"
+arch/powerpc/include/asm/io.h:	__asm__ __volatile__("sync;"#insn"%U1%X1 
+%0,%1;twi 0,%0,0;isync"\
+arch/powerpc/include/asm/io.h:	__asm__ __volatile__("sync;"#insn"%U0%X0 
+%1,%0"			\
+arch/powerpc/include/asm/nohash/pgtable.h:			stw%U0%X0 %2,%0\n\
+arch/powerpc/include/asm/nohash/pgtable.h:			stw%U0%X0 %L2,%1"
+arch/powerpc/kvm/powerpc.c:	asm ("lfs%U1%X1 0,%1; stfd%U0%X0 0,%0" : 
+"=m" (fprd) : "m" (fprs)
+arch/powerpc/kvm/powerpc.c:	asm ("lfd%U1%X1 0,%1; stfs%U0%X0 0,%0" : 
+"=m" (fprs) : "m" (fprd)
+
+
+Christophe
