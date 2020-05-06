@@ -2,128 +2,159 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E7AAC47259
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A53C4725E
 	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 028432075A
+	by mail.kernel.org (Postfix) with ESMTP id 8B68E20747
 	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:36:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588750570;
-	bh=wJB7AVgD0h7fCY7ouJXiaTz3ZITva1KOZ+RtXVFf+gI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BBDrm9gUziDEQ6ANtrmy1lEa1yNTexS4acWqQIHk5rGHitAZ9uLDaz9at6iiYL5hY
-	 hbSN1Bze7+QKNsmxCf5q+Fay+LXCa2Pogz3rBWFp5XenhZc6b5f/h77NfoBUcLlJvC
-	 ZYd4vO72gQ9i9xv3ejHTVWij9baRBBH54tMw/ruo=
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aF0DgDhl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728320AbgEFHfc (ORCPT
+        id S1728335AbgEFHfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 03:35:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37220 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728069AbgEFHfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 03:35:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 6 May 2020 03:35:39 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:51374 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728331AbgEFHfh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 03:35:37 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588750537; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=wrYpcoVK8IdDRtNBeHLzn6UFclCXY1INuT6aKv4B83U=;
+ b=aF0DgDhlT8jz8g2jt37DqxPnOsE5ublK9Lr1n3czeC5/edj+Nk9O+TMz/qfllmO1z2VhjMhG
+ VPQyaRwbIdqYvcidhGgd64vG+vsWHocAw/9zvpt2w7sLhQRBgtVmisweYQNWUMFcw+oMVZ8b
+ xC6aOb7o6z7CeqVp/KUVMOJq2qE=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb268ba.7fd5852e1880-smtp-out-n01;
+ Wed, 06 May 2020 07:35:22 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 23F7AC4478F; Wed,  6 May 2020 07:35:22 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B997420753;
-        Wed,  6 May 2020 07:35:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588750527;
-        bh=wJB7AVgD0h7fCY7ouJXiaTz3ZITva1KOZ+RtXVFf+gI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=R3i+qZy5IfS2N3VlFHdc2WEfSK/bY6El8PmmoTZ6sXyW50BL/Zu6sCFbupelNktoI
-         5Wftdz5V8zLoFsrrbwz1aVv5OdSjBVYpJp9r9E3bqg3V9zyq/Gy82ypV+g733qeEQU
-         cUA7bOsbPwJNorsKbfq7frvec8s1Ohp7BwhzxJ24=
-Date:   Wed, 6 May 2020 09:35:25 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Justin He <Justin.He@arm.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ldigby@redhat.com" <ldigby@redhat.com>,
-        "n.b@live.com" <n.b@live.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [GIT PULL] vhost: fixes
-Message-ID: <20200506073525.GC2336830@kroah.com>
-References: <20200504081540-mutt-send-email-mst@kernel.org>
- <AM6PR08MB40696EFF8BE389C134AC04F6F7A40@AM6PR08MB4069.eurprd08.prod.outlook.com>
- <20200506031918-mutt-send-email-mst@kernel.org>
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7EFC3C433F2;
+        Wed,  6 May 2020 07:35:21 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506031918-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 06 May 2020 13:05:21 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mike Leach <mike.leach@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH] coresight: dynamic-replicator: Fix handling of multiple
+ connections
+In-Reply-To: <ae0fe2050be01cc1403c7d53a0da8cb8@codeaurora.org>
+References: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org>
+ <cf5852e9-c3c1-3d31-46f0-0370719947ab@arm.com>
+ <CAJ9a7VgF3-Hdc7KSw9gVBeXSDHNguhqVhp60oK2XhCtr3DhDqg@mail.gmail.com>
+ <84918e7d-c933-3fa1-a61e-0615d4b3cf2c@arm.com>
+ <668ea1283a6dd6b34e701972f6f71034@codeaurora.org>
+ <5b0f5d77c4eec22d8048bb0ffa078345@codeaurora.org>
+ <759d47de-2101-39cf-2f1c-cfefebebd548@arm.com>
+ <7d343e96cf0701d91152fd14c2fdec42@codeaurora.org>
+ <CAJ9a7VgEiX19ukjwakNHBHDeZJ05f5Z7pAYG9iEnpXCuuDfBqg@mail.gmail.com>
+ <a4bba03d41a2b0145b3c6c19d48698eb@codeaurora.org>
+ <CAJ9a7Vj4eyv1n=RxuqfV=pdBN3SDG+ShYS5J4s40KJtqOnR7vw@mail.gmail.com>
+ <ae0fe2050be01cc1403c7d53a0da8cb8@codeaurora.org>
+Message-ID: <b8c1cc35846d425a1677c73fddf5874d@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 03:19:55AM -0400, Michael S. Tsirkin wrote:
-> On Wed, May 06, 2020 at 03:28:47AM +0000, Justin He wrote:
-> > Hi Michael
-> > 
-> > > -----Original Message-----
-> > > From: Michael S. Tsirkin <mst@redhat.com>
-> > > Sent: Monday, May 4, 2020 8:16 PM
-> > > To: Linus Torvalds <torvalds@linux-foundation.org>
-> > > Cc: kvm@vger.kernel.org; virtualization@lists.linux-foundation.org;
-> > > netdev@vger.kernel.org; linux-kernel@vger.kernel.org; Justin He
-> > > <Justin.He@arm.com>; ldigby@redhat.com; mst@redhat.com; n.b@live.com;
-> > > stefanha@redhat.com
-> > > Subject: [GIT PULL] vhost: fixes
-> > >
-> > > The following changes since commit
-> > > 6a8b55ed4056ea5559ebe4f6a4b247f627870d4c:
-> > >
-> > >   Linux 5.7-rc3 (2020-04-26 13:51:02 -0700)
-> > >
-> > > are available in the Git repository at:
-> > >
-> > >   https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
-> > >
-> > > for you to fetch changes up to
-> > > 0b841030625cde5f784dd62aec72d6a766faae70:
-> > >
-> > >   vhost: vsock: kick send_pkt worker once device is started (2020-05-02
-> > > 10:28:21 -0400)
-> > >
-> > > ----------------------------------------------------------------
-> > > virtio: fixes
-> > >
-> > > A couple of bug fixes.
-> > >
-> > > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > >
-> > > ----------------------------------------------------------------
-> > > Jia He (1):
-> > >       vhost: vsock: kick send_pkt worker once device is started
-> > 
-> > Should this fix also be CC-ed to stable? Sorry I forgot to cc it to stable.
-> > 
-> > --
-> > Cheers,
-> > Justin (Jia He)
+Hi Suzuki, Mike,
+
+On 2020-04-29 22:41, Sai Prakash Ranjan wrote:
+> Hi Mike,
 > 
+> On 2020-04-29 22:28, Mike Leach wrote:
+>> Hi,
+>> 
 > 
-> Go ahead, though recently just including Fixes seems to be enough.
+> [...]
+> 
+>>> >> > You need to find what is resetting the IDFILTERs to 0 for replicator1.
+>>> >> >
+>>> >>
+>>> >> That is right.
+>>> >>
+>>> >
+>>> > By default all replicators have the IDFILTER registers set to 0 out of
+>>> > hardware reset. This ensures that programmable replicators behave in
+>>> > the same way as non-programmable replicators out of reset.
+>>> >
+>>> > The  dynamic_replicator_reset() is of course a driver state reset -
+>>> > which filters out all trace on the output ports. The trace is then
+>>> > enabled when we set the trace path from source to sink.
+>>> >
+>>> 
+>>> Thanks for these explanations.
+>>> 
+>>> > It seems to me that you have 2 problems that need solving here:
+>>> >
+>>> > 1) Why does the reset_replicator() called from probe() _not_ work
+>>> > correctly on replicator 1? It seems to work later if you introduce a
+>>> > reset after more of the system has powered and booted. This is
+>>> > startiing to look a little like a PM / clocking issue.
+>>> 
+>>> reset_replicator() does work in probe correctly for both replicators,
+>>> below logs is collected before and after reset in probe. It is later
+>>> that it's set back to 0x0 and hence the suggestion to look at 
+>>> firmware
+>>> using this replicator1.
+>>> 
+>> OK - sorry I read your statement saying that replicator1 was 0 after
+>> the reset in probe(), rather than look at the logs.
+>> 
+>> From the logs it is working at the time probe() occurs, but by the
+>> time we come to enable the replicator later, something has reset these
+>> registers / hardware outside the control of the replicator driver.
+>> 
+> 
+> Yes, I will try to get some more information from the firmware side if
+> there is anything messing up.
+> 
 
-You are getting lucky if you only apply a "Fixes:" tag, as that is much
-lower down our list of things to look at.  We are forced to do that
-because of subsystems and maintainers that do not use the cc: stable
-tag, as has been documented for the patch 15+ years :(
+This turned out to be a clock/pm issue. To confirm, I just marked clk as 
+critical
+so that it won't be gated and I saw the replicator1(swao_replicator) 
+registers
+intact after probe. Also alternatively, I tried to comment out disabling 
+pclk
+to check if there is something wrong in amba pm and this keeps the 
+registers
+intact as well.
 
-So please be explicit if you know you want it merged to the stable
-trees, otherwise it is not a guarantee at all if you only use "fixes:".
+@@ -288,7 +295,7 @@ static int amba_probe(struct device *dev)
+                 pm_runtime_set_suspended(dev);
+                 pm_runtime_put_noidle(dev);
 
-thanks,
+-               amba_put_disable_pclk(pcdev);
++               //amba_put_disable_pclk(pcdev);
+                 dev_pm_domain_detach(dev, true);
+         } while (0);
 
-greg k-h
+Thanks,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
