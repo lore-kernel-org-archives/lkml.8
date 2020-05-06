@@ -2,124 +2,92 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4886C47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 058DEC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F02420708
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:46:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588779976;
-	bh=zIzO6N2aIHBBQfpze5U1m0raY9nb61DLTvoRlnF4tv0=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=JLN/JScx36wTXM/CGiO9abqP23DVwKAnlZVISvBAJ3vHc0PO1W9f7qypVapU+nSxl
-	 sNSSq853WlDRYh3YZ6cEG+D+AbkHTgRX3cFlY9XF8WB7fI80mqcX/BlFX+jSs2P1/O
-	 IjKy9alkByXPvdWojOn/CBVpFStxqc+w8mWe9UZQ=
+	by mail.kernel.org (Postfix) with ESMTP id E058B20708
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:47:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729686AbgEFPqP (ORCPT
+        id S1729341AbgEFPri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:46:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33870 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729148AbgEFPqP (ORCPT
+        Wed, 6 May 2020 11:47:38 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:47436 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728428AbgEFPrh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:46:15 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6058C061A10
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 08:46:13 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id c18so2194757ile.5
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 08:46:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QT2YN6oqKqg6700ugZaaaxIxPh7KJTUan3y27PnGKts=;
-        b=J/GhKerOoarXIYXI3Rx+JWkjRs7CCOiRPgY+0225MXwMQMVB0it64dmgW6lpUI5o0Q
-         yH6/E22JHPpFY7NS7CnEvTyK9tFqq1yV9g6N4rAbwlqaUOry02ETNNre4XdxElRL19F2
-         pNHdP5k4fWMSt7askz6QOiDDWXSO/VoIe0Fh0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QT2YN6oqKqg6700ugZaaaxIxPh7KJTUan3y27PnGKts=;
-        b=n/yDQ0AQTh3RQ7cY/++6QGES2AmsFvIqQnL7WoPfMtuYf8KXngYpGEGPFsbgibi/NJ
-         vfq3NFewl2S74oG/U8n2prOE4+fftqs3+eObq60Eh/mkkGrNDOevv6nb2hpj8iXMpUPR
-         Ddn3Wk/b8eOIjzQTzG7ta7+T9ztNBNaRzkTqWHavVcXymZiyuZMCdo3fMXGkwwSy4XXi
-         iHjUavifucuLSGOVhe0AVF0KJ0/Qq2ZyK6vkllPXjvET/Jr6ml9lm00f/jTDQcbfo6Cg
-         FdJcItn+un5RTiQmdGUZatazWzBCbjwxZ/GVQ2sg37z1p6w2KQxfcqYZNTmWA/CGiTZ0
-         +7YA==
-X-Gm-Message-State: AGi0Pua00LNUkdHOw8t+g6gYKxAfQ+EgILh2gQhPgD00K/9zvfD9HjDP
-        hvMbrbxmAhH9t0EcI/64ZP8G1w==
-X-Google-Smtp-Source: APiQypIkBH8t6x3OXeefHkp9yWiD5BTjf+mpTuKXbtUT2nXa+csoEMlMwpIi8Fir10PaPz6LZpH1Cg==
-X-Received: by 2002:a92:1949:: with SMTP id e9mr9877680ilm.106.1588779973174;
-        Wed, 06 May 2020 08:46:13 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id t1sm1208096iln.4.2020.05.06.08.46.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 May 2020 08:46:11 -0700 (PDT)
-Subject: Re: [PATCH] selftests/ftrace: mark irqsoff_tracer.tc test as
- unresolved if the test module does not exist
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Po-Hsu Lin <po-hsu.lin@canonical.com>
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shuah <shuah@kernel.org>, mingo@redhat.com,
-        Masami Hiramatsu <mhiramat@kernel.org>, joel@joelfernandes.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20200505101445.27063-1-po-hsu.lin@canonical.com>
- <20200505090912.7114f420@gandalf.local.home>
- <CAMy_GT8r8H21Ly3N5VFkiPi0qUCkPCvy8SU3Ns2vesaS8xvffQ@mail.gmail.com>
- <20200506114351.1b45e82f@gandalf.local.home>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <ac9c5f4a-3288-0f6a-dbb7-1b7dcd0c7a87@linuxfoundation.org>
-Date:   Wed, 6 May 2020 09:46:10 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 6 May 2020 11:47:37 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jWMGk-0006bR-Ln; Wed, 06 May 2020 09:47:34 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jWMGi-0006AO-Iz; Wed, 06 May 2020 09:47:34 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeremy Kerr <jk@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200505101256.3121270-1-hch@lst.de>
+        <CAHk-=wgrHhaM1XCB=E3Zp2Br8E5c_kmVUTd5y06xh5sev5nRMA@mail.gmail.com>
+        <877dxqgm7x.fsf@x220.int.ebiederm.org> <20200506063134.GA11391@lst.de>
+Date:   Wed, 06 May 2020 10:44:07 -0500
+In-Reply-To: <20200506063134.GA11391@lst.de> (Christoph Hellwig's message of
+        "Wed, 6 May 2020 08:31:34 +0200")
+Message-ID: <87lfm5cblk.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200506114351.1b45e82f@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-XM-SPF: eid=1jWMGi-0006AO-Iz;;;mid=<87lfm5cblk.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18n7ilHkYpqhNUvG5niq5VycMEtqxB6v30=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: remove set_fs calls from the coredump code v6
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/6/20 9:43 AM, Steven Rostedt wrote:
-> On Wed, 6 May 2020 09:46:21 +0800
-> Po-Hsu Lin <po-hsu.lin@canonical.com> wrote:
-> 
->> On Tue, May 5, 2020 at 9:09 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->>>
->>>
->>> You keep forgetting to Cc Shuah's other email.
->> Thanks!
->> I got the recipients list from the get_mainter.pl.
-> 
-> Hmm.
-> 
-> Seems like that is what get_maintainer.pl does:
-> 
-> Steven Rostedt <rostedt@goodmis.org> (maintainer:TRACING)
-> Ingo Molnar <mingo@redhat.com> (maintainer:TRACING)
-> Shuah Khan <shuah@kernel.org> (maintainer:KERNEL SELFTEST FRAMEWORK)
-> linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK)
-> linux-kernel@vger.kernel.org (open list)
-> 
-> And looking at the code, it appears it will only take the first email
-> address found in the file.
-> 
-> Shuah, if you prefer the linuxfoundation.org email, you need to update
-> MAINTAINERS file to have that one first.
-> 
+Christoph Hellwig <hch@lst.de> writes:
 
-When I updated the MAINTAINERS file, I was hoping both addresses will be
-in the output. It doesn't appear to be working the way I assumed it
-would. I will send in patch to update to switch them.
+> On Tue, May 05, 2020 at 03:28:50PM -0500, Eric W. Biederman wrote:
+>> We probably can.   After introducing a kernel_compat_siginfo that is
+>> the size that userspace actually would need.
+>> 
+>> It isn't something I want to mess with until this code gets merged, as I
+>> think the set_fs cleanups are more important.
+>> 
+>> 
+>> Christoph made some good points about how ugly the #ifdefs are in
+>> the generic copy_siginfo_to_user32 implementation.
+>
+> Take a look at the series you are replying to, the magic x86 ifdefs are
+> entirely gone from the common code :)
 
-thanks,
--- Shuah
+Interesting.
+
+That is a different way of achieving that, and I don't hate it.
+  
+I still want whatever you are doing to settle before I touch that code
+again.  Removing the set_fs is important and I have other fish to fry
+at the moment.
+
+Eric
+
+
+
