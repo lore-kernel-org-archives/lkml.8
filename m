@@ -2,163 +2,91 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F813C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 626AEC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF749206E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:21:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Joa9o9sU"
+	by mail.kernel.org (Postfix) with ESMTP id 3A036206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:22:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728938AbgEFIVj (ORCPT
+        id S1728754AbgEFIW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 04:21:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57658 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728922AbgEFIVi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 04:21:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588753296;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rsgh1dLxGFSdxuzsdLh/uv8qhBvMPuP+xGju+ifbTRc=;
-        b=Joa9o9sUGegw8TqNzDdth1AV4ddxpMtM/asN0uNtHFJS+h700gGz1fyzdqkYpk43KHop0V
-        XrYI9sXFQTY/bl9tk5LTIg+1j7qW+uOWXRuoODRpmT+hiOwEYaC6Y+7dg3B4jo2sGD/xEb
-        LHVIVrSV4bYiLb8oBixh4lhI+FJpHjI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-355-fsNNCIaXOyCRvQJwUVOw2A-1; Wed, 06 May 2020 04:21:34 -0400
-X-MC-Unique: fsNNCIaXOyCRvQJwUVOw2A-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 962E718FE866;
-        Wed,  6 May 2020 08:21:33 +0000 (UTC)
-Received: from carbon (unknown [10.40.208.15])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D4A7919C4F;
-        Wed,  6 May 2020 08:21:25 +0000 (UTC)
-Date:   Wed, 6 May 2020 10:21:23 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     mst@redhat.com, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, brouer@redhat.com,
-        "Jubran, Samih" <sameehj@amazon.com>
-Subject: Re: [PATCH net-next 1/2] virtio-net: don't reserve space for vnet
- header for XDP
-Message-ID: <20200506102123.739f1233@carbon>
-In-Reply-To: <20200506061633.16327-1-jasowang@redhat.com>
-References: <20200506061633.16327-1-jasowang@redhat.com>
+        Wed, 6 May 2020 04:22:58 -0400
+Received: from mga14.intel.com ([192.55.52.115]:19981 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728573AbgEFIW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 04:22:58 -0400
+IronPort-SDR: 3Ako+PfXdeFEIKKuckXNebe1S4pUGL0UU9lkAPZrryEyktDLWvkjXJE+WyWDTDalvQbQeVxpda
+ f5C2kzuZ16kw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 01:22:57 -0700
+IronPort-SDR: zzl/daXJ0Oc7LgXfevtb/pXR40XCMnV3NryHB9opA31ZugUP9uNZBg7KMhVaAbYy82E8S3ZdAx
+ 7m7bWACakU1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,358,1583222400"; 
+   d="scan'208";a="461682447"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
+  by fmsmga006.fm.intel.com with ESMTP; 06 May 2020 01:22:55 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Wei Yang <richard.weiyang@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
+Subject: Re: [PATCH 3/3] mm/swapfile.c: count won't be bigger than SWAP_MAP_MAX
+References: <20200501015259.32237-1-richard.weiyang@gmail.com>
+        <20200501015259.32237-3-richard.weiyang@gmail.com>
+        <20200501154853.bca4cfb7b2558bd43a4942f3@linux-foundation.org>
+        <20200502132911.u6y6hkh56ik4ojne@master>
+Date:   Wed, 06 May 2020 16:22:54 +0800
+In-Reply-To: <20200502132911.u6y6hkh56ik4ojne@master> (Wei Yang's message of
+        "Sat, 2 May 2020 13:29:11 +0000")
+Message-ID: <87k11pv5ep.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  6 May 2020 14:16:32 +0800
-Jason Wang <jasowang@redhat.com> wrote:
+Wei Yang <richard.weiyang@gmail.com> writes:
 
-> We tried to reserve space for vnet header before
-> xdp.data_hard_start. But this is useless since the packet could be
-> modified by XDP which may invalidate the information stored in the
-> header and
+> On Fri, May 01, 2020 at 03:48:53PM -0700, Andrew Morton wrote:
+>>On Fri,  1 May 2020 01:52:59 +0000 Wei Yang <richard.weiyang@gmail.com> wrote:
+>>
+>>> When the condition is true, there are two possibilities:
+>>
+>>I'm struggling with this one.
+>>
+>>>    1. count == SWAP_MAP_BAD
+>>>    2. count == (SWAP_MAP_MAX & COUNT_CONTINUED) == SWAP_MAP_SHMEM
+>>
+>>I'm not sure what 2. is trying to say.  For a start, (SWAP_MAP_MAX &
+>>COUNT_CONTINUED) is zero.  I guess it meant "|"?
+>
+> Oops, you are right. It should be (SWAP_MAP_MAX | COUNT_CONTINUED).
+>
+> Sorry for the confusion.
+>
+>>
+>>Also, the return value documentation says we return EINVAL for migration
+>>entries.  Where's that happening, or is the comment out of date?
+>>
+>
+> Not paid attention to this.
+>
+> Take look into the code, I don't find a relationship between the swap count
+> and migration. Seems we just make a migration entry but not duplicate it.  
+> If my understanding is correct.
 
-IMHO above statements are wrong. XDP cannot access memory before
-xdp.data_hard_start. Thus, it is safe to store a vnet headers before
-xdp.data_hard_start. (The sfc driver also use this "before" area).
+Per my understanding, one functionality of the error path is to catch
+the behavior that shouldn't happen at all.  For example, if
+__swap_duplicate() is called for the migration entry because of some
+race condition.
 
-> there's no way for XDP to know the existence of the vnet header currently.
-
-It is true that XDP is unaware of this area, which is the way it
-should be.  Currently the area will survive after calling BPF/XDP.
-After your change it will be overwritten in xdp_frame cases.
-
-
-> So let's just not reserve space for vnet header in this case.
-
-I think this is a wrong approach!
-
-We are working on supporting GRO multi-buffer for XDP.  The vnet header
-contains GRO information (see pahole below sign). It is currently not
-used in the XDP case, but we will be working towards using it.  There
-are a lot of unanswered questions on how this will be implemented.
-Thus, I cannot layout how we are going to leverage this info yet, but
-your patch are killing this info, which IHMO is going in the wrong
-direction.
-
-
-> Cc: Jesper Dangaard Brouer <brouer@redhat.com>
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
->  drivers/net/virtio_net.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> index 11f722460513..98dd75b665a5 100644
-> --- a/drivers/net/virtio_net.c
-> +++ b/drivers/net/virtio_net.c
-> @@ -684,8 +684,8 @@ static struct sk_buff *receive_small(struct net_device *dev,
->  			page = xdp_page;
->  		}
->  
-> -		xdp.data_hard_start = buf + VIRTNET_RX_PAD + vi->hdr_len;
-> -		xdp.data = xdp.data_hard_start + xdp_headroom;
-> +		xdp.data_hard_start = buf + VIRTNET_RX_PAD;
-> +		xdp.data = xdp.data_hard_start + xdp_headroom + vi->hdr_len;
->  		xdp.data_end = xdp.data + len;
->  		xdp.data_meta = xdp.data;
->  		xdp.rxq = &rq->xdp_rxq;
-> @@ -845,7 +845,7 @@ static struct sk_buff *receive_mergeable(struct net_device *dev,
->  		 * the descriptor on if we get an XDP_TX return code.
->  		 */
->  		data = page_address(xdp_page) + offset;
-> -		xdp.data_hard_start = data - VIRTIO_XDP_HEADROOM + vi->hdr_len;
-> +		xdp.data_hard_start = data - VIRTIO_XDP_HEADROOM;
->  		xdp.data = data + vi->hdr_len;
->  		xdp.data_end = xdp.data + (len - vi->hdr_len);
->  		xdp.data_meta = xdp.data;
-
-
-
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
-
-
-
-$ pahole -C virtio_net_hdr_mrg_rxbuf drivers/net/virtio_net.o
-struct virtio_net_hdr_mrg_rxbuf {
-	struct virtio_net_hdr hdr;                       /*     0    10 */
-	__virtio16                 num_buffers;          /*    10     2 */
-
-	/* size: 12, cachelines: 1, members: 2 */
-	/* last cacheline: 12 bytes */
-};
-
-
-$ pahole -C virtio_net_hdr drivers/net/virtio_net.o
-struct virtio_net_hdr {
-	__u8                       flags;                /*     0     1 */
-	__u8                       gso_type;             /*     1     1 */
-	__virtio16                 hdr_len;              /*     2     2 */
-	__virtio16                 gso_size;             /*     4     2 */
-	__virtio16                 csum_start;           /*     6     2 */
-	__virtio16                 csum_offset;          /*     8     2 */
-
-	/* size: 10, cachelines: 1, members: 6 */
-	/* last cacheline: 10 bytes */
-};
-
+Best Regards,
+Huang, Ying
