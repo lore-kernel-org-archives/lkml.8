@@ -2,139 +2,117 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A5FC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17217C38A2A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7FA8206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:01:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HKi1CUmO"
+	by mail.kernel.org (Postfix) with ESMTP id E1A42206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:01:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588770106;
+	bh=sQPtx1IaJT17mYcGEwphgUj7Th54XCa2l0rTr5A6suc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=m9xgz/Ch+1ZNTqqcziW1/SeJ0Mi36jJnroUcSYSisJiZP/XIFhMbM6YWKg1Gke0SU
+	 37r2nwTbL4AAydBvN0sKnkMnD6Fl3x4QmSL7HCyNZ/rlqXIFhu7N3EUlb0Hf3KVo1K
+	 RFTxUrfNjU7EW10HVtS1tXQhZ5njLysQh37CZ628=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728715AbgEFNBC (ORCPT
+        id S1728727AbgEFNBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 09:01:02 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:26957 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727964AbgEFNBC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 09:01:02 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588770061; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=EEVpYpqQ1QRwHdkwdt5mqy1ieqOZLEZitiAbr0eLLME=; b=HKi1CUmO241oStvHDtRmFf/ztsXSQocP8rYnDeiJOXuj2MGUddq9w70BQjmGVj+VgI8RxhuG
- h2iV840w0dXMD8hIRyLsaTA5f35IADmktx1i+u4aSEaBDIGNYfhU/L0cl/+G5KduycAbvxx9
- LpoimeqKaUwouy8c3eycS3CPSks=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb2b4e8.7fc83cd1fdf8-smtp-out-n03;
- Wed, 06 May 2020 13:00:24 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0BFC2C00456; Wed,  6 May 2020 13:00:20 +0000 (UTC)
-Received: from [192.168.43.57] (unknown [27.59.131.204])
+        Wed, 6 May 2020 09:01:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728213AbgEFNBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 09:01:45 -0400
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B9225C433BA;
-        Wed,  6 May 2020 13:00:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B9225C433BA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-Subject: Re: [PATCH v5 1/5] mmc: core: Extend mmc_of_parse() to parse CQE
- bindings
-To:     Chun-Hung Wu <chun-hung.wu@mediatek.com>, mirq-linux@rere.qmqm.pl,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Pan Bian <bianpan2016@163.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Kuohong Wang <kuohong.wang@mediatek.com>,
-        Yong Mao <yong.mao@mediatek.com>
-Cc:     kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, wsd_upstream@mediatek.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org
-References: <1588031768-23677-1-git-send-email-chun-hung.wu@mediatek.com>
- <1588031768-23677-2-git-send-email-chun-hung.wu@mediatek.com>
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Message-ID: <9bc2454f-0b42-e256-7927-2564b56f369f@codeaurora.org>
-Date:   Wed, 6 May 2020 18:30:04 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        by mail.kernel.org (Postfix) with ESMTPSA id DD93D2073A
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 13:01:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588770105;
+        bh=sQPtx1IaJT17mYcGEwphgUj7Th54XCa2l0rTr5A6suc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=d4dRvoo6myiw+4TGn6t+D3ZiwSj4ULil+cbsBGYjE7NzgGwmn3LSudeZGa3rVUVNo
+         Q/7BO5jc29DtgPLDymu8hPMrA9iuC6YfpUjlC4oB/2X/ujB6bqKCPg+nIxR2+eeW0X
+         8wpt+LXVS+Vn8MlY294ANKu5qUATl6utH+qt9y8w=
+Received: by mail-ej1-f50.google.com with SMTP id x1so1237037ejd.8
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 06:01:44 -0700 (PDT)
+X-Gm-Message-State: AGi0Pua++8168jYcVfPfmjPAuCCJgTs4IZH1gzxsBGByXq8gMcwOdjM1
+        DWj03oH1PidjQUxypIh/Yd71jvWUamX3qiVqfg==
+X-Google-Smtp-Source: APiQypIHqZadC3nzIvFXNOEse7bTp7FzDlJqNyxZvrk+cHMRB9Tyvtfrxw7SwuI3j/qcSFHHZBwidZxx5VwL3Ns5Qwg=
+X-Received: by 2002:a17:906:2503:: with SMTP id i3mr6776180ejb.293.1588770103283;
+ Wed, 06 May 2020 06:01:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1588031768-23677-2-git-send-email-chun-hung.wu@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200506123356.9147-1-bernard@vivo.com>
+In-Reply-To: <20200506123356.9147-1-bernard@vivo.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Wed, 6 May 2020 21:01:32 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9Cuc40zaDF83m7sJiok35x3oqDCr4JQRJyvLCBZ4U_FA@mail.gmail.com>
+Message-ID: <CAAOTY_9Cuc40zaDF83m7sJiok35x3oqDCr4JQRJyvLCBZ4U_FA@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/mediatek: cleanup coding style in mediatek a bit
+To:     Bernard Zhao <bernard@vivo.com>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        opensource.kernel@vivo.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi, Bernard:
 
-On 4/28/2020 5:26 AM, Chun-Hung Wu wrote:
-> Parse CQE bindings "supports-cqe" and "disable-cqe-dcmd"
-> in mmc_of_parse().
+Bernard Zhao <bernard@vivo.com> =E6=96=BC 2020=E5=B9=B45=E6=9C=886=E6=97=A5=
+ =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=888:34=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+> This code change is to make code bit more readable.
+>
+
+Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+
+> Signed-off-by: Bernard Zhao <bernard@vivo.com>
 > ---
->   drivers/mmc/core/host.c | 5 +++++
->   1 file changed, 5 insertions(+)
+>  drivers/gpu/drm/mediatek/mtk_hdmi.c | 12 ++++--------
+>  1 file changed, 4 insertions(+), 8 deletions(-)
 >
-> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-> index c876872..47521c6 100644
-> --- a/drivers/mmc/core/host.c
-> +++ b/drivers/mmc/core/host.c
-> @@ -302,6 +302,11 @@ int mmc_of_parse(struct mmc_host *host)
->   		host->caps2 |= MMC_CAP2_NO_SD;
->   	if (device_property_read_bool(dev, "no-mmc"))
->   		host->caps2 |= MMC_CAP2_NO_MMC;
-> +	if (device_property_read_bool(dev, "supports-cqe"))
-> +		host->caps2 |= MMC_CAP2_CQE;
-
-This change is breaking emmc driver on qcom platforms where this dt 
-property is defined.
-
-[    1.543453]  cqhci_deactivate+0xc/0x38
-[    1.545627]  sdhci_msm_reset+0x40/0x58
-[    1.549447]  sdhci_do_reset+0x48/0x7c
-[    1.553180]  __sdhci_read_caps+0x7c/0x214
-[    1.556913]  sdhci_setup_host+0x58/0xce8
-[    1.560905]  sdhci_msm_probe+0x588/0x8a4
-[    1.564900]  platform_drv_probe+0x4c/0xb0
-
-So, we cant have this flag defined before sdhci_setup_host().
-
-I will have to clear this cap and re-enable it in our initialization.
-
-> +	if (!device_property_read_bool(dev, "disable-cqe-dcmd")) {
-> +		host->caps2 |= MMC_CAP2_CQE_DCMD;
-> +	}
->   
->   	/* Must be after "non-removable" check */
->   	if (device_property_read_u32(dev, "fixed-emmc-driver-type", &drv_type) == 0) {
+> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediat=
+ek/mtk_hdmi.c
+> index ff43a3d80410..43e9876fd50c 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+> @@ -311,14 +311,10 @@ static void mtk_hdmi_hw_send_info_frame(struct mtk_=
+hdmi *hdmi, u8 *buffer,
+>         u8 checksum;
+>         int ctrl_frame_en =3D 0;
+>
+> -       frame_type =3D *buffer;
+> -       buffer +=3D 1;
+> -       frame_ver =3D *buffer;
+> -       buffer +=3D 1;
+> -       frame_len =3D *buffer;
+> -       buffer +=3D 1;
+> -       checksum =3D *buffer;
+> -       buffer +=3D 1;
+> +       frame_type =3D *buffer++;
+> +       frame_ver =3D *buffer++;
+> +       frame_len =3D *buffer++;
+> +       checksum =3D *buffer++;
+>         frame_data =3D buffer;
+>
+>         dev_dbg(hdmi->dev,
+> --
+> 2.26.2
+>
