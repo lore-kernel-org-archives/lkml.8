@@ -2,191 +2,178 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACBAC47259
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2CAC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47F04214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:48:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NL61s/IE"
+	by mail.kernel.org (Postfix) with ESMTP id 00A3C208D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:50:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729220AbgEFOsT (ORCPT
+        id S1729254AbgEFOu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 10:48:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53008 "EHLO
+        Wed, 6 May 2020 10:50:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729108AbgEFOsT (ORCPT
+        with ESMTP id S1726114AbgEFOu4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 10:48:19 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33C94C061A10
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 07:48:18 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id 19so1946473oiy.8
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 07:48:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wDj5+tuZkrR7oNrhFt9atUhp/2FopkJwEnSLs3/dRt8=;
-        b=NL61s/IE8eFnPePLN3nuUAK4eaP6MM3y2w4CzNYIdhGhoUmj5C8bunqphDdpHaouVa
-         lqnpq/4XtxVVO+mzUickCYq9BEd1L+5zd2wDuxtw3mLZecF7jxGruEn1VXTQSJvH/esc
-         ozZqVMVWm66x7U9TCr+2oJ3Rcat7yJFgS3GMQeuXl5vtO0nmJGTtqj+JYiZASXBG0M4v
-         qqWtNiDDyVCpTFmWcHt59IikbanIVLl7mYsG0X021wQ39a9kfQUvqr40lbY7IIO+0NOP
-         LwawsK2TTi6/SuDQcBF/bo4WGt9GfnkpF7msRIKBU0IGMKTOCaTqZmnB8bdsTRLYE7rf
-         pWIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wDj5+tuZkrR7oNrhFt9atUhp/2FopkJwEnSLs3/dRt8=;
-        b=hzLOjdlHNo627XXwTGRjRMIuOsfAnu5QK1nckH/px56L0gWG+nKRNj4ZbrzwZoFe8M
-         fgSYd91NOUTOvpCJhe3mqhfeI9pWvDwvRN7bPgW4Ha1l9Q2R6NazDpNY4NbyiaeqgNvx
-         nlM7iYh8zdgBS5baENQeHiC0C76XfwJugaloRkvKumJ1svrgiIFFLJhYQR443PUT8dJu
-         gRe2q1f7AQb8OU4CLN6cUqy2LPwSbYCWVJwRbbHcX+Gt1eSg3jqsgMbXlsdw49OYg6i1
-         Ew6Xd1KU5ar75PNAYODcYNP1I+qwAbojmmz8l5ckPJ6o4NtmeMuTM0K38h1dFyeNU5wS
-         gggQ==
-X-Gm-Message-State: AGi0PubVWlRsTQEEIxym84Sxlv4RWERO0YF5tYLo5JnnpINFKDl44Az6
-        n3NWylc7L8rhFgs7MwElWaIpzoI13YXDvt0uWKA7SA==
-X-Google-Smtp-Source: APiQypLNUtStA5nMDnbX6HOFM0LGQaCEcidSi5vAAWVsLC9SK3lN1UJfYxfdDKcoZRx18eT3Y5ExcVKLSk6kP1N3Arw=
-X-Received: by 2002:aca:1812:: with SMTP id h18mr2665993oih.133.1588776497531;
- Wed, 06 May 2020 07:48:17 -0700 (PDT)
+        Wed, 6 May 2020 10:50:56 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AA2CC061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 07:50:56 -0700 (PDT)
+Received: from localhost ([127.0.0.1] helo=vostro)
+        by Galois.linutronix.de with esmtps (TLS1.2:RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1jWLNr-000527-91; Wed, 06 May 2020 16:50:51 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] printk: use the lockless ringbuffer
+References: <20200501094010.17694-1-john.ogness@linutronix.de>
+        <20200501094010.17694-4-john.ogness@linutronix.de>
+Date:   Wed, 06 May 2020 16:50:49 +0200
+In-Reply-To: <20200501094010.17694-4-john.ogness@linutronix.de> (John Ogness's
+        message of "Fri, 1 May 2020 11:46:10 +0206")
+Message-ID: <87ftcd86d2.fsf@vostro.fn.ogness.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20200505100129.104673-1-robert.foss@linaro.org>
- <20200505100129.104673-4-robert.foss@linaro.org> <20200505101729.GF18755@pengutronix.de>
-In-Reply-To: <20200505101729.GF18755@pengutronix.de>
-From:   Robert Foss <robert.foss@linaro.org>
-Date:   Wed, 6 May 2020 16:48:06 +0200
-Message-ID: <CAG3jFyvvzk8n1+fkfS5h6TPpqMQ3sGXuJ1_yot1MKFRTcDkhnQ@mail.gmail.com>
-Subject: Re: [PATCH v7 3/3] media: ov8856: Implement sensor module revision identification
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Maxime Ripard <maxime@cerno.tech>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Tomasz Figa <tfiga@chromium.org>, Ben Kao <ben.kao@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Marco,
+Hi,
 
-On Tue, 5 May 2020 at 12:17, Marco Felsch <m.felsch@pengutronix.de> wrote:
->
-> Hi Robert,
->
-> On 20-05-05 12:01, Robert Foss wrote:
-> > Query the sensor for its module revision, and compare it
-> > to known revisions.
-> >
-> > Currently 2A and 1B revision indentification is supported.
-> >
-> > Signed-off-by: Robert Foss <robert.foss@linaro.org>
-> > ---
-> >
-> > - Changes since v3:
-> >   * Actually add module revision 2A
-> >
-> > - Changes since v2:
-> >   * Add module revision 2A
-> >   * Sakari: Remove ov8856_check_revision()
-> >   * Sakari: Stop EEPROM streaming mode
-> >
-> >  drivers/media/i2c/ov8856.c | 53 ++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 53 insertions(+)
-> >
-> > diff --git a/drivers/media/i2c/ov8856.c b/drivers/media/i2c/ov8856.c
-> > index e6418a79801e..3c82c3e588d7 100644
-> > --- a/drivers/media/i2c/ov8856.c
-> > +++ b/drivers/media/i2c/ov8856.c
-> > @@ -32,6 +32,19 @@
-> >  #define OV8856_MODE_STANDBY          0x00
-> >  #define OV8856_MODE_STREAMING                0x01
-> >
-> > +/* module revisions */
-> > +#define OV8856_2A_MODULE             0x01
-> > +#define OV8856_1B_MODULE             0x02
-> > +
-> > +/* the OTP read-out buffer is at 0x7000 and 0xf is the offset
-> > + * of the byte in the OTP that means the module revision
-> > + */
-> > +#define OV8856_MODULE_REVISION               0x700f
-> > +#define OV8856_OTP_MODE_CTRL         0x3d84
-> > +#define OV8856_OTP_LOAD_CTRL         0x3d81
-> > +#define OV8856_OTP_MODE_AUTO         0x00
-> > +#define OV8856_OTP_LOAD_CTRL_ENABLE  BIT(0)
-> > +
-> >  /* vertical-timings from sensor */
-> >  #define OV8856_REG_VTS                       0x380e
-> >  #define OV8856_VTS_MAX                       0x7fff
-> > @@ -1152,6 +1165,46 @@ static int ov8856_identify_module(struct ov8856 *ov8856)
-> >               return -ENXIO;
-> >       }
-> >
-> > +     ret = ov8856_write_reg(ov8856, OV8856_REG_MODE_SELECT,
-> > +                            OV8856_REG_VALUE_08BIT, OV8856_MODE_STREAMING);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret = ov8856_write_reg(ov8856, OV8856_OTP_MODE_CTRL,
-> > +                            OV8856_REG_VALUE_08BIT, OV8856_OTP_MODE_AUTO);
-> > +     if (ret) {
-> > +             dev_err(&client->dev, "failed to set otp mode");
-> > +             return ret;
-> > +     }
-> > +
-> > +     ret = ov8856_write_reg(ov8856, OV8856_OTP_LOAD_CTRL,
-> > +                            OV8856_REG_VALUE_08BIT,
-> > +                            OV8856_OTP_LOAD_CTRL_ENABLE);
-> > +     if (ret) {
-> > +             dev_err(&client->dev, "failed to enable load control");
-> > +             return ret;
-> > +     }
-> > +
-> > +     ret = ov8856_read_reg(ov8856, OV8856_MODULE_REVISION,
-> > +                           OV8856_REG_VALUE_08BIT, &val);
-> > +     if (ret) {
-> > +             dev_err(&client->dev, "failed to read module revision");
-> > +             return ret;
-> > +     }
-> > +
-> > +     dev_info(&client->dev, "OV8856 revision %x (%s) at address 0x%02x\n",
-> > +             val,
-> > +             val == OV8856_2A_MODULE ? "2A" :
-> > +             val == OV8856_1B_MODULE ? "1B" : "unknown revision",
-> > +             client->addr);
->
-> Pls check the alignment here too.
+I discovered a bug while preparing my next series, which also made me
+realize I had never tested the extended mode feature of netconsole. :-/
+The only other user of extended output is /dev/kmsg, and it is doing it
+correctly.
 
-Ack.
+Explanation and patch below.
 
->
-> Regards,
->   Marco
->
-> > +
-> > +     ret = ov8856_write_reg(ov8856, OV8856_REG_MODE_SELECT,
-> > +                            OV8856_REG_VALUE_08BIT, OV8856_MODE_STANDBY);
-> > +     if (ret) {
-> > +             dev_err(&client->dev, "failed to exit streaming mode");
-> > +             return ret;
-> > +     }
-> > +
-> >       return 0;
-> >  }
-> >
-> > --
-> > 2.25.1
+On 2020-05-01, John Ogness <john.ogness@linutronix.de> wrote:
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index 9a9b6156270b..0d74ca748b82 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -2395,12 +2443,17 @@ void console_unlock(void)
+>  	static char text[LOG_LINE_MAX + PREFIX_MAX];
+>  	unsigned long flags;
+>  	bool do_cond_resched, retry;
+> +	struct printk_info info;
+> +	struct printk_record r;
+>  
+>  	if (console_suspended) {
+>  		up_console_sem();
+>  		return;
+>  	}
+>  
+> +	prb_rec_init_rd(&r, &info, text, sizeof(text), ext_text,
+> +			sizeof(ext_text));
+> +
+
+Using @ext_text for the dictionary buffer. But extended mode will need
+that buffer for generating extended output!
+
+>  	/*
+>  	 * Console drivers are called with interrupts disabled, so
+>  	 * @console_may_schedule should be cleared before; however, we may
+> @@ -2470,19 +2514,20 @@ void console_unlock(void)
+>  			exclusive_console = NULL;
+>  		}
+>  
+> -		len += msg_print_text(msg,
+> +		len = record_print_text(&r,
+>  				console_msg_format & MSG_FORMAT_SYSLOG,
+> -				printk_time, text + len, sizeof(text) - len);
+> +				printk_time);
+>  		if (nr_ext_console_drivers) {
+> -			ext_len = msg_print_ext_header(ext_text,
+> +			ext_len = info_print_ext_header(ext_text,
+>  						sizeof(ext_text),
+> -						msg, console_seq);
+> +						r.info);
+>  			ext_len += msg_print_ext_body(ext_text + ext_len,
+>  						sizeof(ext_text) - ext_len,
+> -						log_dict(msg), msg->dict_len,
+> -						log_text(msg), msg->text_len);
+> +						&r.dict_buf[0],
+> +						r.info->dict_len,
+> +						&r.text_buf[0],
+> +						r.info->text_len);
+
+2 problems here:
+
+First, record_print_text() works by modifying the record text buffer
+"in-place". So when msg_print_ext_body() creates the extended output, it
+will be using a modified text buffer (i.e. one with prefix added).
+
+Second, info_print_ext_header() and msg_print_ext_body() are clobbering
+the dictionary buffer because @ext_text _is_ @r.dict_buf.
+
+This can be resolved by giving the record a separate dictionary buffer
+and calling record_print_text() after preparing any extended console
+text. Patch below...
+
+John Ogness
+
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 0d74ca748b82..cc79ad67e6e3 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -2441,6 +2441,7 @@ void console_unlock(void)
+ {
+ 	static char ext_text[CONSOLE_EXT_LOG_MAX];
+ 	static char text[LOG_LINE_MAX + PREFIX_MAX];
++	static char dict[LOG_LINE_MAX];
+ 	unsigned long flags;
+ 	bool do_cond_resched, retry;
+ 	struct printk_info info;
+@@ -2451,8 +2452,7 @@ void console_unlock(void)
+ 		return;
+ 	}
+ 
+-	prb_rec_init_rd(&r, &info, text, sizeof(text), ext_text,
+-			sizeof(ext_text));
++	prb_rec_init_rd(&r, &info, text, sizeof(text), dict, sizeof(dict));
+ 
+ 	/*
+ 	 * Console drivers are called with interrupts disabled, so
+@@ -2514,9 +2514,10 @@ void console_unlock(void)
+ 			exclusive_console = NULL;
+ 		}
+ 
+-		len = record_print_text(&r,
+-				console_msg_format & MSG_FORMAT_SYSLOG,
+-				printk_time);
++		/*
++		 * Handle extended console text first because later
++		 * record_print_text() will modify the record buffer in-place.
++		 */
+ 		if (nr_ext_console_drivers) {
+ 			ext_len = info_print_ext_header(ext_text,
+ 						sizeof(ext_text),
+@@ -2528,6 +2529,9 @@ void console_unlock(void)
+ 						&r.text_buf[0],
+ 						r.info->text_len);
+ 		}
++		len = record_print_text(&r,
++				console_msg_format & MSG_FORMAT_SYSLOG,
++				printk_time);
+ 		console_seq++;
+ 		raw_spin_unlock(&logbuf_lock);
+ 
+-- 
+2.20.1
