@@ -2,149 +2,125 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8AC7C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4CCC47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B65EE20752
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EA7120752
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:50:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nL3uvcfq"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="L3V4zgLg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728726AbgEFNtW (ORCPT
+        id S1728797AbgEFNuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 09:49:22 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:60760 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbgEFNtU (ORCPT
+        Wed, 6 May 2020 09:50:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44054 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728738AbgEFNuv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 09:49:20 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046DhHOf041920;
-        Wed, 6 May 2020 13:48:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=t4sRhb0X/251G1cVV1RmskSKn3e8sjNJMHaIFlbBwg8=;
- b=nL3uvcfqB9tTREIiS+hkYXksefzL22cn8i2tq4oVKoVTknO5SKGjESkw71rAhzFK4DI+
- mhZRaqofj+R1cY1NEvYlRf+DlXA5DJcGDswprmHVeJ6mF/2nLnGe9YB/IGpDJo1THIaH
- vAxMaB/ezdedMSxMDu6MXjSPA4yP4ui+PzMGvjXr8z1WgBVKvGo+N6uJyG/27wVaVIAU
- gpOZ311QYDWYEfALp+MF0xmwAUBUNSm3cXT0HWVm1qY2N/bzXa4eTsvxB7NYW3e8O+fe
- zubFqttMLaCKe9qX5OBWxcW+I4GL6leQTEPZXxZaNcxcktqHS8R/1HzCZQueUO39OdrP gA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 30usgq1h85-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 May 2020 13:48:23 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046DlnCM039789;
-        Wed, 6 May 2020 13:48:22 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 30t1r7v63h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 May 2020 13:48:22 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 046DmGjZ006383;
-        Wed, 6 May 2020 13:48:16 GMT
-Received: from linux-1.home (/10.175.10.30)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 May 2020 06:48:16 -0700
-Subject: Re: [patch V4 part 1 08/36] x86/doublefault: Remove memmove() call
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-References: <20200505131602.633487962@linutronix.de>
- <20200505134058.863038566@linutronix.de>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Message-ID: <426fb037-9573-f616-6015-b732f66493c0@oracle.com>
-Date:   Wed, 6 May 2020 15:47:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 6 May 2020 09:50:51 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E9A1C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 06:50:51 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id x4so2695144wmj.1
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 06:50:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=I/qG/Ox9dCbdx5Qwe5iyaFRLkkPugTYpk411h+gVkoI=;
+        b=L3V4zgLgR3PEs4EfZbCdU/LZ6RsghbYvTAgfaDCCQS5tt5+XvqAR3zlTPxnSzV7/tm
+         IjcJAwPeyneoAtS3npxUG/3wsZyKdf7/Y2z2V+UEf0MIHgrB11T/6mC89nq6cC+L8fXr
+         lNoFeKxvIytrvvbCIW+ZBLrd2ldiwYmgnhM9l6TzsiV3KdzfdflEoLzFzzOp0PSGewfe
+         1zDcytVUzXM4pdZbPRPfXQareLPB2SygRzfgA/hajBRCiWFj3bkwHZtLITbBoRSBsBMj
+         NgJ52EtnXNnQMGSVfKsHb0bKp6DyODz42UmSUN8cryQZydwPlqOFVu1E71HXpuNVHnrM
+         KYuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=I/qG/Ox9dCbdx5Qwe5iyaFRLkkPugTYpk411h+gVkoI=;
+        b=eQQxJ1jNCHkPJK460W7zp4tk8Ay17+bhAVhAPaVUmVH9429DNPgtrbUqYgRe3btBdE
+         akm/E0ZAAype0ZHbEJ8WxcvOWQ4P1W6pWvDt3Va0OixNv3XqNlCUQNiQS9aNEk/UIcrQ
+         g6lTrEoItAsb5Yyfm1cmw0NKSScZ1WXkDT3DwVdcNa2zLACEQ+aaZZm98hsWn5TGmhkh
+         qU5t4gsPR5KbLp+irAH/6ZslmDL6PolTsMQ9cLCUGiW0Oc8SvjC+XG4RdiWwG0ysuEWP
+         wUiGEG4HiqhDeYBPrgdXF6TjAaedtYf5nZKvJ5+8VQ6IGDEfd0shUvxdIZSDZMNFevbu
+         ezOQ==
+X-Gm-Message-State: AGi0PubKD8L9QdU6v3wfeJQ/Uwgn6pDq6dxADApxNZtfatL2G7ha1cUN
+        yVzmvpSGB9p/vRDCsjsA/jLGEQ==
+X-Google-Smtp-Source: APiQypJYkQsg7V5Lp/ORrO0FfGs/HMwOchKbXYQOh9lEmsS29K376blp3Us4qv4u4RPPv/hkLROiZw==
+X-Received: by 2002:a1c:bd54:: with SMTP id n81mr4385872wmf.141.1588773049725;
+        Wed, 06 May 2020 06:50:49 -0700 (PDT)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id n6sm2939428wrs.81.2020.05.06.06.50.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 06:50:48 -0700 (PDT)
+References: <20200122092526.2436421-1-jbrunet@baylibre.com> <6f661498f58c6a519095d0657413f4b89d3ef21e.camel@pengutronix.de> <1jimi2tqsn.fsf@starbuckisacylon.baylibre.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Kevin Hilman <khilman@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: reset: meson: add gxl internal dac reset
+In-reply-to: <1jimi2tqsn.fsf@starbuckisacylon.baylibre.com>
+Date:   Wed, 06 May 2020 15:50:47 +0200
+Message-ID: <1jy2q5f9zc.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20200505134058.863038566@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9612 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=0
- spamscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005060110
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9612 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 clxscore=1015
- mlxlogscore=999 spamscore=0 adultscore=0 bulkscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005060109
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 5/5/20 3:16 PM, Thomas Gleixner wrote:
-> Use of memmove() in #DF is problematic considered tracing and other
-> instrumentation.
-> 
-> Remove the memmove() call and simply write out what needs doing; this
-> even clarifies the code, win-win! The code copies from the espfix64
-> stack to the normal task stack, there is no possible way for that to
-> overlap.
-> 
-> Survives selftests/x86, specifically sigreturn_64.
-> 
-> Suggested-by: Borislav Petkov <bp@alien8.de>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Acked-by: Andy Lutomirski <luto@kernel.org>
-> Link: https://lkml.kernel.org/r/20200220121727.GB507@zn.tnic
-> ---
->   arch/x86/kernel/traps.c |    7 ++++++-
->   1 file changed, 6 insertions(+), 1 deletion(-)
+On Tue 14 Apr 2020 at 10:28, Jerome Brunet <jbrunet@baylibre.com> wrote:
 
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+> On Thu 23 Jan 2020 at 11:13, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+>
+>> On Wed, 2020-01-22 at 10:25 +0100, Jerome Brunet wrote:
+>>> Add the reset line of the internal DAC found on the amlogic gxl SoC family
+>>> 
+>>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>>> ---
+>>>  include/dt-bindings/reset/amlogic,meson-gxbb-reset.h | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>> 
+>>> diff --git a/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h b/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
+>>> index ea5058618863..883bfd3bcbad 100644
+>>> --- a/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
+>>> +++ b/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
+>>> @@ -69,7 +69,7 @@
+>>>  #define RESET_SYS_CPU_L2		58
+>>>  #define RESET_SYS_CPU_P			59
+>>>  #define RESET_SYS_CPU_MBIST		60
+>>> -/*					61	*/
+>>> +#define RESET_ACODEC			61
+>>>  /*					62	*/
+>>>  /*					63	*/
+>>>  /*	RESET2					*/
+>>
+>> Thank you, applied to reset/next.
+>
+> Hi Philip,
+>
+> It seems reset/next has not made it to v5.7-rc1
+>
+> Would it be possible to provide an immutable branch with this change, or
+> maybe let Kevin apply this change through the amlogic tree ?
+>
+> It would allow us to progress on some DT changes during this new cycle.
+>
+> Thanks
+> Jerome
 
-alex.
+Hi Philip, how can we move forward on this ?
 
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -278,6 +278,7 @@ dotraplinkage void do_double_fault(struc
->   		regs->ip == (unsigned long)native_irq_return_iret)
->   	{
->   		struct pt_regs *gpregs = (struct pt_regs *)this_cpu_read(cpu_tss_rw.x86_tss.sp0) - 1;
-> +		unsigned long *p = (unsigned long *)regs->sp;
->   
->   		/*
->   		 * regs->sp points to the failing IRET frame on the
-> @@ -285,7 +286,11 @@ dotraplinkage void do_double_fault(struc
->   		 * in gpregs->ss through gpregs->ip.
->   		 *
->   		 */
-> -		memmove(&gpregs->ip, (void *)regs->sp, 5*8);
-> +		gpregs->ip	= p[0];
-> +		gpregs->cs	= p[1];
-> +		gpregs->flags	= p[2];
-> +		gpregs->sp	= p[3];
-> +		gpregs->ss	= p[4];
->   		gpregs->orig_ax = 0;  /* Missing (lost) #GP error code */
->   
->   		/*
-> 
+>
+>>
+>> regards
+>> Philipp
+
