@@ -2,78 +2,73 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0E6C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 03:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F12C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 03:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B68820752
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 03:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DAB120752
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 03:19:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbgEFDTH (ORCPT
+        id S1726743AbgEFDT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 23:19:07 -0400
-Received: from smtprelay0003.hostedemail.com ([216.40.44.3]:36174 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725908AbgEFDTG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 23:19:06 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 925061801E69E;
-        Wed,  6 May 2020 03:19:05 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: plane35_14f105b6b975d
-X-Filterd-Recvd-Size: 2073
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Wed,  6 May 2020 03:19:03 +0000 (UTC)
-Message-ID: <f8b258e0c8bb073c445090e637195df2fc989543.camel@perches.com>
-Subject: Re: [PATCH -next] iwlwifi: pcie: Use bitwise instead of arithmetic
- operator for flags
-From:   Joe Perches <joe@perches.com>
-To:     Samuel Zou <zou_wei@huawei.com>, johannes.berg@intel.com,
-        emmanuel.grumbach@intel.com, luciano.coelho@intel.com,
-        linuxwifi@intel.com, kvalo@codeaurora.org, davem@davemloft.net
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 05 May 2020 20:19:02 -0700
-In-Reply-To: <1588734423-33988-1-git-send-email-zou_wei@huawei.com>
-References: <1588734423-33988-1-git-send-email-zou_wei@huawei.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Tue, 5 May 2020 23:19:58 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3807 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726029AbgEFDT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 23:19:57 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 1F04FAA9770614B36C3B;
+        Wed,  6 May 2020 11:19:52 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 6 May 2020 11:19:43 +0800
+From:   Samuel Zou <zou_wei@huawei.com>
+To:     <agross@kernel.org>, <bjorn.andersson@linaro.org>,
+        <vkoul@kernel.org>, <sanyog.r.kale@intel.com>,
+        <pierre-louis.bossart@linux.intel.com>
+CC:     <linux-arm-msm@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, Samuel Zou <zou_wei@huawei.com>
+Subject: [PATCH -next] soundwire: qcom: Use IRQF_ONESHOT
+Date:   Wed, 6 May 2020 11:25:53 +0800
+Message-ID: <1588735553-34219-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-05-06 at 11:07 +0800, Samuel Zou wrote:
-> This silences the following coccinelle warning:
-> 
-> "WARNING: sum of probable bitmasks, consider |"
+Fixes coccicheck error:
 
-I suggest instead ignoring bad and irrelevant warnings.
+drivers/soundwire/qcom.c:815:7-32: ERROR: Threaded IRQ with
+no primary handler requested without IRQF_ONESHOT
 
-PREFIX_LEN is 32 not 0x20 or BIT(5)
-PCI_DUMP_SIZE is 352
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Samuel Zou <zou_wei@huawei.com>
+---
+ drivers/soundwire/qcom.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-[]
-> @@ -109,9 +109,9 @@ void iwl_trans_pcie_dump_regs(struct iwl_trans *trans)
->  
->  	/* Alloc a max size buffer */
->  	alloc_size = PCI_ERR_ROOT_ERR_SRC +  4 + PREFIX_LEN;
-> -	alloc_size = max_t(u32, alloc_size, PCI_DUMP_SIZE + PREFIX_LEN);
-> -	alloc_size = max_t(u32, alloc_size, PCI_MEM_DUMP_SIZE + PREFIX_LEN);
-> -	alloc_size = max_t(u32, alloc_size, PCI_PARENT_DUMP_SIZE + PREFIX_LEN);
-> +	alloc_size = max_t(u32, alloc_size, PCI_DUMP_SIZE | PREFIX_LEN);
-> +	alloc_size = max_t(u32, alloc_size, PCI_MEM_DUMP_SIZE | PREFIX_LEN);
-> +	alloc_size = max_t(u32, alloc_size, PCI_PARENT_DUMP_SIZE | PREFIX_LEN);
->  
->  	buf = kmalloc(alloc_size, GFP_ATOMIC);
->  	if (!buf)
+diff --git a/drivers/soundwire/qcom.c b/drivers/soundwire/qcom.c
+index e08a17c..a2a35f7 100644
+--- a/drivers/soundwire/qcom.c
++++ b/drivers/soundwire/qcom.c
+@@ -814,7 +814,8 @@ static int qcom_swrm_probe(struct platform_device *pdev)
+ 
+ 	ret = devm_request_threaded_irq(dev, ctrl->irq, NULL,
+ 					qcom_swrm_irq_handler,
+-					IRQF_TRIGGER_RISING,
++					IRQF_TRIGGER_RISING |
++					IRQF_ONESHOT,
+ 					"soundwire", ctrl);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to request soundwire irq\n");
+-- 
+2.6.2
 
