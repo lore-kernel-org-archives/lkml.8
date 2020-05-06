@@ -2,127 +2,172 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE96EC47257
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54243C54E49
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D30A20753
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:22:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oTF5oYGz"
+	by mail.kernel.org (Postfix) with ESMTP id 3B6F720753
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:23:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730110AbgEFWWL (ORCPT
+        id S1730131AbgEFWXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 18:22:11 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:54572 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729985AbgEFWWK (ORCPT
+        Wed, 6 May 2020 18:23:39 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:34190 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728888AbgEFWXj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 18:22:10 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046MHrU3036994;
-        Wed, 6 May 2020 22:21:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=z+LlBKYna795Gom/3fJzeJIvqJa67ZsX6LqoW2jCPmw=;
- b=oTF5oYGzvMAaLEqGhwJwqGVZSNd0qmF+hqs17v/mtJznVezka3nNb4zCuJI6pK+vr1K0
- oD/X4v62FjJC2F2GpaDlwS0jESSFZNlqj1GIGrDYMq6e06juxUrJJlguLlQLH6sM/GJT
- hAucB9ZAFXNV3Q//UujMxQq29RKurkzwCPIJaVtdiIspWUik0oNEIdijsJEkZIZ0Lb4U
- NHCSP/ZWi3vUl6hPMtX/kwez3cxr76QpetK36yIXwXzMCL1/uzS2tkB5lC+w0cOtvzCH
- h1TDllx9dJyNQFIKiY9ijR/Ez9xB5JLyXRzNxqZ9i0mpOcbGbIJBeLAO4YReqhw2FNrQ Sw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 30s1gncv3k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 May 2020 22:21:15 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046MHmhR062218;
-        Wed, 6 May 2020 22:21:14 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 30t1r8vcdm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 May 2020 22:21:14 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 046ML6cm029131;
-        Wed, 6 May 2020 22:21:06 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 May 2020 15:21:05 -0700
-Date:   Wed, 6 May 2020 18:21:27 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Michal Hocko <mhocko@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Tejun Heo <tj@kernel.org>, Zi Yan <ziy@nvidia.com>,
-        linux-crypto@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 6/7] mm: parallelize deferred_init_memmap()
-Message-ID: <20200506222127.l3p2a2vjavwz2bdl@ca-dmjordan1.us.oracle.com>
-References: <20200430201125.532129-1-daniel.m.jordan@oracle.com>
- <20200430201125.532129-7-daniel.m.jordan@oracle.com>
- <CAKgT0Uf7e5514SOi8dmkB5oXUK9bwqD_z-5KJ_F3MUn3CAQyPQ@mail.gmail.com>
- <3C3C62BE-6363-41C3-834C-C3124EB3FFAB@joshtriplett.org>
- <CAKgT0UdBv-Wj98P2wMFGDSihPLKWFsqpu77ZmO+eA51uteZ-Ag@mail.gmail.com>
- <20200505014844.ulp4rtih7adtcicm@ca-dmjordan1.us.oracle.com>
- <20200505020916.mve4ijrg4z5h7eh5@ca-dmjordan1.us.oracle.com>
- <CAKgT0UdE1ex_aAyMeR3PWtVcmXL8cUtjqy0J8hLpnFm42yn82w@mail.gmail.com>
+        Wed, 6 May 2020 18:23:39 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id CCAAD8030808;
+        Wed,  6 May 2020 22:23:33 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Epmofd3VE4Ed; Thu,  7 May 2020 01:23:33 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/4] clk: Add Baikal-T1 SoC Clock Control Unit support
+Date:   Thu, 7 May 2020 01:22:56 +0300
+Message-ID: <20200506222300.30895-1-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200306130053.BCBFC803078F@mail.baikalelectronics.ru>
+References: <20200306130053.BCBFC803078F@mail.baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKgT0UdE1ex_aAyMeR3PWtVcmXL8cUtjqy0J8hLpnFm42yn82w@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=0
- spamscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005060177
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 mlxscore=0
- spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0
- impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005060177
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 07:55:43AM -0700, Alexander Duyck wrote:
-> One question about this data. What is the power management
-> configuration on the systems when you are running these tests? I'm
-> just curious if CPU frequency scaling, C states, and turbo are
-> enabled?
+Clocks Control Unit is the core of Baikal-T1 SoC responsible for the chip
+subsystems clocking and resetting. The CCU is connected with an external
+fixed rate oscillator, which signal is transformed into clocks of various
+frequencies and then propagated to either individual IP-blocks or to groups
+of blocks (clock domains). The transformation is done by means of PLLs and
+gateable/non-gateable, fixed/variable dividers embedded into the CCU. There
+are five PLLs to create a clock for the MIPS P5600 cores, the embedded DDR
+controller, SATA, Ethernet and PCIe domains. The last three PLLs CLKOUT are
+then passed over CCU dividers to create signals required for the target clock
+domains: individual AXI and APB bus clocks, SoC devices reference clocks.
+The CCU divider registers may also provide a way to reset the target devices
+state.
 
-Yes, intel_pstate is loaded in active mode without hwp and with turbo enabled
-(those power management docs are great by the way!) and intel_idle is in use
-too.
+So this patchset introduces the Baikal-T1 clock and reset drivers of CCU
+PLLs, AXI-bus clock dividers and system devices clock dividers.
 
-> I ask because that is what I have seen usually make the
-> difference in these kind of workloads as the throughput starts
-> dropping off as you start seeing the core frequency lower and more
-> cores become active.
+This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
+0e698dfa2822 ("Linux 5.7-rc4")
+tag: v5.7-rc4
 
-If I follow, you're saying there's a chance performance would improve with the
-above disabled, but how often would a system be configured that way?  Even if
-it were faster, the machine is configured how it's configured, or am I missing
-your point?
+Changelog v2:
+- Rearrange the SoBs.
+- Discard comments in the binding files headers.
+- Add dual GPL/BSD license to the bindings.
+- Add spaces around the ASCII-graphics in the bindings description.
+- Discard redundant dt objects check against "/schemas/clock/clock.yaml#"
+  schema.
+- Discard redundant descriptions of the "#clock-cells" and "#reset-cells"
+  properties in dt bindings schema.
+- Discard "reg" property since the CCU dividers DT nodes are supposed be
+  children of the syscon-compatible system controller node.
+- Remove "clock-output-names" property support.
+- Replace "additionalProperties: false" with "unevaluatedProperties: false"
+  in the bindings.
+- Lowercase the nodes name in the binding examples.
+- Use "clock-controller" node name suffix in the binding examples.
+- Remove unnecessary comments in the clocks and resets dt-binding header
+  files.
+- Don't enable the CCU clock drivers by default for COMPILE_TEST config.
+- Make sure the CCU drivers depend on OF kernel config only when built for
+  Baikal-T1-based platform.
+- Fix spelling in the CCU PLL and Dividers kernel configs description.
+- Replace lock delay and frequency calculation macros with inline functions.
+- Use 64-bits arithmetics in the CCU PLL frequency calculation function.
+- Use FIELD_{GET,PREP}() macro instead of handwritten field setters and
+  getters.
+- Discard CLK_IGNORE_UNUSED flag setting. It's redundant since CLK_IS_CRITICAL
+  is enough for cases when it's appropriate.
+- Comment out the CLK_IS_CRITICAL flag settings.
+- Discard !pll and !div tests from ccu_pll_hw_unregister() and ccu_div_get_clk_id()
+  methods respectively.
+- Discard alive probe messages.
+- Convert the drivers to using syscon regmap instead of direct IO methods,
+  since now the PLLs DT node is supposed to be a sub-node of the Baikal-T1
+  System Controller node.
+- Add DebugFS nodes in RO-mode by default.
+
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-clk@vger.kernel.org
+Cc: linux-mips@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Serge Semin (4):
+  dt-bindings: clk: Add Baikal-T1 CCU PLLs binding
+  dt-bindings: clk: Add Baikal-T1 CCU Dividers binding
+  clk: Add Baikal-T1 CCU PLLs driver
+  clk: Add Baikal-T1 CCU Dividers driver
+
+ .../bindings/clock/baikal,bt1-ccu-div.yaml    | 182 ++++++
+ .../bindings/clock/baikal,bt1-ccu-pll.yaml    | 127 ++++
+ drivers/clk/Kconfig                           |   1 +
+ drivers/clk/Makefile                          |   1 +
+ drivers/clk/baikal-t1/Kconfig                 |  42 ++
+ drivers/clk/baikal-t1/Makefile                |   3 +
+ drivers/clk/baikal-t1/ccu-div.c               | 602 ++++++++++++++++++
+ drivers/clk/baikal-t1/ccu-div.h               | 110 ++++
+ drivers/clk/baikal-t1/ccu-pll.c               | 558 ++++++++++++++++
+ drivers/clk/baikal-t1/ccu-pll.h               |  64 ++
+ drivers/clk/baikal-t1/clk-ccu-div.c           | 487 ++++++++++++++
+ drivers/clk/baikal-t1/clk-ccu-pll.c           | 204 ++++++
+ include/dt-bindings/clock/bt1-ccu.h           |  48 ++
+ include/dt-bindings/reset/bt1-ccu.h           |  25 +
+ 14 files changed, 2454 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/baikal,bt1-ccu-div.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/baikal,bt1-ccu-pll.yaml
+ create mode 100644 drivers/clk/baikal-t1/Kconfig
+ create mode 100644 drivers/clk/baikal-t1/Makefile
+ create mode 100644 drivers/clk/baikal-t1/ccu-div.c
+ create mode 100644 drivers/clk/baikal-t1/ccu-div.h
+ create mode 100644 drivers/clk/baikal-t1/ccu-pll.c
+ create mode 100644 drivers/clk/baikal-t1/ccu-pll.h
+ create mode 100644 drivers/clk/baikal-t1/clk-ccu-div.c
+ create mode 100644 drivers/clk/baikal-t1/clk-ccu-pll.c
+ create mode 100644 include/dt-bindings/clock/bt1-ccu.h
+ create mode 100644 include/dt-bindings/reset/bt1-ccu.h
+
+-- 
+2.25.1
+
