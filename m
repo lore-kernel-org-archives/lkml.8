@@ -6,128 +6,99 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79840C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41611C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EA0220936
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 210E520936
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:51:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730774AbgEFQu5 (ORCPT
+        id S1730482AbgEFQvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:50:57 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:56659 "EHLO pegase1.c-s.fr"
+        Wed, 6 May 2020 12:51:01 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:2642 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730453AbgEFQsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:48:22 -0400
+        id S1730449AbgEFQsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 12:48:21 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49HMwg1bgpz9v4kP;
-        Wed,  6 May 2020 18:48:19 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 49HMwf2rxLz9v4kN;
+        Wed,  6 May 2020 18:48:18 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id QntUCMKCfgIu; Wed,  6 May 2020 18:48:19 +0200 (CEST)
+        with ESMTP id uqpAgprKc6Oz; Wed,  6 May 2020 18:48:18 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMwg0r5Wz9v4kF;
-        Wed,  6 May 2020 18:48:19 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMwf137Xz9v4kF;
+        Wed,  6 May 2020 18:48:18 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id EF3288B7C5;
-        Wed,  6 May 2020 18:48:20 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E5D428B7C5;
+        Wed,  6 May 2020 18:48:19 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id aqzt6KIO-SF2; Wed,  6 May 2020 18:48:20 +0200 (CEST)
+        with ESMTP id b7cHQsHkavAO; Wed,  6 May 2020 18:48:19 +0200 (CEST)
 Received: from localhost.localdomain (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9D61C8B7C3;
-        Wed,  6 May 2020 18:48:20 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id AD11E8B7C3;
+        Wed,  6 May 2020 18:48:19 +0200 (CEST)
 Received: by localhost.localdomain (Postfix, from userid 0)
-        id 6A9A165911; Wed,  6 May 2020 16:48:20 +0000 (UTC)
-Message-Id: <9dd7022f292466f02ad2003a4b9619c6a4b8922b.1588783498.git.christophe.leroy@csgroup.eu>
+        id 6386165911; Wed,  6 May 2020 16:48:19 +0000 (UTC)
+Message-Id: <2bc792487932ee122536a4e29a9d6c5b6b120cac.1588783498.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 References: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v2 15/45] powerpc/mm: Allocate static page tables for fixmap
+Subject: [PATCH v2 14/45] powerpc/32s: Don't warn when mapping RO data ROX.
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed,  6 May 2020 16:48:20 +0000 (UTC)
+Date:   Wed,  6 May 2020 16:48:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allocate static page tables for the fixmap area. This allows
-setting mappings through page tables before memblock is ready.
-That's needed to use early_ioremap() early and to use standard
-page mappings with fixmap.
+Mapping RO data as ROX is not an issue since that data
+cannot be modified to introduce an exploit.
+
+PPC64 accepts to have RO data mapped ROX, as a trade off
+between kernel size and strictness of protection.
+
+On PPC32, kernel size is even more critical as amount of
+memory is usually small.
+
+Depending on the number of available IBATs, the last IBATs
+might overflow the end of text. Only warn if it crosses
+the end of RO data.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/include/asm/fixmap.h |  4 ++++
- arch/powerpc/kernel/setup_32.c    |  2 +-
- arch/powerpc/mm/pgtable_32.c      | 16 ++++++++++++++++
- 3 files changed, 21 insertions(+), 1 deletion(-)
+ arch/powerpc/mm/book3s32/mmu.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/fixmap.h b/arch/powerpc/include/asm/fixmap.h
-index 2ef155a3c821..ccbe2e83c950 100644
---- a/arch/powerpc/include/asm/fixmap.h
-+++ b/arch/powerpc/include/asm/fixmap.h
-@@ -86,6 +86,10 @@ enum fixed_addresses {
- #define __FIXADDR_SIZE	(__end_of_fixed_addresses << PAGE_SHIFT)
- #define FIXADDR_START		(FIXADDR_TOP - __FIXADDR_SIZE)
+diff --git a/arch/powerpc/mm/book3s32/mmu.c b/arch/powerpc/mm/book3s32/mmu.c
+index 39ba53ca5bb5..a9b2cbc74797 100644
+--- a/arch/powerpc/mm/book3s32/mmu.c
++++ b/arch/powerpc/mm/book3s32/mmu.c
+@@ -187,6 +187,7 @@ void mmu_mark_initmem_nx(void)
+ 	int i;
+ 	unsigned long base = (unsigned long)_stext - PAGE_OFFSET;
+ 	unsigned long top = (unsigned long)_etext - PAGE_OFFSET;
++	unsigned long border = (unsigned long)__init_begin - PAGE_OFFSET;
+ 	unsigned long size;
  
-+#define FIXMAP_ALIGNED_SIZE	(ALIGN(FIXADDR_TOP, PGDIR_SIZE) - \
-+				 ALIGN_DOWN(FIXADDR_START, PGDIR_SIZE))
-+#define FIXMAP_PTE_SIZE	(FIXMAP_ALIGNED_SIZE / PGDIR_SIZE * PTE_TABLE_SIZE)
-+
- #define FIXMAP_PAGE_NOCACHE PAGE_KERNEL_NCG
- #define FIXMAP_PAGE_IO	PAGE_KERNEL_NCG
- 
-diff --git a/arch/powerpc/kernel/setup_32.c b/arch/powerpc/kernel/setup_32.c
-index 305ca89d856f..fee167d2701f 100644
---- a/arch/powerpc/kernel/setup_32.c
-+++ b/arch/powerpc/kernel/setup_32.c
-@@ -80,7 +80,7 @@ notrace void __init machine_init(u64 dt_ptr)
- 	/* Configure static keys first, now that we're relocated. */
- 	setup_feature_keys();
- 
--	early_ioremap_setup();
-+	early_ioremap_init();
- 
- 	/* Enable early debugging if any specified (see udbg.h) */
- 	udbg_early_init();
-diff --git a/arch/powerpc/mm/pgtable_32.c b/arch/powerpc/mm/pgtable_32.c
-index f62de06e3d07..9934659cb871 100644
---- a/arch/powerpc/mm/pgtable_32.c
-+++ b/arch/powerpc/mm/pgtable_32.c
-@@ -29,11 +29,27 @@
- #include <asm/fixmap.h>
- #include <asm/setup.h>
- #include <asm/sections.h>
-+#include <asm/early_ioremap.h>
- 
- #include <mm/mmu_decl.h>
- 
- extern char etext[], _stext[], _sinittext[], _einittext[];
- 
-+static u8 early_fixmap_pagetable[FIXMAP_PTE_SIZE] __page_aligned_data;
-+
-+notrace void __init early_ioremap_init(void)
-+{
-+	unsigned long addr = ALIGN_DOWN(FIXADDR_START, PGDIR_SIZE);
-+	pte_t *ptep = (pte_t *)early_fixmap_pagetable;
-+	pmd_t *pmdp = pmd_ptr_k(addr);
-+
-+	for (; (s32)(FIXADDR_TOP - addr) > 0;
-+	     addr += PGDIR_SIZE, ptep += PTRS_PER_PTE, pmdp++)
-+		pmd_populate_kernel(&init_mm, pmdp, ptep);
-+
-+	early_ioremap_setup();
-+}
-+
- static void __init *early_alloc_pgtable(unsigned long size)
- {
- 	void *ptr = memblock_alloc(size, size);
+ 	if (IS_ENABLED(CONFIG_PPC_BOOK3S_601))
+@@ -201,9 +202,10 @@ void mmu_mark_initmem_nx(void)
+ 		size = block_size(base, top);
+ 		size = max(size, 128UL << 10);
+ 		if ((top - base) > size) {
+-			if (strict_kernel_rwx_enabled())
+-				pr_warn("Kernel _etext not properly aligned\n");
+ 			size <<= 1;
++			if (strict_kernel_rwx_enabled() && base + size > border)
++				pr_warn("Some RW data is getting mapped X. "
++					"Adjust CONFIG_DATA_SHIFT to avoid that.\n");
+ 		}
+ 		setibat(i++, PAGE_OFFSET + base, base, size, PAGE_KERNEL_TEXT);
+ 		base += size;
 -- 
 2.25.0
 
