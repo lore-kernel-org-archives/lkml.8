@@ -2,180 +2,248 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0DEC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2411C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C761D20936
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:22:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kPtoH17W"
+	by mail.kernel.org (Postfix) with ESMTP id BBBBD20A8B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:22:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729518AbgEFPV7 (ORCPT
+        id S1729527AbgEFPWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:21:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58254 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729475AbgEFPVv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:21:51 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A6AAC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 08:21:51 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id l12so909879pgr.10
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 08:21:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Q0K/lv5zGYyr82mHQzUYrmx/oxfMBXzRZFC8ZU0cokw=;
-        b=kPtoH17WkQd61pRXa7oPU+5nNu/1tOIwbo0X5iltCrgz2x55XhK9IkHhRBZax+/hPn
-         RQaXT11HlV17Qsaww9Zx7Hy0rCQQht4TZKq2ixUgrjQ5uQ0T6UBmuuFEn7VrFfCdHDpd
-         0+Xzaj7d6hIrmiOBPVeQZ80HZQeecxnfjBH40=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Q0K/lv5zGYyr82mHQzUYrmx/oxfMBXzRZFC8ZU0cokw=;
-        b=TRwdENyVLiAZM5NBPoqlovBqiPFtwOmIgNhkqANLD3pcOqJAhR44d1xzEKVfE19TUU
-         B364ONaGXDeP5w87wQnnZ8X0GlXwTsskF7BZpWWwkBorUPnZbUSUgwA6AygdLY2+D6qe
-         ziXW0Zmfz8mXubSP1900DTlUlg1uuqu8MxHASSLLnze2E0RwFqg8qn1IEu30xj/+m3PH
-         aA2SDh0S+tVNIM19Nypxvx4gE0OVFIpXmZWuD6YLtx43I0x1yND2qo3jK82m3vog+VvJ
-         G+L0vJjQ8uhbk6VXCwdsCwCoEOuDMkvP2ErdJQU/4wRVRjVMwk0kv3EJP60ywUb+ra7N
-         2KkA==
-X-Gm-Message-State: AGi0PuY3cnd+02mG2TGPVO3jz+pzhuH/PsiiZRk/kkpdKyj01NUIpL3P
-        G05TOVyAwwBPYs6+10Tv2RTHK7/jqEU=
-X-Google-Smtp-Source: APiQypKNchaOE6ot5taOOUNgl3Z8z+GYVPXEzgFz1dmxosOo9OHMPnXGr4EpN87kFA2OoZmLG6BE+g==
-X-Received: by 2002:a62:f247:: with SMTP id y7mr8794147pfl.200.1588778510702;
-        Wed, 06 May 2020 08:21:50 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h13sm1752842pgm.69.2020.05.06.08.21.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 08:21:45 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Luis Henriques <lhenriques@suse.com>
-Subject: [PATCH 09/10] pstore: Do not leave timer disabled for next backend
-Date:   Wed,  6 May 2020 08:21:13 -0700
-Message-Id: <20200506152114.50375-10-keescook@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200506152114.50375-1-keescook@chromium.org>
-References: <20200506152114.50375-1-keescook@chromium.org>
+        Wed, 6 May 2020 11:22:01 -0400
+Received: from mga14.intel.com ([192.55.52.115]:49108 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729476AbgEFPVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:21:54 -0400
+IronPort-SDR: uh8ZBvJGGpEmN7ggeM8+zosQ80ciAOqjZdNP0ageNKxXNSlqvbY188Mj9g0s2dVXC7InZXgXyB
+ hevdE0tq9Bsw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 08:21:53 -0700
+IronPort-SDR: jaIF5hZlOSX83fPUAUoxIbJIRGPQgGAU04AVIVce2ggtjU8BamnEPpvv6GIye4gyMiGB3b+M27
+ gLmVv4/ET1kQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,359,1583222400"; 
+   d="scan'208";a="461795067"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 06 May 2020 08:21:52 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jWLrq-000HUD-W0; Wed, 06 May 2020 23:21:50 +0800
+Date:   Wed, 06 May 2020 23:21:42 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:dev.2020.04.29a] BUILD SUCCESS
+ d54b2ad6d7f4caed123d988135478ae257357081
+Message-ID: <5eb2d606.KnmjG8ryIlrjPxSb%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pstore.update_ms value was being disabled during pstore_unregister(),
-which would cause any prior value to go unnoticed on the next
-pstore_register(). Instead, just let del_timer() stop the timer, which
-was always sufficient. This additionally refactors the timer reset code
-and allows the timer to be enabled if the module parameter is changed
-away from the default.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.04.29a
+branch HEAD: d54b2ad6d7f4caed123d988135478ae257357081  doc: Timer problems can cause RCU CPU stall warnings
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
+elapsed time: 7134m
+
+configs tested: 181
+configs skipped: 10
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm                              allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+sparc                            allyesconfig
+m68k                             allyesconfig
+c6x                              allyesconfig
+ia64                              allnoconfig
+arc                                 defconfig
+sparc64                           allnoconfig
+sh                               allmodconfig
+sparc64                             defconfig
+riscv                             allnoconfig
+microblaze                        allnoconfig
+m68k                                defconfig
+i386                             alldefconfig
+s390                             allyesconfig
+powerpc                             defconfig
+ia64                                defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                             allyesconfig
+ia64                             alldefconfig
+m68k                             allmodconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+csky                             allyesconfig
+alpha                            allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                              allyesconfig
+microblaze                       allyesconfig
+sh                                allnoconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                          rhel-kconfig
+powerpc                           allnoconfig
+powerpc                          allyesconfig
+powerpc                          alldefconfig
+powerpc                          allmodconfig
+parisc               randconfig-a001-20200430
+mips                 randconfig-a001-20200430
+m68k                 randconfig-a001-20200430
+riscv                randconfig-a001-20200430
+alpha                randconfig-a001-20200430
+nds32                randconfig-a001-20200430
+h8300                randconfig-a001-20200501
+nios2                randconfig-a001-20200501
+microblaze           randconfig-a001-20200501
+c6x                  randconfig-a001-20200501
+sparc64              randconfig-a001-20200501
+h8300                randconfig-a001-20200502
+nios2                randconfig-a001-20200502
+microblaze           randconfig-a001-20200502
+c6x                  randconfig-a001-20200502
+sparc64              randconfig-a001-20200502
+s390                 randconfig-a001-20200430
+xtensa               randconfig-a001-20200430
+csky                 randconfig-a001-20200430
+openrisc             randconfig-a001-20200430
+sh                   randconfig-a001-20200430
+i386                 randconfig-b003-20200501
+x86_64               randconfig-b002-20200501
+i386                 randconfig-b001-20200501
+x86_64               randconfig-b003-20200501
+x86_64               randconfig-b001-20200501
+i386                 randconfig-b002-20200501
+i386                 randconfig-b001-20200430
+i386                 randconfig-b002-20200430
+x86_64               randconfig-b001-20200430
+i386                 randconfig-b003-20200430
+x86_64               randconfig-b002-20200430
+x86_64               randconfig-b003-20200430
+i386                 randconfig-b003-20200506
+i386                 randconfig-b001-20200506
+x86_64               randconfig-b001-20200506
+x86_64               randconfig-b003-20200506
+i386                 randconfig-b002-20200506
+x86_64               randconfig-c001-20200430
+i386                 randconfig-c001-20200430
+i386                 randconfig-c002-20200430
+x86_64               randconfig-c002-20200430
+x86_64               randconfig-c003-20200430
+i386                 randconfig-c003-20200430
+i386                 randconfig-d003-20200502
+i386                 randconfig-d001-20200502
+x86_64               randconfig-d002-20200502
+i386                 randconfig-d002-20200502
+i386                 randconfig-e003-20200506
+x86_64               randconfig-e003-20200506
+x86_64               randconfig-e001-20200506
+i386                 randconfig-e002-20200506
+i386                 randconfig-e001-20200506
+x86_64               randconfig-e002-20200430
+i386                 randconfig-e003-20200430
+x86_64               randconfig-e003-20200430
+i386                 randconfig-e002-20200430
+x86_64               randconfig-e001-20200430
+i386                 randconfig-e001-20200430
+i386                 randconfig-f003-20200501
+x86_64               randconfig-f001-20200501
+x86_64               randconfig-f003-20200501
+i386                 randconfig-f001-20200501
+i386                 randconfig-f002-20200501
+i386                 randconfig-f003-20200506
+x86_64               randconfig-f001-20200506
+x86_64               randconfig-f003-20200506
+x86_64               randconfig-f002-20200506
+i386                 randconfig-f001-20200506
+i386                 randconfig-f002-20200506
+x86_64               randconfig-g003-20200506
+i386                 randconfig-g003-20200506
+i386                 randconfig-g002-20200506
+x86_64               randconfig-g001-20200506
+i386                 randconfig-g001-20200506
+x86_64               randconfig-g002-20200506
+i386                 randconfig-h002-20200506
+i386                 randconfig-h001-20200506
+i386                 randconfig-h003-20200506
+x86_64               randconfig-h002-20200506
+x86_64               randconfig-h003-20200506
+x86_64               randconfig-h001-20200506
+i386                 randconfig-h002-20200430
+i386                 randconfig-h003-20200430
+x86_64               randconfig-h001-20200430
+x86_64               randconfig-h003-20200430
+i386                 randconfig-h001-20200430
+ia64                 randconfig-a001-20200501
+arc                  randconfig-a001-20200501
+powerpc              randconfig-a001-20200501
+arm                  randconfig-a001-20200501
+sparc                randconfig-a001-20200501
+sparc                randconfig-a001-20200430
+arc                  randconfig-a001-20200430
+ia64                 randconfig-a001-20200430
+powerpc              randconfig-a001-20200430
+arm                  randconfig-a001-20200430
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                             alldefconfig
+s390                                defconfig
+sparc                               defconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
 ---
- fs/pstore/platform.c | 34 +++++++++++++++++++---------------
- 1 file changed, 19 insertions(+), 15 deletions(-)
-
-diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-index 55f46837a7f4..03a17b401533 100644
---- a/fs/pstore/platform.c
-+++ b/fs/pstore/platform.c
-@@ -44,7 +44,7 @@ static int pstore_update_ms = -1;
- module_param_named(update_ms, pstore_update_ms, int, 0600);
- MODULE_PARM_DESC(update_ms, "milliseconds before pstore updates its content "
- 		 "(default is -1, which means runtime updates are disabled; "
--		 "enabling this option is not safe, it may lead to further "
-+		 "enabling this option may not be safe; it may lead to further "
- 		 "corruption on Oopses)");
- 
- /* Names should be in the same order as the enum pstore_type_id */
-@@ -150,6 +150,14 @@ static const char *get_reason_str(enum kmsg_dump_reason reason)
- 	}
- }
- 
-+static void pstore_timer_kick(void)
-+{
-+	if (pstore_update_ms < 0)
-+		return;
-+
-+	mod_timer(&pstore_timer, jiffies + msecs_to_jiffies(pstore_update_ms));
-+}
-+
- /*
-  * Should pstore_dump() wait for a concurrent pstore_dump()? If
-  * not, the current pstore_dump() will report a failure to dump
-@@ -460,8 +468,10 @@ static void pstore_dump(struct kmsg_dumper *dumper,
- 		}
- 
- 		ret = psinfo->write(&record);
--		if (ret == 0 && reason == KMSG_DUMP_OOPS)
-+		if (ret == 0 && reason == KMSG_DUMP_OOPS) {
- 			pstore_new_entry = 1;
-+			pstore_timer_kick();
-+		}
- 
- 		total += record.size;
- 		part++;
-@@ -606,11 +616,7 @@ int pstore_register(struct pstore_info *psi)
- 		pstore_register_pmsg();
- 
- 	/* Start watching for new records, if desired. */
--	if (pstore_update_ms >= 0) {
--		pstore_timer.expires = jiffies +
--			msecs_to_jiffies(pstore_update_ms);
--		add_timer(&pstore_timer);
--	}
-+	pstore_timer_kick();
- 
- 	/*
- 	 * Update the module parameter backend, so it is visible
-@@ -638,11 +644,7 @@ void pstore_unregister(struct pstore_info *psi)
- 		return;
- 	}
- 
--	/* Stop timer and make sure all work has finished. */
--	pstore_update_ms = -1;
--	del_timer_sync(&pstore_timer);
--	flush_work(&pstore_work);
--
-+	/* Unregister all callbacks. */
- 	if (psi->flags & PSTORE_FLAGS_PMSG)
- 		pstore_unregister_pmsg();
- 	if (psi->flags & PSTORE_FLAGS_FTRACE)
-@@ -652,6 +654,10 @@ void pstore_unregister(struct pstore_info *psi)
- 	if (psi->flags & PSTORE_FLAGS_DMESG)
- 		pstore_unregister_kmsg();
- 
-+	/* Stop timer and make sure all work has finished. */
-+	del_timer_sync(&pstore_timer);
-+	flush_work(&pstore_work);
-+
- 	free_buf_for_compression();
- 
- 	psinfo = NULL;
-@@ -793,9 +799,7 @@ static void pstore_timefunc(struct timer_list *unused)
- 		schedule_work(&pstore_work);
- 	}
- 
--	if (pstore_update_ms >= 0)
--		mod_timer(&pstore_timer,
--			  jiffies + msecs_to_jiffies(pstore_update_ms));
-+	pstore_timer_kick();
- }
- 
- static void __init pstore_choose_compression(void)
--- 
-2.20.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
