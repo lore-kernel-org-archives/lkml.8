@@ -2,158 +2,129 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AECC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6775BC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60243206D5
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45F7C207DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:53:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Blpzrd2W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728494AbgEFHvp (ORCPT
+        id S1728509AbgEFHxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 03:51:45 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3814 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728280AbgEFHvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 03:51:45 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id C8507BAD909D4E3D7B84;
-        Wed,  6 May 2020 15:51:40 +0800 (CST)
-Received: from [10.133.206.78] (10.133.206.78) by smtp.huawei.com
- (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 6 May 2020
- 15:51:32 +0800
-Subject: Re: cgroup pointed by sock is leaked on mode switch
-From:   Zefan Li <lizefan@huawei.com>
-To:     Yang Yingliang <yangyingliang@huawei.com>,
-        Tejun Heo <tj@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <cgroups@vger.kernel.org>,
-        <netdev@vger.kernel.org>,
-        "Libin (Huawei)" <huawei.libin@huawei.com>, <guofan5@huawei.com>,
-        <wangkefeng.wang@huawei.com>
-References: <03dab6ab-0ffe-3cae-193f-a7f84e9b14c5@huawei.com>
- <20200505160639.GG12217@mtj.thefacebook.com>
- <c9879fd2-cb91-2a08-8293-c6a436b5a539@huawei.com>
- <0a6ae984-e647-5ada-8849-3fa2fb994ff3@huawei.com>
-Message-ID: <1edd6b6c-ab3c-6a51-6460-6f5d7f37505e@huawei.com>
-Date:   Wed, 6 May 2020 15:51:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Wed, 6 May 2020 03:53:41 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53446 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728412AbgEFHxl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 03:53:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588751619;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8W0xSmvUlYVndDM8MoTsGUiUlHlecuHz50ZkJqJ3zCY=;
+        b=Blpzrd2Wm0O93KkVoSr1gHv6p+sBFkuXSXZOtue0JcgVJj5D4vrnSn0Md2XvG5gsoDvf4z
+        rRBUyUEu+fgKB0LTd61nNmnA8rD+0HldQIVjWnFdL4x0xfYrYtuh7TIwd1zsHFf25jy41R
+        h+CLBr6obYatALYAFJaZb2dOZV4F93g=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-453-XFdgnQjZP5aZb8ahg5twRw-1; Wed, 06 May 2020 03:53:36 -0400
+X-MC-Unique: XFdgnQjZP5aZb8ahg5twRw-1
+Received: by mail-wr1-f72.google.com with SMTP id f15so899179wrj.2
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 00:53:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8W0xSmvUlYVndDM8MoTsGUiUlHlecuHz50ZkJqJ3zCY=;
+        b=PDCCG/n6w7aTbjIDYM13Mv4hO3hDUgkk2cPauIBeTMkDq/a3Lij7F8az0M5P3oBfkd
+         slvptknd47q478mkyaU36QGG5hOZvlbLhPx07Pb53RwKejIwhNWhA86aGohkkyVHpUJw
+         Ad2MKbRFLqizNCt79NQ1HumzKoEqWK3iJYeN5UMlX/0pBv1TnM8fIbtC1Ri+A3pB4W3j
+         hr3rkFfRhWM/dOlu2DdtFAH1FGmtZloEJEa2XNyYUTwFIEBbUx9Q+4rj6rgz5GblT9Bw
+         kv3zaPnHCCPLBXlj85IpLjyf65pdT+eRs05gjyltyylfkeLojWLghVFCm1XYiahl5oAA
+         1eMw==
+X-Gm-Message-State: AGi0PubjHK1dAaiAm3wtabB4KW+xyhYKsRgJ8mvQy/0ZTCCZdSBRIteN
+        xrylKqE6gZXYlIFjpuX/LQyRi0YxY34yt7y1XH6OUDyUGk95OkQfcFBGV3nytnscRNosjp7I5GG
+        oy2BotBj6TZM9EWXMPqxW1WNi
+X-Received: by 2002:a5d:6692:: with SMTP id l18mr8511147wru.423.1588751614940;
+        Wed, 06 May 2020 00:53:34 -0700 (PDT)
+X-Google-Smtp-Source: APiQypI/1wp+em/vQpb50Bo7ALnQIlQcctHrYO0O4kec4Eg43lHoV1FZjHRLjxj87amFb1+gASDZpQ==
+X-Received: by 2002:a5d:6692:: with SMTP id l18mr8511130wru.423.1588751614751;
+        Wed, 06 May 2020 00:53:34 -0700 (PDT)
+Received: from redhat.com (bzq-109-66-7-121.red.bezeqint.net. [109.66.7.121])
+        by smtp.gmail.com with ESMTPSA id p190sm1710263wmp.38.2020.05.06.00.53.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 00:53:34 -0700 (PDT)
+Date:   Wed, 6 May 2020 03:53:31 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Jesper Dangaard Brouer <brouer@redhat.com>
+Subject: Re: [PATCH net-next 1/2] virtio-net: don't reserve space for vnet
+ header for XDP
+Message-ID: <20200506033834-mutt-send-email-mst@kernel.org>
+References: <20200506061633.16327-1-jasowang@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <0a6ae984-e647-5ada-8849-3fa2fb994ff3@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.133.206.78]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506061633.16327-1-jasowang@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/6 10:16, Zefan Li wrote:
-> On 2020/5/6 9:50, Yang Yingliang wrotee:
->> +cc lizefan@huawei.com
->>
->> On 2020/5/6 0:06, Tejun Heo wrote:
->>> Hello, Yang.
->>>
->>> On Sat, May 02, 2020 at 06:27:21PM +0800, Yang Yingliang wrote:
->>>> I find the number nr_dying_descendants is increasing:
->>>> linux-dVpNUK:~ # find /sys/fs/cgroup/ -name cgroup.stat -exec grep
->>>> '^nr_dying_descendants [^0]'  {} +
->>>> /sys/fs/cgroup/unified/cgroup.stat:nr_dying_descendants 80
->>>> /sys/fs/cgroup/unified/system.slice/cgroup.stat:nr_dying_descendants 1
->>>> /sys/fs/cgroup/unified/system.slice/system-hostos.slice/cgroup.stat:nr_dying_descendants
->>>> 1
->>>> /sys/fs/cgroup/unified/lxc/cgroup.stat:nr_dying_descendants 79
->>>> /sys/fs/cgroup/unified/lxc/5f1fdb8c54fa40c3e599613dab6e4815058b76ebada8a27bc1fe80c0d4801764/cgroup.stat:nr_dying_descendants
->>>> 78
->>>> /sys/fs/cgroup/unified/lxc/5f1fdb8c54fa40c3e599613dab6e4815058b76ebada8a27bc1fe80c0d4801764/system.slice/cgroup.stat:nr_dying_descendants
->>>> 78
->>> Those numbers are nowhere close to causing oom issues. There are some
->>> aspects of page and other cache draining which is being improved but unless
->>> you're seeing numbers multiple orders of magnitude higher, this isn't the
->>> source of your problem.
->>>
->>>> The situation is as same as the commit bd1060a1d671 ("sock, cgroup: add
->>>> sock->sk_cgroup") describes.
->>>> "On mode switch, cgroup references which are already being pointed to by
->>>> socks may be leaked."
->>> I'm doubtful that you're hitting that issue. Mode switching means memcg
->>> being switched between cgroup1 and cgroup2 hierarchies, which is unlikely to
->>> be what's happening when you're launching docker containers.
->>>
->>> The first step would be identifying where memory is going and finding out
->>> whether memcg is actually being switched between cgroup1 and 2 - look at the
->>> hierarchy number in /proc/cgroups, if that's switching between 0 and
->>> someting not zero, it is switching.
->>>
-> 
-> I think there's a bug here which can lead to unlimited memory leak.
-> This should reproduce the bug:
-> 
->     # mount -t cgroup -o netprio xxx /cgroup/netprio
->     # mkdir /cgroup/netprio/xxx
->     # echo PID > /cgroup/netprio/xxx/tasks
->     /* this PID process starts to do some network thing and then exits */
->     # rmdir /cgroup/netprio/xxx
->     /* now this cgroup will never be freed */
-> 
+On Wed, May 06, 2020 at 02:16:32PM +0800, Jason Wang wrote:
+> We tried to reserve space for vnet header before
+> xdp.data_hard_start. But this is useless since the packet could be
+> modified by XDP which may invalidate the information stored in the
+> header and there's no way for XDP to know the existence of the vnet
+> header currently.
 
-Correction (still not tested):
+What do you mean? Doesn't XDP_PASS use the header in the buffer?
 
-     # mount -t cgroup2 none /cgroup/v2
-     # mkdir /cgroup/v2/xxx
-     # echo PID > /cgroup/v2/xxx/cgroup.procs
-     /* this PID process starts to do some network thing */
+> So let's just not reserve space for vnet header in this case.
 
-     # mount -t cgroup -o netprio xxx /cgroup/netprio
-     # mkdir /cgroup/netprio/xxx
-     # echo PID > /cgroup/netprio/xxx/tasks
-     ...
-     /* the PID process exits */
+In any case, we can find out XDP does head adjustments
+if we need to.
 
-     rmdir /cgroup/netprio/xxx
-     rmdir /cgroup/v2/xxx
-     /* now looks like this v2 cgroup will never be freed */
 
-> Look at the code:
+> Cc: Jesper Dangaard Brouer <brouer@redhat.com>
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> ---
+>  drivers/net/virtio_net.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> static inline void sock_update_netprioidx(struct sock_cgroup_data *skcd)
-> {
->      ...
->      sock_cgroup_set_prioidx(skcd, task_netprioidx(current));
-> }
-> 
-> static inline void sock_cgroup_set_prioidx(struct sock_cgroup_data *skcd,
->                      u16 prioidx)
-> {
->      ...
->      if (sock_cgroup_prioidx(&skcd_buf) == prioidx)
->          return ;
->      ...
->      skcd_buf.prioidx = prioidx;
->      WRITE_ONCE(skcd->val, skcd_buf.val);
-> }
-> 
-> task_netprioidx() will be the cgrp id of xxx which is not 1, but
-> sock_cgroup_prioidx(&skcd_buf) is 1 because it thought it's in v2 mode.
-> Now we have a memory leak.
-> 
-> I think the eastest fix is to do the mode switch here:
-> 
-> diff --git a/net/core/netprio_cgroup.c b/net/core/netprio_cgroup.c
-> index b905747..2397866 100644
-> --- a/net/core/netprio_cgroup.c
-> +++ b/net/core/netprio_cgroup.c
-> @@ -240,6 +240,8 @@ static void net_prio_attach(struct cgroup_taskset *tset)
->          struct task_struct *p;
->          struct cgroup_subsys_state *css;
-> 
-> +       cgroup_sk_alloc_disable();
-> +
->          cgroup_taskset_for_each(p, css, tset) {
->                  void *v = (void *)(unsigned long)css->cgroup->id;
+> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> index 11f722460513..98dd75b665a5 100644
+> --- a/drivers/net/virtio_net.c
+> +++ b/drivers/net/virtio_net.c
+> @@ -684,8 +684,8 @@ static struct sk_buff *receive_small(struct net_device *dev,
+>  			page = xdp_page;
+>  		}
+>  
+> -		xdp.data_hard_start = buf + VIRTNET_RX_PAD + vi->hdr_len;
+> -		xdp.data = xdp.data_hard_start + xdp_headroom;
+> +		xdp.data_hard_start = buf + VIRTNET_RX_PAD;
+> +		xdp.data = xdp.data_hard_start + xdp_headroom + vi->hdr_len;
+>  		xdp.data_end = xdp.data + len;
+>  		xdp.data_meta = xdp.data;
+>  		xdp.rxq = &rq->xdp_rxq;
+> @@ -845,7 +845,7 @@ static struct sk_buff *receive_mergeable(struct net_device *dev,
+>  		 * the descriptor on if we get an XDP_TX return code.
+>  		 */
+>  		data = page_address(xdp_page) + offset;
+> -		xdp.data_hard_start = data - VIRTIO_XDP_HEADROOM + vi->hdr_len;
+> +		xdp.data_hard_start = data - VIRTIO_XDP_HEADROOM;
+>  		xdp.data = data + vi->hdr_len;
+>  		xdp.data_end = xdp.data + (len - vi->hdr_len);
+>  		xdp.data_meta = xdp.data;
+> -- 
+> 2.20.1
 
