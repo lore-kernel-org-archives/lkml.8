@@ -2,90 +2,124 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A00C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C40C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E120120663
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA70B2070B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:38:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cfeMbzjj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729212AbgEFKfK (ORCPT
+        id S1729145AbgEFKia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 06:35:10 -0400
-Received: from mail.secom.com.pl ([213.216.87.26]:54526 "EHLO
-        mail.secom.com.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728943AbgEFKfJ (ORCPT
+        Wed, 6 May 2020 06:38:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42204 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728338AbgEFKi3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 06:35:09 -0400
-Received: from debian-2019.secom.com.pl
-        ([192.168.192.41])
-        by mail.secom.com.pl; Wed, 06 May 2020 12:34:46 +0200
-From:   =?UTF-8?q?Rafa=C5=82=20Hibner?= <rafal.hibner@secom.com.pl>
-Cc:     =?UTF-8?q?Rafa=C5=82=20Hibner?= <rafal.hibner@secom.com.pl>,
-        Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
-        Harini Katakam <harini.katakam@xilinx.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH V2] dma: zynqmp_dma: Move list_del inside zynqmp_dma_free_descriptor.
-Date:   Wed,  6 May 2020 12:28:45 +0200
-Message-Id: <20200506102844.2259-1-rafal.hibner@secom.com.pl>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <MW2PR02MB37705416E18413689BFFC7C3C9A60@MW2PR02MB3770.namprd02.prod.outlook.com>
-References: <MW2PR02MB37705416E18413689BFFC7C3C9A60@MW2PR02MB3770.namprd02.prod.outlook.com>
+        Wed, 6 May 2020 06:38:29 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ABEDC061A0F;
+        Wed,  6 May 2020 03:38:29 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id a5so671626pjh.2;
+        Wed, 06 May 2020 03:38:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1OkzDtpIyQuO7IKIy35A+BZWVbOn5RiVMSLQdPPTaSc=;
+        b=cfeMbzjjr2O4Cw1uSwSiiOnq7ozVGG9+v0gmcQMqOdBGNT94BtXZeH1Vk0DpoIaAJ9
+         Tllhu5B8YINCJR6KvA87+KtaEftkw2Hj+qPDr0N7dih/CK0166AMBKfxUJ4JgOG6ujKR
+         UEo4flpajmZABW4JGOjPD+mqNoenPHGzcRKoatZBzZGBOBu/8CwjQ77cHoCmPm24tM+L
+         bEH5L7IHljTsB1bC1Qvv28aFGS8RKx3ewTBxyUR0G3Tbkwno4CbtDs9mLomGZBD1q1IT
+         ZnN2XJBvG4uHXGM9774PbHY4gDBTF/0YqeoUIHoWtgZ1eO2ZBwdwW9WxmINyrR2JJYzH
+         gyxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1OkzDtpIyQuO7IKIy35A+BZWVbOn5RiVMSLQdPPTaSc=;
+        b=Cfpm4/LIeZHSRcHNGdZ6TvXilXqVB5SKFaa0AspgOWUDGLcmZiXkur/MseMIp3J75s
+         gTCeaJ2JPx67Ypxi2XHA59izeUb9tdEGTijrk+ROSSkWP0VAGhH+l1foRtImfBoJN1vb
+         424qPC2GCWadmV5A67U/1hoNLe5hrY5WVvN0AoMACR//mTL6qydxuL+bcBs4xEz5gi+O
+         VXg3ge9LdXUmohmV5WjbWV6pP3JPzJpcuil26ApiUBu7C9dOgZATobGPpX0hYLAVpiWT
+         bzJkABogg9MbisI6HoaRLd/Fa9gEImIkBk68/Q63gunZDlNZRH0elp3EE0gT2vUCCxhc
+         7Tgw==
+X-Gm-Message-State: AGi0PuZ9zdJ2xSydLBizZqYhg2mWmL2GPtn9BOIjzCQH/+uVPgWXxRDu
+        AQVkKEs5854WBXDS8glvaGcDAGiIQsm57g/WPWJxnK7opSE=
+X-Google-Smtp-Source: APiQypIQSsE756MmU5Ui9qd6Ru5n1fOj18yZcTKTZaLH1fRbMTqqyO0CS+qusaR0TW0AGLITbhdOtcSi1Yf7K190AJA=
+X-Received: by 2002:a17:902:6901:: with SMTP id j1mr7086450plk.255.1588761508837;
+ Wed, 06 May 2020 03:38:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20200506035206.192173-1-christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20200506035206.192173-1-christophe.jaillet@wanadoo.fr>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 6 May 2020 13:38:22 +0300
+Message-ID: <CAHp75Vdi+ZYpQPHgoREQ6LTaUHTPmNkR7ULZaVNTJr7Bvh-q9Q@mail.gmail.com>
+Subject: Re: [PATCH] iio: sca3000: Remove an erroneous 'get_device()'
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-List elements are not formally removed from list during zynqmp_dma_reset.
+On Wed, May 6, 2020 at 6:55 AM Christophe JAILLET
+<christophe.jaillet@wanadoo.fr> wrote:
+>
+> This looks really unusual to have a 'get_device()' hidden in a 'dev_err()'
+> call.
+> Remove it.
+>
+> While at it add a missing \n at the end of the message.
+>
 
-Signed-off-by: Rafal Hibner <rafal.hibner@secom.com.pl>
----
-> Looking at this, i think it would make sense to do list_splice_init() before we
-> send the list to be freed.
+It should have Fixes tag because it is a quite an issue (get_device()
+breaks reference counting with all problems we may expect).
 
-Moving list_del inside zynqmp_dma_free_descriptor fixes the problem just as well
-and avoids INIT_LIST_HEAD(list).
-I still don't see how list_splice_init would help here.
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> This patch is purely speculative.
+> I've looked a bit arround and see no point for this get_device() but other
+> eyes are welcomed :)
+> ---
+>  drivers/iio/accel/sca3000.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/iio/accel/sca3000.c b/drivers/iio/accel/sca3000.c
+> index 66d768d971e1..6e429072e44a 100644
+> --- a/drivers/iio/accel/sca3000.c
+> +++ b/drivers/iio/accel/sca3000.c
+> @@ -980,7 +980,7 @@ static int sca3000_read_data(struct sca3000_state *st,
+>         st->tx[0] = SCA3000_READ_REG(reg_address_high);
+>         ret = spi_sync_transfer(st->us, xfer, ARRAY_SIZE(xfer));
+>         if (ret) {
+> -               dev_err(get_device(&st->us->dev), "problem reading register");
+> +               dev_err(&st->us->dev, "problem reading register\n");
+>                 return ret;
+>         }
+>
+> --
+> 2.25.1
+>
 
-Regards,
-Rafal
 
----
- drivers/dma/xilinx/zynqmp_dma.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/dma/xilinx/zynqmp_dma.c b/drivers/dma/xilinx/zynqmp_dma.c
-index 931e41a72..df0403335 100644
---- a/drivers/dma/xilinx/zynqmp_dma.c
-+++ b/drivers/dma/xilinx/zynqmp_dma.c
-@@ -434,6 +434,7 @@ static void zynqmp_dma_free_descriptor(struct zynqmp_dma_chan *chan,
- 	struct zynqmp_dma_desc_sw *child, *next;
- 
- 	chan->desc_free_cnt++;
-+	list_del(&sdesc->node);
- 	list_add_tail(&sdesc->node, &chan->free_list);
- 	list_for_each_entry_safe(child, next, &sdesc->tx_list, node) {
- 		chan->desc_free_cnt++;
-@@ -604,8 +605,6 @@ static void zynqmp_dma_chan_desc_cleanup(struct zynqmp_dma_chan *chan)
- 		dma_async_tx_callback callback;
- 		void *callback_param;
- 
--		list_del(&desc->node);
--
- 		callback = desc->async_tx.callback;
- 		callback_param = desc->async_tx.callback_param;
- 		if (callback) {
 -- 
-2.20.1
-
+With Best Regards,
+Andy Shevchenko
