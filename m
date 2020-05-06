@@ -2,107 +2,131 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C06DCC38A24
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C48C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A16C72070B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:47:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="GmeI+UP2"
+	by mail.kernel.org (Postfix) with ESMTP id 9B4442070B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:48:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588758535;
+	bh=ZW1E79xPaZKAydY429DVMLY0e+c/wC5VYXN8YIirzjM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=m/Qo4jfWLmahwbX1amnUZRKFy604Rl6B/gStmYS6vjHk0GFObHE0x+pTXJAic9Yn9
+	 Eyry+U141X3wyxBPUrFE2zpZAzNPoSaC0UjsrRwWWSuCRlP9/NIews0YY6Rpa+s4zV
+	 Lis8laVDGAZ0fMuYZx3X2pCoMuqNRPWGyeT9feXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbgEFJrm (ORCPT
+        id S1729141AbgEFJsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 05:47:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729040AbgEFJrl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 05:47:41 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5892DC061A10
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 02:47:39 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id t11so790795lfe.4
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 02:47:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cumulusnetworks.com; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=/9ah7zhuR4873GSpvZCqmYYEsJCcLFVCYyRiQ4J6Vdk=;
-        b=GmeI+UP24kyAPTiBFvucgZ/V4AdmN9uFhZQV85PUDH3V01byOj0XccFF6diF/xZd4E
-         +cSoNUycgb8W8kPHInzeAOkcj+nqZPlNvaGrwlGWqFZpY2eMaUa27ZP5I9tqihtthDnx
-         6QQKERCXj5PH5svOqIuTE12LsGdy5dfxSTCXg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/9ah7zhuR4873GSpvZCqmYYEsJCcLFVCYyRiQ4J6Vdk=;
-        b=AKvwQ+KkhRxpv/R9kVEfo1q8SY/vk9jzXXiiAXTSJBizCr/GSmUw1RAQhJ6TahMvks
-         PU2ZAz/emtkDAi/QHnyYEttqxwi0tRX85hXpspo5Ra7gWOjxSTQ/kIQ6DxVxsBRYrT42
-         QSfpuHCxa14bOdauULz7cKSFDHAY30Hsu+SXfgnw5X5Kx8fARN/ac1qP9Plfs1gPDPmF
-         T/xNVysQI9nb/jRk3yYUEZdKR2Hk3G40ckAkvKasyYYvvzTJClPPZoE+1+csOkwo7ihJ
-         86kmUrQ0ng9v0KLIVaGGK9OPStKpopUDGW5qOp6Z609GGdWOawre/PvpPCcN6kiokwTF
-         DUbg==
-X-Gm-Message-State: AGi0PuYu5pXgPcQa1nQohr2q0mGeRpTZcF0lV2y5Q8wqAlySIxYDrZzm
-        /A4EtAkopqYxVk4DrHAD09tM3Nzfa9Np7A==
-X-Google-Smtp-Source: APiQypLnD2AvkD2qPRRmjXwr/1RNm41CbdM9Hbn0xbk9jZ1SR3g4pCmCYNoosoZyqZS6x+UMJMpQzA==
-X-Received: by 2002:a05:6512:455:: with SMTP id y21mr4691981lfk.202.1588758457377;
-        Wed, 06 May 2020 02:47:37 -0700 (PDT)
-Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
-        by smtp.gmail.com with ESMTPSA id 23sm954196lju.106.2020.05.06.02.47.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 May 2020 02:47:36 -0700 (PDT)
-Subject: Re: [PATCH net-next] net: bridge: return false in br_mrp_enabled()
-To:     Jason Yan <yanaijie@huawei.com>, roopa@cumulusnetworks.com,
-        davem@davemloft.net, kuba@kernel.org,
-        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
+        Wed, 6 May 2020 05:48:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51950 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728640AbgEFJsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 05:48:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7934F206DD;
+        Wed,  6 May 2020 09:48:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588758533;
+        bh=ZW1E79xPaZKAydY429DVMLY0e+c/wC5VYXN8YIirzjM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pwtFY++fxs2YNcNbbN+ZfgD+/9YnoIpehM4RYf+bS6ZuKVQf6QPag8gWpA0OrecEp
+         G2ZCTCXXR3/YDgChIyUNUbIvPOKmS0Lf6irGRLNNWe1EfCOEz7QJ2p038mRUue0uSK
+         cjs/cy+YpVrIdfXvi40mz6x60zA0GR0vRbom8Bb4=
+Date:   Wed, 6 May 2020 11:48:51 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Raghavendra Rao Ananta <rananta@codeaurora.org>
+Cc:     jslaby@suse.com, andrew@daynix.com, linuxppc-dev@lists.ozlabs.org,
         linux-kernel@vger.kernel.org
-References: <20200506061616.18929-1-yanaijie@huawei.com>
-From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Message-ID: <80b3d01a-1bd5-f5c5-abaa-6f3114683617@cumulusnetworks.com>
-Date:   Wed, 6 May 2020 12:47:35 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+Subject: Re: [PATCH] tty: hvc: Fix data abort due to race in hvc_open
+Message-ID: <20200506094851.GA2787548@kroah.com>
+References: <20200428032601.22127-1-rananta@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200506061616.18929-1-yanaijie@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428032601.22127-1-rananta@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/05/2020 09:16, Jason Yan wrote:
-> Fix the following coccicheck warning:
+On Mon, Apr 27, 2020 at 08:26:01PM -0700, Raghavendra Rao Ananta wrote:
+> Potentially, hvc_open() can be called in parallel when two tasks calls
+> open() on /dev/hvcX. In such a scenario, if the hp->ops->notifier_add()
+> callback in the function fails, where it sets the tty->driver_data to
+> NULL, the parallel hvc_open() can see this NULL and cause a memory abort.
+> Hence, serialize hvc_open and check if tty->private_data is NULL before
+> proceeding ahead.
 > 
-> net/bridge/br_private.h:1334:8-9: WARNING: return of 0/1 in function
-> 'br_mrp_enabled' with return type bool
+> The issue can be easily reproduced by launching two tasks simultaneously
+> that does nothing but open() and close() on /dev/hvcX.
+> For example:
+> $ ./simple_open_close /dev/hvc0 & ./simple_open_close /dev/hvc0 &
 > 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
 > ---
->  net/bridge/br_private.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/tty/hvc/hvc_console.c | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
 > 
-> diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
-> index c35647cb138a..78d3a951180d 100644
-> --- a/net/bridge/br_private.h
-> +++ b/net/bridge/br_private.h
-> @@ -1331,7 +1331,7 @@ static inline int br_mrp_process(struct net_bridge_port *p, struct sk_buff *skb)
+> diff --git a/drivers/tty/hvc/hvc_console.c b/drivers/tty/hvc/hvc_console.c
+> index 436cc51c92c3..ebe26fe5ac09 100644
+> --- a/drivers/tty/hvc/hvc_console.c
+> +++ b/drivers/tty/hvc/hvc_console.c
+> @@ -75,6 +75,8 @@ static LIST_HEAD(hvc_structs);
+>   */
+>  static DEFINE_MUTEX(hvc_structs_mutex);
 >  
->  static inline bool br_mrp_enabled(struct net_bridge *br)
+> +/* Mutex to serialize hvc_open */
+> +static DEFINE_MUTEX(hvc_open_mutex);
+>  /*
+>   * This value is used to assign a tty->index value to a hvc_struct based
+>   * upon order of exposure via hvc_probe(), when we can not match it to
+> @@ -346,16 +348,24 @@ static int hvc_install(struct tty_driver *driver, struct tty_struct *tty)
+>   */
+>  static int hvc_open(struct tty_struct *tty, struct file * filp)
 >  {
-> -	return 0;
-> +	return false;
->  }
+> -	struct hvc_struct *hp = tty->driver_data;
+> +	struct hvc_struct *hp;
+>  	unsigned long flags;
+>  	int rc = 0;
 >  
->  static inline void br_mrp_port_del(struct net_bridge *br,
-> 
-Fixes: 6536993371fab ("bridge: mrp: Integrate MRP into the bridge")
-Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+> +	mutex_lock(&hvc_open_mutex);
+> +
+> +	hp = tty->driver_data;
+> +	if (!hp) {
+> +		rc = -EIO;
+> +		goto out;
+> +	}
+> +
+>  	spin_lock_irqsave(&hp->port.lock, flags);
+>  	/* Check and then increment for fast path open. */
+>  	if (hp->port.count++ > 0) {
+>  		spin_unlock_irqrestore(&hp->port.lock, flags);
+>  		hvc_kick();
+> -		return 0;
+> +		goto out;
+>  	} /* else count == 0 */
+>  	spin_unlock_irqrestore(&hp->port.lock, flags);
 
+Wait, why isn't this driver just calling tty_port_open() instead of
+trying to open-code all of this?
+
+Keeping a single mutext for open will not protect it from close, it will
+just slow things down a bit.  There should already be a tty lock held by
+the tty core for open() to keep it from racing things, right?
+
+Try just removing all of this logic and replacing it with a call to
+tty_port_open() and see if that fixes this issue.
+
+As "proof" of this, I don't see other serial drivers needing a single
+mutex for their open calls, do you?
+
+thanks,
+
+greg k-h
