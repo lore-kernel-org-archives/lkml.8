@@ -2,145 +2,126 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA620C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92319C38A24
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C213C2075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:23:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GsaOfT1d"
+	by mail.kernel.org (Postfix) with ESMTP id 79B76206D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:25:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbgEFUXo (ORCPT
+        id S1728231AbgEFUZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 16:23:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49252 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728231AbgEFUXo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 16:23:44 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14E94C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 13:23:43 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id b1so2851626qtt.1
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 13:23:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TMfOiyScPI6sXjzue1RK10RLRAGspCu6RHrnOnwDOOA=;
-        b=GsaOfT1dKy7+TKNY3uZhlWeFDkDGnb/ccNetSXIMzIu4vpbuSqwquRPW15AMw0mZxN
-         DtZVlleBXUYtuQzDVvQ10t6XJLJMZVLjbeyOb0ERtEQ/EyVYO+J33F8l5FRCwmdB3LcI
-         JFWdj1Gbx85j+nXt6fKTeVdumL0CU+vjWr0kBTiBAJxMYcS55KRFk+3keNV30VyGS9En
-         2LHk5jHgq9+MHSpvG3oxsJkqxCxOf0TJOcyjb0Ps8dfNrIdME9FjOGSiFLo2x2HdAhYf
-         qa/O4h3jOT2k1pHgv9r3sFeWDzJzDndKPA2dZ7F7Ac+KXgKo0fqXeumqJHg2SgmQGJxy
-         FdmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TMfOiyScPI6sXjzue1RK10RLRAGspCu6RHrnOnwDOOA=;
-        b=N0E+4khLPihvH52RKbyzmV6K9rF50Gn4SrVuBJMEP0GS/lZGOk6EGPIrO5sZNv4rsm
-         LJ7FJ+tMHi0rOFj9eebRw2j13ZdYmeK+Eup+Mo8MDOv5j6zZrWsRev8FfYbKPEKqQLn1
-         m1QRT60KlTJzGRhxps9zOdj2xVHLXw/QqzXQCpfOLWYmxw1xHB8zrFnpRh+FtCwYuMbA
-         uAUHZTdbmw5XFhqrHYJPGSR2sSWBuLWlKbuCfCRh0AN8BnU5U97vkJpM8cjqtllmszBw
-         w+WgkpHaufWgPH6TNBB8s4iF8LpvW9xPBM2TKc8gdeNiOXQdOrVtkliA3j3bzZ/DkmhQ
-         O7Vw==
-X-Gm-Message-State: AGi0PuYkSLUZ1w8Oq2gZG/E8kYhpYFzkIQG/+1YdZ0XUzFWUxauAmqvh
-        CU/ZFOG3h+nEngpDo8wlFlw=
-X-Google-Smtp-Source: APiQypKQDCPBZJAx487iYZ1OSLfHaAiC3CwXXlFiHduT8fxRN12FEzIB64LsfZA7lz5jWoyvOQCRgA==
-X-Received: by 2002:ac8:6ecd:: with SMTP id f13mr10536169qtv.114.1588796622228;
-        Wed, 06 May 2020 13:23:42 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id l8sm2549236qtl.86.2020.05.06.13.23.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 13:23:41 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6BD93409A3; Wed,  6 May 2020 17:23:39 -0300 (-03)
-Date:   Wed, 6 May 2020 17:23:39 -0300
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Wed, 6 May 2020 16:25:16 -0400
+Received: from mga07.intel.com ([134.134.136.100]:32872 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726627AbgEFUZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 16:25:16 -0400
+IronPort-SDR: iuyKOFRaSc5UDnIYcz6oLu/mTlBbbftpP66PZXTW2HTv2aLBgBX9vidybh/Bj2eRxHi6t8EZbY
+ i+43cy2henJw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 13:25:15 -0700
+IronPort-SDR: xSrhp4VCcSvP5bv2WtfYo6vFeSsnnsv3N44sSopWfpFOgIk9uc/zRJt3WrQM/g5MZyK9rPCoAV
+ JVwDj2vxz4ng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,360,1583222400"; 
+   d="scan'208";a="461881349"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga006.fm.intel.com with ESMTP; 06 May 2020 13:25:14 -0700
+Date:   Wed, 6 May 2020 13:25:14 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 09/11] perf record: implement control commands handling
-Message-ID: <20200506202339.GH9893@kernel.org>
-References: <d582cc3d-2302-c7e2-70d3-bc7ab6f628c3@linux.intel.com>
- <db9bb4c3-14d2-aa9f-c281-f81ca698913d@linux.intel.com>
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH V2 05/11] {x86,powerpc,microblaze}/kmap: Move preempt
+ disable
+Message-ID: <20200506202514.GF1084880@iweiny-DESK2.sc.intel.com>
+References: <20200504010912.982044-1-ira.weiny@intel.com>
+ <20200504010912.982044-6-ira.weiny@intel.com>
+ <20200506061113.GA5192@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <db9bb4c3-14d2-aa9f-c281-f81ca698913d@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200506061113.GA5192@infradead.org>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, May 06, 2020 at 09:29:05PM +0300, Alexey Budankov escreveu:
+On Tue, May 05, 2020 at 11:11:13PM -0700, Christoph Hellwig wrote:
+> On Sun, May 03, 2020 at 06:09:06PM -0700, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > During this kmap() conversion series we must maintain bisect-ability.
+> > To do this, kmap_atomic_prot() in x86, powerpc, and microblaze need to
+> > remain functional.
+> > 
+> > Create a temporary inline version of kmap_atomic_prot within these
+> > architectures so we can rework their kmap_atomic() calls and then lift
+> > kmap_atomic_prot() to the core.
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > ---
+> > Changes from V1:
+> > 	New patch
+> > ---
+> >  arch/microblaze/include/asm/highmem.h | 11 ++++++++++-
+> >  arch/microblaze/mm/highmem.c          | 10 ++--------
+> >  arch/powerpc/include/asm/highmem.h    | 11 ++++++++++-
+> >  arch/powerpc/mm/highmem.c             |  9 ++-------
+> >  arch/x86/include/asm/highmem.h        | 11 ++++++++++-
+> >  arch/x86/mm/highmem_32.c              | 10 ++--------
+> >  6 files changed, 36 insertions(+), 26 deletions(-)
+> > 
+> > diff --git a/arch/microblaze/include/asm/highmem.h b/arch/microblaze/include/asm/highmem.h
+> > index 0c94046f2d58..ec9954b091e1 100644
+> > --- a/arch/microblaze/include/asm/highmem.h
+> > +++ b/arch/microblaze/include/asm/highmem.h
+> > @@ -51,7 +51,16 @@ extern pte_t *pkmap_page_table;
+> >  #define PKMAP_NR(virt)  ((virt - PKMAP_BASE) >> PAGE_SHIFT)
+> >  #define PKMAP_ADDR(nr)  (PKMAP_BASE + ((nr) << PAGE_SHIFT))
+> >  
+> > -extern void *kmap_atomic_prot(struct page *page, pgprot_t prot);
+> > +extern void *kmap_atomic_high_prot(struct page *page, pgprot_t prot);
+> > +void *kmap_atomic_prot(struct page *page, pgprot_t prot)
 > 
-> Implement handling of 'enable' and 'disable' control commands
-> coming from control file descriptor.
-> 
-> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-> ---
->  tools/perf/builtin-record.c | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 8a14e68b86ad..2278a3efc747 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -1496,6 +1496,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
->  	bool disabled = false, draining = false;
->  	int fd;
->  	float ratio = 0;
-> +	enum evlist_ctl_cmd cmd = CTL_CMD_UNSUPPORTED;
->  
->  	atexit(record__sig_exit);
->  	signal(SIGCHLD, sig_handler);
-> @@ -1793,8 +1794,23 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
->  			 * Propagate error, only if there's any. Ignore positive
->  			 * number of returned events and interrupt error.
->  			 */
-> -			if (err > 0 || (err < 0 && errno == EINTR))
-> +			if (err > 0 || (err < 0 && errno == EINTR)) {
->  				err = 0;
-> +				if (perf_evlist__ctlfd_process(rec->evlist, &cmd) > 0) {
-> +					switch (cmd) {
-> +					case CTL_CMD_ENABLE:
-> +						pr_info(PERF_EVLIST__ENABLED_MSG);
-> +						break;
-> +					case CTL_CMD_DISABLE:
-> +						pr_info(PERF_EVLIST__DISABLED_MSG);
-> +						break;
-> +					case CTL_CMD_ACK:
-> +					case CTL_CMD_UNSUPPORTED:
+> Shouldn't this be marked inline?
 
-Shouldn't we have a pr_debug() or even pr_err() for the unsupported one?
+Yes Thanks.  Done.
 
-> +					default:
-> +						break;
-> +					}
-> +				}
-> +			}
->  			waking++;
->  
->  			if (evlist__filter_pollfd(rec->evlist, POLLERR | POLLHUP) == 0)
-> -- 
-> 2.24.1
 > 
+> The rest looks fine:
 > 
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
 
--- 
+Thanks,
+Ira
 
-- Arnaldo
