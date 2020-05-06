@@ -2,115 +2,110 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C860C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE7BC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3429F2063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7C61206D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:18:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588796327;
+	bh=8Sej8aUk9IaZRIgP1lsxb1KUmZLb9ww84lQcyW/w7JA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=um42RgpCIpUflTDoyevgcMRzhTvh8Poge8kbdU8OxNSTrgEMrufUksBrYA5fMZmZV
+	 A/I9y0q12RZHB3VKEaRW/iesB72eAcn16llinJ6ja3eI4MJkZ4pevbl8vn/8CrYICJ
+	 fJ3UeG7DQI3yzvgVmsE8Kpysq4QGWtbnrBTApeEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728728AbgEFUSh (ORCPT
+        id S1728811AbgEFUSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 16:18:37 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:33638 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726927AbgEFUSf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 16:18:35 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 124AB803087B;
-        Wed,  6 May 2020 20:18:32 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id LskWpPVdEHP7; Wed,  6 May 2020 23:18:31 +0300 (MSK)
-Date:   Wed, 6 May 2020 23:18:30 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Sam Ravnborg <sam@ravnborg.org>
-CC:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-mips@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 03/20] dt-bindings: Add vendor prefix for Baikal
- Electronics, JSC
-Message-ID: <20200506201830.tmul56h5nci434n5@mobilestation>
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
- <20200506174238.15385-4-Sergey.Semin@baikalelectronics.ru>
- <20200506175553.GA7775@ravnborg.org>
- <20200506192049.bznhiwra5a43ao26@mobilestation>
- <20200506192653.GA30135@ravnborg.org>
+        Wed, 6 May 2020 16:18:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57156 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727792AbgEFUSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 16:18:46 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 297D02075E;
+        Wed,  6 May 2020 20:18:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588796325;
+        bh=8Sej8aUk9IaZRIgP1lsxb1KUmZLb9ww84lQcyW/w7JA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=koDl/cfHbwUDaHEDXE9KShFTvX2BsBlgoa16I9Uk+ojauzDcpR4gP1c8k9R7aU360
+         4VzN7manhmTrbJcwtgeUNHAnlq47ZK2mMIaRBW2vPAF4Hzqr+V1BTNn9TOWx/HQQMT
+         mYG4LKhMXVfxpNDXU4ZVvuGbwq0qG/DhC5mVh98Q=
+Date:   Wed, 6 May 2020 13:18:43 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     <nicolas.ferre@microchip.com>
+Cc:     <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
+        "Claudiu Beznea" <claudiu.beznea@microchip.com>,
+        <harini.katakam@xilinx.com>, <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <antoine.tenart@bootlin.com>, <f.fainelli@gmail.com>
+Subject: Re: [PATCH v4 1/5] net: macb: fix wakeup test in runtime
+ suspend/resume routines
+Message-ID: <20200506131843.22cf1dab@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <dc30ff1d17cb5a75ddd10966eab001f67ac744ef.1588763703.git.nicolas.ferre@microchip.com>
+References: <cover.1588763703.git.nicolas.ferre@microchip.com>
+        <dc30ff1d17cb5a75ddd10966eab001f67ac744ef.1588763703.git.nicolas.ferre@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200506192653.GA30135@ravnborg.org>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 09:26:53PM +0200, Sam Ravnborg wrote:
-> Hi Sergey
-> > > > +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> > > > @@ -139,6 +139,8 @@ patternProperties:
-> > > >      description: Azoteq (Pty) Ltd
-> > > >    "^azw,.*":
-> > > >      description: Shenzhen AZW Technology Co., Ltd.
-> > > > +  "^baikal,.*":
-> > > > +    description: BAIKAL ELECTRONICS, JSC
-> > > Baikal do not use ALL UPPSECASE on their website for their name.
-> > > So please use same case use as they do themself.
-> > > 
-> > 
-> > It's not like me can't be considered as part of them.) I discussed the
-> > upper-case and normal version with our managers half a year ago and we
-> > came up to use the upper-case version. From Russian legal point of view
-> > it's also the upper-cased version what counts. I don't really know why
-> > the site use different naming, but in the internal documents it's always
-> > as submitted. Anyway I asked this question one more time to our managers.
-> > If they say to use as you suggest, then I'll resend an update in v3
-> > patchset, if v3 doesn't get to be necessary I'll send a followup patch
-> > with fix.
+On Wed, 6 May 2020 13:37:37 +0200 nicolas.ferre@microchip.com wrote:
+> From: Nicolas Ferre <nicolas.ferre@microchip.com>
 > 
-> I had expected it was upper case because others used upper case.
-> But there is a good explanation and then all is fine wiht me.
+> Use the proper struct device pointer to check if the wakeup flag
+> and wakeup source are positioned.
+> Use the one passed by function call which is equivalent to
+> &bp->dev->dev.parent.
 > 
-> And it is an alphabetic order - so
-> Acked-by: Sam Ravnborg <sam@ravnborg.org>
-
-Great. Thanks. I've just got an answer from our legal department:
-"The Company has a Charter in which the name in English is:
-“BAIKAL ELECTRONICS, JSC.” Charter is the only thing you need to focus on
-when specifying the name."
-
-I also pointed out that it would be good to have the site updated if the
-upper-cased name is required by the Charter. Hope it will be done soon.)
-
--Sergey
-
+> It's preventing the trigger of a spurious interrupt in case the
+> Wake-on-Lan feature is used.
 > 
-> > 
-> > -Sergey
-> > 
-> > > 
-> > > 	Sam
-> > > 
-> > > >    "^bananapi,.*":
-> > > >      description: BIPAI KEJI LIMITED
-> > > >    "^beacon,.*":
-> > > > -- 
-> > > > 2.25.1
+> Fixes: bc1109d04c39 ("net: macb: Add pm runtime support")
+
+        Fixes tag: Fixes: bc1109d04c39 ("net: macb: Add pm runtime support")
+        Has these problem(s):
+                - Target SHA1 does not exist
+
+> Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Claudiu Beznea <claudiu.beznea@microchip.com>
+> Cc: Harini Katakam <harini.katakam@xilinx.com>
+> ---
+>  drivers/net/ethernet/cadence/macb_main.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+> index 36290a8e2a84..d11fae37d46b 100644
+> --- a/drivers/net/ethernet/cadence/macb_main.c
+> +++ b/drivers/net/ethernet/cadence/macb_main.c
+> @@ -4616,7 +4616,7 @@ static int __maybe_unused macb_runtime_suspend(struct device *dev)
+>  	struct net_device *netdev = dev_get_drvdata(dev);
+>  	struct macb *bp = netdev_priv(netdev);
+>  
+> -	if (!(device_may_wakeup(&bp->dev->dev))) {
+> +	if (!(device_may_wakeup(dev))) {
+>  		clk_disable_unprepare(bp->tx_clk);
+>  		clk_disable_unprepare(bp->hclk);
+>  		clk_disable_unprepare(bp->pclk);
+> @@ -4632,7 +4632,7 @@ static int __maybe_unused macb_runtime_resume(struct device *dev)
+>  	struct net_device *netdev = dev_get_drvdata(dev);
+>  	struct macb *bp = netdev_priv(netdev);
+>  
+> -	if (!(device_may_wakeup(&bp->dev->dev))) {
+> +	if (!(device_may_wakeup(dev))) {
+>  		clk_prepare_enable(bp->pclk);
+>  		clk_prepare_enable(bp->hclk);
+>  		clk_prepare_enable(bp->tx_clk);
+
