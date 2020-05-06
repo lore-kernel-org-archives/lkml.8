@@ -2,273 +2,89 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C68C47258
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5607FC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E51B20714
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27EB520714
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:30:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mLUoJKiQ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FALkq/GS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728681AbgEFIaU (ORCPT
+        id S1728787AbgEFIal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 04:30:20 -0400
+        Wed, 6 May 2020 04:30:41 -0400
 Received: from mail27.static.mailgun.info ([104.130.122.27]:59402 "EHLO
         mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728366AbgEFIaU (ORCPT
+        by vger.kernel.org with ESMTP id S1727956AbgEFIak (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 04:30:20 -0400
+        Wed, 6 May 2020 04:30:40 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588753818; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To:
- Subject: From: Sender; bh=jzdjT5/FfPOTtWWCKqxudmO6PH7po5sH4MzlpxAcptc=;
- b=mLUoJKiQwJ1UcAVWjvEUgSGmHCWfHrw96LI9qtZWfMUlCWPZziU9j+Q/tf47sRCrOPNm6Hl3
- jr4mFy0Cqji8j8gL/UeeCt7veyzSbVgWfzQZ6O3bREarmK66m2FTdWPKEHQYALYX4TYi4v6o
- I6TwDuIc3snOMqoxfm7oKn7pDzY=
+ s=smtp; t=1588753840; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=kOsCE+K1+9vGSPSNsL0vsTI07a8frxFk3jreyDx93Jg=;
+ b=FALkq/GSBnjzpvNtZ7mi9EnQRZXGWRyTzLpzGff4GQaRBJK0t6aPexU3taKtjs5YpuG4rrXk
+ sKsr3+N4YdphQxzR++glYLZjZmy7MicZGc2JzVdjGu8vWcfvDo7PR4VaMEL65jabS+4bwyP3
+ ldZALRWlOAb+9V2yP5zxlKF9PVA=
 X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb27599.7f608a93aca8-smtp-out-n04;
- Wed, 06 May 2020 08:30:17 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5eb27592.7f42392bf730-smtp-out-n02;
+ Wed, 06 May 2020 08:30:10 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 58BC0C43636; Wed,  6 May 2020 08:30:17 +0000 (UTC)
-Received: from [192.168.0.102] (unknown [183.83.139.238])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id DE136C44798; Wed,  6 May 2020 08:30:08 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: charante)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 90C41C433BA;
-        Wed,  6 May 2020 08:30:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 90C41C433BA
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 695A9C44793;
+        Wed,  6 May 2020 08:30:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 695A9C44793
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=charante@codeaurora.org
-From:   Charan Teja Kalla <charante@codeaurora.org>
-Subject: Re: [PATCH] dma-buf: fix use-after-free in dmabuffs_dname
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-kernel@vger.kernel.org
-Cc:     vinmenon@codeaurora.org, sumit.semwal@linaro.org,
-        ghackmann@google.com, fengc@google.com, linux-media@vger.kernel.org
-References: <1588060442-28638-1-git-send-email-charante@codeaurora.org>
- <20200505100806.GA4177627@kroah.com>
-Message-ID: <8424b2ac-3ea6-6e5b-b99c-951a569f493d@codeaurora.org>
-Date:   Wed, 6 May 2020 14:00:10 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200505100806.GA4177627@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2 1/2] iopoll: Introduce read_poll_timeout_atomic macro
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200424184918.30360-1-kai.heng.feng@canonical.com>
+References: <20200424184918.30360-1-kai.heng.feng@canonical.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     yhchuang@realtek.com, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dejin Zheng <zhengdejin5@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org (open list)
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200506083008.DE136C44798@smtp.codeaurora.org>
+Date:   Wed,  6 May 2020 08:30:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you Greg for the reply.
+Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
 
-On 5/5/2020 3:38 PM, Greg KH wrote:
-> On Tue, Apr 28, 2020 at 01:24:02PM +0530, Charan Teja Reddy wrote:
->> The following race occurs while accessing the dmabuf object exported as
->> file:
->> P1				P2
->> dma_buf_release()          dmabuffs_dname()
->> 			   [say lsof reading /proc/<P1 pid>/fd/<num>]
->>
->> 			   read dmabuf stored in dentry->fsdata
->> Free the dmabuf object
->> 			   Start accessing the dmabuf structure
->>
->> In the above description, the dmabuf object freed in P1 is being
->> accessed from P2 which is resulting into the use-after-free. Below is
->> the dump stack reported.
->>
->> Call Trace:
->>   kasan_report+0x12/0x20
->>   __asan_report_load8_noabort+0x14/0x20
->>   dmabuffs_dname+0x4f4/0x560
->>   tomoyo_realpath_from_path+0x165/0x660
->>   tomoyo_get_realpath
->>   tomoyo_check_open_permission+0x2a3/0x3e0
->>   tomoyo_file_open
->>   tomoyo_file_open+0xa9/0xd0
->>   security_file_open+0x71/0x300
->>   do_dentry_open+0x37a/0x1380
->>   vfs_open+0xa0/0xd0
->>   path_openat+0x12ee/0x3490
->>   do_filp_open+0x192/0x260
->>   do_sys_openat2+0x5eb/0x7e0
->>   do_sys_open+0xf2/0x180
->>
->> Fixes: bb2bb90 ("dma-buf: add DMA_BUF_SET_NAME ioctls")
-> Nit, please read the documentation for how to do a Fixes: line properly,
-> you need more digits:
-> 	Fixes: bb2bb9030425 ("dma-buf: add DMA_BUF_SET_NAME ioctls")
+> Like read_poll_timeout, an atomic variant for multiple parameter read
+> function can be useful.
+> 
+> Will be used by a later patch.
+> 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
+Patch applied to wireless-drivers-next.git, thanks.
 
-Will update the patch
+57a29df34146 iopoll: Introduce read_poll_timeout_atomic macro
 
+-- 
+https://patchwork.kernel.org/patch/11508809/
 
->> Reported-by:syzbot+3643a18836bce555bff6@syzkaller.appspotmail.com
->> Signed-off-by: Charan Teja Reddy<charante@codeaurora.org>
-> Also, any reason you didn't include the other mailing lists that
-> get_maintainer.pl said to?
-
-
-Really sorry for not sending to complete list. Added now.
-
-
-> And finally, no cc: stable in the s-o-b area for an issue that needs to
-> be backported to older kernels?
-
-
-Will update the patch.
-
-
->
->> ---
->>   drivers/dma-buf/dma-buf.c | 25 +++++++++++++++++++++++--
->>   include/linux/dma-buf.h   |  1 +
->>   2 files changed, 24 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
->> index 570c923..069d8f78 100644
->> --- a/drivers/dma-buf/dma-buf.c
->> +++ b/drivers/dma-buf/dma-buf.c
->> @@ -25,6 +25,7 @@
->>   #include <linux/mm.h>
->>   #include <linux/mount.h>
->>   #include <linux/pseudo_fs.h>
->> +#include <linux/dcache.h>
->>   
->>   #include <uapi/linux/dma-buf.h>
->>   #include <uapi/linux/magic.h>
->> @@ -38,18 +39,34 @@ struct dma_buf_list {
->>   
->>   static struct dma_buf_list db_list;
->>   
->> +static void dmabuf_dent_put(struct dma_buf *dmabuf)
->> +{
->> +	if (atomic_dec_and_test(&dmabuf->dent_count)) {
->> +		kfree(dmabuf->name);
->> +		kfree(dmabuf);
->> +	}
-> Why not just use a kref instead of an open-coded atomic value?
-
-
-Kref approach looks cleaner. will update the patch accordingly.
-
-
->> +}
->> +
->>   static char *dmabuffs_dname(struct dentry *dentry, char *buffer, int buflen)
->>   {
->>   	struct dma_buf *dmabuf;
->>   	char name[DMA_BUF_NAME_LEN];
->>   	size_t ret = 0;
->>   
->> +	spin_lock(&dentry->d_lock);
->>   	dmabuf = dentry->d_fsdata;
->> +	if (!dmabuf || !atomic_add_unless(&dmabuf->dent_count, 1, 0)) {
->> +		spin_unlock(&dentry->d_lock);
->> +		goto out;
-> How can dmabuf not be valid here?
->
-> And isn't there already a usecount for the buffer?
-
-
-dmabuf exported as file simply relies on that file's refcount, thus 
-fput() releases the dmabuf.
-
-We are storing the dmabuf in the dentry->d_fsdata but there is no 
-binding between the dentry and the dmabuf. So, flow will be like
-
-1) P1 calls fput(dmabuf_fd)
-
-2) P2 trying to access the file information of P1.
-     Eg: lsof command trying to list out the dmabuf_fd information using 
-/proc/<P1 pid>/fd/dmabuf_fd
-
-3) P1 calls the file->f_op->release(dmabuf_fd_file)(ends up in calling 
-dma_buf_release()),   thus frees up the dmabuf buffer.
-
-4) P2 access the dmabuf stored in the dentry->d_fsdata which was freed 
-in step 3.
-
-So we need to have some refcount mechanism to avoid the use-after-free 
-in step 4.
-
->> +	}
->> +	spin_unlock(&dentry->d_lock);
->>   	dma_resv_lock(dmabuf->resv, NULL);
->>   	if (dmabuf->name)
->>   		ret = strlcpy(name, dmabuf->name, DMA_BUF_NAME_LEN);
->>   	dma_resv_unlock(dmabuf->resv);
->> +	dmabuf_dent_put(dmabuf);
->>   
->> +out:
->>   	return dynamic_dname(dentry, buffer, buflen, "/%s:%s",
->>   			     dentry->d_name.name, ret > 0 ? name : "");
->>   }
->> @@ -80,12 +97,16 @@ static int dma_buf_fs_init_context(struct fs_context *fc)
->>   static int dma_buf_release(struct inode *inode, struct file *file)
->>   {
->>   	struct dma_buf *dmabuf;
->> +	struct dentry *dentry = file->f_path.dentry;
->>   
->>   	if (!is_dma_buf_file(file))
->>   		return -EINVAL;
->>   
->>   	dmabuf = file->private_data;
->>   
->> +	spin_lock(&dentry->d_lock);
->> +	dentry->d_fsdata = NULL;
->> +	spin_unlock(&dentry->d_lock);
->>   	BUG_ON(dmabuf->vmapping_counter);
->>   
->>   	/*
->> @@ -108,8 +129,7 @@ static int dma_buf_release(struct inode *inode, struct file *file)
->>   		dma_resv_fini(dmabuf->resv);
->>   
->>   	module_put(dmabuf->owner);
->> -	kfree(dmabuf->name);
->> -	kfree(dmabuf);
->> +	dmabuf_dent_put(dmabuf);
->>   	return 0;
->>   }
->>   
->> @@ -548,6 +568,7 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
->>   	init_waitqueue_head(&dmabuf->poll);
->>   	dmabuf->cb_excl.poll = dmabuf->cb_shared.poll = &dmabuf->poll;
->>   	dmabuf->cb_excl.active = dmabuf->cb_shared.active = 0;
->> +	atomic_set(&dmabuf->dent_count, 1);
->>   
->>   	if (!resv) {
->>   		resv = (struct dma_resv *)&dmabuf[1];
->> diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
->> index 82e0a4a..a259042 100644
->> --- a/include/linux/dma-buf.h
->> +++ b/include/linux/dma-buf.h
->> @@ -315,6 +315,7 @@ struct dma_buf {
->>   	struct list_head list_node;
->>   	void *priv;
->>   	struct dma_resv *resv;
->> +	atomic_t dent_count;
-> Isn't there other usage counters here that can support this?  Adding
-> another one feels wrong as now we have multiple use counts, right?
-
-
-I couldn't see any refcount exist and couldn't find the need either, 
-earlier.
-
-But the change bb2bb9030425 ("dma-buf: add DMA_BUF_SET_NAME ioctls") 
-requires to have one.
-
-
-> thanks,
->
-> greg k-h
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
