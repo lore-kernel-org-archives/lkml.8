@@ -2,141 +2,277 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D093BC4725D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 04:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A8FC47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE403206F9
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 04:56:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D226206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:02:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vRIXKSQQ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oCw0B/Xi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgEFE4v (ORCPT
+        id S1726408AbgEFFCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 00:56:51 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:50949 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725796AbgEFE4u (ORCPT
+        Wed, 6 May 2020 01:02:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46254 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725821AbgEFFB7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 00:56:50 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588741010; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=QX8Zhtt2ZI9PyrjDSVNOucmxgJDf+kNLava4CsP69mA=; b=vRIXKSQQm2StiUTR8CBjEO+0n/t6z7X4bo6NIaTDDF4scnPnAji3sqiM8w5xK8J0hmYATCNB
- fgA/Bad3XAkDmI7HTFNvISBGnlrKSg7iArNdOlnVunAWhNyVEyf/fObMXRTL+67rUCf6S5sh
- SrZj16E2v/mW1Mk77kgjcop7v8Y=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6DB40C44792; Wed,  6 May 2020 04:56:44 +0000 (UTC)
-Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A6838C433D2;
-        Wed,  6 May 2020 04:56:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A6838C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        stanley.chu@mediatek.com, alim.akhtar@samsung.com,
-        beanhuo@micron.com, Avri.Altman@wdc.com,
-        bjorn.andersson@linaro.org, bvanassche@acm.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v4 1/1] scsi: pm: Balance pm_only counter of request queue during system resume
-Date:   Tue,  5 May 2020 21:55:35 -0700
-Message-Id: <1588740936-28846-1-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Wed, 6 May 2020 01:01:59 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54E1DC061A10
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 22:01:59 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id mq3so288539pjb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 22:01:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gRH6mP5DkzvDWC4BDrXU46q1GfnJROfRsSs9Enh6Aj8=;
+        b=oCw0B/XiMV8seZdiFN6gUWTR0Y153v/PDpXeWEGiBgetI4eVkDccMuQaAEk607OF3X
+         Q7/zPDc1KnH+3AbqlpwwsiKDForB2mZVM+HQINTsxSPjQh+cw9VIn49svgZyfWeF8x9q
+         SHXK3mCi2hPaGJ8UWMwbQOKV5I35WHHMRowqo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gRH6mP5DkzvDWC4BDrXU46q1GfnJROfRsSs9Enh6Aj8=;
+        b=VKWTLkRB0Pix6e/1PkmTUiCglUSCEACbpm8wDNomE10hC2Q5nu78DbPILTgttOBt1m
+         35NNP2DNSCooeBqRDqm7Zk2U7DhEx16LQwcQEDXVgVFTXs6DqxmxiMtSYVY+olAvPKaa
+         cqd2y8SwtajryEFZVjQDdze6HGG7DTnqFa+lLTyh68iC11xEBOtd9P4gmKhGjE6L2Lkv
+         a7vYJhyqa4Gdr+5PcKRtrMsMu+Dl0R6Xfdmlx7atfWhzVsB2oALAUBKH9DLtPXN/qTN3
+         iUun4HEsMTke/XBl3P8A7q3zfGx0BVOL1Gi6miCwwkJgHRgSrlBtYH5LPOTbp9BnnWCN
+         ybUw==
+X-Gm-Message-State: AGi0Puas+OAKG6FPrpfjRvYoO6/WrmHqQ59RdVdytNSOTaNDanaISFIe
+        dzru8dmAtGfE+5Bo9/kXXC8uhxbvekQ=
+X-Google-Smtp-Source: APiQypKPe+BFKl0nmU6VwfRqKkFP56+voyr9ECvJUtW0PAP3CNx9OxXNwP82M75LqkF/fVSOBs1lUw==
+X-Received: by 2002:a17:90a:fb4e:: with SMTP id iq14mr6895190pjb.146.1588741318495;
+        Tue, 05 May 2020 22:01:58 -0700 (PDT)
+Received: from localhost ([2401:fa00:9:14:a92f:c47d:76a8:b09e])
+        by smtp.gmail.com with ESMTPSA id 14sm512613pfy.38.2020.05.05.22.01.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2020 22:01:57 -0700 (PDT)
+From:   Eizan Miyamoto <eizan@chromium.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Francois Buergisser <fbuergisser@chromium.org>,
+        Eizan Miyamoto <eizan@chromium.org>,
+        Enric Balletbo I Serra <enric.balletbo@collabora.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH v2] [media] mtk-mdp: Remove states for format checks
+Date:   Wed,  6 May 2020 15:01:37 +1000
+Message-Id: <20200506150122.v2.1.If64533ce7519a22cbd584fff07214bcf9cb9260b@changeid>
+X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During system resume, scsi_resume_device() decreases a request queue's
-pm_only counter if the scsi device was quiesced before. But after that,
-if the scsi device's RPM status is RPM_SUSPENDED, the pm_only counter is
-still held (non-zero). Current scsi resume hook only sets the RPM status
-of the scsi device and its request queue to RPM_ACTIVE, but leaves the
-pm_only counter unchanged. This may make the request queue's pm_only
-counter remain non-zero after resume hook returns, hence those who are
-waiting on the mq_freeze_wq would never be woken up. Fix this by calling
-blk_post_runtime_resume() if a sdev's RPM status was RPM_SUSPENDED.
+From: Francois Buergisser <fbuergisser@chromium.org>
 
-(struct request_queue)0xFFFFFF815B69E938
-	pm_only = (counter = 2),
-	rpm_status = 0,
-	dev = 0xFFFFFF815B0511A0,
+The mtk-mdp driver uses states to check if the formats have been set
+on the capture and output when turning the streaming on, setting
+controls or setting the selection rectangles.
+Those states are reset when 0 buffers are requested like when checking
+capabilities.
+This patch removes all format checks and set one by default as queues in
+V4L2 are expected to always have a format set.
 
-((struct device)0xFFFFFF815B0511A0)).power
-	is_suspended = FALSE,
-	runtime_status = RPM_ACTIVE,
+https://linuxtv.org/downloads/v4l-dvb-apis/uapi/v4l/vidioc-streamon.html
+https://linuxtv.org/downloads/v4l-dvb-apis/uapi/v4l/vidioc-g-ctrl.html
+https://linuxtv.org/downloads/v4l-dvb-apis/uapi/v4l/vidioc-g-selection.html
 
-(struct scsi_device)0xffffff815b051000
-	request_queue = 0xFFFFFF815B69E938,
-	sdev_state = SDEV_RUNNING,
-	quiesced_by = 0x0,
-
-B::v.f_/task_0xFFFFFF810C246940
--000|__switch_to(prev = 0xFFFFFF810C246940, next = 0xFFFFFF80A49357C0)
--001|context_switch(inline)
--001|__schedule(?)
--002|schedule()
--003|blk_queue_enter(q = 0xFFFFFF815B69E938, flags = 0)
--004|generic_make_request(?)
--005|submit_bio(bio = 0xFFFFFF80A8195B80)
-
-Signed-off-by: Can Guo <cang@codeaurora.org>
+Signed-off-by: Francois Buergisser <fbuergisser@chromium.org>
+Signed-off-by: Eizan Miyamoto <eizan@chromium.org>
+Reviewed-by: Enric Balletbo I Serra <enric.balletbo@collabora.com>
 ---
 
-Change since v3:
-- Instead of relying on pm_only counter, rely on the runtime status of a sdev. (Based on the discussion with Bart)
+ drivers/media/platform/mtk-mdp/mtk_mdp_core.h |  2 -
+ drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c  | 90 +++++++------------
+ 2 files changed, 34 insertions(+), 58 deletions(-)
 
-Change since v2:
-- Rebased on 5.8-scsi-queue
-
-Change since v1:
-- Added more debugging context info
-
- drivers/scsi/scsi_pm.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/scsi/scsi_pm.c b/drivers/scsi/scsi_pm.c
-index 3717eea..5f0ad8b 100644
---- a/drivers/scsi/scsi_pm.c
-+++ b/drivers/scsi/scsi_pm.c
-@@ -80,6 +80,10 @@ static int scsi_dev_type_resume(struct device *dev,
- 	dev_dbg(dev, "scsi resume: %d\n", err);
+diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_core.h b/drivers/media/platform/mtk-mdp/mtk_mdp_core.h
+index bafcccd71f31..dd130cc218c9 100644
+--- a/drivers/media/platform/mtk-mdp/mtk_mdp_core.h
++++ b/drivers/media/platform/mtk-mdp/mtk_mdp_core.h
+@@ -28,8 +28,6 @@
+ #define MTK_MDP_FMT_FLAG_CAPTURE	BIT(1)
  
- 	if (err == 0) {
-+		bool was_runtime_suspended;
-+
-+		was_runtime_suspended = pm_runtime_suspended(dev);
-+
- 		pm_runtime_disable(dev);
- 		err = pm_runtime_set_active(dev);
- 		pm_runtime_enable(dev);
-@@ -93,8 +97,10 @@ static int scsi_dev_type_resume(struct device *dev,
- 		 */
- 		if (!err && scsi_is_sdev_device(dev)) {
- 			struct scsi_device *sdev = to_scsi_device(dev);
+ #define MTK_MDP_VPU_INIT		BIT(0)
+-#define MTK_MDP_SRC_FMT			BIT(1)
+-#define MTK_MDP_DST_FMT			BIT(2)
+ #define MTK_MDP_CTX_ERROR		BIT(5)
+ 
+ /**
+diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c b/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
+index 821f2cf325f0..bb9caaf513bc 100644
+--- a/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
++++ b/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
+@@ -369,13 +369,6 @@ void mtk_mdp_ctx_state_lock_set(struct mtk_mdp_ctx *ctx, u32 state)
+ 	mutex_unlock(&ctx->slock);
+ }
+ 
+-static void mtk_mdp_ctx_state_lock_clear(struct mtk_mdp_ctx *ctx, u32 state)
+-{
+-	mutex_lock(&ctx->slock);
+-	ctx->state &= ~state;
+-	mutex_unlock(&ctx->slock);
+-}
 -
--			blk_set_runtime_active(sdev->request_queue);
-+			if (was_runtime_suspended)
-+				blk_post_runtime_resume(sdev->request_queue, 0);
-+			else
-+				blk_set_runtime_active(sdev->request_queue);
- 		}
+ static bool mtk_mdp_ctx_state_is_set(struct mtk_mdp_ctx *ctx, u32 mask)
+ {
+ 	bool ret;
+@@ -726,11 +719,6 @@ static int mtk_mdp_m2m_s_fmt_mplane(struct file *file, void *fh,
+ 		ctx->quant = pix_mp->quantization;
  	}
  
+-	if (V4L2_TYPE_IS_OUTPUT(f->type))
+-		mtk_mdp_ctx_state_lock_set(ctx, MTK_MDP_SRC_FMT);
+-	else
+-		mtk_mdp_ctx_state_lock_set(ctx, MTK_MDP_DST_FMT);
+-
+ 	mtk_mdp_dbg(2, "[%d] type:%d, frame:%dx%d", ctx->id, f->type,
+ 		    frame->width, frame->height);
+ 
+@@ -742,13 +730,6 @@ static int mtk_mdp_m2m_reqbufs(struct file *file, void *fh,
+ {
+ 	struct mtk_mdp_ctx *ctx = fh_to_ctx(fh);
+ 
+-	if (reqbufs->count == 0) {
+-		if (reqbufs->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
+-			mtk_mdp_ctx_state_lock_clear(ctx, MTK_MDP_SRC_FMT);
+-		else
+-			mtk_mdp_ctx_state_lock_clear(ctx, MTK_MDP_DST_FMT);
+-	}
+-
+ 	return v4l2_m2m_reqbufs(file, ctx->m2m_ctx, reqbufs);
+ }
+ 
+@@ -758,14 +739,6 @@ static int mtk_mdp_m2m_streamon(struct file *file, void *fh,
+ 	struct mtk_mdp_ctx *ctx = fh_to_ctx(fh);
+ 	int ret;
+ 
+-	/* The source and target color format need to be set */
+-	if (V4L2_TYPE_IS_OUTPUT(type)) {
+-		if (!mtk_mdp_ctx_state_is_set(ctx, MTK_MDP_SRC_FMT))
+-			return -EINVAL;
+-	} else if (!mtk_mdp_ctx_state_is_set(ctx, MTK_MDP_DST_FMT)) {
+-		return -EINVAL;
+-	}
+-
+ 	if (!mtk_mdp_ctx_state_is_set(ctx, MTK_MDP_VPU_INIT)) {
+ 		ret = mtk_mdp_vpu_init(&ctx->vpu);
+ 		if (ret < 0) {
+@@ -899,24 +872,21 @@ static int mtk_mdp_m2m_s_selection(struct file *file, void *fh,
+ 		frame = &ctx->d_frame;
+ 
+ 	/* Check to see if scaling ratio is within supported range */
+-	if (mtk_mdp_ctx_state_is_set(ctx, MTK_MDP_DST_FMT | MTK_MDP_SRC_FMT)) {
+-		if (V4L2_TYPE_IS_OUTPUT(s->type)) {
+-			ret = mtk_mdp_check_scaler_ratio(variant, new_r.width,
+-				new_r.height, ctx->d_frame.crop.width,
+-				ctx->d_frame.crop.height,
+-				ctx->ctrls.rotate->val);
+-		} else {
+-			ret = mtk_mdp_check_scaler_ratio(variant,
+-				ctx->s_frame.crop.width,
+-				ctx->s_frame.crop.height, new_r.width,
+-				new_r.height, ctx->ctrls.rotate->val);
+-		}
++	if (V4L2_TYPE_IS_OUTPUT(s->type))
++		ret = mtk_mdp_check_scaler_ratio(variant, new_r.width,
++			new_r.height, ctx->d_frame.crop.width,
++			ctx->d_frame.crop.height,
++			ctx->ctrls.rotate->val);
++	else
++		ret = mtk_mdp_check_scaler_ratio(variant,
++			ctx->s_frame.crop.width,
++			ctx->s_frame.crop.height, new_r.width,
++			new_r.height, ctx->ctrls.rotate->val);
+ 
+-		if (ret) {
+-			dev_info(&ctx->mdp_dev->pdev->dev,
+-				"Out of scaler range");
+-			return -EINVAL;
+-		}
++	if (ret) {
++		dev_info(&ctx->mdp_dev->pdev->dev,
++			"Out of scaler range");
++		return -EINVAL;
+ 	}
+ 
+ 	s->r = new_r;
+@@ -989,7 +959,6 @@ static int mtk_mdp_s_ctrl(struct v4l2_ctrl *ctrl)
+ 	struct mtk_mdp_ctx *ctx = ctrl_to_ctx(ctrl);
+ 	struct mtk_mdp_dev *mdp = ctx->mdp_dev;
+ 	struct mtk_mdp_variant *variant = mdp->variant;
+-	u32 state = MTK_MDP_DST_FMT | MTK_MDP_SRC_FMT;
+ 	int ret = 0;
+ 
+ 	if (ctrl->flags & V4L2_CTRL_FLAG_INACTIVE)
+@@ -1003,17 +972,15 @@ static int mtk_mdp_s_ctrl(struct v4l2_ctrl *ctrl)
+ 		ctx->vflip = ctrl->val;
+ 		break;
+ 	case V4L2_CID_ROTATE:
+-		if (mtk_mdp_ctx_state_is_set(ctx, state)) {
+-			ret = mtk_mdp_check_scaler_ratio(variant,
+-					ctx->s_frame.crop.width,
+-					ctx->s_frame.crop.height,
+-					ctx->d_frame.crop.width,
+-					ctx->d_frame.crop.height,
+-					ctx->ctrls.rotate->val);
+-
+-			if (ret)
+-				return -EINVAL;
+-		}
++		ret = mtk_mdp_check_scaler_ratio(variant,
++				ctx->s_frame.crop.width,
++				ctx->s_frame.crop.height,
++				ctx->d_frame.crop.width,
++				ctx->d_frame.crop.height,
++				ctx->ctrls.rotate->val);
++
++		if (ret)
++			return -EINVAL;
+ 
+ 		ctx->rotation = ctrl->val;
+ 		break;
+@@ -1090,6 +1057,7 @@ static int mtk_mdp_m2m_open(struct file *file)
+ 	struct video_device *vfd = video_devdata(file);
+ 	struct mtk_mdp_ctx *ctx = NULL;
+ 	int ret;
++	struct v4l2_format default_format;
+ 
+ 	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+ 	if (!ctx)
+@@ -1144,6 +1112,16 @@ static int mtk_mdp_m2m_open(struct file *file)
+ 	list_add(&ctx->list, &mdp->ctx_list);
+ 	mutex_unlock(&mdp->lock);
+ 
++	/* Default format */
++	memset(&default_format, 0, sizeof(default_format));
++	default_format.type = V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE;
++	default_format.fmt.pix_mp.width = 32;
++	default_format.fmt.pix_mp.height = 32;
++	default_format.fmt.pix_mp.pixelformat = V4L2_PIX_FMT_YUV420M;
++	mtk_mdp_m2m_s_fmt_mplane(file, &ctx->fh, &default_format);
++	default_format.type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
++	mtk_mdp_m2m_s_fmt_mplane(file, &ctx->fh, &default_format);
++
+ 	mtk_mdp_dbg(0, "%s [%d]", dev_name(&mdp->pdev->dev), ctx->id);
+ 
+ 	return 0;
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.26.2.526.g744177e7f7-goog
 
