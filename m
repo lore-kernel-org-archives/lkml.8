@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB4EC47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A40C47259
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14D1D21655
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A3A3208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:44:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbgEFQoZ (ORCPT
+        id S1730364AbgEFQot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:44:25 -0400
-Received: from foss.arm.com ([217.140.110.172]:41002 "EHLO foss.arm.com"
+        Wed, 6 May 2020 12:44:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:41024 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730074AbgEFQoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:44:21 -0400
+        id S1730088AbgEFQoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 12:44:25 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5A64DD6E;
-        Wed,  6 May 2020 09:44:21 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A0E8D6E;
+        Wed,  6 May 2020 09:44:24 -0700 (PDT)
 Received: from usa.arm.com (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 016453F305;
-        Wed,  6 May 2020 09:44:19 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1B3CC3F305;
+        Wed,  6 May 2020 09:44:23 -0700 (PDT)
 From:   Sudeep Holla <sudeep.holla@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Sudeep Holla <sudeep.holla@arm.com>,
@@ -35,9 +35,9 @@ Cc:     Sudeep Holla <sudeep.holla@arm.com>,
         Steven Price <steven.price@arm.com>,
         linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         harb@amperecomputing.com
-Subject: [PATCH v3 2/7] firmware: smccc: Update link to latest SMCCC specification
-Date:   Wed,  6 May 2020 17:44:06 +0100
-Message-Id: <20200506164411.3284-3-sudeep.holla@arm.com>
+Subject: [PATCH v3 4/7] firmware: smccc: Drop smccc_version enum and use ARM_SMCCC_VERSION_1_x instead
+Date:   Wed,  6 May 2020 17:44:08 +0100
+Message-Id: <20200506164411.3284-5-sudeep.holla@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200506164411.3284-1-sudeep.holla@arm.com>
 References: <20200506164411.3284-1-sudeep.holla@arm.com>
@@ -46,33 +46,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current link gets redirected to the revision B published in November
-2016 though it actually points to the original revision A published in
-June 2013.
+Instead of maintaining 2 sets of enums/macros for tracking SMCCC version,
+let us drop smccc_version enum and use ARM_SMCCC_VERSION_1_x directly
+instead.
 
-Let us update the link to point to the latest version, so that it
-doesn't get stale anytime soon. Currently it points to v1.2 published in
-March 2020.
+This is in preparation to drop smccc_version here and move it separately
+under drivers/firmware/smccc.
 
 Reviewed-by: Steven Price <steven.price@arm.com>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- include/linux/arm-smccc.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/paravirt.c | 2 +-
+ drivers/firmware/psci/psci.c | 8 ++++----
+ include/linux/psci.h         | 7 +------
+ 3 files changed, 6 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
-index 59494df0f55b..6c1d1eda3be4 100644
---- a/include/linux/arm-smccc.h
-+++ b/include/linux/arm-smccc.h
-@@ -10,7 +10,7 @@
- /*
-  * This file provides common defines for ARM SMC Calling Convention as
-  * specified in
-- * http://infocenter.arm.com/help/topic/com.arm.doc.den0028a/index.html
-+ * https://developer.arm.com/docs/den0028/latest
-  */
+diff --git a/arch/arm64/kernel/paravirt.c b/arch/arm64/kernel/paravirt.c
+index 1ef702b0be2d..295d66490584 100644
+--- a/arch/arm64/kernel/paravirt.c
++++ b/arch/arm64/kernel/paravirt.c
+@@ -120,7 +120,7 @@ static bool has_pv_steal_clock(void)
+ 	struct arm_smccc_res res;
  
- #define ARM_SMCCC_STD_CALL	        _AC(0,U)
+ 	/* To detect the presence of PV time support we require SMCCC 1.1+ */
+-	if (psci_ops.smccc_version < SMCCC_VERSION_1_1)
++	if (arm_smccc_1_1_get_conduit() == SMCCC_CONDUIT_NONE)
+ 		return false;
+ 
+ 	arm_smccc_1_1_invoke(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
+diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+index 2937d44b5df4..6a56d7196697 100644
+--- a/drivers/firmware/psci/psci.c
++++ b/drivers/firmware/psci/psci.c
+@@ -54,12 +54,12 @@ bool psci_tos_resident_on(int cpu)
+ 
+ struct psci_operations psci_ops = {
+ 	.conduit = SMCCC_CONDUIT_NONE,
+-	.smccc_version = SMCCC_VERSION_1_0,
++	.smccc_version = ARM_SMCCC_VERSION_1_0,
+ };
+ 
+ enum arm_smccc_conduit arm_smccc_1_1_get_conduit(void)
+ {
+-	if (psci_ops.smccc_version < SMCCC_VERSION_1_1)
++	if (psci_ops.smccc_version < ARM_SMCCC_VERSION_1_1)
+ 		return SMCCC_CONDUIT_NONE;
+ 
+ 	return psci_ops.conduit;
+@@ -411,8 +411,8 @@ static void __init psci_init_smccc(void)
+ 	if (feature != PSCI_RET_NOT_SUPPORTED) {
+ 		u32 ret;
+ 		ret = invoke_psci_fn(ARM_SMCCC_VERSION_FUNC_ID, 0, 0, 0);
+-		if (ret == ARM_SMCCC_VERSION_1_1) {
+-			psci_ops.smccc_version = SMCCC_VERSION_1_1;
++		if (ret >= ARM_SMCCC_VERSION_1_1) {
++			psci_ops.smccc_version = ret;
+ 			ver = ret;
+ 		}
+ 	}
+diff --git a/include/linux/psci.h b/include/linux/psci.h
+index a67712b73b6c..29bd0671e5bb 100644
+--- a/include/linux/psci.h
++++ b/include/linux/psci.h
+@@ -21,11 +21,6 @@ bool psci_power_state_is_valid(u32 state);
+ int psci_set_osi_mode(void);
+ bool psci_has_osi_support(void);
+ 
+-enum smccc_version {
+-	SMCCC_VERSION_1_0,
+-	SMCCC_VERSION_1_1,
+-};
+-
+ struct psci_operations {
+ 	u32 (*get_version)(void);
+ 	int (*cpu_suspend)(u32 state, unsigned long entry_point);
+@@ -36,7 +31,7 @@ struct psci_operations {
+ 			unsigned long lowest_affinity_level);
+ 	int (*migrate_info_type)(void);
+ 	enum arm_smccc_conduit conduit;
+-	enum smccc_version smccc_version;
++	u32 smccc_version;
+ };
+ 
+ extern struct psci_operations psci_ops;
 -- 
 2.17.1
 
