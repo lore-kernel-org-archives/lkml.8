@@ -2,172 +2,158 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 606A3C38A2A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C97C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 410812082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F4882082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:40:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ncii/QMt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XD+Hdxkj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729081AbgEFJiI (ORCPT
+        id S1729114AbgEFJkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 05:38:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60856 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728640AbgEFJiH (ORCPT
+        Wed, 6 May 2020 05:40:05 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33123 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729059AbgEFJkD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 05:38:07 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A42DC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 02:38:07 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id s9so1224546qkm.6
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 02:38:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=da9Msd6VhXx/3o4OwwaQEairzk+A5t5H6NDxBwzjlV0=;
-        b=ncii/QMt765z12zCCRyYs27sJbBG55KS6EXgAt7uA/nAMWDhb5SHWhLAsl67GI2EoZ
-         M8oLJnLRBvHLjeXdD4dcTwGX5lvZsRQlXW/VdJ5A5UG4MK0C0ulIURk5H/8tNBoDaiIx
-         gdHY6M1cX35EHbi2BxS2kf8m7sXjfDgqqg+VdiCZ49OiOv2jz2Ef46X8koWsWasgYdK+
-         bpeXm4R264TMadTOVkieNdWTkWI29YNk27LeBy3LsP8sRxUuonyXbewfko/HGB0BL9AB
-         CTgR25v8+cAv6LwtMchkSgHRNjqGZDYpLsrhiIe5fjWVqJq9Nb1O7fnneO6+SAspPv3J
-         L7Pw==
+        Wed, 6 May 2020 05:40:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588758002;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=kJ4kEjO/bwheMovYORrIfy7ArmLVCRzD0yejl3ZmrDY=;
+        b=XD+HdxkjPRi5aoYZtsT0NGoAKDp15lWqrzc1KcyAe0zUaZPpD0Dcw1/04+fxVgQhUfNlbf
+        Y3qEiynKov6o+UJ6mJnsrwYhEuXND3pgDj4SWNzrbhzBEFqZhgGCY/u5klXTxwS8NlUOgT
+        DyiJtSuuhFFgs33u9a80mChV5qtUa3E=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-353-xgKsvrljPsaJ1l0Gc-O8tg-1; Wed, 06 May 2020 05:40:00 -0400
+X-MC-Unique: xgKsvrljPsaJ1l0Gc-O8tg-1
+Received: by mail-wr1-f70.google.com with SMTP id x8so1015111wrl.16
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 02:40:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=da9Msd6VhXx/3o4OwwaQEairzk+A5t5H6NDxBwzjlV0=;
-        b=gx/SsJtbiiPXu1gI79iBFvZQ2BLN//VuqUWLEZAwoCTbJIo850KWOFeDIq0s+qCiS1
-         r93J5xRwRobgS1Q/SRxd2nsDRMIFIi3/5Vee8VRKuxfbSSBz+iU3hCBJ1eQQd+dHcHm8
-         YLBE/1QzTc8bim4opo5G5q3nuQ1JJVKR7trpHSRRvJFucFklOL+aSdQYn1MlEM/14IQQ
-         QLyDfd8Qf7VIbsvOpgaCID4VoON8BhnM/GEtyLmrWI7kMvNh3cbQbqfl+nOR0Tfor5iP
-         RhKTVm0RnibMtnXOu2R/JCYHzaGg9tYDmNu7sTodO9Q8ASVE29qsMvArdZ84F+U2r0u0
-         xFuw==
-X-Gm-Message-State: AGi0PuY2jaIIsX63LuW+saORxQKronuhW8ErBydBGs9t52xmUnk0YkYy
-        /ehUL2zcCj7M2QIQTHBfJ82woVBYDi5/LBHtLKpx9w==
-X-Google-Smtp-Source: APiQypKkPwnxUq8+DlhhdqgWHdUkT5LHK+5uGXTodzsX0U7vrL7xa9kBwImSOF/TnuGRNKJl1K2bC7yaOlhwM1P6u2E=
-X-Received: by 2002:ae9:ed05:: with SMTP id c5mr2109866qkg.250.1588757886424;
- Wed, 06 May 2020 02:38:06 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kJ4kEjO/bwheMovYORrIfy7ArmLVCRzD0yejl3ZmrDY=;
+        b=UlD3uC9YgvCBHJ7MSwwEHPvtszdV18GB7JhK3Oe305emhN0E80jfq1MtU33PBjuKtp
+         7uecO5fI2PlOAsXRAbp9uYpYVM39Xg8FNuOxZo5S5bhTM2tBUyqxdmsHCkg5oRVW8LNX
+         jwk0XeR6S+amw2/i7f/2A0P6PvvilfcFv925vssPf9GV5cWeK61c2YW+bx4sHYzK0148
+         ZgBJTylGdxWEwamp4ako7gLzoh7AfoOOnx5RVdNeNrbrnComNXdsjQ9F8Hd3bjombK11
+         ahbJ1IeUgmFCRpGAW60nbeoiycAy6i3A9HBzhY6A6r8S6ADnPQnpNRBX/+B7n1pVM3Ni
+         F5SQ==
+X-Gm-Message-State: AGi0PuYjxLvj5owFiWJ5EMMHf/kx3Z9Yu5FkaKx9Ws/DXwxsw4l9mVCo
+        kS2+IrsMEZwntUCbE7ZqX6zJjvVcFcxzozgRGDnUMYPOhq85yS1XMKLk+FqolZPqKegxuCCJjW1
+        pc+dylt2iWQrSfTMDS0r5Y2U/
+X-Received: by 2002:a5d:4c4b:: with SMTP id n11mr8949401wrt.139.1588757999148;
+        Wed, 06 May 2020 02:39:59 -0700 (PDT)
+X-Google-Smtp-Source: APiQypK13X0Zo4jMSTyL7ujAS9WuUrdxRvvZsqJbiGw8vpveKPhCdyH4OKPB+Frf82bNzjKr1/MqGg==
+X-Received: by 2002:a5d:4c4b:: with SMTP id n11mr8949372wrt.139.1588757998970;
+        Wed, 06 May 2020 02:39:58 -0700 (PDT)
+Received: from redhat.com (bzq-109-66-7-121.red.bezeqint.net. [109.66.7.121])
+        by smtp.gmail.com with ESMTPSA id m4sm1993050wrb.42.2020.05.06.02.39.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 02:39:58 -0700 (PDT)
+Date:   Wed, 6 May 2020 05:39:55 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Justin He <Justin.He@arm.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ldigby@redhat.com" <ldigby@redhat.com>,
+        "n.b@live.com" <n.b@live.com>,
+        "stefanha@redhat.com" <stefanha@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [GIT PULL] vhost: fixes
+Message-ID: <20200506053948-mutt-send-email-mst@kernel.org>
+References: <20200504081540-mutt-send-email-mst@kernel.org>
+ <AM6PR08MB40696EFF8BE389C134AC04F6F7A40@AM6PR08MB4069.eurprd08.prod.outlook.com>
+ <20200506031918-mutt-send-email-mst@kernel.org>
+ <20200506092546.o6prnn4d66tavmjl@steredhat>
 MIME-Version: 1.0
-References: <20200506051853.14380-1-walter-zh.wu@mediatek.com>
- <2BF68E83-4611-48B2-A57F-196236399219@lca.pw> <1588746219.16219.10.camel@mtksdccf07>
-In-Reply-To: <1588746219.16219.10.camel@mtksdccf07>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 6 May 2020 11:37:54 +0200
-Message-ID: <CACT4Y+atTS6p4b23AH+G9LM-k2gU=kMdkKQdARSboxc-H8CLTQ@mail.gmail.com>
-Subject: Re: [PATCH 0/3] kasan: memorize and print call_rcu stack
-To:     Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Qian Cai <cai@lca.pw>, Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        linux-mediatek@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506092546.o6prnn4d66tavmjl@steredhat>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 6, 2020 at 8:23 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> > > This patchset improves KASAN reports by making them to have
-> > > call_rcu() call stack information. It is helpful for programmers
-> > > to solve use-after-free or double-free memory issue.
-> > >
-> > > The KASAN report was as follows(cleaned up slightly):
-> > >
-> > > BUG: KASAN: use-after-free in kasan_rcu_reclaim+0x58/0x60
-> > >
-> > > Freed by task 0:
-> > > save_stack+0x24/0x50
-> > > __kasan_slab_free+0x110/0x178
-> > > kasan_slab_free+0x10/0x18
-> > > kfree+0x98/0x270
-> > > kasan_rcu_reclaim+0x1c/0x60
-> > > rcu_core+0x8b4/0x10f8
-> > > rcu_core_si+0xc/0x18
-> > > efi_header_end+0x238/0xa6c
-> > >
-> > > First call_rcu() call stack:
-> > > save_stack+0x24/0x50
-> > > kasan_record_callrcu+0xc8/0xd8
-> > > call_rcu+0x190/0x580
-> > > kasan_rcu_uaf+0x1d8/0x278
-> > >
-> > > Last call_rcu() call stack:
-> > > (stack is not available)
-> > >
-> > >
-> > > Add new CONFIG option to record first and last call_rcu() call stack
-> > > and KASAN report prints two call_rcu() call stack.
-> > >
-> > > This option doesn't increase the cost of memory consumption. It is
-> > > only suitable for generic KASAN.
-> >
-> > I don=E2=80=99t understand why this needs to be a Kconfig option at all=
-. If call_rcu() stacks are useful in general, then just always gather those=
- information. How do developers judge if they need to select this option or=
- not?
->
-> Because we don't want to increase slub meta-data size, so enabling this
-> option can print call_rcu() stacks, but the in-use slub object doesn't
-> print free stack. So if have out-of-bound issue, then it will not print
-> free stack. It is a trade-off, see [1].
->
-> [1] https://bugzilla.kernel.org/show_bug.cgi?id=3D198437
+On Wed, May 06, 2020 at 11:25:46AM +0200, Stefano Garzarella wrote:
+> On Wed, May 06, 2020 at 03:19:55AM -0400, Michael S. Tsirkin wrote:
+> > On Wed, May 06, 2020 at 03:28:47AM +0000, Justin He wrote:
+> > > Hi Michael
+> > > 
+> > > > -----Original Message-----
+> > > > From: Michael S. Tsirkin <mst@redhat.com>
+> > > > Sent: Monday, May 4, 2020 8:16 PM
+> > > > To: Linus Torvalds <torvalds@linux-foundation.org>
+> > > > Cc: kvm@vger.kernel.org; virtualization@lists.linux-foundation.org;
+> > > > netdev@vger.kernel.org; linux-kernel@vger.kernel.org; Justin He
+> > > > <Justin.He@arm.com>; ldigby@redhat.com; mst@redhat.com; n.b@live.com;
+> > > > stefanha@redhat.com
+> > > > Subject: [GIT PULL] vhost: fixes
+> > > >
+> > > > The following changes since commit
+> > > > 6a8b55ed4056ea5559ebe4f6a4b247f627870d4c:
+> > > >
+> > > >   Linux 5.7-rc3 (2020-04-26 13:51:02 -0700)
+> > > >
+> > > > are available in the Git repository at:
+> > > >
+> > > >   https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
+> > > >
+> > > > for you to fetch changes up to
+> > > > 0b841030625cde5f784dd62aec72d6a766faae70:
+> > > >
+> > > >   vhost: vsock: kick send_pkt worker once device is started (2020-05-02
+> > > > 10:28:21 -0400)
+> > > >
+> > > > ----------------------------------------------------------------
+> > > > virtio: fixes
+> > > >
+> > > > A couple of bug fixes.
+> > > >
+> > > > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> > > >
+> > > > ----------------------------------------------------------------
+> > > > Jia He (1):
+> > > >       vhost: vsock: kick send_pkt worker once device is started
+> > > 
+> > > Should this fix also be CC-ed to stable? Sorry I forgot to cc it to stable.
+> > > 
+> > > --
+> > > Cheers,
+> > > Justin (Jia He)
+> > 
+> > 
+> > Go ahead, though recently just including Fixes seems to be enough.
+> > 
+> 
+> The following patch Justin refers to does not contain the "Fixes:" tag:
+> 
+> 0b841030625c vhost: vsock: kick send_pkt worker once device is started
+> 
+> 
+> I think we should merge it on stable branches, so if needed, I can backport
+> and send it.
+> 
+> Stefano
 
-Hi Walter,
+Go ahead.
 
-Great you are tackling this!
+-- 
+MST
 
-I have the same general sentiment as Qian. I would enable this
-unconditionally because:
-
-1. We still can't get both rcu stack and free stack. I would assume
-most kernel testing systems need to enable this (we definitely enable
-on syzbot). This means we do not have free stack for allocation
-objects in any reports coming from testing systems. Which greatly
-diminishes the value of the other mode.
-
-2. Kernel is undertested. Introducing any additional configuration
-options is a problem in such context. Chances are that some of the
-modes are not working or will break in future.
-
-3. That free stack actually causes lots of confusion and I never found
-it useful:
-https://bugzilla.kernel.org/show_bug.cgi?id=3D198425
-If it's a very delayed UAF, either one may get another report for the
-same bug with not so delayed UAF, or if it's way too delayed, then the
-previous free stack is wrong as well.
-
-4. Most users don't care that much about debugging tools to learn
-every bit of every debugging tool and spend time fine-tuning it for
-their context. Most KASAN users won't even be aware of this choice,
-and they will just use whatever is the default.
-
-5. Each configuration option increases implementation complexity.
-
-What would have value is if we figure out how to make both of them
-work at the same time without increasing memory consumption. But I
-don't see any way to do this.
-
-I propose to make this the only mode. I am sure lots of users will
-find this additional stack useful, whereas the free stack is even
-frequently confusing.
