@@ -2,102 +2,132 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 705B1C47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72546C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44E6F2076D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:07:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Hy7KlVWC"
+	by mail.kernel.org (Postfix) with ESMTP id 56C952076D
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:09:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729374AbgEFPHw (ORCPT
+        id S1729311AbgEFPJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:07:52 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:45264 "EHLO vps0.lunn.ch"
+        Wed, 6 May 2020 11:09:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:38498 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728428AbgEFPHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:07:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=nhr9qd9ThMfni7QzQ5SF9W0ZpuyW47KCsL9Tm7+P44g=; b=Hy7KlVWCuIvr3QKj0XXtpllydw
-        UINzSvoHOwbVO4XMFtC4xzbpUQy1A+v9fbAV9wVkKCXTsQ8yiIQj5y0PYIoZCCUkT03lKIjkX9HKO
-        FIdp2/ubpCX0vdavYJmOTzzfPK9EDEGWe92ijdKO888WYD4uXbggRdmvzVemksyj+jsI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jWLeE-0016AI-QR; Wed, 06 May 2020 17:07:46 +0200
-Date:   Wed, 6 May 2020 17:07:46 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v1] dt-bindings: net: nxp,tja11xx: rework validation
- support
-Message-ID: <20200506150746.GJ224913@lunn.ch>
-References: <20200505104215.8975-1-o.rempel@pengutronix.de>
- <20200505140127.GJ208718@lunn.ch>
- <20200506051134.mrm4nuqxssw255tl@pengutronix.de>
+        id S1728428AbgEFPJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:09:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6725DD6E;
+        Wed,  6 May 2020 08:09:30 -0700 (PDT)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 12E6A3F68F;
+        Wed,  6 May 2020 08:09:25 -0700 (PDT)
+Subject: Re: [PATCH v2 3/6] sched/deadline: Add dl_bw_capacity()
+To:     Juri Lelli <juri.lelli@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Luca Abeni <luca.abeni@santannapisa.it>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
+        Alessio Balsini <balsini@google.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Qais Yousef <qais.yousef@arm.com>, linux-kernel@vger.kernel.org
+References: <20200427083709.30262-1-dietmar.eggemann@arm.com>
+ <20200427083709.30262-4-dietmar.eggemann@arm.com>
+ <23bde551-0d91-4bfe-ce65-40af9fbfdef9@arm.com>
+ <20200506123738.GJ17381@localhost.localdomain>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <d07a0517-b1bf-0879-575b-7933063c7597@arm.com>
+Date:   Wed, 6 May 2020 17:09:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506051134.mrm4nuqxssw255tl@pengutronix.de>
+In-Reply-To: <20200506123738.GJ17381@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > Hi Oleksij
-> > 
-> > reg is normally 0 to 31, since that is the address range for MDIO. 
-> > Did you use 14 here because of what strapping allows?
+On 06/05/2020 14:37, Juri Lelli wrote:
+> On 06/05/20 12:54, Dietmar Eggemann wrote:
+>> On 27/04/2020 10:37, Dietmar Eggemann wrote:
+
+[...]
+
+>> There is an issue w/ excl. cpusets and cpuset.sched_load_balance=0. The
+>> latter is needed to demonstrate the problem since DL task affinity can't
+>> be altered.
+>>
+>> A CPU in such a cpuset has its rq attached to def_root_domain which does
+>> not have its 'sum_cpu_capacity' properly set.
 > 
-> Yes. Only BITs 1:3 are configurable. BIT(0) is always 0 for the PHY0 and 1
-> for the PHY1
+> Hummm, but if sched_load_balance is disabled it means that we've now got
+> a subset of CPUs which (from a DL AC pow) are partitioned. So, I'd tend
 
-O.K. good.
+Yes, the CPUs of the cpuset w/ cpuset.sched_load_balance=0 (cpuset B in
+the example).
 
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +  - '#address-cells'
-> > > +  - '#size-cells'
-> > 
-> > So we have two different meanings of 'required' here.
-> > 
-> > One meaning is the code requires it. compatible is not required, the
-> > driver will correctly be bind to the device based on its ID registers.
-> > Is reg also required by the code?
-> > 
-> > The second meaning is about keeping the yaml verifier happy. It seems
-> > like compatible is needed for the verifier. Is reg also required? We
-> > do recommend having reg, but the generic code does not require it.
-> 
-> reg is used by:
-> tja1102_p0_probe()
->   tja1102_p1_register()
->     of_mdio_parse_addr()
-> 
-> But this is required for the slave PHY. I assume the reg can be
-> optional for the master PHY. Should I?
+> to say that we actually want to check new tasks bw requirement against
+> the available bandwidth of the particular CPU they happen to be running
+> (and will continue to run) when setscheduler is called.
 
-It is recommended to have a reg value. So lets leave it as is for the
-moment. If anybody really does need it to be optional, we can change
-it later.
+By 'available bandwidth of the particular CPU' you refer to
+'\Sum_{cpu_rq(i)->rd->span} CPU capacity', right?
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+This is what this fix tries to achieve. Regardless whether cpu_rq(i)->rd
+is a 'real' rd or the def_root_domain, dl_bw_capacity() will now always
+return '\Sum_{cpu_rq(i)->rd->span} CPU capacity'
 
-    Andrew
+> If then load balance is enabled again, AC check we did above should
+> still be valid for all tasks admitted in the meantime, no?
+ 
+Example (w/ this fix) on Juno [L b b L L L], capacity_orig_of(L)=446 :
+
+mkdir /sys/fs/cgroup/cpuset/A
+echo 0 > /sys/fs/cgroup/cpuset/A/cpuset.mems
+echo 1 > /sys/fs/cgroup/cpuset/A/cpuset.cpu_exclusive
+echo 0-2 > /sys/fs/cgroup/cpuset/A/cpuset.cpus
+
+mkdir /sys/fs/cgroup/cpuset/B
+echo 0 > /sys/fs/cgroup/cpuset/B/cpuset.mems
+echo 1 > /sys/fs/cgroup/cpuset/B/cpuset.cpu_exclusive
+echo 3-5 > /sys/fs/cgroup/cpuset/B/cpuset.cpus
+
+echo 0 > /sys/fs/cgroup/cpuset/B/cpuset.sched_load_balance
+echo 0 > /sys/fs/cgroup/cpuset/cpuset.sched_load_balance
+
+echo $$ > /sys/fs/cgroup/cpuset/B/tasks
+chrt -d --sched-runtime 8000 --sched-period 16000 -p 0 $$
+
+...
+[  144.920102] __dl_bw_capacity CPU3 rd->span=3-5 return 1338
+[  144.925607] sched_dl_overflow: [bash 1999] task_cpu(p)=3 cap=1338 cpus_ptr=3-5
+[  144.932841] __dl_bw_capacity CPU3 rd->span=3-5 return 1338
+...
+
+echo 1 > /sys/fs/cgroup/cpuset/B/cpuset.sched_load_balance
+
+echo $$ > /sys/fs/cgroup/cpuset/B/tasks
+chrt -d --sched-runtime 8000 --sched-period 16000 -p 0 $$
+
+...
+[  254.367982] __dl_bw_capacity CPU5 rd->span=3-5 return 1338
+[  254.373487] sched_dl_overflow: [bash 2052] task_cpu(p)=5 cap=1338 cpus_ptr=3-5
+[  254.380721] __dl_bw_capacity CPU5 rd->span=3-5 return 1338
+...
+
+Regardless of 'B/cpuset.sched_load_balance'
+'\Sum_{cpu_rq(i)->rd->span} CPU capacity' stays 1338 (3*446)
+
+So IMHO, DL AC check stays intact.
