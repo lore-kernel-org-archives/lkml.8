@@ -2,166 +2,312 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 191A8C38A24
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDCEC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E916220575
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0A4A20575
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:39:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C4fCOVoh"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FJr3sr6b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgEFMjK (ORCPT
+        id S1728240AbgEFMje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 08:39:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60988 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728166AbgEFMjK (ORCPT
+        Wed, 6 May 2020 08:39:34 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:34836 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728133AbgEFMjd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 08:39:10 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2B14C0610D5
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 05:39:09 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id j1so609000vkc.2
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 05:39:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jk2BARTLAgZL9Z1dR3KbfuvtdoJ3V9bQ1jv2jjnLH8E=;
-        b=C4fCOVohLS2kPCD5qFz2dgOue6s94XhvkFpTCsrha1pcYweNjF+IaH6gRIdYmJqdqm
-         oFgp+EDGp1FMsPCUrEo3ltTYWEoPSWIqbS9ayAQR69ak7Y+0fdpCj4xhzzsWBANxQYHy
-         Lf+rFL+y9fxw2qfR9166c35tiHl+m4NraUF/1aejcq7nzecJqYKk9oiR2DEzqt9ExSkY
-         KTXJ1/ltUftlp1HurqkUDnB4uF0yk7YH5lBAZV2tuzjt9fldDbYWU/UAKCReVqHSkL/x
-         4UzaeL1ygRqYcDPDkaSN8y88nDqRAo363pHInp7N0ypbCm1mJd3tQuJgl4t8W+HC2lpk
-         ccCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jk2BARTLAgZL9Z1dR3KbfuvtdoJ3V9bQ1jv2jjnLH8E=;
-        b=TzR7ZP97OP8CVD660cqE/wrZTrZQo42mO3MpabNu51OAELooqudCR0qtXmmUFsc2wC
-         DZ3PAK3HMsLA2UIvgnU9PNEo0WoxFB5C+YatLkEhon4MgK68v19zX4jEGcSTVNfniKPw
-         b7plnFLoGBL+Kcr8zz2vYQ9FrA0IPq6OgqiyYVKj5RQN5hhMEVhtAlAadIWlm4zEB6NN
-         oJjfEA39AmF9PetDS6W0rok6bXRMi9QyvDPdO4XMrdHciSUny0y1bBq3uljzNpMFmRXl
-         zNywCyFrtOocHASnYXRPFSAPzltpkTZgXsNb54vML+kmNFaJi52h+qyQEcHpS5g03TAc
-         Zs1g==
-X-Gm-Message-State: AGi0PuYPW1/tSBT4DSNDpnH67cBT7JucBlwEuylXZM/YveAvg1CThlcM
-        C5rrDauJMuFgv0RCi5hw6na1aPR1Y+DsBnu0kvRqoA==
-X-Google-Smtp-Source: APiQypJLk71XFPxOIJWwAizMUmAtKTR+K2mXUHbcP1wbAfkC3uIULbDNR6nha/+qS/WeZu7Io0k/dKD30Nke5CY6x+c=
-X-Received: by 2002:a1f:2a13:: with SMTP id q19mr6528853vkq.73.1588768748823;
- Wed, 06 May 2020 05:39:08 -0700 (PDT)
+        Wed, 6 May 2020 08:39:33 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046Cboq7117730;
+        Wed, 6 May 2020 12:38:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=jkiqCFb8ZO557s3RPly9WeIuqgOYis3wsQUlecisOxk=;
+ b=FJr3sr6b3hNO+Pa2lyjlrr/VbwfqGv10LSEe5L9w9WDxzMQHPtvXfoDXqOVfpfpSgEl1
+ BXnoUCH7bUuDHx+y/qufvzMmq5g5rnLMKkreBsY934w27EzGlW3e1UMU8u2d2+/2w2YC
+ aruhtnhMH4mcOiBNekHES5+sMGb1J4APngw2OXHCQaAoHERkkJY/pyWzyrs3T452nF3/
+ erOmTGowY/LSB4cZu/sb90guBPsLpKggqFukDyIavwrJm9Q0wP8sFNv5E/2ixZJdE3du
+ EGYsyMb6JDnXMelEnFMuq8fapZhJfMabp34Ku013lxFVMIgne+sunW0By2ApPV2U/a2Z 8Q== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 30s09ra3sr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 May 2020 12:38:36 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046CblAj139420;
+        Wed, 6 May 2020 12:38:36 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 30t1r7r55t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 May 2020 12:38:36 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 046CcVLB001358;
+        Wed, 6 May 2020 12:38:31 GMT
+Received: from linux-1.home (/10.175.10.30)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 06 May 2020 05:38:31 -0700
+Subject: Re: [patch V4 part 1 03/36] sched: Clean up scheduler_ipi()
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+References: <20200505131602.633487962@linutronix.de>
+ <20200505134058.361859938@linutronix.de>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Message-ID: <f969427d-a151-2c69-a779-a2b602e39d9e@oracle.com>
+Date:   Wed, 6 May 2020 14:37:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200504202243.5476-1-sibis@codeaurora.org>
-In-Reply-To: <20200504202243.5476-1-sibis@codeaurora.org>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Wed, 6 May 2020 18:08:34 +0530
-Message-ID: <CAHLCerM_wdHDwzEDN7YxU9pBdHo3KvNyJeRWMC6seTG6aCH7nw@mail.gmail.com>
-Subject: Re: [PATCH v4 00/12] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Nishanth Menon <nm@ti.com>, Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200505134058.361859938@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9612 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=4
+ spamscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005060099
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9612 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1015 suspectscore=4
+ priorityscore=1501 malwarescore=0 mlxlogscore=999 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005060099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 1:54 AM Sibi Sankar <sibis@codeaurora.org> wrote:
->
-> This patch series aims to extend cpu based scaling support to L3/DDR on
-> SDM845 and SC7180 SoCs.
->
-> Patches [1-3] - Blacklist SDM845 and SC7180 in cpufreq-dt-platdev
-> Patches [4-8] - Update bw levels based on cpu frequency change
-> Patches [9-10] - Add tag setting support to OPP
-> Patches [11-12] - Add the cpu opp tables for SDM845 and SC7180 SoCs.
->
-> Depends on the following series:
-> https://lore.kernel.org/patchwork/cover/1230626/
 
-Are there any other dependencies for this series? I tried applying
-this on top of Georgi's series on v5.7-rc3. Patch 12 didn't apply
-cleanly and needed a manual fixup for the include change.
+On 5/5/20 3:16 PM, Thomas Gleixner wrote:
+> The scheduler IPI has grown weird and wonderful over the years, time
+> for spring cleaning.
+> 
+> Move all the non-trivial stuff out of it and into a regular smp function
+> call IPI. This then reduces the schedule_ipi() to most of it's former MOP
+> glory and ensures to keep the interrupt vector lean and mean.
+> 
+> Aside of that avoiding the full irq_enter() in the x86 IPI implementation
+> is incorrect as scheduler_ipi() can be instrumented. To work around that
+> scheduler_ipi() had an irq_enter/exit() hack when heavy work was
+> pending. This is gone now.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>   kernel/sched/core.c  |   64 +++++++++++++++++++++++----------------------------
+>   kernel/sched/fair.c  |    5 +--
+>   kernel/sched/sched.h |    6 +++-
+>   3 files changed, 36 insertions(+), 39 deletions(-)
+> 
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -219,6 +219,13 @@ void update_rq_clock(struct rq *rq)
+>   	update_rq_clock_task(rq, delta);
+>   }
+>   
+> +static inline void
+> +rq_csd_init(struct rq *rq, call_single_data_t *csd, smp_call_func_t func)
+> +{
+> +	csd->flags = 0;
+> +	csd->func = func;
+> +	csd->info = rq;
+> +}
+>   
+>   #ifdef CONFIG_SCHED_HRTICK
+>   /*
+> @@ -314,16 +321,14 @@ void hrtick_start(struct rq *rq, u64 del
+>   	hrtimer_start(&rq->hrtick_timer, ns_to_ktime(delay),
+>   		      HRTIMER_MODE_REL_PINNED_HARD);
+>   }
+> +
+>   #endif /* CONFIG_SMP */
+>   
+>   static void hrtick_rq_init(struct rq *rq)
+>   {
+>   #ifdef CONFIG_SMP
+> -	rq->hrtick_csd.flags = 0;
+> -	rq->hrtick_csd.func = __hrtick_start;
+> -	rq->hrtick_csd.info = rq;
+> +	rq_csd_init(rq, &rq->hrtick_csd, __hrtick_start);
+>   #endif
+> -
+>   	hrtimer_init(&rq->hrtick_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
+>   	rq->hrtick_timer.function = hrtick;
+>   }
+> @@ -650,6 +655,16 @@ static inline bool got_nohz_idle_kick(vo
+>   	return false;
+>   }
+>   
+> +static void nohz_csd_func(void *info)
+> +{
+> +	struct rq *rq = info;
+> +
+> +	if (got_nohz_idle_kick()) {
+> +		rq->idle_balance = 1;
+> +		raise_softirq_irqoff(SCHED_SOFTIRQ);
+> +	}
+> +}
+> +
+>   #else /* CONFIG_NO_HZ_COMMON */
+>   
+>   static inline bool got_nohz_idle_kick(void)
+> @@ -2292,6 +2307,11 @@ void sched_ttwu_pending(void)
+>   	rq_unlock_irqrestore(rq, &rf);
+>   }
+>   
+> +static void wake_csd_func(void *info)
+> +{
+> +	sched_ttwu_pending();
+> +}
+> +
+>   void scheduler_ipi(void)
+>   {
+>   	/*
+> @@ -2300,34 +2320,6 @@ void scheduler_ipi(void)
+>   	 * this IPI.
+>   	 */
+>   	preempt_fold_need_resched();
+> -
+> -	if (llist_empty(&this_rq()->wake_list) && !got_nohz_idle_kick())
+> -		return;
+> -
+> -	/*
+> -	 * Not all reschedule IPI handlers call irq_enter/irq_exit, since
+> -	 * traditionally all their work was done from the interrupt return
+> -	 * path. Now that we actually do some work, we need to make sure
+> -	 * we do call them.
+> -	 *
+> -	 * Some archs already do call them, luckily irq_enter/exit nest
+> -	 * properly.
+> -	 *
+> -	 * Arguably we should visit all archs and update all handlers,
+> -	 * however a fair share of IPIs are still resched only so this would
+> -	 * somewhat pessimize the simple resched case.
+> -	 */
+> -	irq_enter();
+> -	sched_ttwu_pending();
+> -
+> -	/*
+> -	 * Check if someone kicked us for doing the nohz idle load balance.
+> -	 */
+> -	if (unlikely(got_nohz_idle_kick())) {
+> -		this_rq()->idle_balance = 1;
+> -		raise_softirq_irqoff(SCHED_SOFTIRQ);
+> -	}
+> -	irq_exit();
+>   }
+>   
+>   static void ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
+> @@ -2336,9 +2328,9 @@ static void ttwu_queue_remote(struct tas
+>   
+>   	p->sched_remote_wakeup = !!(wake_flags & WF_MIGRATED);
+>   
+> -	if (llist_add(&p->wake_entry, &cpu_rq(cpu)->wake_list)) {
+> +	if (llist_add(&p->wake_entry, &rq->wake_list)) {
+>   		if (!set_nr_if_polling(rq->idle))
+> -			smp_send_reschedule(cpu);
+> +			smp_call_function_single_async(cpu, &rq->wake_csd);
+>   		else
+>   			trace_sched_wake_idle_without_ipi(cpu);
+>   	}
+> @@ -6685,12 +6677,16 @@ void __init sched_init(void)
+>   		rq->avg_idle = 2*sysctl_sched_migration_cost;
+>   		rq->max_idle_balance_cost = sysctl_sched_migration_cost;
+>   
+> +		rq_csd_init(rq, &rq->wake_csd, wake_csd_func);
+> +
+>   		INIT_LIST_HEAD(&rq->cfs_tasks);
+>   
+>   		rq_attach_root(rq, &def_root_domain);
+>   #ifdef CONFIG_NO_HZ_COMMON
+>   		rq->last_blocked_load_update_tick = jiffies;
+>   		atomic_set(&rq->nohz_flags, 0);
+> +
+> +		rq_csd_init(rq, &rq->nohz_csd, nohz_csd_func);
+>   #endif
+>   #endif /* CONFIG_SMP */
+>   		hrtick_rq_init(rq);
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -10009,12 +10009,11 @@ static void kick_ilb(unsigned int flags)
+>   		return;
+>   
+>   	/*
+> -	 * Use smp_send_reschedule() instead of resched_cpu().
+> -	 * This way we generate a sched IPI on the target CPU which
+> +	 * This way we generate an IPI on the target CPU which
+>   	 * is idle. And the softirq performing nohz idle load balance
+>   	 * will be run before returning from the IPI.
+>   	 */
+> -	smp_send_reschedule(ilb_cpu);
+> +	smp_call_function_single_async(ilb_cpu, &cpu_rq(ilb_cpu)->wake_csd);
 
-Compilation failed with:
-Error: /home/amit/work/sources/worktree-review-pipeline/arch/arm64/boot/dts/qcom/sc7180.dtsi:101.30-31
-syntax error
-FATAL ERROR: Unable to parse input tree
+This should be nohz_csd instead of wake_csd, no? I.e.:
 
-I've been squinting at the offending lines with no success:
-                        interconnects = <&gem_noc MASTER_APPSS_PROC
-&mc_virt SLAVE_EBI1>,
-                                        <&osm_l3 MASTER_OSM_L3_APPS
-&osm_l3 SLAVE_OSM_L3>;
+        smp_call_function_single_async(ilb_cpu, &cpu_rq(ilb_cpu)->nohz_csd);
 
-> Georgi,
->  Would it make sense to include tag support patches [9-10] in your next
->  re-spin?
->
-> V4:
->  * Migrate to using Georgi's new bindings
->  * Misc fixups based on Matthias comments
->  * API fixups based on Bjorn's comments on v2
->  * Picked up a few R-bs from Matthias
->
-> v3:
->  * Migrated to using Saravana's opp-kBps bindings [1]
->  * Fixed some misc comments from Rajendra
->  * Added support for SC7180
->
-> v2:
->  * Incorporated Viresh's comments from:
->  https://lore.kernel.org/lkml/20190410102429.r6j6brm5kspmqxc3@vireshk-i7/
->  https://lore.kernel.org/lkml/20190410112516.gnh77jcwawvld6et@vireshk-i7/
->  * Dropped cpufreq-map passive governor
->
-> Sibi Sankar (12):
->   arm64: dts: qcom: sdm845: Add SoC compatible to MTP
->   cpufreq: blacklist SDM845 in cpufreq-dt-platdev
->   cpufreq: blacklist SC7180 in cpufreq-dt-platdev
->   OPP: Add and export helper to update voltage
->   OPP: Add and export helper to set bandwidth
->   cpufreq: qcom: Update the bandwidth levels on frequency change
->   OPP: Add and export helper to get icc path count
->   cpufreq: qcom: Disable fast switch when scaling ddr/l3
->   dt-bindings: interconnect: Add interconnect-tags bindings
->   OPP: Add support for setting interconnect-tags
->   arm64: dts: qcom: sdm845: Add cpu OPP tables
->   arm64: dts: qcom: sc7180: Add cpu OPP tables
->
->  .../bindings/interconnect/interconnect.txt    |   5 +
->  arch/arm64/boot/dts/qcom/sc7180.dtsi          | 168 ++++++++++++
->  arch/arm64/boot/dts/qcom/sdm845-mtp.dts       |   2 +-
->  arch/arm64/boot/dts/qcom/sdm845.dtsi          | 258 ++++++++++++++++++
->  drivers/cpufreq/cpufreq-dt-platdev.c          |   2 +
->  drivers/cpufreq/qcom-cpufreq-hw.c             |  89 +++++-
->  drivers/opp/core.c                            | 114 ++++++++
->  drivers/opp/of.c                              |  25 +-
->  include/linux/pm_opp.h                        |  22 ++
->  9 files changed, 675 insertions(+), 10 deletions(-)
->
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+
+With that:
+
+Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+
+alex.
+
+
+>   }
+>   
+>   /*
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -890,9 +890,10 @@ struct rq {
+>   #ifdef CONFIG_SMP
+>   	unsigned long		last_blocked_load_update_tick;
+>   	unsigned int		has_blocked_load;
+> +	call_single_data_t	nohz_csd;
+>   #endif /* CONFIG_SMP */
+>   	unsigned int		nohz_tick_stopped;
+> -	atomic_t nohz_flags;
+> +	atomic_t		nohz_flags;
+>   #endif /* CONFIG_NO_HZ_COMMON */
+>   
+>   	unsigned long		nr_load_updates;
+> @@ -979,7 +980,7 @@ struct rq {
+>   
+>   	/* This is used to determine avg_idle's max value */
+>   	u64			max_idle_balance_cost;
+> -#endif
+> +#endif /* CONFIG_SMP */
+>   
+>   #ifdef CONFIG_IRQ_TIME_ACCOUNTING
+>   	u64			prev_irq_time;
+> @@ -1021,6 +1022,7 @@ struct rq {
+>   #endif
+>   
+>   #ifdef CONFIG_SMP
+> +	call_single_data_t	wake_csd;
+>   	struct llist_head	wake_list;
+>   #endif
+>   
+> 
