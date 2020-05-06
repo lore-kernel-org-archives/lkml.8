@@ -2,151 +2,78 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BE7C47257
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7551BC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF549206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:25:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a/WX2Mvp"
+	by mail.kernel.org (Postfix) with ESMTP id 58E0D2073A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:26:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729077AbgEFJZ4 (ORCPT
+        id S1729037AbgEFJ0t convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 05:25:56 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49162 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728685AbgEFJZz (ORCPT
+        Wed, 6 May 2020 05:26:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59092 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728385AbgEFJ0s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 05:25:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588757154;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Bim1c8eCjYcLbuTSswn0dpCBvXNi8zOQ0N1tlPafZn4=;
-        b=a/WX2MvpVfdLwgMlWsGaXFmhPJcEm7GcakNQf4XqzojKV3Faq0mIzyu3iSox1aInkgs6G2
-        3kXdS1nfFOMklUg4HOCBZHDgQMasoFz6YVizWYfuT7YcnmF96jDMbwGqbTZaYEkyJMCYHv
-        uyows5NyV74pEW5pv34t7DNBcGNFeTI=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-210-lo9OQhJ0PheWydVUmrhFzQ-1; Wed, 06 May 2020 05:25:50 -0400
-X-MC-Unique: lo9OQhJ0PheWydVUmrhFzQ-1
-Received: by mail-wr1-f69.google.com with SMTP id p2so998922wrx.12
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 02:25:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Bim1c8eCjYcLbuTSswn0dpCBvXNi8zOQ0N1tlPafZn4=;
-        b=ECsRNko5OxVT7H32n9LFxUvCTNQEhqu2yLWRF1RjIzApaSIW9U3sjO55WMAvstQ8pC
-         5K/koVqzNF8avla+UDheAH7B7IDsaQOm9VdP1lCYHWayPAqj98A0Q7i7nkAHDhEtO9DJ
-         q8ud7zgn0LVcgEvynNGsgMuESP19lnjioHveBFLF0PUAqgeY1UpMQTjls+O8ajGti1Ll
-         QQq56bA2XhQ7P5QnJWCmdxian8zhLECT0/ZyY69ITViI25b8T2WQgE3Cdys8wiMeUvUK
-         48pjFuo1BItlZg8xu8Okeq3YS8xYuJ2+c/Grue6gtYelSmumexKimeQWPe7bCBXA+Ynj
-         xLOg==
-X-Gm-Message-State: AGi0PuZKCHyctQTo2BITureSwzW4ubj/RKTnNQf6kBMDABSEXrmam0s9
-        9hOURnqCAbQ1p1N5BBH46g2NH2IOWyAzvJgNQFUFgZkHqzxvW4rDTgSeVTUoq39GMGlqk61rcMM
-        8wywKbYRT1V7rj3oGBYXh6G1Q
-X-Received: by 2002:adf:dfcd:: with SMTP id q13mr7131679wrn.22.1588757149675;
-        Wed, 06 May 2020 02:25:49 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKDcQLCEb81yrXyKaZpg3LwlEaXE+I6k94/3G8d4AwC2GS8U1KX5Fn5b7fyFPoR8Cv9PqLECw==
-X-Received: by 2002:adf:dfcd:: with SMTP id q13mr7131657wrn.22.1588757149453;
-        Wed, 06 May 2020 02:25:49 -0700 (PDT)
-Received: from steredhat (host108-207-dynamic.49-79-r.retail.telecomitalia.it. [79.49.207.108])
-        by smtp.gmail.com with ESMTPSA id c25sm2030281wmb.44.2020.05.06.02.25.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 02:25:48 -0700 (PDT)
-Date:   Wed, 6 May 2020 11:25:46 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     Justin He <Justin.He@arm.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ldigby@redhat.com" <ldigby@redhat.com>,
-        "n.b@live.com" <n.b@live.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [GIT PULL] vhost: fixes
-Message-ID: <20200506092546.o6prnn4d66tavmjl@steredhat>
-References: <20200504081540-mutt-send-email-mst@kernel.org>
- <AM6PR08MB40696EFF8BE389C134AC04F6F7A40@AM6PR08MB4069.eurprd08.prod.outlook.com>
- <20200506031918-mutt-send-email-mst@kernel.org>
+        Wed, 6 May 2020 05:26:48 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79459C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 02:26:48 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jWGK5-0000MG-HH; Wed, 06 May 2020 11:26:37 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jWGK2-0004UH-Q5; Wed, 06 May 2020 11:26:34 +0200
+Message-ID: <b1af9917885ee3da60de1385edd2d8094ecb3b7d.camel@pengutronix.de>
+Subject: Re: [PATCH v2 22/91] reset: Move reset-simple header out of
+ drivers/reset
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Maxime Ripard <maxime@cerno.tech>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>
+Date:   Wed, 06 May 2020 11:26:34 +0200
+In-Reply-To: <6f7651682a6dab539bd89c80704c8303bbae68bd.1587742492.git-series.maxime@cerno.tech>
+References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
+         <6f7651682a6dab539bd89c80704c8303bbae68bd.1587742492.git-series.maxime@cerno.tech>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506031918-mutt-send-email-mst@kernel.org>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 03:19:55AM -0400, Michael S. Tsirkin wrote:
-> On Wed, May 06, 2020 at 03:28:47AM +0000, Justin He wrote:
-> > Hi Michael
-> > 
-> > > -----Original Message-----
-> > > From: Michael S. Tsirkin <mst@redhat.com>
-> > > Sent: Monday, May 4, 2020 8:16 PM
-> > > To: Linus Torvalds <torvalds@linux-foundation.org>
-> > > Cc: kvm@vger.kernel.org; virtualization@lists.linux-foundation.org;
-> > > netdev@vger.kernel.org; linux-kernel@vger.kernel.org; Justin He
-> > > <Justin.He@arm.com>; ldigby@redhat.com; mst@redhat.com; n.b@live.com;
-> > > stefanha@redhat.com
-> > > Subject: [GIT PULL] vhost: fixes
-> > >
-> > > The following changes since commit
-> > > 6a8b55ed4056ea5559ebe4f6a4b247f627870d4c:
-> > >
-> > >   Linux 5.7-rc3 (2020-04-26 13:51:02 -0700)
-> > >
-> > > are available in the Git repository at:
-> > >
-> > >   https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
-> > >
-> > > for you to fetch changes up to
-> > > 0b841030625cde5f784dd62aec72d6a766faae70:
-> > >
-> > >   vhost: vsock: kick send_pkt worker once device is started (2020-05-02
-> > > 10:28:21 -0400)
-> > >
-> > > ----------------------------------------------------------------
-> > > virtio: fixes
-> > >
-> > > A couple of bug fixes.
-> > >
-> > > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > >
-> > > ----------------------------------------------------------------
-> > > Jia He (1):
-> > >       vhost: vsock: kick send_pkt worker once device is started
-> > 
-> > Should this fix also be CC-ed to stable? Sorry I forgot to cc it to stable.
-> > 
-> > --
-> > Cheers,
-> > Justin (Jia He)
+On Fri, 2020-04-24 at 17:34 +0200, Maxime Ripard wrote:
+> The reset-simple code can be useful for drivers outside of drivers/reset
+> that have a few reset controls as part of their features. Let's move it to
+> include/linux/reset.
 > 
-> 
-> Go ahead, though recently just including Fixes seems to be enough.
-> 
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 
-The following patch Justin refers to does not contain the "Fixes:" tag:
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-0b841030625c vhost: vsock: kick send_pkt worker once device is started
+Do you need the reset patches applied together with this series, or can
+I pick them up individually?
 
-
-I think we should merge it on stable branches, so if needed, I can backport
-and send it.
-
-Stefano
-
+regards
+Philipp
