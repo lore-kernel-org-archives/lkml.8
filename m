@@ -2,137 +2,82 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C1DBC47254
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 02:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B26D5C47254
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 02:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06589206A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 02:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A1932073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 02:18:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="dW0KNPrS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729706AbgEFCQj (ORCPT
+        id S1729913AbgEFCSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 22:16:39 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3806 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727989AbgEFCQi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 22:16:38 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 87B7FCE5517664ADD426;
-        Wed,  6 May 2020 10:16:34 +0800 (CST)
-Received: from [10.133.206.78] (10.133.206.78) by smtp.huawei.com
- (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 6 May 2020
- 10:16:27 +0800
-Subject: Re: cgroup pointed by sock is leaked on mode switch
-To:     Yang Yingliang <yangyingliang@huawei.com>,
-        Tejun Heo <tj@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <cgroups@vger.kernel.org>,
-        <netdev@vger.kernel.org>,
-        "Libin (Huawei)" <huawei.libin@huawei.com>, <guofan5@huawei.com>,
-        <wangkefeng.wang@huawei.com>
-References: <03dab6ab-0ffe-3cae-193f-a7f84e9b14c5@huawei.com>
- <20200505160639.GG12217@mtj.thefacebook.com>
- <c9879fd2-cb91-2a08-8293-c6a436b5a539@huawei.com>
-From:   Zefan Li <lizefan@huawei.com>
-Message-ID: <0a6ae984-e647-5ada-8849-3fa2fb994ff3@huawei.com>
-Date:   Wed, 6 May 2020 10:16:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Tue, 5 May 2020 22:18:30 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:26266 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727989AbgEFCS3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 22:18:29 -0400
+X-UUID: 4ca1649daef045499f1b75e07c81ce0b-20200506
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=4S4SLonUCeNW5fuMA+NMKxm1B76GCYdDl1j3L5SVHFc=;
+        b=dW0KNPrSZhZM173NBSclYZ1tJTvc44e9LJrIEP270ljD0AA3YnvMy1bhrzbNZE6DQqpEV5fpGcsXftAjtA36mgqTZ0/smMm6xmizEK4uwLOrE5XOUzSlgyEOe9v10u569pZRB5hORt/M+2NjUFcrIunjVrk8pUVYCUDI5ywW0Is=;
+X-UUID: 4ca1649daef045499f1b75e07c81ce0b-20200506
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1308487309; Wed, 06 May 2020 10:18:26 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 6 May 2020 10:18:23 +0800
+Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 6 May 2020 10:18:19 +0800
+Message-ID: <1588731504.7745.3.camel@mtksdccf07>
+Subject: Re: [PATCH v2] stacktrace: cleanup inconsistent variable type
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Bart Van Assche <bvanassche@acm.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>
+Date:   Wed, 6 May 2020 10:18:24 +0800
+In-Reply-To: <d2a9f155-f309-0182-73c9-5c02d7014574@acm.org>
+References: <20200421013511.5960-1-walter-zh.wu@mediatek.com>
+         <d2a9f155-f309-0182-73c9-5c02d7014574@acm.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <c9879fd2-cb91-2a08-8293-c6a436b5a539@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.133.206.78]
-X-CFilter-Loop: Reflected
+X-TM-SNTS-SMTP: B18FF41D50DAA5A8BBADA9C39DDC3D29DECCB526F72A79F9EBA7F71DB48F5D192000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/6 9:50, Yang Yingliang wrotee:
-> +cc lizefan@huawei.com
-> 
-> On 2020/5/6 0:06, Tejun Heo wrote:
->> Hello, Yang.
->>
->> On Sat, May 02, 2020 at 06:27:21PM +0800, Yang Yingliang wrote:
->>> I find the number nr_dying_descendants is increasing:
->>> linux-dVpNUK:~ # find /sys/fs/cgroup/ -name cgroup.stat -exec grep
->>> '^nr_dying_descendants [^0]'  {} +
->>> /sys/fs/cgroup/unified/cgroup.stat:nr_dying_descendants 80
->>> /sys/fs/cgroup/unified/system.slice/cgroup.stat:nr_dying_descendants 1
->>> /sys/fs/cgroup/unified/system.slice/system-hostos.slice/cgroup.stat:nr_dying_descendants
->>> 1
->>> /sys/fs/cgroup/unified/lxc/cgroup.stat:nr_dying_descendants 79
->>> /sys/fs/cgroup/unified/lxc/5f1fdb8c54fa40c3e599613dab6e4815058b76ebada8a27bc1fe80c0d4801764/cgroup.stat:nr_dying_descendants
->>> 78
->>> /sys/fs/cgroup/unified/lxc/5f1fdb8c54fa40c3e599613dab6e4815058b76ebada8a27bc1fe80c0d4801764/system.slice/cgroup.stat:nr_dying_descendants
->>> 78
->> Those numbers are nowhere close to causing oom issues. There are some
->> aspects of page and other cache draining which is being improved but unless
->> you're seeing numbers multiple orders of magnitude higher, this isn't the
->> source of your problem.
->>
->>> The situation is as same as the commit bd1060a1d671 ("sock, cgroup: add
->>> sock->sk_cgroup") describes.
->>> "On mode switch, cgroup references which are already being pointed to by
->>> socks may be leaked."
->> I'm doubtful that you're hitting that issue. Mode switching means memcg
->> being switched between cgroup1 and cgroup2 hierarchies, which is unlikely to
->> be what's happening when you're launching docker containers.
->>
->> The first step would be identifying where memory is going and finding out
->> whether memcg is actually being switched between cgroup1 and 2 - look at the
->> hierarchy number in /proc/cgroups, if that's switching between 0 and
->> someting not zero, it is switching.
->>
+T24gV2VkLCAyMDIwLTA0LTIyIGF0IDE4OjIxIC0wNzAwLCBCYXJ0IFZhbiBBc3NjaGUgd3JvdGU6
+DQo+IE9uIDQvMjAvMjAgNjozNSBQTSwgV2FsdGVyIFd1IHdyb3RlOg0KPiA+IE1vZGlmeSB0aGUg
+dmFyaWFibGUgdHlwZSBvZiAnc2tpcCcgbWVtYmVyIG9mIHN0cnVjdCBzdGFja190cmFjZS4NCj4g
+PiBJbiB0aGVvcnksIHRoZSAnc2tpcCcgdmFyaWFibGUgdHlwZSBzaG91bGQgYmUgdW5zaWduZWQg
+aW50Lg0KPiA+IFRoZXJlIGFyZSB0d28gcmVhc29uczoNCj4gPiAtIFRoZSAnc2tpcCcgb25seSBo
+YXMgdHdvIHNpdHVhdGlvbiwgMSlQb3NpdGl2ZSB2YWx1ZSwgMilaZXJvDQo+ID4gLSBUaGUgJ3Nr
+aXAnIG9mIHN0cnVjdCBzdGFja190cmFjZSBoYXMgaW5jb25zaXN0ZW50IHR5cGUgd2l0aCBzdHJ1
+Y3QNCj4gPiAgICBzdGFja190cmFjZV9kYXRhLCBpdCBtYWtlcyBhIGJpdCBjb25mdXNpb24gaW4g
+dGhlIHJlbGF0aW9uc2hpcCBiZXR3ZWVuDQo+ID4gICAgc3RydWN0IHN0YWNrX3RyYWNlIGFuZCBz
+dGFja190cmFjZV9kYXRhLg0KPiANCj4gUmV2aWV3ZWQtYnk6IEJhcnQgVmFuIEFzc2NoZSA8YnZh
+bmFzc2NoZUBhY20ub3JnPg0KDQpIaSBBbmRyZXcsDQoNCldvdWxkIHlvdSBrbm93IHdoeSBub3Qg
+dG8gYmUgcGlja2VkIHVwIHRoaXMgcGF0Y2ggeWV0Pw0KRG8gSSBtaXNzIHNvbWV0aGluZ3M/DQoN
+Cg0KVGhhbmsgeW91IGZvciB5b3VyIGhlbHAuDQoNCldhbHRlcg0KDQo=
 
-I think there's a bug here which can lead to unlimited memory leak.
-This should reproduce the bug:
-
-    # mount -t cgroup -o netprio xxx /cgroup/netprio
-    # mkdir /cgroup/netprio/xxx
-    # echo PID > /cgroup/netprio/xxx/tasks
-    /* this PID process starts to do some network thing and then exits */
-    # rmdir /cgroup/netprio/xxx
-    /* now this cgroup will never be freed */
-
-Look at the code:
-
-static inline void sock_update_netprioidx(struct sock_cgroup_data *skcd)
-{
-	...
-	sock_cgroup_set_prioidx(skcd, task_netprioidx(current));
-}
-
-static inline void sock_cgroup_set_prioidx(struct sock_cgroup_data *skcd,
-					u16 prioidx)
-{
-	...
-	if (sock_cgroup_prioidx(&skcd_buf) == prioidx)
-		return ;
-	...
-	skcd_buf.prioidx = prioidx;
-	WRITE_ONCE(skcd->val, skcd_buf.val);
-}
-
-task_netprioidx() will be the cgrp id of xxx which is not 1, but
-sock_cgroup_prioidx(&skcd_buf) is 1 because it thought it's in v2 mode.
-Now we have a memory leak.
-
-I think the eastest fix is to do the mode switch here:
-
-diff --git a/net/core/netprio_cgroup.c b/net/core/netprio_cgroup.c
-index b905747..2397866 100644
---- a/net/core/netprio_cgroup.c
-+++ b/net/core/netprio_cgroup.c
-@@ -240,6 +240,8 @@ static void net_prio_attach(struct cgroup_taskset *tset)
-         struct task_struct *p;
-         struct cgroup_subsys_state *css;
-
-+       cgroup_sk_alloc_disable();
-+
-         cgroup_taskset_for_each(p, css, tset) {
-                 void *v = (void *)(unsigned long)css->cgroup->id;
