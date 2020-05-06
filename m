@@ -2,133 +2,63 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B826C38A2A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2ACC38A2A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68E142076D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:19:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iT8/5tDZ"
+	by mail.kernel.org (Postfix) with ESMTP id 730E82076D
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:20:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730065AbgEFVT6 (ORCPT
+        id S1730118AbgEFVUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 17:19:58 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46924 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729967AbgEFVT5 (ORCPT
+        Wed, 6 May 2020 17:20:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58104 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729543AbgEFVUM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 17:19:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588799995;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=kLUveg/lfBXpIFrkJcbT6gNz4XvLtpAVItCEuZjrXyk=;
-        b=iT8/5tDZyJ/sZx8MTHIJDQknU7C4ChUHrJJ1dHigEY3+u2sHIJLYdhG1E4OO4dt74FaCtI
-        G1YpO8LD/MeUOsNvCe44pUWUjvEfYe8bdjdQPV1YqW4YExB13rSONEauk/X86Q7ScIC19N
-        gmHgJBa/xUdz9l76E7I9GabgB/4q/So=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-158-NLqgcf3gPoyVSTJu7v8WYg-1; Wed, 06 May 2020 17:19:52 -0400
-X-MC-Unique: NLqgcf3gPoyVSTJu7v8WYg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 52BF71005510;
-        Wed,  6 May 2020 21:19:50 +0000 (UTC)
-Received: from treble (ovpn-115-96.rdu2.redhat.com [10.10.115.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0C85B60CCC;
-        Wed,  6 May 2020 21:19:47 +0000 (UTC)
-Date:   Wed, 6 May 2020 16:19:45 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] bpf: Tweak BPF jump table optimizations for objtool
- compatibility
-Message-ID: <20200506211945.4qhrxqplzmt4ul66@treble>
-References: <20200501195617.czrnfqqcxfnliz3k@treble>
- <20200502030622.yrszsm54r6s6k6gq@ast-mbp.dhcp.thefacebook.com>
- <20200502192105.xp2osi5z354rh4sm@treble>
- <20200505174300.gech3wr5v6kkho35@ast-mbp.dhcp.thefacebook.com>
- <20200505181108.hwcqanvw3qf5qyxk@treble>
- <20200505195320.lyphpnprn3sjijf6@ast-mbp.dhcp.thefacebook.com>
- <20200505202823.zkmq6t55fxspqazk@treble>
- <20200505235939.utnmzqsn22cec643@ast-mbp.dhcp.thefacebook.com>
- <20200506155343.7x3slq3uasponb6w@treble>
- <CAADnVQJZ1rj1DB-Y=85itvfcHxnXVKjhJXpzqs6zZ6ZLpexhCQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAADnVQJZ1rj1DB-Y=85itvfcHxnXVKjhJXpzqs6zZ6ZLpexhCQ@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Wed, 6 May 2020 17:20:12 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03F33C061A0F;
+        Wed,  6 May 2020 14:20:12 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id B7BA8123229ED;
+        Wed,  6 May 2020 14:20:11 -0700 (PDT)
+Date:   Wed, 06 May 2020 14:20:11 -0700 (PDT)
+Message-Id: <20200506.142011.1280227366362981007.davem@davemloft.net>
+To:     chentao107@huawei.com
+Cc:     claudiu.manoil@nxp.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] net: enetc: Make some symbols static
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200506112217.161534-1-chentao107@huawei.com>
+References: <20200506112217.161534-1-chentao107@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 06 May 2020 14:20:11 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 09:45:01AM -0700, Alexei Starovoitov wrote:
-> On Wed, May 6, 2020 at 8:53 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> >
-> > On Tue, May 05, 2020 at 04:59:39PM -0700, Alexei Starovoitov wrote:
-> > > As far as workaround I prefer the following:
-> > > From 94bbc27c5a70d78846a5cb675df4cf8732883564 Mon Sep 17 00:00:00 2001
-> > > From: Alexei Starovoitov <ast@kernel.org>
-> > > Date: Tue, 5 May 2020 16:52:41 -0700
-> > > Subject: [PATCH] bpf,objtool: tweak interpreter compilation flags to help objtool
-> > >
-> > > tbd
-> > >
-> > > Fixes: 3193c0836f20 ("bpf: Disable GCC -fgcse optimization for ___bpf_prog_run()")
-> > > Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> > > Reported-by: Arnd Bergmann <arnd@arndb.de>
-> > > Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-> > > ---
-> > >  include/linux/compiler-gcc.h | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
-> > > index d7ee4c6bad48..05104c3cc033 100644
-> > > --- a/include/linux/compiler-gcc.h
-> > > +++ b/include/linux/compiler-gcc.h
-> > > @@ -171,4 +171,4 @@
-> > >  #define __diag_GCC_8(s)
-> > >  #endif
-> > >
-> > > -#define __no_fgcse __attribute__((optimize("-fno-gcse")))
-> > > +#define __no_fgcse __attribute__((optimize("-fno-gcse,-fno-omit-frame-pointer")))
-> > > --
-> > > 2.23.0
-> > >
-> > > I've tested it with gcc 8,9,10 and clang 11 with FP=y and with ORC=y.
-> > > All works.
-> > > I think it's safer to go with frame pointers even for ORC=y considering
-> > > all the pain this issue had caused. Even if objtool gets confused again
-> > > in the future __bpf_prog_run() will have frame pointers and kernel stack
-> > > unwinding can fall back from ORC to FP for that frame.
-> > > wdyt?
-> >
-> > It seems dangerous to me.  The GCC manual recommends against it.
+From: ChenTao <chentao107@huawei.com>
+Date: Wed, 6 May 2020 19:22:17 +0800
+
+> Fix the following warning:
 > 
-> The manual can says that it's broken. That won't stop the world from using it.
-> Just google projects that are using it. For example: qt, lz4, unreal engine, etc
-> Telling compiler to disable gcse via flag is a guaranteed way to avoid
-> that optimization that breaks objtool whereas messing with C code is nothing
-> but guess work. gcc can still do gcse.
+> drivers/net/ethernet/freescale/enetc/enetc_qos.c:427:20: warning:
+> symbol 'enetc_act_fwd' was not declared. Should it be static?
+> drivers/net/ethernet/freescale/enetc/enetc_qos.c:966:20: warning:
+> symbol 'enetc_check_flow_actions' was not declared. Should it be static?
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: ChenTao <chentao107@huawei.com>
 
-But the manual's right, it is broken.  How do you know other important
-flags won't also be stripped?
-
--- 
-Josh
-
+Applied.
