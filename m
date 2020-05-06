@@ -2,164 +2,73 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E34E4C4725C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 04:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76832C47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 04:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9C12206F9
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 04:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59EB320838
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 04:53:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgEFEvg (ORCPT
+        id S1726660AbgEFExC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 00:51:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44592 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726350AbgEFEvf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 00:51:35 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A8BEC061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 21:51:35 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jWC1j-0000J1-MN; Wed, 06 May 2020 06:51:23 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jWC1e-0006qW-QW; Wed, 06 May 2020 06:51:18 +0200
-Date:   Wed, 6 May 2020 06:51:18 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        David Jander <david@protonic.nl>,
-        "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH net-next v3] net: phy: micrel: add phy-mode support for
- the KSZ9031 PHY
-Message-ID: <20200506045118.hl3sfmww2ncfh5ze@pengutronix.de>
-References: <20200422072137.8517-1-o.rempel@pengutronix.de>
- <71dea993-b420-e994-ffa8-87350e157cda@ti.com>
+        Wed, 6 May 2020 00:53:02 -0400
+Received: from verein.lst.de ([213.95.11.211]:38744 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725771AbgEFExC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 00:53:02 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 46CD968C4E; Wed,  6 May 2020 06:52:59 +0200 (CEST)
+Date:   Wed, 6 May 2020 06:52:58 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Stefan Haberland <sth@linux.ibm.com>
+Cc:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
+        linux-block@vger.kernel.org, hoeppner@linux.ibm.com,
+        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com,
+        linux-kernel@vger.kernel.org,
+        Peter Oberparleiter <oberpar@linux.ibm.com>
+Subject: Re: [PATCH 1/1] s390/dasd: remove ioctl_by_bdev from DASD driver
+Message-ID: <20200506045258.GB9846@lst.de>
+References: <20200430111754.98508-1-sth@linux.ibm.com> <20200430111754.98508-2-sth@linux.ibm.com> <20200430131351.GA24813@lst.de> <4ab11558-9f2b-02ee-d191-c9a5cc38de0f@linux.ibm.com> <70f541fe-a678-8952-0753-32707d21e337@linux.ibm.com> <20200505124423.GA26313@lst.de> <a6c99eba-44f2-2944-a135-50ed75ef2c55@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="l5xaumdvxm7xwgpw"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <71dea993-b420-e994-ffa8-87350e157cda@ti.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 06:46:43 up 172 days, 20:05, 176 users,  load average: 0.04, 0.07,
- 0.07
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <a6c99eba-44f2-2944-a135-50ed75ef2c55@linux.ibm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 05, 2020 at 05:09:56PM +0200, Stefan Haberland wrote:
+> OK, thanks for the hint.I did not have this in mind. And I still have
+> to look up how this is working at all.
+> But isn't this only a real issue for devices with more than 16 minors
+> or partitions? So it should not be a problem for DASDs with our limit
+> of 3 partitions and the fixed amount of minors, right?
+> 
+> Just tested with CONFIG_DEBUG_BLOCK_EXT_DEVT enabled and about 1000
+> unlabeled devices. Did not see an issue.
+> 
+> While I see the SCSI devices with MAJOR 259 and quite a random MINOR
+> all the DASD devices keep their MAJOR 94 and ascending MINOR.
 
---l5xaumdvxm7xwgpw
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Looks like it only changes the minors, and not the majors.  Still
+checking for major and relying on a shared structure define in different
+places just doesn't look maintainable.
 
-Hi Grygorii,
+> > And compared to all the complications I think the biodasdinfo method
+> > is the least of all those evils.
+> 
+> Are you talking about your first patch suggestion?Then I disagree.
+> I still do not like to force the driver to be built in if there is an
+> alternative.
 
-On Tue, May 05, 2020 at 09:26:46PM +0300, Grygorii Strashko wrote:
->=20
->=20
-> On 22/04/2020 10:21, Oleksij Rempel wrote:
-> > Add support for following phy-modes: rgmii, rgmii-id, rgmii-txid, rgmii=
--rxid.
-> >=20
-> > This PHY has an internal RX delay of 1.2ns and no delay for TX.
-> >=20
-> > The pad skew registers allow to set the total TX delay to max 1.38ns and
-> > the total RX delay to max of 2.58ns (configurable 1.38ns + build in
-> > 1.2ns) and a minimal delay of 0ns.
-> >=20
-> > According to the RGMII v1.3 specification the delay provided by PCB tra=
-ces
-> > should be between 1.5ns and 2.0ns. The RGMII v2.0 allows to provide this
-> > delay by MAC or PHY. So, we configure this PHY to the best values we can
-> > get by this HW: TX delay to 1.38ns (max supported value) and RX delay to
-> > 1.80ns (best calculated delay)
-> >=20
-> > The phy-modes can still be fine tuned/overwritten by *-skew-ps
-> > device tree properties described in:
-> > Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-> >=20
-> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> > ---
-> > changes v3:
-> > - change delay on RX line to 1.80ns
-> > - add warning if *-skew-ps properties are used together with not rgmii
-> >    mode.
-> >=20
-> > changes v2:
-> > - change RX_ID value from 0x1a to 0xa. The overflow bit was detected by
-> >    FIELD_PREP() build check.
-> >    Reported-by: kbuild test robot <lkp@intel.com>
-> >=20
-> >   drivers/net/phy/micrel.c | 128 +++++++++++++++++++++++++++++++++++++--
-> >   1 file changed, 123 insertions(+), 5 deletions(-)
-> >=20
->=20
-> This patch broke networking on at least 5 TI boards:
-> am572x-idk
-> am571x-idk
-> am43xx-hsevm
-> am43xx-gpevm
-> am437x-idk
->=20
-> am57xx I can fix.
->=20
-> am437x need to investigate.
+No, I mean the series that I actually sent out:
 
-Please try:
-	phy-mode =3D "rgmii-txid"
-
-I assume your boards are using "rgmii" which should be used only if you
-boards have extra long clk traces.
-
-Regards,
-Oleksij
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---l5xaumdvxm7xwgpw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl6yQkIACgkQ4omh9DUa
-UbMp2A/+J8sk5MKQrPLpxu0jbGmvE3SO4JOpyFLJVxg83qR0ndhzuRXM2o0AKz7a
-v5BmOL+e926ev0iisyOdzsNSdWh5xlV3FiIT1sUOSyfigVsgKUVe5Jb7n8q+QiKi
-5NEyB6LckWrWnfkEp5OFyAh0wY3+GX/RUQEeQQ4sLBUNyyhHCSKR5WAxLkZ24M8P
-K+b/g/DbRJGWCiasnFnOJZTdHjW7MWtxBUBoxEYPt9LtyGWJ5E8S8R93jmztaLJr
-wFSrX0Wi0UrAYX+OCLGerw6N2biFrU7jQeXs5Gup+fwq9+MfAm7s2R16ecqNVzdy
-r1N6exEX+POV0BAgovn8sG8pUSij36d41Iiuqt85o9ZXXEnNB5l2XCPlhbKIltT/
-dJQR9F5TwhIM6zc6jnU0DvAtdl3WvkvU0gZab2hmC00Wigpsdw6sNmsUyfEOVC2R
-207W76WNCEJnQJw81z8QJiQcvgFhr/HaSdvLvzAmXbOj23PxV+wgp8vVawmgGcLR
-kIsJDwu4TBUS3SZfoKXcYberpHvaSZaikijpJxCJs2NMND/3Cgn/WzNCkBrbaFQL
-znUhKYUoPX6isaX+e4i4DxEe+35tTggQhQZ+E0Pk+lppkDIecyHrGOCM3NTUBDA3
-NM3UoHo/K1XyIpTbPWuQp6o1U5KMQPA4SQbdOSdkw7S+0++zglY=
-=tVb8
------END PGP SIGNATURE-----
-
---l5xaumdvxm7xwgpw--
+https://lkml.org/lkml/2020/4/21/66
+https://lkml.org/lkml/2020/4/21/68
+https://lkml.org/lkml/2020/4/21/69
