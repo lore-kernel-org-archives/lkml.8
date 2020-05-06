@@ -2,134 +2,167 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD6F2C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 11:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD0CC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 11:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5E7B20714
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 11:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0A4520746
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 11:56:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PXJKEtd2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbgEFL4M (ORCPT
+        id S1727874AbgEFL4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 07:56:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37816 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726558AbgEFL4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 07:56:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 39BECAE0F;
-        Wed,  6 May 2020 11:56:13 +0000 (UTC)
-Subject: Re: [PATCH] slub: limit count of partial slabs scanned to gather
- statistics
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Roman Gushchin <guro@fb.com>,
-        Wen Yang <wenyang@linux.alibaba.com>
-References: <158860845968.33385.4165926113074799048.stgit@buzz>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <09e66344-4d30-9a67-24b8-14a910709157@suse.cz>
-Date:   Wed, 6 May 2020 13:56:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 6 May 2020 07:56:41 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:38462 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725985AbgEFL4l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 07:56:41 -0400
+X-UUID: 02a666bec23c4b3eb4474929ed893b68-20200506
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=MNY7QjHyK2N8v2XPbveR8rY3W7ehZggZwWilVhYjlQw=;
+        b=PXJKEtd2EYOa4rA2Hb0vETIQGIbuaIRWoqj+ZhgwmE/kBOQWSyUVFAKUrIGXIxS16PZF+Zsez8211XRDgJtX9345+lZf2IlW7Zb5mvobDYAQXAAQ+D+vQErewCeuq7qeEII5tuzpDqUeJQqy9MpYZ9dns9lh7M5eAaQ6368JM1M=;
+X-UUID: 02a666bec23c4b3eb4474929ed893b68-20200506
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2131291375; Wed, 06 May 2020 19:56:35 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 6 May 2020 19:56:31 +0800
+Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 6 May 2020 19:56:30 +0800
+Message-ID: <1588766193.23664.28.camel@mtksdccf07>
+Subject: Re: [PATCH 2/3] kasan: record and print the free track
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Wed, 6 May 2020 19:56:33 +0800
+In-Reply-To: <CACT4Y+ajKJpwNXd1V17bOT_ZShXm8h2eepxx_g4hAqk78SxCDA@mail.gmail.com>
+References: <20200506052155.14515-1-walter-zh.wu@mediatek.com>
+         <CACT4Y+ajKJpwNXd1V17bOT_ZShXm8h2eepxx_g4hAqk78SxCDA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <158860845968.33385.4165926113074799048.stgit@buzz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/4/20 6:07 PM, Konstantin Khlebnikov wrote:
-> To get exact count of free and used objects slub have to scan list of
-> partial slabs. This may take at long time. Scanning holds spinlock and
-> blocks allocations which move partial slabs to per-cpu lists and back.
-> 
-> Example found in the wild:
-> 
-> # cat /sys/kernel/slab/dentry/partial
-> 14478538 N0=7329569 N1=7148969
-> # time cat /sys/kernel/slab/dentry/objects
-> 286225471 N0=136967768 N1=149257703
-> 
-> real	0m1.722s
-> user	0m0.001s
-> sys	0m1.721s
-> 
-> The same problem in slab was addressed in commit f728b0a5d72a ("mm, slab:
-> faster active and free stats") by adding more kmem cache statistics.
-> For slub same approach requires atomic op on fast path when object frees.
-
-In general yeah, but are you sure about this one? AFAICS this is about pages in
-the n->partial list, where manipulations happen under n->list_lock and shouldn't
-be fast path. It should be feasible to add a counter under the same lock, so it
-wouldn't even need to be atomic?
-
-> Let's simply limit count of scanned slabs and print warning.
-> Limit set in /sys/module/slub/parameters/max_partial_to_count.
-> Default is 10000 which should be enough for most sane cases.
-> 
-> Return linear approximation if list of partials is longer than limit.
-> Nobody should notice difference.
-> 
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-
-BTW there was a different patch in that area proposed recently [1] for slabinfo.
-Christopher argued that we can do that for slabinfo but leave /sys stats
-precise. Guess not then?
-
-[1]
-https://lore.kernel.org/linux-mm/20200222092428.99488-1-wenyang@linux.alibaba.com/
-
-> ---
->  mm/slub.c |   15 ++++++++++++++-
->  1 file changed, 14 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/slub.c b/mm/slub.c
-> index 9bf44955c4f1..86a366f7acb6 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -2407,16 +2407,29 @@ static inline unsigned long node_nr_objs(struct kmem_cache_node *n)
->  #endif /* CONFIG_SLUB_DEBUG */
->  
->  #if defined(CONFIG_SLUB_DEBUG) || defined(CONFIG_SYSFS)
-> +
-> +static unsigned long max_partial_to_count __read_mostly = 10000;
-> +module_param(max_partial_to_count, ulong, 0644);
-> +
->  static unsigned long count_partial(struct kmem_cache_node *n,
->  					int (*get_count)(struct page *))
->  {
-> +	unsigned long counted = 0;
->  	unsigned long flags;
->  	unsigned long x = 0;
->  	struct page *page;
->  
->  	spin_lock_irqsave(&n->list_lock, flags);
-> -	list_for_each_entry(page, &n->partial, slab_list)
-> +	list_for_each_entry(page, &n->partial, slab_list) {
->  		x += get_count(page);
-> +
-> +		if (++counted > max_partial_to_count) {
-> +			pr_warn_once("SLUB: too much partial slabs to count all objects, increase max_partial_to_count.\n");
-> +			/* Approximate total count of objects */
-> +			x = mult_frac(x, n->nr_partial, counted);
-> +			break;
-> +		}
-> +	}
->  	spin_unlock_irqrestore(&n->list_lock, flags);
->  	return x;
->  }
-> 
-> 
+T24gV2VkLCAyMDIwLTA1LTA2IGF0IDExOjUwICswMjAwLCBEbWl0cnkgVnl1a292IHdyb3RlOg0K
+PiBPbiBXZWQsIE1heSA2LCAyMDIwIGF0IDc6MjIgQU0gV2FsdGVyIFd1IDx3YWx0ZXItemgud3VA
+bWVkaWF0ZWsuY29tPiB3cm90ZToNCj4gPg0KPiA+IFdlIGFkZCBuZXcgS0FTQU5fUkNVX1NUQUNL
+X1JFQ09SRCBjb25maWd1cmF0aW9uIG9wdGlvbi4gSXQgd2lsbCBtb3ZlDQo+ID4gZnJlZSB0cmFj
+ayBmcm9tIHNsdWIgbWV0YS1kYXRhIChzdHJ1Y3Qga2FzYW5fYWxsb2NfbWV0YSkgaW50byBmcmVl
+ZCBvYmplY3QuDQo+ID4gQmVjYXVzZSB3ZSBob3BlIHRoaXMgb3B0aW9ucyBkb2Vzbid0IGVubGFy
+Z2Ugc2x1YiBtZXRhLWRhdGEgc2l6ZS4NCj4gPg0KPiA+IFRoaXMgb3B0aW9uIGRvZXNuJ3QgZW5s
+YXJnZSBzdHJ1Y3Qga2FzYW5fYWxsb2NfbWV0YSBzaXplLg0KPiA+IC0gYWRkIHR3byBjYWxsX3Jj
+dSgpIGNhbGwgc3RhY2sgaW50byBrYXNhbl9hbGxvY19tZXRhLCBzaXplIGlzIDggYnl0ZXMuDQo+
+ID4gLSByZW1vdmUgZnJlZSB0cmFjayBmcm9tIGthc2FuX2FsbG9jX21ldGEsIHNpemUgaXMgOCBi
+eXRlcy4NCj4gPg0KPiA+IFRoaXMgb3B0aW9uIGlzIG9ubHkgc3VpdGFibGUgZm9yIGdlbmVyaWMg
+S0FTQU4sIGJlY2F1c2Ugd2UgbW92ZSBmcmVlIHRyYWNrDQo+ID4gaW50byB0aGUgZnJlZWQgb2Jq
+ZWN0LCBzbyBmcmVlIHRyYWNrIGlzIHZhbGlkIGluZm9ybWF0aW9uIG9ubHkgd2hlbiBpdA0KPiA+
+IGV4aXN0cyBpbiBxdWFyYW50aW5lLiBJZiB0aGUgb2JqZWN0IGlzIGluLXVzZSBzdGF0ZSwgdGhl
+biB0aGUgS0FTQU4gcmVwb3J0DQo+ID4gZG9lc24ndCBwcmludCBjYWxsX3JjdSgpIGZyZWUgdHJh
+Y2sgaW5mb3JtYXRpb24uDQo+ID4NCj4gPiBbMV1odHRwczovL2J1Z3ppbGxhLmtlcm5lbC5vcmcv
+c2hvd19idWcuY2dpP2lkPTE5ODQzNw0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogV2FsdGVyIFd1
+IDx3YWx0ZXItemgud3VAbWVkaWF0ZWsuY29tPg0KPiA+IENjOiBBbmRyZXkgUnlhYmluaW4gPGFy
+eWFiaW5pbkB2aXJ0dW96em8uY29tPg0KPiA+IENjOiBEbWl0cnkgVnl1a292IDxkdnl1a292QGdv
+b2dsZS5jb20+DQo+ID4gQ2M6IEFsZXhhbmRlciBQb3RhcGVua28gPGdsaWRlckBnb29nbGUuY29t
+Pg0KPiA+IC0tLQ0KPiA+ICBtbS9rYXNhbi9jb21tb24uYyB8IDEwICsrKysrKysrKy0NCj4gPiAg
+bW0va2FzYW4vcmVwb3J0LmMgfCAyNCArKysrKysrKysrKysrKysrKysrKystLS0NCj4gPiAgMiBm
+aWxlcyBjaGFuZ2VkLCAzMCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4g
+ZGlmZiAtLWdpdCBhL21tL2thc2FuL2NvbW1vbi5jIGIvbW0va2FzYW4vY29tbW9uLmMNCj4gPiBp
+bmRleCAzMmQ0MjJiZGYxMjcuLjEzZWMwM2UyMjVhNyAxMDA2NDQNCj4gPiAtLS0gYS9tbS9rYXNh
+bi9jb21tb24uYw0KPiA+ICsrKyBiL21tL2thc2FuL2NvbW1vbi5jDQo+ID4gQEAgLTMyMSw4ICsz
+MjEsMTUgQEAgdm9pZCBrYXNhbl9yZWNvcmRfY2FsbHJjdSh2b2lkICphZGRyKQ0KPiA+ICAgICAg
+ICAgICAgICAgICAvKiByZWNvcmQgbGFzdCBjYWxsX3JjdSgpIGNhbGwgc3RhY2sgKi8NCj4gPiAg
+ICAgICAgICAgICAgICAgYWxsb2NfaW5mby0+cmN1X2ZyZWVfc3RhY2tbMV0gPSBzYXZlX3N0YWNr
+KEdGUF9OT1dBSVQpOw0KPiA+ICB9DQo+ID4gLSNlbmRpZg0KPiA+DQo+ID4gK3N0YXRpYyB2b2lk
+IGthc2FuX3NldF9mcmVlX2luZm8oc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlLA0KPiA+ICsgICAg
+ICAgICAgICAgICB2b2lkICpvYmplY3QsIHU4IHRhZykNCj4gPiArew0KPiA+ICsgICAgICAgLyog
+c3RvcmUgZnJlZSB0cmFjayBpbnRvIGZyZWVkIG9iamVjdCAqLw0KPiA+ICsgICAgICAgc2V0X3Ry
+YWNrKChzdHJ1Y3Qga2FzYW5fdHJhY2sgKikob2JqZWN0ICsgQllURVNfUEVSX1dPUkQpLCBHRlBf
+Tk9XQUlUKTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArI2Vsc2UNCj4gPiAgc3RhdGljIHZvaWQga2Fz
+YW5fc2V0X2ZyZWVfaW5mbyhzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUsDQo+ID4gICAgICAgICAg
+ICAgICAgIHZvaWQgKm9iamVjdCwgdTggdGFnKQ0KPiA+ICB7DQo+ID4gQEAgLTMzOSw2ICszNDYs
+NyBAQCBzdGF0aWMgdm9pZCBrYXNhbl9zZXRfZnJlZV9pbmZvKHN0cnVjdCBrbWVtX2NhY2hlICpj
+YWNoZSwNCj4gPg0KPiA+ICAgICAgICAgc2V0X3RyYWNrKCZhbGxvY19tZXRhLT5mcmVlX3RyYWNr
+W2lkeF0sIEdGUF9OT1dBSVQpOw0KPiA+ICB9DQo+ID4gKyNlbmRpZg0KPiA+DQo+ID4gIHZvaWQg
+a2FzYW5fcG9pc29uX3NsYWIoc3RydWN0IHBhZ2UgKnBhZ2UpDQo+ID4gIHsNCj4gPiBkaWZmIC0t
+Z2l0IGEvbW0va2FzYW4vcmVwb3J0LmMgYi9tbS9rYXNhbi9yZXBvcnQuYw0KPiA+IGluZGV4IDdh
+YWNjYzcwYjY1Yi4uZjJiMGM2YjlkZmZhIDEwMDY0NA0KPiA+IC0tLSBhL21tL2thc2FuL3JlcG9y
+dC5jDQo+ID4gKysrIGIvbW0va2FzYW4vcmVwb3J0LmMNCj4gPiBAQCAtMTc1LDggKzE3NSwyMyBA
+QCBzdGF0aWMgdm9pZCBrYXNhbl9wcmludF9yY3VfZnJlZV9zdGFjayhzdHJ1Y3Qga2FzYW5fYWxs
+b2NfbWV0YSAqYWxsb2NfaW5mbykNCj4gPiAgICAgICAgIHByaW50X3RyYWNrKCZmcmVlX3RyYWNr
+LCAiTGFzdCBjYWxsX3JjdSgpIGNhbGwgc3RhY2siLCB0cnVlKTsNCj4gPiAgICAgICAgIHByX2Vy
+cigiXG4iKTsNCj4gPiAgfQ0KPiA+IC0jZW5kaWYNCj4gPg0KPiA+ICtzdGF0aWMgc3RydWN0IGth
+c2FuX3RyYWNrICprYXNhbl9nZXRfZnJlZV90cmFjayhzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUs
+DQo+ID4gKyAgICAgICAgICAgICAgIHZvaWQgKm9iamVjdCwgdTggdGFnLCBjb25zdCB2b2lkICph
+ZGRyKQ0KPiA+ICt7DQo+ID4gKyAgICAgICB1OCAqc2hhZG93X2FkZHIgPSAodTggKilrYXNhbl9t
+ZW1fdG9fc2hhZG93KGFkZHIpOw0KPiA+ICsNCj4gPiArICAgICAgIC8qDQo+ID4gKyAgICAgICAg
+KiBPbmx5IHRoZSBmcmVlZCBvYmplY3QgY2FuIGdldCBmcmVlIHRyYWNrLA0KPiA+ICsgICAgICAg
+ICogYmVjYXVzZSBmcmVlIHRyYWNrIGluZm9ybWF0aW9uIGlzIHN0b3JlZCB0byBmcmVlZCBvYmpl
+Y3QuDQo+ID4gKyAgICAgICAgKi8NCj4gPiArICAgICAgIGlmICgqc2hhZG93X2FkZHIgPT0gS0FT
+QU5fS01BTExPQ19GUkVFKQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gKHN0cnVjdCBrYXNh
+bl90cmFjayAqKShvYmplY3QgKyBCWVRFU19QRVJfV09SRCk7DQo+IA0KPiBIdW1tLi4uIHRoZSBv
+dGhlciBwYXRjaCBkZWZpbmVzIEJZVEVTX1BFUl9XT1JEIGFzIDQuLi4gSSB3b3VsZCBhc3N1bWUN
+Cj4gc2VlaW5nIDggKG9yIHNpemVvZihsb25nKSkgaGVyZS4gV2h5IDQ/DQpJdCBzaG91bGQgYmUg
+YSBwb2ludGVyIHNpemUsIG1heWJlIHNpemVvZihsb25nKSBtYWtlcyBtb3JlIHNlbnNlLg0KDQo+
+IEhhdmUgeW91IHRlc3RlZCBhbGwgNCBtb2RlcyAoUkNVL25vLVJDVSB4IFNMQUIvU0xVQik/IEFz
+IGZhciBhcyBJDQo+IHJlbWVtYmVyIG9uZSBvZiB0aGUgYWxsb2NhdG9ycyBzdG9yZWQgc29tZXRo
+aW5nIGluIHRoZSBvYmplY3QuDQpHb29kIHF1ZXN0aW9uLCBJIG9ubHkgdGVzdGVkIGluIFJDVSB4
+IFNMVUIsIHdvdWxkIHlvdSB0ZWxsIG1ldyBob3cgZG8NCm5vLVJDVT8gSSB3aWxsIHRlc3QgdGhl
+bSBpbiB2MiBwYXRoc2V0Lg0KDQo+IA0KPiBBbHNvLCBkb2VzIHRoaXMgd29yayB3aXRoIG9iamVj
+dHMgd2l0aCBjdG9ycyBhbmQgc2xhYnMgZGVzdHJveWVkIGJ5DQo+IHJjdT8ga2FzYW5fdHJhY2sg
+bWF5IHNtYXNoIG90aGVyIHRoaW5ncyBpbiB0aGVzZSBjYXNlcy4NCj4gSGF2ZSB5b3UgbG9va2Vk
+IGF0IHRoZSBLQVNBTiBpbXBsZW1lbnRhdGlvbiB3aGVuIGZyZWVfdHJhY2sgd2FzDQo+IHJlbW92
+ZWQ/IFRoYXQgbWF5IGhhdmUgdXNlZnVsIGRldGFpbHMgOikNClNldCBmcmVlX3RyYWNrIGJlZm9y
+ZSBwdXQgaW50byBxdWFyYW50aW5lLCBmcmVlX3RyYWNrIHNob3VsZCBub3QgaGF2ZSB0bw0KYmUg
+cmVtb3ZlZCwgaXQgb25seSBoYXZlIHRvIG92ZXJ3aXJ0ZSBpdHNlbGYuDQoNCj4gDQo+IA0KPiA+
+ICsgICAgICAgZWxzZQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gTlVMTDsNCj4gPiArfQ0K
+PiA+ICsNCj4gPiArI2Vsc2UNCj4gPiAgc3RhdGljIHN0cnVjdCBrYXNhbl90cmFjayAqa2FzYW5f
+Z2V0X2ZyZWVfdHJhY2soc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlLA0KPiA+ICAgICAgICAgICAg
+ICAgICB2b2lkICpvYmplY3QsIHU4IHRhZywgY29uc3Qgdm9pZCAqYWRkcikNCj4gPiAgew0KPiA+
+IEBAIC0xOTYsNiArMjExLDcgQEAgc3RhdGljIHN0cnVjdCBrYXNhbl90cmFjayAqa2FzYW5fZ2V0
+X2ZyZWVfdHJhY2soc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlLA0KPiA+DQo+ID4gICAgICAgICBy
+ZXR1cm4gJmFsbG9jX21ldGEtPmZyZWVfdHJhY2tbaV07DQo+ID4gIH0NCj4gPiArI2VuZGlmDQo+
+ID4NCj4gPiAgc3RhdGljIHZvaWQgZGVzY3JpYmVfb2JqZWN0KHN0cnVjdCBrbWVtX2NhY2hlICpj
+YWNoZSwgdm9pZCAqb2JqZWN0LA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+Y29uc3Qgdm9pZCAqYWRkciwgdTggdGFnKQ0KPiA+IEBAIC0yMDgsOCArMjI0LDEwIEBAIHN0YXRp
+YyB2b2lkIGRlc2NyaWJlX29iamVjdChzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUsIHZvaWQgKm9i
+amVjdCwNCj4gPiAgICAgICAgICAgICAgICAgcHJpbnRfdHJhY2soJmFsbG9jX2luZm8tPmFsbG9j
+X3RyYWNrLCAiQWxsb2NhdGVkIiwgZmFsc2UpOw0KPiA+ICAgICAgICAgICAgICAgICBwcl9lcnIo
+IlxuIik7DQo+ID4gICAgICAgICAgICAgICAgIGZyZWVfdHJhY2sgPSBrYXNhbl9nZXRfZnJlZV90
+cmFjayhjYWNoZSwgb2JqZWN0LCB0YWcsIGFkZHIpOw0KPiA+IC0gICAgICAgICAgICAgICBwcmlu
+dF90cmFjayhmcmVlX3RyYWNrLCAiRnJlZWQiLCBmYWxzZSk7DQo+ID4gLSAgICAgICAgICAgICAg
+IHByX2VycigiXG4iKTsNCj4gPiArICAgICAgICAgICAgICAgaWYgKGZyZWVfdHJhY2spIHsNCj4g
+PiArICAgICAgICAgICAgICAgICAgICAgICBwcmludF90cmFjayhmcmVlX3RyYWNrLCAiRnJlZWQi
+LCBmYWxzZSk7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcHJfZXJyKCJcbiIpOw0KPiA+
+ICsgICAgICAgICAgICAgICB9DQo+ID4gICNpZmRlZiBDT05GSUdfS0FTQU5fUkNVX1NUQUNLX1JF
+Q09SRA0KPiA+ICAgICAgICAgICAgICAgICBrYXNhbl9wcmludF9yY3VfZnJlZV9zdGFjayhhbGxv
+Y19pbmZvKTsNCj4gPiAgI2VuZGlmDQo+ID4gLS0NCj4gPiAyLjE4LjANCj4gPg0KPiA+IC0tDQo+
+ID4gWW91IHJlY2VpdmVkIHRoaXMgbWVzc2FnZSBiZWNhdXNlIHlvdSBhcmUgc3Vic2NyaWJlZCB0
+byB0aGUgR29vZ2xlIEdyb3VwcyAia2FzYW4tZGV2IiBncm91cC4NCj4gPiBUbyB1bnN1YnNjcmli
+ZSBmcm9tIHRoaXMgZ3JvdXAgYW5kIHN0b3AgcmVjZWl2aW5nIGVtYWlscyBmcm9tIGl0LCBzZW5k
+IGFuIGVtYWlsIHRvIGthc2FuLWRldit1bnN1YnNjcmliZUBnb29nbGVncm91cHMuY29tLg0KPiA+
+IFRvIHZpZXcgdGhpcyBkaXNjdXNzaW9uIG9uIHRoZSB3ZWIgdmlzaXQgaHR0cHM6Ly9ncm91cHMu
+Z29vZ2xlLmNvbS9kL21zZ2lkL2thc2FuLWRldi8yMDIwMDUwNjA1MjE1NS4xNDUxNS0xLXdhbHRl
+ci16aC53dSU0MG1lZGlhdGVrLmNvbS4NCg0K
 
