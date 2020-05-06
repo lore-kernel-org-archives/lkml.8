@@ -6,106 +6,135 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C5C8C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FA1C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE9CB20936
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4271F208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:49:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730612AbgEFQtB (ORCPT
+        id S1730620AbgEFQtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:49:01 -0400
+        Wed, 6 May 2020 12:49:03 -0400
 Received: from pegase1.c-s.fr ([93.17.236.30]:22955 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730534AbgEFQsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:48:43 -0400
+        id S1730546AbgEFQsp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 12:48:45 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49HMx36PHtz9v4kL;
-        Wed,  6 May 2020 18:48:39 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 49HMx61c5bz9v4kN;
+        Wed,  6 May 2020 18:48:42 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id Fc1Kf6BEehOV; Wed,  6 May 2020 18:48:39 +0200 (CEST)
+        with ESMTP id jYXoCHc_5Nei; Wed,  6 May 2020 18:48:42 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMx35B4Jz9v4kD;
-        Wed,  6 May 2020 18:48:39 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMx60q8rz9v4kH;
+        Wed,  6 May 2020 18:48:42 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 94DF38B7C5;
-        Wed,  6 May 2020 18:48:41 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DB6AF8B777;
+        Wed,  6 May 2020 18:48:43 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 77V0bCkrPIQt; Wed,  6 May 2020 18:48:41 +0200 (CEST)
+        with ESMTP id MJ5Nh-EiBShA; Wed,  6 May 2020 18:48:43 +0200 (CEST)
 Received: from localhost.localdomain (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 56AA38B7C3;
-        Wed,  6 May 2020 18:48:41 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 664FE8B7C5;
+        Wed,  6 May 2020 18:48:43 +0200 (CEST)
 Received: by localhost.localdomain (Postfix, from userid 0)
-        id 2223865911; Wed,  6 May 2020 16:48:41 +0000 (UTC)
-Message-Id: <1b1406f8c839805dd6d259e2fd40a135e0a9a830.1588783498.git.christophe.leroy@csgroup.eu>
+        id 30A6F65911; Wed,  6 May 2020 16:48:43 +0000 (UTC)
+Message-Id: <3db4cecc87f9127752f6246d4306e8c21ca1d56b.1588783498.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 References: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v2 35/45] powerpc/8xx: Move DTLB perf handling closer.
+Subject: [PATCH v2 37/45] powerpc/8xx: Refactor kernel address boundary
+ comparison
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed,  6 May 2020 16:48:41 +0000 (UTC)
+Date:   Wed,  6 May 2020 16:48:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that space have been freed next to the DTLB miss handler,
-it's associated DTLB perf handling can be brought back in
-the same place.
+Now that linear and IMMR dedicated TLB handling is gone, kernel
+boundary address comparison is similar in ITLB miss handler and
+in DTLB miss handler.
+
+Create a macro named compare_to_kernel_boundary.
+
+When TASK_SIZE is strictly below 0x80000000 and PAGE_OFFSET is
+above 0x80000000, it is enough to compare to 0x8000000, and this
+can be done with a single instruction.
+
+Using not. instruction, we get to use 'blt' conditional branch as
+when doing a regular comparison:
+
+0x00000000 <= addr <= 0x7fffffff ==>
+0xffffffff >= NOT(addr) >= 0x80000000
+The above test corresponds to a 'blt'
+
+Otherwise, do a regular comparison using two instructions.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/kernel/head_8xx.S | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+ arch/powerpc/kernel/head_8xx.S | 22 ++++++++--------------
+ 1 file changed, 8 insertions(+), 14 deletions(-)
 
 diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
-index fb5d17187772..9f3f7f3d03a7 100644
+index 9f3f7f3d03a7..9a117b9f0998 100644
 --- a/arch/powerpc/kernel/head_8xx.S
 +++ b/arch/powerpc/kernel/head_8xx.S
-@@ -344,6 +344,17 @@ DataStoreTLBMiss:
- 	rfi
- 	patch_site	0b, patch__dtlbmiss_exit_1
+@@ -32,10 +32,15 @@
  
-+#ifdef CONFIG_PERF_EVENTS
-+	patch_site	0f, patch__dtlbmiss_perf
-+0:	lwz	r10, (dtlb_miss_counter - PAGE_OFFSET)@l(0)
-+	addi	r10, r10, 1
-+	stw	r10, (dtlb_miss_counter - PAGE_OFFSET)@l(0)
-+	mfspr	r10, SPRN_DAR
-+	mtspr	SPRN_DAR, r11	/* Tag DAR */
-+	mfspr	r11, SPRN_M_TW
-+	rfi
-+#endif
-+
- /* This is an instruction TLB error on the MPC8xx.  This could be due
-  * to many reasons, such as executing guarded memory or illegal instruction
-  * addresses.  There is nothing to do but handle a big time error fault.
-@@ -390,18 +401,6 @@ DARFixed:/* Return from dcbx instruction bug workaround */
- 	/* 0x300 is DataAccess exception, needed by bad_page_fault() */
- 	EXC_XFER_LITE(0x300, handle_page_fault)
+ #include "head_32.h"
  
--/* Called from DataStoreTLBMiss when perf TLB misses events are activated */
--#ifdef CONFIG_PERF_EVENTS
--	patch_site	0f, patch__dtlbmiss_perf
--0:	lwz	r10, (dtlb_miss_counter - PAGE_OFFSET)@l(0)
--	addi	r10, r10, 1
--	stw	r10, (dtlb_miss_counter - PAGE_OFFSET)@l(0)
--	mfspr	r10, SPRN_DAR
--	mtspr	SPRN_DAR, r11	/* Tag DAR */
--	mfspr	r11, SPRN_M_TW
--	rfi
++.macro compare_to_kernel_boundary scratch, addr
+ #if CONFIG_TASK_SIZE <= 0x80000000 && CONFIG_PAGE_OFFSET >= 0x80000000
+ /* By simply checking Address >= 0x80000000, we know if its a kernel address */
+-#define SIMPLE_KERNEL_ADDRESS		1
++	not.	\scratch, \addr
++#else
++	rlwinm	\scratch, \addr, 16, 0xfff8
++	cmpli	cr0, \scratch, PAGE_OFFSET@h
+ #endif
++.endm
+ 
+ /*
+  * We need an ITLB miss handler for kernel addresses if:
+@@ -209,20 +214,11 @@ InstructionTLBMiss:
+ 	mtspr	SPRN_MD_EPN, r10
+ #ifdef ITLB_MISS_KERNEL
+ 	mfcr	r11
+-#if defined(SIMPLE_KERNEL_ADDRESS)
+-	cmpi	cr0, r10, 0	/* Address >= 0x80000000 */
+-#else
+-	rlwinm	r10, r10, 16, 0xfff8
+-	cmpli	cr0, r10, PAGE_OFFSET@h
 -#endif
++	compare_to_kernel_boundary r10, r10
+ #endif
+ 	mfspr	r10, SPRN_M_TWB	/* Get level 1 table */
+ #ifdef ITLB_MISS_KERNEL
+-#if defined(SIMPLE_KERNEL_ADDRESS)
+-	bge+	3f
+-#else
+ 	blt+	3f
+-#endif
+ 	rlwinm	r10, r10, 0, 20, 31
+ 	oris	r10, r10, (swapper_pg_dir - PAGE_OFFSET)@ha
+ 3:
+@@ -288,9 +284,7 @@ DataStoreTLBMiss:
+ 	 * kernel page tables.
+ 	 */
+ 	mfspr	r10, SPRN_MD_EPN
+-	rlwinm	r10, r10, 16, 0xfff8
+-	cmpli	cr0, r10, PAGE_OFFSET@h
 -
- stack_overflow:
- 	vmap_stack_overflow_exception
- 
++	compare_to_kernel_boundary r10, r10
+ 	mfspr	r10, SPRN_M_TWB	/* Get level 1 table */
+ 	blt+	3f
+ 	rlwinm	r10, r10, 0, 20, 31
 -- 
 2.25.0
 
