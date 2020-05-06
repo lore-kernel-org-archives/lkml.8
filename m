@@ -2,149 +2,98 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11EB1C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13BE8C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFBD72080D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:22:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YAI1tjUp"
+	by mail.kernel.org (Postfix) with ESMTP id E421F2080D
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:22:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588778548;
+	bh=+pE8sGvSzhyzM1lmu2Si50vS5WEGHwFn5xiL0d50HMU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=buQ3I9G48keCtHDOyb7bZjgUcMIDsq+U1SGF/uJGchajUXyx+VZLsFawhDIBcAuvd
+	 Nbl7c21oVcOtp4c6ef4pNfRf7ubHBPBA+s0kUd4rHEtlI9Nq97Q5wiOeqBgEBY9KOk
+	 KVi2p7zWLUR84C7MzjVFLYEBfl8ErLGYjdRMzfv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729567AbgEFPW0 (ORCPT
+        id S1729560AbgEFPWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:22:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58220 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729408AbgEFPVp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:21:45 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39D65C061A10
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 08:21:45 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id y6so1061301pjc.4
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 08:21:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qWlHBN/3hvShJu+ITQ2VKsWR3g9HqwgdpXyZ5LX21CA=;
-        b=YAI1tjUpn5zlOwDJnOxslc63NeKw2d0jLqjUJCgbRGMZA943VBl6kX3k03mQxcjLGv
-         22f4mSlg/0BhX87quVIuQPUAv18gpArdRPDfpa/FpFcPw5PrFmHA0eEAKJH4ccKb581/
-         M24qxeyX0yfrodUDuJBMqJqCofeYKccEC4yts=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qWlHBN/3hvShJu+ITQ2VKsWR3g9HqwgdpXyZ5LX21CA=;
-        b=n7O5OKm/sP17IGCOxnW/AMpNqMc58jB7+yMkO/0NUM7W7hYXw7aWN7jtNGCSpD1UtY
-         4w1K+gcCtMa9uK9cXTUJVKWvuIbiS5xve8o1fsE36u+tgJV3SC+3jDkYw8fL+K8Zhdlz
-         adO9EhxXCGp2rpZdfnKhd5QjQkUTvQnMgSAHh/t25fp2A9ur1G3Ve+J3vNDz695sp1Z4
-         SKzmk9IP/paF6y8upKmDfJIthKFIocTh+5vG+8Ni2QlyBrGbCpZ07qntzVX0DsIps6zZ
-         el2QnyA2TAryRIOfB0dQxD9mvvUncaD0rBYYZfnqQZeCsjZxjlFo5JSZNMWt6EViSTug
-         FonQ==
-X-Gm-Message-State: AGi0Pua0IiMTcDFRuclzlKmwirKq7D9zyrd5QKJdsDJo882mjKEvH/yx
-        J+xKHQuDvJqH3Byung635VOfKg==
-X-Google-Smtp-Source: APiQypJf9kdgVvoj0G+zgWGJk7pqjABqsOyRmjsvqCmtvNdvOOBYHPzccyhJuHcyfrjpNp0gSNS4oA==
-X-Received: by 2002:a17:902:b187:: with SMTP id s7mr9027685plr.0.1588778504733;
-        Wed, 06 May 2020 08:21:44 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l1sm5048438pjr.17.2020.05.06.08.21.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 08:21:41 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Luis Henriques <lhenriques@suse.com>
-Subject: [PATCH 04/10] pstore: Rename "allpstore" to "records_list"
-Date:   Wed,  6 May 2020 08:21:08 -0700
-Message-Id: <20200506152114.50375-5-keescook@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200506152114.50375-1-keescook@chromium.org>
-References: <20200506152114.50375-1-keescook@chromium.org>
+        Wed, 6 May 2020 11:22:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35962 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729403AbgEFPWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:22:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2EC6214D8;
+        Wed,  6 May 2020 15:22:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588778540;
+        bh=+pE8sGvSzhyzM1lmu2Si50vS5WEGHwFn5xiL0d50HMU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QfcNm0KpE/RtsiDqfDC8DOAWU86AMBX+DLRnNIy0jsPDWYLPOsRbP+Q1io4uXbRAf
+         0fJ3/8DRIsu5k6XLpH3O7giw5QGxPF6IYE4ufTAeV+SnpMKLQqcPiggoQH7S1VV8PY
+         S5VM95W/t0cxh9hCocfsUznQxCprtFM5fax2gZys=
+Date:   Wed, 6 May 2020 17:22:18 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Ondrej Jirman <megous@megous.com>,
+        =?iso-8859-1?Q?Myl=E8ne?= Josserand 
+        <mylene.josserand@bootlin.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Input: edt-ft5x06: Use DEFINE_DEBUGFS_ATTRIBUTE to
+ define debugfs fops
+Message-ID: <20200506152218.GA3447721@kroah.com>
+References: <20200505153325.20113-1-aishwaryarj100@gmail.com>
+ <20200506150623.3841-1-raishwar@visteon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506150623.3841-1-raishwar@visteon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The name "allpstore" doesn't carry much meaning, so rename it to what it
-actually is: the list of all records present in the filesystem. The lock
-is also renamed accordingly.
+On Wed, May 06, 2020 at 08:36:22PM +0530, Aishwarya Ramakrishnan wrote:
+> From: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+> 
+> On Tue, May 5, 2020 at 11:49 PM Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+> > On Tue, May 05, 2020 at 09:03:24PM +0530, Aishwarya Ramakrishnan wrote:
+> >> It is more clear to use DEFINE_DEBUGFS_ATTRIBUTE to define debugfs file
+> >> operation rather than DEFINE_SIMPLE_ATTRIBUTE.
+> 
+> > No it is not, why do you think so?
+> 
+> This change is suggested by Coccinelle software.
+> Generated by: scripts/coccinelle/api/debugfs/debugfs_simple_attr.cocci
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- fs/pstore/inode.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+Not a good thing, I do not know why that was added :(
 
-diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
-index d99b5d39aa90..5cc09cb315f9 100644
---- a/fs/pstore/inode.c
-+++ b/fs/pstore/inode.c
-@@ -29,8 +29,8 @@
- 
- #define	PSTORE_NAMELEN	64
- 
--static DEFINE_SPINLOCK(allpstore_lock);
--static LIST_HEAD(allpstore);
-+static DEFINE_SPINLOCK(records_list_lock);
-+static LIST_HEAD(records_list);
- 
- struct pstore_private {
- 	struct list_head list;
-@@ -196,9 +196,9 @@ static void pstore_evict_inode(struct inode *inode)
- 
- 	clear_inode(inode);
- 	if (p) {
--		spin_lock_irqsave(&allpstore_lock, flags);
-+		spin_lock_irqsave(&records_list_lock, flags);
- 		list_del(&p->list);
--		spin_unlock_irqrestore(&allpstore_lock, flags);
-+		spin_unlock_irqrestore(&records_list_lock, flags);
- 		free_pstore_private(p);
- 	}
- }
-@@ -302,8 +302,8 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
- 
- 	WARN_ON(!inode_is_locked(d_inode(root)));
- 
--	spin_lock_irqsave(&allpstore_lock, flags);
--	list_for_each_entry(pos, &allpstore, list) {
-+	spin_lock_irqsave(&records_list_lock, flags);
-+	list_for_each_entry(pos, &records_list, list) {
- 		if (pos->record->type == record->type &&
- 		    pos->record->id == record->id &&
- 		    pos->record->psi == record->psi) {
-@@ -311,7 +311,7 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
- 			break;
- 		}
- 	}
--	spin_unlock_irqrestore(&allpstore_lock, flags);
-+	spin_unlock_irqrestore(&records_list_lock, flags);
- 	if (rc)
- 		return rc;
- 
-@@ -343,9 +343,9 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
- 
- 	d_add(dentry, inode);
- 
--	spin_lock_irqsave(&allpstore_lock, flags);
--	list_add(&private->list, &allpstore);
--	spin_unlock_irqrestore(&allpstore_lock, flags);
-+	spin_lock_irqsave(&records_list_lock, flags);
-+	list_add(&private->list, &records_list);
-+	spin_unlock_irqrestore(&records_list_lock, flags);
- 
- 	return 0;
- 
--- 
-2.20.1
+> > The two defines do different things, that is why we have 2 different
+> > defines.  You can not just replace one with the other without
+> > understanding why one was used and not the other one.
+> 
+> > Did you test this change to verify that everything still works
+> > properly?  Why is it needed to be changed at all?
+> 
+> DEFINE_SIMPLE_ATTRIBUTE + debugfs_create_file()
+> imposes some significant overhead as compared to
+> DEFINE_DEBUGFS_ATTRIBUTE + debugfs_create_file_unsafe().
 
+What kind of overhead?  Is it required?
+
+> But I missed to use debugfs_create_file_unsafe() function in the patch.
+
+Yeah, don't use the unsafe stuff unless you know what is happening here
+please.
+
+greg k-h
