@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D20C4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F78C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 416252068E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4212F2145D
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588778685;
-	bh=MVonwGigjV0jPpVWJaH/x/eIAwOScbckew/swx8pnWc=;
+	s=default; t=1588778688;
+	bh=X+JaR+67nC3+mnTx0sfbVQoLMgA+y3FKW53P616HF80=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kn0bJeyGLmjSUnNAxLVSbgauHcfgFJ+/pIeiHsQCM92XDUTNIOIX5croM2RDtYdd2
-	 CmWcvDALPkD28WkC5QWKa2IRe3ju6ASVOeuVEtweYRk2a6BR0LCP0Oe7gaowJHwSKf
-	 GYpiGW6vHdbdDZTwfOP5JHcnC2jc6+aR7+eC36Xs=
+	b=JLvsuwrmXHA3YurXlGvPJrOufPpE1ho5e0UinDtuZaS/bYXjBoARLaT/JeNvTHG7s
+	 ikCKV+Y9vfMvISO2/i5F+vt3hQ0L81DLg9LvVTbEJk71dfZHV+QsgFn7hUdQI2gr+m
+	 3dTwAq1VN0xCGd2f5gtuSEcsL4n2USCCbCr2IRik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729910AbgEFPYo (ORCPT
+        id S1729920AbgEFPYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:24:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42962 "EHLO mail.kernel.org"
+        Wed, 6 May 2020 11:24:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729895AbgEFPYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:24:40 -0400
+        id S1729904AbgEFPYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:24:43 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36EB221775;
-        Wed,  6 May 2020 15:24:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FDE521582;
+        Wed,  6 May 2020 15:24:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588778679;
-        bh=MVonwGigjV0jPpVWJaH/x/eIAwOScbckew/swx8pnWc=;
+        s=default; t=1588778682;
+        bh=X+JaR+67nC3+mnTx0sfbVQoLMgA+y3FKW53P616HF80=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YTUs+uKC9/gmtKgl4l7bxldLyLNhHLHRDc/u6bPEf126ovC5tTjkGN/r0RmpH/5Wr
-         gEl1bYJBPrzccZTiz2mdw7xTRFLoJo0nSPkPitNwzByU/OzLSnD96CfQ9EwTSLxOGb
-         zkzCFNq5yj5jAE+antFqZbMbbCXUqNfsJfZLZgQU=
+        b=JLDfyaB5NwPD/34OGltD06sfumQbv7M4a7Z8Rt1oz/1OT91MLvgTkALwEQRG58HPt
+         JW2ClT5fxF6lHxV4goPL73WlXBShPrXnJ0yWqOZTCvDbmz8iIqeew6npvtMX+asezs
+         C4k4H24DrmYyl3CB1Hrb6NeQaLKHZbLkgCq6ToCA=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 31/91] perf record: Move side band evlist setup to separate routine
-Date:   Wed,  6 May 2020 12:21:34 -0300
-Message-Id: <20200506152234.21977-32-acme@kernel.org>
+        He Zhe <zhe.he@windriver.com>, Andi Kleen <ak@linux.intel.com>,
+        Kyle Meyer <meyerk@hpe.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 32/91] libperf: Add NULL pointer check for cpu_map iteration and NULL assignment for all_cpus.
+Date:   Wed,  6 May 2020 12:21:35 -0300
+Message-Id: <20200506152234.21977-33-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
@@ -62,111 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: He Zhe <zhe.he@windriver.com>
 
-It is quite big by now, move that code to a separate
-record__setup_sb_evlist() routine.
+A NULL pointer may be passed to perf_cpu_map__cpu and then cause a
+crash, such as the one commit cb71f7d43ece ("libperf: Setup initial
+evlist::all_cpus value") fix.
 
-Suggested-by: Jiri Olsa <jolsa@redhat.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Link: http://lore.kernel.org/lkml/20200429131106.27974-9-acme@kernel.org
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Kyle Meyer <meyerk@hpe.com>
+Link: http://lore.kernel.org/lkml/1583665157-349023-1-git-send-email-zhe.he@windriver.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-record.c | 71 +++++++++++++++++++++----------------
- 1 file changed, 41 insertions(+), 30 deletions(-)
+ tools/lib/perf/cpumap.c | 2 +-
+ tools/lib/perf/evlist.c | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index bb5b4d2fc32b..cfb9a69a42dd 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1446,6 +1446,44 @@ static int record__process_signal_event(union perf_event *event __maybe_unused,
- 	return 0;
- }
+diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+index f93f4e703e4c..ca0215047c32 100644
+--- a/tools/lib/perf/cpumap.c
++++ b/tools/lib/perf/cpumap.c
+@@ -247,7 +247,7 @@ struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
  
-+static int record__setup_sb_evlist(struct record *rec)
-+{
-+	struct record_opts *opts = &rec->opts;
-+
-+	if (rec->sb_evlist != NULL) {
-+		/*
-+		 * We get here if --switch-output-event populated the
-+		 * sb_evlist, so associate a callback that will send a SIGUSR2
-+		 * to the main thread.
-+		 */
-+		evlist__set_cb(rec->sb_evlist, record__process_signal_event, rec);
-+		rec->thread_id = pthread_self();
-+	}
-+
-+	if (!opts->no_bpf_event) {
-+		if (rec->sb_evlist == NULL) {
-+			rec->sb_evlist = evlist__new();
-+
-+			if (rec->sb_evlist == NULL) {
-+				pr_err("Couldn't create side band evlist.\n.");
-+				return -1;
-+			}
-+		}
-+
-+		if (evlist__add_bpf_sb_event(rec->sb_evlist, &rec->session->header.env)) {
-+			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
-+			return -1;
-+		}
-+	}
-+
-+	if (perf_evlist__start_sb_thread(rec->sb_evlist, &rec->opts.target)) {
-+		pr_debug("Couldn't start the BPF side band thread:\nBPF programs starting from now on won't be annotatable\n");
-+		opts->no_bpf_event = true;
-+	}
-+
-+	return 0;
-+}
-+
- static int __cmd_record(struct record *rec, int argc, const char **argv)
+ int perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx)
  {
- 	int err;
-@@ -1590,36 +1628,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		goto out_child;
- 	}
+-	if (idx < cpus->nr)
++	if (cpus && idx < cpus->nr)
+ 		return cpus->map[idx];
  
--	if (rec->sb_evlist != NULL) {
--		/*
--		 * We get here if --switch-output-event populated the
--		 * sb_evlist, so associate a callback that will send a SIGUSR2
--		 * to the main thread.
--		 */
--		evlist__set_cb(rec->sb_evlist, record__process_signal_event, rec);
--		rec->thread_id = pthread_self();
--	}
--
--	if (!opts->no_bpf_event) {
--		if (rec->sb_evlist == NULL) {
--			rec->sb_evlist = evlist__new();
--
--			if (rec->sb_evlist == NULL) {
--				pr_err("Couldn't create side band evlist.\n.");
--				goto out_child;
--			}
--		}
--
--		if (evlist__add_bpf_sb_event(rec->sb_evlist, &session->header.env)) {
--			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
--			goto out_child;
--		}
--	}
--
--	if (perf_evlist__start_sb_thread(rec->sb_evlist, &rec->opts.target)) {
--		pr_debug("Couldn't start the BPF side band thread:\nBPF programs starting from now on won't be annotatable\n");
--		opts->no_bpf_event = true;
--	}
-+	err = record__setup_sb_evlist(rec);
-+	if (err)
-+		goto out_child;
- 
- 	err = record__synthesize(rec, false);
- 	if (err < 0)
+ 	return -1;
+diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+index def55054c55b..c481b62f2ce4 100644
+--- a/tools/lib/perf/evlist.c
++++ b/tools/lib/perf/evlist.c
+@@ -125,6 +125,7 @@ void perf_evlist__exit(struct perf_evlist *evlist)
+ 	perf_cpu_map__put(evlist->cpus);
+ 	perf_thread_map__put(evlist->threads);
+ 	evlist->cpus = NULL;
++	evlist->all_cpus = NULL;
+ 	evlist->threads = NULL;
+ 	fdarray__exit(&evlist->pollfd);
+ }
 -- 
 2.21.1
 
