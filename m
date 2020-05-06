@@ -4,34 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CFAC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2495FC4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B121206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FC0F206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:18:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgEFGSe (ORCPT
+        id S1728011AbgEFGSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 02:18:34 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:50022 "EHLO huawei.com"
+        Wed, 6 May 2020 02:18:44 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3809 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727084AbgEFGSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 02:18:33 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3A1678CC74D9F94A02ED;
-        Wed,  6 May 2020 14:18:30 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Wed, 6 May 2020
- 14:18:23 +0800
+        id S1726863AbgEFGSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 02:18:44 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6C699DADA646ACB44E7B;
+        Wed,  6 May 2020 14:18:41 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Wed, 6 May 2020
+ 14:18:35 +0800
 From:   Jason Yan <yanaijie@huawei.com>
-To:     <b.zolnierkie@samsung.com>, <dri-devel@lists.freedesktop.org>,
-        <linux-fbdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+To:     <njavali@marvell.com>, <GR-QLogic-Storage-Upstream@marvell.com>,
+        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
+        <hmadhani@marvell.com>, <bvanassche@acm.org>,
+        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC:     Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH] video: fbdev: pxa168fb: make pxa168fb_init_mode() return void
-Date:   Wed, 6 May 2020 14:17:45 +0800
-Message-ID: <20200506061745.19451-1-yanaijie@huawei.com>
+Subject: [PATCH] scsi: qla2xxx: make qlafx00_process_aen() return void
+Date:   Wed, 6 May 2020 14:17:57 +0800
+Message-ID: <20200506061757.19536-1-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -43,45 +46,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No other functions use the return value of pxa168fb_init_mode() and the
+No other functions use the return value of qlafx00_process_aen() and the
 return value is always 0 now. Make it return void. This fixes the
 following coccicheck warning:
 
-drivers/video/fbdev/pxa168fb.c:565:5-8: Unneeded variable: "ret". Return
-"0" on line 597
+drivers/scsi/qla2xxx/qla_mr.c:1716:5-9: Unneeded variable: "rval".
+Return "0" on line 1768
 
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
- drivers/video/fbdev/pxa168fb.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/scsi/qla2xxx/qla_gbl.h | 2 +-
+ drivers/scsi/qla2xxx/qla_mr.c  | 5 +----
+ 2 files changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/video/fbdev/pxa168fb.c b/drivers/video/fbdev/pxa168fb.c
-index aef8a3042590..eedfbd3572a8 100644
---- a/drivers/video/fbdev/pxa168fb.c
-+++ b/drivers/video/fbdev/pxa168fb.c
-@@ -557,12 +557,11 @@ static const struct fb_ops pxa168fb_ops = {
- 	.fb_imageblit	= cfb_imageblit,
- };
- 
--static int pxa168fb_init_mode(struct fb_info *info,
-+static void pxa168fb_init_mode(struct fb_info *info,
- 			      struct pxa168fb_mach_info *mi)
- {
- 	struct pxa168fb_info *fbi = info->par;
- 	struct fb_var_screeninfo *var = &info->var;
--	int ret = 0;
- 	u32 total_w, total_h, refresh;
- 	u64 div_result;
- 	const struct fb_videomode *m;
-@@ -593,8 +592,6 @@ static int pxa168fb_init_mode(struct fb_info *info,
- 	div_result = 1000000000000ll;
- 	do_div(div_result, total_w * total_h * refresh);
- 	var->pixclock = (u32)div_result;
--
--	return ret;
+diff --git a/drivers/scsi/qla2xxx/qla_gbl.h b/drivers/scsi/qla2xxx/qla_gbl.h
+index b20c5fa122fb..f62b71e47581 100644
+--- a/drivers/scsi/qla2xxx/qla_gbl.h
++++ b/drivers/scsi/qla2xxx/qla_gbl.h
+@@ -771,7 +771,7 @@ extern int qlafx00_fw_ready(scsi_qla_host_t *);
+ extern int qlafx00_configure_devices(scsi_qla_host_t *);
+ extern int qlafx00_reset_initialize(scsi_qla_host_t *);
+ extern int qlafx00_fx_disc(scsi_qla_host_t *, fc_port_t *, uint16_t);
+-extern int qlafx00_process_aen(struct scsi_qla_host *, struct qla_work_evt *);
++extern void qlafx00_process_aen(struct scsi_qla_host *, struct qla_work_evt *);
+ extern int qlafx00_post_aenfx_work(struct scsi_qla_host *,  uint32_t,
+ 				   uint32_t *, int);
+ extern uint32_t qlafx00_fw_state_show(struct device *,
+diff --git a/drivers/scsi/qla2xxx/qla_mr.c b/drivers/scsi/qla2xxx/qla_mr.c
+index df99911b8bb9..ce98189c7872 100644
+--- a/drivers/scsi/qla2xxx/qla_mr.c
++++ b/drivers/scsi/qla2xxx/qla_mr.c
+@@ -1710,10 +1710,9 @@ qlafx00_tgt_detach(struct scsi_qla_host *vha, int tgt_id)
+ 	return;
  }
  
- static int pxa168fb_probe(struct platform_device *pdev)
+-int
++void
+ qlafx00_process_aen(struct scsi_qla_host *vha, struct qla_work_evt *evt)
+ {
+-	int rval = 0;
+ 	uint32_t aen_code, aen_data;
+ 
+ 	aen_code = FCH_EVT_VENDOR_UNIQUE;
+@@ -1764,8 +1763,6 @@ qlafx00_process_aen(struct scsi_qla_host *vha, struct qla_work_evt *evt)
+ 
+ 	fc_host_post_event(vha->host, fc_get_event_number(),
+ 	    aen_code, aen_data);
+-
+-	return rval;
+ }
+ 
+ static void
 -- 
 2.21.1
 
