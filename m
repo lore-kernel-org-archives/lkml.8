@@ -2,126 +2,90 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9271C47254
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 01:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C62C47247
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 01:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF5FB206A5
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 01:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F9912073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 01:50:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729892AbgEFBqg (ORCPT
+        id S1729894AbgEFBuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 21:46:36 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:46325 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728512AbgEFBqg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 21:46:36 -0400
-Received: from mail-lf1-f69.google.com ([209.85.167.69])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <po-hsu.lin@canonical.com>)
-        id 1jW98r-00051R-Ky
-        for linux-kernel@vger.kernel.org; Wed, 06 May 2020 01:46:33 +0000
-Received: by mail-lf1-f69.google.com with SMTP id b16so219127lfb.19
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 18:46:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0B7yS8vfVpzW+bK3bCu1s781EudQm0LhQfkvys8g52o=;
-        b=MRzqMAHTsfRAfLEaL5QKJcFlscE8RavH8SAkH6UtyYSWufNunSO34cjfyikZfCsYS6
-         B/8O9nGBUa3aPuPRuY0A1Tmby9ryPGtCGD9nBC0ZfMOzuUMEYK7R18y6FIH1/MG3kE7n
-         m4LfUEWGa9nd69CL54AI6m+zeG5L/BLtkW8Gd2wv+fLARQ0YITZNsBpK3AJbThX9U4Mv
-         mkniZWGDhCKwvEocKBBENGEvWzsA4K4BdaACzKVrM2LF3Lb6qc7X+74PalvrYs9yoion
-         PMpUpHAPsuP5ACwRYWHskTo/yatGREPu4//efx2JiA/n34LxYgV34a9U0zmsO4X6J13t
-         m1Rw==
-X-Gm-Message-State: AGi0PuZ8RO1A/46T3Cv5l2kmUh/ujpPDUnUSBMiRL9kDc/Q6GWnf1mIu
-        ks7kuhuvadjIaOUZ5m0JBwZqNYocZrlBdg7ZBldiHM3mi9XwsJC4eUV0yCqmQizvtp3XtAL5hJW
-        XfTtU4XvtH69BwKnUTsmWSXeYfEV7o5N2l3zJtxCs5Eqd+JrScoXaNkvr
-X-Received: by 2002:a2e:910e:: with SMTP id m14mr3149530ljg.141.1588729592881;
-        Tue, 05 May 2020 18:46:32 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKuOYHIUMYt6ojTcSw/TDbURUf5WO6gJf1Kd8Jas019NkaxPEO+rYB8lhaFaJsGc6VfsnRf75BAETP9FLg5EUA=
-X-Received: by 2002:a2e:910e:: with SMTP id m14mr3149521ljg.141.1588729592605;
- Tue, 05 May 2020 18:46:32 -0700 (PDT)
+        Tue, 5 May 2020 21:50:54 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3851 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728069AbgEFBuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 21:50:54 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 7772AED51D9EDAEEF549;
+        Wed,  6 May 2020 09:50:52 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.99) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Wed, 6 May 2020
+ 09:50:44 +0800
+Subject: Re: cgroup pointed by sock is leaked on mode switch
+To:     Tejun Heo <tj@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <cgroups@vger.kernel.org>,
+        <netdev@vger.kernel.org>,
+        "Libin (Huawei)" <huawei.libin@huawei.com>, <guofan5@huawei.com>,
+        <wangkefeng.wang@huawei.com>, <lizefan@huawei.com>
+References: <03dab6ab-0ffe-3cae-193f-a7f84e9b14c5@huawei.com>
+ <20200505160639.GG12217@mtj.thefacebook.com>
+From:   Yang Yingliang <yangyingliang@huawei.com>
+Message-ID: <c9879fd2-cb91-2a08-8293-c6a436b5a539@huawei.com>
+Date:   Wed, 6 May 2020 09:50:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200505101445.27063-1-po-hsu.lin@canonical.com> <20200505090912.7114f420@gandalf.local.home>
-In-Reply-To: <20200505090912.7114f420@gandalf.local.home>
-From:   Po-Hsu Lin <po-hsu.lin@canonical.com>
-Date:   Wed, 6 May 2020 09:46:21 +0800
-Message-ID: <CAMy_GT8r8H21Ly3N5VFkiPi0qUCkPCvy8SU3Ns2vesaS8xvffQ@mail.gmail.com>
-Subject: Re: [PATCH] selftests/ftrace: mark irqsoff_tracer.tc test as
- unresolved if the test module does not exist
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shuah <shuah@kernel.org>, mingo@redhat.com,
-        Masami Hiramatsu <mhiramat@kernel.org>, joel@joelfernandes.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200505160639.GG12217@mtj.thefacebook.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.166.215.99]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 9:09 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
->
-> You keep forgetting to Cc Shuah's other email.
-Thanks!
-I got the recipients list from the get_mainter.pl.
++cc lizefan@huawei.com
 
+On 2020/5/6 0:06, Tejun Heo wrote:
+> Hello, Yang.
 >
-> On Tue,  5 May 2020 18:14:45 +0800
-> Po-Hsu Lin <po-hsu.lin@canonical.com> wrote:
+> On Sat, May 02, 2020 at 06:27:21PM +0800, Yang Yingliang wrote:
+>> I find the number nr_dying_descendants is increasing:
+>> linux-dVpNUK:~ # find /sys/fs/cgroup/ -name cgroup.stat -exec grep
+>> '^nr_dying_descendants [^0]'  {} +
+>> /sys/fs/cgroup/unified/cgroup.stat:nr_dying_descendants 80
+>> /sys/fs/cgroup/unified/system.slice/cgroup.stat:nr_dying_descendants 1
+>> /sys/fs/cgroup/unified/system.slice/system-hostos.slice/cgroup.stat:nr_dying_descendants
+>> 1
+>> /sys/fs/cgroup/unified/lxc/cgroup.stat:nr_dying_descendants 79
+>> /sys/fs/cgroup/unified/lxc/5f1fdb8c54fa40c3e599613dab6e4815058b76ebada8a27bc1fe80c0d4801764/cgroup.stat:nr_dying_descendants
+>> 78
+>> /sys/fs/cgroup/unified/lxc/5f1fdb8c54fa40c3e599613dab6e4815058b76ebada8a27bc1fe80c0d4801764/system.slice/cgroup.stat:nr_dying_descendants
+>> 78
+> Those numbers are nowhere close to causing oom issues. There are some
+> aspects of page and other cache draining which is being improved but unless
+> you're seeing numbers multiple orders of magnitude higher, this isn't the
+> source of your problem.
 >
-> > The UNRESOLVED state is much more apporiate than the UNSUPPORTED state
-> > for the absence of the test module, as it matches "test was set up
-> > incorrectly" situation in the README file.
-> >
-> > A possible scenario is that the function was enabled (supported by the
-> > kernel) but the module was not installed properly, in this case we
-> > cannot call this as UNSUPPORTED.
-> >
-> > This change also make it consistent with other module-related tests
-> > in ftrace.
+>> The situation is as same as the commit bd1060a1d671 ("sock, cgroup: add
+>> sock->sk_cgroup") describes.
+>> "On mode switch, cgroup references which are already being pointed to by
+>> socks may be leaked."
+> I'm doubtful that you're hitting that issue. Mode switching means memcg
+> being switched between cgroup1 and cgroup2 hierarchies, which is unlikely to
+> be what's happening when you're launching docker containers.
 >
-> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> The first step would be identifying where memory is going and finding out
+> whether memcg is actually being switched between cgroup1 and 2 - look at the
+> hierarchy number in /proc/cgroups, if that's switching between 0 and
+> someting not zero, it is switching.
 >
-> Shuah,
+> Thanks.
 >
-> Can you take this after Masami gives his ack (if he does that is).
->
-> Thanks,
->
-> -- Steve
->
-> >
-> > Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
-> > ---
-> >  .../testing/selftests/ftrace/test.d/preemptirq/irqsoff_tracer.tc | 9 ++++++++-
-> >  1 file changed, 8 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/testing/selftests/ftrace/test.d/preemptirq/irqsoff_tracer.tc b/tools/testing/selftests/ftrace/test.d/preemptirq/irqsoff_tracer.tc
-> > index cbd1743..2b82c80e 100644
-> > --- a/tools/testing/selftests/ftrace/test.d/preemptirq/irqsoff_tracer.tc
-> > +++ b/tools/testing/selftests/ftrace/test.d/preemptirq/irqsoff_tracer.tc
-> > @@ -17,7 +17,14 @@ unsup() { #msg
-> >      exit_unsupported
-> >  }
-> >
-> > -modprobe $MOD || unsup "$MOD module not available"
-> > +unres() { #msg
-> > +    reset_tracer
-> > +    rmmod $MOD || true
-> > +    echo $1
-> > +    exit_unresolved
-> > +}
-> > +
-> > +modprobe $MOD || unres "$MOD module not available"
-> >  rmmod $MOD
-> >
-> >  grep -q "preemptoff" available_tracers || unsup "preemptoff tracer not enabled"
->
+
