@@ -7,37 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60148C4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 873C3C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4074420708
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 546D920708
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:58:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="GyijhFtm"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="WfWbCXAy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729774AbgEFP6G (ORCPT
+        id S1729887AbgEFP6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:58:06 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:9878 "EHLO
+        Wed, 6 May 2020 11:58:09 -0400
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:58904 "EHLO
         mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727984AbgEFP6G (ORCPT
+        by vger.kernel.org with ESMTP id S1729455AbgEFP6H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:58:06 -0400
+        Wed, 6 May 2020 11:58:07 -0400
 Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 046Fri6V028143;
-        Wed, 6 May 2020 10:58:01 -0500
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 046Fri6W028143;
+        Wed, 6 May 2020 10:58:02 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type;
- s=PODMain02222019; bh=j9THUvlUW3zsmYeCMbeUYGW24rlP4wtLiwSg7tYQauw=;
- b=GyijhFtmroyCx7cYHPb5q7j84DkHQifprLJGW2RwWE9dpmqZlLuHxNhYO9fHc5zyp88B
- BYIkjseCUXWzhOEAO7zQ7iGCG54KXFTOa35OMjlGBCvrdaag3d3IyfxE3IRBKrrE2jHY
- cSZ/65GatxRsgbZgWW1XN61lOkDNFzKS8eYVZaTv+kznaPDvz0bjlyKLoXdex8NeG0EH
- UzQcj91xz9x2e+pbvz/HHoNKbZz/5vPEjfA3Lni9lHdDnx6UxQqnYXDQQjzMAmC0pO+C
- MVy3jw4jVnKIY52adSRrfeGZvXs82ggYIXeeV7aJGjfon38NBDZM/4ZDUqvtLHz/oeUX uw== 
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=PODMain02222019;
+ bh=ZUV1lwKXBHO9x6o9eiH67NwiBdI+w5GFIjfClIMjUpg=;
+ b=WfWbCXAy9bLTFkxfbE33o3vNSEhKWWCrK9x95XLfRgeOcIukgnqyI81VuignEJiGKyM/
+ CjIQ0L8/xr8dq1/6lNCQtQrZhGIQ8w5LFe+jJiwytHvOUnnEnSfPCZ4uL/CDklAedtb9
+ jBeSkaEPj/6HPZ20n6zs+ygZkO3LhgtkU6NGG6Jhz0KaooD6mDJE+P04Y2JEBjsX34BX
+ lghWkcZEGFv9wfMbxtrKh+FDv31gyR+EG+TEwf5JzsvbAAwMTDOOfhLpUjorr9Brdu2X
+ jzPWHGjCALNIjtyKqVHvL9N7rsCuJPFFuD14hTV/eYtiLjBs/Fv6TnSBi2cDwK4JMwb9 SQ== 
 Authentication-Results: ppops.net;
         spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
 Received: from ediex02.ad.cirrus.com ([87.246.76.36])
-        by mx0a-001ae601.pphosted.com with ESMTP id 30s6937h76-1
+        by mx0a-001ae601.pphosted.com with ESMTP id 30s6937h76-2
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
         Wed, 06 May 2020 10:58:01 -0500
 Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
@@ -48,7 +49,7 @@ Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
  (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
  Transport; Wed, 6 May 2020 16:57:59 +0100
 Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 0835E2C8;
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 1772944A;
         Wed,  6 May 2020 15:57:59 +0000 (UTC)
 From:   Charles Keepax <ckeepax@opensource.cirrus.com>
 To:     <cw00.choi@samsung.com>, <robh+dt@kernel.org>,
@@ -57,10 +58,12 @@ To:     <cw00.choi@samsung.com>, <robh+dt@kernel.org>,
 CC:     <myungjoo.ham@samsung.com>, <lgirdwood@gmail.com>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <patches@opensource.cirrus.com>
-Subject: [PATCH v2 1/7] regulator: arizona-regulator: Move binding over to dtschema
-Date:   Wed, 6 May 2020 16:57:52 +0100
-Message-ID: <20200506155758.14643-1-ckeepax@opensource.cirrus.com>
+Subject: [PATCH v2 2/7] extcon: arizona: Move binding over to dtschema
+Date:   Wed, 6 May 2020 16:57:53 +0100
+Message-ID: <20200506155758.14643-2-ckeepax@opensource.cirrus.com>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200506155758.14643-1-ckeepax@opensource.cirrus.com>
+References: <20200506155758.14643-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Proofpoint-SPF-Result: fail
@@ -79,54 +82,113 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 ---
 
-No changes since v1.
+Changes since v1:
+ - Removed some description that duplicates constraints
 
 Thanks,
 Charles
 
- .../bindings/regulator/arizona-regulator.txt       | 18 -----------
- .../devicetree/bindings/regulator/wlf,arizona.yaml | 37 ++++++++++++++++++++++
- 2 files changed, 37 insertions(+), 18 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/regulator/arizona-regulator.txt
- create mode 100644 Documentation/devicetree/bindings/regulator/wlf,arizona.yaml
+ .../devicetree/bindings/extcon/extcon-arizona.txt  |  76 -------------
+ .../devicetree/bindings/extcon/wlf,arizona.yaml    | 125 +++++++++++++++++++++
+ 2 files changed, 125 insertions(+), 76 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+ create mode 100644 Documentation/devicetree/bindings/extcon/wlf,arizona.yaml
 
-diff --git a/Documentation/devicetree/bindings/regulator/arizona-regulator.txt b/Documentation/devicetree/bindings/regulator/arizona-regulator.txt
+diff --git a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
 deleted file mode 100644
-index 69bf41949b01f..0000000000000
---- a/Documentation/devicetree/bindings/regulator/arizona-regulator.txt
+index 208daaff0be4f..0000000000000
+--- a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
 +++ /dev/null
-@@ -1,18 +0,0 @@
+@@ -1,76 +0,0 @@
 -Cirrus Logic Arizona class audio SoCs
 -
 -These devices are audio SoCs with extensive digital capabilities and a range
 -of analogue I/O.
 -
--This document lists regulator specific bindings, see the primary binding
--document:
--  For Wolfson Microelectronic Arizona codecs: ../mfd/arizona.txt
--  For Cirrus Logic Madera codecs: ../mfd/madera.txt
+-This document lists Extcon specific bindings, see the primary binding document:
+-  ../mfd/arizona.txt
 -
 -Optional properties:
--  - wlf,ldoena : GPIO specifier for the GPIO controlling LDOENA
 -
--Optional subnodes:
--  - ldo1 : Initial data for the LDO1 regulator, as covered in
--    Documentation/devicetree/bindings/regulator/regulator.txt
--  - micvdd : Initial data for the MICVDD regulator, as covered in
--    Documentation/devicetree/bindings/regulator/regulator.txt
-diff --git a/Documentation/devicetree/bindings/regulator/wlf,arizona.yaml b/Documentation/devicetree/bindings/regulator/wlf,arizona.yaml
+-  - wlf,hpdet-channel : Headphone detection channel.
+-    ARIZONA_ACCDET_MODE_HPL or 1 - Headphone detect mode is set to HPDETL
+-    ARIZONA_ACCDET_MODE_HPR or 2 - Headphone detect mode is set to HPDETR
+-    If this node is not mentioned or if the value is unknown, then
+-    headphone detection mode is set to HPDETL.
+-
+-  - wlf,use-jd2 : Use the additional JD input along with JD1 for dual pin jack
+-    detection.
+-  - wlf,use-jd2-nopull : Internal pull on JD2 is disabled when used for
+-    jack detection.
+-  - wlf,jd-invert : Invert the polarity of the jack detection switch
+-
+-  - wlf,micd-software-compare : Use a software comparison to determine mic
+-    presence
+-  - wlf,micd-detect-debounce : Additional software microphone detection
+-    debounce specified in milliseconds.
+-  - wlf,micd-pol-gpio : GPIO specifier for the GPIO controlling the headset
+-    polarity if one exists.
+-  - wlf,micd-bias-start-time : Time allowed for MICBIAS to startup prior to
+-    performing microphone detection, specified as per the ARIZONA_MICD_TIME_XXX
+-    defines.
+-  - wlf,micd-rate : Delay between successive microphone detection measurements,
+-    specified as per the ARIZONA_MICD_TIME_XXX defines.
+-  - wlf,micd-dbtime : Microphone detection hardware debounces specified as the
+-    number of measurements to take, valid values being 2 and 4.
+-  - wlf,micd-timeout-ms : Timeout for microphone detection, specified in
+-    milliseconds.
+-  - wlf,micd-force-micbias : Force MICBIAS continuously on during microphone
+-    detection.
+-  - wlf,micd-configs : Headset polarity configurations (generally used for
+-    detection of CTIA / OMTP headsets), the field can be of variable length
+-    but should always be a multiple of 3 cells long, each three cell group
+-    represents one polarity configuration.
+-    The first cell defines the accessory detection pin, zero will use MICDET1
+-    and all other values will use MICDET2.
+-    The second cell represents the MICBIAS to be used.
+-    The third cell represents the value of the micd-pol-gpio pin.
+-
+-  - wlf,gpsw : Settings for the general purpose switch, set as one of the
+-    ARIZONA_GPSW_XXX defines.
+-
+-Example:
+-
+-codec: wm8280@0 {
+-	compatible = "wlf,wm8280";
+-	reg = <0>;
+-	...
+-
+-	wlf,use-jd2;
+-	wlf,use-jd2-nopull;
+-	wlf,jd-invert;
+-
+-	wlf,micd-software-compare;
+-	wlf,micd-detect-debounce = <0>;
+-	wlf,micd-pol-gpio = <&codec 2 0>;
+-	wlf,micd-rate = <ARIZONA_MICD_TIME_8MS>;
+-	wlf,micd-dbtime = <4>;
+-	wlf,micd-timeout-ms = <100>;
+-	wlf,micd-force-micbias;
+-	wlf,micd-configs = <
+-		0 1 0 /* MICDET1 MICBIAS1 GPIO=low */
+-		1 2 1 /* MICDET2 MICBIAS2 GPIO=high */
+-	>;
+-
+-	wlf,gpsw = <ARIZONA_GPSW_OPEN>;
+-};
+diff --git a/Documentation/devicetree/bindings/extcon/wlf,arizona.yaml b/Documentation/devicetree/bindings/extcon/wlf,arizona.yaml
 new file mode 100644
-index 0000000000000..a0aea73bf4122
+index 0000000000000..f9845dc2f5ae5
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/wlf,arizona.yaml
-@@ -0,0 +1,37 @@
++++ b/Documentation/devicetree/bindings/extcon/wlf,arizona.yaml
+@@ -0,0 +1,125 @@
 +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/regulator/wlf,arizona.yaml#
++$id: http://devicetree.org/schemas/extcon/wlf,arizona.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Cirrus Logic/Wolfson Microelectronics Arizona/Madera class audio SoCs
++title: Cirrus Logic/Wolfson Microelectronics Arizona class audio SoCs
 +
 +maintainers:
 +  - patches@opensource.cirrus.com
@@ -135,28 +197,116 @@ index 0000000000000..a0aea73bf4122
 +  These devices are audio SoCs with extensive digital capabilities and a
 +  range of analogue I/O.
 +
-+  This document lists regulator specific bindings, see the primary binding
-+  document. For Wolfson Microelectronic Arizona codecs ../mfd/wlf,arizona.yaml
-+  and for Cirrus Logic Madera codecs ../mfd/madera.txt
++  This document lists Extcon specific bindings, see the primary binding
++  document ../mfd/arizona.yaml
 +
 +properties:
-+  wlf,ldoena:
++  wlf,hpdet-channel:
 +    description:
-+      GPIO specifier for the GPIO controlling LDOENA.
-+    $ref: "/schemas/types.yaml#/definitions/phandle-array"
++      Headphone detection channel.  ARIZONA_ACCDET_MODE_HPL/1 sets the
++      headphone detect mode to HPDETL, ARIZONA_ACCDET_MODE_HPR/2 sets it
++      to HPDETR.  If this node is not included or if the value is unknown,
++      then headphone detection mode is set to HPDETL.
++    $ref: "/schemas/types.yaml#/definitions/uint32"
++    minimum: 1
++    maximum: 2
++
++  wlf,use-jd2:
++    description:
++      Use the additional JD input along with JD1 for dual pin jack detection.
++    type: boolean
++
++  wlf,use-jd2-nopull:
++    description:
++      Internal pull on JD2 is disabled when used for jack detection.
++    type: boolean
++
++  wlf,jd-invert:
++    description:
++      Invert the polarity of the jack detection switch.
++    type: boolean
++
++  wlf,micd-software-compare:
++    description:
++      Use a software comparison to determine mic presence.
++    type: boolean
++
++  wlf,micd-detect-debounce:
++    description:
++      Additional software microphone detection debounce specified in
++      milliseconds.
++    $ref: "/schemas/types.yaml#/definitions/uint32"
++
++  wlf,micd-pol-gpio:
++    description:
++      GPIO specifier for the GPIO controlling the headset polarity if one
++      exists.
 +    maxItems: 1
 +
-+  ldo1:
++  wlf,micd-bias-start-time:
 +    description:
-+      Initial data for the LDO1 regulator.
-+    $ref: "regulator.yaml#"
-+    type: object
++      Time allowed for MICBIAS to startup prior to performing microphone
++      detection, specified as per the ARIZONA_MICD_TIME_XXX defines.
++    $ref: "/schemas/types.yaml#/definitions/uint32"
++    minimum: 0
++    maximum: 12
 +
-+  micvdd:
++  wlf,micd-rate:
 +    description:
-+      Initial data for the MICVDD regulator.
-+    $ref: "regulator.yaml#"
-+    type: object
++      Delay between successive microphone detection measurements, specified
++      as per the ARIZONA_MICD_TIME_XXX defines.
++    $ref: "/schemas/types.yaml#/definitions/uint32"
++    minimum: 0
++    maximum: 12
++
++  wlf,micd-dbtime:
++    description:
++      Microphone detection hardware debounces specified as the number of
++      measurements to take.
++    $ref: "/schemas/types.yaml#/definitions/uint32"
++    enum: [2, 4]
++
++  wlf,micd-timeout-ms:
++    description:
++      Timeout for microphone detection, specified in milliseconds.
++    $ref: "/schemas/types.yaml#/definitions/uint32"
++
++  wlf,micd-force-micbias:
++    description:
++      Force MICBIAS continuously on during microphone detection.
++    type: boolean
++
++  wlf,micd-configs:
++    description:
++      Headset polarity configurations (generally used for detection of
++      CTIA / OMTP headsets), the field can be of variable length but
++      should always be a multiple of 3 cells long, each three cell group
++      represents one polarity configuration.
++    $ref: "/schemas/types.yaml#/definitions/uint32-matrix"
++    items:
++      items:
++        - description:
++            The first cell defines the accessory detection pin, zero
++            will use MICDET1 and 0x2000 will use MICDET2.
++          enum: [ 0, 0x2000 ]
++        - description:
++            The second cell represents the MICBIAS to be used. Zero
++            will use MICVDD, 1-3 will use MICBIASx.
++          minimum: 0
++          maximum: 3
++        - description:
++            The third cell represents the value of the micd-pol-gpio
++            pin.
++          minimum: 0
++          maximum: 1
++
++  wlf,gpsw:
++    description:
++      Settings for the general purpose switch, set as one of the
++      ARIZONA_GPSW_XXX defines.
++    $ref: "/schemas/types.yaml#/definitions/uint32"
++    minimum: 0
++    maximum: 3
 -- 
 2.11.0
 
