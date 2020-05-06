@@ -2,127 +2,156 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C36C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 723A2C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A10D4207DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A3D32075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:46:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JWi1lrV3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730371AbgEFWpl (ORCPT
+        id S1730384AbgEFWqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 18:45:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43256 "EHLO
+        Wed, 6 May 2020 18:46:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728888AbgEFWpl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 18:45:41 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32121C061A0F;
-        Wed,  6 May 2020 15:45:41 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jWSnH-0005W9-22; Thu, 07 May 2020 00:45:35 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E002D1C0081;
-        Thu,  7 May 2020 00:45:33 +0200 (CEST)
-Date:   Wed, 06 May 2020 22:45:33 -0000
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/urgent] ARM: futex: Address build warning
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <87pncao2ph.fsf@nanos.tec.linutronix.de>
-References: <87pncao2ph.fsf@nanos.tec.linutronix.de>
+        with ESMTP id S1728888AbgEFWqL (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 18:46:11 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51DE5C061A0F
+        for <Linux-kernel@vger.kernel.org>; Wed,  6 May 2020 15:46:11 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id o198so1861330ybg.10
+        for <Linux-kernel@vger.kernel.org>; Wed, 06 May 2020 15:46:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LjRTwHggWiwM4X6xKecNjuKevakeacekowAHtGUdnQA=;
+        b=JWi1lrV3wsChCcXjeiJ9huwyv/r4heBAPZrWDMYxhSgeHd5ZZzrrtl8TNlel24DLAP
+         054FlgpJh8j1sN6zGPdA7bglW+0GBhjtMdPgLXc6ofVrIqZUGdrOx9GrohoH6u2IBAPL
+         rm/ca62Q5PCukvsthFMRjNYrdZLuDs6+ACDWbKtB4tVHTWZ8eQkYbDuYzBhmZJSJMCVu
+         Oug3pOYyt3PMl97Kd8/RCNx2vudi43bI/vSiD+gmf5d6mSl3mjwBsnbyf6PmOlJlWnfW
+         upwS/BIqcl6lhveO/VGvt6acPoz2KlGCvh3UD+skLtSCOKWyippdzkqd46R6lFd91B0l
+         TMCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LjRTwHggWiwM4X6xKecNjuKevakeacekowAHtGUdnQA=;
+        b=Lz1DMxpzI4sczu12EO2siqmtDcQIlN7IiE0L0KN5IByXLTipgXQ0BAKfknNIt0S7cM
+         iXcQiKnntoomgtw9hYR7JiWUtRBxWzx5zIrH4wtAmSuDVSpKxhEIwOZOl5f6BDkNIFYm
+         TCsLFJEm0vc5fx3p/6BdArB61NSXg4lSpx2gXclbsGODHHbbxHgiA/gcbPb3tvhuA9yq
+         PhQaF00p/rLckTWs9pXqh7MPEvVPYe400rvV5vCuQHfmEqQkJ9g6SleQjcjGFHQC2z3T
+         xeATZIAv/uk2W+4jiQAtJ/np+w6lfxxaeH1pximvnrN85x2m0EcIQDovCCfwQpDmrOIT
+         WJaQ==
+X-Gm-Message-State: AGi0PuZc7iaOOP2ZJUshzkbjqlf/Icj+sEQBzTpe9IQ9XgvDJh4dTQDN
+        8YWZKQHh8/80fGtAwOHGy4QprK0kGEv3sl0Gubpl0w==
+X-Google-Smtp-Source: APiQypJVkauLZl4RM85aNILemYh6DIXQPD8BNnf8f9PmxLTsPtTuE61ClBlB5njsTTNQZZ/zSTzUvdltz+mOh9u63I0=
+X-Received: by 2002:a25:77d8:: with SMTP id s207mr16003960ybc.47.1588805170245;
+ Wed, 06 May 2020 15:46:10 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <158880513375.8414.17944066222342801665.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200430003618.17002-1-yao.jin@linux.intel.com>
+ <20200430084529.GC1681583@krava> <fc51012d-66c7-3e93-07df-22411b23fa8f@linux.intel.com>
+ <20200430153253.GF1694693@krava>
+In-Reply-To: <20200430153253.GF1694693@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 6 May 2020 15:45:59 -0700
+Message-ID: <CAP-5=fVLGfr-bYgR=vt0g-0TtxB+-1mLPt59WfiPEPTtRdQh2Q@mail.gmail.com>
+Subject: Re: [PATCH] perf parse-events: Use strcmp to compare the PMU name
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     "Jin, Yao" <yao.jin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        LKML <Linux-kernel@vger.kernel.org>,
+        Andi Kleen <ak@linux.intel.com>, kan.liang@intel.com,
+        yao.jin@intel.com, John Garry <john.garry@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the locking/urgent branch of tip:
+On Thu, Apr 30, 2020 at 8:33 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Thu, Apr 30, 2020 at 09:45:14PM +0800, Jin, Yao wrote:
+> > Hi Jiri,
+> >
+> > On 4/30/2020 4:45 PM, Jiri Olsa wrote:
+> > > On Thu, Apr 30, 2020 at 08:36:18AM +0800, Jin Yao wrote:
+> > > > A big uncore event group is split into multiple small groups which
+> > > > only include the uncore events from the same PMU. This has been
+> > > > supported in the commit 3cdc5c2cb924a ("perf parse-events: Handle
+> > > > uncore event aliases in small groups properly").
+> > > >
+> > > > If the event's PMU name starts to repeat, it must be a new event.
+> > > > That can be used to distinguish the leader from other members.
+> > > > But now it only compares the pointer of pmu_name
+> > > > (leader->pmu_name == evsel->pmu_name).
+> > > >
+> > > > If we use "perf stat -M LLC_MISSES.PCIE_WRITE -a" on cascadelakex,
+> > > > the event list is:
+> > > >
+> > > > evsel->name                                       evsel->pmu_name
+> > > > ---------------------------------------------------------------
+> > > > unc_iio_data_req_of_cpu.mem_write.part0           uncore_iio_4 (as leader)
+> > > > unc_iio_data_req_of_cpu.mem_write.part0           uncore_iio_2
+> > > > unc_iio_data_req_of_cpu.mem_write.part0           uncore_iio_0
+> > > > unc_iio_data_req_of_cpu.mem_write.part0           uncore_iio_5
+> > > > unc_iio_data_req_of_cpu.mem_write.part0           uncore_iio_3
+> > > > unc_iio_data_req_of_cpu.mem_write.part0           uncore_iio_1
+> > > > unc_iio_data_req_of_cpu.mem_write.part1           uncore_iio_4
+> > > > ......
+> > > >
+> > > > For the event "unc_iio_data_req_of_cpu.mem_write.part1" with
+> > > > "uncore_iio_4", it should be the event from PMU "uncore_iio_4".
+> > > > It's not a new leader for this PMU.
+> > > >
+> > > > But if we use "(leader->pmu_name == evsel->pmu_name)", the check
+> > > > would be failed and the event is stored to leaders[] as a new
+> > > > PMU leader.
+> > > >
+> > > > So this patch uses strcmp to compare the PMU name between events.
+> > > >
+> > > > Fixes: 3cdc5c2cb924a ("perf parse-events: Handle uncore event aliases in small groups properly")
+> > > > Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+> > >
+> > > looks good, any chance we could have automated test
+> > > for this uncore leader setup logic? like maybe the way
+> > > John did the pmu-events tests? like test will trigger
+> > > only when there's the pmu/events in the system
+> > >
+> > > Acked-by: Jiri Olsa <jolsa@redhat.com>
+> > >
+> > > thanks,
+> > > jirka
+> > >
+> > >
+> >
+> > I'm considering to use LKP to do the sanity tests for all perf events
+> > (core/uncore) and perf metrics periodically. It may help us to find the
+> > regressions on time.
+>
+> sounds good ;) thanks
+>
+> jirka
 
-Commit-ID:     8101b5a1531f3390b3a69fa7934c70a8fd6566ad
-Gitweb:        https://git.kernel.org/tip/8101b5a1531f3390b3a69fa7934c70a8fd6566ad
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Tue, 14 Apr 2020 11:07:22 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 07 May 2020 00:41:47 +02:00
+I've tested this and would be happy to see this merged. John's bisect
+found a memory leak fix of mine as the culprit.
 
-ARM: futex: Address build warning
+Wrt testing, libbpf is using github/travis CI:
+https://github.com/libbpf/libbpf
+https://travis-ci.org/libbpf/libbpf
+Perhaps that kind of set up can automate testing and lower the
+reviewer burden - but there's upfront cost in setting it up.
 
-Stephen reported the following build warning on a ARM multi_v7_defconfig
-build with GCC 9.2.1:
-
-kernel/futex.c: In function 'do_futex':
-kernel/futex.c:1676:17: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]
- 1676 |   return oldval == cmparg;
-      |          ~~~~~~~^~~~~~~~~
-kernel/futex.c:1652:6: note: 'oldval' was declared here
- 1652 |  int oldval, ret;
-      |      ^~~~~~
-
-introduced by commit a08971e9488d ("futex: arch_futex_atomic_op_inuser()
-calling conventions change").
-
-While that change should not make any difference it confuses GCC which
-fails to work out that oldval is not referenced when the return value is
-not zero.
-
-GCC fails to properly analyze arch_futex_atomic_op_inuser(). It's not the
-early return, the issue is with the assembly macros. GCC fails to detect
-that those either set 'ret' to 0 and set oldval or set 'ret' to -EFAULT
-which makes oldval uninteresting. The store to the callsite supplied oldval
-pointer is conditional on ret == 0.
-
-The straight forward way to solve this is to make the store unconditional.
-
-Aside of addressing the build warning this makes sense anyway because it
-removes the conditional from the fastpath. In the error case the stored
-value is uninteresting and the extra store does not matter at all.
-
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/87pncao2ph.fsf@nanos.tec.linutronix.de
-
----
- arch/arm/include/asm/futex.h |  9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/include/asm/futex.h b/arch/arm/include/asm/futex.h
-index e133da3..a915188 100644
---- a/arch/arm/include/asm/futex.h
-+++ b/arch/arm/include/asm/futex.h
-@@ -165,8 +165,13 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- 	preempt_enable();
- #endif
- 
--	if (!ret)
--		*oval = oldval;
-+	/*
-+	 * Store unconditionally. If ret != 0 the extra store is the least
-+	 * of the worries but GCC cannot figure out that __futex_atomic_op()
-+	 * is either setting ret to -EFAULT or storing the old value in
-+	 * oldval which results in a uninitialized warning at the call site.
-+	 */
-+	*oval = oldval;
- 
- 	return ret;
- }
+Thanks,
+Ian
