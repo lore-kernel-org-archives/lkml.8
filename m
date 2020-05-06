@@ -2,246 +2,108 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BABD2C38A2A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D7CC47257
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 998F420708
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:28:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ANa/SnPb"
+	by mail.kernel.org (Postfix) with ESMTP id 76CEA2075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:36:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730322AbgEFW2h (ORCPT
+        id S1730012AbgEFWgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 18:28:37 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43158 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729875AbgEFW2g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 18:28:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588804114;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=wQTyzrrjxvEBxHFU1Nt/yiuwPloqRUZUg1732JX0QhY=;
-        b=ANa/SnPb7+LzpHR2jBOwbIV7w2tjVTVJrAoh0HN965P5YFYq3YO2OBBFZbEHYPNZ4r2Q5w
-        s4Sdpt0Y18sZ4EeSEVYr8oFPQ2n1QxnwOexP/xGBIKpUFVEQbQawVGtNh/HW1LAJZxOVkm
-        dm/uhLmmLcR+t/jpNANIGPDor7Wn/CM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-122-PVdTOSqROH68QaI3WS8alw-1; Wed, 06 May 2020 18:28:33 -0400
-X-MC-Unique: PVdTOSqROH68QaI3WS8alw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9092856C8E;
-        Wed,  6 May 2020 22:28:31 +0000 (UTC)
-Received: from optiplex-lnx.redhat.com (unknown [10.3.128.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3BB9A1001B07;
-        Wed,  6 May 2020 22:28:25 +0000 (UTC)
-From:   Rafael Aquini <aquini@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-doc@vger.kernel.org, kexec@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, dyoung@redhat.com, bhe@redhat.com,
-        corbet@lwn.net, mcgrof@kernel.org, keescook@chromium.org,
-        akpm@linux-foundation.org, cai@lca.pw
-Subject: [PATCH] kernel: add panic_on_taint
-Date:   Wed,  6 May 2020 18:28:15 -0400
-Message-Id: <20200506222815.274570-1-aquini@redhat.com>
+        Wed, 6 May 2020 18:36:18 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:33948 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728888AbgEFWgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 18:36:18 -0400
+Received: from s0106602ad0811846.cg.shawcable.net ([68.147.191.165] helo=[192.168.0.12])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1jWSeG-0001RP-PL; Wed, 06 May 2020 16:36:17 -0600
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Babu Moger <babu.moger@amd.com>, corbet@lwn.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        pbonzini@redhat.com, sean.j.christopherson@intel.com
+Cc:     x86@kernel.org, vkuznets@redhat.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, dave.hansen@linux.intel.com,
+        luto@kernel.org, peterz@infradead.org, mchehab+samsung@kernel.org,
+        changbin.du@intel.com, namit@vmware.com, bigeasy@linutronix.de,
+        yang.shi@linux.alibaba.com, asteinhauser@google.com,
+        anshuman.khandual@arm.com, jan.kiszka@siemens.com,
+        akpm@linux-foundation.org, steven.price@arm.com,
+        rppt@linux.vnet.ibm.com, peterx@redhat.com,
+        dan.j.williams@intel.com, arjunroy@google.com,
+        thellstrom@vmware.com, aarcange@redhat.com, justin.he@arm.com,
+        robin.murphy@arm.com, ira.weiny@intel.com, keescook@chromium.org,
+        jgross@suse.com, andrew.cooper3@citrix.com,
+        pawan.kumar.gupta@linux.intel.com, fenghua.yu@intel.com,
+        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
+        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <158880240546.11615.2219410169137148044.stgit@naples-babu.amd.com>
+ <158880253347.11615.8499618616856685179.stgit@naples-babu.amd.com>
+ <4d86b207-77af-dc5d-88a4-f092be0043f6@intel.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <5081782d-bec2-b82c-8d3b-87fcb5d847ae@deltatee.com>
+Date:   Wed, 6 May 2020 16:36:05 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <4d86b207-77af-dc5d-88a4-f092be0043f6@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 68.147.191.165
+X-SA-Exim-Rcpt-To: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, acme@redhat.com, sam@ravnborg.org, yamada.masahiro@socionext.com, vineela.tummalapalli@intel.com, fenghua.yu@intel.com, pawan.kumar.gupta@linux.intel.com, andrew.cooper3@citrix.com, jgross@suse.com, keescook@chromium.org, ira.weiny@intel.com, robin.murphy@arm.com, justin.he@arm.com, aarcange@redhat.com, thellstrom@vmware.com, arjunroy@google.com, dan.j.williams@intel.com, peterx@redhat.com, rppt@linux.vnet.ibm.com, steven.price@arm.com, akpm@linux-foundation.org, jan.kiszka@siemens.com, anshuman.khandual@arm.com, asteinhauser@google.com, yang.shi@linux.alibaba.com, bigeasy@linutronix.de, namit@vmware.com, changbin.du@intel.com, mchehab+samsung@kernel.org, peterz@infradead.org, luto@kernel.org, dave.hansen@linux.intel.com, joro@8bytes.org, jmattson@google.com, wanpengli@tencent.com, vkuznets@redhat.com, x86@kernel.org, sean.j.christopherson@intel.com, pbonzini@redhat.com, hpa@zytor.com, bp
+ @alien8.de, mingo@redhat.com, tglx@linutronix.de, corbet@lwn.net, babu.moger@amd.com, dave.hansen@intel.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH 1/2] arch/x86: Rename config
+ X86_INTEL_MEMORY_PROTECTION_KEYS to generic x86
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Analogously to the introduction of panic_on_warn, this patch
-introduces a kernel option named panic_on_taint in order to
-provide a simple and generic way to stop execution and catch
-a coredump when the kernel gets tainted by any given taint flag.
 
-This is useful for debugging sessions as it avoids rebuilding
-the kernel to explicitly add calls to panic() or BUG() into
-code sites that introduce the taint flags of interest.
-Another, perhaps less frequent, use for this option would be
-as a mean for assuring a security policy (in paranoid mode)
-case where no single taint is allowed for the running system.
 
-Suggested-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Rafael Aquini <aquini@redhat.com>
----
- Documentation/admin-guide/kdump/kdump.rst     | 10 ++++++
- .../admin-guide/kernel-parameters.txt         |  3 ++
- Documentation/admin-guide/sysctl/kernel.rst   | 36 +++++++++++++++++++
- include/linux/kernel.h                        |  1 +
- kernel/panic.c                                |  7 ++++
- kernel/sysctl.c                               |  7 ++++
- 6 files changed, 64 insertions(+)
+On 2020-05-06 4:21 p.m., Dave Hansen wrote:
+>> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+>> index 1197b5596d5a..8630b9fa06f5 100644
+>> --- a/arch/x86/Kconfig
+>> +++ b/arch/x86/Kconfig
+>> @@ -1886,11 +1886,11 @@ config X86_UMIP
+>>  	  specific cases in protected and virtual-8086 modes. Emulated
+>>  	  results are dummy.
+>>  
+>> -config X86_INTEL_MEMORY_PROTECTION_KEYS
+>> -	prompt "Intel Memory Protection Keys"
+>> +config X86_MEMORY_PROTECTION_KEYS
+>> +	prompt "Memory Protection Keys"
+>>  	def_bool y
+>>  	# Note: only available in 64-bit mode
+>> -	depends on CPU_SUP_INTEL && X86_64
+>> +	depends on X86_64 && (CPU_SUP_INTEL || CPU_SUP_AMD)
+>>  	select ARCH_USES_HIGH_VMA_FLAGS
+>>  	select ARCH_HAS_PKEYS
+>>  	---help---
+> 
+> It's a bit of a bummer that we're going to prompt everybody doing
+> oldconfig's for this new option.  But, I don't know any way for Kconfig
+> to suppress it if the name is changed.  Also, I guess the def_bool=y
+> means that menuconfig and olddefconfig will tend to do the right thing.
+> 
+> Do we *really* need to change the Kconfig name?  The text prompt, sure.
+>  End users see that and having Intel in there is massively confusing.
+> 
+> If I have to put up with seeing 'amd64' all over my Debian package
+> names, you can put up with a Kconfig name. :P
 
-diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/ad=
-min-guide/kdump/kdump.rst
-index ac7e131d2935..de3cf6d377cc 100644
---- a/Documentation/admin-guide/kdump/kdump.rst
-+++ b/Documentation/admin-guide/kdump/kdump.rst
-@@ -521,6 +521,16 @@ will cause a kdump to occur at the panic() call.  In=
- cases where a user wants
- to specify this during runtime, /proc/sys/kernel/panic_on_warn can be se=
-t to 1
- to achieve the same behaviour.
-=20
-+Trigger Kdump on add_taint()
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
-+
-+The kernel parameter, panic_on_taint, calls panic() from within add_tain=
-t(),
-+whenever the value set in this bitmask matches with the bit flag being s=
-et
-+by add_taint(). This will cause a kdump to occur at the panic() call.
-+In cases where a user wants to specify this during runtime,
-+/proc/sys/kernel/panic_on_taint can be set to a respective bitmask value
-+to achieve the same behaviour.
-+
- Contact
- =3D=3D=3D=3D=3D=3D=3D
-=20
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentat=
-ion/admin-guide/kernel-parameters.txt
-index 7bc83f3d9bdf..75c02c1841b2 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3404,6 +3404,9 @@
- 	panic_on_warn	panic() instead of WARN().  Useful to cause kdump
- 			on a WARN().
-=20
-+	panic_on_taint	panic() when the kernel gets tainted, if the taint
-+			flag being set matches with the assigned bitmask.
-+
- 	crash_kexec_post_notifiers
- 			Run kdump after running panic-notifiers and dumping
- 			kmsg. This only for the users who doubt kdump always
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/=
-admin-guide/sysctl/kernel.rst
-index 0d427fd10941..5b880102f2e3 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -658,6 +658,42 @@ a kernel rebuild when attempting to kdump at the loc=
-ation of a WARN().
- =3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=20
-=20
-+panic_on_taint
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+Bitmask for calling panic() in the add_taint() path.
-+This is useful to avoid a kernel rebuild when attempting to
-+kdump at the insertion of any specific TAINT flags.
-+When set to 0 (default) add_taint() default behavior is maintained.
-+
-+=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+bit  0 TAINT_PROPRIETARY_MODULE
-+bit  1 TAINT_FORCED_MODULE
-+bit  2 TAINT_CPU_OUT_OF_SPEC
-+bit  3 TAINT_FORCED_RMMOD
-+bit  4 TAINT_MACHINE_CHECK
-+bit  5 TAINT_BAD_PAGE
-+bit  6 TAINT_USER
-+bit  7 TAINT_DIE
-+bit  8 TAINT_OVERRIDDEN_ACPI_TABLE
-+bit  9 TAINT_WARN
-+bit 10 TAINT_CRAP
-+bit 11 TAINT_FIRMWARE_WORKAROUND
-+bit 12 TAINT_OOT_MODULE
-+bit 13 TAINT_UNSIGNED_MODULE
-+bit 14 TAINT_SOFTLOCKUP
-+bit 15 TAINT_LIVEPATCH
-+bit 16 TAINT_AUX
-+bit 17 TAINT_RANDSTRUCT
-+bit 18 TAINT_FLAGS_COUNT
-+=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+So, for example, to panic if the kernel gets tainted due to
-+occurrences of bad pages and/or machine check errors, a user can::
-+
-+  echo 48 > /proc/sys/kernel/panic_on_taint
-+
-+
- panic_print
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=20
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 9b7a8d74a9d6..518b9fd381c2 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -528,6 +528,7 @@ extern int panic_on_oops;
- extern int panic_on_unrecovered_nmi;
- extern int panic_on_io_nmi;
- extern int panic_on_warn;
-+extern unsigned long panic_on_taint;
- extern int sysctl_panic_on_rcu_stall;
- extern int sysctl_panic_on_stackoverflow;
-=20
-diff --git a/kernel/panic.c b/kernel/panic.c
-index b69ee9e76cb2..e2d4771ab911 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -44,6 +44,7 @@ static int pause_on_oops_flag;
- static DEFINE_SPINLOCK(pause_on_oops_lock);
- bool crash_kexec_post_notifiers;
- int panic_on_warn __read_mostly;
-+unsigned long panic_on_taint __read_mostly;
-=20
- int panic_timeout =3D CONFIG_PANIC_TIMEOUT;
- EXPORT_SYMBOL_GPL(panic_timeout);
-@@ -434,6 +435,11 @@ void add_taint(unsigned flag, enum lockdep_ok lockde=
-p_ok)
- 		pr_warn("Disabling lock debugging due to kernel taint\n");
-=20
- 	set_bit(flag, &tainted_mask);
-+
-+	if (unlikely(tainted_mask & panic_on_taint)) {
-+		panic_on_taint =3D 0;
-+		panic("panic_on_taint set ...");
-+	}
- }
- EXPORT_SYMBOL(add_taint);
-=20
-@@ -675,6 +681,7 @@ core_param(panic, panic_timeout, int, 0644);
- core_param(panic_print, panic_print, ulong, 0644);
- core_param(pause_on_oops, pause_on_oops, int, 0644);
- core_param(panic_on_warn, panic_on_warn, int, 0644);
-+core_param(panic_on_taint, panic_on_taint, ulong, 0644);
- core_param(crash_kexec_post_notifiers, crash_kexec_post_notifiers, bool,=
- 0644);
-=20
- static int __init oops_setup(char *s)
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 8a176d8727a3..b80ab660d727 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -1217,6 +1217,13 @@ static struct ctl_table kern_table[] =3D {
- 		.extra1		=3D SYSCTL_ZERO,
- 		.extra2		=3D SYSCTL_ONE,
- 	},
-+	{
-+		.procname	=3D "panic_on_taint",
-+		.data		=3D &panic_on_taint,
-+		.maxlen		=3D sizeof(unsigned long),
-+		.mode		=3D 0644,
-+		.proc_handler	=3D proc_doulongvec_minmax,
-+	},
- #if defined(CONFIG_SMP) && defined(CONFIG_NO_HZ_COMMON)
- 	{
- 		.procname	=3D "timer_migration",
---=20
-2.25.4
+Lol, isn't that just Intel's penance for Itanium?
 
+Logan
