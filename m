@@ -2,73 +2,144 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30079C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB58C47258
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15CFA20714
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 781B320735
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 08:24:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588753490;
+	bh=/WPfbJquieUPIKiO6Ciow9laJ/MI4AxasPfQ3zVwzko=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=zWV+xHijlhJwLoNOvNAx+9IAZECuTZHbX74iWMVYESGzUmp3yEiJyFvuNnIAu/o8H
+	 9ff/Kht6Ch61Sc/eLjO6HHf+ZeEAiDcyvK95gS8b7u3Dwvpyve6nK0ucyLpIufgcrp
+	 F6mq2GN/yZa0FX8/HGxFIZwANufZFlweEGLvwyws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728851AbgEFIXR (ORCPT
+        id S1728628AbgEFIYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 04:23:17 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3860 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728349AbgEFIXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 04:23:16 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 071CC32915EF8542B1BD;
-        Wed,  6 May 2020 16:23:15 +0800 (CST)
-Received: from huawei.com (10.175.105.27) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Wed, 6 May 2020
- 16:23:05 +0800
-From:   Wu Bo <wubo40@huawei.com>
-To:     <kbusch@kernel.org>, <axboe@fb.com>, <hch@lst.de>,
-        <sagi@grimberg.me>
-CC:     <linux-nvme@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <liuzhiqiang26@huawei.com>, <linfeilong@huawei.com>,
-        <wubo40@huawei.com>
-Subject: [PATCH] nvme/core:disable streams when get stream params failed
-Date:   Wed, 6 May 2020 16:37:01 +0800
-Message-ID: <1588754221-661597-1-git-send-email-wubo40@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 6 May 2020 04:24:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59772 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727956AbgEFIYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 04:24:49 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CF51206E6;
+        Wed,  6 May 2020 08:24:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588753489;
+        bh=/WPfbJquieUPIKiO6Ciow9laJ/MI4AxasPfQ3zVwzko=;
+        h=From:To:Cc:Subject:Date:From;
+        b=TTmO/ni6FB69UC8PUWqYLqi4YFZHPwoQyrwKQpYksGaz95suoRvRgGjUIXXp3byFB
+         CPKsFPJLQlu/USduvGkEOVQKkLQcpQttLEtuIICQe5EghQHufB+jY5OJMKBAw8NuVC
+         X2e8DpayLM5q+m3TWnkhxvl1vLT2JbjO5EGKc3e8=
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Sagi Grimberg <sagi@rimberg.me>,
+        Yishai Hadas <yishaih@mellanox.com>
+Subject: [PATCH rdma-next v1 00/10] Enable asynchronous event FD per object
+Date:   Wed,  6 May 2020 11:24:34 +0300
+Message-Id: <20200506082444.14502-1-leon@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.105.27]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After enable nvme streams, then if get stream params failed, 
-We should disable streams before return error in 
-nvme_configure_directives() function.
+From: Leon Romanovsky <leonro@mellanox.com>
 
-Signed-off-by: Wu Bo <wubo40@huawei.com>
----
- drivers/nvme/host/core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Changelog:
+v1: Forgot to add patch "IB/uverbs: Move QP, SRQ, WQ type and flags to UAPI"
+v0: https://lore.kernel.org/lkml/20200506074049.8347-1-leon@kernel.org
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index f2adea9..afe1f5a 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -552,8 +552,10 @@ static int nvme_configure_directives(struct nvme_ctrl *ctrl)
- 		return ret;
- 
- 	ret = nvme_get_stream_params(ctrl, &s, NVME_NSID_ALL);
--	if (ret)
-+	if (ret) {
-+		nvme_disable_streams(ctrl);
- 		return ret;
-+	}
- 
- 	ctrl->nssa = le16_to_cpu(s.nssa);
- 	if (ctrl->nssa < BLK_MAX_WRITE_HINTS - 1) {
--- 
-1.8.3.1
+-------------------------------------------------------------------------------
+From Yishai:
+
+This series enables applicable events objects (i.e. QP, SRQ, CQ, WQ) to
+be created with their own asynchronous event FD.
+
+Before this series any affiliated event on an object was reported on the
+first asynchronous event FD that was created on the context without the
+ability to create and use a dedicated FD for it.
+
+With this series we enable granularity and control for the usage per
+object, according to the application's usage.
+
+For example, a secondary process that uses the same command FD as of the
+master one, can create its own objects with its dedicated event FD to be
+able to get the events for them once occurred, this couldn't be done
+before this series.
+
+To achieve the above, any 'create' method for the applicable objects was
+extended to get from rdma-core its optional event FD, if wasn't
+supplied, the default one from the context will be used.
+
+As we prefer to not extend the 'write' mode KABIs anymore and fully
+move to the 'ioct' mode, as part of this extension QP, SRQ and WQ
+create/destroy commands were introduced over 'ioctl', the CQ KABI was
+extended over its existing 'ioctl' create command.
+
+As part of moving to 'ioctl' for the above objects the frame work was
+improved to abort a fully created uobject upon some later error, some
+flows were consolidated with the 'write' mode and few bugs were found
+and fixed.
+
+Yishai
+
+Jason Gunthorpe (2):
+  RDMA/core: Allow the ioctl layer to abort a fully created uobject
+  RDMA/core: Consolidate ib_create_srq flows
+
+Yishai Hadas (8):
+  IB/uverbs: Refactor related objects to use their own asynchronous
+    event FD
+  IB/uverbs: Extend CQ to get its own asynchronous event FD
+  IB/uverbs: Cleanup wq/srq context usage from uverbs layer
+  IB/uverbs: Move QP, SRQ, WQ type and flags to UAPI
+  IB/uverbs: Introduce create/destroy SRQ commands over ioctl
+  IB/uverbs: Fix create WQ to use the given user handle
+  IB/uverbs: Introduce create/destroy WQ commands over ioctl
+  IB/uverbs: Introduce create/destroy QP commands over ioctl
+
+ drivers/infiniband/core/Makefile              |   5 +-
+ drivers/infiniband/core/rdma_core.c           |  28 +-
+ drivers/infiniband/core/rdma_core.h           |   7 +-
+ drivers/infiniband/core/uverbs.h              |  21 +-
+ drivers/infiniband/core/uverbs_cmd.c          |  73 ++--
+ drivers/infiniband/core/uverbs_ioctl.c        |  22 +-
+ drivers/infiniband/core/uverbs_main.c         |  16 +-
+ drivers/infiniband/core/uverbs_std_types.c    |  95 -----
+ drivers/infiniband/core/uverbs_std_types_cq.c |  17 +-
+ drivers/infiniband/core/uverbs_std_types_mr.c |  12 +-
+ drivers/infiniband/core/uverbs_std_types_qp.c | 401 ++++++++++++++++++
+ .../infiniband/core/uverbs_std_types_srq.c    | 233 ++++++++++
+ drivers/infiniband/core/uverbs_std_types_wq.c | 194 +++++++++
+ drivers/infiniband/core/uverbs_uapi.c         |   3 +
+ drivers/infiniband/core/verbs.c               |  29 +-
+ drivers/infiniband/hw/mlx5/devx.c             |  10 +-
+ drivers/infiniband/hw/mlx5/main.c             |  24 +-
+ drivers/infiniband/hw/mlx5/qos.c              |  13 +-
+ include/rdma/ib_verbs.h                       |  75 ++--
+ include/rdma/uverbs_ioctl.h                   |   3 +
+ include/rdma/uverbs_std_types.h               |   2 +-
+ include/rdma/uverbs_types.h                   |   3 +-
+ include/uapi/rdma/ib_user_ioctl_cmds.h        |  81 ++++
+ include/uapi/rdma/ib_user_ioctl_verbs.h       |  43 ++
+ 24 files changed, 1163 insertions(+), 247 deletions(-)
+ create mode 100644 drivers/infiniband/core/uverbs_std_types_qp.c
+ create mode 100644 drivers/infiniband/core/uverbs_std_types_srq.c
+ create mode 100644 drivers/infiniband/core/uverbs_std_types_wq.c
+
+--
+2.26.2
 
