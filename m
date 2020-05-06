@@ -2,109 +2,195 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E4EC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B11C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5613208DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:22:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="blArYA9V"
+	by mail.kernel.org (Postfix) with ESMTP id D52AD208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:25:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588782323;
+	bh=dPgC0IdZmoar8smzxO3Lgc2vZOaUoxASeKurFJsgjbQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zRnZdqKEQbsVZopyGw2luq1MNW7APFqgt1qFHKnA9GSaTiHBnjghIL5kZShnxEHIh
+	 iBQ1/eoiqWP2CEYx/JAj6WOGm6OWDPj2Z6bJBbYBcrob5wSE8BG5LnHa3RBA7L81wt
+	 q3uP5wFe+/FLFvAG8HiTp+STusIkLgfVK3CwXj+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730125AbgEFQWn (ORCPT
+        id S1729644AbgEFQZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:22:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39630 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729602AbgEFQWl (ORCPT
+        Wed, 6 May 2020 12:25:23 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:62032 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729341AbgEFQZW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:22:41 -0400
-Received: from mail-qv1-xf36.google.com (mail-qv1-xf36.google.com [IPv6:2607:f8b0:4864:20::f36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5F98C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 09:22:40 -0700 (PDT)
-Received: by mail-qv1-xf36.google.com with SMTP id v10so1030222qvr.2
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 09:22:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:content-transfer-encoding:mime-version:subject:message-id:date
-         :cc:to;
-        bh=phACmFjtsUr519GbyVMqeDIygQPJGWBVYvjGrWTBdhE=;
-        b=blArYA9VIT1l590CBcRy4de/5VR4Zz8ladRcp5qB3XrsCeS8dPce/7akzh7znMzZd2
-         QJwhrtAG/gh1Lz2wE12y6ajf6ZUFm2jzzfET5PL52gO5usJDMbN1yCeMQPZGnI2AgCXo
-         wJD+/u5gxKVj4r7rMNNen+nNKr/h/NsRYY3Vw0GyvqI+dCMJpCZW4x37yKNmntn07Tt/
-         VdP7m+LSNsJfP/pqSA0Yq5X5DSYMWZ0nl7s1hGUhkOmn3+iY9qYzmAtpvG+GIK7sETr/
-         KUhMVGJJfIjjWHVGf8eYN/maUwpUODKcPwPTZg0zbZMVgzWDNIvSUngz5qiIArjQms/i
-         bc4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:content-transfer-encoding:mime-version
-         :subject:message-id:date:cc:to;
-        bh=phACmFjtsUr519GbyVMqeDIygQPJGWBVYvjGrWTBdhE=;
-        b=Ce40z6VtCwAg13QyEZ8FfoCKM203a1Xyht3G5+DaJNDauzMDM6JyXphE4Gs3YChTTM
-         O7RXE0SlkOa6lsnnfgIzx6YdCkBGhP2DwSFXQnse0yGmRBoxiqmBXNSlphYho+x3UGe4
-         w6urFQGnIsg8aUS+4elKHXoCjQcrvKp23VpajbGGNbYR5DLtG2defBdgAZCwbWIXxvGI
-         MbXGDL1YKU0s+QDmIZ3/h+rtswfTk1tNuOdbThV9EPIVn9I6+l0Oa0fdOip7ZKn0O/Gv
-         bkGB2cheHpvZHpd0Whz6kaPfd3S0XlQK4p3unqA7i5wYJwuw9Px60Uj4QjpF+5mttY9d
-         7pvA==
-X-Gm-Message-State: AGi0PuY7YgiixQHhkbZ09R0BKJjvc+g+rhszt0QvvuxaQts5/wtSk+KO
-        vYSWbkiq22UqVFJ1oWZeYmi9ZCiNh8itdw==
-X-Google-Smtp-Source: APiQypJx//I3wpa4sAYFG0etQeNjQjU3zYkRQnI7Ifia9Us5vO9GTnNQ2HPLH3gBgcIzdwZJAOyosw==
-X-Received: by 2002:ad4:4864:: with SMTP id u4mr8268319qvy.117.1588782160029;
-        Wed, 06 May 2020 09:22:40 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id x5sm1864421qtm.81.2020.05.06.09.22.37
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 May 2020 09:22:38 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Kmemleak infrastructure improvement for task_struct leaks and
- call_rcu() 
-Message-Id: <45D2D811-C3B0-442B-9744-415B4AC5CCDB@lca.pw>
-Date:   Wed, 6 May 2020 12:22:37 -0400
-Cc:     Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Wed, 6 May 2020 12:25:22 -0400
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 046GP61e028339;
+        Thu, 7 May 2020 01:25:07 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 046GP61e028339
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1588782307;
+        bh=rq69QzS6nlj/kgKXQgJKnWEQ+bYqfWhhoP80dDaszRc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Az/G5MBn0oyNTBjj4AxjqqsJqGgqWI18xwcUbGnqdyl/g/Z25t2VwxuY69u1jDENo
+         K9sxP0r1jMKQNkQZuIW1u7AW/f8Dkg6fQAUajAW/q/a1u3bnW+Kd/AEctu/WA6ed6b
+         SLxyEU0bsoJJrJuCbcloVrX2bKit8J3ZMJq3Bd7lI0F4xRbO3l5una52xG+oTWJKpb
+         KJ9H0tFljp35e3iPiA0f2GXyyRY+0ryNIafbzrjfHalNFvybkgTRCZPn5F3cGWSGL5
+         NGoO07MGTgMkkzh9nmrgln0VP6KB3Sfks4/mBMlluAnsx7fNgkXs41xqrBNDRBAJz+
+         pp0U9V82V1iAg==
+X-Nifty-SrcIP: [209.85.222.47]
+Received: by mail-ua1-f47.google.com with SMTP id c24so710323uap.13;
+        Wed, 06 May 2020 09:25:06 -0700 (PDT)
+X-Gm-Message-State: AGi0Puas2aD5aSc9pVsqjVS9ueclDz4jL3YvYJZ1okgKemwFSKTu4e2S
+        eK40x8357pRlolaHPJsMSjfwOhmis9QDiovrgg8=
+X-Google-Smtp-Source: APiQypJqmfuIuGzAsi/SVJfoQ1bvOYPU2yoQHrHm0uw6i1E0zrLfQQcykbn5vorW8hI7P4L685FYmQ9D9HJlIb6c+6w=
+X-Received: by 2002:ab0:cd:: with SMTP id 71mr7499076uaj.109.1588782305667;
+ Wed, 06 May 2020 09:25:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <cd20b888-7f3d-e7ff-8096-2cc8305a5107@gmail.com>
+ <CAK7LNAR5TsnUn2n2nDFHywQyqCT7si840yE2nyuxx70AYj+nDQ@mail.gmail.com> <01279bfe-95a3-dbdb-3785-bd2d92dc4f95@gmail.com>
+In-Reply-To: <01279bfe-95a3-dbdb-3785-bd2d92dc4f95@gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 7 May 2020 01:24:29 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASKHb5QzD-5d7Vam9t4C1U64_2tTk7eVAmK2oDVquy0MA@mail.gmail.com>
+Message-ID: <CAK7LNASKHb5QzD-5d7Vam9t4C1U64_2tTk7eVAmK2oDVquy0MA@mail.gmail.com>
+Subject: Re: Proper use for linking foo.o_shipped after 69ea912fda74 ("kbuild:
+ remove unneeded link_multi_deps")?
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=3D=3D task struck leaks =3D=3D
-There are leaks from task struct from time to time where someone forgot =
-to call put_task_struct() somewhere leading to leaks. For example,
+On Thu, May 7, 2020 at 1:03 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+>
+>
+> On 5/6/2020 7:37 AM, Masahiro Yamada wrote:
+> > On Wed, May 6, 2020 at 1:45 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+> >>
+> >> Hi Masahiro, Michal,
+> >>
+> >> While updating our systems from 4.9 to 5.4, we noticed that one of the
+> >> kernel modules that we build, which is done by linking an object that we
+> >> pre-compile out of Kbuild stopped working.
+> >>
+> >> I bisected it down to:
+> >>
+> >> commit 69ea912fda74a673d330d23595385e5b73e3a2b9 (refs/bisect/bad)
+> >> Author: Masahiro Yamada <yamada.masahiro@socionext.com>
+> >> Date:   Thu Oct 4 13:25:19 2018 +0900
+> >>
+> >>     kbuild: remove unneeded link_multi_deps
+> >>
+> >>     Since commit c8589d1e9e01 ("kbuild: handle multi-objs dependency
+> >>     appropriately"), $^ really represents all the prerequisite of the
+> >>     composite object being built.
+> >>
+> >>     Hence, $(filter %.o,$^) contains all the objects to link together,
+> >>     which is much simpler than link_multi_deps calculation.
+> >>
+> >>     Please note $(filter-out FORCE,$^) does not work here. When a single
+> >>     object module is turned into a multi object module, $^ will contain
+> >>     header files that were previously included for building the single
+> >>     object, and recorded in the .*.cmd file. To filter out such headers,
+> >>     $(filter %.o,$^) should be used here.
+> >>
+> >>     Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> >>
+> >> and the linker now fails with the following:
+> >>
+> >> mkdir -p /home/florian/dev/lkm/.tmp_versions ; rm -f
+> >> /home/florian/dev/lkm/.tmp_versions/*
+> >>
+> >>   WARNING: Symbol version dump ./Module.symvers
+> >>            is missing; modules will have no dependencies and modversions.
+> >>
+> >> make -f ./scripts/Makefile.build obj=/home/florian/dev/lkm
+> >> (cat /dev/null;   echo kernel//home/florian/dev/lkm/hello.ko;) >
+> >> /home/florian/dev/lkm/modules.order
+> >>   ld -m elf_x86_64  -z max-page-size=0x200000    -r -o
+> >> /home/florian/dev/lkm/hello.o
+> >> ld: no input files
+> >> make[1]: *** [scripts/Makefile.build:492: /home/florian/dev/lkm/hello.o]
+> >> Error 1
+> >> make: *** [Makefile:1530: _module_/home/florian/dev/lkm] Error 2
+> >>
+> >> and here are some steps to reproduce this:
+> >>
+> >> Kbuild:
+> >> obj-m   := hello.o
+> >> hello-y := test.o_shipped
+> >>
+> >> test.c can be a simple hello world, and you can compile it using a
+> >> standard Kbuild file first, and then move test.o as test.o_shipped.
+> >
+> >
+> >
+> > Why don't you do like this?
+> >
+> > obj-m   := hello.o
+> > hello-y := test.o
+>
+> I tried it in the original environment where it failed, not my contrived
+> test case, and this did not work, as we really need test.o and
+> test.o_shipped to be separate objects, doing what you suggest results in
+> a circular dependency.
 
-=
-https://lore.kernel.org/lkml/C1CCBDAC-A453-4FF2-908F-0B6E356223D1@lca.pw/
 
-It was such a pain to debug this kind of leaks at the moment, as all we =
-could do was to audit the code by checking all new put_task_struct()  =
-and get_task_struct() call sites which is error-prone because there =
-could be other new call sites like get_pid_task() which would also need =
-to be balanced with put_task_struct() as well.
+I do not understand why you are trying to link *.o_shipped
+directly to the module.
 
-What do you think about adding some aux call traces for kmemleak in =
-general? For example, if the tracking object is a task struct, it would =
-save call traces for the first and last call of both get_task_struct() =
-and put_task_struct(). Then, it could be expanded to track other =
-refcount-based leaks in the future.
 
-=3D=3D call_rcu() leaks =3D=3D
-Another issue that might be relevant is that it seems sometimes, =
-kmemleak will give a lot of false positives (hundreds) because the =
-memory was supposed to be freed by call_rcu()  (for example, in =
-dst_release()) but for some reasons, it takes a long time probably =
-waiting for grace periods or some kind of RCU self-stall, but the memory =
-had already became an orphan. I am not sure how we are going to resolve =
-this properly until we have to figure out why call_rcu() is taking so =
-long to finish?
+Did you notice the following code in scripts/Makefile.lib ?
 
-Another solution is to add aux call traces for both skb_dst_drop() and =
-skb_dst_set() for this case, but that there are many places to free =
-memory via call_rcu() like inode free etc.=
+quiet_cmd_shipped = SHIPPED $@
+cmd_shipped = cat $< > $@
+
+$(obj)/%: $(src)/%_shipped
+        $(call cmd,shipped)
+
+
+
+
+*_shipped should be copied to *
+before the use.
+
+
+
+> To me this is a regression, as it used to work and now it does not, thus
+> we should be fixing it, any idea about how we go about it without doing
+> a plain revert?
+
+
+In fact, a patch exists.
+
+https://patchwork.kernel.org/patch/11318691/
+
+It allows you to link whatever file name to a module,
+but please read the comments from Christoph and Greg.
+
+
+In this case, your Makefile is doing strange.
+
+I'd recommend to fix your Makefile.
+
+
+
+>
+> Thank you!
+> --
+> Florian
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
