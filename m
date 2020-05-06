@@ -2,160 +2,108 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C81C1C47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 199C0C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A91132080D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:11:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ozb27oNd"
+	by mail.kernel.org (Postfix) with ESMTP id F080B207DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:11:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588792320;
+	bh=citGFZi6S2DjQsJEvhMOJMQ8CN0QUttWidsX75r3OJo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=EnNWXwkHtI0mT5pYj+aZjfzznejAFnUxXGrBxHQo3LlWnSSdApEP7PsNfGKi3JoVK
+	 xVBtA1StTXCsKaPve/Sea4aSa6KXVpJpqGPWyPlgV0wWPlZlRFIfLrUr0h7zNbyoxo
+	 SF4KgD+OqhMfRg186o0bIpTydwVjJjsGY2HfjaH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbgEFTLn (ORCPT
+        id S1728368AbgEFTL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 15:11:43 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:46830 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725915AbgEFTLm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 15:11:42 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 046JBWCq025897;
-        Wed, 6 May 2020 14:11:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588792292;
-        bh=/5vVUDy+xDJuPs/2JxsnxOLycj/Z7dCmyZc/fbS7E5A=;
-        h=From:To:CC:Subject:Date;
-        b=Ozb27oNdIVpSyyI8nJ+Agefj78mGAwD22/LLTPz0eLhSl9XJKqjmeFpTASqKhg/oC
-         eCKWz0m4wS8MYc8+XYwH5Uo8d6cWwULN5CWT6TFauSU3Vfr701Y6pv1MRswxJxs46Q
-         i1YvyIDtruSxg9Ksh8qL0lgrobyC+ea1JY0euiJ4=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 046JBWRZ011813
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 6 May 2020 14:11:32 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 6 May
- 2020 14:11:32 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 6 May 2020 14:11:32 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 046JBV2x038119;
-        Wed, 6 May 2020 14:11:32 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Tony Lindgren <tony@atomide.com>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH next] ARM: dts: am57xx: fix networking on boards with ksz9031 phy
-Date:   Wed, 6 May 2020 22:11:24 +0300
-Message-ID: <20200506191124.31569-1-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 6 May 2020 15:11:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39662 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725915AbgEFTL6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 15:11:58 -0400
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3769B207DD
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 19:11:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588792318;
+        bh=citGFZi6S2DjQsJEvhMOJMQ8CN0QUttWidsX75r3OJo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Aw+gB5NtkkvlBUT7tXLIY/bYcAizk6f9IGQJPWdCXny2TLOJ+j3hSmvuTidCcV4ys
+         UCWAKL3K0zdSWI0xW0kdLCH9au34dMI9aEQ9F7w0AuQjiZCsqhUy/A5QX5cG8DG7cM
+         eT5n0dkz5cT7NNBedDpp64YAk3Tk0zFm9c2t5MTM=
+Received: by mail-ot1-f53.google.com with SMTP id m13so2304232otf.6
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 12:11:58 -0700 (PDT)
+X-Gm-Message-State: AGi0Pub9J2Cz9WBYTsPX6vGuNPwjhw2UFINEyUTq4h+HnpJyTelLPWoY
+        0vIKEzC9EGvfkNLFiDPoQbWuz2v27xDDFCnJ0w==
+X-Google-Smtp-Source: APiQypLrUw5swnxye+W3hdYYDWTGz5iKhNQMAHolEI0hjg6JYAgHL6gBXXl6Wxn72fX//SnrpbedExiEb0XoVH4kQ08=
+X-Received: by 2002:a9d:1441:: with SMTP id h59mr7797620oth.192.1588792317532;
+ Wed, 06 May 2020 12:11:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200427210806.37422-1-cristian.marussi@arm.com>
+ <CAL_JsqKV8j8Jm_7B7no6SsZ9AAv=WjqOx9EmCp3fomUXRO-FzQ@mail.gmail.com> <DB7PR08MB3657577B2251084FF2B4A0EF9EAA0@DB7PR08MB3657.eurprd08.prod.outlook.com>
+In-Reply-To: <DB7PR08MB3657577B2251084FF2B4A0EF9EAA0@DB7PR08MB3657.eurprd08.prod.outlook.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 6 May 2020 14:11:45 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqK6+2c9jXfsipqH0qakTGrszSGN4+kZqGstOmkWj40JGQ@mail.gmail.com>
+Message-ID: <CAL_JsqK6+2c9jXfsipqH0qakTGrszSGN4+kZqGstOmkWj40JGQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/3] SCMI System Power Support
+To:     Cristian Marussi <Cristian.Marussi@arm.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "james.quinlan@broadcom.com" <james.quinlan@broadcom.com>,
+        Lukasz Luba <Lukasz.Luba@arm.com>,
+        Sudeep Holla <Sudeep.Holla@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the
-KSZ9031 PHY") the networking is broken on boards:
- am571x-idk
- am572x-idk
- am574x-idk
- am57xx-beagle-x15
+On Thu, Apr 30, 2020 at 12:23 PM Cristian Marussi
+<Cristian.Marussi@arm.com> wrote:
+>
+> Hi Rob
+>
+> thanks for the feedback.
 
-All above boards have phy-mode = "rgmii" and this is worked before because
-KSZ9031 PHY started with default RGMII internal delays configuration (TX
-off, RX on 1.2 ns) and MAC provided TX delay. After above commit, the
-KSZ9031 PHY starts handling phy mode properly and disables RX delay, as
-result networking is become broken.
+Plain text for maillists please.
 
-Fix it by switching to phy-mode = "rgmii-rxid" to reflect previous
-behavior.
+>
+> > On top of this a new SCMI driver has been developed which registers for
+> > ----
+> > such System Power notification and acts accordingly to satisfy such
+> > plaform system-state transition requests that can be of forceful or
+> > graceful kind.
+>
+> > I needed this 7 years ago. :) (hb_keys_notifier in
+> > arch/arm/mach-highbank/highbank.c)
+>
+> ...better later than never
+>
+> > Such alternative, if deemed worth, should clearly be configurable via DT
+> > (also in terms of which signals to use), BUT all of this work is not done
+> > in this series: and that's the reason for the RFC tag: does it make sense
+> > to add such a configurable additional option ?
+>
+> >Which process signal to use in DT? I don't think so.
+>
+> ... beside the awkward bad idea of mine of configuring it via DT
+> (which I'll drop possibly using modparams for this config), my question
+> was more about if it makes sense at all to have another alternative mechanism
+> (other than orderly_poweroof/reboot)) based on signals to gracefully ask userspace
+> to shutdown
 
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Philippe Schenker <philippe.schenker@toradex.com>
-Fixes: commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- arch/arm/boot/dts/am571x-idk.dts                | 4 ++--
- arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi | 4 ++--
- arch/arm/boot/dts/am57xx-idk-common.dtsi        | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+gregkh will tell you no to module params.
 
-diff --git a/arch/arm/boot/dts/am571x-idk.dts b/arch/arm/boot/dts/am571x-idk.dts
-index 669559c9c95b..c13756fa0f55 100644
---- a/arch/arm/boot/dts/am571x-idk.dts
-+++ b/arch/arm/boot/dts/am571x-idk.dts
-@@ -190,13 +190,13 @@
- 
- &cpsw_port1 {
- 	phy-handle = <&ethphy0_sw>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-rxid";
- 	ti,dual-emac-pvid = <1>;
- };
- 
- &cpsw_port2 {
- 	phy-handle = <&ethphy1_sw>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-rxid";
- 	ti,dual-emac-pvid = <2>;
- };
- 
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-index a813a0cf3ff3..565675354de4 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-@@ -433,13 +433,13 @@
- 
- &cpsw_emac0 {
- 	phy-handle = <&phy0>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-rxid";
- 	dual_emac_res_vlan = <1>;
- };
- 
- &cpsw_emac1 {
- 	phy-handle = <&phy1>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-rxid";
- 	dual_emac_res_vlan = <2>;
- };
- 
-diff --git a/arch/arm/boot/dts/am57xx-idk-common.dtsi b/arch/arm/boot/dts/am57xx-idk-common.dtsi
-index aa5e55f98179..a3ff1237d1fa 100644
---- a/arch/arm/boot/dts/am57xx-idk-common.dtsi
-+++ b/arch/arm/boot/dts/am57xx-idk-common.dtsi
-@@ -408,13 +408,13 @@
- 
- &cpsw_emac0 {
- 	phy-handle = <&ethphy0>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-rxid";
- 	dual_emac_res_vlan = <1>;
- };
- 
- &cpsw_emac1 {
- 	phy-handle = <&ethphy1>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-rxid";
- 	dual_emac_res_vlan = <2>;
- };
- 
--- 
-2.17.1
+If the signal is not standard, then we probably shouldn't go that route.
 
+Rob
