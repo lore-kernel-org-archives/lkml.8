@@ -2,187 +2,77 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9259FC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB4EC47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72DB7214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:44:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588783487;
-	bh=hCSPoFmu1EhzNjU6f3u9L+qlUyfbiTP0C3+iaJb7+Ew=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MtavXzM9o/KT0t0RgPm/WlFqldgHRH78MwRPNAD3VMdn8Yhw4ZavwCuqzVq2g2rlx
-	 kwQSMGqj5QnWV4n1Ug7D/i6eBU0GzDYlybkctq0cM0ds3yrtzEEWE5sE42U181Xf+z
-	 LEklmF2Sk1M2isEGY7KVp3dqbL12n8iiV8VeIItU=
+	by mail.kernel.org (Postfix) with ESMTP id 14D1D21655
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:44:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729765AbgEFQo0 (ORCPT
+        id S1730098AbgEFQoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:44:26 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:39790 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730055AbgEFQoV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 12:44:25 -0400
+Received: from foss.arm.com ([217.140.110.172]:41002 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730074AbgEFQoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 6 May 2020 12:44:21 -0400
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 046GhjRm017691;
-        Thu, 7 May 2020 01:43:46 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 046GhjRm017691
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1588783426;
-        bh=utvgGRsMw8+CW4P3BXfPw8wbFM86fzbR5axYMY0vIGg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=HVH9aqAW7dSrdCAjK6LWzWts7qi2i3l9S1k/K3/lF6QsA57Ee6mFgi8K6fwZERevF
-         rjCXb5fR5X2r4POSS6b8fjaiRn0t2cQk1AeEGXRt9wL+uQDy4ASmfOiC+ew0tjRC+x
-         bGLyot+eGg+hRaeaiyKW7Hr3KxZJmsW2zqxmTtyrKvmvS9W6F1rkmA2UQgk/ZWXbvy
-         jsJIl03DzkDtOxu39qqNndEyguJO/fmWeMWTPt59h320vs1fcLIz+0RqLbE5a2jLx/
-         vHKsWeeOcmAuLyiiLftS7dibF6eA1SMP+X2kS9phHcrcQ25sB/uAMLcj6xUIbkWNiW
-         JsJJogMZ5YlRw==
-X-Nifty-SrcIP: [209.85.222.46]
-Received: by mail-ua1-f46.google.com with SMTP id u12so742721uau.10;
-        Wed, 06 May 2020 09:43:46 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaII36n1U0693WqgVgZ0rGswZYbWwux97Wn0dOFJTlDch2l9p9u
-        XIll8Z3it55Hgnnc4CWPYqwZk32QvPfwPPPzSTk=
-X-Google-Smtp-Source: APiQypLwLaVV3HiKerrKQmnXe6ZFcFF3HTIhVjsUpf+ssyj1nm7hvmk9gnii/QfOzPVIh3ds2SJSZMDp2FaPdcevn04=
-X-Received: by 2002:ab0:4ac9:: with SMTP id t9mr8255622uae.40.1588783425219;
- Wed, 06 May 2020 09:43:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <nycvar.YSQ.7.76.2004231102480.2671@knanqh.ubzr>
- <87imhqb3le.fsf@intel.com> <nycvar.YSQ.7.76.2004231155060.2671@knanqh.ubzr>
-In-Reply-To: <nycvar.YSQ.7.76.2004231155060.2671@knanqh.ubzr>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 7 May 2020 01:43:08 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARpRMZb18FFnX1WPV4Xzh2B_n2E+KLf5QXqiqkZEKhTbQ@mail.gmail.com>
-Message-ID: <CAK7LNARpRMZb18FFnX1WPV4Xzh2B_n2E+KLf5QXqiqkZEKhTbQ@mail.gmail.com>
-Subject: Re: [PATCH] kconfig: allow for conditional dependencies
-To:     Nicolas Pitre <nico@fluxnic.net>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5A64DD6E;
+        Wed,  6 May 2020 09:44:21 -0700 (PDT)
+Received: from usa.arm.com (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 016453F305;
+        Wed,  6 May 2020 09:44:19 -0700 (PDT)
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Steven Price <steven.price@arm.com>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        harb@amperecomputing.com
+Subject: [PATCH v3 2/7] firmware: smccc: Update link to latest SMCCC specification
+Date:   Wed,  6 May 2020 17:44:06 +0100
+Message-Id: <20200506164411.3284-3-sudeep.holla@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200506164411.3284-1-sudeep.holla@arm.com>
+References: <20200506164411.3284-1-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 1:05 AM Nicolas Pitre <nico@fluxnic.net> wrote:
->
-> On Thu, 23 Apr 2020, Jani Nikula wrote:
->
-> > On Thu, 23 Apr 2020, Nicolas Pitre <nico@fluxnic.net> wrote:
-> > > This might appear to be a strange concept, but sometimes we want
-> > > a dependency to be conditionally applied. One such case is currently
-> > > expressed with:
-> > >
-> > >         depends on FOO || !FOO
-> > >
-> > > This pattern is strange enough to give one's pause. Given that it is
-> > > also frequent, let's make the intent more obvious with some syntaxic
-> > > sugar by effectively making dependencies optionally conditional.
-> > >
-> > > This also makes the kconfig language more uniform.
-> >
-> > Thanks, I prefer this over all the previous proposals. Versatile yet
-> > self-explanatory.
-> >
-> > > Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
-> > >
-> > > diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
-> > > index d0111dd264..0f841e0037 100644
-> > > --- a/Documentation/kbuild/kconfig-language.rst
-> > > +++ b/Documentation/kbuild/kconfig-language.rst
-> > > @@ -114,7 +114,7 @@ applicable everywhere (see syntax).
-> > >    This is a shorthand notation for a type definition plus a value.
-> > >    Optionally dependencies for this default value can be added with "if".
-> > >
-> > > -- dependencies: "depends on" <expr>
-> > > +- dependencies: "depends on" <expr> ["if" <expr>]
-> > >
-> > >    This defines a dependency for this menu entry. If multiple
-> > >    dependencies are defined, they are connected with '&&'. Dependencies
-> > > @@ -130,6 +130,16 @@ applicable everywhere (see syntax).
-> > >     bool "foo"
-> > >     default y
-> > >
-> > > +  The dependency definition itself may be conditional by appending "if"
-> > > +  followed by an expression. If such expression is false (n) then this
-> > > +  dependency is ignored. One possible use case is:
-> > > +
-> > > +    config FOO
-> > > +   tristate
-> > > +   depends on BAZ if BAZ != n
-> >
-> > I presume this is the same as
-> >
-> >       depends on BAZ if BAZ
-> >
-> > which makes me wonder if that should be the example. At least current
-> > usage for select is predominantly
-> >
-> >       select FOO if BAR
-> >
-> > without "!= n".
->
-> Yes, it is the same thing. I prefer making the documentation a little
-> more explicit than necessary so the explanation is really obvious.
+The current link gets redirected to the revision B published in November
+2016 though it actually points to the original revision A published in
+June 2013.
 
+Let us update the link to point to the latest version, so that it
+doesn't get stale anytime soon. Currently it points to v1.2 published in
+March 2020.
 
-For the case of 'select',
+Reviewed-by: Steven Price <steven.price@arm.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ include/linux/arm-smccc.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  select FOO if BAR != n
-
-is NOT equivalent to:
-
-  select FOO if BAR
-
-
-
-I do not think "if <expr>" in Kconfig
-is so easy to understand.
-I tend to hesitate to extend it.
-
-Sometimes, it means "the property is visible if <expr> != n".
-Sometimes, not.
-
-
-
-
-For the case of 'depends on',
-the 'depends on' is effective if <expr> != n
-because Nicolas implemented it in this way.
-
-
-
-We can do:
-
-    depends on X || X = n
-
-instead of:
-
-    depends on X || !X
-
-        or
-
-    depends on X if X
-
-
-
-
-
-
-I guess the source of the complaint is
-!X is difficult to understand
-when X is tristate.
-
-But, is there any confusion in 'X = n' ?
-I think not.
-
+diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
+index 59494df0f55b..6c1d1eda3be4 100644
+--- a/include/linux/arm-smccc.h
++++ b/include/linux/arm-smccc.h
+@@ -10,7 +10,7 @@
+ /*
+  * This file provides common defines for ARM SMC Calling Convention as
+  * specified in
+- * http://infocenter.arm.com/help/topic/com.arm.doc.den0028a/index.html
++ * https://developer.arm.com/docs/den0028/latest
+  */
+ 
+ #define ARM_SMCCC_STD_CALL	        _AC(0,U)
 -- 
-Best Regards
-Masahiro Yamada
+2.17.1
+
