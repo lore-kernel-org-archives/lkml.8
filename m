@@ -6,140 +6,214 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF67C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B6EC47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA09B20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 219D220B1F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:48:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730465AbgEFQsZ (ORCPT
+        id S1730477AbgEFQs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:48:25 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:48039 "EHLO pegase1.c-s.fr"
+        Wed, 6 May 2020 12:48:27 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:62671 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730174AbgEFQsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730046AbgEFQsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 6 May 2020 12:48:14 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49HMwV0JRGz9txk0;
-        Wed,  6 May 2020 18:48:10 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 49HMwW1WNKz9v4kD;
+        Wed,  6 May 2020 18:48:11 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id M5mtb2HnG5dQ; Wed,  6 May 2020 18:48:09 +0200 (CEST)
+        with ESMTP id A0-wNCiauOXi; Wed,  6 May 2020 18:48:11 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMwT6Vn7z9tyf6;
-        Wed,  6 May 2020 18:48:09 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 958EA8B7C5;
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMwW0kcsz9tyf6;
         Wed,  6 May 2020 18:48:11 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id BA9898B7C6;
+        Wed,  6 May 2020 18:48:12 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id pL8CrOqxmzkG; Wed,  6 May 2020 18:48:11 +0200 (CEST)
+        with ESMTP id XU7H6IdAycnR; Wed,  6 May 2020 18:48:12 +0200 (CEST)
 Received: from localhost.localdomain (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 50E628B7C3;
-        Wed,  6 May 2020 18:48:11 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 623A68B7C5;
+        Wed,  6 May 2020 18:48:12 +0200 (CEST)
 Received: by localhost.localdomain (Postfix, from userid 0)
-        id 2191F65911; Wed,  6 May 2020 16:48:11 +0000 (UTC)
-Message-Id: <9d7b76d576794173c005237309312f99220da472.1588783498.git.christophe.leroy@csgroup.eu>
+        id 2E02465911; Wed,  6 May 2020 16:48:12 +0000 (UTC)
+Message-Id: <9743a7cc4407b67af2c73754ba1aa33723553d40.1588783498.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 References: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v2 06/45] powerpc/kasan: Declare kasan_init_region() weak
+Subject: [PATCH v2 07/45] powerpc/ptdump: Limit size of flags text to 1/2
+ chars on PPC32
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed,  6 May 2020 16:48:11 +0000 (UTC)
+Date:   Wed,  6 May 2020 16:48:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to alloc sub-arches to alloc KASAN regions using optimised
-methods (Huge pages on 8xx, BATs on BOOK3S, ...), declare
-kasan_init_region() weak.
+In order to have all flags fit on a 80 chars wide screen,
+reduce the flags to 1 char (2 where ambiguous).
 
-Also make kasan_init_shadow_page_tables() accessible from outside,
-so that it can be called from the specific kasan_init_region()
-functions if needed.
-
-And populate remaining KASAN address space only once performed
-the region mapping, to allow 8xx to allocate hugepd instead of
-standard page tables for mapping via 8M hugepages.
+No cache is 'i'
+User is 'ur' (Supervisor would be sr)
+Shared (for 8xx) becomes 'sh' (it was 'user' when not shared but
+that was ambiguous because that's not entirely right)
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/include/asm/kasan.h      |  3 +++
- arch/powerpc/mm/kasan/kasan_init_32.c | 21 +++++++++++----------
- 2 files changed, 14 insertions(+), 10 deletions(-)
+ arch/powerpc/mm/ptdump/8xx.c    | 33 ++++++++++++++++---------------
+ arch/powerpc/mm/ptdump/shared.c | 35 +++++++++++++++++----------------
+ 2 files changed, 35 insertions(+), 33 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/kasan.h b/arch/powerpc/include/asm/kasan.h
-index 4769bbf7173a..107a24c3f7b3 100644
---- a/arch/powerpc/include/asm/kasan.h
-+++ b/arch/powerpc/include/asm/kasan.h
-@@ -34,5 +34,8 @@ static inline void kasan_init(void) { }
- static inline void kasan_late_init(void) { }
- #endif
- 
-+int kasan_init_shadow_page_tables(unsigned long k_start, unsigned long k_end);
-+int kasan_init_region(void *start, size_t size);
-+
- #endif /* __ASSEMBLY */
- #endif
-diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
-index 10481d904fea..76d418af4ce8 100644
---- a/arch/powerpc/mm/kasan/kasan_init_32.c
-+++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -28,7 +28,7 @@ static void __init kasan_populate_pte(pte_t *ptep, pgprot_t prot)
- 		__set_pte_at(&init_mm, va, ptep, pfn_pte(PHYS_PFN(pa), prot), 0);
- }
- 
--static int __init kasan_init_shadow_page_tables(unsigned long k_start, unsigned long k_end)
-+int __init kasan_init_shadow_page_tables(unsigned long k_start, unsigned long k_end)
- {
- 	pmd_t *pmd;
- 	unsigned long k_cur, k_next;
-@@ -52,7 +52,7 @@ static int __init kasan_init_shadow_page_tables(unsigned long k_start, unsigned
- 	return 0;
- }
- 
--static int __init kasan_init_region(void *start, size_t size)
-+int __init __weak kasan_init_region(void *start, size_t size)
- {
- 	unsigned long k_start = (unsigned long)kasan_mem_to_shadow(start);
- 	unsigned long k_end = (unsigned long)kasan_mem_to_shadow(start + size);
-@@ -122,14 +122,6 @@ static void __init kasan_mmu_init(void)
- 	int ret;
- 	struct memblock_region *reg;
- 
--	if (early_mmu_has_feature(MMU_FTR_HPTE_TABLE) ||
--	    IS_ENABLED(CONFIG_KASAN_VMALLOC)) {
--		ret = kasan_init_shadow_page_tables(KASAN_SHADOW_START, KASAN_SHADOW_END);
--
--		if (ret)
--			panic("kasan: kasan_init_shadow_page_tables() failed");
--	}
--
- 	for_each_memblock(memory, reg) {
- 		phys_addr_t base = reg->base;
- 		phys_addr_t top = min(base + reg->size, total_lowmem);
-@@ -141,6 +133,15 @@ static void __init kasan_mmu_init(void)
- 		if (ret)
- 			panic("kasan: kasan_init_region() failed");
+diff --git a/arch/powerpc/mm/ptdump/8xx.c b/arch/powerpc/mm/ptdump/8xx.c
+index 9e2d8e847d6e..ca9ce94672f5 100644
+--- a/arch/powerpc/mm/ptdump/8xx.c
++++ b/arch/powerpc/mm/ptdump/8xx.c
+@@ -12,9 +12,9 @@
+ static const struct flag_info flag_array[] = {
+ 	{
+ 		.mask	= _PAGE_SH,
+-		.val	= 0,
+-		.set	= "user",
+-		.clear	= "    ",
++		.val	= _PAGE_SH,
++		.set	= "sh",
++		.clear	= "  ",
+ 	}, {
+ 		.mask	= _PAGE_RO | _PAGE_NA,
+ 		.val	= 0,
+@@ -30,37 +30,38 @@ static const struct flag_info flag_array[] = {
+ 	}, {
+ 		.mask	= _PAGE_EXEC,
+ 		.val	= _PAGE_EXEC,
+-		.set	= " X ",
+-		.clear	= "   ",
++		.set	= "x",
++		.clear	= " ",
+ 	}, {
+ 		.mask	= _PAGE_PRESENT,
+ 		.val	= _PAGE_PRESENT,
+-		.set	= "present",
+-		.clear	= "       ",
++		.set	= "p",
++		.clear	= " ",
+ 	}, {
+ 		.mask	= _PAGE_GUARDED,
+ 		.val	= _PAGE_GUARDED,
+-		.set	= "guarded",
+-		.clear	= "       ",
++		.set	= "g",
++		.clear	= " ",
+ 	}, {
+ 		.mask	= _PAGE_DIRTY,
+ 		.val	= _PAGE_DIRTY,
+-		.set	= "dirty",
+-		.clear	= "     ",
++		.set	= "d",
++		.clear	= " ",
+ 	}, {
+ 		.mask	= _PAGE_ACCESSED,
+ 		.val	= _PAGE_ACCESSED,
+-		.set	= "accessed",
+-		.clear	= "        ",
++		.set	= "a",
++		.clear	= " ",
+ 	}, {
+ 		.mask	= _PAGE_NO_CACHE,
+ 		.val	= _PAGE_NO_CACHE,
+-		.set	= "no cache",
+-		.clear	= "        ",
++		.set	= "i",
++		.clear	= " ",
+ 	}, {
+ 		.mask	= _PAGE_SPECIAL,
+ 		.val	= _PAGE_SPECIAL,
+-		.set	= "special",
++		.set	= "s",
++		.clear	= " ",
  	}
-+
-+	if (early_mmu_has_feature(MMU_FTR_HPTE_TABLE) ||
-+	    IS_ENABLED(CONFIG_KASAN_VMALLOC)) {
-+		ret = kasan_init_shadow_page_tables(KASAN_SHADOW_START, KASAN_SHADOW_END);
-+
-+		if (ret)
-+			panic("kasan: kasan_init_shadow_page_tables() failed");
-+	}
-+
- }
+ };
  
- void __init kasan_init(void)
+diff --git a/arch/powerpc/mm/ptdump/shared.c b/arch/powerpc/mm/ptdump/shared.c
+index f7ed2f187cb0..44a8a64a664f 100644
+--- a/arch/powerpc/mm/ptdump/shared.c
++++ b/arch/powerpc/mm/ptdump/shared.c
+@@ -13,8 +13,8 @@ static const struct flag_info flag_array[] = {
+ 	{
+ 		.mask	= _PAGE_USER,
+ 		.val	= _PAGE_USER,
+-		.set	= "user",
+-		.clear	= "    ",
++		.set	= "ur",
++		.clear	= "  ",
+ 	}, {
+ 		.mask	= _PAGE_RW,
+ 		.val	= _PAGE_RW,
+@@ -23,42 +23,43 @@ static const struct flag_info flag_array[] = {
+ 	}, {
+ 		.mask	= _PAGE_EXEC,
+ 		.val	= _PAGE_EXEC,
+-		.set	= " X ",
+-		.clear	= "   ",
++		.set	= "x",
++		.clear	= " ",
+ 	}, {
+ 		.mask	= _PAGE_PRESENT,
+ 		.val	= _PAGE_PRESENT,
+-		.set	= "present",
+-		.clear	= "       ",
++		.set	= "p",
++		.clear	= " ",
+ 	}, {
+ 		.mask	= _PAGE_GUARDED,
+ 		.val	= _PAGE_GUARDED,
+-		.set	= "guarded",
+-		.clear	= "       ",
++		.set	= "g",
++		.clear	= " ",
+ 	}, {
+ 		.mask	= _PAGE_DIRTY,
+ 		.val	= _PAGE_DIRTY,
+-		.set	= "dirty",
+-		.clear	= "     ",
++		.set	= "d",
++		.clear	= " ",
+ 	}, {
+ 		.mask	= _PAGE_ACCESSED,
+ 		.val	= _PAGE_ACCESSED,
+-		.set	= "accessed",
+-		.clear	= "        ",
++		.set	= "a",
++		.clear	= " ",
+ 	}, {
+ 		.mask	= _PAGE_WRITETHRU,
+ 		.val	= _PAGE_WRITETHRU,
+-		.set	= "write through",
+-		.clear	= "             ",
++		.set	= "w",
++		.clear	= " ",
+ 	}, {
+ 		.mask	= _PAGE_NO_CACHE,
+ 		.val	= _PAGE_NO_CACHE,
+-		.set	= "no cache",
+-		.clear	= "        ",
++		.set	= "i",
++		.clear	= " ",
+ 	}, {
+ 		.mask	= _PAGE_SPECIAL,
+ 		.val	= _PAGE_SPECIAL,
+-		.set	= "special",
++		.set	= "s",
++		.clear	= " ",
+ 	}
+ };
+ 
 -- 
 2.25.0
 
