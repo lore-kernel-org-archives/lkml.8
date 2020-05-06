@@ -2,131 +2,104 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 903BDC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F1BC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A20D20714
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:04:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40BF020714
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:05:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hPKOutk4"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MIuH9691"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729114AbgEFKEJ (ORCPT
+        id S1729165AbgEFKFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 06:04:09 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48683 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728624AbgEFKEJ (ORCPT
+        Wed, 6 May 2020 06:05:08 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:60306 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728614AbgEFKFI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 06:04:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588759448;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QiIEZVwe7SG+6Nxq2tgonbDJOE30ulty5p7C5cusMJU=;
-        b=hPKOutk4JMgHoZ9O6QIU0O2dYxmhqzAeqgLAN0UU6/tUO0wm2JPdyd1eLBCW/4ounLYN9v
-        SpEbRE+EOa3XyHBVoUL10X4I+AQY9aFWX+0ngaDjXNlmfKi5bo7OyyduQgM8TQJdq7P54n
-        sdTxVBENa2045dNv1Bn++vbhOA/sAGs=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-457-GNSxqRPuNuyx7nvNHd2iaw-1; Wed, 06 May 2020 06:03:49 -0400
-X-MC-Unique: GNSxqRPuNuyx7nvNHd2iaw-1
-Received: by mail-wr1-f70.google.com with SMTP id f2so1054043wrm.9
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 03:03:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QiIEZVwe7SG+6Nxq2tgonbDJOE30ulty5p7C5cusMJU=;
-        b=Dht3dSUvTouRdujBTvWdW8PQecDw1xO8/shKp9yrRacSlExCK+kLAKiVuu8s142Prf
-         jOdwsIu3jH5JxoEVUMvLtqBV8WILn+cVJ7c02r0UAhynWZNKVJvysmW1gdCAFC0oRtzS
-         HHzQtBlHs33uuu9Zy1eRLOpMoCSsbFxLVFxy/r00Ppt95xwsFD8UVGMWp0kWap9R7x4g
-         VEwsVUXicVDsuHZ9z7yU+jMUlWx3YH63XMrftrf8RaajfwoxU5mqaAGLb8LHmogKUH31
-         szKP+i3HXVsyPGGq17WEvbAHVs0ZTQ4EfJ0U2kS8Wh3CociYFZDMel7qM9f48kul0UiE
-         HA7g==
-X-Gm-Message-State: AGi0PuY5CdcO09+xdUmy1cz6cP4QR27tzPC3QQEWE2vxcn6RCid0HbBa
-        V+NJRwNJSjAl9+9SqQ/Fj5NM7qsvYDDLeyL17bH61xeEgmwI3+HOLaFOVHqx1d9puxtO14QZx9a
-        vr8VcgBEu8OYmisWFxuxCUAm0
-X-Received: by 2002:a1c:e284:: with SMTP id z126mr3721710wmg.32.1588759427842;
-        Wed, 06 May 2020 03:03:47 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKA2Cf0okwuIaFAnbBfYxArho8JGedgvkjxALaNhmtcMcYyVgk5oUJVs5LcIZ75gvpZF67HhA==
-X-Received: by 2002:a1c:e284:: with SMTP id z126mr3721677wmg.32.1588759427527;
-        Wed, 06 May 2020 03:03:47 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:11d7:2f21:f38b:17e? ([2001:b07:6468:f312:11d7:2f21:f38b:17e])
-        by smtp.gmail.com with ESMTPSA id d27sm2027867wra.30.2020.05.06.03.03.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 May 2020 03:03:46 -0700 (PDT)
-Subject: Re: [PATCH] KVM: VMX: Explicitly clear RFLAGS.CF and RFLAGS.ZF in
- VM-Exit RSB path
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-References: <20200506035355.2242-1-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <1f906b20-4806-4de0-fa99-9e7607464eb0@redhat.com>
-Date:   Wed, 6 May 2020 12:03:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 6 May 2020 06:05:08 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0469vdto049129;
+        Wed, 6 May 2020 10:05:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=3oh7HarTSxz1XIgzxje6tJoDFgumYXnu8ULdheUzXjA=;
+ b=MIuH9691bvG55EQ0VXiuyvYHuf0r43XonMGQcT15u/7dDXW52bkeZ7UeOsspvFB19jOP
+ Ros/e68ae6XFAb0iEHpV8e8JDf1201hylqBt/R0NaZTFJuLbbD1c05hd0noeirl1tJgw
+ JyN35w64UsKKEKM8s19RozvydzR6CcdvCyu6PoOzhmgNuDjoOIS6RoNuUP635dXYyGCD
+ zpDs+0xUIVVm+yvT3/lWDwQmdENE07Q1a9aGsfkV2teoWrmCjeF3iT9nZNF9a5lJL3kp
+ x4FV3ujEZnqFIktUUMPVmHKLxuvXteKiOE9IH29svxCh5qfCzhTmUis7cPZRGVcobleY 8w== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 30s09r9ght-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 May 2020 10:05:03 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046A4vA5023736;
+        Wed, 6 May 2020 10:05:03 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 30sjdv4h9w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 May 2020 10:05:02 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 046A506M011143;
+        Wed, 6 May 2020 10:05:00 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 06 May 2020 03:05:00 -0700
+Date:   Wed, 6 May 2020 13:04:53 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Richard Gong <richard.gong@linux.intel.com>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        gregkh@linuxfoundation.org, atull@kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH 4/4 v2] firmware: stratix10-svc: Slightly simplify code
+Message-ID: <20200506100453.GA9365@kadam>
+References: <cover.1588142343.git.christophe.jaillet@wanadoo.fr>
+ <8c505c686438c54da61ad4fe15e1eae722011153.1588142343.git.christophe.jaillet@wanadoo.fr>
+ <1f8ae50d-6830-7fbb-e999-3e8110fe7cd6@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200506035355.2242-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1f8ae50d-6830-7fbb-e999-3e8110fe7cd6@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9612 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 mlxscore=0
+ bulkscore=0 adultscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005060079
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9612 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1015 suspectscore=0
+ priorityscore=1501 malwarescore=0 mlxlogscore=999 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005060078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/05/20 05:53, Sean Christopherson wrote:
-> Clear CF and ZF in the VM-Exit path after doing __FILL_RETURN_BUFFER so
-> that KVM doesn't interpret clobbered RFLAGS as a VM-Fail.  Filling the
-> RSB has always clobbered RFLAGS, its current incarnation just happens
-> clear CF and ZF in the processs.  Relying on the macro to clear CF and
-> ZF is extremely fragile, e.g. commit 089dd8e53126e ("x86/speculation:
-> Change FILL_RETURN_BUFFER to work with objtool") tweaks the loop such
-> that the ZF flag is always set.
+On Fri, May 01, 2020 at 10:40:20AM -0500, Richard Gong wrote:
+> Hi,
 > 
-> Reported-by: Qian Cai <cai@lca.pw>
-> Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>
-> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-> Cc: stable@vger.kernel.org
-> Fixes: f2fde6a5bcfcf ("KVM: VMX: Move RSB stuffing to before the first RET after VM-Exit")
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/vmx/vmenter.S | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/x86/kvm/vmx/vmenter.S b/arch/x86/kvm/vmx/vmenter.S
-> index 87f3f24fef37b..51d1a82742fd5 100644
-> --- a/arch/x86/kvm/vmx/vmenter.S
-> +++ b/arch/x86/kvm/vmx/vmenter.S
-> @@ -82,6 +82,9 @@ SYM_FUNC_START(vmx_vmexit)
->  	/* IMPORTANT: Stuff the RSB immediately after VM-Exit, before RET! */
->  	FILL_RETURN_BUFFER %_ASM_AX, RSB_CLEAR_LOOPS, X86_FEATURE_RETPOLINE
->  
-> +	/* Clear RFLAGS.CF and RFLAGS.ZF to preserve VM-Exit, i.e. !VM-Fail. */
-> +	or $1, %_ASM_AX
-> +
->  	pop %_ASM_AX
->  .Lvmexit_skip_rsb:
->  #endif
+> On 4/29/20 1:52 AM, Christophe JAILLET wrote:
+> > Replace 'devm_kmalloc_array(... | __GFP_ZERO)' with the equivalent and
+> > shorter 'devm_kcalloc(...)'.
+> > 
+> It doesn't make much sense.
+> Actually devm_kcalloc returns devm_kmalloc_array(.., flag | __GFP_ZERO).
 > 
 
-Queued, thanks (for 5.7 so that it will never be broken in Linus's tree).
+devm_kcalloc() is better style and easier to read.  I was just reading
+a bunch of AMD code that does this and I almost complained to them
+that devm_kmalloc_array() doesn't zero the memory so they were freeing
+uninitialized pointers.
 
-Paolo
+regards,
+dan carpenter
 
