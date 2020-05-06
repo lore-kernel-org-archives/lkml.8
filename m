@@ -2,279 +2,207 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABD7C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C43E8C47259
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E83E420936
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E25D206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:00:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b0KKpEYs"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="u2GpqU9i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728095AbgEFHAY (ORCPT
+        id S1728180AbgEFHA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 03:00:24 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33535 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727803AbgEFHAW (ORCPT
+        Wed, 6 May 2020 03:00:29 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:27304 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727991AbgEFHAZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 03:00:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588748420;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WFq/0yqRbKNXv/YBxVPlsC0lujmPDyxJNpEoG2AcP8w=;
-        b=b0KKpEYsXRk2CES92M0xwFEA+Zast8+Rg8ORsc8XW6ib6UQv46Qfhj9G4x2tS/GWx1/y7w
-        J/F7sBCjVLvheFGC1L3sNe5/r4dUgV3rwzgB+PfhSvlS2lj3h7DrzZC8tByhus7kxN14XL
-        iFjbymsiw40EBDNJwk0Sb5U1I7Xo19A=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-318-DFjrMKbuNKGrpDQ3jBz64g-1; Wed, 06 May 2020 03:00:18 -0400
-X-MC-Unique: DFjrMKbuNKGrpDQ3jBz64g-1
-Received: by mail-wr1-f70.google.com with SMTP id u4so823046wrm.13
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 00:00:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WFq/0yqRbKNXv/YBxVPlsC0lujmPDyxJNpEoG2AcP8w=;
-        b=L29j88nsCBZDvA+VEusg+BJVo39ZNxqZmTGyAM0UpfB/6+EaaGDAq6y/HXXbs0sI9V
-         D8l30d0IKpftesgKRzjxzdo50lnZZgHwewf/tQiws6vRc9/Qjf8diuLBCdd52yEdaE1B
-         9/RVdDTnmIKNI3Q18wWNFetWn2vsLa0uQyv7mDav2fybm03Hx/DdwJGsTUzv/4X1d+1R
-         OfaZSwnVBHHsdsYbxIpKWUEpuBn3YjNajsPZvoWr4lQHaXH2zHxz7z8c5naO4SwRbGfT
-         CWunxHSets3bu+nIe+hiv2mBxIm4ZyQDqDFcDprcMUq/ewmceOpfHqlsdIDXZ05TqyHu
-         P97g==
-X-Gm-Message-State: AGi0PuZGNWuQxueqzsAZLgIBowsWKHqtDQ6fu/36Th6UOOhPe4M0uOB8
-        O6LtSJwgk/URPupgFdNwDiUbnooTaBc6Rfn6LMQKoU6rcvFRkYzwkFv6qBK/+Y6DCCqsYityBFb
-        ri4+ZWkZJ0+JysywMjJqcI1XT
-X-Received: by 2002:adf:dfc8:: with SMTP id q8mr7688671wrn.325.1588748417400;
-        Wed, 06 May 2020 00:00:17 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLvuTZ3mOtVJTz+LZ76QaJsd2IW3Bp7IkeH7XH2An2xEV/4s/UH++MAOsNHvdu1xb6w7Qbljw==
-X-Received: by 2002:adf:dfc8:: with SMTP id q8mr7688640wrn.325.1588748417113;
-        Wed, 06 May 2020 00:00:17 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:11d7:2f21:f38b:17e? ([2001:b07:6468:f312:11d7:2f21:f38b:17e])
-        by smtp.gmail.com with ESMTPSA id o6sm1187423wrw.63.2020.05.06.00.00.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 May 2020 00:00:16 -0700 (PDT)
-Subject: Re: [patch V4 part 1 13/36] x86/kvm: Restrict ASYNC_PF to user space
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-References: <20200505131602.633487962@linutronix.de>
- <20200505134059.369802541@linutronix.de>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <ea4525e3-ab52-0f94-2f27-43e83ea5b310@redhat.com>
-Date:   Wed, 6 May 2020 09:00:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200505134059.369802541@linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 6 May 2020 03:00:25 -0400
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200506070021epoutp015c7657ab00d361910b388b61906b0149~MXkWit_EQ2834928349epoutp01V
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 07:00:21 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200506070021epoutp015c7657ab00d361910b388b61906b0149~MXkWit_EQ2834928349epoutp01V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1588748421;
+        bh=QLGR/21hPBV9EKZby41Rww+EnJI3BX4xeSI7yPOB9P0=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=u2GpqU9iyeYfTUrC3ms8V1v2yQRH7GH0rIvgjBEQooBVzstv+QGkCoixUWuOQXffj
+         WOYS6tIp0JGBJ/lraNWusITZleP1XBP3fW33UJSDlQbByPEWJS2X0E7Va03JJ433HH
+         ioWXODrSpv4W1EKPr4TH00SeCO20hRep1Q4O18EM=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
+        20200506070020epcas2p133c622a8ff794cf98d6e3d269d022151~MXkV1syiA0588605886epcas2p17;
+        Wed,  6 May 2020 07:00:20 +0000 (GMT)
+Received: from epsmges2p2.samsung.com (unknown [182.195.40.186]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 49H6tC1cnVzMqYkZ; Wed,  6 May
+        2020 07:00:19 +0000 (GMT)
+Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
+        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B0.BC.04704.18062BE5; Wed,  6 May 2020 16:00:17 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200506070015epcas2p2f2ce5d07918dbea764e2830d9024fc5f~MXkQ4xXju1433414334epcas2p24;
+        Wed,  6 May 2020 07:00:15 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200506070015epsmtrp2b51a567e72403619e656abfa4c57bb46~MXkQ3gqv91579015790epsmtrp2S;
+        Wed,  6 May 2020 07:00:15 +0000 (GMT)
+X-AuditID: b6c32a46-829ff70000001260-86-5eb26081197f
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        21.E8.18461.F7062BE5; Wed,  6 May 2020 16:00:15 +0900 (KST)
+Received: from ishtar.dsn.sec.samsung.com (unknown [12.36.155.159]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200506070015epsmtip1450ad8070358777f8578415f18b1d91b~MXkQtcnZ-2422924229epsmtip14;
+        Wed,  6 May 2020 07:00:15 +0000 (GMT)
+From:   Hyunki Koo <hyunki00.koo@samsung.com>
+To:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Hyunki Koo <hyunki00.koo@samsung.com>
+Subject: [PATCH v9 1/3] serial: samsung: Replace rd_regb/wr_regb with
+ rd_reg/wr_reg
+Date:   Wed,  6 May 2020 16:00:05 +0900
+Message-Id: <20200506070009.16809-1-hyunki00.koo@samsung.com>
+X-Mailer: git-send-email 2.15.0.rc1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDKsWRmVeSWpSXmKPExsWy7bCmqW5jwqY4g6PdAhbNi9ezWaxaeoPZ
+        YsqGD0wW/Y9fM1ucP7+B3WLT42usFpd3zWGzmHF+H5PFmcW97A6cHptWdbJ57J+7ht1j85J6
+        j74tqxg91m+5yuLxeZNcAFtUjk1GamJKapFCal5yfkpmXrqtkndwvHO8qZmBoa6hpYW5kkJe
+        Ym6qrZKLT4CuW2YO0FFKCmWJOaVAoYDE4mIlfTubovzSklSFjPziElul1IKUnAJDwwK94sTc
+        4tK8dL3k/FwrQwMDI1OgyoScjCULVjMW3JCs+D5rA3sD43HRLkZODgkBE4l/F9cydTFycQgJ
+        7GCUeH9jJwuE84lR4ufdu2wQzjdGiSmnvjPDtDR872GGSOxllOif/IERwvnBKPFjz0FGkCo2
+        AW2JN99nglWJCCxhkph+/gkLSIJZQFPix4EbrCC2sECoxO0th5hAbBYBVYktrzaB2bwCthKT
+        //1kg1inLHHh3RJWkEESAsfYJfZs+swOkXCR2Nk/CeomYYlXx7dAxaUkPr/bC9VcL7GvbSI7
+        RHMP0EcfnrJCJIwlZj1rBzqVA+yi9bv0QUyQZUduQd3JJ9Fx+C87RJhXoqNNCKJRTWLdtxdM
+        ELaMxJqnu6BKPCQ+TfcECQsJxEo07tjFNoFRdhbC+AWMjKsYxVILinPTU4uNCoyQY2kTIzil
+        abntYFxyzucQowAHoxIPr4H7xjgh1sSy4srcQ4wSHMxKIrw8P4BCvCmJlVWpRfnxRaU5qcWH
+        GE2BYTeRWUo0OR+YbvNK4g1NjczMDCxNLUzNjCyUxHk3cd+MERJITyxJzU5NLUgtgulj4uCU
+        amCMZa+M8k7xUn4gc/P252dMN60vfze5c+5etFh6j98fvZyTRdIX2gPzetSeLfujzps2+/L9
+        zAnpK2ILEve1BR25/fFkYYlVwrNNRdFBh1pu1W3zVoi7wJWa0nKIr1SihUPj6u/eg4/6OE9e
+        mW+4KvzQ8qfL1pg5hR4s2Pjq8qq6PfFTYhTf7/BQYinOSDTUYi4qTgQAJj3qoH8DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjluLIzCtJLcpLzFFi42LZdlhJTrc+YVOcwf7bShbNi9ezWaxaeoPZ
+        YsqGD0wW/Y9fM1ucP7+B3WLT42usFpd3zWGzmHF+H5PFmcW97A6cHptWdbJ57J+7ht1j85J6
+        j74tqxg91m+5yuLxeZNcAFsUl01Kak5mWWqRvl0CV8aSBasZC25IVnyftYG9gfG4aBcjJ4eE
+        gIlEw/ce5i5GLg4hgd2MEje/LmOCSMhITHixhBnCFpa433KEFaLoG6PEx4kfGEESbALaEm++
+        zwTrFhFYxSRx/cASsG5mAU2JHwdusILYwgLBEtMef2MHsVkEVCW2vNoEVsMrYCsx+d9PNogN
+        yhIX3i1hncDIs4CRYRWjZGpBcW56brFhgWFearlecWJucWleul5yfu4mRnCQaWnuYNy+6oPe
+        IUYmDsZDjBIczEoivDw/NsYJ8aYkVlalFuXHF5XmpBYfYpTmYFES571RuDBOSCA9sSQ1OzW1
+        ILUIJsvEwSnVwGTkwOTHserz7Vm1spqev6s3bJQsv7NA+RJLpN+pT68jmJi3q5zo1rvEwRcz
+        uf2+RlRK3Yms/qT5zosPPPyzLGrOh/sm3F4ydWHnWL/s9TvOPo/1mVLH6rX9+U9+bxaSLvlu
+        WVrIMfXn+1Wmb668NJ/36LvI2U1v55QxZIb7fNw/yYAzfGNIrtOP/e/U/pn8+3E+wE5gSYBZ
+        Y1bz67aAV2dYbzWfOrr5VYrrv+U7EvJP//NPKy9ylJ7lEF/w9dLiGj7OTNvNa790HT0nWp84
+        /aD6s90FhtdTpGzFvKK8jy7ZuFNR5kAIt9ZXLt/GhF9/Xzl279nFpRZqsXxzI/vGRezv59yr
+        YT0QmHIg8tlLRUklluKMREMt5qLiRABgR5VqoQIAAA==
+X-CMS-MailID: 20200506070015epcas2p2f2ce5d07918dbea764e2830d9024fc5f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200506070015epcas2p2f2ce5d07918dbea764e2830d9024fc5f
+References: <CGME20200506070015epcas2p2f2ce5d07918dbea764e2830d9024fc5f@epcas2p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/05/20 15:16, Thomas Gleixner wrote:
-> The async page fault injection into kernel space creates more problems than
-> it solves. The host has absolutely no knowledge about the state of the
-> guest if the fault happens in CPL0. The only restriction for the host is
-> interrupt disabled state. If interrupts are enabled in the guest then the
-> exception can hit arbitrary code. The HALT based wait in non-preemotible
-> code is a hacky replacement for a proper hypercall.
-> 
-> For the ongoing work to restrict instrumentation and make the RCU idle
-> interaction well defined the required extra work for supporting async
-> pagefault in CPL0 is just not justified and creates complexity for a
-> dubious benefit.
-> 
-> The CPL3 injection is well defined and does not cause any issues as it is
-> more or less the same as a regular page fault from CPL3.
-> 
-> Suggested-by: Andy Lutomirski <luto@kernel.org>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->  arch/x86/kernel/kvm.c |  100 +++-----------------------------------------------
->  1 file changed, 7 insertions(+), 93 deletions(-)
-> 
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
-> @@ -75,7 +75,6 @@ struct kvm_task_sleep_node {
->  	struct swait_queue_head wq;
->  	u32 token;
->  	int cpu;
-> -	bool use_halt;
->  };
->  
->  static struct kvm_task_sleep_head {
-> @@ -98,8 +97,7 @@ static struct kvm_task_sleep_node *_find
->  	return NULL;
->  }
->  
-> -static bool kvm_async_pf_queue_task(u32 token, bool use_halt,
-> -				    struct kvm_task_sleep_node *n)
-> +static bool kvm_async_pf_queue_task(u32 token, struct kvm_task_sleep_node *n)
->  {
->  	u32 key = hash_32(token, KVM_TASK_SLEEP_HASHBITS);
->  	struct kvm_task_sleep_head *b = &async_pf_sleepers[key];
-> @@ -117,7 +115,6 @@ static bool kvm_async_pf_queue_task(u32
->  
->  	n->token = token;
->  	n->cpu = smp_processor_id();
-> -	n->use_halt = use_halt;
->  	init_swait_queue_head(&n->wq);
->  	hlist_add_head(&n->link, &b->list);
->  	raw_spin_unlock(&b->lock);
-> @@ -138,7 +135,7 @@ void kvm_async_pf_task_wait_schedule(u32
->  
->  	lockdep_assert_irqs_disabled();
->  
-> -	if (!kvm_async_pf_queue_task(token, false, &n))
-> +	if (!kvm_async_pf_queue_task(token, &n))
->  		return;
->  
->  	for (;;) {
-> @@ -154,91 +151,10 @@ void kvm_async_pf_task_wait_schedule(u32
->  }
->  EXPORT_SYMBOL_GPL(kvm_async_pf_task_wait_schedule);
->  
-> -/*
-> - * Invoked from the async page fault handler.
-> - */
-> -static void kvm_async_pf_task_wait_halt(u32 token)
-> -{
-> -	struct kvm_task_sleep_node n;
-> -
-> -	if (!kvm_async_pf_queue_task(token, true, &n))
-> -		return;
-> -
-> -	for (;;) {
-> -		if (hlist_unhashed(&n.link))
-> -			break;
-> -		/*
-> -		 * No point in doing anything about RCU here. Any RCU read
-> -		 * side critical section or RCU watching section can be
-> -		 * interrupted by VMEXITs and the host is free to keep the
-> -		 * vCPU scheduled out as long as it sees fit. This is not
-> -		 * any different just because of the halt induced voluntary
-> -		 * VMEXIT.
-> -		 *
-> -		 * Also the async page fault could have interrupted any RCU
-> -		 * watching context, so invoking rcu_irq_exit()/enter()
-> -		 * around this is not gaining anything.
-> -		 */
-> -		native_safe_halt();
-> -		local_irq_disable();
-> -	}
-> -}
-> -
-> -/* Invoked from the async page fault handler */
-> -static void kvm_async_pf_task_wait(u32 token, bool usermode)
-> -{
-> -	bool can_schedule;
-> -
-> -	/*
-> -	 * No need to check whether interrupts were disabled because the
-> -	 * host will (hopefully) only inject an async page fault into
-> -	 * interrupt enabled regions.
-> -	 *
-> -	 * If CONFIG_PREEMPTION is enabled then check whether the code
-> -	 * which triggered the page fault is preemptible. This covers user
-> -	 * mode as well because preempt_count() is obviously 0 there.
-> -	 *
-> -	 * The check for rcu_preempt_depth() is also required because
-> -	 * voluntary scheduling inside a rcu read locked section is not
-> -	 * allowed.
-> -	 *
-> -	 * The idle task is already covered by this because idle always
-> -	 * has a preempt count > 0.
-> -	 *
-> -	 * If CONFIG_PREEMPTION is disabled only allow scheduling when
-> -	 * coming from user mode as there is no indication whether the
-> -	 * context which triggered the page fault could schedule or not.
-> -	 */
-> -	if (IS_ENABLED(CONFIG_PREEMPTION))
-> -		can_schedule = preempt_count() + rcu_preempt_depth() == 0;
-> -	else
-> -		can_schedule = usermode;
-> -
-> -	/*
-> -	 * If the kernel context is allowed to schedule then RCU is
-> -	 * watching because no preemptible code in the kernel is inside RCU
-> -	 * idle state. So it can be treated like user mode. User mode is
-> -	 * safe because the #PF entry invoked enter_from_user_mode().
-> -	 *
-> -	 * For the non schedulable case invoke rcu_irq_enter() for
-> -	 * now. This will be moved out to the pagefault entry code later
-> -	 * and only invoked when really needed.
-> -	 */
-> -	if (can_schedule) {
-> -		kvm_async_pf_task_wait_schedule(token);
-> -	} else {
-> -		rcu_irq_enter();
-> -		kvm_async_pf_task_wait_halt(token);
-> -		rcu_irq_exit();
-> -	}
-> -}
-> -
->  static void apf_task_wake_one(struct kvm_task_sleep_node *n)
->  {
->  	hlist_del_init(&n->link);
-> -	if (n->use_halt)
-> -		smp_send_reschedule(n->cpu);
-> -	else if (swq_has_sleeper(&n->wq))
-> +	if (swq_has_sleeper(&n->wq))
->  		swake_up_one(&n->wq);
->  }
->  
-> @@ -337,8 +253,10 @@ bool __kvm_handle_async_pf(struct pt_reg
->  		panic("Host injected async #PF in interrupt disabled region\n");
->  
->  	if (reason == KVM_PV_REASON_PAGE_NOT_PRESENT) {
-> -		/* page is swapped out by the host. */
-> -		kvm_async_pf_task_wait(token, user_mode(regs));
-> +		if (unlikely(!(user_mode(regs))))
-> +			panic("Host injected async #PF in kernel mode\n");
-> +		/* Page is swapped out by the host. */
-> +		kvm_async_pf_task_wait_schedule(token);
->  	} else {
->  		rcu_irq_enter();
->  		kvm_async_pf_task_wake(token);
-> @@ -397,10 +315,6 @@ static void kvm_guest_cpu_init(void)
->  		WARN_ON_ONCE(!static_branch_likely(&kvm_async_pf_enabled));
->  
->  		pa = slow_virt_to_phys(this_cpu_ptr(&apf_reason));
-> -
-> -#ifdef CONFIG_PREEMPTION
-> -		pa |= KVM_ASYNC_PF_SEND_ALWAYS;
-> -#endif
->  		pa |= KVM_ASYNC_PF_ENABLED;
->  
->  		if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF_VMEXIT))
-> 
+This patch change the name of macro for general usage.
 
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
+---
+ drivers/tty/serial/samsung_tty.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
+index 73f951d65b93..326b0164609c 100644
+--- a/drivers/tty/serial/samsung_tty.c
++++ b/drivers/tty/serial/samsung_tty.c
+@@ -154,10 +154,10 @@ struct s3c24xx_uart_port {
+ #define portaddrl(port, reg) \
+ 	((unsigned long *)(unsigned long)((port)->membase + (reg)))
+ 
+-#define rd_regb(port, reg) (readb_relaxed(portaddr(port, reg)))
++#define rd_reg(port, reg) (readb_relaxed(portaddr(port, reg)))
+ #define rd_regl(port, reg) (readl_relaxed(portaddr(port, reg)))
+ 
+-#define wr_regb(port, reg, val) writeb_relaxed(val, portaddr(port, reg))
++#define wr_reg(port, reg, val) writeb_relaxed(val, portaddr(port, reg))
+ #define wr_regl(port, reg, val) writel_relaxed(val, portaddr(port, reg))
+ 
+ /* Byte-order aware bit setting/clearing functions. */
+@@ -714,7 +714,7 @@ static void s3c24xx_serial_rx_drain_fifo(struct s3c24xx_uart_port *ourport)
+ 		fifocnt--;
+ 
+ 		uerstat = rd_regl(port, S3C2410_UERSTAT);
+-		ch = rd_regb(port, S3C2410_URXH);
++		ch = rd_reg(port, S3C2410_URXH);
+ 
+ 		if (port->flags & UPF_CONS_FLOW) {
+ 			int txe = s3c24xx_serial_txempty_nofifo(port);
+@@ -826,7 +826,7 @@ static irqreturn_t s3c24xx_serial_tx_chars(int irq, void *id)
+ 	}
+ 
+ 	if (port->x_char) {
+-		wr_regb(port, S3C2410_UTXH, port->x_char);
++		wr_reg(port, S3C2410_UTXH, port->x_char);
+ 		port->icount.tx++;
+ 		port->x_char = 0;
+ 		goto out;
+@@ -852,7 +852,7 @@ static irqreturn_t s3c24xx_serial_tx_chars(int irq, void *id)
+ 		if (rd_regl(port, S3C2410_UFSTAT) & ourport->info->tx_fifofull)
+ 			break;
+ 
+-		wr_regb(port, S3C2410_UTXH, xmit->buf[xmit->tail]);
++		wr_reg(port, S3C2410_UTXH, xmit->buf[xmit->tail]);
+ 		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+ 		port->icount.tx++;
+ 		count--;
+@@ -916,7 +916,7 @@ static unsigned int s3c24xx_serial_tx_empty(struct uart_port *port)
+ /* no modem control lines */
+ static unsigned int s3c24xx_serial_get_mctrl(struct uart_port *port)
+ {
+-	unsigned int umstat = rd_regb(port, S3C2410_UMSTAT);
++	unsigned int umstat = rd_reg(port, S3C2410_UMSTAT);
+ 
+ 	if (umstat & S3C2410_UMSTAT_CTS)
+ 		return TIOCM_CAR | TIOCM_DSR | TIOCM_CTS;
+@@ -2185,7 +2185,7 @@ static int s3c24xx_serial_get_poll_char(struct uart_port *port)
+ 	if (s3c24xx_serial_rx_fifocnt(ourport, ufstat) == 0)
+ 		return NO_POLL_CHAR;
+ 
+-	return rd_regb(port, S3C2410_URXH);
++	return rd_reg(port, S3C2410_URXH);
+ }
+ 
+ static void s3c24xx_serial_put_poll_char(struct uart_port *port,
+@@ -2200,7 +2200,7 @@ static void s3c24xx_serial_put_poll_char(struct uart_port *port,
+ 
+ 	while (!s3c24xx_serial_console_txrdy(port, ufcon))
+ 		cpu_relax();
+-	wr_regb(port, S3C2410_UTXH, c);
++	wr_reg(port, S3C2410_UTXH, c);
+ }
+ 
+ #endif /* CONFIG_CONSOLE_POLL */
+@@ -2212,7 +2212,7 @@ s3c24xx_serial_console_putchar(struct uart_port *port, int ch)
+ 
+ 	while (!s3c24xx_serial_console_txrdy(port, ufcon))
+ 		cpu_relax();
+-	wr_regb(port, S3C2410_UTXH, ch);
++	wr_reg(port, S3C2410_UTXH, ch);
+ }
+ 
+ static void
+-- 
+2.15.0.rc1
 
