@@ -2,299 +2,160 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C640C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F80C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1D9720735
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:32:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 527252075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:32:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F4Io3OgG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbgEFXcH (ORCPT
+        id S1727982AbgEFXco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 19:32:07 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:34672 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727833AbgEFXcF (ORCPT
+        Wed, 6 May 2020 19:32:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50612 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727088AbgEFXco (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 19:32:05 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 90CC580307C7;
-        Wed,  6 May 2020 23:31:58 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id wKfdVf1ADvRI; Thu,  7 May 2020 02:31:57 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Long Cheng <long.cheng@mediatek.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        <linux-mips@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 4/4] serial: 8250_dw: Fix common clocks usage race condition
-Date:   Thu, 7 May 2020 02:31:35 +0300
-Message-ID: <20200506233136.11842-5-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200506233136.11842-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200323024611.16039-1-Sergey.Semin@baikalelectronics.ru>
- <20200506233136.11842-1-Sergey.Semin@baikalelectronics.ru>
+        Wed, 6 May 2020 19:32:44 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE1B8C061A0F;
+        Wed,  6 May 2020 16:32:43 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id k8so2946853ejv.3;
+        Wed, 06 May 2020 16:32:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PyQtyzfpEi11D12YIo9CY2Ai/69JbjG0nmbCVjCYT+Q=;
+        b=F4Io3OgGcJpxtvJtxEwwIQOL+8gShv7UL9fM8M+vuC5/ZU2s8LRdB7GuUsDXLvtcL1
+         ML+/afleaQR+tNqZFburj0jhDpa5CLwvJjOFaNGlOYDE6PPDk2I0XoA3TXJSjy07yEEm
+         JxxyQXm9Po+5iwgAuVEHXMBdQX85kUBKOtqhJzNEaiRUxvsSS0tp4RoYAtExXssFtUti
+         2tWnRMAR641gO49w72cQChLHv3oRt/da9UEeV39DR0rjBpMbUJscoJKgdzGK0EBc+n1T
+         K2yUgvvSkkOawmCQYMRkHAHD9FqXNzbN6KOO/Qu7GWsQNNzamHHpyPHyV6FT1PlASSk6
+         jRow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PyQtyzfpEi11D12YIo9CY2Ai/69JbjG0nmbCVjCYT+Q=;
+        b=OSipleIq0CBfzS5ZUkjtk8KAjEqAt020XtUFXnJzU6TuWa+Wbo4uVQEpdVyD0Li4uu
+         n6d0drKvlSVs2DnYCxpXacnctHrBqgwmUo/2wPEBA671z2SLoawj2p8Sgqj9yJv0+mH4
+         5eRt8M3ylqIqeTVl3MdJhNrhvavzYOZdX9y0vf+dBxEekEQO/kEwI5DoeLkGnP0rzx4F
+         pU/6JDPKHJfMOzxCNLV5II5m5pknbq090tpsWD7tiYqoWp6TCDIF8EzlT0LXCztsaEXp
+         w4Z9C56G68sX9Q6OTysNkm4r2BexO/3zaUUkRao3XG3zbdSEiCAVCGz2Zsrl63oUNJtk
+         i8Ug==
+X-Gm-Message-State: AGi0PuZTwkX1RE6yHRRmYVKV3syrUXXTJjbunLyNsRvPKBKJeJhKvftN
+        Ks2MTA3L8Pq1MZ47fRZXXT0XFX/jq9Y2U6S6VT4=
+X-Google-Smtp-Source: APiQypIQCyTIuPEEp1VjyAMeJ0nSR+gVWjNQWhEv4iJMafIi9Jc3YYJF/ceHOIfQmoxB+sYXp2PumtD92nOc/dJC2t4=
+X-Received: by 2002:a17:906:355b:: with SMTP id s27mr9781545eja.184.1588807962270;
+ Wed, 06 May 2020 16:32:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+References: <20200505210253.20311-1-f.fainelli@gmail.com> <20200505172302.GB1170406@t480s.localdomain>
+ <d681a82b-5d4b-457f-56de-3a439399cb3d@gmail.com> <CA+h21hpvC6ST2iv-4xjpwpmRHQJvk-AufYFvG0J=5KzUgcnC5A@mail.gmail.com>
+ <97c93b65-3631-e694-78ac-7e520e063f95@gmail.com>
+In-Reply-To: <97c93b65-3631-e694-78ac-7e520e063f95@gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Thu, 7 May 2020 02:32:31 +0300
+Message-ID: <CA+h21hp0-3n7OBuBxXiAeicicpkbXu9XnURjONvgfYgd=b1zLA@mail.gmail.com>
+Subject: Re: [RFC net] net: dsa: Add missing reference counting
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The race condition may happen if the UART reference clock is shared with
-some other device (on Baikal-T1 SoC it's another DW UART port). In this
-case if that device changes the clock rate while serial console is using
-it the DW 8250 UART port might not only end up with an invalid uartclk
-value saved, but may also experience a distorted output data since
-baud-clock could have been changed. In order to fix this lets at least
-try to adjust the 8250 port setting like UART clock rate in case if the
-reference clock rate change is discovered. The driver will call the new
-method to update 8250 UART port clock rate settings. It's done by means of
-the clock event notifier registered at the port startup and unregistered
-in the shutdown callback method.
+On Thu, 7 May 2020 at 01:45, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+>
+>
+> On 5/6/2020 2:40 PM, Vladimir Oltean wrote:
+> > Hi Florian,
+> >
+> > On Thu, 7 May 2020 at 00:24, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> >>
+> >>
+> >>
+> >> On 5/5/2020 2:23 PM, Vivien Didelot wrote:
+> >>> On Tue,  5 May 2020 14:02:53 -0700, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> >>>> If we are probed through platform_data we would be intentionally
+> >>>> dropping the reference count on master after dev_to_net_device()
+> >>>> incremented it. If we are probed through Device Tree,
+> >>>> of_find_net_device() does not do a dev_hold() at all.
+> >>>>
+> >>>> Ensure that the DSA master device is properly reference counted by
+> >>>> holding it as soon as the CPU port is successfully initialized and later
+> >>>> released during dsa_switch_release_ports(). dsa_get_tag_protocol() does
+> >>>> a short de-reference, so we hold and release the master at that time,
+> >>>> too.
+> >>>>
+> >>>> Fixes: 83c0afaec7b7 ("net: dsa: Add new binding implementation")
+> >>>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> >>>
+> >>> Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+> >>>
+> >> Andrew, Vladimir, any thoughts on that?
+> >> --
+> >> Florian
+> >
+> > I might be completely off because I guess I just don't understand what
+> > is the goal of keeping a reference to the DSA master in this way for
+> > the entire lifetime of the DSA switch. I think that dev_hold is for
+> > short-term things that cannot complete atomically, but I think that
+> > you are trying to prevent the DSA master from getting freed from under
+> > our feet, which at the moment would fault the kernel instantaneously?
+>
+> Yes, that's the idea, you should not be able to rmmod/unbind the DSA
+> master while there is a DSA switch tree hanging off of it.
+>
+> >
+> > If this is correct, it certainly doesn't do what it intends to do:
+> > echo 0000\:00\:00.5> /sys/bus/pci/drivers/mscc_felix/unbind
+> > [   71.576333] unregister_netdevice: waiting for swp0 to become free.
+> > Usage count = 1
+> > (hangs there)
+>
+> Is this with the sja1105 switch hanging off felix?
 
-Note 1. In order to avoid deadlocks we had to execute the UART port update
-method in a dedicated deferred work. This is due to (in my opinion
-redundant) the clock update implemented in the dw8250_set_termios()
-method.
-Note 2. Before the ref clock is manually changed by the custom
-set_termios() function we swap the port uartclk value with new rate
-adjusted to be suitable for the requested baud. It is necessary in
-order to effectively disable a functionality of the ref clock events
-handler for the current UART port, since uartclk update will be done
-a bit further in the generic serial8250_do_set_termios() function.
+Yes, but it actually doesn't matter that the DSA master is a DSA slave too.
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Long Cheng <long.cheng@mediatek.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-mediatek@lists.infradead.org
+> If so, is not it
+> working as expected because you still have sja1150 being bound to one of
+> those ports? If not, then I will look into why.
+>
 
----
+I just unbound the driver for the DSA master and the shell got stuck
+in kernel process context telling me that it's waiting for the
+reference to be freed. So I think it's just that my "expected" is not
+the same as yours - it looks like what I'm doing would qualify as
+"incorrect usage".
 
-Changelog v2:
-- Move exclusive ref clock lock/unlock precudures to the 8250 port
-  startup/shutdown methods.
-- The changelog message has also been slightly modified due to the
-  alteration.
-- Remove Alexey' SoB tag.
-- Cc someone from ARM who might be concerned regarding this change.
-- Cc someone from Clocks Framework to get their comments on this patch.
+> >
+> > But if I'm right and that's indeed what you want to achieve, shouldn't
+> > we be using device links instead?
+> > https://www.kernel.org/doc/html/v4.14/driver-api/device_link.html
+>
+> device links could work but given that the struct device and struct
+> net_device have almost the same lifetime, with the net_device being a
+> little bit shorter, and that is what DSA uses, I am not sure whether
+> device link would bring something better.
 
-Changelog v3:
-- Refactor the original patch to adjust the UART port divisor instead of
-  requesting an exclusive ref clock utilization.
----
- drivers/tty/serial/8250/8250_dw.c | 114 +++++++++++++++++++++++++++++-
- 1 file changed, 111 insertions(+), 3 deletions(-)
+At the very least, I think they would bring us graceful teardown of
+consumers of the DSA master device.
 
-diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
-index 12866083731d..cf4de510ab1b 100644
---- a/drivers/tty/serial/8250/8250_dw.c
-+++ b/drivers/tty/serial/8250/8250_dw.c
-@@ -19,6 +19,8 @@
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
-+#include <linux/workqueue.h>
-+#include <linux/notifier.h>
- #include <linux/slab.h>
- #include <linux/acpi.h>
- #include <linux/clk.h>
-@@ -43,6 +45,8 @@ struct dw8250_data {
- 	int			msr_mask_off;
- 	struct clk		*clk;
- 	struct clk		*pclk;
-+	struct notifier_block	clk_notifier;
-+	struct work_struct	clk_work;
- 	struct reset_control	*rst;
- 
- 	unsigned int		skip_autocfg:1;
-@@ -54,6 +58,16 @@ static inline struct dw8250_data *to_dw8250_data(struct dw8250_port_data *data)
- 	return container_of(data, struct dw8250_data, data);
- }
- 
-+static inline struct dw8250_data *clk_to_dw8250_data(struct notifier_block *nb)
-+{
-+	return container_of(nb, struct dw8250_data, clk_notifier);
-+}
-+
-+static inline struct dw8250_data *work_to_dw8250_data(struct work_struct *work)
-+{
-+	return container_of(work, struct dw8250_data, clk_work);
-+}
-+
- static inline int dw8250_modify_msr(struct uart_port *p, int offset, int value)
- {
- 	struct dw8250_data *d = to_dw8250_data(p->private_data);
-@@ -260,6 +274,45 @@ static int dw8250_handle_irq(struct uart_port *p)
- 	return 0;
- }
- 
-+static void dw8250_clk_work_cb(struct work_struct *work)
-+{
-+	struct dw8250_data *d = work_to_dw8250_data(work);
-+	struct uart_8250_port *up;
-+	unsigned long rate;
-+
-+	rate = clk_get_rate(d->clk);
-+	if (rate) {
-+		up = serial8250_get_port(d->data.line);
-+
-+		serial8250_update_uartclk(&up->port, rate);
-+	}
-+}
-+
-+static int dw8250_clk_notifier_cb(struct notifier_block *nb,
-+				  unsigned long event, void *data)
-+{
-+	struct dw8250_data *d = clk_to_dw8250_data(nb);
-+
-+	/*
-+	 * We have no choice but to defer the uartclk update due to two
-+	 * deadlocks. First one is caused by a recursive mutex lock which
-+	 * happens when clk_set_rate() is called from dw8250_set_termios().
-+	 * Second deadlock is more tricky and is caused by an inverted order of
-+	 * the clk and tty-port mutexes lock. It happens if clock rate change
-+	 * is requested asynchronously while set_termios() is executed between
-+	 * tty-port mutex lock and clk_set_rate() function invocation and
-+	 * vise-versa. Anyway if we didn't have the reference clock alteration
-+	 * in the dw8250_set_termios() method we wouldn't have needed this
-+	 * deferred event handling complication.
-+	 */
-+	if (event == POST_RATE_CHANGE) {
-+		queue_work(system_unbound_wq, &d->clk_work);
-+		return NOTIFY_OK;
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
- static void
- dw8250_do_pm(struct uart_port *port, unsigned int state, unsigned int old)
- {
-@@ -283,9 +336,16 @@ static void dw8250_set_termios(struct uart_port *p, struct ktermios *termios,
- 	clk_disable_unprepare(d->clk);
- 	rate = clk_round_rate(d->clk, baud * 16);
- 	if (rate > 0) {
--		ret = clk_set_rate(d->clk, rate);
--		if (!ret)
--			p->uartclk = rate;
-+		/*
-+		 * Premilinary set the uartclk to the new clock rate so the
-+		 * clock update event handler caused by the clk_set_rate()
-+		 * calling wouldn't actually update the UART divisor since
-+		 * we about to do this anyway.
-+		 */
-+		swap(p->uartclk, rate);
-+		ret = clk_set_rate(d->clk, p->uartclk);
-+		if (ret)
-+			swap(p->uartclk, rate);
- 	}
- 	clk_prepare_enable(d->clk);
- 
-@@ -312,6 +372,49 @@ static void dw8250_set_ldisc(struct uart_port *p, struct ktermios *termios)
- 	serial8250_do_set_ldisc(p, termios);
- }
- 
-+static int dw8250_startup(struct uart_port *p)
-+{
-+	struct dw8250_data *d = to_dw8250_data(p->private_data);
-+	int ret;
-+
-+	/*
-+	 * Some platforms may provide a reference clock shared between several
-+	 * devices. In this case before using the serial port first we have to
-+	 * make sure that any clock state change is known to the UART port at
-+	 * least post factum.
-+	 */
-+	if (d->clk) {
-+		ret = clk_notifier_register(d->clk, &d->clk_notifier);
-+		if (ret)
-+			dev_warn(p->dev, "Failed to set the clock notifier\n");
-+
-+		/*
-+		 * Get current reference clock rate to make sure the UART port
-+		 * is equipped with an up-to-date value before it's started up.
-+		 */
-+		p->uartclk = clk_get_rate(d->clk);
-+		if (!p->uartclk) {
-+			dev_err(p->dev, "Clock rate not defined\n");
-+			return -EINVAL;
-+		}
-+	}
-+
-+	return serial8250_do_startup(p);
-+}
-+
-+static void dw8250_shutdown(struct uart_port *p)
-+{
-+	struct dw8250_data *d = to_dw8250_data(p->private_data);
-+
-+	serial8250_do_shutdown(p);
-+
-+	if (d->clk) {
-+		clk_notifier_unregister(d->clk, &d->clk_notifier);
-+
-+		flush_work(&d->clk_work);
-+	}
-+}
-+
- /*
-  * dw8250_fallback_dma_filter will prevent the UART from getting just any free
-  * channel on platforms that have DMA engines, but don't have any channels
-@@ -407,6 +510,8 @@ static int dw8250_probe(struct platform_device *pdev)
- 	p->serial_out	= dw8250_serial_out;
- 	p->set_ldisc	= dw8250_set_ldisc;
- 	p->set_termios	= dw8250_set_termios;
-+	p->startup	= dw8250_startup;
-+	p->shutdown	= dw8250_shutdown;
- 
- 	p->membase = devm_ioremap(dev, regs->start, resource_size(regs));
- 	if (!p->membase)
-@@ -468,6 +573,9 @@ static int dw8250_probe(struct platform_device *pdev)
- 	if (IS_ERR(data->clk))
- 		return PTR_ERR(data->clk);
- 
-+	INIT_WORK(&data->clk_work, dw8250_clk_work_cb);
-+	data->clk_notifier.notifier_call = dw8250_clk_notifier_cb;
-+
- 	err = clk_prepare_enable(data->clk);
- 	if (err)
- 		dev_warn(dev, "could not enable optional baudclk: %d\n", err);
--- 
-2.25.1
+> --
+> Florian
 
+Thanks,
+-Vladimir
