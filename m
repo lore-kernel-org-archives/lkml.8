@@ -2,130 +2,127 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95641C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FA8C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D1192068E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:28:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="NKcnOcbz"
+	by mail.kernel.org (Postfix) with ESMTP id 9BC482080D
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:28:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588778933;
+	bh=nzV5wZFnEo1oF076nwRGgp9QzjEaRg95ZgofEOFVtII=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=r2/dg8W2MtA0m8sXa4pcfPJ4FUJyDKgg1/ika3dmEe4SxqSnZdjdg1xVtZJHNfVCp
+	 ndFPvE8Y9k3f6acm53TXyRmYdEzXtxIeJt9WouXkr0lOz9uhS9BXXSISWTGDXir5HF
+	 sCUJozKO0Gio5NrnEzHECSWfQ2oaxg/YV6H2nChM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730113AbgEFP0C (ORCPT
+        id S1730103AbgEFPZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:26:02 -0400
-Received: from smtp2.axis.com ([195.60.68.18]:64270 "EHLO smtp2.axis.com"
+        Wed, 6 May 2020 11:25:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729606AbgEFPZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730082AbgEFPZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 6 May 2020 11:25:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; l=1984; q=dns/txt; s=axis-central1;
-  t=1588778747; x=1620314747;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=g4pSnXC9ETSX82mL7jdj/f/E60NtYuVks+hnYgNlpAE=;
-  b=NKcnOcbz+JCP5wFQb4GS5aTEgqywBPIw0bFCxq2t7iFBe9Z4DFl4XLXj
-   x3botCuS7l/7OqQA5uyCyI+aTi/JSY3l40fqdHsIxPwuX05k5ZIKpdASo
-   3OQOdj3yOGfD1aqKtExEJDenRbs2Zmjjz0GjD62DYbtBmnIEQ3olxpNJe
-   zhbOWQE1O+vKlEXWpKaGsfnk9YGX2yEoO8xueqaMrhDjHo/JDJ60aofy3
-   jpA9HibLsDqoc0VV+soyTsr/56I82L8fHLXQ6f9ukLeo2h9K3bpilXg4L
-   bf3XKH6uW+PnH8z1UlG1/eIFcswrhFXjGMipeTN3p6/DmRhZYF4whZOyC
-   g==;
-IronPort-SDR: AKBGHpcM8BafnapRQsr1FxP3dvICNjoNiKOvJze/+/IugtOp7sq8s6+xM8k6OISvdahdvSesLQ
- y+KB0pKhJ8uYqtklAe7SGgadnPokY0B7z8aizYJ5Srqi1xo7o5MaS/tYmg4H6Jrr+epHco5pwW
- ka31te4LKvOcNeWtTojZxFx6vZv41ZSHUhwyX2ATO4AtgKTRAH8aRAsvqlG65IU2O0z7tkpNPg
- HRYj9S7mulBTjiQxGRUJDvSgLvxhMrgEIHVfye8OLeqzM5NSWaZ3W+8jrQ+5HPyoVDXxRg5Abz
- utA=
-X-IronPort-AV: E=Sophos;i="5.73,359,1583190000"; 
-   d="scan'208";a="8222270"
-From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
-To:     <linux@armlinux.org.uk>, <jeyu@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kernel@axis.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>
-Subject: [PATCH 2/2] ARM: module: fix handling of unwind init sections
-Date:   Wed, 6 May 2020 17:25:33 +0200
-Message-ID: <20200506152533.31286-2-vincent.whitchurch@axis.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200506152533.31286-1-vincent.whitchurch@axis.com>
-References: <20200506152533.31286-1-vincent.whitchurch@axis.com>
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CE2621744;
+        Wed,  6 May 2020 15:25:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588778747;
+        bh=nzV5wZFnEo1oF076nwRGgp9QzjEaRg95ZgofEOFVtII=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hg/yc3Dmpv/HS9EFzV9+hqR56rOA4Bb+8L0JB7bK+/cb6n651DHSRk7WGE+Hqafup
+         Ih32CVvDhIMi07yOLevIIBgRBt7Ab8I4t70Wd5Ls6R/AWdqZE5gzHkUTFebF6Bd7TC
+         iFrC3gr4HCyt+62cXnOfH78MO1LddNa/aN3l5Z3k=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCH 53/91] perf evsel: Rename perf_evsel__exit() to evsel__exit()
+Date:   Wed,  6 May 2020 12:21:56 -0300
+Message-Id: <20200506152234.21977-54-acme@kernel.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
+References: <20200506152234.21977-1-acme@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unwind information for init sections is placed in .ARM.exidx.init.text
-and .ARM.extab.init.text.  The module core doesn't know that these are
-init sections so they are allocated along with the core sections, and if
-the core and init sections get allocated in different memory regions
-(which is possible with CONFIG_ARM_MODULE_PLTS=y) and they can't reach
-each other, relocation fails:
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-  final section addresses:
-  	...
-  	0x7f800000 .init.text
-	..
-  	0xcbb54078 .ARM.exidx.init.text
-	..
+As it is a 'struct evsel' method, not part of tools/lib/perf/, aka
+libperf, to whom the perf_ prefix belongs.
 
- section 16 reloc 0 sym '': relocation 42 out of range (0xcbb54078 ->
- 0x7f800000)
-
-Fix this by informing the module core that these sections are init
-sections, and by removing the init unwind tables before the module core
-frees the init sections.
-
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- arch/arm/kernel/module.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ tools/perf/util/evsel.c  | 4 ++--
+ tools/perf/util/evsel.h  | 2 +-
+ tools/perf/util/python.c | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/kernel/module.c b/arch/arm/kernel/module.c
-index deef17f34bd2..af0a8500a24e 100644
---- a/arch/arm/kernel/module.c
-+++ b/arch/arm/kernel/module.c
-@@ -55,6 +55,13 @@ void *module_alloc(unsigned long size)
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index db6d2a5f9b3c..11e754746984 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1259,7 +1259,7 @@ static void perf_evsel__free_config_terms(struct evsel *evsel)
+ 	}
  }
- #endif
  
-+bool module_init_section(const char *name)
-+{
-+	return strstarts(name, ".init") ||
-+		strstarts(name, ".ARM.extab.init") ||
-+		strstarts(name, ".ARM.exidx.init");
-+}
-+
- bool module_exit_section(const char *name)
+-void perf_evsel__exit(struct evsel *evsel)
++void evsel__exit(struct evsel *evsel)
  {
- 	return strstarts(name, ".exit") ||
-@@ -409,8 +416,17 @@ module_arch_cleanup(struct module *mod)
- #ifdef CONFIG_ARM_UNWIND
- 	int i;
+ 	assert(list_empty(&evsel->core.node));
+ 	assert(evsel->evlist == NULL);
+@@ -1279,7 +1279,7 @@ void perf_evsel__exit(struct evsel *evsel)
  
--	for (i = 0; i < ARM_SEC_MAX; i++)
--		if (mod->arch.unwind[i])
--			unwind_table_del(mod->arch.unwind[i]);
-+	for (i = 0; i < ARM_SEC_MAX; i++) {
-+		unwind_table_del(mod->arch.unwind[i]);
-+		mod->arch.unwind[i] = NULL;
-+	}
-+#endif
-+}
-+
-+void __weak module_arch_freeing_init(struct module *mod)
-+{
-+#ifdef CONFIG_ARM_UNWIND
-+	unwind_table_del(mod->arch.unwind[ARM_SEC_INIT]);
-+	mod->arch.unwind[ARM_SEC_INIT] = NULL;
- #endif
+ void evsel__delete(struct evsel *evsel)
+ {
+-	perf_evsel__exit(evsel);
++	evsel__exit(evsel);
+ 	free(evsel);
  }
+ 
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 6187dba21298..2facb16e9f12 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -183,7 +183,7 @@ struct evsel *perf_evsel__new_cycles(bool precise);
+ struct tep_event *event_format__new(const char *sys, const char *name);
+ 
+ void evsel__init(struct evsel *evsel, struct perf_event_attr *attr, int idx);
+-void perf_evsel__exit(struct evsel *evsel);
++void evsel__exit(struct evsel *evsel);
+ void evsel__delete(struct evsel *evsel);
+ 
+ struct callchain_param;
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 83212c65848b..67810d31f88d 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -801,7 +801,7 @@ static int pyrf_evsel__init(struct pyrf_evsel *pevsel,
+ 
+ static void pyrf_evsel__delete(struct pyrf_evsel *pevsel)
+ {
+-	perf_evsel__exit(&pevsel->evsel);
++	evsel__exit(&pevsel->evsel);
+ 	Py_TYPE(pevsel)->tp_free((PyObject*)pevsel);
+ }
+ 
 -- 
-2.25.1
+2.21.1
 
