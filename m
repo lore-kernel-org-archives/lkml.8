@@ -2,141 +2,89 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 009A3C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 773F8C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB2EF20708
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47AA3208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:35:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pw9fk+/I"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lZ50TRZ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730212AbgEFQev (ORCPT
+        id S1730110AbgEFQfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:34:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41594 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729774AbgEFQev (ORCPT
+        Wed, 6 May 2020 12:35:42 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:52534 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729444AbgEFQfm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:34:51 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F8AFC061A0F;
-        Wed,  6 May 2020 09:34:51 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x17so2967833wrt.5;
-        Wed, 06 May 2020 09:34:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CitFOW6lSCwIM6aw5NC/+3Zn/prCPjR6lg9nFJoDblU=;
-        b=pw9fk+/IZaZeW50iJflg9PhbuzRdzLg808N7u2Fez6ORNPCvTn4U/En6ZNVoy1q4FA
-         Uf2pw1nwS6gqTx7REZYSdawIUha1dkYjj5r1GCU/1ewCeJNxsQKgmOXOSNXcWKYK1DJv
-         62t3uKrx2SaH1SGCgedfOSjOpTYD54k6Z5B5iF7CiXeid7vlco/BKhnHnxAMHMw3Fvd3
-         jHIeXwoKTqsg30eMuCBNDlkQstSOdVxKxTzyBAwbaRlTR/Y0n8rSdp+UuSreOzzEJjPg
-         b5mc100rw6sjev7bTHgNhYKGi6aKdzd9aiak1/oSe+et1Acb0Ut90fGpODCSBRRDTUcc
-         DOfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CitFOW6lSCwIM6aw5NC/+3Zn/prCPjR6lg9nFJoDblU=;
-        b=VyutDvXPuLzIi/YXK0slCVj5U1YImhmCJluTn5NkrclbRbXqUIzKjE8xp1KKeRkyP8
-         sDaAXJXtHc+yVvQzbKpXatEiV3MbUqyrSl/cBGDIQdxgjt2k5fJupQSYLnDql4ca7gP9
-         OjjZMccsjE78wRxF61o4s7vkgvYVGE1lVGxV0g9VR0fPlZFfSQvCsCrdDTocwSBI/Ggf
-         5551fNpx85hteVbLzR3D2xdWURjG68kl02OONQ4dsj7NaDNhWaixCCoZufM99e529e3D
-         cHaOPaM5+CFoUWdDnqF6pDFH16HvZkXzcDYF29WJOnsZcBfPn/Yf8zWM+LL7gwz15FLm
-         8/6w==
-X-Gm-Message-State: AGi0PuZoaYzlVYxkGKnsf+qcDFj1EihYvLxSnoiV/2m6mu1DjdaAMr84
-        tbIMe1FSmrvr3AchCaqFi7c=
-X-Google-Smtp-Source: APiQypK1bdGwO4NQxd7pKQ9BlCG76pCZhDO/3C0TjjeFDAcxUmgUbDnUVkcYYf++x/xrrPP+67mExA==
-X-Received: by 2002:a5d:42c1:: with SMTP id t1mr10771365wrr.18.1588782889895;
-        Wed, 06 May 2020 09:34:49 -0700 (PDT)
-Received: from localhost (p2E5BE57B.dip0.t-ipconnect.de. [46.91.229.123])
-        by smtp.gmail.com with ESMTPSA id b23sm1506720wmb.26.2020.05.06.09.34.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 09:34:48 -0700 (PDT)
-Date:   Wed, 6 May 2020 18:34:47 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Jasper Korten <jja2000@gmail.com>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] firmware: trusted_foundations: Different way of
- L2 cache enabling after LP2 suspend
-Message-ID: <20200506163447.GC2723057@ulmo>
-References: <20200324224335.5825-1-digetx@gmail.com>
- <20200324224335.5825-3-digetx@gmail.com>
+        Wed, 6 May 2020 12:35:42 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 046GZcW1088886;
+        Wed, 6 May 2020 11:35:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588782938;
+        bh=vhGRFxrLxPKWXoDZs4vfMZqtTgCc++eaf3Q4SLFft8o=;
+        h=From:To:Subject:Date;
+        b=lZ50TRZ0paEN1p/9b+d3g0+OzsacvbNyjaG86Wx3k9Dvspdo32iWvLAjNTMFGOIFv
+         IinSRtBwCU1rQOj4J85Aj2+c8NgSGZnW/EAHmrNg3Tiug0nt+WNR86Q0/bx65QkWq/
+         FT/yPoV+s5Wd7Rgytu43ls3M4JSsWRmbaRFQ7RtU=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 046GZc5O028097
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 6 May 2020 11:35:38 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 6 May
+ 2020 11:35:38 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 6 May 2020 11:35:38 -0500
+Received: from uda0868495.fios-router.home (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 046GZbQG128992;
+        Wed, 6 May 2020 11:35:37 -0500
+From:   Murali Karicheri <m-karicheri2@ti.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <nsekhar@ti.com>,
+        <grygorii.strashko@ti.com>
+Subject: [net-next RFC PATCH 0/2] iproute2: Add PRP support
+Date:   Wed, 6 May 2020 12:35:35 -0400
+Message-ID: <20200506163537.3958-1-m-karicheri2@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lMM8JwqTlfDpEaS6"
-Content-Disposition: inline
-In-Reply-To: <20200324224335.5825-3-digetx@gmail.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is the RFC patch series to add prp link type in iproute2. This
+is dependent on the kernel patch series with subject line 
 
---lMM8JwqTlfDpEaS6
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+"[net-next RFC PATCH 00/13] net: hsr: Add PRP driver
 
-On Wed, Mar 25, 2020 at 01:43:34AM +0300, Dmitry Osipenko wrote:
-> ASUS TF300T device may not work properly if firmware is asked to fully
-> re-initialize L2 cache after resume from LP2 suspend. The downstream
-> kernel of TF300T uses different opcode to enable cache after resuming
-> from LP2, this opcode also works fine on Nexus 7 and Ouya devices.
-> Supposedly, this may be needed by an older firmware versions.
->=20
-> Reported-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
-> Tested-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
-> Tested-by: Jasper Korten <jja2000@gmail.com>
-> Tested-by: David Heidelberg <david@ixit.cz>
-> Tested-by: Peter Geis <pgwipeout@gmail.com>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  arch/arm/mach-tegra/pm.c                     |  4 ++++
->  drivers/firmware/trusted_foundations.c       | 21 ++++++++++++++++++--
->  include/linux/firmware/trusted_foundations.h |  1 +
->  3 files changed, 24 insertions(+), 2 deletions(-)
+Murali Karicheri (2):
+  add support for PRP similar to HSR
+  prp: update man page for PRP
 
-I split this up and applied it to for-5.8/firmware and for-5.8/arm/core,
-respectively.
+ include/uapi/linux/if_link.h |  16 ++++-
+ ip/Makefile                  |   5 +-
+ ip/iplink_hsr.c              | 111 +++-------------------------------
+ ip/iplink_hsr_prp_common.c   | 114 +++++++++++++++++++++++++++++++++++
+ ip/iplink_hsr_prp_common.h   |  24 ++++++++
+ ip/iplink_prp.c              |  60 ++++++++++++++++++
+ man/man8/ip-link.8.in        |  29 +++++++++
+ 7 files changed, 252 insertions(+), 107 deletions(-)
+ create mode 100644 ip/iplink_hsr_prp_common.c
+ create mode 100644 ip/iplink_hsr_prp_common.h
+ create mode 100644 ip/iplink_prp.c
 
-Thanks,
-Thierry
+-- 
+2.17.1
 
---lMM8JwqTlfDpEaS6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6y5ycACgkQ3SOs138+
-s6FCSRAAh02WAmouPtmya248FjU/uaRY3IDf6ewTOb0PsVokeZQB4biQYVvIN7CW
-l15w6+90Ni3RTxe6g3GewA8IIxmRYet1RGeRIFYo2ZhLCL5SurzOcQp1V7NO3Jg3
-UrgHSCOlmZM3W55qOwucjdolZINuXvhqbgscHdDHn3hbfJ7vciHSAVvKR+eDijU7
-xL+UZJ72i2UVgFwnu0ecREIPLDzzRSbwTP7z5Aedelr6RyNpjJFpwXL1ARRIpV+B
-f5AVWvyn4PqKrHgav+N7mPAccVXu3NImsa6e+GlPq6JJCMt2bD8a7FBXha0Xp+z9
-LcF3Fwv3H7ZWfGiqqtTrhBADXUaj3fkJ8zQzbeHR5W5DvYJFkaZtIuAtH4/Rissh
-Fnk0j3kJ+WRUD3/CdAKpOdMEcqmQW4eU5JWHFrEqXtwICE51tKiF7qnLtgwNsrll
-m/Y4dCq7l4KsKAHQSU4/H53PuJkyAlQW5UKCIdOzizqjMtRQCjvQFsq46WSYD9uK
-b7WW44l8UpUHfKGT7hSQfHhi5OHucY5otFCx81rTj3Dyv6ckLbd5igPAZk8cylMg
-HXfxegHGR0f1Tb8HfUsBbs/fNUFnhPNsWgM0nMvbmxNbpKH9LCeOlKSdY1y/WpWy
-OEJiuem6uaohDNwOC+tUOEBhRn06wZcOpGkQOBNm3qswQkXecos=
-=+mgt
------END PGP SIGNATURE-----
-
---lMM8JwqTlfDpEaS6--
