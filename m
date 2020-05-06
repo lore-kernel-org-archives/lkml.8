@@ -2,258 +2,106 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA48C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF5EC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AA0A2073A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE8A520659
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:23:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HxroKVeB"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="YdPweka6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbgEFGXb (ORCPT
+        id S1728469AbgEFGXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 02:23:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58804 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728000AbgEFGXA (ORCPT
+        Wed, 6 May 2020 02:23:52 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:26639 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728000AbgEFGXu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 02:23:00 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C483C061A0F;
-        Tue,  5 May 2020 23:23:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=EgzCrGQ6Qxh33KJX/iL+nsU3Uwz9t7i6fxzkprPd6/s=; b=HxroKVeBseU/0gkk50Ux0r8UIP
-        hY5NVFW09VFKc3C2a1uV/I7DDhZuT0TJagunzO10hMKHo0LlC8hCFlrxim9J5IG+yVRCXjEc/erew
-        LFQpT4aFfZOxSDFflT6BDHjTqsK86T0mz4EvN2PNPO3URAdSQhwuqvZx/9NG3K9JAuERhvJEVslcl
-        Sjnd6Dji7VfFZoC0HMP+k6gE6C3Zfqg89bV4qIe3hV6565uOrxXNneh3xvwoUYbXom3DQhb1ZV9AS
-        qY4Z4zrdWexqbMoAPQp0SDi14Rbk85OiKB76zLEj8wr7fN+N6CJlMy1Z7Y7oeCQsOitv70muCKJJH
-        5rrLRRSg==;
-Received: from [2001:4bb8:191:66b6:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jWDSM-0006lb-Mc; Wed, 06 May 2020 06:22:59 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 11/15] maccess: remove strncpy_from_unsafe
-Date:   Wed,  6 May 2020 08:22:19 +0200
-Message-Id: <20200506062223.30032-12-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200506062223.30032-1-hch@lst.de>
-References: <20200506062223.30032-1-hch@lst.de>
+        Wed, 6 May 2020 02:23:50 -0400
+X-UUID: f60d58e8e7534651a6dc3844e569535c-20200506
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=EMtEpkXEvK9nfHRYvG1dhOQ8iE+qMOZdMvGDu7QjaPw=;
+        b=YdPweka6yiq9Z0oJweGz75TbXzTe35IsBUdRqukYNHsv0yxMFvv1Opj+CQOXnmyPhPGuDzKMdTHfNsr1zNEPlkwOQ7yG896y0YNldjPLZOKsPLWN4J/UuzpClBN5+X3oCsZ60TAyjxQ08WumGZd68we4aev2p+X94HkCN4+gDKo=;
+X-UUID: f60d58e8e7534651a6dc3844e569535c-20200506
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 460470072; Wed, 06 May 2020 14:23:47 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 6 May 2020 14:23:38 +0800
+Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 6 May 2020 14:23:34 +0800
+Message-ID: <1588746219.16219.10.camel@mtksdccf07>
+Subject: Re: [PATCH 0/3] kasan: memorize and print call_rcu stack
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Qian Cai <cai@lca.pw>
+CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        "Josh Triplett" <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Wed, 6 May 2020 14:23:39 +0800
+In-Reply-To: <2BF68E83-4611-48B2-A57F-196236399219@lca.pw>
+References: <20200506051853.14380-1-walter-zh.wu@mediatek.com>
+         <2BF68E83-4611-48B2-A57F-196236399219@lca.pw>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-TM-SNTS-SMTP: 42DEFC715D66F1062290FF153DFF6751FECE0CF316B54F13B8825BE6B87E4B562000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All three callers really should try the explicit kernel and user
-copies instead.  One has already deprecated the somewhat dangerous
-either kernel or user address concept, the other two still need to
-follow up eventually.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- include/linux/uaccess.h     |  1 -
- kernel/trace/bpf_trace.c    | 40 ++++++++++++++++++++++++++-----------
- kernel/trace/trace_kprobe.c |  5 ++++-
- mm/maccess.c                | 39 +-----------------------------------
- 4 files changed, 33 insertions(+), 52 deletions(-)
-
-diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-index f8c47395a92df..09d6e358883cc 100644
---- a/include/linux/uaccess.h
-+++ b/include/linux/uaccess.h
-@@ -311,7 +311,6 @@ extern long probe_user_read(void *dst, const void __user *src, size_t size);
- extern long notrace probe_kernel_write(void *dst, const void *src, size_t size);
- extern long notrace probe_user_write(void __user *dst, const void *src, size_t size);
- 
--extern long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count);
- extern long strncpy_from_kernel_unsafe(char *dst, const void *unsafe_addr,
- 				       long count);
- extern long strncpy_from_user_unsafe(char *dst, const void __user *unsafe_addr,
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index e4e202f433903..ffe841433caa1 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -229,9 +229,10 @@ bpf_probe_read_kernel_str_common(void *dst, u32 size, const void *unsafe_ptr,
- 	int ret = security_locked_down(LOCKDOWN_BPF_READ);
- 
- 	if (unlikely(ret < 0))
--		goto out;
-+		goto fail;
-+
- 	/*
--	 * The strncpy_from_unsafe_*() call will likely not fill the entire
-+	 * The strncpy_from_*_unsafe() call will likely not fill the entire
- 	 * buffer, but that's okay in this circumstance as we're probing
- 	 * arbitrary memory anyway similar to bpf_probe_read_*() and might
- 	 * as well probe the stack. Thus, memory is explicitly cleared
-@@ -239,11 +240,18 @@ bpf_probe_read_kernel_str_common(void *dst, u32 size, const void *unsafe_ptr,
- 	 * code altogether don't copy garbage; otherwise length of string
- 	 * is returned that can be used for bpf_perf_event_output() et al.
- 	 */
--	ret = compat ? strncpy_from_unsafe(dst, unsafe_ptr, size) :
--	      strncpy_from_kernel_unsafe(dst, unsafe_ptr, size);
--	if (unlikely(ret < 0))
--out:
--		memset(dst, 0, size);
-+	ret = strncpy_from_kernel_unsafe(dst, unsafe_ptr, size);
-+	if (unlikely(ret < 0)) {
-+		if (compat)
-+			ret = strncpy_from_user_unsafe(dst,
-+					(__force const void __user *)unsafe_ptr,
-+					size);
-+		if (ret < 0)
-+			goto fail;
-+	}
-+	return 0;
-+fail:
-+	memset(dst, 0, size);
- 	return ret;
- }
- 
-@@ -321,6 +329,17 @@ static const struct bpf_func_proto *bpf_get_probe_write_proto(void)
- 	return &bpf_probe_write_user_proto;
- }
- 
-+#define BPF_STRNCPY_LEN 64
-+
-+static void bpf_strncpy(char *buf, long unsafe_addr)
-+{
-+	buf[0] = 0;
-+	if (strncpy_from_kernel_unsafe(buf, (void *)unsafe_addr,
-+			BPF_STRNCPY_LEN))
-+		strncpy_from_user_unsafe(buf, (void __user *)unsafe_addr,
-+				BPF_STRNCPY_LEN);
-+}
-+
- /*
-  * Only limited trace_printk() conversion specifiers allowed:
-  * %d %i %u %x %ld %li %lu %lx %lld %lli %llu %llx %p %s
-@@ -332,7 +351,7 @@ BPF_CALL_5(bpf_trace_printk, char *, fmt, u32, fmt_size, u64, arg1,
- 	int mod[3] = {};
- 	int fmt_cnt = 0;
- 	u64 unsafe_addr;
--	char buf[64];
-+	char buf[BPF_STRNCPY_LEN];
- 	int i;
- 
- 	/*
-@@ -387,10 +406,7 @@ BPF_CALL_5(bpf_trace_printk, char *, fmt, u32, fmt_size, u64, arg1,
- 					arg3 = (long) buf;
- 					break;
- 				}
--				buf[0] = 0;
--				strncpy_from_unsafe(buf,
--						    (void *) (long) unsafe_addr,
--						    sizeof(buf));
-+				bpf_strncpy(buf, unsafe_addr);
- 			}
- 			continue;
- 		}
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index a7f43c7ec9880..525d12137325c 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -1238,7 +1238,10 @@ fetch_store_string(unsigned long addr, void *dest, void *base)
- 	 * Try to get string again, since the string can be changed while
- 	 * probing.
- 	 */
--	ret = strncpy_from_unsafe(__dest, (void *)addr, maxlen);
-+	ret = strncpy_from_kernel_unsafe(__dest, (void *)addr, maxlen);
-+	if (ret < 0)
-+		ret = strncpy_from_user_unsafe(__dest, (void __user *)addr,
-+				maxlen);
- 	if (ret >= 0)
- 		*(u32 *)dest = make_data_loc(ret, __dest - base);
- 
-diff --git a/mm/maccess.c b/mm/maccess.c
-index 11563129cd490..cbd9d668aa46e 100644
---- a/mm/maccess.c
-+++ b/mm/maccess.c
-@@ -8,8 +8,6 @@
- 
- static long __probe_kernel_read(void *dst, const void *src, size_t size,
- 		bool strict);
--static long __strncpy_from_unsafe(char *dst, const void *unsafe_addr,
--		long count, bool strict);
- 
- bool __weak probe_kernel_read_allowed(void *dst, const void *unsafe_src,
- 		size_t size, bool strict)
-@@ -156,35 +154,6 @@ long probe_user_write(void __user *dst, const void *src, size_t size)
- 	return 0;
- }
- 
--/**
-- * strncpy_from_unsafe: - Copy a NUL terminated string from unsafe address.
-- * @dst:   Destination address, in kernel space.  This buffer must be at
-- *         least @count bytes long.
-- * @unsafe_addr: Unsafe address.
-- * @count: Maximum number of bytes to copy, including the trailing NUL.
-- *
-- * Copies a NUL-terminated string from unsafe address to kernel buffer.
-- *
-- * On success, returns the length of the string INCLUDING the trailing NUL.
-- *
-- * If access fails, returns -EFAULT (some data may have been copied
-- * and the trailing NUL added).
-- *
-- * If @count is smaller than the length of the string, copies @count-1 bytes,
-- * sets the last byte of @dst buffer to NUL and returns @count.
-- *
-- * Same as strncpy_from_kernel_unsafe() except that for architectures with
-- * not fully separated user and kernel address spaces this function also works
-- * for user address tanges.
-- *
-- * DO NOT USE THIS FUNCTION - it is broken on architectures with entirely
-- * separate kernel and user address spaces, and also a bad idea otherwise.
-- */
--long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count)
--{
--	return __strncpy_from_unsafe(dst, unsafe_addr, count, false);
--}
--
- /**
-  * strncpy_from_kernel_unsafe: - Copy a NUL terminated string from unsafe
-  *				 address.
-@@ -204,12 +173,6 @@ long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count)
-  * sets the last byte of @dst buffer to NUL and returns @count.
-  */
- long strncpy_from_kernel_unsafe(char *dst, const void *unsafe_addr, long count)
--{
--	return __strncpy_from_unsafe(dst, unsafe_addr, count, true);
--}
--
--static long __strncpy_from_unsafe(char *dst, const void *unsafe_addr,
--		long count, bool strict)
- {
- 	mm_segment_t old_fs = get_fs();
- 	const void *src = unsafe_addr;
-@@ -217,7 +180,7 @@ static long __strncpy_from_unsafe(char *dst, const void *unsafe_addr,
- 
- 	if (unlikely(count <= 0))
- 		return 0;
--	if (!probe_kernel_read_allowed(dst, unsafe_addr, count, strict))
-+	if (!probe_kernel_read_allowed(dst, unsafe_addr, count, true))
- 		return -EFAULT;
- 
- 	set_fs(KERNEL_DS);
--- 
-2.26.2
+T24gV2VkLCAyMDIwLTA1LTA2IGF0IDAxOjUzIC0wNDAwLCBRaWFuIENhaSB3cm90ZToNCj4gDQo+
+ID4gT24gTWF5IDYsIDIwMjAsIGF0IDE6MTkgQU0sIFdhbHRlciBXdSA8d2FsdGVyLXpoLnd1QG1l
+ZGlhdGVrLmNvbT4gd3JvdGU6DQo+ID4gDQo+ID4gVGhpcyBwYXRjaHNldCBpbXByb3ZlcyBLQVNB
+TiByZXBvcnRzIGJ5IG1ha2luZyB0aGVtIHRvIGhhdmUNCj4gPiBjYWxsX3JjdSgpIGNhbGwgc3Rh
+Y2sgaW5mb3JtYXRpb24uIEl0IGlzIGhlbHBmdWwgZm9yIHByb2dyYW1tZXJzDQo+ID4gdG8gc29s
+dmUgdXNlLWFmdGVyLWZyZWUgb3IgZG91YmxlLWZyZWUgbWVtb3J5IGlzc3VlLg0KPiA+IA0KPiA+
+IFRoZSBLQVNBTiByZXBvcnQgd2FzIGFzIGZvbGxvd3MoY2xlYW5lZCB1cCBzbGlnaHRseSk6DQo+
+ID4gDQo+ID4gQlVHOiBLQVNBTjogdXNlLWFmdGVyLWZyZWUgaW4ga2FzYW5fcmN1X3JlY2xhaW0r
+MHg1OC8weDYwDQo+ID4gDQo+ID4gRnJlZWQgYnkgdGFzayAwOg0KPiA+IHNhdmVfc3RhY2srMHgy
+NC8weDUwDQo+ID4gX19rYXNhbl9zbGFiX2ZyZWUrMHgxMTAvMHgxNzgNCj4gPiBrYXNhbl9zbGFi
+X2ZyZWUrMHgxMC8weDE4DQo+ID4ga2ZyZWUrMHg5OC8weDI3MA0KPiA+IGthc2FuX3JjdV9yZWNs
+YWltKzB4MWMvMHg2MA0KPiA+IHJjdV9jb3JlKzB4OGI0LzB4MTBmOA0KPiA+IHJjdV9jb3JlX3Np
+KzB4Yy8weDE4DQo+ID4gZWZpX2hlYWRlcl9lbmQrMHgyMzgvMHhhNmMNCj4gPiANCj4gPiBGaXJz
+dCBjYWxsX3JjdSgpIGNhbGwgc3RhY2s6DQo+ID4gc2F2ZV9zdGFjaysweDI0LzB4NTANCj4gPiBr
+YXNhbl9yZWNvcmRfY2FsbHJjdSsweGM4LzB4ZDgNCj4gPiBjYWxsX3JjdSsweDE5MC8weDU4MA0K
+PiA+IGthc2FuX3JjdV91YWYrMHgxZDgvMHgyNzgNCj4gPiANCj4gPiBMYXN0IGNhbGxfcmN1KCkg
+Y2FsbCBzdGFjazoNCj4gPiAoc3RhY2sgaXMgbm90IGF2YWlsYWJsZSkNCj4gPiANCj4gPiANCj4g
+PiBBZGQgbmV3IENPTkZJRyBvcHRpb24gdG8gcmVjb3JkIGZpcnN0IGFuZCBsYXN0IGNhbGxfcmN1
+KCkgY2FsbCBzdGFjaw0KPiA+IGFuZCBLQVNBTiByZXBvcnQgcHJpbnRzIHR3byBjYWxsX3JjdSgp
+IGNhbGwgc3RhY2suDQo+ID4gDQo+ID4gVGhpcyBvcHRpb24gZG9lc24ndCBpbmNyZWFzZSB0aGUg
+Y29zdCBvZiBtZW1vcnkgY29uc3VtcHRpb24uIEl0IGlzDQo+ID4gb25seSBzdWl0YWJsZSBmb3Ig
+Z2VuZXJpYyBLQVNBTi4NCj4gDQo+IEkgZG9u4oCZdCB1bmRlcnN0YW5kIHdoeSB0aGlzIG5lZWRz
+IHRvIGJlIGEgS2NvbmZpZyBvcHRpb24gYXQgYWxsLiBJZiBjYWxsX3JjdSgpIHN0YWNrcyBhcmUg
+dXNlZnVsIGluIGdlbmVyYWwsIHRoZW4ganVzdCBhbHdheXMgZ2F0aGVyIHRob3NlIGluZm9ybWF0
+aW9uLiBIb3cgZG8gZGV2ZWxvcGVycyBqdWRnZSBpZiB0aGV5IG5lZWQgdG8gc2VsZWN0IHRoaXMg
+b3B0aW9uIG9yIG5vdD8NCg0KQmVjYXVzZSB3ZSBkb24ndCB3YW50IHRvIGluY3JlYXNlIHNsdWIg
+bWV0YS1kYXRhIHNpemUsIHNvIGVuYWJsaW5nIHRoaXMNCm9wdGlvbiBjYW4gcHJpbnQgY2FsbF9y
+Y3UoKSBzdGFja3MsIGJ1dCB0aGUgaW4tdXNlIHNsdWIgb2JqZWN0IGRvZXNuJ3QNCnByaW50IGZy
+ZWUgc3RhY2suIFNvIGlmIGhhdmUgb3V0LW9mLWJvdW5kIGlzc3VlLCB0aGVuIGl0IHdpbGwgbm90
+IHByaW50DQpmcmVlIHN0YWNrLiBJdCBpcyBhIHRyYWRlLW9mZiwgc2VlIFsxXS4NCg0KWzFdIGh0
+dHBzOi8vYnVnemlsbGEua2VybmVsLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MTk4NDM3DQoNClRoYW5r
+cw0K
 
