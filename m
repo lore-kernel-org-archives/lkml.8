@@ -2,119 +2,82 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B38F7C47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8322C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92E3420675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:33:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sMK2gxKz"
+	by mail.kernel.org (Postfix) with ESMTP id 8E5DF2076D
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:34:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbgEFOdz (ORCPT
+        id S1729024AbgEFOeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 10:33:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50744 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728836AbgEFOdy (ORCPT
+        Wed, 6 May 2020 10:34:21 -0400
+Received: from cmccmta1.chinamobile.com ([221.176.66.79]:3523 "EHLO
+        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728826AbgEFOeV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 10:33:54 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE38C061A41
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 07:33:54 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id w137so1085384ybg.8
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 07:33:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XbqSj0zLlZxwhc6FbfH4AgPdBJNe+u7Ez5XFOAJ4dlE=;
-        b=sMK2gxKz00XlJrqT2IQRh3RVnLny1lQB0H+zg4sYGFloaiAo/v9DJLCWh3yavgGR9t
-         c9UH85bbgwNnZ8rYaAmhkL9RXQ0ojcvHwdGPEORoemyMdhnQh1F34HjrbRUWcPnC06if
-         XXQz6FU/rVCvlSYCU7ys0+0E0Twdld4F+lZM4DENbx1STo8XrEe+V2fdFnCkStrpVY/p
-         AtTCq68fOOYR2goQGPNTKBBoBU+ce30sIhhZuhLPmFihWqnJd1lOneugUIJwibLPGWmh
-         wHKs3CJjA3fRLTTjL74ocbYlbKhUsFm/Mv/m6kMUuQOJXTxOg2QqsPJd/cn1IoG3HMml
-         gn/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XbqSj0zLlZxwhc6FbfH4AgPdBJNe+u7Ez5XFOAJ4dlE=;
-        b=CY5gjmT2P0vRU126EmpAoA1o1eB0gLzhi72iLe/HuPHMdx3cyT/DuTmNjBCUXLmEHF
-         pfvANbRr9L9cHyF/A28rYT7q95f1OILwY6SGKDvSsU4iPVq38PzbrM/lXRcuZueyxD54
-         GfJ6Jd8eElqsnzNXNyc6wf9Td9KhpYhyGY1cLoaiOtw/NWft0rMRsSsp10yMAA4mcyej
-         2NGddfyWYIGQfg6ZwKZQMEoiApvasnJq2ZdFjZax8aWbUKDZyGpH6aw/N889nU567QSu
-         pXbn49mYXh2ST5Xcl5Co2srSrNFVIg18kOmfH4rEXXrrvUzUrW4kjqge/lS4hvQNOxqx
-         KXIQ==
-X-Gm-Message-State: AGi0Puan0ExvSalVAcjjkaLLntksoZ8aJ7v/JQ/OH5PA2OvIY2UZLQyf
-        hlObrLx8uYkKwqjgQ2/DQqQ0gc+iInEAtOvhNj3Ueg==
-X-Google-Smtp-Source: APiQypLa55+6CY2rDCiL0pAlUnndI/LxWB5VFYnf5D/Y4Vob6Fja7SVSAFXSw3DhrjJqMzyBFM1EmuD9ZAmaq6mtXSQ=
-X-Received: by 2002:a25:bc53:: with SMTP id d19mr13792238ybk.395.1588775632988;
- Wed, 06 May 2020 07:33:52 -0700 (PDT)
+        Wed, 6 May 2020 10:34:21 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.11]) by rmmx-syy-dmz-app01-12001 (RichMail) with SMTP id 2ee15eb2c9d076f-2798f; Wed, 06 May 2020 22:29:36 +0800 (CST)
+X-RM-TRANSID: 2ee15eb2c9d076f-2798f
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[112.0.146.193])
+        by rmsmtp-syy-appsvr06-12006 (RichMail) with SMTP id 2ee65eb2c9cc322-73c3f;
+        Wed, 06 May 2020 22:29:36 +0800 (CST)
+X-RM-TRANSID: 2ee65eb2c9cc322-73c3f
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+To:     broonie@kernel.org, lgirdwood@gmail.com, perex@perex.cz,
+        matthias.bgg@gmail.com
+Cc:     alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>,
+        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Subject: [PATCH] ASoC: mediatek: Fix error handling
+Date:   Wed,  6 May 2020 22:30:09 +0800
+Message-Id: <20200506143009.13368-1-tangbin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.20.1.windows.1
 MIME-Version: 1.0
-References: <20200505184955.GO2869@paulmck-ThinkPad-P72> <20200506125926.29844-1-sjpark@amazon.com>
-In-Reply-To: <20200506125926.29844-1-sjpark@amazon.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Wed, 6 May 2020 07:33:41 -0700
-Message-ID: <CANn89iL2ZRa9CtypuZXL_+aGQmiqxP9q7eutozJ6G8b=QWjZKw@mail.gmail.com>
-Subject: Re: Re: Re: Re: Re: [PATCH net v2 0/2] Revert the 'socket_alloc' life
- cycle change
-To:     SeongJae Park <sjpark@amazon.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        sj38.park@gmail.com, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>, snu@amazon.com,
-        amit@kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 6, 2020 at 5:59 AM SeongJae Park <sjpark@amazon.com> wrote:
->
-> TL; DR: It was not kernel's fault, but the benchmark program.
->
-> So, the problem is reproducible using the lebench[1] only.  I carefully read
-> it's code again.
->
-> Before running the problem occurred "poll big" sub test, lebench executes
-> "context switch" sub test.  For the test, it sets the cpu affinity[2] and
-> process priority[3] of itself to '0' and '-20', respectively.  However, it
-> doesn't restore the values to original value even after the "context switch" is
-> finished.  For the reason, "select big" sub test also run binded on CPU 0 and
-> has lowest nice value.  Therefore, it can disturb the RCU callback thread for
-> the CPU 0, which processes the deferred deallocations of the sockets, and as a
-> result it triggers the OOM.
->
-> We confirmed the problem disappears by offloading the RCU callbacks from the
-> CPU 0 using rcu_nocbs=0 boot parameter or simply restoring the affinity and/or
-> priority.
->
-> Someone _might_ still argue that this is kernel problem because the problem
-> didn't occur on the old kernels prior to the Al's patches.  However, setting
-> the affinity and priority was available because the program received the
-> permission.  Therefore, it would be reasonable to blame the system
-> administrators rather than the kernel.
->
-> So, please ignore this patchset, apology for making confuse.  If you still has
-> some doubts or need more tests, please let me know.
->
-> [1] https://github.com/LinuxPerfStudy/LEBench
-> [2] https://github.com/LinuxPerfStudy/LEBench/blob/master/TEST_DIR/OS_Eval.c#L820
-> [3] https://github.com/LinuxPerfStudy/LEBench/blob/master/TEST_DIR/OS_Eval.c#L822
->
->
-> Thanks,
-> SeongJae Park
+If the function platform_get_irq() failed, the negative value
+returned will not be detected here. So fix error handling in
+mt6797_afe_pcm_dev_probe(). And when get irq failed, the function
+platform_get_irq() logs an error message, so remove redundant
+message here.
 
-No harm done, thanks for running more tests and root-causing the issue !
+Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+---
+ sound/soc/mediatek/mt6797/mt6797-afe-pcm.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/sound/soc/mediatek/mt6797/mt6797-afe-pcm.c b/sound/soc/mediatek/mt6797/mt6797-afe-pcm.c
+index 378bfc16e..a621dcf91 100644
+--- a/sound/soc/mediatek/mt6797/mt6797-afe-pcm.c
++++ b/sound/soc/mediatek/mt6797/mt6797-afe-pcm.c
+@@ -807,10 +807,9 @@ static int mt6797_afe_pcm_dev_probe(struct platform_device *pdev)
+ 
+ 	/* request irq */
+ 	irq_id = platform_get_irq(pdev, 0);
+-	if (!irq_id) {
+-		dev_err(dev, "%pOFn no irq found\n", dev->of_node);
+-		return -ENXIO;
+-	}
++	if (irq_id < 0)
++		return irq_id;
++
+ 	ret = devm_request_irq(dev, irq_id, mt6797_afe_irq_handler,
+ 			       IRQF_TRIGGER_NONE, "asys-isr", (void *)afe);
+ 	if (ret) {
+-- 
+2.20.1.windows.1
+
+
+
