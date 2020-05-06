@@ -2,62 +2,91 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B835C47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFDAEC47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 307AD2075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC48C2082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:51:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbgEFTut (ORCPT
+        id S1728939AbgEFTvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 15:50:49 -0400
-Received: from mail.manjaro.org ([176.9.38.148]:52910 "EHLO mail.manjaro.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726093AbgEFTut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 15:50:49 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.manjaro.org (Postfix) with ESMTP id F198039E0E76;
-        Wed,  6 May 2020 21:50:47 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at manjaro.org
-Received: from mail.manjaro.org ([127.0.0.1])
-        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id tGAS5DBpzZsm; Wed,  6 May 2020 21:50:45 +0200 (CEST)
-Subject: Re: [PATCH -next] power/supply/cw2015: Make some symbols static
-To:     ChenTao <chentao107@huawei.com>
-Cc:     sre@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200506114519.238186-1-chentao107@huawei.com>
-From:   Tobias Schramm <t.schramm@manjaro.org>
-Message-ID: <0a9613a6-5557-21cb-af16-bd57d7b2a696@manjaro.org>
-Date:   Wed, 6 May 2020 21:49:26 +0200
-MIME-Version: 1.0
-In-Reply-To: <20200506114519.238186-1-chentao107@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US-large
-Content-Transfer-Encoding: 7bit
+        Wed, 6 May 2020 15:51:53 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:51023 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725799AbgEFTvw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 15:51:52 -0400
+X-IronPort-AV: E=Sophos;i="5.73,360,1583161200"; 
+   d="scan'208";a="46431211"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 07 May 2020 04:51:50 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 6DF984003EC8;
+        Thu,  7 May 2020 04:51:46 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 0/9] RZ/G1H describe IRQC, [H]SCIF{A|B} and GPIO nodes
+Date:   Wed,  6 May 2020 20:51:26 +0100
+Message-Id: <1588794695-27852-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi All,
 
-> Fix the following warning:
-> 
-> drivers/power/supply/cw2015_battery.c:96:5: warning:
-> 'cw_update_profile' was not declared. Should it be static?
-> drivers/power/supply/cw2015_battery.c:712:1: warning:
-> 'cw_bat_pm_ops' was not declared. Should it be static?
-> 
+This patch series describes irqc, serial and gpio controllers on
+R8A7742 SoC.
 
-LGTM.
+* Patch 1/9 is from series [1], which added initial basic support for
+  iW-RainboW-G21D-Qseven development board.
+* Patches 2-9 are from series [2] ("Add R8A7742/RZG1H board support")
 
-Acked-by: Tobias Schramm <t.schramm@manjaro.org>
-Tested-by: Tobias Schramm <t.schramm@manjaro.org>
+Cheers,
+Prabhakar
 
-Thanks,
+[1] https://lkml.org/lkml/2020/5/3/294
+[2] https://lkml.org/lkml/2020/4/29/1300
 
-Tobias
+Lad Prabhakar (9):
+  dt-bindings: mmc: renesas,mmcif: Document r8a7742 DT bindings
+  dt-bindings: irqchip: renesas-irqc: Document r8a7742 bindings
+  ARM: dts: r8a7742: Add IRQC support
+  dt-bindings: serial: renesas,scif: Document r8a7742 bindings
+  dt-bindings: serial: renesas,scifb: Document r8a7742 bindings
+  dt-bindings: serial: renesas,hscif: Document r8a7742 bindings
+  ARM: dts: r8a7742: Add [H]SCIF{A|B} support
+  dt-bindings: gpio: renesas,gpio-rcar: Add r8a7742 (RZ/G1H) support
+  ARM: dts: r8a7742: Add GPIO nodes
+
+ .../bindings/gpio/renesas,gpio-rcar.txt       |   1 +
+ .../interrupt-controller/renesas,irqc.yaml    |   1 +
+ .../devicetree/bindings/mmc/renesas,mmcif.txt |   5 +-
+ .../bindings/serial/renesas,hscif.yaml        |   1 +
+ .../bindings/serial/renesas,scif.yaml         |   1 +
+ .../bindings/serial/renesas,scifb.yaml        |   1 +
+ arch/arm/boot/dts/r8a7742.dtsi                | 259 ++++++++++++++++++
+ 7 files changed, 267 insertions(+), 2 deletions(-)
+
+-- 
+2.17.1
+
