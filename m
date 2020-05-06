@@ -2,91 +2,66 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4914C4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA706C47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7A25206E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4356206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:10:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgEFFKe (ORCPT
+        id S1727030AbgEFFKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 01:10:34 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:37498 "EHLO fornost.hmeau.com"
+        Wed, 6 May 2020 01:10:43 -0400
+Received: from verein.lst.de ([213.95.11.211]:38823 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbgEFFKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 01:10:33 -0400
-Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1jWCEq-0008BX-5s; Wed, 06 May 2020 15:04:57 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 06 May 2020 15:10:06 +1000
-Date:   Wed, 6 May 2020 15:10:06 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: [GIT PULL] Crypto Fixes for 5.7
-Message-ID: <20200506051006.GA6537@gondor.apana.org.au>
-References: <20190916084901.GA20338@gondor.apana.org.au>
- <20190923050515.GA6980@gondor.apana.org.au>
- <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au>
- <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
- <20200115150812.mo2eycc53lbsgvue@gondor.apana.org.au>
- <20200213033231.xjwt6uf54nu26qm5@gondor.apana.org.au>
- <20200408061513.GA23636@gondor.apana.org.au>
- <20200429055420.GA26381@gondor.apana.org.au>
+        id S1725821AbgEFFKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 01:10:42 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 87DA468C4E; Wed,  6 May 2020 07:10:39 +0200 (CEST)
+Date:   Wed, 6 May 2020 07:10:39 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Martijn Coenen <maco@android.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ming Lei <ming.lei@redhat.com>,
+        Narayan Kamath <narayan@google.com>,
+        Zimuzo Ezeozue <zezeozue@google.com>, kernel-team@android.com,
+        Martijn Coenen <maco@google.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 04/10] loop: Refactor loop_set_status() size
+ calculation
+Message-ID: <20200506051039.GA9983@lst.de>
+References: <20200429140341.13294-1-maco@android.com> <20200429140341.13294-5-maco@android.com> <20200501173032.GD22792@lst.de> <CAB0TPYFJT5A-+T-B6tD1O0X8GGK_LFOpBDZv+fFc7LqDyN_aAg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200429055420.GA26381@gondor.apana.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAB0TPYFJT5A-+T-B6tD1O0X8GGK_LFOpBDZv+fFc7LqDyN_aAg@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus:
+On Fri, May 01, 2020 at 09:33:23PM +0200, Martijn Coenen wrote:
+> On Fri, May 1, 2020 at 7:30 PM Christoph Hellwig <hch@lst.de> wrote:
+> >
+> > For some reason this fails to apply for me against both
+> > Jens' for-5.8/block and Linus' current tree.
+> >
+> > What is the baseline for this series?
+> 
+> This was based on Linus' tree from a week or two ago or so, but I
+> think you're most likely missing this one?
+> 
+> https://lkml.org/lkml/2020/3/31/755
+> 
+> (I mentioned it in the cover letter, but can make it a part of this
+> series if you prefer).
 
-This push fixes a potential scheduling latency problem for the
-algorithms used by WireGuard.
-
-The following changes since commit 55b3209acbb01cb02b1ee6b1afe80d83b1aab36d:
-
-  crypto: caam - fix the address of the last entry of S/G (2020-04-16 16:48:56 +1000)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus 
-
-for you to fetch changes up to a9a8ba90fa5857c2c8a0e32eef2159cec717da11:
-
-  crypto: arch/nhpoly1305 - process in explicit 4k chunks (2020-04-30 15:16:59 +1000)
-
-----------------------------------------------------------------
-Jason A. Donenfeld (2):
-      crypto: arch/lib - limit simd usage to 4k chunks
-      crypto: arch/nhpoly1305 - process in explicit 4k chunks
-
- arch/arm/crypto/chacha-glue.c            | 14 +++++++++++---
- arch/arm/crypto/nhpoly1305-neon-glue.c   |  2 +-
- arch/arm/crypto/poly1305-glue.c          | 15 +++++++++++----
- arch/arm64/crypto/chacha-neon-glue.c     | 14 +++++++++++---
- arch/arm64/crypto/nhpoly1305-neon-glue.c |  2 +-
- arch/arm64/crypto/poly1305-glue.c        | 15 +++++++++++----
- arch/x86/crypto/blake2s-glue.c           | 10 ++++------
- arch/x86/crypto/chacha_glue.c            | 14 +++++++++++---
- arch/x86/crypto/nhpoly1305-avx2-glue.c   |  2 +-
- arch/x86/crypto/nhpoly1305-sse2-glue.c   |  2 +-
- arch/x86/crypto/poly1305_glue.c          | 13 ++++++-------
- 11 files changed, 69 insertions(+), 34 deletions(-)
-
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Yes, I missed that one.
