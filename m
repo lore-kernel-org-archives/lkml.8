@@ -2,101 +2,98 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D84DDC47259
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C07ABC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B817A20575
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:51:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aUP/Sxk2"
+	by mail.kernel.org (Postfix) with ESMTP id A29AC2073A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 12:51:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbgEFMvU (ORCPT
+        id S1728532AbgEFMvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 08:51:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728131AbgEFMvT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 08:51:19 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2C42C0610D5
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 05:51:17 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id e25so2217217ljg.5
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 05:51:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=COqQCzJ4auJxawCeL75BevJEbAnSN1myQOD2Q4QlS6o=;
-        b=aUP/Sxk2re3PRk+ECqewTQ+F6wOEpuHPLfG7pOjR67sNQWZCZXm7Pfzn/ZAYrBQSbY
-         HVhJOF8T1bwfgCt/z4GB6Ow72DCwp+iAHjSoprUUYF5vtKSY8Cy5Xl4kJdlz2Hn/zH5o
-         4C3uG3jkQiChJm4nW6t0LQ5NEH4t3yE246s/ohqdudan45YcDTTSmK71uwDs+nHhvsvW
-         Y5igS6gapbGHcIHtefdk9vrArC3GRfr+RqBbTaLOzZxsy1IWVjbepibeT/Lb4UK0thrP
-         y5pz35U+/XWr9Bm+eiGtlMLF/XRlRGyQ/eEX64km/9WDAVpPOMdw+gSlGnegG2NrgeXY
-         E2WQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=COqQCzJ4auJxawCeL75BevJEbAnSN1myQOD2Q4QlS6o=;
-        b=l5PdTvU5/goMYW7xchlyThdYJFRTFYz1mZYZhuGLtv+PAajqaGQNQPHvYAN1gSmeOO
-         Td1c0AB2d9T7FJmd3hFky7f5/5IMoRm97oaX482iFyY4pAxhbgQxw0Y2jrgkJdsc+Kov
-         DHqjZYuNcDaSSu3xLDri9DZU6PNYEVJ4qbnrXY/D6d106AMssp+kbrcK7QTPOnen8455
-         XD/VmNrxHKr1mJ2cCi37oADIryo4WlElKMuUUHxQBqGAyYiB5hzDJlS5wUdRSp8D7Sv+
-         EntLn7taSw1E4+YJAbypJ7qx++DuiQvejRrI4zsss+7921VgJ03CIjOrKko6fSAaw5tK
-         ngVQ==
-X-Gm-Message-State: AGi0PuaEJofuPcseMDCg0/7yFJIcn5Z8U3J1IL8aNxPIfICmzmMpLT9u
-        yVn3BtxdUD05lVlwVaT1iHP6XexeeadaSLMN8+JCmMpW
-X-Google-Smtp-Source: APiQypImbwPouCSTKAxAbrKj370TdmOTHAg/3XPenrNSIG2xSYlnZPNpgYrCuSMEoTyq02M+FrCmk94OR5vDtNs6eq8=
-X-Received: by 2002:a2e:81d5:: with SMTP id s21mr4764927ljg.258.1588769476101;
- Wed, 06 May 2020 05:51:16 -0700 (PDT)
+        Wed, 6 May 2020 08:51:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34586 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728131AbgEFMvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 08:51:45 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5816020575;
+        Wed,  6 May 2020 12:51:43 +0000 (UTC)
+Date:   Wed, 6 May 2020 08:51:41 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Oleg Nesterov <oleg@redhat.com>, Guo Ren <guoren@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Jann Horn <jannh@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>,
+        Security Officers <security@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Ananth N Mavinakayanahalli <ananth@in.ibm.com>,
+        Naveen Rao <naveen.n.rao@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] uprobes: ensure that uprobe->offset and
+ ->ref_ctr_offset are properly aligned
+Message-ID: <20200506085141.723673f1@gandalf.local.home>
+In-Reply-To: <20200506052955.GA8259@linux.vnet.ibm.com>
+References: <CAHk-=whQt69ApMkZF8b2Q2idMDgPpPETZeeOuZg59CrOO4025w@mail.gmail.com>
+        <20200428091149.GB19958@linux.vnet.ibm.com>
+        <20200428123914.GA27920@redhat.com>
+        <20200504164724.GA28697@redhat.com>
+        <20200506052955.GA8259@linux.vnet.ibm.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200503172206.13782-1-xc-racer2@live.ca> <BN6PR04MB0660C583D9538853C8296398A3A90@BN6PR04MB0660.namprd04.prod.outlook.com>
-In-Reply-To: <BN6PR04MB0660C583D9538853C8296398A3A90@BN6PR04MB0660.namprd04.prod.outlook.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 6 May 2020 14:51:04 +0200
-Message-ID: <CACRpkdasEU0ao0OZBoeQ9x5Efe8tFwtpkLMOU_=Xn639anJxbA@mail.gmail.com>
-Subject: Re: [PATCH 5/5] iio: accel: bma180: Add support for bma023
-To:     Jonathan Bakker <xc-racer2@live.ca>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Input <linux-input@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 3, 2020 at 7:22 PM Jonathan Bakker <xc-racer2@live.ca> wrote:
+On Wed, 6 May 2020 10:59:55 +0530
+Srikar Dronamraju <srikar@linux.vnet.ibm.com> wrote:
 
-> The bma023 chip is similar enough to the bma180 and bma25x that the
-> same driver can support all of them.  The biggest differences are
-> the lack of a temperature channel and no low power but still working
-> mode.
->
-> The bma150 is a close relative of the bma023, but it does have a
-> temperature channel so support is not added for it.
->
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> * Oleg Nesterov <oleg@redhat.com> [2020-05-04 18:47:25]:
+> 
+> > uprobe_write_opcode() must not cross page boundary; prepare_uprobe()
+> > relies on arch_uprobe_analyze_insn() which should validate "vaddr" but
+> > some architectures (csky, s390, and sparc) don't do this.
+> > 
+> > We can remove the BUG_ON() check in prepare_uprobe() and validate the
+> > offset early in __uprobe_register(). The new IS_ALIGNED() check matches
+> > the alignment check in arch_prepare_kprobe() on supported architectures,
+> > so I think that all insns must be aligned to UPROBE_SWBP_INSN_SIZE.
+> > 
+> > Another problem is __update_ref_ctr() which was wrong from the very
+> > beginning, it can read/write outside of kmap'ed page unless "vaddr" is
+> > aligned to sizeof(short), __uprobe_register() should check this too.
+> > 
+> > Cc: stable@vger.kernel.org
+> > Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+> > Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> > Signed-off-by: Oleg Nesterov <oleg@redhat.com>  
+> 
+> Thanks Oleg.
+> 
+> Looks good to me.
+> 
+> Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+> > ---  
+> 
 
-Looks good to me!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Thanks Oleg, Srikar and Sven.
 
-Yours,
-Linus Walleij
+As this is in the kernel/events/ directory, I'm guessing it should be taken
+through the tip tree?
+
+-- Steve
