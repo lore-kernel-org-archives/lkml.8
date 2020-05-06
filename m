@@ -2,80 +2,150 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B000C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9830AC4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 043A720A8B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 750A820575
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:35:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tifmsMUF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729498AbgEFPfl (ORCPT
+        id S1729687AbgEFPfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:35:41 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:55930 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727984AbgEFPfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:35:41 -0400
-Received: from s0106602ad0811846.cg.shawcable.net ([68.147.191.165] helo=[192.168.0.12])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1jWM58-0000e4-J6; Wed, 06 May 2020 09:35:36 -0600
-To:     Sanjay R Mehta <sanju.mehta@amd.com>, jdmason@kudzu.us,
-        dave.jiang@intel.com, allenbh@gmail.com, arindam.nath@amd.com,
-        Shyam-sundar.S-k@amd.com
-Cc:     linux-ntb@googlegroups.com, linux-kernel@vger.kernel.org
-References: <1588738912-24827-1-git-send-email-sanju.mehta@amd.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <2197ff4b-be91-7c73-ad2e-f3849a088953@deltatee.com>
-Date:   Wed, 6 May 2020 09:35:31 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 6 May 2020 11:35:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60474 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727984AbgEFPfx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:35:53 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F517C061A0F;
+        Wed,  6 May 2020 08:35:53 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id z25so1580395otq.13;
+        Wed, 06 May 2020 08:35:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ckjD+FqBC50sSOZnIMh6YuZzBECHbpinchtFk/oKQF4=;
+        b=tifmsMUFw9bEuTEv2gjVfZHkd1NY2XfzRLvDQefmRMGi1NWZoJuf5ItxXUGdp3zVm4
+         dq+AgmcDZlfhHz14d9uTRmy7IgS4zbA/ZoqI+sDhjmK0WKhoqiQ6Xmr9wmwqTvxMYm5c
+         cdc7rZ0Bzzb4i2JHMyYfKGECz9Am32LMNaXNygAHL9Fmyqir+QWeppkJ4OSFz6fvLXmy
+         l6uPTF/s2mJBh1nY4zOU5TzKYxndCEMdW4aT4iqurU70QKeC+nFioUl/lh5iu9IwVpyf
+         YL3fIL3swQhF7rCu14kBo0t/KmIemnTuyfV1BAdW/8vvo+yiY37nol6xvqbElHyOIBcG
+         h4xA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ckjD+FqBC50sSOZnIMh6YuZzBECHbpinchtFk/oKQF4=;
+        b=AweIZ2x4l6ZMyfFMcHek61jUX/iiGa6Q6XmEYox44kpIX+vOQ538yJNElJjPEX1kdv
+         Wwpf653kv00qmfVKKLcYUHhuxrThci5WP8YEGmKx0Csr2X/Nv26rONnpqyMqdEaPqyRB
+         8/Zt/Tk5CHqwfQGlXYRN3Qy3brZXM4Mc8SwY/jE/pEV4zjU9+E1TGbw6XOZKeQHSDtgX
+         093c1f0jCtO0d1OQrhYa0I0PIE56m3Krb4jpdmihUp56m4mK92yifI2Bm8lJ5Mx6LocT
+         f6r06PSB2wThYmnBYagPVKPctkhkwB5Js3ro8XChB8f5rfu23Cf9sm1NSPGTeXcer6rW
+         Z2bQ==
+X-Gm-Message-State: AGi0Puam/IyGOOmv6YsuLvDPmQj0Lq87+VpUTK0z9mdWSuUUy+hpFYxi
+        EDo7A8VZARDP+YGHuMlU0xg=
+X-Google-Smtp-Source: APiQypJB16GivY77dA72L6q2je+mXnq7kxlSwCV722zlkaQ9FQBpPDIV87Khv7+RFTaKPEi2TMBDhQ==
+X-Received: by 2002:a05:6830:1e49:: with SMTP id e9mr6817601otj.184.1588779352509;
+        Wed, 06 May 2020 08:35:52 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id t15sm672971oov.32.2020.05.06.08.35.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 08:35:51 -0700 (PDT)
+Date:   Wed, 6 May 2020 08:35:50 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Bryan Wu <bryan.wu@canonical.com>,
+        "G.Shark Jeong" <gshark.jeong@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-leds@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] leds: lm355x: avoid enum conversion warning
+Message-ID: <20200506153550.GB1213645@ubuntu-s3-xlarge-x86>
+References: <20200505141928.923428-1-arnd@arndb.de>
+ <20200506024416.GB415100@ubuntu-s3-xlarge-x86>
+ <CAK8P3a3wqiXAx2GuKJjY90qLGNnyBNTst6LW7n6tRDvzvBQVVQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1588738912-24827-1-git-send-email-sanju.mehta@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.191.165
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com, Shyam-sundar.S-k@amd.com, arindam.nath@amd.com, allenbh@gmail.com, dave.jiang@intel.com, jdmason@kudzu.us, sanju.mehta@amd.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v3 0/5] ntb perf, ntb tool and ntb-hw improvements
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a3wqiXAx2GuKJjY90qLGNnyBNTst6LW7n6tRDvzvBQVVQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020-05-05 10:21 p.m., Sanjay R Mehta wrote:
-> v3: 
-> - Increased ntb_perf command re-try sleep time
-> - avoid false dma unmap of dst address.
+On Wed, May 06, 2020 at 04:19:45PM +0200, Arnd Bergmann wrote:
+> On Wed, May 6, 2020 at 4:44 AM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> >
+> > On Tue, May 05, 2020 at 04:19:17PM +0200, Arnd Bergmann wrote:
+> > > clang points out that doing arithmetic between diffent enums is usually
+> >                                                  ^ different
+> > > a mistake:
+> > >
+> > > drivers/leds/leds-lm355x.c:167:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
+> > >                 reg_val = pdata->pin_tx2 | pdata->ntc_pin;
+> > >                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
+> > > drivers/leds/leds-lm355x.c:178:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
+> > >                 reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
+> > >                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
+> > >
+> > > In this driver, it is intentional, so add a cast to hide the false-positive
+> >
+> > Not sure that I would call this a false positive. The warning is correct
+> > that there is a bitwise operation between different enumeration types
+> > but we do not care since we are just using the enumerated type for its
+> > integer value in lieu of a #define VAR value.
 > 
-> v2: Incorporated improvements suggested by Logan Gunthorpe
+> Right, I meant that the code works as intended and said "false positive"
+> to avoid claiming the driver is broken when this was a deliberate
+> design point.
+
+Ack.
+
+> We do want clang to warn about this though as you say, so I can
+> rephrase it to explain that both the driver and the compiler work
+> as intended but they clash in their views of how to do it ;-)
+
+Yes, that would be good if we don't go a different direction based on
+your commends below.
+
+> > > -             reg_val = pdata->pass_mode;
+> > > +             reg_val = (u32)pdata->pass_mode;
+> >
+> > Is this cast needed? I don't think there should be warning from going
+> > from an enumerated type to unsigned int.
 > 
-> Links of the review comments for v3:
-> 1. https://lkml.org/lkml/2020/3/11/981
-> 2. https://lkml.org/lkml/2020/3/10/1827
+> This cast is not needed for warnings, I added it for consistency because
+> it seemed odd to cast only four of the five enums. I can remove if though
+> if you think it's clearer without the cast.
+
+I don't really have a strong opinion but I do think that not having the
+cast makes the patch a little more specific/precise.
+
+> There may also be a different solution in completely removing the
+> lm355x_chip_init() function, as it was added at a time when we
+> were converting the last board files into devicetree, and there has
+> never been a board file defining lm355x_platform_data.
 > 
-> Logan Gunthorpe (1):
->   ntb: hw: remove the code that sets the DMA mask
+> There is unfortunately no DT support either in it, so I assume we
+> could just remove the driver completely, or change it to use a
+> DT binding similar to
+> Documentation/devicetree/bindings/leds/leds-lm36*.txt
 > 
-> Sanjay R Mehta (4):
->   ntb_perf: pass correct struct device to dma_alloc_coherent
->   ntb_tool: pass correct struct device to dma_alloc_coherent
->   ntb_perf: increase sleep time from one milli sec to one sec
->   ntb_perf: avoid false dma unmap of destination address
+> LED maintainers, any opinions on this?
+> 
+>      Arnd
 
-Looks good to me. For these 4 patches:
-
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-
-Thanks!
-
-Logan
+Cheers,
+Nathan
