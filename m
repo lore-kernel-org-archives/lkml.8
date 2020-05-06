@@ -2,78 +2,158 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64611C38A24
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEC8C47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4092C2070B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:23:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588793014;
-	bh=HT+hCyDDnp3A+m/VSXJaYiGdp3Y+AgCoLB8fV/ljk2w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=JhryHWf5PZM/Hw+StpK6FZoJi0fu9LozEJ+UCAP2RWHh3gCv2DgyFmSbtqW+JBTDi
-	 Wp4Tc50lgI/K0BzUbwNLUzyb1h4NX5t/VV5qbm2J8La0QUl4kbxGJQWBjV52PbERfc
-	 cg0R3JRfXkaQ07DejNCMaE0oE4EDhn76d+8ew9n4=
+	by mail.kernel.org (Postfix) with ESMTP id D3D0B20936
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:24:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="jWuvWWHI";
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="jWuvWWHI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbgEFTXd (ORCPT
+        id S1728867AbgEFTYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 15:23:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47194 "EHLO mail.kernel.org"
+        Wed, 6 May 2020 15:24:08 -0400
+Received: from node.akkea.ca ([192.155.83.177]:50628 "EHLO node.akkea.ca"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727110AbgEFTXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 15:23:32 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4A7720870;
-        Wed,  6 May 2020 19:23:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588793012;
-        bh=HT+hCyDDnp3A+m/VSXJaYiGdp3Y+AgCoLB8fV/ljk2w=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=B8Rz9G6AEtJsXLDcU5SN0axbD1UiixoRkMRXpd+reYcH1nNAqljAPm1kqXl6a62Fx
-         OfeHQq8+PvUnHXBkkYxLMR98TSp6iVizYFtDu1jSTWBCot46PEfXlbDMCwIGKaB1gi
-         IpcHIfbJG1bhaZlyPlunRqaMIf7V2DyCO+3weANQ=
-Date:   Wed, 6 May 2020 12:23:29 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Leon Romanovsky <leon@leon.nu>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        id S1728772AbgEFTYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 15:24:06 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by node.akkea.ca (Postfix) with ESMTP id 65B5E4E200C;
+        Wed,  6 May 2020 19:18:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1588792706; bh=LHoulxi1vTiKQKmc4GVw+S12/3VEaL+Jud01OzrChlU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=jWuvWWHIIGzaT0qvMjH/2HdacRQlCU0aGAG3XWwW4cC60lZxoTlmwGxrn0ZDYwV2f
+         rS2MsrMBebv8GOjo/h4OSTiZiQXut5VIQPQWWeWxiiUrOmc/XsQUlxlrFSl5K2pGya
+         awNKgKrogmqhKocm7IvPTKvvbJfxeKqdOnW9b0I8=
+X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
+Received: from node.akkea.ca ([127.0.0.1])
+        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 410gAoNv7bRR; Wed,  6 May 2020 19:18:26 +0000 (UTC)
+Received: from midas.localdomain (S0106788a2041785e.gv.shawcable.net [70.66.86.75])
+        by node.akkea.ca (Postfix) with ESMTPSA id BFB5E4E2003;
+        Wed,  6 May 2020 19:18:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1588792706; bh=LHoulxi1vTiKQKmc4GVw+S12/3VEaL+Jud01OzrChlU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=jWuvWWHIIGzaT0qvMjH/2HdacRQlCU0aGAG3XWwW4cC60lZxoTlmwGxrn0ZDYwV2f
+         rS2MsrMBebv8GOjo/h4OSTiZiQXut5VIQPQWWeWxiiUrOmc/XsQUlxlrFSl5K2pGya
+         awNKgKrogmqhKocm7IvPTKvvbJfxeKqdOnW9b0I8=
+From:   Angus Ainslie <angus@akkea.ca>
+To:     angus@akkea.ca
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Felix Fietkau <nbd@openwrt.org>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Fabien Parent <fparent@baylibre.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-netdev <netdev@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 06/11] net: ethernet: mtk-eth-mac: new driver
-Message-ID: <20200506122329.0a6b2ac4@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <CALq1K=Lu0hv9UCgxgrwCVoOe9L7A4sgBEM=RW2d9JkizHmdBPQ@mail.gmail.com>
-References: <20200505140231.16600-1-brgl@bgdev.pl>
-        <20200505140231.16600-7-brgl@bgdev.pl>
-        <CALq1K=Lu0hv9UCgxgrwCVoOe9L7A4sgBEM=RW2d9JkizHmdBPQ@mail.gmail.com>
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] dt-bindings: usb: ti,tps6598x: add dt binding doc
+Date:   Wed,  6 May 2020 12:17:18 -0700
+Message-Id: <20200506191718.2144752-3-angus@akkea.ca>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200506191718.2144752-1-angus@akkea.ca>
+References: <20200506191718.2144752-1-angus@akkea.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 May 2020 22:16:11 +0300 Leon Romanovsky wrote:
-> > +#define MTK_MAC_DRVNAME                                "mtk_eth_mac"
-> > +#define MTK_MAC_VERSION                                "1.0"  
-> 
-> Please don't add driver version to new driver.
+Document the tps6598x driver
 
-It has already been pointed out. Please trim your replies.
+Signed-off-by: Angus Ainslie <angus@akkea.ca>
+---
+ .../devicetree/bindings/usb/ti,tps6598x.yaml  | 75 +++++++++++++++++++
+ 1 file changed, 75 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
+
+diff --git a/Documentation/devicetree/bindings/usb/ti,tps6598x.yaml b/Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
+new file mode 100644
+index 000000000000..925db38aaf84
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
+@@ -0,0 +1,75 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/usb/ti,tps6598x.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: TI tps6598x driver
++
++maintainers:
++  -
++
++properties:
++  $nodename:
++    pattern: '^usb-pd@.*'
++
++  compatible:
++    oneOf:
++      - enum:
++        - ti,tps6598x
++      - items:
++        - const: ti,tps6598x
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  connector:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    typec_pd: usb-pd@3f {
++      compatible = "ti,tps6598x";
++      reg = <0x3f>;
++      pinctrl-names = "default";
++      pinctrl-0 = <&pinctrl_typec>, <&pinctrl_tcpc>;
++      interrupt-parent = <&gpio1>;
++      interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
++
++      connector {
++        compatible = "usb-c-connector";
++        label = "USB-C";
++        data-role = "dual";
++
++        ports {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          port@0 {
++            reg = <0>;
++
++            usb_con_hs: endpoint {
++              remote-endpoint = <&typec_hs>;
++            };
++          };
++
++          port@1 {
++            reg = <1>;
++
++            usb_con_ss: endpoint {
++              remote-endpoint = <&typec_ss>;
++            };
++          };
++        };
++      };
++    };
+-- 
+2.25.1
+
