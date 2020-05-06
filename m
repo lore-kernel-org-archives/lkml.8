@@ -2,234 +2,193 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3CCC47257
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68EC0C38A2A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E24392076D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:12:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588799537;
-	bh=LHfljle6cEyxnYKirXiuZPRTdcB4po4vvn7PQ093hKI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=iaC9DoEJ9qJXQ2PH1cWgNAH/5ozgw5tGs2U8OLe3Y0SrH+QEPqb/sFl7mKjQKJjm2
-	 L69VLXCtpcztApPwohYG1Wc5gVcdH5Dv7jVTC371+qAnSMKFp1eKvNX7T1OAF6DRVv
-	 /r6LgTFPLrVhSWhtPVBiCjyZYvqRpW4jUqwlOW24=
+	by mail.kernel.org (Postfix) with ESMTP id 3281E2075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:14:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TPnm6EJy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729915AbgEFVMR (ORCPT
+        id S1729665AbgEFVOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 17:12:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44524 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729162AbgEFVMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 17:12:16 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A24BC2075E;
-        Wed,  6 May 2020 21:12:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588799536;
-        bh=LHfljle6cEyxnYKirXiuZPRTdcB4po4vvn7PQ093hKI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=h1we/HgRwNZMpzSWYzK19H6htYEff1g/pAAVOLu8ux6MY0BNciptGD7hXpiRrbEvS
-         E/Q8UYl8yC7QXUGthU6Wq+baxM8CAXsk8EomP6NNTVhZ66wLu2Q0TN9P8rj6h0TYAY
-         /vYeSx1GoCyFex4n+LYQaeRFj1z7Jda/cGZ66ZlM=
-Date:   Wed, 6 May 2020 16:12:13 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Niklas Schnelle <schnelle@linux.ibm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Pierre Morel <pmorel@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>
-Subject: Re: [RFC 2/2] s390/pci: create links between PFs and VFs
-Message-ID: <20200506211213.GA454947@bjorn-Precision-5520>
+        Wed, 6 May 2020 17:14:04 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34968 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729432AbgEFVOC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 17:14:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588799640;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=NZxhiJYbxM1qqUjtcTHTmwQVVAW7Looq+iFDFA5dqgo=;
+        b=TPnm6EJy+Fn+FlpRf5xvFxl9hZo7VGtvQYACSLSf1aCaCAysbA2VtzPqmZb+qAos83a4b4
+        0I/J7zQkWXQwhYqTJ7en69+pxhWfAfRHqHGPKRBAtrrzZ5ChZVratQzjtvHFafC/2wDQR5
+        HW1qEaCcryesgtkW77UfcN1HUqM3yus=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-263-EyNsKzwvPsm-DHAaJIS9iw-1; Wed, 06 May 2020 17:13:59 -0400
+X-MC-Unique: EyNsKzwvPsm-DHAaJIS9iw-1
+Received: by mail-qv1-f71.google.com with SMTP id et5so3719270qvb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 14:13:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=NZxhiJYbxM1qqUjtcTHTmwQVVAW7Looq+iFDFA5dqgo=;
+        b=PZVTp4H8xBVQ/yoxnVpf3ScIaV9hpSc5kBewy+UtjmhjinjiK2z3k/xxJvr+Z2trFg
+         KHagNLvHla5vH6DHska98DrSe7WkYo1hv9GgszO8dc/Ocms5VW0LOuNzYm+WW0S9mFbE
+         b8BzNJgK94wMWC0Bj0D0OxV99IfRndfv5Z2t3QhXXsxVfQM5q23RYiGCaQEMWphRtwG7
+         aWEhmr8NO+/O2jLWCpDsPAwF3cqYaXpdWCERTxfFe0M2p4sQaDizqjDocjJdHONBhgr9
+         Felvu9dgvYapT9N7ZFor1RqMTiAMvbez4A82QrqJySBfjMBKvFU46WIRvtrXhYbSr88N
+         bfXQ==
+X-Gm-Message-State: AGi0PuZz2bk8h3i4cOGFJx06a5LBXT9dxb34Vys85Xt24IC4g82vC7jx
+        lsU0N1qsP1wtdPPx9Ky9DOfhgw9GoMrD8+SwUjKK76qxJqZ210mDdViWrxBWeXVTajbpQpuANkG
+        UuYLTBcS/dNu8DU05Fr/a3LYE
+X-Received: by 2002:a37:a310:: with SMTP id m16mr9623003qke.346.1588799638487;
+        Wed, 06 May 2020 14:13:58 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJBI0yo8r3Z8dCk2QYAiBQX+xeNtOpc5CrXQmfe7B7XVovD+2ApSgkbXVcQhsnFI4RYRJRQwg==
+X-Received: by 2002:a37:a310:: with SMTP id m16mr9622975qke.346.1588799638100;
+        Wed, 06 May 2020 14:13:58 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id x125sm2716746qke.34.2020.05.06.14.13.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 14:13:57 -0700 (PDT)
+Date:   Wed, 6 May 2020 17:13:56 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH 8/9] KVM: x86, SVM: do not clobber guest DR6 on
+ KVM_EXIT_DEBUG
+Message-ID: <20200506211356.GD228260@xz-x1>
+References: <20200506111034.11756-1-pbonzini@redhat.com>
+ <20200506111034.11756-9-pbonzini@redhat.com>
+ <20200506181515.GR6299@xz-x1>
+ <8f7f319c-4093-0ddc-f9f5-002c41d5622c@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200506154139.90609-3-schnelle@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8f7f319c-4093-0ddc-f9f5-002c41d5622c@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 05:41:39PM +0200, Niklas Schnelle wrote:
-> On s390 PCI Virtual Functions (VFs) are scanned by firmware and are made
-> available to Linux via the hot-plug interface. As such the common code
-> path of doing the scan directly using the parent Physical Function (PF)
-> is not used and fenced off with the no_vf_scan attribute.
+On Wed, May 06, 2020 at 10:07:15PM +0200, Paolo Bonzini wrote:
+> On 06/05/20 20:15, Peter Xu wrote:
+> > On Wed, May 06, 2020 at 07:10:33AM -0400, Paolo Bonzini wrote:
+> >> On Intel, #DB exceptions transmit the DR6 value via the exit qualification
+> >> field of the VMCS, and the exit qualification only contains the description
+> >> of the precise event that caused a vmexit.
+> >>
+> >> On AMD, instead the DR6 field of the VMCB is filled in as if the #DB exception
+> >> was to be injected into the guest.  This has two effects when guest debugging
+> >> is in use:
+> >>
+> >> * the guest DR6 is clobbered
+> >>
+> >> * the kvm_run->debug.arch.dr6 field can accumulate more debug events, rather
+> >> than just the last one that happened.
+> >>
+> >> Fortunately, if guest debugging is in use we debug register reads and writes
+> >> are always intercepted.  Now that the guest DR6 is always synchronized with
+> >> vcpu->arch.dr6, we can just run the guest with an all-zero DR6 while guest
+> >> debugging is enabled, and restore the guest value when it is disabled.  This
+> >> fixes both problems.
+> >>
+> >> A testcase for the second issue is added in the next patch.
+> > 
+> > Is there supposed to be another test after this one, or the GD test?
 > 
-> Even if the partition created the VFs itself e.g. using the sriov_numvfs
-> attribute of a PF, the PF/VF links thus need to be established after the
-> fact. To do this when a VF is plugged we scan through all functions on
-> the same zbus and test whether they are the parent PF in which case we
-> establish the necessary links.
-> 
-> With these links established there is now no more need to fence off
-> pci_iov_remove_virtfn() for pdev->no_vf_scan as the common code now
-> works fine.
-> 
-> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> It's the GD test.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Oh... so is dr6 going to have some leftover bit set in the GD test if without
+this patch for AMD?  Btw, I noticed a small difference on Intel/AMD spec for
+this case, e.g., B[0-3] definitions on such leftover bits...
 
-I assume these will go via the s390 tree.
+Intel says:
 
-> ---
->  arch/s390/include/asm/pci.h     |  3 +-
->  arch/s390/include/asm/pci_clp.h |  3 +-
->  arch/s390/pci/pci_bus.c         | 69 ++++++++++++++++++++++++++++++++-
->  arch/s390/pci/pci_clp.c         |  1 +
->  drivers/pci/iov.c               |  3 --
->  5 files changed, 73 insertions(+), 6 deletions(-)
+        B0 through B3 (breakpoint condition detected) flags (bits 0 through 3)
+        — Indicates (when set) that its associated breakpoint condition was met
+        when a debug exception was generated. These flags are set if the
+        condition described for each breakpoint by the LENn, and R/Wn flags in
+        debug control register DR7 is true. They may or may not be set if the
+        breakpoint is not enabled by the Ln or the Gn flags in register
+        DR7. Therefore on a #DB, a debug handler should check only those B0-B3
+        bits which correspond to an enabled breakpoint.
+
+AMD says:
+
+        Breakpoint-Condition Detected (B3–B0)—Bits 3:0. The processor updates
+        these four bits on every debug breakpoint or general-detect
+        condition. A bit is set to 1 if the corresponding address- breakpoint
+        register detects an enabled breakpoint condition, as specified by the
+        DR7 Ln, Gn, R/Wn and LENn controls, and is cleared to 0 otherwise. For
+        example, B1 (bit 1) is set to 1 if an address- breakpoint condition is
+        detected by DR1.
+
+I'm not sure whether it means AMD B[0-3] bits are more strict on the Intel ones
+(if so, then the selftest could be a bit too strict to VMX).
+
+> >> +		/* This restores DR6 to all zeros.  */
+> >> +		kvm_update_dr6(vcpu);
+> > 
+> > I feel like it won't work as expected for KVM_GUESTDBG_SINGLESTEP, because at
+> > [2] below it'll go to the "else" instead so dr6 seems won't be cleared in that
+> > case.
 > 
-> diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
-> index c1558cf071b8..99b92c3e46b0 100644
-> --- a/arch/s390/include/asm/pci.h
-> +++ b/arch/s390/include/asm/pci.h
-> @@ -131,7 +131,8 @@ struct zpci_dev {
->  	u8		port;
->  	u8		rid_available	: 1;
->  	u8		has_hp_slot	: 1;
-> -	u8		reserved	: 6;
-> +	u8		is_physfn	: 1;
-> +	u8		reserved	: 5;
->  	unsigned int	devfn;		/* DEVFN part of the RID*/
->  
->  	struct mutex lock;
-> diff --git a/arch/s390/include/asm/pci_clp.h b/arch/s390/include/asm/pci_clp.h
-> index 896ee41e23e3..1651b5610b0f 100644
-> --- a/arch/s390/include/asm/pci_clp.h
-> +++ b/arch/s390/include/asm/pci_clp.h
-> @@ -95,7 +95,8 @@ struct clp_rsp_query_pci {
->  	u16 vfn;			/* virtual fn number */
->  	u16			:  3;
->  	u16 rid_avail		:  1;
-> -	u16			:  2;
-> +	u16 is_physfn		:  1;
-> +	u16 reserved		:  1;
->  	u16 mio_addr_avail	:  1;
->  	u16 util_str_avail	:  1;	/* utility string available? */
->  	u16 pfgid		:  8;	/* pci function group id */
-> diff --git a/arch/s390/pci/pci_bus.c b/arch/s390/pci/pci_bus.c
-> index 542c6b8f56df..52d79a2f6722 100644
-> --- a/arch/s390/pci/pci_bus.c
-> +++ b/arch/s390/pci/pci_bus.c
-> @@ -126,6 +126,64 @@ static struct zpci_bus *zpci_bus_alloc(int pchid)
->  	return zbus;
->  }
->  
-> +#ifdef CONFIG_PCI_IOV
-> +static int zpci_bus_link_virtfn(struct pci_dev *pdev,
-> +		struct pci_dev *virtfn, int vfid)
-> +{
-> +	int rc;
-> +
-> +	virtfn->physfn = pci_dev_get(pdev);
-> +	rc = pci_iov_sysfs_link(pdev, virtfn, vfid);
-> +	if (rc) {
-> +		pci_dev_put(pdev);
-> +		virtfn->physfn = NULL;
-> +		return rc;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int zpci_bus_setup_virtfn(struct zpci_bus *zbus,
-> +		struct pci_dev *virtfn, int vfn)
-> +{
-> +	int i, cand_devfn;
-> +	struct zpci_dev *zdev;
-> +	struct pci_dev *pdev;
-> +	int vfid = vfn - 1; /* Linux' vfid's start at 0 vfn at 1*/
-> +	int rc = 0;
-> +
-> +	virtfn->is_virtfn = 1;
-> +	virtfn->multifunction = 0;
-> +	WARN_ON(vfid < 0);
-> +	/* If the parent PF for the given VF is also configured in the
-> +	 * instance, it must be on the same zbus.
-> +	 * We can then identify the parent PF by checking what
-> +	 * devfn the VF would have if it belonged to that PF using the PF's
-> +	 * stride and offset. Only if this candidate devfn matches the
-> +	 * actual devfn will we link both functions.
-> +	 */
-> +	for (i = 0; i < ZPCI_FUNCTIONS_PER_BUS; i++) {
-> +		zdev = zbus->function[i];
-> +		if (zdev && zdev->is_physfn) {
-> +			pdev = pci_get_slot(zbus->bus, zdev->devfn);
-> +			cand_devfn = pci_iov_virtfn_devfn(pdev, vfid);
-> +			if (cand_devfn == virtfn->devfn) {
-> +				rc = zpci_bus_link_virtfn(pdev, virtfn, vfid);
-> +				break;
-> +			}
-> +		}
-> +	}
-> +	return rc;
-> +}
-> +#else
-> +static inline int zpci_bus_setup_virtfn(struct zpci_bus *zbus,
-> +		struct pci_dev *virtfn, int vfn)
-> +{
-> +	virtfn->is_virtfn = 1;
-> +	virtfn->multifunction = 0;
-> +	return 0;
-> +}
-> +#endif
-> +
->  static int zpci_bus_add_device(struct zpci_bus *zbus, struct zpci_dev *zdev)
->  {
->  	struct pci_bus *bus;
-> @@ -157,11 +215,20 @@ static int zpci_bus_add_device(struct zpci_bus *zbus, struct zpci_dev *zdev)
->  
->  	pdev = pci_scan_single_device(bus, zdev->devfn);
->  	if (pdev) {
-> -		pdev->multifunction = 1;
-> +		if (!zdev->is_physfn) {
-> +			rc = zpci_bus_setup_virtfn(zbus, pdev, zdev->vfn);
-> +			if (rc)
-> +				goto failed_with_pdev;
-> +		}
->  		pci_bus_add_device(pdev);
->  	}
->  
->  	return 0;
-> +
-> +failed_with_pdev:
-> +	pci_stop_and_remove_bus_device(pdev);
-> +	pci_dev_put(pdev);
-> +	return rc;
->  }
->  
->  static void zpci_bus_add_devices(struct zpci_bus *zbus)
-> diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
-> index 9b318824a134..d7bd3c287cf7 100644
-> --- a/arch/s390/pci/pci_clp.c
-> +++ b/arch/s390/pci/pci_clp.c
-> @@ -159,6 +159,7 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
->  	zdev->uid = response->uid;
->  	zdev->fmb_length = sizeof(u32) * response->fmb_len;
->  	zdev->rid_available = response->rid_avail;
-> +	zdev->is_physfn = response->is_physfn;
->  	if (!s390_pci_no_rid && zdev->rid_available)
->  		zdev->devfn = response->rid & ZPCI_RID_MASK_DEVFN;
->  
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index d0ddf5f5484c..d932495b0407 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -569,9 +569,6 @@ static void sriov_del_vfs(struct pci_dev *dev)
->  	struct pci_sriov *iov = dev->sriov;
->  	int i;
->  
-> -	if (dev->no_vf_scan)
-> -		return;
-> -
->  	for (i = 0; i < iov->num_VFs; i++)
->  		pci_iov_remove_virtfn(dev, i);
->  }
-> -- 
-> 2.17.1
+> You're right, I need to cover both cases that trigger #DB.
 > 
+> > Another concern I have is that, I mostly read kvm_update_dr6() as "apply the
+> > dr6 memory cache --> VMCB".  I'm worried this might confuse people (at least I
+> > used quite a few minutes to digest...) here because latest data should already
+> > be in the VMCB.
+> 
+> No, the latest guest register is always in vcpu->arch.dr6.  It's only
+> because of KVM_DEBUGREG_WONT_EXIT that kvm_update_dr6() needs to pass
+> vcpu->arch.dr6 to kvm_x86_ops.set_dr6.  Actually this patch could even
+> check KVM_DEBUGREG_WONT_EXIT instead of vcpu->guest_debug.  I'll take a
+> look tomorrow.
+
+OK.
+
+> 
+> > Also, IMHO it would be fine to have invalid dr6 values during
+> > KVM_SET_GUEST_DEBUG.  I'm not sure whether my understanding is correct, but I
+> > see KVM_SET_GUEST_DEBUG needs to override the in-guest debug completely.
+> 
+> Sort of, userspace can try to juggle host and guest debugging (this is
+> why you have KVM_GUESTDBG_INJECT_DB and KVM_GUESTDBG_INJECT_BP).
+
+I see!
+
+> 
+> > If we worry about dr6 being incorrect after KVM_SET_GUEST_DEBUG is disabled,
+> > IMHO we can reset dr6 in kvm_arch_vcpu_ioctl_set_guest_debug() properly before
+> > we return the debug registers to the guest.
+> > 
+> > PS. I cannot see above lines [1] in my local tree (which seems to be really a
+> > bugfix...).  I tried to use kvm/queue just in case I missed some patches, but I
+> > still didn't see them.  So am I reading the wrong tree here?
+> 
+> The patch is based on kvm/master, and indeed that line is from a bugfix
+> that I've posted yesterday ("KVM: SVM: fill in
+> kvm_run->debug.arch.dr[67]"). I had pushed that one right away, because
+> it was quite obviously suitable for 5.7.
+
+Oh that's why it looks very familiar (because I read that patch.. :).  Then it
+makes sense now.  Thanks!
+
+-- 
+Peter Xu
+
