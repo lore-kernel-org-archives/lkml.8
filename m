@@ -2,92 +2,139 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E65DFC4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3365C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE0A1208DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78CB6208CA
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:05:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NJ3cssIf"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JfUipbxq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729981AbgEFQFF (ORCPT
+        id S1729989AbgEFQFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:05:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58348 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729251AbgEFQFF (ORCPT
+        Wed, 6 May 2020 12:05:18 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:40876 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729418AbgEFQFS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:05:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588781104;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=EjQrx7huxOAEezjt1ZsltALd6iDUYrh3aKybbxhxR0E=;
-        b=NJ3cssIfygfYCgqtfZVxFQudo9SFFMrtHP4WiYh1hqqt3xcJoTa1iagpbzehbe2JYcNY5R
-        IylCrbLSROo06J1t/W9/LWAiVsoDCptixlx6WmJvehQPWgq27xfocL18CqJd8zuASlLwh/
-        nvoUHVCZz25WUu+nQ8AeCxdf+1Y3Xd0=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-103-f-nY5IvCOK6R_BWaSYOY6Q-1; Wed, 06 May 2020 12:05:02 -0400
-X-MC-Unique: f-nY5IvCOK6R_BWaSYOY6Q-1
-Received: by mail-qt1-f200.google.com with SMTP id x24so3327134qta.4
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 09:05:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EjQrx7huxOAEezjt1ZsltALd6iDUYrh3aKybbxhxR0E=;
-        b=mfNxJEdWCkDHnDlNyzSC1uJrRQJMcXnfI0ATAQ5az2wgBNFsXt1pNagUZA2xmCEfVM
-         fQQwlkN5sQXIV9hT6mi1VGy+Ok91uFm9hxYztONMAQM04JtiLZy6iGjbZAcdH91H6Su8
-         jdwlSnGrP9kRhaVxrL0Bp0nIV+2OpAAJRzXSFJN/0SoXNhU4b/VK2ND6rMWewojQ6nuC
-         TWdgLJPVSrhpG0RfGnCg6GwwPoKbyG0ZvkpZ660prWUa4biWhNs7+1QQW2I3ZuWrvySz
-         7ErqyDMdX33jtcfEtFCR0dtAZQ6RqzrJAK716LZLF9hMmC93Rf+k1YNSXTBC0mJ24USQ
-         lBrg==
-X-Gm-Message-State: AGi0PuZwb0z2lILpIJmQ6QVUPr8ZsCR6/yZ2r+oUOEJ2TfwKvJLcd4aZ
-        4qQg9LlpvJgGfk8VN8s3VXI5F83zVZGgA5dO7qz1tpOLloATPOCdNyMB/2+qa627W3FzOa2GD1Z
-        gI4Ea1PC8oK2/2dL4C2RxJwwt
-X-Received: by 2002:ac8:d86:: with SMTP id s6mr8814786qti.199.1588781101563;
-        Wed, 06 May 2020 09:05:01 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIL0UQVhBLUOOXhtquJMMHvklh7J05are5WMG2EL+1MK+mNLkdxo7ZfxFE4DNlpfNv4qdNukg==
-X-Received: by 2002:ac8:d86:: with SMTP id s6mr8814772qti.199.1588781101336;
-        Wed, 06 May 2020 09:05:01 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id k2sm1956414qta.39.2020.05.06.09.05.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 09:05:00 -0700 (PDT)
-Date:   Wed, 6 May 2020 12:04:59 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH 6/9] KVM: SVM: keep DR6 synchronized with vcpu->arch.dr6
-Message-ID: <20200506160459.GN6299@xz-x1>
-References: <20200506111034.11756-1-pbonzini@redhat.com>
- <20200506111034.11756-7-pbonzini@redhat.com>
+        Wed, 6 May 2020 12:05:18 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046G3AKk111143;
+        Wed, 6 May 2020 16:04:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=gxGliN3rA/OmNwubwue86m81HXzC2y0mNMBvFANHIAE=;
+ b=JfUipbxqAxX6uP53g8rJxlwWJEZMwrT+veuzveybzGCdOyoX9BgjcZq1uCrciOlPBvW0
+ ll1Fn2RpJJ25+t4XebcbwPH0FnM/CID1lGHLHo1GiwApTzDZRvZcOPLR+S8Dwd9bkJam
+ B0agXW/QrbtwvbPffw6FexDeLrt/G9Ksq0CjQvPzwfCcHqaGqPGL2GQBKuZFLdqBRmWF
+ JAjeMS//90Snmjh6SfGFeHnEv2OXZy26RVvgUagXO1CryTkjjP6p5zVvGMQiUBc7VzqM
+ u997U8O1iTOg+B8J2AekCmUEKFjDyTpAFhK1+1hr2/RCcNd8Q58JRcvYeBPYHt8bUwGS ew== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 30usgq2cvm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 May 2020 16:04:22 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046G1moj073302;
+        Wed, 6 May 2020 16:04:21 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 30t1r85kjb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 May 2020 16:04:21 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 046G4IUs017886;
+        Wed, 6 May 2020 16:04:18 GMT
+Received: from linux-1.home (/10.175.10.30)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 06 May 2020 09:04:18 -0700
+Subject: Re: [patch V4 part 1 19/36] x86/entry: Exclude low level entry code
+ from sanitizing
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+References: <20200505131602.633487962@linutronix.de>
+ <20200505134059.970057117@linutronix.de>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Message-ID: <a5d3866a-af7f-bf0a-4864-16db9965e39f@oracle.com>
+Date:   Wed, 6 May 2020 18:03:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200506111034.11756-7-pbonzini@redhat.com>
+In-Reply-To: <20200505134059.970057117@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=0
+ spamscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005060129
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 malwarescore=0 clxscore=1015
+ mlxlogscore=999 spamscore=0 adultscore=0 bulkscore=0 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005060129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 07:10:31AM -0400, Paolo Bonzini wrote:
-> Ensure that the current value of DR6 is always available in vcpu->arch.dr6,
-> so that the get_dr6 callback can just access vcpu->arch.dr6 and becomes
-> redundant.
+
+On 5/5/20 3:16 PM, Thomas Gleixner wrote:
+> The sanitizers are not really applicable to the fragile low level entry
+> code. code. Entry code needs to carefully setup a normal 'runtime'
+
+typo: code. code.
+
+Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+
+alex.
+
+
+> environment.
 > 
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-
-Reviewed-by: Peter Xu <peterx@redhat.com>
-
--- 
-Peter Xu
-
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>   arch/x86/entry/Makefile |    8 ++++++++
+>   1 file changed, 8 insertions(+)
+> 
+> --- a/arch/x86/entry/Makefile
+> +++ b/arch/x86/entry/Makefile
+> @@ -3,6 +3,14 @@
+>   # Makefile for the x86 low level entry code
+>   #
+>   
+> +KASAN_SANITIZE := n
+> +UBSAN_SANITIZE := n
+> +KCOV_INSTRUMENT := n
+> +
+> +CFLAGS_REMOVE_common.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
+> +CFLAGS_REMOVE_syscall_32.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
+> +CFLAGS_REMOVE_syscall_64.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
+> +
+>   OBJECT_FILES_NON_STANDARD_entry_64_compat.o := y
+>   
+>   CFLAGS_syscall_64.o		+= $(call cc-option,-Wno-override-init,)
+> 
