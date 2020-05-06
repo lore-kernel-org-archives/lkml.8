@@ -2,178 +2,179 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46611C47258
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 476F7C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2651C24953
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C612082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:59:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pivKrwZ/"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="a6mx5bM2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgEFG4d (ORCPT
+        id S1727886AbgEFG7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 02:56:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35764 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726451AbgEFG4d (ORCPT
+        Wed, 6 May 2020 02:59:43 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:23052 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727803AbgEFG7n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 02:56:33 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C901EC061A0F;
-        Tue,  5 May 2020 23:56:32 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id b6so884173qkh.11;
-        Tue, 05 May 2020 23:56:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
-         :mime-version:content-transfer-encoding:content-disposition;
-        bh=g4mEA7psFAWfP/DWFOVbhOa2yXPpZxwLT+x2aAr3dAA=;
-        b=pivKrwZ/HTtBb+GDV6/M/JoLtcHXR0gIYHTZ4/6TZM5xpSQGxykyVkZDVz8bDymHkV
-         lcgbRo+8zU/CC4AVratnDce6eRa9D0L+xgZEUlBm/0cBd0P7qRx7JFBLTMProGfnTDdg
-         8bz7f/Ui6q590m1nF2UFuVF2ATuIRhqeYB9VOhq55RFTI3iEcgVGacuaje9KBRBwAp1o
-         oxYX66Ru10kQXCcPvp7aQ1BRMeYu+bfDrJqwxCu1yDw2X3FW1uJyk8sOweamUxRXaiq9
-         iIStVtBR/7HlURHAgeetpcnALl44ntx00aVB55g7s05Oc9epBwlbox7Ofn1xhBg/Kix4
-         O5Jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding
-         :content-disposition;
-        bh=g4mEA7psFAWfP/DWFOVbhOa2yXPpZxwLT+x2aAr3dAA=;
-        b=e/Vi0zbsfJr9rXTS45y1pAn+B21AAvWzYRGdXSlFDidRTffGvLYiaORHLh7jdDiVs/
-         E7JRa1Q5i14cTUWD6p5LZGTjF7wL9fDh25fOJYhQfUp02lMA+6kHC5VSWB6qQlsE2k9g
-         OwkDBGZgn9v3OqFBw9ZICwJwSofXemazFD532bLl9KMMQJNtipFbC4XipyHjEcWdEg+V
-         LRL70kVmR8/KeHc8Aj7G0HGzsFai9unt76Sug8kqrjdNXJzFIZNGhzOEMpUXwdVRBc1e
-         D2c1fVk+czmunx6BClUVzgJ8IrY/4R/gfLtemiKXmsj1ErMiwIhvYfSWQ172T7DUPEw4
-         CLqA==
-X-Gm-Message-State: AGi0Pubn2d0OSJUo6ZlwwMN03OCQCVzNmYRIy4BASlC0uUbjXPhuZ9ly
-        x7GroCboWPaw/tjcGYse/Ii0naWt91g=
-X-Google-Smtp-Source: APiQypKlfwOaA5T0mzX83+5/WFryXYBnpEehLpnP7Em4tqgoXyObmhQrRr9uzeaiU2/q/09o0gFtTw==
-X-Received: by 2002:a05:620a:65a:: with SMTP id a26mr6952049qka.323.1588748191584;
-        Tue, 05 May 2020 23:56:31 -0700 (PDT)
-Received: from dwls-dell ([177.193.195.148])
-        by smtp.gmail.com with ESMTPSA id b19sm1018449qkg.72.2020.05.05.23.56.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 May 2020 23:56:31 -0700 (PDT)
-Date:   Wed, 6 May 2020 03:55:48 -0300
-From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     "=?utf-8?Q?sean=40mess.org?=" <sean@mess.org>,
-        "=?utf-8?Q?kstewart=40linuxfoundation.org?=" 
-        <kstewart@linuxfoundation.org>,
-        "=?utf-8?Q?allison=40lohutok.net?=" <allison@lohutok.net>,
-        "=?utf-8?Q?tglx=40linutronix.de?=" <tglx@linutronix.de>,
-        "=?utf-8?Q?linux-media=40vger.kernel.org?=" 
-        <linux-media@vger.kernel.org>,
-        "=?utf-8?Q?skhan=40linuxfoundation.org?=" <skhan@linuxfoundation.org>,
-        "=?utf-8?Q?linux-kernel-mentees=40lists.linuxfoundation.org?=" 
-        <linux-kernel-mentees@lists.linuxfoundation.org>,
-        "=?utf-8?Q?linux-kernel=40vger.kernel.org?=" 
-        <linux-kernel@vger.kernel.org>
-Message-ID: <40C2F764-6E43-418B-8904-952C5E99D9D9@getmailspring.com>
-In-Reply-To: <20200503101621.50047b5c@coco.lan>
-References: <20200503101621.50047b5c@coco.lan>
-Subject: Re: [RFC, WIP, v4 09/11] media: vidtv: implement a PES
- packetizer
-X-Mailer: Mailspring
+        Wed, 6 May 2020 02:59:43 -0400
+Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200506065939epoutp0430b8b74e4b35f1e72d589a9d7f76a17e~MXjvm0_By2204322043epoutp04T
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 06:59:39 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200506065939epoutp0430b8b74e4b35f1e72d589a9d7f76a17e~MXjvm0_By2204322043epoutp04T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1588748379;
+        bh=lV2O+8iZ2/46R5+QG5laRwy2by68RqeSALI8AS4Fc/A=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=a6mx5bM24fDQD3a/VEqChD9sXCtscW9jdE2NEmhLoMG1/aMmberpPyw0v34tQNJTl
+         iVne9tBs1U9cRF4DIWhCzIih/4ZiVIFOIp6pJ69bT0YtyioGsIQvZkYJjyFncM+5Lo
+         ZiWQFtyS7v8nJXRrJi05fxNSFxKYcValPC5qO1Q4=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+        20200506065939epcas2p338187b35d7e399b1400de1b8d3fff8c9~MXju-kI3Q2161321613epcas2p3A;
+        Wed,  6 May 2020 06:59:39 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.40.188]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 49H6sN68BxzMqYm1; Wed,  6 May
+        2020 06:59:36 +0000 (GMT)
+Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
+        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        81.39.49908.85062BE5; Wed,  6 May 2020 15:59:36 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200506065936epcas2p4dec87b4a038006c26d8c66c151694cdb~MXjsT5Ybh1915819158epcas2p4l;
+        Wed,  6 May 2020 06:59:36 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200506065936epsmtrp17aae55cf1ad37c66d5e89f9f2cb72ab7~MXjsTEpZu2782027820epsmtrp1j;
+        Wed,  6 May 2020 06:59:36 +0000 (GMT)
+X-AuditID: b6c32a45-af9ff7000000c2f4-a7-5eb260581abe
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        CD.B8.18461.85062BE5; Wed,  6 May 2020 15:59:36 +0900 (KST)
+Received: from ishtar.dsn.sec.samsung.com (unknown [12.36.155.159]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200506065936epsmtip14160593c2788d15c268561091017ee03~MXjsI8YjG2294722947epsmtip1m;
+        Wed,  6 May 2020 06:59:36 +0000 (GMT)
+From:   Hyunki Koo <hyunki00.koo@samsung.com>
+To:     krzk@kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com,
+        robh+dt@kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Hyunki Koo <hyunki00.koo@samsung.com>
+Subject: [PATCH v9 0/3] 32-bit access for TX/RX hold registers for
+ samsung_tty driver
+Date:   Wed,  6 May 2020 15:59:31 +0900
+Message-Id: <20200506065931.16648-1-hyunki00.koo@samsung.com>
+X-Mailer: git-send-email 2.15.0.rc1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjm29l2jtbiOK2+RHIcK8lSN2t2tBaBmoMkxKJCqnnSg0q7sbPZ
+        hSDNmiapyYx0apo6wmGpc4pJGql0I3Vd1pUgzbSLhHaxGQltO4v897zP+z48z/t9L4YIG/nB
+        WK5aT+vUlJLg+3O7B9dLIw9k2A6LzwxGkvVDIzyysKmNT1otLxGysn2GQ46OtqOk7f1zHvm0
+        t5ZPVo32c8hHTaUoea5vCN3hL7dZz/Plt+taUXln82l5md0K5G12J1f+3bY6lZ+u3JZDU1m0
+        TkSrMzVZuepsGbFrjyJBIY0VSyIlceQWQqSmVLSMSExJjdyZq3QnI0R5lNLgplIphiGit2/T
+        aQx6WpSjYfQygtZmKbUSiTaKoVSMQZ0dlalRxUvE4hipezJDmdM/40S0rsDjw3PznHzQjJcA
+        Pwzim2HFk7OgBPhjQrwHwL7xd1y2+AZg8dO3fLaYA/Btyx/uP4nT+B5hG30ALpyZ9UlcADZ/
+        vgQ8U3x8A5z+VY14cBC+DxZYXvA8Qwg+AqCx4yrH0wjE98OOkkdezMXXwgnXL9SDBbgMVo40
+        IKxdGHR8beaxfAB8UD3hjYHgobCwq8YbA+IFGLzWcIvHChLhmNEBWBwIP9+zoywOhp/KjT58
+        GvYbK1BWfAHA+ZkPPvEmaJ4scosxt8N62NYb7YGeEEOvfb7LYPHgAsrSAlhsFLLCdfDG3EcO
+        i0Ng64den5McVnzq8a4ixA/BadNP3kUQal60jXnRNub/vg0AsYIVtJZRZdNMjFay+FttwHuf
+        EUk9oGokZQDgGCCWCsTJHYeFPCqPOaEaABBDiCDBUpebEmRRJ07SOo1CZ1DSzACQuh+7Agle
+        nqlxX7tar5BIY2JjxXFSUhobQxIrBZ1LXh0U4tmUnj5K01pa90/HwfyC80F4SVKGo8wpqrPY
+        ZnscRfEb/e7n1gtrTPawhsKmqbYE03Xb5cdv9v++c6orQDGeAYju+WrN5O7G4VNjS+SHTLKu
+        lU5Z2qqbJmJ8a9BYeuuEA9xdM/dD/SCiHD0X0jKVZyf8BqMNX7TO2qBjpYay8OG9lcL8Z1ei
+        LLfSXEcWHiYTXCaHkkQgOob6C8DSmWi1AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBLMWRmVeSWpSXmKPExsWy7bCSnG5EwqY4g1lHhSzmHznHatG8eD2b
+        xaqlN5gtpmz4wGRx/vwGdotNj6+xWlzeNYfNYsb5fUwWZxb3slu07j3C7sDlsWlVJ5vH/rlr
+        2D02L6n36NuyitFj/ZarLB6fN8kFsEVx2aSk5mSWpRbp2yVwZez7cJW54IdwxdlvP5kaGJcI
+        dDFyckgImEhcbXvM3MXIxSEksJtR4sCjS2wQCRmJCS+WMEPYwhL3W46wQhR9Y5R4u/QxK0iC
+        TUBb4s33mUBFHBwiAlESez76g9QwC1xhlFj4fgsjSI2wQKjE6xtLWUBsFgFViSc/vrOD2LwC
+        thJTzi2AWqAsceHdElaIuKDEyZlPWEBmMguoS6yfJwQSZhaQl2jeOpt5AiP/LCRVsxCqZiGp
+        WsDIvIpRMrWgODc9t9iwwDAvtVyvODG3uDQvXS85P3cTIzjwtTR3MG5f9UHvECMTB+MhRgkO
+        ZiURXp4fG+OEeFMSK6tSi/Lji0pzUosPMUpzsCiJ894oXBgnJJCeWJKanZpakFoEk2Xi4JRq
+        YEpOvCLx5Gj7UrWIRXpWF1Z0O6x5azpl7tuS6ZEXCx6oB1qovlvqp1rg6yV5ccbW579PV6XM
+        WO58i/PkvPTV4tNCjRb7+5xb7a5r9ajtekvZTkHu/u1TfRobkpviGZm2vCz2Us769uD7j6bj
+        h30VYvMFbfqtEjUE1qQ4tHDPWeqh7dWZXapQ/Lhj06aTjK2TZ5x7O/HD98NRrnvv5zn/vl01
+        Xbhm3ZNq8/y/js8mJOSHLRdLyJoefG3yVwUvb/WlDqxq2nGdSd+uKBW2VyrbZsy77Lp1Qejb
+        x1oLH5frGi5JjtNUckkMN3+/Z+LaskjvT9/99N/FfHBwn8miN62lpFX1Q0pptNDrZ8/iN6bG
+        KrEUZyQaajEXFScCAFOw1ojrAgAA
+X-CMS-MailID: 20200506065936epcas2p4dec87b4a038006c26d8c66c151694cdb
+X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200506065936epcas2p4dec87b4a038006c26d8c66c151694cdb
+References: <CGME20200506065936epcas2p4dec87b4a038006c26d8c66c151694cdb@epcas2p4.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mauro,
+Change in v9:
+- move wr_reg_barrier into ifdef of CONFIG_SERIAL_SAMSUNG_CONSOLE
+  to fix following build error for x86 build
+  CC [M]  drivers/tty/serial/samsung_tty.o
+  drivers/tty/serial/samsung_tty.c:186:13: warning: ‘wr_reg_barrier’
+  defined but not used [-Wunused-function]
 
+Change in v8:
+- spit into 3 patch
+  [1/3] create the new functions with no functional change to the code as-is.
+  Replace rd_regb/wr_regb with rd_reg/wr_reg for general usage.
+  [2/3] add the new binding reg-io-width in device tree
+  [3/3] add the new funtinality of rd_reg / wr_reg and wr_reg_barrier 
+        to support 32-bit access for the TX/RX hold registers UTXH and URXH.
 
-> As commented, don't use WARN_ON(). At most, you could use WARN_ON_ONCE(),
-> as otherwise, you may end by causing serious performance issues if
-> the code starts to produce a flood of warnings at the dmesg.
-> 
-> I would use pr_warn_ratelimit() on all such cases.
-> 
+Change in v7:
+- [1/2] correct build error on running 'make dt_binding_check' 
+Documentation/devicetree/bindings/serial/samsung_uart.yaml:  mapping values are not allowed in this context
+  in "<unicode string>", line 36, column 13
+  Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/serial/samsung_uart.example.dts' failed
+  make[1]: *** [Documentation/devicetree/bindings/serial/samsung_uart.example.dts] Error 1
+  make[1]: *** Waiting for unfinished jobs....
+  Makefile:1262: recipe for target 'dt_binding_check' failed
+  make: *** [dt_binding_check] Error 2
+- [2/2] add commit message of reviewed by and tested by in commit message
+  Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+  Tested on Odroid HC1 (Exynos5422):
+  Tested-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-OK.
+Change in v6:
+- [2/2] clean description of reg-io-width
+  allOf is not needed. Just enum [1, 2] is enough.
 
+Changes in v5:
+- spit into 2 patch, newly added patch for dt-binding
+  [1/2] newly added dt-binding and go as first patch in this series.
+  [2/2] go as second patch in this series.
 
+Changes in v4:
+- correct variable types and change misleading function name
 
+Changes in v3:
+- line 2031: remove redundant init value  for ourport->port.iotype
 
-> I don't like the idea of changing the "from" buffer endiannes, copy
-> and then restore it back to the original state. Is this really needed?
-> 
-> I would, instead, define:
-> 
-> 	struct pes_header {
-> 	...
-> 		__be32 bitfield;
-> 		__be16 length;
-> 	...
-> 	};
-> 
-> Then wherever you would touch them:
-> 
-> 	u32 bitfield;
-> 	u16 len;
-> 
-> 	/* Write into BE fields */
-> 	pes_header.bitfield = cpu_to_be32(bitfield);
-> 	pes_header.length = cpu_to_be16(len);
-> 
-> 	/* Read from BE fields */
-> 	bitfield = be32_to_cpu(pes_header.bitfield);
-> 	len = be16_to_cpu(pes_header.length);
-> 
-> 
-> As a side effect, when you use "__be16" and "__be32" types, gcc
-> and smatch/sparse will warn you if you mess with endiannes.
-> 
-> Same applies to similar code elsewhere.
-> 
+Changes in v2:
+- line 954 : change rd_regl to rd_reg in for backward compatibility.
+- line 2031: Add init value for ourport->port.iotype  to UPIO_MEM
 
-I don't like it either, it is error prone. I did not know about this
-other possibility. Does this work for _bitfields_ though?
+Hyunki Koo (3):
+  serial: samsung: Replace rd_regb/wr_regb with rd_reg/wr_reg
+  dt-bindings: serial: Add reg-io-width compatible
+  tty: samsung_tty: 32-bit access for TX/RX hold registers
 
-I think the authors for libdvbv5 used unions precisely so bswap() could
-be called on a 'bitfield' member and from then on the bitfields could be
-accessed directly, e.g.:
+ .../devicetree/bindings/serial/samsung_uart.yaml   |  8 +++
+ drivers/tty/serial/samsung_tty.c                   | 76 ++++++++++++++++++----
+ 2 files changed, 72 insertions(+), 12 deletions(-)
 
-	union {
-		u16 bitfield; <-- call bswap() on this
-		struct {
-                        --> then use these directly:
-			u8  syntax:1;
-			u8  zero:1;
-			u8  one:2;
-			u16 section_length:12;
-		} __packed;
-	} __packed
-
-At least that's what I understood.
-
-I found this: 
-https://lwn.net/Articles/741762/
-
-Maybe *_get_bits, *_replace_bits is the equivalent that I should use for bitfields?
-
-Because I'd rather not do this:
-
-> 	u32 bitfield;
-> 	/* Write into BE fields */
-> 	pes_header.bitfield = cpu_to_be32(bitfield);
-
-Since I'd have to write the (many!) bitwise operations myself and I'm
-sure I will mess this up at _some_ point.
-
-
-
-thanks,
-- Daniel
-
+-- 
+2.15.0.rc1
 
