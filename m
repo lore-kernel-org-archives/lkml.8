@@ -2,140 +2,200 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C76C0C47254
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 00:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C972C47247
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 00:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 996072073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 00:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 562862073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 00:03:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VlfY3VSB"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="aS17fUgF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbgEFABi (ORCPT
+        id S1729537AbgEFADU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 20:01:38 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26814 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728642AbgEFABi (ORCPT
+        Tue, 5 May 2020 20:03:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56452 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728717AbgEFADT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 20:01:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588723296;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=uPy7LWjiZV38WzP4ia9r6qbCDanZ9+7jGEAYy844X1w=;
-        b=VlfY3VSB+yU7MrhrErllB4x2dQZedCoCI4yxeH1J0855cOcq8tLrLUwI9+qIuNxKpqPfrK
-        iz3snfPdr+uBH5MRVPaJh1hGbIPhhjq3m6+c0cQz9EyRpUSbajm2aQYTNyZ2GvzwVN3a+h
-        BXDioIVv281GCzxPzqbRE1oBAdLpJVU=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-170-vlQ9c-X4MjOGSRe2N2pZ7A-1; Tue, 05 May 2020 20:01:35 -0400
-X-MC-Unique: vlQ9c-X4MjOGSRe2N2pZ7A-1
-Received: by mail-wm1-f70.google.com with SMTP id l21so181961wmh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 17:01:35 -0700 (PDT)
+        Tue, 5 May 2020 20:03:19 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC5EAC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 17:03:19 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id q24so9312pjd.1
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 17:03:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HQ1Cigpl9A0g2ziQxfxPjRmKwSRMahcOzSHZQwuGlC0=;
+        b=aS17fUgF3ZC88stcvJfNxTaoB+HmJk4Ad7IBO2Jbxa7DBT0xHZEzNR+EpuVvT3jKxK
+         3fNensYy9VMPP35dxWjkIE/G2AWSvUAtAUsfaCik58Kco16YYkIrxNAod0sW9c1NWlMQ
+         kk/wKARGgNRrs/6+2L/Z8zvcdz8+1FVqbBSLfa96M3eHXdnC5bEp/V7dtDLUNdZzB4cR
+         PBueW4BvuQgv1sdcX0JxRpzCTiYT1/iUHyB6GwkHI460ETnHumVG+jRbClGLPgWzoBTF
+         IO71jMIzDcIgS/qnohBGUlCZC0XTb7LG1Lys3TPvPrd07M9QSQqQcdtB6rk98Q6zybf6
+         gL0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=uPy7LWjiZV38WzP4ia9r6qbCDanZ9+7jGEAYy844X1w=;
-        b=HXFo0wscy5WEN3qfOG+Nf+pLvFZ7zs5vzHbhsqP+RqRa1uhwWUI2zt7r8ic4dBtpKw
-         SrgjRz1T6Du1M3Vh4xrwJqidOZv4uKGxnEDhjs0COdkQerbBcj7rP44hgDo6G4ufnx+G
-         YPIAeC09SsJFa2NLCgV954jIAwAN3t85JSIxZUJn0Z//K7k5gWJSdIXL3wkZoLAFcD5v
-         sCiVI0ajYp/a5AL3b+hVbmtVrZDF7JAdwjxZ5kjp1eDITg6dMeAepo8bypDnoJlAX4tZ
-         H6niPsCy1surSLN4ZNx5m8l5jlscJ8TrslVU+MGAL8I+hRAA12VgBJyZ3901597VuSl0
-         Emmg==
-X-Gm-Message-State: AGi0PuauURNBMACgMufXtrzN5Bzjye9bV6UOAbX/M9La1ogNogIrUD1E
-        rELDxd1oLZB27TSlsbBfo64n5++BK+WVQ4/0fyBdlx8y615b4JSBckMKPI85yyms0mFQMRiIsSb
-        Whz7jn6GqIprlZAVFlnEKUJVD
-X-Received: by 2002:a1c:668a:: with SMTP id a132mr1374907wmc.46.1588723293808;
-        Tue, 05 May 2020 17:01:33 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJ8RYGHvYZzJ/QpEX2WdgeFSAVsMNA2jw0S7Y/1PxVtp3/Bj3PJc6VuKrGHjyReVPI+0wkbBw==
-X-Received: by 2002:a1c:668a:: with SMTP id a132mr1374894wmc.46.1588723293612;
-        Tue, 05 May 2020 17:01:33 -0700 (PDT)
-Received: from redhat.com (bzq-109-66-7-121.red.bezeqint.net. [109.66.7.121])
-        by smtp.gmail.com with ESMTPSA id n7sm447wrm.86.2020.05.05.17.01.32
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=HQ1Cigpl9A0g2ziQxfxPjRmKwSRMahcOzSHZQwuGlC0=;
+        b=c8zbubFfyxxi54JBJPLmrLJ2rEPfuqgB1uHsBolaNL6kU6B6FOdtcxMWppJpgohN6W
+         a/jK/JVghhLAghH6cQTyPG8wwwswGrSMtsXHzfxcMgVM8MszJ1MChLIylWu9Eoxpra+O
+         SEZBXWHB5p1eBA4yCoA269Ts7F2XrQWB3PCPc4rm4hhed3OeDVuPoMY/SQ4OvPvu+k+q
+         1vdZe35rqgT3Mm5Uuw545DDFx5gCQsm74gy/vH+NoUFLRUGIh/JqxxgblgzEKCl6Rclp
+         DqLI7B0LUukr6OviOH243zlrD4TB+JwHYXc4FkIcu70t5ESRmm0SeYI4j0kSfIbzHEwb
+         0HCQ==
+X-Gm-Message-State: AGi0Pua1yu49Onvu1sgbu3EUmGyIu3c8I8szf/bkeI4FBkY02gap8ft8
+        6BztyEufI621IEYsEWWqkDQAvA==
+X-Google-Smtp-Source: APiQypKgpYaqDCemgOAG6HlmVBw70Z+EdVZDEw8elHZMNfKM8/xCEHqZc+sWdHTnljPuqGXuPzSDCA==
+X-Received: by 2002:a17:90a:32ea:: with SMTP id l97mr6115115pjb.50.1588723398999;
+        Tue, 05 May 2020 17:03:18 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id r4sm220213pgi.6.2020.05.05.17.03.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 17:01:32 -0700 (PDT)
-Date:   Tue, 5 May 2020 20:01:31 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: [PATCH] virtio_net: fix lockdep warning on 32 bit
-Message-ID: <20200506000006.196646-1-mst@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
-X-Mutt-Fcc: =sent
+        Tue, 05 May 2020 17:03:18 -0700 (PDT)
+Date:   Tue, 05 May 2020 17:03:18 -0700 (PDT)
+X-Google-Original-Date: Tue, 05 May 2020 17:03:16 PDT (-0700)
+Subject:     Re: [PATCH] RISC-V: Remove unused code from STRICT_KERNEL_RWX
+In-Reply-To: <CAOnJCUJtnVjYwfaHbiUdO4SqPk8rY0q0uYckNJpQpc7jK0Pz7g@mail.gmail.com>
+CC:     Atish Patra <Atish.Patra@wdc.com>, aou@eecs.berkeley.edu,
+        Anup Patel <Anup.Patel@wdc.com>, linux-kernel@vger.kernel.org,
+        zong.li@sifive.com, Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv@lists.infradead.org
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     atishp@atishpatra.org
+Message-ID: <mhng-3b48ef6b-d427-40af-b8f7-1bdccc117927@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we fill up a receive VQ, try_fill_recv currently tries to count
-kicks using a 64 bit stats counter. Turns out, on a 32 bit kernel that
-uses a seqcount. sequence counts are "lock" constructs where you need to
-make sure that writers are serialized.
+On Tue, 05 May 2020 17:00:05 PDT (-0700), atishp@atishpatra.org wrote:
+> On Tue, May 5, 2020 at 4:55 PM Palmer Dabbelt <palmer@dabbelt.com> wrote:
+>>
+>> On Sun, 03 May 2020 21:03:19 PDT (-0700), Atish Patra wrote:
+>> > This patch removes the unused functions set_kernel_text_rw/ro.
+>> > Currently, it is not being invoked from anywhere and no other architecture
+>> > (except arm) uses this code. Even in ARM, these functions are not invoked
+>> > from anywhere currently.
+>> >
+>> > Fixes: d27c3c90817e ("riscv: add STRICT_KERNEL_RWX support")
+>> >
+>> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+>> > ---
+>> >  arch/riscv/mm/init.c | 16 ----------------
+>> >  1 file changed, 16 deletions(-)
+>> >
+>> > diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+>> > index b55be44ff9bd..ba60a581e9b6 100644
+>> > --- a/arch/riscv/mm/init.c
+>> > +++ b/arch/riscv/mm/init.c
+>> > @@ -501,22 +501,6 @@ static inline void setup_vm_final(void)
+>> >  #endif /* CONFIG_MMU */
+>> >
+>> >  #ifdef CONFIG_STRICT_KERNEL_RWX
+>> > -void set_kernel_text_rw(void)
+>> > -{
+>> > -     unsigned long text_start = (unsigned long)_text;
+>> > -     unsigned long text_end = (unsigned long)_etext;
+>> > -
+>> > -     set_memory_rw(text_start, (text_end - text_start) >> PAGE_SHIFT);
+>> > -}
+>> > -
+>> > -void set_kernel_text_ro(void)
+>> > -{
+>> > -     unsigned long text_start = (unsigned long)_text;
+>> > -     unsigned long text_end = (unsigned long)_etext;
+>> > -
+>> > -     set_memory_ro(text_start, (text_end - text_start) >> PAGE_SHIFT);
+>> > -}
+>> > -
+>> >  void mark_rodata_ro(void)
+>> >  {
+>> >       unsigned long text_start = (unsigned long)_text;
+>>
+>> Thanks, this is on fixes.  Are you going to remove the ARM code as well?
+>>
+>
+> Yeah and also I realized that I forgot to remove the declarations from
+> the header file.
+> My bad. I will send out a v2. Please drop this one and take v2.
 
-In turn, this means that we mustn't run two try_fill_recv concurrently.
-Which of course we don't. We do run try_fill_recv sometimes from a fully
-preemptible context and sometimes from a softirq (napi) context.
+I just fixed it up
 
-However, when it comes to the seqcount, lockdep is trying to enforce
-the rule that the same lock isn't accessed from preemptible
-and softirq context. This causes a false-positive warning:
+commit 73cb8e2a5863ccc5215660f5123db621bd57dff7
+gpg: Signature made Tue 05 May 2020 05:02:17 PM PDT
+gpg:                using RSA key 2B3C3747446843B24A943A7A2E1319F35FBB1889
+gpg:                issuer "palmer@dabbelt.com"
+gpg: Good signature from "Palmer Dabbelt <palmer@dabbelt.com>" [ultimate]
+gpg:                 aka "Palmer Dabbelt <palmerdabbelt@google.com>" [ultimate]
+Author: Atish Patra <atish.patra@wdc.com>
+Date:   Sun May 3 21:03:19 2020 -0700
 
-WARNING: inconsistent lock state
-...
-inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
+    RISC-V: Remove unused code from STRICT_KERNEL_RWX
+    
+    This patch removes the unused functions set_kernel_text_rw/ro.
+    Currently, it is not being invoked from anywhere and no other architecture
+    (except arm) uses this code. Even in ARM, these functions are not invoked
+    from anywhere currently.
+    
+    Fixes: d27c3c90817e ("riscv: add STRICT_KERNEL_RWX support")
+    Signed-off-by: Atish Patra <atish.patra@wdc.com>
+    Reviewed-by: Zong Li <zong.li@sifive.com>
+    Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 
-As a work around, shut down the warning by switching
-to u64_stats_update_begin_irqsave - that works by disabling
-interrupts on 32 bit only, is a NOP on 64 bit.
-
-Reported-by: Thomas Gleixner <tglx@linutronix.de>
-Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
----
-
-I'm not thrilled about this but this seems the best we can do for now.
-
-Completely untested.
-
-
-Thomas, can you pls let me know the config I need to trigger the warning
-in question?
-
-
- drivers/net/virtio_net.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-index 6594aab4910e..95393b61187f 100644
---- a/drivers/net/virtio_net.c
-+++ b/drivers/net/virtio_net.c
-@@ -1243,9 +1243,11 @@ static bool try_fill_recv(struct virtnet_info *vi, struct receive_queue *rq,
- 			break;
- 	} while (rq->vq->num_free);
- 	if (virtqueue_kick_prepare(rq->vq) && virtqueue_notify(rq->vq)) {
--		u64_stats_update_begin(&rq->stats.syncp);
-+		unsigned long flags;
-+
-+		flags = u64_stats_update_begin_irqsave(&rq->stats.syncp);
- 		rq->stats.kicks++;
--		u64_stats_update_end(&rq->stats.syncp);
-+		u64_stats_update_end_irqrestore(&rq->stats.syncp);
- 	}
+diff --git a/arch/riscv/include/asm/set_memory.h b/arch/riscv/include/asm/set_memory.h
+index c38df4771c09..4c5bae7ca01c 100644
+--- a/arch/riscv/include/asm/set_memory.h
++++ b/arch/riscv/include/asm/set_memory.h
+@@ -22,14 +22,6 @@ static inline int set_memory_x(unsigned long addr, int numpages) { return 0; }
+ static inline int set_memory_nx(unsigned long addr, int numpages) { return 0; }
+ #endif
  
- 	return !oom;
--- 
-MST
+-#ifdef CONFIG_STRICT_KERNEL_RWX
+-void set_kernel_text_ro(void);
+-void set_kernel_text_rw(void);
+-#else
+-static inline void set_kernel_text_ro(void) { }
+-static inline void set_kernel_text_rw(void) { }
+-#endif
+-
+ int set_direct_map_invalid_noflush(struct page *page);
+ int set_direct_map_default_noflush(struct page *page);
+ 
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index 5b813532db59..27a334106708 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -502,22 +502,6 @@ static inline void setup_vm_final(void)
+ #endif /* CONFIG_MMU */
+ 
+ #ifdef CONFIG_STRICT_KERNEL_RWX
+-void set_kernel_text_rw(void)
+-{
+-	unsigned long text_start = (unsigned long)_text;
+-	unsigned long text_end = (unsigned long)_etext;
+-
+-	set_memory_rw(text_start, (text_end - text_start) >> PAGE_SHIFT);
+-}
+-
+-void set_kernel_text_ro(void)
+-{
+-	unsigned long text_start = (unsigned long)_text;
+-	unsigned long text_end = (unsigned long)_etext;
+-
+-	set_memory_ro(text_start, (text_end - text_start) >> PAGE_SHIFT);
+-}
+-
+ void mark_rodata_ro(void)
+ {
+ 	unsigned long text_start = (unsigned long)_text;
 
