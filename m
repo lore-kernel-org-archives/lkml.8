@@ -2,63 +2,64 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F31C47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2088C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41DB1206F9
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92DB920721
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:50:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kAUBHaIn"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kRWBWqQa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgEFFuC (ORCPT
+        id S1727794AbgEFFuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 01:50:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53656 "EHLO
+        Wed, 6 May 2020 01:50:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725771AbgEFFuC (ORCPT
+        by vger.kernel.org with ESMTP id S1726712AbgEFFuP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 01:50:02 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A909DC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 22:50:00 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id w65so447626pfc.12
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 22:50:00 -0700 (PDT)
+        Wed, 6 May 2020 01:50:15 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38490C061A10
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 22:50:14 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id j21so613531pgb.7
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 22:50:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yzL6cUEC8Sb9M0V1vJgMsz/nqVpMVfxLp+rf/lwsZKU=;
-        b=kAUBHaIn2XglY81EN0TH5ycwufqdQH9VevoTUibsMR40E5b2pIhc6cR9QKtdpRt36a
-         Tbc7Iftyur5i+FyD7I2vkmk3ZmM0uWNr41YIGEsZ70mj/JHi7UC1LnPWsJL8DGq9kez4
-         vswVXvyYNPJBwPManb3stNUHuwpIIufgTSweQ=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ldWprC6/gJRy30f4qI0sd87+jEX+5JVD2qRmLKUKSuY=;
+        b=kRWBWqQa6ecU6mj/tDkQ5CyX0eu1M74l2wFd/sa8roAbVsA16hSvJ0poORwNmLvTWq
+         uUnZcYIowQQ867FiKUZFFwcagHQ8pwFgab6F8bfGIY0UHVI/XB5+RtdjqE+5r7ujhQYu
+         t/DgPgoT6wGvpRRdCG/kerbjz/d5Ojyd45T24=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yzL6cUEC8Sb9M0V1vJgMsz/nqVpMVfxLp+rf/lwsZKU=;
-        b=eLkbKg7xmzIhFJsbci4h1y6+09NT62pTBvrL515gQnl1aGzP2A3GK0KgQPYblhqgqp
-         rWc3D52dwLR9Ks2K29vHlDWTUJYzIQH6NesyCBdBGnVxOodg2tWNeFGDnRXrn4SB8Zik
-         gkReFhYvgTTHkRR4Hu0h5yAxuArZ5mjE4+TeNG03g5YZONr9pw1hMHh8ibOunqNWPLaV
-         +6eUnTYZxb7noW4l+3OU1UdCx6B26vOfai97LfPK05v+pYTvGyiCnz/uWr1koBoj9qBE
-         U6eHkdFLaqy9Zbjy2Gpgf2eoKOzJwfYlUHJcc49dpx8Lm1ZeOMGe0HBJCJWT7wwCWTrr
-         GX6Q==
-X-Gm-Message-State: AGi0Pub2T95NBRY3SbfNzu4vKG+dpab0uvL6FxkO0fJPQXAlMmjwf+Yt
-        YxZ9bu+eEh+u6ilMc2Cya2nRBAExMB4=
-X-Google-Smtp-Source: APiQypL44xNcKeY9JS5dfmN3iPs0MNug++UkszcoF+ZJvAg0ou5lbnqsDADn1qqg9HVVdPkFsqBSJA==
-X-Received: by 2002:aa7:9589:: with SMTP id z9mr6512255pfj.247.1588744199913;
-        Tue, 05 May 2020 22:49:59 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ldWprC6/gJRy30f4qI0sd87+jEX+5JVD2qRmLKUKSuY=;
+        b=WUKcUcFNXuHhGevSDNE35iUSnD8HmMdQV37XKna7MMbinjGVJc9Qrxgkb44kNtYTlI
+         ffoPyE27Z6m50q9R15M5TySEOvMdTp/20QGarjYbC4RY3M6Iz1eC7Qg/0bRKG1ZtpgIy
+         K140keqZsN8PLhrIxN0y27+VhBIUxGc6HXP1frfUOk7XOdPAbrV/EjIHpbhlHUv4kh4h
+         9tMjiyE3x9nb151XBv3n0qrljStthzkbbPorIDddOpcBbJtRMaZcKzBLpLfsCpmxQhRK
+         0WV3K9liXfoYqtj2FCoYyREbNdqaLA5MfDvBEvsSZg8wmYi4pYua47f4DrPCdyD0fB6b
+         sBqA==
+X-Gm-Message-State: AGi0Puayxu+eptPiT+/dSavf8fXcrnqMzjWtdYDnjnGe5L8JuXV40eAT
+        iR5eN8D1WUhNm5X1v25wtXPVVvtYYOs=
+X-Google-Smtp-Source: APiQypLBf6Z7OsDBx417Ig2iNo0B8it48czxeprZK9XxePTpiPqDkOB4YpcOD4sdhh224rDHgW0Hsg==
+X-Received: by 2002:aa7:9a43:: with SMTP id x3mr6662861pfj.266.1588744213491;
+        Tue, 05 May 2020 22:50:13 -0700 (PDT)
 Received: from localhost ([2401:fa00:9:14:a92f:c47d:76a8:b09e])
-        by smtp.gmail.com with ESMTPSA id t5sm729738pgp.80.2020.05.05.22.49.55
+        by smtp.gmail.com with ESMTPSA id z13sm3734853pjz.42.2020.05.05.22.50.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2020 22:49:59 -0700 (PDT)
+        Tue, 05 May 2020 22:50:13 -0700 (PDT)
 From:   Eizan Miyamoto <eizan@chromium.org>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Eizan Miyamoto <eizan@chromium.org>,
+        Enric Balletbo I Serra <enric.balletbo@collabora.com>,
         Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
         Houlong Wei <houlong.wei@mediatek.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
@@ -66,10 +67,12 @@ Cc:     Eizan Miyamoto <eizan@chromium.org>,
         Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
         linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
         linux-mediatek@lists.infradead.org
-Subject: [PATCH v2 0/5] MTK MDP driver cleanups to prep for futher work
-Date:   Wed,  6 May 2020 15:49:15 +1000
-Message-Id: <20200506054920.109738-1-eizan@chromium.org>
+Subject: [PATCH v2 1/5] [media] mtk-mdp: remove mtk_mdp_comp.regs from mtk_mdp_comp.h
+Date:   Wed,  6 May 2020 15:49:16 +1000
+Message-Id: <20200506154832.v2.1.I0d52fd84fe481e254a10960b060f32c47ce0d202@changeid>
 X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
+In-Reply-To: <20200506054920.109738-1-eizan@chromium.org>
+References: <20200506054920.109738-1-eizan@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,35 +80,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+These fields are not used and can be removed.
 
-It most notably converts an array of MDP components to a list instead,
-but also removes some unused fields.
+Signed-off-by: eizan@chromium.org
+Reviewed-by: Enric Balletbo I Serra <enric.balletbo@collabora.com>
+Signed-off-by: Eizan Miyamoto <eizan@chromium.org>
+---
 
-This series of patches does some cleanup in preparation for futher work
-so that hardware video decode works on 4.19 and later kernels. We are
-planning on adding a dummy driver for the relevant MDP components that
-will be bound together using the component framework, which will enable
-calls to set up IOMMUs and LARBs, and make calls into pm_runtime.
+Changes in v1: None
 
-Changes in v2:
-- remove unnecessary error handling labels in favor of err_m2m_register
-- rebase onto linux-next/master to pick up
-  757570f11fa4b0ce5472a6583de6f06e996a8527
+ drivers/media/platform/mtk-mdp/mtk_mdp_comp.c | 1 -
+ drivers/media/platform/mtk-mdp/mtk_mdp_comp.h | 2 --
+ 2 files changed, 3 deletions(-)
 
-Eizan Miyamoto (5):
-  [media] mtk-mdp: remove mtk_mdp_comp.regs from mtk_mdp_comp.h
-  [media] mtk-mdp: handle vb2_dma_contig_set_max_seg_size errors during
-    probe
-  [media] mtk-mdp: handle vpu_wdt_reg_handler() errors during probe
-  [media] mtk-mdp: convert mtk_mdp_dev.comp array to list
-  [media] mtk-mdp: Remove mtk_mdp_comp.id and supporting functionality
-
- drivers/media/platform/mtk-mdp/mtk_mdp_comp.c | 60 ++--------------
- drivers/media/platform/mtk-mdp/mtk_mdp_comp.h | 23 ++----
- drivers/media/platform/mtk-mdp/mtk_mdp_core.c | 70 ++++++++++++-------
- drivers/media/platform/mtk-mdp/mtk_mdp_core.h | 10 ++-
- 4 files changed, 64 insertions(+), 99 deletions(-)
-
+diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
+index 58abfbdfb82d..c76cd61fb178 100644
+--- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
++++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
+@@ -106,7 +106,6 @@ int mtk_mdp_comp_init(struct device *dev, struct device_node *node,
+ 	comp->dev_node = of_node_get(node);
+ 	comp->id = comp_id;
+ 	comp->type = mtk_mdp_matches[comp_id].type;
+-	comp->regs = of_iomap(node, 0);
+ 
+ 	for (i = 0; i < ARRAY_SIZE(comp->clk); i++) {
+ 		comp->clk[i] = of_clk_get(node, i);
+diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h
+index 998a4b953025..3b83bd6e0d8b 100644
+--- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h
++++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h
+@@ -38,7 +38,6 @@ enum mtk_mdp_comp_id {
+  * struct mtk_mdp_comp - the MDP's function component data
+  * @dev_node:	component device node
+  * @clk:	clocks required for component
+- * @regs:	Mapped address of component registers.
+  * @larb_dev:	SMI device required for component
+  * @type:	component type
+  * @id:		component ID
+@@ -46,7 +45,6 @@ enum mtk_mdp_comp_id {
+ struct mtk_mdp_comp {
+ 	struct device_node	*dev_node;
+ 	struct clk		*clk[2];
+-	void __iomem		*regs;
+ 	struct device		*larb_dev;
+ 	enum mtk_mdp_comp_type	type;
+ 	enum mtk_mdp_comp_id	id;
 -- 
 2.26.2.526.g744177e7f7-goog
 
