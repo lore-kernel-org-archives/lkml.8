@@ -2,133 +2,96 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3265FC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4F7C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A0482073A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA3CD20575
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:15:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mzbUK3+w"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="EqiyYX8r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729227AbgEFKNM (ORCPT
+        id S1729227AbgEFKPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 06:13:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728306AbgEFKNL (ORCPT
+        Wed, 6 May 2020 06:15:07 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:58645 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbgEFKPG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 06:13:11 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4A12C061A0F;
-        Wed,  6 May 2020 03:13:11 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id f8so297799plt.2;
-        Wed, 06 May 2020 03:13:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=6WNtx/WWmmyn4FXsUEVTqUH4KJDR4nxrdnROOFWF/VA=;
-        b=mzbUK3+wvDC/iKKVfsqO7JxEpc8wkfvQGmd9RVRS5IlAeErkoJfQAYkHrc1DhpRpYC
-         fv8KQ3XglpbVR5p0mD/8GydupQlPSlIAP9MhVUOEkdqkpJDFKGlNtBk8yIsV2V7WoWDU
-         jlT3QrOPU5GsdYKpmRZF2RDGBUzVWAOyYSFLdyXcg+YqzTVw1MG/nvw+NQ3B3mWSqmCU
-         1JSsaxotmtp99Q4ASjOi9TT6zv1IQHlGvTlNSbMsPEaWbsotJ5DiLqIrR9fLy3XV6zt5
-         q51Ff7cYqaJ6ebxxaB4HvaoFPqidAyJg+iybqAmB9R8jdS1+mp7m9gwEntmvhCc9PUx4
-         aYSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=6WNtx/WWmmyn4FXsUEVTqUH4KJDR4nxrdnROOFWF/VA=;
-        b=qYwF16IgHta35RlLJk0NX02ZLimRw20CxMBnMRvvt4THC7N06cCyDlhCNn2ZWvhndG
-         zaSnX+8Uvs29a2Sk+53ub/fK55l0dvOK8s01jw+hkyqWS8NDY/0gL0pA5zIravvBT0Yr
-         GbA1XUGjsGhz0oAWOarO66YQNQBk9tOxar1PiDHa/KmwmHkn70XRlz+DFjIi0vqUNaXu
-         +0j7CReJfbGVamDgEShXncPspY9nlZXK2SaeccdVKXDma1ElIp3ZsxaOB9aVGcHoHAsA
-         XRdPpR+GDfOsWHVR2CmZYz5qKiLTkqgz+UAg6of09+eFlo4MkOmgMxCvhcpnu34n6IZc
-         wBRw==
-X-Gm-Message-State: AGi0Pub2kO7uzjM9DPD9w0C/pvvc6dz53lWwFylxK2dCAO0jNfCWK0XE
-        tZMK3MKAK7xJIJM8z2cbFs85duo1j50=
-X-Google-Smtp-Source: APiQypLiiBZmSCG4wntUL7TaFVTjDm5EyQBD2qbPgRk0HPb182fxQ/EzgQf9njQfVxApmOk4Ctml4A==
-X-Received: by 2002:a17:902:a989:: with SMTP id bh9mr7260346plb.44.1588759990559;
-        Wed, 06 May 2020 03:13:10 -0700 (PDT)
-Received: from [192.168.1.7] ([223.72.42.191])
-        by smtp.gmail.com with ESMTPSA id q7sm1348750pgs.13.2020.05.06.03.13.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 May 2020 03:13:09 -0700 (PDT)
-Subject: Re: [PATCH] media: usb: ttusb-dec: avoid buffer overflow in
- ttusb_dec_handle_irq() when DMA failures/attacks occur
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     mchehab@kernel.org, kstewart@linuxfoundation.org,
-        tomasbortoli@gmail.com, sean@mess.org, allison@lohutok.net,
-        tglx@linutronix.de, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200505142110.7620-1-baijiaju1990@gmail.com>
- <20200505181042.GD1199718@kroah.com>
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-Message-ID: <0e4a86ee-8c4e-4ac3-8499-4e9a6ed7bd1e@gmail.com>
-Date:   Wed, 6 May 2020 18:13:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 6 May 2020 06:15:06 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id E833922EDE;
+        Wed,  6 May 2020 12:15:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1588760104;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nAAw+xDlfmFE1PfS+rEU4ez9NFhnFnvHiViZ3xvNAjw=;
+        b=EqiyYX8rMFKm4ilqILTgN1nc1EwQkfTsMRvUtxdbWGDMPV//E1lru0wM/ukjLURl1X48OP
+        suuwpvyMemfPmvR3qgZJnnwXlzuKxxEmGxXjSBH8fRm8/1qJXxxp/olDPtcEQEmsriMABz
+        MQang03KtcdxXv6b0rpAvfz54QJGy4A=
 MIME-Version: 1.0
-In-Reply-To: <20200505181042.GD1199718@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Date:   Wed, 06 May 2020 12:15:01 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Matthias May <matthias.may@neratec.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [RFC net-next] net: phy: at803x: add cable diagnostics support
+In-Reply-To: <00e8202e-1786-27f4-3bfc-accc5a01787d@neratec.com>
+References: <20200503181517.4538-1-michael@walle.cc>
+ <00e8202e-1786-27f4-3bfc-accc5a01787d@neratec.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <c09c5c851e64f374fe9f7f575113f432@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Am 2020-05-06 11:01, schrieb Matthias May:
+> I've worked with this PHY quite often and we've hacked together some
+> support for the CDT in uboot.
+> 
+> Have you done any tests with the cable on the other side being plugged 
+> in?
 
-Thanks for the reply :)
+yes
 
-On 2020/5/6 2:10, Greg KH wrote:
-> On Tue, May 05, 2020 at 10:21:10PM +0800, Jia-Ju Bai wrote:
->> In this case, "buffer[4] - 1 < ARRAY_SIZE(rc_keys)"
->> can be first satisfied, and then the value of buffer[4] can be changed
->> to a large number, causing a buffer-overflow vulnerability.
-> Um, maybe.  I agree testing and then using the value can cause problems
-> when userspace provides you with that data and control, but for
-> DMA-backed memory, we are in so much other trouble if that is the case.
->
->> To avoid the risk of this vulnerability, buffer[4] is assigned to a
->> non-DMA local variable "index" at the beginning of
->> ttusb_dec_handle_irq(), and then this variable replaces each use of
->> buffer[4] in the function.
-> I strongly doubt this is even possible.  Can you describe how you can
-> modify DMA memory and if so, would you do something tiny like this?
->
+> 
+> With the cable being plugged in, we something (1 out of 10 or so)
+> observed that the test returns with a failure.
+> --> AT803X_CDT_STATUS_STAT_FAIL in AT803X_CDT_STATUS
+> 
+> Often you get the correct result if you simply try again. Sometimes
+> however it gets into a "stuck" state where it just
+> returns FAIL for ~3~10 seconds. After some that it seems to recover
+> and gets the correct result again.
 
-I have never modified DMA memory in the real world, but an attacker can 
-use a malicious device to do this.
-There is a video that shows how to use the Inception tool to perform DMA 
-attacks and login in the Windows OS without password:
-https://www.youtube.com/watch?v=HDhpy7RpUjM
+its actually pretty stable for the following sequence (see also code
+above):
 
-Besides, the Windows OS resists against DMA attacks by disabling DMA of 
-external devices by default:
-http://support.microsoft.com/kb/2516445
+restart AN -> wait 1.5s -> start test
 
-Considering that this patch is for a USB media driver, I think that an 
-attacker can just insert a malicious USB device to modify DMA memory and 
-trigger this bug.
-Besides, not related to this patch, some drivers use DMA to send/receive 
-data (such as the URB used in USB drivers and ring descriptors used in 
-network drivers). In this case, if the data is malicious and used as an 
-array index through DMA, security problems may occur.
+Only thing I've noticed is that if you perform the test without
+waiting for the AN to complete beforehand there might be some
+failed states. Seems like the "restart an" doesn't work while
+AN is still running. But that seems to be the link partner
+who disturbs the measurement.
+And it seems that AN is a requirement to do successful testing
+(or to silence the link partner I guess).
 
-In my opinion, similar to the data from userspace, the data from 
-hardware may be also malicious and should be checked.
-
-Maybe we could discuss this issue with DMA driver developers?
-
-
-Best wishes,
-Jia-Ju Bai
+-michael
