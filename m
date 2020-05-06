@@ -2,72 +2,67 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37604C47247
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 02:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A19DAC47254
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 02:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FBE620735
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 02:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83EEC20735
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 02:51:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgEFCtD (ORCPT
+        id S1726268AbgEFCvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 22:49:03 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:47376 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725966AbgEFCtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 22:49:02 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8175C1F0BC7A8D842B63;
-        Wed,  6 May 2020 10:48:58 +0800 (CST)
-Received: from linux-lmwb.huawei.com (10.175.103.112) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 6 May 2020 10:48:49 +0800
-From:   Samuel Zou <zou_wei@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <grygorii.strashko@ti.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Samuel Zou <zou_wei@huawei.com>
-Subject: [PATCH -next] net: ethernet: ti: Use PTR_ERR_OR_ZERO() to simplify code
-Date:   Wed, 6 May 2020 10:54:58 +0800
-Message-ID: <1588733698-33746-1-git-send-email-zou_wei@huawei.com>
-X-Mailer: git-send-email 2.6.2
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.103.112]
-X-CFilter-Loop: Reflected
+        Tue, 5 May 2020 22:51:04 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:46451 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725900AbgEFCvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 22:51:04 -0400
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 49H1Lb02frz9sSw; Wed,  6 May 2020 12:51:02 +1000 (AEST)
+X-powerpc-patch-notification: thanks
+X-powerpc-patch-commit: e4a884cc28fa3f5d8b81de46998ffe29b4ad169e
+In-Reply-To: <1586249263-14048-2-git-send-email-ego@linux.vnet.ibm.com>
+To:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>
+From:   Michael Ellerman <patch-notifications@ellerman.id.au>
+Cc:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/5] powerpc: Move idle_loop_prolog()/epilog() functions to header file
+Message-Id: <49H1Lb02frz9sSw@ozlabs.org>
+Date:   Wed,  6 May 2020 12:51:02 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes coccicheck warning:
+On Tue, 2020-04-07 at 08:47:39 UTC, "Gautham R. Shenoy" wrote:
+> From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+> 
+> Currently prior to entering an idle state on a Linux Guest, the
+> pseries cpuidle driver implement an idle_loop_prolog() and
+> idle_loop_epilog() functions which ensure that idle_purr is correctly
+> computed, and the hypervisor is informed that the CPU cycles have been
+> donated.
+> 
+> These prolog and epilog functions are also required in the default
+> idle call, i.e pseries_lpar_idle(). Hence move these accessor
+> functions to a common header file and call them from
+> pseries_lpar_idle(). Since the existing header files such as
+> asm/processor.h have enough clutter, create a new header file
+> asm/idle.h. Finally rename idle_loop_prolog() and idle_loop_epilog()
+> to pseries_idle_prolog() and pseries_idle_epilog() as they are only
+> relavent for on pseries guests.
+> 
+> Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
 
-drivers/net/ethernet/ti/am65-cpts.c:1017:1-3: WARNING: PTR_ERR_OR_ZERO can be used
+Series applied to powerpc next, thanks.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Samuel Zou <zou_wei@huawei.com>
----
- drivers/net/ethernet/ti/am65-cpts.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+https://git.kernel.org/powerpc/c/e4a884cc28fa3f5d8b81de46998ffe29b4ad169e
 
-diff --git a/drivers/net/ethernet/ti/am65-cpts.c b/drivers/net/ethernet/ti/am65-cpts.c
-index 370162c..51c94b2 100644
---- a/drivers/net/ethernet/ti/am65-cpts.c
-+++ b/drivers/net/ethernet/ti/am65-cpts.c
-@@ -1014,10 +1014,7 @@ static int am65_cpts_probe(struct platform_device *pdev)
- 		return PTR_ERR(base);
- 
- 	cpts = am65_cpts_create(dev, base, node);
--	if (IS_ERR(cpts))
--		return PTR_ERR(cpts);
--
--	return 0;
-+	return PTR_ERR_OR_ZERO(cpts);
- }
- 
- static const struct of_device_id am65_cpts_of_match[] = {
--- 
-2.6.2
-
+cheers
