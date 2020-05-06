@@ -3,154 +3,234 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,NUMERIC_HTTP_ADDR,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18957C47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E84C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0116D208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6D2B208CA
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:50:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730538AbgEFQsm (ORCPT
+        id S1730709AbgEFQuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:48:42 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:56659 "EHLO pegase1.c-s.fr"
+        Wed, 6 May 2020 12:50:04 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:53309 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730463AbgEFQsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:48:24 -0400
+        id S1730531AbgEFQsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 12:48:41 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49HMwj33y9z9v4kG;
-        Wed,  6 May 2020 18:48:21 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 49HMx30S0Xz9v4kF;
+        Wed,  6 May 2020 18:48:39 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id dJpQFZoe8fCJ; Wed,  6 May 2020 18:48:21 +0200 (CEST)
+        with ESMTP id A_ojo4U-QKIf; Wed,  6 May 2020 18:48:38 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMwj29c8z9v4kF;
-        Wed,  6 May 2020 18:48:21 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMx25RsHz9v4kK;
+        Wed,  6 May 2020 18:48:38 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2242A8B7C5;
-        Wed,  6 May 2020 18:48:23 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9B4718B7C5;
+        Wed,  6 May 2020 18:48:40 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id AS1ryKspiXe1; Wed,  6 May 2020 18:48:23 +0200 (CEST)
+        with ESMTP id CfiWEJpgWZlW; Wed,  6 May 2020 18:48:40 +0200 (CEST)
 Received: from localhost.localdomain (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B4F038B7C3;
-        Wed,  6 May 2020 18:48:22 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4C14A8B7C3;
+        Wed,  6 May 2020 18:48:40 +0200 (CEST)
 Received: by localhost.localdomain (Postfix, from userid 0)
-        id 77F5A65911; Wed,  6 May 2020 16:48:22 +0000 (UTC)
-Message-Id: <91bbbf5df8ec16cbc0e21a4cbbe239fdbcb4993c.1588783498.git.christophe.leroy@csgroup.eu>
+        id 18C8365911; Wed,  6 May 2020 16:48:40 +0000 (UTC)
+Message-Id: <59213d48028b6b4985b059c6bb20c7256f2ff1b5.1588783498.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 References: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v2 17/45] powerpc/mm: PTE_ATOMIC_UPDATES is only for 40x
+Subject: [PATCH v2 34/45] powerpc/8xx: Remove now unused TLB miss functions
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed,  6 May 2020 16:48:22 +0000 (UTC)
+Date:   Wed,  6 May 2020 16:48:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only 40x still uses PTE_ATOMIC_UPDATES.
-40x cannot not select CONFIG_PTE64_BIT.
+The code to setup linear and IMMR mapping via huge TLB entries is
+not called anymore. Remove it.
 
-Drop handling of PTE_ATOMIC_UPDATES:
-- In nohash/64
-- In nohash/32 for CONFIG_PTE_64BIT
-
-Keep PTE_ATOMIC_UPDATES only for nohash/32 for !CONFIG_PTE_64BIT
+Also remove the handling of removed code exits in the perf driver.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/include/asm/nohash/32/pgtable.h | 17 ------------
- arch/powerpc/include/asm/nohash/64/pgtable.h | 28 +-------------------
- 2 files changed, 1 insertion(+), 44 deletions(-)
+ arch/powerpc/include/asm/nohash/32/mmu-8xx.h |  8 +-
+ arch/powerpc/kernel/head_8xx.S               | 83 --------------------
+ arch/powerpc/perf/8xx-pmu.c                  | 10 ---
+ 3 files changed, 1 insertion(+), 100 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/nohash/32/pgtable.h b/arch/powerpc/include/asm/nohash/32/pgtable.h
-index b04ba257fddb..523c4c3876c5 100644
---- a/arch/powerpc/include/asm/nohash/32/pgtable.h
-+++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
-@@ -262,25 +262,8 @@ static inline unsigned long long pte_update(pte_t *p,
- 					    unsigned long clr,
- 					    unsigned long set)
- {
--#ifdef PTE_ATOMIC_UPDATES
--	unsigned long long old;
--	unsigned long tmp;
--
--	__asm__ __volatile__("\
--1:	lwarx	%L0,0,%4\n\
--	lwzx	%0,0,%3\n\
--	andc	%1,%L0,%5\n\
--	or	%1,%1,%6\n"
--	PPC405_ERR77(0,%3)
--"	stwcx.	%1,0,%4\n\
--	bne-	1b"
--	: "=&r" (old), "=&r" (tmp), "=m" (*p)
--	: "r" (p), "r" ((unsigned long)(p) + 4), "r" (clr), "r" (set), "m" (*p)
--	: "cc" );
--#else /* PTE_ATOMIC_UPDATES */
- 	unsigned long long old = pte_val(*p);
- 	*p = __pte((old & ~(unsigned long long)clr) | set);
--#endif /* !PTE_ATOMIC_UPDATES */
- 
- #ifdef CONFIG_44x
- 	if ((old & _PAGE_USER) && (old & _PAGE_EXEC))
-diff --git a/arch/powerpc/include/asm/nohash/64/pgtable.h b/arch/powerpc/include/asm/nohash/64/pgtable.h
-index 9a33b8bd842d..9c703b140d64 100644
---- a/arch/powerpc/include/asm/nohash/64/pgtable.h
-+++ b/arch/powerpc/include/asm/nohash/64/pgtable.h
-@@ -211,22 +211,9 @@ static inline unsigned long pte_update(struct mm_struct *mm,
- 				       unsigned long set,
- 				       int huge)
- {
--#ifdef PTE_ATOMIC_UPDATES
--	unsigned long old, tmp;
--
--	__asm__ __volatile__(
--	"1:	ldarx	%0,0,%3		# pte_update\n\
--	andc	%1,%0,%4 \n\
--	or	%1,%1,%6\n\
--	stdcx.	%1,0,%3 \n\
--	bne-	1b"
--	: "=&r" (old), "=&r" (tmp), "=m" (*ptep)
--	: "r" (ptep), "r" (clr), "m" (*ptep), "r" (set)
--	: "cc" );
--#else
- 	unsigned long old = pte_val(*ptep);
- 	*ptep = __pte((old & ~clr) | set);
--#endif
-+
- 	/* huge pages use the old page table lock */
- 	if (!huge)
- 		assert_pte_locked(mm, addr);
-@@ -310,21 +297,8 @@ static inline void __ptep_set_access_flags(struct vm_area_struct *vma,
- 	unsigned long bits = pte_val(entry) &
- 		(_PAGE_DIRTY | _PAGE_ACCESSED | _PAGE_RW | _PAGE_EXEC);
- 
--#ifdef PTE_ATOMIC_UPDATES
--	unsigned long old, tmp;
--
--	__asm__ __volatile__(
--	"1:	ldarx	%0,0,%4\n\
--		or	%0,%3,%0\n\
--		stdcx.	%0,0,%4\n\
--		bne-	1b"
--	:"=&r" (old), "=&r" (tmp), "=m" (*ptep)
--	:"r" (bits), "r" (ptep), "m" (*ptep)
--	:"cc");
--#else
- 	unsigned long old = pte_val(*ptep);
- 	*ptep = __pte(old | bits);
--#endif
- 
- 	flush_tlb_page(vma, address);
+diff --git a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
+index 4d3ef3841b00..e82368838416 100644
+--- a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
++++ b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
+@@ -240,13 +240,7 @@ static inline unsigned int mmu_psize_to_shift(unsigned int mmu_psize)
  }
+ 
+ /* patch sites */
+-extern s32 patch__itlbmiss_linmem_top, patch__itlbmiss_linmem_top8;
+-extern s32 patch__dtlbmiss_linmem_top, patch__dtlbmiss_immr_jmp;
+-extern s32 patch__fixupdar_linmem_top;
+-extern s32 patch__dtlbmiss_romem_top, patch__dtlbmiss_romem_top8;
+-
+-extern s32 patch__itlbmiss_exit_1, patch__itlbmiss_exit_2;
+-extern s32 patch__dtlbmiss_exit_1, patch__dtlbmiss_exit_2, patch__dtlbmiss_exit_3;
++extern s32 patch__itlbmiss_exit_1, patch__dtlbmiss_exit_1;
+ extern s32 patch__itlbmiss_perf, patch__dtlbmiss_perf;
+ 
+ #endif /* !__ASSEMBLY__ */
+diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
+index d1546f379757..fb5d17187772 100644
+--- a/arch/powerpc/kernel/head_8xx.S
++++ b/arch/powerpc/kernel/head_8xx.S
+@@ -278,33 +278,6 @@ InstructionTLBMiss:
+ 	rfi
+ #endif
+ 
+-#ifndef CONFIG_PIN_TLB_TEXT
+-ITLBMissLinear:
+-	mtcr	r11
+-#if defined(CONFIG_STRICT_KERNEL_RWX) && CONFIG_ETEXT_SHIFT < 23
+-	patch_site	0f, patch__itlbmiss_linmem_top8
+-
+-	mfspr	r10, SPRN_SRR0
+-0:	subis	r11, r10, (PAGE_OFFSET - 0x80000000)@ha
+-	rlwinm	r11, r11, 4, MI_PS8MEG ^ MI_PS512K
+-	ori	r11, r11, MI_PS512K | MI_SVALID
+-	rlwinm	r10, r10, 0, 0x0ff80000	/* 8xx supports max 256Mb RAM */
+-#else
+-	/* Set 8M byte page and mark it valid */
+-	li	r11, MI_PS8MEG | MI_SVALID
+-	rlwinm	r10, r10, 20, 0x0f800000	/* 8xx supports max 256Mb RAM */
+-#endif
+-	mtspr	SPRN_MI_TWC, r11
+-	ori	r10, r10, 0xf0 | MI_SPS16K | _PAGE_SH | _PAGE_DIRTY | \
+-			  _PAGE_PRESENT
+-	mtspr	SPRN_MI_RPN, r10	/* Update TLB entry */
+-
+-0:	mfspr	r10, SPRN_SPRG_SCRATCH0
+-	mfspr	r11, SPRN_SPRG_SCRATCH1
+-	rfi
+-	patch_site	0b, patch__itlbmiss_exit_2
+-#endif
+-
+ 	. = 0x1200
+ DataStoreTLBMiss:
+ 	mtspr	SPRN_DAR, r10
+@@ -371,62 +344,6 @@ DataStoreTLBMiss:
+ 	rfi
+ 	patch_site	0b, patch__dtlbmiss_exit_1
+ 
+-DTLBMissIMMR:
+-	mtcr	r11
+-	/* Set 512k byte guarded page and mark it valid */
+-	li	r10, MD_PS512K | MD_GUARDED | MD_SVALID
+-	mtspr	SPRN_MD_TWC, r10
+-	mfspr	r10, SPRN_IMMR			/* Get current IMMR */
+-	rlwinm	r10, r10, 0, 0xfff80000		/* Get 512 kbytes boundary */
+-	ori	r10, r10, 0xf0 | MD_SPS16K | _PAGE_SH | _PAGE_DIRTY | \
+-			  _PAGE_PRESENT | _PAGE_NO_CACHE
+-	mtspr	SPRN_MD_RPN, r10	/* Update TLB entry */
+-
+-	li	r11, RPN_PATTERN
+-
+-0:	mfspr	r10, SPRN_DAR
+-	mtspr	SPRN_DAR, r11	/* Tag DAR */
+-	mfspr	r11, SPRN_M_TW
+-	rfi
+-	patch_site	0b, patch__dtlbmiss_exit_2
+-
+-DTLBMissLinear:
+-	mtcr	r11
+-	rlwinm	r10, r10, 20, 0x0f800000	/* 8xx supports max 256Mb RAM */
+-#if defined(CONFIG_STRICT_KERNEL_RWX) && CONFIG_DATA_SHIFT < 23
+-	patch_site	0f, patch__dtlbmiss_romem_top8
+-
+-0:	subis	r11, r10, (PAGE_OFFSET - 0x80000000)@ha
+-	rlwinm	r11, r11, 0, 0xff800000
+-	neg	r10, r11
+-	or	r11, r11, r10
+-	rlwinm	r11, r11, 4, MI_PS8MEG ^ MI_PS512K
+-	ori	r11, r11, MI_PS512K | MI_SVALID
+-	mfspr	r10, SPRN_MD_EPN
+-	rlwinm	r10, r10, 0, 0x0ff80000	/* 8xx supports max 256Mb RAM */
+-#else
+-	/* Set 8M byte page and mark it valid */
+-	li	r11, MD_PS8MEG | MD_SVALID
+-#endif
+-	mtspr	SPRN_MD_TWC, r11
+-#ifdef CONFIG_STRICT_KERNEL_RWX
+-	patch_site	0f, patch__dtlbmiss_romem_top
+-
+-0:	subis	r11, r10, 0
+-	rlwimi	r10, r11, 11, _PAGE_RO
+-#endif
+-	ori	r10, r10, 0xf0 | MD_SPS16K | _PAGE_SH | _PAGE_DIRTY | \
+-			  _PAGE_PRESENT
+-	mtspr	SPRN_MD_RPN, r10	/* Update TLB entry */
+-
+-	li	r11, RPN_PATTERN
+-
+-0:	mfspr	r10, SPRN_DAR
+-	mtspr	SPRN_DAR, r11	/* Tag DAR */
+-	mfspr	r11, SPRN_M_TW
+-	rfi
+-	patch_site	0b, patch__dtlbmiss_exit_3
+-
+ /* This is an instruction TLB error on the MPC8xx.  This could be due
+  * to many reasons, such as executing guarded memory or illegal instruction
+  * addresses.  There is nothing to do but handle a big time error fault.
+diff --git a/arch/powerpc/perf/8xx-pmu.c b/arch/powerpc/perf/8xx-pmu.c
+index 1ad03c55c88c..0c56b42a4f91 100644
+--- a/arch/powerpc/perf/8xx-pmu.c
++++ b/arch/powerpc/perf/8xx-pmu.c
+@@ -99,9 +99,6 @@ static int mpc8xx_pmu_add(struct perf_event *event, int flags)
+ 			unsigned long target = patch_site_addr(&patch__itlbmiss_perf);
+ 
+ 			patch_branch_site(&patch__itlbmiss_exit_1, target, 0);
+-#ifndef CONFIG_PIN_TLB_TEXT
+-			patch_branch_site(&patch__itlbmiss_exit_2, target, 0);
+-#endif
+ 		}
+ 		val = itlb_miss_counter;
+ 		break;
+@@ -110,8 +107,6 @@ static int mpc8xx_pmu_add(struct perf_event *event, int flags)
+ 			unsigned long target = patch_site_addr(&patch__dtlbmiss_perf);
+ 
+ 			patch_branch_site(&patch__dtlbmiss_exit_1, target, 0);
+-			patch_branch_site(&patch__dtlbmiss_exit_2, target, 0);
+-			patch_branch_site(&patch__dtlbmiss_exit_3, target, 0);
+ 		}
+ 		val = dtlb_miss_counter;
+ 		break;
+@@ -174,9 +169,6 @@ static void mpc8xx_pmu_del(struct perf_event *event, int flags)
+ 					    __PPC_SPR(SPRN_SPRG_SCRATCH0);
+ 
+ 			patch_instruction_site(&patch__itlbmiss_exit_1, insn);
+-#ifndef CONFIG_PIN_TLB_TEXT
+-			patch_instruction_site(&patch__itlbmiss_exit_2, insn);
+-#endif
+ 		}
+ 		break;
+ 	case PERF_8xx_ID_DTLB_LOAD_MISS:
+@@ -186,8 +178,6 @@ static void mpc8xx_pmu_del(struct perf_event *event, int flags)
+ 					    __PPC_SPR(SPRN_DAR);
+ 
+ 			patch_instruction_site(&patch__dtlbmiss_exit_1, insn);
+-			patch_instruction_site(&patch__dtlbmiss_exit_2, insn);
+-			patch_instruction_site(&patch__dtlbmiss_exit_3, insn);
+ 		}
+ 		break;
+ 	}
 -- 
 2.25.0
 
