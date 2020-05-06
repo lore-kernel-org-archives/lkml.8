@@ -2,99 +2,95 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B331FC47257
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA998C47257
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85D872078C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:29:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588800591;
-	bh=XMODf73qdY1pBEPZqbcgGU49OOeQf5NflglZA7mOg1k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=JDfIDwEDrTGTZWdCs4zlfV/vqA1zWTHt56CVQO03pSpHnLZHszt8fGsbTMtgfKaH9
-	 rAM/BaLdNPalSX5Z2BSMVfvVkw4mbS6EQdtW1ANknKXx4tHxcCYP0GZhoP4SvY6Hv8
-	 FwJ8/VsnYEKN+MM3kzlpzEzYmif2mGiwdUz0aDgs=
+	by mail.kernel.org (Postfix) with ESMTP id C42292070B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 21:31:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="x/JTzjYI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729700AbgEFV3u (ORCPT
+        id S1729855AbgEFVbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 17:29:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54404 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726927AbgEFV3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 17:29:49 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC31C2070B;
-        Wed,  6 May 2020 21:29:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588800589;
-        bh=XMODf73qdY1pBEPZqbcgGU49OOeQf5NflglZA7mOg1k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=w6td1PRYmzZANGSumMXG6yHUCkJNf+vnnBIWMD2l2XCpZmt52cK9zt6pbuF/L9UIP
-         VZlkXyQ0axjjAOeLIngA/ZzOBG7WL/7VQ87UR62+MTc5wAX2d7aQvfIYv/9eBPIAeE
-         j0uRIcv/zrrP0lXbNDHjR4FdNzAcUINFXweFhgoc=
-Date:   Wed, 6 May 2020 16:29:47 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>, bhelgaas@google.com,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Yicong Yang <yangyicong@hisilicon.com>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] PCI/ASPM: Enable ASPM for bridge-to-bridge link
-Message-ID: <20200506212947.GA455758@bjorn-Precision-5520>
+        Wed, 6 May 2020 17:31:12 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50710 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726927AbgEFVbM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 17:31:12 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 046LV8NS099833;
+        Wed, 6 May 2020 16:31:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588800668;
+        bh=1E4Aar7eIyqkUMWdPEbVw1rTuDiTTWmcpK8rxV5WG2g=;
+        h=From:To:Subject:Date;
+        b=x/JTzjYIe4Scls675CEJQvpuOinkt2f0uV+O3b4+0TVQYr8gN1+nzMZr6vJCNKAZL
+         qpqYN81Yw6kdoGfdGCv3inv8/LNyjAP0NG+BivKHx2YhYdxrL2/wv+h2wc3XceTcWN
+         3rr/I3OkXUGsv/H+1OevYMKt6qCt1zo4Wd46E5+o=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 046LV8p3056330
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 6 May 2020 16:31:08 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 6 May
+ 2020 16:31:08 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 6 May 2020 16:31:08 -0500
+Received: from uda0868495.fios-router.home (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 046LV7UB025450;
+        Wed, 6 May 2020 16:31:08 -0500
+From:   Murali Karicheri <m-karicheri2@ti.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [net PATCH v2] net: hsr: fix incorrect type usage for protocol variable
+Date:   Wed, 6 May 2020 17:31:07 -0400
+Message-ID: <20200506213107.28291-1-m-karicheri2@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506061438.GR487496@lahna.fi.intel.com>
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 09:14:38AM +0300, Mika Westerberg wrote:
-> On Wed, May 06, 2020 at 01:34:21AM +0800, Kai-Heng Feng wrote:
-> > The TI PCIe-to-PCI bridge prevents the Intel SoC from entering power
-> > state deeper than PC3 due to disabled ASPM, consumes lots of unnecessary
-> > power. On Windows ASPM L1 is enabled on the device and its upstream
-> > bridge, so it can make the Intel SoC reach PC8 or PC10 to save lots of
-> > power.
-> > 
-> > In short, ASPM always gets disabled on bridge-to-bridge link.
-> 
-> Excelent finding :) I've heard several reports complaining that we can't
-> enter PC10 when TBT is enabled and I guess this explains it.
+Fix following sparse checker warning:-
 
-I'm curious about this.  I first read this patch as affecting
-garden-variety Links between a Root Port or Downstream Port and the
-Upstream Port of a switch.  But the case we're talking about is
-specifically when the downstream device is PCI_EXP_TYPE_PCI_BRIDGE,
-i.e., a PCIe to PCI/PCI-X bridge, not a switch.
+net/hsr/hsr_slave.c:38:18: warning: incorrect type in assignment (different base types)
+net/hsr/hsr_slave.c:38:18:    expected unsigned short [unsigned] [usertype] protocol
+net/hsr/hsr_slave.c:38:18:    got restricted __be16 [usertype] h_proto
+net/hsr/hsr_slave.c:39:25: warning: restricted __be16 degrades to integer
+net/hsr/hsr_slave.c:39:57: warning: restricted __be16 degrades to integer
 
-AFAICT, a Link to a PCI bridge is still a normal Link and ASPM should
-still work.  I'm sort of surprised that you'd find such a PCIe to
-PCI/PCI-X bridge in a Thunderbolt topology, but maybe that's a common
-thing?
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+---
+ v2 : Added Acked-by from Vinicius Costa Gomes
+ net/hsr/hsr_slave.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I guess "PC8" and "PC10" are some sort of Intel-specific power states?
+diff --git a/net/hsr/hsr_slave.c b/net/hsr/hsr_slave.c
+index f4b9f7a3ce51..25b6ffba26cd 100644
+--- a/net/hsr/hsr_slave.c
++++ b/net/hsr/hsr_slave.c
+@@ -18,7 +18,7 @@ static rx_handler_result_t hsr_handle_frame(struct sk_buff **pskb)
+ {
+ 	struct sk_buff *skb = *pskb;
+ 	struct hsr_port *port;
+-	u16 protocol;
++	__be16 protocol;
+ 
+ 	if (!skb_mac_header_was_set(skb)) {
+ 		WARN_ONCE(1, "%s: skb invalid", __func__);
+-- 
+2.17.1
 
-> > The special case was part of first ASPM introduction patch, commit
-> > 7d715a6c1ae5 ("PCI: add PCI Express ASPM support"). However, it didn't
-> > explain why ASPM needs to be disabled in special bridge-to-bridge case.
-> > 
-> > Let's remove the the special case, as PCIe spec already envisioned ASPM
-> > on bridge-to-bridge link.
-> > 
-> > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207571
-> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> 
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
