@@ -2,166 +2,146 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8FEC47257
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2258CC47257
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 363AC20753
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:19:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hnOw9cEZ"
+	by mail.kernel.org (Postfix) with ESMTP id EE9892078C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:21:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730307AbgEFWTc (ORCPT
+        id S1730012AbgEFWVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 18:19:32 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:53497 "EHLO ozlabs.org"
+        Wed, 6 May 2020 18:21:39 -0400
+Received: from mga02.intel.com ([134.134.136.20]:6307 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729114AbgEFWTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 18:19:31 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49HWGk1kvcz9sP7;
-        Thu,  7 May 2020 08:19:26 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588803569;
-        bh=cvnMZTLI2KRIxxSUz/K4Hmuh15cwPhFtGK6dZGCUSU8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hnOw9cEZq94+CAbYxDvqRzI/w57/afztYTZ+FX1zfjWIdL6dcEIc1v78Vm34ivBLS
-         JCFWI93rNJHn24szr9SSUp3UNkq6w8XXqkyidtzj7h0o8RrehTeEiIxoJoWmbMAXku
-         grM/NSreaRTmeb//r4TKY6fz7iTN2+Zhhl27wTy/O8slmuvEq7jyjJaTq0md6RohG6
-         /mFbWUjqznMutDBADLNpYHrQCI4yHhfPjcaIuwigPnhS+fxSvYQeJftMSWgUeofgFR
-         /90VYp7Lf39sc+vHVezRctIR8LOPIbRN09A3D34xQuXn0qzt4bSyTs4xQ+5kOGe1dd
-         dv127hcYpVniw==
-Date:   Thu, 7 May 2020 08:19:23 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: ARM: futex: Address build warning
-Message-ID: <20200507081924.7c77bfc9@canb.auug.org.au>
-In-Reply-To: <87pncao2ph.fsf@nanos.tec.linutronix.de>
-References: <20200330134746.627dcd93@canb.auug.org.au>
-        <20200401085753.617c1636@canb.auug.org.au>
-        <877dyzv6y2.fsf@nanos.tec.linutronix.de>
-        <20200402090051.741905cd@canb.auug.org.au>
-        <874ku2q18k.fsf@nanos.tec.linutronix.de>
-        <20200413100112.2e114e24@canb.auug.org.au>
-        <87pncao2ph.fsf@nanos.tec.linutronix.de>
+        id S1728888AbgEFWVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 18:21:38 -0400
+IronPort-SDR: U+yiptBqnyrHvVGh3N4qqpdxXs1TuFmYUJ4RboaEk1Ul8zQsDra0tVBhT+BiD5/AkYk8UlyooE
+ lmmV1wyDvNkg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 15:21:38 -0700
+IronPort-SDR: prVFv/FXvvscNChjaqe9gn+SMFRbdXi9nx6vCu1chg15FUeQfLqnUdfwhufRSqZk6ov0uUKqFX
+ fjgydCU3ZOog==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,360,1583222400"; 
+   d="scan'208";a="263729426"
+Received: from mmahler-mobl1.amr.corp.intel.com (HELO [10.254.74.145]) ([10.254.74.145])
+  by orsmga006.jf.intel.com with ESMTP; 06 May 2020 15:21:30 -0700
+Subject: Re: [PATCH 1/2] arch/x86: Rename config
+ X86_INTEL_MEMORY_PROTECTION_KEYS to generic x86
+To:     Babu Moger <babu.moger@amd.com>, corbet@lwn.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        pbonzini@redhat.com, sean.j.christopherson@intel.com
+Cc:     x86@kernel.org, vkuznets@redhat.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, dave.hansen@linux.intel.com,
+        luto@kernel.org, peterz@infradead.org, mchehab+samsung@kernel.org,
+        changbin.du@intel.com, namit@vmware.com, bigeasy@linutronix.de,
+        yang.shi@linux.alibaba.com, asteinhauser@google.com,
+        anshuman.khandual@arm.com, jan.kiszka@siemens.com,
+        akpm@linux-foundation.org, steven.price@arm.com,
+        rppt@linux.vnet.ibm.com, peterx@redhat.com,
+        dan.j.williams@intel.com, arjunroy@google.com, logang@deltatee.com,
+        thellstrom@vmware.com, aarcange@redhat.com, justin.he@arm.com,
+        robin.murphy@arm.com, ira.weiny@intel.com, keescook@chromium.org,
+        jgross@suse.com, andrew.cooper3@citrix.com,
+        pawan.kumar.gupta@linux.intel.com, fenghua.yu@intel.com,
+        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
+        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <158880240546.11615.2219410169137148044.stgit@naples-babu.amd.com>
+ <158880253347.11615.8499618616856685179.stgit@naples-babu.amd.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <4d86b207-77af-dc5d-88a4-f092be0043f6@intel.com>
+Date:   Wed, 6 May 2020 15:21:29 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ScnmteIMj_Vg.3wJi0L3LjA";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <158880253347.11615.8499618616856685179.stgit@naples-babu.amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ScnmteIMj_Vg.3wJi0L3LjA
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 1197b5596d5a..8630b9fa06f5 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -1886,11 +1886,11 @@ config X86_UMIP
+>  	  specific cases in protected and virtual-8086 modes. Emulated
+>  	  results are dummy.
+>  
+> -config X86_INTEL_MEMORY_PROTECTION_KEYS
+> -	prompt "Intel Memory Protection Keys"
+> +config X86_MEMORY_PROTECTION_KEYS
+> +	prompt "Memory Protection Keys"
+>  	def_bool y
+>  	# Note: only available in 64-bit mode
+> -	depends on CPU_SUP_INTEL && X86_64
+> +	depends on X86_64 && (CPU_SUP_INTEL || CPU_SUP_AMD)
+>  	select ARCH_USES_HIGH_VMA_FLAGS
+>  	select ARCH_HAS_PKEYS
+>  	---help---
 
-Hi all,
+It's a bit of a bummer that we're going to prompt everybody doing
+oldconfig's for this new option.  But, I don't know any way for Kconfig
+to suppress it if the name is changed.  Also, I guess the def_bool=y
+means that menuconfig and olddefconfig will tend to do the right thing.
 
-On Tue, 14 Apr 2020 11:07:22 +0200 Thomas Gleixner <tglx@linutronix.de> wro=
-te:
->
-> Stephen reported the following build warning on a ARM multi_v7_defconfig
-> build with GCC 9.2.1:
->=20
-> kernel/futex.c: In function 'do_futex':
-> kernel/futex.c:1676:17: warning: 'oldval' may be used uninitialized in th=
-is function [-Wmaybe-uninitialized]
->  1676 |   return oldval =3D=3D cmparg;
->       |          ~~~~~~~^~~~~~~~~
-> kernel/futex.c:1652:6: note: 'oldval' was declared here
->  1652 |  int oldval, ret;
->       |      ^~~~~~
->=20
-> introduced by commit a08971e9488d ("futex: arch_futex_atomic_op_inuser()
-> calling conventions change").
->=20
-> While that change should not make any difference it confuses GCC which
-> fails to work out that oldval is not referenced when the return value is
-> not zero.
->=20
-> GCC fails to properly analyze arch_futex_atomic_op_inuser(). It's not the
-> early return, the issue is with the assembly macros. GCC fails to detect
-> that those either set 'ret' to 0 and set oldval or set 'ret' to -EFAULT
-> which makes oldval uninteresting. The store to the callsite supplied oldv=
-al
-> pointer is conditional on ret =3D=3D 0.
->=20
-> The straight forward way to solve this is to make the store unconditional.
->=20
-> Aside of addressing the build warning this makes sense anyway because it
-> removes the conditional from the fastpath. In the error case the stored
-> value is uninteresting and the extra store does not matter at all.
->=20
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Link: https://lore.kernel.org/r/874ku2q18k.fsf@nanos.tec.linutronix.de
-> ---
->  arch/arm/include/asm/futex.h |    9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
->=20
-> --- a/arch/arm/include/asm/futex.h
-> +++ b/arch/arm/include/asm/futex.h
-> @@ -165,8 +165,13 @@ arch_futex_atomic_op_inuser(int op, int
->  	preempt_enable();
->  #endif
-> =20
-> -	if (!ret)
-> -		*oval =3D oldval;
-> +	/*
-> +	 * Store unconditionally. If ret !=3D 0 the extra store is the least
-> +	 * of the worries but GCC cannot figure out that __futex_atomic_op()
-> +	 * is either setting ret to -EFAULT or storing the old value in
-> +	 * oldval which results in a uninitialized warning at the call site.
-> +	 */
-> +	*oval =3D oldval;
-> =20
->  	return ret;
->  }
+Do we *really* need to change the Kconfig name?  The text prompt, sure.
+ End users see that and having Intel in there is massively confusing.
 
-Any response to this?  I am still getting the warning ...
+If I have to put up with seeing 'amd64' all over my Debian package
+names, you can put up with a Kconfig name. :P
 
-The warning was introduced by commit
-
-  a08971e9488d ("futex: arch_futex_atomic_op_inuser() calling conventions c=
-hange")
-
-Which has been in Linus' tree since before v5.7-rc1.  Should this go in
-via the tip tree, the arm tree, or will I just send ti to Linus myself?
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/ScnmteIMj_Vg.3wJi0L3LjA
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6zN+wACgkQAVBC80lX
-0GwZmwf/aePLWiH5arcTzhuOXIsMsYUaw6sCxEllNlLA36DHq3f4kC0k8c6NeDIY
-hD91S189DeTo9UBXSebPNQ0s3YnypjcURfRAEfY3tWzxjAJDV9f2WR4z56y6j4ML
-HF26mQ1OvX0So+blF7IUlfkP/f5aAWuyWRMEhXGV0Iios0w219NwLW30hbHbU5F/
-GBeSE31PDPL4P+hxypPhubB6E8pH/H8LkgdFeezbDx4qLIBgQhKR8kGczi6Jbxmn
-1F6HMqPkVLMoeMBy7tTUV2uxLPRLgDHo4jhHurQLQ4LrGvIMdzEgFau25xwStNOL
-4dL7EHIuSvFiYPtAGpjeRFY/HKrpuQ==
-=qjow
------END PGP SIGNATURE-----
-
---Sig_/ScnmteIMj_Vg.3wJi0L3LjA--
+I'm really just wondering what the point of the churn is.
