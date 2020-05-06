@@ -6,211 +6,149 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2BFC47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E77AC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD60208CA
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:48:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DA2F208CA
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:48:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730557AbgEFQsq (ORCPT
+        id S1730566AbgEFQss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:48:46 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:2642 "EHLO pegase1.c-s.fr"
+        Wed, 6 May 2020 12:48:48 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:22955 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730489AbgEFQsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:48:31 -0400
+        id S1730509AbgEFQsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 12:48:37 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49HMwr4XZ3z9v4kH;
-        Wed,  6 May 2020 18:48:28 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 49HMwx63whz9v4kL;
+        Wed,  6 May 2020 18:48:33 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id esG4lZCXYt_G; Wed,  6 May 2020 18:48:28 +0200 (CEST)
+        with ESMTP id IAD-sok6VKnq; Wed,  6 May 2020 18:48:33 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMwr3Dt2z9v4kD;
-        Wed,  6 May 2020 18:48:28 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMwx5Jsrz9v4kD;
+        Wed,  6 May 2020 18:48:33 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 474C68B7C6;
-        Wed,  6 May 2020 18:48:30 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 64BD88B7C6;
+        Wed,  6 May 2020 18:48:35 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id YuaoZrBjvB2c; Wed,  6 May 2020 18:48:30 +0200 (CEST)
+        with ESMTP id RNSeV06x7FLA; Wed,  6 May 2020 18:48:35 +0200 (CEST)
 Received: from localhost.localdomain (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id ED6518B7C5;
-        Wed,  6 May 2020 18:48:29 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1E5178B7C5;
+        Wed,  6 May 2020 18:48:35 +0200 (CEST)
 Received: by localhost.localdomain (Postfix, from userid 0)
-        id B2D5E65911; Wed,  6 May 2020 16:48:29 +0000 (UTC)
-Message-Id: <2e9d667d94d6c8d770fa2650c11756c586165829.1588783498.git.christophe.leroy@csgroup.eu>
+        id DD1C465911; Wed,  6 May 2020 16:48:34 +0000 (UTC)
+Message-Id: <d87ecbd24c9f477ab4c3a3461afa5b4d8141aec0.1588783498.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 References: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v2 24/45] powerpc/8xx: Drop CONFIG_8xx_COPYBACK option
+Subject: [PATCH v2 29/45] powerpc/8xx: Move PPC_PIN_TLB options into 8xx
+ Kconfig
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed,  6 May 2020 16:48:29 +0000 (UTC)
+Date:   Wed,  6 May 2020 16:48:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CONFIG_8xx_COPYBACK was there to help disabling copyback cache mode
-for debuging hardware. But nobody will design new boards with 8xx now.
+PPC_PIN_TLB options are dedicated to the 8xx, move them into
+the 8xx Kconfig.
 
-All 8xx platforms select it, so make it the default and remove
-the option.
-
-Also remove the Mx_RESETVAL values which are pretty useless and hide
-the real value while reading code.
+While we are at it, add some text to explain what it does.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/configs/adder875_defconfig      |  1 -
- arch/powerpc/configs/ep88xc_defconfig        |  1 -
- arch/powerpc/configs/mpc866_ads_defconfig    |  1 -
- arch/powerpc/configs/mpc885_ads_defconfig    |  1 -
- arch/powerpc/configs/tqm8xx_defconfig        |  1 -
- arch/powerpc/include/asm/nohash/32/mmu-8xx.h |  2 --
- arch/powerpc/kernel/head_8xx.S               | 15 +--------------
- arch/powerpc/platforms/8xx/Kconfig           |  9 ---------
- 8 files changed, 1 insertion(+), 30 deletions(-)
+ arch/powerpc/Kconfig               | 20 ---------------
+ arch/powerpc/platforms/8xx/Kconfig | 41 ++++++++++++++++++++++++++++++
+ 2 files changed, 41 insertions(+), 20 deletions(-)
 
-diff --git a/arch/powerpc/configs/adder875_defconfig b/arch/powerpc/configs/adder875_defconfig
-index f55e23cb176c..5326bc739279 100644
---- a/arch/powerpc/configs/adder875_defconfig
-+++ b/arch/powerpc/configs/adder875_defconfig
-@@ -10,7 +10,6 @@ CONFIG_EXPERT=y
- # CONFIG_BLK_DEV_BSG is not set
- CONFIG_PARTITION_ADVANCED=y
- CONFIG_PPC_ADDER875=y
--CONFIG_8xx_COPYBACK=y
- CONFIG_GEN_RTC=y
- CONFIG_HZ_1000=y
- # CONFIG_SECCOMP is not set
-diff --git a/arch/powerpc/configs/ep88xc_defconfig b/arch/powerpc/configs/ep88xc_defconfig
-index 0e2e5e81a359..f5c3e72da719 100644
---- a/arch/powerpc/configs/ep88xc_defconfig
-+++ b/arch/powerpc/configs/ep88xc_defconfig
-@@ -12,7 +12,6 @@ CONFIG_EXPERT=y
- # CONFIG_BLK_DEV_BSG is not set
- CONFIG_PARTITION_ADVANCED=y
- CONFIG_PPC_EP88XC=y
--CONFIG_8xx_COPYBACK=y
- CONFIG_GEN_RTC=y
- CONFIG_HZ_100=y
- # CONFIG_SECCOMP is not set
-diff --git a/arch/powerpc/configs/mpc866_ads_defconfig b/arch/powerpc/configs/mpc866_ads_defconfig
-index 5320735395e7..5c56d36cdfc5 100644
---- a/arch/powerpc/configs/mpc866_ads_defconfig
-+++ b/arch/powerpc/configs/mpc866_ads_defconfig
-@@ -12,7 +12,6 @@ CONFIG_EXPERT=y
- # CONFIG_BLK_DEV_BSG is not set
- CONFIG_PARTITION_ADVANCED=y
- CONFIG_MPC86XADS=y
--CONFIG_8xx_COPYBACK=y
- CONFIG_GEN_RTC=y
- CONFIG_HZ_1000=y
- CONFIG_MATH_EMULATION=y
-diff --git a/arch/powerpc/configs/mpc885_ads_defconfig b/arch/powerpc/configs/mpc885_ads_defconfig
-index 82a008c04eae..949ff9ccda5e 100644
---- a/arch/powerpc/configs/mpc885_ads_defconfig
-+++ b/arch/powerpc/configs/mpc885_ads_defconfig
-@@ -11,7 +11,6 @@ CONFIG_EXPERT=y
- # CONFIG_VM_EVENT_COUNTERS is not set
- # CONFIG_BLK_DEV_BSG is not set
- CONFIG_PARTITION_ADVANCED=y
--CONFIG_8xx_COPYBACK=y
- CONFIG_GEN_RTC=y
- CONFIG_HZ_100=y
- # CONFIG_SECCOMP is not set
-diff --git a/arch/powerpc/configs/tqm8xx_defconfig b/arch/powerpc/configs/tqm8xx_defconfig
-index eda8bfb2d0a3..77857d513022 100644
---- a/arch/powerpc/configs/tqm8xx_defconfig
-+++ b/arch/powerpc/configs/tqm8xx_defconfig
-@@ -15,7 +15,6 @@ CONFIG_MODULE_SRCVERSION_ALL=y
- # CONFIG_BLK_DEV_BSG is not set
- CONFIG_PARTITION_ADVANCED=y
- CONFIG_TQM8XX=y
--CONFIG_8xx_COPYBACK=y
- # CONFIG_8xx_CPU15 is not set
- CONFIG_GEN_RTC=y
- CONFIG_HZ_100=y
-diff --git a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
-index 76af5b0cb16e..26b7cee34dfe 100644
---- a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
-+++ b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
-@@ -19,7 +19,6 @@
- #define MI_RSV4I	0x08000000	/* Reserve 4 TLB entries */
- #define MI_PPCS		0x02000000	/* Use MI_RPN prob/priv state */
- #define MI_IDXMASK	0x00001f00	/* TLB index to be loaded */
--#define MI_RESETVAL	0x00000000	/* Value of register at reset */
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 8324d98728db..f552726c9de2 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -1226,26 +1226,6 @@ config TASK_SIZE
+ 	hex "Size of user task space" if TASK_SIZE_BOOL
+ 	default "0x80000000" if PPC_8xx
+ 	default "0xc0000000"
+-
+-config PIN_TLB
+-	bool "Pinned Kernel TLBs (860 ONLY)"
+-	depends on ADVANCED_OPTIONS && PPC_8xx && \
+-		   !DEBUG_PAGEALLOC && !STRICT_KERNEL_RWX
+-
+-config PIN_TLB_DATA
+-	bool "Pinned TLB for DATA"
+-	depends on PIN_TLB
+-	default y
+-
+-config PIN_TLB_IMMR
+-	bool "Pinned TLB for IMMR"
+-	depends on PIN_TLB || PPC_EARLY_DEBUG_CPM
+-	default y
+-
+-config PIN_TLB_TEXT
+-	bool "Pinned TLB for TEXT"
+-	depends on PIN_TLB
+-	default y
+ endmenu
  
- /* These are the Ks and Kp from the PowerPC books.  For proper operation,
-  * Ks = 0, Kp = 1.
-@@ -95,7 +94,6 @@
- #define MD_TWAM		0x04000000	/* Use 4K page hardware assist */
- #define MD_PPCS		0x02000000	/* Use MI_RPN prob/priv state */
- #define MD_IDXMASK	0x00001f00	/* TLB index to be loaded */
--#define MD_RESETVAL	0x04000000	/* Value of register at reset */
- 
- #define SPRN_M_CASID	793	/* Address space ID (context) to match */
- #define MC_ASIDMASK	0x0000000f	/* Bits used for ASID value */
-diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
-index 073a651787df..905205c79a25 100644
---- a/arch/powerpc/kernel/head_8xx.S
-+++ b/arch/powerpc/kernel/head_8xx.S
-@@ -779,10 +779,7 @@ start_here:
- initial_mmu:
- 	li	r8, 0
- 	mtspr	SPRN_MI_CTR, r8		/* remove PINNED ITLB entries */
--	lis	r10, MD_RESETVAL@h
--#ifndef CONFIG_8xx_COPYBACK
--	oris	r10, r10, MD_WTDEF@h
--#endif
-+	lis	r10, MD_TWAM@h
- 	mtspr	SPRN_MD_CTR, r10	/* remove PINNED DTLB entries */
- 
- 	tlbia			/* Invalidate all TLB entries */
-@@ -857,17 +854,7 @@ initial_mmu:
- 	mtspr	SPRN_DC_CST, r8
- 	lis	r8, IDC_ENABLE@h
- 	mtspr	SPRN_IC_CST, r8
--#ifdef CONFIG_8xx_COPYBACK
--	mtspr	SPRN_DC_CST, r8
--#else
--	/* For a debug option, I left this here to easily enable
--	 * the write through cache mode
--	 */
--	lis	r8, DC_SFWT@h
- 	mtspr	SPRN_DC_CST, r8
--	lis	r8, IDC_ENABLE@h
--	mtspr	SPRN_DC_CST, r8
--#endif
- 	/* Disable debug mode entry on breakpoints */
- 	mfspr	r8, SPRN_DER
- #ifdef CONFIG_PERF_EVENTS
+ if PPC64
 diff --git a/arch/powerpc/platforms/8xx/Kconfig b/arch/powerpc/platforms/8xx/Kconfig
-index e0fe670f06f6..b37de62d7e7f 100644
+index b37de62d7e7f..0d036cd868ef 100644
 --- a/arch/powerpc/platforms/8xx/Kconfig
 +++ b/arch/powerpc/platforms/8xx/Kconfig
-@@ -98,15 +98,6 @@ menu "MPC8xx CPM Options"
- # 8xx specific questions.
- comment "Generic MPC8xx Options"
+@@ -162,4 +162,45 @@ config UCODE_PATCH
+ 	default y
+ 	depends on !NO_UCODE_PATCH
  
--config 8xx_COPYBACK
--	bool "Copy-Back Data Cache (else Writethrough)"
--	help
--	  Saying Y here will cause the cache on an MPC8xx processor to be used
--	  in Copy-Back mode.  If you say N here, it is used in Writethrough
--	  mode.
--
--	  If in doubt, say Y here.
--
- config 8xx_GPIO
- 	bool "GPIO API Support"
- 	select GPIOLIB
++menu "8xx advanced setup"
++	depends on PPC_8xx
++
++config PIN_TLB
++	bool "Pinned Kernel TLBs"
++	depends on ADVANCED_OPTIONS && !DEBUG_PAGEALLOC && !STRICT_KERNEL_RWX
++	help
++	  On the 8xx, we have 32 instruction TLBs and 32 data TLBs. In each
++	  table 4 TLBs can be pinned.
++
++	  It reduces the amount of usable TLBs to 28 (ie by 12%). That's the
++	  reason why we make it selectable.
++
++	  This option does nothing, it just activate the selection of what
++	  to pin.
++
++config PIN_TLB_DATA
++	bool "Pinned TLB for DATA"
++	depends on PIN_TLB
++	default y
++	help
++	  This pins the first 32 Mbytes of memory with 8M pages.
++
++config PIN_TLB_IMMR
++	bool "Pinned TLB for IMMR"
++	depends on PIN_TLB || PPC_EARLY_DEBUG_CPM
++	default y
++	help
++	  This pins the IMMR area with a 512kbytes page. In case
++	  CONFIG_PIN_TLB_DATA is also selected, it will reduce
++	  CONFIG_PIN_TLB_DATA to 24 Mbytes.
++
++config PIN_TLB_TEXT
++	bool "Pinned TLB for TEXT"
++	depends on PIN_TLB
++	default y
++	help
++	  This pins kernel text with 8M pages.
++
++endmenu
++
+ endmenu
 -- 
 2.25.0
 
