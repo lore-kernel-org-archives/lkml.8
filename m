@@ -2,107 +2,108 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74EA6C4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4147C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F15120A8B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0844208CA
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:10:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hRsFR1E3"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="a9mOjW6R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730065AbgEFQJd (ORCPT
+        id S1730072AbgEFQKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:09:33 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:25111 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729418AbgEFQJc (ORCPT
+        Wed, 6 May 2020 12:10:11 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15094 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729425AbgEFQKK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:09:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588781371;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LSgQ8YJxEMhLIrqO/YJcdGSlP0f7eNQQ/CQ1CO6dBlo=;
-        b=hRsFR1E3mGwUjE0tkcq9+hd6nY+S7HgXXnw8bQduoCbVRqJMlkPpYvhTBLMSlEw2nXptXu
-        Y30CTqEMbR5XAOoNyA2yTnDIfiALiF2eZAqPHMAdkwZ32I6UqsW68vNQn+BsgA/ghJ/I2h
-        qX+5mOFOi84itCzryRunbnIzocItCIQ=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-141-LguOkTntPW2255Mt4NzQ6w-1; Wed, 06 May 2020 12:09:27 -0400
-X-MC-Unique: LguOkTntPW2255Mt4NzQ6w-1
-Received: by mail-wr1-f71.google.com with SMTP id a12so1578805wrv.3
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 09:09:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LSgQ8YJxEMhLIrqO/YJcdGSlP0f7eNQQ/CQ1CO6dBlo=;
-        b=spRMtVVqHrBaJk/aATNnUMHsbsiHe+N/6WJT3sm2UxQrjdVpEUTVdbLrtZIb7D6vLa
-         iuQ+vePudW0vpzHCWLrsP15pXtuSimARk149jIm3KblIt9tny/veTaISaHwvCSNkuPDl
-         MP3jx4T4FW/ecbrVJzisnvJSXaWagunz2UVABEEkVdgfSmiZcLHYHWGqUxWlNBnB09In
-         tpOwSSqvWta6uIhvijJE0uzojV7OR0rnycgXx59ZxWG+0KuO3EOIFKABdrGpazN4GbFo
-         PXm8CfCI0k9+yWWXP4xT9mSXiwiz8/eeSTBHh5V6nNTT8GU6vMQ/hFv1DN1BvT0OrwhJ
-         pMYw==
-X-Gm-Message-State: AGi0PuYeEaW3XegIRFIgjvXBy2m1DrU0mLJfaEvkHtxLrmqnHwijVe3e
-        b34KCDWGAqgnVDvV36PL//h6Z0JEnItkwOwGN9kHu2Bfd+S6eAzyuz+gqmD9xIC2HM32FzDZ0l6
-        AxfbhVr8qSRAgMs+jyzAg1GvS
-X-Received: by 2002:a05:600c:22d6:: with SMTP id 22mr5176815wmg.121.1588781365653;
-        Wed, 06 May 2020 09:09:25 -0700 (PDT)
-X-Google-Smtp-Source: APiQypI7gzG5qcbx8VG1Ygu0+6ZEU8iGxjvwNjrNCvKqYtR7y1a21HzIpeztonpTyCyr1MPQTdPsGQ==
-X-Received: by 2002:a05:600c:22d6:: with SMTP id 22mr5176789wmg.121.1588781365458;
-        Wed, 06 May 2020 09:09:25 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:11d7:2f21:f38b:17e? ([2001:b07:6468:f312:11d7:2f21:f38b:17e])
-        by smtp.gmail.com with ESMTPSA id m188sm3461061wme.47.2020.05.06.09.09.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 May 2020 09:09:24 -0700 (PDT)
-Subject: Re: [PATCH 7/9] KVM: x86: simplify dr6 accessors in kvm_x86_ops
-To:     Peter Xu <peterx@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-References: <20200506111034.11756-1-pbonzini@redhat.com>
- <20200506111034.11756-8-pbonzini@redhat.com> <20200506160623.GO6299@xz-x1>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <2d44c75f-00df-3cae-31a8-982a0b95f0b0@redhat.com>
-Date:   Wed, 6 May 2020 18:09:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 6 May 2020 12:10:10 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eb2e0e00000>; Wed, 06 May 2020 09:08:00 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 06 May 2020 09:10:10 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 06 May 2020 09:10:10 -0700
+Received: from [10.25.100.73] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 6 May
+ 2020 16:10:01 +0000
+CC:     <spujar@nvidia.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <kuninori.morimoto.gx@renesas.com>, <nicoleotsuka@gmail.com>,
+        <alsa-devel@alsa-project.org>, <swarren@nvidia.com>,
+        <linux-kernel@vger.kernel.org>, <nwartikar@nvidia.com>,
+        <lgirdwood@gmail.com>, <jonathanh@nvidia.com>,
+        <viswanathl@nvidia.com>, <sharadg@nvidia.com>,
+        <thierry.reding@gmail.com>, <atalambedu@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <digetx@gmail.com>,
+        <rlokhande@nvidia.com>, <mkumard@nvidia.com>, <dramesh@nvidia.com>
+Subject: Re: Re: [RFC] DPCM for Tegra
+To:     Mark Brown <broonie@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>
+References: <1588250483-10014-1-git-send-email-spujar@nvidia.com>
+ <1jzhalffhh.fsf@starbuckisacylon.baylibre.com>
+ <fe842d81-22da-fbbe-b5e2-9872cefb9d8b@nvidia.com>
+ <1jwo5pf7de.fsf@starbuckisacylon.baylibre.com>
+ <20200506155311.GG5299@sirena.org.uk>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <74e724ec-72c9-e06a-cada-85110c9b145b@nvidia.com>
+Date:   Wed, 6 May 2020 21:39:58 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200506160623.GO6299@xz-x1>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200506155311.GG5299@sirena.org.uk>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588781280; bh=luEZbp/2pQikNm6FKyeutAkc6bT22MBQsDLNbbelIrA=;
+        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=a9mOjW6RuG26hYzX7UOGzVEZDVrreu3mqV6fw12xry5J1FudrZ+vEg9ndnajwE97Q
+         UvxZTMPsQg6LlL2Db0Z+bSoHxp2ygtUeO2JxAJauQRWWKt44llawNCjfCIBKFs3gV9
+         LWQi1aF3m7ewByj1PsniavquSAbPLxtrLslPRveM122li9gSihnjFuLY6zgfQU7cWR
+         9q3+wy/DGpzQCGvM4l5dJxVFoXIXiw/xbo1bnfP7ib1tdfL8cHi5vn8CSW7DXzO6k4
+         FdsOiiYA7EtaQXVOjkZW0TCMFSHgwUH8fBYjN60WgW/unKVFhREP9lKoGw470ibQFw
+         mhwElpSkq9KhQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/05/20 18:06, Peter Xu wrote:
-> On Wed, May 06, 2020 at 07:10:32AM -0400, Paolo Bonzini wrote:
->> kvm_x86_ops.set_dr6 is only ever called with vcpu->arch.dr6 as the
->> second argument, and for both SVM and VMX the VMCB value is kept
->> synchronized with vcpu->arch.dr6 on #DB; we can therefore remove the
->> read accessor.
->>
->> For the write accessor we can avoid the retpoline penalty on Intel
->> by accepting a NULL value and just skipping the call in that case.
->>
->> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
->> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> (I think this patch and the previous one seem to be the same as the previous
->  version.  Anyway...)
 
-Yes, I placed them here because they are needed to solve the SVM bugs in
-patch 8.  Sorry for not adding your Reviewed-by.
 
-Paolo
+On 5/6/2020 9:23 PM, Mark Brown wrote:
+> On Wed, May 06, 2020 at 04:47:09PM +0200, Jerome Brunet wrote:
+>> On Wed 06 May 2020 at 16:12, Sameer Pujar <spujar@nvidia.com> wrote:
+>>> XBAR currently exports all routing widgets which can be used to
+>>> interconnect multiple components and thus implements Mux widgets. Fixing
+>>> the routing paths in driver would limit anyone to try a different
+>>> combination as per the need, unless driver is modified.
+>> I did not mean that you should restrict the routing ability of your SoC,
+>> quite the opposite actually.
 
-> Reviewed-by: Peter Xu <peterx@redhat.com>
+>> You should just expose it correctly
+> Yes, it's going to be less effort in the long run if nothing else.
+
+This is what below reference tried to achieve in the original series, 
+where all Mux widgets and corresponding kcontrols were exposed.
+[1] 
+http://patchwork.ozlabs.org/project/linux-tegra/patch/1582180492-25297-6-git-send-email-spujar@nvidia.com/
+
+However it has DAI declarations too, that was mainly because 
+codec-to-codec links were used to connect multiple components. DT would 
+expose all these links (please note that machine driver was not sent as 
+part of the original series). May be with DPCM these additional DAIs can 
+be avoided, but it comes with few challenges highlighted in this RFC patch.
+
 
