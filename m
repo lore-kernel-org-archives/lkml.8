@@ -6,221 +6,170 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E048C47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE692C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80AB7208CA
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A33A0208CA
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:49:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730579AbgEFQsv (ORCPT
+        id S1730671AbgEFQtj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:48:51 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:53309 "EHLO pegase1.c-s.fr"
+        Wed, 6 May 2020 12:49:39 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:12432 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730517AbgEFQsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:48:38 -0400
+        id S1730570AbgEFQsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 12:48:50 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49HMwz19vGz9v4kH;
-        Wed,  6 May 2020 18:48:35 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 49HMxC10SMz9v4kK;
+        Wed,  6 May 2020 18:48:47 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id iUF0f3o94ubZ; Wed,  6 May 2020 18:48:35 +0200 (CEST)
+        with ESMTP id JN9f6NWcK4Ly; Wed,  6 May 2020 18:48:47 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMwy6B6mz9v4kD;
-        Wed,  6 May 2020 18:48:34 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMxC033Dz9v4kH;
+        Wed,  6 May 2020 18:48:47 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7FFB38B7C6;
-        Wed,  6 May 2020 18:48:36 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D37FF8B7C5;
+        Wed,  6 May 2020 18:48:48 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id uvUbkd_IMxd3; Wed,  6 May 2020 18:48:36 +0200 (CEST)
+        with ESMTP id 5XALJNlVFwcJ; Wed,  6 May 2020 18:48:48 +0200 (CEST)
 Received: from localhost.localdomain (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2CA168B7C5;
-        Wed,  6 May 2020 18:48:36 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8B9338B777;
+        Wed,  6 May 2020 18:48:48 +0200 (CEST)
 Received: by localhost.localdomain (Postfix, from userid 0)
-        id EC7FE65911; Wed,  6 May 2020 16:48:35 +0000 (UTC)
-Message-Id: <e75326c43ef65f38e36b1ddd5aeda48f2a53b4eb.1588783498.git.christophe.leroy@csgroup.eu>
+        id 565EE65911; Wed,  6 May 2020 16:48:48 +0000 (UTC)
+Message-Id: <07a8175ded8fdff84262d1d5293a6f2e78e9404e.1588783498.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 References: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v2 30/45] powerpc/8xx: Add function to set pinned TLBs
+Subject: [PATCH v2 42/45] powerpc/8xx: Allow large TLBs with DEBUG_PAGEALLOC
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed,  6 May 2020 16:48:35 +0000 (UTC)
+Date:   Wed,  6 May 2020 16:48:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pinned TLBs cannot be modified when the MMU is enabled.
+DEBUG_PAGEALLOC only manages RW data.
 
-Create a function to rewrite the pinned TLB entries with MMU off.
+Text and RO data can still be mapped with hugepages and pinned TLB.
 
-To set pinned TLB, we have to turn off MMU, disable pinning,
-do a TLB flush (Either with tlbie and tlbia) then reprogam
-the TLB entries, enable pinning and turn on MMU.
+In order to map with hugepages, also enforce a 512kB data alignment
+minimum. That's a trade-off between size of speed, taking into
+account that DEBUG_PAGEALLOC is a debug option. Anyway the alignment
+is still tunable.
 
-If using tlbie, it cleared entries in both instruction and data
-TLB regardless whether pinning is disabled or not.
-If using tlbia, it clears all entries of the TLB which has
-disabled pinning.
-
-To make it easy, just clear all entries in both TLBs, and
-reprogram them.
-
-The function takes two arguments, the top of the memory to
-consider and whether data is RO under _sinittext.
-When DEBUG_PAGEALLOC is set, the top is the end of kernel rodata.
-Otherwise, that's the top of physical RAM.
-
-Everything below _sinittext is set RX, over _sinittext that's RW.
+We also allow tuning of alignment for book3s to limit the complexity
+of the test in Kconfig that will anyway disappear in the following
+patches once DEBUG_PAGEALLOC is handled together with BATs.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
-v2: Function rewritten to manage all entries at once.
----
- arch/powerpc/include/asm/nohash/32/mmu-8xx.h |   2 +
- arch/powerpc/kernel/head_8xx.S               | 103 +++++++++++++++++++
- 2 files changed, 105 insertions(+)
+ arch/powerpc/Kconfig               | 11 +++++++----
+ arch/powerpc/mm/init_32.c          |  5 ++++-
+ arch/powerpc/mm/nohash/8xx.c       | 11 ++++++++---
+ arch/powerpc/platforms/8xx/Kconfig |  2 +-
+ 4 files changed, 20 insertions(+), 9 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
-index a092e6434bda..4d3ef3841b00 100644
---- a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
-+++ b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
-@@ -193,6 +193,8 @@
- 
- #include <linux/mmdebug.h>
- 
-+void mmu_pin_tlb(unsigned long top, bool readonly);
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index edbe39140da0..9d94e8b178d8 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -780,8 +780,9 @@ config THREAD_SHIFT
+ config DATA_SHIFT_BOOL
+ 	bool "Set custom data alignment"
+ 	depends on ADVANCED_OPTIONS
+-	depends on STRICT_KERNEL_RWX
+-	depends on PPC_BOOK3S_32 || (PPC_8xx && !PIN_TLB_DATA && !PIN_TLB_TEXT)
++	depends on STRICT_KERNEL_RWX || DEBUG_PAGEALLOC
++	depends on PPC_BOOK3S_32 || (PPC_8xx && !PIN_TLB_DATA && \
++				     (!PIN_TLB_TEXT || !STRICT_KERNEL_RWX))
+ 	help
+ 	  This option allows you to set the kernel data alignment. When
+ 	  RAM is mapped by blocks, the alignment needs to fit the size and
+@@ -792,10 +793,12 @@ config DATA_SHIFT_BOOL
+ config DATA_SHIFT
+ 	int "Data shift" if DATA_SHIFT_BOOL
+ 	default 24 if STRICT_KERNEL_RWX && PPC64
+-	range 17 28 if STRICT_KERNEL_RWX && PPC_BOOK3S_32
+-	range 19 23 if STRICT_KERNEL_RWX && PPC_8xx
++	range 17 28 if (STRICT_KERNEL_RWX || DEBUG_PAGEALLOC) && PPC_BOOK3S_32
++	range 19 23 if (STRICT_KERNEL_RWX || DEBUG_PAGEALLOC) && PPC_8xx
+ 	default 22 if STRICT_KERNEL_RWX && PPC_BOOK3S_32
+ 	default 23 if STRICT_KERNEL_RWX && PPC_8xx
++	default 23 if DEBUG_PAGEALLOC && PPC_8xx && PIN_TLB_DATA
++	default 19 if DEBUG_PAGEALLOC && PPC_8xx
+ 	default PPC_PAGE_SHIFT
+ 	help
+ 	  On Book3S 32 (603+), DBATs are used to map kernel text and rodata RO.
+diff --git a/arch/powerpc/mm/init_32.c b/arch/powerpc/mm/init_32.c
+index a6991ef8727d..8977a7c2543d 100644
+--- a/arch/powerpc/mm/init_32.c
++++ b/arch/powerpc/mm/init_32.c
+@@ -96,11 +96,14 @@ static void __init MMU_setup(void)
+ 	if (strstr(boot_command_line, "noltlbs")) {
+ 		__map_without_ltlbs = 1;
+ 	}
++	if (IS_ENABLED(CONFIG_PPC_8xx))
++		return;
 +
- typedef struct {
- 	unsigned int id;
- 	unsigned int active;
-diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
-index 423465b10c82..c9e3d54e6a6f 100644
---- a/arch/powerpc/kernel/head_8xx.S
-+++ b/arch/powerpc/kernel/head_8xx.S
-@@ -16,6 +16,7 @@
+ 	if (debug_pagealloc_enabled()) {
+ 		__map_without_bats = 1;
+ 		__map_without_ltlbs = 1;
+ 	}
+-	if (strict_kernel_rwx_enabled() && !IS_ENABLED(CONFIG_PPC_8xx))
++	if (strict_kernel_rwx_enabled())
+ 		__map_without_ltlbs = 1;
+ }
  
- #include <linux/init.h>
- #include <linux/magic.h>
-+#include <linux/sizes.h>
- #include <asm/processor.h>
- #include <asm/page.h>
- #include <asm/mmu.h>
-@@ -866,6 +867,108 @@ initial_mmu:
- 	mtspr	SPRN_DER, r8
- 	blr
+diff --git a/arch/powerpc/mm/nohash/8xx.c b/arch/powerpc/mm/nohash/8xx.c
+index 35796ce81695..e112eb157e48 100644
+--- a/arch/powerpc/mm/nohash/8xx.c
++++ b/arch/powerpc/mm/nohash/8xx.c
+@@ -149,7 +149,8 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
+ {
+ 	unsigned long etext8 = ALIGN(__pa(_etext), SZ_8M);
+ 	unsigned long sinittext = __pa(_sinittext);
+-	unsigned long boundary = strict_kernel_rwx_enabled() ? sinittext : etext8;
++	bool strict_boundary = strict_kernel_rwx_enabled() || debug_pagealloc_enabled();
++	unsigned long boundary = strict_boundary ? sinittext : etext8;
+ 	unsigned long einittext8 = ALIGN(__pa(_einittext), SZ_8M);
  
-+#ifdef CONFIG_PIN_TLB
-+_GLOBAL(mmu_pin_tlb)
-+	lis	r9, (1f - PAGE_OFFSET)@h
-+	ori	r9, r9, (1f - PAGE_OFFSET)@l
-+	mfmsr	r10
-+	mflr	r11
-+	li	r12, MSR_KERNEL & ~(MSR_IR | MSR_DR | MSR_RI)
-+	rlwinm	r0, r10, 0, ~MSR_RI
-+	rlwinm	r0, r0, 0, ~MSR_EE
-+	mtmsr	r0
-+	isync
-+	.align	4
-+	mtspr	SPRN_SRR0, r9
-+	mtspr	SPRN_SRR1, r12
-+	rfi
-+1:
-+	li	r5, 0
-+	lis	r6, MD_TWAM@h
-+	mtspr	SPRN_MI_CTR, r5
-+	mtspr	SPRN_MD_CTR, r6
-+	tlbia
-+
-+#ifdef CONFIG_PIN_TLB_TEXT
-+	LOAD_REG_IMMEDIATE(r5, 28 << 8)
-+	LOAD_REG_IMMEDIATE(r6, PAGE_OFFSET)
-+	LOAD_REG_IMMEDIATE(r7, MI_SVALID | MI_PS8MEG)
-+	LOAD_REG_IMMEDIATE(r8, 0xf0 | _PAGE_RO | _PAGE_SPS | _PAGE_SH | _PAGE_PRESENT)
-+	LOAD_REG_ADDR(r9, _sinittext)
-+	li	r0, 4
-+	mtctr	r0
-+
-+2:	ori	r0, r6, MI_EVALID
-+	mtspr	SPRN_MI_CTR, r5
-+	mtspr	SPRN_MI_EPN, r0
-+	mtspr	SPRN_MI_TWC, r7
-+	mtspr	SPRN_MI_RPN, r8
-+	addi	r5, r5, 0x100
-+	addis	r6, r6, SZ_8M@h
-+	addis	r8, r8, SZ_8M@h
-+	cmplw	r6, r9
-+	bdnzt	lt, 2b
-+	lis	r0, MI_RSV4I@h
-+	mtspr	SPRN_MI_CTR, r0
-+#endif
-+	LOAD_REG_IMMEDIATE(r5, 28 << 8 | MD_TWAM)
-+#ifdef CONFIG_PIN_TLB_DATA
-+	LOAD_REG_IMMEDIATE(r6, PAGE_OFFSET)
-+	LOAD_REG_IMMEDIATE(r7, MI_SVALID | MI_PS8MEG)
-+#ifdef CONFIG_PIN_TLB_IMMR
-+	li	r0, 3
-+#else
-+	li	r0, 4
-+#endif
-+	mtctr	r0
-+	cmpwi	r4, 0
-+	beq	4f
-+	LOAD_REG_IMMEDIATE(r8, 0xf0 | _PAGE_RO | _PAGE_SPS | _PAGE_SH | _PAGE_PRESENT)
-+	LOAD_REG_ADDR(r9, _sinittext)
-+
-+2:	ori	r0, r6, MD_EVALID
-+	mtspr	SPRN_MD_CTR, r5
-+	mtspr	SPRN_MD_EPN, r0
-+	mtspr	SPRN_MD_TWC, r7
-+	mtspr	SPRN_MD_RPN, r8
-+	addi	r5, r5, 0x100
-+	addis	r6, r6, SZ_8M@h
-+	addis	r8, r8, SZ_8M@h
-+	cmplw	r6, r9
-+	bdnzt	lt, 2b
-+
-+4:	LOAD_REG_IMMEDIATE(r8, 0xf0 | _PAGE_SPS | _PAGE_SH | _PAGE_PRESENT)
-+2:	ori	r0, r6, MD_EVALID
-+	mtspr	SPRN_MD_CTR, r5
-+	mtspr	SPRN_MD_EPN, r0
-+	mtspr	SPRN_MD_TWC, r7
-+	mtspr	SPRN_MD_RPN, r8
-+	addi	r5, r5, 0x100
-+	addis	r6, r6, SZ_8M@h
-+	addis	r8, r8, SZ_8M@h
-+	cmplw	r6, r3
-+	bdnzt	lt, 2b
-+#endif
-+#ifdef CONFIG_PIN_TLB_IMMR
-+	LOAD_REG_IMMEDIATE(r0, VIRT_IMMR_BASE | MD_EVALID)
-+	LOAD_REG_IMMEDIATE(r7, MD_SVALID | MD_PS512K | MD_GUARDED)
-+	mfspr   r8, SPRN_IMMR
-+	rlwinm	r8, r8, 0, 0xfff80000
-+	ori	r8, r8, 0xf0 | _PAGE_DIRTY | _PAGE_SPS | _PAGE_SH | \
-+			_PAGE_NO_CACHE | _PAGE_PRESENT
-+	mtspr	SPRN_MD_CTR, r5
-+	mtspr	SPRN_MD_EPN, r0
-+	mtspr	SPRN_MD_TWC, r7
-+	mtspr	SPRN_MD_RPN, r8
-+#endif
-+#if defined(CONFIG_PIN_TLB_IMMR) || defined(CONFIG_PIN_TLB_DATA)
-+	lis	r0, (MD_RSV4I | MD_TWAM)@h
-+	mtspr	SPRN_MI_CTR, r0
-+#endif
-+	mtspr	SPRN_SRR1, r10
-+	mtspr	SPRN_SRR0, r11
-+	rfi
-+#endif /* CONFIG_PIN_TLB */
+ 	WARN_ON(top < einittext8);
+@@ -160,8 +161,12 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
+ 		return 0;
  
- /*
-  * We put a few things here that have to be page-aligned.
+ 	mmu_mapin_ram_chunk(0, boundary, PAGE_KERNEL_TEXT, true);
+-	mmu_mapin_ram_chunk(boundary, einittext8, PAGE_KERNEL_TEXT, true);
+-	mmu_mapin_ram_chunk(einittext8, top, PAGE_KERNEL, true);
++	if (debug_pagealloc_enabled()) {
++		top = boundary;
++	} else {
++		mmu_mapin_ram_chunk(boundary, einittext8, PAGE_KERNEL_TEXT, true);
++		mmu_mapin_ram_chunk(einittext8, top, PAGE_KERNEL, true);
++	}
+ 
+ 	if (top > SZ_32M)
+ 		memblock_set_current_limit(top);
+diff --git a/arch/powerpc/platforms/8xx/Kconfig b/arch/powerpc/platforms/8xx/Kconfig
+index 05669f2fadce..abb2b45b2789 100644
+--- a/arch/powerpc/platforms/8xx/Kconfig
++++ b/arch/powerpc/platforms/8xx/Kconfig
+@@ -167,7 +167,7 @@ menu "8xx advanced setup"
+ 
+ config PIN_TLB
+ 	bool "Pinned Kernel TLBs"
+-	depends on ADVANCED_OPTIONS && !DEBUG_PAGEALLOC
++	depends on ADVANCED_OPTIONS
+ 	help
+ 	  On the 8xx, we have 32 instruction TLBs and 32 data TLBs. In each
+ 	  table 4 TLBs can be pinned.
 -- 
 2.25.0
 
