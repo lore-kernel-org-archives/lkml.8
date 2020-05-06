@@ -2,137 +2,155 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 713A4C47254
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 01:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D79AC47247
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 01:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 463F220735
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 01:24:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588728272;
-	bh=0MLo2NbZMkoEikI+0ws5DDZ7FousY6/b9nnHo7P+Gjk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZfiMSn+OPOLMIzROQsaCRZOy9RIMMAcc8RZEQqJ1P1jOQFtZSDjDM58/CmxplWs2c
-	 sMWLJGW5SzYTVswhq0ArXKjvTsquaOiZO8r5ZTY7JN4BEkDW1MbJvm0SCED4tz3QjB
-	 xIQdD4/QZys0kyiTsYshsNkcgoR6iP+qAUADezNg=
+	by mail.kernel.org (Postfix) with ESMTP id 4640520735
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 01:27:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fEeDB7Zt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729774AbgEFBYb (ORCPT
+        id S1729816AbgEFB1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 21:24:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40380 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729457AbgEFBYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 21:24:31 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38C3320721;
-        Wed,  6 May 2020 01:24:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588728270;
-        bh=0MLo2NbZMkoEikI+0ws5DDZ7FousY6/b9nnHo7P+Gjk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tXVf6TQ1Sti0iAG5VHBet6ALroDk6gYzIaC5JV+smROfEfJggD6fgeg19XW+7O8/2
-         bYWn7fbiDYwRISi5X8fDqEQVdH9Z1kdp2hU8Dh38/TYjeZjSAUC6kkug7gkha0bjeZ
-         VQJDeO6Ztfl/XIAlww3YDrgnB3H7htuULoFp3GfM=
-Date:   Tue, 5 May 2020 18:24:28 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Gao Xiang <hsiangkao@gmx.com>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, kernel-team@android.com,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [f2fs-dev] [PATCH] f2fs: get parent inode when recovering pino
-Message-ID: <20200506012428.GG128280@sol.localdomain>
-References: <20200505153139.201697-1-jaegeuk@kernel.org>
- <20200505165847.GA98848@gmail.com>
- <20200505181323.GA55221@google.com>
- <20200505181941.GC98848@gmail.com>
- <20200506001403.GA2101@hsiangkao-HP-ZHAN-66-Pro-G1>
+        Tue, 5 May 2020 21:27:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41234 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729457AbgEFB1E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 21:27:04 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E23AC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 18:27:04 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id e6so63130pjt.4
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 18:27:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xPLZJsayQjCGQwY1s3pIHaRye61Spu3GPa2g53Bgbks=;
+        b=fEeDB7ZtkjwraZ9jqNqbxrp7Cectj/LniyG/WVDfQNq5mosFEZjdmr1kmgJXXf7gS7
+         YrOsB8SvewJ12YN9j8EeYsTeXkf2jy0QY3xtTWr8zhWljmjTm5WPRdeMuVgMp75XZimU
+         7ziiQemGDg6TRHGHElVK9iHo8KxOxqUfkxAY1BUfFaRAYUzySKqtlhu8Xl/7PBBLSdMy
+         ZVO9y7q/g7hz/bEA1epVZ4L/vpmlB4LkfhTqm1WuhY11A0UQTl6+Nv7WJ7PdROMka9KA
+         fNsryR1MYk5rtPLfoFUFzXBHAhmO5RlCCYU/lBWfxTP80j6Ul/WIQys3RFyl/zydXvaQ
+         pS6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xPLZJsayQjCGQwY1s3pIHaRye61Spu3GPa2g53Bgbks=;
+        b=p6Bwi1R/5M0mfOgRNV3O2JiEuMJRDoxXoU7nSyYaBGhvDG4QGZKkEisi1ZAaPEwilo
+         0hc5r/3w6QVtDkYCcB7Rqd4fNE680IvebOU4DndG/xDbR5BIHDZ8J4Tfy6Ij+CcC70zH
+         EXttemLvW/lelyjMzaa78XYip5B7hIqUE3Bvo1XCsQhrKfs8857ZRrwhmQpvk59UHhbm
+         S6AhTia5ryO9WzSXj7dJudhrfK1My+MGs4VXjkS9cqDdT3lO8IrzK0sX5/eC7wx/ege4
+         JuifEV7biKsPz2hVRhScBnfpV8CoDbtlrspbjxFuG8Vaz2xLJS10mx83NbXw9f9yb1U1
+         +X+A==
+X-Gm-Message-State: AGi0PuYR5sqOT9wFVC7OksN/ol5/uzSDm1yuDroWyXnJ28/GlMZxaKEz
+        IfFXUCbM8WrPAkKFUxm7GmCo7g==
+X-Google-Smtp-Source: APiQypKMMlkzNjpv5d0j02REz81TfCnytVATHuXPJbjlnGrYHmHErVvmMGUWN25gsFd796v7EFTpgQ==
+X-Received: by 2002:a17:90a:df88:: with SMTP id p8mr6494662pjv.119.1588728423310;
+        Tue, 05 May 2020 18:27:03 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id y2sm106442pfq.16.2020.05.05.18.27.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 18:27:02 -0700 (PDT)
+Date:   Tue, 5 May 2020 18:27:48 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     ohad@wizery.com, loic.pallardy@st.com, arnaud.pouliquen@st.com,
+        s-anna@ti.com, linux-remoteproc@vger.kernel.org, corbet@lwn.net,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 11/14] remoteproc: Deal with synchronisation when
+ changing FW image
+Message-ID: <20200506012748.GH2329931@builder.lan>
+References: <20200424200135.28825-1-mathieu.poirier@linaro.org>
+ <20200424200135.28825-12-mathieu.poirier@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200506001403.GA2101@hsiangkao-HP-ZHAN-66-Pro-G1>
+In-Reply-To: <20200424200135.28825-12-mathieu.poirier@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 08:14:07AM +0800, Gao Xiang wrote:
-> >
-> > Actually, I think this is wrong because the fsync can be done via a file
-> > descriptor that was opened to a now-deleted link to the file.
+On Fri 24 Apr 13:01 PDT 2020, Mathieu Poirier wrote:
+
+> This patch prevents the firmware image from being displayed or changed
+> when the remoteproc core is synchronising with a remote processor. This
+> is needed since there is no guarantee about the nature of the firmware
+> image that is loaded by the external entity.
 > 
-> I'm still confused about this...
+> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> ---
+>  drivers/remoteproc/remoteproc_sysfs.c | 24 +++++++++++++++++++++++-
+>  1 file changed, 23 insertions(+), 1 deletion(-)
 > 
-> I don't know what's wrong with this version from my limited knowledge?
->  inode itself is locked when fsyncing, so
+> diff --git a/drivers/remoteproc/remoteproc_sysfs.c b/drivers/remoteproc/remoteproc_sysfs.c
+> index 7f8536b73295..cdd322a6ecfa 100644
+> --- a/drivers/remoteproc/remoteproc_sysfs.c
+> +++ b/drivers/remoteproc/remoteproc_sysfs.c
+> @@ -13,9 +13,20 @@
+>  static ssize_t firmware_show(struct device *dev, struct device_attribute *attr,
+>  			  char *buf)
+>  {
+> +	ssize_t ret;
+>  	struct rproc *rproc = to_rproc(dev);
+>  
+> -	return sprintf(buf, "%s\n", rproc->firmware);
+> +	/*
+> +	 * In most instances there is no guarantee about the firmware
+> +	 * that was loaded by the external entity.  As such simply don't
+> +	 * print anything.
+
+Not only "in most instances", we have no idea what firmware is running,
+so this can be shortened.
+
+However, this does implicate that on_init = true, after_crash = false,
+this will read blank, but a future rproc_report_crash() will indeed load
+and boot rproc->firmware.
+
+> +	 */
+> +	if (rproc_needs_syncing(rproc))
+> +		ret = sprintf(buf, "\n");
+> +	else
+> +		ret = sprintf(buf, "%s\n", rproc->firmware);
+> +
+> +	return ret;
+>  }
+>  
+>  /* Change firmware name via sysfs */
+> @@ -39,6 +50,17 @@ static ssize_t firmware_store(struct device *dev,
+>  		goto out;
+>  	}
+>  
+> +	/*
+> +	 * There is no point in trying to change the firmware if loading the
+> +	 * image of the remote processor is done by another entity.
+> +	 */
+> +	if (rproc_needs_syncing(rproc)) {
+> +		dev_err(dev,
+> +			"can't change firmware while synchronising with MCU\n");
+
+The conditional checks for a future event, but the error message
+indicates an ongoing event. How about "can't change firmware on remote
+controlled remote processor"? "externally controlled"?
+
+Regards,
+Bjorn
+
+> +		err = -EBUSY;
+> +		goto out;
+> +	}
+> +
+>  	len = strcspn(buf, "\n");
+>  	if (!len) {
+>  		dev_err(dev, "can't provide a NULL firmware\n");
+> -- 
+> 2.20.1
 > 
->    if the fsync inode->i_nlink == 1, this inode has only one hard link
->    (not deleted yet) and should belong to a single directory; and
-> 
->    the only one parent directory would not go away (not deleted as well)
->    since there are some dirents in it (not empty).
-> 
-> Could kindly explain more so I would learn more about this scenario?
-> Thanks a lot!
-
-i_nlink == 1 just means that there is one non-deleted link.  There can be links
-that have since been deleted, and file descriptors can still be open to them.
-
-> 
-> >
-> > We need to find the dentry whose parent directory is still exists, i.e. the
-> > parent directory that is counting towards 'inode->i_nlink == 1'.
-> 
-> directory counting towards 'inode->i_nlink == 1', what's happening?
-
-The non-deleted link is the one counted in i_nlink.
-
-> 
-> >
-> > I think d_find_alias() is what we're looking for.
-> 
-> It may be simply dentry->d_parent (stable/positive as you said before, and it's
-> not empty). why need to d_find_alias()?
-
-Because we need to get the dentry that hasn't been deleted yet, which isn't
-necessarily the one associated with the file descriptor being fsync()'ed.
-
-> And what is the original problem? I could not get some clue from the original
-> patch description (I only saw some extra igrab/iput because of some unknown
-> reasons), it there some backtrace related to the problem?
-
-The problem is that i_pino gets set incorrectly.  I just noticed this while
-reviewing the code.  It's not hard to reproduce, e.g.:
-
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-
-int main()
-{
-        int fd;
-
-        mkdir("dir1", 0700);
-        mkdir("dir2", 0700);
-        mknod("dir1/file", S_IFREG|0600, 0);
-        link("dir1/file", "dir2/file");
-        fd = open("dir2/file", O_WRONLY);
-        unlink("dir2/file");
-        write(fd, "X", 1);
-        fsync(fd);
-}
-
-Then:
-
-sync
-echo N | dump.f2fs -i $(stat -c %i dir1/file) /dev/vdb | grep 'i_pino'
-echo "dir1 (correct): $(stat -c %i dir1)"
-echo "dir2 (wrong): $(stat -c %i dir2)"
-
-i_pino will point to dir2 rather than dir1 as expected.
-
-- Eric
