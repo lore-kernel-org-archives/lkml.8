@@ -2,63 +2,83 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE75EC38A24
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7336C47259
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99E2E2075A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93AF7207DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 20:59:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729353AbgEFU6A (ORCPT
+        id S1729391AbgEFU7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 16:58:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54606 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726815AbgEFU56 (ORCPT
+        Wed, 6 May 2020 16:59:43 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:58080 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726815AbgEFU7n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 16:57:58 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC617C061A0F;
-        Wed,  6 May 2020 13:57:58 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2E9EC1210A3F3;
-        Wed,  6 May 2020 13:57:58 -0700 (PDT)
-Date:   Wed, 06 May 2020 13:57:57 -0700 (PDT)
-Message-Id: <20200506.135757.899774547217843583.davem@davemloft.net>
-To:     yanaijie@huawei.com
-Cc:     tariqt@mellanox.com, ast@kernel.org, daniel@iogearbox.net,
-        kuba@kernel.org, hawk@kernel.org, john.fastabend@gmail.com,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH net-next] net: mlx4: remove unneeded variable "err" in
- mlx4_en_get_rxfh()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200506061630.19010-1-yanaijie@huawei.com>
-References: <20200506061630.19010-1-yanaijie@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Wed, 6 May 2020 16:59:43 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 5B3EB2A2524
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: Re: [PATCH v14 01/11] dt-bindings: mediatek: Add property to mt8183
+ smi-common
+To:     Weiyi Lu <weiyi.lu@mediatek.com>,
+        Enric Balletbo Serra <eballetbo@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Rob Herring <robh@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>
+Cc:     James Liao <jamesjj.liao@mediatek.com>,
+        srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org,
+        Fan Chen <fan.chen@mediatek.com>,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        devicetree <devicetree@vger.kernel.org>
+References: <1588752963-19934-1-git-send-email-weiyi.lu@mediatek.com>
+ <1588752963-19934-2-git-send-email-weiyi.lu@mediatek.com>
+Message-ID: <7165ec9f-03ca-3020-2c34-246465094c46@collabora.com>
+Date:   Wed, 6 May 2020 22:59:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <1588752963-19934-2-git-send-email-weiyi.lu@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 06 May 2020 13:57:58 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Yan <yanaijie@huawei.com>
-Date: Wed, 6 May 2020 14:16:30 +0800
+Hi Weiyi,
 
-> Fix the following coccicheck warning:
-> 
-> drivers/net/ethernet/mellanox/mlx4/en_ethtool.c:1238:5-8: Unneeded
-> variable: "err". Return "0" on line 1252
-> 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Thank you for your patch. Don't forget to cc <devicetree@vger.kernel.org>,
+otherwise this patch could be silently ignored.
 
-Applied.
+On 6/5/20 10:15, Weiyi Lu wrote:
+> For scpsys driver using regmap based syscon driver API.
+> 
+> Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+> ---
+>  .../devicetree/bindings/memory-controllers/mediatek,smi-common.txt      | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/mediatek,smi-common.txt b/Documentation/devicetree/bindings/memory-controllers/mediatek,smi-common.txt
+> index b478ade..01744ec 100644
+> --- a/Documentation/devicetree/bindings/memory-controllers/mediatek,smi-common.txt
+> +++ b/Documentation/devicetree/bindings/memory-controllers/mediatek,smi-common.txt
+> @@ -20,7 +20,7 @@ Required properties:
+>  	"mediatek,mt2712-smi-common"
+>  	"mediatek,mt7623-smi-common", "mediatek,mt2701-smi-common"
+>  	"mediatek,mt8173-smi-common"
+> -	"mediatek,mt8183-smi-common"
+> +	"mediatek,mt8183-smi-common", "syscon"
+>  - reg : the register and size of the SMI block.
+>  - power-domains : a phandle to the power domain of this local arbiter.
+>  - clocks : Must contain an entry for each entry in clock-names.
+> 
