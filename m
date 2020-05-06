@@ -2,487 +2,262 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,PDS_BTC_ID,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B14E3C38A2A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90372C38A2A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE0620659
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6820520736
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:24:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588807496;
+	bh=PRTrDKdE5/UWlqajRQ5UBqsVuVvaRhbdhBZIKDP+RfE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SDKJPEumvaO9N+E7OvezfnUlv+nlNYze5XbtFXMrQkJjf+OArMZVb4u1PjZStbgeP
+	 /W3ujsyQ2zXoj/aUzYpiNGZXCGvvlOMByWqVE/wM/2ApaCeVJJg58tL9PboNIHOBUc
+	 kz4deXZgblJ6VBddyR8YDnYwWvVIPb5tEy49fvMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgEFXVT (ORCPT
+        id S1727790AbgEFXYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 19:21:19 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:42983 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbgEFXVS (ORCPT
+        Wed, 6 May 2020 19:24:53 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:50665 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbgEFXYx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 19:21:18 -0400
-X-Originating-IP: 84.65.30.46
-Received: from storm.broadband (unknown [84.65.30.46])
-        (Authenticated sender: edwin@etorok.net)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 7646A60003;
-        Wed,  6 May 2020 23:20:51 +0000 (UTC)
-Message-ID: <788538c79fc331f09d335d7526f5e79484403c59.camel@etorok.net>
-Subject: Re: PROBLEM: XFS in-memory corruption with reflinks and duperemove:
- XFS (dm-4): Internal error xfs_trans_cancel at line 1048 of file
- fs/xfs/xfs_trans.c.  Caller xfs_reflink_remap_extent+0x100/0x560
-From:   Edwin =?ISO-8859-1?Q?T=F6r=F6k?= <edwin@etorok.net>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 07 May 2020 00:20:51 +0100
-In-Reply-To: <20200506224749.GA6730@magnolia>
-References: <f6c749739dc135ebd7a9321195a616b15c772082.camel@etorok.net>
-         <20200421171616.GH6749@magnolia>
-         <acc12ecd2c183c93f8af770b2302498cb30e83f4.camel@etorok.net>
-         <20200504152135.GA13811@magnolia>
-         <583e618512f15f10b3dee8857a92235950c862e7.camel@etorok.net>
-         <20200505005811.GC5716@magnolia>
-         <124EB800-8712-4C36-8B35-41363A558269@etorok.net>
-         <20200506224749.GA6730@magnolia>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1-2 
+        Wed, 6 May 2020 19:24:53 -0400
+Received: by mail-pj1-f66.google.com with SMTP id t9so1800814pjw.0;
+        Wed, 06 May 2020 16:24:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uyjs7v1E7X5rVgzIyUeAKPIhZ3ctg8TK9ZgJrbngU+c=;
+        b=VUTz9fox/cd2ldkrDFq6aSvLvVRyAi8OcccPDdMICH+AotwtmAmBMedVnwOWuJ7lFC
+         lagtCiNQgmODdfACJCUj0DL0r6Bfu5hcpuASl2E2WfvklObCpfb63it955J2XdNq/D+a
+         kXhfkhwch9rfsgwB8Z+QyfhvsRJfPBJ9f2O6gtgtQvOvZYE3zvqB+UGvtYItqEaIckwc
+         s73QKTtvoTmv0i4yZUf9c2DI+M4/eZ/cnzpryQyiNO08Z5KnQFDDKwF3CHCV3w+acF3y
+         92neO+OrUypGlFvoNF+pGsYFG8CwYOYaKsA7rOvGOljmjJigLDmkvrRVNyhKrecTM4Z/
+         yzVw==
+X-Gm-Message-State: AGi0PuZRVkIT9xm2ywgf1ghwZpIeTrATa2L/Nhu4qMzA/f5S2V1a3OzV
+        3MQSttsv7DoAtN+QpHQhoqw=
+X-Google-Smtp-Source: APiQypJF7JgwMQGGqc5WoVBRTmeLPQFP3HCAUpgl/HK5RDaLMY4BaPZ3HEiEHMuxcEW8GnpABdKTXg==
+X-Received: by 2002:a17:902:8bc2:: with SMTP id r2mr10733856plo.42.1588807490411;
+        Wed, 06 May 2020 16:24:50 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id r78sm2438478pgr.40.2020.05.06.16.24.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 16:24:48 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 0F275403EA; Wed,  6 May 2020 23:24:48 +0000 (UTC)
+Date:   Wed, 6 May 2020 23:24:48 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Rafael Aquini <aquini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        dyoung@redhat.com, bhe@redhat.com, corbet@lwn.net,
+        keescook@chromium.org, akpm@linux-foundation.org, cai@lca.pw
+Subject: Re: [PATCH] kernel: add panic_on_taint
+Message-ID: <20200506232447.GW11244@42.do-not-panic.com>
+References: <20200506222815.274570-1-aquini@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506222815.274570-1-aquini@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-05-06 at 15:47 -0700, Darrick J. Wong wrote:
-> On Wed, May 06, 2020 at 12:07:12AM +0100, Edwin Török wrote:
-> > 
-> > On 5 May 2020 01:58:11 BST, "Darrick J. Wong" <
-> > darrick.wong@oracle.com> wrote:
-> > > On Mon, May 04, 2020 at 11:54:05PM +0100, Edwin Török wrote:
-> > > > On Mon, 2020-05-04 at 08:21 -0700, Darrick J. Wong wrote:
-> > > > > On Mon, Apr 27, 2020 at 10:15:57AM +0100, Edwin Török wrote:
-> > > > > > On Tue, 2020-04-21 at 10:16 -0700, Darrick J. Wong wrote:
-> > > > > > > On Sat, Apr 18, 2020 at 11:19:03AM +0100, Edwin Török
-> > > > > > > wrote:
-> > > > > > > > [1.] One line summary of the problem:
-> > > > > > > > 
-> > > > > > > > I 100% reproducibly get XFS in-memory data corruption
-> > > > > > > > when
-> > > > > > > > running
-> > > > > > > > duperemove on an XFS filesystem with reflinks, even
-> > > > > > > > after
-> > > > > > > > running
-> > > > > > > > xfs_repair and repeating the operation.
-> > > > > > > > 
-> > > > > > > > [2.] Full description of the problem/report:
-> > > > > > > > Ubuntu bugreport here: 
-> > > > > > > > 
-https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1873555
-> > > > > > > 
-> > > > > > > Hmm.  I recently fixed an uninitialized variable error in
-> > > > > > > xfs_reflink_remap_extent.
-> > > > > > > 
-> > > > > > > Does applying that patch to the ubuntu kernel (or running
-> > > > > > > the
-> > > > > > > same
-> > > > > > > workload on the 5.7-rc2 ubuntu mainline kernel) fix this?
-> > > > > > > 
-> > > > > > > https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.7-rc2/
-> > > > > > 
-> > > > > > [...]
-> > > > > 
-> > > > > A smaller testcase would help.
-> > > > 
-> > > > Found it! I don't think it is corruption at all, more like the
-> > > function
-> > > > caller not handling an expected error condition, see below:
-> > > > 
-> > > > I wasn't able to create a testcase that doesn't also need all
-> > > > my
-> > > data,
-> > > > but I found a faster repro which takes only a few minutes:
-> > > > 
-> > > > 
-> > > > sudo lvconvert --merge /dev/mapper/storage-storage--snapshot
-> > > > sudo lvcreate -L 32G -s -n storage-snapshot
-> > > /dev/mapper/storage-backup
-> > > > sudo mount -o noatime /dev/mapper/storage-backup /mnt/storage
-> > > > sudo duperemove -d --hashfile hashes /mnt/storage/from-
-> > > > 
-> > > restic/04683ed4/tmp/fast/c14-sd-92016-2-home/2017-06-07-
-> > > 233355/2017-06-
-> > > > 07-233355/edwin/.mu/xapian/postlist.DB /mnt/storage/from-
-> > > > 
-> > > restic/0fcf01c9/tmp/fast/c14-sd-92016-2-home/2017-05-23-
-> > > 233346/2017-05-
-> > > > 23-233346/edwin/.mu/xapian/postlist.DB /mnt/storage/from-
-> > > > 
-> > > restic/10350278/tmp/fast/c14-sd-92016-2-home/2017-06-17-
-> > > 233341/2017-06-
-> > > > 17-233341/edwin/.mu/xapian/postlist.DB
-> > > > sudo umount /mnt/storage
-> > > > 
-> > > > 
-> > > > > Or... if you have bpftrace handy, using kretprobes to figure
-> > > > > out
-> > > > > which
-> > > > > function starts the -EIO return that ultimately causes the
-> > > > > remap to
-> > > > > fail.
-> > > > > 
-> > > > > (Or failing that, 'trace-cmd -e xfs_buf_ioerr' to see if it
-> > > uncovers
-> > > > > anything.)
-> > > > 
-> > > > With this xfs.bt:
-> > > > 
-> > > > kprobe:xfs_iread_extents,
-> > > > kprobe:xfs_bmap_add_extent_unwritten_real,
-> > > > kprobe:xfs_bmap_del_extent_delay,
-> > > > kprobe:xfs_bmap_del_extent_real,
-> > > > kprobe:xfs_bmap_extents_to_btree,
-> > > > kprobe:xfs_bmap_btree_to_extents,
-> > > > kprobe:__xfs_bunmapi,
-> > > > kprobe:xfs_defer_finish
-> > > > {
-> > > >     @st[tid] = kstack();
-> > > >     @has[tid] = 1;
-> > > > }
-> > > > 
-> > > > kretprobe:xfs_iread_extents,
-> > > > kretprobe:xfs_bmap_add_extent_unwritten_real,
-> > > > kretprobe:xfs_bmap_del_extent_delay,
-> > > > kretprobe:xfs_bmap_del_extent_real,
-> > > > kretprobe:xfs_bmap_extents_to_btree,
-> > > > kretprobe:xfs_bmap_btree_to_extents,
-> > > > kretprobe:__xfs_bunmapi,
-> > > > kretprobe:xfs_defer_finish
-> > > > /(retval!=0) && (@has[tid])/ {
-> > > >     // kstack does not work here
-> > > >     @errors[(int32)retval, probe, @st[tid]] = count();
-> > > >     delete(@st[tid]);
-> > > >     delete(@has[tid]);
-> > > > }
-> > > > 
-> > > > BEGIN { printf("START\n"); }
-> > > > END { print(@errors); }
-> > > > 
-> > > > I got this:
-> > > > @errors[-28, kretprobe:xfs_bmap_del_extent_real, 
-> > > >     xfs_bmap_del_extent_real+1
-> > > >     kretprobe_trampoline+0
-> > > >     xfs_reflink_remap_blocks+286
-> > > >     xfs_file_remap_range+272
-> > > >     vfs_dedupe_file_range_one+301
-> > > >     vfs_dedupe_file_range+342
-> > > >     do_vfs_ioctl+832
-> > > >     ksys_ioctl+103
-> > > >     __x64_sys_ioctl+26
-> > > >     do_syscall_64+87
-> > > >     entry_SYSCALL_64_after_hwframe+68
-> > > > ]: 1
-> > > > 
-> > > > -28 is ENOSPC, but I have more than 1TiB free (and plenty of
-> > > > free
-> > > > inodes too).
-> > > > 
-> > > > Poking around in that code I found this block of code:
-> > > >   >       /*
-> > > >   >        * If it's the case where the directory code is
-> > > > running
-> > > with
-> > > > no block
-> > > >   >        * reservation, and the deleted block is in the
-> > > > middle of
-> > > its
-> > > > extent,
-> > > >   >        * and the resulting insert of an extent would cause
-> > > > transformation to
-> > > >   >        * btree format, then reject it.  The calling code
-> > > > will
-> > > then
-> > > > swap blocks
-> > > >   >        * around instead.  We have to do this now, rather
-> > > > than
-> > > > waiting for the
-> > > >   >        * conversion to btree format, since the transaction
-> > > > will
-> > > be
-> > > > dirty then.
-> > > >   >        */
-> > > >   >       if (tp->t_blk_res == 0 &&
-> > > >   >           XFS_IFORK_FORMAT(ip, whichfork) ==
-> > > XFS_DINODE_FMT_EXTENTS
-> > > > &&
-> > > >   >           XFS_IFORK_NEXTENTS(ip, whichfork) >=
-> > > >   >       >       >       XFS_IFORK_MAXEXT(ip, whichfork) &&
-> > > >   >           del->br_startoff > got.br_startoff && del_endoff
-> > > > <
-> > > > got_endoff) {
-> > > >                   xfs_warn(mp, "returning ENOSPC in %s",
-> > > > __func__);
-> > > >   >       >       return -ENOSPC;
-> > > >               }
-> > > 
-> > > Aww, gross, that's some weird thing that exists for directory
-> > > code. :/
-> > > 
-> > > I bet the problem here is that the remap transaction is running
-> > > out of
-> > > block reservation.  Looking at xfs_reflink_remap_extent it looks
-> > > like
-> > > we
-> > > reserve one extent mapping's worth of blocks for the whole
-> > > operation.
-> > > I don't think is correct, since we're removing a whole mapping
-> > > and
-> > > inserting another mapping, but only allowing for one bmbt split.
-> > > 
-> > > Hmm, if you find the chunk of xfs_reflink_remap_extent:
-> > > 
-> > > 	/* Start a rolling transaction to switch the mappings */
-> > > 	resblks = XFS_EXTENTADD_SPACE_RES(ip->i_mount, XFS_DATA_FORK);
-> > > 	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_write, resblks, 0,
-> > > 0, &tp);
-> > > 
-> > > and then change the resblks= line to read:
-> > > 
-> > > 	resblks = XFS_EXTENTADD_SPACE_RES(ip->i_mount, XFS_DATA_FORK) *
-> > > 2;
-> > > 
-> > > Does that make the crash go away?
-> > 
-> > No, the smallest multiplier that works for this file is 14, perhaps
-> > the formula here needs some of the other space macros? I don't see
-> > why
-> > 14 would be the answer.  I'll let it run on the other files to see
-> > if
-> > that's enough in general.
+On Wed, May 06, 2020 at 06:28:15PM -0400, Rafael Aquini wrote:
+> Analogously to the introduction of panic_on_warn, this patch
+> introduces a kernel option named panic_on_taint in order to
+> provide a simple and generic way to stop execution and catch
+> a coredump when the kernel gets tainted by any given taint flag.
 > 
-> Ok.  14 also confirms my suspicions that we're running out of block
-> reservation, probably because of the length of the transaction chain.
-
-FWIW running duperemove on the rest of the FS triggered the issue again
-even with 14 on the exact same file.
-
-
+> This is useful for debugging sessions as it avoids rebuilding
+> the kernel to explicitly add calls to panic() or BUG() into
+> code sites that introduce the taint flags of interest.
+> Another, perhaps less frequent, use for this option would be
+> as a mean for assuring a security policy (in paranoid mode)
+> case where no single taint is allowed for the running system.
 > 
-> > > Or, send me a metadump and let me bang my head on this tomorrow.
-> > > :)
-> > 
-> > That'll be quite large, is there a way to metadump only a subdir?
+> Suggested-by: Qian Cai <cai@lca.pw>
+> Signed-off-by: Rafael Aquini <aquini@redhat.com>
+> ---
+>  Documentation/admin-guide/kdump/kdump.rst     | 10 ++++++
+>  .../admin-guide/kernel-parameters.txt         |  3 ++
+>  Documentation/admin-guide/sysctl/kernel.rst   | 36 +++++++++++++++++++
+>  include/linux/kernel.h                        |  1 +
+>  kernel/panic.c                                |  7 ++++
+>  kernel/sysctl.c                               |  7 ++++
+>  6 files changed, 64 insertions(+)
 > 
-> Hm... could you send me a filefrag -v of the files that you're
-> feeding
-> to duperemove?  That might give me a better idea of the reflinking
-> factor of the filesystem.
+> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+> index ac7e131d2935..de3cf6d377cc 100644
+> --- a/Documentation/admin-guide/kdump/kdump.rst
+> +++ b/Documentation/admin-guide/kdump/kdump.rst
+> @@ -521,6 +521,16 @@ will cause a kdump to occur at the panic() call.  In cases where a user wants
+>  to specify this during runtime, /proc/sys/kernel/panic_on_warn can be set to 1
+>  to achieve the same behaviour.
+>  
+> +Trigger Kdump on add_taint()
+> +============================
+> +
+> +The kernel parameter, panic_on_taint, calls panic() from within add_taint(),
+> +whenever the value set in this bitmask matches with the bit flag being set
+> +by add_taint(). This will cause a kdump to occur at the panic() call.
+> +In cases where a user wants to specify this during runtime,
+> +/proc/sys/kernel/panic_on_taint can be set to a respective bitmask value
+> +to achieve the same behaviour.
+> +
+>  Contact
+>  =======
+>  
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 7bc83f3d9bdf..75c02c1841b2 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -3404,6 +3404,9 @@
+>  	panic_on_warn	panic() instead of WARN().  Useful to cause kdump
+>  			on a WARN().
+>  
+> +	panic_on_taint	panic() when the kernel gets tainted, if the taint
+> +			flag being set matches with the assigned bitmask.
+> +
+>  	crash_kexec_post_notifiers
+>  			Run kdump after running panic-notifiers and dumping
+>  			kmsg. This only for the users who doubt kdump always
+> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+> index 0d427fd10941..5b880102f2e3 100644
+> --- a/Documentation/admin-guide/sysctl/kernel.rst
+> +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> @@ -658,6 +658,42 @@ a kernel rebuild when attempting to kdump at the location of a WARN().
+>  = ================================================
+>  
+>  
+> +panic_on_taint
+> +==============
+> +
+> +Bitmask for calling panic() in the add_taint() path.
+> +This is useful to avoid a kernel rebuild when attempting to
+> +kdump at the insertion of any specific TAINT flags.
+> +When set to 0 (default) add_taint() default behavior is maintained.
+> +
+> +====== ============================
+> +bit  0 TAINT_PROPRIETARY_MODULE
+> +bit  1 TAINT_FORCED_MODULE
+> +bit  2 TAINT_CPU_OUT_OF_SPEC
+> +bit  3 TAINT_FORCED_RMMOD
+> +bit  4 TAINT_MACHINE_CHECK
+> +bit  5 TAINT_BAD_PAGE
+> +bit  6 TAINT_USER
+> +bit  7 TAINT_DIE
+> +bit  8 TAINT_OVERRIDDEN_ACPI_TABLE
+> +bit  9 TAINT_WARN
+> +bit 10 TAINT_CRAP
+> +bit 11 TAINT_FIRMWARE_WORKAROUND
+> +bit 12 TAINT_OOT_MODULE
+> +bit 13 TAINT_UNSIGNED_MODULE
+> +bit 14 TAINT_SOFTLOCKUP
+> +bit 15 TAINT_LIVEPATCH
+> +bit 16 TAINT_AUX
+> +bit 17 TAINT_RANDSTRUCT
+> +bit 18 TAINT_FLAGS_COUNT
+> +====== ============================
+> +
+> +So, for example, to panic if the kernel gets tainted due to
+> +occurrences of bad pages and/or machine check errors, a user can::
+> +
+> +  echo 48 > /proc/sys/kernel/panic_on_taint
+> +
+> +
+>  panic_print
+>  ===========
+>  
+> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+> index 9b7a8d74a9d6..518b9fd381c2 100644
+> --- a/include/linux/kernel.h
+> +++ b/include/linux/kernel.h
+> @@ -528,6 +528,7 @@ extern int panic_on_oops;
+>  extern int panic_on_unrecovered_nmi;
+>  extern int panic_on_io_nmi;
+>  extern int panic_on_warn;
+> +extern unsigned long panic_on_taint;
+>  extern int sysctl_panic_on_rcu_stall;
+>  extern int sysctl_panic_on_stackoverflow;
+>  
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index b69ee9e76cb2..e2d4771ab911 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -44,6 +44,7 @@ static int pause_on_oops_flag;
+>  static DEFINE_SPINLOCK(pause_on_oops_lock);
+>  bool crash_kexec_post_notifiers;
+>  int panic_on_warn __read_mostly;
+> +unsigned long panic_on_taint __read_mostly;
 
-sudo filefrag -v /mnt/storage/from-restic/04683ed4/tmp/fast/c14-sd-
-92016-2-home/2017-06-07-233355/2017-06-07-
-233355/edwin/.mu/xapian/postlist.DB /mnt/storage/from-
-restic/0fcf01c9/tmp/fast/c14-sd-92016-2-home/2017-05-23-233346/2017-05-
-23-233346/edwin/.mu/xapian/postlist.DB /mnt/storage/from-
-restic/10350278/tmp/fast/c14-sd-92016-2-home/2017-06-17-233341/2017-06-
-17-233341/edwin/.mu/xapian/postlist.DB 
-Filesystem type is: 58465342
-File size of /mnt/storage/from-restic/04683ed4/tmp/fast/c14-sd-92016-2-
-home/2017-06-07-233355/2017-06-07-233355/edwin/.mu/xapian/postlist.DB
-is 2255716352 (550712 blocks of 4096 bytes)
- ext:     logical_offset:        physical_offset: length:   expected:
-flags:
-   0:        0..     650:  289205390..
-289206040:    651:             shared
-   1:      651..     827:  288864297.. 288864473:    177:  289206041:
-shared
-   2:      828..    1098:  289206041.. 289206311:    271:  288864474:
-shared
-   3:     1099..    1490:  288947797.. 288948188:    392:  289206312:
-shared
-   4:     1491..    1928:  289206312.. 289206749:    438:  288948189:
-shared
-   5:     1929..    3078:  289024844.. 289025993:   1150:  289206750:
-shared
-   6:     3079..    7504:  289206750.. 289211175:   4426:  289025994:
-shared
-   7:     7505..   10083:  289030420.. 289032998:   2579:  289211176:
-shared
-   8:    10084..   11930:  289211176.. 289213022:   1847:  289032999:
-shared
-   9:    11931..   13072:  289034846.. 289035987:   1142:  289213023:
-shared
-  10:    13073..   14183:  289213023.. 289214133:   1111:  289035988:
-shared
-  11:    14184..   15536:  289037099.. 289038451:   1353:  289214134:
-shared
-  12:    15537..   20897:  289219223.. 289224583:   5361:  289038452:
-shared
-  13:    20898..   23720:  289043813.. 289046635:   2823:  289224584:
-shared
-  14:    23721..   24004:  289214134.. 289214417:    284:  289046636:
-shared
-  15:    24005..   24784:  289046920.. 289047699:    780:  289214418:
-shared
-  16:    24785..   31903:  289224584.. 289231702:   7119:  289047700:
-shared
-  17:    31904..   34332:  289096507.. 289098935:   2429:  289231703:
-shared
-  18:    34333..   35396:  289214898.. 289215961:   1064:  289098936:
-shared
-  19:    35397..   45075:  289153956.. 289163634:   9679:  289215962:
-shared
-  20:    45076..  550711:  289336838.. 289842473: 505636:  289163635:
-last,shared,eof
-/mnt/storage/from-restic/04683ed4/tmp/fast/c14-sd-92016-2-home/2017-06-
-07-233355/2017-06-07-233355/edwin/.mu/xapian/postlist.DB: 21 extents
-found
-File size of /mnt/storage/from-restic/0fcf01c9/tmp/fast/c14-sd-92016-2-
-home/2017-05-23-233346/2017-05-23-233346/edwin/.mu/xapian/postlist.DB
-is 2255716352 (550712 blocks of 4096 bytes)
- ext:     logical_offset:        physical_offset: length:   expected:
-flags:
-   0:        0..     650:  289205390..
-289206040:    651:             shared
-   1:      651..     827:  288864297.. 288864473:    177:  289206041:
-shared
-   2:      828..    1098:  289206041.. 289206311:    271:  288864474:
-shared
-   3:     1099..    1490:  288947797.. 288948188:    392:  289206312:
-shared
-   4:     1491..    1928:  289206312.. 289206749:    438:  288948189:
-shared
-   5:     1929..    3078:  289024844.. 289025993:   1150:  289206750:
-shared
-   6:     3079..    7504:  289206750.. 289211175:   4426:  289025994:
-shared
-   7:     7505..   10083:  289030420.. 289032998:   2579:  289211176:
-shared
-   8:    10084..   11930:  289211176.. 289213022:   1847:  289032999:
-shared
-   9:    11931..   13072:  289034846.. 289035987:   1142:  289213023:
-shared
-  10:    13073..   14183:  289213023.. 289214133:   1111:  289035988:
-shared
-  11:    14184..   15536:  289037099.. 289038451:   1353:  289214134:
-shared
-  12:    15537..   20897:  289219223.. 289224583:   5361:  289038452:
-shared
-  13:    20898..   23720:  289043813.. 289046635:   2823:  289224584:
-shared
-  14:    23721..   24004:  289214134.. 289214417:    284:  289046636:
-shared
-  15:    24005..   24784:  289046920.. 289047699:    780:  289214418:
-shared
-  16:    24785..   31903:  289224584.. 289231702:   7119:  289047700:
-shared
-  17:    31904..   34332:  289096507.. 289098935:   2429:  289231703:
-shared
-  18:    34333..   35396:  289214898.. 289215961:   1064:  289098936:
-shared
-  19:    35397..   45075:  289153956.. 289163634:   9679:  289215962:
-shared
-  20:    45076..  550711:  289336838.. 289842473: 505636:  289163635:
-last,shared,eof
-/mnt/storage/from-restic/0fcf01c9/tmp/fast/c14-sd-92016-2-home/2017-05-
-23-233346/2017-05-23-233346/edwin/.mu/xapian/postlist.DB: 21 extents
-found
-File size of /mnt/storage/from-restic/10350278/tmp/fast/c14-sd-92016-2-
-home/2017-06-17-233341/2017-06-17-233341/edwin/.mu/xapian/postlist.DB
-is 2255716352 (550712 blocks of 4096 bytes)
- ext:     logical_offset:        physical_offset: length:   expected:
-flags:
-   0:        0..     650:  289205390..
-289206040:    651:             shared
-   1:      651..     827:  288864297.. 288864473:    177:  289206041:
-shared
-   2:      828..    1098:  289206041.. 289206311:    271:  288864474:
-shared
-   3:     1099..    1490:  288947797.. 288948188:    392:  289206312:
-shared
-   4:     1491..    1928:  289206312.. 289206749:    438:  288948189:
-shared
-   5:     1929..    3078:  289024844.. 289025993:   1150:  289206750:
-shared
-   6:     3079..    7504:  289206750.. 289211175:   4426:  289025994:
-shared
-   7:     7505..   10083:  289030420.. 289032998:   2579:  289211176:
-shared
-   8:    10084..   11930:  289211176.. 289213022:   1847:  289032999:
-shared
-   9:    11931..   13072:  289034846.. 289035987:   1142:  289213023:
-shared
-  10:    13073..   14183:  289213023.. 289214133:   1111:  289035988:
-shared
-  11:    14184..   15536:  289037099.. 289038451:   1353:  289214134:
-shared
-  12:    15537..   20897:  289219223.. 289224583:   5361:  289038452:
-shared
-  13:    20898..   23720:  289043813.. 289046635:   2823:  289224584:
-shared
-  14:    23721..   24004:  289214134.. 289214417:    284:  289046636:
-shared
-  15:    24005..   24784:  289046920.. 289047699:    780:  289214418:
-shared
-  16:    24785..   31903:  289224584.. 289231702:   7119:  289047700:
-shared
-  17:    31904..   34332:  289096507.. 289098935:   2429:  289231703:
-shared
-  18:    34333..   35396:  289214898.. 289215961:   1064:  289098936:
-shared
-  19:    35397..   45075:  289153956.. 289163634:   9679:  289215962:
-shared
-  20:    45076..  550711:  289336838.. 289842473: 505636:  289163635:
-last,shared,eof
-/mnt/storage/from-restic/10350278/tmp/fast/c14-sd-92016-2-home/2017-06-
-17-233341/2017-06-17-233341/edwin/.mu/xapian/postlist.DB: 21 extents
-found
+What justification do we have for using __read_mostly here?
+See patch I just sent out, hope that helps.
 
-Looking at duperemove's database there are some files with high reflink
-counts:
+>  int panic_timeout = CONFIG_PANIC_TIMEOUT;
+>  EXPORT_SYMBOL_GPL(panic_timeout);
+> @@ -434,6 +435,11 @@ void add_taint(unsigned flag, enum lockdep_ok lockdep_ok)
+>  		pr_warn("Disabling lock debugging due to kernel taint\n");
+>  
+>  	set_bit(flag, &tainted_mask);
+> +
+> +	if (unlikely(tainted_mask & panic_on_taint)) {
 
-sqlite> select hex(digest), count(ino) as c from hashes group by digest
-order by c desc limit 30;
-E47862EAC39A71995587EC6F98C0F77E|120826
-603774B45A054235A3EA9973C0326B1A|1146
-1155F3DE7E9760BD3774A084F651E734|1126
-737B0085639F6182B8975B253673CC0F|1126
-1E49066D483DC85F597AA1E311B759C8|852
-25F03E77F28B29812EF7BC467E2AB8A3|720
-3D1DA8B943984CAA28D8143E57CF2AD2|720
-49EDE0A7B5BF869DDF0EC58D97B88CA6|720
-514E20541D0F06B15042E7F60D656F6E|720
-9D05E927C2CBFF1B95B4CD423CB82683|720
-A5630A5CCA0D495679BCDB0E9B118459|720
-EE94AF6B4F3E1B53781AC5202297D4CF|720
-66952AB2F45AD72E5E4F7F5753C45A42|702
-3028010B6254DA58C5A7A83FD57EA5D8|612
-8A35D931C2A52EC0BAE0F8499FE9D56B|603
-167F01605D23CB6DDA52FD3036CB9925|593
-5BC8DAF52583CA428096C2B5046B2329|593
-C1A98787EF8CF318311AE2FAECB526EC|593
-ABDC9B93518EFB347F6FBD6FE7D2F8FE|421
-4DAA7ECCAA161C148624495563211F81|395
-4E08DB53E7E602136CB0E5A8886761C7|395
-5DFDE0C5AA5CA52429389FF516B69012|395
-72E52A135D6DF5C931E3660FA30F5856|395
-7D7F1D1345C7E22E211B9253F2A0DC34|395
-87B61864CDF325C831B6B2B6B99B9217|395
-A191E341458429624A534414547251FD|395
-A932C7FD8269F6941A84F9F4DC573E59|395
-B0B52DE7472FC02EB92836B875A92A05|395
-A84CFAD1E5BCD8CC8DA1FBFEB8BAD520|363
-1304E6AF0087B5498184C9532B79207F|358
+unlikely() is telling the merit may not be that strong?
 
-> 
-> (Obviously, a full metadump would be useful for confirming the shape
-> of
-> the refcount btree, but...first things first let's look at the
-> filefrag
-> output.)
+> +		panic_on_taint = 0;
+> +		panic("panic_on_taint set ...");
+> +	}
+>  }
+>  EXPORT_SYMBOL(add_taint);
+>  
+> @@ -675,6 +681,7 @@ core_param(panic, panic_timeout, int, 0644);
+>  core_param(panic_print, panic_print, ulong, 0644);
+>  core_param(pause_on_oops, pause_on_oops, int, 0644);
+>  core_param(panic_on_warn, panic_on_warn, int, 0644);
+> +core_param(panic_on_taint, panic_on_taint, ulong, 0644);
+>  core_param(crash_kexec_post_notifiers, crash_kexec_post_notifiers, bool, 0644);
+>  
+>  static int __init oops_setup(char *s)
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index 8a176d8727a3..b80ab660d727 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -1217,6 +1217,13 @@ static struct ctl_table kern_table[] = {
+>  		.extra1		= SYSCTL_ZERO,
+>  		.extra2		= SYSCTL_ONE,
+>  	},
+> +	{
+> +		.procname	= "panic_on_taint",
+> +		.data		= &panic_on_taint,
+> +		.maxlen		= sizeof(unsigned long),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_doulongvec_minmax,
 
-I'll try to gather one, and find a place to store/share it.
+proc_doulongvec_minmax supports a min and max, do we want to
+set it so that we have a sanity check for values used? To see
+an example, refer to the file-max entry.
 
-Best regards,
---Edwin
+That would allow for example to error our if a value was
+tried but it is a taint flag which we don't support on an older
+kernel.
 
-> 
-> --D
-> 
+You know what would be *really* useful as well, is a way to
+cat out our current taint, and perhaps another that spits it
+out in English. This can allow scripts to check that for
+validity, instead of scraping kernel logs.
 
+For instance, I would love to easily just check if TAIN_WARN
+was hit on some tests I am working on, but I don't want to scrape
+the kernel log for this, as I think this is overkill.
+
+  Luis
