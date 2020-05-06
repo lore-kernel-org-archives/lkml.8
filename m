@@ -2,99 +2,82 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A6BC47259
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16355C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80C82206E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:14:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YQdcPidw"
+	by mail.kernel.org (Postfix) with ESMTP id E973220714
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:14:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgEFGON (ORCPT
+        id S1727945AbgEFGOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 02:14:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57424 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726495AbgEFGON (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 02:14:13 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D22AC061A0F;
-        Tue,  5 May 2020 23:14:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=4GHTrlwGxcD7riSfw6FoiiWpv9lgWgy1e6SGI+Jf+lk=; b=YQdcPidwWxUsGPCqlsV5vlo08W
-        WE8x+MoDuXM7hVPD+/jHc3dDvfTrn9tM8b6ev+ngbwncTVqcdaxewm6WCDle9njCK90Fa6uDM8pzz
-        V1XKGx1+Kpcns1k6UZYJf5Fj5DEan46YXQrVVoWIg1pzlOvy252FRwu+V+Xz4mzIUqpwuO0rHOWQ3
-        44n+12vujyorLPu546uL9Jr9Rjc2cs3Px+jF8MGMUozOLUVhKI7jXCci3SoqI+7OPayG3rYjHx9QF
-        3xqDiBy6CDrTege8f3bj4NtjfsI9xry8OurnktjyDACV315FnjWOvzsuEqTT6dzYmPcWVFR+g3F8g
-        +dARHVUA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jWDJq-00064d-Uc; Wed, 06 May 2020 06:14:10 +0000
-Date:   Tue, 5 May 2020 23:14:10 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH V2 10/11] arch/kmap: Define kmap_atomic_prot() for all
- arch's
-Message-ID: <20200506061410.GE5192@infradead.org>
-References: <20200504010912.982044-1-ira.weiny@intel.com>
- <20200504010912.982044-11-ira.weiny@intel.com>
+        Wed, 6 May 2020 02:14:43 -0400
+Received: from mga11.intel.com ([192.55.52.93]:13733 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726495AbgEFGOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 02:14:42 -0400
+IronPort-SDR: Aea8bJ0TPKSGcD2+YdR056vVwmezCMYnZNc80YCGOkgY80P0/ClkoH5fuIy38WYW8/isyxkgmZ
+ WLdX2Fwf4M4g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 23:14:42 -0700
+IronPort-SDR: 8SU0ZqGeDxAqRO3wxKhezSMu6O2lsRivPI+hZNxm7YSA4YXKFMebS7DjQxzKlx6yRlYm9rM62J
+ 4aPiWNDugCFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,358,1583222400"; 
+   d="scan'208";a="369691803"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 05 May 2020 23:14:39 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 06 May 2020 09:14:38 +0300
+Date:   Wed, 6 May 2020 09:14:38 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     bhelgaas@google.com, Heiner Kallweit <hkallweit1@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Yicong Yang <yangyicong@hisilicon.com>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] PCI/ASPM: Enable ASPM for bridge-to-bridge link
+Message-ID: <20200506061438.GR487496@lahna.fi.intel.com>
+References: <20200505122801.12903-1-kai.heng.feng@canonical.com>
+ <20200505173423.26968-1-kai.heng.feng@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200504010912.982044-11-ira.weiny@intel.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200505173423.26968-1-kai.heng.feng@canonical.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 03, 2020 at 06:09:11PM -0700, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
+On Wed, May 06, 2020 at 01:34:21AM +0800, Kai-Heng Feng wrote:
+> The TI PCIe-to-PCI bridge prevents the Intel SoC from entering power
+> state deeper than PC3 due to disabled ASPM, consumes lots of unnecessary
+> power. On Windows ASPM L1 is enabled on the device and its upstream
+> bridge, so it can make the Intel SoC reach PC8 or PC10 to save lots of
+> power.
 > 
-> To support kmap_atomic_prot(), all architectures need to support
-> protections passed to their kmap_atomic_high() function.  Pass
-> protections into kmap_atomic_high() and change the name to
-> kmap_atomic_high_prot() to match.
-> 
-> Then define kmap_atomic_prot() as a core function which calls
-> kmap_atomic_high_prot() when needed.
-> 
-> Finally, redefine kmap_atomic() as a wrapper of kmap_atomic_prot() with
-> the default kmap_prot exported by the architectures.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> In short, ASPM always gets disabled on bridge-to-bridge link.
 
-Looks good,
+Excelent finding :) I've heard several reports complaining that we can't
+enter PC10 when TBT is enabled and I guess this explains it.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+> The special case was part of first ASPM introduction patch, commit
+> 7d715a6c1ae5 ("PCI: add PCI Express ASPM support"). However, it didn't
+> explain why ASPM needs to be disabled in special bridge-to-bridge case.
+> 
+> Let's remove the the special case, as PCIe spec already envisioned ASPM
+> on bridge-to-bridge link.
+> 
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207571
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
