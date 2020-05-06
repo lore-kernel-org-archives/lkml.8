@@ -2,98 +2,133 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13BE8C4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80885C47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E421F2080D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:22:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588778548;
-	bh=+pE8sGvSzhyzM1lmu2Si50vS5WEGHwFn5xiL0d50HMU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=buQ3I9G48keCtHDOyb7bZjgUcMIDsq+U1SGF/uJGchajUXyx+VZLsFawhDIBcAuvd
-	 Nbl7c21oVcOtp4c6ef4pNfRf7ubHBPBA+s0kUd4rHEtlI9Nq97Q5wiOeqBgEBY9KOk
-	 KVi2p7zWLUR84C7MzjVFLYEBfl8ErLGYjdRMzfv8=
+	by mail.kernel.org (Postfix) with ESMTP id 537D92080D
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:22:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U4pPQvxD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729560AbgEFPWX (ORCPT
+        id S1729578AbgEFPWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:22:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35962 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729403AbgEFPWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:22:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2EC6214D8;
-        Wed,  6 May 2020 15:22:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588778540;
-        bh=+pE8sGvSzhyzM1lmu2Si50vS5WEGHwFn5xiL0d50HMU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QfcNm0KpE/RtsiDqfDC8DOAWU86AMBX+DLRnNIy0jsPDWYLPOsRbP+Q1io4uXbRAf
-         0fJ3/8DRIsu5k6XLpH3O7giw5QGxPF6IYE4ufTAeV+SnpMKLQqcPiggoQH7S1VV8PY
-         S5VM95W/t0cxh9hCocfsUznQxCprtFM5fax2gZys=
-Date:   Wed, 6 May 2020 17:22:18 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Ondrej Jirman <megous@megous.com>,
-        =?iso-8859-1?Q?Myl=E8ne?= Josserand 
-        <mylene.josserand@bootlin.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: edt-ft5x06: Use DEFINE_DEBUGFS_ATTRIBUTE to
- define debugfs fops
-Message-ID: <20200506152218.GA3447721@kroah.com>
-References: <20200505153325.20113-1-aishwaryarj100@gmail.com>
- <20200506150623.3841-1-raishwar@visteon.com>
+        Wed, 6 May 2020 11:22:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58356 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729408AbgEFPWb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:22:31 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19B0BC061A0F;
+        Wed,  6 May 2020 08:22:31 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id b188so2300896qkd.9;
+        Wed, 06 May 2020 08:22:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UTLapDh6d6sa8JwxWOzYsk+xzBhP38ZyiktZuaXRCHI=;
+        b=U4pPQvxDSFslfW9caqLL2iEZJPKAkK07gBRE9swSmx0eoxQPVz7uvid/DnJKkfomyj
+         Qku3qbx38HEbSOfJ/7i1rK5VqUxEEibBDynvO2JtYd8jsPBuOJSqRmf9xKjBERGYKZ/c
+         GwVO3uJ4W5YsQBhphnG0UlxOfdAiZY7MMHh26coLua4rQMY57/bVZgjbvxIjci01AlO0
+         ewa6+hKVqoH/lycs4MtAmlJ7rV8I6a8g+DuNUjC4k+8dyl5ql2VwKPagDk4SP6AXwoEm
+         8Z9eD0tLqSjlyEQl7gwggn3e8qjA6oVWT0Y0XI689Qu2uoxVdNMYqB78Auf/W78dQsFR
+         AQDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UTLapDh6d6sa8JwxWOzYsk+xzBhP38ZyiktZuaXRCHI=;
+        b=rgzrYk9Scp4Td9oizt3XIr0dLm0dndAzaMwO7+HPSEAOkfokZTrxmEHtFHhqV1qW3x
+         RaHTI3CAr3/hmcZg4bQg/1BswXK+h31iUQJUS5MUsMefCDjlap1HqQDYMWLFuGIEsmoY
+         WCJgloHBvKdgaw5NQKfylC3opLEu5QYNsUpdbCm2N8eNVEhhgpQcsjocL017bLSHt60L
+         1fqNsCDyVyekVbmcUGxxrIO+mW5ENDRbs+Xl0dCyOyupmAiNaO+QZTH5v92UkbMwYXf2
+         OnmkmOvRmCWqkHe6pwPBmyveEi63AXs96JAhwDPJKt5fIwIMEkaQm9ZIVlBV5HTEUwo8
+         mM6Q==
+X-Gm-Message-State: AGi0PuZ4EFC6XPHYdtoECMzHfiwXWv8DscfSp8CXaETUJpT1cRs5/7kc
+        fIlmy7IXpr3D2kp3L3t/fqroCjx9UIORBVAbjVA=
+X-Google-Smtp-Source: APiQypKsxvWF4y74GYdGypVDcJfTSzmgBGHkfDV88Yy1EbC8OSn5BNhqQrbQzK/PTVwD9mD+DIxmTIufp9t3uVKQClE=
+X-Received: by 2002:a37:a7d6:: with SMTP id q205mr6564216qke.85.1588778550313;
+ Wed, 06 May 2020 08:22:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506150623.3841-1-raishwar@visteon.com>
+References: <20200506054920.109738-1-eizan@chromium.org> <20200506154832.v2.2.If340fa06d86053aaea25841b36741fe69c3126dd@changeid>
+In-Reply-To: <20200506154832.v2.2.If340fa06d86053aaea25841b36741fe69c3126dd@changeid>
+From:   Enric Balletbo Serra <eballetbo@gmail.com>
+Date:   Wed, 6 May 2020 17:22:19 +0200
+Message-ID: <CAFqH_53hZMxwR=Wk8YY485v_uAgPDh1MRs2ksv-BkfJ7TJGT6g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] [media] mtk-mdp: handle vb2_dma_contig_set_max_seg_size
+ errors during probe
+To:     Eizan Miyamoto <eizan@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 08:36:22PM +0530, Aishwarya Ramakrishnan wrote:
-> From: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
-> 
-> On Tue, May 5, 2020 at 11:49 PM Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> > On Tue, May 05, 2020 at 09:03:24PM +0530, Aishwarya Ramakrishnan wrote:
-> >> It is more clear to use DEFINE_DEBUGFS_ATTRIBUTE to define debugfs file
-> >> operation rather than DEFINE_SIMPLE_ATTRIBUTE.
-> 
-> > No it is not, why do you think so?
-> 
-> This change is suggested by Coccinelle software.
-> Generated by: scripts/coccinelle/api/debugfs/debugfs_simple_attr.cocci
+Hi Eizan,
 
-Not a good thing, I do not know why that was added :(
+Thank you for your patch.
 
-> > The two defines do different things, that is why we have 2 different
-> > defines.  You can not just replace one with the other without
-> > understanding why one was used and not the other one.
-> 
-> > Did you test this change to verify that everything still works
-> > properly?  Why is it needed to be changed at all?
-> 
-> DEFINE_SIMPLE_ATTRIBUTE + debugfs_create_file()
-> imposes some significant overhead as compared to
-> DEFINE_DEBUGFS_ATTRIBUTE + debugfs_create_file_unsafe().
+Missatge de Eizan Miyamoto <eizan@chromium.org> del dia dc., 6 de maig
+2020 a les 7:51:
+>
+> This is a cleanup to better handle errors during MDP probe.
+>
+> Signed-off-by: eizan@chromium.org
 
-What kind of overhead?  Is it required?
+As I commented on the first patch you should drop the above line.
 
-> But I missed to use debugfs_create_file_unsafe() function in the patch.
+> Signed-off-by: Eizan Miyamoto <eizan@chromium.org>
 
-Yeah, don't use the unsafe stuff unless you know what is happening here
-please.
+Other than that:
 
-greg k-h
+Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+
+> ---
+>
+> Changes in v1:
+> - remove unnecessary error handling labels in favor of err_m2m_register
+>
+>  drivers/media/platform/mtk-mdp/mtk_mdp_core.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+> index aeaed2cf4458..9b24b8d46eb7 100644
+> --- a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+> +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+> @@ -193,7 +193,11 @@ static int mtk_mdp_probe(struct platform_device *pdev)
+>
+>         platform_set_drvdata(pdev, mdp);
+>
+> -       vb2_dma_contig_set_max_seg_size(&pdev->dev, DMA_BIT_MASK(32));
+> +       ret = vb2_dma_contig_set_max_seg_size(&pdev->dev, DMA_BIT_MASK(32));
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "Failed to set vb2 dma mag seg size\n");
+> +               goto err_m2m_register;
+> +       }
+>
+>         pm_runtime_enable(dev);
+>         dev_dbg(dev, "mdp-%d registered successfully\n", mdp->id);
+> --
+> 2.26.2.526.g744177e7f7-goog
+>
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
