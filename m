@@ -2,251 +2,199 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3577C4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72EFAC4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82F26206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5832C20A8B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:41:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729709AbgEFPlv (ORCPT
+        id S1729747AbgEFPly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:41:51 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58040 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729668AbgEFPlr (ORCPT
+        Wed, 6 May 2020 11:41:54 -0400
+Received: from mout-p-101.mailbox.org ([80.241.56.151]:24776 "EHLO
+        mout-p-101.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729066AbgEFPlu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:41:47 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 046FbqXe174249;
-        Wed, 6 May 2020 11:41:46 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30uf8j4gat-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 May 2020 11:41:46 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 046Ff01h189626;
-        Wed, 6 May 2020 11:41:45 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30uf8j4g9r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 May 2020 11:41:45 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 046Ff5iO004062;
-        Wed, 6 May 2020 15:41:43 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma05fra.de.ibm.com with ESMTP id 30s0g5ktt6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 May 2020 15:41:43 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 046FeUAg58130922
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 6 May 2020 15:40:30 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8F36DA4053;
-        Wed,  6 May 2020 15:41:40 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5BE9CA4057;
-        Wed,  6 May 2020 15:41:40 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  6 May 2020 15:41:40 +0000 (GMT)
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>
-Subject: [RFC 2/2] s390/pci: create links between PFs and VFs
-Date:   Wed,  6 May 2020 17:41:39 +0200
-Message-Id: <20200506154139.90609-3-schnelle@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200506154139.90609-1-schnelle@linux.ibm.com>
-References: <20200506154139.90609-1-schnelle@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-06_08:2020-05-05,2020-05-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0 mlxscore=0
- lowpriorityscore=0 adultscore=0 mlxlogscore=999 phishscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005060122
+        Wed, 6 May 2020 11:41:50 -0400
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 49HLRq0L5BzKmVK;
+        Wed,  6 May 2020 17:41:43 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
+        with ESMTP id iNb9taX10f5N; Wed,  6 May 2020 17:41:38 +0200 (CEST)
+Date:   Thu, 7 May 2020 01:41:17 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     "Lev R. Oshvang ." <levonshe@gmail.com>
+Cc:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v5 0/6] Add support for O_MAYEXEC
+Message-ID: <20200506154117.gibiibfytrdl4exo@yavin.dot.cyphar.com>
+References: <20200505153156.925111-1-mic@digikod.net>
+ <d4616bc0-39df-5d6c-9f5b-d84cf6e65960@digikod.net>
+ <CAP22eLHres_shVWEC+2=wcKXRsQzfNKDAnyRd8yuO_gJ3Wi_JA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ljnqns477wlvxj5l"
+Content-Disposition: inline
+In-Reply-To: <CAP22eLHres_shVWEC+2=wcKXRsQzfNKDAnyRd8yuO_gJ3Wi_JA@mail.gmail.com>
+X-Rspamd-Queue-Id: BECC31754
+X-Rspamd-Score: -7.67 / 15.00 / 15.00
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On s390 PCI Virtual Functions (VFs) are scanned by firmware and are made
-available to Linux via the hot-plug interface. As such the common code
-path of doing the scan directly using the parent Physical Function (PF)
-is not used and fenced off with the no_vf_scan attribute.
 
-Even if the partition created the VFs itself e.g. using the sriov_numvfs
-attribute of a PF, the PF/VF links thus need to be established after the
-fact. To do this when a VF is plugged we scan through all functions on
-the same zbus and test whether they are the parent PF in which case we
-establish the necessary links.
+--ljnqns477wlvxj5l
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-With these links established there is now no more need to fence off
-pci_iov_remove_virtfn() for pdev->no_vf_scan as the common code now
-works fine.
+On 2020-05-06, Lev R. Oshvang . <levonshe@gmail.com> wrote:
+> On Tue, May 5, 2020 at 6:36 PM Micka=EBl Sala=FCn <mic@digikod.net> wrote:
+> >
+> >
+> > On 05/05/2020 17:31, Micka=EBl Sala=FCn wrote:
+> > > Hi,
+> > >
+> > > This fifth patch series add new kernel configurations (OMAYEXEC_STATI=
+C,
+> > > OMAYEXEC_ENFORCE_MOUNT, and OMAYEXEC_ENFORCE_FILE) to enable to
+> > > configure the security policy at kernel build time.  As requested by
+> > > Mimi Zohar, I completed the series with one of her patches for IMA.
+> > >
+> > > The goal of this patch series is to enable to control script execution
+> > > with interpreters help.  A new O_MAYEXEC flag, usable through
+> > > openat2(2), is added to enable userspace script interpreter to delega=
+te
+> > > to the kernel (and thus the system security policy) the permission to
+> > > interpret/execute scripts or other files containing what can be seen =
+as
+> > > commands.
+> > >
+> > > A simple system-wide security policy can be enforced by the system
+> > > administrator through a sysctl configuration consistent with the mount
+> > > points or the file access rights.  The documentation patch explains t=
+he
+> > > prerequisites.
+> > >
+> > > Furthermore, the security policy can also be delegated to an LSM, eit=
+her
+> > > a MAC system or an integrity system.  For instance, the new kernel
+> > > MAY_OPENEXEC flag closes a major IMA measurement/appraisal interpreter
+> > > integrity gap by bringing the ability to check the use of scripts [1].
+> > > Other uses are expected, such as for openat2(2) [2], SGX integration
+> > > [3], bpffs [4] or IPE [5].
+> > >
+> > > Userspace needs to adapt to take advantage of this new feature.  For
+> > > example, the PEP 578 [6] (Runtime Audit Hooks) enables Python 3.8 to =
+be
+> > > extended with policy enforcement points related to code interpretatio=
+n,
+> > > which can be used to align with the PowerShell audit features.
+> > > Additional Python security improvements (e.g. a limited interpreter
+> > > withou -c, stdin piping of code) are on their way.
+> > >
+> > > The initial idea come from CLIP OS 4 and the original implementation =
+has
+> > > been used for more than 12 years:
+> > > https://github.com/clipos-archive/clipos4_doc
+> > >
+> > > An introduction to O_MAYEXEC was given at the Linux Security Summit
+> > > Europe 2018 - Linux Kernel Security Contributions by ANSSI:
+> > > https://www.youtube.com/watch?v=3DchNjCRtPKQY&t=3D17m15s
+> > > The "write xor execute" principle was explained at Kernel Recipes 201=
+8 -
+> > > CLIP OS: a defense-in-depth OS:
+> > > https://www.youtube.com/watch?v=3DPjRE0uBtkHU&t=3D11m14s
+> > >
+> > > This patch series can be applied on top of v5.7-rc4.  This can be tes=
+ted
+> > > with CONFIG_SYSCTL.  I would really appreciate constructive comments =
+on
+> > > this patch series.
+> > >
+> > > Previous version:
+> > > https://lore.kernel.org/lkml/20200428175129.634352-1-mic@digikod.net/
+> >
+> > The previous version (v4) is
+> > https://lore.kernel.org/lkml/20200430132320.699508-1-mic@digikod.net/
+>=20
+>=20
+> Hi Michael
+>=20
+> I have couple of question
+> 1. Why you did not add O_MAYEXEC to open()?
+> Some time ago (around v4.14) open() did not return EINVAL when
+> VALID_OPEN_FLAGS check failed.
+> Now it does, so I do not see a problem that interpreter will use
+> simple open(),  ( Although that path might be manipulated, but file
+> contents will be verified by IMA)
 
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
----
- arch/s390/include/asm/pci.h     |  3 +-
- arch/s390/include/asm/pci_clp.h |  3 +-
- arch/s390/pci/pci_bus.c         | 69 ++++++++++++++++++++++++++++++++-
- arch/s390/pci/pci_clp.c         |  1 +
- drivers/pci/iov.c               |  3 --
- 5 files changed, 73 insertions(+), 6 deletions(-)
+You don't get -EINVAL from open() in the case of unknown flags, that's
+something only openat2() does in the open*() family. Hence why it's only
+introduced for openat2().
 
-diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
-index c1558cf071b8..99b92c3e46b0 100644
---- a/arch/s390/include/asm/pci.h
-+++ b/arch/s390/include/asm/pci.h
-@@ -131,7 +131,8 @@ struct zpci_dev {
- 	u8		port;
- 	u8		rid_available	: 1;
- 	u8		has_hp_slot	: 1;
--	u8		reserved	: 6;
-+	u8		is_physfn	: 1;
-+	u8		reserved	: 5;
- 	unsigned int	devfn;		/* DEVFN part of the RID*/
- 
- 	struct mutex lock;
-diff --git a/arch/s390/include/asm/pci_clp.h b/arch/s390/include/asm/pci_clp.h
-index 896ee41e23e3..1651b5610b0f 100644
---- a/arch/s390/include/asm/pci_clp.h
-+++ b/arch/s390/include/asm/pci_clp.h
-@@ -95,7 +95,8 @@ struct clp_rsp_query_pci {
- 	u16 vfn;			/* virtual fn number */
- 	u16			:  3;
- 	u16 rid_avail		:  1;
--	u16			:  2;
-+	u16 is_physfn		:  1;
-+	u16 reserved		:  1;
- 	u16 mio_addr_avail	:  1;
- 	u16 util_str_avail	:  1;	/* utility string available? */
- 	u16 pfgid		:  8;	/* pci function group id */
-diff --git a/arch/s390/pci/pci_bus.c b/arch/s390/pci/pci_bus.c
-index 542c6b8f56df..52d79a2f6722 100644
---- a/arch/s390/pci/pci_bus.c
-+++ b/arch/s390/pci/pci_bus.c
-@@ -126,6 +126,64 @@ static struct zpci_bus *zpci_bus_alloc(int pchid)
- 	return zbus;
- }
- 
-+#ifdef CONFIG_PCI_IOV
-+static int zpci_bus_link_virtfn(struct pci_dev *pdev,
-+		struct pci_dev *virtfn, int vfid)
-+{
-+	int rc;
-+
-+	virtfn->physfn = pci_dev_get(pdev);
-+	rc = pci_iov_sysfs_link(pdev, virtfn, vfid);
-+	if (rc) {
-+		pci_dev_put(pdev);
-+		virtfn->physfn = NULL;
-+		return rc;
-+	}
-+	return 0;
-+}
-+
-+static int zpci_bus_setup_virtfn(struct zpci_bus *zbus,
-+		struct pci_dev *virtfn, int vfn)
-+{
-+	int i, cand_devfn;
-+	struct zpci_dev *zdev;
-+	struct pci_dev *pdev;
-+	int vfid = vfn - 1; /* Linux' vfid's start at 0 vfn at 1*/
-+	int rc = 0;
-+
-+	virtfn->is_virtfn = 1;
-+	virtfn->multifunction = 0;
-+	WARN_ON(vfid < 0);
-+	/* If the parent PF for the given VF is also configured in the
-+	 * instance, it must be on the same zbus.
-+	 * We can then identify the parent PF by checking what
-+	 * devfn the VF would have if it belonged to that PF using the PF's
-+	 * stride and offset. Only if this candidate devfn matches the
-+	 * actual devfn will we link both functions.
-+	 */
-+	for (i = 0; i < ZPCI_FUNCTIONS_PER_BUS; i++) {
-+		zdev = zbus->function[i];
-+		if (zdev && zdev->is_physfn) {
-+			pdev = pci_get_slot(zbus->bus, zdev->devfn);
-+			cand_devfn = pci_iov_virtfn_devfn(pdev, vfid);
-+			if (cand_devfn == virtfn->devfn) {
-+				rc = zpci_bus_link_virtfn(pdev, virtfn, vfid);
-+				break;
-+			}
-+		}
-+	}
-+	return rc;
-+}
-+#else
-+static inline int zpci_bus_setup_virtfn(struct zpci_bus *zbus,
-+		struct pci_dev *virtfn, int vfn)
-+{
-+	virtfn->is_virtfn = 1;
-+	virtfn->multifunction = 0;
-+	return 0;
-+}
-+#endif
-+
- static int zpci_bus_add_device(struct zpci_bus *zbus, struct zpci_dev *zdev)
- {
- 	struct pci_bus *bus;
-@@ -157,11 +215,20 @@ static int zpci_bus_add_device(struct zpci_bus *zbus, struct zpci_dev *zdev)
- 
- 	pdev = pci_scan_single_device(bus, zdev->devfn);
- 	if (pdev) {
--		pdev->multifunction = 1;
-+		if (!zdev->is_physfn) {
-+			rc = zpci_bus_setup_virtfn(zbus, pdev, zdev->vfn);
-+			if (rc)
-+				goto failed_with_pdev;
-+		}
- 		pci_bus_add_device(pdev);
- 	}
- 
- 	return 0;
-+
-+failed_with_pdev:
-+	pci_stop_and_remove_bus_device(pdev);
-+	pci_dev_put(pdev);
-+	return rc;
- }
- 
- static void zpci_bus_add_devices(struct zpci_bus *zbus)
-diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
-index 9b318824a134..d7bd3c287cf7 100644
---- a/arch/s390/pci/pci_clp.c
-+++ b/arch/s390/pci/pci_clp.c
-@@ -159,6 +159,7 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
- 	zdev->uid = response->uid;
- 	zdev->fmb_length = sizeof(u32) * response->fmb_len;
- 	zdev->rid_available = response->rid_avail;
-+	zdev->is_physfn = response->is_physfn;
- 	if (!s390_pci_no_rid && zdev->rid_available)
- 		zdev->devfn = response->rid & ZPCI_RID_MASK_DEVFN;
- 
-diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-index d0ddf5f5484c..d932495b0407 100644
---- a/drivers/pci/iov.c
-+++ b/drivers/pci/iov.c
-@@ -569,9 +569,6 @@ static void sriov_del_vfs(struct pci_dev *dev)
- 	struct pci_sriov *iov = dev->sriov;
- 	int i;
- 
--	if (dev->no_vf_scan)
--		return;
--
- 	for (i = 0; i < iov->num_VFs; i++)
- 		pci_iov_remove_virtfn(dev, i);
- }
--- 
-2.17.1
+> 2. When you apply a new flag to mount, it means that IMA will check
+> all files under this mount and it does not matter whether the file in
+> question is a script or not.
+> IMHO it is too hard overhead for performance reasons.
+>=20
+> Regards,
+> LEv
 
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--ljnqns477wlvxj5l
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXrLamgAKCRCdlLljIbnQ
+Eo2EAQDv6NtU9F0Nl45n0HGqLDKRn1IEH5GBUZwhlkUR72xbbAD8CqwZXGFnsYZB
++Che7WXy1zSGWAJq84tQAqCqj97ABAQ=
+=EWAe
+-----END PGP SIGNATURE-----
+
+--ljnqns477wlvxj5l--
