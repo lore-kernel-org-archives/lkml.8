@@ -2,142 +2,49 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAB5C47259
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC5FC47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AECD720721
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:09:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="Nl6mdz+K"
+	by mail.kernel.org (Postfix) with ESMTP id 244F8206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:09:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbgEFGJR (ORCPT
+        id S1727113AbgEFGJq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 02:09:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726751AbgEFGJQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 02:09:16 -0400
-Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8003DC061A0F;
-        Tue,  5 May 2020 23:09:16 -0700 (PDT)
-Received: from flygoat-x1e (unknown [IPv6:2409:891e:6b40:4ccf:a277:695f:88be:4123])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 93E731FAF7;
-        Wed,  6 May 2020 06:09:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1588745356; bh=A4jfPl3F7aTVgpe4nLCMijDOi3+pUZ6bmkfPi8BYFEc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Nl6mdz+KS0BxVJFJBxa1LZPTQUZAo5bbHCM7nC26G8p7Ist/+31lEdGwdjClIFDKd
-         rmnaX0ekaflA+fgPWHXHzvv9pYs2LLHbdxp2YKzQtwOtL3FtZjfslGZdiX6+tsXjf7
-         hAJHZzKeK2oK1dvTjomBqZtgm1S9bcnJO1pjAnwRh/hfAJ1LFgudwnIy5blsV3Ls4T
-         0siqdGX0Q99FOJto60UraRS4SjFhpSyrAS8a/x1q6Oa5mri/I/2F16ex0sNv7KMmSW
-         VneT3zgf3/IwXv+Er69AgMnIVfNkcuRH4SxxoDIq3DFIvBR8qF1ej7pJSwUISU5UUG
-         7/fpsQ1XHPzvw==
-Date:   Wed, 6 May 2020 14:08:52 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-mips@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 2/5] PCI: Add Loongson PCI Controller support
-Message-ID: <20200506140852.49bf7d2c@flygoat-x1e>
-In-Reply-To: <20200504234329.GA300770@bjorn-Precision-5520>
-References: <20200428011429.1852081-3-jiaxun.yang@flygoat.com>
-        <20200504234329.GA300770@bjorn-Precision-5520>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 6 May 2020 02:09:46 -0400
+Received: from verein.lst.de ([213.95.11.211]:39079 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726438AbgEFGJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 02:09:46 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 4601168C4E; Wed,  6 May 2020 08:09:44 +0200 (CEST)
+Date:   Wed, 6 May 2020 08:09:44 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Martijn Coenen <maco@android.com>
+Cc:     axboe@kernel.dk, hch@lst.de, ming.lei@redhat.com,
+        narayan@google.com, zezeozue@google.com, kernel-team@android.com,
+        maco@google.com, bvanassche@acm.org, Chaitanya.Kulkarni@wdc.com,
+        jaegeuk@kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Linux API <linux-api@vger.kernel.org>
+Subject: Re: [PATCH v4 10/10] loop: Add LOOP_CONFIGURE ioctl
+Message-ID: <20200506060944.GG10771@lst.de>
+References: <20200429140341.13294-1-maco@android.com> <20200429140341.13294-11-maco@android.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429140341.13294-11-maco@android.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 4 May 2020 18:43:29 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
+Thanks, this looks very nice!
 
-> On Tue, Apr 28, 2020 at 09:14:17AM +0800, Jiaxun Yang wrote:
-> > This controller can be found on Loongson-2K SoC, Loongson-3
-> > systems with RS780E/LS7A PCH.
-> > 
-> > The RS780E part of code was previously located at
-> > arch/mips/pci/ops-loongson3.c and now it can use generic PCI
-> > driver implementation.
-> > 
-> > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> > 
-> > --
-> > v2:
-> > 	- Clean up according to rob's suggestions
-> > 	- Claim that it can't work as a module
-> > v3:
-> > 	- Fix a typo
-> > v4:
-> > 	- More clean-ups: Drop flag check, use devfn
-> > v7:
-> > 	- Fix ordering according to huacai's suggestion
-> > ---
-> >  drivers/pci/controller/Kconfig        |  10 +
-> >  drivers/pci/controller/Makefile       |   1 +
-> >  drivers/pci/controller/pci-loongson.c | 251
-> > ++++++++++++++++++++++++++ 3 files changed, 262 insertions(+)
-> >  create mode 100644 drivers/pci/controller/pci-loongson.c
-> > 
-> > diff --git a/drivers/pci/controller/Kconfig
-> > b/drivers/pci/controller/Kconfig index 91bfdb784829..ae36edb1d7db
-> > 100644 --- a/drivers/pci/controller/Kconfig
-> > +++ b/drivers/pci/controller/Kconfig
-> > @@ -258,6 +258,16 @@ config PCI_HYPERV_INTERFACE
-> >  	  The Hyper-V PCI Interface is a helper driver allows
-> > other drivers to have a common interface with the Hyper-V PCI
-> > frontend driver. 
-> > +config PCI_LOONGSON
-> > +	bool "LOONGSON PCI Controller"
-> > +	depends on MACH_LOONGSON64 || COMPILE_TEST
-> > +	depends on OF
-> > +	depends on PCI_QUIRKS
-> > +	default MACH_LOONGSON64
-> > +	help
-> > +	  Say Y here if you want to enable PCI controller support
-> > on
-> > +	  Loongson systems.
-> > +
-> >  source "drivers/pci/controller/dwc/Kconfig"
-> >  source "drivers/pci/controller/mobiveil/Kconfig"
-> >  source "drivers/pci/controller/cadence/Kconfig"
-> > diff --git a/drivers/pci/controller/Makefile
-> > b/drivers/pci/controller/Makefile index 158c59771824..fbac4b0190a0
-> > 100644 --- a/drivers/pci/controller/Makefile
-> > +++ b/drivers/pci/controller/Makefile
-> > @@ -28,6 +28,7 @@ obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
-> >  obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
-> >  obj-$(CONFIG_VMD) += vmd.o
-> >  obj-$(CONFIG_PCIE_BRCMSTB) += pcie-brcmstb.o
-> > +obj-$(CONFIG_PCI_LOONGSON) += pci-loongson.o  
-> 
-> This is apparently a PCIe controller, not a Conventional PCI
-> controller, since you reference PCIe-specific things like MRRS below.
-> 
-> If that's the case, I'd name it pcie-loongson.c.
-> 
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-Hi Bjorn,
-
-Thanks for your careful review.
-
-I'll resolve other comments, for the naming as it's exactly a PCI host
-bridge with some on-chip devices like AHCI, Ethernet, VGA controller
-attached on it, also some PCI to PCIe bridges are attached on it to
-provide PCIe port. I'd still prefer pci-loongson as it's name.
-
---
-Jiaxun Yang
+Are you also going to submit a patch to util-linux to use the new
+ioctl?
