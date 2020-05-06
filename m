@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB14C4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2356C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 247A22145D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D252A2192A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588778810;
-	bh=VUqJGWfnZIEcj7uXe3qha10yBeFTZsKI9VaYHJPuTfs=;
+	s=default; t=1588778815;
+	bh=9WsWM9Xa603KvtWrdVrNv3WnxgTQlk3Sr+wKK0/8K/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q3l8Bqi3uZYZBWs0vCNiEy1qELQsTMF1XWqjml53435lbOulgWXNGaLa3uTfePH5I
-	 BwH9ACt47GoZXYE1LyDQ7hs0pgeMQgeTAI9rtzrU1HxBXrwoCkGyWzmadPZRJ2vQjL
-	 1Hh+Czxro/VZukBwFUPJZVC6863+HzEqMmro7/f0=
+	b=l4mqAYBXgolrgCVZ76PMXMqy6O0S1POT4seCZtWBIjaXDSiXC6IAYCPYNI8EE/Yuw
+	 6E7uAZ6tt+D4mBxNVp8QGBUAXPfdAb4zVpmD4vC9UgEgFS4qsQdBiBk9yfWrFEtu1t
+	 AazxBacECKOmqNRfe1l5CRp21mlqg1h+6O6bqttU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730228AbgEFP0t (ORCPT
+        id S1730253AbgEFP0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:26:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49338 "EHLO mail.kernel.org"
+        Wed, 6 May 2020 11:26:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730216AbgEFP0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:26:46 -0400
+        id S1729774AbgEFP0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:26:53 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 323E621775;
-        Wed,  6 May 2020 15:26:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7BF721835;
+        Wed,  6 May 2020 15:26:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588778805;
-        bh=VUqJGWfnZIEcj7uXe3qha10yBeFTZsKI9VaYHJPuTfs=;
+        s=default; t=1588778812;
+        bh=9WsWM9Xa603KvtWrdVrNv3WnxgTQlk3Sr+wKK0/8K/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G4+grWfobDwxYa2oVYG4PgwF1JbppcJqQ/Z8/NJjyoEMWMsYmcWm4erUpYOiT+enV
-         DJm4G/XCxawBCj5OXyzDrKdPlYeOmIVE3HJDdcUQxzT0Jmdu/CIkRzMKuaB3R0N8nH
-         CJ93mTKDK7mp3puXZEYjcuj4x+3CpPMPEF8/U+IQ=
+        b=Aq4z/s2UVEkaT14YObIGighIRKPv3wLPCoBUGEq/H9EbxM4NDI75VomtHgw2iE7r5
+         Qkj8yhy+8MHOEVxL7Oj8MyFLJOHBEkuPYQZ+WZa0OJHa/6AL44mFeoFRo0mKP1SwG2
+         YAhHWIOcso10rouOAvjB61G7e1ep4uQ6d2N8xntQ=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 70/91] perf evsel: Rename perf_evsel__parse_sample*() to evsel__parse_sample*()
-Date:   Wed,  6 May 2020 12:22:13 -0300
-Message-Id: <20200506152234.21977-71-acme@kernel.org>
+Subject: [PATCH 73/91] perf evsel: Rename perf_evsel__fallback() to evsel__fallback()
+Date:   Wed,  6 May 2020 12:22:16 -0300
+Message-Id: <20200506152234.21977-74-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
@@ -62,7 +62,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-As these are 'struct evsel' methods, not part of tools/lib/perf/, aka
+As it is a 'struct evsel' method, not part of tools/lib/perf/, aka
 libperf, to whom the perf_ prefix belongs.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
@@ -70,162 +70,94 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/x86/tests/perf-time-to-tsc.c | 6 ++----
- tools/perf/builtin-inject.c                  | 2 +-
- tools/perf/tests/openat-syscall-tp-fields.c  | 2 +-
- tools/perf/tests/sample-parsing.c            | 4 ++--
- tools/perf/util/evlist.c                     | 4 ++--
- tools/perf/util/evsel.c                      | 9 ++++-----
- tools/perf/util/evsel.h                      | 9 ++++-----
- tools/perf/util/python.c                     | 2 +-
- 8 files changed, 17 insertions(+), 21 deletions(-)
+ tools/perf/builtin-record.c | 2 +-
+ tools/perf/builtin-stat.c   | 2 +-
+ tools/perf/builtin-top.c    | 2 +-
+ tools/perf/util/cloexec.c   | 2 +-
+ tools/perf/util/evsel.c     | 3 +--
+ tools/perf/util/evsel.h     | 3 +--
+ 6 files changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/arch/x86/tests/perf-time-to-tsc.c b/tools/perf/arch/x86/tests/perf-time-to-tsc.c
-index 909ead08a6f6..026d32ed078e 100644
---- a/tools/perf/arch/x86/tests/perf-time-to-tsc.c
-+++ b/tools/perf/arch/x86/tests/perf-time-to-tsc.c
-@@ -130,13 +130,11 @@ int test__perf_time_to_tsc(struct test *test __maybe_unused, int subtest __maybe
- 				goto next_event;
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index ab303c4165ac..46aaa6b14ca1 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -845,7 +845,7 @@ static int record__open(struct record *rec)
+ 	evlist__for_each_entry(evlist, pos) {
+ try_again:
+ 		if (evsel__open(pos, pos->core.cpus, pos->core.threads) < 0) {
+-			if (perf_evsel__fallback(pos, errno, msg, sizeof(msg))) {
++			if (evsel__fallback(pos, errno, msg, sizeof(msg))) {
+ 				if (verbose > 0)
+ 					ui__warning("%s\n", msg);
+ 				goto try_again;
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index e3629ca69827..92a59f08db71 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -466,7 +466,7 @@ static enum counter_recovery stat_handle_error(struct evsel *counter)
+ 		if ((counter->leader != counter) ||
+ 		    !(counter->leader->core.nr_members > 1))
+ 			return COUNTER_SKIP;
+-	} else if (perf_evsel__fallback(counter, errno, msg, sizeof(msg))) {
++	} else if (evsel__fallback(counter, errno, msg, sizeof(msg))) {
+ 		if (verbose > 0)
+ 			ui__warning("%s\n", msg);
+ 		return COUNTER_RETRY;
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 4403a76f2047..d5bfffed2843 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1045,7 +1045,7 @@ static int perf_top__start_counters(struct perf_top *top)
+ 			    perf_top_overwrite_fallback(top, counter))
+ 				goto try_again;
  
- 			if (strcmp(event->comm.comm, comm1) == 0) {
--				CHECK__(perf_evsel__parse_sample(evsel, event,
--								 &sample));
-+				CHECK__(evsel__parse_sample(evsel, event, &sample));
- 				comm1_time = sample.time;
- 			}
- 			if (strcmp(event->comm.comm, comm2) == 0) {
--				CHECK__(perf_evsel__parse_sample(evsel, event,
--								 &sample));
-+				CHECK__(evsel__parse_sample(evsel, event, &sample));
- 				comm2_time = sample.time;
- 			}
- next_event:
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 842e940523b7..aad007bfb581 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -546,7 +546,7 @@ static int perf_inject__sched_stat(struct perf_tool *tool,
- 	return 0;
- found:
- 	event_sw = &ent->event[0];
--	perf_evsel__parse_sample(evsel, event_sw, &sample_sw);
-+	evsel__parse_sample(evsel, event_sw, &sample_sw);
+-			if (perf_evsel__fallback(counter, errno, msg, sizeof(msg))) {
++			if (evsel__fallback(counter, errno, msg, sizeof(msg))) {
+ 				if (verbose > 0)
+ 					ui__warning("%s\n", msg);
+ 				goto try_again;
+diff --git a/tools/perf/util/cloexec.c b/tools/perf/util/cloexec.c
+index a12872f2856a..6b3988a7aba8 100644
+--- a/tools/perf/util/cloexec.c
++++ b/tools/perf/util/cloexec.c
+@@ -28,7 +28,7 @@ int __weak sched_getcpu(void)
  
- 	sample_sw.period = sample->period;
- 	sample_sw.time	 = sample->time;
-diff --git a/tools/perf/tests/openat-syscall-tp-fields.c b/tools/perf/tests/openat-syscall-tp-fields.c
-index 6d026e8a7fa6..1dc2897d2df9 100644
---- a/tools/perf/tests/openat-syscall-tp-fields.c
-+++ b/tools/perf/tests/openat-syscall-tp-fields.c
-@@ -108,7 +108,7 @@ int test__syscall_openat_tp_fields(struct test *test __maybe_unused, int subtest
- 					continue;
- 				}
- 
--				err = perf_evsel__parse_sample(evsel, event, &sample);
-+				err = evsel__parse_sample(evsel, event, &sample);
- 				if (err) {
- 					pr_debug("Can't parse sample, err = %d\n", err);
- 					goto out_delete_evlist;
-diff --git a/tools/perf/tests/sample-parsing.c b/tools/perf/tests/sample-parsing.c
-index ab964db855ac..a0bdaf390ac8 100644
---- a/tools/perf/tests/sample-parsing.c
-+++ b/tools/perf/tests/sample-parsing.c
-@@ -298,10 +298,10 @@ static int do_test(u64 sample_type, u64 sample_regs, u64 read_format)
- 
- 	evsel.sample_size = __evsel__sample_size(sample_type);
- 
--	err = perf_evsel__parse_sample(&evsel, event, &sample_out);
-+	err = evsel__parse_sample(&evsel, event, &sample_out);
- 	if (err) {
- 		pr_debug("%s failed for sample_type %#"PRIx64", error %d\n",
--			 "perf_evsel__parse_sample", sample_type, err);
-+			 "evsel__parse_sample", sample_type, err);
- 		goto out_free;
- 	}
- 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 404542b69543..0a0b760d6948 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1439,7 +1439,7 @@ int perf_evlist__parse_sample(struct evlist *evlist, union perf_event *event,
- 
- 	if (!evsel)
- 		return -EFAULT;
--	return perf_evsel__parse_sample(evsel, event, sample);
-+	return evsel__parse_sample(evsel, event, sample);
- }
- 
- int perf_evlist__parse_sample_timestamp(struct evlist *evlist,
-@@ -1450,7 +1450,7 @@ int perf_evlist__parse_sample_timestamp(struct evlist *evlist,
- 
- 	if (!evsel)
- 		return -EFAULT;
--	return perf_evsel__parse_sample_timestamp(evsel, event, timestamp);
-+	return evsel__parse_sample_timestamp(evsel, event, timestamp);
- }
- 
- int perf_evlist__strerror_open(struct evlist *evlist,
+ static int perf_flag_probe(void)
+ {
+-	/* use 'safest' configuration as used in perf_evsel__fallback() */
++	/* use 'safest' configuration as used in evsel__fallback() */
+ 	struct perf_event_attr attr = {
+ 		.type = PERF_TYPE_SOFTWARE,
+ 		.config = PERF_COUNT_SW_CPU_CLOCK,
 diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index a11d1359ba81..b63d9eebe42f 100644
+index 909e993b4dcd..a75bcb95bf23 100644
 --- a/tools/perf/util/evsel.c
 +++ b/tools/perf/util/evsel.c
-@@ -1964,8 +1964,8 @@ perf_event__check_size(union perf_event *event, unsigned int sample_size)
- 	return 0;
+@@ -2382,8 +2382,7 @@ u64 evsel__intval(struct evsel *evsel, struct perf_sample *sample, const char *n
+ 	return field ? format_field__intval(field, sample, evsel->needs_swap) : 0;
  }
  
--int perf_evsel__parse_sample(struct evsel *evsel, union perf_event *event,
--			     struct perf_sample *data)
-+int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
-+			struct perf_sample *data)
+-bool perf_evsel__fallback(struct evsel *evsel, int err,
+-			  char *msg, size_t msgsize)
++bool evsel__fallback(struct evsel *evsel, int err, char *msg, size_t msgsize)
  {
- 	u64 type = evsel->core.attr.sample_type;
- 	bool swapped = evsel->needs_swap;
-@@ -2267,9 +2267,8 @@ int perf_evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 	return 0;
- }
+ 	int paranoid;
  
--int perf_evsel__parse_sample_timestamp(struct evsel *evsel,
--				       union perf_event *event,
--				       u64 *timestamp)
-+int evsel__parse_sample_timestamp(struct evsel *evsel, union perf_event *event,
-+				  u64 *timestamp)
- {
- 	u64 type = evsel->core.attr.sample_type;
- 	const __u64 *array;
 diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index a87de95a66c8..4b5a411c403c 100644
+index 101cfff647c7..783246bf8d0d 100644
 --- a/tools/perf/util/evsel.h
 +++ b/tools/perf/util/evsel.h
-@@ -293,12 +293,11 @@ static inline int evsel__read_on_cpu_scaled(struct evsel *evsel, int cpu, int th
- 	return __evsel__read_on_cpu(evsel, cpu, thread, true);
+@@ -350,8 +350,7 @@ static inline bool evsel__is_clock(struct evsel *evsel)
+ 	       evsel__match(evsel, SOFTWARE, SW_TASK_CLOCK);
  }
  
--int perf_evsel__parse_sample(struct evsel *evsel, union perf_event *event,
--			     struct perf_sample *sample);
-+int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
-+			struct perf_sample *sample);
+-bool perf_evsel__fallback(struct evsel *evsel, int err,
+-			  char *msg, size_t msgsize);
++bool evsel__fallback(struct evsel *evsel, int err, char *msg, size_t msgsize);
+ int perf_evsel__open_strerror(struct evsel *evsel, struct target *target,
+ 			      int err, char *msg, size_t size);
  
--int perf_evsel__parse_sample_timestamp(struct evsel *evsel,
--				       union perf_event *event,
--				       u64 *timestamp);
-+int evsel__parse_sample_timestamp(struct evsel *evsel, union perf_event *event,
-+				  u64 *timestamp);
- 
- static inline struct evsel *perf_evsel__next(struct evsel *evsel)
- {
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 67810d31f88d..75a9b1d62bba 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -1044,7 +1044,7 @@ static PyObject *pyrf_evlist__read_on_cpu(struct pyrf_evlist *pevlist,
- 
- 		pevent->evsel = evsel;
- 
--		err = perf_evsel__parse_sample(evsel, event, &pevent->sample);
-+		err = evsel__parse_sample(evsel, event, &pevent->sample);
- 
- 		/* Consume the even only after we parsed it out. */
- 		perf_mmap__consume(&md->core);
 -- 
 2.21.1
 
