@@ -2,109 +2,138 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE51C47257
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6145C47257
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6862B20746
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:25:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tKbBOLIP"
+	by mail.kernel.org (Postfix) with ESMTP id BCBE020735
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:31:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbgEFXZu (ORCPT
+        id S1727851AbgEFXbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 19:25:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49548 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbgEFXZu (ORCPT
+        Wed, 6 May 2020 19:31:53 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:34512 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbgEFXbx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 19:25:50 -0400
-Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D549C061A0F;
-        Wed,  6 May 2020 16:25:50 -0700 (PDT)
-Received: by mail-il1-x135.google.com with SMTP id b18so146319ilf.2;
-        Wed, 06 May 2020 16:25:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+CNkpvoV+7/WGRtPvOLP3NxAkiDmtlvxq7O9LqthmvE=;
-        b=tKbBOLIPghXV1x039iYZ7x+Y1RJC0Q3+9P9/zbjar9hhlkyIVZaNWCRtt+5bpdtpj2
-         2PH3iRDmzDTcwt3YUNleGOprd4FzeRfsZvdTmfV76IQCNfCbkJaCRmwrbWyVqsCJ/kUy
-         5ubqTOshBUAdF9S8YvBtxyr4NbdlkP9poH6og27SiiH3yhaYDIuJQGy4tgJrXbzVUnQQ
-         y+cluAVE3JIOEWAC69AKY0sggp05g9O21cLCxFYCnzkdAIyPsXRLCj+qirmeH1z/5PG0
-         kq0zdTIPkFfiyfHPsDe2PPCh6YNleXoXgTSSmDr36SUGy9d2EjjUEvkl/v8kum+99b0K
-         d7HA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+CNkpvoV+7/WGRtPvOLP3NxAkiDmtlvxq7O9LqthmvE=;
-        b=cxYqSYqmVw9k5vjdXRs/uTPB+D39ckn29GXoC/tE+s242z5D1QlJAI5EePS94i1MbL
-         kAeC0Sn3QPbE7HT5g+hJuW37O93c8wlh8SFo9lNNQPhABuaFuKA6oA1q2c6DJG3S4TES
-         ZDOYq0yhNMzVBx1K8KDyBQOwRSZ58hqpFpVOtgGaF1dbdthId+LiFGSIH701I0ZLTLJH
-         98WsVAoV2ImMvuYY0FqbsNZxVB2i9MdmqUFY4/4++DsEnxj0B6S0aEvNCy+LPIGKllGt
-         byG4tqd6OlqQWPOp/yC4DWWLSQC1lF19m8IL+YMPEduQSTjz62PKtgKtPijiUHeve5+3
-         vbWA==
-X-Gm-Message-State: AGi0PuYRbEqaJAiL5FXr/1BeUAv3oPTiQv95eIECd3eJbRWkrAPE9Zrl
-        Xx3L3EOve71GEAJpTlai1e7v/7pAxXT0H6v680k=
-X-Google-Smtp-Source: APiQypJd1bvaAZ6xswFa4gdRaiKe8L9dkI6mmjVGE7LVH0QLX2wsxeD9NAWt/rEvRTMYwN6igmGfQNkcIt0aPeN/008=
-X-Received: by 2002:a05:6e02:8ea:: with SMTP id n10mr11858252ilt.87.1588807549127;
- Wed, 06 May 2020 16:25:49 -0700 (PDT)
+        Wed, 6 May 2020 19:31:53 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 8CC9C803080B;
+        Wed,  6 May 2020 23:31:50 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ZPJCJBFg5i0k; Thu,  7 May 2020 02:31:46 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Long Cheng <long.cheng@mediatek.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        <linux-mips@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 0/4] serial: 8250_dw: Fix ref clock usage
+Date:   Thu, 7 May 2020 02:31:31 +0300
+Message-ID: <20200506233136.11842-1-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200323024611.16039-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200323024611.16039-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-References: <8d29eba045ef18c5489e122b3668afc20431f15d.1588043236.git.baolin.wang7@gmail.com>
- <4b224e7bb703e15469e5cd79a54f7bc00a790fc5.1588043236.git.baolin.wang7@gmail.com>
- <CADBw62pDp4NByqNJ+ryUdBUi7GsW3tD8_vSN7iRGekThw0Xo+Q@mail.gmail.com>
-In-Reply-To: <CADBw62pDp4NByqNJ+ryUdBUi7GsW3tD8_vSN7iRGekThw0Xo+Q@mail.gmail.com>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Wed, 6 May 2020 18:25:38 -0500
-Message-ID: <CABb+yY2Pph4EeQtg9xSaCWHqcXr0mVNkrrFYm-E3x3f5xaxygg@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] mailbox: sprd: Add Spreadtrum mailbox driver
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 6, 2020 at 8:29 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
->
-> Hi Jassi,
->
-> On Tue, Apr 28, 2020 at 11:10 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> >
-> > From: Baolin Wang <baolin.wang@unisoc.com>
-> >
-> > The Spreadtrum mailbox controller supports 8 channels to communicate
-> > with MCUs, and it contains 2 different parts: inbox and outbox, which
-> > are used to send and receive messages by IRQ mode.
-> >
-> > Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
-> > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> > ---
-> > Changes from v3:
-> >  - Save the id in mbox_chan.con_priv and remove the 'sprd_mbox_chan'
-> >
-> > Changes from v2:
-> >  - None.
-> >
-> > Changes from v1:
-> >  - None
->
-> Gentle ping, do you have any other comments? Thanks.
->
-Yea, I am still not sure about the error returned in send_data().  It
-will either never hit or there will be no easy recovery from it. The
-api expects the driver to tell it the last-tx was done only when it
-can send the next message. (There may be case like sending depend on
-remote, which can't be ensured before hand).
+It might be dangerous if an UART port reference clock rate is suddenly
+changed. In particular the 8250 port drivers (and AFAICS most of the tty
+drivers using common clock framework clocks) rely either on the
+exclusive reference clock utilization or on the ref clock rate being
+always constant. Needless to say that it turns out not true and if some
+other service suddenly changes the clock rate behind an UART port driver
+back it's no good. So the port might not only end up with an invalid
+uartclk value saved, but may also experience a distorted output/input
+data since such action will effectively update the programmed baud-clock.
+We discovered such problem on Baikal-T1 SoC where two DW 8250 ports have
+got a shared reference clock. Allwinner SoC is equipped with an UART,
+which clock is derived from the CPU PLL clock source, so the CPU frequency
+change might be propagated down up to the serial port reference clock.
+This patchset provides a way to fix the problem to the 8250 serial port
+controllers and mostly fixes it for the DW 8250-compatible UART. I say
+mostly because due to not having a facility to pause/stop and resume/
+restart on-going transfers we implemented the UART clock rate update
+procedure executed post factum of the actual reference clock rate change.
 
-thnx
+In addition the patchset includes a few fixes we discovered when were
+working the issue. First one concerns the maximum baud rate setting used
+to determine a serial port baud based on the current UART port clock rate.
+Another one simplifies the ref clock rate setting procedure a bit.
+
+This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
+0e698dfa2822 ("Linux 5.7-rc4")
+tag: v5.7-rc4
+
+Changelog v3:
+- Refactor the original patch to adjust the UART port divisor instead of
+  requesting an exclusive ref clock utilization.
+
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Long Cheng <long.cheng@mediatek.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-mediatek@lists.infradead.org
+Cc: linux-serial@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Serge Semin (4):
+  serial: 8250: Fix max baud limit in generic 8250 port
+  serial: 8250: Add 8250 port clock update method
+  serial: 8250_dw: Simplify the ref clock rate setting procedure
+  serial: 8250_dw: Fix common clocks usage race condition
+
+ drivers/tty/serial/8250/8250_dw.c   | 125 +++++++++++++++++++++++++---
+ drivers/tty/serial/8250/8250_port.c |  42 +++++++++-
+ include/linux/serial_8250.h         |   2 +
+ 3 files changed, 156 insertions(+), 13 deletions(-)
+
+-- 
+2.25.1
+
