@@ -2,97 +2,112 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B69F6C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D765C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 955C2206D5
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:24:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ACHaDpy3"
+	by mail.kernel.org (Postfix) with ESMTP id 0ED1320769
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:29:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588775358;
+	bh=AI9x0xuZnv9+yQgyWPjO6l+C5qqXvu+8N9ZTrnmdLqQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=JqTk6hTggZOje2CcGdAYaWnmDTsjrVs61Y+puriWEsmYkPgOKVm7LwbVrkPGRuGQi
+	 g0nYQXDFtQctteef9wsSQlN3ApclwUeYdokhQ3JsOn7H8dwOQoSyxgaQ+wBuIewssN
+	 EEtVJO70yNFsn3I1hL873EziQC1W/cF98/vYmKbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728983AbgEFOYo (ORCPT
+        id S1728968AbgEFO3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 10:24:44 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:45679 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728947AbgEFOYo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 10:24:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588775082;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=dbddwc8AWoCH822EokkiRcp0XFOdJXpCOboNl38sqMs=;
-        b=ACHaDpy3T+8vAeh8aoJigXXeFPOf9C4HwA/U5jqHOKpbI6hZEFqZh3pVyMtZ0zLTGkJbE1
-        tBgTpG6hPgN7FRvJGPe1fHd6xT8qSvFW+rzk2gr9YuwBKK9W0hl/YXkvRNFgyli78q4Dly
-        eQ04N0YhT7FJfN+aoiDkfRESNnLn0MU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-308-7dSlh3iYM9GY009Ms9gsRQ-1; Wed, 06 May 2020 10:24:39 -0400
-X-MC-Unique: 7dSlh3iYM9GY009Ms9gsRQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 6 May 2020 10:29:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47190 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728784AbgEFO3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 10:29:16 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E1CE281CBE1;
-        Wed,  6 May 2020 14:24:36 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-118-225.rdu2.redhat.com [10.10.118.225])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2557E6299C;
-        Wed,  6 May 2020 14:24:32 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200506110942.GL16070@bombadil.infradead.org>
-References: <20200506110942.GL16070@bombadil.infradead.org> <20200505115946.GF16070@bombadil.infradead.org> <158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk> <158861253957.340223.7465334678444521655.stgit@warthog.procyon.org.uk> <683739.1588751878@warthog.procyon.org.uk>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     dhowells@redhat.com, Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Jeff Layton <jlayton@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 54/61] afs: Wait on PG_fscache before modifying/releasing a page
+        by mail.kernel.org (Postfix) with ESMTPSA id E5616206DB;
+        Wed,  6 May 2020 14:29:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588775356;
+        bh=AI9x0xuZnv9+yQgyWPjO6l+C5qqXvu+8N9ZTrnmdLqQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=l9ziEJ+J23audz5AAB8xRp6meeYXG0H4Vl2HNGDyIhk4r3CAfPnRYcjESzr4Y7UkJ
+         G96hwbUonGmeP3OEKHV1bYmcxci/JWls7X6RVUP3OzK+tnMQU6iehmPmVUen/3Z9h3
+         F3DkdQAufnb1EE6E4jyAeob0c7IOge0eOmFki6Ss=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] perf-probe: Accept the instance number of kretprobe event
+Date:   Wed,  6 May 2020 23:29:12 +0900
+Message-Id: <158877535215.26469.1113127926699134067.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <713140.1588775072.1@warthog.procyon.org.uk>
-Date:   Wed, 06 May 2020 15:24:32 +0100
-Message-ID: <713141.1588775072@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Matthew Wilcox <willy@infradead.org> wrote:
+Since the commit 6a13a0d7b4d1 ("ftrace/kprobe: Show the
+maxactive number on kprobe_events") introduced to show the
+instance number of kretprobe events, the length of the 1st
+format of the kprobe event will not 1, but it can be longer.
+This caused a parser error in perf-probe.
 
-> > Won't that screw up ITER_MAPPING?  Does that mean that ITER_MAPPING isn't
-> > viable?
-> 
-> Can you remind me why ITER_MAPPING needs:
-> 
-> "The caller must guarantee that the pages are all present and they must be
-> locked using PG_locked, PG_writeback or PG_fscache to prevent them from
-> going away or being migrated whilst they're being accessed."
-> 
-> An elevated refcount prevents migration, and it also prevents the pages
-> from being freed.  It doesn't prevent them from being truncated out of
-> the file, but it does ensure the pages aren't reallocated.
+Skip the length check the 1st format of the kprobe event
+to accept this instance number.
 
-ITER_MAPPING relies on the mapping to maintain the pointers to the pages so
-that it can find them rather than being like ITER_BVEC where there's a
-separate list.
+Without this fix:
 
-Truncate removes the pages from the mapping - at which point ITER_MAPPING can
-no longer find them.
+  # perf probe -a vfs_read%return
+  Added new event:
+    probe:vfs_read__return (on vfs_read%return)
 
-David
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:vfs_read__return -aR sleep 1
+
+  # perf probe -l
+  Semantic error :Failed to parse event name: r16:probe/vfs_read__return
+    Error: Failed to show event list.
+
+And with this fixes:
+
+  # perf probe -a vfs_read%return
+  ...
+  # perf probe -l
+    probe:vfs_read__return (on vfs_read%return)
+
+
+Fixes: 6a13a0d7b4d1 ("ftrace/kprobe: Show the maxactive number on kprobe_events")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: stable@vger.kernel.org
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=207587
+---
+ tools/perf/util/probe-event.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index eea132f512b0..c6bcf5709564 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -1765,8 +1765,7 @@ int parse_probe_trace_command(const char *cmd, struct probe_trace_event *tev)
+ 	fmt1_str = strtok_r(argv0_str, ":", &fmt);
+ 	fmt2_str = strtok_r(NULL, "/", &fmt);
+ 	fmt3_str = strtok_r(NULL, " \t", &fmt);
+-	if (fmt1_str == NULL || strlen(fmt1_str) != 1 || fmt2_str == NULL
+-	    || fmt3_str == NULL) {
++	if (fmt1_str == NULL || fmt2_str == NULL || fmt3_str == NULL) {
+ 		semantic_error("Failed to parse event name: %s\n", argv[0]);
+ 		ret = -EINVAL;
+ 		goto out;
 
