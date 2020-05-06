@@ -2,145 +2,191 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4CAC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC5DC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35F4020A8B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F6FF2080D
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:18:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ho47/w1s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729532AbgEFPRI convert rfc822-to-8bit (ORCPT
+        id S1729322AbgEFPSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:17:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56134 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729136AbgEFPRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:17:07 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4158020836;
-        Wed,  6 May 2020 15:17:06 +0000 (UTC)
-Date:   Wed, 6 May 2020 11:17:04 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        Wed, 6 May 2020 11:18:05 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:60134 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728959AbgEFPSF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:18:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588778282;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=lnWUJGShEIEC2tJse85xpWYQfdXH3V6xxIKOsonZhS0=;
+        b=ho47/w1sU08DqwsuLcJXRfABjRhfluifDNroByqLZvSjcaEw6WNgWIiUIEhbcn5eeouXT/
+        3dpLVjANJm79azzfnR8k3R+bTOaT+593WoAutWZnfaUnB1k//tHztWJLeHvKaBsAiIXpiu
+        lxJjRzPbxDmeaq4RWvaGIM7JI30XqHQ=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-174-5LFQ3VMzNrSIqs2PC4UEsw-1; Wed, 06 May 2020 11:18:01 -0400
+X-MC-Unique: 5LFQ3VMzNrSIqs2PC4UEsw-1
+Received: by mail-wr1-f72.google.com with SMTP id x8so1477827wrl.16
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 08:18:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=lnWUJGShEIEC2tJse85xpWYQfdXH3V6xxIKOsonZhS0=;
+        b=TMLzQEFVMJdu917vPMiI+m4hS2ShpkWAZpusA9NRzgHNnqoBj5vlU7icVseKMLSSrn
+         7j7xneoVyOeORWhHduqdc9XYTQLAXXquMF/ABWaDD1nm+yxyDr1KReiXRMQHNIBsQuA0
+         UpncyNImTeH9SBJg0AhwM6UQvI2lhkVL7Ert6uKEEjrBd8P5lnRBUkTomU57LXnhVTTG
+         6v2rjPsfBhj3Q0m60PJ8jwhyUXSVRrCIeehwHhHMZVyO7Pqi0PZEWTA/kt8i5Sl3yZx/
+         QZvc0Us7bYvvfN16vdLqwvc6JJDmveZ3YaUkjCTRXKBsYOsqugcVfUCEUwZyzvrsY76c
+         x7Pw==
+X-Gm-Message-State: AGi0PuY35tw7CZ7EafAnk/SvZFJIMkcUaEB1mtqPxovswcCwmaygzSgh
+        b7eBn4S/6++kIZUap1qi9OCVw/dVzPVbIFdVZ+BIYKHFlXNlZMjaPV1dOi/otjdWbOFRUwR4MOr
+        okl42gXo4X308weYpVWtmUN6m
+X-Received: by 2002:a1c:5f46:: with SMTP id t67mr5415360wmb.156.1588778280030;
+        Wed, 06 May 2020 08:18:00 -0700 (PDT)
+X-Google-Smtp-Source: APiQypI4RpVdj46m5iqEv5/myfvTamsIAlmjdwYjSFRnScWUzUxtCUGtLP7QamnKNwjG9lTJmTreBw==
+X-Received: by 2002:a1c:5f46:: with SMTP id t67mr5415334wmb.156.1588778279741;
+        Wed, 06 May 2020 08:17:59 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id n12sm3452451wrj.95.2020.05.06.08.17.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 08:17:58 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
-Subject: Re: [PATCH] tracing: Call vmalloc_sync_mappings() after
- alloc_percpu()
-Message-ID: <20200506111704.5a97a3e2@gandalf.local.home>
-In-Reply-To: <20200505123144.GM8135@suse.de>
-References: <20200430141120.GA8135@suse.de>
-        <20200430121136.6d7aeb22@gandalf.local.home>
-        <20200430191434.GC8135@suse.de>
-        <20200430211308.74a994dc@oasis.local.home>
-        <1902703609.78863.1588300015661.JavaMail.zimbra@efficios.com>
-        <20200430223919.50861011@gandalf.local.home>
-        <20200504151236.GI8135@suse.de>
-        <20200504134042.178409c3@gandalf.local.home>
-        <20200504183832.GL8135@suse.de>
-        <20200504151006.69d2a16c@gandalf.local.home>
-        <20200505123144.GM8135@suse.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH RFC 1/6] Revert "KVM: async_pf: Fix #DF due to inject "Page not Present" and "Page Ready" exceptions simultaneously"
+In-Reply-To: <20200505141603.GA7155@redhat.com>
+References: <20200429093634.1514902-1-vkuznets@redhat.com> <20200429093634.1514902-2-vkuznets@redhat.com> <20200505141603.GA7155@redhat.com>
+Date:   Wed, 06 May 2020 17:17:57 +0200
+Message-ID: <87y2q5ay8q.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 May 2020 14:31:44 +0200
-Joerg Roedel <jroedel@suse.de> wrote:
+Vivek Goyal <vgoyal@redhat.com> writes:
 
-> On Mon, May 04, 2020 at 03:10:06PM -0400, Steven Rostedt wrote:
-> > I'm fine with adding it to the tracing code (with that ridiculous
-> > comment! ;-)
-> > 
-> > I'll even tag is as stable, but again, it's uncertain what commit that it
-> > "fixes".  
-> 
-> Okay, so here it is. It fixes the issue for me and doesn't cause any
-> lockdep splats on my machine. I am not sure how far this needs to be
-> backported via stable, so I didn't specify it. Same with a Fixes tag.
-> Oh, and I added your comment :-) (which makes up most of the added
-> lines, so feel free to change authorship to you).
+> On Wed, Apr 29, 2020 at 11:36:29AM +0200, Vitaly Kuznetsov wrote:
+>> Commit 9a6e7c39810e (""KVM: async_pf: Fix #DF due to inject "Page not
+>> Present" and "Page Ready" exceptions simultaneously") added a protection
+>> against 'page ready' notification coming before 'page not ready' is
+>> delivered.
+>
+> Hi Vitaly,
+>
+> Description of the commit seems to suggest that it is solving double
+> fault issue. That is both "page not present" and "page ready" exceptions
+> got queued and on next vcpu entry, it will result in double fault.
+>
+> It does not seem to solve the issue of "page not ready" being delivered
+> before "page ready". That guest can handle already and its not an issue.
+>
+>> This situation seems to be impossible since commit 2a266f23550b
+>> ("KVM MMU: check pending exception before injecting APF) which added
+>> 'vcpu->arch.exception.pending' check to kvm_can_do_async_pf.
+>
+> This original commit description is confusing too. It says.
+>
+> "For example, when two APF's for page ready happen after one exit and
+>  the first one becomes pending, the second one will result in #DF.
+>  Instead, just handle the second page fault synchronously."
+>
+> So it seems to be trying to protect against that two "page ready"
+> exceptions don't get queued simultaneously. But you can't fall back
+> to synchronous mechanism once you have started the async pf prototocol.
+> Once you have started async page fault protocol by sending "page not
+> reay", you have to send "page ready". So I am not sure how above commit
+> solved the issue of two "page ready" not being queued at the same time.
+>
+> I am wondering what problem did this commit solve. It looks like it
+> can avoid queueing two "page not ready" events. But can that even happen?
+>
+>> 
+>> On x86, kvm_arch_async_page_present() has only one call site:
+>> kvm_check_async_pf_completion() loop and we only enter the loop when
+>> kvm_arch_can_inject_async_page_present(vcpu) which when async pf msr
+>> is enabled, translates into kvm_can_do_async_pf().
+>
+> kvm_check_async_pf_completion() skips injecting "page ready" if fault
+> can't be injected now. Does that mean we leave it queued and it will
+> be injected after next exit.
+>
+> If yes, then previous commit kind of makes sense. When it will not
+> queue up two exceptions at the same time but will wait for queuing
+> up the exception after next exit. But commit description still seems
+> to be wrong in the sense it is not falling back to synchronous page
+> fault for "page ready" events.
 
-OK, I did take authorship. At least it will be me who gets the blame ;-)
+As I'll be dropping 'page ready' event delivery via #PF this doesn't
+really matter much but after staring at the code for a while I managed
+to convince myself that this particular code patch is just unreachable.
+I don't think we can get #DF now with two 'page not ready' exceptions,
+kvm_can_do_async_pf() should now allow that.
 
-Here's the patch:
+>
+> try_async_pf() also calls kvm_can_do_async_pf(). And IIUC, it will
+> fall back to synchrounous fault if injecting async_pf is not possible
+> at this point of time. So that means despite the fact that async pf
+> is enabled, all the page faults might not take that route and some
+> will fall back to synchrounous faults. 
 
-From 685fc0b545f39bf9bfafa0396113c852ef3c81fc Mon Sep 17 00:00:00 2001
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Date: Wed, 6 May 2020 10:36:18 -0400
-Subject: [PATCH] tracing: Add a vmalloc_sync_mappings() for safe measure
+This sounds correct.
 
-x86_64 lazily maps in the vmalloc pages, and the way this works with per_cpu
-areas can be complex, to say the least. Mappings may happen at boot up, and
-if nothing synchronizes the page tables, those page mappings may not be
-synced till they are used. This causes issues for anything that might touch
-one of those mappings in the path of the page fault handler. When one of
-those unmapped mappings is touched in the page fault handler, it will cause
-another page fault, which in turn will cause a page fault, and leave us in
-a loop of page faults.
+> I am concerned that how will
+> this work for reporting errors back to guest (for virtiofs use case).
+> If we are relying on async pf mechanism to also be able to report
+> errors back, then we can't afford to do synchrounous page faults becase
+> we don't have a way to report errors back to guest and it will hang (if
+> page can't be faulted in).
 
-Commit 763802b53a42 ("x86/mm: split vmalloc_sync_all()") split
-vmalloc_sync_all() into vmalloc_sync_unmappings() and
-vmalloc_sync_mappings(), as on system exit, it did not need to do a full
-sync on x86_64 (although it still needed to be done on x86_32). By chance,
-the vmalloc_sync_all() would synchronize the page mappings done at boot up
-and prevent the per cpu area from being a problem for tracing in the page
-fault handler. But when that synchronization in the exit of a task became a
-nop, it caused the problem to appear.
+Currently, if 'page not ready' event was delivered then we can't skip
+'page ready' event, we'll have to deliver it. 'Page not ready' is still
+going to be delivered as exception and unless we really need to solve
+complex problems like delivering nested exception this should work.
 
-Link: https://lore.kernel.org/r/20200429054857.66e8e333@oasis.local.home
+>
+> So either we need a way to report errors back while doing synchrounous
+> page faults or we can't fall back to synchorounous page faults while
+> async page faults are enabled.
+>
+> While we are reworking async page mechanism, want to make sure that
+> error reporting part has been taken care of as part of design. Don't
+> want to be dealing with it after the fact.
 
-Cc: stable@vger.kernel.org
-Fixes: 737223fbca3b1 ("tracing: Consolidate buffer allocation code")
-Reported-by: "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
-Suggested-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- kernel/trace/trace.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+The main issue I'm seeing here is that we'll need to deliver these
+errors 'right now' and not some time later. Generally, exceptions
+(e.g. #VE) should work but there are some corner cases, I remember Paolo
+and Andy discussing these (just hoping they'll jump in with their
+conclusions :-). If we somehow manage to exclude interrupts-disabled
+context from our scope we should be good, I don't see reasons to skip
+delivering #VE there.
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 8d2b98812625..9ed6d92768af 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -8525,6 +8525,19 @@ static int allocate_trace_buffers(struct trace_array *tr, int size)
- 	 */
- 	allocate_snapshot = false;
- #endif
-+
-+	/*
-+	 * Because of some magic with the way alloc_percpu() works on
-+	 * x86_64, we need to synchronize the pgd of all the tables,
-+	 * otherwise the trace events that happen in x86_64 page fault
-+	 * handlers can't cope with accessing the chance that a
-+	 * alloc_percpu()'d memory might be touched in the page fault trace
-+	 * event. Oh, and we need to audit all other alloc_percpu() and vmalloc()
-+	 * calls in tracing, because something might get triggered within a
-+	 * page fault trace event!
-+	 */
-+	vmalloc_sync_mappings();
-+
- 	return 0;
- }
- 
+For the part this series touches, "page ready" notifications, we don't
+skip them but at the same time there is no timely delivery guarantee, we
+just queue an interrupt. I'm not sure you'll need these for virtio-fs
+though.
+
+Thanks for the feedback!
+
 -- 
-2.20.1
+Vitaly
 
