@@ -2,184 +2,107 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED96FC47257
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C06DCC38A24
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9D5920714
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A16C72070B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:47:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dwb+436W"
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="GmeI+UP2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729206AbgEFJrI (ORCPT
+        id S1729251AbgEFJrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 05:47:08 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60723 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726935AbgEFJrI (ORCPT
+        Wed, 6 May 2020 05:47:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34204 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729040AbgEFJrl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 05:47:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588758426;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=w9sS983PmfppClLAD95W4RbZvvHCy4pYMhZVa7NWgzU=;
-        b=Dwb+436WtNWdZC4+3SwsuooyGuda1f+qdXyvuFrFI5EoPmVooHjyrnR0PCpef9ICkaXZHz
-        5pFtLHkc8zt61iOuQXpxZbjVcxz6h+GXnuBRtJEmgEPeJheV5eDgIxFrx9pE2DNuMlDy6S
-        SADkvrN8V+Jdjh0y06gw+uZoZfYaD3M=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-15-etYHd-LhNreSkJjshwbpdA-1; Wed, 06 May 2020 05:47:03 -0400
-X-MC-Unique: etYHd-LhNreSkJjshwbpdA-1
-Received: by mail-wm1-f71.google.com with SMTP id f128so916146wmf.8
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 02:47:03 -0700 (PDT)
+        Wed, 6 May 2020 05:47:41 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5892DC061A10
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 02:47:39 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id t11so790795lfe.4
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 02:47:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=/9ah7zhuR4873GSpvZCqmYYEsJCcLFVCYyRiQ4J6Vdk=;
+        b=GmeI+UP24kyAPTiBFvucgZ/V4AdmN9uFhZQV85PUDH3V01byOj0XccFF6diF/xZd4E
+         +cSoNUycgb8W8kPHInzeAOkcj+nqZPlNvaGrwlGWqFZpY2eMaUa27ZP5I9tqihtthDnx
+         6QQKERCXj5PH5svOqIuTE12LsGdy5dfxSTCXg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=w9sS983PmfppClLAD95W4RbZvvHCy4pYMhZVa7NWgzU=;
-        b=ud3tBp8aV8dZwJBhuNOnXgboj8BE9mfpcT5QxmkRKkEnP5feyGjjx0sOMUyBgQim2D
-         aj+Zv3+lwISkUEaR46SxJobhLWw5Ub6i+EqMdiEZz4/KHS+oRuSMYgaPcpoN5GlaqINz
-         UK1yKDplDhYGxrrHsckWz6zkZDkd4/K2MMGzyh+0O3d+n78aDlFQCJjj99j1mI29w8Sx
-         vN1NYPoBcVzprm/4Nh6MaImOArYm0jF4b75tHCGzjITb3BcJR8XxcdP+wWgF/3gNj0bu
-         uBRgq4kZ/ZNqw9sH9FcfSsnoGg1S4FSYJxI1QgrUFaNQ96HLwnWcJ8xyrXD9y//uUCeU
-         XPsQ==
-X-Gm-Message-State: AGi0PuZicZHuTGdG7lbZnJ62YbHdHSjbsQdXO7PEqI33EFBpn5GCbwkP
-        lwBYSRQr2fGh5oTNKYLJuBSMP/hju2uoCCVnMoMLP5shpdDZO+m3+M3s13XSYrbkkNOiSNoJTyt
-        +DBWfV7XIfXtn9vQ3noN3ASUR
-X-Received: by 2002:a1c:6402:: with SMTP id y2mr3483285wmb.116.1588758422664;
-        Wed, 06 May 2020 02:47:02 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJLFM/iL7UVJP6AWuYr6XnmG4Y7mYLYvXVuwtw2JDBHwlkMdlwBhYhsts9edtJoB4WeNEhqOg==
-X-Received: by 2002:a1c:6402:: with SMTP id y2mr3483265wmb.116.1588758422450;
-        Wed, 06 May 2020 02:47:02 -0700 (PDT)
-Received: from redhat.com (bzq-109-66-7-121.red.bezeqint.net. [109.66.7.121])
-        by smtp.gmail.com with ESMTPSA id a139sm491033wme.18.2020.05.06.02.47.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 02:47:01 -0700 (PDT)
-Date:   Wed, 6 May 2020 05:46:59 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        "Jubran, Samih" <sameehj@amazon.com>
-Subject: Re: [PATCH net-next 1/2] virtio-net: don't reserve space for vnet
- header for XDP
-Message-ID: <20200506054619-mutt-send-email-mst@kernel.org>
-References: <20200506061633.16327-1-jasowang@redhat.com>
- <20200506102123.739f1233@carbon>
- <3ecb558b-5281-2497-db3c-6aae7d7f882b@redhat.com>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/9ah7zhuR4873GSpvZCqmYYEsJCcLFVCYyRiQ4J6Vdk=;
+        b=AKvwQ+KkhRxpv/R9kVEfo1q8SY/vk9jzXXiiAXTSJBizCr/GSmUw1RAQhJ6TahMvks
+         PU2ZAz/emtkDAi/QHnyYEttqxwi0tRX85hXpspo5Ra7gWOjxSTQ/kIQ6DxVxsBRYrT42
+         QSfpuHCxa14bOdauULz7cKSFDHAY30Hsu+SXfgnw5X5Kx8fARN/ac1qP9Plfs1gPDPmF
+         T/xNVysQI9nb/jRk3yYUEZdKR2Hk3G40ckAkvKasyYYvvzTJClPPZoE+1+csOkwo7ihJ
+         86kmUrQ0ng9v0KLIVaGGK9OPStKpopUDGW5qOp6Z609GGdWOawre/PvpPCcN6kiokwTF
+         DUbg==
+X-Gm-Message-State: AGi0PuYu5pXgPcQa1nQohr2q0mGeRpTZcF0lV2y5Q8wqAlySIxYDrZzm
+        /A4EtAkopqYxVk4DrHAD09tM3Nzfa9Np7A==
+X-Google-Smtp-Source: APiQypLnD2AvkD2qPRRmjXwr/1RNm41CbdM9Hbn0xbk9jZ1SR3g4pCmCYNoosoZyqZS6x+UMJMpQzA==
+X-Received: by 2002:a05:6512:455:: with SMTP id y21mr4691981lfk.202.1588758457377;
+        Wed, 06 May 2020 02:47:37 -0700 (PDT)
+Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id 23sm954196lju.106.2020.05.06.02.47.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 May 2020 02:47:36 -0700 (PDT)
+Subject: Re: [PATCH net-next] net: bridge: return false in br_mrp_enabled()
+To:     Jason Yan <yanaijie@huawei.com>, roopa@cumulusnetworks.com,
+        davem@davemloft.net, kuba@kernel.org,
+        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200506061616.18929-1-yanaijie@huawei.com>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <80b3d01a-1bd5-f5c5-abaa-6f3114683617@cumulusnetworks.com>
+Date:   Wed, 6 May 2020 12:47:35 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <20200506061616.18929-1-yanaijie@huawei.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3ecb558b-5281-2497-db3c-6aae7d7f882b@redhat.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 04:34:36PM +0800, Jason Wang wrote:
+On 06/05/2020 09:16, Jason Yan wrote:
+> Fix the following coccicheck warning:
 > 
-> On 2020/5/6 下午4:21, Jesper Dangaard Brouer wrote:
-> > On Wed,  6 May 2020 14:16:32 +0800
-> > Jason Wang <jasowang@redhat.com> wrote:
-> > 
-> > > We tried to reserve space for vnet header before
-> > > xdp.data_hard_start. But this is useless since the packet could be
-> > > modified by XDP which may invalidate the information stored in the
-> > > header and
-> > IMHO above statements are wrong. XDP cannot access memory before
-> > xdp.data_hard_start. Thus, it is safe to store a vnet headers before
-> > xdp.data_hard_start. (The sfc driver also use this "before" area).
+> net/bridge/br_private.h:1334:8-9: WARNING: return of 0/1 in function
+> 'br_mrp_enabled' with return type bool
 > 
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> ---
+>  net/bridge/br_private.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> The problem is if we place vnet header before data_hard_start, virtio-net
-> will fail any header adjustment.
+> diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
+> index c35647cb138a..78d3a951180d 100644
+> --- a/net/bridge/br_private.h
+> +++ b/net/bridge/br_private.h
+> @@ -1331,7 +1331,7 @@ static inline int br_mrp_process(struct net_bridge_port *p, struct sk_buff *skb)
+>  
+>  static inline bool br_mrp_enabled(struct net_bridge *br)
+>  {
+> -	return 0;
+> +	return false;
+>  }
+>  
+>  static inline void br_mrp_port_del(struct net_bridge *br,
 > 
-> Or do you mean to copy vnet header before data_hard_start before processing
-> XDP?
-> 
-> 
-> > 
-> > > there's no way for XDP to know the existence of the vnet header currently.
-> > It is true that XDP is unaware of this area, which is the way it
-> > should be.  Currently the area will survive after calling BPF/XDP.
-> > After your change it will be overwritten in xdp_frame cases.
-> > 
-> > 
-> > > So let's just not reserve space for vnet header in this case.
-> > I think this is a wrong approach!
-> > 
-> > We are working on supporting GRO multi-buffer for XDP.  The vnet header
-> > contains GRO information (see pahole below sign).
-> 
-> 
-> Another note is that since we need reserve room for skb_shared_info, GRO for
-> XDP may probably lead more frag list.
-> 
-> 
-> >   It is currently not
-> > used in the XDP case, but we will be working towards using it.
-> 
-> 
-> Good to know that, but I think it can only work when the packet is not
-> modified by XDP?
-> 
-> 
-> > There
-> > are a lot of unanswered questions on how this will be implemented.
-> > Thus, I cannot layout how we are going to leverage this info yet, but
-> > your patch are killing this info, which IHMO is going in the wrong
-> > direction.
-> 
-> 
-> I can copy vnet header ahead of data_hard_start, does it work for you?
-> 
-> Thanks
-
-That's likely to be somewhat expensive.
-
-
-> 
-> > 
-> > 
-> > > Cc: Jesper Dangaard Brouer <brouer@redhat.com>
-> > > Signed-off-by: Jason Wang <jasowang@redhat.com>
-> > > ---
-> > >   drivers/net/virtio_net.c | 6 +++---
-> > >   1 file changed, 3 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> > > index 11f722460513..98dd75b665a5 100644
-> > > --- a/drivers/net/virtio_net.c
-> > > +++ b/drivers/net/virtio_net.c
-> > > @@ -684,8 +684,8 @@ static struct sk_buff *receive_small(struct net_device *dev,
-> > >   			page = xdp_page;
-> > >   		}
-> > > -		xdp.data_hard_start = buf + VIRTNET_RX_PAD + vi->hdr_len;
-> > > -		xdp.data = xdp.data_hard_start + xdp_headroom;
-> > > +		xdp.data_hard_start = buf + VIRTNET_RX_PAD;
-> > > +		xdp.data = xdp.data_hard_start + xdp_headroom + vi->hdr_len;
-> > >   		xdp.data_end = xdp.data + len;
-> > >   		xdp.data_meta = xdp.data;
-> > >   		xdp.rxq = &rq->xdp_rxq;
-> > > @@ -845,7 +845,7 @@ static struct sk_buff *receive_mergeable(struct net_device *dev,
-> > >   		 * the descriptor on if we get an XDP_TX return code.
-> > >   		 */
-> > >   		data = page_address(xdp_page) + offset;
-> > > -		xdp.data_hard_start = data - VIRTIO_XDP_HEADROOM + vi->hdr_len;
-> > > +		xdp.data_hard_start = data - VIRTIO_XDP_HEADROOM;
-> > >   		xdp.data = data + vi->hdr_len;
-> > >   		xdp.data_end = xdp.data + (len - vi->hdr_len);
-> > >   		xdp.data_meta = xdp.data;
-> > 
-> > 
+Fixes: 6536993371fab ("bridge: mrp: Integrate MRP into the bridge")
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
