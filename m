@@ -2,108 +2,90 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2335EC4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84605C47258
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8C50206F9
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:53:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="tNlpNrhm"
+	by mail.kernel.org (Postfix) with ESMTP id 5C757206F9
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:55:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588748128;
+	bh=riHfJCDSgqZ4JOW1s8kw7kfc1UX4YXs+Rj74HV1Xopg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=0thDIzUZTZNqJAUZP7k23BxOZ8oz/Aw1zP9V1NDZIkCtlCZI7dWdI7hL18cCWl38J
+	 FCMy6oFBuroSB20SsH3ojU3Fvsww1sKDn07pZFNPolEuhNKUnMBBOPeWDjRcbWzWdr
+	 KtoSouvWj8kh6k0MUNkXMz4fsfwmrvJwIHkYV6zc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbgEFGx5 (ORCPT
+        id S1727981AbgEFGz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 02:53:57 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:52829 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725782AbgEFGx4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 02:53:56 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id WDwEjnDEK8hmdWDwHjBf2e; Wed, 06 May 2020 08:53:54 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1588748034; bh=ajeYTYpW2stA5uxu5d9aTwu82ozRtYvaSmlwniMHM7g=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=tNlpNrhmVLgMGOJ9zBRHwpB4FJi//gD1n5ZyZaWBVVi+ElW+XnjlLdzyWC5a9sBDJ
-         pzTkJe1+mewgJnve8bMhjs2/xARqjNmGK5O3Dx/Px5DMxOHJecFcCFriaKhmjxP9Vj
-         AO5N41lrlw3qzyAa++8HlseTSf5xQf9FrYzxaaSaCGR9EsQesxCrSM3W1oomd1mf4j
-         9Ct7p6I80AgzKfjBhxVq/0LMUwNvOW7fVUN47jwrTTJzRK2Mfc/BlA5eunICnBXrD6
-         VEwZyQ+tL1Wr1y53CoaSfxe5TTaCbW5Ztezz0D9ft/FpZPHJROFMk4Z0eDNMJdkIn8
-         mO7ptlXIdAowQ==
-Subject: Re: [RFC PATCH v12 7/9] MAINTAINERS: Add Tegra Video driver section
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     digetx@gmail.com, sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1588645920-20557-1-git-send-email-skomatineni@nvidia.com>
- <1588645920-20557-8-git-send-email-skomatineni@nvidia.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <f8c66ec5-7641-5600-b79e-30624a18ebdd@xs4all.nl>
-Date:   Wed, 6 May 2020 08:53:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 6 May 2020 02:55:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47536 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725782AbgEFGz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 02:55:26 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B08020714;
+        Wed,  6 May 2020 06:55:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588748126;
+        bh=riHfJCDSgqZ4JOW1s8kw7kfc1UX4YXs+Rj74HV1Xopg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=J8Rejwfq9+x0WPcvTeDzka2cvkFXGh6B9rimBuJOYdcpmakeoxwwDcdBfPgmAkJGw
+         exZmqgsrlhXgE1Hw+BQh2FYZ5bYZEb3KCXyNUbzMp3X8PuJyahy9pMEsiLkV9bVfaT
+         HqE/uOB77YZKrYOZhy63rtfF1dyLhGWxgGqwy3bc=
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Max Gurtovoy <maxg@mellanox.com>
+Subject: [PATCH rdma-next 0/3] mlx5 QP cleanup (cont.)
+Date:   Wed,  6 May 2020 09:55:10 +0300
+Message-Id: <20200506065513.4668-1-leon@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <1588645920-20557-8-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfP+ADfYPsJxKFMVzegRcx63hwx1VPGOY6SaLmRkjlJq/HES6338CeQoKPOKdclkKQMafEqMOqUEeJG8PJaXxUX4tHzS0oA3uEQwBbG5ZJyju7smDqcZm
- XjVQG125ksEoKx7NKRPmCndh+R++QKs5TgFLHaloLV8uIUOdDS2RzHHGNRFv/Vdgw5wle9CDtPh80Gk1EHKt2nlrR3HyiTgkVABa5CGcEHFKUrZLacJG+m8T
- RLliCCbxg8BOdsC8g6zHZBvMTEnSdQFI/wgQVITa+mAV8uxLtsUoGpZ66pj0+8BcUahF15tZJl23jH7E8BbxKOgIj/4+jmnOHbuDvABcLt0KAlTP1kYyjnwe
- lXmEod1FHxVjBw1dpn1mnC/qInOOKA24zq3jPS6W1n3OKBX6VW3Pr5dGdRrkSDzZuKcd+Hh2F3aI2MZgJc6Zjwo4Wv9wV7nperBxKy2OH/qEFyw9lEPw8kql
- 0e2N4OK/zmL8Z2xLOjcygDYZI8rLRDPNRvPtEcjI0GG4f1F8mA0wCVBSKASAiomy8jnbhjI+fE2x25rqfj0ix6rTnNhbB1JWiSSqyDEh3mU17HfziU6/isXS
- z3M=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/05/2020 04:31, Sowjanya Komatineni wrote:
-> Add maintainers and mailing list entries to Tegra Video driver section.
-> 
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+From: Leon Romanovsky <leonro@mellanox.com>
 
-Since this goes through Thierry:
+Hi,
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+This short series continue to cleanup qp.c file, which grew
+to be completely unmaintainable.
 
-Regards,
+Thanks
 
-	Hans
+Leon Romanovsky (2):
+  RDMA/mlx5: Update mlx5_ib to use new cmd interface
+  RDMA/mlx5: Move all WR logic from qp.c to separate file
 
-> ---
->  MAINTAINERS | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index fe55b3f..611d7bc 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -16652,6 +16652,16 @@ M:	Laxman Dewangan <ldewangan@nvidia.com>
->  S:	Supported
->  F:	drivers/spi/spi-tegra*
->  
-> +TEGRA VIDEO DRIVER
-> +M:	Thierry Reding <thierry.reding@gmail.com>
-> +M:	Jonathan Hunter <jonathanh@nvidia.com>
-> +M:	Sowjanya Komatineni <skomatineni@nvidia.com>
-> +L:	linux-media@vger.kernel.org
-> +L:	linux-tegra@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-> +F:	drivers/staging/media/tegra/
-> +
->  TEGRA XUSB PADCTL DRIVER
->  M:	JC Kuo <jckuo@nvidia.com>
->  S:	Supported
-> 
+Max Gurtovoy (1):
+  RDMA/mlx5: Refactor mlx5_post_send() to improve readability
+
+ drivers/infiniband/hw/mlx5/Makefile  |    3 +-
+ drivers/infiniband/hw/mlx5/cmd.c     |  114 +-
+ drivers/infiniband/hw/mlx5/cmd.h     |    4 +-
+ drivers/infiniband/hw/mlx5/cong.c    |    4 +-
+ drivers/infiniband/hw/mlx5/main.c    |   10 +-
+ drivers/infiniband/hw/mlx5/mlx5_ib.h |    4 -
+ drivers/infiniband/hw/mlx5/odp.c     |    5 +-
+ drivers/infiniband/hw/mlx5/qp.c      | 1488 +------------------------
+ drivers/infiniband/hw/mlx5/srq_cmd.c |  115 +-
+ drivers/infiniband/hw/mlx5/wr.c      | 1504 ++++++++++++++++++++++++++
+ drivers/infiniband/hw/mlx5/wr.h      |   76 ++
+ 11 files changed, 1680 insertions(+), 1647 deletions(-)
+ create mode 100644 drivers/infiniband/hw/mlx5/wr.c
+ create mode 100644 drivers/infiniband/hw/mlx5/wr.h
+
+--
+2.26.2
 
