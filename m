@@ -2,180 +2,110 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93584C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB6AC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AE7D208DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B8B7206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:33:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbgEFGcg (ORCPT
+        id S1728082AbgEFGdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 02:32:36 -0400
-Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:4377 "EHLO
-        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725782AbgEFGcg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 02:32:36 -0400
-Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Tue, 5 May 2020 23:32:29 -0700
-Received: from localhost.localdomain (ashwinh-vm-1.vmware.com [10.110.19.225])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 7F1E0400A2;
-        Tue,  5 May 2020 23:32:29 -0700 (PDT)
-From:   ashwin-h <ashwinh@vmware.com>
-To:     <vyasevich@gmail.com>, <nhorman@tuxdriver.com>
-CC:     <davem@davemloft.net>, <linux-sctp@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <srivatsab@vmware.com>, <srivatsa@csail.mit.edu>,
-        <rostedt@goodmis.org>, <srostedt@vmware.com>,
-        <gregkh@linuxfoundation.org>, <ashwin.hiranniah@gmail.com>,
-        Xin Long <lucien.xin@gmail.com>, Ashwin H <ashwinh@vmware.com>
-Subject: [PATCH 2/2] sctp: implement memory accounting on rx path
-Date:   Wed, 6 May 2020 19:50:54 +0530
-Message-ID: <b2d9886afc672b4120f101eeb9217e68abb61471.1588242081.git.ashwinh@vmware.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1588242081.git.ashwinh@vmware.com>
-References: <cover.1588242081.git.ashwinh@vmware.com>
+        Wed, 6 May 2020 02:33:37 -0400
+Received: from foss.arm.com ([217.140.110.172]:56830 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726807AbgEFGdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 02:33:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF6FF30E;
+        Tue,  5 May 2020 23:33:35 -0700 (PDT)
+Received: from [10.163.71.196] (unknown [10.163.71.196])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C737B3F68F;
+        Tue,  5 May 2020 23:33:33 -0700 (PDT)
+Subject: Re: [PATCH V3 11/16] arm64/cpufeature: Add remaining feature bits in
+ ID_AA64PFR1 register
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org
+References: <1588426445-24344-1-git-send-email-anshuman.khandual@arm.com>
+ <1588426445-24344-12-git-send-email-anshuman.khandual@arm.com>
+ <4c6e9f6e-fffa-8fdf-ad1a-f0c6514c3571@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <197bddfb-d63f-7824-63eb-cc38ae729efe@arm.com>
+Date:   Wed, 6 May 2020 12:03:03 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
-Received-SPF: None (EX13-EDG-OU-002.vmware.com: ashwinh@vmware.com does not
- designate permitted sender hosts)
+In-Reply-To: <4c6e9f6e-fffa-8fdf-ad1a-f0c6514c3571@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
 
-commit 9dde27de3e5efa0d032f3c891a0ca833a0d31911 upstream.
 
-sk_forward_alloc's updating is also done on rx path, but to be consistent
-we change to use sk_mem_charge() in sctp_skb_set_owner_r().
+On 05/05/2020 02:54 PM, Suzuki K Poulose wrote:
+> On 05/02/2020 02:34 PM, Anshuman Khandual wrote:
+>> Enable the following features bits in ID_AA64PFR1 register as per ARM DDI
+>> 0487F.a specification.
+>>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>>
+>> Suggested-by: Will Deacon <will@kernel.org>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>   arch/arm64/include/asm/sysreg.h | 4 ++++
+>>   arch/arm64/kernel/cpufeature.c  | 4 ++++
+>>   2 files changed, 8 insertions(+)
+>>
+>> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+>> index c93ea6613f51..f1c0d874220a 100644
+>> --- a/arch/arm64/include/asm/sysreg.h
+>> +++ b/arch/arm64/include/asm/sysreg.h
+>> @@ -666,7 +666,11 @@
+>>   #define ID_AA64PFR0_EL0_32BIT_64BIT    0x2
+>>     /* id_aa64pfr1 */
+>> +#define ID_AA64PFR1_MPAMFRAC_SHIFT    16
+>> +#define ID_AA64PFR1_RASFRAC_SHIFT    12
+>> +#define ID_AA64PFR1_MTE_SHIFT        8
+>>   #define ID_AA64PFR1_SSBS_SHIFT        4
+>> +#define ID_AA64PFR1_BT_SHIFT        0
+>>     #define ID_AA64PFR1_SSBS_PSTATE_NI    0
+>>   #define ID_AA64PFR1_SSBS_PSTATE_ONLY    1
+>> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+>> index f5a39e040804..181e09d62147 100644
+>> --- a/arch/arm64/kernel/cpufeature.c
+>> +++ b/arch/arm64/kernel/cpufeature.c
+>> @@ -233,7 +233,11 @@ static const struct arm64_ftr_bits ftr_id_aa64pfr0[] = {
+>>   };
+>>     static const struct arm64_ftr_bits ftr_id_aa64pfr1[] = {
+>> +    ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR1_MPAMFRAC_SHIFT, 4, 0),
+>> +    ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR1_RASFRAC_SHIFT, 4, 0),
+> 
+> These should be hidden as well.
 
-In sctp_eat_data(), it's not enough to check sctp_memory_pressure only,
-which doesn't work for mem_cgroup_sockets_enabled, so we change to use
-sk_under_memory_pressure().
+Will change.
 
-When it's under memory pressure, sk_mem_reclaim() and sk_rmem_schedule()
-should be called on both RENEGE or CHUNK DELIVERY path exit the memory
-pressure status as soon as possible.
+> 
+>> +    ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR1_MTE_SHIFT, 4, 0),
+>>       ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR1_SSBS_SHIFT, 4, ID_AA64PFR1_SSBS_PSTATE_NI),
+>> +    ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR1_BT_SHIFT, 4, 0),
+> 
+> I would say remove the MTE, BTI fields for now. As they must be VISIBLE, but with the kernel support for these merged. They will be added with their respective series.
+Sure, will drop above changes from the series.
 
-Note that sk_rmem_schedule() is using datalen to make things easy there.
-
-Reported-by: Matteo Croce <mcroce@redhat.com>
-Tested-by: Matteo Croce <mcroce@redhat.com>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Ashwin H <ashwinh@vmware.com>
----
- include/net/sctp/sctp.h |  2 +-
- net/sctp/sm_statefuns.c |  6 ++++--
- net/sctp/ulpevent.c     | 19 ++++++++-----------
- net/sctp/ulpqueue.c     |  3 ++-
- 4 files changed, 15 insertions(+), 15 deletions(-)
-
-diff --git a/include/net/sctp/sctp.h b/include/net/sctp/sctp.h
-index 2c6570e..fef8c33 100644
---- a/include/net/sctp/sctp.h
-+++ b/include/net/sctp/sctp.h
-@@ -421,7 +421,7 @@ static inline void sctp_skb_set_owner_r(struct sk_buff *skb, struct sock *sk)
- 	/*
- 	 * This mimics the behavior of skb_set_owner_r
- 	 */
--	sk->sk_forward_alloc -= event->rmem_len;
-+	sk_mem_charge(sk, event->rmem_len);
- }
- 
- /* Tests if the list has one and only one entry. */
-diff --git a/net/sctp/sm_statefuns.c b/net/sctp/sm_statefuns.c
-index 9f4d325..93cbf88 100644
---- a/net/sctp/sm_statefuns.c
-+++ b/net/sctp/sm_statefuns.c
-@@ -6444,13 +6444,15 @@ static int sctp_eat_data(const struct sctp_association *asoc,
- 	 * in sctp_ulpevent_make_rcvmsg will drop the frame if we grow our
- 	 * memory usage too much
- 	 */
--	if (*sk->sk_prot_creator->memory_pressure) {
-+	if (sk_under_memory_pressure(sk)) {
- 		if (sctp_tsnmap_has_gap(map) &&
- 		    (sctp_tsnmap_get_ctsn(map) + 1) == tsn) {
- 			pr_debug("%s: under pressure, reneging for tsn:%u\n",
- 				 __func__, tsn);
- 			deliver = SCTP_CMD_RENEGE;
--		 }
-+		} else {
-+			sk_mem_reclaim(sk);
-+		}
- 	}
- 
- 	/*
-diff --git a/net/sctp/ulpevent.c b/net/sctp/ulpevent.c
-index 8cb7d98..c2a7478 100644
---- a/net/sctp/ulpevent.c
-+++ b/net/sctp/ulpevent.c
-@@ -634,8 +634,9 @@ struct sctp_ulpevent *sctp_ulpevent_make_rcvmsg(struct sctp_association *asoc,
- 						gfp_t gfp)
- {
- 	struct sctp_ulpevent *event = NULL;
--	struct sk_buff *skb;
--	size_t padding, len;
-+	struct sk_buff *skb = chunk->skb;
-+	struct sock *sk = asoc->base.sk;
-+	size_t padding, datalen;
- 	int rx_count;
- 
- 	/*
-@@ -646,15 +647,12 @@ struct sctp_ulpevent *sctp_ulpevent_make_rcvmsg(struct sctp_association *asoc,
- 	if (asoc->ep->rcvbuf_policy)
- 		rx_count = atomic_read(&asoc->rmem_alloc);
- 	else
--		rx_count = atomic_read(&asoc->base.sk->sk_rmem_alloc);
-+		rx_count = atomic_read(&sk->sk_rmem_alloc);
- 
--	if (rx_count >= asoc->base.sk->sk_rcvbuf) {
-+	datalen = ntohs(chunk->chunk_hdr->length);
- 
--		if ((asoc->base.sk->sk_userlocks & SOCK_RCVBUF_LOCK) ||
--		    (!sk_rmem_schedule(asoc->base.sk, chunk->skb,
--				       chunk->skb->truesize)))
--			goto fail;
--	}
-+	if (rx_count >= sk->sk_rcvbuf || !sk_rmem_schedule(sk, skb, datalen))
-+		goto fail;
- 
- 	/* Clone the original skb, sharing the data.  */
- 	skb = skb_clone(chunk->skb, gfp);
-@@ -681,8 +679,7 @@ struct sctp_ulpevent *sctp_ulpevent_make_rcvmsg(struct sctp_association *asoc,
- 	 * The sender should never pad with more than 3 bytes.  The receiver
- 	 * MUST ignore the padding bytes.
- 	 */
--	len = ntohs(chunk->chunk_hdr->length);
--	padding = SCTP_PAD4(len) - len;
-+	padding = SCTP_PAD4(datalen) - datalen;
- 
- 	/* Fixup cloned skb with just this chunks data.  */
- 	skb_trim(skb, chunk->chunk_end - padding - skb->data);
-diff --git a/net/sctp/ulpqueue.c b/net/sctp/ulpqueue.c
-index 0b42710..7de9be3 100644
---- a/net/sctp/ulpqueue.c
-+++ b/net/sctp/ulpqueue.c
-@@ -1106,7 +1106,8 @@ void sctp_ulpq_renege(struct sctp_ulpq *ulpq, struct sctp_chunk *chunk,
- 			freed += sctp_ulpq_renege_frags(ulpq, needed - freed);
- 	}
- 	/* If able to free enough room, accept this chunk. */
--	if (freed >= needed) {
-+	if (sk_rmem_schedule(asoc->base.sk, chunk->skb, needed) &&
-+	    freed >= needed) {
- 		int retval = sctp_ulpq_tail_data(ulpq, chunk, gfp);
- 		/*
- 		 * Enter partial delivery if chunk has not been
--- 
-2.7.4
-
+> 
+> Suzuki
+> 
