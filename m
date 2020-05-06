@@ -2,90 +2,102 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1F1C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC9AC47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EE7920836
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:17:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588774635;
-	bh=E2FPRMOtJPQ28Jn0CD58CEFJGl3jwphHRxnRKSQWI6g=;
-	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
-	b=nDOdTptzX9whx2xDqWVvKqcnZfuyW1hPzG7CZQSJGFQw4kreMvhOyC4+VEBgGXHsG
-	 j+BicpabWC/S2rjjM7d9SqIuIgZk2C0SxI9dNPtRtGmIhYhe1hjDnCbWb7DIV1/dXY
-	 oPdanx1mw3vbrubW5aOMpcpANmYzkI9lWgjH+KcQ=
+	by mail.kernel.org (Postfix) with ESMTP id A3ABA206D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:17:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ETbnGxm8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbgEFORO (ORCPT
+        id S1728937AbgEFORh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 10:17:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57666 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726114AbgEFORO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 10:17:14 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F948206D5;
-        Wed,  6 May 2020 14:17:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588774633;
-        bh=E2FPRMOtJPQ28Jn0CD58CEFJGl3jwphHRxnRKSQWI6g=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=DaPlaRDy0v4tHoZdrLe0I2dX6GTf+R8IzmF1viAzoLmOMnZyexJZ8+pmrygf//lAH
-         4MDE2hAsaLAVTfBR7wjPHzR40f4Vjpsd+ojmGE30XzdjdWTKRzIOd3TDQDSDyvB4A1
-         gpAYD5ejPwZy9vWaZUm3zX51ZR3qhjJBYuFzTqUc=
-Date:   Wed, 06 May 2020 15:17:11 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jason Yan <yanaijie@huawei.com>, linux-kernel@vger.kernel.org,
-        lgirdwood@gmail.com
-In-Reply-To: <20200506061726.19289-1-yanaijie@huawei.com>
-References: <20200506061726.19289-1-yanaijie@huawei.com>
-Subject: Re: [PATCH] regulator: db8500-prcmu: Use true,false for bool variable
-Message-Id: <158877463128.38550.10089198425831753344.b4-ty@kernel.org>
+        Wed, 6 May 2020 10:17:37 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:57243 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728670AbgEFORh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 10:17:37 -0400
+Received: from [IPv6:2601:646:8600:3281:d9e2:e16d:2ce4:a5c3] ([IPv6:2601:646:8600:3281:d9e2:e16d:2ce4:a5c3])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 046EGISp3022440
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Wed, 6 May 2020 07:16:20 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 046EGISp3022440
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2020042201; t=1588774580;
+        bh=2t81ix48+XEqIovy4/uuaiJNVpVfGfHkdc5n10MqWF4=;
+        h=Date:In-Reply-To:References:Subject:To:From:From;
+        b=ETbnGxm8J7xr65vxrUydccH3oDZPr6ssZbQrpdFDLaJeehBoK3COvrkjxemldJ7Kx
+         Sa52fbj6LykWgbqsauISnLs58GZlGFQSwp79DKsiE1odTeSOahoIzKxZbKYslRZtx0
+         leFQHs/2egU6BRZTlK0L2B6oIkbgaI2b94xuQ4hRk4PQFHIuoTwmGAvAjJP3lp8BMK
+         zUtyWynNJ6BlmrLVpoB2QgQIliA5HiCUHfX7pco+BKXdU7t7orRcmmE0/IvCMP0sE0
+         PY/U2uGwLk/0CeWvIzDjVdiuqMmSLvMaZFW9KlUXKXXlYlfF7y6ZcnDqnTxh9U/8cl
+         nnKRsNJVAHEHA==
+Date:   Wed, 06 May 2020 07:16:11 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20200506140352.37154-1-yanaijie@huawei.com>
+References: <20200506140352.37154-1-yanaijie@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2] bpf, i386: remove unneeded conversion to bool
+To:     Jason Yan <yanaijie@huawei.com>, davem@davemloft.net,
+        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, udknight@gmail.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org,
+        lukenels@cs.washington.edu, xi.wang@gmail.com,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   hpa@zytor.com
+Message-ID: <D11F36F6-BF28-4DEB-8AED-4486477130F8@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 May 2020 14:17:26 +0800, Jason Yan wrote:
-> Fix the following coccicheck warning:
-> 
-> drivers/regulator/db8500-prcmu.c:184:1-17: WARNING: Assignment of 0/1 to
-> bool variable
-> 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> 
-> [...]
+On May 6, 2020 7:03:52 AM PDT, Jason Yan <yanaijie@huawei=2Ecom> wrote:
+>The '=3D=3D' expression itself is bool, no need to convert it to bool
+>again=2E
+>This fixes the following coccicheck warning:
+>
+>arch/x86/net/bpf_jit_comp32=2Ec:1478:50-55: WARNING: conversion to bool
+>not needed here
+>arch/x86/net/bpf_jit_comp32=2Ec:1479:50-55: WARNING: conversion to bool
+>not needed here
+>
+>Signed-off-by: Jason Yan <yanaijie@huawei=2Ecom>
+>---
+> v2: change the name 'x32' to 'i386'=2E
+>
+> arch/x86/net/bpf_jit_comp32=2Ec | 4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
+>
+>diff --git a/arch/x86/net/bpf_jit_comp32=2Ec
+>b/arch/x86/net/bpf_jit_comp32=2Ec
+>index 66cd150b7e54=2E=2E96fde03aa987 100644
+>--- a/arch/x86/net/bpf_jit_comp32=2Ec
+>+++ b/arch/x86/net/bpf_jit_comp32=2Ec
+>@@ -1475,8 +1475,8 @@ static int do_jit(struct bpf_prog *bpf_prog, int
+>*addrs, u8 *image,
+> 	for (i =3D 0; i < insn_cnt; i++, insn++) {
+> 		const s32 imm32 =3D insn->imm;
+> 		const bool is64 =3D BPF_CLASS(insn->code) =3D=3D BPF_ALU64;
+>-		const bool dstk =3D insn->dst_reg =3D=3D BPF_REG_AX ? false : true;
+>-		const bool sstk =3D insn->src_reg =3D=3D BPF_REG_AX ? false : true;
+>+		const bool dstk =3D insn->dst_reg !=3D BPF_REG_AX;
+>+		const bool sstk =3D insn->src_reg !=3D BPF_REG_AX;
+> 		const u8 code =3D insn->code;
+> 		const u8 *dst =3D bpf2ia32[insn->dst_reg];
+> 		const u8 *src =3D bpf2ia32[insn->src_reg];
 
-Applied to
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.8
-
-Thanks!
-
-[1/1] regulator: db8500-prcmu: Use true,false for bool variable
-      commit: aab5fd7a1b7b931487694b527322f48f423701c7
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+"foo ? true : false" is also far better written !!foo when it isn't totall=
+y redundant=2E
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
