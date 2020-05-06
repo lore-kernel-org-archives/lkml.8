@@ -2,74 +2,91 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66005C4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4914C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49287206F9
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7A25206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:10:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgEFFKR (ORCPT
+        id S1726942AbgEFFKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 01:10:17 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3852 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725821AbgEFFKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 01:10:17 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 57FC7CF745FA5A634122;
-        Wed,  6 May 2020 13:10:14 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 6 May 2020 13:10:04 +0800
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-To:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>
-CC:     Wei Yongjun <weiyongjun1@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] firmware: imx: scu: Fix possible memory leak in imx_scu_probe()
-Date:   Wed, 6 May 2020 05:14:10 +0000
-Message-ID: <20200506051410.27219-1-weiyongjun1@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 6 May 2020 01:10:34 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:37498 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725821AbgEFFKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 01:10:33 -0400
+Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1jWCEq-0008BX-5s; Wed, 06 May 2020 15:04:57 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 06 May 2020 15:10:06 +1000
+Date:   Wed, 6 May 2020 15:10:06 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: [GIT PULL] Crypto Fixes for 5.7
+Message-ID: <20200506051006.GA6537@gondor.apana.org.au>
+References: <20190916084901.GA20338@gondor.apana.org.au>
+ <20190923050515.GA6980@gondor.apana.org.au>
+ <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au>
+ <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
+ <20200115150812.mo2eycc53lbsgvue@gondor.apana.org.au>
+ <20200213033231.xjwt6uf54nu26qm5@gondor.apana.org.au>
+ <20200408061513.GA23636@gondor.apana.org.au>
+ <20200429055420.GA26381@gondor.apana.org.au>
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429055420.GA26381@gondor.apana.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'chan_name' is malloced in imx_scu_probe() and should be freed
-before leaving from the error handling cases, otherwise it will
-cause memory leak.
+Hi Linus:
 
-Fixes: edbee095fafb ("firmware: imx: add SCU firmware driver support")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
----
- drivers/firmware/imx/imx-scu.c | 1 +
- 1 file changed, 1 insertion(+)
+This push fixes a potential scheduling latency problem for the
+algorithms used by WireGuard.
 
-diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.c
-index b3da2e193ad2..176ddd151375 100644
---- a/drivers/firmware/imx/imx-scu.c
-+++ b/drivers/firmware/imx/imx-scu.c
-@@ -314,6 +314,7 @@ static int imx_scu_probe(struct platform_device *pdev)
- 			if (ret != -EPROBE_DEFER)
- 				dev_err(dev, "Failed to request mbox chan %s ret %d\n",
- 					chan_name, ret);
-+			kfree(chan_name);
- 			return ret;
- 		}
+The following changes since commit 55b3209acbb01cb02b1ee6b1afe80d83b1aab36d:
 
+  crypto: caam - fix the address of the last entry of S/G (2020-04-16 16:48:56 +1000)
 
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus 
+
+for you to fetch changes up to a9a8ba90fa5857c2c8a0e32eef2159cec717da11:
+
+  crypto: arch/nhpoly1305 - process in explicit 4k chunks (2020-04-30 15:16:59 +1000)
+
+----------------------------------------------------------------
+Jason A. Donenfeld (2):
+      crypto: arch/lib - limit simd usage to 4k chunks
+      crypto: arch/nhpoly1305 - process in explicit 4k chunks
+
+ arch/arm/crypto/chacha-glue.c            | 14 +++++++++++---
+ arch/arm/crypto/nhpoly1305-neon-glue.c   |  2 +-
+ arch/arm/crypto/poly1305-glue.c          | 15 +++++++++++----
+ arch/arm64/crypto/chacha-neon-glue.c     | 14 +++++++++++---
+ arch/arm64/crypto/nhpoly1305-neon-glue.c |  2 +-
+ arch/arm64/crypto/poly1305-glue.c        | 15 +++++++++++----
+ arch/x86/crypto/blake2s-glue.c           | 10 ++++------
+ arch/x86/crypto/chacha_glue.c            | 14 +++++++++++---
+ arch/x86/crypto/nhpoly1305-avx2-glue.c   |  2 +-
+ arch/x86/crypto/nhpoly1305-sse2-glue.c   |  2 +-
+ arch/x86/crypto/poly1305_glue.c          | 13 ++++++-------
+ 11 files changed, 69 insertions(+), 34 deletions(-)
+
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
