@@ -2,68 +2,143 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8D2C47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D834C47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A5512076D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 300E02076D
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 19:21:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lFQlkU6E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbgEFTVK (ORCPT
+        id S1728710AbgEFTVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 15:21:10 -0400
-Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:51993 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728592AbgEFTVK (ORCPT
+        Wed, 6 May 2020 15:21:49 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:47920 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728592AbgEFTVt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 15:21:10 -0400
-Received: from localhost.localdomain ([93.23.14.107])
-        by mwinf5d60 with ME
-        id bXM6220092JbCfx03XM6m5; Wed, 06 May 2020 21:21:07 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 06 May 2020 21:21:07 +0200
-X-ME-IP: 93.23.14.107
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     wsa+renesas@sang-engineering.com, peda@axentia.se, robh@kernel.org
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] i2c: mux: demux-pinctrl: Fix an error handling path in 'i2c_demux_pinctrl_probe()'
-Date:   Wed,  6 May 2020 21:21:00 +0200
-Message-Id: <20200506192100.194821-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Wed, 6 May 2020 15:21:49 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 046JLgZS028342;
+        Wed, 6 May 2020 14:21:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588792902;
+        bh=z5KTFZ7VsGaMFwyM2iAcVcZw6DjwHKoZZe2pBriK/n0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=lFQlkU6ESPbepNcpPREgDX19r22YhEr5KgjPoE2oAgCvRtppWkQ13Yq6td+xP64mk
+         y/fXD1yb1m/ZSTMa17u2i1xMmejfT1k15jOtKkJ0fU/VA88etCpUONoD2MjnQXmVdi
+         583O4CnEh4Eqb4pMj7OSLkLEn08t43l3/Xmw/9mQ=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 046JLglC023628
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 6 May 2020 14:21:42 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 6 May
+ 2020 14:21:42 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 6 May 2020 14:21:41 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 046JLbBp056569;
+        Wed, 6 May 2020 14:21:39 -0500
+Subject: Re: [PATCH v2 1/2] dt-bindings: soc: ti: add binding for k3 platforms
+ chipid module
+To:     Santosh Shilimkar <ssantosh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>, <devicetree@vger.kernel.org>
+CC:     Dave Gerlach <d-gerlach@ti.com>, Sekhar Nori <nsekhar@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        Nishanth Menon <nm@ti.com>
+References: <20200505193417.2112-1-grygorii.strashko@ti.com>
+ <20200505193417.2112-2-grygorii.strashko@ti.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <a523caa4-bd34-35e3-8e3a-7668a168931d@ti.com>
+Date:   Wed, 6 May 2020 22:21:36 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200505193417.2112-2-grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A call to 'i2c_demux_deactivate_master()' is missing in the error handling
-path, as already done in the remove function.
+Hi Rob,
 
-Fixes: 50a5ba876908 ("i2c: mux: demux-pinctrl: add driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/i2c/muxes/i2c-demux-pinctrl.c | 1 +
- 1 file changed, 1 insertion(+)
+On 05/05/2020 22:34, Grygorii Strashko wrote:
+> Add DT binding for Texas Instruments K3 Multicore SoC platforms chipid
+> module which is represented by CTRLMMR_xxx_JTAGID register and contains
+> information about SoC id and revision.
+> 
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+> ---
+>   .../bindings/soc/ti/k3-socinfo.yaml           | 40 +++++++++++++++++++
+>   1 file changed, 40 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-socinfo.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/ti/k3-socinfo.yaml b/Documentation/devicetree/bindings/soc/ti/k3-socinfo.yaml
+> new file mode 100644
+> index 000000000000..a1a8423b2e2e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/ti/k3-socinfo.yaml
+> @@ -0,0 +1,40 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/soc/ti/k3-socinfo.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Texas Instruments K3 Multicore SoC platforms chipid module
+> +
+> +maintainers:
+> +  - Tero Kristo <t-kristo@ti.com>
+> +  - Nishanth Menon <nm@ti.com>
+> +
+> +description: |
+> +  Texas Instruments (ARM64) K3 Multicore SoC platforms chipid module is
+> +  represented by CTRLMMR_xxx_JTAGID register which contains information about
+> +  SoC id and revision.
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^chipid@[0-9a-f]+$"
+> +
+> +  compatible:
+> +    items:
+> +      - const: ti,am654-chipid
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    chipid@43000014 {
+> +        compatible = "ti,am654-chipid";
+> +        reg = <0x43000014 0x4>;
+> +    };
+> 
 
-diff --git a/drivers/i2c/muxes/i2c-demux-pinctrl.c b/drivers/i2c/muxes/i2c-demux-pinctrl.c
-index 0e16490eb3a1..5365199a31f4 100644
---- a/drivers/i2c/muxes/i2c-demux-pinctrl.c
-+++ b/drivers/i2c/muxes/i2c-demux-pinctrl.c
-@@ -272,6 +272,7 @@ static int i2c_demux_pinctrl_probe(struct platform_device *pdev)
- err_rollback_available:
- 	device_remove_file(&pdev->dev, &dev_attr_available_masters);
- err_rollback:
-+	i2c_demux_deactivate_master(priv);
- 	for (j = 0; j < i; j++) {
- 		of_node_put(priv->chan[j].parent_np);
- 		of_changeset_destroy(&priv->chan[j].chgset);
+Rob, Do you have any comments here?
+
 -- 
-2.25.1
-
+Best regards,
+grygorii
