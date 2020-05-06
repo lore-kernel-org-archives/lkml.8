@@ -2,119 +2,98 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48838C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 231E4C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2390D2076D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:03:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588806206;
-	bh=XcKljOyA8MI70ejLn0nQwtirIILJp1QajO5LmILJmlg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=K0kL+ODBq4jNOxF+regjn94qejztUcB48aARc9O5OQwDyBJgDHC7T0XKLbyXhpcds
-	 fOHH0iIzLBEtOsBFX+A8KEt120EAfvgWnJty/kUDiFavmvdx2RJ3lIF5y56UMte6Cb
-	 a67ly+MbeK5Q4iW60dUeQGmXNufUSNCgFh6YgnR8=
+	by mail.kernel.org (Postfix) with ESMTP id EEF72207DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:03:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jJj8oVcc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgEFXDZ (ORCPT
+        id S1726587AbgEFXDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 19:03:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57566 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726086AbgEFXDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 19:03:25 -0400
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 398182145D;
-        Wed,  6 May 2020 23:03:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588806204;
-        bh=XcKljOyA8MI70ejLn0nQwtirIILJp1QajO5LmILJmlg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Wyt/JGZoLBoCyrBbn+nfKaptsftweK+J/hSN/lanGug2dLve6x9IIG1O6u0eohq7L
-         g4TBx58wLXTZ9ZQQB9ddeTSyd/ZG5lVk4uhkoH+gu/r1TWmz6j62pfp9AeV6LqRpFR
-         L7TA0Un44Wj8o//D5Mkep7vCrBa8XeG24QfzeOpw=
-Received: by mail-ed1-f54.google.com with SMTP id r7so3603802edo.11;
-        Wed, 06 May 2020 16:03:24 -0700 (PDT)
-X-Gm-Message-State: AGi0PuadTxLMVe5qsoznW672L/ylmB1W/sTF9Fi2pIT6iH4DXdrzZVMN
-        eQhyWSQKvK6G8OG3ov2EqLtr2ut+yUR4DoxNWEs=
-X-Google-Smtp-Source: APiQypL7jasVVzwLhx3EaVL/2cJEk9MJtHeXT6qkCc1Y5SzHENoGQP9owkfX68fn1CyN/mdLVs9MduopS6s761TG+e0=
-X-Received: by 2002:a50:d6d0:: with SMTP id l16mr9650852edj.317.1588806202552;
- Wed, 06 May 2020 16:03:22 -0700 (PDT)
+        Wed, 6 May 2020 19:03:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbgEFXDd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 19:03:33 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65105C061A10
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 16:03:33 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id x10so1263611plr.4
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 16:03:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xmaPtEHyPvGoB0RVI/vcu9s3SLlgGAwwRY3BU1xGh4w=;
+        b=jJj8oVccZvz0VnXx/RxslRSl6lS7KnhNSbt4svw5Um1pu8LUgfMmb9WcLEL1iqiPLK
+         G+4wMfzeASCOFSnrKIGoRn/y6nbJIYl1NV6RfpsHJnnxes8xXH6iXuSrmE3Njx5tX213
+         T2IC0Deegw5PZ+VMuBtGBSRU6fSXOqAAwinVU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xmaPtEHyPvGoB0RVI/vcu9s3SLlgGAwwRY3BU1xGh4w=;
+        b=sTfFtvGGJOM+SbHYuko+SYsZ7Je7+y+DSW8gKZkvi+Td9vt7nWXjpopNHgWfZ6YHAg
+         HEN6BdFTLmDqMcDvM3esmEv438+ccSsxNoeGRS++cMkLPxy6ez4VF/TOt5u74qtcS2k1
+         sDoO/QuKlEtelD5u64A2amyAqIn22Yq2C5ysHsRrkWLACLRthOFD6Nknuq2Sp9tmLeu0
+         2UcZb5fQEV6v5jwJHb3V0CTPOpgF9lHwS8080zifN9+C5EK4XszsBMeBpBm+k9PJ+CSg
+         KytxhuS5Jb7MKseDiXHwZsuDWeaCz9iBD+Pf6Z29ZUAwwBT3fm4s/FjL9lVPoNY8NhOh
+         mvlA==
+X-Gm-Message-State: AGi0PuZQhlQ41xeC33Wur+LIAqNxP3kqbIRWHErZ5sukVsCvHdRbWu1q
+        Np+znHsG35CLbDYHf1aCKwrYxQ==
+X-Google-Smtp-Source: APiQypKUO7bfvDMai2oDuvIVuwr3nwkhaoD7oZ559rsBY2hRfYMuzzVDjlXNMNfwdicLgaOeZJ2Bjg==
+X-Received: by 2002:a17:902:c3d3:: with SMTP id j19mr10226448plj.340.1588806212706;
+        Wed, 06 May 2020 16:03:32 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4cc0:7eee:97c9:3c1a])
+        by smtp.gmail.com with ESMTPSA id 189sm2887851pfd.55.2020.05.06.16.03.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 May 2020 16:03:31 -0700 (PDT)
+From:   Gwendal Grignou <gwendal@chromium.org>
+To:     enric.balletbo@collabora.com, jic23@kernel.org
+Cc:     bleung@chromium.org, groeck@chromium.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        Gwendal Grignou <gwendal@chromium.org>
+Subject: [PATCH v3 0/3] iio: cros_ec: Add support for RGB light sensor
+Date:   Wed,  6 May 2020 16:03:21 -0700
+Message-Id: <20200506230324.139241-1-gwendal@chromium.org>
+X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
 MIME-Version: 1.0
-References: <20180508181924.19939-1-mcgrof@kernel.org>
-In-Reply-To: <20180508181924.19939-1-mcgrof@kernel.org>
-From:   Luis Chamberlain <mcgrof@kernel.org>
-Date:   Wed, 6 May 2020 17:03:15 -0600
-X-Gmail-Original-Message-ID: <CAB=NE6WnO+6Mn-t9coVHKSVY5iNpTcb+VGCAfBJWrwj3jNNAKA@mail.gmail.com>
-Message-ID: <CAB=NE6WnO+6Mn-t9coVHKSVY5iNpTcb+VGCAfBJWrwj3jNNAKA@mail.gmail.com>
-Subject: Re: [PATCH v2] mm: expland documentation over __read_mostly
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christopher Lamenter <cl@linux.com>,
-        Rafael Aquini <aquini@redhat.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Waiman Long <longman@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Randy Dunlap <rdunlap@infradead.org>, joel.opensrc@gmail.com,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 8, 2018 at 12:19 PM Luis R. Rodriguez <mcgrof@kernel.org> wrote:
->
-> __read_mostly can easily be misused by folks, its not meant for
-> just read-only data. There are performance reasons for using it, but
-> we also don't provide any guidance about its use. Provide a bit more
-> guidance over it use.
->
-> Acked-by: Christoph Lameter <cl@linux.com>
-> Signed-off-by: Luis R. Rodriguez <mcgrof@kernel.org>
+Add support for color light sensor presented by the Chromebook Embedded
+Controller (EC).
+Instead of just presenting lux measurement (clear channel), a color light
+sensor is able to report color temperature measurement.
 
-After 2 years, this patch was never applied... and so people can
-easily keep misusing this. I'll resend now.
+The EC, using factory settings, can transform the raw measurement into
+the CIE 1931 XYZ color space (XYZ) and take adavantage of color sensor
+autocalibration to provide the most accurate measurements.
 
-  Luis
-> ---
->  include/linux/cache.h | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
->
-> diff --git a/include/linux/cache.h b/include/linux/cache.h
-> index 750621e41d1c..4967566ed08c 100644
-> --- a/include/linux/cache.h
-> +++ b/include/linux/cache.h
-> @@ -15,8 +15,16 @@
->
->  /*
->   * __read_mostly is used to keep rarely changing variables out of frequently
-> - * updated cachelines. If an architecture doesn't support it, ignore the
-> - * hint.
-> + * updated cachelines. Its use should be reserved for data that is used
-> + * frequently in hot paths. Performance traces can help decide when to use
-> + * this. You want __read_mostly data to be tightly packed, so that in the
-> + * best case multiple frequently read variables for a hot path will be next
-> + * to each other in order to reduce the number of cachelines needed to
-> + * execute a critial path. We should be mindful and selective of its use.
-> + * ie: if you're going to use it please supply a *good* justification in your
-> + * commit log.
-> + *
-> + * If an architecture doesn't support it, ignore the hint.
->   */
->  #ifndef __read_mostly
->  #define __read_mostly
-> --
-> 2.17.0
->
+Gwendal Grignou (3):
+  iio: Add in_illumincance vectors in different color spaces
+  iio: cros_ec: Allow enabling/disabling calibration mode
+  iio: cros_ec_light: Add support for RGB sensor
+
+ Documentation/ABI/testing/sysfs-bus-iio       |  27 +
+ .../cros_ec_sensors/cros_ec_sensors_core.c    |   3 +-
+ drivers/iio/light/cros_ec_light_prox.c        | 469 +++++++++++++++---
+ drivers/platform/chrome/cros_ec_sensorhub.c   |   3 +
+ .../linux/iio/common/cros_ec_sensors_core.h   |   1 -
+ .../linux/platform_data/cros_ec_commands.h    |  14 +-
+ 6 files changed, 441 insertions(+), 76 deletions(-)
+
+-- 
+2.26.2.526.g744177e7f7-goog
+
