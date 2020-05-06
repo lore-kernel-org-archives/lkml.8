@@ -2,127 +2,155 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D13FC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF829C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63E03208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:56:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K9QQNbSW"
+	by mail.kernel.org (Postfix) with ESMTP id CD721208CA
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:56:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588784218;
+	bh=GPt0Ao4SuzOwEVG/H0krmtr7Ntra56UtzZmAGRDH9vk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mdcXMnuue2dOy8sNnG5NRIpLHq71ydFQ43odIJuwKnstBOJ5VJkyOe5vHsAr3dmHd
+	 2u1WvlSAQFLhx6f3vUIr0GB4hdnmdMcqdTOKe8sZiGHsDwNUxIhICg2a4Fd/Hsbbyf
+	 aINQF52b/svRU8xdtrOuyc4BhnJa7zDlmpXBaY6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730192AbgEFQ4S (ORCPT
+        id S1730219AbgEFQ46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:56:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729981AbgEFQ4S (ORCPT
+        Wed, 6 May 2020 12:56:58 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40734 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729414AbgEFQ45 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:56:18 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B588DC061A10
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 09:56:17 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id e25so3147613ljg.5
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 09:56:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pGzWREigVi0gy27TVyA7ZnJBxh+sA8DcxHlip3QEgLg=;
-        b=K9QQNbSW5DvWRhcbYjot86EYnvfYjnbtFk02iHbc1TWXlqpiSk6gx9ZDHzyTckdCnG
-         7aJPEVO4PY3frmrW4cWp4PlPt0jYpoNJJAnAGd07ne9XvfDhZBgG4tIgFpMTeb5mtoDC
-         t+7X9Fu20gYUEz1OyWAMzTkIiKprhGCBOvgq4ryewJs2D8e1wVpoAgn9hGppYmjC9oZj
-         KBvhcM7CsUEs1G9Lqy7I+e3WBKHJ6zKy4rbfAJTnlxIj9Iel/DoxR2iDknVl5n9WPZdA
-         249Y4ntgVR34+9LmgCsMdp0mqt8GrSosXZf0ijTSP//WSnmMWdUvTKTgMJEQK2LT1lcM
-         wJZw==
+        Wed, 6 May 2020 12:56:57 -0400
+Received: by mail-wr1-f66.google.com with SMTP id e16so3046274wra.7
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 09:56:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pGzWREigVi0gy27TVyA7ZnJBxh+sA8DcxHlip3QEgLg=;
-        b=cHq0LsmSwqi9zVoHJMfnPGtgmn9aNNKJwqpr6O9So3Di16DC8StRYcowwfCpgM39ZN
-         YKxf6+/foD1jHPiseeOnZ7ul2q4eok27eQM9b3/K5C+GQP8DnJ/TFoWCaOVJx0o4ETKf
-         5M09mwDiuBJb7XelFfwI7nD/3e6J96fP4PEYOVlsW1Re4nHRpRLvow2L6+Ku+S1QNmrC
-         gPr84FwNYaC2dt8blK8SBKiKkFnLCHiWd1+2BVgL3FlF7PpZfi868yS27JHyuAx5baL0
-         ZGKAJr/Nyscv0imXKaDrR9w9r4KOERqiEn2isJujc70Q7wZewLFvUToNoKq/6aSnpjCP
-         wbPA==
-X-Gm-Message-State: AGi0PuYreMVVfpPxnQe6goJQP6q1oZoAKqY/lQTihvvM52Rb1qpNJre1
-        tp++Qc+US4c7MOk+EyBZdp/uUjt0ma56VZib1Vm97g==
-X-Google-Smtp-Source: APiQypKDcfkgObuhIxvbjRCvBTdoiuyCxbB+rf/asU81P118j2NSvxhp5ygD/glaxs7sV8SUh6ipzWzeKYtuRAFYqwQ=
-X-Received: by 2002:a2e:3209:: with SMTP id y9mr5332790ljy.154.1588784175979;
- Wed, 06 May 2020 09:56:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200503083407.GA27766@iZj6chx1xj0e0buvshuecpZ>
- <CAKfTPtCNG9Y4xNA-iLd+JRRsUCA1+SkkFFRbbzk5n7q6v401tw@mail.gmail.com>
- <20200505134056.GA31680@iZj6chx1xj0e0buvshuecpZ> <20200505142711.GA12952@vingu-book>
- <jhjftcd1hmx.mognet@arm.com> <CAKfTPtCM7mE7a63rXB4cG5gHn03ArjTB1ZBje=qEWOGR9mj67g@mail.gmail.com>
- <jhjv9l9yrtb.mognet@arm.com>
-In-Reply-To: <jhjv9l9yrtb.mognet@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 6 May 2020 18:56:02 +0200
-Message-ID: <CAKfTPtAujvP=kN6zuB9N+5H2xGZ2U2ScsDUcUf+3iLeKbrmNKg@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: Fix nohz.next_balance update
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Peng Liu <iwtbavbm@gmail.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UAR3StJ1tjRjcPQPguO3q+ZrNyaW8mBxV+t84vp3JQk=;
+        b=rSLvDT7BsJgnXX5dFt/bCCv3rjkp9POk9u5jEh3iYBaRd6P3l6J2Y1nuVUPxpqbc/+
+         vTypRN4VUv5xQLMBiaIc5tcvWw4ZqXM3M1jHSsvxqXmaXsvxyalG8iLtie3mKfWv7qh8
+         xtEP8WqpVy0AuKd1odWrDndGR6iXer0XSGwoK/y3ym2vbhNEheIePIjUaKYCYyK7HWgT
+         sn305svfZ75xR0RjVp2aYOvpRDOthIdRgISBqrQYz+JDda3vrE0Vx4z64cajeUdB9HC+
+         +0+tkd8IR2NUdoms3Sl3j1LwzziFZEz0c55qdbow9MGbb1KCnctbonPSzrSCfHAlJvzH
+         OGDA==
+X-Gm-Message-State: AGi0PuaTtS1IBOGMneasGYc/h/H9VqmacJbFzDf5GIjzgizHYImz90r/
+        OFGG8MlG65+R3WwmnXBgRYk=
+X-Google-Smtp-Source: APiQypKZ0cJ4el/27ukSaL29mvN14Cb9ejX5GlSiZbyH+oRs0LbgOJNJeFatIDPQ8ZENpLYMBt/yUA==
+X-Received: by 2002:a5d:6b8a:: with SMTP id n10mr10193186wrx.36.1588784215607;
+        Wed, 06 May 2020 09:56:55 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id v5sm3638531wrr.93.2020.05.06.09.56.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 09:56:55 -0700 (PDT)
+Date:   Wed, 6 May 2020 16:56:53 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>, Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>
+Subject: Re: [patch V4 part 5 22/31] x86/entry: Convert various hypervisor
+ vectors to IDTENTRY_SYSVEC
+Message-ID: <20200506165653.ttxa33llcynokaq2@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
+References: <20200505135341.730586321@linutronix.de>
+ <20200505135830.298201197@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505135830.298201197@linutronix.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 May 2020 at 18:03, Valentin Schneider
-<valentin.schneider@arm.com> wrote:
->
->
-> On 06/05/20 14:45, Vincent Guittot wrote:
-> >> But then we may skip an update if we goto abort, no? Imagine we have just
-> >> NOHZ_STATS_KICK, so we don't call any rebalance_domains(), and then as we
-> >> go through the last NOHZ CPU in the loop we hit need_resched(). We would
-> >> end in the abort part without any update to nohz.next_balance, despite
-> >> having accumulated relevant data in the local next_balance variable.
-> >
-> > Yes but on the other end, the last CPU has not been able to run the
-> > rebalance_domain so we must not move  nohz.next_balance otherwise it
-> > will have to wait for at least another full period
-> > In fact, I think that we have a problem with current implementation
-> > because if we abort because  local cpu because busy we might end up
-> > skipping idle load balance for a lot of idle CPUs
-> >
-> > As an example, imagine that we have 10 idle CPUs with the same
-> > rq->next_balance which equal nohz.next_balance.  _nohz_idle_balance
-> > starts on CPU0, it processes idle lb for CPU1 but then has to abort
-> > because of need_resched. If we update nohz.next_balance like
-> > currently, the next idle load balance  will happen after a full
-> > balance interval whereas we still have 8 CPUs waiting for running an
-> > idle load balance.
-> >
-> > My proposal also fixes this problem
-> >
->
-> That's a very good point; so with NOHZ_BALANCE_KICK we can reduce
-> nohz.next_balance via rebalance_domains(), and otherwise we would only
-> increase it if we go through a complete for_each_cpu() loop in
-> _nohz_idle_balance().
->
-> That said, if for some reason we keep bailing out of the loop, we won't
-> push nohz.next_balance forward and thus may repeatedly nohz-balance only
-> the first few CPUs in the NOHZ mask. I think that can happen if we have
-> say 2 tasks pinned to a single rq, in that case nohz_balancer_kick() will
-> kick a NOHZ balance whenever now >= nohz.next_balance.
+On Tue, May 05, 2020 at 03:54:03PM +0200, Thomas Gleixner wrote:
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> Convert various hypervisor vectors to IDTENTRY_SYSVEC
+>   - Implement the C entry point with DEFINE_IDTENTRY_SYSVEC
+>   - Emit the ASM stub with DECLARE_IDTENTRY_SYSVEC
+>   - Remove the ASM idtentries in 64bit
+>   - Remove the BUILD_INTERRUPT entries in 32bit
+>   - Remove the old prototypes
+> 
+> No functional change.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Wei Liu <wei.liu@kernel.org>
+> Cc: Michael Kelley <mikelley@microsoft.com>
+> Cc: Jason Chen CJ <jason.cj.chen@intel.com>
+> Cc: Zhao Yakui <yakui.zhao@intel.com>
+> 
+> ---
+>  arch/x86/entry/entry_32.S       |   14 --------------
+>  arch/x86/entry/entry_64.S       |   17 -----------------
+>  arch/x86/hyperv/hv_init.c       |    9 +++------
+>  arch/x86/include/asm/acrn.h     |   11 -----------
+>  arch/x86/include/asm/apic.h     |   20 --------------------
+>  arch/x86/include/asm/idtentry.h |   10 ++++++++++
+>  arch/x86/include/asm/mshyperv.h |   13 -------------
+>  arch/x86/kernel/cpu/acrn.c      |    9 ++++-----
+>  arch/x86/kernel/cpu/mshyperv.c  |   22 ++++++++++------------
+>  9 files changed, 27 insertions(+), 98 deletions(-)
+> 
+> --- a/arch/x86/entry/entry_32.S
+> +++ b/arch/x86/entry/entry_32.S
+> @@ -1342,20 +1342,6 @@ BUILD_INTERRUPT3(xen_hvm_callback_vector
+>  		 xen_evtchn_do_upcall)
+>  #endif
+>  
 
-If we take my example above and we have CPU0 which is idle at every
-tick and selected as ilb_cpu but unluckily CPU0 has to abort before
-running ilb for CPU1 everytime, I agree that we can end up trying to
-run ilb on CPU0 at every tick without any success. We might consider
-to kick_ilb in _nohz_idle_balance if we have to abort to let another
-CPU handle the ilb
+You seem to have missed the Xen entry.
+
+> -
+> -#if IS_ENABLED(CONFIG_HYPERV)
+> -
+> -BUILD_INTERRUPT3(hyperv_callback_vector, HYPERVISOR_CALLBACK_VECTOR,
+> -		 hyperv_vector_handler)
+> -
+> -BUILD_INTERRUPT3(hyperv_reenlightenment_vector, HYPERV_REENLIGHTENMENT_VECTOR,
+> -		 hyperv_reenlightenment_intr)
+> -
+> -BUILD_INTERRUPT3(hv_stimer0_callback_vector, HYPERV_STIMER0_VECTOR,
+> -		 hv_stimer0_vector_handler)
+> -
+> -#endif /* CONFIG_HYPERV */
+> -
+>  SYM_CODE_START_LOCAL_NOALIGN(handle_exception)
+>  	/* the function address is in %gs's slot on the stack */
+>  	SAVE_ALL switch_stacks=1 skip_gs=1 unwind_espfix=1
+> --- a/arch/x86/entry/entry_64.S
+> +++ b/arch/x86/entry/entry_64.S
+> @@ -1078,23 +1078,6 @@ apicinterrupt3 HYPERVISOR_CALLBACK_VECTO
+>  	xen_hvm_callback_vector xen_evtchn_do_upcall
+>  #endif
+>  
+
+Ditto.
+
+Wei.
