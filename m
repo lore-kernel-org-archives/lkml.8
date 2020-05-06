@@ -6,149 +6,227 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E77AC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1437C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA2F208CA
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9303D208CA
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:48:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730566AbgEFQss (ORCPT
+        id S1730586AbgEFQsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:48:48 -0400
+        Wed, 6 May 2020 12:48:53 -0400
 Received: from pegase1.c-s.fr ([93.17.236.30]:22955 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730509AbgEFQsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:48:37 -0400
+        id S1730521AbgEFQsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 12:48:39 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49HMwx63whz9v4kL;
-        Wed,  6 May 2020 18:48:33 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 49HMx0158hz9v4kJ;
+        Wed,  6 May 2020 18:48:36 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id IAD-sok6VKnq; Wed,  6 May 2020 18:48:33 +0200 (CEST)
+        with ESMTP id GmOIOjqv3sQP; Wed,  6 May 2020 18:48:36 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMwx5Jsrz9v4kD;
-        Wed,  6 May 2020 18:48:33 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMx007rqz9v4kD;
+        Wed,  6 May 2020 18:48:36 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 64BD88B7C6;
-        Wed,  6 May 2020 18:48:35 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id CDC058B7C6;
+        Wed,  6 May 2020 18:48:37 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id RNSeV06x7FLA; Wed,  6 May 2020 18:48:35 +0200 (CEST)
+        with ESMTP id IASKlTrnCdR4; Wed,  6 May 2020 18:48:37 +0200 (CEST)
 Received: from localhost.localdomain (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1E5178B7C5;
-        Wed,  6 May 2020 18:48:35 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 344B28B7C5;
+        Wed,  6 May 2020 18:48:37 +0200 (CEST)
 Received: by localhost.localdomain (Postfix, from userid 0)
-        id DD1C465911; Wed,  6 May 2020 16:48:34 +0000 (UTC)
-Message-Id: <d87ecbd24c9f477ab4c3a3461afa5b4d8141aec0.1588783498.git.christophe.leroy@csgroup.eu>
+        id 0086465911; Wed,  6 May 2020 16:48:36 +0000 (UTC)
+Message-Id: <19e3d6403cfe41b2e3299ceea67f8e67ffcb9486.1588783498.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 References: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v2 29/45] powerpc/8xx: Move PPC_PIN_TLB options into 8xx
- Kconfig
+Subject: [PATCH v2 31/45] powerpc/8xx: Don't set IMMR map anymore at boot
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed,  6 May 2020 16:48:34 +0000 (UTC)
+Date:   Wed,  6 May 2020 16:48:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PPC_PIN_TLB options are dedicated to the 8xx, move them into
-the 8xx Kconfig.
+Only early debug requires IMMR to be mapped early.
 
-While we are at it, add some text to explain what it does.
+No need to set it up and pin it in assembly. Map it
+through page tables at udbg init when necessary.
+
+If CONFIG_PIN_TLB_IMMR is selected, pin it once we
+don't need the 32 Mb pinned RAM anymore.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/Kconfig               | 20 ---------------
- arch/powerpc/platforms/8xx/Kconfig | 41 ++++++++++++++++++++++++++++++
- 2 files changed, 41 insertions(+), 20 deletions(-)
+v2: Disable TLB reservation to modify entry 31
+---
+ arch/powerpc/kernel/head_8xx.S     | 39 +++++++++++++-----------------
+ arch/powerpc/mm/mmu_decl.h         |  4 +++
+ arch/powerpc/mm/nohash/8xx.c       | 15 +++++++++---
+ arch/powerpc/platforms/8xx/Kconfig |  2 +-
+ arch/powerpc/sysdev/cpm_common.c   |  2 ++
+ 5 files changed, 35 insertions(+), 27 deletions(-)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 8324d98728db..f552726c9de2 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -1226,26 +1226,6 @@ config TASK_SIZE
- 	hex "Size of user task space" if TASK_SIZE_BOOL
- 	default "0x80000000" if PPC_8xx
- 	default "0xc0000000"
--
--config PIN_TLB
--	bool "Pinned Kernel TLBs (860 ONLY)"
--	depends on ADVANCED_OPTIONS && PPC_8xx && \
--		   !DEBUG_PAGEALLOC && !STRICT_KERNEL_RWX
--
--config PIN_TLB_DATA
--	bool "Pinned TLB for DATA"
--	depends on PIN_TLB
--	default y
--
--config PIN_TLB_IMMR
--	bool "Pinned TLB for IMMR"
--	depends on PIN_TLB || PPC_EARLY_DEBUG_CPM
--	default y
--
--config PIN_TLB_TEXT
--	bool "Pinned TLB for TEXT"
--	depends on PIN_TLB
--	default y
- endmenu
+diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
+index c9e3d54e6a6f..d607f4b53e0f 100644
+--- a/arch/powerpc/kernel/head_8xx.S
++++ b/arch/powerpc/kernel/head_8xx.S
+@@ -749,6 +749,23 @@ start_here:
+ 	rfi
+ /* Load up the kernel context */
+ 2:
++#ifdef CONFIG_PIN_TLB_IMMR
++	lis	r0, MD_TWAM@h
++	oris	r0, r0, 0x1f00
++	mtspr	SPRN_MD_CTR, r0
++	LOAD_REG_IMMEDIATE(r0, VIRT_IMMR_BASE | MD_EVALID)
++	tlbie	r0
++	mtspr	SPRN_MD_EPN, r0
++	LOAD_REG_IMMEDIATE(r0, MD_SVALID | MD_PS512K | MD_GUARDED)
++	mtspr	SPRN_MD_TWC, r0
++	mfspr   r0, SPRN_IMMR
++	rlwinm	r0, r0, 0, 0xfff80000
++	ori	r0, r0, 0xf0 | _PAGE_DIRTY | _PAGE_SPS | _PAGE_SH | \
++			_PAGE_NO_CACHE | _PAGE_PRESENT
++	mtspr	SPRN_MD_RPN, r0
++	lis	r0, (MD_TWAM | MD_RSV4I)@h
++	mtspr	SPRN_MD_CTR, r0
++#endif
+ 	tlbia			/* Clear all TLB entries */
+ 	sync			/* wait for tlbia/tlbie to finish */
  
- if PPC64
+@@ -797,28 +814,6 @@ initial_mmu:
+ 	ori	r8, r8, MD_APG_INIT@l
+ 	mtspr	SPRN_MD_AP, r8
+ 
+-	/* Map a 512k page for the IMMR to get the processor
+-	 * internal registers (among other things).
+-	 */
+-#ifdef CONFIG_PIN_TLB_IMMR
+-	oris	r10, r10, MD_RSV4I@h
+-	ori	r10, r10, 0x1c00
+-	mtspr	SPRN_MD_CTR, r10
+-
+-	mfspr	r9, 638			/* Get current IMMR */
+-	andis.	r9, r9, 0xfff8		/* Get 512 kbytes boundary */
+-
+-	lis	r8, VIRT_IMMR_BASE@h	/* Create vaddr for TLB */
+-	ori	r8, r8, MD_EVALID	/* Mark it valid */
+-	mtspr	SPRN_MD_EPN, r8
+-	li	r8, MD_PS512K | MD_GUARDED	/* Set 512k byte page */
+-	ori	r8, r8, MD_SVALID	/* Make it valid */
+-	mtspr	SPRN_MD_TWC, r8
+-	mr	r8, r9			/* Create paddr for TLB */
+-	ori	r8, r8, MI_BOOTINIT|0x2 /* Inhibit cache -- Cort */
+-	mtspr	SPRN_MD_RPN, r8
+-#endif
+-
+ 	/* Now map the lower RAM (up to 32 Mbytes) into the ITLB. */
+ #ifdef CONFIG_PIN_TLB_TEXT
+ 	lis	r8, MI_RSV4I@h
+diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
+index 7097e07a209a..1b6d39e9baed 100644
+--- a/arch/powerpc/mm/mmu_decl.h
++++ b/arch/powerpc/mm/mmu_decl.h
+@@ -182,6 +182,10 @@ static inline void mmu_mark_initmem_nx(void) { }
+ static inline void mmu_mark_rodata_ro(void) { }
+ #endif
+ 
++#ifdef CONFIG_PPC_8xx
++void __init mmu_mapin_immr(void);
++#endif
++
+ #ifdef CONFIG_PPC_DEBUG_WX
+ void ptdump_check_wx(void);
+ #else
+diff --git a/arch/powerpc/mm/nohash/8xx.c b/arch/powerpc/mm/nohash/8xx.c
+index d83a12c5bc7f..d54d395c3378 100644
+--- a/arch/powerpc/mm/nohash/8xx.c
++++ b/arch/powerpc/mm/nohash/8xx.c
+@@ -65,7 +65,7 @@ void __init MMU_init_hw(void)
+ 	if (IS_ENABLED(CONFIG_PIN_TLB_DATA)) {
+ 		unsigned long ctr = mfspr(SPRN_MD_CTR) & 0xfe000000;
+ 		unsigned long flags = 0xf0 | MD_SPS16K | _PAGE_SH | _PAGE_DIRTY;
+-		int i = IS_ENABLED(CONFIG_PIN_TLB_IMMR) ? 29 : 28;
++		int i = 28;
+ 		unsigned long addr = 0;
+ 		unsigned long mem = total_lowmem;
+ 
+@@ -80,12 +80,19 @@ void __init MMU_init_hw(void)
+ 	}
+ }
+ 
+-static void __init mmu_mapin_immr(void)
++static bool immr_is_mapped __initdata;
++
++void __init mmu_mapin_immr(void)
+ {
+ 	unsigned long p = PHYS_IMMR_BASE;
+ 	unsigned long v = VIRT_IMMR_BASE;
+ 	int offset;
+ 
++	if (immr_is_mapped)
++		return;
++
++	immr_is_mapped = true;
++
+ 	for (offset = 0; offset < IMMR_SIZE; offset += PAGE_SIZE)
+ 		map_kernel_page(v + offset, p + offset, PAGE_KERNEL_NCG);
+ }
+@@ -121,9 +128,10 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
+ {
+ 	unsigned long mapped;
+ 
++	mmu_mapin_immr();
++
+ 	if (__map_without_ltlbs) {
+ 		mapped = 0;
+-		mmu_mapin_immr();
+ 		if (!IS_ENABLED(CONFIG_PIN_TLB_IMMR))
+ 			patch_instruction_site(&patch__dtlbmiss_immr_jmp, PPC_INST_NOP);
+ 		if (!IS_ENABLED(CONFIG_PIN_TLB_TEXT))
+@@ -142,7 +150,6 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
+ 		 */
+ 		mmu_mapin_ram_chunk(0, einittext8, PAGE_KERNEL_X);
+ 		mmu_mapin_ram_chunk(einittext8, mapped, PAGE_KERNEL);
+-		mmu_mapin_immr();
+ 	}
+ 
+ 	mmu_patch_cmp_limit(&patch__dtlbmiss_linmem_top, mapped);
 diff --git a/arch/powerpc/platforms/8xx/Kconfig b/arch/powerpc/platforms/8xx/Kconfig
-index b37de62d7e7f..0d036cd868ef 100644
+index 0d036cd868ef..04ea1a8a0bdc 100644
 --- a/arch/powerpc/platforms/8xx/Kconfig
 +++ b/arch/powerpc/platforms/8xx/Kconfig
-@@ -162,4 +162,45 @@ config UCODE_PATCH
- 	default y
- 	depends on !NO_UCODE_PATCH
+@@ -187,7 +187,7 @@ config PIN_TLB_DATA
  
-+menu "8xx advanced setup"
-+	depends on PPC_8xx
-+
-+config PIN_TLB
-+	bool "Pinned Kernel TLBs"
-+	depends on ADVANCED_OPTIONS && !DEBUG_PAGEALLOC && !STRICT_KERNEL_RWX
-+	help
-+	  On the 8xx, we have 32 instruction TLBs and 32 data TLBs. In each
-+	  table 4 TLBs can be pinned.
-+
-+	  It reduces the amount of usable TLBs to 28 (ie by 12%). That's the
-+	  reason why we make it selectable.
-+
-+	  This option does nothing, it just activate the selection of what
-+	  to pin.
-+
-+config PIN_TLB_DATA
-+	bool "Pinned TLB for DATA"
+ config PIN_TLB_IMMR
+ 	bool "Pinned TLB for IMMR"
+-	depends on PIN_TLB || PPC_EARLY_DEBUG_CPM
 +	depends on PIN_TLB
-+	default y
-+	help
-+	  This pins the first 32 Mbytes of memory with 8M pages.
+ 	default y
+ 	help
+ 	  This pins the IMMR area with a 512kbytes page. In case
+diff --git a/arch/powerpc/sysdev/cpm_common.c b/arch/powerpc/sysdev/cpm_common.c
+index 71660bacb264..7dc1960f8bdb 100644
+--- a/arch/powerpc/sysdev/cpm_common.c
++++ b/arch/powerpc/sysdev/cpm_common.c
+@@ -68,6 +68,8 @@ static void udbg_putc_cpm(char c)
+ void __init udbg_init_cpm(void)
+ {
+ #ifdef CONFIG_PPC_8xx
++	mmu_mapin_immr();
 +
-+config PIN_TLB_IMMR
-+	bool "Pinned TLB for IMMR"
-+	depends on PIN_TLB || PPC_EARLY_DEBUG_CPM
-+	default y
-+	help
-+	  This pins the IMMR area with a 512kbytes page. In case
-+	  CONFIG_PIN_TLB_DATA is also selected, it will reduce
-+	  CONFIG_PIN_TLB_DATA to 24 Mbytes.
-+
-+config PIN_TLB_TEXT
-+	bool "Pinned TLB for TEXT"
-+	depends on PIN_TLB
-+	default y
-+	help
-+	  This pins kernel text with 8M pages.
-+
-+endmenu
-+
- endmenu
+ 	cpm_udbg_txdesc = (u32 __iomem __force *)
+ 			  (CONFIG_PPC_EARLY_DEBUG_CPM_ADDR - PHYS_IMMR_BASE +
+ 			   VIRT_IMMR_BASE);
 -- 
 2.25.0
 
