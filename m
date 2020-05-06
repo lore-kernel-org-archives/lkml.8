@@ -2,187 +2,164 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B974EC47259
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCA7C47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9773E20936
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:17:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AoWlyDRv"
+	by mail.kernel.org (Postfix) with ESMTP id 6D40020936
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:19:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588785597;
+	bh=Vx2laojPRA9af0b+TlZJnd1rj8BT6IbkCPf9uW8twE8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Hrc7RtBYz1bXVFYgtWvfehPb57wlAPJ/P2LAJeihCz7O19Uq2lwBdj2UGDWVfbUzC
+	 f2MPFWD8kP008Zului72JKNZ6ROujazBqZTEv8oxwMw7DL9f3mF+yUxUF9nlJJn7KC
+	 YGCzGCCzA1LmuoOAO2G6nrSi9f6JRqKTHzjWYpdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730006AbgEFRRV (ORCPT
+        id S1729331AbgEFRT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 13:17:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48330 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729900AbgEFRRS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 13:17:18 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88CA7C061A10
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 10:17:18 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id f15so771962plr.3
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 10:17:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/k/x3jvD4hIY8pDNsyuRYJAWCjnjlkQj95o1100b+nU=;
-        b=AoWlyDRvgvgfz7OXgRvmqbZq6U8eVGyvK/25YzVKraEel8OmtkOdz2BW5cyKKN+B9T
-         lEgbKudq8lqfvZcc0Bi648R42oxIhUjrYoffQ8Pl1H0dbp92fpYcf/ynrRCKVnTxHnc2
-         jkJnZkh325ckYdhrmmHLfDG16i0rJSiyd+Zv3Qt4C+5MhFk8kmN7vsaFKHVJhFnVi28I
-         BUftmHbmElrqRsxk91bDZkkdM2b6RMZpk2ctFThP4FhABx3J6RNF4W7EfO8FzFbMsf7v
-         CCXjr9xbkvksrdNlppx8YSdgFiilZJpQOX2Atv6Tgjvh+0RwwMnHTy8wof2Roe99T5MU
-         Cf8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/k/x3jvD4hIY8pDNsyuRYJAWCjnjlkQj95o1100b+nU=;
-        b=LKoa0aHAj2W6PfDmkhhcIHmakKNhaxGjMxJyl9bx5N7idi8z+KgXb98skhKWV0NEOm
-         /sMt6hR/biLKDorI9GlgxLFS0KYEDFdSN7qKFe2Fg1//R283ZNlnrOaJKNhK3uakUyd2
-         DuccwxOA8gmCrDIRnUd59v0TbLtAhDZOQJ71HsRiayljaszruRTNwWjLOTanllAFlJEf
-         i/TkRM6vyuX3bjM2PmVRqblxYwXPXgO3UVbBaJyHY4u9AiZn/08elntFntV/6RBTS5fm
-         Z+qBKHraIFi+5q4vcXJGa19h5sx5BA0voYg1aN/L9+JQM9iREEHYnitw3VvmEwT/CXiT
-         9xxg==
-X-Gm-Message-State: AGi0PuY5cpur0PpwymywS+ADSBXhRggS/wsxOZY/2pPjnPR8/XxU4u38
-        CiqChZ58QG/lG15XBTz5Ddxbnjdocf8xcHjTOLHYbQ==
-X-Google-Smtp-Source: APiQypLnpQ9fey9MWfkvN5jK3cTisnhcJeTBQn37c1umPrLJpul/zCxeo6IzqY/pYCZUn/CL8vsxMaNBNscsUYb0zG8=
-X-Received: by 2002:a17:902:ac87:: with SMTP id h7mr8736134plr.119.1588785437559;
- Wed, 06 May 2020 10:17:17 -0700 (PDT)
+        Wed, 6 May 2020 13:19:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728336AbgEFRT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 13:19:56 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 303CA20736;
+        Wed,  6 May 2020 17:19:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588785595;
+        bh=Vx2laojPRA9af0b+TlZJnd1rj8BT6IbkCPf9uW8twE8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iuGK0qrhphha7crkNxqfd/exR5+vrUBVOQvCaqmSpI6mMtTv2Bb9e5KAxHVaNhOJf
+         cqiBsvormrGZm4pmx0ZvNJS1V19n58ngNSsoNqdXvSsTy/98rlzZ+Y1iImcjRJgUcu
+         qekIZfCuEXFEPE/QxUXdK/yglIY8ZHVMjybnLH2o=
+Date:   Wed, 6 May 2020 10:19:53 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 06/11] net: ethernet: mtk-eth-mac: new driver
+Message-ID: <20200506101953.208e5366@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <CAMRc=MfmuKd64YaqrkhGFThDZd0_tRecR5H0QLY0cDJWSM-VgQ@mail.gmail.com>
+References: <20200505140231.16600-1-brgl@bgdev.pl>
+        <20200505140231.16600-7-brgl@bgdev.pl>
+        <20200505110447.2404985c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <CAMRc=MfmuKd64YaqrkhGFThDZd0_tRecR5H0QLY0cDJWSM-VgQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200506055245.3013374-1-jiaxun.yang@flygoat.com>
-In-Reply-To: <20200506055245.3013374-1-jiaxun.yang@flygoat.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 6 May 2020 10:17:06 -0700
-Message-ID: <CAKwvOdkmK7QdbZFKCCao9W8cJcOR_M-LyOkL3_Ms7amegv499w@mail.gmail.com>
-Subject: Re:
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "Maciej W . Rozycki" <macro@linux-mips.org>,
-        Fangrui Song <maskray@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Jouni Hogander <jouni.hogander@unikie.com>,
-        Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
-        Borislav Petkov <bp@suse.de>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 10:52 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->
-> Subject: [PATCH v6] MIPS: Truncate link address into 32bit for 32bit kernel
-> In-Reply-To: <20200413062651.3992652-1-jiaxun.yang@flygoat.com>
->
-> LLD failed to link vmlinux with 64bit load address for 32bit ELF
-> while bfd will strip 64bit address into 32bit silently.
-> To fix LLD build, we should truncate load address provided by platform
-> into 32bit for 32bit kernel.
->
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> Link: https://github.com/ClangBuiltLinux/linux/issues/786
-> Link: https://sourceware.org/bugzilla/show_bug.cgi?id=25784
-> Reviewed-by: Fangrui Song <maskray@google.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-> Cc: Maciej W. Rozycki <macro@linux-mips.org>
+On Wed, 6 May 2020 09:09:52 +0200 Bartosz Golaszewski wrote:
+> > > +}  
+> >
+> > Why do you clean the TX ring from a work rather than from the NAPI
+> > context?
+> 
+> So this was unclear to me, that's why I went with a workqueue. The
+> budget argument in napi poll is for RX. Should I put some cap on the
+> number of TX descriptors processed in napi context?
 
-Cool, this revision looks a bit simpler. Thanks for chasing this.
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+The prevailing wisdom is to not count the TX cleanup as work at all.
+I think the best practice is to first clean up all the TX you can, 
+and then do at must @budget of RX.
 
-> ---
-> V2: Take MaskRay's shell magic.
->
-> V3: After spent an hour on dealing with special character issue in
-> Makefile, I gave up to do shell hacks and write a util in C instead.
-> Thanks Maciej for pointing out Makefile variable problem.
->
-> v4: Finally we managed to find a Makefile method to do it properly
-> thanks to Kees. As it's too far from the initial version, I removed
-> Review & Test tag from Nick and Fangrui and Cc instead.
->
-> v5: Care vmlinuz as well.
->
-> v6: Rename to LIKER_LOAD_ADDRESS
-> ---
->  arch/mips/Makefile                 | 13 ++++++++++++-
->  arch/mips/boot/compressed/Makefile |  2 +-
->  arch/mips/kernel/vmlinux.lds.S     |  2 +-
->  3 files changed, 14 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/mips/Makefile b/arch/mips/Makefile
-> index e1c44aed8156..68c0f22fefc0 100644
-> --- a/arch/mips/Makefile
-> +++ b/arch/mips/Makefile
-> @@ -288,12 +288,23 @@ ifdef CONFIG_64BIT
->    endif
->  endif
->
-> +# When linking a 32-bit executable the LLVM linker cannot cope with a
-> +# 32-bit load address that has been sign-extended to 64 bits.  Simply
-> +# remove the upper 32 bits then, as it is safe to do so with other
-> +# linkers.
-> +ifdef CONFIG_64BIT
-> +       load-ld                 = $(load-y)
-> +else
-> +       load-ld                 = $(subst 0xffffffff,0x,$(load-y))
-> +endif
-> +
->  KBUILD_AFLAGS  += $(cflags-y)
->  KBUILD_CFLAGS  += $(cflags-y)
-> -KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y)
-> +KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y) -DLINKER_LOAD_ADDRESS=$(load-ld)
->  KBUILD_CPPFLAGS += -DDATAOFFSET=$(if $(dataoffset-y),$(dataoffset-y),0)
->
->  bootvars-y     = VMLINUX_LOAD_ADDRESS=$(load-y) \
-> +                 LINKER_LOAD_ADDRESS=$(load-ld) \
->                   VMLINUX_ENTRY_ADDRESS=$(entry-y) \
->                   PLATFORM="$(platform-y)" \
->                   ITS_INPUTS="$(its-y)"
-> diff --git a/arch/mips/boot/compressed/Makefile b/arch/mips/boot/compressed/Makefile
-> index 0df0ee8a298d..3d391256ab7e 100644
-> --- a/arch/mips/boot/compressed/Makefile
-> +++ b/arch/mips/boot/compressed/Makefile
-> @@ -90,7 +90,7 @@ ifneq ($(zload-y),)
->  VMLINUZ_LOAD_ADDRESS := $(zload-y)
->  else
->  VMLINUZ_LOAD_ADDRESS = $(shell $(obj)/calc_vmlinuz_load_addr \
-> -               $(obj)/vmlinux.bin $(VMLINUX_LOAD_ADDRESS))
-> +               $(obj)/vmlinux.bin $(LINKER_LOAD_ADDRESS))
->  endif
->  UIMAGE_LOADADDR = $(VMLINUZ_LOAD_ADDRESS)
->
-> diff --git a/arch/mips/kernel/vmlinux.lds.S b/arch/mips/kernel/vmlinux.lds.S
-> index a5f00ec73ea6..5226cd8e4bee 100644
-> --- a/arch/mips/kernel/vmlinux.lds.S
-> +++ b/arch/mips/kernel/vmlinux.lds.S
-> @@ -55,7 +55,7 @@ SECTIONS
->         /* . = 0xa800000000300000; */
->         . = 0xffffffff80300000;
->  #endif
-> -       . = VMLINUX_LOAD_ADDRESS;
-> +       . = LINKER_LOAD_ADDRESS;
->         /* read-only */
->         _text = .;      /* Text and read-only data */
->         .text : {
->
-> --
+Perhaps one day we will come up with a good way of capping TX, but
+today not counting it towards budget is the safe choice.
 
--- 
-Thanks,
-~Nick Desaulniers
+> > > +static int mtk_mac_receive_packet(struct mtk_mac_priv *priv)
+> > > +{
+> > > +     struct net_device *ndev = mtk_mac_get_netdev(priv);
+> > > +     struct mtk_mac_ring *ring = &priv->rx_ring;
+> > > +     struct device *dev = mtk_mac_get_dev(priv);
+> > > +     struct mtk_mac_ring_desc_data desc_data;
+> > > +     struct sk_buff *new_skb;
+> > > +     int ret;
+> > > +
+> > > +     mtk_mac_lock(priv);
+> > > +     ret = mtk_mac_ring_pop_tail(ring, &desc_data);
+> > > +     mtk_mac_unlock(priv);
+> > > +     if (ret)
+> > > +             return -1;
+> > > +
+> > > +     mtk_mac_dma_unmap_rx(priv, &desc_data);
+> > > +
+> > > +     if ((desc_data.flags & MTK_MAC_DESC_BIT_RX_CRCE) ||
+> > > +         (desc_data.flags & MTK_MAC_DESC_BIT_RX_OSIZE)) {
+> > > +             /* Error packet -> drop and reuse skb. */
+> > > +             new_skb = desc_data.skb;
+> > > +             goto map_skb;
+> > > +     }
+> > > +
+> > > +     new_skb = mtk_mac_alloc_skb(ndev);
+> > > +     if (!new_skb) {
+> > > +             netdev_err(ndev, "out of memory for skb\n");  
+> >
+> > No need for printing, kernel will complain loudly about oom.
+> >  
+> > > +             ndev->stats.rx_dropped++;
+> > > +             new_skb = desc_data.skb;
+> > > +             goto map_skb;
+> > > +     }
+> > > +
+> > > +     skb_put(desc_data.skb, desc_data.len);
+> > > +     desc_data.skb->ip_summed = CHECKSUM_NONE;
+> > > +     desc_data.skb->protocol = eth_type_trans(desc_data.skb, ndev);
+> > > +     desc_data.skb->dev = ndev;
+> > > +     netif_receive_skb(desc_data.skb);
+> > > +
+> > > +map_skb:
+> > > +     desc_data.dma_addr = mtk_mac_dma_map_rx(priv, new_skb);
+> > > +     if (dma_mapping_error(dev, desc_data.dma_addr)) {
+> > > +             dev_kfree_skb(new_skb);
+> > > +             netdev_err(ndev, "DMA mapping error of RX descriptor\n");
+> > > +             return -ENOMEM;  
+> >
+> > In this case nothing will ever replenish the RX ring right? If we hit
+> > this condition 128 times the ring will be empty?
+> 
+> Indeed. What should I do if this fails though?
+
+I think if you move things around it should work:
+
+	skb = pop_tail();
+	if (!skb)
+		return;
+
+	new_skb = alloc();
+	if (!new_skb)
+		goto reuse;
+
+	dma_map(new_skb);
+	if (error)
+		goto reuse;
+	
+	dma_unmap(skb);
+
+	if (do_packet_processing()) 
+		free(skb);
+	else
+		receive(skb);
+
+	put_on_ring(new_skb);
+
