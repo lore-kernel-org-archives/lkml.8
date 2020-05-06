@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E48F9C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 302DEC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6D2620A8B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0678120B1F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:25:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588778707;
-	bh=hL/kKAoJjpVSuhX0xX+QYZmcEFItB9E0+Y8VyH/J4W4=;
+	s=default; t=1588778711;
+	bh=L2ExiaFaaJ7NWX2ZeWy30+rPSKc5qvFJX+4HTwcNHAk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ebNlbmggGtYBmH7pW/MrPaFXHnKmOUx44B51EWtguFiZppJNzruPbEQFRJMb6dwGy
-	 bnadmieWjhihQ+bMQEWNw0Kp4IHzrzUW9N/T3AEzSE9gnmvcNkQUlz0DK9vZY1zgvt
-	 9UWE4AomSY6UA/X5POhyoFmSfKS/q9PozvV9WRPE=
+	b=J0eXUhFAPZw7ALaN9Ir3Yzh3iw6wcdzmd3flFTfd2DrA+hMFM2JtdCRvUgz2nsQIL
+	 T3jVHZN0FXMiz7Fo6059GGjXBn0HS/pW+XodQbqEyhjDWH5LdZeADrlWdA2OKvF3Dd
+	 zQwxR4Q+p0OYmDLmoOdWRKSaKSlQH50CHT5DR+UE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729945AbgEFPZG (ORCPT
+        id S1729970AbgEFPZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:25:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44216 "EHLO mail.kernel.org"
+        Wed, 6 May 2020 11:25:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729059AbgEFPZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:25:03 -0400
+        id S1729455AbgEFPZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:25:06 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA2C120B1F;
-        Wed,  6 May 2020 15:24:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26057215A4;
+        Wed,  6 May 2020 15:25:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588778702;
-        bh=hL/kKAoJjpVSuhX0xX+QYZmcEFItB9E0+Y8VyH/J4W4=;
+        s=default; t=1588778705;
+        bh=L2ExiaFaaJ7NWX2ZeWy30+rPSKc5qvFJX+4HTwcNHAk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yv6bjs781qadSIoVW0IjWRRN7OPa4jKhbGLfxuI5dIMgYZiLIynfleA7o2u1aRtTi
-         3U+TojPa9UOhxC1V92jIVMk2iMJkXSHePWQQ8l/NeFTBmXvkEFgmfYf5HnBGNYuodG
-         Ta57zr3Crgrn/6mNkaG592FE3ph78rCpEYaLcQCs=
+        b=sBwkKPsqo2ezpXRLVukNGNcdKjcTLfUX9AuVGhhZocvNQ3Bp1POS5hdesfGBN5cSx
+         S+nQBr2ZYBunUnemKuWJFiTJWUSEBFCL7MHriR4EQfbCefLeRExNa6EPtgDgyksIgl
+         47U1c9pgcb77sp3V9zOUrVyfwDtSog64kjCL5o5o=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -51,9 +51,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 37/91] perf tools: Fix reading new topology attribute "core_cpus"
-Date:   Wed,  6 May 2020 12:21:40 -0300
-Message-Id: <20200506152234.21977-38-acme@kernel.org>
+Subject: [PATCH 38/91] perf tools: Simplify checking if SMT is active.
+Date:   Wed,  6 May 2020 12:21:41 -0300
+Message-Id: <20200506152234.21977-39-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
@@ -66,45 +66,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-Check if access("devices/system/cpu/cpu%d/topology/core_cpus", F_OK)
-fails, which will happen unless the current directory is "/sys".
+SMT now could be disabled via "/sys/devices/system/cpu/smt/control".
 
-Simply try to read this file first.
+Status is shown in "/sys/devices/system/cpu/smt/active" simply as "0" / "1".
 
-Fixes: 0ccdb8407a46 ("perf tools: Apply new CPU topology sysfs attributes")
+If this knob isn't here then fallback to checking topology as before.
+
 Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/158817718710.747528.11009278875028211991.stgit@buzz
+Link: http://lore.kernel.org/lkml/158817741394.748034.9273604089138009552.stgit@buzz
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/smt.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/util/smt.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/tools/perf/util/smt.c b/tools/perf/util/smt.c
-index 3b791ef2cd50..8481842e9edb 100644
+index 8481842e9edb..20bacd5972ad 100644
 --- a/tools/perf/util/smt.c
 +++ b/tools/perf/util/smt.c
-@@ -24,13 +24,13 @@ int smt_on(void)
+@@ -15,6 +15,9 @@ int smt_on(void)
+ 	if (cached)
+ 		return cached_result;
  
- 		snprintf(fn, sizeof fn,
- 			"devices/system/cpu/cpu%d/topology/core_cpus", cpu);
--		if (access(fn, F_OK) == -1) {
-+		if (sysfs__read_str(fn, &str, &strlen) < 0) {
- 			snprintf(fn, sizeof fn,
- 				"devices/system/cpu/cpu%d/topology/thread_siblings",
- 				cpu);
-+			if (sysfs__read_str(fn, &str, &strlen) < 0)
-+				continue;
- 		}
--		if (sysfs__read_str(fn, &str, &strlen) < 0)
--			continue;
- 		/* Entry is hex, but does not have 0x, so need custom parser */
- 		siblings = strtoull(str, NULL, 16);
- 		free(str);
++	if (sysfs__read_int("devices/system/cpu/smt/active", &cached_result) > 0)
++		goto done;
++
+ 	ncpu = sysconf(_SC_NPROCESSORS_CONF);
+ 	for (cpu = 0; cpu < ncpu; cpu++) {
+ 		unsigned long long siblings;
+@@ -42,6 +45,7 @@ int smt_on(void)
+ 	}
+ 	if (!cached) {
+ 		cached_result = 0;
++done:
+ 		cached = true;
+ 	}
+ 	return cached_result;
 -- 
 2.21.1
 
