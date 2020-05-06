@@ -2,91 +2,110 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B96C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 03:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB37EC47259
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 03:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69C8821841
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 03:54:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 861D32075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 03:55:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HqoN+g1f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbgEFDyB (ORCPT
+        id S1726885AbgEFDzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 23:54:01 -0400
-Received: from mga09.intel.com ([134.134.136.24]:58810 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726495AbgEFDyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 23:54:01 -0400
-IronPort-SDR: Ii4BPnUjy6z8kDg9x5kQNoyGAQqpetxcqGgTuhEZRxCJ+rGjwW2dnR1pjJ7obW0HfGR46w2jum
- Ob6u1Fbm4adg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 20:53:56 -0700
-IronPort-SDR: RnY/CkTVHGDllTWl3vsALQBX8FyOb9RmSDv/9J4Oj1pJg9ax+A6NZxcyLyU93gQX7ft9fjdsk6
- jV1WhhTCDb9A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,357,1583222400"; 
-   d="scan'208";a="461286084"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by fmsmga005.fm.intel.com with ESMTP; 05 May 2020 20:53:56 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [PATCH] KVM: VMX: Explicitly clear RFLAGS.CF and RFLAGS.ZF in VM-Exit RSB path
-Date:   Tue,  5 May 2020 20:53:55 -0700
-Message-Id: <20200506035355.2242-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.26.0
+        Tue, 5 May 2020 23:55:16 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:51262 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbgEFDzP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 23:55:15 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0463swqG026651;
+        Tue, 5 May 2020 22:54:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588737298;
+        bh=dP9vIylGch3mfYOoHduGYa4fpVr1vxqy1GWoA3PI0aY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=HqoN+g1f6QCF8y1A1LVthP/mExB8HaQXALSKQCtVsTK94opB6EDbI0nH8XuZi15M0
+         L313zb0cQUc3vZE/yksWkkzf5kegyvfFcFHnRPdyWPTEQGm2dxcdysoiLpKkGwHNmK
+         jiJGC43/GgNWMbBJGRfiOgU9qOruxlcTwTImygDw=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0463swt9020345
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 5 May 2020 22:54:58 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 5 May
+ 2020 22:54:58 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 5 May 2020 22:54:58 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0463ssDu004336;
+        Tue, 5 May 2020 22:54:55 -0500
+Subject: Re: [PATCH v3 14/14] MAINTAINERS: Add Kishon Vijay Abraham I for TI
+ J721E SoC PCIe
+To:     Joe Perches <joe@perches.com>, Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>
+CC:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200417125753.13021-1-kishon@ti.com>
+ <20200417125753.13021-15-kishon@ti.com>
+ <ee72cdce1c487f7d0fd089f59fb92422ef2d9396.camel@perches.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <d4ca70be-0beb-f1a3-2c70-54df976c2983@ti.com>
+Date:   Wed, 6 May 2020 09:24:54 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <ee72cdce1c487f7d0fd089f59fb92422ef2d9396.camel@perches.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clear CF and ZF in the VM-Exit path after doing __FILL_RETURN_BUFFER so
-that KVM doesn't interpret clobbered RFLAGS as a VM-Fail.  Filling the
-RSB has always clobbered RFLAGS, its current incarnation just happens
-clear CF and ZF in the processs.  Relying on the macro to clear CF and
-ZF is extremely fragile, e.g. commit 089dd8e53126e ("x86/speculation:
-Change FILL_RETURN_BUFFER to work with objtool") tweaks the loop such
-that the ZF flag is always set.
+Hi Joe,
 
-Reported-by: Qian Cai <cai@lca.pw>
-Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: stable@vger.kernel.org
-Fixes: f2fde6a5bcfcf ("KVM: VMX: Move RSB stuffing to before the first RET after VM-Exit")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/vmx/vmenter.S | 3 +++
- 1 file changed, 3 insertions(+)
+On 4/17/2020 8:49 PM, Joe Perches wrote:
+> On Fri, 2020-04-17 at 18:27 +0530, Kishon Vijay Abraham I wrote:
+>> Add Kishon Vijay Abraham I as MAINTAINER for TI J721E SoC PCIe.
+> []
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+> []
+>> @@ -12968,13 +12968,15 @@ S:	Maintained
+>>  F:	Documentation/devicetree/bindings/pci/designware-pcie.txt
+>>  F:	drivers/pci/controller/dwc/*designware*
+>>  
+>> -PCI DRIVER FOR TI DRA7XX
+>> +PCI DRIVER FOR TI DRA7XX/J721E
+>>  M:	Kishon Vijay Abraham I <kishon@ti.com>
+>>  L:	linux-omap@vger.kernel.org
+>>  L:	linux-pci@vger.kernel.org
+>> +L:	linux-arm-kernel@lists.infradead.org
+>>  S:	Supported
+>>  F:	Documentation/devicetree/bindings/pci/ti-pci.txt
+>>  F:	drivers/pci/controller/dwc/pci-dra7xx.c
+>> +F:	drivers/pci/controller/cadence/pci-j721e.c
+> 
+> Please keep file patterns in alphabetic order by
+> moving this new cadence line up one line above dwc.
 
-diff --git a/arch/x86/kvm/vmx/vmenter.S b/arch/x86/kvm/vmx/vmenter.S
-index 87f3f24fef37b..51d1a82742fd5 100644
---- a/arch/x86/kvm/vmx/vmenter.S
-+++ b/arch/x86/kvm/vmx/vmenter.S
-@@ -82,6 +82,9 @@ SYM_FUNC_START(vmx_vmexit)
- 	/* IMPORTANT: Stuff the RSB immediately after VM-Exit, before RET! */
- 	FILL_RETURN_BUFFER %_ASM_AX, RSB_CLEAR_LOOPS, X86_FEATURE_RETPOLINE
- 
-+	/* Clear RFLAGS.CF and RFLAGS.ZF to preserve VM-Exit, i.e. !VM-Fail. */
-+	or $1, %_ASM_AX
-+
- 	pop %_ASM_AX
- .Lvmexit_skip_rsb:
- #endif
--- 
-2.26.0
+Sure, will fix this up in my next revision.
 
+Thanks
+Kishon
