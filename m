@@ -2,152 +2,150 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5106BC47257
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3878DC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B76020659
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C6672075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:45:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Lho8OH4E"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kWmi9VLq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730310AbgEFWoC (ORCPT
+        id S1730343AbgEFWpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 18:44:02 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:43416 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728888AbgEFWoC (ORCPT
+        Wed, 6 May 2020 18:45:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728888AbgEFWpO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 18:44:02 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046MfRPL087376;
-        Wed, 6 May 2020 22:43:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=qxCl0w8RFM4/l1IN+gQYmT3V1Br1VTWD4aTDDTrdu0I=;
- b=Lho8OH4E9JeoPeXdTBqyyIkroI5DsWGoyuxXe+VY1VwWtD9AgbXIcaTfJnCNQ7oyBFTp
- YDBO9KDN6JTRuCcu17qG78qycIp7J/wEUPcvI2RLtR06CUWFPswCp2NJb7iTaHKXy5mT
- JgbJVcdFIY4dXthIlsjEBUJ8YEu+4xKqbvO0bxs0NmWTAidlr6gm4scfbFvSAJYavceA
- 9GLTRKyz58PxU0/fTkqHil2b+7Yih4BgzapKMC5S1XXk8He8ydNAYKRE33qfVypZcQAy
- yJyeCNCKv0fq427GXrqlzo7ZAYvAmH8oOAMwG9g/I7pJlOmT8CmlO9K6/jV/21zibl2O 4Q== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 30s1gncx6g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 May 2020 22:43:32 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046MhVFq125753;
-        Wed, 6 May 2020 22:43:32 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 30sjnky4s4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 May 2020 22:43:31 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 046MhDlZ011089;
-        Wed, 6 May 2020 22:43:13 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 May 2020 15:43:13 -0700
-Date:   Wed, 6 May 2020 18:43:35 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Michal Hocko <mhocko@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Tejun Heo <tj@kernel.org>, Zi Yan <ziy@nvidia.com>,
-        linux-crypto@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 6/7] mm: parallelize deferred_init_memmap()
-Message-ID: <20200506224335.gv3as7vuik3rtt5w@ca-dmjordan1.us.oracle.com>
-References: <20200430201125.532129-1-daniel.m.jordan@oracle.com>
- <20200430201125.532129-7-daniel.m.jordan@oracle.com>
- <CAKgT0Uf7e5514SOi8dmkB5oXUK9bwqD_z-5KJ_F3MUn3CAQyPQ@mail.gmail.com>
- <3C3C62BE-6363-41C3-834C-C3124EB3FFAB@joshtriplett.org>
- <CAKgT0UdBv-Wj98P2wMFGDSihPLKWFsqpu77ZmO+eA51uteZ-Ag@mail.gmail.com>
- <20200505014844.ulp4rtih7adtcicm@ca-dmjordan1.us.oracle.com>
- <20200505020916.mve4ijrg4z5h7eh5@ca-dmjordan1.us.oracle.com>
- <CAKgT0UdE1ex_aAyMeR3PWtVcmXL8cUtjqy0J8hLpnFm42yn82w@mail.gmail.com>
- <20200506222127.l3p2a2vjavwz2bdl@ca-dmjordan1.us.oracle.com>
- <CAKgT0UcZhnCtM4YP3L9kbtghNp9vOzSpVm5WC1164OVmRHLaMA@mail.gmail.com>
+        Wed, 6 May 2020 18:45:14 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DB1AC061A0F;
+        Wed,  6 May 2020 15:45:14 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id l18so4059582wrn.6;
+        Wed, 06 May 2020 15:45:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Xzs/Kjvpb+Bur4dwOG66eDftXF7VVBOIkEWHXdV8Ezc=;
+        b=kWmi9VLqH4Jbm/yDYVVIYklJy4C82ABfqo+2aSRFKrm0baEfzTcF71bUab/rukbU+F
+         btz2HIWRg80PgSJkntipQIcleerbKCph8jlGEmMcUrC6Irvpun7DJoqIguZSVNu/lT1j
+         INL3F9AyJAPPVgbM31rpJPLQqz5AfDJZJ0fTNuRM4JTm0okY7O3SzlnHBHLkwfx3RqKw
+         5o+5ZDllWJE6oU79nD6dk1sMbF4gz9pnyf4wGIvGB5DT8YYflzVjMPWpOX5D6/5HXitX
+         I1rj+IOPudnuQsUhlzzIfa/gfBfeGoMsZpsNc33RZwjuyydCoNB89PVp+ZUjRlvgSift
+         pXcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Xzs/Kjvpb+Bur4dwOG66eDftXF7VVBOIkEWHXdV8Ezc=;
+        b=eJL2Zg7NLApB1X3iYMQI/2ZJFgb8Rv8T5DhRJpR93+Dte6jDKbfzm1RdqwcmwVGBo/
+         t1kRycakaGJzJkIh0jY2KKbzLagmakbgHXUQRXJuZWOccADfy6U27rFFMMEDMod3f7dQ
+         wcyL85HfodGQJqBFa8OqJDBPaNKQgGV26CVwv92aZSzR+6tlQjjgm64iRjikt/cfoIOd
+         X6fphpAgWljSPlTjL2TXwX4mis+B0KueeqipYgwXCO2SOJeUCY8g9vusjthdlJ16my6I
+         P51r6cQ8+ffuFQEyQtPnMQ11M1rIQvrv1tnWbLZxODoZ227sqhMgqbKjwfLPh1uqK566
+         5m0w==
+X-Gm-Message-State: AGi0PuYvTQkl/Zo228stN+yrykRdcWVaRGhTL9zwjFmj9ieKQ7un9MLr
+        +NxTTe7tcrIWdZK7IooOtfwQIjpB
+X-Google-Smtp-Source: APiQypJrXBV0Jqvdn9YGs9vGJDgAOFrPfAwOn4vgQjb+k2HiNPcQD5mngDn/UDlb8ftheGPJNq85sA==
+X-Received: by 2002:a5d:6a85:: with SMTP id s5mr11737214wru.122.1588805112574;
+        Wed, 06 May 2020 15:45:12 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id x6sm4745410wrv.57.2020.05.06.15.45.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 May 2020 15:45:11 -0700 (PDT)
+Subject: Re: [RFC net] net: dsa: Add missing reference counting
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200505210253.20311-1-f.fainelli@gmail.com>
+ <20200505172302.GB1170406@t480s.localdomain>
+ <d681a82b-5d4b-457f-56de-3a439399cb3d@gmail.com>
+ <CA+h21hpvC6ST2iv-4xjpwpmRHQJvk-AufYFvG0J=5KzUgcnC5A@mail.gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <97c93b65-3631-e694-78ac-7e520e063f95@gmail.com>
+Date:   Wed, 6 May 2020 15:45:08 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKgT0UcZhnCtM4YP3L9kbtghNp9vOzSpVm5WC1164OVmRHLaMA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005060181
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 mlxscore=0
- spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0
- impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005060180
+In-Reply-To: <CA+h21hpvC6ST2iv-4xjpwpmRHQJvk-AufYFvG0J=5KzUgcnC5A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 03:36:54PM -0700, Alexander Duyck wrote:
-> On Wed, May 6, 2020 at 3:21 PM Daniel Jordan <daniel.m.jordan@oracle.com> wrote:
-> >
-> > On Tue, May 05, 2020 at 07:55:43AM -0700, Alexander Duyck wrote:
-> > > One question about this data. What is the power management
-> > > configuration on the systems when you are running these tests? I'm
-> > > just curious if CPU frequency scaling, C states, and turbo are
-> > > enabled?
-> >
-> > Yes, intel_pstate is loaded in active mode without hwp and with turbo enabled
-> > (those power management docs are great by the way!) and intel_idle is in use
-> > too.
-> >
-> > > I ask because that is what I have seen usually make the
-> > > difference in these kind of workloads as the throughput starts
-> > > dropping off as you start seeing the core frequency lower and more
-> > > cores become active.
-> >
-> > If I follow, you're saying there's a chance performance would improve with the
-> > above disabled, but how often would a system be configured that way?  Even if
-> > it were faster, the machine is configured how it's configured, or am I missing
-> > your point?
+
+
+On 5/6/2020 2:40 PM, Vladimir Oltean wrote:
+> Hi Florian,
 > 
-> I think you might be missing my point. What I was getting at is that I
-> know for performance testing sometimes C states and P states get
-> disabled in order to get consistent results between runs, it sounds
-> like you have them enabled though. I was just wondering if you had
-> disabled them or not. If they were disabled then you wouldn't get the
-> benefits of turbo and as such adding more cores wouldn't come at a
-> penalty, while with it enabled the first few cores should start to
-> slow down as they fell out of turbo mode. So it may be part of the
-> reason why you are only hitting about 10x at full core count.
+> On Thu, 7 May 2020 at 00:24, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>>
+>>
+>>
+>> On 5/5/2020 2:23 PM, Vivien Didelot wrote:
+>>> On Tue,  5 May 2020 14:02:53 -0700, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>>>> If we are probed through platform_data we would be intentionally
+>>>> dropping the reference count on master after dev_to_net_device()
+>>>> incremented it. If we are probed through Device Tree,
+>>>> of_find_net_device() does not do a dev_hold() at all.
+>>>>
+>>>> Ensure that the DSA master device is properly reference counted by
+>>>> holding it as soon as the CPU port is successfully initialized and later
+>>>> released during dsa_switch_release_ports(). dsa_get_tag_protocol() does
+>>>> a short de-reference, so we hold and release the master at that time,
+>>>> too.
+>>>>
+>>>> Fixes: 83c0afaec7b7 ("net: dsa: Add new binding implementation")
+>>>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>>>
+>>> Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+>>>
+>> Andrew, Vladimir, any thoughts on that?
+>> --
+>> Florian
+> 
+> I might be completely off because I guess I just don't understand what
+> is the goal of keeping a reference to the DSA master in this way for
+> the entire lifetime of the DSA switch. I think that dev_hold is for
+> short-term things that cannot complete atomically, but I think that
+> you are trying to prevent the DSA master from getting freed from under
+> our feet, which at the moment would fault the kernel instantaneously?
 
-All right, that makes way more sense.
+Yes, that's the idea, you should not be able to rmmod/unbind the DSA
+master while there is a DSA switch tree hanging off of it.
 
-> As it stands I think your code may speed up a bit if you split the
-> work up based on section instead of max order. That would get rid of
-> any cache bouncing you may be doing on the pageblock flags and reduce
-> the overhead for splitting the work up into individual pieces since
-> each piece will be bigger.
+> 
+> If this is correct, it certainly doesn't do what it intends to do:
+> echo 0000\:00\:00.5> /sys/bus/pci/drivers/mscc_felix/unbind
+> [   71.576333] unregister_netdevice: waiting for swp0 to become free.
+> Usage count = 1
+> (hangs there)
 
-See my other mail.
+Is this with the sja1105 switch hanging off felix? If so, is not it
+working as expected because you still have sja1150 being bound to one of
+those ports? If not, then I will look into why.
+
+> 
+> But if I'm right and that's indeed what you want to achieve, shouldn't
+> we be using device links instead?
+> https://www.kernel.org/doc/html/v4.14/driver-api/device_link.html
+
+device links could work but given that the struct device and struct
+net_device have almost the same lifetime, with the net_device being a
+little bit shorter, and that is what DSA uses, I am not sure whether
+device link would bring something better.
+-- 
+Florian
