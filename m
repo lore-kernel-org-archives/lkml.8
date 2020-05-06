@@ -2,100 +2,116 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE3FC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 152F6C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAD12208DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:40:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588786821;
-	bh=bE63Lp2f3tulJ939j+qr3C21dbeTCgpfD0tbW6on/aw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=jKDny+VYxMt/zTdidnDZQNYsRl0PgsJIL/9nlOeb+JNLGR1DCmi+N0QJugmhvBbDO
-	 IjfQCdfIYNeAik/cCORT47nNgNWPWILewdc7MJGnRpuYDgWxlYKpb3MqdLTVgYa2Sl
-	 Uvp5Zj5Nq/XM7XVtHi75RtFchhexHwELYKXyIx24=
+	by mail.kernel.org (Postfix) with ESMTP id E3A3F208DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:41:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729331AbgEFRkV (ORCPT
+        id S1729467AbgEFRlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 13:40:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49808 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728047AbgEFRkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 13:40:20 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        Wed, 6 May 2020 13:41:03 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:37872 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728718AbgEFRlC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 13:41:02 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB2AA20936;
-        Wed,  6 May 2020 17:40:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588786819;
-        bh=bE63Lp2f3tulJ939j+qr3C21dbeTCgpfD0tbW6on/aw=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=mlCVdHQ7dipgESZw6Y2jcMAKucLqT5xaDH/m6SnEi+YH5SnCHHYsccqRSGB6042mK
-         dcS1++vwRFeAXky0kr8QjrEbJUgZ26yXMFFgxyCNLtuLFhX6lM1GzsMS1ZTge3BkEQ
-         uSuTUOllOcbM/dszbDh0MWxOg0mL9a5f73+fGCac=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id A8103352306C; Wed,  6 May 2020 10:40:19 -0700 (PDT)
-Date:   Wed, 6 May 2020 10:40:19 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Kmemleak infrastructure improvement for task_struct leaks and
- call_rcu()
-Message-ID: <20200506174019.GA2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <45D2D811-C3B0-442B-9744-415B4AC5CCDB@lca.pw>
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 6599A803E8;
+        Wed,  6 May 2020 19:40:59 +0200 (CEST)
+Date:   Wed, 6 May 2020 19:40:52 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     adaplas@gmail.com, b.zolnierkie@samsung.com,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] video: fbdev: i810: use true,false for bool variables
+Message-ID: <20200506174052.GF19296@ravnborg.org>
+References: <20200422071826.49038-1-yanaijie@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <45D2D811-C3B0-442B-9744-415B4AC5CCDB@lca.pw>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200422071826.49038-1-yanaijie@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=i0EeH86SAAAA:8 a=e5mUnYsNAAAA:8
+        a=t5bY3fDbLEjA0SOcjXMA:9 a=CjuIK1q_8ugA:10 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 12:22:37PM -0400, Qian Cai wrote:
-> == task struck leaks ==
-> There are leaks from task struct from time to time where someone forgot to call put_task_struct() somewhere leading to leaks. For example,
+On Wed, Apr 22, 2020 at 03:18:26PM +0800, Jason Yan wrote:
+> Fix the following coccicheck warning:
 > 
-> https://lore.kernel.org/lkml/C1CCBDAC-A453-4FF2-908F-0B6E356223D1@lca.pw/
+> drivers/video/fbdev/i810/i810_main.c:1969:3-7: WARNING: Assignment of
+> 0/1 to bool variable
+> drivers/video/fbdev/i810/i810_main.c:1971:3-8: WARNING: Assignment of
+> 0/1 to bool variable
+> drivers/video/fbdev/i810/i810_main.c:1973:3-9: WARNING: Assignment of
+> 0/1 to bool variable
+> drivers/video/fbdev/i810/i810_main.c:1975:3-7: WARNING: Assignment of
+> 0/1 to bool variable
+> drivers/video/fbdev/i810/i810_main.c:2001:3-9: WARNING: Assignment of
+> 0/1 to bool variable
 > 
-> It was such a pain to debug this kind of leaks at the moment, as all we could do was to audit the code by checking all new put_task_struct()  and get_task_struct() call sites which is error-prone because there could be other new call sites like get_pid_task() which would also need to be balanced with put_task_struct() as well.
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+
+Thanks.
+
+I have pushed this and your other three patches to drm-misc-next.
+They will show up in the mainline kernel in the next merge window.
+
+	Sam
+
+> ---
+>  drivers/video/fbdev/i810/i810_main.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 > 
-> What do you think about adding some aux call traces for kmemleak in general? For example, if the tracking object is a task struct, it would save call traces for the first and last call of both get_task_struct() and put_task_struct(). Then, it could be expanded to track other refcount-based leaks in the future.
+> diff --git a/drivers/video/fbdev/i810/i810_main.c b/drivers/video/fbdev/i810/i810_main.c
+> index aa7583d963ac..13bbf7fe13bf 100644
+> --- a/drivers/video/fbdev/i810/i810_main.c
+> +++ b/drivers/video/fbdev/i810/i810_main.c
+> @@ -1966,13 +1966,13 @@ static int i810fb_setup(char *options)
+>  	
+>  	while ((this_opt = strsep(&options, ",")) != NULL) {
+>  		if (!strncmp(this_opt, "mtrr", 4))
+> -			mtrr = 1;
+> +			mtrr = true;
+>  		else if (!strncmp(this_opt, "accel", 5))
+> -			accel = 1;
+> +			accel = true;
+>  		else if (!strncmp(this_opt, "extvga", 6))
+> -			extvga = 1;
+> +			extvga = true;
+>  		else if (!strncmp(this_opt, "sync", 4))
+> -			sync = 1;
+> +			sync = true;
+>  		else if (!strncmp(this_opt, "vram:", 5))
+>  			vram = (simple_strtoul(this_opt+5, NULL, 0));
+>  		else if (!strncmp(this_opt, "voffset:", 8))
+> @@ -1998,7 +1998,7 @@ static int i810fb_setup(char *options)
+>  		else if (!strncmp(this_opt, "vsync2:", 7))
+>  			vsync2 = simple_strtoul(this_opt+7, NULL, 0);
+>  		else if (!strncmp(this_opt, "dcolor", 6))
+> -			dcolor = 1;
+> +			dcolor = true;
+>  		else if (!strncmp(this_opt, "ddc3", 4))
+>  			ddc3 = true;
+>  		else
+> -- 
+> 2.21.1
 > 
-> == call_rcu() leaks ==
-> Another issue that might be relevant is that it seems sometimes, kmemleak will give a lot of false positives (hundreds) because the memory was supposed to be freed by call_rcu()  (for example, in dst_release()) but for some reasons, it takes a long time probably waiting for grace periods or some kind of RCU self-stall, but the memory had already became an orphan. I am not sure how we are going to resolve this properly until we have to figure out why call_rcu() is taking so long to finish?
-
-I know nothing about kmemleak, but I won't let that stop me from making
-random suggestions...
-
-One approach is to do an rcu_barrier() inside kmemleak just before
-printing leaked blocks, and check to see if any are still leaked after
-the rcu_barrier().
-
-If kmemleak works on crash dumps, another approach is to scan RCU's
-callback lists.  This will miss those callbacks that rcu_do_batch()
-was in the middle of invoking, though.  It also misses cases where
-someone passes a linked structure to call_rcu(), and then frees the
-structure piece by piece within the callback function.
-
-> Another solution is to add aux call traces for both skb_dst_drop() and skb_dst_set() for this case, but that there are many places to free memory via call_rcu() like inode free etc.
-
-And call_rcu() has no idea where the memory starts.  And again, sometimes
-there is memory linked from that passed to call_rcu() that will be freed
-by the callback function.
-
-In theory, these linked-structure cases could be handled by checking
-the callback function and then traversing the links.  I wouldn't be
-that ambitious, but don't let me discourage you.  ;-)
-
-							Thanx, Paul
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
