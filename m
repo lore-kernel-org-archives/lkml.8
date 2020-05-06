@@ -2,270 +2,101 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 417DCC4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF1EC47259
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CC7C20836
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:15:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RVRbJ1cy"
+	by mail.kernel.org (Postfix) with ESMTP id 6214420A8B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:15:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729418AbgEFPPG (ORCPT
+        id S1729238AbgEFPPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:15:06 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:49262 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728821AbgEFPPB (ORCPT
+        Wed, 6 May 2020 11:15:14 -0400
+Received: from smtprelay0241.hostedemail.com ([216.40.44.241]:60978 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728821AbgEFPPN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:15:01 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 046FEkMm096803;
-        Wed, 6 May 2020 10:14:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588778086;
-        bh=DOBs9Avsla6Bvl41pGUSBS2Aw8GI+lo3Fc5IsqKblZY=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=RVRbJ1cy7e6LHv8Xmp2/S9PjW63MP4xleWOnSHY7b0mFmZjx8dx9UfJw4fgNUoIKq
-         tiyvZNz/yu5j7uSj/UDWPrD4Kh6uLia+3yoFXgtRS3l7os/aNhiI+BQiHP679swqp8
-         GKTzZkw2qdHiGNM9cNyl/5rrJ8OVyVN6O7Ot1IX4=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 046FEkaI099712
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 6 May 2020 10:14:46 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 6 May
- 2020 10:14:45 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 6 May 2020 10:14:45 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 046FEUg9119457;
-        Wed, 6 May 2020 10:14:42 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Tom Joseph <tjoseph@cadence.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kishon@ti.com>
-Subject: [PATCH v4 03/14] PCI: cadence: Add support to use custom read and write accessors
-Date:   Wed, 6 May 2020 20:44:18 +0530
-Message-ID: <20200506151429.12255-4-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200506151429.12255-1-kishon@ti.com>
-References: <20200506151429.12255-1-kishon@ti.com>
+        Wed, 6 May 2020 11:15:13 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id B51AB246E;
+        Wed,  6 May 2020 15:15:11 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: bears23_ff76a315943a
+X-Filterd-Recvd-Size: 2948
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf10.hostedemail.com (Postfix) with ESMTPA;
+        Wed,  6 May 2020 15:15:09 +0000 (UTC)
+Message-ID: <2208e464cd8bd399cfb9b49abb5aed211f27b3a8.camel@perches.com>
+Subject: Re: [PATCH -next] iwlwifi: pcie: Use bitwise instead of arithmetic
+ operator for flags
+From:   Joe Perches <joe@perches.com>
+To:     Luciano Coelho <luciano.coelho@intel.com>,
+        Samuel Zou <zou_wei@huawei.com>, johannes.berg@intel.com,
+        emmanuel.grumbach@intel.com, linuxwifi@intel.com,
+        kvalo@codeaurora.org, davem@davemloft.net,
+        Julia Lawall <julia.lawall@lip6.fr>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, cocci <cocci@systeme.lip6.fr>
+Date:   Wed, 06 May 2020 08:15:08 -0700
+In-Reply-To: <bfd6b3a7db0c50cd3d084510bd43c9e540688edd.camel@intel.com>
+References: <1588734423-33988-1-git-send-email-zou_wei@huawei.com>
+         <f8b258e0c8bb073c445090e637195df2fc989543.camel@perches.com>
+         <bfd6b3a7db0c50cd3d084510bd43c9e540688edd.camel@intel.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support to use custom read and write accessors. Platforms that
-don't support half word or byte access or any other constraint
-while accessing registers can use this feature to populate custom
-read and write accessors. These custom accessors are used for both
-standard register access and configuration space register access of
-the PCIe host bridge.
+On Wed, 2020-05-06 at 16:51 +0300, Luciano Coelho wrote:
+> On Tue, 2020-05-05 at 20:19 -0700, Joe Perches wrote:
+> > On Wed, 2020-05-06 at 11:07 +0800, Samuel Zou wrote:
+> > > This silences the following coccinelle warning:
+> > > 
+> > > "WARNING: sum of probable bitmasks, consider |"
+> > 
+> > I suggest instead ignoring bad and irrelevant warnings.
+> > 
+> > PREFIX_LEN is 32 not 0x20 or BIT(5)
+> > PCI_DUMP_SIZE is 352
+> > 
+> > > diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+> > []
+> > > @@ -109,9 +109,9 @@ void iwl_trans_pcie_dump_regs(struct iwl_trans *trans)
+> > >  
+> > >  	/* Alloc a max size buffer */
+> > >  	alloc_size = PCI_ERR_ROOT_ERR_SRC +  4 + PREFIX_LEN;
+> > > -	alloc_size = max_t(u32, alloc_size, PCI_DUMP_SIZE + PREFIX_LEN);
+> > > -	alloc_size = max_t(u32, alloc_size, PCI_MEM_DUMP_SIZE + PREFIX_LEN);
+> > > -	alloc_size = max_t(u32, alloc_size, PCI_PARENT_DUMP_SIZE + PREFIX_LEN);
+> > > +	alloc_size = max_t(u32, alloc_size, PCI_DUMP_SIZE | PREFIX_LEN);
+> > > +	alloc_size = max_t(u32, alloc_size, PCI_MEM_DUMP_SIZE | PREFIX_LEN);
+> > > +	alloc_size = max_t(u32, alloc_size, PCI_PARENT_DUMP_SIZE | PREFIX_LEN);
+> > >  
+> > >  	buf = kmalloc(alloc_size, GFP_ATOMIC);
+> > >  	if (!buf)
+> 
+> Yeah, those macros are clearly not bitmasks.  I'm dropping this patch.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/pci/controller/cadence/pcie-cadence.h | 107 +++++++++++++++---
- 1 file changed, 94 insertions(+), 13 deletions(-)
+Can the cocci script that generated this warning
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index df14ad002fe9..70b6b25153e8 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -223,6 +223,11 @@ enum cdns_pcie_msg_routing {
- 	MSG_ROUTING_GATHER,
- };
- 
-+struct cdns_pcie_ops {
-+	u32	(*read)(void __iomem *addr, int size);
-+	void	(*write)(void __iomem *addr, int size, u32 value);
-+};
-+
- /**
-  * struct cdns_pcie - private data for Cadence PCIe controller drivers
-  * @reg_base: IO mapped register base
-@@ -239,7 +244,7 @@ struct cdns_pcie {
- 	int			phy_count;
- 	struct phy		**phy;
- 	struct device_link	**link;
--	const struct cdns_pcie_common_ops *ops;
-+	const struct cdns_pcie_ops *ops;
- };
- 
- /**
-@@ -299,69 +304,145 @@ struct cdns_pcie_ep {
- /* Register access */
- static inline void cdns_pcie_writeb(struct cdns_pcie *pcie, u32 reg, u8 value)
- {
--	writeb(value, pcie->reg_base + reg);
-+	void __iomem *addr = pcie->reg_base + reg;
-+
-+	if (pcie->ops && pcie->ops->write) {
-+		pcie->ops->write(addr, 0x1, value);
-+		return;
-+	}
-+
-+	writeb(value, addr);
- }
- 
- static inline void cdns_pcie_writew(struct cdns_pcie *pcie, u32 reg, u16 value)
- {
--	writew(value, pcie->reg_base + reg);
-+	void __iomem *addr = pcie->reg_base + reg;
-+
-+	if (pcie->ops && pcie->ops->write) {
-+		pcie->ops->write(addr, 0x2, value);
-+		return;
-+	}
-+
-+	writew(value, addr);
- }
- 
- static inline void cdns_pcie_writel(struct cdns_pcie *pcie, u32 reg, u32 value)
- {
--	writel(value, pcie->reg_base + reg);
-+	void __iomem *addr = pcie->reg_base + reg;
-+
-+	if (pcie->ops && pcie->ops->write) {
-+		pcie->ops->write(addr, 0x4, value);
-+		return;
-+	}
-+
-+	writel(value, addr);
- }
- 
- static inline u32 cdns_pcie_readl(struct cdns_pcie *pcie, u32 reg)
- {
--	return readl(pcie->reg_base + reg);
-+	void __iomem *addr = pcie->reg_base + reg;
-+
-+	if (pcie->ops && pcie->ops->read)
-+		return pcie->ops->read(addr, 0x4);
-+
-+	return readl(addr);
- }
- 
- /* Root Port register access */
- static inline void cdns_pcie_rp_writeb(struct cdns_pcie *pcie,
- 				       u32 reg, u8 value)
- {
--	writeb(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
-+
-+	if (pcie->ops && pcie->ops->write) {
-+		pcie->ops->write(addr, 0x1, value);
-+		return;
-+	}
-+
-+	writeb(value, addr);
- }
- 
- static inline void cdns_pcie_rp_writew(struct cdns_pcie *pcie,
- 				       u32 reg, u16 value)
- {
--	writew(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
-+
-+	if (pcie->ops && pcie->ops->write) {
-+		pcie->ops->write(addr, 0x2, value);
-+		return;
-+	}
-+
-+	writew(value, addr);
- }
- 
- /* Endpoint Function register access */
- static inline void cdns_pcie_ep_fn_writeb(struct cdns_pcie *pcie, u8 fn,
- 					  u32 reg, u8 value)
- {
--	writeb(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-+
-+	if (pcie->ops && pcie->ops->write) {
-+		pcie->ops->write(addr, 0x1, value);
-+		return;
-+	}
-+
-+	writeb(value, addr);
- }
- 
- static inline void cdns_pcie_ep_fn_writew(struct cdns_pcie *pcie, u8 fn,
- 					  u32 reg, u16 value)
- {
--	writew(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-+
-+	if (pcie->ops && pcie->ops->write) {
-+		pcie->ops->write(addr, 0x2, value);
-+		return;
-+	}
-+
-+	writew(value, addr);
- }
- 
- static inline void cdns_pcie_ep_fn_writel(struct cdns_pcie *pcie, u8 fn,
- 					  u32 reg, u32 value)
- {
--	writel(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-+
-+	if (pcie->ops && pcie->ops->write) {
-+		pcie->ops->write(addr, 0x4, value);
-+		return;
-+	}
-+
-+	writel(value, addr);
- }
- 
- static inline u8 cdns_pcie_ep_fn_readb(struct cdns_pcie *pcie, u8 fn, u32 reg)
- {
--	return readb(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-+
-+	if (pcie->ops && pcie->ops->read)
-+		return pcie->ops->read(addr, 0x1);
-+
-+	return readb(addr);
- }
- 
- static inline u16 cdns_pcie_ep_fn_readw(struct cdns_pcie *pcie, u8 fn, u32 reg)
- {
--	return readw(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-+
-+	if (pcie->ops && pcie->ops->read)
-+		return pcie->ops->read(addr, 0x2);
-+
-+	return readw(addr);
- }
- 
- static inline u32 cdns_pcie_ep_fn_readl(struct cdns_pcie *pcie, u8 fn, u32 reg)
- {
--	return readl(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-+
-+	if (pcie->ops && pcie->ops->read)
-+		return pcie->ops->read(addr, 0x4);
-+
-+	return readl(addr);
- }
- 
- #ifdef CONFIG_PCIE_CADENCE_HOST
--- 
-2.17.1
+scripts/coccinelle/misc/orplus.cocci
+
+be dropped or improved to validate the likelihood that
+the defines or constants used are more likely than
+not are bit values?
+
+Maybe these should be defined as hex or BIT or BIT_ULL
+or GENMASK or the like?
+
+
+Right now it seems it just tests for two constants.
+
 
