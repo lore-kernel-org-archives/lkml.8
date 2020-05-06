@@ -2,82 +2,118 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4A7C38A2A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 11:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A56BC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 11:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B65B620736
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 11:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05A2B206D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 11:47:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lXAvBhJk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgEFLqN (ORCPT
+        id S1727812AbgEFLrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 07:46:13 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3866 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725887AbgEFLqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 07:46:13 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 00E935DF7238A183430A;
-        Wed,  6 May 2020 19:46:12 +0800 (CST)
-Received: from huawei.com (10.67.174.156) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Wed, 6 May 2020
- 19:46:02 +0800
-From:   ChenTao <chentao107@huawei.com>
-To:     <t.schramm@manjaro.org>, <sre@kernel.org>
-CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <chentao107@huawei.com>
-Subject: [PATCH -next] power/supply/cw2015: Make some symbols static
-Date:   Wed, 6 May 2020 19:45:18 +0800
-Message-ID: <20200506114519.238186-1-chentao107@huawei.com>
-X-Mailer: git-send-email 2.22.0
+        Wed, 6 May 2020 07:47:55 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:6394 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbgEFLry (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 07:47:54 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eb2a3a40000>; Wed, 06 May 2020 04:46:44 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 06 May 2020 04:47:54 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 06 May 2020 04:47:54 -0700
+Received: from [10.25.78.179] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 6 May
+ 2020 11:47:52 +0000
+Subject: Re: [PATCH] phy: tegra: Use PTR_ERR_OR_ZERO() to simplify code
+To:     Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <digetx@gmail.com>
+References: <20200505150058.17674-1-aishwaryarj100@gmail.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <be185976-3d12-f49d-6131-39f5075e0190@nvidia.com>
+Date:   Wed, 6 May 2020 17:17:49 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.174.156]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200505150058.17674-1-aishwaryarj100@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588765604; bh=BJBqJSRQf6+TfAc5agbOFu+x857JC8+7fnNqVj7P1aE=;
+        h=X-PGP-Universal:Subject:To:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=lXAvBhJkbpUiZOHzaAwwDF61VpqdKcCQGjDYB34C2b8sPNq7TrGSB3yvPYtbmQ2h6
+         +MUrs1BzMuJRLLzbOQt5hu6exzpC4jTOGViSMgvjbkuolxNc1WLbewql4IROEm6lNQ
+         cnRpdROBQ9U8rfQMeenem0ZdDaHxAOV41X+s2Qi8bwK+V2ZuWuYmQTdcZCkLUGWMdL
+         f0KRQqtmzsrfmiFZpuS0hsMnvYQVMj14ttF9m5thK8LtIfBXbFpi3Ie7fPZ3tPOOiK
+         KYtnFLAkCBGhjbr9DR8YCI2R0NcUWpwWguuDKRaHxKmZD7OC0NFQ33dePxQ8kwkzL8
+         m/SopzUpAFZCQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following warning:
+Thanks for pushing this change.
+I'm fine with this change as it is attempting to change only the last 
+occurrence of the (IS_ERR(...)) + PTR_ERR combination.
+But, this code was initially written with PTR_ERR_OR_ZERO() itself but 
+later changed to use (IS_ERR(...)) + PTR_ERR based on the review comment 
+from Dmitry Osipenko ( https://lkml.org/lkml/2019/6/20/1457 )
 
-drivers/power/supply/cw2015_battery.c:96:5: warning:
-'cw_update_profile' was not declared. Should it be static?
-drivers/power/supply/cw2015_battery.c:712:1: warning:
-'cw_bat_pm_ops' was not declared. Should it be static?
+Adding Dmitry as well to review the change.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: ChenTao <chentao107@huawei.com>
----
- drivers/power/supply/cw2015_battery.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I'm fine with this change.
+Reviewed-by: Vidya Sagar <vidyas@nvidia.com>
 
-diff --git a/drivers/power/supply/cw2015_battery.c b/drivers/power/supply/cw2015_battery.c
-index 8603da6f4593..19f62ea957ee 100644
---- a/drivers/power/supply/cw2015_battery.c
-+++ b/drivers/power/supply/cw2015_battery.c
-@@ -93,7 +93,7 @@ static int cw_read_word(struct cw_battery *cw_bat, u8 reg, u16 *val)
- 	return 0;
- }
- 
--int cw_update_profile(struct cw_battery *cw_bat)
-+static int cw_update_profile(struct cw_battery *cw_bat)
- {
- 	int ret;
- 	unsigned int reg_val;
-@@ -709,7 +709,7 @@ static int __maybe_unused cw_bat_resume(struct device *dev)
- 	return 0;
- }
- 
--SIMPLE_DEV_PM_OPS(cw_bat_pm_ops, cw_bat_suspend, cw_bat_resume);
-+static SIMPLE_DEV_PM_OPS(cw_bat_pm_ops, cw_bat_suspend, cw_bat_resume);
- 
- static int cw_bat_remove(struct i2c_client *client)
- {
--- 
-2.22.0
-
+On 05-May-20 8:30 PM, Aishwarya Ramakrishnan wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> PTR_ERR_OR_ZERO contains if(IS_ERR(...)) + PTR_ERR.
+> 
+> Generated by: scripts/coccinelle/api/ptr_ret.cocci
+> 
+> Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+> ---
+>   drivers/phy/tegra/phy-tegra194-p2u.c | 5 +----
+>   1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/drivers/phy/tegra/phy-tegra194-p2u.c b/drivers/phy/tegra/phy-tegra194-p2u.c
+> index 7042bed9feaa..42394d27f4cb 100644
+> --- a/drivers/phy/tegra/phy-tegra194-p2u.c
+> +++ b/drivers/phy/tegra/phy-tegra194-p2u.c
+> @@ -92,10 +92,7 @@ static int tegra_p2u_probe(struct platform_device *pdev)
+>          phy_set_drvdata(generic_phy, phy);
+> 
+>          phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> -       if (IS_ERR(phy_provider))
+> -               return PTR_ERR(phy_provider);
+> -
+> -       return 0;
+> +       return PTR_ERR_OR_ZERO(phy_provider);
+>   }
+> 
+>   static const struct of_device_id tegra_p2u_id_table[] = {
+> --
+> 2.17.1
+> 
