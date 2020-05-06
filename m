@@ -2,142 +2,195 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9CCC47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 888FEC47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD8B20708
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:45:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="R7lsSWur"
+	by mail.kernel.org (Postfix) with ESMTP id 6321720735
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:45:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588790750;
+	bh=gigegsw9Oj8TIYgU47530V44T98t2OPVL9trxrvvp2M=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=p1HV2qTILpajyAl5Om7XYkk16UqXu5ua7G52K2TfD1NcTnAGAnT2ULnPBFD1Bctpj
+	 7Uc+xC/dckjyn/87tyf6jqkhvYaBV0rf0NC52y7RScbt8Kmo7nhl93uCZvH8/25ixA
+	 AVnNniav3swHgA+c1bBjyXnZo3A931xhXxqoKmgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730478AbgEFSp3 (ORCPT
+        id S1730494AbgEFSpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 14:45:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33948 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729895AbgEFSp3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 14:45:29 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFE46C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 11:45:27 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id g16so2384066qtp.11
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 11:45:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Xp4PtIWSbFjNlCqFouJe0yrPGUY2LlWC8culMqw4W34=;
-        b=R7lsSWur/AS2+mWO7IfggMu+O6gDIpHb5fsBvc2LXsH3PmDGNjMK0zpysOcb4Eb+cz
-         mf1+TNibVmiOreGgMt3vNl0KRwbfkShNrsiJbn/DxYcbSmXH5gNZ2gXIH9fCOUIYt2rx
-         uufl1oq3YEnO5fNw5YpjjaxL6Z++oij1nCST3wT/cti8pRbhvx/M4SzbZD4RgxRFb8j/
-         a+zbity4CLj+uAm+lxJ1UlFhn4tfneJczLNr2kYjP8d52NCpunCB2utDdguPKw1NtyIw
-         xRCnoJJk0pa86wmw4nQiE5mnB14UQ13vcfrECf72UWGBC29459PJrqkAuJYkcOi1aUv5
-         XJJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Xp4PtIWSbFjNlCqFouJe0yrPGUY2LlWC8culMqw4W34=;
-        b=rA8iTDAiOu7S7ZyZZ9aZisVyZMiSDchK7btvpEEy7CFJpPnkB65IdO1VvXh9br7tMe
-         +mUpMq0mEbUKkvAL5ov77P1Ap7xqzc0zFT5pg6s340gRaxjyl/zX9hayFF9SfP6J/ZO6
-         lUmz2c4UyEOdhHPrOa//RTAOLsxvwgSTRJMZKIzATQ9+Xx+r+tUhfmh0oFjpqRTrpopY
-         rcfpgkPzlezCw7Ammc2zEtlMTlU9nO5iAZDsQO/FfYMPRTmCCBvZUAgonaS4QN901Tcm
-         xQjqcdo0r2whTrYXLKdGxNwTn5WXXdXVlxYryWvsAN9uYCXGDoVSbjZUbLxIkZN8batw
-         uK3w==
-X-Gm-Message-State: AGi0PuZDrz6BwiZbI9jcFr9F6rZVTl+Qt3ILVfOQdq+1VFU6AC6/atyJ
-        /L7FFDhYz/qeq5DhVmyFgEorYA==
-X-Google-Smtp-Source: APiQypL616xxVLy7sIJ2gUjjzq8FfTN3eeP1TOOdrppMGZHDTaCWu7Efs5+lgJDGx3ZLUW9Bw/3rtw==
-X-Received: by 2002:ac8:4d06:: with SMTP id w6mr9559957qtv.180.1588790727109;
-        Wed, 06 May 2020 11:45:27 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id x5sm715097qtx.35.2020.05.06.11.45.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 06 May 2020 11:45:26 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jWP2s-0002GJ-3V; Wed, 06 May 2020 15:45:26 -0300
-Date:   Wed, 6 May 2020 15:45:26 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     linux-mm@kvack.org, Ralph Campbell <rcampbell@nvidia.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        amd-gfx@lists.freedesktop.org, Ben Skeggs <bskeggs@redhat.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        dri-devel@lists.freedesktop.org,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Christoph Hellwig <hch@lst.de>,
-        intel-gfx@lists.freedesktop.org,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        linux-kernel@vger.kernel.org,
-        Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
-        nouveau@lists.freedesktop.org, "Yang, Philip" <Philip.Yang@amd.com>
-Subject: Re: [PATCH hmm v2 0/5] Adjust hmm_range_fault() API
-Message-ID: <20200506184526.GA8668@ziepe.ca>
-References: <0-v2-b4e84f444c7d+24f57-hmm_no_flags_jgg@mellanox.com>
+        Wed, 6 May 2020 14:45:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47856 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729895AbgEFSpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 14:45:49 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CC2520708;
+        Wed,  6 May 2020 18:45:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588790748;
+        bh=gigegsw9Oj8TIYgU47530V44T98t2OPVL9trxrvvp2M=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Zh8rGp7exfpuWXwr7XwnPrHVTETtgSr7bqT7m4Z/r7W2Mu+9R+/XZ/MMRN8wnwda1
+         Xz3yfCschfOlBqh8qNPY7jUmpm6G0vwd+WAH1GIwtNlf4Oj0MF4Plqr9lM2OtG7qIA
+         cUWfHS3O6z9mKxrdMz5sfCl9zGowQEHy0YVOs5nk=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 4457E352306C; Wed,  6 May 2020 11:45:48 -0700 (PDT)
+Date:   Wed, 6 May 2020 11:45:48 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        RCU <rcu@vger.kernel.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH 21/24] rcu/tiny: move kvfree_call_rcu() out of header
+Message-ID: <20200506184548.GE2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200428205903.61704-1-urezki@gmail.com>
+ <20200428205903.61704-22-urezki@gmail.com>
+ <20200501230359.GH7560@paulmck-ThinkPad-P72>
+ <20200506182902.GA2570@pc636>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <0-v2-b4e84f444c7d+24f57-hmm_no_flags_jgg@mellanox.com>
+In-Reply-To: <20200506182902.GA2570@pc636>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 03:20:43PM -0300, Jason Gunthorpe wrote:
-> From: Jason Gunthorpe <jgg@mellanox.com>
+On Wed, May 06, 2020 at 08:29:02PM +0200, Uladzislau Rezki wrote:
+> Hello, Paul, Joel.
 > 
-> The API is a bit complicated for the uses we actually have, and
-> disucssions for simplifying have come up a number of times.
+> > > Move inlined kvfree_call_rcu() function out of the
+> > > header file. This step is a preparation for head-less
+> > > support.
+> > > 
+> > > Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> > > ---
+> > >  include/linux/rcutiny.h | 6 +-----
+> > >  kernel/rcu/tiny.c       | 6 ++++++
+> > >  2 files changed, 7 insertions(+), 5 deletions(-)
+> > > 
+> > > diff --git a/include/linux/rcutiny.h b/include/linux/rcutiny.h
+> > > index 0c6315c4a0fe..7eb66909ae1b 100644
+> > > --- a/include/linux/rcutiny.h
+> > > +++ b/include/linux/rcutiny.h
+> > > @@ -34,11 +34,7 @@ static inline void synchronize_rcu_expedited(void)
+> > >  	synchronize_rcu();
+> > >  }
+> > >  
+> > > -static inline void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+> > > -{
+> > > -	call_rcu(head, func);
+> > > -}
+> > > -
+> > > +void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func);
+> > >  void rcu_qs(void);
+> > >  
+> > >  static inline void rcu_softirq_qs(void)
+> > > diff --git a/kernel/rcu/tiny.c b/kernel/rcu/tiny.c
+> > > index aa897c3f2e92..508c82faa45c 100644
+> > > --- a/kernel/rcu/tiny.c
+> > > +++ b/kernel/rcu/tiny.c
+> > > @@ -177,6 +177,12 @@ void call_rcu(struct rcu_head *head, rcu_callback_t func)
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(call_rcu);
+> > >  
+> > > +void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+> > > +{
+> > > +	call_rcu(head, func);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(kvfree_call_rcu);
+> > 
+> > This increases the size of Tiny RCU.  Plus in Tiny RCU, the overhead of
+> > synchronize_rcu() is exactly zero.  So why not make the single-argument
+> > kvfree_call_rcu() just unconditionally do synchronize_rcu() followed by
+> > kvfree() or whatever?  That should go just fine into the header file.
+> > 
+> Seems it does not go well if i do it in header file:
 > 
-> This small series removes the customizable pfn format and simplifies the
-> return code of hmm_range_fault()
+> <snip>
+> diff --git a/include/linux/rcutiny.h b/include/linux/rcutiny.h
+> index 0c6315c4a0fe..76b7ad053218 100644
+> --- a/include/linux/rcutiny.h
+> +++ b/include/linux/rcutiny.h
+> @@ -13,6 +13,7 @@
+>  #define __LINUX_TINY_H
+>  
+>  #include <asm/param.h> /* for HZ */
+> +#include <linux/mm.h>
+>  
+>  /* Never flag non-existent other CPUs! */
+>  static inline bool rcu_eqs_special_set(int cpu) { return false; }
+> @@ -36,7 +37,15 @@ static inline void synchronize_rcu_expedited(void)
+>  
+>  static inline void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+>  {
+> -       call_rcu(head, func);
+> +       if (head) {
+> +               call_rcu(head, func);
+> +               return;
+> +       }
+> +
+> +       // kvfree_rcu(one_arg) call.
+> +       might_sleep();
+> +       synchronize_rcu();
+> +       kvfree((void *) func);
+>  }
+> <snip> 
 > 
-> All the drivers are adjusted to process in the simplified format.
-> I would appreciated tested-by's for the two drivers, thanks!
+> kvfree() is defined in <linux/mm.h> as extern void kvfree(const void *addr); 
+> If i just include <linux/mm.h> i get many errors related to "implicit declaration
+> of function" like:
 > 
-> v2:
->  - Move call chain to commit message
->  - Fix typo of HMM_PFN_REQ_FAULT
->  - Move nouveau_hmm_convert_pfn() to nouveau_svm.c
->  - Add acks and tested-bys
-> v1: https://lore.kernel.org/r/0-v1-4eb72686de3c+5062-hmm_no_flags_jgg@mellanox.com
+> <snip>
+> rcu_read_lock()
+> compound_mapcount_ptr()
+> rcu_assign_pointer()
+> ...
+> <snip>
 > 
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: Jérôme Glisse <jglisse@redhat.com>
-> Cc: Ben Skeggs <bskeggs@redhat.com>
-> To: Ralph Campbell <rcampbell@nvidia.com>
-> Cc: nouveau@lists.freedesktop.org
-> Cc: Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>
-> Cc: intel-gfx@lists.freedesktop.org
-> Cc: "Kuehling, Felix" <Felix.Kuehling@amd.com>
-> Cc: Alex Deucher <alexander.deucher@amd.com>
-> Cc: "Christian König" <christian.koenig@amd.com>
-> Cc: "David (ChunMing) Zhou" <David1.Zhou@amd.com>
-> Cc: amd-gfx@lists.freedesktop.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: "Yang, Philip" <Philip.Yang@amd.com>
-> To: linux-mm@kvack.org
+> and many other messages like:
 > 
-> Jason Gunthorpe (5):
->   mm/hmm: make CONFIG_DEVICE_PRIVATE into a select
->   mm/hmm: make hmm_range_fault return 0 or -1
->   drm/amdgpu: remove dead code after hmm_range_fault()
->   mm/hmm: remove HMM_PFN_SPECIAL
->   mm/hmm: remove the customizable pfn format from hmm_range_fault
+> <snip>
+> warning: returning ‘int’ from a function with return type
+> error: unknown type name ‘vm_fault_t’; did you mean ‘pmdval_t’?
+> error: implicit declaration of function ‘RB_EMPTY_ROOT’
+> ...
+> <snip>
+> 
+> Please see full log here: ftp://vps418301.ovh.net/incoming/include_mm_h_output.txt
+> 
+> I can fix it by adding the kvfree() declaration to the rcutiny.h also:
+> extern void kvfree(const void *addr);
+> 
+> what seems wired to me? Also it can be fixed if i move it to the tiny.c
+> so it will be aligned with the way how it is done for tree-RCU.
 
-Applied to hmm.git, thanks
+If the mm guys are OK with the kvfree() declaration, that is the way
+to go.  With the addition of a comment saying something like "Avoid
+#include hell".
 
-Jason
+The compiler will complain if the definition changes given that there
+has to be somewhere that sees both the above and the real declaration,
+so this should not cause too much trouble.
+
+> Any valuable proposals?
+
+Otherwise, yes, the function would need to move to tiny.c and thus add
+bloat.  :-(
+
+							Thanx, Paul
