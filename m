@@ -2,118 +2,149 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD6BC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1AC4C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB82320721
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:19:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588749574;
-	bh=QuJoFlHL30sC+0HfhLIHXNWYmeVyaepPc79QoY6a1Y8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fO0UNkfJMVdTMH5BrvuP3SYGVvH6hbl54uJPGtVBkLdRCdadSwa1ygDzwaoRCY5WT
-	 oaRnXqtgr1TmBoDANZHCVMBWrPv6dXwr1gTwvGgGiLuB7pr2T5c1Ej1QQJr+5PpSuD
-	 fSgAR7A7S4zfXfguecUtY22sYm8oO6k4jrpkLovI=
+	by mail.kernel.org (Postfix) with ESMTP id BF83320663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:20:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iXYbXcn2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728293AbgEFHTd (ORCPT
+        id S1728297AbgEFHUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 03:19:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58470 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726897AbgEFHTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 03:19:32 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F374420663;
-        Wed,  6 May 2020 07:19:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588749572;
-        bh=QuJoFlHL30sC+0HfhLIHXNWYmeVyaepPc79QoY6a1Y8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IKcCKYiuihKxGIxZI0baNIcMUCMTdk9n4d8flfD54rK5BRWF+Lw+vvxbrBFFJ381R
-         mB7Lu28v+mN8c10qsDg3cWzpKb8rWtdHqjFue+6MdYmJ2zg+uv5lbrU6G5Cy1Ml8CL
-         JsaQ3G6BJhZiqp3UvlrHRN2RvpMMYQA/t8OM+L90=
-Date:   Wed, 6 May 2020 08:19:27 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     Gavin Shan <gshan@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com,
-        catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
-        shan.gavin@gmail.com
-Subject: Re: [PATCH] arm64/mm: Remove add_huge_page_size()
-Message-ID: <20200506071927.GB7021@willie-the-truck>
-References: <20200506064635.20114-1-gshan@redhat.com>
- <fa3ad75d-9c4d-d6c9-1664-53b4c9770c6b@arm.com>
+        Wed, 6 May 2020 03:20:08 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43326 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727832AbgEFHUE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 03:20:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588749603;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=736cry6ayk4bFoTJ6GjBafnY0xYXIZ6Pinl17EvWj60=;
+        b=iXYbXcn2wkkHPzf66OFWmbjSyOJCBgF8EQty7nQAS/yFyCQL3gam8jLso3BckTuVNy1RUD
+        GiVTCtGYxM1YSkQuZAOgJ1x4J1C5/CQcw//REfBJYrh5Pcr37sXf91kjHn3yrCh0kjzSbz
+        wxTrvAMyYzGKB/6U05I1ME1mgiEHqMc=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-207-6Gu47QbHPcSCyEecx8pmLA-1; Wed, 06 May 2020 03:20:00 -0400
+X-MC-Unique: 6Gu47QbHPcSCyEecx8pmLA-1
+Received: by mail-wm1-f69.google.com with SMTP id j5so737963wmi.4
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 00:19:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=736cry6ayk4bFoTJ6GjBafnY0xYXIZ6Pinl17EvWj60=;
+        b=OD1eLc3WHP/i/6dha1WNxoFEIsjAyrjwoBMZZmkjqNfr2BTKldFNQfj2yQPxtj/OkC
+         7nBB3swCUUuDA/2vhKqRLudUkIWQ7zqqoOwTYdbRIUlKoNfQ4rqrlSeB6znMkA2ftzCJ
+         AXwZQMhIUxTSTfWHRgqoJsd5uNv5Z/KA/Aiwt0OkJPhD/FJeSnybDS7A5oEnIMD2Kjl7
+         LczVGM6w0v2d1foT5rn51zQXfw95VK47suUxbbPyUNqp8kIVekkl079g4XQqyz7vFcyu
+         6+PmyN3BbvyL+L+AQMgWfUZ2R/u2a8yX7sCgHcI2W80ZA48lsuMranso1FN4VKo7/HHB
+         WMEQ==
+X-Gm-Message-State: AGi0PuYE6v9VYPzqZ4fn+UCvO/aIJmcbEFa/7aTtw12DPIX107PdWQ4W
+        219+Ls1bj/qe/bGi4mjyrBOBaSF6FUpa4kRNahiUPixKsyhI9Aj0InGS8uWgqxijv9Hp/N/+iJx
+        sIJC3ztDglg+/sY8LBbhHjIBE
+X-Received: by 2002:a7b:c38e:: with SMTP id s14mr2569986wmj.12.1588749599087;
+        Wed, 06 May 2020 00:19:59 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIV+r+NtiFQvVY9XndOnisjRoTPFVUYqnvGw+P8xp0StDMwaXBjj0p0abeACiuHrrh2hF04MA==
+X-Received: by 2002:a7b:c38e:: with SMTP id s14mr2569971wmj.12.1588749598878;
+        Wed, 06 May 2020 00:19:58 -0700 (PDT)
+Received: from redhat.com (bzq-109-66-7-121.red.bezeqint.net. [109.66.7.121])
+        by smtp.gmail.com with ESMTPSA id o129sm1727634wme.16.2020.05.06.00.19.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 00:19:58 -0700 (PDT)
+Date:   Wed, 6 May 2020 03:19:55 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Justin He <Justin.He@arm.com>
+Cc:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ldigby@redhat.com" <ldigby@redhat.com>,
+        "n.b@live.com" <n.b@live.com>,
+        "stefanha@redhat.com" <stefanha@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [GIT PULL] vhost: fixes
+Message-ID: <20200506031918-mutt-send-email-mst@kernel.org>
+References: <20200504081540-mutt-send-email-mst@kernel.org>
+ <AM6PR08MB40696EFF8BE389C134AC04F6F7A40@AM6PR08MB4069.eurprd08.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fa3ad75d-9c4d-d6c9-1664-53b4c9770c6b@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <AM6PR08MB40696EFF8BE389C134AC04F6F7A40@AM6PR08MB4069.eurprd08.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 12:36:43PM +0530, Anshuman Khandual wrote:
+On Wed, May 06, 2020 at 03:28:47AM +0000, Justin He wrote:
+> Hi Michael
 > 
+> > -----Original Message-----
+> > From: Michael S. Tsirkin <mst@redhat.com>
+> > Sent: Monday, May 4, 2020 8:16 PM
+> > To: Linus Torvalds <torvalds@linux-foundation.org>
+> > Cc: kvm@vger.kernel.org; virtualization@lists.linux-foundation.org;
+> > netdev@vger.kernel.org; linux-kernel@vger.kernel.org; Justin He
+> > <Justin.He@arm.com>; ldigby@redhat.com; mst@redhat.com; n.b@live.com;
+> > stefanha@redhat.com
+> > Subject: [GIT PULL] vhost: fixes
+> >
+> > The following changes since commit
+> > 6a8b55ed4056ea5559ebe4f6a4b247f627870d4c:
+> >
+> >   Linux 5.7-rc3 (2020-04-26 13:51:02 -0700)
+> >
+> > are available in the Git repository at:
+> >
+> >   https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
+> >
+> > for you to fetch changes up to
+> > 0b841030625cde5f784dd62aec72d6a766faae70:
+> >
+> >   vhost: vsock: kick send_pkt worker once device is started (2020-05-02
+> > 10:28:21 -0400)
+> >
+> > ----------------------------------------------------------------
+> > virtio: fixes
+> >
+> > A couple of bug fixes.
+> >
+> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> >
+> > ----------------------------------------------------------------
+> > Jia He (1):
+> >       vhost: vsock: kick send_pkt worker once device is started
 > 
-> On 05/06/2020 12:16 PM, Gavin Shan wrote:
-> > The function add_huge_page_size(), wrapper of hugetlb_add_hstate(),
-> > avoids to register duplicated huge page states for same size. However,
-> > the same logic has been included in hugetlb_add_hstate(). So it seems
-> > unnecessary to keep add_huge_page_size() and this just removes it.
+> Should this fix also be CC-ed to stable? Sorry I forgot to cc it to stable.
 > 
-> Makes sense.
+> --
+> Cheers,
+> Justin (Jia He)
+
+
+Go ahead, though recently just including Fixes seems to be enough.
+
+
 > 
-> > 
-> > Signed-off-by: Gavin Shan <gshan@redhat.com>
-> > ---
-> >  arch/arm64/mm/hugetlbpage.c | 18 +++++-------------
-> >  1 file changed, 5 insertions(+), 13 deletions(-)
-> > 
-> > diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
-> > index bbeb6a5a6ba6..ed7530413941 100644
-> > --- a/arch/arm64/mm/hugetlbpage.c
-> > +++ b/arch/arm64/mm/hugetlbpage.c
-> > @@ -441,22 +441,14 @@ void huge_ptep_clear_flush(struct vm_area_struct *vma,
-> >  	clear_flush(vma->vm_mm, addr, ptep, pgsize, ncontig);
-> >  }
-> >  
-> > -static void __init add_huge_page_size(unsigned long size)
-> > -{
-> > -	if (size_to_hstate(size))
-> > -		return;
-> > -
-> > -	hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT);
-> > -}
-> > -
-> >  static int __init hugetlbpage_init(void)
-> >  {
-> >  #ifdef CONFIG_ARM64_4K_PAGES
-> > -	add_huge_page_size(PUD_SIZE);
-> > +	hugetlb_add_hstate(PUD_SHIFT - PAGE_SHIFT);
-> >  #endif
-> > -	add_huge_page_size(CONT_PMD_SIZE);
-> > -	add_huge_page_size(PMD_SIZE);
-> > -	add_huge_page_size(CONT_PTE_SIZE);
-> > +	hugetlb_add_hstate(CONT_PMD_SHIFT + PMD_SHIFT - PAGE_SHIFT);
-> > +	hugetlb_add_hstate(PMD_SHIFT - PAGE_SHIFT);
-> > +	hugetlb_add_hstate(CONT_PTE_SHIFT);
+> >
+> > Stefan Hajnoczi (1):
+> >       virtio-blk: handle block_device_operations callbacks after hot unplug
+> >
+> >  drivers/block/virtio_blk.c | 86
+> > +++++++++++++++++++++++++++++++++++++++++-----
+> >  drivers/vhost/vsock.c      |  5 +++
+> >  2 files changed, 83 insertions(+), 8 deletions(-)
+> 
+> IMPORTANT NOTICE: The contents of this email and any attachments are confidential and may also be privileged. If you are not the intended recipient, please notify the sender immediately and do not disclose the contents to any other person, use it for any purpose, or store or copy the information in any medium. Thank you.
 
-Something similar has already been done in linux-next.
-
-> Should these page order values be converted into macros instead. Also
-> we should probably keep (CONT_PTE_SHIFT + PAGE_SHIFT - PAGE_SHIFT) as
-> is to make things more clear.
-
-I think the real confusion stems from us not being consistent with your
-*_SHIFT definitions on arm64. It's madness for CONT_PTE_SHIFT to be smaller
-than PAGE_SHIFT imo, but it's just cosmetic I guess.
-
-Will
