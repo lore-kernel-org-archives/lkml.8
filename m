@@ -6,119 +6,123 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8547C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF27C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBB01208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 601ED221F7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:50:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730762AbgEFQuo (ORCPT
+        id S1730767AbgEFQut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:50:44 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:14946 "EHLO pegase1.c-s.fr"
+        Wed, 6 May 2020 12:50:49 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:2642 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730474AbgEFQs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:48:27 -0400
+        id S1730468AbgEFQsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 12:48:25 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49HMwm3Xx3z9v4kK;
-        Wed,  6 May 2020 18:48:24 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 49HMwk2Z4Wz9v4kH;
+        Wed,  6 May 2020 18:48:22 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 7_6lcXNn1kQQ; Wed,  6 May 2020 18:48:24 +0200 (CEST)
+        with ESMTP id q06Ta3EM9nWJ; Wed,  6 May 2020 18:48:22 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMwm2G6Yz9v4kF;
-        Wed,  6 May 2020 18:48:24 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMwk1PJNz9v4kF;
+        Wed,  6 May 2020 18:48:22 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 180508B7C5;
-        Wed,  6 May 2020 18:48:26 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 04A518B7C5;
+        Wed,  6 May 2020 18:48:24 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id TZPgUSZi_LoX; Wed,  6 May 2020 18:48:26 +0200 (CEST)
+        with ESMTP id v1Lfu_ueeMfF; Wed,  6 May 2020 18:48:23 +0200 (CEST)
 Received: from localhost.localdomain (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C6E488B7C7;
-        Wed,  6 May 2020 18:48:25 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B06028B7C3;
+        Wed,  6 May 2020 18:48:23 +0200 (CEST)
 Received: by localhost.localdomain (Postfix, from userid 0)
-        id 8F56E65911; Wed,  6 May 2020 16:48:25 +0000 (UTC)
-Message-Id: <a844b5d4313a0247c7431dd3b57993b343eb6f42.1588783498.git.christophe.leroy@csgroup.eu>
+        id 7F00065911; Wed,  6 May 2020 16:48:23 +0000 (UTC)
+Message-Id: <6363ce9f8eeeceed49d512557f06be4ccf20138b.1588783498.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 References: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v2 20/45] powerpc/mm: Standardise
- __ptep_test_and_clear_young() params between PPC32 and PPC64
+Subject: [PATCH v2 18/45] powerpc/mm: Refactor pte_update() on nohash/32
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed,  6 May 2020 16:48:25 +0000 (UTC)
+Date:   Wed,  6 May 2020 16:48:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On PPC32, __ptep_test_and_clear_young() takes the mm->context.id
+When CONFIG_PTE_64BIT is set, pte_update() operates on
+'unsigned long long'
+When CONFIG_PTE_64BIT is not set, pte_update() operates on
+'unsigned long'
 
-In preparation of standardising pte_update() params between PPC32 and
-PPC64, __ptep_test_and_clear_young() need mm instead of mm->context.id
+In asm/page.h, we have pte_basic_t which is 'unsigned long long'
+when CONFIG_PTE_64BIT is set and 'unsigned long' otherwise.
 
-Replace context param by mm.
+Refactor pte_update() using pte_basic_t.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/include/asm/book3s/32/pgtable.h | 7 ++++---
- arch/powerpc/include/asm/nohash/32/pgtable.h | 5 +++--
- 2 files changed, 7 insertions(+), 5 deletions(-)
+ arch/powerpc/include/asm/nohash/32/pgtable.h | 26 +++-----------------
+ 1 file changed, 4 insertions(+), 22 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/book3s/32/pgtable.h b/arch/powerpc/include/asm/book3s/32/pgtable.h
-index d1108d25e2e5..8122f0b55d21 100644
---- a/arch/powerpc/include/asm/book3s/32/pgtable.h
-+++ b/arch/powerpc/include/asm/book3s/32/pgtable.h
-@@ -288,18 +288,19 @@ static inline pte_basic_t pte_update(pte_t *p, unsigned long clr, unsigned long
-  * for our hash-based implementation, we fix that up here.
-  */
- #define __HAVE_ARCH_PTEP_TEST_AND_CLEAR_YOUNG
--static inline int __ptep_test_and_clear_young(unsigned int context, unsigned long addr, pte_t *ptep)
-+static inline int __ptep_test_and_clear_young(struct mm_struct *mm,
-+					      unsigned long addr, pte_t *ptep)
- {
- 	unsigned long old;
- 	old = pte_update(ptep, _PAGE_ACCESSED, 0);
- 	if (old & _PAGE_HASHPTE) {
- 		unsigned long ptephys = __pa(ptep) & PAGE_MASK;
--		flush_hash_pages(context, addr, ptephys, 1);
-+		flush_hash_pages(mm->context.id, addr, ptephys, 1);
- 	}
- 	return (old & _PAGE_ACCESSED) != 0;
- }
- #define ptep_test_and_clear_young(__vma, __addr, __ptep) \
--	__ptep_test_and_clear_young((__vma)->vm_mm->context.id, __addr, __ptep)
-+	__ptep_test_and_clear_young((__vma)->vm_mm, __addr, __ptep)
- 
- #define __HAVE_ARCH_PTEP_GET_AND_CLEAR
- static inline pte_t ptep_get_and_clear(struct mm_struct *mm, unsigned long addr,
 diff --git a/arch/powerpc/include/asm/nohash/32/pgtable.h b/arch/powerpc/include/asm/nohash/32/pgtable.h
-index 9eaf386a747b..ddf681ceb860 100644
+index 523c4c3876c5..9eaf386a747b 100644
 --- a/arch/powerpc/include/asm/nohash/32/pgtable.h
 +++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
-@@ -256,14 +256,15 @@ static inline pte_basic_t pte_update(pte_t *p, unsigned long clr, unsigned long
+@@ -222,12 +222,9 @@ static inline void pmd_clear(pmd_t *pmdp)
+  * to properly flush the virtually tagged instruction cache of
+  * those implementations.
+  */
+-#ifndef CONFIG_PTE_64BIT
+-static inline unsigned long pte_update(pte_t *p,
+-				       unsigned long clr,
+-				       unsigned long set)
++static inline pte_basic_t pte_update(pte_t *p, unsigned long clr, unsigned long set)
+ {
+-#ifdef PTE_ATOMIC_UPDATES
++#if defined(PTE_ATOMIC_UPDATES) && !defined(CONFIG_PTE_64BIT)
+ 	unsigned long old, tmp;
+ 
+ 	__asm__ __volatile__("\
+@@ -241,8 +238,8 @@ static inline unsigned long pte_update(pte_t *p,
+ 	: "r" (p), "r" (clr), "r" (set), "m" (*p)
+ 	: "cc" );
+ #else /* PTE_ATOMIC_UPDATES */
+-	unsigned long old = pte_val(*p);
+-	unsigned long new = (old & ~clr) | set;
++	pte_basic_t old = pte_val(*p);
++	pte_basic_t new = (old & ~(pte_basic_t)clr) | set;
+ 
+ #if defined(CONFIG_PPC_8xx) && defined(CONFIG_PPC_16K_PAGES)
+ 	p->pte = p->pte1 = p->pte2 = p->pte3 = new;
+@@ -257,21 +254,6 @@ static inline unsigned long pte_update(pte_t *p,
+ #endif
+ 	return old;
  }
+-#else /* CONFIG_PTE_64BIT */
+-static inline unsigned long long pte_update(pte_t *p,
+-					    unsigned long clr,
+-					    unsigned long set)
+-{
+-	unsigned long long old = pte_val(*p);
+-	*p = __pte((old & ~(unsigned long long)clr) | set);
+-
+-#ifdef CONFIG_44x
+-	if ((old & _PAGE_USER) && (old & _PAGE_EXEC))
+-		icache_44x_need_flush = 1;
+-#endif
+-	return old;
+-}
+-#endif /* CONFIG_PTE_64BIT */
  
  #define __HAVE_ARCH_PTEP_TEST_AND_CLEAR_YOUNG
--static inline int __ptep_test_and_clear_young(unsigned int context, unsigned long addr, pte_t *ptep)
-+static inline int __ptep_test_and_clear_young(struct mm_struct *mm,
-+					      unsigned long addr, pte_t *ptep)
- {
- 	unsigned long old;
- 	old = pte_update(ptep, _PAGE_ACCESSED, 0);
- 	return (old & _PAGE_ACCESSED) != 0;
- }
- #define ptep_test_and_clear_young(__vma, __addr, __ptep) \
--	__ptep_test_and_clear_young((__vma)->vm_mm->context.id, __addr, __ptep)
-+	__ptep_test_and_clear_young((__vma)->vm_mm, __addr, __ptep)
- 
- #define __HAVE_ARCH_PTEP_GET_AND_CLEAR
- static inline pte_t ptep_get_and_clear(struct mm_struct *mm, unsigned long addr,
+ static inline int __ptep_test_and_clear_young(unsigned int context, unsigned long addr, pte_t *ptep)
 -- 
 2.25.0
 
