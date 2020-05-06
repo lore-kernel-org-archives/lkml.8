@@ -6,165 +6,221 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A54C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E048C47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A5E320B1F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80AB7208CA
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:49:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730666AbgEFQte (ORCPT
+        id S1730579AbgEFQsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:49:34 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:9462 "EHLO pegase1.c-s.fr"
+        Wed, 6 May 2020 12:48:51 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:53309 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730582AbgEFQsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:48:53 -0400
+        id S1730517AbgEFQsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 12:48:38 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49HMxG1tVRz9v4kH;
-        Wed,  6 May 2020 18:48:50 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 49HMwz19vGz9v4kH;
+        Wed,  6 May 2020 18:48:35 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id mPULLINeXMSc; Wed,  6 May 2020 18:48:50 +0200 (CEST)
+        with ESMTP id iUF0f3o94ubZ; Wed,  6 May 2020 18:48:35 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMxG0nBcz9v4kG;
-        Wed,  6 May 2020 18:48:50 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMwy6B6mz9v4kD;
+        Wed,  6 May 2020 18:48:34 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E793A8B7C5;
-        Wed,  6 May 2020 18:48:51 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7FFB38B7C6;
+        Wed,  6 May 2020 18:48:36 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id UAxc12qlDLEm; Wed,  6 May 2020 18:48:51 +0200 (CEST)
+        with ESMTP id uvUbkd_IMxd3; Wed,  6 May 2020 18:48:36 +0200 (CEST)
 Received: from localhost.localdomain (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9EF638B777;
-        Wed,  6 May 2020 18:48:51 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2CA168B7C5;
+        Wed,  6 May 2020 18:48:36 +0200 (CEST)
 Received: by localhost.localdomain (Postfix, from userid 0)
-        id 691C565911; Wed,  6 May 2020 16:48:51 +0000 (UTC)
-Message-Id: <dbf3f04358be4ce733fe4f495775a9ca0c6e719b.1588783498.git.christophe.leroy@csgroup.eu>
+        id EC7FE65911; Wed,  6 May 2020 16:48:35 +0000 (UTC)
+Message-Id: <e75326c43ef65f38e36b1ddd5aeda48f2a53b4eb.1588783498.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 References: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v2 45/45] powerpc/32s: Implement dedicated kasan_init_region()
+Subject: [PATCH v2 30/45] powerpc/8xx: Add function to set pinned TLBs
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed,  6 May 2020 16:48:51 +0000 (UTC)
+Date:   Wed,  6 May 2020 16:48:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement a kasan_init_region() dedicated to book3s/32 that
-allocates KASAN regions using BATs.
+Pinned TLBs cannot be modified when the MMU is enabled.
+
+Create a function to rewrite the pinned TLB entries with MMU off.
+
+To set pinned TLB, we have to turn off MMU, disable pinning,
+do a TLB flush (Either with tlbie and tlbia) then reprogam
+the TLB entries, enable pinning and turn on MMU.
+
+If using tlbie, it cleared entries in both instruction and data
+TLB regardless whether pinning is disabled or not.
+If using tlbia, it clears all entries of the TLB which has
+disabled pinning.
+
+To make it easy, just clear all entries in both TLBs, and
+reprogram them.
+
+The function takes two arguments, the top of the memory to
+consider and whether data is RO under _sinittext.
+When DEBUG_PAGEALLOC is set, the top is the end of kernel rodata.
+Otherwise, that's the top of physical RAM.
+
+Everything below _sinittext is set RX, over _sinittext that's RW.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/include/asm/kasan.h      |  1 +
- arch/powerpc/mm/kasan/Makefile        |  1 +
- arch/powerpc/mm/kasan/book3s_32.c     | 57 +++++++++++++++++++++++++++
- arch/powerpc/mm/kasan/kasan_init_32.c |  2 +-
- 4 files changed, 60 insertions(+), 1 deletion(-)
- create mode 100644 arch/powerpc/mm/kasan/book3s_32.c
+v2: Function rewritten to manage all entries at once.
+---
+ arch/powerpc/include/asm/nohash/32/mmu-8xx.h |   2 +
+ arch/powerpc/kernel/head_8xx.S               | 103 +++++++++++++++++++
+ 2 files changed, 105 insertions(+)
 
-diff --git a/arch/powerpc/include/asm/kasan.h b/arch/powerpc/include/asm/kasan.h
-index 107a24c3f7b3..be85c7005fb1 100644
---- a/arch/powerpc/include/asm/kasan.h
-+++ b/arch/powerpc/include/asm/kasan.h
-@@ -34,6 +34,7 @@ static inline void kasan_init(void) { }
- static inline void kasan_late_init(void) { }
- #endif
+diff --git a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
+index a092e6434bda..4d3ef3841b00 100644
+--- a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
++++ b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
+@@ -193,6 +193,8 @@
  
-+void kasan_update_early_region(unsigned long k_start, unsigned long k_end, pte_t pte);
- int kasan_init_shadow_page_tables(unsigned long k_start, unsigned long k_end);
- int kasan_init_region(void *start, size_t size);
+ #include <linux/mmdebug.h>
  
-diff --git a/arch/powerpc/mm/kasan/Makefile b/arch/powerpc/mm/kasan/Makefile
-index 440038ea79f1..bb1a5408b86b 100644
---- a/arch/powerpc/mm/kasan/Makefile
-+++ b/arch/powerpc/mm/kasan/Makefile
-@@ -4,3 +4,4 @@ KASAN_SANITIZE := n
++void mmu_pin_tlb(unsigned long top, bool readonly);
++
+ typedef struct {
+ 	unsigned int id;
+ 	unsigned int active;
+diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
+index 423465b10c82..c9e3d54e6a6f 100644
+--- a/arch/powerpc/kernel/head_8xx.S
++++ b/arch/powerpc/kernel/head_8xx.S
+@@ -16,6 +16,7 @@
  
- obj-$(CONFIG_PPC32)           += kasan_init_32.o
- obj-$(CONFIG_PPC_8xx)		+= 8xx.o
-+obj-$(CONFIG_PPC_BOOK3S_32)	+= book3s_32.o
-diff --git a/arch/powerpc/mm/kasan/book3s_32.c b/arch/powerpc/mm/kasan/book3s_32.c
-new file mode 100644
-index 000000000000..4bc491a4a1fd
---- /dev/null
-+++ b/arch/powerpc/mm/kasan/book3s_32.c
-@@ -0,0 +1,57 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#define DISABLE_BRANCH_PROFILING
-+
-+#include <linux/kasan.h>
-+#include <linux/memblock.h>
-+#include <asm/pgalloc.h>
-+#include <mm/mmu_decl.h>
-+
-+int __init kasan_init_region(void *start, size_t size)
-+{
-+	unsigned long k_start = (unsigned long)kasan_mem_to_shadow(start);
-+	unsigned long k_end = (unsigned long)kasan_mem_to_shadow(start + size);
-+	unsigned long k_cur = k_start;
-+	int k_size = k_end - k_start;
-+	int k_size_base = 1 << (ffs(k_size) - 1);
-+	int ret;
-+	void *block;
-+
-+	block = memblock_alloc(k_size, k_size_base);
-+
-+	if (block && k_size_base >= SZ_128K && k_start == ALIGN(k_start, k_size_base)) {
-+		int k_size_more = 1 << (ffs(k_size - k_size_base) - 1);
-+
-+		setbat(-1, k_start, __pa(block), k_size_base, PAGE_KERNEL);
-+		if (k_size_more >= SZ_128K)
-+			setbat(-1, k_start + k_size_base, __pa(block) + k_size_base,
-+			       k_size_more, PAGE_KERNEL);
-+		if (v_block_mapped(k_start))
-+			k_cur = k_start + k_size_base;
-+		if (v_block_mapped(k_start + k_size_base))
-+			k_cur = k_start + k_size_base + k_size_more;
-+
-+		update_bats();
-+	}
-+
-+	if (!block)
-+		block = memblock_alloc(k_size, PAGE_SIZE);
-+	if (!block)
-+		return -ENOMEM;
-+
-+	ret = kasan_init_shadow_page_tables(k_start, k_end);
-+	if (ret)
-+		return ret;
-+
-+	kasan_update_early_region(k_start, k_cur, __pte(0));
-+
-+	for (; k_cur < k_end; k_cur += PAGE_SIZE) {
-+		pmd_t *pmd = pmd_ptr_k(k_cur);
-+		void *va = block + k_cur - k_start;
-+		pte_t pte = pfn_pte(PHYS_PFN(__pa(va)), PAGE_KERNEL);
-+
-+		__set_pte_at(&init_mm, k_cur, pte_offset_kernel(pmd, k_cur), pte, 0);
-+	}
-+	flush_tlb_kernel_range(k_start, k_end);
-+	return 0;
-+}
-diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
-index 76d418af4ce8..c42085801c04 100644
---- a/arch/powerpc/mm/kasan/kasan_init_32.c
-+++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -79,7 +79,7 @@ int __init __weak kasan_init_region(void *start, size_t size)
- 	return 0;
- }
+ #include <linux/init.h>
+ #include <linux/magic.h>
++#include <linux/sizes.h>
+ #include <asm/processor.h>
+ #include <asm/page.h>
+ #include <asm/mmu.h>
+@@ -866,6 +867,108 @@ initial_mmu:
+ 	mtspr	SPRN_DER, r8
+ 	blr
  
--static void __init
-+void __init
- kasan_update_early_region(unsigned long k_start, unsigned long k_end, pte_t pte)
- {
- 	unsigned long k_cur;
++#ifdef CONFIG_PIN_TLB
++_GLOBAL(mmu_pin_tlb)
++	lis	r9, (1f - PAGE_OFFSET)@h
++	ori	r9, r9, (1f - PAGE_OFFSET)@l
++	mfmsr	r10
++	mflr	r11
++	li	r12, MSR_KERNEL & ~(MSR_IR | MSR_DR | MSR_RI)
++	rlwinm	r0, r10, 0, ~MSR_RI
++	rlwinm	r0, r0, 0, ~MSR_EE
++	mtmsr	r0
++	isync
++	.align	4
++	mtspr	SPRN_SRR0, r9
++	mtspr	SPRN_SRR1, r12
++	rfi
++1:
++	li	r5, 0
++	lis	r6, MD_TWAM@h
++	mtspr	SPRN_MI_CTR, r5
++	mtspr	SPRN_MD_CTR, r6
++	tlbia
++
++#ifdef CONFIG_PIN_TLB_TEXT
++	LOAD_REG_IMMEDIATE(r5, 28 << 8)
++	LOAD_REG_IMMEDIATE(r6, PAGE_OFFSET)
++	LOAD_REG_IMMEDIATE(r7, MI_SVALID | MI_PS8MEG)
++	LOAD_REG_IMMEDIATE(r8, 0xf0 | _PAGE_RO | _PAGE_SPS | _PAGE_SH | _PAGE_PRESENT)
++	LOAD_REG_ADDR(r9, _sinittext)
++	li	r0, 4
++	mtctr	r0
++
++2:	ori	r0, r6, MI_EVALID
++	mtspr	SPRN_MI_CTR, r5
++	mtspr	SPRN_MI_EPN, r0
++	mtspr	SPRN_MI_TWC, r7
++	mtspr	SPRN_MI_RPN, r8
++	addi	r5, r5, 0x100
++	addis	r6, r6, SZ_8M@h
++	addis	r8, r8, SZ_8M@h
++	cmplw	r6, r9
++	bdnzt	lt, 2b
++	lis	r0, MI_RSV4I@h
++	mtspr	SPRN_MI_CTR, r0
++#endif
++	LOAD_REG_IMMEDIATE(r5, 28 << 8 | MD_TWAM)
++#ifdef CONFIG_PIN_TLB_DATA
++	LOAD_REG_IMMEDIATE(r6, PAGE_OFFSET)
++	LOAD_REG_IMMEDIATE(r7, MI_SVALID | MI_PS8MEG)
++#ifdef CONFIG_PIN_TLB_IMMR
++	li	r0, 3
++#else
++	li	r0, 4
++#endif
++	mtctr	r0
++	cmpwi	r4, 0
++	beq	4f
++	LOAD_REG_IMMEDIATE(r8, 0xf0 | _PAGE_RO | _PAGE_SPS | _PAGE_SH | _PAGE_PRESENT)
++	LOAD_REG_ADDR(r9, _sinittext)
++
++2:	ori	r0, r6, MD_EVALID
++	mtspr	SPRN_MD_CTR, r5
++	mtspr	SPRN_MD_EPN, r0
++	mtspr	SPRN_MD_TWC, r7
++	mtspr	SPRN_MD_RPN, r8
++	addi	r5, r5, 0x100
++	addis	r6, r6, SZ_8M@h
++	addis	r8, r8, SZ_8M@h
++	cmplw	r6, r9
++	bdnzt	lt, 2b
++
++4:	LOAD_REG_IMMEDIATE(r8, 0xf0 | _PAGE_SPS | _PAGE_SH | _PAGE_PRESENT)
++2:	ori	r0, r6, MD_EVALID
++	mtspr	SPRN_MD_CTR, r5
++	mtspr	SPRN_MD_EPN, r0
++	mtspr	SPRN_MD_TWC, r7
++	mtspr	SPRN_MD_RPN, r8
++	addi	r5, r5, 0x100
++	addis	r6, r6, SZ_8M@h
++	addis	r8, r8, SZ_8M@h
++	cmplw	r6, r3
++	bdnzt	lt, 2b
++#endif
++#ifdef CONFIG_PIN_TLB_IMMR
++	LOAD_REG_IMMEDIATE(r0, VIRT_IMMR_BASE | MD_EVALID)
++	LOAD_REG_IMMEDIATE(r7, MD_SVALID | MD_PS512K | MD_GUARDED)
++	mfspr   r8, SPRN_IMMR
++	rlwinm	r8, r8, 0, 0xfff80000
++	ori	r8, r8, 0xf0 | _PAGE_DIRTY | _PAGE_SPS | _PAGE_SH | \
++			_PAGE_NO_CACHE | _PAGE_PRESENT
++	mtspr	SPRN_MD_CTR, r5
++	mtspr	SPRN_MD_EPN, r0
++	mtspr	SPRN_MD_TWC, r7
++	mtspr	SPRN_MD_RPN, r8
++#endif
++#if defined(CONFIG_PIN_TLB_IMMR) || defined(CONFIG_PIN_TLB_DATA)
++	lis	r0, (MD_RSV4I | MD_TWAM)@h
++	mtspr	SPRN_MI_CTR, r0
++#endif
++	mtspr	SPRN_SRR1, r10
++	mtspr	SPRN_SRR0, r11
++	rfi
++#endif /* CONFIG_PIN_TLB */
+ 
+ /*
+  * We put a few things here that have to be page-aligned.
 -- 
 2.25.0
 
