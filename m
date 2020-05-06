@@ -2,141 +2,106 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C8CFC47259
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9208C4725D
 	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 04:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6275920714
+	by mail.kernel.org (Postfix) with ESMTP id 88E1A206F9
 	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 04:45:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r9hXDDE4"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dNYljanB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgEFEpM (ORCPT
+        id S1726774AbgEFEpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 00:45:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43582 "EHLO
+        Wed, 6 May 2020 00:45:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbgEFEpL (ORCPT
+        with ESMTP id S1725862AbgEFEpQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 00:45:11 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79B64C061A0F;
-        Tue,  5 May 2020 21:45:11 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id p25so386095pfn.11;
-        Tue, 05 May 2020 21:45:11 -0700 (PDT)
+        Wed, 6 May 2020 00:45:16 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23D41C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 21:45:16 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id u16so857520wmc.5
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 21:45:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=nLsJXrAuqBX1mbe5XSwwfXidNjjtm9wgbXukORhebQU=;
-        b=r9hXDDE4T7bGFCOFM1dnN/Dwl8t6eXqEkOZlA4BDKRqS8/giU1Xn7tYlRqhxZzNMff
-         wt41E7VSwL++TEkU4mmMXaC5DVHNJ6uW0uM5wEoRJwdutU0WhRRlw03CioQEyxdHX8lV
-         F12ifMvOD36BZKAdVMPRFZ8zLG7pq+hMCnzvMqc6JKHtm1ogY4rDJ1wfR7S3vD0Lbvkz
-         LRktAvvFEhrKhF8el8L9SHMbG3e32PjCbAvxD04/VLxxYUfri5kOVc7m12NcE2xCf4lJ
-         R2NGM0aqgXvAA+5HTtIi46iVtlC0OheLy0XclmzyoU24vBCEyqhIl52rpaEM3al3Ks41
-         DPbg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Iqotp4Pzqr9RQqsgLMpXGPLAwQseruKWmRPMUXLKxY4=;
+        b=dNYljanBzrbTS1pIe5fVzt2wPBuZEBnSMI5xTqSjKCm5pBWo45oj87/rEcsvAj+fyG
+         ejziA6igQ3J1BuLiRKf7QfkZovsocQgMp7sfLa2hkfS5hSRp+Wd2n3TSCIahHFKxf+0F
+         wXePzIJqbhUN3fJiQ6SC+EL5KmtH4nSwA6ytYDVwk7yA1GiOZqg7u6EiiMFWHTue8CRR
+         j2WbBxKtVthNdffzVFJ5fd9tvadNHjoj6WD+CjYQF7e6CRfUzH2hhOfAjkeiTpzIdn/R
+         qZ23jkSjPLJh8rzPu7EAVlBU2EZszA9/qDPGv6JWLZbZe6mChM3IfVVGyR1QzfVJlNy0
+         /Upw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=nLsJXrAuqBX1mbe5XSwwfXidNjjtm9wgbXukORhebQU=;
-        b=Tgp75Mj0BHBNDG6fGYNuaSbePQw/cdcTU6nm2qT7dl1Hpd2wNFBD4KLqeup3H2wBVR
-         nH5BmGvUzHY+rtHj9YPeiROy7qaafdDaeCL2xMDTgD7Ux5cIjxC9AaUIXQHw7drIX6HX
-         Dr/7LfzwrQ4/nGrRQcPpSA7JFQ7ACA+6XIiVeO4W0Vh33en2SPJyYbm16Ug1pXxaY7NQ
-         xLtNntb4pYqPbHlyuk0D/PK88eXlasYj/D47kimrQQNw+yEo3G4Y2wHn+jII6zbQCYiQ
-         jmrOjULb7Ta8y+a5W/dKIw2ubKcd6tKxCIzQXZYM6rJBNSOU5+isUKER9c6sP2WWan65
-         KGpg==
-X-Gm-Message-State: AGi0PubZGm7NBfDk8Nne3vkvzLt61Z04JAjp3/fNIeytHSsk+jlLoi0q
-        c510AbQHvZEL7iqynXNOxCD4mYRl
-X-Google-Smtp-Source: APiQypJHyJ7BjHlFl/OTwlOF88+C9kf/F/gwwhlsf/M00v8f1Ac5yeF0HtrNpv5PT1LmocqD4rqV5A==
-X-Received: by 2002:a63:e04e:: with SMTP id n14mr5477625pgj.147.1588740310754;
-        Tue, 05 May 2020 21:45:10 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id gn20sm3500466pjb.24.2020.05.05.21.45.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2020 21:45:09 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Subject: Proper use for linking foo.o_shipped after 69ea912fda74 ("kbuild:
- remove unneeded link_multi_deps")?
-To:     masahiroy@kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-kbuild@vger.kernel.org,
-        Michal Marek <michal.lkml@markovi.net>
-Message-ID: <cd20b888-7f3d-e7ff-8096-2cc8305a5107@gmail.com>
-Date:   Tue, 5 May 2020 21:45:08 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Iqotp4Pzqr9RQqsgLMpXGPLAwQseruKWmRPMUXLKxY4=;
+        b=U8U2mNEdRvfX27CHf+5/1n4WTnwnaAC1oQx+kFaAR2z2DbkCYTBlxICdNzv5tjrV1C
+         z1GlKfXGowTygdXM+U10Iw4nVNXUC42gv/kp0Ke8l3Xv0ymvJrjZLxY04QieH/jqf72A
+         t+hmcocaD4vaUCpORplpKtqx42vsQBnrwT3qln5dVdkrakruk7T29gSpvd5s7XRjTI9l
+         mC9MJm1IazGC3z5ak+X2bP9J5bI17R4ZPAmw5hl5x/PN+lwxFh0KZWDinrMRtpeKq2OH
+         +oUuGpPxkFpIO35JmsE8TpPQKQtZZ9TT2pwFUvYrIPrxt8wlTJX3MKOG7U7BGUnFrf64
+         bKFw==
+X-Gm-Message-State: AGi0Pua2B+J+eO6izmgShMsR0f2aofU31JA5XU21UrNxu2X8UaSS1wOB
+        S37aYaACJILg8sexxIpAGJZdghHyK25YCE2eAr9elQ==
+X-Google-Smtp-Source: APiQypLlWoyB8MsiBPPwrCnj6rFRlzdL+3LDkvIkmUwWB4W78Fye3W+wePNZ9OADmwbwWZLxi6pRuvX3lw5wcg7eR1Y=
+X-Received: by 2002:a1c:1fcf:: with SMTP id f198mr2157051wmf.16.1588740314500;
+ Tue, 05 May 2020 21:45:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200505182821.47708-1-elver@google.com>
+In-Reply-To: <20200505182821.47708-1-elver@google.com>
+From:   David Gow <davidgow@google.com>
+Date:   Wed, 6 May 2020 12:45:03 +0800
+Message-ID: <CABVgOSmg8z1TpMh7NPy0M+9Gs2JT097-j_XGBRGhKk_3y2J-oA@mail.gmail.com>
+Subject: Re: [PATCH v2] kcsan: Add test suite
+To:     Marco Elver <elver@google.com>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masahiro, Michal,
+On Wed, May 6, 2020 at 2:30 AM Marco Elver <elver@google.com> wrote:
+>
+> This adds KCSAN test focusing on behaviour of the integrated runtime.
+> Tests various race scenarios, and verifies the reports generated to
+> console. Makes use of KUnit for test organization, and the Torture
+> framework for test thread control.
+>
+> Signed-off-by: Marco Elver <elver@google.com>
 
-While updating our systems from 4.9 to 5.4, we noticed that one of the
-kernel modules that we build, which is done by linking an object that we
-pre-compile out of Kbuild stopped working.
+Thanks, this works much better on my setup: having an explicit error
+for there not being enough CPUs is a lot better than hanging. It'd
+still be nice to have these be "skipped" rather than "failed" at some
+stage, but that's a nice-to-have for the future once we've implemented
+such a thing in KUnit.
 
-I bisected it down to:
+I'm still a little hesitant about non-deterministic tests in general =E2=80=
+=94
+even if they're only run when CONFIG_KCSAN is enabled, it's possible
+that a future CI system could run under KCSAN and report false
+breakages on unrelated patches. Given no such setup exists yet,
+though, I think it's probably a problem for the future rather than a
+blocker at the moment.
 
-commit 69ea912fda74a673d330d23595385e5b73e3a2b9 (refs/bisect/bad)
-Author: Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu Oct 4 13:25:19 2018 +0900
+Regardless, I hit no unexpected issues in my testing, so,
 
-    kbuild: remove unneeded link_multi_deps
+Tested-by: David Gow <davidgow@google.com>
 
-    Since commit c8589d1e9e01 ("kbuild: handle multi-objs dependency
-    appropriately"), $^ really represents all the prerequisite of the
-    composite object being built.
-
-    Hence, $(filter %.o,$^) contains all the objects to link together,
-    which is much simpler than link_multi_deps calculation.
-
-    Please note $(filter-out FORCE,$^) does not work here. When a single
-    object module is turned into a multi object module, $^ will contain
-    header files that were previously included for building the single
-    object, and recorded in the .*.cmd file. To filter out such headers,
-    $(filter %.o,$^) should be used here.
-
-    Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-
-and the linker now fails with the following:
-
-mkdir -p /home/florian/dev/lkm/.tmp_versions ; rm -f
-/home/florian/dev/lkm/.tmp_versions/*
-
-  WARNING: Symbol version dump ./Module.symvers
-           is missing; modules will have no dependencies and modversions.
-
-make -f ./scripts/Makefile.build obj=/home/florian/dev/lkm
-(cat /dev/null;   echo kernel//home/florian/dev/lkm/hello.ko;) >
-/home/florian/dev/lkm/modules.order
-  ld -m elf_x86_64  -z max-page-size=0x200000    -r -o
-/home/florian/dev/lkm/hello.o
-ld: no input files
-make[1]: *** [scripts/Makefile.build:492: /home/florian/dev/lkm/hello.o]
-Error 1
-make: *** [Makefile:1530: _module_/home/florian/dev/lkm] Error 2
-
-and here are some steps to reproduce this:
-
-Kbuild:
-obj-m   := hello.o
-hello-y := test.o_shipped
-
-test.c can be a simple hello world, and you can compile it using a
-standard Kbuild file first, and then move test.o as test.o_shipped.
-
-I am afraid I do not speak Kbuild fluently enough to recommend a fix for
-that.
-
-Thanks!
--- 
-Florian
+-- David
