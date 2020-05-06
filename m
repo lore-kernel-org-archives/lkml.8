@@ -6,183 +6,71 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD6FC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFBDC47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78F6320836
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E90BA20836
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 14:42:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VrB6p4Xy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="faoi2zfZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729239AbgEFOmH (ORCPT
+        id S1729246AbgEFOmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 10:42:07 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:52297 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729226AbgEFOmH (ORCPT
+        Wed, 6 May 2020 10:42:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52094 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728712AbgEFOmb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 10:42:07 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588776125; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=cx846LpCI/mxVQVVyh+RuRGtZ75GrHh3+ShglsOfGD4=;
- b=VrB6p4Xy5AKLQxHK+mf/kPuXe8nDfUWFmgjtCDK/h6EpSAToQsSp3VDfDbK3/BrGvh5VHFd3
- dCobiEkVI0ORhRhXaWcydrHcufZvetJSym7qNQL0KT/aWc4wf/xj4aPQZ1aYHt5s/g/JaH4r
- Y1arxWt5q3mTsPEo5kxBIau4RXM=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb2ccb5.7f1064742c70-smtp-out-n02;
- Wed, 06 May 2020 14:41:57 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E0711C44791; Wed,  6 May 2020 14:41:55 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 887D4C433F2;
-        Wed,  6 May 2020 14:41:54 +0000 (UTC)
+        Wed, 6 May 2020 10:42:31 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95C53C061A0F;
+        Wed,  6 May 2020 07:42:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=PhdajbNn68yKLUpzBA64THvXTzqUMkhchAQNlpDFb4w=; b=faoi2zfZ65krF7BF3qUUJfKYRx
+        cniqB35eZxuYkKsNE+7KTwE4viLklY4E1t/hGQSOOiWztg9Mq00mIdcIzK0zkhTINMU6h7yaUVZrB
+        ZIFO1J0yGUnSvXTzi/E9QUILDu1ewOueuKnXU4GiY22Q5XuGKkOu4Lnj8dTPZ0CJ78sdHlTLVg4sp
+        uVb7g4b/xrl3q3R+euu8YSifXQmYB8AyWndN64wjgz01U+b4rUyKR1yf3WvHSSgf1Jy1QigWdNp2n
+        0iNhSgsNZJ5ipXOEoPNwb/vx7SM9/rHiMNAM7/17epxZmS6hX8z3nlAdbQ7+0H2fZezfwp6s2I76C
+        t7RSQVFg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jWLFQ-0001wI-Ty; Wed, 06 May 2020 14:42:08 +0000
+Date:   Wed, 6 May 2020 07:42:08 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Huacai Chen <chenhc@lemote.com>
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH v6] MIPS: Loongson: Add DMA support for LS7A
+Message-ID: <20200506144208.GD27643@infradead.org>
+References: <1588213867-32274-1-git-send-email-yangtiezhu@loongson.cn>
+ <CAAhV-H5QBOnrqVbMfGf7H5vJ6UMhUxhkCqAzZiwRFn_VwTQHpA@mail.gmail.com>
+ <7d7f6211-f6bc-daae-5b13-b54092e762a1@loongson.cn>
+ <CAAhV-H7jX9uVwb+GnaKXHPBsBQY35YKccbDedLrmfp8-hveVfw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 06 May 2020 20:11:54 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Nishanth Menon <nm@ti.com>, Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH v4 00/12] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
-In-Reply-To: <CAHLCerM_wdHDwzEDN7YxU9pBdHo3KvNyJeRWMC6seTG6aCH7nw@mail.gmail.com>
-References: <20200504202243.5476-1-sibis@codeaurora.org>
- <CAHLCerM_wdHDwzEDN7YxU9pBdHo3KvNyJeRWMC6seTG6aCH7nw@mail.gmail.com>
-Message-ID: <87126044e367432ee8722ec2346d1dd5@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAhV-H7jX9uVwb+GnaKXHPBsBQY35YKccbDedLrmfp8-hveVfw@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Amit,
-Thanks for taking time to review
-the series!
+On Wed, May 06, 2020 at 04:47:30PM +0800, Huacai Chen wrote:
+> > For the above reasons, I think what you are concerned is not a
+> > big deal.
+> I don't think so, this is obviously a regression. If we can accept a
+> regression of RS780E, why we still maintain Loongson-2EF rather than
+> simply drop them?
 
-On 2020-05-06 18:08, Amit Kucheria wrote:
-> On Tue, May 5, 2020 at 1:54 AM Sibi Sankar <sibis@codeaurora.org> 
-> wrote:
->> 
->> This patch series aims to extend cpu based scaling support to L3/DDR 
->> on
->> SDM845 and SC7180 SoCs.
->> 
->> Patches [1-3] - Blacklist SDM845 and SC7180 in cpufreq-dt-platdev
->> Patches [4-8] - Update bw levels based on cpu frequency change
->> Patches [9-10] - Add tag setting support to OPP
->> Patches [11-12] - Add the cpu opp tables for SDM845 and SC7180 SoCs.
->> 
->> Depends on the following series:
->> https://lore.kernel.org/patchwork/cover/1230626/
-> 
-> Are there any other dependencies for this series? I tried applying
-> this on top of Georgi's series on v5.7-rc3. Patch 12 didn't apply
-> cleanly and needed a manual fixup for the include change.
-> 
-
-When I posted out it was based on
-next-20200428 tree, there shouldn't
-be any other dependency needed.
-
-> Compilation failed with:
-> Error:
-> /home/amit/work/sources/worktree-review-pipeline/arch/arm64/boot/dts/qcom/sc7180.dtsi:101.30-31
-> syntax error
-> FATAL ERROR: Unable to parse input tree
-> 
-> I've been squinting at the offending lines with no success:
->                         interconnects = <&gem_noc MASTER_APPSS_PROC
-> &mc_virt SLAVE_EBI1>,
->                                         <&osm_l3 MASTER_OSM_L3_APPS
-> &osm_l3 SLAVE_OSM_L3>;
-> 
-
-#include <dt-bindings/interconnect/qcom,sc7180.h>
-You are probably missing ^^ which
-is present in next.
-
->> Georgi,
->>  Would it make sense to include tag support patches [9-10] in your 
->> next
->>  re-spin?
->> 
->> V4:
->>  * Migrate to using Georgi's new bindings
->>  * Misc fixups based on Matthias comments
->>  * API fixups based on Bjorn's comments on v2
->>  * Picked up a few R-bs from Matthias
->> 
->> v3:
->>  * Migrated to using Saravana's opp-kBps bindings [1]
->>  * Fixed some misc comments from Rajendra
->>  * Added support for SC7180
->> 
->> v2:
->>  * Incorporated Viresh's comments from:
->>  
->> https://lore.kernel.org/lkml/20190410102429.r6j6brm5kspmqxc3@vireshk-i7/
->>  
->> https://lore.kernel.org/lkml/20190410112516.gnh77jcwawvld6et@vireshk-i7/
->>  * Dropped cpufreq-map passive governor
->> 
->> Sibi Sankar (12):
->>   arm64: dts: qcom: sdm845: Add SoC compatible to MTP
->>   cpufreq: blacklist SDM845 in cpufreq-dt-platdev
->>   cpufreq: blacklist SC7180 in cpufreq-dt-platdev
->>   OPP: Add and export helper to update voltage
->>   OPP: Add and export helper to set bandwidth
->>   cpufreq: qcom: Update the bandwidth levels on frequency change
->>   OPP: Add and export helper to get icc path count
->>   cpufreq: qcom: Disable fast switch when scaling ddr/l3
->>   dt-bindings: interconnect: Add interconnect-tags bindings
->>   OPP: Add support for setting interconnect-tags
->>   arm64: dts: qcom: sdm845: Add cpu OPP tables
->>   arm64: dts: qcom: sc7180: Add cpu OPP tables
->> 
->>  .../bindings/interconnect/interconnect.txt    |   5 +
->>  arch/arm64/boot/dts/qcom/sc7180.dtsi          | 168 ++++++++++++
->>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts       |   2 +-
->>  arch/arm64/boot/dts/qcom/sdm845.dtsi          | 258 
->> ++++++++++++++++++
->>  drivers/cpufreq/cpufreq-dt-platdev.c          |   2 +
->>  drivers/cpufreq/qcom-cpufreq-hw.c             |  89 +++++-
->>  drivers/opp/core.c                            | 114 ++++++++
->>  drivers/opp/of.c                              |  25 +-
->>  include/linux/pm_opp.h                        |  22 ++
->>  9 files changed, 675 insertions(+), 10 deletions(-)
->> 
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->> a Linux Foundation Collaborative Project
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+While I much prefer to use the default, regression an otherwise
+working platform seems like a bad idea.  I don't really know much
+about the Loongson platforms, do they all boot using the same kernel
+image?
