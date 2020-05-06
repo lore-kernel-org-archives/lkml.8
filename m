@@ -2,90 +2,109 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C62C47247
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 01:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD635C47254
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 01:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F9912073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 01:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B342206A5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 01:52:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BVvIl436"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729894AbgEFBuy (ORCPT
+        id S1729901AbgEFBw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 May 2020 21:50:54 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3851 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728069AbgEFBuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 May 2020 21:50:54 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 7772AED51D9EDAEEF549;
-        Wed,  6 May 2020 09:50:52 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.99) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Wed, 6 May 2020
- 09:50:44 +0800
-Subject: Re: cgroup pointed by sock is leaked on mode switch
-To:     Tejun Heo <tj@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <cgroups@vger.kernel.org>,
-        <netdev@vger.kernel.org>,
-        "Libin (Huawei)" <huawei.libin@huawei.com>, <guofan5@huawei.com>,
-        <wangkefeng.wang@huawei.com>, <lizefan@huawei.com>
-References: <03dab6ab-0ffe-3cae-193f-a7f84e9b14c5@huawei.com>
- <20200505160639.GG12217@mtj.thefacebook.com>
-From:   Yang Yingliang <yangyingliang@huawei.com>
-Message-ID: <c9879fd2-cb91-2a08-8293-c6a436b5a539@huawei.com>
-Date:   Wed, 6 May 2020 09:50:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200505160639.GG12217@mtj.thefacebook.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.166.215.99]
-X-CFilter-Loop: Reflected
+        Tue, 5 May 2020 21:52:58 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:15014 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727986AbgEFBw6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 May 2020 21:52:58 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588729977; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=qmvdG7p6e6Acl9I4vzAwMCDyl5hiqrJddxAfbhxUf2g=; b=BVvIl436OAbgimWVljfFR2i5TOm7Q6Zntw1HSJVWTfMgftDxqycaSaZE27/NK61zgJ6CtVAH
+ x3R9NhWwmquz7df/TQiReILdiPYc0kSrIt+HGjhwW6C2npidhVuja3CtQCIz7xiUKTkWMWl3
+ J2dlFhgi7RkWwkMwv34QGZtfE0I=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb2186f.7fc768df54c8-smtp-out-n03;
+ Wed, 06 May 2020 01:52:47 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BFA26C432C2; Wed,  6 May 2020 01:52:47 +0000 (UTC)
+Received: from sidgup-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sidgup)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 03105C433CB;
+        Wed,  6 May 2020 01:52:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 03105C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sidgup@codeaurora.org
+From:   Siddharth Gupta <sidgup@codeaurora.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     Siddharth Gupta <sidgup@codeaurora.org>,
+        linux-kernel@vger.kernel.org, maennich@google.com
+Subject: [PATCH v3] scripts: headers_install: Exit with error on config leak
+Date:   Tue,  5 May 2020 18:52:37 -0700
+Message-Id: <1588729957-19164-1-git-send-email-sidgup@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+cc lizefan@huawei.com
+Misuse of CONFIG_* in UAPI headers should result in an error. These config
+options can be set in userspace by the user application which includes
+these headers to control the APIs and structures being used in a kernel
+which supports multiple targets.
 
-On 2020/5/6 0:06, Tejun Heo wrote:
-> Hello, Yang.
->
-> On Sat, May 02, 2020 at 06:27:21PM +0800, Yang Yingliang wrote:
->> I find the number nr_dying_descendants is increasing:
->> linux-dVpNUK:~ # find /sys/fs/cgroup/ -name cgroup.stat -exec grep
->> '^nr_dying_descendants [^0]'  {} +
->> /sys/fs/cgroup/unified/cgroup.stat:nr_dying_descendants 80
->> /sys/fs/cgroup/unified/system.slice/cgroup.stat:nr_dying_descendants 1
->> /sys/fs/cgroup/unified/system.slice/system-hostos.slice/cgroup.stat:nr_dying_descendants
->> 1
->> /sys/fs/cgroup/unified/lxc/cgroup.stat:nr_dying_descendants 79
->> /sys/fs/cgroup/unified/lxc/5f1fdb8c54fa40c3e599613dab6e4815058b76ebada8a27bc1fe80c0d4801764/cgroup.stat:nr_dying_descendants
->> 78
->> /sys/fs/cgroup/unified/lxc/5f1fdb8c54fa40c3e599613dab6e4815058b76ebada8a27bc1fe80c0d4801764/system.slice/cgroup.stat:nr_dying_descendants
->> 78
-> Those numbers are nowhere close to causing oom issues. There are some
-> aspects of page and other cache draining which is being improved but unless
-> you're seeing numbers multiple orders of magnitude higher, this isn't the
-> source of your problem.
->
->> The situation is as same as the commit bd1060a1d671 ("sock, cgroup: add
->> sock->sk_cgroup") describes.
->> "On mode switch, cgroup references which are already being pointed to by
->> socks may be leaked."
-> I'm doubtful that you're hitting that issue. Mode switching means memcg
-> being switched between cgroup1 and cgroup2 hierarchies, which is unlikely to
-> be what's happening when you're launching docker containers.
->
-> The first step would be identifying where memory is going and finding out
-> whether memcg is actually being switched between cgroup1 and 2 - look at the
-> hierarchy number in /proc/cgroups, if that's switching between 0 and
-> someting not zero, it is switching.
->
-> Thanks.
->
+Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
+---
+ scripts/headers_install.sh | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
+diff --git a/scripts/headers_install.sh b/scripts/headers_install.sh
+index a07668a..94a8335 100755
+--- a/scripts/headers_install.sh
++++ b/scripts/headers_install.sh
+@@ -64,7 +64,7 @@ configs=$(sed -e '
+ 	d
+ ' $OUTFILE)
+ 
+-# The entries in the following list are not warned.
++# The entries in the following list do not result in an error.
+ # Please do not add a new entry. This list is only for existing ones.
+ # The list will be reduced gradually, and deleted eventually. (hopefully)
+ #
+@@ -98,18 +98,19 @@ include/uapi/linux/raw.h:CONFIG_MAX_RAW_DEVS
+ 
+ for c in $configs
+ do
+-	warn=1
++	leak_error=1
+ 
+ 	for ignore in $config_leak_ignores
+ 	do
+ 		if echo "$INFILE:$c" | grep -q "$ignore$"; then
+-			warn=
++			leak_error=
+ 			break
+ 		fi
+ 	done
+ 
+-	if [ "$warn" = 1 ]; then
+-		echo "warning: $INFILE: leak $c to user-space" >&2
++	if [ "$leak_error" = 1 ]; then
++		echo "error: $INFILE: leak $c to user-space" >&2
++		exit 1
+ 	fi
+ done
+ 
+-- 
+Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
