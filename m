@@ -2,113 +2,108 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BC9C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D9CC38A24
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 429912068E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA4802068E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:19:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588760393;
+	bh=0q621lKWiW6X1gU1dku8w9Ioxw5BlY6leH5SpyaQyCM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fMRF2ZXg8HonW72/feDqrPgxTFltIi3uWnHmdj+0hbfF9GF4DRnmVR5u++bav9Slv
+	 oSfMffPlzNRlhkGcO0quriwEoiO9ctqOnaboZHJXlUoQWfcHBxm0dh/qZYe0Or4ev+
+	 tTHbApwcXJtsJii3DgqhA4CTj1iZBdR9is7unSRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728886AbgEFKT1 convert rfc822-to-8bit (ORCPT
+        id S1728937AbgEFKTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 06:19:27 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:50207 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728465AbgEFKTX (ORCPT
+        Wed, 6 May 2020 06:19:53 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41640 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728306AbgEFKTv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 06:19:23 -0400
-X-Originating-IP: 90.76.143.236
-Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 442881BF238;
-        Wed,  6 May 2020 10:16:41 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Wed, 6 May 2020 06:19:51 -0400
+Received: by mail-ot1-f68.google.com with SMTP id c3so898102otp.8;
+        Wed, 06 May 2020 03:19:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3Jd+W5BzC4qZWaXd8mMr44l3QHyMyxsGcV2SIRL+Ey0=;
+        b=HS9sQ6QNtzhxPTOrFzimcPyjkde76rY2YfbyWAlGvMUi1HWS5oZvBrQb2VYI4h5PCj
+         j6VssnVkjz+74it0D3U55CKKbURgqvTOqMs8Yoq4Y/l6aOUXaPNzUmVVfHcKTwyfZCi3
+         P8lxVP7uCbEQ9ys60Q9EjzBdtffF7hhVDJnKq6YZLj6gp5Sj3njn48u7DC6gVjWV8bTw
+         YEblCZRRz0CZLUgBF7vmmKQcIRFFxs1p85eMe2xtndbSuUSNLgNVsmdpPT4qm+WXTeIx
+         GY81QoCFkUUYy9Di/pirenieV3FgoLZrGU6/Chycf+2Tw5LlhSt+HXmhGJCNZ3WtylXa
+         97Cg==
+X-Gm-Message-State: AGi0PuaxlAPxGqcMBLuXHydbUeLtLbshKZsqKBaxsf5Uf6nXcHngoVJM
+        hYYkCX3+TG/aUReHqPq2HqDXx2aY4/md6tR43c3Apg==
+X-Google-Smtp-Source: APiQypKOnnHoizZAjjH6JFCByCWVpWyQaiM0FY3kCcfXlB2TaOUlENM09pbUovXDWS0vH+3OFGg7USg9KBXKGjKs9nU=
+X-Received: by 2002:a9d:112:: with SMTP id 18mr5482997otu.167.1588760390910;
+ Wed, 06 May 2020 03:19:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200504213136.26458-4-michael@walle.cc>
-References: <20200504213136.26458-1-michael@walle.cc> <20200504213136.26458-4-michael@walle.cc>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Michael Walle <michael@walle.cc>
-Subject: Re: [PATCH net-next v2 3/3] net: phy: mscc: use phy_package_shared
-To:     Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-Message-ID: <158876019421.468345.17020929384276599315@kwain>
-Date:   Wed, 06 May 2020 12:16:35 +0200
+References: <CAB4CAwdqo7=MvyG_PE+PGVfeA17AHF5i5JucgaKqqMX6mjArbQ@mail.gmail.com>
+ <CAJZ5v0gZH61ui04Howzif-_Xc3-X9GyAx7FgZ=ZS2X=4KotEng@mail.gmail.com>
+In-Reply-To: <CAJZ5v0gZH61ui04Howzif-_Xc3-X9GyAx7FgZ=ZS2X=4KotEng@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 6 May 2020 12:19:39 +0200
+Message-ID: <CAJZ5v0gX1gx1_zTZg=M+xEOqxPEaq8ZU-N3hwk7OGcGdzrdBTg@mail.gmail.com>
+Subject: Re: System fails to exit s2idle by a keystroke on my laptop
+To:     Chris Chiu <chiu@endlessm.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        seth.forshee@canonical.com, Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Michael,
+On Wed, May 6, 2020 at 11:32 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Mon, May 4, 2020 at 7:09 PM Chris Chiu <chiu@endlessm.com> wrote:
+> >
+> > Hi,
+> >     I have an Intel X5-Z8350 laptop which used to work fine on s2idle
+> > enter/exit with kernel 5.3. After upgrading to kernel 5.4 and later,
+> > the system can still exit s2idle by power button. However, if I try to
+> > wake it up from a keystroke, the system will freeze and then no longer
+> > respond even to the power button. I can only shut it down and power on
+> > again.
+> >
+> >     I tried to 'git bisect' to find out which commit causes the
+> > difference, it shows me the commit "ACPI: PM: s2idle: Prevent spurious
+> > SCIs from waking up the system". My laptop can work as usual to exit
+> > s2idle by a keystroke with reverting it on kernel 5.4.
+> >
+> >     Then I tried to check whether I can reproduce it on the latest
+> > mainline kernel, the same problem still there. But I can not fix it by
+> > simply reverting. I found the acpi_s2idle_wake() has been refined on
+> > the latest mainline kernel, and I have to make modifications as
+> > follows to make my laptop work.
+>
+> Thanks for the report, the issue evidently is EC-related.
+>
+> > @@ -1024,7 +1024,7 @@ static bool acpi_s2idle_wake(void)
+> >                  * regarded as a spurious one.
+> >                  */
+> >                 if (!acpi_ec_dispatch_gpe())
+> > -                       return false;
+> > +                       return true;
+>
+> Have you tried commenting out simply removing the if () check and the
+> following return statement?
 
-Quoting Michael Walle (2020-05-04 23:31:36)
-> 
-> diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
-> index 5391acdece05..a505286b2195 100644
-> --- a/drivers/net/phy/mscc/mscc_main.c
-> +++ b/drivers/net/phy/mscc/mscc_main.c
-> -static bool vsc8584_is_pkg_init(struct phy_device *phydev, bool reversed)
-> +static void vsc8584_get_base_addr(struct phy_device *phydev)
->  {
-> -       struct mii_bus *bus = phydev->mdio.bus;
-> -       struct vsc8531_private *vsc8531;
-> -       struct phy_device *phy;
-> -       int i, addr;
-> -
-> -       /* VSC8584 is a Quad PHY */
-> -       for (i = 0; i < 4; i++) {
-> -               vsc8531 = phydev->priv;
-> -
-> -               if (reversed)
-> -                       addr = vsc8531->base_addr - i;
-> -               else
-> -                       addr = vsc8531->base_addr + i;
-> -
-> -               phy = mdiobus_get_phy(bus, addr);
-> -               if (!phy)
-> -                       continue;
-> +       struct vsc8531_private *vsc8531 = phydev->priv;
-> +       u16 val, addr;
->  
-> -               if ((phy->phy_id & phydev->drv->phy_id_mask) !=
-> -                   (phydev->drv->phy_id & phydev->drv->phy_id_mask))
-> -                       continue;
-> +       mutex_lock(&phydev->mdio.bus->mdio_lock);
-> +       __phy_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_EXTENDED);
->  
-> -               vsc8531 = phy->priv;
-> +       addr = __phy_read(phydev, MSCC_PHY_EXT_PHY_CNTL_4);
-> +       addr >>= PHY_CNTL_4_ADDR_POS;
->  
-> -               if (vsc8531 && vsc8531->pkg_init)
-> -                       return true;
-> -       }
-> +       val = __phy_read(phydev, MSCC_PHY_ACTIPHY_CNTL);
+Scratch that.
 
-You should restore the page to MSCC_PHY_PAGE_STANDARD here.
+Instead, please try doing
 
-> +       mutex_unlock(&phydev->mdio.bus->mdio_lock);
->  
-> -       return false;
-> +       if (val & PHY_ADDR_REVERSED)
-> +               vsc8531->base_addr = phydev->mdio.addr + addr;
-> +       else
-> +               vsc8531->base_addr = phydev->mdio.addr - addr;
->  }
+acpi_ec_dispatch_gpe()
 
-Thanks for the series!
-Antoine
-
--- 
-Antoine Ténart, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+instead of the if () and the following return statement.
