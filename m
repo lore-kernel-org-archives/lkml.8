@@ -2,280 +2,99 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64745C4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82819C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F88B20735
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 632BC20735
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:51:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Nuse4U//"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qa4Zt0hu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgEFFun (ORCPT
+        id S1727783AbgEFFvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 01:50:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53790 "EHLO
+        Wed, 6 May 2020 01:51:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727824AbgEFFum (ORCPT
+        by vger.kernel.org with ESMTP id S1727032AbgEFFvj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 01:50:42 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A523FC061A10
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 22:50:42 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id a7so336722pju.2
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 22:50:42 -0700 (PDT)
+        Wed, 6 May 2020 01:51:39 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BF51C061A0F;
+        Tue,  5 May 2020 22:51:39 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id j5so642502wrq.2;
+        Tue, 05 May 2020 22:51:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=PM4gOtd4M5rNomz6Zqy7hM5rWWUrGbMfSwGqTPRg+r8=;
-        b=Nuse4U//1dIw0hvi5grcLxpOnLlYQvg45dm/2J1rPsqcpfRdWq+WukMyMaVSOzpPzO
-         5Oy0ft/YP77n8K8IYNoF/uJl44Nyfabz3jfSjJiykUGXFXesQ8MUkwpgvKetO4iEgCfG
-         /w+3C8uEbBjR1RW44mv4rXNm5eXHp+fwU2Pak=
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:user-agent:mime-version;
+        bh=nSVb3PkS7tlyf+3taQPnEP1Eff6rnFW28O+T1NDOdcE=;
+        b=qa4Zt0huxFz8HpA5bELEktHKTEcCLxRITJXkka3TjD3K1oRws7lktDVasgfGR4c6cD
+         +CHvBYT+Q+63XzWERo73HdLbHj7x3th2TMr7DRDEXumaSousDTqztkM62ykqNIvhfN0J
+         H8wWipCphUgsmTqQlfiYPJpOF8uemyUm/nBYZ+NXhSYYak+bPsSGuFEb5TAsl/cyWOPf
+         x6k1sUpB+ulnhF8LliWQ+he8rpSRM1Hz/0gmuWo9WK21eoQgQrsWQ5EpxfHfjvbOdnrz
+         VB+J8XOvAukaxJZ6Z9D9wMefVSZ04z3MMMUkShIo+GPnDLIPs5IyOVhVDZl2HRn2ObdB
+         a52A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=PM4gOtd4M5rNomz6Zqy7hM5rWWUrGbMfSwGqTPRg+r8=;
-        b=TMUzjNBoooNF8iqbz0tqXCXT3H/8UbZcaPiJptZ55YgbnwEgWkdYZsloR/rROsS654
-         gX8vua/M9fH9EejY410hBmyqjiqlhoS5SaMzmSTg/l8B2yOlZKbWx+32MKd+BuqODdyO
-         VmUDhZ+HWxzcafT8Q302iuzRoSZIF43FKqA9r1r0+j+bn8DiqpuUEsIwWxj/Dxg0ImwN
-         RVzpTY4Sche5f7SGF3dnSXu3kvncqWyQc8XCUR8MOXQHzTPakaVpmFStgktRD6pYmfXL
-         73sAm/1IWyYFz6cgmarK4NPoAhQzH89vsTVD5AfPZE9LQ54BauROwG0jMpTiQGVS8g3Q
-         ADcA==
-X-Gm-Message-State: AGi0PuYQ1mnvaQ4ugVaqaU8z56E6qaJ/LWyK2aCXq+eFOQuB+Cpk43Bd
-        Gtlx1ZTaGfLG8Hs3cPME/aSteu15c6k=
-X-Google-Smtp-Source: APiQypLzIgL9ROrJP+e/3vE9RehzRL5dYKQz623FwIXDy2lI5j7YL+/bC1ZK/Rdbn+SsjhxYzbnJXg==
-X-Received: by 2002:a17:902:a706:: with SMTP id w6mr6196148plq.173.1588744241767;
-        Tue, 05 May 2020 22:50:41 -0700 (PDT)
-Received: from localhost ([2401:fa00:9:14:a92f:c47d:76a8:b09e])
-        by smtp.gmail.com with ESMTPSA id u5sm622227pfu.198.2020.05.05.22.50.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2020 22:50:41 -0700 (PDT)
-From:   Eizan Miyamoto <eizan@chromium.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Eizan Miyamoto <eizan@chromium.org>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH v2 5/5] [media] mtk-mdp: Remove mtk_mdp_comp.id and supporting functionality
-Date:   Wed,  6 May 2020 15:49:20 +1000
-Message-Id: <20200506154832.v2.5.I1c85bddc262913b8572d892dd6bf9bc03fbe0ec7@changeid>
-X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-In-Reply-To: <20200506054920.109738-1-eizan@chromium.org>
-References: <20200506054920.109738-1-eizan@chromium.org>
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=nSVb3PkS7tlyf+3taQPnEP1Eff6rnFW28O+T1NDOdcE=;
+        b=UvO28+ZCcjjoW0ji17h5W0MNYeMAw/Zen5C68ql0sXh3BMGz2vzuF98AGgbTJYND7E
+         K4Cxj0uYbaGmz2OtQtKj80Q+Z7xuZ2HmPjwEDWBNCSXCmBqtqdrf8f8Hw21WvEWfXDxf
+         T8rugGBEn40Nr0QHE+BlyzcUXGIpP8Yr5y0L+atyNIq/EjNZktc7Cl/yPi1+mocoeYwt
+         TzECvReRguBSYeOdcrkbIByUdXoeYeVcemT8JEBmpR0DbqydOLu3fzW+vM7/i5acV14N
+         h8jcFyfXv1TuNQF6QuFIQtOnnSdSRhM+tzkSNUKUUqpY7BtvE9dvw8H0nhDGrWFWZ092
+         vSkg==
+X-Gm-Message-State: AGi0PuZkbeJbPytRTFPSr7UVBdzjF8E/Hf9r1VR07cMz7ON1B0kl5vhi
+        qEvrpZDWbElJhQwTTa4l7FVkG3lB9jQ=
+X-Google-Smtp-Source: APiQypIPZvMmeMC+/3D0zdDLWUsgmfJ8bkt0AnAOeqk3D/5PB61wRUAIAa541ltCRSrdQDdyQ0jfVw==
+X-Received: by 2002:a5d:6b85:: with SMTP id n5mr7673266wrx.370.1588744298190;
+        Tue, 05 May 2020 22:51:38 -0700 (PDT)
+Received: from felia ([2001:16b8:2df1:2500:bc2e:80a7:2be5:2fcf])
+        by smtp.gmail.com with ESMTPSA id 185sm1340363wmc.32.2020.05.05.22.51.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 22:51:37 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
+Date:   Wed, 6 May 2020 07:51:36 +0200 (CEST)
+X-X-Sender: lukas@felia
+To:     Jakub Kicinski <kuba@kernel.org>
+cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Joe Perches <joe@perches.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: MAINTAINERS: Wrong ordering in DYNAMIC INTERRUPT MODERATION
+Message-ID: <alpine.DEB.2.21.2005060749590.7719@felia>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since components are registered in a list, the numeric component id that
-specified a location in an array is not necessary.
+Hi Jakub,
 
-Signed-off-by: eizan@chromium.org
-Signed-off-by: Eizan Miyamoto <eizan@chromium.org>
----
+with your commit 9b038086f06b ("docs: networking: convert DIM to RST"), 
+visible on next-20200505, ./scripts/checkpatch.pl -f MAINTAINERS 
+complains:
 
-Changes in v1:
-- rebase onto linux-next/master to pick up
-  757570f11fa4b0ce5472a6583de6f06e996a8527
+WARNING: Misordered MAINTAINERS entry - list file patterns in alphabetic order
+#5966: FILE: MAINTAINERS:5966:
++F:	lib/dim/
++F:	Documentation/networking/net_dim.rst
 
- drivers/media/platform/mtk-mdp/mtk_mdp_comp.c | 60 +++----------------
- drivers/media/platform/mtk-mdp/mtk_mdp_comp.h | 19 +-----
- drivers/media/platform/mtk-mdp/mtk_mdp_core.c | 10 +---
- 3 files changed, 11 insertions(+), 78 deletions(-)
+This is due to wrong ordering of the entries in your submission. If you 
+would like me to send you a patch fixing that, please just let me know.
 
-diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-index da2bdad7a8d1..362fff924aef 100644
---- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-+++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-@@ -14,46 +14,6 @@
- #include "mtk_mdp_comp.h"
- 
- 
--static const char * const mtk_mdp_comp_stem[MTK_MDP_COMP_TYPE_MAX] = {
--	"mdp-rdma",
--	"mdp-rsz",
--	"mdp-wdma",
--	"mdp-wrot",
--};
--
--struct mtk_mdp_comp_match {
--	enum mtk_mdp_comp_type type;
--	int alias_id;
--};
--
--static const struct mtk_mdp_comp_match mtk_mdp_matches[MTK_MDP_COMP_ID_MAX] = {
--	{ MTK_MDP_RDMA,	0 },
--	{ MTK_MDP_RDMA,	1 },
--	{ MTK_MDP_RSZ,	0 },
--	{ MTK_MDP_RSZ,	1 },
--	{ MTK_MDP_RSZ,	2 },
--	{ MTK_MDP_WDMA,	0 },
--	{ MTK_MDP_WROT,	0 },
--	{ MTK_MDP_WROT,	1 },
--};
--
--int mtk_mdp_comp_get_id(struct device *dev, struct device_node *node,
--			enum mtk_mdp_comp_type comp_type)
--{
--	int id = of_alias_get_id(node, mtk_mdp_comp_stem[comp_type]);
--	int i;
--
--	for (i = 0; i < ARRAY_SIZE(mtk_mdp_matches); i++) {
--		if (comp_type == mtk_mdp_matches[i].type &&
--		    id == mtk_mdp_matches[i].alias_id)
--			return i;
--	}
--
--	dev_err(dev, "Failed to get id. type: %d, id: %d\n", comp_type, id);
--
--	return -EINVAL;
--}
--
- void mtk_mdp_comp_clock_on(struct device *dev, struct mtk_mdp_comp *comp)
- {
- 	int i, err;
-@@ -62,8 +22,8 @@ void mtk_mdp_comp_clock_on(struct device *dev, struct mtk_mdp_comp *comp)
- 		err = mtk_smi_larb_get(comp->larb_dev);
- 		if (err)
- 			dev_err(dev,
--				"failed to get larb, err %d. type:%d id:%d\n",
--				err, comp->type, comp->id);
-+				"failed to get larb, err %d. type:%d\n",
-+				err, comp->type);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(comp->clk); i++) {
-@@ -72,8 +32,8 @@ void mtk_mdp_comp_clock_on(struct device *dev, struct mtk_mdp_comp *comp)
- 		err = clk_prepare_enable(comp->clk[i]);
- 		if (err)
- 			dev_err(dev,
--			"failed to enable clock, err %d. type:%d id:%d i:%d\n",
--				err, comp->type, comp->id, i);
-+			"failed to enable clock, err %d. type:%d i:%d\n",
-+				err, comp->type, i);
- 	}
- }
- 
-@@ -92,21 +52,15 @@ void mtk_mdp_comp_clock_off(struct device *dev, struct mtk_mdp_comp *comp)
- }
- 
- int mtk_mdp_comp_init(struct device *dev, struct device_node *node,
--		      struct mtk_mdp_comp *comp, enum mtk_mdp_comp_id comp_id)
-+		      struct mtk_mdp_comp *comp,
-+		      enum mtk_mdp_comp_type comp_type)
- {
- 	struct device_node *larb_node;
- 	struct platform_device *larb_pdev;
- 	int i;
- 
--	if (comp_id < 0 || comp_id >= MTK_MDP_COMP_ID_MAX) {
--		dev_err(dev, "Invalid comp_id %d\n", comp_id);
--		return -EINVAL;
--	}
--
--	INIT_LIST_HEAD(&comp->node);
- 	comp->dev_node = of_node_get(node);
--	comp->id = comp_id;
--	comp->type = mtk_mdp_matches[comp_id].type;
-+	comp->type = comp_type;
- 
- 	for (i = 0; i < ARRAY_SIZE(comp->clk); i++) {
- 		comp->clk[i] = of_clk_get(node, i);
-diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h
-index 1f745891c6c3..1bf0242cce46 100644
---- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h
-+++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h
-@@ -22,18 +22,6 @@ enum mtk_mdp_comp_type {
- 	MTK_MDP_COMP_TYPE_MAX,
- };
- 
--enum mtk_mdp_comp_id {
--	MTK_MDP_COMP_RDMA0,
--	MTK_MDP_COMP_RDMA1,
--	MTK_MDP_COMP_RSZ0,
--	MTK_MDP_COMP_RSZ1,
--	MTK_MDP_COMP_RSZ2,
--	MTK_MDP_COMP_WDMA,
--	MTK_MDP_COMP_WROT0,
--	MTK_MDP_COMP_WROT1,
--	MTK_MDP_COMP_ID_MAX,
--};
--
- /**
-  * struct mtk_mdp_comp - the MDP's function component data
-  * @node:	list node to track sibing MDP components
-@@ -41,7 +29,6 @@ enum mtk_mdp_comp_id {
-  * @clk:	clocks required for component
-  * @larb_dev:	SMI device required for component
-  * @type:	component type
-- * @id:		component ID
-  */
- struct mtk_mdp_comp {
- 	struct list_head	node;
-@@ -49,14 +36,12 @@ struct mtk_mdp_comp {
- 	struct clk		*clk[2];
- 	struct device		*larb_dev;
- 	enum mtk_mdp_comp_type	type;
--	enum mtk_mdp_comp_id	id;
- };
- 
- int mtk_mdp_comp_init(struct device *dev, struct device_node *node,
--		      struct mtk_mdp_comp *comp, enum mtk_mdp_comp_id comp_id);
-+		      struct mtk_mdp_comp *comp,
-+		      enum mtk_mdp_comp_type comp_type);
- void mtk_mdp_comp_deinit(struct device *dev, struct mtk_mdp_comp *comp);
--int mtk_mdp_comp_get_id(struct device *dev, struct device_node *node,
--			enum mtk_mdp_comp_type comp_type);
- void mtk_mdp_comp_clock_on(struct device *dev, struct mtk_mdp_comp *comp);
- void mtk_mdp_comp_clock_off(struct device *dev, struct mtk_mdp_comp *comp);
- 
-diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-index 40b9fda8b03b..acbc5a01ae4c 100644
---- a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-+++ b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-@@ -137,7 +137,6 @@ static int mtk_mdp_probe(struct platform_device *pdev)
- 	for_each_child_of_node(parent, node) {
- 		const struct of_device_id *of_id;
- 		enum mtk_mdp_comp_type comp_type;
--		int comp_id;
- 
- 		of_id = of_match_node(mtk_mdp_comp_dt_ids, node);
- 		if (!of_id)
-@@ -150,12 +149,7 @@ static int mtk_mdp_probe(struct platform_device *pdev)
- 		}
- 
- 		comp_type = (enum mtk_mdp_comp_type)of_id->data;
--		comp_id = mtk_mdp_comp_get_id(dev, node, comp_type);
--		if (comp_id < 0) {
--			dev_warn(dev, "Skipping unknown component %pOF\n",
--				 node);
--			continue;
--		}
-+
- 
- 		comp = devm_kzalloc(dev, sizeof(*comp), GFP_KERNEL);
- 		if (!comp) {
-@@ -164,7 +158,7 @@ static int mtk_mdp_probe(struct platform_device *pdev)
- 			goto err_comp;
- 		}
- 
--		ret = mtk_mdp_comp_init(dev, node, comp, comp_id);
-+		ret = mtk_mdp_comp_init(dev, node, comp, comp_type);
- 		if (ret) {
- 			of_node_put(node);
- 			goto err_comp;
--- 
-2.26.2.526.g744177e7f7-goog
+It is a recent addition to checkpatch.pl to report ordering problems in 
+MAINTAINERS, so you might have not seen that at submission time.
 
+
+Best regards,
+
+Lukas
