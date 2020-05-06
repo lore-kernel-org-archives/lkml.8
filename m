@@ -2,162 +2,90 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F88C47257
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B419C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29E51208CA
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54658208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:47:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZYzs9CyU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730406AbgEFQpX (ORCPT
+        id S1729972AbgEFQro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:45:23 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:59984 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729443AbgEFQpV (ORCPT
+        Wed, 6 May 2020 12:47:44 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53638 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729414AbgEFQro (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:45:21 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 6 May 2020 12:47:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588783663;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=D5gcsjRW/Y6Yf/Wf7cSY/UTAOCmTv3dfJwfJ5p0w6mY=;
+        b=ZYzs9CyU3x1ZeyNiqhdbBYFBkDV1uFKMlgU9yQdCwZthYblEWJT5H5g04rEbtLTWyCfvRF
+        pcz+YYAcmUoHPrSLU/6LQFCKaqiEeLad5ccJQ8WmNGWqmhtv4mvtzvOW0yabpTbIix2yqm
+        CjP8XsXyxJP6h1ysyfBTVFyN5P4mWpg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-286-SSyRdXdjPeWrRvNKHd7Qyg-1; Wed, 06 May 2020 12:47:35 -0400
+X-MC-Unique: SSyRdXdjPeWrRvNKHd7Qyg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 753D08046E;
-        Wed,  6 May 2020 18:45:18 +0200 (CEST)
-Date:   Wed, 6 May 2020 18:45:17 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Dmitry Osipenko <digetx@gmail.com>, g@ravnborg.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v5 5/6] drm/tegra: output: rgb: Support LVDS encoder
- bridge
-Message-ID: <20200506164517.GE19296@ravnborg.org>
-References: <20200418170703.1583-1-digetx@gmail.com>
- <20200418170703.1583-6-digetx@gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7B72F107ACF8;
+        Wed,  6 May 2020 16:47:33 +0000 (UTC)
+Received: from suzdal.zaitcev.lan (ovpn-113-96.phx2.redhat.com [10.3.113.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C39B96298F;
+        Wed,  6 May 2020 16:47:32 +0000 (UTC)
+Date:   Wed, 6 May 2020 11:47:32 -0500
+From:   Pete Zaitcev <zaitcev@redhat.com>
+To:     Oliver Neukum <oneukum@suse.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        syzbot <syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com>,
+        andreyknvl@google.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, zaitcev@redhat.com
+Subject: Re: KASAN: use-after-free Read in usblp_bulk_read
+Message-ID: <20200506114732.5f81c8c5@suzdal.zaitcev.lan>
+In-Reply-To: <1588756482.13662.20.camel@suse.com>
+References: <Pine.LNX.4.44L0.2004301103500.27217-100000@netrider.rowland.org>
+        <1588756482.13662.20.camel@suse.com>
+Organization: Red Hat, Inc.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200418170703.1583-6-digetx@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=P1BnusSwAAAA:8 a=pGLkceISAAAA:8 a=7gkXJVJtAAAA:8
-        a=e5mUnYsNAAAA:8 a=EMU4hVWXcrfB3vzXjuAA:9 a=CjuIK1q_8ugA:10
-        a=D0XLA9XvdZm18NrgonBM:22 a=E9Po1WZjFZOl8hwRPBS3:22
-        a=Vxmtnl_E_bksehYqCbjh:22
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 08:07:02PM +0300, Dmitry Osipenko wrote:
-> Newer Tegra device-trees will specify a video output graph, which involves
-> LVDS encoder bridge. This patch adds support for the LVDS encoder bridge
-> to the RGB output, allowing us to model the display hardware properly.
-> 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-> ---
->  drivers/gpu/drm/tegra/rgb.c | 58 +++++++++++++++++++++++++++++++------
->  1 file changed, 49 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/tegra/rgb.c b/drivers/gpu/drm/tegra/rgb.c
-> index 0562a7eb793f..9a7024ec96bc 100644
-> --- a/drivers/gpu/drm/tegra/rgb.c
-> +++ b/drivers/gpu/drm/tegra/rgb.c
-> @@ -7,6 +7,7 @@
->  #include <linux/clk.h>
+On Wed, 06 May 2020 11:14:42 +0200
+Oliver Neukum <oneukum@suse.com> wrote:
+
+> Very well. We are not going to find it without exceptional luck. Yet
+> there may be a real issue, too. We simply do not know. How about the
+> attached patch?
+
+>  	usblp_unlink_urbs(usblp);
+>  	mutex_unlock(&usblp->mut);
+> +	usb_poison_anchored_urbs(&usblp->urbs);
 >  
->  #include <drm/drm_atomic_helper.h>
-> +#include <drm/drm_bridge_connector.h>
->  #include <drm/drm_panel.h>
->  #include <drm/drm_simple_kms_helper.h>
->  
-> @@ -267,24 +268,63 @@ int tegra_dc_rgb_remove(struct tegra_dc *dc)
->  int tegra_dc_rgb_init(struct drm_device *drm, struct tegra_dc *dc)
->  {
->  	struct tegra_output *output = dc->rgb;
-> +	struct drm_connector *connector;
->  	int err;
->  
->  	if (!dc->rgb)
->  		return -ENODEV;
->  
-> -	drm_connector_init(drm, &output->connector, &tegra_rgb_connector_funcs,
-> -			   DRM_MODE_CONNECTOR_LVDS);
-> -	drm_connector_helper_add(&output->connector,
-> -				 &tegra_rgb_connector_helper_funcs);
-> -	output->connector.dpms = DRM_MODE_DPMS_OFF;
-> -
->  	drm_simple_encoder_init(drm, &output->encoder, DRM_MODE_ENCODER_LVDS);
->  	drm_encoder_helper_add(&output->encoder,
->  			       &tegra_rgb_encoder_helper_funcs);
->  
-> -	drm_connector_attach_encoder(&output->connector,
-> -					  &output->encoder);
-> -	drm_connector_register(&output->connector);
-> +	/*
-> +	 * Tegra devices that have LVDS panel utilize LVDS encoder bridge
-> +	 * for converting up to 28 LCD LVTTL lanes into 5/4 LVDS lanes that
-> +	 * go to display panel's receiver.
-> +	 *
-> +	 * Encoder usually have a power-down control which needs to be enabled
-> +	 * in order to transmit data to the panel.  Historically devices that
-> +	 * use an older device-tree version didn't model the bridge, assuming
-> +	 * that encoder is turned ON by default, while today's DRM allows us
-> +	 * to model LVDS encoder properly.
-> +	 *
-> +	 * Newer device-trees utilize LVDS encoder bridge, which provides
-> +	 * us with a connector and handles the display panel.
-> +	 *
-> +	 * For older device-trees we fall back to our own connector and use
-> +	 * nvidia,panel phandle.
-> +	 */
-> +	if (output->bridge) {
-> +		err = drm_bridge_attach(&output->encoder, output->bridge,
-> +					NULL, DRM_BRIDGE_ATTACH_NO_CONNECTOR);
-> +		if (err) {
-> +			dev_err(output->dev, "failed to attach bridge: %d\n",
-> +				err);
-> +			return err;
-> +		}
-> +
-> +		connector = drm_bridge_connector_init(drm, &output->encoder);
-> +		if (IS_ERR(connector)) {
-> +			dev_err(output->dev,
-> +				"failed to initialize bridge connector: %pe\n",
-> +				connector);
-> +			return PTR_ERR(connector);
-> +		}
-> +
-> +		drm_connector_attach_encoder(connector, &output->encoder);
-> +	} else {
-> +		drm_connector_init(drm, &output->connector,
-> +				   &tegra_rgb_connector_funcs,
-> +				   DRM_MODE_CONNECTOR_LVDS);
-> +		drm_connector_helper_add(&output->connector,
-> +					 &tegra_rgb_connector_helper_funcs);
-> +		output->connector.dpms = DRM_MODE_DPMS_OFF;
-> +
-> +		drm_connector_attach_encoder(&output->connector,
-> +					     &output->encoder);
-> +		drm_connector_register(&output->connector);
-> +	}
->  
->  	err = tegra_output_init(drm, output);
->  	if (err < 0) {
-> -- 
-> 2.26.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>  	if (!usblp->used)
+>  		usblp_cleanup(usblp);
+
+This can't be right. Our URBs are freed by the callback, and this
+technique is not compatible with poisoning, at least with how the
+usb/core.c implements it. The usb_poison_urb() waits for URB
+to complete, and if the callback frees it, it's a problem.
+
+-- Pete
+
