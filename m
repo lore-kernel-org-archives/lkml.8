@@ -2,131 +2,100 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2025C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A0AC4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B77FD20A8B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CB95208CA
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:51:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AN3uHAOG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730804AbgEFQvK (ORCPT
+        id S1730796AbgEFQvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:51:10 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:56659 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730438AbgEFQsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 12:51:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43760 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730444AbgEFQsU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 6 May 2020 12:48:20 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49HMwd2w0Fz9v4kM;
-        Wed,  6 May 2020 18:48:17 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id B36Rqi0BjgRO; Wed,  6 May 2020 18:48:17 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMwd216dz9v4kF;
-        Wed,  6 May 2020 18:48:17 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1DCF68B7C5;
-        Wed,  6 May 2020 18:48:19 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id ra7wy__qUfco; Wed,  6 May 2020 18:48:19 +0200 (CEST)
-Received: from localhost.localdomain (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8DC5B8B7C3;
-        Wed,  6 May 2020 18:48:18 +0200 (CEST)
-Received: by localhost.localdomain (Postfix, from userid 0)
-        id 5CAE865911; Wed,  6 May 2020 16:48:18 +0000 (UTC)
-Message-Id: <9bcd46b0376b3d865fec696423b7002151607827.1588783498.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <cover.1588783498.git.christophe.leroy@csgroup.eu>
-References: <cover.1588783498.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v2 13/45] powerpc/ptdump: Handle hugepd at PGD level
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed,  6 May 2020 16:48:18 +0000 (UTC)
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F83EC061A0F;
+        Wed,  6 May 2020 09:48:20 -0700 (PDT)
+Received: by mail-lj1-x22e.google.com with SMTP id a21so3087597ljb.9;
+        Wed, 06 May 2020 09:48:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=IlweazdekYqS94U1Xj1r4OmuyOC1Nv3qU7YSDeCBRlM=;
+        b=AN3uHAOGD4JKrw8xuzUE7vpMKBJ5J8AJ/7JmX91Bmlt+py0Z7v16qngoQx+tkwuEVh
+         gDpn6xF1T0uGoHJmF8E0ezr227yjEmehoFoC75hYmJJ+AMM2GsbPnaoWgepSJv+B/vXa
+         PJT/p93k7uV1awCS2I4lP5lov50nMdUvCqkj9GU8Ua4CVJMEViYfoc9UKixCMp1mU4x4
+         A7iQ4nCVxlfU8K+H5FOSAfPpL6x8VVJBBx6YGA5VM+/2oythOg7/4oVj6mxPOt4mGHwK
+         ZcfNzwyMyLlHugrgi58R2Dr/grZOWsFfQPr+lewnPi6AYqpI44xbxkbMWTTIDE5JyL9I
+         pMUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=IlweazdekYqS94U1Xj1r4OmuyOC1Nv3qU7YSDeCBRlM=;
+        b=uO4dendeLXG1enmS0QZc5KIIr+yCo+02YCdu8NKt10G6M9MKQyQum3bfOjuBcj/LkY
+         ul0kuFOiV1Q+bLsbV8NFiBesUXCCTaeiBI3SfmX2vN1J2NU4ysWl+u2ziFJPXZtQgn1C
+         Y1ScKLcs0VTedGZrDFvlQqObLNKKxM0MzGCXgPraDMIYAW4K0d5CE71QH5US/yNPVqjL
+         AbrcKJiUWOMMfIQ5ma3uV21v/0l7DcZhNzL5CJpfvInCPNvsNPjwfDE45OQqahZw2f0c
+         VB0ulBcjkadaSLOB21Vm0MjVp3odAG6Jj6Fj/m9yx4DLYXS2gFA+Nb5rv2sT0YY9D7Rb
+         BQlg==
+X-Gm-Message-State: AGi0PuYNXh4Qr5w2eWD5aD/Ai4ymzBWYpIJOq1Xq321d/DkNj32SIfpo
+        M7VKtellgQQy723UroGSAFHDn1gTF9SaeSIo1+CuCw==
+X-Google-Smtp-Source: APiQypI2hjOb8TJaiPFfUG3oI9wfgz7TFR6gbZ+bohBeA0V3R1j0LyOpgLqQFPK3JItM2/KSqOJkEQ1G8J7Bw/Zepdo=
+X-Received: by 2002:a2e:9011:: with SMTP id h17mr5839071ljg.138.1588783698970;
+ Wed, 06 May 2020 09:48:18 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAADnVQJfD1dLVsfg4=c4f6ftRNF_4z0wELjFq8z=7voi-Ak=7w@mail.gmail.com>
+ <CAADnVQ+GOn4ZRGMZ+RScdSvM8gpXD9xbe3EYHCcUHdSs=i_NGA@mail.gmail.com>
+In-Reply-To: <CAADnVQ+GOn4ZRGMZ+RScdSvM8gpXD9xbe3EYHCcUHdSs=i_NGA@mail.gmail.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Wed, 6 May 2020 09:48:07 -0700
+Message-ID: <CAADnVQLKuLu8wMJNO5w3AtFqyUTMmwzpctJMw0ORyUJM=M3bwA@mail.gmail.com>
+Subject: Re: pulling cap_perfmon
+To:     Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Network Development <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 8xx is about to map kernel linear space and IMMR using huge
-pages.
+On Mon, May 4, 2020 at 1:52 PM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Thu, Apr 30, 2020 at 11:03 AM Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> wrote:
+> >
+> > Hi Ingo,
+> >
+> > I'd like to pull
+> > commit 980737282232 ("capabilities: Introduce CAP_PERFMON to kernel
+> > and user space")
+> > into bpf-next to base my CAP_BPF work on top of it.
+> > could you please prepare a stable tag for me to pull ?
+> > Last release cycle Thomas did a tag for bpf+rt prerequisite patches and
+> > it all worked well during the merge window.
+> > I think that one commit will suffice.
+> >
+> > Thanks!
+>
+> Looks like Ingo is offline.
+> Thomas,
+> could you please create a branch for me to pull?
+>
+> Thanks!
 
-In order to display those pages properly, ptdump needs to handle
-hugepd tables at PGD level.
-
-For the time being do it only at PGD level. Further patches may
-add handling of hugepd tables at lower level for other platforms
-when needed in the future.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/mm/ptdump/ptdump.c | 29 ++++++++++++++++++++++++++---
- 1 file changed, 26 insertions(+), 3 deletions(-)
-
-diff --git a/arch/powerpc/mm/ptdump/ptdump.c b/arch/powerpc/mm/ptdump/ptdump.c
-index 64434b66f240..1adaa7e794f3 100644
---- a/arch/powerpc/mm/ptdump/ptdump.c
-+++ b/arch/powerpc/mm/ptdump/ptdump.c
-@@ -23,6 +23,7 @@
- #include <linux/const.h>
- #include <asm/page.h>
- #include <asm/pgalloc.h>
-+#include <asm/hugetlb.h>
- 
- #include <mm/mmu_decl.h>
- 
-@@ -270,6 +271,26 @@ static void walk_pte(struct pg_state *st, pmd_t *pmd, unsigned long start)
- 	}
- }
- 
-+static void walk_hugepd(struct pg_state *st, hugepd_t *phpd, unsigned long start,
-+			int pdshift, int level)
-+{
-+#ifdef CONFIG_ARCH_HAS_HUGEPD
-+	unsigned int i;
-+	int shift = hugepd_shift(*phpd);
-+	int ptrs_per_hpd = pdshift - shift > 0 ? 1 << (pdshift - shift) : 1;
-+
-+	if (start & ((1 << shift) - 1))
-+		return;
-+
-+	for (i = 0; i < ptrs_per_hpd; i++) {
-+		unsigned long addr = start + (i << shift);
-+		pte_t *pte = hugepte_offset(*phpd, addr, pdshift);
-+
-+		note_page(st, addr, level + 1, pte_val(*pte), shift);
-+	}
-+#endif
-+}
-+
- static void walk_pmd(struct pg_state *st, pud_t *pud, unsigned long start)
- {
- 	pmd_t *pmd = pmd_offset(pud, 0);
-@@ -313,11 +334,13 @@ static void walk_pagetables(struct pg_state *st)
- 	 * the hash pagetable.
- 	 */
- 	for (i = pgd_index(addr); i < PTRS_PER_PGD; i++, pgd++, addr += PGDIR_SIZE) {
--		if (!pgd_none(*pgd) && !pgd_is_leaf(*pgd))
-+		if (pgd_none(*pgd) || pgd_is_leaf(*pgd))
-+			note_page(st, addr, 1, pgd_val(*pgd), PUD_SHIFT);
-+		else if (is_hugepd(__hugepd(pgd_val(*pgd))))
-+			walk_hugepd(st, (hugepd_t *)pgd, addr, PGDIR_SHIFT, 1);
-+		else
- 			/* pgd exists */
- 			walk_pud(st, pgd, addr);
--		else
--			note_page(st, addr, 1, pgd_val(*pgd), PUD_SHIFT);
- 	}
- }
- 
--- 
-2.25.0
-
+ping
