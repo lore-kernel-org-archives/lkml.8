@@ -2,138 +2,116 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42590C47257
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2231C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17D1120936
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C189206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:15:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f1zstsF2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zoRnF2zy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730096AbgEFQK6 (ORCPT
+        id S1729768AbgEFQP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:10:58 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35698 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729486AbgEFQK5 (ORCPT
+        Wed, 6 May 2020 12:15:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38578 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729481AbgEFQP5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:10:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588781455;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=kZPPxriWZX6GKqib57CUR0KHurjWMqJXVQoLVEPp5t4=;
-        b=f1zstsF2BwvoIVYFb+z+mQqgKv0mbca5HQ4uU7U5WS8cQ+tjqPxBm9Ap/XjWhbnlvo2WN6
-        habu9FoIJf3zomYkByzK9JLuy70p4stMiZIXznWXCqJZC8JvTlinlGf/Z9CHhCue4+IR57
-        4CQoEb4Q6DHxC/H2pSgMnZMSlaS1mXk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-470-Pk5GFsTpPHCClfx87srNYQ-1; Wed, 06 May 2020 12:10:53 -0400
-X-MC-Unique: Pk5GFsTpPHCClfx87srNYQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CFB2880058A;
-        Wed,  6 May 2020 16:10:51 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 81A2527C39;
-        Wed,  6 May 2020 16:10:50 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     wanpengli@tencent.com, linxl3@wangsu.com,
-        Haiwei Li <lihaiwei@tencent.com>
-Subject: [PATCH 1/7] KVM: VMX: Introduce generic fastpath handler
-Date:   Wed,  6 May 2020 12:10:42 -0400
-Message-Id: <20200506161048.28840-2-pbonzini@redhat.com>
-In-Reply-To: <20200506161048.28840-1-pbonzini@redhat.com>
-References: <20200506161048.28840-1-pbonzini@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        Wed, 6 May 2020 12:15:57 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 534F1C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 09:15:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=le1OFYu72/kMH5Lgm/DrtMirSfET+FXsAUvpWVi5058=; b=zoRnF2zyubEwJ1uXDboQzy+lmw
+        TeQ0m76xZtlNZL9Nc+Qv608OIhmCYJfsy/mD8VxnTBRUsAWaZ7WFJkvb4MgqK9Q/5uYevKLKGVQRo
+        qv0V3grPNpRvWcUxMfREGpbgGkRMM5Ck7eQ8xZnyKnDxjI3ob5XwUOgb+P6Wm6xQMc/hCukFim56v
+        QDYYiu8MnJjRhfvPqs0sYTr8mue1VCM/xvVRiQOZX3cUeqWfabin5dXLZUG/3pH/XKeJd4mv5OLqn
+        pM6GqQkYo5q4xtCef0Dc7F2FXq5yvyg+71Yau8ZmqWtNQNkgba/3BaKYUxLczqtUSc4BeWfz5118T
+        j8IcLuEQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jWMhg-00061K-Pq; Wed, 06 May 2020 16:15:24 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A1B1F30018B;
+        Wed,  6 May 2020 18:15:22 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7E9CC203ECDC3; Wed,  6 May 2020 18:15:22 +0200 (CEST)
+Date:   Wed, 6 May 2020 18:15:22 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, pbonzini@redhat.com,
+        mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH v4 07/18] static_call: Add inline static call
+ infrastructure
+Message-ID: <20200506161522.GT3762@hirez.programming.kicks-ass.net>
+References: <20200501202849.647891881@infradead.org>
+ <20200501202944.186964469@infradead.org>
+ <20200505221051.x6mz33ylqy62m4s4@treble>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505221051.x6mz33ylqy62m4s4@treble>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+On Tue, May 05, 2020 at 05:10:51PM -0500, Josh Poimboeuf wrote:
+> On Fri, May 01, 2020 at 10:28:56PM +0200, Peter Zijlstra wrote:
+> > +#ifdef CONFIG_HAVE_STATIC_CALL_INLINE
+> > +
+> > +struct static_call_mod {
+> > +	struct static_call_mod *next;
+> > +	struct module *mod; /* for vmlinux, mod == NULL */
+> > +	struct static_call_site *sites;
+> > +};
+> > +
+> > +struct static_call_key {
+> > +	void *func;
+> > +	struct static_call_mod *next;
+> > +};
+> 
+> "next" implies it links to another key.  How about "mods" or
+> "site_mods"?
+> 
+> > +++ b/include/linux/static_call_types.h
+> > @@ -2,14 +2,27 @@
+> >  #ifndef _STATIC_CALL_TYPES_H
+> >  #define _STATIC_CALL_TYPES_H
+> >  
+> > +#include <linux/types.h>
+> >  #include <linux/stringify.h>
+> >  
+> >  #define STATIC_CALL_PREFIX		__SC__
+> > +#define STATIC_CALL_PREFIX_STR		__stringify(STATIC_CALL_PREFIX)
+> > +#define STATIC_CALL_PREFIX_LEN		(sizeof(STATIC_CALL_PREFIX_STR) - 1)
+> 
+> STATIC_CALL_KEY_PREFIX_STR
+> STATIC_CALL_KEY_PREFIX_LEN
+> 
 
-Introduce generic fastpath handler to handle MSR fastpath, VMX-preemption
-timer fastpath etc; move it after vmx_complete_interrupts() in order to
-catch events delivered to the guest, and abort the fast path in later
-patches.  While at it, move the kvm_exit tracepoint so that it is printed
-for fastpath vmexits as well.
+> > +#ifdef CONFIG_MODULES
+> > +		if (site_mod->mod) {
+> > +			stop = site_mod->mod->static_call_sites +
+> > +			       site_mod->mod->num_static_call_sites;
+> > +		}
+> > +#endif
+> 
+> Instead of defining 'mod' in the inner loop below, it can be set at the
+> top of the outer loop above.  Then the above 'stop' calculation can
+> be a little less verbose.
 
-There is no observed performance effect for the IPI fastpath after this patch.
-
-Tested-by: Haiwei Li <lihaiwei@tencent.com>
-Cc: Haiwei Li <lihaiwei@tencent.com>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Message-Id: <1588055009-12677-2-git-send-email-wanpengli@tencent.com>
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/vmx/vmx.c | 23 ++++++++++++++++-------
- 1 file changed, 16 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 13cdb8469848..ad57c4744b99 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -5907,8 +5907,6 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu,
- 	u32 exit_reason = vmx->exit_reason;
- 	u32 vectoring_info = vmx->idt_vectoring_info;
- 
--	trace_kvm_exit(exit_reason, vcpu, KVM_ISA_VMX);
--
- 	/*
- 	 * Flush logged GPAs PML buffer, this will make dirty_bitmap more
- 	 * updated. Another good is, in kvm_vm_ioctl_get_dirty_log, before
-@@ -6604,6 +6602,16 @@ void vmx_update_host_rsp(struct vcpu_vmx *vmx, unsigned long host_rsp)
- 	}
- }
- 
-+static enum exit_fastpath_completion vmx_exit_handlers_fastpath(struct kvm_vcpu *vcpu)
-+{
-+	switch (to_vmx(vcpu)->exit_reason) {
-+	case EXIT_REASON_MSR_WRITE:
-+		return handle_fastpath_set_msr_irqoff(vcpu);
-+	default:
-+		return EXIT_FASTPATH_NONE;
-+	}
-+}
-+
- bool __vmx_vcpu_run(struct vcpu_vmx *vmx, unsigned long *regs, bool launched);
- 
- static enum exit_fastpath_completion vmx_vcpu_run(struct kvm_vcpu *vcpu)
-@@ -6778,17 +6786,18 @@ static enum exit_fastpath_completion vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 	if (unlikely(vmx->exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY))
- 		return EXIT_FASTPATH_NONE;
- 
--	if (!is_guest_mode(vcpu) && vmx->exit_reason == EXIT_REASON_MSR_WRITE)
--		exit_fastpath = handle_fastpath_set_msr_irqoff(vcpu);
--	else
--		exit_fastpath = EXIT_FASTPATH_NONE;
--
- 	vmx->loaded_vmcs->launched = 1;
- 	vmx->idt_vectoring_info = vmcs_read32(IDT_VECTORING_INFO_FIELD);
- 
- 	vmx_recover_nmi_blocking(vmx);
- 	vmx_complete_interrupts(vmx);
- 
-+	trace_kvm_exit(vmx->exit_reason, vcpu, KVM_ISA_VMX);
-+
-+	if (is_guest_mode(vcpu))
-+		return EXIT_FASTPATH_NONE;
-+
-+	exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
- 	return exit_fastpath;
- }
- 
--- 
-2.18.2
-
-
+All done!
