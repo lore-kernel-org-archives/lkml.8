@@ -2,130 +2,160 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B58BC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60777C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A999206D5
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:53:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="bHT6W/fW"
+	by mail.kernel.org (Postfix) with ESMTP id 315E320721
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 06:00:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588744851;
+	bh=UW8ZX3nCW0V/vYWcElzTqXesPegk9LEv9xZxzAfWIMs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=RIlrswgj+9kdfxh2H4rKXk2rM88H00tGIrBojbt2RJSTJMSkeqDuTsQjgK8+lyQKs
+	 gO25C2v4zwgebog5/Arp7wOlkP/3RCuT8rssYCA+d4qv1dPAU2zW+7AjUaxLcO0gDL
+	 9MT8uZyHgJ6e/mAmnIhnLYuZwugmdBq43l/JaL2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbgEFFxh (ORCPT
+        id S1727111AbgEFGAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 01:53:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725771AbgEFFxf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 01:53:35 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABEA6C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 22:53:34 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id q7so823924qkf.3
-        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 22:53:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=22ofnai8Kmb8nUlZsIXdX+pSRFQQCaWUWDTVletlIn8=;
-        b=bHT6W/fWOA40fzVohmqwgewBY83jYMapJYxNmoWYZVRhjvCcN/uCGzLtu9ZZpjegPt
-         Q5UbabCAQpEu6VOQ2/0bfia7psVZhQGM9SB5PDcKKTxpXQn9IS3XpkRWbxDGHYQAG7N1
-         ovzcSLqAS+e8Fw4CCoKn+w1qIPMvetUcoab0V7CJoEZh64Q5tvUMem8gw2iKrTYXkngI
-         YqVYPnFDEVpL7n0s2gMY4wNqTWgAriIEJAvPIW46iz2mFzAkM75yNUg8U+l18gc8m3i9
-         irKLWLsMowcpjqZtMkd8CoZmJ6mEW1aJe6aQcZk2+U4qiUPJRXSGghS4vawiCrNLWoCM
-         CvAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=22ofnai8Kmb8nUlZsIXdX+pSRFQQCaWUWDTVletlIn8=;
-        b=GpoQzArAqt3fX7hQUyidbZO7qjLn8OsevtSvbonx0KxjgL0Ka7vtMglZiJ0GuEdHpB
-         lGqsq3eB91cbSxhNXAzl04alAT+Omx6bgvTxWrAnd0UTaHYtHinEb28wvIjCu6DEfcet
-         L53ozNzHFy2Qf8WQSg8yKTKIjZ4e9kANCzyG08RtyAdELhYw2eCGuDHVGsrjNKXywrPg
-         gAcqqTPdvxvU5RDD+5wLc6eNiUjS7ozqiphf4cys3Lyy1j3C3I+AbgGuQFhbtro9TmNU
-         LxmpZGLH3uZKe2LGTILK4L80sUcVfINQFKllrGFRIE576wpe0q89N4Kj2WXvtigZtSJ8
-         Jb9Q==
-X-Gm-Message-State: AGi0PuaEkLJcyOCXTl7J4UE+xkDdyGZjU2SK33HbCEZWJZhytgeltzJm
-        PGHdkx1okSbpkVWKVc9JvPBpkh8HX8JhGw==
-X-Google-Smtp-Source: APiQypLikjqrC0WTXdzYihbO3/y7LWLnb+LLpLiSTCvKKz620VCQubf/5jDWJa4A3ZgrSWfdszM/kA==
-X-Received: by 2002:a05:620a:a12:: with SMTP id i18mr6804658qka.316.1588744413624;
-        Tue, 05 May 2020 22:53:33 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id p31sm706132qtf.11.2020.05.05.22.53.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2020 22:53:33 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH 0/3] kasan: memorize and print call_rcu stack
-Date:   Wed, 6 May 2020 01:53:31 -0400
-Message-Id: <2BF68E83-4611-48B2-A57F-196236399219@lca.pw>
-References: <20200506051853.14380-1-walter-zh.wu@mediatek.com>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        kasan-dev@googlegroups.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        linux-mediatek@lists.infradead.org
-In-Reply-To: <20200506051853.14380-1-walter-zh.wu@mediatek.com>
-To:     Walter Wu <walter-zh.wu@mediatek.com>
-X-Mailer: iPhone Mail (17D50)
+        Wed, 6 May 2020 02:00:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51634 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725771AbgEFGAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 02:00:50 -0400
+Received: from localhost.localdomain (unknown [122.181.213.114])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2212206E6;
+        Wed,  6 May 2020 06:00:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588744849;
+        bh=UW8ZX3nCW0V/vYWcElzTqXesPegk9LEv9xZxzAfWIMs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QgaxcexZO3bKQibBypoqBW6r4EeJgCwPb7CAP4UFXzg0eRhOqasRrGzjnHnWNpwU6
+         Za3ueWxG7GFWc41YY/6HQDF91totUrypO7DvGm9UM9gCp1LwHWv6LjeaOixruMTjJl
+         IUTxZ+h3b0THO+kHyVqAauYNyx54TrpaWl/3G/Hw=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        =?UTF-8?q?Andreas=20B=C3=B6hler?= <dev@aboehler.at>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v13 0/5] usb: xhci: Add support for Renesas USB controllers
+Date:   Wed,  6 May 2020 11:30:20 +0530
+Message-Id: <20200506060025.1535960-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.25.4
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This series add support for Renesas USB controllers uPD720201 and uPD720202.
+These require firmware to be loaded and in case devices have ROM those can
+also be programmed if empty. If ROM is programmed, it runs from ROM as well.
+
+This includes patches from Christian which supported these controllers w/o
+ROM and later my patches for ROM support and debugfs hook for rom erase and
+export of xhci-pci functions.
+
+Changes in v13:
+ - Make rensesas as independent module invoke by xhci-pci which can be
+   selected by users of such hardware
+
+Changes in v12:
+  - Restore back module name for xhci-pci, so now renesas is a separate
+    module, export init/exit routines from renesas modules
+  - Update changelog on patch2
+
+Changes in v11:
+  - update xhci->quirks and use that in remove function
+  - remove error return renesas_verify_fw_version()
+  - remove renesas_download_rom() and modify renesas_fw_download_image() for
+  reuse
+Changes in v10:
+  remove renesas_xhci_pci_probe and call renesas_xhci_check_request_fw and
+  also cleanup exit code along with it.
+
+Changes in v9:
+ Make fw load a sync call and have single instance of probe execute,
+   elimating probe/remove races
+ Add quirk for renesas and use that for loading
+
+Changes in v8:
+ Fix compile error reported by Kbuild-bot by making usb_hcd_pci_probe() take
+ const struct hc_driver * as argument
+
+Changes in v7:
+ Make a single module which removes issues with module loading
+ Keep the renesas code in renesas file
+ Add hc_driver as argument for usb_hcd_pci_probe and modify hdc drivers to
+   pass this and not use driver_data
+ Use driver data for fw name
+ Remove code to check if we need to load firmware or not
+ remove multiple fw version support, we can do that with symlink in
+   userspace
+
+Changes in v6:
+ Move the renesas code into a separate driver which invokes xhci-pci functions.
+
+Changes in v5:
+ Added a debugfs rom erase patch, helps in debugging
+ Squashed patch 1 & 2 as requested by Mathias
+
+Changes in v4:
+ Rollback the delay values as we got device failures
+
+Changes in v3:
+  Dropped patch 2 as discussed with Christian
+  Removed aligned 8 bytes check
+  Change order for firmware search from highest version to lowest
+  Added entry for new firmware for device 0x14 as well
+  Add tested by Christian
+
+Changes in v2:
+  used macros for timeout count and delay
+  removed renesas_fw_alive_check
+  cleaned renesas_fw_callback
+  removed recurion for renesas_fw_download
+  added MODULE_FIRMWARE
+  added comment for multip
 
 
-> On May 6, 2020, at 1:19 AM, Walter Wu <walter-zh.wu@mediatek.com> wrote:
->=20
-> This patchset improves KASAN reports by making them to have
-> call_rcu() call stack information. It is helpful for programmers
-> to solve use-after-free or double-free memory issue.
->=20
-> The KASAN report was as follows(cleaned up slightly):
->=20
-> BUG: KASAN: use-after-free in kasan_rcu_reclaim+0x58/0x60
->=20
-> Freed by task 0:
-> save_stack+0x24/0x50
-> __kasan_slab_free+0x110/0x178
-> kasan_slab_free+0x10/0x18
-> kfree+0x98/0x270
-> kasan_rcu_reclaim+0x1c/0x60
-> rcu_core+0x8b4/0x10f8
-> rcu_core_si+0xc/0x18
-> efi_header_end+0x238/0xa6c
->=20
-> First call_rcu() call stack:
-> save_stack+0x24/0x50
-> kasan_record_callrcu+0xc8/0xd8
-> call_rcu+0x190/0x580
-> kasan_rcu_uaf+0x1d8/0x278
->=20
-> Last call_rcu() call stack:
-> (stack is not available)
->=20
->=20
-> Add new CONFIG option to record first and last call_rcu() call stack
-> and KASAN report prints two call_rcu() call stack.
->=20
-> This option doesn't increase the cost of memory consumption. It is
-> only suitable for generic KASAN.
+Christian Lamparter (1):
+  usb: renesas-xhci: Add the renesas xhci driver
 
-I don=E2=80=99t understand why this needs to be a Kconfig option at all. If c=
-all_rcu() stacks are useful in general, then just always gather those inform=
-ation. How do developers judge if they need to select this option or not?=
+Vinod Koul (4):
+  usb: hci: add hc_driver as argument for usb_hcd_pci_probe
+  usb: xhci: Add support for Renesas controller with memory
+  usb: renesas-xhci: Add ROM loader for uPD720201
+  usb: xhci: provide a debugfs hook for erasing rom
+
+ drivers/usb/core/hcd-pci.c          |   7 +-
+ drivers/usb/host/Kconfig            |   9 +
+ drivers/usb/host/Makefile           |   1 +
+ drivers/usb/host/ehci-pci.c         |   6 +-
+ drivers/usb/host/ohci-pci.c         |   9 +-
+ drivers/usb/host/uhci-pci.c         |   8 +-
+ drivers/usb/host/xhci-pci-renesas.c | 678 ++++++++++++++++++++++++++++
+ drivers/usb/host/xhci-pci.c         |  47 +-
+ drivers/usb/host/xhci-pci.h         |  28 ++
+ drivers/usb/host/xhci.h             |   1 +
+ include/linux/usb/hcd.h             |   3 +-
+ 11 files changed, 775 insertions(+), 22 deletions(-)
+ create mode 100644 drivers/usb/host/xhci-pci-renesas.c
+ create mode 100644 drivers/usb/host/xhci-pci.h
+
+-- 
+2.25.4
+
