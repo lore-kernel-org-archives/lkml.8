@@ -2,131 +2,109 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC83C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5B9C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC9AC20714
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05FA020661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 05:33:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JwDrngzG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgEFFam (ORCPT
+        id S1727099AbgEFFdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 01:30:42 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6634 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725849AbgEFFam (ORCPT
+        Wed, 6 May 2020 01:33:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51136 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725796AbgEFFdk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 01:30:42 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04653OOR128725;
-        Wed, 6 May 2020 01:30:05 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30u8sp1hge-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 May 2020 01:30:05 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04655q7w135977;
-        Wed, 6 May 2020 01:30:04 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30u8sp1hf0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 May 2020 01:30:04 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0465U1F5003746;
-        Wed, 6 May 2020 05:30:02 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 30s0g5rdxe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 May 2020 05:30:02 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0465Txts45088912
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 6 May 2020 05:29:59 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8E15F4C044;
-        Wed,  6 May 2020 05:29:59 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9FEFD4C04E;
-        Wed,  6 May 2020 05:29:56 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Wed,  6 May 2020 05:29:56 +0000 (GMT)
-Date:   Wed, 6 May 2020 10:59:55 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Guo Ren <guoren@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Jann Horn <jannh@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>,
-        Security Officers <security@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Ananth N Mavinakayanahalli <ananth@in.ibm.com>,
-        Naveen Rao <naveen.n.rao@linux.vnet.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] uprobes: ensure that uprobe->offset and ->ref_ctr_offset
- are properly aligned
-Message-ID: <20200506052955.GA8259@linux.vnet.ibm.com>
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <CAHk-=whQt69ApMkZF8b2Q2idMDgPpPETZeeOuZg59CrOO4025w@mail.gmail.com>
- <20200428091149.GB19958@linux.vnet.ibm.com>
- <20200428123914.GA27920@redhat.com>
- <20200504164724.GA28697@redhat.com>
+        Wed, 6 May 2020 01:33:40 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC37C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue,  5 May 2020 22:33:40 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id e16so364705ybn.7
+        for <linux-kernel@vger.kernel.org>; Tue, 05 May 2020 22:33:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SxykVaThalWy+W/RBmeDI+Hdof9R/cQbDKxbUTqIEM0=;
+        b=JwDrngzGzQaHxQ3b7w03CpIDP6hDzeFF/0ELYYXK23OXV9/8bqEUeQH6WENg0kY5Sd
+         fUMEfJdTMQiX4nGOFOUmAjkgmCo0YXjc2SmAaSFDpn7KbfxhaDsrG1xNLo5tKV6A7jN7
+         XHk3phR8JJ4e60twlCo+IKNks2GnKxaJh6Da3xrDn4n9KfKB3Thq8Q9bWCWuu7En0lAB
+         vTDKteNupyn+s7mwIwNlJXNfdhlWk6IsW39w/I3fyZfdQhNu7MFC5P5d5yIhL1QiEycU
+         LVfxy5TX2yfRRL8KhPTB8TM24KVtF02HBc9zZ6oFn+hfIFc58ZRu/8ZgIdDH9+GgtBXb
+         0VIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SxykVaThalWy+W/RBmeDI+Hdof9R/cQbDKxbUTqIEM0=;
+        b=BInskAxY/b7mxrjbihSYqSrx5f1albVAiNqFEgh7N9xVaJgKRwtMO+vzlML7469KVt
+         NB5D17e/RHAUZdSXLxn3BXig84P4c+tCQVXDBx/2DiwDsbJTNHIc7njrGJyF0GPOufaT
+         WsNjrsVTXM0mD6e/RYXAQN0ElaZFy49O/TlwxkvU1QfbAsUyef/whY1JbpQd4FIIXUrh
+         jqYgCvM8zgYEsC8nqBZKvg5SvK0yxsutJEmKx5RWsWcM7fzdMRUf6tCASH7Y6vANKsDu
+         0Vus8sT/sJrLNl8QNnnJSQi8QCl2VvpTepvUzzTfSSR/k26CgQ3mfhQ79eS3DVxk9A2Z
+         V9VA==
+X-Gm-Message-State: AGi0PuZ6WA3Fvjv7m+G0+H78JmyIRq03OO4EEXoKY74AHFIBK/ubyVYB
+        lK179RW5r1Q3Ps7PerGPrPvk+TuAL45WGsKUWyE=
+X-Google-Smtp-Source: APiQypIS3uec5wwcorLYtSCMzlLufQ7uozL+gS9rxwGKORMmhztVrmFSByYw7WY5wS2AeDkJk+neYOBnz51E/BWUQOY=
+X-Received: by 2002:a5b:383:: with SMTP id k3mr10816210ybp.332.1588743218448;
+ Tue, 05 May 2020 22:33:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20200504164724.GA28697@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-06_01:2020-05-04,2020-05-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 bulkscore=0
- impostorscore=0 priorityscore=1501 phishscore=0 mlxscore=0 malwarescore=0
- suspectscore=0 lowpriorityscore=0 adultscore=0 spamscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005060038
+References: <20200505162607.334-1-nsaenzjulienne@suse.de> <20200505162607.334-2-nsaenzjulienne@suse.de>
+In-Reply-To: <20200505162607.334-2-nsaenzjulienne@suse.de>
+From:   Bin Meng <bmeng.cn@gmail.com>
+Date:   Wed, 6 May 2020 13:33:26 +0800
+Message-ID: <CAEUhbmWOQNDeStd3oDFTveiugzDG0zf0X1ybSWeCSP4QStNcPA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] arm: rpi: Add function to trigger VL805's firmware load
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     mbrugger@suse.com, U-Boot Mailing List <u-boot@lists.denx.de>,
+        Marek Vasut <marex@denx.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Simon Glass <sjg@chromium.org>, m.szyprowski@samsung.com,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        mark.kettenis@xs4all.nl
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Oleg Nesterov <oleg@redhat.com> [2020-05-04 18:47:25]:
+Hi Nicolas,
 
-> uprobe_write_opcode() must not cross page boundary; prepare_uprobe()
-> relies on arch_uprobe_analyze_insn() which should validate "vaddr" but
-> some architectures (csky, s390, and sparc) don't do this.
-> 
-> We can remove the BUG_ON() check in prepare_uprobe() and validate the
-> offset early in __uprobe_register(). The new IS_ALIGNED() check matches
-> the alignment check in arch_prepare_kprobe() on supported architectures,
-> so I think that all insns must be aligned to UPROBE_SWBP_INSN_SIZE.
-> 
-> Another problem is __update_ref_ctr() which was wrong from the very
-> beginning, it can read/write outside of kmap'ed page unless "vaddr" is
-> aligned to sizeof(short), __uprobe_register() should check this too.
-> 
-> Cc: stable@vger.kernel.org
-> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+On Wed, May 6, 2020 at 12:26 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> On the Raspberry Pi 4, after a PCI reset, VL805's (a xHCI chip) firmware
+> may either be loaded directly from an EEPROM or, if not present, by the
+> SoC's VideCore (the SoC's co-processor). Introduce the function that
+> informs VideCore that VL805 may need its firmware loaded.
+>
 
-Thanks Oleg.
+I still did not get it. Without the firmware being loaded, does xHCI
+on RPi 4 still work? What exact functionality does the firmware
+provide?
 
-Looks good to me.
-
-Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>
 > ---
+> Changes since v2:
+>  - Correct wrong function name in comment
+>  - Add better comment on rpi_firmware_init_vl805()
+>
+> Changes since v1:
+>  - Rename function so it's not mistaken with regular firmware loading
+>
+>  arch/arm/mach-bcm283x/include/mach/mbox.h | 13 +++++++
+>  arch/arm/mach-bcm283x/include/mach/msg.h  |  7 ++++
+>  arch/arm/mach-bcm283x/msg.c               | 45 +++++++++++++++++++++++
+>  3 files changed, 65 insertions(+)
+>
 
-
--- 
-Thanks and Regards
-Srikar Dronamraju
+Regards,
+Bin
