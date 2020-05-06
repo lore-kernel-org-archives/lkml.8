@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32049C4724C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4682EC47257
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F22C20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 284D521655
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588778648;
-	bh=m1iki+DwuA4wE3IAIIYpTgHq0ZNDrpZS7Zx7gASceeI=;
+	s=default; t=1588778654;
+	bh=Z2a6BvB7V2oRcTfvpILMr6MCbyplu9h+wRMMfrZXx7E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aV1iHCrdoSBun8Pfvbu3eRN3plJBQJXxLL+ehtTzMVMToK7BO3eE3kpEqfJlqPvla
-	 zcX2nRyIxSlFEgV11mutlVHOP3zU36HdBEzha77VW8v1LxuDu9KTKEU2ol2MmfUD2t
-	 K9Cy7g7CeQukkFIDUWMO1jAg8oR7d/1g20q9Ghdg=
+	b=eUj/nPSXN/CWphbOXiTfzC1clXazUjt1XQPUPAXzj2mZPRYrbKAgKpBB0V6IT1Zg2
+	 xouCj/sY4W15XvKeiEOx5bMTliIl9tJtsbTiayLWj0s/mW6EkT+TZdAho4ExECIIZp
+	 pqBe840IHHOmy5D4Qpo2qFJvdl2Th7kNyUXPvwNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729807AbgEFPYH (ORCPT
+        id S1729813AbgEFPYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:24:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40910 "EHLO mail.kernel.org"
+        Wed, 6 May 2020 11:24:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728959AbgEFPYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:24:04 -0400
+        id S1729165AbgEFPYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:24:11 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 148E120A8B;
-        Wed,  6 May 2020 15:23:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32FAD21BE5;
+        Wed,  6 May 2020 15:24:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588778643;
-        bh=m1iki+DwuA4wE3IAIIYpTgHq0ZNDrpZS7Zx7gASceeI=;
+        s=default; t=1588778651;
+        bh=Z2a6BvB7V2oRcTfvpILMr6MCbyplu9h+wRMMfrZXx7E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Za1i5T8KnbLGXHt59bewFp7D+DRDW30yFQW0Lp9dV542jN4RCpmUcnMX72qCndhYr
-         9nwOTkQflo91ZUp2AwlQe6XgvXVe3gUgd9be4TqBCDBCeykmsqZg5QVzzUN78G3IdL
-         zF+dxo2D/cHH/lg/2gF3xAcF16l9+5On7CZRZ0XM=
+        b=W01y7i9nt1hesraQra2LYBVAR3tPGFHaIesl37RV3fsa7tcg0SRcxpL5XsbAz3Q/Y
+         X5DkixVHSFUTVK9k8MvgaJ3WFnPb0oDck69pYpMPSP7UwQNHFC+EeD98h0OEy39XUD
+         6LpoN7LcGDNMaqdIEtZiKQAECR+MkXT1LpFpOFv8=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -65,13 +65,14 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>,
         linuxppc-dev@lists.ozlabs.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 20/91] perf tools: Enable Hz/hz prinitg for --metric-only option
-Date:   Wed,  6 May 2020 12:21:23 -0300
-Message-Id: <20200506152234.21977-21-acme@kernel.org>
+Subject: [PATCH 21/91] perf vendor events power9: Add hv_24x7 socket/chip level metric events
+Date:   Wed,  6 May 2020 12:21:24 -0300
+Message-Id: <20200506152234.21977-22-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -80,10 +81,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kajol Jain <kjain@linux.ibm.com>
 
-Commit 54b5091606c18 ("perf stat: Implement --metric-only mode") added
-function 'valid_only_metric()' which drops "Hz" or "hz", if it is part
-of "ScaleUnit". This patch enable it since hv_24x7 supports couple of
-frequency events.
+The hv_24×7 feature in IBM® POWER9™ processor-based servers provide the
+facility to continuously collect large numbers of hardware performance
+metrics efficiently and accurately.
+
+This patch adds hv_24x7  metric file for different Socket/chip
+resources.
+
+Result:
+
+power9 platform:
+
+  command:# ./perf stat --metric-only -M Memory_RD_BW_Chip -C 0 -I 1000
+
+     1.000096188          0.9           0.3
+     2.000285720          0.5           0.1
+     3.000424990          0.4           0.1
+
+  command:# ./perf stat --metric-only -M PowerBUS_Frequency -C 0 -I 1000
+
+     1.000097981          2.3           2.3
+     2.000291713          2.3           2.3
+     3.000421719          2.3           2.3
+     4.000550912          2.3           2.3
 
 Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
 Acked-by: Jiri Olsa <jolsa@redhat.com>
@@ -107,25 +127,38 @@ Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 Cc: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: linuxppc-dev@lists.ozlabs.org
-Link: http://lore.kernel.org/lkml/20200401203340.31402-7-kjain@linux.ibm.com
+Link: http://lore.kernel.org/lkml/20200401203340.31402-8-kjain@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/stat-display.c | 2 --
- 1 file changed, 2 deletions(-)
+ .../arch/powerpc/power9/nest_metrics.json     | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 9e757d18d713..679aaa655824 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -237,8 +237,6 @@ static bool valid_only_metric(const char *unit)
- 	if (!unit)
- 		return false;
- 	if (strstr(unit, "/sec") ||
--	    strstr(unit, "hz") ||
--	    strstr(unit, "Hz") ||
- 	    strstr(unit, "CPUs utilized"))
- 		return false;
- 	return true;
+diff --git a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+new file mode 100644
+index 000000000000..c121e526442a
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+@@ -0,0 +1,19 @@
++[
++    {
++        "MetricExpr": "(hv_24x7@PM_MCS01_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_RD_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT23\\,chip\\=?@)",
++        "MetricName": "Memory_RD_BW_Chip",
++        "MetricGroup": "Memory_BW",
++        "ScaleUnit": "1.6e-2MB"
++    },
++    {
++	"MetricExpr": "(hv_24x7@PM_MCS01_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_WR_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT23\\,chip\\=?@ )",
++        "MetricName": "Memory_WR_BW_Chip",
++        "MetricGroup": "Memory_BW",
++        "ScaleUnit": "1.6e-2MB"
++    },
++    {
++	"MetricExpr": "(hv_24x7@PM_PB_CYC\\,chip\\=?@ )",
++        "MetricName": "PowerBUS_Frequency",
++        "ScaleUnit": "2.5e-7GHz"
++    }
++]
 -- 
 2.21.1
 
