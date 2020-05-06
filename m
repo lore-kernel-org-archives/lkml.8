@@ -2,96 +2,182 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4F7C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF89C38A2A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA3CD20575
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:15:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31D942068E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 10:19:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="EqiyYX8r"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xFXp8/aS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729227AbgEFKPH (ORCPT
+        id S1728770AbgEFKTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 06:15:07 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:58645 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbgEFKPG (ORCPT
+        Wed, 6 May 2020 06:19:22 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:51851 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726354AbgEFKTV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 06:15:06 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 6 May 2020 06:19:21 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588760361; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=IcUq3JaTDMqeMJ20mOeLmSvjfCk1bKlvregH4GOb4ZI=; b=xFXp8/aStK9cBqyvLoUAQLqtCHI2CdD0mQaWlhM6zNeRomXXdK6qTTtiOurBmuBAjp6NsGTF
+ AIjly7dZjwjxbL0jmnS+6uS/I5V09rcX297+Z70dL/AYdSChk4mJVCLRyCvNG5Iv/D4Akavg
+ DReFws3WUfjB8AExR1+CNYx3P7Y=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8E989C432C2; Wed,  6 May 2020 10:19:17 +0000 (UTC)
+Received: from [10.131.199.84] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id E833922EDE;
-        Wed,  6 May 2020 12:15:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1588760104;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nAAw+xDlfmFE1PfS+rEU4ez9NFhnFnvHiViZ3xvNAjw=;
-        b=EqiyYX8rMFKm4ilqILTgN1nc1EwQkfTsMRvUtxdbWGDMPV//E1lru0wM/ukjLURl1X48OP
-        suuwpvyMemfPmvR3qgZJnnwXlzuKxxEmGxXjSBH8fRm8/1qJXxxp/olDPtcEQEmsriMABz
-        MQang03KtcdxXv6b0rpAvfz54QJGy4A=
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B5D44C433F2;
+        Wed,  6 May 2020 10:19:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B5D44C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v4 6/6] spi: spi-qcom-qspi: Use OPP API to set clk/perf
+ state
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Alok Chauhan <alokc@codeaurora.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-spi@vger.kernel.org
+References: <1588507469-31889-1-git-send-email-rnayak@codeaurora.org>
+ <1588507469-31889-7-git-send-email-rnayak@codeaurora.org>
+ <20200505163811.GW4525@google.com>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <66551105-c296-36ce-0ca7-2240c2af7db0@codeaurora.org>
+Date:   Wed, 6 May 2020 15:49:10 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200505163811.GW4525@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 06 May 2020 12:15:01 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Matthias May <matthias.may@neratec.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [RFC net-next] net: phy: at803x: add cable diagnostics support
-In-Reply-To: <00e8202e-1786-27f4-3bfc-accc5a01787d@neratec.com>
-References: <20200503181517.4538-1-michael@walle.cc>
- <00e8202e-1786-27f4-3bfc-accc5a01787d@neratec.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <c09c5c851e64f374fe9f7f575113f432@walle.cc>
-X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-05-06 11:01, schrieb Matthias May:
-> I've worked with this PHY quite often and we've hacked together some
-> support for the CDT in uboot.
+
+On 5/5/2020 10:08 PM, Matthias Kaehlcke wrote:
+> Hi Rajendra,
 > 
-> Have you done any tests with the cable on the other side being plugged 
-> in?
-
-yes
-
+> On Sun, May 03, 2020 at 05:34:29PM +0530, Rajendra Nayak wrote:
+>> QSPI needs to vote on a performance state of a power domain depending on
+>> the clock rate. Add support for it by specifying the perf state/clock rate
+>> as an OPP table in device tree.
+>>
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> Cc: Mark Brown <broonie@kernel.org>
+>> Cc: Alok Chauhan <alokc@codeaurora.org>
+>> Cc: Akash Asthana <akashast@codeaurora.org>
+>> Cc: linux-spi@vger.kernel.org
+>> ---
+>>   drivers/spi/spi-qcom-qspi.c | 29 ++++++++++++++++++++++++++++-
+>>   1 file changed, 28 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/spi/spi-qcom-qspi.c b/drivers/spi/spi-qcom-qspi.c
+>> index 3c4f83b..eb53c00 100644
+>> --- a/drivers/spi/spi-qcom-qspi.c
+>> +++ b/drivers/spi/spi-qcom-qspi.c
+>> @@ -8,6 +8,7 @@
+>>   #include <linux/of.h>
+>>   #include <linux/of_platform.h>
+>>   #include <linux/pm_runtime.h>
+>> +#include <linux/pm_opp.h>
+>>   #include <linux/spi/spi.h>
+>>   #include <linux/spi/spi-mem.h>
+>>   
+>> @@ -139,6 +140,8 @@ struct qcom_qspi {
+>>   	struct device *dev;
+>>   	struct clk_bulk_data *clks;
+>>   	struct qspi_xfer xfer;
+>> +	struct opp_table *opp_table;
+>> +	bool has_opp_table;
+>>   	/* Lock to protect xfer and IRQ accessed registers */
+>>   	spinlock_t lock;
+>>   };
+>> @@ -235,7 +238,7 @@ static int qcom_qspi_transfer_one(struct spi_master *master,
+>>   		speed_hz = xfer->speed_hz;
+>>   
+>>   	/* In regular operation (SBL_EN=1) core must be 4x transfer clock */
+>> -	ret = clk_set_rate(ctrl->clks[QSPI_CLK_CORE].clk, speed_hz * 4);
+>> +	ret = dev_pm_opp_set_rate(ctrl->dev, speed_hz * 4);
+>>   	if (ret) {
+>>   		dev_err(ctrl->dev, "Failed to set core clk %d\n", ret);
+>>   		return ret;
+>> @@ -481,6 +484,20 @@ static int qcom_qspi_probe(struct platform_device *pdev)
+>>   	master->handle_err = qcom_qspi_handle_err;
+>>   	master->auto_runtime_pm = true;
+>>   
+>> +	ctrl->opp_table = dev_pm_opp_set_clkname(&pdev->dev, "core");
+>> +	if (IS_ERR(ctrl->opp_table)) {
+>> +		ret = PTR_ERR(ctrl->opp_table);
+>> +		goto exit_probe_master_put;
+>> +	}
+>> +	/* OPP table is optional */
+>> +	ret = dev_pm_opp_of_add_table(&pdev->dev);
+>> +	if (!ret) {
+>> +		ctrl->has_opp_table = true;
+>> +	} else if (ret != -ENODEV) {
+>> +		dev_err(&pdev->dev, "invalid OPP table in device tree\n");
+>> +		goto exit_probe_master_put;
+>> +	}
+>> +
+>>   	pm_runtime_enable(dev);
+>>   
+>>   	ret = spi_register_master(master);
+>> @@ -488,6 +505,9 @@ static int qcom_qspi_probe(struct platform_device *pdev)
+>>   		return 0;
+>>   
+>>   	pm_runtime_disable(dev);
+>> +	if (ctrl->has_opp_table)
+>> +		dev_pm_opp_of_remove_table(&pdev->dev);
+>> +	dev_pm_opp_put_clkname(ctrl->opp_table);
+>>   
+>>   exit_probe_master_put:
+>>   	spi_master_put(master);
+>> @@ -498,6 +518,11 @@ static int qcom_qspi_probe(struct platform_device *pdev)
+>>   static int qcom_qspi_remove(struct platform_device *pdev)
+>>   {
+>>   	struct spi_master *master = platform_get_drvdata(pdev);
+>> +	struct qcom_qspi *ctrl = spi_master_get_devdata(master);
+>> +
+>> +	if (ctrl->has_opp_table)
+>> +		dev_pm_opp_of_remove_table(&pdev->dev);
+>> +	dev_pm_opp_put_clkname(ctrl->opp_table);
 > 
-> With the cable being plugged in, we something (1 out of 10 or so)
-> observed that the test returns with a failure.
-> --> AT803X_CDT_STATUS_STAT_FAIL in AT803X_CDT_STATUS
-> 
-> Often you get the correct result if you simply try again. Sometimes
-> however it gets into a "stuck" state where it just
-> returns FAIL for ~3~10 seconds. After some that it seems to recover
-> and gets the correct result again.
+> IIUC there can still be active transfers before the controller is
+> unregistered. If that is correct the above should be done after the
+> spi_unregister_master() call below.
 
-its actually pretty stable for the following sequence (see also code
-above):
+ah, true. i should have read the comment below :)
 
-restart AN -> wait 1.5s -> start test
+>>   
+>>   	/* Unregister _before_ disabling pm_runtime() so we stop transfers */
+>>   	spi_unregister_master(master);
+>> @@ -512,6 +537,8 @@ static int __maybe_unused qcom_qspi_runtime_suspend(struct device *dev)
+>>   	struct spi_master *master = dev_get_drvdata(dev);
+>>   	struct qcom_qspi *ctrl = spi_master_get_devdata(master);
+>>   
+>> +	/* Drop the performance state vote */
+>> +	dev_pm_opp_set_rate(dev, 0);
+>>   	clk_bulk_disable_unprepare(QSPI_NUM_CLKS, ctrl->clks);
+>>   
+>>   	return 0;
 
-Only thing I've noticed is that if you perform the test without
-waiting for the AN to complete beforehand there might be some
-failed states. Seems like the "restart an" doesn't work while
-AN is still running. But that seems to be the link partner
-who disturbs the measurement.
-And it seems that AN is a requirement to do successful testing
-(or to silence the link partner I guess).
-
--michael
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
