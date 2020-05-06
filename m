@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD41C47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D77BC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A56A20CC7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A52C20CC7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588778721;
-	bh=GGRIseQMktZJlY52mt7ANKHySNFZCqQzsSlXLeEJyME=;
+	s=default; t=1588778728;
+	bh=HEEk8PmAYoQEBFPU8KHu+Y/1Ujm+GfPN+zdAJQevnVw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DlZfNOUotGfXF+HQH8uBUkYi8DsHjU5Ij/ei4OVgHhpdu8J0gIOIuHFDUOzAm8g/G
-	 KvMV1rHgUiX2PmCovRU5XKK5Xx4E5Qls2kaHRe7ZUuh0UjH8kmjM1Z5RKLoSuGiBGJ
-	 d5xdy5HC4Hq2fCXrGKv/fUV3/m53iH/OIM1tQSss=
+	b=OlQQ73WuNdFvANf8l2zcHL+NhqwTan6OoPQeQu898gYnaBIsBuLsH6NGk9VCTJoWs
+	 BqqLvV9Vq94Bc1OCm+aLNHxDJR9U4mfPptkQHJ/TsBWEuyQ2VQNgutZZPgAhDNmmTZ
+	 8SWSDQAYiyuJeRN42q0vSAOi2eKsZxfJGYZpSOSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730005AbgEFPZU (ORCPT
+        id S1730022AbgEFPZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:25:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45130 "EHLO mail.kernel.org"
+        Wed, 6 May 2020 11:25:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729965AbgEFPZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:25:18 -0400
+        id S1730011AbgEFPZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:25:24 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1856221775;
-        Wed,  6 May 2020 15:25:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D768920A8B;
+        Wed,  6 May 2020 15:25:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588778717;
-        bh=GGRIseQMktZJlY52mt7ANKHySNFZCqQzsSlXLeEJyME=;
+        s=default; t=1588778723;
+        bh=HEEk8PmAYoQEBFPU8KHu+Y/1Ujm+GfPN+zdAJQevnVw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LIEsaoedLY3WXFlfFU7twkbzDVuDrbo9RWaH0UMzSTNuPZ5+1EhzH2IUMHCCeTACG
-         2YhCKGOmxbOizNrsSU82m6eOzKuwcxrMvc+iG44Lnm61Nzo4NYZaSHS0x9bHAzVLbN
-         Vg5lwZw6ruDWuOyx4cJVdDJ6gpeiI6A9ECPChd+A=
+        b=dRvpW5RBa6swxJLJ632YIAG7okzjtb+N2kHvECubTsG136cjDc2GwZilvdzc+qAn+
+         99ICfM1RJSMFf7ZDv56caXCbGU6Z80bE82XPHH5qjB06nRTf0i6rbsPNHqGxygIazG
+         iausJCGODfqH1AJhU13AROYljaZsKALe81qhL3to=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -48,9 +48,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 42/91] perf auxtrace: Add option to synthesize branch stack for regular events
-Date:   Wed,  6 May 2020 12:21:45 -0300
-Message-Id: <20200506152234.21977-43-acme@kernel.org>
+Subject: [PATCH 44/91] perf thread-stack: Add thread_stack__br_sample_late()
+Date:   Wed,  6 May 2020 12:21:47 -0300
+Message-Id: <20200506152234.21977-45-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
@@ -63,124 +63,148 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-There is an existing option to synthesize branch stacks for synthesized
-events. Add a new option to synthesize branch stacks for regular events.
+Add a thread stack function to create a branch stack for hardware events
+where the sample records get created some time after the event occurred.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20200429150751.12570-5-adrian.hunter@intel.com
+Link: http://lore.kernel.org/lkml/20200429150751.12570-7-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/itrace.txt | 1 +
- tools/perf/builtin-inject.c         | 3 ++-
- tools/perf/builtin-report.c         | 5 +++--
- tools/perf/util/auxtrace.c          | 6 +++++-
- tools/perf/util/auxtrace.h          | 2 ++
- tools/perf/util/s390-cpumsf.c       | 3 ++-
- 6 files changed, 15 insertions(+), 5 deletions(-)
+ tools/perf/util/thread-stack.c | 104 +++++++++++++++++++++++++++++++++
+ tools/perf/util/thread-stack.h |   3 +
+ 2 files changed, 107 insertions(+)
 
-diff --git a/tools/perf/Documentation/itrace.txt b/tools/perf/Documentation/itrace.txt
-index 671e154ede03..0326050beebd 100644
---- a/tools/perf/Documentation/itrace.txt
-+++ b/tools/perf/Documentation/itrace.txt
-@@ -12,6 +12,7 @@
- 		g	synthesize a call chain (use with i or x)
- 		G	synthesize a call chain on existing event records
- 		l	synthesize last branch entries (use with i or x)
-+		L	synthesize last branch entries on existing event records
- 		s       skip initial number of events
- 
- 	The default is all events i.e. the same as --itrace=ibxwpe,
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 7e124a7b8bfd..7c4403cf8dcb 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -684,7 +684,8 @@ static int __cmd_inject(struct perf_inject *inject)
- 
- 			perf_header__clear_feat(&session->header,
- 						HEADER_AUXTRACE);
--			if (inject->itrace_synth_opts.last_branch)
-+			if (inject->itrace_synth_opts.last_branch ||
-+			    inject->itrace_synth_opts.add_last_branch)
- 				perf_header__set_feat(&session->header,
- 						      HEADER_BRANCH_STACK);
- 			evsel = perf_evlist__id2evsel_strict(session->evlist,
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 7da1342a1f4e..0eea667bfb76 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -349,7 +349,8 @@ static int report__setup_sample_type(struct report *rep)
- 	     !session->itrace_synth_opts->set))
- 		sample_type |= PERF_SAMPLE_CALLCHAIN;
- 
--	if (session->itrace_synth_opts->last_branch)
-+	if (session->itrace_synth_opts->last_branch ||
-+	    session->itrace_synth_opts->add_last_branch)
- 		sample_type |= PERF_SAMPLE_BRANCH_STACK;
- 
- 	if (!is_pipe && !(sample_type & PERF_SAMPLE_CALLCHAIN)) {
-@@ -1393,7 +1394,7 @@ int cmd_report(int argc, const char **argv)
- 		goto error;
+diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
+index 79698831b4b9..1b992bbba4e8 100644
+--- a/tools/perf/util/thread-stack.c
++++ b/tools/perf/util/thread-stack.c
+@@ -645,6 +645,110 @@ void thread_stack__br_sample(struct thread *thread, int cpu,
  	}
+ }
  
--	if (itrace_synth_opts.last_branch)
-+	if (itrace_synth_opts.last_branch || itrace_synth_opts.add_last_branch)
- 		has_br_stack = true;
- 
- 	if (has_br_stack && branch_call_mode)
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index ac6e09965a78..83ea7ca24686 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -1464,8 +1464,12 @@ int itrace_parse_synth_opts(const struct option *opt, const char *str,
- 				synth_opts->callchain_sz = val;
- 			}
- 			break;
-+		case 'L':
- 		case 'l':
--			synth_opts->last_branch = true;
-+			if (p[-1] == 'L')
-+				synth_opts->add_last_branch = true;
-+			else
-+				synth_opts->last_branch = true;
- 			synth_opts->last_branch_sz =
- 					PERF_ITRACE_DEFAULT_LAST_BRANCH_SZ;
- 			while (*p == ' ' || *p == ',')
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index dd8a4ff8209e..0220a2e86c16 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -77,6 +77,7 @@ enum itrace_period_type {
-  * @add_callchain: add callchain to existing event records
-  * @thread_stack: feed branches to the thread_stack
-  * @last_branch: add branch context to 'instruction' events
-+ * @add_last_branch: add branch context to existing event records
-  * @callchain_sz: maximum callchain size
-  * @last_branch_sz: branch context size
-  * @period: 'instructions' events period
-@@ -105,6 +106,7 @@ struct itrace_synth_opts {
- 	bool			add_callchain;
- 	bool			thread_stack;
- 	bool			last_branch;
-+	bool			add_last_branch;
- 	unsigned int		callchain_sz;
- 	unsigned int		last_branch_sz;
- 	unsigned long long	period;
-diff --git a/tools/perf/util/s390-cpumsf.c b/tools/perf/util/s390-cpumsf.c
-index 38a942881d1a..f8861998e5bd 100644
---- a/tools/perf/util/s390-cpumsf.c
-+++ b/tools/perf/util/s390-cpumsf.c
-@@ -1079,7 +1079,8 @@ static bool check_auxtrace_itrace(struct itrace_synth_opts *itops)
- 		itops->pwr_events || itops->errors ||
- 		itops->dont_decode || itops->calls || itops->returns ||
- 		itops->callchain || itops->thread_stack ||
--		itops->last_branch || itops->add_callchain;
-+		itops->last_branch || itops->add_callchain ||
-+		itops->add_last_branch;
- 	if (!ison)
- 		return true;
- 	pr_err("Unsupported --itrace options specified\n");
++/* Start of user space branch entries */
++static bool us_start(struct branch_entry *be, u64 kernel_start, bool *start)
++{
++	if (!*start)
++		*start = be->to && be->to < kernel_start;
++
++	return *start;
++}
++
++/*
++ * Start of branch entries after the ip fell in between 2 branches, or user
++ * space branch entries.
++ */
++static bool ks_start(struct branch_entry *be, u64 sample_ip, u64 kernel_start,
++		     bool *start, struct branch_entry *nb)
++{
++	if (!*start) {
++		*start = (nb && sample_ip >= be->to && sample_ip <= nb->from) ||
++			 be->from < kernel_start ||
++			 (be->to && be->to < kernel_start);
++	}
++
++	return *start;
++}
++
++/*
++ * Hardware sample records, created some time after the event occurred, need to
++ * have subsequent addresses removed from the branch stack.
++ */
++void thread_stack__br_sample_late(struct thread *thread, int cpu,
++				  struct branch_stack *dst, unsigned int sz,
++				  u64 ip, u64 kernel_start)
++{
++	struct thread_stack *ts = thread__stack(thread, cpu);
++	struct branch_entry *d, *s, *spos, *ssz;
++	struct branch_stack *src;
++	unsigned int nr = 0;
++	bool start = false;
++
++	dst->nr = 0;
++
++	if (!ts)
++		return;
++
++	src = ts->br_stack_rb;
++	if (!src->nr)
++		return;
++
++	spos = &src->entries[ts->br_stack_pos];
++	ssz  = &src->entries[ts->br_stack_sz];
++
++	d = &dst->entries[0];
++	s = spos;
++
++	if (ip < kernel_start) {
++		/*
++		 * User space sample: start copying branch entries when the
++		 * branch is in user space.
++		 */
++		for (s = spos; s < ssz && nr < sz; s++) {
++			if (us_start(s, kernel_start, &start)) {
++				*d++ = *s;
++				nr += 1;
++			}
++		}
++
++		if (src->nr >= ts->br_stack_sz) {
++			for (s = &src->entries[0]; s < spos && nr < sz; s++) {
++				if (us_start(s, kernel_start, &start)) {
++					*d++ = *s;
++					nr += 1;
++				}
++			}
++		}
++	} else {
++		struct branch_entry *nb = NULL;
++
++		/*
++		 * Kernel space sample: start copying branch entries when the ip
++		 * falls in between 2 branches (or the branch is in user space
++		 * because then the start must have been missed).
++		 */
++		for (s = spos; s < ssz && nr < sz; s++) {
++			if (ks_start(s, ip, kernel_start, &start, nb)) {
++				*d++ = *s;
++				nr += 1;
++			}
++			nb = s;
++		}
++
++		if (src->nr >= ts->br_stack_sz) {
++			for (s = &src->entries[0]; s < spos && nr < sz; s++) {
++				if (ks_start(s, ip, kernel_start, &start, nb)) {
++					*d++ = *s;
++					nr += 1;
++				}
++				nb = s;
++			}
++		}
++	}
++
++	dst->nr = nr;
++}
++
+ struct call_return_processor *
+ call_return_processor__new(int (*process)(struct call_return *cr, u64 *parent_db_id, void *data),
+ 			   void *data)
+diff --git a/tools/perf/util/thread-stack.h b/tools/perf/util/thread-stack.h
+index c279a0cbbdd0..3bc47a42af8e 100644
+--- a/tools/perf/util/thread-stack.h
++++ b/tools/perf/util/thread-stack.h
+@@ -91,6 +91,9 @@ void thread_stack__sample_late(struct thread *thread, int cpu,
+ 			       u64 kernel_start);
+ void thread_stack__br_sample(struct thread *thread, int cpu,
+ 			     struct branch_stack *dst, unsigned int sz);
++void thread_stack__br_sample_late(struct thread *thread, int cpu,
++				  struct branch_stack *dst, unsigned int sz,
++				  u64 sample_ip, u64 kernel_start);
+ int thread_stack__flush(struct thread *thread);
+ void thread_stack__free(struct thread *thread);
+ size_t thread_stack__depth(struct thread *thread, int cpu);
 -- 
 2.21.1
 
