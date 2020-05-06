@@ -2,149 +2,93 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECDEC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61735C4724C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ACF320747
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DA9E20747
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:21:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="JaXZicmL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730193AbgEFSU6 (ORCPT
+        id S1730326AbgEFSVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 14:20:58 -0400
-Received: from mga09.intel.com ([134.134.136.24]:45742 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729757AbgEFSU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 14:20:58 -0400
-IronPort-SDR: 1ns3Uh9GibrGlVxCBfZ3PkZ0OQUV86FZfLNGaFY7uebvmVwlwJKOv27niAtS1+ZXDGA00NmRoX
- C/6x1O274Y0w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 11:20:57 -0700
-IronPort-SDR: HCPTaO2Hwj49m6PtKDn0xkScq8UN+38Fy94ZSIF4qlGOEofq+QuFwChFSp2Epl3v4hcmO0OSaQ
- Ozn36vM3hKzg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,360,1583222400"; 
-   d="scan'208";a="263650013"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 06 May 2020 11:20:57 -0700
-Received: from [10.249.228.227] (abudanko-mobl.ccr.corp.intel.com [10.249.228.227])
-        by linux.intel.com (Postfix) with ESMTP id 531B258043A;
-        Wed,  6 May 2020 11:20:55 -0700 (PDT)
-Subject: [PATCH v2 04/11] perf stat: extend -D,--delay option with -1 value
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <d582cc3d-2302-c7e2-70d3-bc7ab6f628c3@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <df2ffd5b-dcd6-40ea-8053-74feef07724f@linux.intel.com>
-Date:   Wed, 6 May 2020 21:20:54 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 6 May 2020 14:21:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58400 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729550AbgEFSVN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 14:21:13 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6705C061A41
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 11:21:12 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id j4so2153522otr.11
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 11:21:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D2taJJRTg2UNCEqvPUHeisc7wYhhWEOMV6TUWaPz7kg=;
+        b=JaXZicmLPCbQ1s4wEPLd+sV+a4q0wnzPoifqdGpBSL8D7Z8GrydmvQGqC8UT22nL2I
+         WZa/znMpgXW+q41TZVo9zK6nCks5GJUhUduUAyuXBbeNVH+4lSu2c8TsdwQTipW46XE8
+         2YvlAWllyGrBAxfyw+wCC3p4SEMWY6eYou+Co=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D2taJJRTg2UNCEqvPUHeisc7wYhhWEOMV6TUWaPz7kg=;
+        b=YWfqYHMIx2wReLax/OFsDX2Wu74d65iDcurL9YBm4OMkAClGcuFDZ2/5VQYy1Xoj3o
+         7KvRh/zxwtMTSrrLYgr/3WeHyFvJP/AlPeqMu2o3FSvowDWMfpD5tI8LIRdE/h8aLb7L
+         yOjL4fUAJR4+nY8CSt7ppo3x0ueIQfBuh736ikzjyVbpNuhRdsyRctjrA4f7+WKKlCrQ
+         rLlK7UeciQCr/VU1NX9msopF1upuifppEWgqE14CDjbR8k1QrquDV/DlxkwalY9LiHF8
+         zm0IWIpW3FZuynIf1DYGFtemQPKwPuPaWeB3l5EYPZA1wegzmg1AWPjwRps1Iwo/zVeW
+         TXZg==
+X-Gm-Message-State: AGi0PuaFsVbm25Nn8Fu+fnq25+Zjhdq1FmnNDGF1M4ip1AmNRNm89ONu
+        Hl3VcQs8bVplbYvQpqAL9AVEFgLD5NA2cWUo2D4FIA==
+X-Google-Smtp-Source: APiQypInw39ygS3P/++U3PAE3LlMt925jYmNYdu8cvU7nnL+hmn3yH1R3d09MJ5VoLDPJl2XHnEM/8wYsJ8wMTKfCVI=
+X-Received: by 2002:a9d:490d:: with SMTP id e13mr7509661otf.356.1588789271980;
+ Wed, 06 May 2020 11:21:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <d582cc3d-2302-c7e2-70d3-bc7ab6f628c3@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200505140231.16600-1-brgl@bgdev.pl> <20200505140231.16600-6-brgl@bgdev.pl>
+ <CAKOOJTzcNr7mc9xusQm3nCzkq5P=ha-si3fizeEL2_KJUOC3-Q@mail.gmail.com> <CAMRc=Md7gLMThfGF-7YLqW17MpMhU=UFbdTvfjbr9fFHTLir8g@mail.gmail.com>
+In-Reply-To: <CAMRc=Md7gLMThfGF-7YLqW17MpMhU=UFbdTvfjbr9fFHTLir8g@mail.gmail.com>
+From:   Edwin Peer <edwin.peer@broadcom.com>
+Date:   Wed, 6 May 2020 11:20:35 -0700
+Message-ID: <CAKOOJTxkcaq0bF34bcz3HZzqsNgfmJH=Hd+odNNMX5gDq4to=w@mail.gmail.com>
+Subject: Re: [PATCH 05/11] net: core: provide devm_register_netdev()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 5, 2020 at 11:46 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-Extend -D,--delay option with -1 value to start monitoring with
-events disabled to be enabled later by enable command provided
-via control file descriptor.
+> Re the last bit in priv_flags: is this really a problem though? It's
+> not like struct net_device must remain stable - e.g. we can make
+> priv_flags a bitmap.
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/builtin-stat.c | 18 ++++++++++++++----
- tools/perf/util/evlist.h  |  3 +++
- tools/perf/util/stat.h    |  2 +-
- 3 files changed, 18 insertions(+), 5 deletions(-)
+Fair enough.
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 9775b0905146..bda777ca0420 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -383,16 +383,26 @@ static bool print_interval_and_stop(struct perf_stat_config *config, int *times)
- 
- static void enable_counters(void)
- {
--	if (stat_config.initial_delay)
-+	if (stat_config.initial_delay < 0) {
-+		pr_info(PERF_EVLIST__DISABLED_MSG);
-+		return;
-+	}
-+
-+	if (stat_config.initial_delay > 0) {
-+		pr_info(PERF_EVLIST__DISABLED_MSG);
- 		usleep(stat_config.initial_delay * USEC_PER_MSEC);
-+	}
- 
- 	/*
- 	 * We need to enable counters only if:
- 	 * - we don't have tracee (attaching to task or cpu)
- 	 * - we have initial delay configured
- 	 */
--	if (!target__none(&target) || stat_config.initial_delay)
-+	if (!target__none(&target) || stat_config.initial_delay) {
- 		evlist__enable(evsel_list);
-+		if (stat_config.initial_delay > 0)
-+			pr_info(PERF_EVLIST__ENABLED_MSG);
-+	}
- }
- 
- static void disable_counters(void)
-@@ -929,8 +939,8 @@ static struct option stat_options[] = {
- 		     "aggregate counts per thread", AGGR_THREAD),
- 	OPT_SET_UINT(0, "per-node", &stat_config.aggr_mode,
- 		     "aggregate counts per numa node", AGGR_NODE),
--	OPT_UINTEGER('D', "delay", &stat_config.initial_delay,
--		     "ms to wait before starting measurement after program start"),
-+	OPT_INTEGER('D', "delay", &stat_config.initial_delay,
-+		    "ms to wait before starting measurement after program start (-1: start with events disabled"),
- 	OPT_CALLBACK_NOOPT(0, "metric-only", &stat_config.metric_only, NULL,
- 			"Only print computed metrics. No raw values", enable_metric_only),
- 	OPT_BOOLEAN(0, "topdown", &topdown_run,
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 84386850c290..874ecf068ac9 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -366,6 +366,9 @@ enum evlist_ctl_cmd {
- 	CTL_CMD_ACK = 'a'
- };
- 
-+#define PERF_EVLIST__ENABLED_MSG "Events enabled\n"
-+#define PERF_EVLIST__DISABLED_MSG "Events disabled\n"
-+
- int perf_evlist__initialize_ctlfd(struct evlist *evlist, int ctl_fd, int ctl_fd_ack);
- int perf_evlist__finalize_ctlfd(struct evlist *evlist);
- int perf_evlist__ctlfd_process(struct evlist *evlist, enum evlist_ctl_cmd *cmd);
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index b4fdfaa7f2c0..027b9dcd902f 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -113,7 +113,7 @@ struct perf_stat_config {
- 	FILE			*output;
- 	unsigned int		 interval;
- 	unsigned int		 timeout;
--	unsigned int		 initial_delay;
-+	int			 initial_delay;
- 	unsigned int		 unit_width;
- 	unsigned int		 metric_only_len;
- 	int			 times;
--- 
-2.24.1
-
-
+Regards,
+Edwin Peer
