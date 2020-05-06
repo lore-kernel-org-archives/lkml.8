@@ -2,201 +2,137 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AEE3C47257
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C5BBC38A2A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DCC52076D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7486B2076D
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 22:06:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="tEdPv01a"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="fdeZSXiW";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="N7rEJHAZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730113AbgEFWCd (ORCPT
+        id S1729962AbgEFWGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 18:02:33 -0400
-Received: from mail-dm6nam10on2044.outbound.protection.outlook.com ([40.107.93.44]:6101
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729981AbgEFWCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 18:02:30 -0400
+        Wed, 6 May 2020 18:06:45 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:47786 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728621AbgEFWGo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 18:06:44 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 046Ljqes025421;
+        Wed, 6 May 2020 15:04:48 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=N9hSj9NDXFrGOhGBoOv0mjohWD7xsdq/VJYqx+FaFy8=;
+ b=fdeZSXiWbHx33jVrADcn9p3dC4e03WHwYDW6XDN8G9oAYPCylUUkEPwl6dOaf0TffIPY
+ F42LLXP56eMTJy/s3KTWrzNSXIU91v0bM2+o2qapIgLyoXiy2t00OsirYCSHpIvMSqFv
+ 8IB6qmx8vaag1n7lg1vgKodTTs0MZOYK5EE= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 30up69cs3v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 06 May 2020 15:04:48 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.199) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Wed, 6 May 2020 15:04:47 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kFYACvTt/q+0E4veYw3/GbCYI4oKERVetl3iw5A/wbDUrt9OKA+DB60n4/RXDIdQQsEbyu0j1tWuO3U+BNiFY+RRPdGjFaKWXdTY2/XrhFOsXqeoywUWvCDhAOwppQFsgq+RrGj3UpQ8kTEvmcb0EQn/HceJ2IMWmmZ7xtSTFNq66qTOt5skaGq3s2lvvxzqh36Egrgq33ngEiKNrzmV/LAiRnWQ4KLOgkJzzwtqGGakWrt5qdffFK4kvmbb3NuO7zFNWmrUOtwbLd4egFO4LgbbY11fdHHUcZ9UJmVD5L2qjrHWYxOop5CBUtF1fbCgZMrPy0qgzk2Er35cF23XZw==
+ b=L4+xHJzGc7ot1OxBevffBgR/kFp79BJXEoNe3OucRPSzR8OR/jZ9Jaa2nLXNSJO8+JC1mOVldee2uNy8IdOwzCV1AZPmnJlIRQ8OVssu4ADGpdyWi4tpZ1RESrfUI+UMtI2wrG9nZNkPnPcaYhGhI/hnL4dWLj95jbhbwAZ47UokkaE3AImylsc+ERPYGJN6HPL3WVRpSNLYZH6TsmgWUfLFt+zkHQ0ItBK0+s3JZ/lVvJFllGHsCWaVRCEjmEcvq/dsHHdRAOYxo4CCIVhpiDDQOW3G5ZSjTucKhcaIjS+UYXFAO0hUkFk34/9vt6TGSuHxsJuasPZ80efu7a3l+w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hg+GvtMV5Nsl0jslmtCbYCPaUDAdn+kfBfk+6pOH/4U=;
- b=SuQTQsAiQplFZhEB5HVxtKUHCqfHR3blhEHWCUUo8T07Kmm+/XdCFZCxCcdyCY4p/zeEBPIDBH6WFVIG5x+b+mFIxS4AxL6QnsB/L25KaLjkdFzrH4OtgTjOTb5iKTg2PItKO3FWoHpKeu7q9scbElK/vDWvXYUbYt6iKAi81yEK24ul8e4N6C1agi0EdkAdTL92cws3cZUaFZWqlMj923CUCrKs9XT4jFN/ydc3tvysBVzwxgQLCp28Svh91paULE7O0c+rBOVUJhgrNGyRVDaOwHMl6B4VO1DQz3Sb+0TlPgs/2JUfft41G5U7CbzvW1nJn4OH4cx9/1NdwflWCg==
+ bh=N9hSj9NDXFrGOhGBoOv0mjohWD7xsdq/VJYqx+FaFy8=;
+ b=N7r3sLf0RHL0xSzA9l0oX+i+nh+g7fQOLP/T2OxTKmsm+n00uC99KFiZlok/3QIEaVk0nQrerOLcPL7RdZ6/QrDDLpE3OH8D9IoEDX7fqH7IZbmh7Z02hZSoxZG2z7hK/Qmxwgx+AuPil0NMxNkOYVrVdQhyNaobsCAu1aPsO7jJbEC1wSYNkkOBOBHWGXcdHQpkQy0G0ccrrQQWOl5M+jaB1mt4QA290TgFvDwa+qejldMNrtQ9ORHZRQbfGVCJBVMoJgrOdYHSabY6frU6uNyiIGgJsTXCEYCL5TTTydaB/5+yza1bzg3TEzGRhGUKWj7kfPvmDKHUZReINqe1Ng==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hg+GvtMV5Nsl0jslmtCbYCPaUDAdn+kfBfk+6pOH/4U=;
- b=tEdPv01a5QoW7GdDI7Ti7Oqb2LexkZaBOPCvgw4U1CymA3XX/RaDSGnX4GnSPEsH6UG1sdsm04fpH22JTtv8GFBBVZhaKlK4byzPXosuQ5VYnJcQkLO8rRBZ6E91XfGQLUXuVmzcDeNLO9ZEGR9hjy7OYw5sH2eUls/lhnFINk0=
-Authentication-Results: tencent.com; dkim=none (message not signed)
- header.d=none;tencent.com; dmarc=none action=none header.from=amd.com;
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
- by SN1PR12MB2512.namprd12.prod.outlook.com (2603:10b6:802:31::14) with
+ bh=N9hSj9NDXFrGOhGBoOv0mjohWD7xsdq/VJYqx+FaFy8=;
+ b=N7rEJHAZiI8v/zNW9qAhjkKDn/WnfLrEF0UhyyB4yYOF3yyiTQHSDV7Z3ItX+Ls6ziSwWkA2GkkBsHH4tqKIldJiR+oLIYD2Q8xeFjGCmz6ddUvOWlJYUd130fCB+DfpbZMEAQ8MRl/aJl8xZ8e3rmdwQUW7Pajy+s8WX2fGV8E=
+Authentication-Results: huawei.com; dkim=none (message not signed)
+ header.d=none;huawei.com; dmarc=none action=none header.from=fb.com;
+Received: from MW3PR15MB4044.namprd15.prod.outlook.com (2603:10b6:303:4b::24)
+ by MW3PR15MB3834.namprd15.prod.outlook.com (2603:10b6:303:4e::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26; Wed, 6 May
- 2020 22:02:23 +0000
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::c0f:2938:784f:ed8d]) by SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::c0f:2938:784f:ed8d%7]) with mapi id 15.20.2979.028; Wed, 6 May 2020
- 22:02:23 +0000
-Subject: [PATCH 2/2] KVM: SVM: Add support for MPK feature on AMD
-From:   Babu Moger <babu.moger@amd.com>
-To:     corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        hpa@zytor.com, pbonzini@redhat.com, sean.j.christopherson@intel.com
-Cc:     x86@kernel.org, vkuznets@redhat.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, mchehab+samsung@kernel.org,
-        babu.moger@amd.com, changbin.du@intel.com, namit@vmware.com,
-        bigeasy@linutronix.de, yang.shi@linux.alibaba.com,
-        asteinhauser@google.com, anshuman.khandual@arm.com,
-        jan.kiszka@siemens.com, akpm@linux-foundation.org,
-        steven.price@arm.com, rppt@linux.vnet.ibm.com, peterx@redhat.com,
-        dan.j.williams@intel.com, arjunroy@google.com, logang@deltatee.com,
-        thellstrom@vmware.com, aarcange@redhat.com, justin.he@arm.com,
-        robin.murphy@arm.com, ira.weiny@intel.com, keescook@chromium.org,
-        jgross@suse.com, andrew.cooper3@citrix.com,
-        pawan.kumar.gupta@linux.intel.com, fenghua.yu@intel.com,
-        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
-        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Date:   Wed, 06 May 2020 17:02:21 -0500
-Message-ID: <158880254122.11615.156420638099504288.stgit@naples-babu.amd.com>
-In-Reply-To: <158880240546.11615.2219410169137148044.stgit@naples-babu.amd.com>
-References: <158880240546.11615.2219410169137148044.stgit@naples-babu.amd.com>
-User-Agent: StGit/unknown-version
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN1PR12CA0082.namprd12.prod.outlook.com
- (2603:10b6:802:21::17) To SN1PR12MB2560.namprd12.prod.outlook.com
- (2603:10b6:802:26::19)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Wed, 6 May
+ 2020 22:04:47 +0000
+Received: from MW3PR15MB4044.namprd15.prod.outlook.com
+ ([fe80::e5c5:aeff:ca99:aae0]) by MW3PR15MB4044.namprd15.prod.outlook.com
+ ([fe80::e5c5:aeff:ca99:aae0%4]) with mapi id 15.20.2958.030; Wed, 6 May 2020
+ 22:04:47 +0000
+Date:   Wed, 6 May 2020 15:04:43 -0700
+From:   Martin KaFai Lau <kafai@fb.com>
+To:     Jason Yan <yanaijie@huawei.com>
+CC:     <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
+        <yoshfuji@linux-ipv6.org>, <udknight@gmail.com>,
+        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <x86@kernel.org>, <hpa@zytor.com>, <ast@kernel.org>,
+        <daniel@iogearbox.net>, <songliubraving@fb.com>, <yhs@fb.com>,
+        <andriin@fb.com>, <john.fastabend@gmail.com>,
+        <kpsingh@chromium.org>, <lukenels@cs.washington.edu>,
+        <xi.wang@gmail.com>, <netdev@vger.kernel.org>,
+        <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] bpf, i386: remove unneeded conversion to bool
+Message-ID: <20200506220443.pmszq4jnfr2pcjp4@kafai-mbp>
+References: <20200506140352.37154-1-yanaijie@huawei.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506140352.37154-1-yanaijie@huawei.com>
+User-Agent: NeoMutt/20180716
+X-ClientProxiedBy: BYAPR07CA0068.namprd07.prod.outlook.com
+ (2603:10b6:a03:60::45) To MW3PR15MB4044.namprd15.prod.outlook.com
+ (2603:10b6:303:4b::24)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from naples-babu.amd.com (165.204.78.2) by SN1PR12CA0082.namprd12.prod.outlook.com (2603:10b6:802:21::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26 via Frontend Transport; Wed, 6 May 2020 22:02:21 +0000
-X-Originating-IP: [165.204.78.2]
+Received: from kafai-mbp (2620:10d:c090:400::5:3fcc) by BYAPR07CA0068.namprd07.prod.outlook.com (2603:10b6:a03:60::45) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27 via Frontend Transport; Wed, 6 May 2020 22:04:45 +0000
+X-Originating-IP: [2620:10d:c090:400::5:3fcc]
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: ede7d559-36fa-482f-2f55-08d7f20927e1
-X-MS-TrafficTypeDiagnostic: SN1PR12MB2512:|SN1PR12MB2512:
+X-MS-Office365-Filtering-Correlation-Id: bfb23930-c184-476e-1e3f-08d7f2097d3f
+X-MS-TrafficTypeDiagnostic: MW3PR15MB3834:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN1PR12MB251220294A65ED439D50CC2295A40@SN1PR12MB2512.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Microsoft-Antispam-PRVS: <MW3PR15MB3834748C79C1BC2593636F6CD5A40@MW3PR15MB3834.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
 X-Forefront-PRVS: 03950F25EC
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: kqRvQ8v+dZ1eCkVKjq4/v0LZSHXGQsoHpD9AnHhGVe7Wap7msDSrGlKgoE3XMf455djII9gWDUpu8UZxc7dxCMg3TfahqZWnwwABeIhAXY5ISMQgkV8OWKeXtND2gVqQ+lKbbZ7PF73UyTQ71weeGvU1TPe7ANQ4KSEj5AbK3QWPJ+h/bR3XR92+0+DW1QN58YWC6zZ4HhBF4mcvlZW42398JNn1YXzP/kMPphlh6OzEONhQceOAYtsoY0AOAlttEJAaz4T1uhTTxApbuEfGZpxOPSSztvclvAhOOMTHJ2899zRQ9Y2aaIUOgaaMhqYSDgyjQtUY82rxJOu6k0VylKHH7f0a1VTehs2Gq0CqgqTY3diSN+SFO7a514OyOBYBxaV19mwQwMiqx+NaRMWvDC9+8owCNVwTZgTdZTzB3esofcJt2kKAfBjgQLszTKlBZbtUgtDF0qNyJIs1aUeZGTVTDcuuL5mQ5MdmGV5Nk71Jhv+exasV0C6r34lFdgYW+A6ft36Pp0VO91LR3vwZJoHXDqFO6K/K6JXdScWcnU8hvtVtv2ZOg3hByPaiF8d5Y+tVS3X6mQ/YLUjk7LtuT2IREpkSEsIMhT69SVE9Pts=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(136003)(39860400002)(396003)(366004)(33430700001)(26005)(52116002)(7696005)(4326008)(2906002)(8936002)(33440700001)(66476007)(66556008)(8676002)(16526019)(478600001)(55016002)(186003)(103116003)(966005)(316002)(86362001)(956004)(66946007)(7416002)(7406005)(5660300002)(44832011);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: vpst/WTqMQWHSRvAXkjLQcr0vfujY4Fm/L5l/4ttFUAL115KzIgoIlKWckjO6Yjucq1uoqEhcF8hTO+y44jlUynIY+Utl61U/8pIlNaJOzpLN1yAHPVrEx4lMBs/r4GFJ8I/viNxDVRbFbB5+HbBpD8j5LM+dOI+K00mVvZjBEesR+7PyLWM0GdXVJPstWgxQf57ammXPHTj57Utgoh2WpAC36TwnKpBuGPd2xI/peW/y7fJSorelsfvi5JTTE7OduQLMt3ELy0tqyeIYn0kJO9sw0VfiSz/fm294KPtj88zx/Jk73sbygy6Lu5DWvRlOMiqzUB24kcfe8dYSVOKmuUbOKwV/ptrMRYQg1/soNqyeL5xZhbqeGfjmEfyrGypYk9mVVEP2w5lcBuhdRHRTby+VSc7uNb/occTn/DbjwaIaxyFT6yzNoR3W/hPw71BN11MGyPr5YHTnSu+2NuJbJjWzQPIw//8LdkFT8PVN4Pg3KS1uSYWjrOeK9NETUD73bsAk4Mfj6kiRdkpvCHAGHzrzoN9IJKb7O/A6ARSJnFqdaXOOxQMkXUsef8nozBUc6dLu6t4J4WOT2JMjBGGjTVj8ZFeCPoCJI8/2O+A8VPTl4qrVkvOcXlopWrA8Ziky9OUcngwz0HjDxwx1DT1PM2/rFN4jGr4SCyPm2b9t+ioAJ2+Ez19XXpkm+AWgvRa5UcJoBaRKseQRQ3U29773yF0VdAzC8Oz/A/PkcxfPgbTQpLjx1TRKObmjjEgLFbG4yOoMcUmeVrSU0QXU2c6igbx+eDQdHGERqGMtmSBUCk=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ede7d559-36fa-482f-2f55-08d7f20927e1
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2020 22:02:23.7079
+X-Microsoft-Antispam-Message-Info: XI4U/XWYwXeB/fdOSYFQIVUpigxOh+Dva1ms2Xm3nmEPBYAC4pO6BRpHBSp7MAfJUoOAXd88+ptv5aJ/ZVKau4Asxu2HIV+eInNIXXjbaXvgfxP56xa6dSujO+8a/FlmMCISsmy76dF0ulUcT/LF96egjyxXWtzgV1CU6nq+tzP4QBHX08VCbtEpklHZ2oBAn/jMaRUdctf6iqXT28FpHo/civPq9bqEMyXvS3CLx9xcQ8Czwd+Fg0TiHGeet0CZ6wC3GALC6L0RHrM7VfjxyVsPQ0E4RYGucHR3PD+dsp30RdHpU1uxy2mmDUnCdt7aZQRXtsfvrp9KQ1uwZVGXZ+7Nbztyj79VUK7Vowp6g0Se64mcape+jPFZUIEBGahh/NqL5m8eJe/eCmIOzMz0EmxXC2zrIKNkGq6sQthgZC5lYSfwc83BpUuJ2qJYM6kkuSCL5a5BDSG2tIVqhGXAxYde1oq9ascegoGpmu90N3YuWPp/LFcpedow+gs479Fig3ALLxpOFMFtSsS62e4Iaw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR15MB4044.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(366004)(346002)(136003)(39860400002)(376002)(33430700001)(66556008)(66476007)(186003)(66946007)(55016002)(478600001)(1076003)(4326008)(316002)(33716001)(16526019)(33440700001)(2906002)(558084003)(86362001)(8936002)(8676002)(6496006)(9686003)(6916009)(7416002)(52116002)(5660300002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: uaG0LGcBV5TxWdZ0QK2Rr6EhMgYsVQt2KlPkE23eZnA4LWnp+ezR/iPvKxvUQE8snbDO7aVp6pTJbLKCTDLUoA42omjW/TjvKDMV7sGuXCyUaYCFEO2hlvB30AgeaNKZ/HPG+VQ7xQs34pWgGrTeg6N9mN4D60MH9H88KB7b7hIgCTGoKInbzieweADY7LiThoCeIYKmO5OQEEjXcqr1p93/CihOqIqlF/N3jBg5eaTR4r1e4b/t3GHUFGpSp3wVb+daGiU6xhP0Jl4u0Au87v6BED+A9OK9xTbQa+9k5xA2D4Ua9LsPYRZrrTYx2utnguUBdzNCVuG9riFYW5nCWEfhiTivUGdBc60+j16LWLhJZS4Ylbv4xhRT2fen4aVc+J9HiQz7geY2zn1t4whc6hOIjOZnEK7HER6iOmEsGMSN7pA+wbdVu9h8DL0gRQiLbiAgLWClhnrU41fFWSHc3NjDqZDbh1rexh+dMOfDRBvnQLAwGMbWqv34X0026E8GIFFNYFC4iKc1wSbUlrDCBGOPapp8LBC3O18ISHfM5MyYRYzIKZa62lCz4n1P8VMyXM6cAWKx3bFHAHKzuiQp5VHLr+BFn3In41+fLKq4VNBbikQiwNZlhiqnapc8bsnAGiLOZ53VVizl7ntnY3rwB/v/pDmXerySKxoWQDhuy7I0YVqgo0orb5MCQ83n5yI51mHxavJbbLkxWAKpYtRICz/3mUOxq3EsFVE8FQMtL+gaUhuX3clBtbBOgECsxI4JMZVU/vgOLSYNZojcD/pUYeCfkISRpVXR9+41chZJt54jwYIeiOH5a2ByLwFX1J7FnZwb5yosIOHVoldiswKGBg==
+X-MS-Exchange-CrossTenant-Network-Message-Id: bfb23930-c184-476e-1e3f-08d7f2097d3f
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2020 22:04:47.1247
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8L3rbj/1Bv6hoe9dUIu7htWOidCBRN+vpvRXJIQhd1dBEKK00TErdsdVxjUqpnj4
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2512
+X-MS-Exchange-CrossTenant-UserPrincipalName: /9zaox/Va7RbQbKlXQIB/ggZPtRlXMJGRKXopQZ42K38RCmh9xfIe14DA7GcGGGj
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR15MB3834
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-06_09:2020-05-05,2020-05-06 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ clxscore=1011 bulkscore=0 impostorscore=0 adultscore=0 spamscore=0
+ lowpriorityscore=0 phishscore=0 mlxscore=0 malwarescore=0 mlxlogscore=533
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005060175
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Memory Protection Key (MPK) feature provides a way for applications
-to impose page-based data access protections (read/write, read-only or
-no access), without requiring modification of page tables and subsequent
-TLB invalidations when the application changes protection domains.
+On Wed, May 06, 2020 at 10:03:52PM +0800, Jason Yan wrote:
+> The '==' expression itself is bool, no need to convert it to bool again.
+> This fixes the following coccicheck warning:
+Make sense.
 
-This feature is already available in Intel platforms. Now enable the
-feature on AMD platforms.
+It may belong to bpf-next instead.
 
-The host pkru state needs to be saved/restored during the guest/host
-switches in SVM.  Other changes are already taken care by the pkru
-common code.
-
-AMD documentation for MPK feature is available at "AMD64 Architecture
-Programmer’s Manual Volume 2: System Programming, Pub. 24593 Rev. 3.34,
-Section 5.6.6 Memory Protection Keys (MPK) Bit". Documentation can be
-obtained at the link below.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
-Signed-off-by: Babu Moger <babu.moger@amd.com>
----
- arch/x86/kvm/svm/svm.c |   20 ++++++++++++++++++++
- arch/x86/kvm/svm/svm.h |    2 ++
- 2 files changed, 22 insertions(+)
-
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 2f379bacbb26..de327f02470f 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -818,6 +818,10 @@ static __init void svm_set_cpu_caps(void)
- 	if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
- 	    boot_cpu_has(X86_FEATURE_AMD_SSBD))
- 		kvm_cpu_cap_set(X86_FEATURE_VIRT_SSBD);
-+
-+	/* PKU is not yet implemented for shadow paging. */
-+	if (npt_enabled && boot_cpu_has(X86_FEATURE_OSPKE))
-+		kvm_cpu_cap_check_and_set(X86_FEATURE_PKU);
- }
- 
- static __init int svm_hardware_setup(void)
-@@ -1300,6 +1304,8 @@ static void svm_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- 		indirect_branch_prediction_barrier();
- 	}
- 	avic_vcpu_load(vcpu, cpu);
-+
-+	svm->host_pkru = read_pkru();
- }
- 
- static void svm_vcpu_put(struct kvm_vcpu *vcpu)
-@@ -3318,6 +3324,12 @@ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
- 	clgi();
- 	kvm_load_guest_xsave_state(vcpu);
- 
-+	/* Load the guest pkru state */
-+	if (static_cpu_has(X86_FEATURE_PKU) &&
-+	    kvm_read_cr4_bits(vcpu, X86_CR4_PKE) &&
-+	    vcpu->arch.pkru != svm->host_pkru)
-+		__write_pkru(vcpu->arch.pkru);
-+
- 	if (lapic_in_kernel(vcpu) &&
- 		vcpu->arch.apic->lapic_timer.timer_advance_ns)
- 		kvm_wait_lapic_expire(vcpu);
-@@ -3371,6 +3383,14 @@ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
- 	if (unlikely(svm->vmcb->control.exit_code == SVM_EXIT_NMI))
- 		kvm_before_interrupt(&svm->vcpu);
- 
-+	/* Save the guest pkru state and restore the host pkru state back */
-+	if (static_cpu_has(X86_FEATURE_PKU) &&
-+	    kvm_read_cr4_bits(vcpu, X86_CR4_PKE)) {
-+		vcpu->arch.pkru = rdpkru();
-+		if (vcpu->arch.pkru != svm->host_pkru)
-+			__write_pkru(svm->host_pkru);
-+	}
-+
- 	kvm_load_host_xsave_state(vcpu);
- 	stgi();
- 
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index df3474f4fb02..5d20a28c1b0e 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -158,6 +158,8 @@ struct vcpu_svm {
- 	u64 *avic_physical_id_cache;
- 	bool avic_is_running;
- 
-+	u32 host_pkru;
-+
- 	/*
- 	 * Per-vcpu list of struct amd_svm_iommu_ir:
- 	 * This is used mainly to store interrupt remapping information used
-
+Acked-by: Martin KaFai Lau <kafai@fb.com>
