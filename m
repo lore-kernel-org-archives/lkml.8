@@ -2,112 +2,119 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F0CC47257
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C2FC38A2A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 226DA20735
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:14:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588806841;
-	bh=L1whZPJK8jTIvUhmCfpL75dR7YBqlLcL7dBaJ2GYTaY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Y3n107dY/73Z/OOD3kFx1eA3pQgjoT5qxoFh4sPPZ0UauK27HHv27jMyhKoWeFZGn
-	 z1BI8bOu1X2W4lHTK2duegZzftriWkEgUKJW2E/u6ppVOIKO7bdKWg9F28pRjOpwaX
-	 /X03TdhzHJMzrHoh2YRGSkait06x/VHoPRyeXoRY=
+	by mail.kernel.org (Postfix) with ESMTP id E2D6520735
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:14:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="YZrb7LGm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgEFXN7 (ORCPT
+        id S1726645AbgEFXOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 19:13:59 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35999 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbgEFXN6 (ORCPT
+        Wed, 6 May 2020 19:14:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47702 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbgEFXOB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 19:13:58 -0400
-Received: by mail-pg1-f196.google.com with SMTP id d22so1905981pgk.3;
-        Wed, 06 May 2020 16:13:58 -0700 (PDT)
+        Wed, 6 May 2020 19:14:01 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3804DC061A10;
+        Wed,  6 May 2020 16:14:01 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id t12so3657445edw.3;
+        Wed, 06 May 2020 16:14:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vh5sHkIk2ctB42dNaltmVdyOo6gu7M7B4FBlMbUP/78=;
+        b=YZrb7LGmD+n+0wVJ2oxBjUDRo7Q+l5YL+EuBd+JHHr0T97aLS9wt1LuRXYAxG5hxrx
+         91vy6KnrF5ec4Vh8kh7TdoG5yUcNScYVZoXLfmFCNv1OzNMhS5AfjcbZmnZqjlAQzsdQ
+         9yWoSoV4QTqAiBHO25L9qlvP+8NmbNeyQYnts=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yNC3GM3ywGXGoZzk8/YUTPNRyoicVYswjVnBQiUzaYs=;
-        b=gyNHFGXtO+bRy10kSQnOFHiuKnpiqxqI/tir6hskR7d6mMoC1Le41qHBv/7SZRB+qN
-         fmoGEE68vFwzQEUdj6atkKL8FGWOsAGoFL9QO8FiO7bSV4TkqjLgfavfVC6GEnyuhlvt
-         xr5nJGUwpcLqyteJzA6M1/Fm2l6H89xE/JKCmXjIC5krtEoqtti8FkjgqXwX2d0N6+1f
-         c82JVef/3dvAYwxBwuraS05Cf/vNWOrUejZqRKNzJtcngptYuXq1GIjIlmWktPHPRh+i
-         gW8Dq1gSRANZRM2hdXtGDap04zXxKXEgP3dtQTOxcBSpFa6jcDLETsy2RWC7edwkM1lc
-         PlXA==
-X-Gm-Message-State: AGi0PubeZOCAvHwGE4gHE6Ld27/RHpOS1LDv9pvxlM3Qg8Y6hPAQRnrZ
-        MxKB28wW87FQu8+a3bqU9kI=
-X-Google-Smtp-Source: APiQypI1cZz5e5aUdny1xt+BmLGd0u9WZ/XOxzZEhrSJwWx5Olumva6WOJu2WNhYATPEGbj5pYvHsA==
-X-Received: by 2002:a62:1994:: with SMTP id 142mr180656pfz.259.1588806837760;
-        Wed, 06 May 2020 16:13:57 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id f6sm2924188pfn.189.2020.05.06.16.13.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 16:13:56 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 505C5403EA; Wed,  6 May 2020 23:13:55 +0000 (UTC)
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     cl@linux.com, akpm@linux-foundation.org
-Cc:     arnd@arndb.de, willy@infradead.org, aquini@redhat.com,
-        keescook@chromium.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH] mm: expland documentation over __read_mostly
-Date:   Wed,  6 May 2020 23:13:53 +0000
-Message-Id: <20200506231353.32451-1-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vh5sHkIk2ctB42dNaltmVdyOo6gu7M7B4FBlMbUP/78=;
+        b=tWrZDhVOsHAniKYQqeyKay99hAGSthloq/c5IE5KCUdMat77VzNvVRSL8eyP+BKkX8
+         C1rP43Y2Wr/8OmhsoFKfvtddhiK9g+3oWRa9ev+5CkcvFmY1vPwJo3b8OcwCgWaJ0vco
+         j67iL7tYag3vSM0zgufRxELg0oGrK0ihd+BclI2DuKJf710sqG7HB7N4XwCbulZZxMkh
+         47O4njgRRSKkYwtPf/wslPfSQ7zinw9S/SOAsSQJYwXzRYXIyZmRq/piSmvc9LXLnQ1w
+         umPe9G3FQds28WWNZycpnGdyU319w0EvpdHmzYLRoOf3Cwy8dPeGEkml/uQIqfqoemSN
+         w/3g==
+X-Gm-Message-State: AGi0PuZoYT0p8bX79ie84RyokJc9em8VbmRSzdHqD42/xFuM1vLobmDb
+        sbP/7fsE9RUzHH5IVjKgv12GliD4ppFhHYvmDKo=
+X-Google-Smtp-Source: APiQypI8Ewgq5yqLktUWwJKPyyv1TxfYTOTbdXEP0SpawXbQmffhZ2z0i20qFvoDhtpRclckUFjOpS0Y51YmfRnpoMs=
+X-Received: by 2002:a50:8dc2:: with SMTP id s2mr9779893edh.318.1588806839283;
+ Wed, 06 May 2020 16:13:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200507091008.1bd38185@canb.auug.org.au>
+In-Reply-To: <20200507091008.1bd38185@canb.auug.org.au>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Wed, 6 May 2020 23:13:47 +0000
+Message-ID: <CACPK8XfOJqj=E4JwQsZWvAsp7cv=bjqj2twZk0=MR+ZJQP1nqQ@mail.gmail.com>
+Subject: Re: linux-next: build warning after merge of the aspeed tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        devicetree-compiler@vger.kernel.org
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>,
+        Andrew Jeffery <andrew@aj.id.au>, Vijay Khemka <vkhemka@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__read_mostly can easily be misused by folks, its not meant for
-just read-only data. There are performance reasons for using it, but
-we also don't provide any guidance about its use. Provide a bit more
-guidance over it use.
+Hi Rob,
 
-Acked-by: Christoph Lameter <cl@linux.com>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
+On Wed, 6 May 2020 at 23:10, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> After merging the aspeed tree, today's linux-next build (arm
+> multi_v7_defconfig) produced this warning:
 
-I sent this 2 years ago, but it fell through the cracks. This time
-I'm adding Andrew Morton now, the fix0r-of-falling-through-the-cracks.
+Thanks Stephen.
 
-Resending as I just saw a patch which doesn't clearly justifiy the
-merits of the use of __read_mostly on it.
+> arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:126.11-130.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10: I2C bus unit address format error, expected "40000010"
+> arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:128.3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10:reg: I2C address must be less than 10-bits, got "0x40000010"
+> arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:137.11-141.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@100/ipmb3@10: I2C bus unit address format error, expected "40000010"
+> arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:139.3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@100/ipmb3@10:reg: I2C address must be less than 10-bits, got "0x40000010"
+> arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:148.11-152.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@180/ipmb5@10: I2C bus unit address format error, expected "40000010"
+> arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:150.3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@180/ipmb5@10:reg: I2C address must be less than 10-bits, got "0x40000010"
+> arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:159.11-163.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@300/ipmb7@10: I2C bus unit address format error, expected "40000010"
+> arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:161.3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@300/ipmb7@10:reg: I2C address must be less than 10-bits, got "0x40000010"
 
- include/linux/cache.h | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+These are IPMB nodes with the SLAVE_ADDRESS bit set:
 
-diff --git a/include/linux/cache.h b/include/linux/cache.h
-index 750621e41d1c..8106fb304fa7 100644
---- a/include/linux/cache.h
-+++ b/include/linux/cache.h
-@@ -15,8 +15,14 @@
- 
- /*
-  * __read_mostly is used to keep rarely changing variables out of frequently
-- * updated cachelines. If an architecture doesn't support it, ignore the
-- * hint.
-+ * updated cachelines. Its use should be reserved for data that is used
-+ * frequently in hot paths. Performance traces can help decide when to use
-+ * this. You want __read_mostly data to be tightly packed, so that in the
-+ * best case multiple frequently read variables for a hot path will be next
-+ * to each other in order to reduce the number of cachelines needed to
-+ * execute a critial path. We should be mindful and selective of its use.
-+ * ie: if you're going to use it please supply a *good* justification in your
-+ * commit log
-  */
- #ifndef __read_mostly
- #define __read_mostly
--- 
-2.25.1
++&i2c5 {
++       //Host3 IPMB bus
++       status = "okay";
++       multi-master;
++       ipmb5@10 {
++               compatible = "ipmb-dev";
++               reg = <(0x10 | I2C_OWN_SLAVE_ADDRESS)>;
++               i2c-protocol;
++       };
 
+This is a correct entry, so dtc should not warn about it.
+
+Cheers,
+
+Joel
+
+>
+> Introduced by commit
+>
+>   266056d3c61d ("ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC")
+>
+> --
+> Cheers,
+> Stephen Rothwell
