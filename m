@@ -2,93 +2,145 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F364EC47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A0AC47257
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C357E2068E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:28:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ei0k57VL"
+	by mail.kernel.org (Postfix) with ESMTP id EEE5820663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:28:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588778940;
+	bh=j3mvAd4AWMOd0sc588HMig1+0l2dK7bH8kj3WD0uJwg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gI6xjIyMF5T+rfK3aCP8qTuMdOSSn0kNSN53VLMA05e58+MIhyv32iUE7wTCIc5pH
+	 4dDpWyVek9Y05fwTvtBYag0JtCl2l4BWvHxb7tLs50xhSrvdaxiKgqpxwI0yzNmuGd
+	 iQQGIyflhBY0zHgaB3VQKRCSybzq+h5xg2Ybldw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730414AbgEFP25 (ORCPT
+        id S1730400AbgEFP24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:28:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58888 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729639AbgEFPZx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:28:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46886 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730088AbgEFPZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 6 May 2020 11:25:53 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2A54C061A0F;
-        Wed,  6 May 2020 08:25:53 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id e6so1032110pjt.4;
-        Wed, 06 May 2020 08:25:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uOcIBwBnUauldiWLndzVmwzZBKURfhS3mRHhqqKZPOs=;
-        b=Ei0k57VLk7N4E1tLvvZ/W7MHkb57jABqquZr5M0n8FHzv94us4sIsfRRTTjtwzJC3C
-         XZpXtiP/3hYpjwUSQyzP7ItePPVEhLJEFdi942IWT4mUMySrX+xg2Hl5R9txLGwkXqQm
-         /r+OvYPRXzuCALy7Rphp6MDbF2lYVmLEmiFiC7aLT2jhENPb2YSyi7A0hpWmZLMVDEBg
-         zf2ZdcRPeDbZ8JhtAI2YC8GjaVL9R45v/JCP1frBXL9Yz56FitLq8IqFvQiQ7HvhtubW
-         F9FxRsMODSAsct79wjZKuI+Nhp2PyaJLU9aXV8lhXbrBJEt+LVl1v8+QZA7HgV6laDK0
-         bYqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uOcIBwBnUauldiWLndzVmwzZBKURfhS3mRHhqqKZPOs=;
-        b=tS8b8qoG8xYBQXDaz/he1CcsuBn+uZE9qz9f8+GvYPothiZm/m0KOpkP2RJ4Bt8ypE
-         heEl4oJ4L9NEIVZERAkF3M/G7F2/gkiiK5fWiThGwuoPjQYsnCNMh9xtuf/mN1SS0lig
-         n79Y01NSCaZzkp9JkyhSuZFXX3Cb0lapUM81kXGk6ZSwmRGS0q7ezCHFGXlmRV23Xbf0
-         rysQr5YgHrJDq8qTyUsCrnly/xjRWGWDFa+7Uq7dztGs3fMZ0Kq1J2VEdQFYIEcqNskk
-         +LPy6oz8gBsVX0p25o0XYMJjFZ5/wmVtiQ9iHV9eWg42tPi9DCyZKGitzO4WU9B7ATD+
-         tDdA==
-X-Gm-Message-State: AGi0PuaXbp99uPURkuHY25NYl4CL+7VlCnvLGOph7y4vAkB2Qh3oTcBC
-        y+cPM4SNHLBLo+rtCSYiqMPC/a4jpTQlteAHiro=
-X-Google-Smtp-Source: APiQypL6R11GbtDukVgWq3NIFn7VvgbUZ3iiF6XhKRJwUfyY+0Iw+ZOcqDtJEjUYcXU7X5ra+HAqDCooSrMRgUlXWCY=
-X-Received: by 2002:a17:90a:fa81:: with SMTP id cu1mr10273546pjb.25.1588778753308;
- Wed, 06 May 2020 08:25:53 -0700 (PDT)
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92AEB20CC7;
+        Wed,  6 May 2020 15:25:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588778752;
+        bh=j3mvAd4AWMOd0sc588HMig1+0l2dK7bH8kj3WD0uJwg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nbc0bG5DgBytRgq6iHoy9XE1kjf9KXdMFNv7wYxIJk/w/3EPlhStRXVNU9m273GOq
+         f82Ft5dkFTnROMaHvWb56Irs2LY37Q111NtURv/AHWwEUV8VJ9JOHEd/5cwngTgLwk
+         fb0mFvGvPBcUq4+A4Z/X1UUIohSHedH7OeWGE5ZM=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCH 55/91] perf evsel: Rename perf_evsel__calc_id_pos() to evsel__calc_id_pos()
+Date:   Wed,  6 May 2020 12:21:58 -0300
+Message-Id: <20200506152234.21977-56-acme@kernel.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
+References: <20200506152234.21977-1-acme@kernel.org>
 MIME-Version: 1.0
-References: <20200325231422.1502366-1-heiko@sntech.de> <20200325231422.1502366-8-heiko@sntech.de>
-In-Reply-To: <20200325231422.1502366-8-heiko@sntech.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 6 May 2020 18:25:45 +0300
-Message-ID: <CAHp75Vef2Gu3Kz97FK6gQRS8dnAhnFFdWK1sqjZuf8tarx3LAw@mail.gmail.com>
-Subject: Re: [PATCH v2 7/7] serial: 8250_dw: add em485 support
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Matwey V. Kornilov" <matwey.kornilov@gmail.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        christoph.muellner@theobroma-systems.com,
-        Giulio Benetti <giulio.benetti@micronovasrl.com>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 1:17 AM Heiko Stuebner <heiko@sntech.de> wrote:
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-If it's not covered by either yours or Lukas' series, perhaps worth to
-address as well.
+As it is a 'struct evsel' method, not part of tools/lib/perf/, aka
+libperf, to whom the perf_ prefix belongs.
 
-.../8250_port.c:1427: warning: Function parameter or member 'p
-' not described in 'serial8250_em485_stop_tx'
-.../8250_port.c:1427: warning: Excess function parameter 'up'
-description in 'serial8250_em485_stop_tx'
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/evlist.c | 2 +-
+ tools/perf/util/evsel.c  | 8 ++++----
+ tools/perf/util/evsel.h  | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 6d902c02fd95..8b691151bae3 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -119,7 +119,7 @@ static void perf_evlist__update_id_pos(struct evlist *evlist)
+ 	struct evsel *evsel;
+ 
+ 	evlist__for_each_entry(evlist, evsel)
+-		perf_evsel__calc_id_pos(evsel);
++		evsel__calc_id_pos(evsel);
+ 
+ 	perf_evlist__set_id_pos(evlist);
+ }
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index f88cf7961d49..896b0b9798d8 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -178,7 +178,7 @@ static int __perf_evsel__calc_is_pos(u64 sample_type)
+ 	return idx;
+ }
+ 
+-void perf_evsel__calc_id_pos(struct evsel *evsel)
++void evsel__calc_id_pos(struct evsel *evsel)
+ {
+ 	evsel->id_pos = __perf_evsel__calc_id_pos(evsel->core.attr.sample_type);
+ 	evsel->is_pos = __perf_evsel__calc_is_pos(evsel->core.attr.sample_type);
+@@ -190,7 +190,7 @@ void __perf_evsel__set_sample_bit(struct evsel *evsel,
+ 	if (!(evsel->core.attr.sample_type & bit)) {
+ 		evsel->core.attr.sample_type |= bit;
+ 		evsel->sample_size += sizeof(u64);
+-		perf_evsel__calc_id_pos(evsel);
++		evsel__calc_id_pos(evsel);
+ 	}
+ }
+ 
+@@ -200,7 +200,7 @@ void __perf_evsel__reset_sample_bit(struct evsel *evsel,
+ 	if (evsel->core.attr.sample_type & bit) {
+ 		evsel->core.attr.sample_type &= ~bit;
+ 		evsel->sample_size -= sizeof(u64);
+-		perf_evsel__calc_id_pos(evsel);
++		evsel__calc_id_pos(evsel);
+ 	}
+ }
+ 
+@@ -250,7 +250,7 @@ void evsel__init(struct evsel *evsel,
+ 	INIT_LIST_HEAD(&evsel->config_terms);
+ 	perf_evsel__object.init(evsel);
+ 	evsel->sample_size = __perf_evsel__sample_size(attr->sample_type);
+-	perf_evsel__calc_id_pos(evsel);
++	evsel__calc_id_pos(evsel);
+ 	evsel->cmdline_group_boundary = false;
+ 	evsel->metric_expr   = NULL;
+ 	evsel->metric_name   = NULL;
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 617cb3fa0353..35ad62807eaf 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -194,7 +194,7 @@ void evsel__config_callchain(struct evsel *evsel, struct record_opts *opts,
+ 			     struct callchain_param *callchain);
+ 
+ int __perf_evsel__sample_size(u64 sample_type);
+-void perf_evsel__calc_id_pos(struct evsel *evsel);
++void evsel__calc_id_pos(struct evsel *evsel);
+ 
+ bool perf_evsel__is_cache_op_valid(u8 type, u8 op);
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.21.1
+
