@@ -2,141 +2,75 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B0DC47258
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D312C47258
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8626C20747
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:37:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IGosKOOh"
+	by mail.kernel.org (Postfix) with ESMTP id 2108E206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 07:38:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588750714;
+	bh=Y1LEEe+kkf6vU7B4UsWqodC8jLCx0BRsN/zYtJeEjvE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yc9MyusCA0s0Y3Z5JIe2VKYd9LSVdlp29oWWZ9v3s2Tw7Smw6mxxz/+938ajO3sd1
+	 PHYFO1Fxxaojzfe2U22GK+a5BiGpVQfvccM+qjzJbkpY+ma+kSwUWrXnI1wLMLmFKj
+	 TTa+Nw8V1C1LLU/STb4uGdHkMlu3Q+PrNKg8yI8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbgEFHhv (ORCPT
+        id S1728361AbgEFHid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 03:37:51 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27384 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727937AbgEFHhu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 03:37:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588750668;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1DqHn9dPlmj80heFjYayVPfLacQlouJrbO3+dn30g+Y=;
-        b=IGosKOOhtur924OsjKmcDnLD1Co+WRdGMjZjU8XKvleAKVOpDZBRqnAZs4cYKveWm5PGRL
-        wYoC6n/164dbOuenEzD+SF6nSPP+y+AgjRygzhX8ZYBRAKxW8dI8/N6Y5JSEleZch8dNJS
-        6oz35GaK5vnBLxwzgSADBIpUq99+fu0=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-192-RMLvViSUPhmuJypugt_i9w-1; Wed, 06 May 2020 03:37:47 -0400
-X-MC-Unique: RMLvViSUPhmuJypugt_i9w-1
-Received: by mail-wr1-f69.google.com with SMTP id f2so874141wrm.9
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 00:37:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1DqHn9dPlmj80heFjYayVPfLacQlouJrbO3+dn30g+Y=;
-        b=AnIvqA8Pe2l3aVIFON19u/Xs6lGoLaqzxo8zB2XlpsKFePmvuy9dhjvBHkPjUDGytc
-         y/2zE+lmxFcV8UzmtDLq+sZE8veIr6QGXmUCrsA4uCmbut+1iudczXYFAuYJRVl0UQ71
-         b9zIe+TR6sGc1NjEDOvbiqyywr40nX6HJyremstL5kxXpKSnsC2FzghU6QkkTBJMZAjk
-         cvgX1DOjqkxiR/70CcOUNtejfGcrdN3rh/p1u9I1LrnoLHig80OoJwffdlb3jO8CSTAQ
-         RPrGacXYobfA9kYYTUgFNdKfuqIwt6CxLkTZGbP/RJy7ydyIQ+6a6AEtnfKEvAwiWi0P
-         RImA==
-X-Gm-Message-State: AGi0PuZbJIc93UAalC3mq9BHW7YvhNhF3evGMsKEOQIx85K885qDy0Ch
-        /UblXEScSsApxrwy9Q79XzcW/Qvv11P0rpviTV5W+ZLwQS8yLNnD6m8Bmg1QCC/Q3ibXYa4LtPH
-        yNw2i4vWn4ba3toYJW/XuL9ec
-X-Received: by 2002:adf:ce10:: with SMTP id p16mr7691543wrn.144.1588750665672;
-        Wed, 06 May 2020 00:37:45 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLylGfrIQvy8pwm2otNVLPO1o3cMHW4JbPm3GLxsqO+x+n/Q0pR35QnHj4F0DC4IEX6mTgYDA==
-X-Received: by 2002:adf:ce10:: with SMTP id p16mr7691526wrn.144.1588750665498;
-        Wed, 06 May 2020 00:37:45 -0700 (PDT)
-Received: from redhat.com (bzq-109-66-7-121.red.bezeqint.net. [109.66.7.121])
-        by smtp.gmail.com with ESMTPSA id 19sm1655337wmo.3.2020.05.06.00.37.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 00:37:45 -0700 (PDT)
-Date:   Wed, 6 May 2020 03:37:42 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Jesper Dangaard Brouer <brouer@redhat.com>
-Subject: Re: [PATCH net-next 2/2] virtio-net: fix the XDP truesize
- calculation for mergeable buffers
-Message-ID: <20200506033259-mutt-send-email-mst@kernel.org>
-References: <20200506061633.16327-1-jasowang@redhat.com>
- <20200506061633.16327-2-jasowang@redhat.com>
+        Wed, 6 May 2020 03:38:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38472 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727067AbgEFHid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 03:38:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B216220735;
+        Wed,  6 May 2020 07:32:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588750376;
+        bh=Y1LEEe+kkf6vU7B4UsWqodC8jLCx0BRsN/zYtJeEjvE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=I5feX9SVlod6nQUrokIJem+6I1ByfhYGOk+CesqWuk2wyAkt4RXSZAzsX7v1+XHzw
+         4DHHxD+eEyyVXNUeQgoKdApHpR2IzkSgNtvuBR/5AtvjmSXKGWNQuEdjTsPn/kaqLI
+         9lKQllYCeCb3g9sV3dmmZ0E2yTndn+rdkJrAGN70=
+Date:   Wed, 6 May 2020 09:32:53 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Hyunki Koo <hyunki00.koo@samsung.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 2/3] dt-bindings: serial: Add reg-io-width compatible
+Message-ID: <20200506073253.GB2336830@kroah.com>
+References: <20200506070009.16809-1-hyunki00.koo@samsung.com>
+ <CGME20200506070024epcas2p2868e11349d2fee83d340df7fa181f704@epcas2p2.samsung.com>
+ <20200506070009.16809-2-hyunki00.koo@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200506061633.16327-2-jasowang@redhat.com>
+In-Reply-To: <20200506070009.16809-2-hyunki00.koo@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 02:16:33PM +0800, Jason Wang wrote:
-> We should not exclude headroom and tailroom when XDP is set. So this
-> patch fixes this by initializing the truesize from PAGE_SIZE when XDP
-> is set.
+On Wed, May 06, 2020 at 04:00:06PM +0900, Hyunki Koo wrote:
+> Add a description for reg-io-width options for the samsung serial
+> UART peripheral.
 > 
-> Cc: Jesper Dangaard Brouer <brouer@redhat.com>
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-
-Seems too aggressive, we do not use up the whole page for the size.
-
-
-
+> Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
 > ---
->  drivers/net/virtio_net.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> index 98dd75b665a5..3f3aa8308918 100644
-> --- a/drivers/net/virtio_net.c
-> +++ b/drivers/net/virtio_net.c
-> @@ -1184,7 +1184,7 @@ static int add_recvbuf_mergeable(struct virtnet_info *vi,
->  	char *buf;
->  	void *ctx;
->  	int err;
-> -	unsigned int len, hole;
-> +	unsigned int len, hole, truesize;
->  
->  	/* Extra tailroom is needed to satisfy XDP's assumption. This
->  	 * means rx frags coalescing won't work, but consider we've
-> @@ -1194,6 +1194,7 @@ static int add_recvbuf_mergeable(struct virtnet_info *vi,
->  	if (unlikely(!skb_page_frag_refill(len + room, alloc_frag, gfp)))
->  		return -ENOMEM;
->  
-> +	truesize = headroom ? PAGE_SIZE : len;
->  	buf = (char *)page_address(alloc_frag->page) + alloc_frag->offset;
->  	buf += headroom; /* advance address leaving hole at front of pkt */
->  	get_page(alloc_frag->page);
+>  Documentation/devicetree/bindings/serial/samsung_uart.yaml | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
-Is this really just on the XDP path? Looks like a confusing way to
-detect that.
+You dropped the reviewed-by tag that Rob gave on the previous version of
+this patch.
 
+Please put that back and resend.
 
-> @@ -1205,11 +1206,12 @@ static int add_recvbuf_mergeable(struct virtnet_info *vi,
->  		 * the current buffer.
->  		 */
->  		len += hole;
-> +		truesize += hole;
->  		alloc_frag->offset += hole;
->  	}
->  
->  	sg_init_one(rq->sg, buf, len);
-> -	ctx = mergeable_len_to_ctx(len, headroom);
-> +	ctx = mergeable_len_to_ctx(truesize, headroom);
->  	err = virtqueue_add_inbuf_ctx(rq->vq, rq->sg, 1, buf, ctx, gfp);
->  	if (err < 0)
->  		put_page(virt_to_head_page(buf));
-> -- 
-> 2.20.1
+thanks,
 
+greg k-h
