@@ -2,121 +2,100 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F87C47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE3FC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61066208DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:38:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ECGhwMJF"
+	by mail.kernel.org (Postfix) with ESMTP id BAD12208DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 17:40:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588786821;
+	bh=bE63Lp2f3tulJ939j+qr3C21dbeTCgpfD0tbW6on/aw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=jKDny+VYxMt/zTdidnDZQNYsRl0PgsJIL/9nlOeb+JNLGR1DCmi+N0QJugmhvBbDO
+	 IjfQCdfIYNeAik/cCORT47nNgNWPWILewdc7MJGnRpuYDgWxlYKpb3MqdLTVgYa2Sl
+	 Uvp5Zj5Nq/XM7XVtHi75RtFchhexHwELYKXyIx24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729222AbgEFRiL (ORCPT
+        id S1729331AbgEFRkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 13:38:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51618 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728047AbgEFRiL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 13:38:11 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA161C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 10:38:10 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id m24so1551105vsq.10
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 10:38:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8a5zVBKejAgld7VXzNaF8qHJFaoZBo2UQTEJWN0/Pas=;
-        b=ECGhwMJFfElWGMQN6/BzuvU4toFz9t7sCKONntpXpgyTmUVrganDLiAX/JlOezV9MQ
-         v0ZNSoJ+RYvhi10KmB3EhaeHUbcH3Cdf9MmAvDRRODJ6v0moR/ADr9ynPi6ZiHninbhx
-         axqnRj1QFSWECx6NxDenAzW44t5GBcDUwJa8o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8a5zVBKejAgld7VXzNaF8qHJFaoZBo2UQTEJWN0/Pas=;
-        b=HgfZF3cveAJQK+XthMFWpAKoIE28Nvk9CL10N609Gg0RFHWf5YnYqysn9SlUTxvGj5
-         a5O+m7YuAkiWzq0wkLsBb1pV0JrmX/4CsL0OYp4Si+xUfkF9BIhI3r/4L5F+nn9hBK4M
-         owz1j+RpGjBQ3jDAnlmUMSNSV5Aa9kYVjVHgnJAJ+n2sxX+xQq7GF3yeXSR5PyB9HFji
-         SPEFDmQy/MQ6f94t23q6LbK5ojDWiupsapSjzNCW5R1rHVeaQUgA5NgVL6DhLoh9s7sc
-         DfVWRIv5tbsbwB9DgbEHiGNw/8LSBG7pp9sNCiRiuy0fKTK2jw+J3PE0lnQB9vMnFZRm
-         67TA==
-X-Gm-Message-State: AGi0Pubf+OKpNrwxIWjG2o3fUHyFXuPe4J8UOeH7VLWLiJV/gpQvrZ1L
-        zm8A4B8Wh6B9UWxDSNfvr4osB5ki6Qs=
-X-Google-Smtp-Source: APiQypIgzcPwoIlr/pl/vdElTZ0yP1aBOoxtVPcBuy2Ad5cSHpYHO+P95Cps1hNjp8UkHH6SRCgTnQ==
-X-Received: by 2002:a67:6487:: with SMTP id y129mr8905842vsb.48.1588786689536;
-        Wed, 06 May 2020 10:38:09 -0700 (PDT)
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com. [209.85.217.45])
-        by smtp.gmail.com with ESMTPSA id t23sm1019637vsm.31.2020.05.06.10.38.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 May 2020 10:38:08 -0700 (PDT)
-Received: by mail-vs1-f45.google.com with SMTP id u12so1682035vsq.0
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 10:38:08 -0700 (PDT)
-X-Received: by 2002:a67:c40c:: with SMTP id c12mr8798801vsk.106.1588786687950;
- Wed, 06 May 2020 10:38:07 -0700 (PDT)
+        Wed, 6 May 2020 13:40:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49808 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728047AbgEFRkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 13:40:20 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB2AA20936;
+        Wed,  6 May 2020 17:40:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588786819;
+        bh=bE63Lp2f3tulJ939j+qr3C21dbeTCgpfD0tbW6on/aw=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=mlCVdHQ7dipgESZw6Y2jcMAKucLqT5xaDH/m6SnEi+YH5SnCHHYsccqRSGB6042mK
+         dcS1++vwRFeAXky0kr8QjrEbJUgZ26yXMFFgxyCNLtuLFhX6lM1GzsMS1ZTge3BkEQ
+         uSuTUOllOcbM/dszbDh0MWxOg0mL9a5f73+fGCac=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id A8103352306C; Wed,  6 May 2020 10:40:19 -0700 (PDT)
+Date:   Wed, 6 May 2020 10:40:19 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Kmemleak infrastructure improvement for task_struct leaks and
+ call_rcu()
+Message-ID: <20200506174019.GA2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <45D2D811-C3B0-442B-9744-415B4AC5CCDB@lca.pw>
 MIME-Version: 1.0
-References: <20200506164223.2875760-1-daniel.thompson@linaro.org>
-In-Reply-To: <20200506164223.2875760-1-daniel.thompson@linaro.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 6 May 2020 10:37:56 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=X7RjSV+dVt-AUn04bW9ZxcmQs8=OpYuXrPFx3US8yMsw@mail.gmail.com>
-Message-ID: <CAD=FV=X7RjSV+dVt-AUn04bW9ZxcmQs8=OpYuXrPFx3US8yMsw@mail.gmail.com>
-Subject: Re: [PATCH] kgdb: Fix spurious true from in_dbg_master()
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Jason Wessel <jason.wessel@windriver.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        LKML <linux-kernel@vger.kernel.org>,
-        Patch Tracking <patches@linaro.org>,
-        Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <45D2D811-C3B0-442B-9744-415B4AC5CCDB@lca.pw>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, May 06, 2020 at 12:22:37PM -0400, Qian Cai wrote:
+> == task struck leaks ==
+> There are leaks from task struct from time to time where someone forgot to call put_task_struct() somewhere leading to leaks. For example,
+> 
+> https://lore.kernel.org/lkml/C1CCBDAC-A453-4FF2-908F-0B6E356223D1@lca.pw/
+> 
+> It was such a pain to debug this kind of leaks at the moment, as all we could do was to audit the code by checking all new put_task_struct()  and get_task_struct() call sites which is error-prone because there could be other new call sites like get_pid_task() which would also need to be balanced with put_task_struct() as well.
+> 
+> What do you think about adding some aux call traces for kmemleak in general? For example, if the tracking object is a task struct, it would save call traces for the first and last call of both get_task_struct() and put_task_struct(). Then, it could be expanded to track other refcount-based leaks in the future.
+> 
+> == call_rcu() leaks ==
+> Another issue that might be relevant is that it seems sometimes, kmemleak will give a lot of false positives (hundreds) because the memory was supposed to be freed by call_rcu()  (for example, in dst_release()) but for some reasons, it takes a long time probably waiting for grace periods or some kind of RCU self-stall, but the memory had already became an orphan. I am not sure how we are going to resolve this properly until we have to figure out why call_rcu() is taking so long to finish?
 
-On Wed, May 6, 2020 at 9:42 AM Daniel Thompson
-<daniel.thompson@linaro.org> wrote:
->
-> Currently there is a small window where a badly timed migration could
-> cause in_dbg_master() to spuriously return true. Specifically if we
-> migrate to a new core after reading the processor id and the previous
-> core takes a breakpoint then we will evaluate true if we read
-> kgdb_active before we get the IPI to bring us to halt.
->
-> Fix this by checking irqs_disabled() first. Interrupts are always
-> disabled when we are executing the kgdb trap so this is an acceptable
-> prerequisite. This also allows us to replace raw_smp_processor_id()
-> with smp_processor_id() since the short circuit logic will prevent
-> warnings from PREEMPT_DEBUG.
->
-> Fixes: dcc7871128e9 ("kgdb: core changes to support kdb")
-> Suggested-by: Will Deacon <will@kernel.org>
-> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-> ---
->  include/linux/kgdb.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
-> index b072aeb1fd78..4d6fe87fd38f 100644
-> --- a/include/linux/kgdb.h
-> +++ b/include/linux/kgdb.h
-> @@ -323,7 +323,7 @@ extern void gdbstub_exit(int status);
->  extern int                     kgdb_single_step;
->  extern atomic_t                        kgdb_active;
->  #define in_dbg_master() \
-> -       (raw_smp_processor_id() == atomic_read(&kgdb_active))
-> +       (irqs_disabled() && (smp_processor_id() == atomic_read(&kgdb_active)))
->  extern bool dbg_is_early;
->  extern void __init dbg_late_init(void);
->  extern void kgdb_panic(const char *msg);
+I know nothing about kmemleak, but I won't let that stop me from making
+random suggestions...
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+One approach is to do an rcu_barrier() inside kmemleak just before
+printing leaked blocks, and check to see if any are still leaked after
+the rcu_barrier().
+
+If kmemleak works on crash dumps, another approach is to scan RCU's
+callback lists.  This will miss those callbacks that rcu_do_batch()
+was in the middle of invoking, though.  It also misses cases where
+someone passes a linked structure to call_rcu(), and then frees the
+structure piece by piece within the callback function.
+
+> Another solution is to add aux call traces for both skb_dst_drop() and skb_dst_set() for this case, but that there are many places to free memory via call_rcu() like inode free etc.
+
+And call_rcu() has no idea where the memory starts.  And again, sometimes
+there is memory linked from that passed to call_rcu() that will be freed
+by the callback function.
+
+In theory, these linked-structure cases could be handled by checking
+the callback function and then traversing the links.  I wouldn't be
+that ambitious, but don't let me discourage you.  ;-)
+
+							Thanx, Paul
