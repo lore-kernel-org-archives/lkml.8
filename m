@@ -2,112 +2,348 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FE9C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FEAC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6C8020708
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:31:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97DBB20708
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:31:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="syehwF6n"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pPnCnFv8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730405AbgEFQbr (ORCPT
+        id S1730433AbgEFQb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:31:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730338AbgEFQb0 (ORCPT
+        Wed, 6 May 2020 12:31:58 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:42222 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729747AbgEFQal (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:31:26 -0400
-Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 205B2C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 09:31:26 -0700 (PDT)
-Received: by mail-vk1-xa42.google.com with SMTP id p139so690850vkd.7
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 09:31:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FiB9pQXmMO6J13wRygH5wpmcQuT6bpeBnplQ+yoWqy4=;
-        b=syehwF6nfAGze51brJjFnUAcXmSHB8FPB4pfxWc8SG6Aqa4Tem6+CFPiSLPrQSdHte
-         r+SFPnZlwqFeixuSetvwES7+awv3/hy73Y68iyZHVbZ51ei1puiteuVzWEiPLX8fKGmf
-         im1pZ55RH9HrzEdYUusQ70GrGcKai+do7bKUbwnb2psU5O4xmrplAU/4voLvbLyTWoD0
-         PdrQVb+Aei2sTJqsnoSFjLQWN9YHPKlz6OViM7ZFNJkFS0nx0/miXdO15nD/a8yjWMPu
-         y1jnV2dp1wd5NFFkkeBVE0xyAPjoyHBLHqqTR9ezZvUlIA5OYJT+dC2ObbEv49QEeEGB
-         6lXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FiB9pQXmMO6J13wRygH5wpmcQuT6bpeBnplQ+yoWqy4=;
-        b=FyDVIY134H1KhKmT92saDbjkYvOZoyaC0eFLxcwg2MHs+V+WIqrlfXeHdNERe0Yj8a
-         RJJkz+JxIHBEYXYel27JeJaJGHgDErLYUJUv5+/fqrdgxOFI5xMqoZCRtXZlQ86RdDqG
-         T6SUy6yaVmpRpDjrWdaRCMHqqosoSOGyJTKmoUWiQ8c19uHcNt9/T1lVHqwsQIe/7iu/
-         w/WU/d+3Wd/bzxBsRCfQowCoQQNu+xYlyvBW7FzdT2YAf1Z3F0f6HfsB9Zp9eadBx0ZE
-         s6b8p+Tg1gVrVzf+EgYJOfwtSSe9QFnmKL6zGskwG73DokAIUpA10MztjNaD/XuwUlTB
-         MplQ==
-X-Gm-Message-State: AGi0PuZdk3KLeZlmds6i/zT8kWD8zv3/ULKWgnMqZp8jXWrWpW5go2rA
-        bM7/2g8c4Q22y8MZfUjnoAu35GKjYZvercMIRny4Bg==
-X-Google-Smtp-Source: APiQypKpUnyKEH6JytKdnsuKIPTizThoHvdxVZCbosHBLsSAAvQY9gGYjrD60PyyFN0U1l8pWmf9tlPrnU9IVFfxork=
-X-Received: by 2002:a1f:31cf:: with SMTP id x198mr7906893vkx.101.1588782685228;
- Wed, 06 May 2020 09:31:25 -0700 (PDT)
+        Wed, 6 May 2020 12:30:41 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 046GUZjG085528;
+        Wed, 6 May 2020 11:30:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588782635;
+        bh=Cai31ZHxQi4/NU0CFxQdN7+fQQ232w1peH7dU6BgXjI=;
+        h=From:To:Subject:Date:In-Reply-To:References;
+        b=pPnCnFv8gH/arunhGMzsTty3UahGNwcbnd1MhojUXU0hgPQ9Q0Q+nRPCFtwop4zqt
+         ujvF2sVuOgKC2hoYHnmETMDZrdW9ug6+OWHWU+sS3rpaknUKmsT7AHsECUuUgRqHXU
+         V8jpTfCclkAaV2yQxRNsQaR3B1oVAiGbZEuiELYU=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 046GUZpY081674
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 6 May 2020 11:30:35 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 6 May
+ 2020 11:30:35 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 6 May 2020 11:30:35 -0500
+Received: from uda0868495.fios-router.home (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 046GUXDg119719;
+        Wed, 6 May 2020 11:30:35 -0500
+From:   Murali Karicheri <m-karicheri2@ti.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
+        <nsekhar@ti.com>, <grygorii.strashko@ti.com>
+Subject: [net-next RFC PATCH 03/13] net: hsr: rename files to introduce PRP support
+Date:   Wed, 6 May 2020 12:30:23 -0400
+Message-ID: <20200506163033.3843-4-m-karicheri2@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200506163033.3843-1-m-karicheri2@ti.com>
+References: <20200506163033.3843-1-m-karicheri2@ti.com>
 MIME-Version: 1.0
-References: <1588348794-4511-1-git-send-email-yanxiaoyong5@gmail.com>
- <CAHQZ30Btybck2ts8FGru_GDP63e6-ZdxN_mF5Wbp4L1XeTPAtQ@mail.gmail.com> <2020050201173899657320@gmail.com>
-In-Reply-To: <2020050201173899657320@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 6 May 2020 18:30:48 +0200
-Message-ID: <CAPDyKFrZebubtoQ-uNwdHc6qpUXz16-3w4U+DkqvnAMbe0-S-g@mail.gmail.com>
-Subject: Re: Re: [PATCH] mmc/core:fix mmc_sd_hw_reset oops mmc_sd_hw_reset
- function may be oops if the ejection of sd and the reset of sd simultaneously occur
-To:     "yanxiaoyong5@gmail.com" <yanxiaoyong5@gmail.com>
-Cc:     Raul Rangel <rrangel@chromium.org>,
-        Avri Altman <avri.altman@wdc.com>,
-        kstewart <kstewart@linuxfoundation.org>,
-        tglx <tglx@linutronix.de>, linux-mmc <linux-mmc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 1 May 2020 at 19:18, yanxiaoyong5@gmail.com
-<yanxiaoyong5@gmail.com> wrote:
->
->  it is a race condition,the situation as follows:
->         a                                                                           b
->  mmc_rescan
->      mmc_sd_detect
->           mmc_get_card
->               __mmc_reclaim_host
->           card is not present                                       __mmc_reclaim_host
->           mmc_put_card                                                 wait a __mmc_release_host
->               __mmc_release_host
->                     set b TASK_RUNNING
->           mmc_sd_remove
+As PRP implementation expect to re-use code from HSR driver, rename
+the existing files that can be re-used with a hsr_prp prefix.
 
-mmc_sd_remove() calls mmc_remove_card(), which calls device_del() on
-the corresponding card->dev.
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+---
+ net/hsr-prp/Makefile                               | 11 ++++++-----
+ net/hsr-prp/hsr_netlink.c                          |  6 +++---
+ net/hsr-prp/{hsr_debugfs.c => hsr_prp_debugfs.c}   |  6 +++---
+ net/hsr-prp/{hsr_device.c => hsr_prp_device.c}     | 10 +++++-----
+ net/hsr-prp/{hsr_device.h => hsr_prp_device.h}     |  2 +-
+ net/hsr-prp/{hsr_forward.c => hsr_prp_forward.c}   |  6 +++---
+ net/hsr-prp/{hsr_forward.h => hsr_prp_forward.h}   |  2 +-
+ net/hsr-prp/{hsr_framereg.c => hsr_prp_framereg.c} |  4 ++--
+ net/hsr-prp/{hsr_framereg.h => hsr_prp_framereg.h} |  2 +-
+ net/hsr-prp/{hsr_main.c => hsr_prp_main.c}         |  8 ++++----
+ net/hsr-prp/{hsr_main.h => hsr_prp_main.h}         |  0
+ net/hsr-prp/{hsr_slave.c => hsr_prp_slave.c}       | 10 +++++-----
+ net/hsr-prp/{hsr_slave.h => hsr_prp_slave.h}       |  2 +-
+ 13 files changed, 35 insertions(+), 34 deletions(-)
+ rename net/hsr-prp/{hsr_debugfs.c => hsr_prp_debugfs.c} (97%)
+ rename net/hsr-prp/{hsr_device.c => hsr_prp_device.c} (98%)
+ rename net/hsr-prp/{hsr_device.h => hsr_prp_device.h} (96%)
+ rename net/hsr-prp/{hsr_forward.c => hsr_prp_forward.c} (99%)
+ rename net/hsr-prp/{hsr_forward.h => hsr_prp_forward.h} (92%)
+ rename net/hsr-prp/{hsr_framereg.c => hsr_prp_framereg.c} (99%)
+ rename net/hsr-prp/{hsr_framereg.h => hsr_prp_framereg.h} (98%)
+ rename net/hsr-prp/{hsr_main.c => hsr_prp_main.c} (96%)
+ rename net/hsr-prp/{hsr_main.h => hsr_prp_main.h} (100%)
+ rename net/hsr-prp/{hsr_slave.c => hsr_prp_slave.c} (96%)
+ rename net/hsr-prp/{hsr_slave.h => hsr_prp_slave.h} (97%)
 
-That leads to ->remove() callback gets invoked for card->dev (see
-mmc_blk_remove()), which ideally should clean up everything mmc block
-device related. In other words, beyond this point there should be no
-thread/user that can call mmc_hw_reset() (which invokes
-mmc_sd_hw_reset().
+diff --git a/net/hsr-prp/Makefile b/net/hsr-prp/Makefile
+index fd207c1a0854..608045f088a4 100644
+--- a/net/hsr-prp/Makefile
++++ b/net/hsr-prp/Makefile
+@@ -1,10 +1,11 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+-# Makefile for HSR
++# Makefile for HSR & PRP
+ #
+ 
+-obj-$(CONFIG_HSR_PRP)	+= hsr.o
++obj-$(CONFIG_HSR_PRP)	+= hsr-prp.o
+ 
+-hsr-y			:= hsr_main.o hsr_framereg.o hsr_device.o \
+-			   hsr_netlink.o hsr_slave.o hsr_forward.o
+-hsr-$(CONFIG_DEBUG_FS) += hsr_debugfs.o
++hsr-prp-y		:= hsr_prp_main.o hsr_prp_framereg.o \
++			   hsr_prp_device.o hsr_netlink.o hsr_prp_slave.o \
++			   hsr_prp_forward.o
++hsr-prp-$(CONFIG_DEBUG_FS) += hsr_prp_debugfs.o
+diff --git a/net/hsr-prp/hsr_netlink.c b/net/hsr-prp/hsr_netlink.c
+index 1decb25f6764..9791d4d89aef 100644
+--- a/net/hsr-prp/hsr_netlink.c
++++ b/net/hsr-prp/hsr_netlink.c
+@@ -11,9 +11,9 @@
+ #include <linux/kernel.h>
+ #include <net/rtnetlink.h>
+ #include <net/genetlink.h>
+-#include "hsr_main.h"
+-#include "hsr_device.h"
+-#include "hsr_framereg.h"
++#include "hsr_prp_main.h"
++#include "hsr_prp_device.h"
++#include "hsr_prp_framereg.h"
+ 
+ static const struct nla_policy hsr_policy[IFLA_HSR_MAX + 1] = {
+ 	[IFLA_HSR_SLAVE1]		= { .type = NLA_U32 },
+diff --git a/net/hsr-prp/hsr_debugfs.c b/net/hsr-prp/hsr_prp_debugfs.c
+similarity index 97%
+rename from net/hsr-prp/hsr_debugfs.c
+rename to net/hsr-prp/hsr_prp_debugfs.c
+index 9787ef11ca71..d37b44082e92 100644
+--- a/net/hsr-prp/hsr_debugfs.c
++++ b/net/hsr-prp/hsr_prp_debugfs.c
+@@ -1,5 +1,5 @@
+ /*
+- * hsr_debugfs code
++ * hsr_prp_debugfs code
+  * Copyright (C) 2019 Texas Instruments Incorporated
+  *
+  * Author(s):
+@@ -17,8 +17,8 @@
+ #include <linux/module.h>
+ #include <linux/errno.h>
+ #include <linux/debugfs.h>
+-#include "hsr_main.h"
+-#include "hsr_framereg.h"
++#include "hsr_prp_main.h"
++#include "hsr_prp_framereg.h"
+ 
+ static struct dentry *hsr_debugfs_root_dir;
+ 
+diff --git a/net/hsr-prp/hsr_device.c b/net/hsr-prp/hsr_prp_device.c
+similarity index 98%
+rename from net/hsr-prp/hsr_device.c
+rename to net/hsr-prp/hsr_prp_device.c
+index cd99f548e440..ed50022849cb 100644
+--- a/net/hsr-prp/hsr_device.c
++++ b/net/hsr-prp/hsr_prp_device.c
+@@ -13,11 +13,11 @@
+ #include <linux/etherdevice.h>
+ #include <linux/rtnetlink.h>
+ #include <linux/pkt_sched.h>
+-#include "hsr_device.h"
+-#include "hsr_slave.h"
+-#include "hsr_framereg.h"
+-#include "hsr_main.h"
+-#include "hsr_forward.h"
++#include "hsr_prp_device.h"
++#include "hsr_prp_slave.h"
++#include "hsr_prp_framereg.h"
++#include "hsr_prp_main.h"
++#include "hsr_prp_forward.h"
+ 
+ static bool is_admin_up(struct net_device *dev)
+ {
+diff --git a/net/hsr-prp/hsr_device.h b/net/hsr-prp/hsr_prp_device.h
+similarity index 96%
+rename from net/hsr-prp/hsr_device.h
+rename to net/hsr-prp/hsr_prp_device.h
+index a099d7de7e79..4cf3db603174 100644
+--- a/net/hsr-prp/hsr_device.h
++++ b/net/hsr-prp/hsr_prp_device.h
+@@ -9,7 +9,7 @@
+ #define __HSR_DEVICE_H
+ 
+ #include <linux/netdevice.h>
+-#include "hsr_main.h"
++#include "hsr_prp_main.h"
+ 
+ void hsr_dev_setup(struct net_device *dev);
+ int hsr_dev_finalize(struct net_device *hsr_dev, struct net_device *slave[2],
+diff --git a/net/hsr-prp/hsr_forward.c b/net/hsr-prp/hsr_prp_forward.c
+similarity index 99%
+rename from net/hsr-prp/hsr_forward.c
+rename to net/hsr-prp/hsr_prp_forward.c
+index ddd9605bad04..5ff0efba5db5 100644
+--- a/net/hsr-prp/hsr_forward.c
++++ b/net/hsr-prp/hsr_prp_forward.c
+@@ -5,13 +5,13 @@
+  *	2011-2014 Arvid Brodin, arvid.brodin@alten.se
+  */
+ 
+-#include "hsr_forward.h"
++#include "hsr_prp_forward.h"
+ #include <linux/types.h>
+ #include <linux/skbuff.h>
+ #include <linux/etherdevice.h>
+ #include <linux/if_vlan.h>
+-#include "hsr_main.h"
+-#include "hsr_framereg.h"
++#include "hsr_prp_main.h"
++#include "hsr_prp_framereg.h"
+ 
+ struct hsr_node;
+ 
+diff --git a/net/hsr-prp/hsr_forward.h b/net/hsr-prp/hsr_prp_forward.h
+similarity index 92%
+rename from net/hsr-prp/hsr_forward.h
+rename to net/hsr-prp/hsr_prp_forward.h
+index 51a69295566c..cbc0704cc14a 100644
+--- a/net/hsr-prp/hsr_forward.h
++++ b/net/hsr-prp/hsr_prp_forward.h
+@@ -9,7 +9,7 @@
+ #define __HSR_FORWARD_H
+ 
+ #include <linux/netdevice.h>
+-#include "hsr_main.h"
++#include "hsr_prp_main.h"
+ 
+ void hsr_forward_skb(struct sk_buff *skb, struct hsr_port *port);
+ 
+diff --git a/net/hsr-prp/hsr_framereg.c b/net/hsr-prp/hsr_prp_framereg.c
+similarity index 99%
+rename from net/hsr-prp/hsr_framereg.c
+rename to net/hsr-prp/hsr_prp_framereg.c
+index 03b891904314..b02a2a0ca0ff 100644
+--- a/net/hsr-prp/hsr_framereg.c
++++ b/net/hsr-prp/hsr_prp_framereg.c
+@@ -14,8 +14,8 @@
+ #include <linux/etherdevice.h>
+ #include <linux/slab.h>
+ #include <linux/rculist.h>
+-#include "hsr_main.h"
+-#include "hsr_framereg.h"
++#include "hsr_prp_main.h"
++#include "hsr_prp_framereg.h"
+ #include "hsr_netlink.h"
+ 
+ /*	TODO: use hash lists for mac addresses (linux/jhash.h)?    */
+diff --git a/net/hsr-prp/hsr_framereg.h b/net/hsr-prp/hsr_prp_framereg.h
+similarity index 98%
+rename from net/hsr-prp/hsr_framereg.h
+rename to net/hsr-prp/hsr_prp_framereg.h
+index 0f0fa12b4329..c7a2a975aca0 100644
+--- a/net/hsr-prp/hsr_framereg.h
++++ b/net/hsr-prp/hsr_prp_framereg.h
+@@ -8,7 +8,7 @@
+ #ifndef __HSR_FRAMEREG_H
+ #define __HSR_FRAMEREG_H
+ 
+-#include "hsr_main.h"
++#include "hsr_prp_main.h"
+ 
+ struct hsr_node;
+ 
+diff --git a/net/hsr-prp/hsr_main.c b/net/hsr-prp/hsr_prp_main.c
+similarity index 96%
+rename from net/hsr-prp/hsr_main.c
+rename to net/hsr-prp/hsr_prp_main.c
+index e2564de67603..d0b7117bf5f9 100644
+--- a/net/hsr-prp/hsr_main.c
++++ b/net/hsr-prp/hsr_prp_main.c
+@@ -9,11 +9,11 @@
+ #include <linux/rculist.h>
+ #include <linux/timer.h>
+ #include <linux/etherdevice.h>
+-#include "hsr_main.h"
+-#include "hsr_device.h"
++#include "hsr_prp_main.h"
++#include "hsr_prp_device.h"
+ #include "hsr_netlink.h"
+-#include "hsr_framereg.h"
+-#include "hsr_slave.h"
++#include "hsr_prp_framereg.h"
++#include "hsr_prp_slave.h"
+ 
+ static bool hsr_slave_empty(struct hsr_priv *hsr)
+ {
+diff --git a/net/hsr-prp/hsr_main.h b/net/hsr-prp/hsr_prp_main.h
+similarity index 100%
+rename from net/hsr-prp/hsr_main.h
+rename to net/hsr-prp/hsr_prp_main.h
+diff --git a/net/hsr-prp/hsr_slave.c b/net/hsr-prp/hsr_prp_slave.c
+similarity index 96%
+rename from net/hsr-prp/hsr_slave.c
+rename to net/hsr-prp/hsr_prp_slave.c
+index 25b6ffba26cd..fad8fef783cc 100644
+--- a/net/hsr-prp/hsr_slave.c
++++ b/net/hsr-prp/hsr_prp_slave.c
+@@ -5,14 +5,14 @@
+  *	2011-2014 Arvid Brodin, arvid.brodin@alten.se
+  */
+ 
+-#include "hsr_slave.h"
++#include "hsr_prp_slave.h"
+ #include <linux/etherdevice.h>
+ #include <linux/if_arp.h>
+ #include <linux/if_vlan.h>
+-#include "hsr_main.h"
+-#include "hsr_device.h"
+-#include "hsr_forward.h"
+-#include "hsr_framereg.h"
++#include "hsr_prp_main.h"
++#include "hsr_prp_device.h"
++#include "hsr_prp_forward.h"
++#include "hsr_prp_framereg.h"
+ 
+ static rx_handler_result_t hsr_handle_frame(struct sk_buff **pskb)
+ {
+diff --git a/net/hsr-prp/hsr_slave.h b/net/hsr-prp/hsr_prp_slave.h
+similarity index 97%
+rename from net/hsr-prp/hsr_slave.h
+rename to net/hsr-prp/hsr_prp_slave.h
+index 8953ea279ce9..c0360b111151 100644
+--- a/net/hsr-prp/hsr_slave.h
++++ b/net/hsr-prp/hsr_prp_slave.h
+@@ -10,7 +10,7 @@
+ #include <linux/skbuff.h>
+ #include <linux/netdevice.h>
+ #include <linux/rtnetlink.h>
+-#include "hsr_main.h"
++#include "hsr_prp_main.h"
+ 
+ int hsr_add_port(struct hsr_priv *hsr, struct net_device *dev,
+ 		 enum hsr_port_type pt, struct netlink_ext_ack *extack);
+-- 
+2.17.1
 
->                host->card =NULL
->                                                                                (b starts to run)
->                                                                                mmc_sd_hw_reset
->                                                                                    finds host->cards is NULL,then oops
-
-So, from the above reasoning I need to ask, have you really seen the
-NULL pointer exception happening? (then we need to look more closely
-at mmc_blk_remove()) Or do you think there is a problem from a
-code-inspection point of view?
-
-Kind regards
-Uffe
