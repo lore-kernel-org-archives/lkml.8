@@ -7,67 +7,67 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C85C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 438C0C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48EE420753
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15F3A2078C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:57:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="q0nAVBG0"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="O+gyeJTY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729281AbgEFJ5h (ORCPT
+        id S1729289AbgEFJ5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 05:57:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35790 "EHLO
+        Wed, 6 May 2020 05:57:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729233AbgEFJ5f (ORCPT
+        by vger.kernel.org with ESMTP id S1729279AbgEFJ5h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 05:57:35 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 135A5C061A10
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 02:57:34 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id 1so608189vsl.9
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 02:57:34 -0700 (PDT)
+        Wed, 6 May 2020 05:57:37 -0400
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EABBC061A41
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 02:57:37 -0700 (PDT)
+Received: by mail-ua1-x942.google.com with SMTP id 36so261246uaf.9
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 02:57:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=verdurent-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=zSGKGmCDCFtLQZd+imNsGpFQmJNoAPGMlCir0YS3PDY=;
-        b=q0nAVBG0KzkAp6uJhAiUbSWsGe5tMXf2uUo5NNXlAIuwzx2+A1thFbz2Rfn0qNoYEp
-         H07670OGlTuPsN/nmB1OKg6lWGNxN60QpMsPi3+CGNYnsf1YRqrrzmsD6mD0RmwuWo1A
-         KZK/XJzBnX0SYwt5FuqHlNbnmKyqhDEunwl5ypK4JmYRzhdgimKgNIvslAKYl5ytrx28
-         4K5XxVg52/VvfWxO9s9B/mXcSR8HFJgIDx/aST9fvdKJQmvEsEnnS7rVMuRHDVZmUrnZ
-         4ZhNOwOn+vYzuw62FvPElylWdDTIpHn1e/VZxDwHmK2TjoWQxsE94vO9ufcdRizvnHv8
-         3S5Q==
+        bh=GEL91UsQkus4klguPQa562vRpJ+uIdXm90Hm4ZfBR84=;
+        b=O+gyeJTYFhQr/KtUZAfqVIH0WTAfmhlRyJcG9PzPBNo88vGrQJkdDr16BZvo7jyPu6
+         Ed7lGKTv6JjIJgAHiuffQ7zdt91Y7/YwK/C8H6PH81YbSDMaT7Zv8rcWBXYJkOALegJF
+         rJAY9Uyo59++eoiXdinzNuqzYLgXNLvkVZtWvMPJ2yilZdRuOhJSlemOTUXdzkAEV0Kk
+         8fV7a+IT2ZsCs7zOiXWgyXMbAqEBeFCd+Lqp1gZqUnNKNY6v8f4O6sQA1KNL/GVBDIfQ
+         Rm1yfvMggC0xl+3HYZ1Wt/wLjsEnN3tLnvF9C9GxeW5yq0n9gU9hG60xnMk7zOyQHHBQ
+         89MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=zSGKGmCDCFtLQZd+imNsGpFQmJNoAPGMlCir0YS3PDY=;
-        b=K+XJVRZwSoQHal+4YIrM3ElYw+NPso1AUmFDEs8FeKWB5EE13SDAEUvRkBDS0CEJhV
-         JVxh7g9EoZh1r4PUsc5hOZ4Eu1EBedW9jQ+X2eKpMhs29+QCkIhXLaQ2YSCaheW3ttsX
-         mcwd2AKxUZzcUXO1J9E1f68njHhsJGzFv1ALIIyLjRckrlImndHpgUiCkFEAKt7OH4Io
-         Dup3x40lPxxXyYCGgEBbXhn6fnic/QN2nd534AitIjVtmepK8Gbp75YRRpPCumdfibD5
-         UDPHgrXAQFdoD/xJMF7tTySuS6ETbh+ISdM1plw4RQvibbwXxrl6APkIJwGNnaYC5TSh
-         O0zQ==
-X-Gm-Message-State: AGi0Pua6xGFUIHVYwxVP6vMnqUmqjHKyA3c+zlZ7OgXB6rIUFa78OD9x
-        XrV2QPeber4o9QL/An+/3krExqWQe7cnVFqcsFQcFg==
-X-Google-Smtp-Source: APiQypKJ7citzlPeGK3mXoZ3uB97JzPAPIFvYQtO9o9p7WOzI60x+N0CC175YJvQ30Vjihvt0vsJCWQqq3RR6Q80084=
-X-Received: by 2002:a67:42c6:: with SMTP id p189mr6947906vsa.9.1588759053119;
- Wed, 06 May 2020 02:57:33 -0700 (PDT)
+        bh=GEL91UsQkus4klguPQa562vRpJ+uIdXm90Hm4ZfBR84=;
+        b=bkOWmYK6ElZmHFVQAbOf8ipv9ft6OpWJA8ysBiXumhhwbSRYZOLNCyaGZD+K4BOjwb
+         0AQblBWmQzaX+XaZUBbCpT8RwpVa9xoZMJCWx6co5kp71Rn9zg7qrsAt7KGiXObzk2Gd
+         bJcUc1BYHE+nkjsuBCAq0sRRuyT2z5o6dsiyDK18zT8bv8gX7W0njLgt1yn2A0+1UNbg
+         gJF+v6lhxKx15q7eHckQhW9+kCJody/UR60pvrPxPMbvzb+mo7Vygwdsn/DyGozIlDDa
+         1Z9wXBf6WnYuuCH4/kQ1tYlcHgi07yNiaTpKobp3qyeypyP0Yz1MyBR3StNga1zNw0ux
+         yLXw==
+X-Gm-Message-State: AGi0PubCBXxdIr066JBgJh9BPCd8jNXLnwOHJctq2rbs1eMJW2s3YFSa
+        vXJ32ESpgT7L5vCBygmy7VVYQyK5vUSO3qLJ4HnnKw==
+X-Google-Smtp-Source: APiQypIB5U2qPB5OSGV7qIRCOai6i1EXBaGaXL0Sbf11IKfGkPyP77p/vRNyWCA4qxTcW0PmeYsPujgapi4K9umVGpQ=
+X-Received: by 2002:ab0:20aa:: with SMTP id y10mr5935962ual.60.1588759056227;
+ Wed, 06 May 2020 02:57:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200429103644.5492-1-daniel.lezcano@linaro.org>
-In-Reply-To: <20200429103644.5492-1-daniel.lezcano@linaro.org>
+References: <20200429103644.5492-1-daniel.lezcano@linaro.org> <20200429103644.5492-2-daniel.lezcano@linaro.org>
+In-Reply-To: <20200429103644.5492-2-daniel.lezcano@linaro.org>
 From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Wed, 6 May 2020 15:26:58 +0530
-Message-ID: <CAHLCerPZ-VMWmEDXqYRka8sWnVnnmJRSLhwG-zm_0Th3ZwzBqA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] powercap/drivers/idle_inject: Specify idle state
- max latency
+Date:   Wed, 6 May 2020 15:27:02 +0530
+Message-ID: <CAHLCerMYLLU6LDEgvq_t=NOzXa00npsjv5K+Z=24Lvh2XZVxgA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/4] dt-bindings: thermal: Add the idle cooling device
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "open list:POWER MANAGEMENT CORE" <linux-pm@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,22 +78,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On Wed, Apr 29, 2020 at 4:07 PM Daniel Lezcano
 <daniel.lezcano@linaro.org> wrote:
 >
-> Currently the idle injection framework uses the play_idle() function
-> which puts the current CPU in an idle state. The idle state is the
-> deepest one, as specified by the latency constraint when calling the
-> subsequent play_idle_precise() function with the INT_MAX.
+> Some devices are not able to cool down by reducing their voltage /
+> frequency because it could be not available or the system does not
+> allow voltage scaling. In this configuration, it is not possible to
+> use this strategy and the idle injection cooling device can be used
+> instead.
 >
-> The idle_injection is used by the cpuidle_cooling device which
-> computes the idle / run duration to mitigate the temperature by
-> injecting idle cycles. The cooling device has no control on the depth
-> of the idle state.
+> One idle cooling device is now present for the CPU as implemented by
+> the combination of the idle injection framework belonging to the power
+> capping framework and the thermal cooling device. The missing part is
+> the DT binding providing a way to describe how the cooling device will
+> work on the system.
 >
-> Allow finer control of the idle injection mechanism by allowing to
-> specify the latency for the idle state. Thus the cooling device has
-> the ability to have a guarantee on the exit latency of the idle states
-> it is injecting.
+> A first iteration was done by making the cooling device to point to
+> the idle state. Unfortunately it does not make sense because it would
+> need to duplicate the idle state description for each CPU in order to
+> have a different phandle and make the thermal internal framework
+> happy.
 >
-> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> It was proposed to add an cooling-cells to <3>, unfortunately the
+> thermal framework is expecting a value of <2> as stated by the
+> documentation and it is not possible from the cooling device generic
+> code to loop this third value to the back end cooling device.
+>
+> Another proposal was to add a child 'thermal-idle' node as the SCMI
+> does. This approach allows to have a self-contained configuration for
+> the idle cooling device without colliding with the cpufreq cooling
+> device which is based on the CPU node. In addition, it allows to have
+> the cpufreq cooling device and the idle cooling device to co-exist
+> together as shown in the example.
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
 
@@ -101,80 +116,174 @@ Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 
 
 > ---
->   - V4:
->     - Respin against v5.7-rc1
+>  - V4:
+>    - Added Rob Herring reviewed-by
+>  - V3:
+>    - Removed extra line with tab inside
+>  - V2:
+>    - Fixed comment type
+>    - Added dual license
+>    - Fixed description s/begins to/should/
+>    - Changed name s/duration/duration-us/
+>    - Changed name s/latency/exit-latency-us/
+>    - Removed types for latency / duration
+>    - Fixed s/idle-thermal/thermal-idle/
 > ---
->  drivers/powercap/idle_inject.c | 16 +++++++++++++++-
->  include/linux/idle_inject.h    |  4 ++++
->  2 files changed, 19 insertions(+), 1 deletion(-)
+>  .../bindings/thermal/thermal-idle.yaml        | 145 ++++++++++++++++++
+>  1 file changed, 145 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-idle.yaml
 >
-> diff --git a/drivers/powercap/idle_inject.c b/drivers/powercap/idle_inject.c
-> index e9bbd3c42eef..c90f0990968b 100644
-> --- a/drivers/powercap/idle_inject.c
-> +++ b/drivers/powercap/idle_inject.c
-> @@ -61,12 +61,14 @@ struct idle_inject_thread {
->   * @timer: idle injection period timer
->   * @idle_duration_us: duration of CPU idle time to inject
->   * @run_duration_us: duration of CPU run time to allow
-> + * @latency_us: max allowed latency
->   * @cpumask: mask of CPUs affected by idle injection
->   */
->  struct idle_inject_device {
->         struct hrtimer timer;
->         unsigned int idle_duration_us;
->         unsigned int run_duration_us;
-> +       unsigned int latency_us;
->         unsigned long cpumask[];
->  };
->
-> @@ -138,7 +140,8 @@ static void idle_inject_fn(unsigned int cpu)
->          */
->         iit->should_run = 0;
->
-> -       play_idle(READ_ONCE(ii_dev->idle_duration_us));
-> +       play_idle_precise(READ_ONCE(ii_dev->idle_duration_us) * NSEC_PER_USEC,
-> +                         READ_ONCE(ii_dev->latency_us) * NSEC_PER_USEC);
->  }
->
->  /**
-> @@ -169,6 +172,16 @@ void idle_inject_get_duration(struct idle_inject_device *ii_dev,
->         *idle_duration_us = READ_ONCE(ii_dev->idle_duration_us);
->  }
->
-> +/**
-> + * idle_inject_set_latency - set the maximum latency allowed
-> + * @latency_us: set the latency requirement for the idle state
-> + */
-> +void idle_inject_set_latency(struct idle_inject_device *ii_dev,
-> +                            unsigned int latency_us)
-> +{
-> +       WRITE_ONCE(ii_dev->latency_us, latency_us);
-> +}
+> diff --git a/Documentation/devicetree/bindings/thermal/thermal-idle.yaml b/Documentation/devicetree/bindings/thermal/thermal-idle.yaml
+> new file mode 100644
+> index 000000000000..7a922f540934
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/thermal-idle.yaml
+> @@ -0,0 +1,145 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright 2020 Linaro Ltd.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/thermal-idle.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
->  /**
->   * idle_inject_start - start idle injections
->   * @ii_dev: idle injection control device structure
-> @@ -297,6 +310,7 @@ struct idle_inject_device *idle_inject_register(struct cpumask *cpumask)
->         cpumask_copy(to_cpumask(ii_dev->cpumask), cpumask);
->         hrtimer_init(&ii_dev->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
->         ii_dev->timer.function = idle_inject_timer_fn;
-> +       ii_dev->latency_us = UINT_MAX;
->
->         for_each_cpu(cpu, to_cpumask(ii_dev->cpumask)) {
->
-> diff --git a/include/linux/idle_inject.h b/include/linux/idle_inject.h
-> index a445cd1a36c5..91a8612b8bf9 100644
-> --- a/include/linux/idle_inject.h
-> +++ b/include/linux/idle_inject.h
-> @@ -26,4 +26,8 @@ void idle_inject_set_duration(struct idle_inject_device *ii_dev,
->  void idle_inject_get_duration(struct idle_inject_device *ii_dev,
->                                  unsigned int *run_duration_us,
->                                  unsigned int *idle_duration_us);
+> +title: Thermal idle cooling device binding
 > +
-> +void idle_inject_set_latency(struct idle_inject_device *ii_dev,
-> +                            unsigned int latency_ns);
+> +maintainers:
+> +  - Daniel Lezcano <daniel.lezcano@linaro.org>
 > +
->  #endif /* __IDLE_INJECT_H__ */
+> +description: |
+> +  The thermal idle cooling device allows the system to passively
+> +  mitigate the temperature on the device by injecting idle cycles,
+> +  forcing it to cool down.
+> +
+> +  This binding describes the thermal idle node.
+> +
+> +properties:
+> +   $nodename:
+> +     const: thermal-idle
+> +     description: |
+> +        A thermal-idle node describes the idle cooling device properties to
+> +        cool down efficiently the attached thermal zone.
+> +
+> +   '#cooling-cells':
+> +      const: 2
+> +      description: |
+> +         Must be 2, in order to specify minimum and maximum cooling state used in
+> +         the cooling-maps reference. The first cell is the minimum cooling state
+> +         and the second cell is the maximum cooling state requested.
+> +
+> +   duration-us:
+> +      description: |
+> +         The idle duration in microsecond the device should cool down.
+> +
+> +   exit-latency-us:
+> +      description: |
+> +         The exit latency constraint in microsecond for the injected
+> +         idle state for the device. It is the latency constraint to
+> +         apply when selecting an idle state from among all the present
+> +         ones.
+> +
+> +required:
+> +  - '#cooling-cells'
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/thermal/thermal.h>
+> +
+> +    // Example: Combining idle cooling device on big CPUs with cpufreq cooling device
+> +    cpus {
+> +            #address-cells = <2>;
+> +            #size-cells = <0>;
+> +
+> +            /* ... */
+> +
+> +                 cpu_b0: cpu@100 {
+> +                         device_type = "cpu";
+> +                         compatible = "arm,cortex-a72";
+> +                         reg = <0x0 0x100>;
+> +                         enable-method = "psci";
+> +                         capacity-dmips-mhz = <1024>;
+> +                         dynamic-power-coefficient = <436>;
+> +                         #cooling-cells = <2>; /* min followed by max */
+> +                         cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+> +                         thermal-idle {
+> +                                 #cooling-cells = <2>;
+> +                                 duration-us = <10000>;
+> +                                 exit-latency-us = <500>;
+> +                         };
+> +                };
+> +
+> +                cpu_b1: cpu@101 {
+> +                        device_type = "cpu";
+> +                        compatible = "arm,cortex-a72";
+> +                        reg = <0x0 0x101>;
+> +                        enable-method = "psci";
+> +                        capacity-dmips-mhz = <1024>;
+> +                        dynamic-power-coefficient = <436>;
+> +                        #cooling-cells = <2>; /* min followed by max */
+> +                        cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+> +                        thermal-idle {
+> +                                #cooling-cells = <2>;
+> +                                duration-us = <10000>;
+> +                                exit-latency-us = <500>;
+> +                        };
+> +                 };
+> +
+> +          /* ... */
+> +
+> +    };
+> +
+> +    /* ... */
+> +
+> +    thermal_zones {
+> +         cpu_thermal: cpu {
+> +                polling-delay-passive = <100>;
+> +                polling-delay = <1000>;
+> +
+> +                /* ... */
+> +
+> +                trips {
+> +                        cpu_alert0: cpu_alert0 {
+> +                                    temperature = <65000>;
+> +                                    hysteresis = <2000>;
+> +                                    type = "passive";
+> +                        };
+> +
+> +                        cpu_alert1: cpu_alert1 {
+> +                                    temperature = <70000>;
+> +                                    hysteresis = <2000>;
+> +                                    type = "passive";
+> +                        };
+> +
+> +                        cpu_alert2: cpu_alert2 {
+> +                                    temperature = <75000>;
+> +                                    hysteresis = <2000>;
+> +                                    type = "passive";
+> +                        };
+> +
+> +                        cpu_crit: cpu_crit {
+> +                                    temperature = <95000>;
+> +                                    hysteresis = <2000>;
+> +                                    type = "critical";
+> +                        };
+> +                };
+> +
+> +                cooling-maps {
+> +                        map0 {
+> +                             trip = <&cpu_alert1>;
+> +                             cooling-device = <&{/cpus/cpu@100/thermal-idle} 0 15 >,
+> +                                              <&{/cpus/cpu@101/thermal-idle} 0 15>;
+> +                        };
+> +
+> +                        map1 {
+> +                             trip = <&cpu_alert2>;
+> +                             cooling-device =
+> +                                        <&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +                                        <&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +                       };
+> +                };
+> +          };
+> +    };
 > --
 > 2.17.1
 >
