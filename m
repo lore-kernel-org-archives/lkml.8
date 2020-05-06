@@ -2,187 +2,85 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45293C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6293FC38A2A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2061C20746
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 405F620746
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:03:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729290AbgEFPCx (ORCPT
+        id S1729291AbgEFPDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:02:53 -0400
-Received: from mga14.intel.com ([192.55.52.115]:47339 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728428AbgEFPCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:02:52 -0400
-IronPort-SDR: 1bDuFxHBGKKc36ngQQV+Mg3WexG4k/q/ZLi4E6bdWo5yOnxVwMCplm7nnkCx08uL7r5YuCH29d
- LcfzlDsk7jog==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 08:02:51 -0700
-IronPort-SDR: iotEaeJZfdzSqwRTQhkamwGWxxlw64uGGZ2fiMMRCLgrxGllRlY210BhUCnbtsFu47WbZj8zZ8
- uUQVtxbY/ciA==
-X-IronPort-AV: E=Sophos;i="5.73,359,1583222400"; 
-   d="scan'208";a="284648279"
-Received: from smtp.ostc.intel.com ([10.54.29.231])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 08:02:50 -0700
-Received: from localhost (mtg-dev.jf.intel.com [10.54.74.10])
-        by smtp.ostc.intel.com (Postfix) with ESMTP id F1870636E;
-        Wed,  6 May 2020 15:02:48 +0000 (UTC)
-Date:   Wed, 6 May 2020 08:02:49 -0700
-From:   mark gross <mgross@linux.intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH 1/3] x86/cpu: Add a steppings field to struct x86_cpu_id
-Message-ID: <20200506150249.GC2961@mtg-dev.jf.intel.com>
-Reply-To: mgross@linux.intel.com
-References: <20200506071516.25445-1-bp@alien8.de>
- <20200506071516.25445-2-bp@alien8.de>
+        Wed, 6 May 2020 11:03:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55418 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727984AbgEFPDv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:03:51 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19061C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 08:03:51 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jWLZu-0005Ek-IM; Wed, 06 May 2020 17:03:18 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id CC1A81001F5; Wed,  6 May 2020 17:03:17 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Alexandre Chartre <alexandre.chartre@oracle.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>
+Subject: Re: [patch V4 part 1 03/36] sched: Clean up scheduler_ipi()
+In-Reply-To: <f969427d-a151-2c69-a779-a2b602e39d9e@oracle.com>
+References: <20200505131602.633487962@linutronix.de> <20200505134058.361859938@linutronix.de> <f969427d-a151-2c69-a779-a2b602e39d9e@oracle.com>
+Date:   Wed, 06 May 2020 17:03:17 +0200
+Message-ID: <874kstkswa.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506071516.25445-2-bp@alien8.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+1
+Alexandre Chartre <alexandre.chartre@oracle.com> writes:
+> On 5/5/20 3:16 PM, Thomas Gleixner wrote:
+>> @@ -10009,12 +10009,11 @@ static void kick_ilb(unsigned int flags)
+>>   		return;
+>>   
+>>   	/*
+>> -	 * Use smp_send_reschedule() instead of resched_cpu().
+>> -	 * This way we generate a sched IPI on the target CPU which
+>> +	 * This way we generate an IPI on the target CPU which
+>>   	 * is idle. And the softirq performing nohz idle load balance
+>>   	 * will be run before returning from the IPI.
+>>   	 */
+>> -	smp_send_reschedule(ilb_cpu);
+>> +	smp_call_function_single_async(ilb_cpu, &cpu_rq(ilb_cpu)->wake_csd);
+>
+> This should be nohz_csd instead of wake_csd, no? I.e.:
+>
+>         smp_call_function_single_async(ilb_cpu, &cpu_rq(ilb_cpu)->nohz_csd);
 
---mark
-
-On Wed, May 06, 2020 at 09:15:14AM +0200, Borislav Petkov wrote:
-> From: Mark Gross <mgross@linux.intel.com>
-> 
-> Intel uses the same family/model for several CPUs. Sometimes the
-> stepping must be checked to tell them apart.
-> 
-> On x86 there can be at most 16 steppings. Add a steppings bitmask to
-> x86_cpu_id and a X86_MATCH_VENDOR_FAMILY_MODEL_STEPPING_FEATURE macro
-> and support for matching against family/model/stepping.
-> 
->  [ bp: Massage. ]
-> 
-> Signed-off-by: Mark Gross <mgross@linux.intel.com>
-> Signed-off-by: Borislav Petkov <bp@suse.de>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> ---
->  arch/x86/include/asm/cpu_device_id.h | 27 ++++++++++++++++++++++++---
->  arch/x86/kernel/cpu/match.c          |  7 ++++++-
->  include/linux/mod_devicetable.h      |  2 ++
->  3 files changed, 32 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/cpu_device_id.h b/arch/x86/include/asm/cpu_device_id.h
-> index cf3d621c6892..10426cd56dca 100644
-> --- a/arch/x86/include/asm/cpu_device_id.h
-> +++ b/arch/x86/include/asm/cpu_device_id.h
-> @@ -20,12 +20,14 @@
->  #define X86_CENTAUR_FAM6_C7_D		0xd
->  #define X86_CENTAUR_FAM6_NANO		0xf
->  
-> +#define X86_STEPPINGS(mins, maxs)    GENMASK(maxs, mins)
->  /**
-> - * X86_MATCH_VENDOR_FAM_MODEL_FEATURE - Base macro for CPU matching
-> + * X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE - Base macro for CPU matching
->   * @_vendor:	The vendor name, e.g. INTEL, AMD, HYGON, ..., ANY
->   *		The name is expanded to X86_VENDOR_@_vendor
->   * @_family:	The family number or X86_FAMILY_ANY
->   * @_model:	The model number, model constant or X86_MODEL_ANY
-> + * @_steppings:	Bitmask for steppings, stepping constant or X86_STEPPING_ANY
->   * @_feature:	A X86_FEATURE bit or X86_FEATURE_ANY
->   * @_data:	Driver specific data or NULL. The internal storage
->   *		format is unsigned long. The supplied value, pointer
-> @@ -37,15 +39,34 @@
->   * into another macro at the usage site for good reasons, then please
->   * start this local macro with X86_MATCH to allow easy grepping.
->   */
-> -#define X86_MATCH_VENDOR_FAM_MODEL_FEATURE(_vendor, _family, _model,	\
-> -					   _feature, _data) {		\
-> +#define X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE(_vendor, _family, _model, \
-> +						    _steppings, _feature, _data) { \
->  	.vendor		= X86_VENDOR_##_vendor,				\
->  	.family		= _family,					\
->  	.model		= _model,					\
-> +	.steppings	= _steppings,					\
->  	.feature	= _feature,					\
->  	.driver_data	= (unsigned long) _data				\
->  }
->  
-> +/**
-> + * X86_MATCH_VENDOR_FAM_MODEL_FEATURE - Macro for CPU matching
-> + * @_vendor:	The vendor name, e.g. INTEL, AMD, HYGON, ..., ANY
-> + *		The name is expanded to X86_VENDOR_@_vendor
-> + * @_family:	The family number or X86_FAMILY_ANY
-> + * @_model:	The model number, model constant or X86_MODEL_ANY
-> + * @_feature:	A X86_FEATURE bit or X86_FEATURE_ANY
-> + * @_data:	Driver specific data or NULL. The internal storage
-> + *		format is unsigned long. The supplied value, pointer
-> + *		etc. is casted to unsigned long internally.
-> + *
-> + * The steppings arguments of X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE() is
-> + * set to wildcards.
-> + */
-> +#define X86_MATCH_VENDOR_FAM_MODEL_FEATURE(vendor, family, model, feature, data) \
-> +	X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE(vendor, family, model, \
-> +						X86_STEPPING_ANY, feature, data)
-> +
->  /**
->   * X86_MATCH_VENDOR_FAM_FEATURE - Macro for matching vendor, family and CPU feature
->   * @vendor:	The vendor name, e.g. INTEL, AMD, HYGON, ..., ANY
-> diff --git a/arch/x86/kernel/cpu/match.c b/arch/x86/kernel/cpu/match.c
-> index d3482eb43ff3..ad6776081e60 100644
-> --- a/arch/x86/kernel/cpu/match.c
-> +++ b/arch/x86/kernel/cpu/match.c
-> @@ -39,13 +39,18 @@ const struct x86_cpu_id *x86_match_cpu(const struct x86_cpu_id *match)
->  	const struct x86_cpu_id *m;
->  	struct cpuinfo_x86 *c = &boot_cpu_data;
->  
-> -	for (m = match; m->vendor | m->family | m->model | m->feature; m++) {
-> +	for (m = match;
-> +	     m->vendor | m->family | m->model | m->steppings | m->feature;
-> +	     m++) {
->  		if (m->vendor != X86_VENDOR_ANY && c->x86_vendor != m->vendor)
->  			continue;
->  		if (m->family != X86_FAMILY_ANY && c->x86 != m->family)
->  			continue;
->  		if (m->model != X86_MODEL_ANY && c->x86_model != m->model)
->  			continue;
-> +		if (m->steppings != X86_STEPPING_ANY &&
-> +		    !(BIT(c->x86_stepping) & m->steppings))
-> +			continue;
->  		if (m->feature != X86_FEATURE_ANY && !cpu_has(c, m->feature))
->  			continue;
->  		return m;
-> diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-> index 4c2ddd0941a7..0754b8d71262 100644
-> --- a/include/linux/mod_devicetable.h
-> +++ b/include/linux/mod_devicetable.h
-> @@ -663,6 +663,7 @@ struct x86_cpu_id {
->  	__u16 vendor;
->  	__u16 family;
->  	__u16 model;
-> +	__u16 steppings;
->  	__u16 feature;	/* bit index */
->  	kernel_ulong_t driver_data;
->  };
-> @@ -671,6 +672,7 @@ struct x86_cpu_id {
->  #define X86_VENDOR_ANY 0xffff
->  #define X86_FAMILY_ANY 0
->  #define X86_MODEL_ANY  0
-> +#define X86_STEPPING_ANY 0
->  #define X86_FEATURE_ANY 0	/* Same as FPU, you can't test for that */
->  
->  /*
-> -- 
-> 2.21.0
-> 
+Good catch!
