@@ -2,153 +2,189 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C27AAC38A2A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6292C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 920D020746
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90DC320746
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:03:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LU/8X2og"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="nH95DECK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730323AbgEFXCB (ORCPT
+        id S1726074AbgEFXDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 19:02:01 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:58308 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730228AbgEFXCA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 19:02:00 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046Mvl6A141076;
-        Wed, 6 May 2020 23:01:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=b20tuqEZWMS3xbLdEetDOfYwGb0aFxf2MGC5L4I9mYw=;
- b=LU/8X2ogceI0aRT+iPTv3y5AR7MLQ/zyDBCGoRzr4SwwYatnyLviW1jD9bjOBDKl8X0a
- RPGMy7xgjk02IbAU0EJKWCfdKLT+z8E0COtwjbl2DQ6Z90ky58g4JcYeTVnkT1jzx/B8
- BwND+NE/JfVGsOB9Vt7xXNzT9C+kS0xOVsdpVojX7/Rix2hqmNTL8Ih/qmVJAyRLlIin
- qZqdIoxI99AtH6j1ja84ShOOkKzN33V1oTroNRKrZWI22qdlVjvOhYpKKE0oAvD3UDq/
- XROjiLpzwnZOgVk+9+Vo0HoLegAVKFUyxzajeHEooP53FCTP2tIVvwl74+6LxeH/nnmc hA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 30s1gncyrc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 May 2020 23:01:31 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046Mucts019798;
-        Wed, 6 May 2020 23:01:31 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 30us7numv8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 May 2020 23:01:31 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 046N1RGX018232;
-        Wed, 6 May 2020 23:01:27 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 May 2020 16:01:26 -0700
-Date:   Wed, 6 May 2020 19:01:48 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
+        Wed, 6 May 2020 19:03:03 -0400
+Received: from mail-dm6nam10on2077.outbound.protection.outlook.com ([40.107.93.77]:6115
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725782AbgEFXDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 19:03:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EUbsl597WivrCTkWD5hyqGS0hmtnKwgiopR7Rpf/3Bbhtx0Dg3bm4SMI4G+GX9jO/zHp1Npyd2K7KpOm7apIVVWHeLkLZaCgYjRfVuarLnilqj+TQZgsDB2ZaPzcL+aecytiDbTjOtQf12u0vhzDHISNAyBKSmdtWgI9BW9FHz24+rcxZIGMv3lJgmVYNmDCFY+LmowKwDjoaRDYeL9HwemwXYC2UxYECXpXC5/3w5pqA8MwWei3UIOCQ2I/qZafxHjwZdGJZgAt+oTVfDtduZfrZJpYqV0BXz6xGBkWjBq2nxF8vY3nlNl6x8/FoqKK7xUJJnImEJagPDxSHGqFrQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oxfPJLALcywCGY5eQBVLNzKgfI4Um+sZRXZXUK/OeVw=;
+ b=JxISCfG84xLvPjfQ/iPcgF0IcdUFQl34mJELHiLMu67eWjLVRUI15WJD0xtu560NTkMPEV3MN/HEOwKoySe4PUVhHEvcVvsFtnRCezzCnImC/X5f38nW3OiH3Q1LDfuiC/F4XE2n8KMaOmJJ5RtRyzzRLcMsLJpvhU4rnIPEAzzaPXCgZ51H+iGmyAOreQveyd4FfldKEKsUishqrYyIqMjHzD0DjFFiV7XxGONgFHgrM3+RJzCnq5PMCeYwYJcFXqEGylMsvO+zU6oy+qNWUKqYt0NhXdYJmaxbqVMvgBcPK9+zUru8sNq50XF7CqKYFi1VUrlyUZV7lt+Xct7Njw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oxfPJLALcywCGY5eQBVLNzKgfI4Um+sZRXZXUK/OeVw=;
+ b=nH95DECKdn8PIr2XIbcJEFb1p6zPRz8WHgFvRJyY8tXec7xJIE8TF2nNyM7UzRWsReCgjXtvfXChtxGriZgcgZU9xUprGrFXuW2iUfqAchxuOsOcRv/8l2AJAWDivOhxUVg7txcH0au2m1uhE4drevtUi32KkHPgxFPsIr4nSYw=
+Authentication-Results: lists.linux-foundation.org; dkim=none (message not
+ signed) header.d=none;lists.linux-foundation.org; dmarc=none action=none
+ header.from=amd.com;
+Received: from DM5PR12MB1355.namprd12.prod.outlook.com (2603:10b6:3:6e::7) by
+ DM5PR12MB1370.namprd12.prod.outlook.com (2603:10b6:3:76::21) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2979.26; Wed, 6 May 2020 23:02:57 +0000
+Received: from DM5PR12MB1355.namprd12.prod.outlook.com
+ ([fe80::4ce1:9947:9681:c8b1]) by DM5PR12MB1355.namprd12.prod.outlook.com
+ ([fe80::4ce1:9947:9681:c8b1%10]) with mapi id 15.20.2958.030; Wed, 6 May 2020
+ 23:02:57 +0000
+Subject: Re: [PATCH v3 64/75] x86/sev-es: Cache CPUID results for improved
+ performance
+To:     Mike Stunes <mstunes@vmware.com>, Joerg Roedel <joro@8bytes.org>
+Cc:     "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Michal Hocko <mhocko@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Tejun Heo <tj@kernel.org>, Zi Yan <ziy@nvidia.com>,
-        linux-crypto@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 6/7] mm: parallelize deferred_init_memmap()
-Message-ID: <20200506230148.44yytsociprgenf4@ca-dmjordan1.us.oracle.com>
-References: <20200430201125.532129-7-daniel.m.jordan@oracle.com>
- <CAKgT0Uf7e5514SOi8dmkB5oXUK9bwqD_z-5KJ_F3MUn3CAQyPQ@mail.gmail.com>
- <3C3C62BE-6363-41C3-834C-C3124EB3FFAB@joshtriplett.org>
- <CAKgT0UdBv-Wj98P2wMFGDSihPLKWFsqpu77ZmO+eA51uteZ-Ag@mail.gmail.com>
- <20200505014844.ulp4rtih7adtcicm@ca-dmjordan1.us.oracle.com>
- <20200505020916.mve4ijrg4z5h7eh5@ca-dmjordan1.us.oracle.com>
- <CAKgT0UdE1ex_aAyMeR3PWtVcmXL8cUtjqy0J8hLpnFm42yn82w@mail.gmail.com>
- <20200506222127.l3p2a2vjavwz2bdl@ca-dmjordan1.us.oracle.com>
- <CAKgT0UcZhnCtM4YP3L9kbtghNp9vOzSpVm5WC1164OVmRHLaMA@mail.gmail.com>
- <20200506224335.gv3as7vuik3rtt5w@ca-dmjordan1.us.oracle.com>
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-65-joro@8bytes.org>
+ <ADD6202C-6743-4C05-B9C9-952BC45C215D@vmware.com>
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <3ab38184-59fd-73f8-83ca-3f35c8e391eb@amd.com>
+Date:   Wed, 6 May 2020 18:02:54 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+In-Reply-To: <ADD6202C-6743-4C05-B9C9-952BC45C215D@vmware.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN4PR0501CA0119.namprd05.prod.outlook.com
+ (2603:10b6:803:42::36) To DM5PR12MB1355.namprd12.prod.outlook.com
+ (2603:10b6:3:6e::7)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506224335.gv3as7vuik3rtt5w@ca-dmjordan1.us.oracle.com>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=0
- mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005060183
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 mlxscore=0
- spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0
- impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005060183
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from office-linux.texastahm.com (67.79.209.213) by SN4PR0501CA0119.namprd05.prod.outlook.com (2603:10b6:803:42::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.11 via Frontend Transport; Wed, 6 May 2020 23:02:55 +0000
+X-Originating-IP: [67.79.209.213]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 6ae54519-a363-4629-06e0-08d7f2119dae
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1370:
+X-Microsoft-Antispam-PRVS: <DM5PR12MB1370F9C35B6447491F3214ABECA40@DM5PR12MB1370.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 03950F25EC
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: nyYVi2ogYuRcQwppMRYZupGrReEmbB0qjdyIVoIQgzWrH70W20e/0rB5ASgSFJvVmZe37ydQDdYgmBKNX1GONYsLmhlvt2oqFDJMVMOzWChQIm5Oa3sLfKr7gftvidtxanqk+o+YZjoqFomTGcK+g7y62WrVxUmOuRirY+V/+yPqZZqbkgPp2RxYo1vFv3Alqtd290bT6jmnPX6Grn3jvVaNLRTT1ULt/twLjXVZiwpU72lV5MQijjfFOtkLiJzToQMonwDIg6lNQ4H7ciIxU4O6cOsmtaxFFDAdp7+6ZSQIcWDWAWPc2Q7dNB5RnbaOV72jVOpgeINMBAdCH4h8tDkXPOF97rS+UW9fkRhDeVBLkcRxzkV8+M4ZHy3iQyMZUl84dxj97iGzovMO7GW0fc4x1vLvbxRVmvRQoARCgD/HtVIcj8d8SUenv9XXmj5Q5YgtSF+DBBB7YWhZW6Myi1K5R4eaDzh0OwWkL6oMvjCs8VDeAW1YKkyLqzxM07wzAPU4XMQ0LddZ4QUyRqJbxBQ2SfQIvLIDoFJ7ab0KUzCX7QwCIHvAN82n9pzQ6hlr
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1355.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(366004)(136003)(346002)(39860400002)(396003)(33430700001)(8936002)(66946007)(66476007)(66556008)(186003)(16526019)(956004)(316002)(52116002)(26005)(6512007)(54906003)(110136005)(8676002)(86362001)(53546011)(2906002)(478600001)(31686004)(4326008)(5660300002)(7416002)(6506007)(31696002)(2616005)(33440700001)(6486002)(36756003)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: gW3gQPQKKoCxE9ZjYDIzlqBjTR5C4YgDCbH4zRP18taLfNKlwFGpOrxUcJLqvCgfqRnfTcXYkdLS7QK4R9BeI16dMQwzMVL21fGUO3wxVFZ+nG0cQQ58/jOA0IoqJ+QOc4XThumHQ4JVb7BU/azWXbqe68q/Sf4R9SM/AsWcQVSq18c5JQ3a85NE8Ms0EdBn9IGHaHMTWlrZBK3gPGCRw6Czp2YQekd0bKvDBG9mhdb0QSxFb7hwVlXoUj7SI+mRiRWQzXAsj9ulVsolQKFbAdlbSySo23DjuCbUdWibm3RaBIvqnZJm4tmxqsF08pK+LYe2aEPKNU4/aYOnFV8gpKsPWSQlXx9LxwbFWlZbBHzVdB1LjK8ACj1KbEDtuCWiocQ9ICUOjOa/L4phRoaIHDpBQpYZTta/1lLVNtXf/7h4oYvQLgyoN2XMR7BOQeDbNk91f5b6QsQuxK/Klszr+Vn3GYnlh8BDcpV+6GL+4ELvzGn6aAKj+Rit7Sqwbtd+owBAvRTpd+RZcnGCKfmr//REEoMkRLUMIkKqYE26VYj5m8ZWqbZl0V5kpwvYmitlbYu+bHVDeoH+l2KlkhvFQ0o6cHia2WAyME/evDYrYQnQROzUuWgKGBj7leLVxltweIirMz5fGxBARwBtmhtYR7c043A3DR8+NKpgAhbE/7P85KB1UwkFkt5CswmYZJ+oWzE2kjJrKPkDzCwIRr5AMqc60sueToteWs2DUEGHK1SQerRKTzOKMmBy7orF5A9H+qAs6MA+GkTgmYYoSYDsFyM5hzhO8O8smmYA/CqJdFk=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6ae54519-a363-4629-06e0-08d7f2119dae
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2020 23:02:57.4036
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JgELZ4EnHC6LwKCXBii0gsPR+pVA/CseqRJnFvagARdvZh6AuUQH0NgEjLan4W1qDtytoaLbXFn9IUGFPtpQSA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1370
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 06:43:35PM -0400, Daniel Jordan wrote:
-> On Wed, May 06, 2020 at 03:36:54PM -0700, Alexander Duyck wrote:
-> > On Wed, May 6, 2020 at 3:21 PM Daniel Jordan <daniel.m.jordan@oracle.com> wrote:
-> > >
-> > > On Tue, May 05, 2020 at 07:55:43AM -0700, Alexander Duyck wrote:
-> > > > One question about this data. What is the power management
-> > > > configuration on the systems when you are running these tests? I'm
-> > > > just curious if CPU frequency scaling, C states, and turbo are
-> > > > enabled?
-> > >
-> > > Yes, intel_pstate is loaded in active mode without hwp and with turbo enabled
-> > > (those power management docs are great by the way!) and intel_idle is in use
-> > > too.
-> > >
-> > > > I ask because that is what I have seen usually make the
-> > > > difference in these kind of workloads as the throughput starts
-> > > > dropping off as you start seeing the core frequency lower and more
-> > > > cores become active.
-> > >
-> > > If I follow, you're saying there's a chance performance would improve with the
-> > > above disabled, but how often would a system be configured that way?  Even if
-> > > it were faster, the machine is configured how it's configured, or am I missing
-> > > your point?
-> > 
-> > I think you might be missing my point. What I was getting at is that I
-> > know for performance testing sometimes C states and P states get
-> > disabled in order to get consistent results between runs, it sounds
-> > like you have them enabled though. I was just wondering if you had
-> > disabled them or not. If they were disabled then you wouldn't get the
-> > benefits of turbo and as such adding more cores wouldn't come at a
-> > penalty, while with it enabled the first few cores should start to
-> > slow down as they fell out of turbo mode. So it may be part of the
-> > reason why you are only hitting about 10x at full core count.
 
-I checked the memory bandwidth of the biggest system, the Skylake.  Couldn't
-find official specs for it, all I could quickly find were stream results from a
-blog post of ours that quoted a range of about 123-145 GB/s over both nodes
-when compiling with gcc.  That's with all CPUs.
 
-Again using all CPUs, multithreaded page init is doing 41 GiB/s per node
-assuming it's just touching the 64 bytes of each page struct, so assuming
-there's more memory traffic than just struct page, it seems another part of the
-reason for only 10x is we're bottlenecked on memory bandwidth.
+On 5/6/20 1:08 PM, Mike Stunes wrote:
+> 
+> 
+>> On Apr 28, 2020, at 8:17 AM, Joerg Roedel <joro@8bytes.org> wrote:
+>>
+>> From: Mike Stunes <mstunes@vmware.com>
+>>
+>> To avoid a future VMEXIT for a subsequent CPUID function, cache the
+>> results returned by CPUID into an xarray.
+>>
+>> [tl: coding standard changes, register zero extension]
+>>
+>> Signed-off-by: Mike Stunes <mstunes@vmware.com>
+>> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+>> [ jroedel@suse.de: - Wrapped cache handling into vc_handle_cpuid_cached()
+>>                    - Used lower_32_bits() where applicable
+>> 		   - Moved cache_index out of struct es_em_ctxt ]
+>> Co-developed-by: Joerg Roedel <jroedel@suse.de>
+>> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+>> ---
+>> arch/x86/kernel/sev-es-shared.c |  12 ++--
+>> arch/x86/kernel/sev-es.c        | 119 +++++++++++++++++++++++++++++++-
+>> 2 files changed, 124 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+>> index 03095bc7b563..0303834d4811 100644
+>> --- a/arch/x86/kernel/sev-es.c
+>> +++ b/arch/x86/kernel/sev-es.c
+>> @@ -744,6 +758,91 @@ static enum es_result vc_handle_mmio(struct ghcb *ghcb,
+>> 	return ret;
+>> }
+>>
+>> +static unsigned long sev_es_get_cpuid_cache_index(struct es_em_ctxt *ctxt)
+>> +{
+>> +	unsigned long hi, lo;
+>> +
+>> +	/* Don't attempt to cache until the xarray is initialized */
+>> +	if (!sev_es_cpuid_cache_initialized)
+>> +		return ULONG_MAX;
+>> +
+>> +	lo = lower_32_bits(ctxt->regs->ax);
+>> +
+>> +	/*
+>> +	 * CPUID 0x0000000d requires both RCX and XCR0, so it can't be
+>> +	 * cached.
+>> +	 */
+>> +	if (lo == 0x0000000d)
+>> +		return ULONG_MAX;
+>> +
+>> +	/*
+>> +	 * Some callers of CPUID don't always set RCX to zero for CPUID
+>> +	 * functions that don't require RCX, which can result in excessive
+>> +	 * cached values, so RCX needs to be manually zeroed for use as part
+>> +	 * of the cache index. Future CPUID values may need RCX, but since
+>> +	 * they can't be known, they must not be cached.
+>> +	 */
+>> +	if (lo > 0x80000020)
+>> +		return ULONG_MAX;
+> 
+> If the cache is shared across CPUs, do we also need to exclude function 0x1 because it contains the LAPIC ID? (Or is the cache per-CPU?)
+
+It's currently not a per-CPU cache, but given what you pointed out, it 
+should be if we're going to keep function 0x1 in there. The question will 
+be how often is that CPUID issued, as that would determine if (not) 
+caching it matters. Or even how often CPUID is issued and whether the 
+xarray lock could be under contention if the cache is not per-CPU.
+
+Thanks,
+Tom
+
+> 
