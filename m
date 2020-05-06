@@ -2,99 +2,101 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB89C47258
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55DC6C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C5BC20714
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30C7420714
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 09:16:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbgEFJPP (ORCPT
+        id S1728939AbgEFJQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 05:15:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39992 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728559AbgEFJPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 05:15:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B8440AB89;
-        Wed,  6 May 2020 09:15:15 +0000 (UTC)
-Message-ID: <1588756482.13662.20.camel@suse.com>
-Subject: Re: KASAN: use-after-free Read in usblp_bulk_read
-From:   Oliver Neukum <oneukum@suse.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     syzbot <syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com>,
-        andreyknvl@google.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, zaitcev@redhat.com
-Date:   Wed, 06 May 2020 11:14:42 +0200
-In-Reply-To: <Pine.LNX.4.44L0.2004301103500.27217-100000@netrider.rowland.org>
-References: <Pine.LNX.4.44L0.2004301103500.27217-100000@netrider.rowland.org>
-Content-Type: multipart/mixed; boundary="=-omYoP5MChuR2jajyK4SQ"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
+        Wed, 6 May 2020 05:16:12 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44108 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728385AbgEFJQM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 05:16:12 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 49EA1F029C3B287432E4;
+        Wed,  6 May 2020 17:16:08 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.55) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Wed, 6 May 2020
+ 17:16:05 +0800
+Subject: Re: [PATCH 2/4] mm/swap: use SECTORS_PER_PAGE_SHIFT to clean up code
+From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
+        "Sergey Senozhatsky" <sergey.senozhatsky.work@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>, Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        dm-devel <dm-devel@redhat.com>, Song Liu <song@kernel.org>,
+        linux-raid <linux-raid@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200505115543.1660-1-thunder.leizhen@huawei.com>
+ <20200505115543.1660-3-thunder.leizhen@huawei.com>
+ <20200505172520.GI16070@bombadil.infradead.org>
+ <32ba9907-60ad-27c0-c565-e7b5c80ab03c@huawei.com>
+ <bddd596b-2e8e-42aa-70cc-41583b15c548@huawei.com>
+Message-ID: <8fefbfb2-1100-fab2-0383-e57343dc44f5@huawei.com>
+Date:   Wed, 6 May 2020 17:16:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <bddd596b-2e8e-42aa-70cc-41583b15c548@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.166.215.55]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---=-omYoP5MChuR2jajyK4SQ
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 
-Am Donnerstag, den 30.04.2020, 11:11 -0400 schrieb Alan Stern:
-
-> KASAN is documented.  The difficulty is that this race is obviously 
-> hard to trigger, and without the ability to reproduce it we can't run 
-> diagnostics to find the underlying cause.
+On 2020/5/6 11:47, Leizhen (ThunderTown) wrote:
 > 
-> We can't even ask syzbot to try running tests for us; without a valid 
-> reproducer it won't agree to rerun the original test program.
+> 
+> On 2020/5/6 9:33, Leizhen (ThunderTown) wrote:
+>>
+>>
+>> On 2020/5/6 1:25, Matthew Wilcox wrote:
+>>> On Tue, May 05, 2020 at 07:55:41PM +0800, Zhen Lei wrote:
+>>>> +++ b/mm/swapfile.c
+>>>> @@ -177,8 +177,8 @@ static int discard_swap(struct swap_info_struct *si)
+>>>>  
+>>>>  	/* Do not discard the swap header page! */
+>>>>  	se = first_se(si);
+>>>> -	start_block = (se->start_block + 1) << (PAGE_SHIFT - 9);
+>>>> -	nr_blocks = ((sector_t)se->nr_pages - 1) << (PAGE_SHIFT - 9);
+>>>> +	start_block = (se->start_block + 1) << SECTORS_PER_PAGE_SHIFT;
+>>>> +	nr_blocks = ((sector_t)se->nr_pages - 1) << SECTORS_PER_PAGE_SHIFT;
+>>>
+>>> Thinking about this some more, wouldn't this look better?
+>>>
+>>> 	start_block = page_sectors(se->start_block + 1);
+>>> 	nr_block = page_sectors(se->nr_pages - 1);
+>>>
+>>
+>> OK，That's fine, it's clearer. And in this way, there won't be more than 80 columns.
+> 
+> Should we rename "page_sectors" to "page_to_sectors"? Because we may need to define
+> "sectors_to_page" also.
 
+Change the "sectors_to_page" to "sectors_to_npage", npage means "number of pages"
+or "page number". To distinguish the use case of "pfn_to_page()" etc. The latter
+returns the pointer of "struct page".
 
-Very well. We are not going to find it without exceptional luck. Yet
-there may be a real issue, too. We simply do not know. How about the
-attached patch?
-
-	Regards
-		Oliver
-
-
-
---=-omYoP5MChuR2jajyK4SQ
-Content-Disposition: attachment; filename="0001-usblp-poison-URBs-upon-disconnect.patch"
-Content-Transfer-Encoding: base64
-Content-Type: text/x-patch; name="0001-usblp-poison-URBs-upon-disconnect.patch";
-	charset="UTF-8"
-
-RnJvbSA1ZWQyM2UwMDI5Y2YxMGNmOGRiZGQ3OTBhMTkwZDdlMjExMzU2MGFlIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBPbGl2ZXIgTmV1a3VtIDxvbmV1a3VtQHN1c2UuY29tPgpEYXRl
-OiBXZWQsIDYgTWF5IDIwMjAgMTE6MDU6NDEgKzAyMDAKU3ViamVjdDogW1BBVENIXSB1c2JscDog
-cG9pc29uIFVSQnMgdXBvbiBkaXNjb25uZWN0CgpzeXprYWxsZXIgcmVwb3J0ZWQgYW4gVUIgdGhh
-dCBzaG91bGQgaGF2ZSBiZWVuIGtpbGxlZCB0byBiZSBhY3RpdmUuCldlIGRvIG5vdCB1bmRlcnN0
-YW5kIGl0LCBidXQgdGhpcyBzaG91bGQgZml4IHRoZSBpc3N1ZSBpZiBpdCBpcyByZWFsLgoKU2ln
-bmVkLW9mZi1ieTogT2xpdmVyIE5ldWt1bSA8b25ldWt1bUBzdXNlLmNvbT4KLS0tCiBkcml2ZXJz
-L3VzYi9jbGFzcy91c2JscC5jIHwgNSArKysrLQogMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9u
-cygrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL2NsYXNzL3VzYmxw
-LmMgYi9kcml2ZXJzL3VzYi9jbGFzcy91c2JscC5jCmluZGV4IDBkOGUzZjM4MDRhMy4uMDg0YzQ4
-YzU4NDhmIDEwMDY0NAotLS0gYS9kcml2ZXJzL3VzYi9jbGFzcy91c2JscC5jCisrKyBiL2RyaXZl
-cnMvdXNiL2NsYXNzL3VzYmxwLmMKQEAgLTQ2OCw3ICs0NjgsOCBAQCBzdGF0aWMgaW50IHVzYmxw
-X3JlbGVhc2Uoc3RydWN0IGlub2RlICppbm9kZSwgc3RydWN0IGZpbGUgKmZpbGUpCiAJdXNiX2F1
-dG9wbV9wdXRfaW50ZXJmYWNlKHVzYmxwLT5pbnRmKTsKIAogCWlmICghdXNibHAtPnByZXNlbnQp
-CQkvKiBmaW5pc2ggY2xlYW51cCBmcm9tIGRpc2Nvbm5lY3QgKi8KLQkJdXNibHBfY2xlYW51cCh1
-c2JscCk7CisJCXVzYmxwX2NsZWFudXAodXNibHApOwkvKiBhbnkgVVJCcyBtdXN0IGJlIGRlYWQg
-Ki8KKwogCW11dGV4X3VubG9jaygmdXNibHBfbXV0ZXgpOwogCXJldHVybiAwOwogfQpAQCAtMTM3
-NSw5ICsxMzc2LDExIEBAIHN0YXRpYyB2b2lkIHVzYmxwX2Rpc2Nvbm5lY3Qoc3RydWN0IHVzYl9p
-bnRlcmZhY2UgKmludGYpCiAKIAl1c2JscF91bmxpbmtfdXJicyh1c2JscCk7CiAJbXV0ZXhfdW5s
-b2NrKCZ1c2JscC0+bXV0KTsKKwl1c2JfcG9pc29uX2FuY2hvcmVkX3VyYnMoJnVzYmxwLT51cmJz
-KTsKIAogCWlmICghdXNibHAtPnVzZWQpCiAJCXVzYmxwX2NsZWFudXAodXNibHApOworCiAJbXV0
-ZXhfdW5sb2NrKCZ1c2JscF9tdXRleCk7CiB9CiAKLS0gCjIuMTYuNAoK
-
-
---=-omYoP5MChuR2jajyK4SQ--
+> 
+>>
+>>>
+>>> .
+>>>
 
