@@ -6,172 +6,87 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0546AC28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09063C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9C4F208CA
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E05C6208CA
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 16:49:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730678AbgEFQtn (ORCPT
+        id S1730692AbgEFQts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 12:49:43 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:27543 "EHLO pegase1.c-s.fr"
+        Wed, 6 May 2020 12:49:48 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:22955 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730562AbgEFQst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 12:48:49 -0400
+        id S1730555AbgEFQsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 12:48:46 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49HMx92vcyz9v4kF;
-        Wed,  6 May 2020 18:48:45 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 49HMx80Bk2z9v4kG;
+        Wed,  6 May 2020 18:48:44 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id C-27bDp3CRxK; Wed,  6 May 2020 18:48:45 +0200 (CEST)
+        with ESMTP id b9ALZa32zAYE; Wed,  6 May 2020 18:48:43 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMx91V4qz9v4kH;
-        Wed,  6 May 2020 18:48:45 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49HMx76WdVz9v4kH;
+        Wed,  6 May 2020 18:48:43 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id F3D668B777;
-        Wed,  6 May 2020 18:48:46 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id BAF318B7C5;
+        Wed,  6 May 2020 18:48:45 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id hQHIW_yWoZKo; Wed,  6 May 2020 18:48:46 +0200 (CEST)
+        with ESMTP id vORc0usDt-Y3; Wed,  6 May 2020 18:48:45 +0200 (CEST)
 Received: from localhost.localdomain (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A62EA8B7C5;
-        Wed,  6 May 2020 18:48:46 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 74BB88B777;
+        Wed,  6 May 2020 18:48:45 +0200 (CEST)
 Received: by localhost.localdomain (Postfix, from userid 0)
-        id 46E8765911; Wed,  6 May 2020 16:48:46 +0000 (UTC)
-Message-Id: <bb5c3d91b86812c416f5a886e1aaca3f42d229e5.1588783498.git.christophe.leroy@csgroup.eu>
+        id 4092765911; Wed,  6 May 2020 16:48:45 +0000 (UTC)
+Message-Id: <fc290394393bbac8810bee23befc88f76538f0a1.1588783498.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 References: <cover.1588783498.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v2 40/45] powerpc/8xx: Map linear memory with huge pages
+Subject: [PATCH v2 39/45] powerpc/8xx: Map IMMR with a huge page
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed,  6 May 2020 16:48:46 +0000 (UTC)
+Date:   Wed,  6 May 2020 16:48:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Map linear memory space with 512k and 8M pages whenever
-possible.
-
-Three mappings are performed:
-- One for kernel text
-- One for RO data
-- One for the rest
-
-Separating the mappings is done to be able to update the
-protection later when using STRICT_KERNEL_RWX.
-
-The ITLB miss handler now need to also handle huge TLBs
-unless kernel text in pinned.
+Map the IMMR area with a single 512k huge page.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/kernel/head_8xx.S |  4 +--
- arch/powerpc/mm/nohash/8xx.c   | 50 +++++++++++++++++++++++++++++++++-
- 2 files changed, 51 insertions(+), 3 deletions(-)
+ arch/powerpc/mm/nohash/8xx.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
-index 9a117b9f0998..abb71fad7d6a 100644
---- a/arch/powerpc/kernel/head_8xx.S
-+++ b/arch/powerpc/kernel/head_8xx.S
-@@ -224,7 +224,7 @@ InstructionTLBMiss:
- 3:
- 	mtcr	r11
- #endif
--#ifdef CONFIG_HUGETLBFS
-+#if defined(CONFIG_HUGETLBFS) || !defined(CONFIG_PIN_TLB_TEXT)
- 	lwz	r11, (swapper_pg_dir-PAGE_OFFSET)@l(r10)	/* Get level 1 entry */
- 	mtspr	SPRN_MD_TWC, r11
- #else
-@@ -234,7 +234,7 @@ InstructionTLBMiss:
- #endif
- 	mfspr	r10, SPRN_MD_TWC
- 	lwz	r10, 0(r10)	/* Get the pte */
--#ifdef CONFIG_HUGETLBFS
-+#if defined(CONFIG_HUGETLBFS) || !defined(CONFIG_PIN_TLB_TEXT)
- 	rlwimi	r11, r10, 32 - 9, _PMD_PAGE_512K
- 	mtspr	SPRN_MI_TWC, r11
- #endif
 diff --git a/arch/powerpc/mm/nohash/8xx.c b/arch/powerpc/mm/nohash/8xx.c
-index fb31a0c1c2a4..c62cab996d4d 100644
+index 570ab2114a73..fb31a0c1c2a4 100644
 --- a/arch/powerpc/mm/nohash/8xx.c
 +++ b/arch/powerpc/mm/nohash/8xx.c
-@@ -126,20 +126,68 @@ void __init mmu_mapin_immr(void)
- 				    PAGE_KERNEL_NCG, MMU_PAGE_512K, true);
+@@ -117,17 +117,13 @@ static bool immr_is_mapped __initdata;
+ 
+ void __init mmu_mapin_immr(void)
+ {
+-	unsigned long p = PHYS_IMMR_BASE;
+-	unsigned long v = VIRT_IMMR_BASE;
+-	int offset;
+-
+ 	if (immr_is_mapped)
+ 		return;
+ 
+ 	immr_is_mapped = true;
+ 
+-	for (offset = 0; offset < IMMR_SIZE; offset += PAGE_SIZE)
+-		map_kernel_page(v + offset, p + offset, PAGE_KERNEL_NCG);
++	__early_map_kernel_hugepage(VIRT_IMMR_BASE, PHYS_IMMR_BASE,
++				    PAGE_KERNEL_NCG, MMU_PAGE_512K, true);
  }
  
-+static void __init mmu_mapin_ram_chunk(unsigned long offset, unsigned long top,
-+				       pgprot_t prot, bool new)
-+{
-+	unsigned long v = PAGE_OFFSET + offset;
-+	unsigned long p = offset;
-+
-+	WARN_ON(!IS_ALIGNED(offset, SZ_512K) || !IS_ALIGNED(top, SZ_512K));
-+
-+	for (; p < ALIGN(p, SZ_8M) && p < top; p += SZ_512K, v += SZ_512K)
-+		__early_map_kernel_hugepage(v, p, prot, MMU_PAGE_512K, new);
-+	for (; p < ALIGN_DOWN(top, SZ_8M) && p < top; p += SZ_8M, v += SZ_8M)
-+		__early_map_kernel_hugepage(v, p, prot, MMU_PAGE_8M, new);
-+	for (; p < ALIGN_DOWN(top, SZ_512K) && p < top; p += SZ_512K, v += SZ_512K)
-+		__early_map_kernel_hugepage(v, p, prot, MMU_PAGE_512K, new);
-+
-+	if (!new)
-+		flush_tlb_kernel_range(PAGE_OFFSET + v, PAGE_OFFSET + top);
-+}
-+
  unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
- {
-+	unsigned long etext8 = ALIGN(__pa(_etext), SZ_8M);
-+	unsigned long sinittext = __pa(_sinittext);
-+	unsigned long boundary = strict_kernel_rwx_enabled() ? sinittext : etext8;
-+	unsigned long einittext8 = ALIGN(__pa(_einittext), SZ_8M);
-+
-+	WARN_ON(top < einittext8);
-+
- 	mmu_mapin_immr();
- 
--	return 0;
-+	if (__map_without_ltlbs)
-+		return 0;
-+
-+	mmu_mapin_ram_chunk(0, boundary, PAGE_KERNEL_TEXT, true);
-+	mmu_mapin_ram_chunk(boundary, einittext8, PAGE_KERNEL_TEXT, true);
-+	mmu_mapin_ram_chunk(einittext8, top, PAGE_KERNEL, true);
-+
-+	if (top > SZ_32M)
-+		memblock_set_current_limit(top);
-+
-+	block_mapped_ram = top;
-+
-+	return top;
- }
- 
- void mmu_mark_initmem_nx(void)
- {
-+	unsigned long etext8 = ALIGN(__pa(_etext), SZ_8M);
-+	unsigned long sinittext = __pa(_sinittext);
-+	unsigned long boundary = strict_kernel_rwx_enabled() ? sinittext : etext8;
-+	unsigned long einittext8 = ALIGN(__pa(_einittext), SZ_8M);
-+
-+	mmu_mapin_ram_chunk(0, boundary, PAGE_KERNEL_TEXT, false);
-+	mmu_mapin_ram_chunk(boundary, einittext8, PAGE_KERNEL, false);
- }
- 
- #ifdef CONFIG_STRICT_KERNEL_RWX
- void mmu_mark_rodata_ro(void)
- {
-+	unsigned long sinittext = __pa(_sinittext);
-+
-+	mmu_mapin_ram_chunk(0, sinittext, PAGE_KERNEL_ROX, false);
- }
- #endif
- 
 -- 
 2.25.0
 
