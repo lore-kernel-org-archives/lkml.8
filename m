@@ -2,95 +2,139 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2644AC47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E64C28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01C4320736
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:36:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="J2sniXj3"
+	by mail.kernel.org (Postfix) with ESMTP id 9E43320736
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 18:36:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588790219;
+	bh=FlQcsSvpVxDSnQ8rJGKRBiZ0LksnddG8dlM/MZLBisY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GhoCJgDfPQ6C1RinBJFFiqKryYGTCSVOKK7Ugw5aR0jRYKvKjsOkVjVMv5sdwas16
+	 MZvSaTLGbYfahcGYEcEKQhn90oHvKd6eIHEwj4BzFR423ndSIEzB0XH+P5y+rU5Pcu
+	 LR6FrbZoSCtWDjaoE2J47F4EYwcgqbTDOxVPWdYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730402AbgEFSgC (ORCPT
+        id S1730434AbgEFSg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 14:36:02 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:36573 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729757AbgEFSgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 14:36:01 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49HQJv0lM7z9sRf;
-        Thu,  7 May 2020 04:35:58 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588790159;
-        bh=Y2lAKEzwmA1JYZ50EYY6uYNUPZZtDuL/PQBftQVk7oY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=J2sniXj3aFxUp+9iAwkfz3sZh1r5A1CwEmuMYKwxE5uc3TD8VKLp16XmWDa6M+lrB
-         z4yu64aBoo5SRMRmHdltNHVQ/QmiLZ3j6q18cCKC9cfnrrsPp8IvV2glZOw4DAcew6
-         4/xObjUQSeG2O5bmQvprGbUdAIHsiPFfCPbEEmXnoGHEaSsmdLR6uT+2ySpr/xzeIv
-         lqblZPLux2wE5SUc50nQqHWpDb4FqWAC7nH1W03pmHk61bpfhpOhVrq0bGYVNh0wgS
-         kMF3KPEqdK8NA7lkcwuBdBiKRTllQaeYpagpoCZwr3XhLid1UijXMGPBxuHHib6m86
-         XOncWeLXM+yJQ==
-Date:   Thu, 7 May 2020 04:35:57 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: linux-next: Fixes tag needs some work in the arm64-fixes tree
-Message-ID: <20200507043557.6ab89b7e@canb.auug.org.au>
+        Wed, 6 May 2020 14:36:59 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:54822 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729757AbgEFSg6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 14:36:58 -0400
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 046Iai4k018523;
+        Thu, 7 May 2020 03:36:45 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 046Iai4k018523
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1588790205;
+        bh=wbaIwcHbiAi9QFigRcq0m039Les723waOhEs26jAtfw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QGLf0HjL5TBDfB6xTHLb4X/nifP3TPUngISgC+amRyt5/ML+RJQ3n2vOpFueN7eQ5
+         xcfxiFnHD7wrASBMBcs9WRkNQ/Q5OMJgmgjzQiStTM/7cZlxRoIg/zVG19A7iRU+Jg
+         iRPHLFP1GIQxcks1i59Ldp30WkRO5roRHgqSUgIN3I/k1dM//Zw5Y1eP09fsEHfh6I
+         zy7v9mIhSw1lg7AsHjsZJfSHDbuORy8DYMnNI2BSz3Vex75VSHCQkgSFXg7ONFmQvF
+         Q8Eu40aEW5JoIR/v1IvjRuxZ0uq4K9sUEw0giZ1sU1N9ECbRwJWn9AEBN/UF5nwNpx
+         tpOIIKAGfBylw==
+X-Nifty-SrcIP: [209.85.217.42]
+Received: by mail-vs1-f42.google.com with SMTP id x136so1686052vsx.2;
+        Wed, 06 May 2020 11:36:45 -0700 (PDT)
+X-Gm-Message-State: AGi0PubDa/EIqUvR4+CU8ct6JrWWpF99awDP8OawI68nuvXXexu/k5k/
+        Jkmq77WsTfAcKW1XoyyRQtlBMKMU67M0FzYpkVI=
+X-Google-Smtp-Source: APiQypL5iC44zxMIBFb6/RIX6MwxQnnJIKgmBH9DgwLYEb77CykdC9frv1rVNu/5ZxNOx7Zti4t4uypODXIceNkBfo4=
+X-Received: by 2002:a05:6102:3c7:: with SMTP id n7mr8677259vsq.179.1588790204256;
+ Wed, 06 May 2020 11:36:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/tu+LoBjscrMtLZZAFBI/hjU";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200505115420.18765-1-anders.roxell@linaro.org>
+In-Reply-To: <20200505115420.18765-1-anders.roxell@linaro.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 7 May 2020 03:36:08 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR6MeBRhP1A3oc-UVATNN4r2Ru1LUp2=DqiLSKDL9gwOQ@mail.gmail.com>
+Message-ID: <CAK7LNAR6MeBRhP1A3oc-UVATNN4r2Ru1LUp2=DqiLSKDL9gwOQ@mail.gmail.com>
+Subject: Re: [PATCH] scripts: fix deprecated always and hostprogs-y
+To:     Anders Roxell <anders.roxell@linaro.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/tu+LoBjscrMtLZZAFBI/hjU
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, May 5, 2020 at 8:54 PM Anders Roxell <anders.roxell@linaro.org> wrote:
+>
+> When I did an allmodconfig build the following warning showed up:
+>
+> scripts/Makefile.lib:8: 'always' is deprecated. Please use 'always-y' instead
+> scripts/Makefile.lib:12: 'hostprogs-y' and 'hostprogs-m' are deprecated. Please use 'hostprogs' instead
+>
+> Rework to use the new 'always-y' and 'hostprogs'.
+>
+> Fixes: ee066c3ddf7b ("kbuild: warn if always, hostprogs-y, or hostprogs-m is used")
+> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 
-Hi all,
 
-In commit
+As Stephen Rothwell reported
+(https://lkml.org/lkml/2020/5/3/392),
+this warning appears by merging the
+two different trees.
 
-  20bf6ebaec5f ("arm64: hugetlb: avoid potential NULL dereference")
 
-Fixes tag
+You sent this patch to the kbuild maintainers,
+but samples/watch_queue/Makefile does not exist
+in the kbuild tree.
 
-  Fixes: 66b3923a1a0f77a5 ("arm64: hugetlb: add support for PTE contiguous =
-bit)"
 
-has these problem(s):
+Also, please drop the fixes tag.
+The commit hash might change.
 
-  - Subject has leading but no trailing quotes
 
---=20
-Cheers,
-Stephen Rothwell
+> ---
+>  samples/watch_queue/Makefile | 4 ++--
+>  scripts/Makefile.build       | 1 -
+>  2 files changed, 2 insertions(+), 3 deletions(-)
+>
+> diff --git a/samples/watch_queue/Makefile b/samples/watch_queue/Makefile
+> index eec00dd0a8df..8511fb6c53d2 100644
+> --- a/samples/watch_queue/Makefile
+> +++ b/samples/watch_queue/Makefile
+> @@ -1,7 +1,7 @@
+>  # List of programs to build
+> -hostprogs-y := watch_test
+> +hostprogs := watch_test
+>
+>  # Tell kbuild to always build the programs
+> -always := $(hostprogs-y)
+> +always-y := $(hostprogs)
+>
+>  HOSTCFLAGS_watch_test.o += -I$(objtree)/usr/include
+> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+> index 3665b1a0bc8e..abdba70f33a1 100644
+> --- a/scripts/Makefile.build
+> +++ b/scripts/Makefile.build
+> @@ -15,7 +15,6 @@ obj-y :=
+>  obj-m :=
+>  lib-y :=
+>  lib-m :=
+> -always :=
+>  always-y :=
+>  always-m :=
+>  targets :=
 
---Sig_/tu+LoBjscrMtLZZAFBI/hjU
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
+Why are you deleting 'always'?
+It would immediately break
+the downstream Makefiles immediately.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6zA40ACgkQAVBC80lX
-0GyxrQf/ZuZyuvaOSx4qiOKx1wDBhlQjfEZvAcGrZkZrc+2eqJbN0KOtadcSaxQB
-04Ujoo1opXdFoogjazx/Luq/RLBJAXQqfCDgB15ahjjTX+nuR91K06UaPQNgkScr
-r3CF3JRgbb5UNpINUa7CAdYpbDWYI7Gi4299akkgroP/u2qsuzVq03gpC9M15y8Z
-nEc+TFZhOvhj7qKnqA4AzHxCwMbocP5Fb/Y/OyhebbMoT1TZqldCkqlphgb86kjt
-P3Escxz58D6D8mVvhWS7H6YUjHS6CTIEXGKN0OOlHX/K2sunG0pnn7UiH4ST4jDV
-86YRGMAJysfUMgMPDh03xYFy7Hqdvw==
-=67db
------END PGP SIGNATURE-----
 
---Sig_/tu+LoBjscrMtLZZAFBI/hjU--
+
+--
+Best Regards
+Masahiro Yamada
