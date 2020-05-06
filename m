@@ -2,129 +2,141 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBBA7C38A2A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA48CC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9E8020746
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:06:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588770391;
-	bh=ATHyH8IAOOsseNmBMuvH1bf7K+ZrPk88T3wrysHsvGo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=USFw/Z7slciMYwb9G1zPc7NMLUSI/V9K1SP0cW/WtvAHor7o8CpoQEhlqFMIx6YfN
-	 HtEfhzJcEYsUm0wgQHrKB4CrURp8ZPx77kWUEC4qFm0LE3WhHF67FNUBgfZAFA2t0N
-	 x19OTVIrquF5xEDkznVgQzW8EBaad18472eMhHH0=
+	by mail.kernel.org (Postfix) with ESMTP id B0F27206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:08:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NTuf+Pgn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728666AbgEFNGa (ORCPT
+        id S1728298AbgEFNIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 09:06:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48586 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728248AbgEFNGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 09:06:30 -0400
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0962120757
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 13:06:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588770389;
-        bh=ATHyH8IAOOsseNmBMuvH1bf7K+ZrPk88T3wrysHsvGo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=nDhpwgGwrJRfIBy7r2ksIqvQKoAT+kJNfZnce9bdk2GF3cqQReLYpUCsgE+FSKx1t
-         cHsExvLIyx91KR0wsLbxQxLj8iNOm5dYDDL1eIvQAoEj7cy3EWsuQcM9x3c7w6AkjZ
-         BbBhm0kJjfiehpFPVj5HH6tjeIFPoIvbJ6QteoQk=
-Received: by mail-ej1-f46.google.com with SMTP id nv1so1279913ejb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 06:06:28 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZT/ERuy1dr6oLwg9PVBt85SPAE6VPx4VQedhEpawMAQKjEvkdf
-        mEbD7zu5LhmpXjhVYQHbeQF/Hxc0kHFOrcLSLA==
-X-Google-Smtp-Source: APiQypJOTbmWiSdzVNGly6SSLaZh9jOGdF2PgGiwlRXhJuZC2XmN36POei/eZpRmaP/4PMMLclDtYH7GC0RLkw+m2ik=
-X-Received: by 2002:a17:906:31d7:: with SMTP id f23mr7140816ejf.118.1588770387409;
- Wed, 06 May 2020 06:06:27 -0700 (PDT)
+        Wed, 6 May 2020 09:08:41 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:58592 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728081AbgEFNIk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 09:08:40 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046D3grX167694;
+        Wed, 6 May 2020 13:07:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=cRGaopetToIvchIxwpM6MmjiSLvcrPB1Z6iY0n2hfSI=;
+ b=NTuf+PgnbpSqZbO3enoTk9wvr/bBWAeOs6SQDan0fGKav5WnrQwT2/3VfM5cWZsQ95BK
+ ZKrJl/B+PQRY/7Co19LfDvuLu28ByqUIvRBhF0dZ6xq5M1/rUGDrfHkhy0cXIrHMRVW6
+ 0lLf+B2MKNcaSwAtWD/ARBLgP0ZUG7cd/+UaQeJ0ocpql/ShPoiuOyHZcukGCtlmIaq9
+ IRweQPRq8AZx3W0xQ+KiBNuQvSnqZzZPVKNRFbw+vsws+HE7xTM6I+ZynCi6GdJgc9HV
+ ssjKGPbxCP3KdpjGXUrwpFTPTTxHwmpRlvEqMykgZFoMZBuU/B6/YO8Akj9KjVwPTV1+ bA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 30s09ra8b6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 May 2020 13:07:48 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 046D6jLm085692;
+        Wed, 6 May 2020 13:07:48 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 30us7mn3xf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 May 2020 13:07:48 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 046D7iIL001148;
+        Wed, 6 May 2020 13:07:44 GMT
+Received: from linux-1.home (/10.175.10.30)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 06 May 2020 06:07:43 -0700
+Subject: Re: [patch V4 part 1 05/36] x86/entry: Flip _TIF_SIGPENDING and
+ _TIF_NOTIFY_RESUME handling
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+References: <20200505131602.633487962@linutronix.de>
+ <20200505134058.560059744@linutronix.de>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Message-ID: <5eade6a3-06fc-d156-29cc-731be55eff3d@oracle.com>
+Date:   Wed, 6 May 2020 15:06:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200506124255.9477-1-bernard@vivo.com>
-In-Reply-To: <20200506124255.9477-1-bernard@vivo.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Wed, 6 May 2020 21:06:16 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_9HjWiWq5twkpXd+-D4fZ32f483815BcZ-5UbA9cyxCjA@mail.gmail.com>
-Message-ID: <CAAOTY_9HjWiWq5twkpXd+-D4fZ32f483815BcZ-5UbA9cyxCjA@mail.gmail.com>
-Subject: Re: [PATCH] drm/mediatek: eliminate the magic number in array size
-To:     Bernard Zhao <bernard@vivo.com>
-Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        opensource.kernel@vivo.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200505134058.560059744@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9612 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=0
+ mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005060103
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9612 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1015 suspectscore=0
+ priorityscore=1501 malwarescore=0 mlxlogscore=999 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005060103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Bernard:
 
-Bernard Zhao <bernard@vivo.com> =E6=96=BC 2020=E5=B9=B45=E6=9C=886=E6=97=A5=
- =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=888:43=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Eiminate the magic number in array size, there macro defines in
-> hdmi.h.
-
-Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-
->
-> Signed-off-by: Bernard Zhao <bernard@vivo.com>
+On 5/5/20 3:16 PM, Thomas Gleixner wrote:
+> Make sure task_work runs before any kind of userspace -- very much
+> including signals -- is invoked.
+> 
+> Suggested-by: Andy Lutomirski <luto@kernel.org>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 > ---
->  drivers/gpu/drm/mediatek/mtk_hdmi.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediat=
-ek/mtk_hdmi.c
-> index ff43a3d80410..4c962c7f06e5 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-> @@ -982,7 +982,7 @@ static int mtk_hdmi_setup_avi_infoframe(struct mtk_hd=
-mi *hdmi,
->                                         struct drm_display_mode *mode)
->  {
->         struct hdmi_avi_infoframe frame;
-> -       u8 buffer[17];
-> +       u8 buffer[HDMI_INFOFRAME_HEADER_SIZE + HDMI_AVI_INFOFRAME_SIZE];
->         ssize_t err;
->
->         err =3D drm_hdmi_avi_infoframe_from_display_mode(&frame,
-> @@ -1008,7 +1008,7 @@ static int mtk_hdmi_setup_spd_infoframe(struct mtk_=
-hdmi *hdmi,
->                                         const char *product)
->  {
->         struct hdmi_spd_infoframe frame;
-> -       u8 buffer[29];
-> +       u8 buffer[HDMI_INFOFRAME_HEADER_SIZE + HDMI_SPD_INFOFRAME_SIZE];
->         ssize_t err;
->
->         err =3D hdmi_spd_infoframe_init(&frame, vendor, product);
-> @@ -1031,7 +1031,7 @@ static int mtk_hdmi_setup_spd_infoframe(struct mtk_=
-hdmi *hdmi,
->  static int mtk_hdmi_setup_audio_infoframe(struct mtk_hdmi *hdmi)
->  {
->         struct hdmi_audio_infoframe frame;
-> -       u8 buffer[14];
-> +       u8 buffer[HDMI_INFOFRAME_HEADER_SIZE + HDMI_AUDIO_INFOFRAME_SIZE]=
-;
->         ssize_t err;
->
->         err =3D hdmi_audio_infoframe_init(&frame);
-> --
-> 2.26.2
->
+>   arch/x86/entry/common.c |    8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
+
+Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+
+alex.
+
+> --- a/arch/x86/entry/common.c
+> +++ b/arch/x86/entry/common.c
+> @@ -156,16 +156,16 @@ static void exit_to_usermode_loop(struct
+>   		if (cached_flags & _TIF_PATCH_PENDING)
+>   			klp_update_patch_state(current);
+>   
+> -		/* deal with pending signal delivery */
+> -		if (cached_flags & _TIF_SIGPENDING)
+> -			do_signal(regs);
+> -
+>   		if (cached_flags & _TIF_NOTIFY_RESUME) {
+>   			clear_thread_flag(TIF_NOTIFY_RESUME);
+>   			tracehook_notify_resume(regs);
+>   			rseq_handle_notify_resume(NULL, regs);
+>   		}
+>   
+> +		/* deal with pending signal delivery */
+> +		if (cached_flags & _TIF_SIGPENDING)
+> +			do_signal(regs);
+> +
+>   		if (cached_flags & _TIF_USER_RETURN_NOTIFY)
+>   			fire_user_return_notifiers();
+>   
+> 
