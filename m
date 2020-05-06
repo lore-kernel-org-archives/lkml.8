@@ -2,104 +2,102 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9692BC47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 705B1C47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73B582076D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44E6F2076D
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:07:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipAclyHS"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Hy7KlVWC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729376AbgEFPGf (ORCPT
+        id S1729374AbgEFPHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:06:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55844 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728428AbgEFPGf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:06:35 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D71F6C061A0F;
-        Wed,  6 May 2020 08:06:34 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id l25so1213108pgc.5;
-        Wed, 06 May 2020 08:06:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=eGi1L9urtaKBeDDvITR0UZqtmPEwGeW5Feo5TNhoZDY=;
-        b=ipAclyHS2TH4DohF7rE2zwbG6ue8HaSV1QL+S7svkhP5ku3RZGC/NDpML1g82C7o9e
-         VMX9vLSxxMroeLVOdJVyqmOaaSTt4fBkf5laIHqdhG3rKqbNEpEGf3+OfO9UxoFFAqgJ
-         NcGfqu0tFw3JSorEWfrJxu7puP7QC806g3mV93zzCU5mI+EK5jhlpEuirwoWOl8r1SMH
-         Kp5PA8BPsaVUNO6b6OJef1J1pxIbIF0tF9VaITj2kdUCeyGx5emB0S77w+WFe/U2q2bJ
-         FtjXaAZfi/H90mACFFHSEwBp+eZkOtSV5iIFVul3suUcTz4OtBtkuBTEUBVadSH/h2U8
-         vQQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=eGi1L9urtaKBeDDvITR0UZqtmPEwGeW5Feo5TNhoZDY=;
-        b=tASrxi/1iRNoVY1yiaB9eekErPg3gi0iLxY4AMaEPw0O/5TqaZJp7bO/6EK8zYG6zw
-         AkSsqbSWVW6EDP073ZU2H68TVtYXbC9hLAi9zPPZeAl6v3YuR+aMwi4mGWWm2biF7P7R
-         PIV1z51P/hTfxehMo29mPcWGkwTZMvaR3ef6bXxaxG1K+WCL9ywCSOhl9QNDZZCHzwrm
-         AoKfkxOWS7but+9Dsef354HYomi/uqOKrj9Qz58OpnYkwAzOV8A1VGTvypZuoil8MPna
-         UImhrWpDNCwNVtnwY+FJeyXZ/ARWkA7KrUiuqQfT24SgSQdBrbUaGvN+xC3WioAIHQj4
-         Owzw==
-X-Gm-Message-State: AGi0PuZK0kUWM4HmfvvTOuJhP6cyfWzQUM8h6l41e2B2yWB8XSseMDmi
-        YJ3vUGDBaxjIeVp894Swznw=
-X-Google-Smtp-Source: APiQypJzopv1LfupQ5DisVLznReQcQbfRpVCydPqhzCm2nKxQ6CPn7126fMo1Ei12s8d7fHU7jse0A==
-X-Received: by 2002:a63:da01:: with SMTP id c1mr7678309pgh.121.1588777594380;
-        Wed, 06 May 2020 08:06:34 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:712:fa06:497c:9578:5fd7:4b29])
-        by smtp.gmail.com with ESMTPSA id u13sm5050259pjb.45.2020.05.06.08.06.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 08:06:33 -0700 (PDT)
-From:   Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
-X-Google-Original-From: Aishwarya Ramakrishnan <raishwar@visteon.com>
-To:     gregkh@linuxfoundation.org
-Cc:     aishwaryarj100@gmail.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Ondrej Jirman <megous@megous.com>,
-        =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Input: edt-ft5x06: Use DEFINE_DEBUGFS_ATTRIBUTE to define debugfs fops
-Date:   Wed,  6 May 2020 20:36:22 +0530
-Message-Id: <20200506150623.3841-1-raishwar@visteon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200505153325.20113-1-aishwaryarj100@gmail.com>
-References: <20200505153325.20113-1-aishwaryarj100@gmail.com>
+        Wed, 6 May 2020 11:07:52 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:45264 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728428AbgEFPHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:07:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=nhr9qd9ThMfni7QzQ5SF9W0ZpuyW47KCsL9Tm7+P44g=; b=Hy7KlVWCuIvr3QKj0XXtpllydw
+        UINzSvoHOwbVO4XMFtC4xzbpUQy1A+v9fbAV9wVkKCXTsQ8yiIQj5y0PYIoZCCUkT03lKIjkX9HKO
+        FIdp2/ubpCX0vdavYJmOTzzfPK9EDEGWe92ijdKO888WYD4uXbggRdmvzVemksyj+jsI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jWLeE-0016AI-QR; Wed, 06 May 2020 17:07:46 +0200
+Date:   Wed, 6 May 2020 17:07:46 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v1] dt-bindings: net: nxp,tja11xx: rework validation
+ support
+Message-ID: <20200506150746.GJ224913@lunn.ch>
+References: <20200505104215.8975-1-o.rempel@pengutronix.de>
+ <20200505140127.GJ208718@lunn.ch>
+ <20200506051134.mrm4nuqxssw255tl@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506051134.mrm4nuqxssw255tl@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+> > Hi Oleksij
+> > 
+> > reg is normally 0 to 31, since that is the address range for MDIO. 
+> > Did you use 14 here because of what strapping allows?
+> 
+> Yes. Only BITs 1:3 are configurable. BIT(0) is always 0 for the PHY0 and 1
+> for the PHY1
 
-On Tue, May 5, 2020 at 11:49 PM Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> On Tue, May 05, 2020 at 09:03:24PM +0530, Aishwarya Ramakrishnan wrote:
->> It is more clear to use DEFINE_DEBUGFS_ATTRIBUTE to define debugfs file
->> operation rather than DEFINE_SIMPLE_ATTRIBUTE.
+O.K. good.
 
-> No it is not, why do you think so?
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - '#address-cells'
+> > > +  - '#size-cells'
+> > 
+> > So we have two different meanings of 'required' here.
+> > 
+> > One meaning is the code requires it. compatible is not required, the
+> > driver will correctly be bind to the device based on its ID registers.
+> > Is reg also required by the code?
+> > 
+> > The second meaning is about keeping the yaml verifier happy. It seems
+> > like compatible is needed for the verifier. Is reg also required? We
+> > do recommend having reg, but the generic code does not require it.
+> 
+> reg is used by:
+> tja1102_p0_probe()
+>   tja1102_p1_register()
+>     of_mdio_parse_addr()
+> 
+> But this is required for the slave PHY. I assume the reg can be
+> optional for the master PHY. Should I?
 
-This change is suggested by Coccinelle software.
-Generated by: scripts/coccinelle/api/debugfs/debugfs_simple_attr.cocci
+It is recommended to have a reg value. So lets leave it as is for the
+moment. If anybody really does need it to be optional, we can change
+it later.
 
-> The two defines do different things, that is why we have 2 different
-> defines.  You can not just replace one with the other without
-> understanding why one was used and not the other one.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-> Did you test this change to verify that everything still works
-> properly?  Why is it needed to be changed at all?
-
-DEFINE_SIMPLE_ATTRIBUTE + debugfs_create_file()
-imposes some significant overhead as compared to
-DEFINE_DEBUGFS_ATTRIBUTE + debugfs_create_file_unsafe().
-But I missed to use debugfs_create_file_unsafe() function in the patch.
+    Andrew
