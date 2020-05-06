@@ -2,77 +2,87 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE18FC47256
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E35DCC47256
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94C8320757
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0A0620661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 13:53:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbgEFNwn (ORCPT
+        id S1728903AbgEFNxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 09:52:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55594 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728717AbgEFNwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 09:52:42 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AF5D20752;
-        Wed,  6 May 2020 13:52:41 +0000 (UTC)
-Date:   Wed, 6 May 2020 09:52:39 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>, jmorris@namei.org,
-        sashal@kernel.org, linux-kernel@vger.kernel.org, pmladek@suse.com,
-        sergey.senozhatsky@gmail.com, anton@enomsg.org, ccross@android.com,
-        tony.luck@intel.com, robh+dt@kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] pstore/platform: pass max_reason to kmesg dump
-Message-ID: <20200506095239.11a76a76@gandalf.local.home>
-In-Reply-To: <202005051444.14B6686@keescook>
-References: <20200505154510.93506-1-pasha.tatashin@soleen.com>
-        <20200505154510.93506-3-pasha.tatashin@soleen.com>
-        <202005051444.14B6686@keescook>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 6 May 2020 09:53:52 -0400
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:53999 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728662AbgEFNxv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 09:53:51 -0400
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 06 May 2020 19:23:49 +0530
+Received: from minint-dvc2thc.qualcomm.com (HELO sartgarg-linux.qualcomm.com) ([10.206.24.245])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 06 May 2020 19:23:49 +0530
+Received: by sartgarg-linux.qualcomm.com (Postfix, from userid 2339771)
+        id 6AF972654; Wed,  6 May 2020 19:23:48 +0530 (IST)
+From:   Sarthak Garg <sartgarg@codeaurora.org>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
+Cc:     vbadigan@codeaurora.org, stummala@codeaurora.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Sarthak Garg <sartgarg@codeaurora.org>
+Subject: [PATCH V1 1/2] mmc: sdhci: Introduce new quirk to use reserved timeout
+Date:   Wed,  6 May 2020 19:14:30 +0530
+Message-Id: <1588772671-19675-2-git-send-email-sartgarg@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1588772671-19675-1-git-send-email-sartgarg@codeaurora.org>
+References: <1588772671-19675-1-git-send-email-sartgarg@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 May 2020 14:59:37 -0700
-Kees Cook <keescook@chromium.org> wrote:
+Introduce a new quirk for letting vendor drivers to use reserved
+timeout value (0xF) in timeout control register.
 
-> > @@ -97,6 +97,8 @@ struct pstore_record {
-> >   * @read_mutex:	serializes @open, @read, @close, and @erase callbacks
-> >   * @flags:	bitfield of frontends the backend can accept writes for
-> >   * @data:	backend-private pointer passed back during callbacks
-> > + * @max_reason: Used when PSTORE_FLAGS_DMESG is set. Contains the
-> > + *              kmsg_dump_reason enum value.  
-> 
-> Nit: please move this above @data since it has a @flags dependency.
-> 
-> >   *
-> >   * Callbacks:
-> >   *
-> > @@ -180,6 +182,7 @@ struct pstore_info {
-> >  
-> >  	int		flags;
-> >  	void		*data;
-> > +	int		max_reason;
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+Signed-off-by: Sarthak Garg <sartgarg@codeaurora.org>
+---
+ drivers/mmc/host/sdhci.c | 3 ++-
+ drivers/mmc/host/sdhci.h | 5 +++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-Not to mention that moving max_reason above data will fill in the hole left
-by a 32 bit int, followed by a 64 bit pointer.
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 1bb6b67..07528a9 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -967,7 +967,8 @@ static u8 sdhci_calc_timeout(struct sdhci_host *host, struct mmc_command *cmd,
+ 	}
+ 
+ 	if (count >= 0xF) {
+-		if (!(host->quirks2 & SDHCI_QUIRK2_DISABLE_HW_TIMEOUT))
++		if (!(host->quirks2 & SDHCI_QUIRK2_DISABLE_HW_TIMEOUT) ||
++		!(host->quirks2 & SDHCI_QUIRK2_USE_RESERVED_MAX_TIMEOUT))
+ 			DBG("Too large timeout 0x%x requested for CMD%d!\n",
+ 			    count, cmd->opcode);
+ 		count = 0xE;
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index 8d2a096..02f8779 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -476,6 +476,11 @@ struct sdhci_host {
+  * block count.
+  */
+ #define SDHCI_QUIRK2_USE_32BIT_BLK_CNT			(1<<18)
++/*
++ * Some controllers define the usage of 0xF in data timeout counter
++ * register (0x2E) which is actually a reserved bit as per specification.
++ */
++#define SDHCI_QUIRK2_USE_RESERVED_MAX_TIMEOUT		(1<<19)
+ 
+ 	int irq;		/* Device IRQ */
+ 	void __iomem *ioaddr;	/* Mapped address */
+-- 
+2.7.4
 
--- Steve
-
-
-> >  
-> >  	int		(*open)(struct pstore_info *psi);
-> >  	int		(*close)(struct pstore_info *psi);
