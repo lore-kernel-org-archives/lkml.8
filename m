@@ -7,70 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B60C28CBC
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9108CC28CBC
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D40420575
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 707242068E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 15:28:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588778914;
-	bh=jGOTpCXWr3wQ4TFvH8say5n5l0hIGbXFTCn/0tUritE=;
+	s=default; t=1588778923;
+	bh=+aoTR50oTeff/5UiwNRJwuvxV3yl6pNhljsh5pM+ZKM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cN+I3z+v69MhNmtTR9fGSeGySn0bDtE86GjvGvkkD1PKVSHd0n8OQklXOLsM+z3em
-	 8ADwFWF3czgmuV+TdXLX4dKE30Lyh2SfVjM1hjZXgQyX0SQOOcxKtviXnQA96wO+NN
-	 LXArsmT431jn+JvL2Flne7Nq+FCN88EfR9Fo1Fg0=
+	b=SmsGvJFn1GwsgWpXqwfIGD6Y8+O8s1OisMH2s4pBSJCC8Z0B5JYfzzZvEhxnrgw+P
+	 lZK+tzT0YOlmk5BzceUOYmjyf1pbD/HHtpFmq0Zc8/QW5Os8n00BhnoFEJt+Rf7MI6
+	 FLn9OnazkGmXNwFUgPxD4f6iEpjOlSKdKxkbNaug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730390AbgEFP2e (ORCPT
+        id S1730399AbgEFP2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 11:28:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48514 "EHLO mail.kernel.org"
+        Wed, 6 May 2020 11:28:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729374AbgEFP03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 11:26:29 -0400
+        id S1730143AbgEFP0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 11:26:14 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EB8920A8B;
-        Wed,  6 May 2020 15:26:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE2CC20CC7;
+        Wed,  6 May 2020 15:26:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588778788;
-        bh=jGOTpCXWr3wQ4TFvH8say5n5l0hIGbXFTCn/0tUritE=;
+        s=default; t=1588778774;
+        bh=+aoTR50oTeff/5UiwNRJwuvxV3yl6pNhljsh5pM+ZKM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LWMqc4rAYVVojKQlTak64/susOeSZK6J40whWh64tHcTsob1xAICDHMSYPDW6nS9o
-         C+y/92ZjDrTHVUOnxdN97h0N7G/yUK86KjAaULFp3/F2S36kPoJlW8Qcf2idQcRBla
-         RCqhzdb0FW5XuRcmVv78ue+eh/M+8uf6ZC/jwGqA=
+        b=WyMSV3ZT2Xyazn7qIaO0XZ7+ApI7RzPkI2eLI2/0s2QzN9bGKf9hxIdM4DmGNzWVH
+         Iro2Rxm6Lf9DcJ70E6bM12ybX+NLJ6pN1mpuBILna1HjP3Uo1xmN5AaQt0P7kh76Ii
+         8R7mQMEsi5LQ/GzlclMQpmW6CJqRQ5bmezXj/Zek=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>,
         Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Jiwei Sun <jiwei.sun@windriver.com>,
-        John Garry <john.garry@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Martin KaFai Lau <kafai@fb.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Yonghong Song <yhs@fb.com>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, yuzhoujian <yuzhoujian@didichuxing.com>,
+        Stephane Eranian <eranian@google.com>,
+        clang-built-linux@googlegroups.com,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 65/91] tools feature: Add support for detecting libpfm4
-Date:   Wed,  6 May 2020 12:22:08 -0300
-Message-Id: <20200506152234.21977-66-acme@kernel.org>
+Subject: [PATCH 63/91] perf mem2node: Avoid double free related to realloc
+Date:   Wed,  6 May 2020 12:22:06 -0300
+Message-Id: <20200506152234.21977-64-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
@@ -81,99 +65,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephane Eranian <eranian@google.com>
+From: Ian Rogers <irogers@google.com>
 
-libpfm4 provides an alternate command line encoding of perf events.
+Realloc of size zero is a free not an error, avoid this causing a double
+free. Caught by clang's address sanitizer:
 
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
+==2634==ERROR: AddressSanitizer: attempting double-free on 0x6020000015f0 in thread T0:
+    #0 0x5649659297fd in free llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:123:3
+    #1 0x5649659e9251 in __zfree tools/lib/zalloc.c:13:2
+    #2 0x564965c0f92c in mem2node__exit tools/perf/util/mem2node.c:114:2
+    #3 0x564965a08b4c in perf_c2c__report tools/perf/builtin-c2c.c:2867:2
+    #4 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
+    #5 0x564965944348 in run_builtin tools/perf/perf.c:312:11
+    #6 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
+    #7 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
+    #8 0x564965942e41 in main tools/perf/perf.c:538:3
+
+0x6020000015f0 is located 0 bytes inside of 1-byte region [0x6020000015f0,0x6020000015f1)
+freed by thread T0 here:
+    #0 0x564965929da3 in realloc third_party/llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:164:3
+    #1 0x564965c0f55e in mem2node__init tools/perf/util/mem2node.c:97:16
+    #2 0x564965a08956 in perf_c2c__report tools/perf/builtin-c2c.c:2803:8
+    #3 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
+    #4 0x564965944348 in run_builtin tools/perf/perf.c:312:11
+    #5 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
+    #6 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
+    #7 0x564965942e41 in main tools/perf/perf.c:538:3
+
+previously allocated by thread T0 here:
+    #0 0x564965929c42 in calloc third_party/llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:154:3
+    #1 0x5649659e9220 in zalloc tools/lib/zalloc.c:8:9
+    #2 0x564965c0f32d in mem2node__init tools/perf/util/mem2node.c:61:12
+    #3 0x564965a08956 in perf_c2c__report tools/perf/builtin-c2c.c:2803:8
+    #4 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
+    #5 0x564965944348 in run_builtin tools/perf/perf.c:312:11
+    #6 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
+    #7 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
+    #8 0x564965942e41 in main tools/perf/perf.c:538:3
+
+v2: add a WARN_ON_ONCE when the free condition arises.
+
+Signed-off-by: Ian Rogers <irogers@google.com>
 Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Andrii Nakryiko <andriin@fb.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Igor Lubashev <ilubashe@akamai.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiwei Sun <jiwei.sun@windriver.com>
-Cc: John Garry <john.garry@huawei.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Leo Yan <leo.yan@linaro.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: bpf@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Cc: yuzhoujian <yuzhoujian@didichuxing.com>
-Link: http://lore.kernel.org/lkml/20200429231443.207201-3-irogers@google.com
+Cc: Stephane Eranian <eranian@google.com>
+Cc: clang-built-linux@googlegroups.com
+Link: http://lore.kernel.org/lkml/20200320182347.87675-1-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/build/Makefile.feature       | 3 ++-
- tools/build/feature/Makefile       | 6 +++++-
- tools/build/feature/test-libpfm4.c | 9 +++++++++
- 3 files changed, 16 insertions(+), 2 deletions(-)
- create mode 100644 tools/build/feature/test-libpfm4.c
+ tools/perf/util/mem2node.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 3e0c019ef297..3abd4316cd4f 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -98,7 +98,8 @@ FEATURE_TESTS_EXTRA :=                  \
-          llvm                           \
-          llvm-version                   \
-          clang                          \
--         libbpf
-+         libbpf                         \
-+         libpfm4
+diff --git a/tools/perf/util/mem2node.c b/tools/perf/util/mem2node.c
+index 797d86a1ab09..c84f5841c7ab 100644
+--- a/tools/perf/util/mem2node.c
++++ b/tools/perf/util/mem2node.c
+@@ -1,5 +1,6 @@
+ #include <errno.h>
+ #include <inttypes.h>
++#include <asm/bug.h>
+ #include <linux/bitmap.h>
+ #include <linux/kernel.h>
+ #include <linux/zalloc.h>
+@@ -95,7 +96,7 @@ int mem2node__init(struct mem2node *map, struct perf_env *env)
  
- FEATURE_TESTS ?= $(FEATURE_TESTS_BASIC)
+ 	/* Cut unused entries, due to merging. */
+ 	tmp_entries = realloc(entries, sizeof(*entries) * j);
+-	if (tmp_entries)
++	if (tmp_entries || WARN_ON_ONCE(j == 0))
+ 		entries = tmp_entries;
  
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 92012381393a..84f845b9627d 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -69,7 +69,8 @@ FILES=                                          \
-          test-libaio.bin			\
-          test-libzstd.bin			\
-          test-clang-bpf-global-var.bin		\
--         test-file-handle.bin
-+         test-file-handle.bin			\
-+         test-libpfm4.bin
- 
- FILES := $(addprefix $(OUTPUT),$(FILES))
- 
-@@ -331,6 +332,9 @@ $(OUTPUT)test-clang-bpf-global-var.bin:
- $(OUTPUT)test-file-handle.bin:
- 	$(BUILD)
- 
-+$(OUTPUT)test-libpfm4.bin:
-+	$(BUILD) -lpfm
-+
- ###############################
- 
- clean:
-diff --git a/tools/build/feature/test-libpfm4.c b/tools/build/feature/test-libpfm4.c
-new file mode 100644
-index 000000000000..af49b259459e
---- /dev/null
-+++ b/tools/build/feature/test-libpfm4.c
-@@ -0,0 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <sys/types.h>
-+#include <perfmon/pfmlib.h>
-+
-+int main(void)
-+{
-+	pfm_initialize();
-+	return 0;
-+}
+ 	for (i = 0; i < j; i++) {
 -- 
 2.21.1
 
