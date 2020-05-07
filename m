@@ -2,122 +2,127 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 920C0C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CAF8C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 683C72084D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:19:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE52A2083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:20:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HFevCgtL"
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="ChRpdbRp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbgEGQTv (ORCPT
+        id S1727116AbgEGQUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 12:19:51 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:42697 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726701AbgEGQTv (ORCPT
+        Thu, 7 May 2020 12:20:51 -0400
+Received: from rcdn-iport-8.cisco.com ([173.37.86.79]:4848 "EHLO
+        rcdn-iport-8.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbgEGQUu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 12:19:51 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588868391; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=sUMLkHN8s8HSlHYFjwFPv/7eTnfMzsw+sp7Uz/sbxUI=; b=HFevCgtLxVsohDWszmB73jil3DxMEohJyOtVyVqI2YubF51etU8CUQNJetQHQHxuGEhQulXY
- TNGtGGEz81iCuXSOILRIPHIzdFIL6XREvFryzWhRsBC1jtZvqdvT36s+L+2Wv/R8nC9B2WYw
- JWkzCfH/zhvieOD0xEHBo7tXz+s=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb43526.7fbc621d7ca8-smtp-out-n05;
- Thu, 07 May 2020 16:19:50 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2757BC433D2; Thu,  7 May 2020 16:19:50 +0000 (UTC)
-Received: from jhugo-perf-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 49755C433F2;
-        Thu,  7 May 2020 16:19:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 49755C433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-To:     manivannan.sadhasivam@linaro.org, hemantk@codeaurora.org
-Cc:     bbhatt@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: [PATCH v4] bus: mhi: core: Handle syserr during power_up
-Date:   Thu,  7 May 2020 10:19:31 -0600
-Message-Id: <1588868371-8365-1-git-send-email-jhugo@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Thu, 7 May 2020 12:20:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=cisco.com; i=@cisco.com; l=2367; q=dns/txt; s=iport;
+  t=1588868449; x=1590078049;
+  h=from:to:cc:subject:date:message-id;
+  bh=OV1yKebG18sSumlGTXlTtESd45PL10aWA2PsPs4tVwc=;
+  b=ChRpdbRpn5ChLPHXRbYGVg+y8g3978UG4e15bDsTwQ2xk2XZgfABarHl
+   WFKFn+4yxPIxAEOpgQDjtq0/Fi04CxDr5DrECZTuSJfcbf0yyWQIr1L29
+   mQPBo/QJObELQknQ90+cE8C+KrGmbl7cmB6qsP4kmNP8YSTn9/Ni5knlF
+   o=;
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0CLBACRNLRe/51dJa1mHgEBCxIMgXw?=
+ =?us-ascii?q?LgiqBQzIqrxCBewsBAQEOLwQBAYREggkkNgcOAgMBAQsBAQUBAQECAQUEbYV?=
+ =?us-ascii?q?ihh9SgT4TgyaCfa94gXUziSGBQBSBJIddhGcagUE/gRGDToQVhisEmAOBUJh?=
+ =?us-ascii?q?+glKBA5cHDB2dIK1bgVgBMoFWMxoIGxWDJFAYDZ8qIQMwNwIGCAEBAwmQAYJ?=
+ =?us-ascii?q?FAQE?=
+X-IronPort-AV: E=Sophos;i="5.73,364,1583193600"; 
+   d="scan'208";a="763140748"
+Received: from rcdn-core-6.cisco.com ([173.37.93.157])
+  by rcdn-iport-8.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 07 May 2020 16:20:48 +0000
+Received: from zorba.cisco.com ([10.24.9.129])
+        by rcdn-core-6.cisco.com (8.15.2/8.15.2) with ESMTP id 047GKmsX010956;
+        Thu, 7 May 2020 16:20:48 GMT
+From:   Daniel Walker <danielwa@cisco.com>
+To:     Tudor Ambarus <tudor.ambarus@microchip.com>
+Cc:     xe-linux-external@cisco.com,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RFC-PATCH] mtd: spi-nor: add conditional 4B opcodes
+Date:   Thu,  7 May 2020 09:20:47 -0700
+Message-Id: <20200507162047.30788-1-danielwa@cisco.com>
+X-Mailer: git-send-email 2.17.1
+X-Auto-Response-Suppress: DR, OOF, AutoReply
+X-Outbound-SMTP-Client: 10.24.9.129, [10.24.9.129]
+X-Outbound-Node: rcdn-core-6.cisco.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MHI device may be in the syserr state when we attempt to init it in
-power_up().  Since we have no local state, the handling is simple -
-reset the device and wait for it to transition out of the reset state.
+Some chips have 4B opcodes, but there is no way to know if they have
+them. This device tree option allows platform owners to force enable 4b
+opcodes when they know their chips support it even when it can be
+automatically identified.
 
-Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+Cc: xe-linux-external@cisco.com
+Signed-off-by: Daniel Walker <danielwa@cisco.com>
 ---
+ drivers/mtd/spi-nor/core.c      | 5 +++++
+ drivers/mtd/spi-nor/core.h      | 5 +++++
+ drivers/mtd/spi-nor/micron-st.c | 2 +-
+ 3 files changed, 11 insertions(+), 1 deletion(-)
 
-v4:
--Implemented Hemant's suggested solution from v2.  The spec will be amended
-to indicate the intvec interrupt will be triggered for the reset state change
-which matches the current implementations and enables Hemant's solution to
-be used, which is cleaner.
-
- drivers/bus/mhi/core/pm.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
-
-diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
-index dc83d65..ddef693 100644
---- a/drivers/bus/mhi/core/pm.c
-+++ b/drivers/bus/mhi/core/pm.c
-@@ -760,6 +760,7 @@ static void mhi_deassert_dev_wake(struct mhi_controller *mhi_cntrl,
+diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
+index cc68ea84318e..2bd130687f4b 100644
+--- a/drivers/mtd/spi-nor/core.c
++++ b/drivers/mtd/spi-nor/core.c
+@@ -3134,6 +3134,11 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
+ 	if (info->flags & SPI_NOR_HAS_LOCK)
+ 		nor->flags |= SNOR_F_HAS_LOCK;
  
- int mhi_async_power_up(struct mhi_controller *mhi_cntrl)
- {
-+	enum mhi_state state;
- 	enum mhi_ee_type current_ee;
- 	enum dev_st_transition next_state;
- 	struct device *dev = &mhi_cntrl->mhi_dev->dev;
-@@ -829,6 +830,32 @@ int mhi_async_power_up(struct mhi_controller *mhi_cntrl)
- 		goto error_bhi_offset;
- 	}
++	/* Add SPI_NOR_4B_OPCODES if force in the device tree */
++	if (info->flags & SPI_NOR_COND_4B_OPCODES &&
++		of_property_read_bool(np, "force-4b-opcodes"))
++		info->flags |= SPI_NOR_4B_OPCODES;
++
+ 	mtd->_write = spi_nor_write;
  
-+	state = mhi_get_mhi_state(mhi_cntrl);
-+	if (state == MHI_STATE_SYS_ERR) {
-+		mhi_set_mhi_state(mhi_cntrl, MHI_STATE_RESET);
-+		ret = wait_event_timeout(mhi_cntrl->state_event,
-+				MHI_PM_IN_FATAL_STATE(mhi_cntrl->pm_state) ||
-+					mhi_read_reg_field(mhi_cntrl,
-+							   mhi_cntrl->regs,
-+							   MHICTRL,
-+							   MHICTRL_RESET_MASK,
-+							   MHICTRL_RESET_SHIFT,
-+							   &val) ||
-+					!val,
-+				msecs_to_jiffies(mhi_cntrl->timeout_ms));
-+		if (ret) {
-+			ret = -EIO;
-+			dev_info(dev, "Failed to reset MHI due to syserr state\n");
-+			goto error_bhi_offset;
-+		}
-+
-+		/*
-+		 * device cleares INTVEC as part of RESET processing,
-+		 * re-program it
-+		 */
-+		mhi_write_reg(mhi_cntrl, mhi_cntrl->bhi, BHI_INTVEC, 0);
-+	}
-+
- 	/* Transition to next state */
- 	next_state = MHI_IN_PBL(current_ee) ?
- 		DEV_ST_TRANSITION_PBL : DEV_ST_TRANSITION_READY;
+ 	/* Init flash parameters based on flash_info struct and SFDP */
+diff --git a/drivers/mtd/spi-nor/core.h b/drivers/mtd/spi-nor/core.h
+index 6f2f6b27173f..49e17415d834 100644
+--- a/drivers/mtd/spi-nor/core.h
++++ b/drivers/mtd/spi-nor/core.h
+@@ -312,6 +312,11 @@ struct flash_info {
+ 					 * Must be used with SPI_NOR_4BIT_BP.
+ 					 */
+ 
++#define SPI_NOR_COND_4B_OPCODES	BIT(19) /*
++					 * Same as SPI_NOR_4B_OPCODES, but
++					 * must also be force in the device
++					 * tree.
++					 */
+ 	/* Part specific fixup hooks. */
+ 	const struct spi_nor_fixups *fixups;
+ };
+diff --git a/drivers/mtd/spi-nor/micron-st.c b/drivers/mtd/spi-nor/micron-st.c
+index 6c034b9718e2..f827454eaa5f 100644
+--- a/drivers/mtd/spi-nor/micron-st.c
++++ b/drivers/mtd/spi-nor/micron-st.c
+@@ -37,7 +37,7 @@ static const struct flash_info st_parts[] = {
+ 			       SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
+ 	{ "n25q256a",    INFO(0x20ba19, 0, 64 * 1024,  512, SECT_4K |
+ 			      USE_FSR | SPI_NOR_DUAL_READ |
+-			      SPI_NOR_QUAD_READ) },
++			      SPI_NOR_QUAD_READ | SPI_NOR_COND_4B_OPCODES) },
+ 	{ "mt25qu256a",  INFO6(0x20bb19, 0x104400, 64 * 1024,  512,
+ 			       SECT_4K | USE_FSR | SPI_NOR_DUAL_READ |
+ 			       SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
 -- 
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.17.1
+
