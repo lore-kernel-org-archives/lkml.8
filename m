@@ -2,75 +2,117 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B83C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9C5C47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 176D820747
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:04:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CD352087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:11:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IirgN5uP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728917AbgEGAEJ (ORCPT
+        id S1728015AbgEGALD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 20:04:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55464 "EHLO
+        Wed, 6 May 2020 20:11:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726712AbgEGAEI (ORCPT
+        with ESMTP id S1726712AbgEGALD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 20:04:08 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE57C061A0F;
-        Wed,  6 May 2020 17:04:08 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5D51A12777A7F;
-        Wed,  6 May 2020 17:04:07 -0700 (PDT)
-Date:   Wed, 06 May 2020 17:04:06 -0700 (PDT)
-Message-Id: <20200506.170406.1373961782517203412.davem@davemloft.net>
-To:     hkallweit1@gmail.com
-Cc:     tglx@linutronix.de, corbet@lwn.net, nic_swsd@realtek.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH net-next 0/2] timer: add fsleep for flexible sleeping
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <8e3c56ca-b43f-3877-0104-a1a279d5a6c5@gmail.com>
-References: <8e3c56ca-b43f-3877-0104-a1a279d5a6c5@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 06 May 2020 17:04:07 -0700 (PDT)
+        Wed, 6 May 2020 20:11:03 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD115C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 17:11:02 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id e10so2237547vsp.12
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 17:11:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GqsJ4w8SiNdYvs9i1O1oWTJDswwPt7gmDaN1Zm1BZ0o=;
+        b=IirgN5uPNEkXVYW+TZDoNzKiLHCgEcf/Gvpo4Jq41Gwh+NhrB/yfrnGR3HodSUIUhd
+         QZKBk14ylHtCo38AykpM4c/IUhnD2P4qVASnG0qtJtZwgUG2jSKcxJ7k5fsG4OSchZbg
+         PKxQo8IGYwFPa5xgd73MGzlBnay+Myfz0dQKY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GqsJ4w8SiNdYvs9i1O1oWTJDswwPt7gmDaN1Zm1BZ0o=;
+        b=rnvDrK3GRs7LmbJRPtCztQ9ybICMSQ+pQo9am2SUbwyoXbKp9B4YbByeqm0dMknkBR
+         XIPD1KCQnWBvmFGk9iMx+3MCxPpd4q22j0Sj0uA8fdj8QUS57X8C8GL+HCSbofgGzjLq
+         oT9i1pkzqvysLyvfiQksBgJPP8pbSaIB912BUqvlzkiVbh6wpbsbaTRsn4BHYDrGNL8i
+         L+iQNGmFjC8Zw9pGG2+Gh+HBZgD/jbY1SQ892o/8PReijMy/SlI2dxBLxu03ETdWqlR/
+         mAuEWv9GNo9nRzychh5/+mrxJII0zPGvEy7Q+AyOP8GunfpmLtrmIWXLMPNlC+0kjhkH
+         SQmA==
+X-Gm-Message-State: AGi0PubZCxrx4W2523QJPLVojlsHJT8LUW5aushveq9Sa/3n1fsj+h9T
+        C5Ei1hB7TY2rnkhXJtfpr3qNci3W69s=
+X-Google-Smtp-Source: APiQypKpx56xydPVXqq+QE/wn9d6xBZIbYC8t9n4P6ff8IY5uaW3WJndgf0ln0u88oEcK2akV+SuGQ==
+X-Received: by 2002:a67:80d1:: with SMTP id b200mr9993580vsd.76.1588810261612;
+        Wed, 06 May 2020 17:11:01 -0700 (PDT)
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com. [209.85.221.180])
+        by smtp.gmail.com with ESMTPSA id g13sm1787347vkm.52.2020.05.06.17.11.00
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 May 2020 17:11:00 -0700 (PDT)
+Received: by mail-vk1-f180.google.com with SMTP id b14so1027513vkk.10
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 17:11:00 -0700 (PDT)
+X-Received: by 2002:a1f:9605:: with SMTP id y5mr9318997vkd.75.1588810260347;
+ Wed, 06 May 2020 17:11:00 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200423095531.9868-1-saiprakash.ranjan@codeaurora.org> <CAD=FV=W=d=KrTwgMOO-ukFc7ZhkE92qGYumUEDrtjmhQOpdWbg@mail.gmail.com>
+In-Reply-To: <CAD=FV=W=d=KrTwgMOO-ukFc7ZhkE92qGYumUEDrtjmhQOpdWbg@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 6 May 2020 17:10:49 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=U0Hhae3D1-P8kbcZafHeuqng11BNAbOb2YWPx+M7X5Gw@mail.gmail.com>
+Message-ID: <CAD=FV=U0Hhae3D1-P8kbcZafHeuqng11BNAbOb2YWPx+M7X5Gw@mail.gmail.com>
+Subject: Re: [PATCHv2] iommu/arm-smmu: Make remove callback message more informative
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Date: Fri, 1 May 2020 23:26:21 +0200
+Hi,
 
-> Sleeping for a certain amount of time requires use of different
-> functions, depending on the time period.
-> Documentation/timers/timers-howto.rst explains when to use which
-> function, and also checkpatch checks for some potentially
-> problematic cases.
-> 
-> So let's create a helper that automatically chooses the appropriate
-> sleep function -> fsleep(), for flexible sleeping
-> Not sure why such a helper doesn't exist yet, or where the pitfall is,
-> because it's a quite obvious idea.
-> 
-> If the delay is a constant, then the compiler should be able to ensure
-> that the new helper doesn't create overhead. If the delay is not
-> constant, then the new helper can save some code.
-> 
-> First user is the r8169 network driver. If nothing speaks against it,
-> then this series could go through the netdev tree.
+On Thu, Apr 23, 2020 at 7:35 AM Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+> On Thu, Apr 23, 2020 at 2:55 AM Sai Prakash Ranjan
+> <saiprakash.ranjan@codeaurora.org> wrote:
+> >
+> > Currently on reboot/shutdown, the following messages are
+> > displayed on the console as error messages before the
+> > system reboots/shutdown as part of remove callback.
+> >
+> > On SC7180:
+> >
+> >   arm-smmu 15000000.iommu: removing device with active domains!
+> >   arm-smmu 5040000.iommu: removing device with active domains!
+> >
+> > Make this error message more informative and less scary.
+> >
+> > Reported-by: Douglas Anderson <dianders@chromium.org>
+> > Suggested-by: Robin Murphy <robin.murphy@arm.com>
+> > Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> > ---
+> >  drivers/iommu/arm-smmu.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
 
-I haven't seen any objections voiced over the new fsleep helper, so
-I've applied this series to net-next.
+Is this patch waiting on anything in particular now?  Do we need
+reviews from Robin and/or Will?
 
-Thank you.
+-Doug
