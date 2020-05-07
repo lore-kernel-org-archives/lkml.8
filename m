@@ -2,446 +2,176 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAF6C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DCCC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A49F20736
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80A6820736
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:53:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RxrFmj2x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbgEGCwI (ORCPT
+        id S1728372AbgEGCxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 22:52:08 -0400
-Received: from mga02.intel.com ([134.134.136.20]:21336 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725827AbgEGCwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 22:52:08 -0400
-IronPort-SDR: XQ9VO9Euss9nueAz7yAQycDUnDwyVcpg/Oj7KSbmo/lXigozOkywDnRoHSVy0pcssIAF21TbUV
- fVv5ibIeV/gg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 19:52:06 -0700
-IronPort-SDR: OqTszefPrIFgDuUpA9hn50M1ivfdyuTzITbjP3rBuWlGkvc/A/vtDG7Y0a0lx/yYZkQ0BAsdka
- C/jnVXyiiRWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,361,1583222400"; 
-   d="scan'208";a="304988164"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 06 May 2020 19:52:04 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jWWdo-0005Qa-7j; Thu, 07 May 2020 10:52:04 +0800
-Date:   Thu, 07 May 2020 10:51:08 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:tglx.2020.05.05a] BUILD REGRESSION
- e6d36eed49b863bbe393e3c07cae737cd9c475e3
-Message-ID: <5eb3779c.HW3KBITqhspDLfd7%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Wed, 6 May 2020 22:53:00 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33928 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726770AbgEGCxA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 22:53:00 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0472qPD2001465;
+        Wed, 6 May 2020 21:52:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588819945;
+        bh=77R+KN0P7OsXUgS4duR3XXp1coR50qLJMaCXXlSV/To=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=RxrFmj2xHI3XzwRDd6EzTkWMyRLVoJV6Gv7++CFw3vBoFCNYGBoD1neud85nJ/7Ui
+         H4tk3kZFbkYIgVmPyDe4Y6M8dRGXJ2gD/vNMdLpf7k0jNXbSVu12/OJlC3NKQdOZDP
+         pAViwat4VydyzOnRRomoWgYymz3/TFYv8phPKH54=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0472qPMY045107;
+        Wed, 6 May 2020 21:52:25 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 6 May
+ 2020 21:52:25 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 6 May 2020 21:52:25 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0472qJsC110440;
+        Wed, 6 May 2020 21:52:20 -0500
+Subject: Re: [PATCH v9 4/8] PCI: endpoint: Pass page size as argument to
+ pci_epc_mem_init()
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>,
+        <linux-rockchip@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>
+References: <1587666159-6035-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1587666159-6035-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <8986f0a7-8e23-71d5-d718-def48a28dfc8@ti.com>
+Date:   Thu, 7 May 2020 08:22:19 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <1587666159-6035-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  tglx.2020.05.05a
-branch HEAD: e6d36eed49b863bbe393e3c07cae737cd9c475e3  x86/entry: Remove the TRACE_IRQS cruft
 
-Error/Warning in current branch:
 
-arch/um/include/asm/irqflags.h:11: Error: no such instruction: `static inline unsigned long arch_local_save_flags(void)'
-arch/um/include/asm/irqflags.h:12: Error: no such instruction: `{'
-arch/um/include/asm/irqflags.h:13: Error: no such instruction: `return get_signals()'
-arch/um/include/asm/irqflags.h:14: Error: junk at end of line, first unrecognized character is `}'
-arch/um/include/asm/irqflags.h:17: Error: no such instruction: `static inline void arch_local_irq_restore(unsigned long flags)'
-arch/um/include/asm/irqflags.h:19: Error: invalid character '(' in mnemonic
-arch/um/include/asm/irqflags.h:23: Error: no such instruction: `static inline void arch_local_irq_enable(void)'
-arch/um/include/asm/irqflags.h:29: Error: no such instruction: `static inline void arch_local_irq_disable(void)'
-arch/um/include/asm/irqflags.h:5: Error: no such instruction: `extern int get_signals(void)'
-arch/um/include/asm/irqflags.h:6: Error: no such instruction: `extern int set_signals(int enable)'
-arch/um/include/asm/irqflags.h:7: Error: no such instruction: `extern void block_signals(void)'
-arch/um/include/asm/irqflags.h:8: Error: no such instruction: `extern void unblock_signals(void)'
-arch/x86/entry/common.o: warning: objtool: run_on_irqstack()+0x4e: undefined stack state
-arch/x86/kernel/apic/vector.o: warning: objtool: irqst_sysvec_irq_move_cleanup()+0x1e: undefined stack state
-arch/x86/kernel/cpu/acrn.o: warning: objtool: irqst_sysvec_acrn_hv_callback()+0x1e: undefined stack state
-arch/x86/kernel/cpu/acrn.o: warning: objtool: irqst_sysvec_acrn_hv_callback()+0x3d: undefined stack state
-arch/x86/kernel/irq.o: warning: objtool: irqst_sysvec_kvm_posted_intr_ipi()+0x1c: undefined stack state
-arch/x86/kernel/irq.o: warning: objtool: irqst_sysvec_kvm_posted_intr_ipi()+0x1e: undefined stack state
-arch/x86/kernel/irq.o: warning: objtool: irqst_sysvec_kvm_posted_intr_ipi()+0x3d: undefined stack state
-arch/x86/kernel/irq.o: warning: objtool: irqst_sysvec_kvm_posted_intr_nested_ipi()+0x1c: undefined stack state
-arch/x86/kernel/irq.o: warning: objtool: irqst_sysvec_kvm_posted_intr_nested_ipi()+0x1e: undefined stack state
-arch/x86/kernel/irq.o: warning: objtool: irqst_sysvec_kvm_posted_intr_nested_ipi()+0x3d: undefined stack state
-arch/x86/kernel/irq.o: warning: objtool: irqst_sysvec_kvm_posted_intr_wakeup_ipi()+0x1c: undefined stack state
-arch/x86/kernel/irq.o: warning: objtool: irqst_sysvec_kvm_posted_intr_wakeup_ipi()+0x1e: undefined stack state
-arch/x86/kernel/irq.o: warning: objtool: irqst_sysvec_kvm_posted_intr_wakeup_ipi()+0x3d: undefined stack state
-arch/x86/kernel/irq_work.o: warning: objtool: irqst_sysvec_irq_work()+0x1c: undefined stack state
-arch/x86/kernel/irq_work.o: warning: objtool: irqst_sysvec_irq_work()+0x1e: undefined stack state
-arch/x86/kernel/irq_work.o: warning: objtool: irqst_sysvec_irq_work()+0x3d: undefined stack state
-arch/x86/kernel/smp.o: warning: objtool: irqst_sysvec_call_function()+0x1e: undefined stack state
-arch/x86/kernel/smp.o: warning: objtool: irqst_sysvec_call_function_single()+0x1e: undefined stack state
-arch/x86/kernel/smp.o: warning: objtool: irqst_sysvec_reboot()+0x1e: undefined stack state
-arch/x86/kernel/traps.c:707:16: warning: Using argument dr7 that points at uninitialized variable dr7 [ctuuninitvar]
-arch/x86/kernel/traps.c:721:16: warning: Using argument dr6 that points at uninitialized variable dr6 [ctuuninitvar]
-include/asm-generic/irqflags.h:26: Error: no such instruction: `static inline unsigned long arch_local_irq_save(void)'
-include/asm-generic/irqflags.h:27: Error: no such instruction: `{'
-include/asm-generic/irqflags.h:28: Error: no such instruction: `unsigned long flags'
-include/asm-generic/irqflags.h:29: Error: junk at end of line, first unrecognized character is `('
-include/asm-generic/irqflags.h:30: Error: no such instruction: `arch_local_irq_restore(0)'
-include/asm-generic/irqflags.h:31: Error: no such instruction: `return flags'
-include/asm-generic/irqflags.h:32: Error: junk at end of line, first unrecognized character is `}'
-include/asm-generic/irqflags.h:37: Error: no such instruction: `static inline int arch_irqs_disabled_flags(unsigned long flags)'
-include/asm-generic/irqflags.h:61: Error: no such instruction: `static inline int arch_irqs_disabled(void)'
-include/asm-generic/irqflags.h:63: Error: no such instruction: `return arch_irqs_disabled_flags(arch_local_save_flags())'
-powerpc64-linux-ld: kernel/kprobes.o:(.toc+0x0): undefined reference to `__noinstr_text_start'
-powerpc64-linux-ld: kernel/kprobes.o:(.toc+0x8): undefined reference to `__noinstr_text_end'
+On 4/23/2020 11:52 PM, Lad Prabhakar wrote:
+> pci_epc_mem_init() internally used page size equal to *PAGE_SIZE* to
+> manage the address space so instead just pass the page size as a
+> argument to pci_epc_mem_init().
+> 
+> Also make pci_epc_mem_init() as a C function instead of a macro function
+> in preparation for adding support for pci-epc-mem core to handle multiple
+> windows.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Error/Warning ids grouped by kconfigs:
-
-recent_errors
-|-- powerpc-defconfig
-|   |-- powerpc64-linux-ld:kernel-kprobes.o:(.toc):undefined-reference-to-__noinstr_text_end
-|   `-- powerpc64-linux-ld:kernel-kprobes.o:(.toc):undefined-reference-to-__noinstr_text_start
-|-- powerpc-ppc64_defconfig
-|   |-- powerpc64-linux-ld:kernel-kprobes.o:(.toc):undefined-reference-to-__noinstr_text_end
-|   `-- powerpc64-linux-ld:kernel-kprobes.o:(.toc):undefined-reference-to-__noinstr_text_start
-|-- um-allmodconfig
-|   |-- arch-um-include-asm-irqflags.h:Error:invalid-character-(-in-mnemonic
-|   |-- arch-um-include-asm-irqflags.h:Error:junk-at-end-of-line-first-unrecognized-character-is
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:extern-int-get_signals(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:extern-int-set_signals(int-enable)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:extern-void-block_signals(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:extern-void-unblock_signals(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:return-get_signals()
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:static-inline-unsigned-long-arch_local_save_flags(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:static-inline-void-arch_local_irq_disable(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:static-inline-void-arch_local_irq_enable(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:static-inline-void-arch_local_irq_restore(unsigned-long-flags)
-|   |-- include-asm-generic-irqflags.h:Error:junk-at-end-of-line-first-unrecognized-character-is
-|   |-- include-asm-generic-irqflags.h:Error:junk-at-end-of-line-first-unrecognized-character-is-(
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:arch_local_irq_restore()
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:return-arch_irqs_disabled_flags(arch_local_save_flags())
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:return-flags
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:static-inline-int-arch_irqs_disabled(void)
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:static-inline-int-arch_irqs_disabled_flags(unsigned-long-flags)
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:static-inline-unsigned-long-arch_local_irq_save(void)
-|   `-- include-asm-generic-irqflags.h:Error:no-such-instruction:unsigned-long-flags
-|-- um-allyesconfig
-|   |-- arch-um-include-asm-irqflags.h:Error:invalid-character-(-in-mnemonic
-|   |-- arch-um-include-asm-irqflags.h:Error:junk-at-end-of-line-first-unrecognized-character-is
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:extern-int-get_signals(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:extern-int-set_signals(int-enable)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:extern-void-block_signals(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:extern-void-unblock_signals(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:return-get_signals()
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:static-inline-unsigned-long-arch_local_save_flags(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:static-inline-void-arch_local_irq_disable(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:static-inline-void-arch_local_irq_enable(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:static-inline-void-arch_local_irq_restore(unsigned-long-flags)
-|   |-- include-asm-generic-irqflags.h:Error:junk-at-end-of-line-first-unrecognized-character-is
-|   |-- include-asm-generic-irqflags.h:Error:junk-at-end-of-line-first-unrecognized-character-is-(
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:arch_local_irq_restore()
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:return-arch_irqs_disabled_flags(arch_local_save_flags())
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:return-flags
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:static-inline-int-arch_irqs_disabled(void)
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:static-inline-int-arch_irqs_disabled_flags(unsigned-long-flags)
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:static-inline-unsigned-long-arch_local_irq_save(void)
-|   `-- include-asm-generic-irqflags.h:Error:no-such-instruction:unsigned-long-flags
-|-- um-defconfig
-|   |-- arch-um-include-asm-irqflags.h:Error:invalid-character-(-in-mnemonic
-|   |-- arch-um-include-asm-irqflags.h:Error:junk-at-end-of-line-first-unrecognized-character-is
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:extern-int-get_signals(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:extern-int-set_signals(int-enable)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:extern-void-block_signals(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:extern-void-unblock_signals(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:return-get_signals()
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:static-inline-unsigned-long-arch_local_save_flags(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:static-inline-void-arch_local_irq_disable(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:static-inline-void-arch_local_irq_enable(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:static-inline-void-arch_local_irq_restore(unsigned-long-flags)
-|   |-- include-asm-generic-irqflags.h:Error:junk-at-end-of-line-first-unrecognized-character-is
-|   |-- include-asm-generic-irqflags.h:Error:junk-at-end-of-line-first-unrecognized-character-is-(
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:arch_local_irq_restore()
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:return-arch_irqs_disabled_flags(arch_local_save_flags())
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:return-flags
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:static-inline-int-arch_irqs_disabled(void)
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:static-inline-int-arch_irqs_disabled_flags(unsigned-long-flags)
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:static-inline-unsigned-long-arch_local_irq_save(void)
-|   `-- include-asm-generic-irqflags.h:Error:no-such-instruction:unsigned-long-flags
-|-- um-kunit_defconfig
-|   |-- arch-um-include-asm-irqflags.h:Error:invalid-character-(-in-mnemonic
-|   |-- arch-um-include-asm-irqflags.h:Error:junk-at-end-of-line-first-unrecognized-character-is
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:extern-int-get_signals(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:extern-int-set_signals(int-enable)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:extern-void-block_signals(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:extern-void-unblock_signals(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:return-get_signals()
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:static-inline-unsigned-long-arch_local_save_flags(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:static-inline-void-arch_local_irq_disable(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:static-inline-void-arch_local_irq_enable(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:static-inline-void-arch_local_irq_restore(unsigned-long-flags)
-|   |-- include-asm-generic-irqflags.h:Error:junk-at-end-of-line-first-unrecognized-character-is
-|   |-- include-asm-generic-irqflags.h:Error:junk-at-end-of-line-first-unrecognized-character-is-(
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:arch_local_irq_restore()
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:return-arch_irqs_disabled_flags(arch_local_save_flags())
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:return-flags
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:static-inline-int-arch_irqs_disabled(void)
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:static-inline-int-arch_irqs_disabled_flags(unsigned-long-flags)
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:static-inline-unsigned-long-arch_local_irq_save(void)
-|   `-- include-asm-generic-irqflags.h:Error:no-such-instruction:unsigned-long-flags
-|-- um-x86_64_defconfig
-|   |-- arch-um-include-asm-irqflags.h:Error:invalid-character-(-in-mnemonic
-|   |-- arch-um-include-asm-irqflags.h:Error:junk-at-end-of-line-first-unrecognized-character-is
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:extern-int-get_signals(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:extern-int-set_signals(int-enable)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:extern-void-block_signals(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:extern-void-unblock_signals(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:return-get_signals()
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:static-inline-unsigned-long-arch_local_save_flags(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:static-inline-void-arch_local_irq_disable(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:static-inline-void-arch_local_irq_enable(void)
-|   |-- arch-um-include-asm-irqflags.h:Error:no-such-instruction:static-inline-void-arch_local_irq_restore(unsigned-long-flags)
-|   |-- include-asm-generic-irqflags.h:Error:junk-at-end-of-line-first-unrecognized-character-is
-|   |-- include-asm-generic-irqflags.h:Error:junk-at-end-of-line-first-unrecognized-character-is-(
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:arch_local_irq_restore()
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:return-arch_irqs_disabled_flags(arch_local_save_flags())
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:return-flags
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:static-inline-int-arch_irqs_disabled(void)
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:static-inline-int-arch_irqs_disabled_flags(unsigned-long-flags)
-|   |-- include-asm-generic-irqflags.h:Error:no-such-instruction:static-inline-unsigned-long-arch_local_irq_save(void)
-|   `-- include-asm-generic-irqflags.h:Error:no-such-instruction:unsigned-long-flags
-|-- x86_64-allyesconfig
-|   |-- arch-x86-kernel-traps.c:warning:Using-argument-dr6-that-points-at-uninitialized-variable-dr6-ctuuninitvar
-|   `-- arch-x86-kernel-traps.c:warning:Using-argument-dr7-that-points-at-uninitialized-variable-dr7-ctuuninitvar
-|-- x86_64-randconfig-b001-20200503
-|   |-- arch-x86-kernel-apic-vector.o:warning:objtool:irqst_sysvec_irq_move_cleanup():undefined-stack-state
-|   |-- arch-x86-kernel-cpu-acrn.o:warning:objtool:irqst_sysvec_acrn_hv_callback():undefined-stack-state
-|   |-- arch-x86-kernel-irq.o:warning:objtool:irqst_sysvec_kvm_posted_intr_ipi():undefined-stack-state
-|   |-- arch-x86-kernel-irq.o:warning:objtool:irqst_sysvec_kvm_posted_intr_nested_ipi():undefined-stack-state
-|   |-- arch-x86-kernel-irq.o:warning:objtool:irqst_sysvec_kvm_posted_intr_wakeup_ipi():undefined-stack-state
-|   |-- arch-x86-kernel-irq_work.o:warning:objtool:irqst_sysvec_irq_work():undefined-stack-state
-|   |-- arch-x86-kernel-smp.o:warning:objtool:irqst_sysvec_call_function():undefined-stack-state
-|   |-- arch-x86-kernel-smp.o:warning:objtool:irqst_sysvec_call_function_single():undefined-stack-state
-|   `-- arch-x86-kernel-smp.o:warning:objtool:irqst_sysvec_reboot():undefined-stack-state
-|-- x86_64-randconfig-e002-20200503
-|   |-- arch-x86-kernel-apic-vector.o:warning:objtool:irqst_sysvec_irq_move_cleanup():undefined-stack-state
-|   |-- arch-x86-kernel-irq.o:warning:objtool:irqst_sysvec_kvm_posted_intr_ipi():undefined-stack-state
-|   |-- arch-x86-kernel-irq.o:warning:objtool:irqst_sysvec_kvm_posted_intr_nested_ipi():undefined-stack-state
-|   |-- arch-x86-kernel-irq.o:warning:objtool:irqst_sysvec_kvm_posted_intr_wakeup_ipi():undefined-stack-state
-|   |-- arch-x86-kernel-irq_work.o:warning:objtool:irqst_sysvec_irq_work():undefined-stack-state
-|   |-- arch-x86-kernel-smp.o:warning:objtool:irqst_sysvec_call_function():undefined-stack-state
-|   |-- arch-x86-kernel-smp.o:warning:objtool:irqst_sysvec_call_function_single():undefined-stack-state
-|   `-- arch-x86-kernel-smp.o:warning:objtool:irqst_sysvec_reboot():undefined-stack-state
-|-- x86_64-randconfig-e003-20200503
-|   |-- arch-x86-entry-common.o:warning:objtool:run_on_irqstack():undefined-stack-state
-|   |-- arch-x86-kernel-apic-vector.o:warning:objtool:irqst_sysvec_irq_move_cleanup():undefined-stack-state
-|   |-- arch-x86-kernel-irq.o:warning:objtool:irqst_sysvec_kvm_posted_intr_ipi():undefined-stack-state
-|   |-- arch-x86-kernel-irq.o:warning:objtool:irqst_sysvec_kvm_posted_intr_nested_ipi():undefined-stack-state
-|   |-- arch-x86-kernel-irq.o:warning:objtool:irqst_sysvec_kvm_posted_intr_wakeup_ipi():undefined-stack-state
-|   |-- arch-x86-kernel-irq_work.o:warning:objtool:irqst_sysvec_irq_work():undefined-stack-state
-|   |-- arch-x86-kernel-smp.o:warning:objtool:irqst_sysvec_call_function():undefined-stack-state
-|   |-- arch-x86-kernel-smp.o:warning:objtool:irqst_sysvec_call_function_single():undefined-stack-state
-|   `-- arch-x86-kernel-smp.o:warning:objtool:irqst_sysvec_reboot():undefined-stack-state
-|-- x86_64-randconfig-f001-20200505
-|   |-- arch-x86-kernel-cpu-acrn.o:warning:objtool:irqst_sysvec_acrn_hv_callback():undefined-stack-state
-|   |-- arch-x86-kernel-irq.o:warning:objtool:irqst_sysvec_kvm_posted_intr_ipi():undefined-stack-state
-|   |-- arch-x86-kernel-irq.o:warning:objtool:irqst_sysvec_kvm_posted_intr_nested_ipi():undefined-stack-state
-|   |-- arch-x86-kernel-irq.o:warning:objtool:irqst_sysvec_kvm_posted_intr_wakeup_ipi():undefined-stack-state
-|   `-- arch-x86-kernel-irq_work.o:warning:objtool:irqst_sysvec_irq_work():undefined-stack-state
-`-- x86_64-randconfig-h002-20200503
-    |-- arch-x86-kernel-irq.o:warning:objtool:irqst_sysvec_kvm_posted_intr_ipi():undefined-stack-state
-    |-- arch-x86-kernel-irq.o:warning:objtool:irqst_sysvec_kvm_posted_intr_nested_ipi():undefined-stack-state
-    |-- arch-x86-kernel-irq.o:warning:objtool:irqst_sysvec_kvm_posted_intr_wakeup_ipi():undefined-stack-state
-    `-- arch-x86-kernel-irq_work.o:warning:objtool:irqst_sysvec_irq_work():undefined-stack-state
-
-elapsed time: 2138m
-
-configs tested: 166
-configs skipped: 0
-
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm                              allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-sparc                            allyesconfig
-m68k                             allyesconfig
-um                           x86_64_defconfig
-ia64                              allnoconfig
-um                               allyesconfig
-nds32                               defconfig
-c6x                               allnoconfig
-microblaze                       allyesconfig
-csky                                defconfig
-ia64                             alldefconfig
-m68k                           sun3_defconfig
-microblaze                        allnoconfig
-i386                                defconfig
-mips                              allnoconfig
-xtensa                              defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                             alldefconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                          multi_defconfig
-m68k                                defconfig
-c6x                              allyesconfig
-nds32                             allnoconfig
-alpha                               defconfig
-csky                             allyesconfig
-alpha                            allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-openrisc                         allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-mips                             allyesconfig
-mips                         64r6el_defconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          rhel-kconfig
-powerpc                           allnoconfig
-powerpc                          allyesconfig
-powerpc                          alldefconfig
-powerpc                          allmodconfig
-m68k                 randconfig-a001-20200506
-mips                 randconfig-a001-20200506
-nds32                randconfig-a001-20200506
-parisc               randconfig-a001-20200506
-alpha                randconfig-a001-20200506
-riscv                randconfig-a001-20200506
-m68k                 randconfig-a001-20200505
-mips                 randconfig-a001-20200505
-nds32                randconfig-a001-20200505
-parisc               randconfig-a001-20200505
-alpha                randconfig-a001-20200505
-riscv                randconfig-a001-20200505
-h8300                randconfig-a001-20200506
-nios2                randconfig-a001-20200506
-microblaze           randconfig-a001-20200506
-c6x                  randconfig-a001-20200506
-sparc64              randconfig-a001-20200506
-s390                 randconfig-a001-20200505
-xtensa               randconfig-a001-20200505
-sh                   randconfig-a001-20200505
-openrisc             randconfig-a001-20200505
-csky                 randconfig-a001-20200505
-s390                 randconfig-a001-20200430
-xtensa               randconfig-a001-20200430
-csky                 randconfig-a001-20200430
-openrisc             randconfig-a001-20200430
-sh                   randconfig-a001-20200430
-xtensa               randconfig-a001-20200503
-openrisc             randconfig-a001-20200503
-csky                 randconfig-a001-20200503
-i386                 randconfig-b003-20200503
-x86_64               randconfig-b002-20200503
-i386                 randconfig-b001-20200503
-x86_64               randconfig-b003-20200503
-x86_64               randconfig-b001-20200503
-i386                 randconfig-b002-20200503
-i386                 randconfig-b003-20200507
-x86_64               randconfig-b002-20200507
-i386                 randconfig-b001-20200507
-x86_64               randconfig-b001-20200507
-x86_64               randconfig-b003-20200507
-i386                 randconfig-b002-20200507
-i386                 randconfig-e003-20200506
-x86_64               randconfig-e003-20200506
-x86_64               randconfig-e001-20200506
-i386                 randconfig-e002-20200506
-i386                 randconfig-e001-20200506
-x86_64               randconfig-e003-20200503
-x86_64               randconfig-e002-20200503
-i386                 randconfig-e003-20200503
-x86_64               randconfig-e001-20200503
-i386                 randconfig-e002-20200503
-i386                 randconfig-e001-20200503
-i386                 randconfig-f003-20200503
-x86_64               randconfig-f002-20200503
-i386                 randconfig-f001-20200503
-i386                 randconfig-f002-20200503
-i386                 randconfig-f003-20200505
-x86_64               randconfig-f001-20200505
-x86_64               randconfig-f003-20200505
-i386                 randconfig-f001-20200505
-i386                 randconfig-f002-20200505
-i386                 randconfig-f003-20200506
-x86_64               randconfig-f001-20200506
-x86_64               randconfig-f003-20200506
-x86_64               randconfig-f002-20200506
-i386                 randconfig-f001-20200506
-i386                 randconfig-f002-20200506
-x86_64               randconfig-a003-20200505
-x86_64               randconfig-a001-20200505
-i386                 randconfig-a001-20200505
-i386                 randconfig-a003-20200505
-i386                 randconfig-a002-20200505
-i386                 randconfig-h002-20200506
-i386                 randconfig-h001-20200506
-i386                 randconfig-h003-20200506
-x86_64               randconfig-h002-20200506
-x86_64               randconfig-h003-20200506
-x86_64               randconfig-h001-20200506
-ia64                 randconfig-a001-20200505
-powerpc              randconfig-a001-20200505
-arm                  randconfig-a001-20200505
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence-ep.c | 2 +-
+>  drivers/pci/controller/pcie-rockchip-ep.c        | 2 +-
+>  drivers/pci/endpoint/pci-epc-mem.c               | 7 +++++++
+>  include/linux/pci-epc.h                          | 5 ++---
+>  4 files changed, 11 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> index 1c173dad67d1..1c15c8352125 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> @@ -450,7 +450,7 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
+>  		epc->max_functions = 1;
+>  
+>  	ret = pci_epc_mem_init(epc, pcie->mem_res->start,
+> -			       resource_size(pcie->mem_res));
+> +			       resource_size(pcie->mem_res), PAGE_SIZE);
+>  	if (ret < 0) {
+>  		dev_err(dev, "failed to initialize the memory space\n");
+>  		goto err_init;
+> diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
+> index d743b0a48988..5eaf36629a75 100644
+> --- a/drivers/pci/controller/pcie-rockchip-ep.c
+> +++ b/drivers/pci/controller/pcie-rockchip-ep.c
+> @@ -615,7 +615,7 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
+>  	rockchip_pcie_write(rockchip, BIT(0), PCIE_CORE_PHY_FUNC_CFG);
+>  
+>  	err = pci_epc_mem_init(epc, rockchip->mem_res->start,
+> -			       resource_size(rockchip->mem_res));
+> +			       resource_size(rockchip->mem_res), PAGE_SIZE);
+>  	if (err < 0) {
+>  		dev_err(dev, "failed to initialize the memory space\n");
+>  		goto err_uninit_port;
+> diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
+> index abfac1109a13..cdd1d3821249 100644
+> --- a/drivers/pci/endpoint/pci-epc-mem.c
+> +++ b/drivers/pci/endpoint/pci-epc-mem.c
+> @@ -93,6 +93,13 @@ return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(__pci_epc_mem_init);
+>  
+> +int pci_epc_mem_init(struct pci_epc *epc, phys_addr_t base,
+> +		     size_t size, size_t page_size)
+> +{
+> +	return __pci_epc_mem_init(epc, base, size, page_size);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_epc_mem_init);
+> +
+>  /**
+>   * pci_epc_mem_exit() - cleanup the pci_epc_mem structure
+>   * @epc: the EPC device that invoked pci_epc_mem_exit
+> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+> index e0ed9d01f6e5..5bc1de65849e 100644
+> --- a/include/linux/pci-epc.h
+> +++ b/include/linux/pci-epc.h
+> @@ -137,9 +137,6 @@ struct pci_epc_features {
+>  #define devm_pci_epc_create(dev, ops)    \
+>  		__devm_pci_epc_create((dev), (ops), THIS_MODULE)
+>  
+> -#define pci_epc_mem_init(epc, phys_addr, size)	\
+> -		__pci_epc_mem_init((epc), (phys_addr), (size), PAGE_SIZE)
+> -
+>  static inline void epc_set_drvdata(struct pci_epc *epc, void *data)
+>  {
+>  	dev_set_drvdata(&epc->dev, data);
+> @@ -195,6 +192,8 @@ unsigned int pci_epc_get_first_free_bar(const struct pci_epc_features
+>  struct pci_epc *pci_epc_get(const char *epc_name);
+>  void pci_epc_put(struct pci_epc *epc);
+>  
+> +int pci_epc_mem_init(struct pci_epc *epc, phys_addr_t base,
+> +		     size_t size, size_t page_size);
+>  int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_addr, size_t size,
+>  		       size_t page_size);
+>  void pci_epc_mem_exit(struct pci_epc *epc);
+> 
