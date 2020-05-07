@@ -2,143 +2,96 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E15BFC47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F593C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFC69207DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37CB1207DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:20:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rbtQf4Gr"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ta5CPKxG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbgEGDRJ (ORCPT
+        id S1726843AbgEGDUV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 23:17:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57294 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725862AbgEGDRH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 23:17:07 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3474FC061A10
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 20:17:07 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id g13so4514349wrb.8
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 20:17:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OqklJJgxCrgioUG9/0U8VvVyNxzQPptp+H1kEoRUcfM=;
-        b=rbtQf4Gr1SzoNJgT+TsCpnOedFkDlsI4GqX3HIApmxx6nalsQhD7JafeN3haqKF95q
-         9FLfc0iLXRofGuj8xSvJr9fCGoEGljqW0AfmoM25AwFBMv01MhzQk74GjUBq8Hxt5HTu
-         kF5LrtH67fdEpmW13BDlx/xM9q8ZC1pdAFNdCTsjb3r/+IQquQw3L1Mhmz5wPihbB8Oa
-         RKcHl2HZ6Swg7Mv+wXEaoj0P119W8tJ06Y6nXdXSmuhhAUF7MuBwIDsA9MO0zAZToS3O
-         JlWjOp3xPxrOLSgeM67Dve9aoviCMexgO0SwIEfM1UZpJ+jUSpQTzPg7wLqjsFeT0/pd
-         XxWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OqklJJgxCrgioUG9/0U8VvVyNxzQPptp+H1kEoRUcfM=;
-        b=Wq1mHhPds+wlKd/MJ9+iyjUELiUn8DEw5YAEOmyMEgMIgipQUpzK55SG4PolqDM9bO
-         2mM3l99YukS2wRm/xow1OJSvRgqn0htMBwFK8rzBbrp/XwuUSBZE3yL97YcIjzFsQSYf
-         3QsQld+MNL3xttwf95kYhxkRxhvaXvn1cNJ2I4p7W2f35cGci8aEXLf2RwkwlISuwuHV
-         2e2GGW2NGLfTWFu1+1QJxPs5u5/5gH5X3npCjGyNrhOb5VgEXHORWa28s3vHn7uSKmvC
-         h4W2p/dgJBqIIXWwDu2uGqWNsyGj23t38nngOsGFNJLNg4Mzr5TCuaPPC+3SURhd+BcA
-         jwVg==
-X-Gm-Message-State: AGi0PuaunB1ifyoReFvoa4P42xtw7Qjpuck2df3xJaZzVj4KDnrC0NnL
-        YepVDEOoTrGsuInlNzfl69IC7QUgntAPVzLhxNf/sw==
-X-Google-Smtp-Source: APiQypJ1wFSkBS5disj8Gxzhwhmj5hTspeDumfe4/uryjgVRkTODm3WVF6Mgksw5Lpz+kSadGCmEn0hnihhQMkh9SPY=
-X-Received: by 2002:adf:f907:: with SMTP id b7mr12664785wrr.203.1588821425549;
- Wed, 06 May 2020 20:17:05 -0700 (PDT)
+        Wed, 6 May 2020 23:20:21 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:33291 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725966AbgEGDUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 23:20:20 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Hdxr2VhBz9sRf;
+        Thu,  7 May 2020 13:20:16 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588821618;
+        bh=E36HXKogWcq48J39JyUpLXPeuF3K69/Cf5yAaSXQREE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ta5CPKxGLLq4MNL6Y9KGaLm2SjYGXTbStvA4ukTzv4MiD2FEVpTX5T5ULI+bnjAwn
+         FcajaIWRIIhCxumvqfjsEjjTC19FpYyu9vTWtTNwtUNLKGD/ai6c151HwJTinTW77Q
+         uU7LQ8sY6myuVFOuXQgdF0//BInyZtHirQetRThDbJ50sd12om7WTAiJEwySnAt8RG
+         pIKpaVNwZ8IleuBArZfCa6oFQnWjo5kWSvpP8d/J1Tglu0aC4xiXkE+bMr3NIVsp4u
+         Fp7uuOylBi9Kjz7h4aMZ+6cgKz7FlISjurcyLUj0vF9KVVCOv8+PHR2WVOA3CmUBFp
+         NgAh5dj6mNaxA==
+Date:   Thu, 7 May 2020 13:20:14 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Subject: Re: [PATCH] slub: limit count of partial slabs scanned to gather
+ statistics
+Message-ID: <20200507132014.1ac14bf5@canb.auug.org.au>
+In-Reply-To: <39E953F3-BBA4-43BF-AA0D-B1BED21F9A4D@lca.pw>
+References: <158860845968.33385.4165926113074799048.stgit@buzz>
+        <5BAA0D82-555E-4E72-966A-A147472271D0@lca.pw>
+        <39E953F3-BBA4-43BF-AA0D-B1BED21F9A4D@lca.pw>
 MIME-Version: 1.0
-References: <20200505102709.7964-1-anders.roxell@linaro.org>
-In-Reply-To: <20200505102709.7964-1-anders.roxell@linaro.org>
-From:   David Gow <davidgow@google.com>
-Date:   Thu, 7 May 2020 11:16:54 +0800
-Message-ID: <CABVgOS=Qybfh_oMGmCONUWqZ3FRcKrwPU1pooSv1SsFumaCFjg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/6] kunit: default KUNIT_* fragments to KUNIT_RUN_ALL
-To:     Anders Roxell <anders.roxell@linaro.org>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        John Johansen <john.johansen@canonical.com>, jmorris@namei.org,
-        serge@hallyn.com, "Theodore Ts'o" <tytso@mit.edu>,
-        adilger.kernel@dilger.ca,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, linux-security-module@vger.kernel.org,
-        Marco Elver <elver@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/cLs680_ssQ0hh7TDv_eZLiW";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 6:27 PM Anders Roxell <anders.roxell@linaro.org> wrote:
->
-> This makes it easier to enable all KUnit fragments.
->
-> Adding 'if !KUNIT_RUN_ALL' so individual test can be turned of if
-> someone wants that even though KUNIT_RUN_ALL is enabled.
+--Sig_/cLs680_ssQ0hh7TDv_eZLiW
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-nit: Should this be "turned off" rather than "turned of" (and
-"individual tests" rather than "individual test").
-It _may_ be worth re-wording it to explain the "if !KUNIT_RUN_ALL"
-change in more detail: that it's explicitly hiding the prompt if
-KUNIT_RUN_ALL is enabled.
-It's probably not worth redoing the patch just for this, but if you've
-got to re-do all these to change KUNIT_RUN_ALL to KUNIT_ALL_TESTS or
-similar, maybe.
+Hi Qian,
 
+On Wed, 6 May 2020 23:01:54 -0400 Qian Cai <cai@lca.pw> wrote:
 >
-> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+> Andrew, Stephen, can you remove this patch from linux-next?
 
-Reviewed-by: David Gow <davidgow@google.com>
-> ---
->  lib/kunit/Kconfig | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
->
-> diff --git a/lib/kunit/Kconfig b/lib/kunit/Kconfig
-> index 537f37bc8400..e6a60391fa6b 100644
-> --- a/lib/kunit/Kconfig
-> +++ b/lib/kunit/Kconfig
-> @@ -15,7 +15,8 @@ menuconfig KUNIT
->  if KUNIT
->
->  config KUNIT_DEBUGFS
-> -       bool "KUnit - Enable /sys/kernel/debug/kunit debugfs representation"
-> +       bool "KUnit - Enable /sys/kernel/debug/kunit debugfs representation" if !KUNIT_RUN_ALL
-> +       default KUNIT_RUN_ALL
->         help
->           Enable debugfs representation for kunit.  Currently this consists
->           of /sys/kernel/debug/kunit/<test_suite>/results files for each
-> @@ -23,7 +24,8 @@ config KUNIT_DEBUGFS
->           run that occurred.
->
->  config KUNIT_TEST
-> -       tristate "KUnit test for KUnit"
-> +       tristate "KUnit test for KUnit" if !KUNIT_RUN_ALL
-> +       default KUNIT_RUN_ALL
->         help
->           Enables the unit tests for the KUnit test framework. These tests test
->           the KUnit test framework itself; the tests are both written using
-> @@ -32,7 +34,8 @@ config KUNIT_TEST
->           expected.
->
->  config KUNIT_EXAMPLE_TEST
-> -       tristate "Example test for KUnit"
-> +       tristate "Example test for KUnit" if !KUNIT_RUN_ALL
-> +       default KUNIT_RUN_ALL
->         help
->           Enables an example unit test that illustrates some of the basic
->           features of KUnit. This test only exists to help new users understand
-> --
-> 2.20.1
->
+Removed from linux-next.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/cLs680_ssQ0hh7TDv_eZLiW
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6zfm4ACgkQAVBC80lX
+0Gwrggf+JKjb9eq0UPd4rQ8eCnRiUPlXsaIKa6SR+FW3CxUPU6zXpb57aIyOb7yW
+j0S6aoOiSedibXajq7hFnyGwXCaUr/zoxSLDHd0uLvJKeW0WJRm3fnzPVImvaNov
+WoCHxdn0MSX8oV+PzEHaxleOZDocyTlaYwdN1F61swa3QZA1hGVji2l3qjepOs3U
+UnZSeAriGQp5/FKRQ5Qj1dEaIJHMdkKXdZRXRx2OdC0XWgD+rKdcRLhocGy+9/Rm
+EVTqW7ozQV6uIhwdaqY2W1HF+9BfSbehPOoLPfymkQpC1cHwIajNqIM9l2pFLUkW
+y7zvv7suNN+OPKBYbKXWU6nSW61K2w==
+=zFpw
+-----END PGP SIGNATURE-----
+
+--Sig_/cLs680_ssQ0hh7TDv_eZLiW--
