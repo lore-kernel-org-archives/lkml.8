@@ -2,111 +2,101 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 481AAC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9978AC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2669021473
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:50:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Mhj9Crcq"
+	by mail.kernel.org (Postfix) with ESMTP id 79B252186A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:50:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588845035;
+	bh=SlvEi24RMQvcZnlFvRCcXwXVLa1fbvDLBSLuhVTVCmw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=CqZ+YfksW+NrmySw7qdANzWkSlM/JKcwh8YIfcNJpFmYdSK0lLnTLaAQS0KUiOEq4
+	 FS6U4s3VX4uDUXw0J3kQvisT4RRMGHMWIoz+XzlBtWM3JUZ4yJaVgpwru+C8cLkBbt
+	 3d2NDMEJKwwWS7WEjobqF1Qov+xLPUEmYJR17+No=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgEGJuc (ORCPT
+        id S1726542AbgEGJue convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 05:50:32 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:56386 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgEGJuc (ORCPT
+        Thu, 7 May 2020 05:50:34 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:46915 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725848AbgEGJud (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 05:50:32 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0479lopB102709;
-        Thu, 7 May 2020 09:50:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=EQ+E4Tct/z2vRcGjh+IR0QddtdU4Z7ldQ+DofhTaTAw=;
- b=Mhj9CrcqOv6UuKjlHgoBbwP15fBZkiNeYaougogHveoMNXebz7skaUerzSs61yeYFP47
- XAL+uT1PTZ05VXmETAn3E2QCfQUv/pbydEa9Wy2eUPzBvYYvDN5C/52VlFmAQGW2OHSM
- VPgz2y5ueIRGpmG+/1JA0utkQfxJgcIrLMVNELQV1G8HPDLnsGoO8aAHRznLMdmEXXfJ
- aD4yZVlDTvODjOS3RSy8jYdl3iOe0DwQdCvyZjikhQfoYksx2mw8F13wPn5T68K0G5eb
- KgxRU02g0jhQZ1JLVA45SN778/oWJTo4ZHB+LweKB6k44EvisQTG4GnO/5n6/W1QuPra ug== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 30s09rf6xh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 09:50:27 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0479grmg092934;
-        Thu, 7 May 2020 09:50:26 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 30sjdxp4ww-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 09:50:26 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0479oO5X022913;
-        Thu, 7 May 2020 09:50:25 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 07 May 2020 02:50:24 -0700
-Date:   Thu, 7 May 2020 12:50:16 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: iio: ad5933: rework probe to use devm_ function
- variants
-Message-ID: <20200507095016.GC9365@kadam>
-References: <20200428093128.60747-1-alexandru.ardelean@analog.com>
- <20200502192542.63cc25a2@archlinux>
+        Thu, 7 May 2020 05:50:33 -0400
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-68-q6wu39kwO9S6RlXaw1RTZA-1; Thu, 07 May 2020 05:50:29 -0400
+X-MC-Unique: q6wu39kwO9S6RlXaw1RTZA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 91E50100CCC3;
+        Thu,  7 May 2020 09:50:27 +0000 (UTC)
+Received: from krava.redhat.com (unknown [10.40.194.212])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 44FD110013BD;
+        Thu,  7 May 2020 09:50:25 +0000 (UTC)
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>, Paul Khuong <pvk@pvk.ca>
+Subject: [PATCH 0/5] perf tools: Pipe fixes
+Date:   Thu,  7 May 2020 11:50:19 +0200
+Message-Id: <20200507095024.2789147-1-jolsa@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200502192542.63cc25a2@archlinux>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 mlxscore=0
- bulkscore=0 adultscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005070079
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0
- lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1011 suspectscore=0
- priorityscore=1501 malwarescore=0 mlxlogscore=999 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005070079
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: kernel.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 02, 2020 at 07:25:42PM +0100, Jonathan Cameron wrote:
-> On Tue, 28 Apr 2020 12:31:28 +0300
-> Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-> > +static void ad5933_cleanup(void *data)
-> > +{
-> > +	struct ad5933_state *st = data;
-> > +
-> > +	clk_disable_unprepare(st->mclk);
-> > +	regulator_disable(st->reg);
-> 
-> Please do two separate callbacks so that these can be handled
-> in the correct places.  I.e. you do something then immediately
-> register the handler to undo it.
-> 
-> Currently you can end up disabling a clock you haven't enabled
-> (which I am fairly sure will give you an error message).
+hi,
+sending changes that allows callchain detection in pipe mode,
+fixing followign use case:
 
-Yeah.  It does.
+  # perf record --no-buffering --call-graph dwarf -e sdt_rtld:init_start -a -o - | perf --no-pager script -i -
 
-It feels like we should just make a devm_ version of regulator_enable().
-Or potentially this is more complicated than it seems, but in that case
-probably adding devm_add_action_or_reset() is more complicated than it
-seems as well.
+plus change that allows to read pipe data from file:
 
-regards,
-dan carpenter
+  # perf record -o - sleep 1 > /tmp/perf.pipe.data
+  # perf report -i /tmp/perf.pipe.data
+
+plus unrelated build fix.
+
+Also reachable in here:
+  git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+  perf/pipe
+
+thanks,
+jirka
+
+
+---
+Jiri Olsa (5):
+      perf tools: Do not display extra info when there is nothing to build
+      perf tools: Do not seek in pipe fd during tracing data processing
+      perf session: Try to read pipe data from file
+      perf tools: Setup callchain properly in pipe mode
+      perf script: Enable IP fields for callchains
+
+ tools/perf/Makefile.perf    |  8 +++++---
+ tools/perf/builtin-report.c | 33 ++++++++++++++++++++++-----------
+ tools/perf/builtin-script.c | 23 +++++++++++++++++++----
+ tools/perf/util/callchain.c | 14 ++++++++++++++
+ tools/perf/util/callchain.h |  1 +
+ tools/perf/util/header.c    | 34 ++++++++++++++++++++++++++--------
+ tools/perf/util/session.c   |  9 +++++++--
+ 7 files changed, 94 insertions(+), 28 deletions(-)
+
