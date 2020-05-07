@@ -2,81 +2,161 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3375BC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8554C54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECA1420661
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:55:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bhpn/LE2"
+	by mail.kernel.org (Postfix) with ESMTP id 7FEE42054F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:58:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588885117;
+	bh=nroxBkHCgkbafyN0jfliqvVdW8na2VpSzSi2z7mjvfE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Bylk0PtziqE03uJxx8ekqAvj6gsXQ9wiUBEBokxS9WrVenFstMwlZeQMG6qNRUOx4
+	 Z3N3h8ejGIVytLDvzsAWDejDuGh2NhGbm8BgHFf1EQmzjbpZBD+j0MMz5fYGzuW89Z
+	 YELXm7cy7oV0d9g+x6vxrk/7Swod9lC7mCCrLtXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgEGUzT (ORCPT
+        id S1726612AbgEGU6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 16:55:19 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:38771 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726367AbgEGUzR (ORCPT
+        Thu, 7 May 2020 16:58:36 -0400
+Received: from mail-oo1-f65.google.com ([209.85.161.65]:38182 "EHLO
+        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgEGU6g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 16:55:17 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588884916; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=3xIfW2AU3J3r/H9xQJs2hT0UbPGNez6Lr+kdeQSCAm8=;
- b=bhpn/LE2GDTwUPKLlJXIp/XUyw5EvCJWRBC5af5VKattUanZFoIoKdGZTKV1Ybkw79+HNzjo
- bEvDUr+BD72J5Q08Xtkf4vMyHojBwjGk2X/uP3jLo1QN4+g6U6Av7hmDc8OCOq3lytJR0kbW
- dy+62D+XYJzgjAwrvAiBD9bn9Fk=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb475a1.7f3170606ea0-smtp-out-n05;
- Thu, 07 May 2020 20:54:57 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 16C17C432C2; Thu,  7 May 2020 20:54:57 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: rmanohar)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BB7F2C433F2;
-        Thu,  7 May 2020 20:54:56 +0000 (UTC)
+        Thu, 7 May 2020 16:58:36 -0400
+Received: by mail-oo1-f65.google.com with SMTP id i9so1671875ool.5;
+        Thu, 07 May 2020 13:58:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Lxk5gbj1SH/yPDCschhz+W4w8vALXa+wNd/bFZoLVl0=;
+        b=nmzny55/ZJR1POywt0YxyR96mUHPFJ1LYiPeP18aCAtwtT9oe3pd9TJENsrTi3rE8n
+         AfTTs1UZ44Eq3XM9pGdeVh0FFGPOAiiPBL2cvuujwAlF5zraEfz6yZgpmVgx0pRzP/wL
+         TK0X5w8XETaGs8m1QCbPkoDV6jfNl+ZvrgOariJwpF7sCEjkWJt/+HtHoijXkKKHLaDG
+         Efy08EfVLaseBZ0T42upyW8Q6lffROOmmuO6MZ1sYmjkRY448+qyicXF6+aWNWGQHr60
+         pqHsjO86KZsYFflwtNRwxjYz2EHLBHzVNyqVX7HZ9OA2WLgSwIHbUFEx0NWEvMPDyWuk
+         B76Q==
+X-Gm-Message-State: AGi0PuaFXPOteTwncD7nqNmmuohooHNZi2tr40jxkmceqTXEKeAwdOLQ
+        B7/DqHP8AHDtXqr6G66XYQ==
+X-Google-Smtp-Source: APiQypLifuetw0ez5PKSz9qoxtY5MpD6KduLwlCg+SknYXTPTZ6gRRj5HTrEHT0ksAh3kG0Gap+XAg==
+X-Received: by 2002:a4a:d136:: with SMTP id n22mr13431215oor.85.1588885113933;
+        Thu, 07 May 2020 13:58:33 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id v9sm1650909oib.56.2020.05.07.13.58.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 13:58:33 -0700 (PDT)
+Received: (nullmailer pid 11452 invoked by uid 1000);
+        Thu, 07 May 2020 20:58:31 -0000
+Date:   Thu, 7 May 2020 15:58:31 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>
+Subject: Re: [PATCH] PCI: export and use pci_msi_get_hwirq in pci-hyperv.c
+Message-ID: <20200507205831.GA30988@bogus>
+References: <20200422195818.35489-1-wei.liu@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 07 May 2020 13:54:56 -0700
-From:   Rajkumar Manoharan <rmanohar@codeaurora.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-wireless-owner@vger.kernel.org
-Subject: Re: [PATCH v2] ath10k: Replace zero-length array with flexible-array
-In-Reply-To: <20200507041127.GA31587@embeddedor>
-References: <20200507041127.GA31587@embeddedor>
-Message-ID: <bbb33f11e8aaf6d482f923aee22aca39@codeaurora.org>
-X-Sender: rmanohar@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422195818.35489-1-wei.liu@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-06 21:11, Gustavo A. R. Silva wrote:
-[...]
->  static inline struct htt_stats_conf_item *htt_stats_conf_next_item(
-> @@ -1674,7 +1674,7 @@ struct htt_tx_fetch_ind {
->  	__le16 num_resp_ids;
->  	__le16 num_records;
->  	struct htt_tx_fetch_record records[0];
-> -	__le32 resp_ids[0]; /* ath10k_htt_get_tx_fetch_ind_resp_ids() */
-> +	__le32 resp_ids[]; /* ath10k_htt_get_tx_fetch_ind_resp_ids() */
->  } __packed;
+On Wed, Apr 22, 2020 at 07:58:15PM +0000, Wei Liu wrote:
+> There is a functionally identical function in pci-hyperv.c. Drop it and
+> use pci_msi_get_hwirq instead.
 > 
-Missed to handle records[0].
+> This requires exporting pci_msi_get_hwirq and declaring it in msi.h.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> ---
+>  arch/x86/include/asm/msi.h          | 4 ++++
+>  arch/x86/kernel/apic/msi.c          | 5 +++--
+>  drivers/pci/controller/pci-hyperv.c | 8 +-------
+>  3 files changed, 8 insertions(+), 9 deletions(-)
 
--Rajkumar
+Would be better if done in a way to remove an x86 dependency. 
+
+I guess this would do it:
+
+#define pci_msi_get_hwirq NULL
+
+when GENERIC_MSI_DOMAIN_OPS is enabled.
+
+> 
+> diff --git a/arch/x86/include/asm/msi.h b/arch/x86/include/asm/msi.h
+> index 25ddd0916bb2..353b80122b2e 100644
+> --- a/arch/x86/include/asm/msi.h
+> +++ b/arch/x86/include/asm/msi.h
+> @@ -11,4 +11,8 @@ int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+>  
+>  void pci_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc);
+>  
+> +struct msi_domain_info;
+> +irq_hw_number_t pci_msi_get_hwirq(struct msi_domain_info *info,
+> +				  msi_alloc_info_t *arg);
+> +
+>  #endif /* _ASM_X86_MSI_H */
+> diff --git a/arch/x86/kernel/apic/msi.c b/arch/x86/kernel/apic/msi.c
+> index 159bd0cb8548..56dcdd912564 100644
+> --- a/arch/x86/kernel/apic/msi.c
+> +++ b/arch/x86/kernel/apic/msi.c
+> @@ -204,11 +204,12 @@ void native_teardown_msi_irq(unsigned int irq)
+>  	irq_domain_free_irqs(irq, 1);
+>  }
+>  
+> -static irq_hw_number_t pci_msi_get_hwirq(struct msi_domain_info *info,
+> -					 msi_alloc_info_t *arg)
+> +irq_hw_number_t pci_msi_get_hwirq(struct msi_domain_info *info,
+> +				  msi_alloc_info_t *arg)
+>  {
+>  	return arg->msi_hwirq;
+>  }
+> +EXPORT_SYMBOL_GPL(pci_msi_get_hwirq);
+>  
+>  int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+>  		    msi_alloc_info_t *arg)
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index e6020480a28b..2b4a6452095f 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -1520,14 +1520,8 @@ static struct irq_chip hv_msi_irq_chip = {
+>  	.irq_unmask		= hv_irq_unmask,
+>  };
+>  
+> -static irq_hw_number_t hv_msi_domain_ops_get_hwirq(struct msi_domain_info *info,
+> -						   msi_alloc_info_t *arg)
+> -{
+> -	return arg->msi_hwirq;
+> -}
+> -
+>  static struct msi_domain_ops hv_msi_ops = {
+> -	.get_hwirq	= hv_msi_domain_ops_get_hwirq,
+> +	.get_hwirq	= pci_msi_get_hwirq,
+>  	.msi_prepare	= pci_msi_prepare,
+>  	.set_desc	= pci_msi_set_desc,
+>  	.msi_free	= hv_msi_free,
+> -- 
+> 2.20.1
+> 
