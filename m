@@ -2,193 +2,115 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DB8C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B859C54E4A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D8092082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A2D620659
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:56:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nexus-software-ie.20150623.gappssmtp.com header.i=@nexus-software-ie.20150623.gappssmtp.com header.b="Nx3LC3Ib"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgEGP4D (ORCPT
+        id S1727903AbgEGP4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 11:56:03 -0400
-Received: from mga05.intel.com ([192.55.52.43]:37587 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726451AbgEGP4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 11:56:03 -0400
-IronPort-SDR: cYuW9XjfF8SP2WsfFQGuGAs+NYZ5PyzuhtKq3zF9Xvg2GNXerz+H3C+0kkJ/8Hnru8DpQtkmb5
- paSzTklkOl2Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 08:56:01 -0700
-IronPort-SDR: Rl/sOx0blX5R3Ymsdvdbhlt3kD3ZMVWetPE/eMqU5p97aaNBAiLnHmbTxBJp5qBpYX32MBW0nF
- Xhx1IdTGHvAA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,364,1583222400"; 
-   d="scan'208";a="263980638"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by orsmga006.jf.intel.com with ESMTP; 07 May 2020 08:56:00 -0700
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Rik van Riel <riel@surriel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH v3 06/10] x86/fpu/xstate: Update sanitize_restored_xstate() for supervisor xstates
-Date:   Thu,  7 May 2020 08:55:16 -0700
-Message-Id: <20200507155516.25972-1-yu-cheng.yu@intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200328164307.17497-7-yu-cheng.yu@intel.com>
-References: <20200328164307.17497-7-yu-cheng.yu@intel.com>
+        Thu, 7 May 2020 11:56:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727833AbgEGP4n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 11:56:43 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58D86C05BD09
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 08:56:42 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id h9so7038483wrt.0
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 08:56:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=nexus-software-ie.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9nd2a3PO/+LDgm1Vu9n0q5s4h9DVCpLpJzPVuCZ63KU=;
+        b=Nx3LC3IbvKtNTVEmAzQ/KFOqYYpw/GP1+cD1yxWaXF9ZN50dmGcN+FwQzWUJHf2SiJ
+         HYOLhybnWiXpx+N6hpWSUtUUpne2o1FQunmFR88u7qw4m//q3YwjbfOeIl4v4Kd1WP1M
+         sQ1JUR9bi7Qr/c0rwFj1q7QG0YR52asMBJJ/Njqs7ZuKSnAIwWru6sdJinpKQ1IU2Hd0
+         bGT0DumcFKjKO5xedyLSFcC++pEDuhORe4ydAlnY3JwOAg731Zz3BV3xOToURDMTj8lA
+         Sk0Kc4rfad7Mav3BaoCGj4zJt6I0gBbPPqhsC6tC1ZBMMf/h/geoZwSDg+35zO1uk6sk
+         QzIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9nd2a3PO/+LDgm1Vu9n0q5s4h9DVCpLpJzPVuCZ63KU=;
+        b=lBUC8/R0Bq3k0u74M+Jhj3TasWT7yppZPdHPdO8x08DbnLYaziY8xCiY1suz4gsTXS
+         4pOsj0VJiGdiiUbHqTZ3VNZx63ThyRmGUwoj0JYutoiUXjFhLyMhjM8fwC+xdrbn58Qz
+         WBjzRiXs6m9ZCMsmISK3eg9Nbxwdd6bOtuJz1AHN390y+RQ11Ab+o4uQaoRq/xiaafvE
+         0IJaUJHcfaPDWwVgbaKLpymAg8MVBEMGBwvH4O8JbupaPqWV8jhJ2suHouZWP4Al3uTx
+         yshn6neEEOcWNeoRmjHCDG9S0F/KCOXq2CRjv6FKqTT40fKt/vFXrd8KwGLOK7bCCKt0
+         wsyQ==
+X-Gm-Message-State: AGi0PuaPTsdZrrxgWPnT2fq46qcLBXpR2MhUDcMCMWD1qvdrriOvr5rZ
+        rq5FZz0zmQSTbE+Tevg1ABNIjw==
+X-Google-Smtp-Source: APiQypLmKMr8r52sf+RwYWYfNgMHo75Wmz7UYlWGQpE7tOtOW43JsiTpxSwbqhBRyIHt2soCkzEApA==
+X-Received: by 2002:a5d:42cf:: with SMTP id t15mr15963353wrr.354.1588867001109;
+        Thu, 07 May 2020 08:56:41 -0700 (PDT)
+Received: from [192.168.0.38] ([176.61.57.127])
+        by smtp.gmail.com with ESMTPSA id c17sm8835844wrn.59.2020.05.07.08.56.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 May 2020 08:56:40 -0700 (PDT)
+Subject: Re: [PATCH v3 0/2] Add Qualcomm MSM8939 GCC binding and driver
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, mturquette@baylibre.com,
+        sboyd@kernel.org, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        shawn.guo@linaro.org, p.zabel@pengutronix.de,
+        Vincent Knecht <vincent.knecht@mailoo.org>,
+        Konrad Dybcio <konradybcio@gmail.com>
+References: <20200423103406.481289-1-bryan.odonoghue@linaro.org>
+From:   Bryan O'Donoghue <pure.logic@nexus-software.ie>
+Message-ID: <e9d181a9-938c-a69b-8325-2aabeefd0934@nexus-software.ie>
+Date:   Thu, 7 May 2020 16:57:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200423103406.481289-1-bryan.odonoghue@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function sanitize_restored_xstate() sanitizes user xstates of an XSAVE
-buffer by clearing bits not in the input 'xfeatures' from the buffer's
-header->xfeatures, effectively resetting those features back to the init
-state.
+On 23/04/2020 11:34, Bryan O'Donoghue wrote:
+> V3:
+> This update removes the old clock name arrays which I forgot to prune in
+> the previous V2.
+> 
+> git diff bod/clk-next+msm8939 bod/clk-next+msm8939-v2.1
 
-When supervisor xstates are introduced, it is necessary to make sure only
-user xstates are sanitized.  Ensure supervisor bits in header->xfeatures
-stay set and supervisor states are not modified.
+I should have mentioned.
 
-To make names clear, also:
+If you want to test this you'll need to do the following to your 
+msm8939.dtsi
 
-- Rename the function to sanitize_restored_user_xstate().
-- Rename input parameter 'xfeatures' to 'user_xfeatures'.
-- In __fpu__restore_sig(), rename 'xfeatures' to 'user_xfeatures'.
+diff --git a/arch/arm64/boot/dts/qcom/msm8939.dtsi 
+b/arch/arm64/boot/dts/qcom/msm8939.dtsi
+index 996425a70014..2d54ad7f99b6 100644
+--- a/arch/arm64/boot/dts/qcom/msm8939.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8939.dtsi
+@@ -673,6 +673,10 @@ gcc: clock-controller@1800000 {
+                         reg = <0x1800000 0x80000>;
++                       clock-names = "xo",
++                                     "sleep_clk";
++                       clocks = <&xo_board>,
++                                <&sleep_clk>;
+                 };
 
-Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+"xo" and "sleep_clk" names can be resolved.
+
 ---
-v3:
-- Change xfeatures_user to user_xfeatures.
-
- arch/x86/kernel/fpu/signal.c | 37 +++++++++++++++++++++++-------------
- 1 file changed, 24 insertions(+), 13 deletions(-)
-
-diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
-index cd6eafba12da..d09d72334a12 100644
---- a/arch/x86/kernel/fpu/signal.c
-+++ b/arch/x86/kernel/fpu/signal.c
-@@ -211,9 +211,9 @@ int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
- }
- 
- static inline void
--sanitize_restored_xstate(union fpregs_state *state,
--			 struct user_i387_ia32_struct *ia32_env,
--			 u64 xfeatures, int fx_only)
-+sanitize_restored_user_xstate(union fpregs_state *state,
-+			      struct user_i387_ia32_struct *ia32_env,
-+			      u64 user_xfeatures, int fx_only)
- {
- 	struct xregs_state *xsave = &state->xsave;
- 	struct xstate_header *header = &xsave->header;
-@@ -226,13 +226,22 @@ sanitize_restored_xstate(union fpregs_state *state,
- 		 */
- 
- 		/*
--		 * Init the state that is not present in the memory
--		 * layout and not enabled by the OS.
-+		 * 'user_xfeatures' might have bits clear which are
-+		 * set in header->xfeatures. This represents features that
-+		 * were in init state prior to a signal delivery, and need
-+		 * to be reset back to the init state.  Clear any user
-+		 * feature bits which are set in the kernel buffer to get
-+		 * them back to the init state.
-+		 *
-+		 * Supervisor state is unchanged by input from userspace.
-+		 * Ensure supervisor state bits stay set and supervisor
-+		 * state is not modified.
- 		 */
- 		if (fx_only)
- 			header->xfeatures = XFEATURE_MASK_FPSSE;
- 		else
--			header->xfeatures &= xfeatures;
-+			header->xfeatures &= user_xfeatures |
-+					     xfeatures_mask_supervisor();
- 	}
- 
- 	if (use_fxsr()) {
-@@ -281,7 +290,7 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
- 	struct task_struct *tsk = current;
- 	struct fpu *fpu = &tsk->thread.fpu;
- 	struct user_i387_ia32_struct env;
--	u64 xfeatures = 0;
-+	u64 user_xfeatures = 0;
- 	int fx_only = 0;
- 	int ret = 0;
- 
-@@ -314,7 +323,7 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
- 			trace_x86_fpu_xstate_check_failed(fpu);
- 		} else {
- 			state_size = fx_sw_user.xstate_size;
--			xfeatures = fx_sw_user.xfeatures;
-+			user_xfeatures = fx_sw_user.xfeatures;
- 		}
- 	}
- 
-@@ -349,7 +358,7 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
- 		 */
- 		fpregs_lock();
- 		pagefault_disable();
--		ret = copy_user_to_fpregs_zeroing(buf_fx, xfeatures, fx_only);
-+		ret = copy_user_to_fpregs_zeroing(buf_fx, user_xfeatures, fx_only);
- 		pagefault_enable();
- 		if (!ret) {
- 			fpregs_mark_activate();
-@@ -362,7 +371,7 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
- 
- 
- 	if (use_xsave() && !fx_only) {
--		u64 init_bv = xfeatures_mask_user() & ~xfeatures;
-+		u64 init_bv = xfeatures_mask_user() & ~user_xfeatures;
- 
- 		if (using_compacted_format()) {
- 			ret = copy_user_to_xstate(&fpu->state.xsave, buf_fx);
-@@ -375,12 +384,13 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
- 		if (ret)
- 			goto err_out;
- 
--		sanitize_restored_xstate(&fpu->state, envp, xfeatures, fx_only);
-+		sanitize_restored_user_xstate(&fpu->state, envp, user_xfeatures,
-+					      fx_only);
- 
- 		fpregs_lock();
- 		if (unlikely(init_bv))
- 			copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
--		ret = copy_kernel_to_xregs_err(&fpu->state.xsave, xfeatures);
-+		ret = copy_kernel_to_xregs_err(&fpu->state.xsave, user_xfeatures);
- 
- 	} else if (use_fxsr()) {
- 		ret = __copy_from_user(&fpu->state.fxsave, buf_fx, state_size);
-@@ -389,7 +399,8 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
- 			goto err_out;
- 		}
- 
--		sanitize_restored_xstate(&fpu->state, envp, xfeatures, fx_only);
-+		sanitize_restored_user_xstate(&fpu->state, envp,
-+					      user_xfeatures, fx_only);
- 
- 		fpregs_lock();
- 		if (use_xsave()) {
--- 
-2.21.0
-
+bod
