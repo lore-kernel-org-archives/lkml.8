@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C5AC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DEFC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D31792073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCBCD2073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:30:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588861852;
-	bh=21RvU87suyQJ5Bno2TZaPg+6cnc/R8INOsdBybhJ+a4=;
+	s=default; t=1588861853;
+	bh=oFmEvwMhzT1oMjagkBpiXYcgW4V972smE29+gs+dHNc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SLh+TigcKVCiVxZZRYtvPhMNBTbMsU2cMh8WahJLAN6JAZTnR9r/17APBx5yRVcMc
-	 HoL2r0eHJ9cMZV88Ew3EMU8Gytxyq6VNX0FgjjKdFUYc3bvkbx+NgsWeq5/oTMcTpl
-	 kY1ipmJdcsjsxgvFEiwSFoKD863Ne56YYei0s53k=
+	b=y8LK8K9tFS5KNFYzQrM5CJIFRD7kz3KcL+3C0c752d/sSfjfMnEhrY2+e7r7H1QhG
+	 9lUwWAoPGQMbyTyZ4k6MhFWmbwKuhsTzbvvNsdcb7Bhbqz+InTi2Xk1cZVpfVzkhzK
+	 923yMS0DqV4e+1+6F1k8idrnfo9hfgCEIb6toFFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbgEGOav (ORCPT
+        id S1728902AbgEGOax (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:30:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59198 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:30:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728815AbgEGOaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:30:22 -0400
+        id S1728822AbgEGOaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:30:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB3F520936;
-        Thu,  7 May 2020 14:30:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB87620A8B;
+        Thu,  7 May 2020 14:30:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861822;
-        bh=21RvU87suyQJ5Bno2TZaPg+6cnc/R8INOsdBybhJ+a4=;
+        s=default; t=1588861824;
+        bh=oFmEvwMhzT1oMjagkBpiXYcgW4V972smE29+gs+dHNc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vRM0RLH3vH3Y5pmm7WpKQt8PkiRTXJJ9X5OyTIeW6xT90bHnsXudMbGxOtT5iF44r
-         a7k4XbnemjG0mL+cXfMKT/nvZh1/q19+vbH+vTVje9eYS8q1+OqhnvJo4zvtpe6GL2
-         FIxD4IDi11jM/uP9zt9EFf7ZDZZZ5CIurYd2dD14=
+        b=gLQxQCa0MCwjhYScMC/I8e2f95wg8h8xtXODSQtklQPMZQCTbnfi4msUOoa+SP1kx
+         S5mqnbRYvUjra5gsP0RyBLsWDBTQ1co1H/v/u5aaD85StzoPfVy1jYr9Xpa/UtD/kG
+         7d22rRQlspk5v8mSm/9jnf188QJWXpxwSKQ9rlWg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 3/9] dmaengine: pch_dma.c: Avoid data race between probe and irq handler
-Date:   Thu,  7 May 2020 10:30:12 -0400
-Message-Id: <20200507143018.27195-3-sashal@kernel.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 5/9] vfio/type1: Fix VA->PA translation for PFNMAP VMAs in vaddr_get_pfn()
+Date:   Thu,  7 May 2020 10:30:14 -0400
+Message-Id: <20200507143018.27195-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507143018.27195-1-sashal@kernel.org>
 References: <20200507143018.27195-1-sashal@kernel.org>
@@ -59,44 +59,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-[ Upstream commit 2e45676a4d33af47259fa186ea039122ce263ba9 ]
+[ Upstream commit 5cbf3264bc715e9eb384e2b68601f8c02bb9a61d ]
 
-pd->dma.dev is read in irq handler pd_irq().
-However, it is set to pdev->dev after request_irq().
-Therefore, set pd->dma.dev to pdev->dev before request_irq() to
-avoid data race between pch_dma_probe() and pd_irq().
+Use follow_pfn() to get the PFN of a PFNMAP VMA instead of assuming that
+vma->vm_pgoff holds the base PFN of the VMA.  This fixes a bug where
+attempting to do VFIO_IOMMU_MAP_DMA on an arbitrary PFNMAP'd region of
+memory calculates garbage for the PFN.
 
-Found by Linux Driver Verification project (linuxtesting.org).
+Hilariously, this only got detected because the first "PFN" calculated
+by vaddr_get_pfn() is PFN 0 (vma->vm_pgoff==0), and iommu_iova_to_phys()
+uses PA==0 as an error, which triggers a WARN in vfio_unmap_unpin()
+because the translation "failed".  PFN 0 is now unconditionally reserved
+on x86 in order to mitigate L1TF, which causes is_invalid_reserved_pfn()
+to return true and in turns results in vaddr_get_pfn() returning success
+for PFN 0.  Eventually the bogus calculation runs into PFNs that aren't
+reserved and leads to failure in vfio_pin_map_dma().  The subsequent
+call to vfio_remove_dma() attempts to unmap PFN 0 and WARNs.
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Link: https://lore.kernel.org/r/20200416062335.29223-1-madhuparnabhowmik10@gmail.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+  WARNING: CPU: 8 PID: 5130 at drivers/vfio/vfio_iommu_type1.c:750 vfio_unmap_unpin+0x2e1/0x310 [vfio_iommu_type1]
+  Modules linked in: vfio_pci vfio_virqfd vfio_iommu_type1 vfio ...
+  CPU: 8 PID: 5130 Comm: sgx Tainted: G        W         5.6.0-rc5-705d787c7fee-vfio+ #3
+  Hardware name: Intel Corporation Mehlow UP Server Platform/Moss Beach Server, BIOS CNLSE2R1.D00.X119.B49.1803010910 03/01/2018
+  RIP: 0010:vfio_unmap_unpin+0x2e1/0x310 [vfio_iommu_type1]
+  Code: <0f> 0b 49 81 c5 00 10 00 00 e9 c5 fe ff ff bb 00 10 00 00 e9 3d fe
+  RSP: 0018:ffffbeb5039ebda8 EFLAGS: 00010246
+  RAX: 0000000000000000 RBX: ffff9a55cbf8d480 RCX: 0000000000000000
+  RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff9a52b771c200
+  RBP: 0000000000000000 R08: 0000000000000040 R09: 00000000fffffff2
+  R10: 0000000000000001 R11: ffff9a51fa896000 R12: 0000000184010000
+  R13: 0000000184000000 R14: 0000000000010000 R15: ffff9a55cb66ea08
+  FS:  00007f15d3830b40(0000) GS:ffff9a55d5600000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000561cf39429e0 CR3: 000000084f75f005 CR4: 00000000003626e0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  Call Trace:
+   vfio_remove_dma+0x17/0x70 [vfio_iommu_type1]
+   vfio_iommu_type1_ioctl+0x9e3/0xa7b [vfio_iommu_type1]
+   ksys_ioctl+0x92/0xb0
+   __x64_sys_ioctl+0x16/0x20
+   do_syscall_64+0x4c/0x180
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  RIP: 0033:0x7f15d04c75d7
+  Code: <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 81 48 2d 00 f7 d8 64 89 01 48
+
+Fixes: 73fa0d10d077 ("vfio: Type1 IOMMU implementation")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/pch_dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/vfio/vfio_iommu_type1.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/pch_dma.c b/drivers/dma/pch_dma.c
-index 113605f6fe208..32517003e118e 100644
---- a/drivers/dma/pch_dma.c
-+++ b/drivers/dma/pch_dma.c
-@@ -877,6 +877,7 @@ static int pch_dma_probe(struct pci_dev *pdev,
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index 875634d0d020f..d394911ec0c98 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -227,8 +227,8 @@ static int vaddr_get_pfn(unsigned long vaddr, int prot, unsigned long *pfn)
+ 	vma = find_vma_intersection(current->mm, vaddr, vaddr + 1);
+ 
+ 	if (vma && vma->vm_flags & VM_PFNMAP) {
+-		*pfn = ((vaddr - vma->vm_start) >> PAGE_SHIFT) + vma->vm_pgoff;
+-		if (is_invalid_reserved_pfn(*pfn))
++		if (!follow_pfn(vma, vaddr, pfn) &&
++		    is_invalid_reserved_pfn(*pfn))
+ 			ret = 0;
  	}
- 
- 	pci_set_master(pdev);
-+	pd->dma.dev = &pdev->dev;
- 
- 	err = request_irq(pdev->irq, pd_irq, IRQF_SHARED, DRV_NAME, pd);
- 	if (err) {
-@@ -892,7 +893,6 @@ static int pch_dma_probe(struct pci_dev *pdev,
- 		goto err_free_irq;
- 	}
- 
--	pd->dma.dev = &pdev->dev;
- 
- 	INIT_LIST_HEAD(&pd->dma.channels);
  
 -- 
 2.20.1
