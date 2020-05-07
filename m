@@ -5,64 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AECDDC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4E7C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BCEF215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 220FD2145D
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:10:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZAAAK0RC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XuO5bWe/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbgEGSK3 (ORCPT
+        id S1728340AbgEGSKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:10:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55558 "EHLO
+        Thu, 7 May 2020 14:10:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728156AbgEGSKY (ORCPT
+        by vger.kernel.org with ESMTP id S1728261AbgEGSK1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:10:24 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C30F7C05BD09
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 11:10:24 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id g6so7897818ybc.13
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 11:10:24 -0700 (PDT)
+        Thu, 7 May 2020 14:10:27 -0400
+Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34542C05BD09
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 11:10:27 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id c5so6639258qvi.10
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 11:10:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=qiBNYuTTBahvA+prfWDH1NCGtPHc0+6kWQqaJheSr88=;
-        b=ZAAAK0RCn7VnQh7zNRyMzcuefNSDFgTTf3/rCXZumrD/Gcltiy2N6K4zbxsWye8Xdb
-         P8K5kvNyfByELwYSMW6BCQO93ulDr4bOkQZ51MXDaZwvYw3l6z+2b0XrJNFcnK3Yxkwe
-         48I6b37i9u/azMO/P1Xft++v9nPPBc0s9UHUebr2ady8fKubuzuQv+RPUaTS5CuLGSUp
-         sz8+AgVIZUg+LCU5Ht4EhdSgZX4bAMyrCKKkhLb3ZKVoHwUnuV75cr+4Mqxi/FWne+TY
-         Jb6nuGDS7zi3Z4N40FF3IWs2u/bmjFpwp6/iWFB+D7XqSy63HymEPP6pIgFhSdNSZFPJ
-         YhbA==
+        bh=qIuiAOvvRT8hmO6u7skiN+kIu86pFv2tJYmMai5+A9I=;
+        b=XuO5bWe/BdA9l8ICcwd67xeqYKBHuj6SfFycygxA/YEJknsrtug6jcdtc5+o1CCB9T
+         rnA7cboTm2jAjJkzYYiExhoFetKoql74YWzUDlNsCtoeU3Is/cIZ/Go05k2FQQGWhxG2
+         Tt/faoI7naq/erLMMyeByH2p22ZehudEVpQ61WHKaBoqHPXK6yn/GLHcncTLg7Nj54BQ
+         AOjCgFi4Jprkdo8rl6ugwMMT8rcNH9Q6f1Ln7CnUXggC1Mx+PaGe9UHRS4yQTvTcmaHt
+         PIV9Ks9HFOh4m82LgKue+7FeXVjaI6RprpGkOK58OsbWUgEHcKtD7hGbBlDmbxLBvH8A
+         g3HQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=qiBNYuTTBahvA+prfWDH1NCGtPHc0+6kWQqaJheSr88=;
-        b=eZwOl6COJGeuW6ATBitT6n1Oacko7fkmD0vwSsLS3C7xzqERak+XUo45ObLurU860c
-         HmjL9wixUcRJ+VLoLHGyk3s/VC0vqoamLQumE8G8QEL32wCoHngJ2ovp7dWzOi8zZhQt
-         hRIzvMaiFzzO9BhTjr3s2gn3NlxefxuAGdaBcppC0pW3n9V6op4vwiiMNpwDMapsixWt
-         hdfKHQHOomf1UZf5RBojRuSiYk+AoxM9lMxzzoWCj+36SFewRS0WcDS4CFU5dw1z6XIk
-         h5EwAdCW+MSsjsh/XbMJfySS3x7xyrcnpo2rAcnuVhKgBvru9Pb78jpWfZNxAeNfSiND
-         EWRQ==
-X-Gm-Message-State: AGi0PuaPtbr1ueSXTahv/UvVJ5hSZDROxWQ1kKoD0t88w4p0bXwre0QV
-        AphbanhrMus3STed8i6Z20BxLbdbtJhZ052WKjOiwTLZOg2yS9EgL0M2SVhAVL6eKjM/WHwqKTn
-        C62SzpWGnEJ52ALVBMh1AyGvSvZ9Rd2OCLQlWnW/2S9YO1/Gh2eLmYvvTZIliqttYv0s+I/vy
-X-Google-Smtp-Source: APiQypJ/t7O00c63w8CU/xSa4LGGxInSc6L4NyofnFjO6B4PNa2CJpc6zN2McrHb5oLO2nY20W1EIk9Oapa5
-X-Received: by 2002:a5b:48c:: with SMTP id n12mr24758635ybp.133.1588875023827;
- Thu, 07 May 2020 11:10:23 -0700 (PDT)
-Date:   Thu,  7 May 2020 19:10:02 +0100
+        bh=qIuiAOvvRT8hmO6u7skiN+kIu86pFv2tJYmMai5+A9I=;
+        b=VLRiIVMRFXDouPmSbXaJoEGwxyoeJoHz08LV83QAkxRM7Lxu9nKBcVWP5AKHqM+n8S
+         MCvzQ9S58frzlfsRYMt6I2/DofDsSuj3h4mK73Zw2Q+F0D+0hU4KgYqUxH/LkfaBXGgg
+         JbxC17gk17H4qBYnKH4Hz52rWfyaJzIBc4nxMmYfOh3v3rxahnuoIriC3gd4HnYSbN1q
+         Zf0kZ8C+Za45VljvwcxlOMnA93/uIYPru6LbSaGtA0ywX22VaBpw0CM8UKhcP9iBE2tP
+         yvknJ86ShvFOYZM+85SWjNxTlx/GwhRIdlQTLOomOp59xjXxoGv8FDWYHl3AskhgvChV
+         EhRw==
+X-Gm-Message-State: AGi0PuYjNgoB8nCCmdWrLgzg3vQbhGfli13QKnGTyhe5LGtE8fTkfSZY
+        tbA+Zn/+j1Pu1aSa9BuDY9Jso77nw4CNzCIaQc+K49pcEZjnjFI5PVPpx/cj1CWpZTpnLwFuYqn
+        wXGqMtPL56lDn/S9+e8BNYl2oWnj2oeYIq4EkNVJe5nwetQnBKAaOAj8w3yVy0d7ojDJM3xNt
+X-Google-Smtp-Source: APiQypIxeHB9B0PYPAzgCNlcFIYWdxDklpWlEPAZH+JGUvjzSqRKkgNbLdi3igaAuz0DTY1KWmcvioAv2CsG
+X-Received: by 2002:ad4:42c7:: with SMTP id f7mr15134043qvr.127.1588875026168;
+ Thu, 07 May 2020 11:10:26 -0700 (PDT)
+Date:   Thu,  7 May 2020 19:10:03 +0100
 In-Reply-To: <20200507181012.29791-1-qperret@google.com>
-Message-Id: <20200507181012.29791-5-qperret@google.com>
+Message-Id: <20200507181012.29791-6-qperret@google.com>
 Mime-Version: 1.0
 References: <20200507181012.29791-1-qperret@google.com>
 X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-Subject: [PATCH 04/14] sched: cpufreq: Move sched_cpufreq_governor_change()
+Subject: [PATCH 05/14] sched: cpufreq: Move schedutil_cpu_util()
 From:   Quentin Perret <qperret@google.com>
 To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
@@ -79,101 +79,371 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CPUFreq calls into sched_cpufreq_governor_change() when switching
-governors, which triggers a sched domain rebuild when entering or
-exiting schedutil.
+The CPU util aggregation code for schedutil and EAS currently resides in
+schedutil for historical reasons. However, this complicates modularizing
+schedutil as that would make the core kernel call into a (potential)
+module. While this could probably be done, it seems significantly
+simpler to move that function in fair.c directly, as it has no strong
+dependencies on schedutil anyway. And as an added benefit, that also
+enables that function to be marked as static, hence giving the compiler
+a chance to remove a few function calls from the wake-up path.
 
-Move the function to sched/cpufreq.c to prepare the ground for the
-modularization of schedutil.
+While at it, rename the function to reflect the fact that it is not
+actually schedutil-specific, and remove the now unnecessary
+cpu_util_cfs().
 
 Signed-off-by: Quentin Perret <qperret@google.com>
 ---
- kernel/sched/cpufreq.c           | 33 ++++++++++++++++++++++++++++++++
- kernel/sched/cpufreq_schedutil.c | 33 --------------------------------
- 2 files changed, 33 insertions(+), 33 deletions(-)
+ kernel/sched/cpufreq_schedutil.c | 109 +---------------------------
+ kernel/sched/fair.c              | 118 ++++++++++++++++++++++++++++++-
+ kernel/sched/sched.h             |  32 ++-------
+ 3 files changed, 120 insertions(+), 139 deletions(-)
 
-diff --git a/kernel/sched/cpufreq.c b/kernel/sched/cpufreq.c
-index 7c2fe50fd76d..82f2dda61a55 100644
---- a/kernel/sched/cpufreq.c
-+++ b/kernel/sched/cpufreq.c
-@@ -75,3 +75,36 @@ bool cpufreq_this_cpu_can_update(struct cpufreq_policy *policy)
- 		(policy->dvfs_possible_from_any_cpu &&
- 		 rcu_dereference_sched(*this_cpu_ptr(&cpufreq_update_util_data)));
- }
-+
-+#ifdef CONFIG_ENERGY_MODEL
-+extern bool sched_energy_update;
-+extern struct mutex sched_energy_mutex;
-+
-+static void rebuild_sd_workfn(struct work_struct *work)
-+{
-+	mutex_lock(&sched_energy_mutex);
-+	sched_energy_update = true;
-+	rebuild_sched_domains();
-+	sched_energy_update = false;
-+	mutex_unlock(&sched_energy_mutex);
-+}
-+static DECLARE_WORK(rebuild_sd_work, rebuild_sd_workfn);
-+
-+/*
-+ * EAS shouldn't be attempted without sugov, so rebuild the sched_domains
-+ * on governor changes to make sure the scheduler knows about it.
-+ */
-+void sched_cpufreq_governor_change(struct cpufreq_policy *policy,
-+				  struct cpufreq_governor *old_gov)
-+{
-+	if ((old_gov && old_gov->want_eas) || policy->governor->want_eas) {
-+		/*
-+		 * When called from the cpufreq_register_driver() path, the
-+		 * cpu_hotplug_lock is already held, so use a work item to
-+		 * avoid nested locking in rebuild_sched_domains().
-+		 */
-+		schedule_work(&rebuild_sd_work);
-+	}
-+
-+}
-+#endif
 diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-index c5e5045f7c81..33e67c48f668 100644
+index 33e67c48f668..aeb04cc5b740 100644
 --- a/kernel/sched/cpufreq_schedutil.c
 +++ b/kernel/sched/cpufreq_schedutil.c
-@@ -905,36 +905,3 @@ static int __init sugov_register(void)
- 	return cpufreq_register_governor(&schedutil_gov);
+@@ -183,122 +183,15 @@ static unsigned int get_next_freq(struct sugov_policy *sg_policy,
+ 	return cpufreq_driver_resolve_freq(policy, freq);
  }
- core_initcall(sugov_register);
--
--#ifdef CONFIG_ENERGY_MODEL
--extern bool sched_energy_update;
--extern struct mutex sched_energy_mutex;
--
--static void rebuild_sd_workfn(struct work_struct *work)
--{
--	mutex_lock(&sched_energy_mutex);
--	sched_energy_update = true;
--	rebuild_sched_domains();
--	sched_energy_update = false;
--	mutex_unlock(&sched_energy_mutex);
--}
--static DECLARE_WORK(rebuild_sd_work, rebuild_sd_workfn);
--
+ 
 -/*
-- * EAS shouldn't be attempted without sugov, so rebuild the sched_domains
-- * on governor changes to make sure the scheduler knows about it.
+- * This function computes an effective utilization for the given CPU, to be
+- * used for frequency selection given the linear relation: f = u * f_max.
+- *
+- * The scheduler tracks the following metrics:
+- *
+- *   cpu_util_{cfs,rt,dl,irq}()
+- *   cpu_bw_dl()
+- *
+- * Where the cfs,rt and dl util numbers are tracked with the same metric and
+- * synchronized windows and are thus directly comparable.
+- *
+- * The cfs,rt,dl utilization are the running times measured with rq->clock_task
+- * which excludes things like IRQ and steal-time. These latter are then accrued
+- * in the irq utilization.
+- *
+- * The DL bandwidth number otoh is not a measured metric but a value computed
+- * based on the task model parameters and gives the minimal utilization
+- * required to meet deadlines.
 - */
--void sched_cpufreq_governor_change(struct cpufreq_policy *policy,
--				  struct cpufreq_governor *old_gov)
+-unsigned long schedutil_cpu_util(int cpu, unsigned long util_cfs,
+-				 unsigned long max, enum schedutil_type type,
+-				 struct task_struct *p)
 -{
--	if ((old_gov && old_gov->want_eas) || policy->governor->want_eas) {
--		/*
--		 * When called from the cpufreq_register_driver() path, the
--		 * cpu_hotplug_lock is already held, so use a work item to
--		 * avoid nested locking in rebuild_sched_domains().
--		 */
--		schedule_work(&rebuild_sd_work);
+-	unsigned long dl_util, util, irq;
+-	struct rq *rq = cpu_rq(cpu);
+-
+-	if (!IS_BUILTIN(CONFIG_UCLAMP_TASK) &&
+-	    type == FREQUENCY_UTIL && rt_rq_is_runnable(&rq->rt)) {
+-		return max;
 -	}
 -
+-	/*
+-	 * Early check to see if IRQ/steal time saturates the CPU, can be
+-	 * because of inaccuracies in how we track these -- see
+-	 * update_irq_load_avg().
+-	 */
+-	irq = cpu_util_irq(rq);
+-	if (unlikely(irq >= max))
+-		return max;
+-
+-	/*
+-	 * Because the time spend on RT/DL tasks is visible as 'lost' time to
+-	 * CFS tasks and we use the same metric to track the effective
+-	 * utilization (PELT windows are synchronized) we can directly add them
+-	 * to obtain the CPU's actual utilization.
+-	 *
+-	 * CFS and RT utilization can be boosted or capped, depending on
+-	 * utilization clamp constraints requested by currently RUNNABLE
+-	 * tasks.
+-	 * When there are no CFS RUNNABLE tasks, clamps are released and
+-	 * frequency will be gracefully reduced with the utilization decay.
+-	 */
+-	util = util_cfs + cpu_util_rt(rq);
+-	if (type == FREQUENCY_UTIL)
+-		util = uclamp_rq_util_with(rq, util, p);
+-
+-	dl_util = cpu_util_dl(rq);
+-
+-	/*
+-	 * For frequency selection we do not make cpu_util_dl() a permanent part
+-	 * of this sum because we want to use cpu_bw_dl() later on, but we need
+-	 * to check if the CFS+RT+DL sum is saturated (ie. no idle time) such
+-	 * that we select f_max when there is no idle time.
+-	 *
+-	 * NOTE: numerical errors or stop class might cause us to not quite hit
+-	 * saturation when we should -- something for later.
+-	 */
+-	if (util + dl_util >= max)
+-		return max;
+-
+-	/*
+-	 * OTOH, for energy computation we need the estimated running time, so
+-	 * include util_dl and ignore dl_bw.
+-	 */
+-	if (type == ENERGY_UTIL)
+-		util += dl_util;
+-
+-	/*
+-	 * There is still idle time; further improve the number by using the
+-	 * irq metric. Because IRQ/steal time is hidden from the task clock we
+-	 * need to scale the task numbers:
+-	 *
+-	 *              max - irq
+-	 *   U' = irq + --------- * U
+-	 *                 max
+-	 */
+-	util = scale_irq_capacity(util, irq, max);
+-	util += irq;
+-
+-	/*
+-	 * Bandwidth required by DEADLINE must always be granted while, for
+-	 * FAIR and RT, we use blocked utilization of IDLE CPUs as a mechanism
+-	 * to gracefully reduce the frequency when no tasks show up for longer
+-	 * periods of time.
+-	 *
+-	 * Ideally we would like to set bw_dl as min/guaranteed freq and util +
+-	 * bw_dl as requested freq. However, cpufreq is not yet ready for such
+-	 * an interface. So, we only do the latter for now.
+-	 */
+-	if (type == FREQUENCY_UTIL)
+-		util += cpu_bw_dl(rq);
+-
+-	return min(max, util);
 -}
+-
+ static unsigned long sugov_get_util(struct sugov_cpu *sg_cpu)
+ {
+ 	struct rq *rq = cpu_rq(sg_cpu->cpu);
+-	unsigned long util = cpu_util_cfs(rq);
+ 	unsigned long max = arch_scale_cpu_capacity(sg_cpu->cpu);
+ 
+ 	sg_cpu->max = max;
+ 	sg_cpu->bw_dl = cpu_bw_dl(rq);
+ 
+-	return schedutil_cpu_util(sg_cpu->cpu, util, max, FREQUENCY_UTIL, NULL);
++	return cpu_util_freq(sg_cpu->cpu, max);
+ }
+ 
+ /**
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 02f323b85b6d..dadf0a060abe 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -6377,6 +6377,118 @@ static unsigned long cpu_util_without(int cpu, struct task_struct *p)
+ 	return min_t(unsigned long, util, capacity_orig_of(cpu));
+ }
+ 
++/*
++ * This function computes an effective utilization for the given CPU, to be
++ * used for frequency selection given the linear relation: f = u * f_max.
++ *
++ * The scheduler tracks the following metrics:
++ *
++ *   cpu_util_{cfs,rt,dl,irq}()
++ *   cpu_bw_dl()
++ *
++ * Where the cfs,rt and dl util numbers are tracked with the same metric and
++ * synchronized windows and are thus directly comparable.
++ *
++ * The cfs,rt,dl utilization are the running times measured with rq->clock_task
++ * which excludes things like IRQ and steal-time. These latter are then accrued
++ * in the irq utilization.
++ *
++ * The DL bandwidth number otoh is not a measured metric but a value computed
++ * based on the task model parameters and gives the minimal utilization
++ * required to meet deadlines.
++ */
++static unsigned long aggregate_cpu_util(int cpu, unsigned long util_cfs,
++					unsigned long max,
++					enum cpu_util_type type,
++					struct task_struct *p)
++{
++	unsigned long dl_util, util, irq;
++	struct rq *rq = cpu_rq(cpu);
++
++	if (!IS_BUILTIN(CONFIG_UCLAMP_TASK) &&
++	    type == FREQUENCY_UTIL && rt_rq_is_runnable(&rq->rt)) {
++		return max;
++	}
++
++	/*
++	 * Early check to see if IRQ/steal time saturates the CPU, can be
++	 * because of inaccuracies in how we track these -- see
++	 * update_irq_load_avg().
++	 */
++	irq = cpu_util_irq(rq);
++	if (unlikely(irq >= max))
++		return max;
++
++	/*
++	 * Because the time spend on RT/DL tasks is visible as 'lost' time to
++	 * CFS tasks and we use the same metric to track the effective
++	 * utilization (PELT windows are synchronized) we can directly add them
++	 * to obtain the CPU's actual utilization.
++	 *
++	 * CFS and RT utilization can be boosted or capped, depending on
++	 * utilization clamp constraints requested by currently RUNNABLE
++	 * tasks.
++	 * When there are no CFS RUNNABLE tasks, clamps are released and
++	 * frequency will be gracefully reduced with the utilization decay.
++	 */
++	util = util_cfs + cpu_util_rt(rq);
++	if (type == FREQUENCY_UTIL)
++		util = uclamp_rq_util_with(rq, util, p);
++
++	dl_util = cpu_util_dl(rq);
++
++	/*
++	 * For frequency selection we do not make cpu_util_dl() a permanent part
++	 * of this sum because we want to use cpu_bw_dl() later on, but we need
++	 * to check if the CFS+RT+DL sum is saturated (ie. no idle time) such
++	 * that we select f_max when there is no idle time.
++	 *
++	 * NOTE: numerical errors or stop class might cause us to not quite hit
++	 * saturation when we should -- something for later.
++	 */
++	if (util + dl_util >= max)
++		return max;
++
++	/*
++	 * OTOH, for energy computation we need the estimated running time, so
++	 * include util_dl and ignore dl_bw.
++	 */
++	if (type == ENERGY_UTIL)
++		util += dl_util;
++
++	/*
++	 * There is still idle time; further improve the number by using the
++	 * irq metric. Because IRQ/steal time is hidden from the task clock we
++	 * need to scale the task numbers:
++	 *
++	 *              max - irq
++	 *   U' = irq + --------- * U
++	 *                 max
++	 */
++	util = scale_irq_capacity(util, irq, max);
++	util += irq;
++
++	/*
++	 * Bandwidth required by DEADLINE must always be granted while, for
++	 * FAIR and RT, we use blocked utilization of IDLE CPUs as a mechanism
++	 * to gracefully reduce the frequency when no tasks show up for longer
++	 * periods of time.
++	 *
++	 * Ideally we would like to set bw_dl as min/guaranteed freq and util +
++	 * bw_dl as requested freq. However, cpufreq is not yet ready for such
++	 * an interface. So, we only do the latter for now.
++	 */
++	if (type == FREQUENCY_UTIL)
++		util += cpu_bw_dl(rq);
++
++	return min(max, util);
++}
++
++unsigned long cpu_util_freq(int cpu, unsigned long max)
++{
++	return aggregate_cpu_util(cpu, cpu_util(cpu), max, FREQUENCY_UTIL, NULL);
++}
++
+ /*
+  * Predicts what cpu_util(@cpu) would return if @p was migrated (and enqueued)
+  * to @dst_cpu.
+@@ -6449,7 +6561,7 @@ compute_energy(struct task_struct *p, int dst_cpu, struct perf_domain *pd)
+ 		 * is already enough to scale the EM reported power
+ 		 * consumption at the (eventually clamped) cpu_capacity.
+ 		 */
+-		sum_util += schedutil_cpu_util(cpu, util_cfs, cpu_cap,
++		sum_util += aggregate_cpu_util(cpu, util_cfs, cpu_cap,
+ 					       ENERGY_UTIL, NULL);
+ 
+ 		/*
+@@ -6459,7 +6571,7 @@ compute_energy(struct task_struct *p, int dst_cpu, struct perf_domain *pd)
+ 		 * NOTE: in case RT tasks are running, by default the
+ 		 * FREQUENCY_UTIL's utilization can be max OPP.
+ 		 */
+-		cpu_util = schedutil_cpu_util(cpu, util_cfs, cpu_cap,
++		cpu_util = aggregate_cpu_util(cpu, util_cfs, cpu_cap,
+ 					      FREQUENCY_UTIL, tsk);
+ 		max_util = max(max_util, cpu_util);
+ 	}
+@@ -6556,7 +6668,7 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+ 			 * IOW, placing the task there would make the CPU
+ 			 * overutilized. Take uclamp into account to see how
+ 			 * much capacity we can get out of the CPU; this is
+-			 * aligned with schedutil_cpu_util().
++			 * aligned with aggregate_cpu_util().
+ 			 */
+ 			util = uclamp_rq_util_with(cpu_rq(cpu), util, p);
+ 			if (!fits_capacity(util, cpu_cap))
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index db3a57675ccf..60592cde80e8 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -2397,10 +2397,9 @@ static inline unsigned long capacity_orig_of(int cpu)
+ {
+ 	return cpu_rq(cpu)->cpu_capacity_orig;
+ }
 -#endif
+ 
+ /**
+- * enum schedutil_type - CPU utilization type
++ * enum cpu_util_type - CPU utilization type
+  * @FREQUENCY_UTIL:	Utilization used to select frequency
+  * @ENERGY_UTIL:	Utilization used during energy calculation
+  *
+@@ -2409,16 +2408,12 @@ static inline unsigned long capacity_orig_of(int cpu)
+  * enum is used within schedutil_freq_util() to differentiate the types of
+  * utilization expected by the callers, and adjust the aggregation accordingly.
+  */
+-enum schedutil_type {
++enum cpu_util_type {
+ 	FREQUENCY_UTIL,
+ 	ENERGY_UTIL,
+ };
+ 
+-#ifdef CONFIG_CPU_FREQ_GOV_SCHEDUTIL
+-
+-unsigned long schedutil_cpu_util(int cpu, unsigned long util_cfs,
+-				 unsigned long max, enum schedutil_type type,
+-				 struct task_struct *p);
++unsigned long cpu_util_freq(int cpu, unsigned long max);
+ 
+ static inline unsigned long cpu_bw_dl(struct rq *rq)
+ {
+@@ -2430,30 +2425,11 @@ static inline unsigned long cpu_util_dl(struct rq *rq)
+ 	return READ_ONCE(rq->avg_dl.util_avg);
+ }
+ 
+-static inline unsigned long cpu_util_cfs(struct rq *rq)
+-{
+-	unsigned long util = READ_ONCE(rq->cfs.avg.util_avg);
+-
+-	if (sched_feat(UTIL_EST)) {
+-		util = max_t(unsigned long, util,
+-			     READ_ONCE(rq->cfs.avg.util_est.enqueued));
+-	}
+-
+-	return util;
+-}
+-
+ static inline unsigned long cpu_util_rt(struct rq *rq)
+ {
+ 	return READ_ONCE(rq->avg_rt.util_avg);
+ }
+-#else /* CONFIG_CPU_FREQ_GOV_SCHEDUTIL */
+-static inline unsigned long schedutil_cpu_util(int cpu, unsigned long util_cfs,
+-				 unsigned long max, enum schedutil_type type,
+-				 struct task_struct *p)
+-{
+-	return 0;
+-}
+-#endif /* CONFIG_CPU_FREQ_GOV_SCHEDUTIL */
++#endif /* CONFIG_SMP */
+ 
+ #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
+ static inline unsigned long cpu_util_irq(struct rq *rq)
 -- 
 2.26.2.526.g744177e7f7-goog
 
