@@ -2,118 +2,142 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04934C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 171EFC35280
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDEC720735
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:31:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D626D2082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:34:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eKlfhGtc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbgEGWbn (ORCPT
+        id S1726843AbgEGWeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 18:31:43 -0400
-Received: from mga03.intel.com ([134.134.136.65]:9417 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726437AbgEGWbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 18:31:42 -0400
-IronPort-SDR: x0JDDpSAGYmdhzYLe3Vva7k0tQ8LO0nx1PXMSs9o4eAv2HFE1URSZ4dAyEIwkpKkfdoFTFsClh
- eVObjR+cWYVw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 15:31:42 -0700
-IronPort-SDR: kbLRHyo+0ltdd62PrMP06uUWWD7UTdnXadny6XTSmUCZ/fuGQZkBhI1s7viP8JAV8O+0Lr8udz
- Q97adQ9VwPxw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,365,1583222400"; 
-   d="scan'208";a="295879649"
-Received: from hhuan26-mobl1.amr.corp.intel.com ([10.255.72.181])
-  by fmsmga002.fm.intel.com with ESMTP; 07 May 2020 15:31:40 -0700
-Content-Type: text/plain; charset=iso-8859-15; format=flowed; delsp=yes
-To:     "Nathaniel McCallum" <npmccallum@redhat.com>
-Cc:     "Sean Christopherson" <sean.j.christopherson@intel.com>,
-        "Jarkko Sakkinen" <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, "Neil Horman" <nhorman@redhat.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        "Josh Triplett" <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, "David Rientjes" <rientjes@google.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        "Patrick Uiterwijk" <puiterwijk@redhat.com>
-Subject: Re: [PATCH v29 00/20] Intel SGX foundations
-References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
- <CAOASepPFe_ucuwe7JW_-+VBQ4=+sHqyGXOdA9kUbcYA_9=v0sA@mail.gmail.com>
- <20200506221422.GK3329@linux.intel.com>
- <op.0j8dm0zzwjvjmi@hhuan26-mobl1.amr.corp.intel.com>
- <CAOASepNVckens=wiWpHj291EAo0ndi7GCVHd9j7BPn8rjy7Ykg@mail.gmail.com>
-Date:   Thu, 07 May 2020 17:31:39 -0500
+        Thu, 7 May 2020 18:34:06 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36547 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726519AbgEGWeF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 18:34:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588890844;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=m6LcYSbiruJMZTX1IqqyKZmdj0QYBFKURVtqzLOdhOY=;
+        b=eKlfhGtcuNNah26DWFn8xHj1KcTjZqTiKtF/webaaqvCsqQcWJcpL4Pn1od2E0f4jeuMyr
+        y279vczx0nARvUyBOMrHJtusIPf9Z1ItBPlTtDEEGxHyOLVbYYi8Dd5JDM9GBhT7nBmDpd
+        926VWqtvSMw4IpiWFvh1Jm150pnB+c8=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-311-5aOJO3i6NOGFjp0J07w0Uw-1; Thu, 07 May 2020 18:33:59 -0400
+X-MC-Unique: 5aOJO3i6NOGFjp0J07w0Uw-1
+Received: by mail-wr1-f72.google.com with SMTP id q13so4273438wrn.14
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 15:33:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=m6LcYSbiruJMZTX1IqqyKZmdj0QYBFKURVtqzLOdhOY=;
+        b=UloTuV9hq2IQIc5lqEE3N4YT3pfd3a/9ZqJDhXZNg9SG6nrDh+B9cxS8ZDeLpd1w4S
+         Lbp9Bi8DHZoXG1FtDyANt8eyCS9/RwYwRFYcFUX63tak8fe+6ffkyVh0BqNvoBV51rg1
+         xYPkjFkv96tpHJkOhkWshKZEhT1MFbCoKAJFJY/dmoE/EJrI6q630JHZfgaH4VcBBoAs
+         8uOkmtBFu6z4AyBlb+HVu9+Qky5uu0ZJkX/PBsmmAc0GgbYKycuHhdFwN826dTaFw6Y8
+         QYGdt8601jr575DkUbwQy5x33p0cExKyhzbc5KKX8dcwuEgtD5bZcKl00/1ekDQYzMAL
+         /cNQ==
+X-Gm-Message-State: AGi0PuZL1NXihSMhUFMzctRzncaALfR24yS/ow/rnN/2LdDwYp6Fhqq2
+        AnIHQR09o03MCA5b1n8xU1d8WAeHl7X/R5NktNWm09h0so1IvKwTdx8EA1l5ilZQ+t01JoozQXw
+        /mExT+KEfImHhLhXAdKydW0/B
+X-Received: by 2002:a1c:9d0d:: with SMTP id g13mr13257317wme.102.1588890838734;
+        Thu, 07 May 2020 15:33:58 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJFQjWpHKrGVTS42cCRtRce69jHzd8zAhp5V7FZjYl/ngImOnPRxZo7IHJfA8JrWwI+PbW5UA==
+X-Received: by 2002:a1c:9d0d:: with SMTP id g13mr13257293wme.102.1588890838456;
+        Thu, 07 May 2020 15:33:58 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:8d3e:39e5:cd88:13cc? ([2001:b07:6468:f312:8d3e:39e5:cd88:13cc])
+        by smtp.gmail.com with ESMTPSA id t17sm9481511wro.2.2020.05.07.15.33.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 May 2020 15:33:58 -0700 (PDT)
+Subject: Re: [PATCH v2 8/9] KVM: x86, SVM: isolate vcpu->arch.dr6 from
+ vmcb->save.dr6
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <20200507115011.494562-1-pbonzini@redhat.com>
+ <20200507115011.494562-9-pbonzini@redhat.com> <20200507192808.GK228260@xz-x1>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <dd8eb45b-4556-6aaa-0061-11b9124020b1@redhat.com>
+Date:   Fri, 8 May 2020 00:33:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <20200507192808.GK228260@xz-x1>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-From:   "Haitao Huang" <haitao.huang@linux.intel.com>
-Organization: Intel Corp
-Message-ID: <op.0j9p6106wjvjmi@hhuan26-mobl1.amr.corp.intel.com>
-In-Reply-To: <CAOASepNVckens=wiWpHj291EAo0ndi7GCVHd9j7BPn8rjy7Ykg@mail.gmail.com>
-User-Agent: Opera Mail/1.0 (Win32)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 07 May 2020 11:49:15 -0500, Nathaniel McCallum  
-<npmccallum@redhat.com> wrote:
+On 07/05/20 21:28, Peter Xu wrote:
+>> -	svm->vcpu.arch.dr6 = dr6;
+>> +	WARN_ON(svm->vcpu.arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT);
+>> +	svm->vcpu.arch.dr6 &= ~(DR_TRAP_BITS | DR6_RTM);
+>> +	svm->vcpu.arch.dr6 |= dr6 & ~DR6_FIXED_1;
+> I failed to figure out what the above calculation is going to do... 
 
-> On Thu, May 7, 2020 at 1:03 AM Haitao Huang
-> <haitao.huang@linux.intel.com> wrote:
->>
->> On Wed, 06 May 2020 17:14:22 -0500, Sean Christopherson
->> <sean.j.christopherson@intel.com> wrote:
->>
->> > On Wed, May 06, 2020 at 05:42:42PM -0400, Nathaniel McCallum wrote:
->> >> Tested on Enarx. This requires a patch[0] for v29 support.
->> >>
->> >> Tested-by: Nathaniel McCallum <npmccallum@redhat.com>
->> >>
->> >> However, we did uncover a small usability issue. See below.
->> >>
->> >> [0]:
->> >>  
->> https://github.com/enarx/enarx/pull/507/commits/80da2352aba46aa7bc6b4d1fccf20fe1bda58662
->> >
->> > ...
->> >
->> >> > * Disallow mmap(PROT_NONE) from /dev/sgx. Any mapping (e.g.
->> >> anonymous) can
->> >> >   be used to reserve the address range. Now /dev/sgx supports only
->> >> opaque
->> >> >   mappings to the (initialized) enclave data.
->> >>
->> >> The statement "Any mapping..." isn't actually true.
->> >>
->> >> Enarx creates a large enclave (currently 64GiB). This worked when we
->> >> created a file-backed mapping on /dev/sgx/enclave. However, switching
->> >> to an anonymous mapping fails with ENOMEM. We suspect this is because
->> >> the kernel attempts to allocate all the pages and zero them but there
->> >> is insufficient RAM available. We currently work around this by
->> >> creating a shared mapping on /dev/zero.
->> >
->> > Hmm, the kernel shouldn't actually allocate physical pages unless  
->> they're
->> > written.  I'll see if I can reproduce.
->> >
->>
->> For larger size mmap, I think it requires enabling vm overcommit mode 1:
->> echo 1 | sudo tee /proc/sys/vm/overcommit_memory
->
-> Which means the default experience isn't good.
->
+The calculation is merging the cause of the #DB with the guest DR6.
+It's basically the same effect as kvm_deliver_exception_payload. The
+payload has DR6_RTM flipped compared to DR6, so you have the following
+simplfications:
 
+	payload = (dr6 ^ DR6_RTM) & ~DR6_FIXED_1;
+	/* This is kvm_deliver_exception_payload: */
+        vcpu->arch.dr6 &= ~DR_TRAP_BITS;
+        vcpu->arch.dr6 |= DR6_RTM;
+	/* copy dr6 bits other than RTM */
+        vcpu->arch.dr6 |= payload;
+	/* copy flipped RTM bit */
+        vcpu->arch.dr6 ^= payload & DR6_RTM;
 
-Yes, it is not good default. But this is not sgx specific IIUC. Normal  
-applications would have the same issue if they ask for large mapping than  
-whatever limit kernel enforces by default.
+->
+
+	payload = (dr6 ^ DR6_RTM) & ~DR6_FIXED_1;
+	/* clear RTM here, so that we can OR it below */
+        vcpu->arch.dr6 &= ~(DR_TRAP_BITS | DR6_RTM);
+	/* copy dr6 bits other than RTM */
+        vcpu->arch.dr6 |= payload & ~DR6_RTM;
+	/* copy flipped RTM bit */
+        vcpu->arch.dr6 |= (payload ^ DR6_RTM) & DR6_RTM;
+
+->
+
+	/* we can drop the double XOR of DR6_RTM */
+	dr6 &= ~DR6_FIXED_1;
+        vcpu->arch.dr6 &= ~(DR_TRAP_BITS | DR6_RTM);
+        vcpu->arch.dr6 |= dr6 & ~DR6_RTM;
+        vcpu->arch.dr6 |= dr6 & DR6_RTM;
+
+->
+
+	/* we can do the two ORs with a single operation */
+        vcpu->arch.dr6 &= ~(DR_TRAP_BITS | DR6_RTM);
+        vcpu->arch.dr6 |= dr6 & ~DR6_FIXED_1;
+
+> E.g., I
+> think the old "BT|BS|BD" bits in the old arch.dr6 cache will be leftover even
+> if none of them is set in save.dr6, while we shouldn't?
+
+Those bits should be kept; this is covered for example by the "hw
+breakpoint (test that dr6.BS is not cleared)" testcase in kvm-unit-tests
+x86/debug.c.
+
+Thanks,
+
+Paolo
+
