@@ -2,106 +2,72 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1953EC35280
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CA4C35280
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 000FE20870
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 418E120870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:47:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbgEGVrB (ORCPT
+        id S1727122AbgEGVri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 17:47:01 -0400
-Received: from mga09.intel.com ([134.134.136.24]:30012 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726437AbgEGVrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 17:47:00 -0400
-IronPort-SDR: lZy1lW9BpjeakLNig3qvWwA18fGMQhtZVfMP07O7UGbbtjgYhWNCdb45cw1jmvINoSVmYsad0d
- qoq8vHXJ1c0A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 14:46:54 -0700
-IronPort-SDR: XSzS7dTe6Wy7C+q//uzNDJRFqXYcvr54hWsflNNGVA2u2d/Yo2Vb3KSk0fM0DqTCqOyLDGNX46
- U16slWjhO8sQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,365,1583222400"; 
-   d="scan'208";a="462004281"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by fmsmga005.fm.intel.com with ESMTP; 07 May 2020 14:46:52 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 5A34B301C1B; Thu,  7 May 2020 14:46:52 -0700 (PDT)
-Date:   Thu, 7 May 2020 14:46:52 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [RFC PATCH 0/7] Share events between metrics
-Message-ID: <20200507214652.GC3538@tassilo.jf.intel.com>
-References: <20200507081436.49071-1-irogers@google.com>
- <20200507174835.GB3538@tassilo.jf.intel.com>
- <CAP-5=fUdoGJs+yViq3BOcJa7YyF53AD9RGQm8aRW72nMH0sKDA@mail.gmail.com>
+        Thu, 7 May 2020 17:47:38 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43612 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbgEGVri (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 17:47:38 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jWoMh-0000Um-MN; Thu, 07 May 2020 21:47:35 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Jens Axboe <axboe@kernel.dk>, drbd-dev@lists.linbit.com,
+        linux-block@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] block/drbd: remove redundant initialization to variable rv
+Date:   Thu,  7 May 2020 22:47:35 +0100
+Message-Id: <20200507214735.66114-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fUdoGJs+yViq3BOcJa7YyF53AD9RGQm8aRW72nMH0sKDA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > - without this change events within a metric may get scheduled
-> >   together, after they may appear as part of a larger group and be
-> >   multiplexed at different times, lowering accuracy - however, less
-> >   multiplexing may compensate for this.
-> 
-> I agree the heuristic in this patch set is naive and would welcome to
-> improve it from your toplev experience. I think this change is
-> progress on TopDownL1 - would you agree?
+From: Colin Ian King <colin.king@canonical.com>
 
-TopdownL1 in non SMT mode should always fit. Inside a group
-deduping always makes sense. 
+The variable rv is being initialized with a value that is never read
+and it is being updated later with a new value.  The initialization is
+redundant and can be removed.
 
-The problem is SMT mode where it doesn't fit. toplev tries
-to group each node and each level together.
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/block/drbd/drbd_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> I'm wondering if what is needed are flags to control behavior. For
-> example, avoiding the use of groups altogether. For TopDownL1 I see.
+diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
+index c094c3c2c5d4..22dfaa91a89d 100644
+--- a/drivers/block/drbd/drbd_main.c
++++ b/drivers/block/drbd/drbd_main.c
+@@ -3522,7 +3522,7 @@ void drbd_uuid_set_bm(struct drbd_device *device, u64 val) __must_hold(local)
+  */
+ int drbd_bmio_set_n_write(struct drbd_device *device) __must_hold(local)
+ {
+-	int rv = -EIO;
++	int rv;
+ 
+ 	drbd_md_set_flag(device, MDF_FULL_SYNC);
+ 	drbd_md_sync(device);
+-- 
+2.25.1
 
-Yes the current situation isn't great.
-
-For Topdown your patch clearly is an improvement, I'm not sure
-it's for everything though.
-
-Probably the advanced heuristics are only useful for a few
-formulas, most are very simple. So maybe it's ok. I guess
-would need some testing over the existing formulas.
-
-
--Andi
