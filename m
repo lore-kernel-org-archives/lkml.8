@@ -2,45 +2,47 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08154C54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA00C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D877720575
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8CE620575
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:59:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="njSqFtJV"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="R26Zokr9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbgEGV7k (ORCPT
+        id S1727789AbgEGV7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 17:59:40 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:36708 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727097AbgEGV7i (ORCPT
+        Thu, 7 May 2020 17:59:46 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:22294 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727121AbgEGV7o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 17:59:38 -0400
+        Thu, 7 May 2020 17:59:44 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588888778; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=2JzIuaOGhuGmjvd/Q8TuZu3HdVzNfJc54yOI38k0duI=; b=njSqFtJVAb1wlTMLtG2EkMVmNUL6FaNrmPQq3un0INYkA9xe0Mtuck1QLEAkEXjbzEw8LLjv
- S66/ArYBkmkqSHuw0Xsif/gG2uhhyhPWqINPAjyBt3w4fHFNQnGdF/7SvSf/+rl7Y9512Qok
- XFLjywkZkl4XW4REkkL/NFtDb6k=
-X-Mailgun-Sending-Ip: 104.130.122.27
+ s=smtp; t=1588888784; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=QX9dMGZh3sTSI8f7klwDJ7QBJ+Rc6eu2SY3BfKNx4VY=; b=R26Zokr9oDHZD9OdNslbVGJuio9x5+wvlM0Dh+w68o9n++mZ58MhoB2RyLae3SVLJ4gFfxkL
+ C9ftKTlWSLff60Io0/G7AMnq7VEoGS6sm7U3yEQTGiURUtkSPJIT4sgZiBNnEGXXCZwufwA8
+ JcseG7w8Fmb0SmJBsZIPV0JJxOI=
+X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb484c5.7f707f34a688-smtp-out-n01;
- Thu, 07 May 2020 21:59:33 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5eb484c8.7f35305596f8-smtp-out-n01;
+ Thu, 07 May 2020 21:59:36 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 19D15C43637; Thu,  7 May 2020 21:59:33 +0000 (UTC)
+        id F40EFC4478C; Thu,  7 May 2020 21:59:34 +0000 (UTC)
 Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 10DA3C433D2;
-        Thu,  7 May 2020 21:59:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 10DA3C433D2
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 13D2FC433D2;
+        Thu,  7 May 2020 21:59:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 13D2FC433D2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
 From:   Wesley Cheng <wcheng@codeaurora.org>
@@ -49,83 +51,38 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
 Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
         jackp@codeaurora.org, Wesley Cheng <wcheng@codeaurora.org>
-Subject: [RFC 0/3] Re-introduce TX FIFO resize for larger EP bursting 
-Date:   Thu,  7 May 2020 14:59:25 -0700
-Message-Id: <1588888768-25315-1-git-send-email-wcheng@codeaurora.org>
+Subject: [RFC 3/3] dt-bindings: usb: dwc3: Add entry for tx-fifo-resize
+Date:   Thu,  7 May 2020 14:59:28 -0700
+Message-Id: <1588888768-25315-4-git-send-email-wcheng@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1588888768-25315-1-git-send-email-wcheng@codeaurora.org>
+References: <1588888768-25315-1-git-send-email-wcheng@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, there is no functionality to allow for resizing the TXFIFOs, and
-relying on the HW default setting for the TXFIFO depth.  In most cases, the
-HW default is probably sufficient, but for USB compositions that contain
-multiple functions that require EP bursting, the default settings
-might not be enough.  Also to note, the current SW will assign an EP to a
-function driver w/o checking to see if the TXFIFO size for that particular
-EP is large enough. (this is a problem if there are multiple HW defined
-values for the TXFIFO size)
+Re-introduce the comment for the tx-fifo-resize setting for the DWC3
+controller.
 
-It is mentioned in the SNPS databook that a minimum of TX FIFO depth = 3
-is required for an EP that supports bursting.  Otherwise, there may be
-frequent occurences of bursts ending.  For high bandwidth functions,
-such as data tethering (protocols that support data aggregation), mass
-storage, and media transfer protocol (over FFS), the bMaxBurst value can be
-large, and a bigger TXFIFO depth may prove to be beneficial in terms of USB
-throughput. (which can be associated to system access latency, etc...)  It
-allows for a more consistent burst of traffic, w/o any interruptions, as
-data is readily available in the FIFO.
+Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+---
+ Documentation/devicetree/bindings/usb/dwc3.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-With testing done using the mass storage function driver, the results show
-that with a larger TXFIFO depth, the bandwidth increased significantly.
-
-Test Parameters:
- - Platform: Qualcomm SM8150
- - bMaxBurst = 6
- - USB req size = 256kB
- - Num of USB reqs = 16
- - USB Speed = Super-Speed
- - Function Driver: Mass Storage (w/ ramdisk)
- - Test Application: CrystalDiskMark
-
-Results:
-
-TXFIFO Depth = 3 max packets
-
-Test Case | Data Size | AVG tput (in MB/s)
--------------------------------------------
-Sequential|1 GB x     | 
-Read      |9 loops    | 193.60
-	  |           | 195.86
-          |           | 184.77
-          |           | 193.60
--------------------------------------------
-
-TXFIFO Depth = 6 max packets
-
-Test Case | Data Size | AVG tput (in MB/s)
--------------------------------------------
-Sequential|1 GB x     | 
-Read      |9 loops    | 287.35
-	  |           | 304.94
-          |           | 289.64
-          |           | 293.61
--------------------------------------------
-
-Wesley Cheng (3):
-  usb: dwc3: Resize TX FIFOs to meet EP bursting requirements
-  arm64: boot: dts: qcom: sm8150: Enable dynamic TX FIFO resize logic
-  dt-bindings: usb: dwc3: Add entry for tx-fifo-resize
-
- Documentation/devicetree/bindings/usb/dwc3.txt |  2 +-
- arch/arm64/boot/dts/qcom/sm8150.dtsi           |  1 +
- drivers/usb/dwc3/core.c                        |  2 +
- drivers/usb/dwc3/core.h                        |  6 ++
- drivers/usb/dwc3/ep0.c                         | 40 ++++++++++-
- drivers/usb/dwc3/gadget.c                      | 95 ++++++++++++++++++++++++++
- 6 files changed, 144 insertions(+), 2 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index 9946ff9..489f5da 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -105,7 +105,7 @@ Optional properties:
+ 			1-16 (DWC_usb31 programming guide section 1.2.3) to
+ 			enable periodic ESS TX threshold.
+ 
+- - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
++ - tx-fifo-resize: determines if the FIFO *has* to be reallocated.
+  - snps,incr-burst-type-adjustment: Value for INCR burst type of GSBUSCFG0
+ 			register, undefined length INCR burst type enable and INCRx type.
+ 			When just one value, which means INCRX burst mode enabled. When
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
