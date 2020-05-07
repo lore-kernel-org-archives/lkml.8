@@ -2,168 +2,103 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 027A7C47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BABBFC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9BC320838
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9613A2083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:14:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jXq0HKJw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgEGONd (ORCPT
+        id S1727802AbgEGOOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:13:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46896 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgEGONb (ORCPT
+        Thu, 7 May 2020 10:14:05 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:22299 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726393AbgEGOOE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:13:31 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 679BBC05BD09;
-        Thu,  7 May 2020 07:13:31 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jWhHD-0002c2-EQ; Thu, 07 May 2020 16:13:27 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id EA21C1C03AB;
-        Thu,  7 May 2020 16:13:26 +0200 (CEST)
-Date:   Thu, 07 May 2020 14:13:26 -0000
-From:   "tip-bot2 for Kyung Min Park" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/timers] x86/delay: Refactor delay_mwaitx() for TPAUSE support
-Cc:     Fenghua Yu <fenghua.yu@intel.com>,
-        Kyung Min Park <kyung.min.park@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <1587757076-30337-3-git-send-email-kyung.min.park@intel.com>
-References: <1587757076-30337-3-git-send-email-kyung.min.park@intel.com>
+        Thu, 7 May 2020 10:14:04 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588860843; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=ouV/sAAm+HHkNw8+tVJPzvplbCTaOzR2TqpfgCh2bos=;
+ b=jXq0HKJwomj9e1xe6cVZXopppxr4CflWAATwBwrK35BfeIbWgPhPiQFKhrNBDmUZK/fyOf8t
+ /bxhjCrHeXzVsPcqofzWrn0pMERMXEAuuo/9nZL+vStiypWoFEoiHiTfPCNtCTfKFc9M1BaF
+ zoht9H9lz5VNixo1cyPnqQ8eSQ8=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb417aa.7f54e805f5a8-smtp-out-n02;
+ Thu, 07 May 2020 14:14:02 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9F620C4478C; Thu,  7 May 2020 14:14:02 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DC865C433F2;
+        Thu,  7 May 2020 14:14:01 +0000 (UTC)
 MIME-Version: 1.0
-Message-ID: <158886080690.8414.16414662834297433879.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Date:   Thu, 07 May 2020 19:44:01 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCHv4 4/6] iommu/arm-smmu-qcom: Request direct mapping for
+ modem device
+In-Reply-To: <20200507130210.GB31783@willie-the-truck>
+References: <cover.1587407458.git.saiprakash.ranjan@codeaurora.org>
+ <8ef5d93c74f5cd9e4a6edab86d1d46efbf3aa038.1587407458.git.saiprakash.ranjan@codeaurora.org>
+ <20200507130210.GB31783@willie-the-truck>
+Message-ID: <f41beaa18f0ba49c3c6f7552291a0641@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/timers branch of tip:
+Hey WIll,
 
-Commit-ID:     46f90c7aad62be1af76588108c730d826308a801
-Gitweb:        https://git.kernel.org/tip/46f90c7aad62be1af76588108c730d826308a801
-Author:        Kyung Min Park <kyung.min.park@intel.com>
-AuthorDate:    Fri, 24 Apr 2020 12:37:55 -07:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 07 May 2020 16:06:19 +02:00
+On 2020-05-07 18:32, Will Deacon wrote:
+> On Tue, Apr 21, 2020 at 12:03:52AM +0530, Sai Prakash Ranjan wrote:
+>> From: Sibi Sankar <sibis@codeaurora.org>
+>> 
+>> The Q6 modem sub-system has direct access to DDR through memnoc.
+>> Also SMMU is not expected to provide access control/translation
+>> for these SIDs (sandboxing of the modem is achieved through XPUs
+>> engaged using SMC calls). So request direct mapping for modem on
+>> platforms which don't have TrustZone.
+> 
+> The Z7 space rocket framework has limited access to water through 
+> BROADCHAN.
+> Also, this commit message really sucks. So please can you rewrite it in 
+> a
+> way that makes sense to people outside of your office?
 
-x86/delay: Refactor delay_mwaitx() for TPAUSE support
+lol, sure I'll re-word ^^ tday
 
-Refactor code to make it easier to add a new model specific function to
-delay for a number of cycles.
+> 
+> Will
 
-No functional change.
-
-Co-developed-by: Fenghua Yu <fenghua.yu@intel.com>
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-Signed-off-by: Kyung Min Park <kyung.min.park@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/1587757076-30337-3-git-send-email-kyung.min.park@intel.com
-
----
- arch/x86/lib/delay.c | 48 ++++++++++++++++++++++++++-----------------
- 1 file changed, 30 insertions(+), 18 deletions(-)
-
-diff --git a/arch/x86/lib/delay.c b/arch/x86/lib/delay.c
-index 887d52d..fe91dc1 100644
---- a/arch/x86/lib/delay.c
-+++ b/arch/x86/lib/delay.c
-@@ -34,6 +34,7 @@ static void delay_loop(u64 __loops);
-  * during boot.
-  */
- static void (*delay_fn)(u64) __ro_after_init = delay_loop;
-+static void (*delay_halt_fn)(u64 start, u64 cycles) __ro_after_init;
- 
- /* simple loop based delay: */
- static void delay_loop(u64 __loops)
-@@ -100,9 +101,33 @@ static void delay_tsc(u64 cycles)
-  * counts with TSC frequency. The input value is the number of TSC cycles
-  * to wait. MWAITX will also exit when the timer expires.
-  */
--static void delay_mwaitx(u64 cycles)
-+static void delay_halt_mwaitx(u64 unused, u64 cycles)
- {
--	u64 start, end, delay;
-+	u64 delay;
-+
-+	delay = min_t(u64, MWAITX_MAX_WAIT_CYCLES, cycles);
-+	/*
-+	 * Use cpu_tss_rw as a cacheline-aligned, seldomly accessed per-cpu
-+	 * variable as the monitor target.
-+	 */
-+	 __monitorx(raw_cpu_ptr(&cpu_tss_rw), 0, 0);
-+
-+	/*
-+	 * AMD, like Intel, supports the EAX hint and EAX=0xf means, do not
-+	 * enter any deep C-state and we use it here in delay() to minimize
-+	 * wakeup latency.
-+	 */
-+	__mwaitx(MWAITX_DISABLE_CSTATES, delay, MWAITX_ECX_TIMER_ENABLE);
-+}
-+
-+/*
-+ * Call a vendor specific function to delay for a given amount of time. Because
-+ * these functions may return earlier than requested, check for actual elapsed
-+ * time and call again until done.
-+ */
-+static void delay_halt(u64 __cycles)
-+{
-+	u64 start, end, cycles = __cycles;
- 
- 	/*
- 	 * Timer value of 0 causes MWAITX to wait indefinitely, unless there
-@@ -114,21 +139,7 @@ static void delay_mwaitx(u64 cycles)
- 	start = rdtsc_ordered();
- 
- 	for (;;) {
--		delay = min_t(u64, MWAITX_MAX_WAIT_CYCLES, cycles);
--
--		/*
--		 * Use cpu_tss_rw as a cacheline-aligned, seldomly
--		 * accessed per-cpu variable as the monitor target.
--		 */
--		__monitorx(raw_cpu_ptr(&cpu_tss_rw), 0, 0);
--
--		/*
--		 * AMD, like Intel's MWAIT version, supports the EAX hint and
--		 * EAX=0xf0 means, do not enter any deep C-state and we use it
--		 * here in delay() to minimize wakeup latency.
--		 */
--		__mwaitx(MWAITX_DISABLE_CSTATES, delay, MWAITX_ECX_TIMER_ENABLE);
--
-+		delay_halt_fn(start, cycles);
- 		end = rdtsc_ordered();
- 
- 		if (cycles <= end - start)
-@@ -147,7 +158,8 @@ void __init use_tsc_delay(void)
- 
- void use_mwaitx_delay(void)
- {
--	delay_fn = delay_mwaitx;
-+	delay_halt_fn = delay_halt_mwaitx;
-+	delay_fn = delay_halt;
- }
- 
- int read_current_timer(unsigned long *timer_val)
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
