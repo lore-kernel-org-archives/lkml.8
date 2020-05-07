@@ -2,97 +2,158 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4674CC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F428C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29A882075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 363642075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:25:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="TzwoQp+Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbgEGNZF (ORCPT
+        id S1725879AbgEGNZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 09:25:05 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:53803 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbgEGNZA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 09:25:00 -0400
-Received: from mail-qv1-f48.google.com ([209.85.219.48]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MUGqT-1jgPph155X-00RJ9O; Thu, 07 May 2020 15:24:58 +0200
-Received: by mail-qv1-f48.google.com with SMTP id a15so623335qvt.9;
-        Thu, 07 May 2020 06:24:57 -0700 (PDT)
-X-Gm-Message-State: AGi0PubcbnKfTZF/aTRyPpow6VVBcaniSl7c4HI7NWDL9wTgXkHef1PE
-        TbO1w/BdjwN0hp/yhrV8ErY2M4V7OZgYKgTRLVc=
-X-Google-Smtp-Source: APiQypLIAviOYBCYxRnII0AvfushamRE+8Q+7+nbZJVXRnY9HSekpz3+fnWiynyno8isRVxgoJHmyQo0K7lErlQsonk=
-X-Received: by 2002:a0c:ea43:: with SMTP id u3mr12360811qvp.211.1588857896673;
- Thu, 07 May 2020 06:24:56 -0700 (PDT)
+        Thu, 7 May 2020 09:25:33 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:53638 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725857AbgEGNZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 09:25:16 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 91A704C844;
+        Thu,  7 May 2020 13:25:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :references:in-reply-to:x-mailer:message-id:date:date:subject
+        :subject:from:from:received:received:received; s=mta-01; t=
+        1588857909; x=1590672310; bh=xI7OXxUNJfQlxBqN+ExXRkqa3CSJstsGyKI
+        w55C7GwU=; b=TzwoQp+YCOVHCFYQwEgvnTfWiTKp1l8RRUtJuRl3pS1krLLOqNv
+        vTYolMWUlLNgC9IlXoE2p73Iqu9a2N8VE5A02KjbIN22HVvumXBU8NFwfvU7DWX2
+        jwonlSFQ5KPh86bE8LxWEpWyLAIr/L9Hn50jJYYNHCpQcT5oqR6auvCw=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id DgCWfimcnoLq; Thu,  7 May 2020 16:25:09 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 50EA94C83E;
+        Thu,  7 May 2020 16:25:07 +0300 (MSK)
+Received: from localhost.dev.yadro.com (10.199.0.174) by
+ T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Thu, 7 May 2020 16:25:08 +0300
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v13 1/2] dt-bindings: proximity: provide vcnl3020 device tree binding document
+Date:   Thu, 7 May 2020 16:25:59 +0300
+Message-ID: <20200507132600.8801-2-i.mikhaylov@yadro.com>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200507132600.8801-1-i.mikhaylov@yadro.com>
+References: <20200507132600.8801-1-i.mikhaylov@yadro.com>
 MIME-Version: 1.0
-References: <20200507112955.23520-1-geert+renesas@glider.be>
-In-Reply-To: <20200507112955.23520-1-geert+renesas@glider.be>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 7 May 2020 15:24:39 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2TcOrWOhLKdovo0qTTx1PB4+iWVyFyzQOen7ZRwNZhJA@mail.gmail.com>
-Message-ID: <CAK8P3a2TcOrWOhLKdovo0qTTx1PB4+iWVyFyzQOen7ZRwNZhJA@mail.gmail.com>
-Subject: Re: [PATCH 0/4] qoriq: Add platform dependencies
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        IDE-ML <linux-ide@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:PgbK4jomL/oPmttcNNnNdvjMIBGCXYxepf+gQMxPOyS7UoUERQ/
- hW+ZUN4S6Wz5oQZDDsyqlH3P8NKPG6bDDMVnwBMiIDmMOL01fhNIiYpbmsqRAobYyDtdxAJ
- 2O4Sg1SLW3ojyS9z8M/8Yrn2v3t9pOpKufGf+NtrKUtYS+0atpuVpIQBvjzp79GUiuPrsBD
- oNvy58oNqsh/cvEGxx0Ug==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:UKGBaAfyG2A=:ipOGl0fuZujD4juaVnmoX9
- t2Iq6oBdXx59XiTToq9LBoAlqD/08LcZnKcwP7sX6iAA5BLddg82vBftJKAo2AesDb8BK3KBn
- H5ClSqBp0gqKpvcpb/Tn+1ReWapcz1+wUCU82UvucS8WHy+D2pRw/7y3yjX16EMkWwKwwSZtM
- L6+4EXrpp/6DkQ+WV52GPMrAzy+sl5gIHrnr0ekmumxP9Mkc+zc3om4cGWy6Z+8rI0HpQsjbA
- P9AIIlFJnqFc7TNYJ78GEDpK8dY5pOx2p/6W2kES78vuAKT290c0sy5rRec4H7a56rmW7DYm7
- Nwm5VDMms9PUPuLn/cOy0PLHZTpqJqD2WPgSQfe54FC1SmBAcIOP949kJja1+dDof11JAqHHF
- 5ZAHbPbprqiUOtlZNB70FV7NBBgOfhSngZ+RpFidKqqCERD7DLm9ubqVye3CNGCCSfv1kZkR1
- b75oHcDFUnqbQ2B5leNHUqoOk7tiUQ93FGiXMSxLfeIr2cFdKgXzD05r1MOleWLmke40zxiMe
- KleXNBIWbhMFJTUEEhQV8zi9C5G+qRsCO4lwtDL81MbooF2L6psOk8orZLXxdH7x1UXEJg4yn
- ToRzNBytYemhZ5omLilJBAFU1AhIvUHXZ12iaK1vE4QDj2ANFxjDcnmTamxEON6DeeHeDn8WO
- cByGB/07BOns8kkblHUxyI85+3byXg3zo5jgIBU4/8hHnSLlB5isxJepVARAlyWX8iKC82kDd
- Xonc6yh4nxVxPmBP7DqeWiJJK72LHhZtyJnloi+o1JStoMTM/D/g/xes0ZRLDZXvIjEm/speC
- KZVZOuczobNrMvl9K1Ur2GWXINeXsZBFiLjqvyrdCYybdc28zw=
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.199.0.174]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 7, 2020 at 1:30 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
->
->         Hi all,
->
-> Several QorIQ blocks are only present on Freescale or NXP SoCs.
-> This series adds platform dependencies to the corresponding config
-> ymbols, to avoid asking the user about them when configuring a kernel
-> without support for these SoCs.
->
-> Most patches in this series are independent, but the third patch may
-> cause some Kconfig warnings when applied before the second patch, and
-> enabling the QorIQ CPU frequency scaling driver in a non-Layerscape
-> kernel.
->
-> Thanks for your comments!
+Mostly standard i2c driver with some additional led-current option
+for vcnl3020.
 
-These all look good to me, thank you for the improvements!
+Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+---
+ .../iio/proximity/vishay,vcnl3020.yaml        | 65 +++++++++++++++++++
+ 1 file changed, 65 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+diff --git a/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml b/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
+new file mode 100644
+index 000000000000..408dee17cdf5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
+@@ -0,0 +1,65 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/proximity/vishay,vcnl3020.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Integrated Proximity Sensor With Infrared Emitter
++
++maintainers:
++  - Ivan Mikhaylov <i.mikhaylov@yadro.com>
++
++description: |
++  The VCNL3020 is a fully integrated proximity sensor. Fully integrated means
++  that the infrared emitter is included in the package. It has 16-bit
++  resolution. It includes a signal processing IC and features standard I2C
++  communication interface. It features an interrupt function.
++
++  Specifications about the devices can be found at:
++  https://www.vishay.com/docs/84150/vcnl3020.pdf
++
++properties:
++  compatible:
++    enum:
++      - vishay,vcnl3020
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  vdd-supply:
++    description: Regulator that provides power to the sensor
++
++  vddio-supply:
++    description: Regulator that provides power to the bus
++
++  vishay,led-current-microamp:
++    description:
++      IR LED current value with valid Range = 0 to 20d. e.g. 0 = 0 mA,
++      1 = 10 mA, 20 = 200 mA. LED Current is limited to 200 mA for values
++      higher than decimal 20. The drive current for the LED used in proximity
++      sensing.
++    enum: [0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000,
++          100000, 110000, 120000, 130000, 140000, 150000, 160000, 170000,
++          180000, 190000, 200000]
++    default: 20000
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    i2c {
++
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        proximity@13 {
++              compatible = "vishay,vcnl3020";
++              reg = <0x13>;
++              vishay,led-current-microamp = <200000>;
++        };
++    };
+-- 
+2.21.1
+
