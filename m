@@ -2,106 +2,181 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD9CC54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F79EC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA9042075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D6D620753
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:04:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HUQq+TWi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgEGIEO (ORCPT
+        id S1726815AbgEGIEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 04:04:14 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:9320 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726750AbgEGIEN (ORCPT
+        Thu, 7 May 2020 04:04:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45334 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725879AbgEGIEs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 04:04:13 -0400
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 07 May 2020 13:32:57 +0530
-Received: from minint-dvc2thc.qualcomm.com (HELO sartgarg-linux.qualcomm.com) ([10.206.24.245])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 07 May 2020 13:32:53 +0530
-Received: by sartgarg-linux.qualcomm.com (Postfix, from userid 2339771)
-        id 1AC47261C; Thu,  7 May 2020 13:32:53 +0530 (IST)
-From:   Sarthak Garg <sartgarg@codeaurora.org>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
-Cc:     vbadigan@codeaurora.org, stummala@codeaurora.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Sarthak Garg <sartgarg@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS)
-Subject: [PATCH V1 1/7] dt-bindings: mmc: Add information for DLL register properties
-Date:   Thu,  7 May 2020 13:32:08 +0530
-Message-Id: <1588838535-6050-2-git-send-email-sartgarg@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1588838535-6050-1-git-send-email-sartgarg@codeaurora.org>
-References: <1588838535-6050-1-git-send-email-sartgarg@codeaurora.org>
+        Thu, 7 May 2020 04:04:48 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B956C061A10
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 01:04:48 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id f11so5320967ljp.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 01:04:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=jFEPt2GmiBe6Ipss2u+04CS26r3/oHgWQw1wXvAx3Vc=;
+        b=HUQq+TWiPZTuLlEyrK8fwDou9qOOcf1N8PV7GI13fytSHFzdWzzm1aj8tJKv0sYfTE
+         JAZUvtez51bmRykV3GhMGo4QczmOqtsx6ej8jWQ9uZN+cdPArs7chVthQqAoWpVvHqrW
+         3NPnAsy0eHwntoDDpkwHjjSN3Zia3Q4LXMse0rQauEJWUIjtUSphFe+QGkeVlzZsG8Ri
+         lDPpm+GC8AYvZTaaaRO0iuN9145g4dadhPWmkXY2em2ljw+CxBx3ZVq0rwQkE5ig1Bb8
+         EN83COnSnQwt1VAeAlIz8Bs608NU2NxbRhSj0/oubnVJzt3J2WZZtYBmH9DIwlkxjihb
+         f4hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=jFEPt2GmiBe6Ipss2u+04CS26r3/oHgWQw1wXvAx3Vc=;
+        b=Edwn+wQtRqG2kGZO9H3iu6gR8NrFcbmj0rW49vqh4UIMorJkf3w23sE1PJfzQBhb2u
+         prkJVDfKJYhQIfN3n7cdgOlBiRMXWZMyuFUZdqSe7vqrgZ9qqKiH7tIG767d/R5TLcuM
+         awATe14+cw0Ex0dQig7i+ZcmJiVXpQ+fnLInjHp4vxHq+BAs4zkUx8xZ/81sVu2bWCsD
+         9Gug4AIQs0dFDWiMWjuoOHH0Q6H6RmeN7Gsq7yWg1AYQF6L0d+RQz9A5zEmoeHNU/BMJ
+         PA7O4Hrc+xd3GIHWK4aH2ZzAHz8nVDPiqRkwem/Ueti1pGyugfeZy1yy8cOIAPzNk0BB
+         RW9w==
+X-Gm-Message-State: AGi0PuYr7Cp+vb1Ukm3GxcRuUAiXexjdC4iKBfbruaJCMn80p1LBnAss
+        LNe4fATwH8bWazi1SMhbqpPF/h/cpJL4QUVzJ8UPuhjz
+X-Google-Smtp-Source: APiQypLtLFC/PCM1CmbsMF6jMokfdxfz+Xy73NsH/pkys6w2SxkwaSOSL40uXb+AJ/j81dvX4kQ6sZanKIVYZ+VyJcQ=
+X-Received: by 2002:a2e:a0cf:: with SMTP id f15mr7186227ljm.165.1588838686720;
+ Thu, 07 May 2020 01:04:46 -0700 (PDT)
+MIME-Version: 1.0
+From:   butt3rflyh4ck <butterflyhuangxx@gmail.com>
+Date:   Thu, 7 May 2020 16:04:25 +0800
+Message-ID: <CAFcO6XMGT42wFBxEa01Ee5Msuecm+WiXnn4rc-VWkC4vTzycPg@mail.gmail.com>
+Subject: KASAN: use-after-free Write in snd_rawmidi_kernel_write1
+To:     security@kernel.org
+Cc:     syzkaller <syzkaller@googlegroups.com>, tiwai@suse.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add information regarding DLL register properties for getting target
-specific configurations. These DLL register settings may vary from
-target to target.
+I report a bug (in linux-5.7-rc1) found by syzkaller.
 
-Also new compatible string value for sm8250 target.
+kernel config: https://github.com/butterflyhack/syzkaller-fuzz/blob/master/v5.7.0-rc1.config
+reproducer: https://github.com/butterflyhack/syzkaller-fuzz/blob/master/repro.cprog
 
-Signed-off-by: Sarthak Garg <sartgarg@codeaurora.org>
----
- Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+I test the reproducer in linux-5.7-rc4 and crash too.
 
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-index 5445931..b8e1d2b 100644
---- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-@@ -17,6 +17,7 @@ Required properties:
- 		"qcom,msm8916-sdhci", "qcom,sdhci-msm-v4"
- 		"qcom,msm8992-sdhci", "qcom,sdhci-msm-v4"
- 		"qcom,msm8996-sdhci", "qcom,sdhci-msm-v4"
-+		"qcom,sm8250-sdhci", "qcom,sdhci-msm-v5"
- 		"qcom,sdm845-sdhci", "qcom,sdhci-msm-v5"
- 		"qcom,qcs404-sdhci", "qcom,sdhci-msm-v5"
- 		"qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
-@@ -46,6 +47,13 @@ Required properties:
- 	"cal"	- reference clock for RCLK delay calibration (optional)
- 	"sleep"	- sleep clock for RCLK delay calibration (optional)
- 
-+- qcom,ddr-config: Certain chipsets and platforms require particular settings
-+	for the DDR_CONFIG register. Use this field to specify the register
-+	value as per the Hardware Programming Guide.
-+
-+- qcom,dll-config: Chipset and Platform specific value. Use this field to
-+	specify the DLL_CONFIG register value as per Hardware Programming Guide.
-+
- Example:
- 
- 	sdhc_1: sdhci@f9824900 {
-@@ -63,6 +71,9 @@ Example:
- 
- 		clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
- 		clock-names = "core", "iface";
-+
-+		qcom,dll-config = <0x000f642c>;
-+		qcom,ddr-config = <0x80040868>;
- 	};
- 
- 	sdhc_2: sdhci@f98a4900 {
-@@ -80,4 +91,7 @@ Example:
- 
- 		clocks = <&gcc GCC_SDCC2_APPS_CLK>, <&gcc GCC_SDCC2_AHB_CLK>;
- 		clock-names = "core", "iface";
-+
-+		qcom,dll-config = <0x0007642c>;
-+		qcom,ddr-config = <0x80040868>;
- 	};
--- 
-2.7.4
+crash log:
+==================================================================
+BUG: KASAN: use-after-free in _copy_from_user+0x113/0x1a0 lib/usercopy.c:13
+Write of size 1 at addr ffff888069da43ca by task syz-executor611/6797
 
+CPU: 0 PID: 6797 Comm: syz-executor611 Not tainted 5.7.0-rc1 #3
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+1.10.2-1ubuntu1 04/01/2014
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x347 mm/kasan/report.c:382
+ __kasan_report.cold+0x35/0x4d mm/kasan/report.c:511
+ kasan_report+0x33/0x50 mm/kasan/common.c:625
+ check_memory_region_inline mm/kasan/generic.c:187 [inline]
+ check_memory_region+0x141/0x190 mm/kasan/generic.c:193
+ _copy_from_user+0x113/0x1a0 lib/usercopy.c:13
+ copy_from_user include/linux/uaccess.h:144 [inline]
+ snd_rawmidi_kernel_write1+0x320/0x6f0 sound/core/rawmidi.c:1363
+ snd_rawmidi_write+0x2e4/0xb80 sound/core/rawmidi.c:1429
+ __vfs_write+0x76/0x100 fs/read_write.c:495
+ vfs_write+0x268/0x5d0 fs/read_write.c:559
+ ksys_write+0x1ee/0x250 fs/read_write.c:612
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x4553a9
+Code: 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48
+89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d
+01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f556b7f5cc8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00000000006d9588 RCX: 00000000004553a9
+RDX: 00000000fffffc85 RSI: 0000000020000040 RDI: 0000000000000004
+RBP: 00000000006d9580 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006d958c
+R13: 0000000000000000 R14: 00000000006d9580 R15: 00007fff34bcb390
+
+Allocated by task 6797:
+ save_stack+0x1b/0x40 mm/kasan/common.c:49
+ set_track mm/kasan/common.c:57 [inline]
+ __kasan_kmalloc mm/kasan/common.c:495 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:468
+ kmalloc_node include/linux/slab.h:578 [inline]
+ kvmalloc_node+0x61/0xf0 mm/util.c:574
+ kvmalloc include/linux/mm.h:757 [inline]
+ kvzalloc include/linux/mm.h:765 [inline]
+ snd_rawmidi_runtime_create sound/core/rawmidi.c:141 [inline]
+ open_substream+0x33d/0x880 sound/core/rawmidi.c:285
+ rawmidi_open_priv+0x58e/0x6e0 sound/core/rawmidi.c:336
+ snd_rawmidi_open+0x455/0xb20 sound/core/rawmidi.c:433
+ snd_open+0x212/0x3d0 sound/core/sound.c:163
+ chrdev_open+0x219/0x5c0 fs/char_dev.c:414
+ do_dentry_open+0x4ba/0x1290 fs/open.c:797
+ do_open fs/namei.c:3229 [inline]
+ path_openat+0x1e59/0x27d0 fs/namei.c:3346
+ do_filp_open+0x192/0x260 fs/namei.c:3373
+ do_sys_openat2+0x585/0x7d0 fs/open.c:1148
+ do_sys_open+0xc3/0x140 fs/open.c:1164
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+Freed by task 6798:
+ save_stack+0x1b/0x40 mm/kasan/common.c:49
+ set_track mm/kasan/common.c:57 [inline]
+ kasan_set_free_info mm/kasan/common.c:317 [inline]
+ __kasan_slab_free+0x126/0x170 mm/kasan/common.c:456
+ slab_free_hook mm/slub.c:1445 [inline]
+ slab_free_freelist_hook+0xc4/0x1c0 mm/slub.c:1478
+ slab_free mm/slub.c:3035 [inline]
+ kfree+0xd8/0x330 mm/slub.c:4003
+ kvfree+0x42/0x50 mm/util.c:603
+ resize_runtime_buffer+0x29e/0x370 sound/core/rawmidi.c:677
+ snd_rawmidi_output_params+0x128/0x170 sound/core/rawmidi.c:690
+ snd_rawmidi_ioctl+0x544/0x5b0 sound/core/rawmidi.c:841
+ vfs_ioctl fs/ioctl.c:47 [inline]
+ ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
+ __do_sys_ioctl fs/ioctl.c:772 [inline]
+ __se_sys_ioctl fs/ioctl.c:770 [inline]
+ __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+The buggy address belongs to the object at ffff888069da4000
+ which belongs to the cache kmalloc-4k of size 4096
+The buggy address is located 970 bytes inside of
+ 4096-byte region [ffff888069da4000, ffff888069da5000)
+The buggy address belongs to the page:
+page:ffffea0001a76800 refcount:1 mapcount:0 mapping:00000000c136e8e7
+index:0x0 head:ffffea0001a76800 order:3 compound_mapcount:0
+compound_pincount:0
+flags: 0xfffe0000010200(slab|head)
+raw: 00fffe0000010200 dead000000000100 dead000000000122 ffff88806bc0c280
+raw: 0000000000000000 0000000080040004 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888069da4280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888069da4300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888069da4380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                              ^
+ ffff888069da4400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888069da4480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+Regards,
+  butt3rflyh4ck
