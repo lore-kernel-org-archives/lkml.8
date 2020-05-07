@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD11C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03068C47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0C10208DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C22CE208DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:28:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588861717;
-	bh=cdb5HhYYbgn0cqmn6y2JFhaVxDFfU8xbH0DMMtzfdrY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=JdpNBgPEDuazSKLwZVG1LuGFocVao/7wX8h3uiC20unmhvqOpJNNO9ykUoD3iUor3
-	 J2ee8osasaOMYe+i08PY2ps5Rqint/JramL9a62kL0FPwf89SaQ7bzM4omWSbnYShh
-	 KDZDuLUXr5STIM2t/J6YBhb5tjbe1HSzDV81GSoY=
+	s=default; t=1588861723;
+	bh=yECwZmYvnmWb9rCcZYE6vRcGIgNGoAKZPtn/KzfGO88=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ohw76xkXwfU2NxKG6GaaQbomSV0swz2TOG+/bEBghSPLQ7dvcCYMpvsyfkVmDG/I5
+	 WV9b4z71KYjtuF6Vz3/cb8Oq5YadA1d1unpmXiq8JjF64dk9oi2rp6ZwT9Dr2kWvfX
+	 r+nhZbdU0JqsLTbAod1t240mhEf734AahlhbMsKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgEGO2g (ORCPT
+        id S1728250AbgEGO2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:28:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55266 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:28:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728138AbgEGO2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:28:32 -0400
+        id S1728201AbgEGO2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:28:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B21A20B1F;
-        Thu,  7 May 2020 14:28:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 292652145D;
+        Thu,  7 May 2020 14:28:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861712;
-        bh=cdb5HhYYbgn0cqmn6y2JFhaVxDFfU8xbH0DMMtzfdrY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=EHV5Wbn1HmEKO7EVxKtljt/Oytm1B8ve0u1n9WMywYXNyla2HSVQVe4vhhqemvg5X
-         frfP3hpbrRrC2eILWe2ApBIZR/ALO55kgwV3FNv/9gfgChNdyPfGbcCMgN2P7HZlA+
-         1rRpzi/QCNq2IX98l2ldN/tHR/B47ZofY3NAfbNU=
+        s=default; t=1588861720;
+        bh=yECwZmYvnmWb9rCcZYE6vRcGIgNGoAKZPtn/KzfGO88=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=c9whM9U0Ubnx/KDiPhwYtnEJCQ2yP7o1rTdGbj5EkpZiQvBwCRmql6fl3OoszLwYu
+         z8GusWGyqFtUjQv5AhA5hbydslfQTJ7hH9E6UK9cISwLbSwOxLk1ksakbARXWeCKAy
+         GUs+9AHJgdITBFbUW2ZIy7MAdP+F9gdC03ZzVsTg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alaa Hleihel <alaa@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 01/35] RDMA/mlx4: Initialize ib_spec on the stack
-Date:   Thu,  7 May 2020 10:27:55 -0400
-Message-Id: <20200507142830.26239-1-sashal@kernel.org>
+Cc:     Martin Wilck <mwilck@suse.com>, Arun Easi <aeasi@marvell.com>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 07/35] scsi: qla2xxx: check UNLOADING before posting async work
+Date:   Thu,  7 May 2020 10:28:01 -0400
+Message-Id: <20200507142830.26239-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200507142830.26239-1-sashal@kernel.org>
+References: <20200507142830.26239-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,40 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alaa Hleihel <alaa@mellanox.com>
+From: Martin Wilck <mwilck@suse.com>
 
-[ Upstream commit c08cfb2d8d78bfe81b37cc6ba84f0875bddd0d5c ]
+[ Upstream commit 5a263892d7d0b4fe351363f8d1a14c6a75955475 ]
 
-Initialize ib_spec on the stack before using it, otherwise we will have
-garbage values that will break creating default rules with invalid parsing
-error.
+qlt_free_session_done() tries to post async PRLO / LOGO, and waits for the
+completion of these async commands. If UNLOADING is set, this is doomed to
+timeout, because the async logout command will never complete.
 
-Fixes: a37a1a428431 ("IB/mlx4: Add mechanism to support flow steering over IB links")
-Link: https://lore.kernel.org/r/20200413132235.930642-1-leon@kernel.org
-Signed-off-by: Alaa Hleihel <alaa@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+The only way to avoid waiting pointlessly is to fail posting these commands
+in the first place if the driver is in UNLOADING state.  In general,
+posting any command should be avoided when the driver is UNLOADING.
+
+With this patch, "rmmod qla2xxx" completes without noticeable delay.
+
+Link: https://lore.kernel.org/r/20200421204621.19228-3-mwilck@suse.com
+Fixes: 45235022da99 ("scsi: qla2xxx: Fix driver unload by shutting down chip")
+Acked-by: Arun Easi <aeasi@marvell.com>
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Martin Wilck <mwilck@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx4/main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_os.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/infiniband/hw/mlx4/main.c b/drivers/infiniband/hw/mlx4/main.c
-index 369a203332a26..61a1b0bdede05 100644
---- a/drivers/infiniband/hw/mlx4/main.c
-+++ b/drivers/infiniband/hw/mlx4/main.c
-@@ -1492,8 +1492,9 @@ static int __mlx4_ib_create_default_rules(
- 	int i;
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 7c588c5b5f6e3..03d272a09e26d 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -4857,6 +4857,9 @@ qla2x00_alloc_work(struct scsi_qla_host *vha, enum qla_work_type type)
+ 	struct qla_work_evt *e;
+ 	uint8_t bail;
  
- 	for (i = 0; i < ARRAY_SIZE(pdefault_rules->rules_create_list); i++) {
-+		union ib_flow_spec ib_spec = {};
- 		int ret;
--		union ib_flow_spec ib_spec;
++	if (test_bit(UNLOADING, &vha->dpc_flags))
++		return NULL;
 +
- 		switch (pdefault_rules->rules_create_list[i]) {
- 		case 0:
- 			/* no rule */
+ 	QLA_VHA_MARK_BUSY(vha, bail);
+ 	if (bail)
+ 		return NULL;
 -- 
 2.20.1
 
