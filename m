@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C50C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DCEC54E4A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE26A2083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E708C2073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588862284;
-	bh=CiUqSGGZ/wftLj2uPpD1velB9FbEfAK86NJmC+dCe74=;
+	s=default; t=1588862291;
+	bh=1nnHsVdBrNbkfWBXxTVXXxkC6uk3Re/8JIIgBHmsfGw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oyvev+pOFAtdzDvO4cMgnhvppz7nE9kx8Xu6zDmmQvBFR6BInfYLqRc/mOoUh/7QV
-	 xjTm3kSAmEJ8KKtryec+CDy6sI32LCDbU4PF2lwEqg5wwg+EiZWH425YDcKoo0RjF4
-	 GuhVT2DvYLNOXZvW1oqWQcbw2fFyB1joGLEEIv8k=
+	b=Be28nHdEZv75wRHldOfkhS3VWZ/Mve0A/AcvAGcmzQxRHjeu3aEZ5VnmFJ/8ileMy
+	 WaZBJyoZVKKn+HxuzbD/xPtujm7fAOmY/W0ZOqhhUn7atUXkjLrmdeWNqYeGTRwCdx
+	 MzsEHdsH/Ixr+gUkBDlfs6Xu43q5xWC253VMPLQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728693AbgEGOiD (ORCPT
+        id S1728736AbgEGOiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:38:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53736 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:38:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727774AbgEGO1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:27:48 -0400
+        id S1727122AbgEGO1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:27:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7761920936;
-        Thu,  7 May 2020 14:27:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B20520857;
+        Thu,  7 May 2020 14:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861668;
-        bh=CiUqSGGZ/wftLj2uPpD1velB9FbEfAK86NJmC+dCe74=;
+        s=default; t=1588861667;
+        bh=1nnHsVdBrNbkfWBXxTVXXxkC6uk3Re/8JIIgBHmsfGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lipTYIHWbG5X2Zqg8Kk5Z7y/uerSBYPnV5n6Hik38MKzkei3oBaGmjH3jKOjhUwXg
-         eba2+7vBXJNKpmbeHy0rU+/1Ky3KYCxdMWCCzKH0/KlyVQLTYLYIbDv+qkZ0n9YGVK
-         XU0tVSAMP/6/o5bt7xk6Tk8+0ZuxOpK8OG4Av66k=
+        b=Mtys2fGIWBhcPHHUFTC2newjJ2J0Fy5FeV9gkE4OqGt0B83ggnKe5RX78j+tIvLx9
+         Z6PXFQt5gf8WvYUdbQXkSLTSKLkFX6G1C6P/z2kbdHXRVvQkLC4HaypGt+vka2B0Mq
+         UtjREbSBLCfeCHtgooq6Ok9I/teb/woM41PNkR7s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lubomir Rintel <lkundrak@v3.sk>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 17/50] dmaengine: mmp_tdma: Do not ignore slave config validation errors
-Date:   Thu,  7 May 2020 10:26:53 -0400
-Message-Id: <20200507142726.25751-17-sashal@kernel.org>
+Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 16/50] dmaengine: pch_dma.c: Avoid data race between probe and irq handler
+Date:   Thu,  7 May 2020 10:26:52 -0400
+Message-Id: <20200507142726.25751-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507142726.25751-1-sashal@kernel.org>
 References: <20200507142726.25751-1-sashal@kernel.org>
@@ -58,38 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-[ Upstream commit 363c32701c7fdc8265a84b21a6a4f45d1202b9ca ]
+[ Upstream commit 2e45676a4d33af47259fa186ea039122ce263ba9 ]
 
-With an invalid dma_slave_config set previously,
-mmp_tdma_prep_dma_cyclic() would detect an error whilst configuring the
-channel, but proceed happily on:
+pd->dma.dev is read in irq handler pd_irq().
+However, it is set to pdev->dev after request_irq().
+Therefore, set pd->dma.dev to pdev->dev before request_irq() to
+avoid data race between pch_dma_probe() and pd_irq().
 
-  [  120.756530] mmp-tdma d42a0800.adma: mmp_tdma: unknown burst size.
+Found by Linux Driver Verification project (linuxtesting.org).
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Link: https://lore.kernel.org/r/20200419164912.670973-2-lkundrak@v3.sk
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Link: https://lore.kernel.org/r/20200416062335.29223-1-madhuparnabhowmik10@gmail.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/mmp_tdma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/dma/pch_dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/mmp_tdma.c b/drivers/dma/mmp_tdma.c
-index 10117f271b12b..51e08c16756ae 100644
---- a/drivers/dma/mmp_tdma.c
-+++ b/drivers/dma/mmp_tdma.c
-@@ -443,7 +443,8 @@ static struct dma_async_tx_descriptor *mmp_tdma_prep_dma_cyclic(
- 	if (!desc)
- 		goto err_out;
+diff --git a/drivers/dma/pch_dma.c b/drivers/dma/pch_dma.c
+index 581e7a290d98e..a3b0b4c56a190 100644
+--- a/drivers/dma/pch_dma.c
++++ b/drivers/dma/pch_dma.c
+@@ -865,6 +865,7 @@ static int pch_dma_probe(struct pci_dev *pdev,
+ 	}
  
--	mmp_tdma_config_write(chan, direction, &tdmac->slave_config);
-+	if (mmp_tdma_config_write(chan, direction, &tdmac->slave_config))
-+		goto err_out;
+ 	pci_set_master(pdev);
++	pd->dma.dev = &pdev->dev;
  
- 	while (buf < buf_len) {
- 		desc = &tdmac->desc_arr[i];
+ 	err = request_irq(pdev->irq, pd_irq, IRQF_SHARED, DRV_NAME, pd);
+ 	if (err) {
+@@ -880,7 +881,6 @@ static int pch_dma_probe(struct pci_dev *pdev,
+ 		goto err_free_irq;
+ 	}
+ 
+-	pd->dma.dev = &pdev->dev;
+ 
+ 	INIT_LIST_HEAD(&pd->dma.channels);
+ 
 -- 
 2.20.1
 
