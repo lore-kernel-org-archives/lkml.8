@@ -2,77 +2,132 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2E8C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C1EC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B19C2073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:30:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="STC8zExZ"
+	by mail.kernel.org (Postfix) with ESMTP id BD8BA2083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:30:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588861838;
+	bh=Wej/uY5j7bc1JjjVM8N9kGzpXqK5HqUHUQm4FqUdtTE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kEY05LAbTtl2GyAxDxXrGhdgxv9ditzcdzRdMpZcSw04H5JOJ2zvuVmnSHraVQirb
+	 p9gkPMYwIZeyukaHheq4d/LLoW4hA78jIoq4RX9Jt7Rw9znaZ651eZ1J3F75R9eFZH
+	 j7DU/KRxWNUY6ve24xk7TiklgTIpXk1mr9n01MHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbgEGOac (ORCPT
+        id S1728855AbgEGOah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:30:32 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49475 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728767AbgEGOaJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:30:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588861806;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Rj5kOWwabzY7Fn7PlvPr8yLZoyzAXjgTM69IXu1oI44=;
-        b=STC8zExZjayDbyGAYOoJbJG7K3uWyKggGkMsr6DYRijFu8kw8En09KWwX+7RjefgErK8NH
-        ZVKq1hyjvlovGiASfuwIq0kIrM/oo43C6nn0i8FvV1H7M3qtlAt3U6wPhhRCF6mBZSmE5N
-        hQR8d+JRFi1V3hGvCQ1L4Ng4phTiSgA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-170-9L22ZqmFO1-qQl2tFhXbWQ-1; Thu, 07 May 2020 10:30:03 -0400
-X-MC-Unique: 9L22ZqmFO1-qQl2tFhXbWQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 7 May 2020 10:30:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58798 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728775AbgEGOaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:30:11 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 57915107ACF3;
-        Thu,  7 May 2020 14:30:02 +0000 (UTC)
-Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 597E7707A9;
-        Thu,  7 May 2020 14:29:59 +0000 (UTC)
-Date:   Thu, 7 May 2020 10:29:58 -0400
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     Samuel Zou <zou_wei@huawei.com>
-Cc:     agk@redhat.com, dm-devel@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] dm mpath: Remove unused variable ret
-Message-ID: <20200507142958.GA12032@redhat.com>
-References: <1588854412-19301-1-git-send-email-zou_wei@huawei.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CDED2083B;
+        Thu,  7 May 2020 14:30:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588861810;
+        bh=Wej/uY5j7bc1JjjVM8N9kGzpXqK5HqUHUQm4FqUdtTE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=m+4kIlrqeeSNHIxhqI86W6Fo7M6JUzbVpyEaDYx8W6qKLLZiIbPzNx2vSWQeimG4m
+         JgOYkvCAPvaOgueAK/yMrn3NpU/CgeFXfK+sOjDDrm58bWflC3jYzVQMcsL40I+47M
+         2JElei9Sk5ObsH0XtVmjUjCFWsiowp6CpbQFhUHo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 05/11] vfio/type1: Fix VA->PA translation for PFNMAP VMAs in vaddr_get_pfn()
+Date:   Thu,  7 May 2020 10:29:57 -0400
+Message-Id: <20200507143003.27047-5-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200507143003.27047-1-sashal@kernel.org>
+References: <20200507143003.27047-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588854412-19301-1-git-send-email-zou_wei@huawei.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07 2020 at  8:26am -0400,
-Samuel Zou <zou_wei@huawei.com> wrote:
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-> This patch fixes below warning reported by coccicheck:
-> 
-> drivers/md/dm-historical-service-time.c:240:14-16: Unneeded variable: "sz". Return "0" on line 261
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Samuel Zou <zou_wei@huawei.com>
+[ Upstream commit 5cbf3264bc715e9eb384e2b68601f8c02bb9a61d ]
 
-Nack.
+Use follow_pfn() to get the PFN of a PFNMAP VMA instead of assuming that
+vma->vm_pgoff holds the base PFN of the VMA.  This fixes a bug where
+attempting to do VFIO_IOMMU_MAP_DMA on an arbitrary PFNMAP'd region of
+memory calculates garbage for the PFN.
 
-DMEMIT() uses the local sz variable.
+Hilariously, this only got detected because the first "PFN" calculated
+by vaddr_get_pfn() is PFN 0 (vma->vm_pgoff==0), and iommu_iova_to_phys()
+uses PA==0 as an error, which triggers a WARN in vfio_unmap_unpin()
+because the translation "failed".  PFN 0 is now unconditionally reserved
+on x86 in order to mitigate L1TF, which causes is_invalid_reserved_pfn()
+to return true and in turns results in vaddr_get_pfn() returning success
+for PFN 0.  Eventually the bogus calculation runs into PFNs that aren't
+reserved and leads to failure in vfio_pin_map_dma().  The subsequent
+call to vfio_remove_dma() attempts to unmap PFN 0 and WARNs.
+
+  WARNING: CPU: 8 PID: 5130 at drivers/vfio/vfio_iommu_type1.c:750 vfio_unmap_unpin+0x2e1/0x310 [vfio_iommu_type1]
+  Modules linked in: vfio_pci vfio_virqfd vfio_iommu_type1 vfio ...
+  CPU: 8 PID: 5130 Comm: sgx Tainted: G        W         5.6.0-rc5-705d787c7fee-vfio+ #3
+  Hardware name: Intel Corporation Mehlow UP Server Platform/Moss Beach Server, BIOS CNLSE2R1.D00.X119.B49.1803010910 03/01/2018
+  RIP: 0010:vfio_unmap_unpin+0x2e1/0x310 [vfio_iommu_type1]
+  Code: <0f> 0b 49 81 c5 00 10 00 00 e9 c5 fe ff ff bb 00 10 00 00 e9 3d fe
+  RSP: 0018:ffffbeb5039ebda8 EFLAGS: 00010246
+  RAX: 0000000000000000 RBX: ffff9a55cbf8d480 RCX: 0000000000000000
+  RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff9a52b771c200
+  RBP: 0000000000000000 R08: 0000000000000040 R09: 00000000fffffff2
+  R10: 0000000000000001 R11: ffff9a51fa896000 R12: 0000000184010000
+  R13: 0000000184000000 R14: 0000000000010000 R15: ffff9a55cb66ea08
+  FS:  00007f15d3830b40(0000) GS:ffff9a55d5600000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000561cf39429e0 CR3: 000000084f75f005 CR4: 00000000003626e0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  Call Trace:
+   vfio_remove_dma+0x17/0x70 [vfio_iommu_type1]
+   vfio_iommu_type1_ioctl+0x9e3/0xa7b [vfio_iommu_type1]
+   ksys_ioctl+0x92/0xb0
+   __x64_sys_ioctl+0x16/0x20
+   do_syscall_64+0x4c/0x180
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  RIP: 0033:0x7f15d04c75d7
+  Code: <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 81 48 2d 00 f7 d8 64 89 01 48
+
+Fixes: 73fa0d10d077 ("vfio: Type1 IOMMU implementation")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/vfio/vfio_iommu_type1.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index 0d5b667c0e652..a9f58f3867f02 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -229,8 +229,8 @@ static int vaddr_get_pfn(unsigned long vaddr, int prot, unsigned long *pfn)
+ 	vma = find_vma_intersection(current->mm, vaddr, vaddr + 1);
+ 
+ 	if (vma && vma->vm_flags & VM_PFNMAP) {
+-		*pfn = ((vaddr - vma->vm_start) >> PAGE_SHIFT) + vma->vm_pgoff;
+-		if (is_invalid_reserved_pfn(*pfn))
++		if (!follow_pfn(vma, vaddr, pfn) &&
++		    is_invalid_reserved_pfn(*pfn))
+ 			ret = 0;
+ 	}
+ 
+-- 
+2.20.1
 
