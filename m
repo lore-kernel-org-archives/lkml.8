@@ -2,152 +2,91 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E208C35280
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AABC35280
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1844420870
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:48:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XTFfyL0X"
+	by mail.kernel.org (Postfix) with ESMTP id DFC012063A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:48:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588888135;
+	bh=UDftLhDRq8J/qKQjH7s5qaWP3S1ycsCwHQU0ilqkucE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=t0y6IAUqGIEkUpfvdg0XT+dr7weqZIy55hIAYAdab43+W6KNfDzoc05of05lvuW7w
+	 IRJ59LQr42f7A7dh5oaaVT8p5MII7u9e0x7dp/buDxOso0dRncQVaAREGdXHkr5XpH
+	 fQMNEQ7ZAwXXMQQAaURi+3zvLpO7qkre+epv+RGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgEGVsV (ORCPT
+        id S1727794AbgEGVsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 17:48:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33044 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726797AbgEGVsU (ORCPT
+        Thu, 7 May 2020 17:48:54 -0400
+Received: from mail-oo1-f68.google.com ([209.85.161.68]:46300 "EHLO
+        mail-oo1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726437AbgEGVsx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 17:48:20 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09E12C05BD43;
-        Thu,  7 May 2020 14:48:20 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id z6so8565084wml.2;
-        Thu, 07 May 2020 14:48:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3VucMel2VcMPBSW+yTXmQNjNtFkFkvQaIgxnkoAD4f8=;
-        b=XTFfyL0XjPY7WSY1nM9GnAVxhp50hPvP6sxaihKi3WiXOAuDH3DX4mdLzFm4TnCmEU
-         wNlVTgcnpgvZ9uMAvSogigH38BM16GIeef3g71BVQGlch6SiBNo9/Tl+EcV/Jchxbqt8
-         tYRdXaXzY0+ewSiDtKZpt0mbfGs37IJWEmcSutt4xCJ11cA0sXQMR6qqmqQUzhAcMd7M
-         R0AUmbnjP/TbbJ6i4lmJElqstbx+E3124Vbo+GpGHh3RIq+UgjYxuXENF46mC0Hc43Vj
-         eCR6GnZp5L6fu273XIOX68PBA4gnjAN/krX0Rjp6LEloMSuXuNM5cWpgUn45n6E6+yfw
-         i7Fg==
+        Thu, 7 May 2020 17:48:53 -0400
+Received: by mail-oo1-f68.google.com with SMTP id x16so1693185oop.13;
+        Thu, 07 May 2020 14:48:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3VucMel2VcMPBSW+yTXmQNjNtFkFkvQaIgxnkoAD4f8=;
-        b=jUhhZulnTVBtq1pADOsJq8HL6WMml5U/v0CL5S9NjuRmUwtmf2UmItH5LtWdFlQs97
-         D36DUg3a9xvQGEEfbHSdA91K9PRbTyCWWXBxhp1AthuC+1tCTp8qnQRC7UPZw2OOjkBq
-         8S/jDWmad3EDcSQEJv3XdToyE+jmP6u/JvtWIwqx7iLDH1ZcuQTpReA7Um52Sgoh/YX5
-         GONFR+CfjaBymbNpMxUBhDrkLO2lRO/DTreO7F4/sJIo35JN8gLporrhcycVppwzRzLH
-         9fkGxvSP5Qfy/KGnFe0/Y7YpP70KNxJJl++sng++g7yZBWnFdyyv7quadAtEaq6/vo/O
-         RPZQ==
-X-Gm-Message-State: AGi0PubN8pnd7iu1gNgeVaKoVGLIE9IvC+xlnjvn3Ty/raZ1Hx4BhcYl
-        8QaB2cbX1ibfVqNNaMn2UjUQpZgTjUAE6vY/48iQhZ9s
-X-Google-Smtp-Source: APiQypINamJQOY2oV75ue3+82pSJ4u2LSA3OnQvIdaIqkuTVDtYRYPW3plUx8czr0GGQwzQAwytf98uAG9THrTKORH0=
-X-Received: by 2002:a05:600c:24cf:: with SMTP id 15mr12017512wmu.94.1588888098625;
- Thu, 07 May 2020 14:48:18 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jyOvNQA3NJg04Vl3qR1GzrBNciXfg5ndlqMgNxLCmlc=;
+        b=DrtSz9kQxPZ8UnwDja9HuH+k2m8CKUiDDQTDjOuOE6uwMJD8PWmu+m/Pl6EDhKbFly
+         OAQLVXZQClC7PTW9XepFqbJgLDvl8N6jWipDIF0mtmUldhnuHpTb3S9W1z11h6AOT0Rl
+         jFyvKLI1bcPAQcQiG59FZqyolOVxLQwbYEZQxtu+yiwg0G8GIDakcfcSrSBh5UJVkkkq
+         58jRGnoF9rBU1mJMHJtGR+uc8hT1+4C5RTBUrTCY+qoLd20Ddq44thUZjBGjGHgFv3bM
+         mqaL0Xhgqg8R/mxtyU42ePV2W0F0z5/y84OuplQaK2p2IyTYrMyx3cXFQlWFzdWVmpsn
+         58Pw==
+X-Gm-Message-State: AGi0PuY8DI8CJZ0AFlgyrhDEGQFx4oTcLwuyBlWJnaPaAhxxxl7UfXJo
+        D+dTuhQz/foh/n9hTUOJCw==
+X-Google-Smtp-Source: APiQypLUtvbcTjpx1yfWVlo65zNy+xaZJq/gtce6iSrajljmwU9lTh5B9bBFI0KXlmfUjhwEd5baxg==
+X-Received: by 2002:a4a:d8d7:: with SMTP id c23mr13689851oov.8.1588888132533;
+        Thu, 07 May 2020 14:48:52 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w205sm1725186oif.26.2020.05.07.14.48.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 14:48:51 -0700 (PDT)
+Received: (nullmailer pid 32707 invoked by uid 1000);
+        Thu, 07 May 2020 21:48:51 -0000
+Date:   Thu, 7 May 2020 16:48:51 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
+        helgaas@kernel.org, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-pci@vger.kernel.org, tim.gover@raspberrypi.org,
+        linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v8 1/4] soc: bcm2835: Add notify xHCI reset property
+Message-ID: <20200507214850.GA32592@bogus>
+References: <20200505161318.26200-1-nsaenzjulienne@suse.de>
+ <20200505161318.26200-2-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-References: <20200507010504.26352-1-luke.r.nels@gmail.com> <20200507010504.26352-2-luke.r.nels@gmail.com>
- <20200507082934.GA28215@willie-the-truck> <20200507101224.33a44d71@why>
-In-Reply-To: <20200507101224.33a44d71@why>
-From:   Luke Nelson <luke.r.nels@gmail.com>
-Date:   Thu, 7 May 2020 14:48:07 -0700
-Message-ID: <CAB-e3NRCJ_4+vkFPkMN67DwBBtO=sJwR-oL4-AozVw2bBJHOzg@mail.gmail.com>
-Subject: Re: [RFC PATCH bpf-next 1/3] arm64: insn: Fix two bugs in encoding
- 32-bit logical immediates
-To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>
-Cc:     Luke Nelson <lukenels@cs.washington.edu>,
-        bpf <bpf@vger.kernel.org>, Xi Wang <xi.wang@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Zi Shen Lim <zlim.lnx@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505161318.26200-2-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi everyone,
+On Tue,  5 May 2020 18:13:14 +0200, Nicolas Saenz Julienne wrote:
+> The property is needed in order to trigger VL805's firmware load. Note
+> that gap between the property introduced and the previous one is due to
+> the properties not being defined.
+> 
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  include/soc/bcm2835/raspberrypi-firmware.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-Thanks for the comments! Responses below:
-
-> It's a bit grotty spreading the checks out now. How about we tweak things
-> slightly along the lines of:
->
->
-> diff --git a/arch/arm64/kernel/insn.c b/arch/arm64/kernel/insn.c
-> index 4a9e773a177f..60ec788eaf33 100644
-> --- a/arch/arm64/kernel/insn.c
-> +++ b/arch/arm64/kernel/insn.c
-> [...]
-
-Agreed; this new version looks much cleaner. I re-ran all the tests /
-verification and everything seems good. Would you like me to submit a
-v2 of this series with this new code?
-
-
->> We tested the new code against llvm-mc with all 1,302 encodable 32-bit
->> logical immediates and all 5,334 encodable 64-bit logical immediates.
->
-> That, on its own, is awesome information. Do you have any pointer on
-> how to set this up?
-
-Sure! The process of running the tests is pretty involved, but I'll
-describe it below and give some links here.
-
-We found the bugs in insn.c while adding support for logical immediates
-to the BPF JIT and verifying the changes with our tool, Serval:
-https://github.com/uw-unsat/serval-bpf. The basic idea for how we tested /
-verified logical immediates is the following:
-
-First, we have a Python script [1] for generating every encodable
-logical immediate and the corresponding instruction fields that encode
-that immediate. The script validates the list by checking that llvm-mc
-decodes each instruction back to the expected immediate.
-
-Next, we use the list [2] from the first step to check a Racket
-translation [3] of the logical immediate encoding function in insn.c.
-We found the second mask bug by noticing that some (encodable) 32-bit
-immediates were being rejected by the encoding function.
-
-Last, we use the Racket translation of the encoding function to verify
-the correctness of the BPF JIT implementation [4], i.e., the JIT
-correctly compiles BPF_{AND,OR,XOR,JSET} BPF_K instructions to arm64
-instructions with equivalent semantics. We found the first bug as the
-verifier complained that the function was producing invalid encodings
-for 32-bit -1 immediates, and we were able to reproduce a kernel crash
-using the BPF tests.
-
-We manually translated the C code to Racket because our verifier, Serval,
-currently only works on Racket code.
-
-Thanks again,
-- Luke
-
-[1]: https://github.com/uw-unsat/serval-bpf/blob/00838174659034e9527e67d9eccd2def2354cec6/racket/test/arm64/gen-logic-imm.py
-[2]: https://github.com/uw-unsat/serval-bpf/blob/00838174659034e9527e67d9eccd2def2354cec6/racket/test/arm64/logic-imm.rkt
-[3]: https://github.com/uw-unsat/serval-bpf/blob/00838174659034e9527e67d9eccd2def2354cec6/racket/arm64/insn.rkt#L66
-[4]: https://github.com/uw-unsat/serval-bpf/blob/00838174659034e9527e67d9eccd2def2354cec6/racket/arm64/bpf_jit_comp.rkt
+Reviewed-by: Rob Herring <robh@kernel.org>
