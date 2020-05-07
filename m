@@ -2,220 +2,214 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14790C35280
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E15C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB13F20735
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6BE120725
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:06:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R58jahGK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hJunktMQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgEGWGT (ORCPT
+        id S1727076AbgEGWGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 18:06:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35804 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726470AbgEGWGS (ORCPT
+        Thu, 7 May 2020 18:06:30 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59672 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726926AbgEGWG3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 18:06:18 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0D6BC05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 15:06:18 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id h185so8824245ybg.6
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 15:06:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=C0M8mvfyEUZvTcioRQRnaCRWnyjcT72VP+TTzmJsK1M=;
-        b=R58jahGKuB9YinvgsU7BS0qmRDU8XVonWfVuZpQ4T17QBOXhNTDDGkDfpBm89cN3dn
-         AhQhXBGP+xRqMQZgSvVZMamjJCpw9LVn6QuRENGyA0U5g5A93kFbgu+BaSk7VwzbdcrC
-         aPdNy1l2HtZlJ95qZC9fnShYZM10XU5L5VPKZau/6sjQhOqBTKBBDkZaFOSld/zMYqz6
-         bZ5IqshyxLhQZpd8Fka7ndIr4g31ayysKbdJvbwjZw3M3uogamOot1hrlICH2yAlgOG8
-         a4NkqUzDeZJN37iIkFEMe6I0uw232hAbzRY0fxA03vsFYOc0hFyft57YBuhxX2MAMxYz
-         kAZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=C0M8mvfyEUZvTcioRQRnaCRWnyjcT72VP+TTzmJsK1M=;
-        b=nqSv1b5vUz1dPMMu4KY6AuEmzPoNE+WvBKBPvG1mzlbpwabGxhnovkH0gQyu334N6F
-         jG6S5kJYeN8xjsZmRHmQ+GTFZuQRrP9yv3r2vvmsUjeUeGRYVEKym0ef/Y7xdXHeo0SY
-         fGKLz6K/RH+/Hbm5dOevRaF4zShrlYcts/OGgw205SAwwwFo4d8W+vRKEIf9/fCS2pPr
-         MYlXx7UROFVgbuvGVVbunXj5WPM4RmvCk3RSHmJhA7DU7y0cfIOjnj/Tiwffwr4IpMld
-         OCZ3OqaArQymieuMaQSi6S8jcPCC9ENuOWSY8DenpPVL4qpGrc1ToKwGn0hWg7zNGAFB
-         AxaA==
-X-Gm-Message-State: AGi0PubYrMMaJ1CbKSIASExlxZgWZZFRq5a7MEpOpbYH+QYyWeKe+fef
-        KBSTrkyWlhEPLUcAznlHOWg9l9DhQ/yG
-X-Google-Smtp-Source: APiQypJrV3nRSZb8Vt+OMi4aaLlKHiSXe3x9yE0PSy+oGxRuFAtIZFQm3uXyK4aBM/ZLJmSQuH47tmYKY+30
-X-Received: by 2002:a25:af0e:: with SMTP id a14mr25775770ybh.275.1588889177875;
- Thu, 07 May 2020 15:06:17 -0700 (PDT)
-Date:   Thu,  7 May 2020 15:06:04 -0700
-Message-Id: <20200507220604.3391-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
-Subject: [PATCH v3] perf c2c: fix '-e list'
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 7 May 2020 18:06:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588889186;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=O0zq6BKZdqRzSQ4IajAdIW2yn8DScQjo8LRrUKBrr9w=;
+        b=hJunktMQvyJuk7L9myiH5hLF3AMUM65X+1n/ANeBx3VV9O9f5JO+4H+6lZZFUZFwU2BLFr
+        XYqI1KpdHXzgoY8zI+fnyXD9fJqAhwLTqPu8aeC7wf1ObhjcN0hceO0O8GzQF/oiSCEqd0
+        v4q6f+s8YoIXNAAicpl0ajR0Zz5KnT0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-61-N6yridzlO2exTfgZLy4BXQ-1; Thu, 07 May 2020 18:06:22 -0400
+X-MC-Unique: N6yridzlO2exTfgZLy4BXQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B490C800688;
+        Thu,  7 May 2020 22:06:19 +0000 (UTC)
+Received: from optiplex-lnx (unknown [10.3.128.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6B81C5D9C5;
+        Thu,  7 May 2020 22:06:09 +0000 (UTC)
+Date:   Thu, 7 May 2020 18:06:06 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Tso Ted <tytso@mit.edu>, Adrian Bunk <bunk@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Jeff Mahoney <jeffm@suse.com>, Jiri Kosina <jikos@kernel.org>,
+        Jessica Yu <jeyu@suse.de>, Takashi Iwai <tiwai@suse.de>,
+        Ann Davis <AnDavis@suse.com>,
+        Richard Palethorpe <rpalethorpe@suse.de>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        dyoung@redhat.com, bhe@redhat.com, corbet@lwn.net,
+        keescook@chromium.org, akpm@linux-foundation.org, cai@lca.pw,
+        rdunlap@infradead.org
+Subject: Re: [PATCH v2] kernel: add panic_on_taint
+Message-ID: <20200507220606.GK205881@optiplex-lnx>
+References: <20200507180631.308441-1-aquini@redhat.com>
+ <20200507182257.GX11244@42.do-not-panic.com>
+ <20200507184307.GF205881@optiplex-lnx>
+ <20200507184705.GG205881@optiplex-lnx>
+ <20200507203340.GZ11244@42.do-not-panic.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507203340.GZ11244@42.do-not-panic.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the event is passed as list, the default events should be listed as
-per 'perf mem record -e list'. Previous behavior is:
+On Thu, May 07, 2020 at 08:33:40PM +0000, Luis Chamberlain wrote:
+> On Thu, May 07, 2020 at 02:47:05PM -0400, Rafael Aquini wrote:
+> > On Thu, May 07, 2020 at 02:43:16PM -0400, Rafael Aquini wrote:
+> > > On Thu, May 07, 2020 at 06:22:57PM +0000, Luis Chamberlain wrote:
+> > > > On Thu, May 07, 2020 at 02:06:31PM -0400, Rafael Aquini wrote:
+> > > > > diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> > > > > index 8a176d8727a3..b80ab660d727 100644
+> > > > > --- a/kernel/sysctl.c
+> > > > > +++ b/kernel/sysctl.c
+> > > > > @@ -1217,6 +1217,13 @@ static struct ctl_table kern_table[] = {
+> > > > >  		.extra1		= SYSCTL_ZERO,
+> > > > >  		.extra2		= SYSCTL_ONE,
+> > > > >  	},
+> > > > > +	{
+> > > > > +		.procname	= "panic_on_taint",
+> > > > > +		.data		= &panic_on_taint,
+> > > > > +		.maxlen		= sizeof(unsigned long),
+> > > > > +		.mode		= 0644,
+> > > > > +		.proc_handler	= proc_doulongvec_minmax,
+> > > > > +	},
+> > > > 
+> > > > You sent this out before I could reply to the other thread on v1.
+> > > > My thoughts on the min / max values, or lack here:
+> > > >                                                                                 
+> > > > Valid range doesn't mean "currently allowed defined" masks.                     
+> > > > 
+> > > > For example, if you expect to panic due to a taint, but a new taint type
+> > > > you want was not added on an older kernel you would be under a very
+> > > > *false* sense of security that your kernel may not have hit such a
+> > > > taint, but the reality of the situation was that the kernel didn't
+> > > > support that taint flag only added in future kernels.                           
+> > > > 
+> > > > You may need to define a new flag (MAX_TAINT) which should be the last
+> > > > value + 1, the allowed max values would be                                      
+> > > > 
+> > > > (2^MAX_TAINT)-1                                                                 
+> > > > 
+> > > > or                                                                              
+> > > > 
+> > > > (1<<MAX_TAINT)-1  
+> > > > 
+> > > > Since this is to *PANIC* I think we do want to test ranges and ensure
+> > > > only valid ones are allowed.
+> > > >
+> > > 
+> > > Ok. I'm thinking in:
+> > > 
+> > > diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> > > index 8a176d8727a3..ee492431e7b0 100644
+> > > --- a/kernel/sysctl.c
+> > > +++ b/kernel/sysctl.c
+> > > @@ -1217,6 +1217,15 @@ static struct ctl_table kern_table[] = {
+> > >                 .extra1         = SYSCTL_ZERO,
+> > >                 .extra2         = SYSCTL_ONE,
+> > >         },
+> > > +       {
+> > > +               .procname       = "panic_on_taint",
+> > > +               .data           = &panic_on_taint,
+> > > +               .maxlen         = sizeof(unsigned long),
+> > > +               .mode           = 0644,
+> > > +               .proc_handler   = proc_doulongvec_minmax,
+> > > +               .extra1         = SYSCTL_ZERO,
+> > > +               .extra2         = (1 << TAINT_FLAGS_COUNT << 1) - 1,
+> > 							^^^^^^^^
+> > Without that crap, obviously. Sorry. That was a screw up on my side,
+> > when copyin' and pasting.
+> 
+> I really think that the implications of this needs a bit further review,
+> hence the wider CCs.
+> 
+> Since this can trivially crash a system, I think we need to be careful
+> about this value. First, proc_doulongvec_minmax() will not suffice alone,
+> we'll *at least* want to check for capable(CAP_SYS_ADMIN)) as in
+> proc_taint().  Second first note that we *always* build proc_taint(), if
+> just CONFIG_PROC_SYSCTL is enabled. That has been the way since it got
+> merged via commit 34f5a39899f3f ("Add TAINT_USER and ability to set
+> taint flags from userspace") since v2.6.21. We need to evaluate if this
+> little *new* knob you are introducing merits its own kconfig tucked away
+> under debugging first. The ship has already sailed for proc_taint().
+> Anyone with CAP_SYS_ADMIN can taint.
+> 
+> The good thing is that proc_taint() added its own TAINT_USER, *but*, hey
+> it didn't use it. A panic-on-taint system would be able to tell if a
+> panic was caused by proc_taint() throught the stack trace only. 
+> If panic-on-taint proc was used *later* after a custom taint was set
+> or happened naturally, no panic would trigger since your panic-on-taint
+> check on your patch only happens on add_taint(). This means that for
+> those thinking about using this for QA or security purposes, the only
+> sensible *reliable* way to use panic-on-taint would be through cmdline,
+> from boot. Post-boot means to enable this would either need to check
+> existing taint flags, or we'd want to a way to check if this was not
+> added post boot. Also, a post-booteed system with panic-on-taint could
+> easily allow for reductions of the intended goal, thereby allowing one
+> to cheat.
+> 
+> I think a new TAINT_MODIFIED for use when proc_taint() is used is worth
+> considering. Ted? Even though 'M' is taken -- I think its silly to rely
+> on the character to be anything of meaning, once we run out of the
+> alphabet letters that will be the way anyway, unless we-redo this a bit.
+> Note we use value for when this is on and off, typically an empty space
+> when a taint is not seen.
+> 
+> The good thing is that proc_taint() only *increments* taint, it doesn't
+> remove taints.
+> 
+> Are we OK with panic-on-taint only with CAP_SYS_ADMIN?
+> 
+> I can see this building up to a "testing" solution to ensure / gaurantee
+> no bugs have happened during QA, but since QA would want the same binary
+> for production it is hard to see this enabled for QA but not production.
+> To resolve that last concern, if we do go with moving this under a
+> kconfig value, a simple cmdline append would address the concerns. Ie,
+> even if you enabled this mechanism through its kconfig you would not be
+> able to modify the panic-on-tain unless you passed a cmdline option.
+> 
+> Note that Vlastimil has some patches which are visible on linux-next,
+> but not yet merged on Linus' tree, which enable these params to be set
+> on the cmdline too now, so perhaps yet-another cmdline param is not
+> needed anymore.
+> 
+> I *think* that a cmdline route to enable this would likely remove the
+> need for the kernel config for this. But even with Vlastimil's work
+> merged, I think we'd want yet-another value to enable / disable this
+> feature. Do we need yet-another-taint flag to tell us that this feature
+> was enabled?
+>
 
-$ perf c2c record -e list
-failed: event 'list' not found, use '-e list' to get list of available events
+I guess it makes sense to get rid of the sysctl interface for
+proc_on_taint, and only keep it as a cmdline option. 
 
- Usage: perf c2c record [<options>] [<command>]
-    or: perf c2c record [<options>] -- <command> [<options>]
+But the real issue seems to be, regardless we go with a cmdline-only option
+or not, the ability of proc_taint() to set any arbitrary taint flag 
+other than just marking the kernel with TAINT_USER. 
 
-    -e, --event <event>   event selector. Use 'perf mem record -e list' to list available events
-
-New behavior:
-
-$ perf c2c record -e list
-ldlat-loads  : available
-ldlat-stores : available
-
-v3: is a rebase.
-v2: addresses review comments by Jiri Olsa.
-https://lore.kernel.org/lkml/20191127081844.GH32367@krava/
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Documentation/perf-c2c.txt |  2 +-
- tools/perf/builtin-c2c.c              |  9 ++++++++-
- tools/perf/builtin-mem.c              | 24 +++++++-----------------
- tools/perf/util/mem-events.c          | 15 +++++++++++++++
- tools/perf/util/mem-events.h          |  2 ++
- 5 files changed, 33 insertions(+), 19 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
-index 2133eb320cb0..98efdab5fbd4 100644
---- a/tools/perf/Documentation/perf-c2c.txt
-+++ b/tools/perf/Documentation/perf-c2c.txt
-@@ -40,7 +40,7 @@ RECORD OPTIONS
- --------------
- -e::
- --event=::
--	Select the PMU event. Use 'perf mem record -e list'
-+	Select the PMU event. Use 'perf c2c record -e list'
- 	to list available events.
- 
- -v::
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index 1baf4cae086f..d617d5682c68 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -2887,8 +2887,15 @@ static int parse_record_events(const struct option *opt,
- {
- 	bool *event_set = (bool *) opt->value;
- 
-+	if (!strcmp(str, "list")) {
-+		perf_mem_events__list();
-+		exit(0);
-+	}
-+	if (perf_mem_events__parse(str))
-+		exit(-1);
-+
- 	*event_set = true;
--	return perf_mem_events__parse(str);
-+	return 0;
- }
- 
- 
-diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
-index 68a7eb84561a..3523279af6af 100644
---- a/tools/perf/builtin-mem.c
-+++ b/tools/perf/builtin-mem.c
-@@ -38,26 +38,16 @@ static int parse_record_events(const struct option *opt,
- 			       const char *str, int unset __maybe_unused)
- {
- 	struct perf_mem *mem = *(struct perf_mem **)opt->value;
--	int j;
- 
--	if (strcmp(str, "list")) {
--		if (!perf_mem_events__parse(str)) {
--			mem->operation = 0;
--			return 0;
--		}
--		exit(-1);
-+	if (!strcmp(str, "list")) {
-+		perf_mem_events__list();
-+		exit(0);
- 	}
-+	if (perf_mem_events__parse(str))
-+		exit(-1);
- 
--	for (j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
--		struct perf_mem_event *e = &perf_mem_events[j];
--
--		fprintf(stderr, "%-13s%-*s%s\n",
--			e->tag,
--			verbose > 0 ? 25 : 0,
--			verbose > 0 ? perf_mem_events__name(j) : "",
--			e->supported ? ": available" : "");
--	}
--	exit(0);
-+	mem->operation = 0;
-+	return 0;
- }
- 
- static const char * const __usage[] = {
-diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-index aa29589f6904..ea0af0bc4314 100644
---- a/tools/perf/util/mem-events.c
-+++ b/tools/perf/util/mem-events.c
-@@ -103,6 +103,21 @@ int perf_mem_events__init(void)
- 	return found ? 0 : -ENOENT;
- }
- 
-+void perf_mem_events__list(void)
-+{
-+	int j;
-+
-+	for (j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
-+		struct perf_mem_event *e = &perf_mem_events[j];
-+
-+		fprintf(stderr, "%-13s%-*s%s\n",
-+			e->tag,
-+			verbose > 0 ? 25 : 0,
-+			verbose > 0 ? perf_mem_events__name(j) : "",
-+			e->supported ? ": available" : "");
-+	}
-+}
-+
- static const char * const tlb_access[] = {
- 	"N/A",
- 	"HIT",
-diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
-index f1389bdae7bf..904dad34f7f7 100644
---- a/tools/perf/util/mem-events.h
-+++ b/tools/perf/util/mem-events.h
-@@ -39,6 +39,8 @@ int perf_mem_events__init(void);
- 
- char *perf_mem_events__name(int i);
- 
-+void perf_mem_events__list(void);
-+
- struct mem_info;
- int perf_mem__tlb_scnprintf(char *out, size_t sz, struct mem_info *mem_info);
- int perf_mem__lvl_scnprintf(char *out, size_t sz, struct mem_info *mem_info);
--- 
-2.26.2.645.ge9eca65c58-goog
+-- Rafael
 
