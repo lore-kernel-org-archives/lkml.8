@@ -2,128 +2,76 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB83C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C407C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42AF220870
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:44:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FkNbon+/"
+	by mail.kernel.org (Postfix) with ESMTP id E201720A8B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:45:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbgEGSoY (ORCPT
+        id S1728245AbgEGSph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:44:24 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:5956 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbgEGSoY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:44:24 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eb456c00000>; Thu, 07 May 2020 11:43:12 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 07 May 2020 11:44:23 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 07 May 2020 11:44:23 -0700
-Received: from [10.2.55.176] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 7 May
- 2020 18:44:23 +0000
-Subject: Re: [RFC] mm/gup.c: Updated return value of
- {get|pin}_user_pages_fast()
-To:     Souptick Joarder <jrdr.linux@gmail.com>, Jan Kara <jack@suse.cz>
-CC:     Tony Luck <tony.luck@intel.com>, <fenghua.yu@intel.com>,
-        Rob Springer <rspringer@google.com>,
-        Todd Poynor <toddpoynor@google.com>, <benchan@chromium.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <santosh.shilimkar@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>, <kuba@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        <inux-ia64@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        <tee-dev@lists.linaro.org>, Linux-MM <linux-mm@kvack.org>,
-        <netdev@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <rds-devel@oss.oracle.com>
-References: <1588706059-4208-1-git-send-email-jrdr.linux@gmail.com>
- <0bfe4a8a-0d91-ef9b-066f-2ea7c68571b3@nvidia.com>
- <CAFqt6zZMsQkOdjAb2k1EjwX=DtZ8gKfbRzwvreHOX-0vJLngNg@mail.gmail.com>
- <20200506100649.GI17863@quack2.suse.cz>
- <CAFqt6zYaNkJ4AfVzutXS=JsN4fE41ZAvnw03vHWpdyiRHY1m_w@mail.gmail.com>
- <20200506125930.GJ17863@quack2.suse.cz>
- <CAFqt6zZztn_AiaGAhV+_uwrnVdKY-xLsxOwYBt-zGmLaat+OhQ@mail.gmail.com>
- <20200507101322.GB30922@quack2.suse.cz>
- <CAFqt6zZ2pj_6q=5kf9dxOsSkHc7vJEHgCjuRmSELQF9KnoKCxA@mail.gmail.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <03bbc0f3-8edc-6110-6391-e540f773954c@nvidia.com>
-Date:   Thu, 7 May 2020 11:44:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 7 May 2020 14:45:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46490 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726367AbgEGSph (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:45:37 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92ED520870;
+        Thu,  7 May 2020 18:45:35 +0000 (UTC)
+Date:   Thu, 7 May 2020 14:45:34 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Jason Yan <yanaijie@huawei.com>, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        bsegall@google.com, mgorman@suse.de, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/fair: Return true,false in
+ voluntary_active_balance()
+Message-ID: <20200507144534.09abd685@gandalf.local.home>
+In-Reply-To: <f0e6f50e910238366b1d8f398c91d3066baac7cf.camel@perches.com>
+References: <20200507110625.37254-1-yanaijie@huawei.com>
+        <jhjpnbg6lkf.mognet@arm.com>
+        <20200507132828.1af39b80@gandalf.local.home>
+        <20200507133024.18dbe349@gandalf.local.home>
+        <f0e6f50e910238366b1d8f398c91d3066baac7cf.camel@perches.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <CAFqt6zZ2pj_6q=5kf9dxOsSkHc7vJEHgCjuRmSELQF9KnoKCxA@mail.gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588876992; bh=s0GB/xjC+YXiEqpbpZ38ACIIfPDrfZoEl489zOuwW70=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=FkNbon+/lZBBjz9hvkzpf8XLqnxFhTzELzTdyEKvRurk0aqMSHwD85ZQ4E7KrBaQR
-         yvRSZEof1rMLcBARCOie6dDXHCRtJ6bX5o0M/30EtLT8wkidpsRgm1sAq5o8X1AYEf
-         ig/myAgWJBZambQrAm4QfpVWNRzk5lA/cuF17BMOs/H00NIHnt/EiCv2Mi0MJgUaW8
-         h/Tgfv4rUsuFQMKZC8/Z5izGkLhmkLb136CD93D+e6sy5bQZdnUnwN6nDSEOWnLbny
-         Lxw9pZdGOYtcDe5ymjtNUpKpBQUA87UMJMZ88DSlXVfnnIQYcIsGYSNMo4qeVJRrUS
-         szSLg14PEX/NQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-07 03:32, Souptick Joarder wrote:
-...
->> OK, so no real problem with any of these callers. I still don't see a
->> justification for the churn you suggest... Auditting all those code sites
->> is going to be pretty tedious.
+On Thu, 07 May 2020 10:55:33 -0700
+Joe Perches <joe@perches.com> wrote:
+
+> > If anything, we can teach people to try to understand their fixes, to see
+> > if something is really a fix or not. Blindly accepting changes like this,
+> > is no different than blindly submitting patches because some tool says its
+> > an issue.  
 > 
-> I try to audit all 42 callers of {get|pin}_user_pages_fast() and
-> figure out these 5 callers
-> which need to be updated and I think, other callers of
-> {get|pin}_user_pages_fast() will not be
-> effected.
+> <shrug>
 > 
-> But I didn't go through other variants of gup/pup except
-> {get|pin}_user_pages_fast().
+> Most people seem to prefer bool returns with apparent bool constants
+> even though true and false are enumerator constants (int) of 1 and 0
+> in the kernel.
+> 
+> from include/linux/stddef.h:
+> 
+> enum {
+> 	false	= 0,
+> 	true	= 1
+> };
 
+Sure, do that for new code, but we don't need these patches popping up for
+current code. That is, it's a preference not a bug.
 
-I feel the need to apologize for suggesting that a change to -EINVAL
-would help. :)
-
-If you change what the return value means, but only apply it the
-gup/pup _fast() variants of this API set, that would make
-the API significantly *worse*.
-
-Also, no one has been able to come up with a scenario in which the call
-sites actually have a problem handling return values of zero. In fact,
-on the contrary: there are call site where returning 0 after being
-requested to pin zero pages, helps simplify the code. For example, if
-they're just doing math such as "if(nr_expected != nr_pages_pinned) ...".
-
-
-This looks like a complete dead end, sorry.
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+-- Steve
