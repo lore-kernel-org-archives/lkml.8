@@ -2,143 +2,128 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB46AC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7122AC47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FFAB20735
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:16:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AmbX5+II"
+	by mail.kernel.org (Postfix) with ESMTP id 5555720735
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:16:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbgEGAQP (ORCPT
+        id S1728240AbgEGAQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 20:16:15 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56700 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726860AbgEGAQP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 20:16:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588810573;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dSCA9RBsimoObRbae5ozwK5uzV2+0s8IdfYdBDLhAxc=;
-        b=AmbX5+IIfviu+sH1mvDLx4dTqtH6UJX1VQ+FlTSc+o2GV9BcdlLX8MaAjGGkjiksJDK+Wa
-        s0VLMPFwn3S0LjqSC5FqNKn1g4gF6Vl8GIGsQMf7L2KXte5Di1oL+X+mNaB3FSYEULrFeR
-        v53jNjR7Z1Ck2uMYXxHw8zhGWscz4Xg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-384-3aBf_r36NcKdIyBHyYDctA-1; Wed, 06 May 2020 20:16:07 -0400
-X-MC-Unique: 3aBf_r36NcKdIyBHyYDctA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 915801005510;
-        Thu,  7 May 2020 00:16:05 +0000 (UTC)
-Received: from localhost.localdomain (vpn2-54-199.bne.redhat.com [10.64.54.199])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 152475C1D4;
-        Thu,  7 May 2020 00:16:02 +0000 (UTC)
-Reply-To: Gavin Shan <gshan@redhat.com>
-Subject: Re: [PATCH] arm64/mm: Remove add_huge_page_size()
-To:     Will Deacon <will@kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com,
-        catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
-        shan.gavin@gmail.com
-References: <20200506064635.20114-1-gshan@redhat.com>
- <fa3ad75d-9c4d-d6c9-1664-53b4c9770c6b@arm.com>
- <20200506071927.GB7021@willie-the-truck>
-From:   Gavin Shan <gshan@redhat.com>
-Message-ID: <e13bb496-7988-e096-2131-78c004231f27@redhat.com>
-Date:   Thu, 7 May 2020 10:15:59 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
-MIME-Version: 1.0
-In-Reply-To: <20200506071927.GB7021@willie-the-truck>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+        Wed, 6 May 2020 20:16:45 -0400
+Received: from mga11.intel.com ([192.55.52.93]:23998 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728194AbgEGAQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 20:16:44 -0400
+IronPort-SDR: hHbXFzmjOjtpyJrIDfHkA7deIK2r2Pu9Foi57B6gXfM7CWH29QOObJ3CJ4w0j/VCnTH8ucupST
+ D5q2YpbU7Ung==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 17:16:44 -0700
+IronPort-SDR: Z5mRlfykAx9SKfwptjllGNm+Oow7fHVLQaKYWHOO7RoytXnYJrz4r3mO4IyYPeEDWtVbUUAqpO
+ hXYp6UpFK+QQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,361,1583222400"; 
+   d="scan'208";a="278417460"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga002.jf.intel.com with ESMTP; 06 May 2020 17:16:39 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org
+Cc:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        arnd@arndb.de, brendanhiggins@google.com, tglx@linutronix.de,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        masonccyang@mxic.com.tw, robh+dt@kernel.org,
+        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v5 0/2] mtd: rawnand: Add NAND controller support on Intel LGM SoC
+Date:   Thu,  7 May 2020 08:15:35 +0800
+Message-Id: <20200507001537.4034-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/6/20 5:19 PM, Will Deacon wrote:
-> On Wed, May 06, 2020 at 12:36:43PM +0530, Anshuman Khandual wrote:
->>
->>
->> On 05/06/2020 12:16 PM, Gavin Shan wrote:
->>> The function add_huge_page_size(), wrapper of hugetlb_add_hstate(),
->>> avoids to register duplicated huge page states for same size. However,
->>> the same logic has been included in hugetlb_add_hstate(). So it seems
->>> unnecessary to keep add_huge_page_size() and this just removes it.
->>
->> Makes sense.
->>
->>>
->>> Signed-off-by: Gavin Shan <gshan@redhat.com>
->>> ---
->>>   arch/arm64/mm/hugetlbpage.c | 18 +++++-------------
->>>   1 file changed, 5 insertions(+), 13 deletions(-)
->>>
->>> diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
->>> index bbeb6a5a6ba6..ed7530413941 100644
->>> --- a/arch/arm64/mm/hugetlbpage.c
->>> +++ b/arch/arm64/mm/hugetlbpage.c
->>> @@ -441,22 +441,14 @@ void huge_ptep_clear_flush(struct vm_area_struct *vma,
->>>   	clear_flush(vma->vm_mm, addr, ptep, pgsize, ncontig);
->>>   }
->>>   
->>> -static void __init add_huge_page_size(unsigned long size)
->>> -{
->>> -	if (size_to_hstate(size))
->>> -		return;
->>> -
->>> -	hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT);
->>> -}
->>> -
->>>   static int __init hugetlbpage_init(void)
->>>   {
->>>   #ifdef CONFIG_ARM64_4K_PAGES
->>> -	add_huge_page_size(PUD_SIZE);
->>> +	hugetlb_add_hstate(PUD_SHIFT - PAGE_SHIFT);
->>>   #endif
->>> -	add_huge_page_size(CONT_PMD_SIZE);
->>> -	add_huge_page_size(PMD_SIZE);
->>> -	add_huge_page_size(CONT_PTE_SIZE);
->>> +	hugetlb_add_hstate(CONT_PMD_SHIFT + PMD_SHIFT - PAGE_SHIFT);
->>> +	hugetlb_add_hstate(PMD_SHIFT - PAGE_SHIFT);
->>> +	hugetlb_add_hstate(CONT_PTE_SHIFT);
-> 
-> Something similar has already been done in linux-next.
-> 
+This patch adds the new IP of Nand Flash Controller(NFC) support
+on Intel's Lightning Mountain(LGM) SoC.
 
-Thanks, Will. I didn't check linux-next before posting this patch.
-Please ignore it then :)
+DMA is used for burst data transfer operation, also DMA HW supports
+aligned 32bit memory address and aligned data access by default.
+DMA burst of 8 supported. Data register used to support the read/write
+operation from/to device.
 
->> Should these page order values be converted into macros instead. Also
->> we should probably keep (CONT_PTE_SHIFT + PAGE_SHIFT - PAGE_SHIFT) as
->> is to make things more clear.
-> 
-> I think the real confusion stems from us not being consistent with your
-> *_SHIFT definitions on arm64. It's madness for CONT_PTE_SHIFT to be smaller
-> than PAGE_SHIFT imo, but it's just cosmetic I guess.
-> 
+NAND controller also supports in-built HW ECC engine.
 
-Yeah, Do you want me to post a patch, to fix it?
+NAND controller driver implements ->exec_op() to replace legacy hooks,
+these specific call-back method to execute NAND operations.
 
-> Will
-> 
+Thank you very much Boris for the reviews, suggestions and valuable inputs.
+---
+v5:
+  - replace by 'HSNAND_CLE_OFFS | HSNAND_CS_OFFS' to NAND_WRITE_CMD and NAND_WRITE_ADDR
+  - remove the unused macros 
+  - update EBU_ADDR_MASK(x) macro
+  - update the EBU_ADDR_SELx register values to be written
+  - add the example in YAML file
+v4:
+  - add ebu_nand_cs structure for multiple-CS support
+  - mask/offset encoding for 0x51 value
+  - update macro HSNAND_CTL_ENABLE_ECC
+  - drop the op argument and un-used macros.
+  - updated the datatype and macros
+  - add function disable nand module
+  - remove ebu_host->dma_rx = NULL;
+  - rename MMIO address range variables to ebu and hsnand
+  - implement ->setup_data_interface()
+  - update label err_cleanup_nand and err_cleanup_dma
+  - add return value check in the nand_remove function
+  - add/remove tabs and spaces as per coding standard
+  - encoded CS ids by reg property
+v3:
+  - Add depends on MACRO in Kconfig
+  - file name update in Makefile
+  - file name update to intel-nand-controller
+  - modification of MACRO divided like EBU, HSNAND and NAND
+  - add NAND_ALE_OFFS, NAND_CLE_OFFS and NAND_CS_OFFS
+  - rename lgm_ to ebu_ and _va suffix is removed in the whole file
+  - rename structure and varaibles as per review comments.
+  - remove lgm_read_byte(), lgm_dev_ready() and cmd_ctrl() un-used function
+  - update in exec_op() as per review comments
+  - rename function lgm_dma_exit() by lgm_dma_cleanup()
+  - hardcoded magic value  for base and offset replaced by MACRO defined
+  - mtd_device_unregister() + nand_cleanup() instead of nand_release()
+v2:
+  - implement the ->exec_op() to replaces the legacy hook-up.
+  - update the commit message
+  - YAML compatible string update to intel, lgm-nand-controller
+  - add MIPS maintainers and xway_nand driver author in CC
 
-Thanks,
-Gavin
+v1:
+ - initial version
+
+
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: mtd: Add YAML for Nand Flash Controller support
+  mtd: rawnand: Add NAND controller support on Intel LGM SoC
+
+ .../devicetree/bindings/mtd/intel,lgm-nand.yaml    |  85 +++
+ drivers/mtd/nand/raw/Kconfig                       |   8 +
+ drivers/mtd/nand/raw/Makefile                      |   1 +
+ drivers/mtd/nand/raw/intel-nand-controller.c       | 741 +++++++++++++++++++++
+ 4 files changed, 835 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+ create mode 100644 drivers/mtd/nand/raw/intel-nand-controller.c
+
+-- 
+2.11.0
 
