@@ -2,109 +2,111 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CCFC47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46EFBC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A90A52078C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15EFB2078C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:31:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588836683;
+	bh=Ibfrzr4aWOuipCvG0cP+Oq1YAQPydyzZWHO9VbwFXeE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qly8dGwvclcRNymjzunVMGsl3I6CzpgwD/BSKLamhiV6ZiVcSujTaT0ZhNepJbdyM
+	 0oBu5Yt/CKDCR82kIWmclylBuze7wuxustshf4BMu3wbodn+HZXs11AxUyF3YMX10A
+	 ZsCQAufC+R7F7cNxntrqj2aBolKE4H+gWKuGHHWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726134AbgEGHbH convert rfc822-to-8bit (ORCPT
+        id S1726393AbgEGHbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 03:31:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40072 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725802AbgEGHbG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 03:31:06 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AE34C061A10;
-        Thu,  7 May 2020 00:31:06 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jWayM-0002td-RD; Thu, 07 May 2020 09:29:34 +0200
-Date:   Thu, 7 May 2020 09:29:34 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Babu Moger <babu.moger@amd.com>, corbet@lwn.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        pbonzini@redhat.com, sean.j.christopherson@intel.com,
-        x86@kernel.org, vkuznets@redhat.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, mchehab+samsung@kernel.org,
-        changbin.du@intel.com, namit@vmware.com,
-        yang.shi@linux.alibaba.com, asteinhauser@google.com,
-        anshuman.khandual@arm.com, jan.kiszka@siemens.com,
-        akpm@linux-foundation.org, steven.price@arm.com,
-        rppt@linux.vnet.ibm.com, peterx@redhat.com,
-        dan.j.williams@intel.com, arjunroy@google.com, logang@deltatee.com,
-        thellstrom@vmware.com, aarcange@redhat.com, justin.he@arm.com,
-        robin.murphy@arm.com, ira.weiny@intel.com, keescook@chromium.org,
-        jgross@suse.com, andrew.cooper3@citrix.com,
-        pawan.kumar.gupta@linux.intel.com, fenghua.yu@intel.com,
-        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
-        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH 1/2] arch/x86: Rename config
- X86_INTEL_MEMORY_PROTECTION_KEYS to generic x86
-Message-ID: <20200507072934.d5l6cpqyy54lrrla@linutronix.de>
-References: <158880240546.11615.2219410169137148044.stgit@naples-babu.amd.com>
- <158880253347.11615.8499618616856685179.stgit@naples-babu.amd.com>
- <4d86b207-77af-dc5d-88a4-f092be0043f6@intel.com>
+        Thu, 7 May 2020 03:31:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51036 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725802AbgEGHbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 03:31:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D31242078C;
+        Thu,  7 May 2020 07:31:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588836681;
+        bh=Ibfrzr4aWOuipCvG0cP+Oq1YAQPydyzZWHO9VbwFXeE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Vy9K39+1uKfjiD/hPeV64uMHUe7pj44TE6ZxNNIUaw3S1NuLoVZlUlW08H3lP9Lws
+         ocUEtLJLEVHzZ08n4kCv8ih5TWvcp0SCDW1JdGG5aSYdOLs3C/wpoTB/vb6cRmpanX
+         Q6hCvBmV7MLRpbG4d6ukGbxSIPsJ70P3qBTcyJXI=
+Date:   Thu, 7 May 2020 09:31:19 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     mathias.nyman@intel.com,
+        "open list:USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] xhci: Make debug message consistent with bus and port
+ number
+Message-ID: <20200507073119.GA876666@kroah.com>
+References: <20200507061755.13280-1-kai.heng.feng@canonical.com>
+ <20200507064510.GA787064@kroah.com>
+ <C4A734C8-D1C6-45BC-9C0A-92364EAEE3C0@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <4d86b207-77af-dc5d-88a4-f092be0043f6@intel.com>
+In-Reply-To: <C4A734C8-D1C6-45BC-9C0A-92364EAEE3C0@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-06 15:21:29 [-0700], Dave Hansen wrote:
-> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > index 1197b5596d5a..8630b9fa06f5 100644
-> > --- a/arch/x86/Kconfig
-> > +++ b/arch/x86/Kconfig
-> > @@ -1886,11 +1886,11 @@ config X86_UMIP
-> >  	  specific cases in protected and virtual-8086 modes. Emulated
-> >  	  results are dummy.
-> >  
-> > -config X86_INTEL_MEMORY_PROTECTION_KEYS
-> > -	prompt "Intel Memory Protection Keys"
-> > +config X86_MEMORY_PROTECTION_KEYS
-> > +	prompt "Memory Protection Keys"
-> >  	def_bool y
-> >  	# Note: only available in 64-bit mode
-> > -	depends on CPU_SUP_INTEL && X86_64
-> > +	depends on X86_64 && (CPU_SUP_INTEL || CPU_SUP_AMD)
-> >  	select ARCH_USES_HIGH_VMA_FLAGS
-> >  	select ARCH_HAS_PKEYS
-> >  	---help---
+On Thu, May 07, 2020 at 03:15:01PM +0800, Kai-Heng Feng wrote:
 > 
-> It's a bit of a bummer that we're going to prompt everybody doing
-> oldconfig's for this new option.  But, I don't know any way for Kconfig
-> to suppress it if the name is changed.  Also, I guess the def_bool=y
-> means that menuconfig and olddefconfig will tend to do the right thing.
-
-You could add a new option (X86_MEMORY_PROTECTION_KEYS) which is
-def_bool X86_INTEL_MEMORY_PROTECTION_KEYS and avoiding the prompt line.
-Soo it is selected based on the old option and the user isn't bother. A
-few cycles later you could remove intel option and add prompt to other.
-But still little work for…
-
-> Do we *really* need to change the Kconfig name?  The text prompt, sure.
->  End users see that and having Intel in there is massively confusing.
 > 
-> If I have to put up with seeing 'amd64' all over my Debian package
-> names, you can put up with a Kconfig name. :P
+> > On May 7, 2020, at 14:45, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+> > 
+> > On Thu, May 07, 2020 at 02:17:55PM +0800, Kai-Heng Feng wrote:
+> >> Current xhci debug message doesn't always output bus number, so it's
+> >> hard to figure out it's from USB2 or USB3 root hub.
+> >> 
+> >> In addition to that, some port numbers are offset to 0 and others are
+> >> offset to 1. Use the latter to match the USB core.
+> >> 
+> >> So use "bus number - port index + 1" to make debug message consistent.
+> >> 
+> >> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> >> ---
+> >> drivers/usb/host/xhci-hub.c | 41 +++++++++++++++++++++----------------
+> >> 1 file changed, 23 insertions(+), 18 deletions(-)
+> >> 
+> >> diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+> >> index f37316d2c8fa..83088c262cc4 100644
+> >> --- a/drivers/usb/host/xhci-hub.c
+> >> +++ b/drivers/usb/host/xhci-hub.c
+> >> @@ -1241,7 +1241,8 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+> >> 			temp = readl(ports[wIndex]->addr);
+> >> 			/* Disable port */
+> >> 			if (link_state == USB_SS_PORT_LS_SS_DISABLED) {
+> >> -				xhci_dbg(xhci, "Disable port %d\n", wIndex);
+> >> +				xhci_dbg(xhci, "Disable port %d-%d\n",
+> >> +					 hcd->self.busnum, wIndex + 1);
+> > 
+> > Shouldn't xhci_dbg() show the bus number already?  
+> 
+> It's the PCI bus number, different to USB2/USB3 root hub bus number...
 
-:) Right. On AMD you also use the crc32c-intel (if possible) and I
-haven't seen people complain about this one.
+But if this is using dev_dbg(), and it is, then you know how to look
+that up by seeing where that device is in sysfs at that point in time.
 
-> I'm really just wondering what the point of the churn is.
+So why add this again?
 
-Sebastian
+> > If not, please fix
+> > that up there instead of having to add it to all messages "by hand".
+> 
+> Not all xhci debug messages need roothub number in it.
+
+Why pick these random ones?  What makes these different?
+
+Either all or none, be consistant please.
+
+greg k-h
