@@ -7,44 +7,48 @@ X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F922C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D89EAC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 619012495D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0CB32495D
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588877594;
-	bh=XpmnuWyINxI6zEyO54yHC9Og/GemuFdZ9nKETjSbd5U=;
+	s=default; t=1588877599;
+	bh=qD1YTu45POQi4xsMj+gdlSVCGKp5j89OYm2p2pPtKh4=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=op3blTxbA5QwN20DkyTqucIbBn7Djo3jXcisKiCeYnT0XOgwUAbWeaneLt5hIKRpo
-	 Sht2eHgF0MlDWR7PlQewtzLZLflkbSn72D9oSR4OtsBDTeW7xcm09fpAlLIGqpRznX
-	 ZIbio8dzOu2rF85+A6z1jLowUuZuyf/loT61BOpU=
+	b=DKTeS8X1s/Lq5i1KizLew9mFmrww/sLWO6lIIGIIYXjPAqgNMefy6TpjfMN2PUZn9
+	 zmvmnp6hGzTyWlq/z7fOm/S1/mW33c9vfi8rynUioufUHECue9xGlPD50wXzQU427Y
+	 2PAocHoLkaXy/hv0Tps8d6IyBQGKPCL3n5LvRqFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728633AbgEGSxN (ORCPT
+        id S1728660AbgEGSxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:53:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54488 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 14:53:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbgEGSxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:53:13 -0400
+        id S1728451AbgEGSxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:53:18 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DBDF2495D;
-        Thu,  7 May 2020 18:53:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8828424960;
+        Thu,  7 May 2020 18:53:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588877592;
-        bh=XpmnuWyINxI6zEyO54yHC9Og/GemuFdZ9nKETjSbd5U=;
+        s=default; t=1588877598;
+        bh=qD1YTu45POQi4xsMj+gdlSVCGKp5j89OYm2p2pPtKh4=;
         h=Date:From:To:Cc:Subject:From;
-        b=lMoFYUDydm03VqI+1i1Fb5lKhT2cTh7yj3c4YOCIcJ8r3E4n6lIGTQIUPr9rU8EKt
-         82ibY3rkXPCY5nGecchZS1qXr9S4ZFQ4PW3onBme++iRwcllh0FgbG5tcm4EGdIcM0
-         6gXhqmXXcaP9YJTiA0VrTbrBMWab8ew8oLRLAAYE=
-Date:   Thu, 7 May 2020 13:57:39 -0500
+        b=FSQeULZOf97JknZWY5LLJLQT/B28yD4GV5UeqoNuLVRKkxweMPCE3bj9Ix6zBiXZG
+         SkK2rXUmNi8iocLO2FpUJfFio+NqcvdSBhbGk6cfmwEwR3nhnNDUrEwSblam8VUPu8
+         tKEbXqXjoojLcnrP4v7c2q3FxuHkngwmGz6OeIH8=
+Date:   Thu, 7 May 2020 13:57:44 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] libata: Replace zero-length array with flexible-array
-Message-ID: <20200507185739.GA14954@embeddedor>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>
+Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] tools/testing/nvdimm: Replace zero-length array with
+ flexible-array
+Message-ID: <20200507185744.GA14974@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -91,20 +95,38 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- include/linux/libata.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/nvdimm/test/nfit_test.h |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/libata.h b/include/linux/libata.h
-index cffa4714bfa8..cbc95456dd23 100644
---- a/include/linux/libata.h
-+++ b/include/linux/libata.h
-@@ -609,7 +609,7 @@ struct ata_host {
- 	struct task_struct	*eh_owner;
+diff --git a/tools/testing/nvdimm/test/nfit_test.h b/tools/testing/nvdimm/test/nfit_test.h
+index db3c07beb9d1..b5f7a996c4d0 100644
+--- a/tools/testing/nvdimm/test/nfit_test.h
++++ b/tools/testing/nvdimm/test/nfit_test.h
+@@ -51,7 +51,7 @@ struct nd_cmd_translate_spa {
+ 		__u32 nfit_device_handle;
+ 		__u32 _reserved;
+ 		__u64 dpa;
+-	} __packed devices[0];
++	} __packed devices[];
  
- 	struct ata_port		*simplex_claimed;	/* channel owning the DMA */
--	struct ata_port		*ports[0];
-+	struct ata_port		*ports[];
- };
+ } __packed;
  
- struct ata_queued_cmd {
+@@ -74,7 +74,7 @@ struct nd_cmd_ars_err_inj_stat {
+ 	struct nd_error_stat_query_record {
+ 		__u64 err_inj_stat_spa_range_base;
+ 		__u64 err_inj_stat_spa_range_length;
+-	} __packed record[0];
++	} __packed record[];
+ } __packed;
+ 
+ #define ND_INTEL_SMART			 1
+@@ -180,7 +180,7 @@ struct nd_intel_fw_send_data {
+ 	__u32 context;
+ 	__u32 offset;
+ 	__u32 length;
+-	__u8 data[0];
++	__u8 data[];
+ /* this field is not declared due ot variable data from input */
+ /*	__u32 status; */
+ } __packed;
 
