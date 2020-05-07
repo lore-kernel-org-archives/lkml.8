@@ -2,101 +2,71 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2075C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B609C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE0062082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4816220659
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:58:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbgEGP6P (ORCPT
+        id S1728113AbgEGP6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 11:58:15 -0400
-Received: from mga12.intel.com ([192.55.52.136]:33248 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726029AbgEGP6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 11:58:15 -0400
-IronPort-SDR: 8ZNZfHpNyQk9cxLl51mxR5d+FzwiJFETorbkOhr4ASUDM5L7pu5mx/sW2nq8yM4Menj8Gb5SxD
- 3jFixHdRnAiA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 08:58:14 -0700
-IronPort-SDR: DKvZ4Y0WgUj+jR3xUIP422g2bmkjshteb4SkyARNZKL0Quu5rjeQkDchpgfiS12QyN/4Nqsnat
- ELe7RVZCn1xA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,364,1583222400"; 
-   d="scan'208";a="249326305"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by orsmga007.jf.intel.com with ESMTP; 07 May 2020 08:58:14 -0700
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Rik van Riel <riel@surriel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH v3 07/10] x86/fpu/xstate: Update copy_kernel_to_xregs_err() for XSAVES supervisor states
-Date:   Thu,  7 May 2020 08:58:16 -0700
-Message-Id: <20200507155816.26059-1-yu-cheng.yu@intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200328164307.17497-8-yu-cheng.yu@intel.com>
-References: <20200328164307.17497-8-yu-cheng.yu@intel.com>
+        Thu, 7 May 2020 11:58:47 -0400
+Received: from www62.your-server.de ([213.133.104.62]:55438 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbgEGP6r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 11:58:47 -0400
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jWiuH-0008Cw-Lt; Thu, 07 May 2020 17:57:53 +0200
+Received: from [178.195.186.98] (helo=pc-9.home)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jWiuH-0008HP-1i; Thu, 07 May 2020 17:57:53 +0200
+Subject: Re: [PATCH v2] bpf, i386: remove unneeded conversion to bool
+To:     Martin KaFai Lau <kafai@fb.com>, Jason Yan <yanaijie@huawei.com>
+Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        udknight@gmail.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com, ast@kernel.org,
+        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org,
+        lukenels@cs.washington.edu, xi.wang@gmail.com,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200506140352.37154-1-yanaijie@huawei.com>
+ <20200506220443.pmszq4jnfr2pcjp4@kafai-mbp>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <1f762d57-7439-37e4-1cfb-f53df6dd47d0@iogearbox.net>
+Date:   Thu, 7 May 2020 17:57:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200506220443.pmszq4jnfr2pcjp4@kafai-mbp>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25805/Thu May  7 14:14:46 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function copy_kernel_to_xregs_err() uses XRSTOR, which can work with
-standard or compacted format without supervisor xstates.  However, when
-supervisor xstates are present, XRSTORS must be used.  Fix it by using
-XRSTORS when XSAVES is enabled.
+On 5/7/20 12:04 AM, Martin KaFai Lau wrote:
+> On Wed, May 06, 2020 at 10:03:52PM +0800, Jason Yan wrote:
+>> The '==' expression itself is bool, no need to convert it to bool again.
+>> This fixes the following coccicheck warning:
+> Make sense.
+> 
+> It may belong to bpf-next instead.
+> 
+> Acked-by: Martin KaFai Lau <kafai@fb.com>
 
-I also considered if there were additional cases where XRSTOR might be
-mistakenly called instead of XRSTORS.  There are only three XRSTOR sites
-in kernel:
-
-1. copy_kernel_to_xregs_booting(), already switches between XRSTOR and
-   XRSTORS based on X86_FEATURE_XSAVES.
-2. copy_user_to_xregs(), which *needs* XRSTOR because it is copying from
-   userspace and must never copy supervisor state with XRSTORS.
-3. copy_kernel_to_xregs_err() mistakenly used XRSTOR only.  Fixed it.
-
-Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
----
- arch/x86/include/asm/fpu/internal.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
-index a42fcb4b690d..42159f45bf9c 100644
---- a/arch/x86/include/asm/fpu/internal.h
-+++ b/arch/x86/include/asm/fpu/internal.h
-@@ -400,7 +400,10 @@ static inline int copy_kernel_to_xregs_err(struct xregs_state *xstate, u64 mask)
- 	u32 hmask = mask >> 32;
- 	int err;
- 
--	XSTATE_OP(XRSTOR, xstate, lmask, hmask, err);
-+	if (static_cpu_has(X86_FEATURE_XSAVES))
-+		XSTATE_OP(XRSTORS, xstate, lmask, hmask, err);
-+	else
-+		XSTATE_OP(XRSTOR, xstate, lmask, hmask, err);
- 
- 	return err;
- }
--- 
-2.21.0
-
+Applied, thanks!
