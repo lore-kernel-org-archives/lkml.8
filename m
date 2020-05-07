@@ -2,163 +2,92 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F1CC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E468C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB99E2073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:30:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E495E207DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:30:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726509AbgEGIap (ORCPT
+        id S1726558AbgEGIar (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 04:30:45 -0400
-Received: from smtp-8faa.mail.infomaniak.ch ([83.166.143.170]:51411 "EHLO
-        smtp-8faa.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725809AbgEGIao (ORCPT
+        Thu, 7 May 2020 04:30:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49474 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725809AbgEGIaq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 04:30:44 -0400
-Received: from smtp-2-0000.mail.infomaniak.ch (unknown [10.5.36.107])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49HmqS2fKzzlj47t;
-        Thu,  7 May 2020 10:30:12 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-2-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 49HmqJ429fzlpk1S;
-        Thu,  7 May 2020 10:30:04 +0200 (CEST)
-Subject: Re: [PATCH v5 0/6] Add support for O_MAYEXEC
-To:     "Lev R. Oshvang ." <levonshe@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
+        Thu, 7 May 2020 04:30:46 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6ED8C061A10
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 01:30:45 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jWbuw-0004Df-NG; Thu, 07 May 2020 10:30:06 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 91F24102652; Thu,  7 May 2020 10:30:05 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org
-References: <20200505153156.925111-1-mic@digikod.net>
- <d4616bc0-39df-5d6c-9f5b-d84cf6e65960@digikod.net>
- <CAP22eLHres_shVWEC+2=wcKXRsQzfNKDAnyRd8yuO_gJ3Wi_JA@mail.gmail.com>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <db3c1f05-11d4-077e-4574-03ecb585bc21@digikod.net>
-Date:   Thu, 7 May 2020 10:30:04 +0200
-User-Agent: 
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [patch V4 part 5 05/31] x86/entry: Switch XEN/PV hypercall entry to IDTENTRY
+In-Reply-To: <5418e98e-b293-bff3-2c74-c7f932c09c55@oracle.com>
+References: <20200505135341.730586321@linutronix.de> <20200505135828.592598658@linutronix.de> <5418e98e-b293-bff3-2c74-c7f932c09c55@oracle.com>
+Date:   Thu, 07 May 2020 10:30:05 +0200
+Message-ID: <874kssjgfm.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <CAP22eLHres_shVWEC+2=wcKXRsQzfNKDAnyRd8yuO_gJ3Wi_JA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Boris Ostrovsky <boris.ostrovsky@oracle.com> writes:
+>> -	if (register_callback(CALLBACKTYPE_event, xen_hypervisor_callback) ||
+>> +	if (register_callback(CALLBACKTYPE_event,
+>> +			      asm_exc_xen_hypervisor_callback) ||
+>
+>
+> This ...
+>
+>
+>>  	    register_callback(CALLBACKTYPE_failsafe, xen_failsafe_callback))
+>>  		BUG();
+...
+>> @@ -347,7 +348,7 @@ cpu_initialize_context(unsigned int cpu,
+>>  	ctxt->gs_base_kernel = per_cpu_offset(cpu);
+>>  #endif
+>>  	ctxt->event_callback_eip    =
+>> -		(unsigned long)xen_hypervisor_callback;
+>> +		(unsigned long)asm_exc_xen_hypervisor_callback;
+>
+>
+> ... and this should be xen_asm_exc_xen_hypervisor_callback (we need to
+> pop %rcx and %r11).
+>
+>
+> And then Xen PV guest boots.
 
-On 06/05/2020 15:58, Lev R. Oshvang . wrote:
-> On Tue, May 5, 2020 at 6:36 PM Mickaël Salaün <mic@digikod.net> wrote:
->>
->>
->> On 05/05/2020 17:31, Mickaël Salaün wrote:
->>> Hi,
->>>
->>> This fifth patch series add new kernel configurations (OMAYEXEC_STATIC,
->>> OMAYEXEC_ENFORCE_MOUNT, and OMAYEXEC_ENFORCE_FILE) to enable to
->>> configure the security policy at kernel build time.  As requested by
->>> Mimi Zohar, I completed the series with one of her patches for IMA.
->>>
->>> The goal of this patch series is to enable to control script execution
->>> with interpreters help.  A new O_MAYEXEC flag, usable through
->>> openat2(2), is added to enable userspace script interpreter to delegate
->>> to the kernel (and thus the system security policy) the permission to
->>> interpret/execute scripts or other files containing what can be seen as
->>> commands.
->>>
->>> A simple system-wide security policy can be enforced by the system
->>> administrator through a sysctl configuration consistent with the mount
->>> points or the file access rights.  The documentation patch explains the
->>> prerequisites.
->>>
->>> Furthermore, the security policy can also be delegated to an LSM, either
->>> a MAC system or an integrity system.  For instance, the new kernel
->>> MAY_OPENEXEC flag closes a major IMA measurement/appraisal interpreter
->>> integrity gap by bringing the ability to check the use of scripts [1].
->>> Other uses are expected, such as for openat2(2) [2], SGX integration
->>> [3], bpffs [4] or IPE [5].
->>>
->>> Userspace needs to adapt to take advantage of this new feature.  For
->>> example, the PEP 578 [6] (Runtime Audit Hooks) enables Python 3.8 to be
->>> extended with policy enforcement points related to code interpretation,
->>> which can be used to align with the PowerShell audit features.
->>> Additional Python security improvements (e.g. a limited interpreter
->>> withou -c, stdin piping of code) are on their way.
->>>
->>> The initial idea come from CLIP OS 4 and the original implementation has
->>> been used for more than 12 years:
->>> https://github.com/clipos-archive/clipos4_doc
->>>
->>> An introduction to O_MAYEXEC was given at the Linux Security Summit
->>> Europe 2018 - Linux Kernel Security Contributions by ANSSI:
->>> https://www.youtube.com/watch?v=chNjCRtPKQY&t=17m15s
->>> The "write xor execute" principle was explained at Kernel Recipes 2018 -
->>> CLIP OS: a defense-in-depth OS:
->>> https://www.youtube.com/watch?v=PjRE0uBtkHU&t=11m14s
->>>
->>> This patch series can be applied on top of v5.7-rc4.  This can be tested
->>> with CONFIG_SYSCTL.  I would really appreciate constructive comments on
->>> this patch series.
->>>
->>> Previous version:
->>> https://lore.kernel.org/lkml/20200428175129.634352-1-mic@digikod.net/
->>
->> The previous version (v4) is
->> https://lore.kernel.org/lkml/20200430132320.699508-1-mic@digikod.net/
-> 
-> 
-> Hi Michael
-> 
-> I have couple of question
-> 1. Why you did not add O_MAYEXEC to open()?
-> Some time ago (around v4.14) open() did not return EINVAL when
-> VALID_OPEN_FLAGS check failed.
-> Now it does, so I do not see a problem that interpreter will use
-> simple open(),  ( Although that path might be manipulated, but file
-> contents will be verified by IMA)
+Ooops. Thanks for tracking this down!
 
-Aleksa replied to this.
-
-> 2. When you apply a new flag to mount, it means that IMA will check
-> all files under this mount and it does not matter whether the file in
-> question is a script or not.
-> IMHO it is too hard overhead for performance reasons.
-
-This patch series doesn't change the way IMA handles mount points.
-
-> 
-> Regards,
-> LEv
-> 
