@@ -4,226 +4,236 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83239C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D8FC47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B0EF2145D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FD3B2145D
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:39:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UUCafa24"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cakw7TP0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbgEGShF (ORCPT
+        id S1728018AbgEGSjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:37:05 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:49232 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726320AbgEGShF (ORCPT
+        Thu, 7 May 2020 14:39:09 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:42312 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbgEGSjJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:37:05 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 047IMZIv032669;
-        Thu, 7 May 2020 18:37:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=jEL0Tl/TzlxZbwRuXIi5yCGHz7/aI7KOtsR7w/YVdFY=;
- b=UUCafa24ozcJZ0XsA13Jv6QhHXg6Pw8qsfPRt+JLuvNivFcVvJy0dZxFtK1BAvC5J/lg
- Q3kQO9/VmsnAIBRMgIkFRQegc6DMJqP0MCNdFXVdIDIsGFMQsPreCgmX4h8XMvfnq90a
- aUyLEeQcV9fTNXC4CMwxKap1JpTDnngsTeiALAiSkGTELcFD+fTMaKrEwA+JSv/oVdj9
- UgY3HbLkp9sUR9dbj7BrGnR0tkzifnvaRX0bcWe7v535KRvxgR4cqG3yKPR2dv9hTwX1
- LoQa/oixKtexzIZPrwS15jIft7BACckhgidLTrqncu+jhJW6cIGMwwk/msmIuzOsd3oN Bg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 30usgq8ysg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 18:37:00 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 047IHZu6080226;
-        Thu, 7 May 2020 18:35:00 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 30sjnq8qus-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 18:35:00 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 047IYx9b019749;
-        Thu, 7 May 2020 18:34:59 GMT
-Received: from ca-common-hq.us.oracle.com (/10.211.9.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 07 May 2020 11:34:59 -0700
-From:   Divya Indi <divya.indi@oracle.com>
-To:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Jason Gunthorpe <jgg@ziepe.ca>, Kaike Wan <kaike.wan@intel.com>
-Cc:     Gerd Rausch <gerd.rausch@oracle.com>,
-        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
-        Srinivas Eeda <srinivas.eeda@oracle.com>,
-        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Divya Indi <divya.indi@oracle.com>
-Subject: [PATCH 1/2] IB/sa: Resolving use-after-free in ib_nl_send_msg.
-Date:   Thu,  7 May 2020 11:34:47 -0700
-Message-Id: <1588876487-5781-2-git-send-email-divya.indi@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1588876487-5781-1-git-send-email-divya.indi@oracle.com>
-References: <1588876487-5781-1-git-send-email-divya.indi@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=2
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005070150
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 clxscore=1015
- mlxlogscore=999 spamscore=0 adultscore=0 bulkscore=0 phishscore=0
- suspectscore=2 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005070150
+        Thu, 7 May 2020 14:39:09 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 047Id7Q3095464;
+        Thu, 7 May 2020 13:39:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588876747;
+        bh=LD8O5nvPdIOq3P/U3apN8rS7w15F0N/iD9a9DoLSKWw=;
+        h=From:To:CC:Subject:Date;
+        b=cakw7TP08+PgTdBy1C8QlzhQD/vMBBZGPHJrAcXxdaSTDRoAJBT/06rX2i8J5b/HL
+         6FnnqUZinTJr0zvqt4391z+iNWAMxS3SP58hHxvxE3X5qoo3tcddBgM8qIznUlyrFI
+         KwxmwvBB4BiOg/JwTOSr0ZtvnIMRSgiEfkY4qWBM=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 047Id7f5125306
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 7 May 2020 13:39:07 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 7 May
+ 2020 13:39:06 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 7 May 2020 13:39:06 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 047Id60P085894;
+        Thu, 7 May 2020 13:39:06 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <sre@kernel.org>
+CC:     <linux-pm@vger.kernel.org>, <robh@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        "Andrew F . Davis" <afd@ti.com>
+Subject: [PATCH v2] dt-bindings: power: Convert bq27xxx dt to yaml
+Date:   Thu, 7 May 2020 13:30:13 -0500
+Message-ID: <20200507183013.27261-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes commit -
-commit 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list before sending")'
+Convert the bq27xxx.txt to yaml format
 
-Above commit adds the query to the request list before ib_nl_snd_msg.
-
-However, if there is a delay in sending out the request (For
-eg: Delay due to low memory situation) the timer to handle request timeout
-might kick in before the request is sent out to ibacm via netlink.
-ib_nl_request_timeout may release the query if it fails to send it to SA
-as well causing a use after free situation.
-
-Call Trace for the above race:
-
-[<ffffffffa02f43cb>] ? ib_pack+0x17b/0x240 [ib_core]
-[<ffffffffa032aef1>] ib_sa_path_rec_get+0x181/0x200 [ib_sa]
-[<ffffffffa0379db0>] rdma_resolve_route+0x3c0/0x8d0 [rdma_cm]
-[<ffffffffa0374450>] ? cma_bind_port+0xa0/0xa0 [rdma_cm]
-[<ffffffffa040f850>] ? rds_rdma_cm_event_handler_cmn+0x850/0x850
-[rds_rdma]
-[<ffffffffa040f22c>] rds_rdma_cm_event_handler_cmn+0x22c/0x850
-[rds_rdma]
-[<ffffffffa040f860>] rds_rdma_cm_event_handler+0x10/0x20 [rds_rdma]
-[<ffffffffa037778e>] addr_handler+0x9e/0x140 [rdma_cm]
-[<ffffffffa026cdb4>] process_req+0x134/0x190 [ib_addr]
-[<ffffffff810a02f9>] process_one_work+0x169/0x4a0
-[<ffffffff810a0b2b>] worker_thread+0x5b/0x560
-[<ffffffff810a0ad0>] ? flush_delayed_work+0x50/0x50
-[<ffffffff810a68fb>] kthread+0xcb/0xf0
-[<ffffffff816ec49a>] ? __schedule+0x24a/0x810
-[<ffffffff816ec49a>] ? __schedule+0x24a/0x810
-[<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
-[<ffffffff816f25a7>] ret_from_fork+0x47/0x90
-[<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
-....
-RIP  [<ffffffffa03296cd>] send_mad+0x33d/0x5d0 [ib_sa]
-
-To resolve this issue, we introduce a new flag IB_SA_NL_QUERY_SENT.
-This flag Indicates if the request has been sent out to ibacm yet.
-
-If this flag is not set for a query and the query times out, we add it
-back to the list with the original delay.
-
-To handle the case where a response is received before we could set this
-flag, the response handler waits for the flag to be
-set before proceeding with the query.
-
-Signed-off-by: Divya Indi <divya.indi@oracle.com>
+CC: Pali Rohár <pali@kernel.org>
+CC: Andrew F. Davis <afd@ti.com>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- drivers/infiniband/core/sa_query.c | 45 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+ .../bindings/power/supply/bq27xxx.txt         | 56 ------------
+ .../bindings/power/supply/bq27xxx.yaml        | 86 +++++++++++++++++++
+ 2 files changed, 86 insertions(+), 56 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/power/supply/bq27xxx.txt
+ create mode 100644 Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
 
-diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
-index 30d4c12..ffbae2f 100644
---- a/drivers/infiniband/core/sa_query.c
-+++ b/drivers/infiniband/core/sa_query.c
-@@ -59,6 +59,9 @@
- #define IB_SA_LOCAL_SVC_TIMEOUT_MAX		200000
- #define IB_SA_CPI_MAX_RETRY_CNT			3
- #define IB_SA_CPI_RETRY_WAIT			1000 /*msecs */
+diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt b/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
+deleted file mode 100644
+index 4fa8e08df2b6..000000000000
+--- a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
++++ /dev/null
+@@ -1,56 +0,0 @@
+-TI BQ27XXX fuel gauge family
+-
+-Required properties:
+-- compatible: contains one of the following:
+- * "ti,bq27200" - BQ27200
+- * "ti,bq27210" - BQ27210
+- * "ti,bq27500" - deprecated, use revision specific property below
+- * "ti,bq27510" - deprecated, use revision specific property below
+- * "ti,bq27520" - deprecated, use revision specific property below
+- * "ti,bq27500-1" - BQ27500/1
+- * "ti,bq27510g1" - BQ27510-g1
+- * "ti,bq27510g2" - BQ27510-g2
+- * "ti,bq27510g3" - BQ27510-g3
+- * "ti,bq27520g1" - BQ27520-g1
+- * "ti,bq27520g2" - BQ27520-g2
+- * "ti,bq27520g3" - BQ27520-g3
+- * "ti,bq27520g4" - BQ27520-g4
+- * "ti,bq27521" - BQ27521
+- * "ti,bq27530" - BQ27530
+- * "ti,bq27531" - BQ27531
+- * "ti,bq27541" - BQ27541
+- * "ti,bq27542" - BQ27542
+- * "ti,bq27546" - BQ27546
+- * "ti,bq27742" - BQ27742
+- * "ti,bq27545" - BQ27545
+- * "ti,bq27411" - BQ27411
+- * "ti,bq27421" - BQ27421
+- * "ti,bq27425" - BQ27425
+- * "ti,bq27426" - BQ27426
+- * "ti,bq27441" - BQ27441
+- * "ti,bq27621" - BQ27621
+-- reg: integer, I2C address of the fuel gauge.
+-
+-Optional properties:
+-- monitored-battery: phandle of battery characteristics node
+-    The fuel gauge uses the following battery properties:
+-    + energy-full-design-microwatt-hours
+-    + charge-full-design-microamp-hours
+-    + voltage-min-design-microvolt
+-  Both or neither of the *-full-design-*-hours properties must be set.
+-  See Documentation/devicetree/bindings/power/supply/battery.txt
+-
+-Example:
+-
+-	bat: battery {
+-		compatible = "simple-battery";
+-		voltage-min-design-microvolt = <3200000>;
+-		energy-full-design-microwatt-hours = <5290000>;
+-		charge-full-design-microamp-hours = <1430000>;
+-	};
+-
+-	bq27510g3: fuel-gauge@55 {
+-		compatible = "ti,bq27510g3";
+-		reg = <0x55>;
+-		monitored-battery = <&bat>;
+-	};
+diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
+new file mode 100644
+index 000000000000..54f497c291f2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
+@@ -0,0 +1,86 @@
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (C) 2020 Texas Instruments Incorporated
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/power/supply/bq27xxx.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+DECLARE_WAIT_QUEUE_HEAD(wait_queue);
++title: TI BQ27XXX fuel gauge family
 +
- static int sa_local_svc_timeout_ms = IB_SA_LOCAL_SVC_TIMEOUT_DEFAULT;
- 
- struct ib_sa_sm_ah {
-@@ -122,6 +125,7 @@ struct ib_sa_query {
- #define IB_SA_ENABLE_LOCAL_SERVICE	0x00000001
- #define IB_SA_CANCEL			0x00000002
- #define IB_SA_QUERY_OPA			0x00000004
-+#define IB_SA_NL_QUERY_SENT		0x00000008
- 
- struct ib_sa_service_query {
- 	void (*callback)(int, struct ib_sa_service_rec *, void *);
-@@ -746,6 +750,11 @@ static inline int ib_sa_query_cancelled(struct ib_sa_query *query)
- 	return (query->flags & IB_SA_CANCEL);
- }
- 
-+static inline int ib_sa_nl_query_sent(struct ib_sa_query *query)
-+{
-+	return (query->flags & IB_SA_NL_QUERY_SENT);
-+}
++maintainers:
++  - Pali Rohár <pali@kernel.org>
++  - Andrew F. Davis <afd@ti.com>
++  - Sebastian Reichel <sre@kernel.org>
 +
- static void ib_nl_set_path_rec_attrs(struct sk_buff *skb,
- 				     struct ib_sa_query *query)
- {
-@@ -889,6 +898,15 @@ static int ib_nl_make_request(struct ib_sa_query *query, gfp_t gfp_mask)
- 		spin_lock_irqsave(&ib_nl_request_lock, flags);
- 		list_del(&query->list);
- 		spin_unlock_irqrestore(&ib_nl_request_lock, flags);
-+	} else {
-+		query->flags |= IB_SA_NL_QUERY_SENT;
++description: |
++  Support various Texas Instruments fuel gauge devices that share similar
++  register maps and power supply properties
 +
-+		/*
-+		 * If response is received before this flag was set
-+		 * someone is waiting to process the response and release the
-+		 * query.
-+		 */
-+		wake_up(&wait_queue);
- 	}
- 
- 	return ret;
-@@ -994,6 +1012,21 @@ static void ib_nl_request_timeout(struct work_struct *work)
- 		}
- 
- 		list_del(&query->list);
++properties:
++  compatible:
++    enum:
++      - ti,bq27200 - BQ27200
++      - ti,bq27210 - BQ27210
++      - ti,bq27500 - deprecated, use revision specific property below
++      - ti,bq27510 - deprecated, use revision specific property below
++      - ti,bq27520 - deprecated, use revision specific property below
++      - ti,bq27500-1 - BQ27500/1
++      - ti,bq27510g1 - BQ27510-g1
++      - ti,bq27510g2 - BQ27510-g2
++      - ti,bq27510g3 - BQ27510-g3
++      - ti,bq27520g1 - BQ27520-g1
++      - ti,bq27520g2 - BQ27520-g2
++      - ti,bq27520g3 - BQ27520-g3
++      - ti,bq27520g4 - BQ27520-g4
++      - ti,bq27521 - BQ27521
++      - ti,bq27530 - BQ27530
++      - ti,bq27531 - BQ27531
++      - ti,bq27541 - BQ27541
++      - ti,bq27542 - BQ27542
++      - ti,bq27546 - BQ27546
++      - ti,bq27742 - BQ27742
++      - ti,bq27545 - BQ27545
++      - ti,bq27411 - BQ27411
++      - ti,bq27421 - BQ27421
++      - ti,bq27425 - BQ27425
++      - ti,bq27426 - BQ27426
++      - ti,bq27441 - BQ27441
++      - ti,bq27621 - BQ27621
 +
-+		/*
-+		 * If IB_SA_NL_QUERY_SENT is not set, this query has not been
-+		 * sent to ibacm yet. Reset the timer.
-+		 */
-+		if (!ib_sa_nl_query_sent(query)) {
-+			delay = msecs_to_jiffies(sa_local_svc_timeout_ms);
-+			query->timeout = delay + jiffies;
-+			list_add_tail(&query->list, &ib_nl_request_list);
-+			/* Start the timeout if this is the only request */
-+			if (ib_nl_request_list.next == &query->list)
-+				queue_delayed_work(ib_nl_wq, &ib_nl_timed_work,
-+						delay);
-+			break;
-+		}
- 		ib_sa_disable_local_svc(query);
- 		/* Hold the lock to protect against query cancellation */
- 		if (ib_sa_query_cancelled(query))
-@@ -1123,6 +1156,18 @@ int ib_nl_handle_resolve_resp(struct sk_buff *skb,
- 
- 	send_buf = query->mad_buf;
- 
-+	/*
-+	 * Make sure the IB_SA_NL_QUERY_SENT flag is set before
-+	 * processing this query. If flag is not set, query can be accessed in
-+	 * another context while setting the flag and processing the query will
-+	 * eventually release it causing a possible use-after-free.
-+	 */
-+	if (unlikely(!ib_sa_nl_query_sent(query))) {
-+		spin_unlock_irqrestore(&ib_nl_request_lock, flags);
-+		wait_event(wait_queue, ib_sa_nl_query_sent(query));
-+		spin_lock_irqsave(&ib_nl_request_lock, flags);
-+	}
++  reg:
++    maxItems: 1
++    description: integer, I2C address of the fuel gauge.
 +
- 	if (!ib_nl_is_good_resolve_resp(nlh)) {
- 		/* if the result is a failure, send out the packet via IB */
- 		ib_sa_disable_local_svc(query);
++  monitored-battery:
++    description: |
++       phandle of battery characteristics node.
++       The fuel gauge uses the following battery properties:
++       - energy-full-design-microwatt-hours
++       - charge-full-design-microamp-hours
++       - voltage-min-design-microvolt
++       Both or neither of the *-full-design-*-hours properties must be set.
++       See Documentation/devicetree/bindings/power/supply/battery.txt
++
++required:
++  - compatible
++  - reg
++additionalProperties: false
++
++examples:
++  - |
++    i2c0 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      bat: battery {
++        compatible = "simple-battery";
++        voltage-min-design-microvolt = <3200000>;
++        energy-full-design-microwatt-hours = <5290000>;
++        charge-full-design-microamp-hours = <1430000>;
++      };
++
++      bq27510g3: fuel-gauge@55 {
++        compatible = "ti,bq27510g3";
++        reg = <0x55>;
++        monitored-battery = <&bat>;
++      };
++    };
 -- 
-1.8.3.1
+2.25.1
 
