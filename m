@@ -2,118 +2,143 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A12FC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72685C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58683208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5000B20CC7
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:55:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbgEGTyM (ORCPT
+        id S1728309AbgEGTzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 15:54:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:38360 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726320AbgEGTyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 15:54:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E7961FB;
-        Thu,  7 May 2020 12:54:11 -0700 (PDT)
-Received: from [192.168.122.166] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D60F83F68F;
-        Thu,  7 May 2020 12:54:09 -0700 (PDT)
-Subject: Re: [net-next PATCH v3 4/5] net: phy: Introduce fwnode_get_phy_id()
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Calvin Johnson <calvin.johnson@oss.nxp.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        linux.cj@gmail.com, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Madalin Bucur <madalin.bucur@oss.nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Varun Sethi <V.Sethi@nxp.com>,
-        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Diana Madalina Craciun <diana.craciun@nxp.com>,
-        netdev <netdev@vger.kernel.org>, Marcin Wojtas <mw@semihalf.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-References: <20200505132905.10276-1-calvin.johnson@oss.nxp.com>
- <20200505132905.10276-5-calvin.johnson@oss.nxp.com>
- <67e263cf-5cd7-98d1-56ff-ebd9ac2265b6@arm.com>
- <CAHp75Vew8Fh6HEoOACk+J9KCpw+AE2t2+oFnXteK1eShopfYAA@mail.gmail.com>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <83ab4ca4-9c34-4cdd-4413-3b4cdf96727d@arm.com>
-Date:   Thu, 7 May 2020 14:54:09 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 7 May 2020 15:55:23 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:59462 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbgEGTzW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 15:55:22 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jWmby-0000uY-Rr; Thu, 07 May 2020 13:55:14 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jWmby-00073f-0p; Thu, 07 May 2020 13:55:14 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+        <87ftcei2si.fsf@x220.int.ebiederm.org>
+        <202005051354.C7E2278688@keescook>
+        <87368ddsc9.fsf@x220.int.ebiederm.org>
+        <202005060829.A09C366D0@keescook>
+Date:   Thu, 07 May 2020 14:51:47 -0500
+In-Reply-To: <202005060829.A09C366D0@keescook> (Kees Cook's message of "Wed, 6
+        May 2020 08:30:33 -0700")
+Message-ID: <87d07fa5gs.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vew8Fh6HEoOACk+J9KCpw+AE2t2+oFnXteK1eShopfYAA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-XM-SPF: eid=1jWmby-00073f-0p;;;mid=<87d07fa5gs.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19ux5x0eTpmQ6FRkwXIaJ6ku+USAj9wB9Q=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 6/7] exec: Move most of setup_new_exec into flush_old_exec
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Kees Cook <keescook@chromium.org> writes:
 
-On 5/7/20 12:27 PM, Andy Shevchenko wrote:
-> On Thu, May 7, 2020 at 4:26 PM Jeremy Linton <jeremy.linton@arm.com> wrote:
->> On 5/5/20 8:29 AM, Calvin Johnson wrote:
-> 
->>> +             if (sscanf(cp, "ethernet-phy-id%4x.%4x",
->>> +                        &upper, &lower) == 2) {
->>> +                     *phy_id = ((upper & 0xFFFF) << 16) | (lower & 0xFFFF);
->>> +                     return 0;
->>> +             }
-> 
->> Isn't the ACPI _CID() conceptually similar to the DT compatible
->> property?
-> 
-> Where?
+> On Wed, May 06, 2020 at 09:57:10AM -0500, Eric W. Biederman wrote:
+>> Kees Cook <keescook@chromium.org> writes:
+>> 
+>> > On Tue, May 05, 2020 at 02:45:33PM -0500, Eric W. Biederman wrote:
+>> >> 
+>> >> The current idiom for the callers is:
+>> >> 
+>> >> flush_old_exec(bprm);
+>> >> set_personality(...);
+>> >> setup_new_exec(bprm);
+>> >> 
+>> >> In 2010 Linus split flush_old_exec into flush_old_exec and
+>> >> setup_new_exec.  With the intention that setup_new_exec be what is
+>> >> called after the processes new personality is set.
+>> >> 
+>> >> Move the code that doesn't depend upon the personality from
+>> >> setup_new_exec into flush_old_exec.  This is to facilitate future
+>> >> changes by having as much code together in one function as possible.
+>> >
+>> > Er, I *think* this is okay, but I have some questions below which
+>> > maybe you already investigated (and should perhaps get called out in
+>> > the changelog).
+>> 
+>> I will see if I can expand more on the review that I have done.
+>> 
+>> I saw this as moving thre lines and the personality setting later in the
+>> code, rather than moving a bunch of lines up
+>> 
+>> AKA these lines:
+>> >> +	arch_pick_mmap_layout(me->mm, &bprm->rlim_stack);
+>> >> +
+>> >> +	arch_setup_new_exec();
+>> >> +
+>> >> +	/* Set the new mm task size. We have to do that late because it may
+>> >> +	 * depend on TIF_32BIT which is only updated in flush_thread() on
+>> >> +	 * some architectures like powerpc
+>> >> +	 */
+>> >> +	me->mm->task_size = TASK_SIZE;
+>> 
+>> 
+>> I verified carefully that only those three lines can depend upon the
+>> personality changes.
+>> 
+>> Your concern if anything depends on those moved lines I haven't looked
+>> at so closely so I will go back through and do that.  I don't actually
+>> expect anything depends upon those three lines because they should only
+>> be changing architecture specific state.  But that is general handwaving
+>> not actually careful review which tends to turn up suprises in exec.
+>
+> Right -- I looked through all of it (see my last email) and I think it's
+> all okay, but I was curious if you'd looked too. :)
 
-Not, sure I understand exactly what your asking. AFAIK, in general the 
-dt property is used to select a device driver/etc based on a more to 
-less compatible set of substrings. The phy case is a bit different 
-because it codes a numerical part number into the string rather than 
-just using arbitrary strings to select a driver and device. But it uses 
-that as a vendor selector for binding to the correct driver/device.
+I had and I will finish looking in the other direction and see if there
+is anything else I can see.
 
-Rephrasing the ACPI spec, the _CID() is either a single compatible id, 
-or a list of ids in order of preference. Each id is either a HID (string 
-or EISA type id) or a bus specific string encoding vendor/device/etc. 
-(https://elixir.bootlin.com/linux/v5.7-rc4/source/drivers/acpi/acpica/utids.c#L186). 
-One of the examples is "PCI\VEN_vvvv&DEV_dddd"
+Thank you for asking and keeping me honest.  There are so many moving
+parts to this code it is easy to overlook something by accident.
 
-So that latter case seems to be almost exactly what we have here.
+>> Speaking of while I was looking through the lsm hooks again I just
+>> realized that 613cc2b6f272 ("fs: exec: apply CLOEXEC before changing
+>> dumpable task flags") only fixed half the problem.  So I am going to
+>> take a quick detour fix that then come back to this.  As that directly
+>> affects this code motion.
+>
+> Oh yay. :) Thanks for catching it!
 
-> 
->> It even appears to be getting used in a similar way to
->> identify particular phy drivers in this case.
-> 
-> _CID() is a string. It can't be used as pure number.
-> 
+Well that fix is going to be a lot more involved than I anticipated.
+The more I looked the more bugs I find so I will revisit fixing that
+after I complete this set of changes.  I thought it was going to be a
+trivial localized fix, and unfortunately not.
 
-It does have a numeric version defined for EISA types. OTOH I suspect 
-that your right. If there were a "PHY\VEN_IDvvvv&ID_DDDD" definition, it 
-may not be ideal to parse it. Instead the normal ACPI model of exactly 
-matching the complete string in the phy driver might be more appropriate.
+Eric
 
-Similarly to how I suspect the next patch's use of "compatible" isn't 
-ideal either, because whether a device is c45 or not, should tend to be 
-fixed to a particular vendor/device implementation and not a firmware 
-provided property.
+
+
