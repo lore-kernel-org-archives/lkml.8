@@ -2,104 +2,180 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEA5C47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A512C47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2632208D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:23:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RLie9QZO"
+	by mail.kernel.org (Postfix) with ESMTP id 22B62208D6
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:24:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588879492;
+	bh=wW6HapZyPKcAS2pniJhuefRACI9qGnuvgtx2jsOUUYE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=UjdnoBDlwpBOXVbokh9upE6i5BGsiqTXAaLJVwpuVXLjpc4M/3ijf2uUljssTZris
+	 TbnwySnYCtQNE2q2p8ON9F+nrAHoaPh0CZX2US9Kj6KGq4aEdIlyXTkCNJZzf1N8eo
+	 puh931RhkbCtIwif04B1GxiuC9zvMgNj9JKvRlhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728531AbgEGTXi (ORCPT
+        id S1727826AbgEGTYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 15:23:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38764 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726863AbgEGTXh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 15:23:37 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4075C05BD43;
-        Thu,  7 May 2020 12:23:37 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id f6so3109083pgm.1;
-        Thu, 07 May 2020 12:23:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Rg8nxTro0ISSd5M3WvCA/ngLZr53aAa4/KH8D93b/O4=;
-        b=RLie9QZOhVw1NcAtFZTDYovRs49qmnHhtfylH7BwGQSFFCJd2kZUiX1Kr1psd7a5PR
-         l59oxsPMPt5FKfqUCsENGVbzVgsoJ2OYMv0drdgk5KVQviEsvp/R4SBfVCsA4u5WttpA
-         mm2wzXpRGW0nJWd0t8O+lgZcNzOhqyURIYlsPR/ZQZzETz79CInBAzOrvlTxEH1vmLwA
-         3YIsl4Z1uru+8hMuLU8fOwxQmLXh3CPruXdHgpJQhHCzAvHFKKZM/YCkZPUaiyMaRB8F
-         0b4FPrqZIS5pVqzwaexGir7wpP4aVnjee7nPRm1yLuQgIHHqbAsrumvdGVPh4R22BSso
-         vpqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Rg8nxTro0ISSd5M3WvCA/ngLZr53aAa4/KH8D93b/O4=;
-        b=I9UoHTVe43KXdISk4AQqsRgoR7GZMiw2QBnYLnlVuuQn4EXf9MUbnM9SRxBVVG0+5j
-         xGORx0/TcWDHllZQ4D6ABDYY+SnfCnQWAuTnfLxVcFuCNLYREjaZ+M08L2BxAqnJX4/Y
-         Tc4NrDWX+zgpQ1zhZfOedPwW2B04VEY+A523g9gtfNzZ4xQnk9KigTQekYal0/HNw+lv
-         +QpC2k2UOBkkDkBU4fMkx0JG1jK9sfrM7ZtfqQ6xwF0UkKalJjGrnXfe65qmzgq7oudz
-         qu5VBwpA0NH5S2nsdGzntiDTdCw8kJtqzgyDKt+QJsWI6pwpg9qTjZWycdex+RWeH0Np
-         za9w==
-X-Gm-Message-State: AGi0PuYjeYZmTE8uDGGNYIyzxcbG7FRY+dDfMPRG9GyDWf358LgacTWa
-        Q16ej6YAzSeYZwCRySZs9r0=
-X-Google-Smtp-Source: APiQypLGGInIi5niVq/AuZHDEALyOPU+N0V7vmKLHNfsYnKpiZ6g2Bqhtvw0Yo1/qPM1pWj8QAM56Q==
-X-Received: by 2002:aa7:8a92:: with SMTP id a18mr15680900pfc.0.1588879417137;
-        Thu, 07 May 2020 12:23:37 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id x7sm5717399pfj.122.2020.05.07.12.23.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 12:23:36 -0700 (PDT)
-Date:   Thu, 7 May 2020 12:23:34 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] Input: add driver for power button on Dell Wyse 3020
-Message-ID: <20200507192334.GJ89269@dtor-ws>
-References: <20200503201237.413864-1-lkundrak@v3.sk>
- <20200503201237.413864-3-lkundrak@v3.sk>
- <20200507174644.GF1216@bug>
+        Thu, 7 May 2020 15:24:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44660 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726491AbgEGTYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 15:24:50 -0400
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C705E208D6;
+        Thu,  7 May 2020 19:24:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588879489;
+        bh=wW6HapZyPKcAS2pniJhuefRACI9qGnuvgtx2jsOUUYE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tVFkrN62oIpbiYkxCjb/8By3qy2iMEIOcK+pWpF803xbdCZK8zJRavcXuPz8RhnBz
+         Cfm9DLoGHTPTo6WudSn26XaNslq6BVQbLrY2I1T6t3/67Jm1OKkxaPCfBpmJjMaahS
+         ONLGUPtYJwACf5Xt69gfZKdBghnpVBXq2Jk7rMOE=
+Received: by mail-io1-f49.google.com with SMTP id 19so1709952ioz.10;
+        Thu, 07 May 2020 12:24:49 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaJA+0C+9YYiKQtzQOgB24RfwS3p71pXh28BCoeMa3d1J9mFswx
+        Ojlfq9HpstMYuj1Ej/DeN8N7FRdC2wyc9/kMMmg=
+X-Google-Smtp-Source: APiQypLRkklJ7aV3gPOvJS6Io4eaLQ9MNmNRgbveyH5ByIhA36D82P/M8hjRUyBis2HMj1IJCsrQAqmip8GynNzHFQg=
+X-Received: by 2002:a5d:8045:: with SMTP id b5mr15433368ior.16.1588879489201;
+ Thu, 07 May 2020 12:24:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507174644.GF1216@bug>
+References: <20200507183332.6153-1-lszubowi@redhat.com>
+In-Reply-To: <20200507183332.6153-1-lszubowi@redhat.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 7 May 2020 21:24:37 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXE-ozARWTkRhaG3h0H6-2B_B3hgqp+tR7j0Ved8j3i53w@mail.gmail.com>
+Message-ID: <CAMj1kXE-ozARWTkRhaG3h0H6-2B_B3hgqp+tR7j0Ved8j3i53w@mail.gmail.com>
+Subject: Re: [PATCH V3] efi/libstub/x86: Avoid EFI map buffer alloc in allocate_e820()
+To:     Lenny Szubowicz <lszubowi@redhat.com>
+Cc:     eric.snowberg@oracle.com, Ingo Molnar <mingo@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 07:46:44PM +0200, Pavel Machek wrote:
-> Hi!
-> 
-> > +struct ec_input_response {
-> > +	u8 reserved;
-> > +	u8 msg_counter:2;
-> > +	u8 count:2;
-> > +	u8 type:4;
-> > +	u8 data[3];
-> > +} __packed;
-> 
+On Thu, 7 May 2020 at 20:33, Lenny Szubowicz <lszubowi@redhat.com> wrote:
+>
+> In allocate_e820(), call the EFI get_memory_map() service directly
+> instead of indirectly via efi_get_memory_map(). This avoids allocation
+> of a buffer and return of the full EFI memory map, which is not needed
+> here and would otherwise need to be freed.
+>
+> Routine allocate_e820() only needs to know how many EFI memory
+> descriptors there are in the map to allocate an adequately sized
+> e820ext buffer, if it's needed. Note that since efi_get_memory_map()
+> returns a memory map buffer sized with extra headroom, allocate_e820()
+> now needs to explicitly factor that into the e820ext size calculation.
+>
+> Signed-off-by: Lenny Szubowicz <lszubowi@redhat.com>
+> Suggested-by: Ard Biesheuvel <ardb@kernel.org>
 
-> Bitfields, and relying on them being in the right place for
-> communication with hardware.
-> 
-> We don't usually do that, and there may be reasons why we don't. I'm
-> pretty sure it breaks on big endian... and Im not sure if there's
-> something else.
+Thanks Lenny. I'll get this queued up.
 
-Usually it is endianness first and foremost, but this hardware is not
-going to be used anywhere else...
-
--- 
-Dmitry
+> --
+> v3:
+>   - Move define of EFI_MMAP_NR_SLACK_SLOTS to efistub.h instead
+>     of providing a helper function to get it.
+>
+> v2:
+>   - Instead of freeing the EFI memory map buffer allocated by
+>     efi_get_memory_map(), avoid the allocation in the first place.
+>
+>   - Changed the title of the patch because the v1 title no longer
+>     applies. v1 ref:
+>     https://lore.kernel.org/lkml/20200505190016.4350-1-lszubowi@redhat.com/
+> --
+> ---
+>  drivers/firmware/efi/libstub/efistub.h  | 13 +++++++++++++
+>  drivers/firmware/efi/libstub/mem.c      |  2 --
+>  drivers/firmware/efi/libstub/x86-stub.c | 22 ++++++++--------------
+>  3 files changed, 21 insertions(+), 16 deletions(-)
+>
+> diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
+> index 67d26949fd26..62943992f02f 100644
+> --- a/drivers/firmware/efi/libstub/efistub.h
+> +++ b/drivers/firmware/efi/libstub/efistub.h
+> @@ -92,6 +92,19 @@ extern __pure efi_system_table_t  *efi_system_table(void);
+>  #define EFI_LOCATE_BY_REGISTER_NOTIFY          1
+>  #define EFI_LOCATE_BY_PROTOCOL                 2
+>
+> +/*
+> + * An efi_boot_memmap is used by efi_get_memory_map() to return the
+> + * EFI memory map in a dynamically allocated buffer.
+> + *
+> + * The buffer allocated for the EFI memory map includes extra room for
+> + * a minimum of EFI_MMAP_NR_SLACK_SLOTS additional EFI memory descriptors.
+> + * This facilitates the reuse of the EFI memory map buffer when a second
+> + * call to ExitBootServices() is needed because of intervening changes to
+> + * the EFI memory map. Other related structures, e.g. x86 e820ext, need
+> + * to factor in this headroom requirement as well.
+> + */
+> +#define EFI_MMAP_NR_SLACK_SLOTS        8
+> +
+>  struct efi_boot_memmap {
+>         efi_memory_desc_t       **map;
+>         unsigned long           *map_size;
+> diff --git a/drivers/firmware/efi/libstub/mem.c b/drivers/firmware/efi/libstub/mem.c
+> index 869a79c8946f..09f4fa01914e 100644
+> --- a/drivers/firmware/efi/libstub/mem.c
+> +++ b/drivers/firmware/efi/libstub/mem.c
+> @@ -5,8 +5,6 @@
+>
+>  #include "efistub.h"
+>
+> -#define EFI_MMAP_NR_SLACK_SLOTS        8
+> -
+>  static inline bool mmap_has_headroom(unsigned long buff_size,
+>                                      unsigned long map_size,
+>                                      unsigned long desc_size)
+> diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+> index 05ccb229fb45..a0aeb1cda8e3 100644
+> --- a/drivers/firmware/efi/libstub/x86-stub.c
+> +++ b/drivers/firmware/efi/libstub/x86-stub.c
+> @@ -606,24 +606,18 @@ static efi_status_t allocate_e820(struct boot_params *params,
+>                                   struct setup_data **e820ext,
+>                                   u32 *e820ext_size)
+>  {
+> -       unsigned long map_size, desc_size, buff_size;
+> -       struct efi_boot_memmap boot_map;
+> -       efi_memory_desc_t *map;
+> +       unsigned long map_size, desc_size;
+>         efi_status_t status;
+>         __u32 nr_desc;
+>
+> -       boot_map.map            = &map;
+> -       boot_map.map_size       = &map_size;
+> -       boot_map.desc_size      = &desc_size;
+> -       boot_map.desc_ver       = NULL;
+> -       boot_map.key_ptr        = NULL;
+> -       boot_map.buff_size      = &buff_size;
+> +       /* Only need the size of the mem map and size of each mem descriptor */
+> +       map_size = 0;
+> +       status = efi_bs_call(get_memory_map, &map_size, NULL, NULL,
+> +                            &desc_size, NULL);
+> +       if (status != EFI_BUFFER_TOO_SMALL)
+> +               return (status != EFI_SUCCESS) ? status : EFI_UNSUPPORTED;
+>
+> -       status = efi_get_memory_map(&boot_map);
+> -       if (status != EFI_SUCCESS)
+> -               return status;
+> -
+> -       nr_desc = buff_size / desc_size;
+> +       nr_desc = map_size / desc_size + EFI_MMAP_NR_SLACK_SLOTS;
+>
+>         if (nr_desc > ARRAY_SIZE(params->e820_table)) {
+>                 u32 nr_e820ext = nr_desc - ARRAY_SIZE(params->e820_table);
+> --
+> 2.18.4
+>
