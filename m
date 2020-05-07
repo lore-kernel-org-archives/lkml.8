@@ -2,161 +2,340 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EFB3C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 913EEC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B15620735
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C7E720735
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:32:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Dn94Rci1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y3ubujsi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgEGMbO (ORCPT
+        id S1726797AbgEGMcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 08:31:14 -0400
-Received: from mail-eopbgr150050.outbound.protection.outlook.com ([40.107.15.50]:8054
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725903AbgEGMbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 08:31:13 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AzZWH77awuVF6SQ3/90ykz5dDRbj9W94Vaex0AZS/VPGJX174+0SEIDIjPzHnPu49bXoQ/QgIMd8F2kdXZUXDw97v2YiJWkiydnx+24jIzzAOrpS8OaUrebMiLSwR88eNe8bdBHngYmP0m/9FdISKUETMmue4ulfXI+jpfbR83/n4czoT6LFJKp/gTQ5cgEe1JO3aMUhEfwWQ3/9TicjI4fqLOSEBQEAKht5R5soUH44/j50QGiI5pEBoqiw1t3ckSjBBTBFC2XBADTpPuo9gsUV/u+s5npO91XfKKs5b14QVXiAVCI7roO6SfAPxUXALcxFEdn5ngCEVb5gv9GiQg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B58YjQ9kc8CqaFtbGgeCStNXvqNpvpY1ssz74Aw8PIY=;
- b=HDtbI4xm37KFHWdQHc5XcROIsX/YbFMJgizrBN5BIxKIkDCK0hd3MZM8gwmwdHzDi21KTiWrLTqC7H8+umnBFYikPS8rsG5PO8VZq34KOf1GU7NgdbHanh4JedA7AiCpzSQ/WohjdvGAZFwH7hDlJIrMv9rrZsfEijlLLGSn0Szru9/jgv0L1RbsmQK2NulsOBp9kreOkZiLuDMy/9dZKfN41GIcF1Bct3yXb66vdsKCkVqOz6Vymbyo02V4Hy2cZsdZglv9FCfH2GEUNhonugOVKp/WMgPGaqPWKd8DbKwKpcG6DcBQsMZdXxRTCB8deviTRnLZIDFNO20efGSXZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B58YjQ9kc8CqaFtbGgeCStNXvqNpvpY1ssz74Aw8PIY=;
- b=Dn94Rci1Vj0vCXhlptGIDZ57K5OHJZh5hFmrqWWaFALOAlbtnxzXM9egn/OgTbs2VFOKlvAbPiS4g6I3wv3Tr0r1zyRex9RT4DQvIwLl/NDzfz/hKljx0a2CIXwk9IdLJdU7/r5dwUaCk2Bf4762yeXJ5xt+iCtNSOo/2zyupz0=
-Received: from VE1PR04MB6496.eurprd04.prod.outlook.com (2603:10a6:803:11c::29)
- by VE1PR04MB6623.eurprd04.prod.outlook.com (2603:10a6:803:125::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27; Thu, 7 May
- 2020 12:31:09 +0000
-Received: from VE1PR04MB6496.eurprd04.prod.outlook.com
- ([fe80::1479:38ea:d4f7:a173]) by VE1PR04MB6496.eurprd04.prod.outlook.com
- ([fe80::1479:38ea:d4f7:a173%7]) with mapi id 15.20.2958.034; Thu, 7 May 2020
- 12:31:09 +0000
-From:   Po Liu <po.liu@nxp.com>
-To:     Stephen Hemminger <stephen@networkplumber.org>
-CC:     "dsahern@gmail.com" <dsahern@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "vlad@buslov.dev" <vlad@buslov.dev>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>
-Subject: RE: Re: [v4,iproute2-next 1/2] iproute2-next:tc:action: add a gate
- control action
-Thread-Topic: Re: [v4,iproute2-next 1/2] iproute2-next:tc:action: add a gate
- control action
-Thread-Index: AdYkGP/813CTQ3HyQZuckXvjuAsisQAUBulw
-Date:   Thu, 7 May 2020 12:31:09 +0000
-Message-ID: <VE1PR04MB6496B92955CD21BC70A7CFAC92A50@VE1PR04MB6496.eurprd04.prod.outlook.com>
-References: <VE1PR04MB64969AC550AE3A762DADEF5292A50@VE1PR04MB6496.eurprd04.prod.outlook.com>
-In-Reply-To: <VE1PR04MB64969AC550AE3A762DADEF5292A50@VE1PR04MB6496.eurprd04.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: networkplumber.org; dkim=none (message not signed)
- header.d=none;networkplumber.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 04893759-e321-4c45-0c33-08d7f282858b
-x-ms-traffictypediagnostic: VE1PR04MB6623:|VE1PR04MB6623:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6623BB4C679768A7F607F98C92A50@VE1PR04MB6623.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 03965EFC76
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: mqqE55z0E38u+ZBYxQ7W1DT8qIUe89FPc07r4A3DSU+4vVTWdfcnIacrUUKNsDeuOFuzWRo8XLMUTJcKLeUDhLfQh3PPziAxGWSoyaWsB6za/aIwGKB0zFUThAQD62zi6Y6Oftffr2nxz5TMXXHYcQKqPzgP3A7iaeSs1wmeVi6S0epP/Zy1m0H85jCjzaiwCJfsg/9n/1LP9nNXiIzwKlky2Ce5KuixlGAxHp2EzN0Rm/PDOhN6015Ul/mIg4By6tXzh378roERvy1I5Mw8Gor7iLnXaln/SBtSWuLDJlctLnMQ4b6SigQYWvSGxikRyMP6K9o7Pn850hbJckdO1Zlub30kKhtA+f/IZqXv/M/nIjOpreGxK/Q2BT9Gp4n+jgXCPUae9ACfaN1/UGaIVAtZyDMEN6B2GnMZHVPY+SvcIxbRCoVw0U/iB+owMUAm2pl2QSr+NMlGa9TExAgv4+wdSaOIghmsGqWQNPcAC7iswttD+C+ie5YpX1BGoupq4OYn+S1mO92yOgACHv+M2g==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6496.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(376002)(346002)(136003)(366004)(33430700001)(5660300002)(478600001)(4326008)(2906002)(55016002)(53546011)(33440700001)(66946007)(52536014)(66446008)(6506007)(66476007)(76116006)(64756008)(54906003)(66556008)(83300400001)(6916009)(83320400001)(83280400001)(83310400001)(83290400001)(9686003)(86362001)(33656002)(7696005)(71200400001)(8936002)(186003)(2940100002)(44832011)(316002)(8676002)(26005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: UKkrcyhs9o5oqjs3gw3mZaGOgvWpHZyDtod8xMrKcuqu/waLdlX2wlj+dhybo0+YIuawxidB4bHBy0RvJYGcCUB/UWTpHDsEKxY4HEZ07Vkm05/qJ/bKlZGrmHifdN2enUZZMc+EkZbmEitB4IiRVz+BI1ohXSbbG1n9U3GZMqTD8T2sn1yAgeEjRitBPHdqXI7Wl7IsK/NvkvZjhNmbJ6/fgutkIMYKguqm2O1YzgsnDRxAHw4F7tzNywMnUJ3QZ4PEhrn+1ToyMOWIKWz17N4/zHf5+vtYV6TrHAlpcz1s+eCc3gpxzMYfR/r8GSdDzIsxZQGkl6ctFQ+gGhtH9688LnovyNfFsKdUp//1EHJpcw/84wl3CpbUdxDWZzySD3Xl8UfkZtNDYwSkqJ4MhXAeC/E5vpCCqsZSRg0cB8cDnPZNgqMznfXD6ELCzGrM84Qnw6Fv7IjwUJ2tIo0+CcvaCkGm6fG2hVZ/1C9xrcbWBuOsyNk+1WPsv0ewUazkG0ScV7eALhoacO4e6GjlI5uYJwEZVxoJHZYhx55aiE777Ty/3yEVqoundIKFTmDVwnRTXNBt03yOg6ot5cPj77wW1G+BAzP2x+S4T0Z+xcIy9tLl5hSSGfzA1qP0KZcT0hRkHtVKlNyCvcfAjbhTH1iwioHsXJtUv3gB1x9CGrMLc7ak0quDqsbNZ/nxhnmiUbVghpu0VXcVWSFCbGX2MeCUMSMEC3Hdvm7OPCUVAbJIpxnlVKWzsVBew+rPuIHZOEhEMyTktVXFTHvs6PqQaR7Jwr46N8byya/8W/9NBzI=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04893759-e321-4c45-0c33-08d7f282858b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2020 12:31:09.4768
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9RmtP+OE6g2KxjBzTU4i+dL9JqqAyxfNYZo1Y/afZGGrY5xkepjIG8WXr54tt33o
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6623
+        Thu, 7 May 2020 08:32:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59060 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725953AbgEGMcG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 08:32:06 -0400
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 793AAC05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 05:32:06 -0700 (PDT)
+Received: by mail-qk1-x749.google.com with SMTP id a83so5564843qkc.11
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 05:32:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=2g1BVX1QureuxU5m39XcOrra/dWoW6mkh/lhoFPB6pA=;
+        b=Y3ubujsiCmzITFxYVhlZQ5+eEv7+RsbVuQRmvb67lIjfnH9hXgCJ6knTM3uMZxt5dJ
+         vZpGKhO/18suUICuMh5InCm4NfB34W0snWFF1y2+c7JkZh3tESbLTIW1YAIgaBZ9nPll
+         XuP4SRb5CwWPE4IE6tCkc1C+iEITqBI3aP3MKojgXUi9UEfLepDDXfUh2uHvLWOc7cOR
+         AGENzNRejcz3PxcA6iu9SVpTpzdXRTwxwpMbKuWor/jfI+F0bkts4YQ0joGE1c4OFWSl
+         LulmPFczOfaSe2H9W95d5ZgrjPXH7rlbgqwud8DnSwb1e4VgHab5OGMIkVYbULel8dHv
+         /3dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=2g1BVX1QureuxU5m39XcOrra/dWoW6mkh/lhoFPB6pA=;
+        b=WXaXS4eHclu8dP3g3KjC2botRgnoJnmN5Jo9cGbnOh+/wjGki+uy8072ZMc+liKrKq
+         8BoWGMQQ+PpZxuNQR5b75YYsx44E1UQov4c47MTHBVsXQ7b/cgEHxEfXklS8h7eaUXs8
+         MFnlUbfl1E2FoWIzS9wYt1wHOGBpaFEg8ciV75Qy32aumYjL+P0281sVuVUrpPy0J1d/
+         MtK/OSo3I6b4SDTp+erQ15YdqnnmukfMg+3C90voWbQizdwhXOPxEKPAqnFsmJYcjdho
+         XysCH+M8PjZDWR7shuoR57b0ggR6kio0ZK95Cg6bLk9uCV0TLb887HY9rcvmMRZJR8g2
+         knng==
+X-Gm-Message-State: AGi0PuZsp9b3RFoWbGZMY8/yhHIEYjpyyc6d6QKeTnsw3hDBmy0mW2rf
+        QcwUzADG1FvV8E88ts1kc8/ZuT7XFw==
+X-Google-Smtp-Source: APiQypJj76lQ9e4aCTpm2UwcuHoFCPtsD8io0gVZFOcrp02Z2Fk9sFtG1glrHPvfv9vT5A1sHuDpiYL2Rg==
+X-Received: by 2002:a05:6214:9ce:: with SMTP id dp14mr13297157qvb.142.1588854725591;
+ Thu, 07 May 2020 05:32:05 -0700 (PDT)
+Date:   Thu,  7 May 2020 14:31:12 +0200
+Message-Id: <20200507123112.252723-1-jannh@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
+Subject: [PATCH] lib/zlib: Remove outdated and incorrect pre-increment optimization
+From:   Jann Horn <jannh@google.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgU3RlcGhlbiwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQbyBM
-aXUNCj4gU2VudDogMjAyMMTqNdTCN8jVIDEwOjUzDQo+IFRvOiBTdGVwaGVuIEhlbW1pbmdlciA8
-c3RlcGhlbkBuZXR3b3JrcGx1bWJlci5vcmc+DQo+IENjOiBkc2FoZXJuQGdtYWlsLmNvbTsgbGlu
-dXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgdmlu
-aWNpdXMuZ29tZXNAaW50ZWwuY29tOw0KPiBkYXZlbUBkYXZlbWxvZnQubmV0OyB2bGFkQGJ1c2xv
-di5kZXY7IENsYXVkaXUgTWFub2lsDQo+IDxjbGF1ZGl1Lm1hbm9pbEBueHAuY29tPjsgVmxhZGlt
-aXIgT2x0ZWFuIDx2bGFkaW1pci5vbHRlYW5AbnhwLmNvbT47DQo+IEFsZXhhbmRydSBNYXJnaW5l
-YW4gPGFsZXhhbmRydS5tYXJnaW5lYW5AbnhwLmNvbT4NCj4gU3ViamVjdDogUkU6IFJlOiBbdjQs
-aXByb3V0ZTItbmV4dCAxLzJdIGlwcm91dGUyLW5leHQ6dGM6YWN0aW9uOiBhZGQgYSBnYXRlDQo+
-IGNvbnRyb2wgYWN0aW9uDQo+IA0KPiBIaSBTdGVwaGVuLA0KPiANCj4gDQo+ID4gLS0tLS1Pcmln
-aW5hbCBNZXNzYWdlLS0tLS0NCj4gPiBGcm9tOiBTdGVwaGVuIEhlbW1pbmdlciA8c3RlcGhlbkBu
-ZXR3b3JrcGx1bWJlci5vcmc+DQo+ID4gU2VudDogMjAyMMTqNdTCNsjVIDIzOjIyDQo+ID4gVG86
-IFBvIExpdSA8cG8ubGl1QG54cC5jb20+DQo+ID4gQ2M6IGRzYWhlcm5AZ21haWwuY29tOyBsaW51
-eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiA+IG5ldGRldkB2Z2VyLmtlcm5lbC5vcmc7IHZp
-bmljaXVzLmdvbWVzQGludGVsLmNvbTsNCj4gZGF2ZW1AZGF2ZW1sb2Z0Lm5ldDsNCj4gPiB2bGFk
-QGJ1c2xvdi5kZXY7IENsYXVkaXUgTWFub2lsIDxjbGF1ZGl1Lm1hbm9pbEBueHAuY29tPjsgVmxh
-ZGltaXINCj4gPiBPbHRlYW4gPHZsYWRpbWlyLm9sdGVhbkBueHAuY29tPjsgQWxleGFuZHJ1IE1h
-cmdpbmVhbg0KPiA+IDxhbGV4YW5kcnUubWFyZ2luZWFuQG54cC5jb20+DQo+ID4gU3ViamVjdDog
-UmU6IFt2NCxpcHJvdXRlMi1uZXh0IDEvMl0gaXByb3V0ZTItbmV4dDp0YzphY3Rpb246IGFkZCBh
-DQo+ID4gZ2F0ZSBjb250cm9sIGFjdGlvbiBPbiBXZWQsICA2IE1heSAyMDIwIDE2OjQwOjE5ICsw
-ODAwIFBvIExpdQ0KPiA+IDxQby5MaXVAbnhwLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiA+ICAgICAg
-ICAgICAgICAgfSBlbHNlIGlmIChtYXRjaGVzKCphcmd2LCAiYmFzZS10aW1lIikgPT0gMCkgew0K
-PiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIE5FWFRfQVJHKCk7DQo+ID4gPiArICAgICAgICAg
-ICAgICAgICAgICAgaWYgKGdldF91NjQoJmJhc2VfdGltZSwgKmFyZ3YsIDEwKSkgew0KPiA+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW52YWxpZGFyZyA9ICJiYXNlLXRpbWUiOw0K
-PiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZ290byBlcnJfYXJnOw0KPiA+ID4g
-KyAgICAgICAgICAgICAgICAgICAgIH0NCj4gPiA+ICsgICAgICAgICAgICAgfSBlbHNlIGlmICht
-YXRjaGVzKCphcmd2LCAiY3ljbGUtdGltZSIpID09IDApIHsNCj4gPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICBORVhUX0FSRygpOw0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIGlmIChnZXRf
-dTY0KCZjeWNsZV90aW1lLCAqYXJndiwgMTApKSB7DQo+ID4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBpbnZhbGlkYXJnID0gImN5Y2xlLXRpbWUiOw0KPiA+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgZ290byBlcnJfYXJnOw0KPiA+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgIH0NCj4gPiA+ICsgICAgICAgICAgICAgfSBlbHNlIGlmIChtYXRjaGVzKCphcmd2LCAiY3lj
-bGUtdGltZS1leHQiKSA9PSAwKSB7DQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgTkVYVF9B
-UkcoKTsNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICBpZiAoZ2V0X3U2NCgmY3ljbGVfdGlt
-ZV9leHQsICphcmd2LCAxMCkpIHsNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IGludmFsaWRhcmcgPSAiY3ljbGUtdGltZS1leHQiOw0KPiA+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgZ290byBlcnJfYXJnOw0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIH0N
-Cj4gPg0KPiA+IENvdWxkIGFsbCB0aGVzZSB0aW1lIHZhbHVlcyB1c2UgZXhpc3RpbmcgVEMgaGVs
-cGVyIHJvdXRpbmVzPw0KPiANCj4gSSBhZ3JlZSB0byBrZWVwIHRoZSB0YyByb3V0aW5lcyBpbnB1
-dC4NCj4gVGhlIG5hbWVzIG9mIHRpbWVyIGlucHV0IGFuZCB0eXBlIGlzIG1vcmUgcmVmZXJlbmNl
-IHRoZSB0YXByaW8gaW5wdXQuDQo+IA0KDQpTaGFsbCBJIHN1cHBvcnQgYm90aCBpbnB1dCBtZXRo
-b2QuIFRoZSBkZWZhdWx0IGRlY2ltYWwgaW5wdXQgbGlrZSAxMjAwMDAgZGVmYXVsdCB0byBuYW5v
-LXNlY29uZCBhbmQgZm9ybWFsIHRpbWUgcm91dGluZXMgbGlrZSAxMjB1cy4NClRoZW4gdGhlIHRj
-IHNob3cgY29tbWFuZCBzaG93cyBmb3JtYWwgdGltZSByb3V0aW5lcyBsaWtlIDEyMHVzIHdoYXRl
-dmVyIGluIG5vbi1qc29uIGZvcm1hdC4gSnNvbiBmb3JtYXQgc2hvd3MgYSBkZWNpbWFsIG51bWJl
-ciBvbmx5IHdoaWNoIGlzIGFsd2F5cyBkb25lIGJ5IG90aGVyIHRjIGNvbW1hbmQuDQoNClNvIHRo
-aXMgd291bGQgY29tcGF0aWJsZSB3aXRoIGtlcm5lbCBjb21taXQgY29tbWFuZHMgZXhhbXBsZXMu
-IEJ1dCBJIHdvdWxkIG1lbnRpb24gaW4gdGhlIG1hbiBwYWdlcyBzdXBwb3J0aW5nIHRoZSB0aW1l
-ciByb3V0aW5lcyBpbnB1dC4NCg0KPiA+IFNlZSBnZXRfdGltZSgpLiAgVGhlIHdheSB5b3UgaGF2
-ZSBpdCBtYWtlcyBzZW5zZSBmb3IgaGFyZHdhcmUgYnV0DQo+ID4gc3RhbmRzIG91dCB2ZXJzdXMg
-dGhlIHJlc3Qgb2YgdGMuDQo+ID4NCj4gPiBJdCBtYXliZSB0aGF0IHRoZSBrZXJuZWwgVUFQSSBp
-cyB3cm9uZywgYW5kIHNob3VsZCBiZSB1c2luZyBzYW1lIHRpbWUNCj4gPiB1bml0cyBhcyByZXN0
-IG9mIHRjLiBGb3Jnb3QgdG8gcmV2aWV3IHRoYXQgcGFydCBvZiB0aGUgcGF0Y2guDQo+IA0KPiBJ
-IHdvdWxkIGFsc28gc3luYyB3aXRoIGtlcm5lbCBVQVBJIGlmIG5lZWRlZC4NCg0KSSBjaGVja2Vk
-IHRoZSBnYXRlIFVBUEkgZmlsZSwgdGhlcmUgaXMgbm90aGluZyBuZWVkIHRvIGNoYW5nZWQgZm9y
-IHRpbWUgZm9ybWF0Lg0KDQo+IA0KPiANCj4gQnIsDQo+IFBvIExpdQ0KDQoNCg0KQnIsDQpQbyBM
-aXUNCg==
+The zlib inflate code has an old micro-optimization based on the assumption
+that for pre-increment memory accesses, the compiler will generate code
+that fits better into the processor's pipeline than what would be generated
+for post-increment memory accesses.
+
+This optimization was already removed in upstream zlib in 2016:
+https://github.com/madler/zlib/commit/9aaec95e8211
+
+This optimization causes UB according to C99, which says in section 6.5.6
+"Additive operators": "If both the pointer operand and the result point to
+elements of the same array object, or one past the last element of the
+array object, the evaluation shall not produce an overflow; otherwise, the
+behavior is undefined".
+This UB is not only a theoretical concern, but can also cause trouble for
+future work on compiler-based sanitizers.
+
+According to the zlib commit, this optimization also is not optimal anymore
+with modern compilers.
+
+Replace uses of OFF, PUP and UP_UNALIGNED with their definitions in the
+POSTINC case, and remove the macro definitions, just like in the upstream
+patch.
+
+(This patch lights up checkpatch like a christmas tree because spaces are
+used for indentation; but almost the entire file uses four spaces to
+indent, so I don't think there's anything I can reasonably do about that.)
+
+Signed-off-by: Jann Horn <jannh@google.com>
+---
+ lib/zlib_inflate/inffast.c | 91 +++++++++++++++-----------------------
+ 1 file changed, 35 insertions(+), 56 deletions(-)
+
+diff --git a/lib/zlib_inflate/inffast.c b/lib/zlib_inflate/inffast.c
+index 2c13ecc5bb2c7..ed1f3df272602 100644
+--- a/lib/zlib_inflate/inffast.c
++++ b/lib/zlib_inflate/inffast.c
+@@ -10,17 +10,6 @@
+ 
+ #ifndef ASMINF
+ 
+-/* Allow machine dependent optimization for post-increment or pre-increment.
+-   Based on testing to date,
+-   Pre-increment preferred for:
+-   - PowerPC G3 (Adler)
+-   - MIPS R5000 (Randers-Pehrson)
+-   Post-increment preferred for:
+-   - none
+-   No measurable difference:
+-   - Pentium III (Anderson)
+-   - M68060 (Nikl)
+- */
+ union uu {
+ 	unsigned short us;
+ 	unsigned char b[2];
+@@ -38,16 +27,6 @@ get_unaligned16(const unsigned short *p)
+ 	return mm.us;
+ }
+ 
+-#ifdef POSTINC
+-#  define OFF 0
+-#  define PUP(a) *(a)++
+-#  define UP_UNALIGNED(a) get_unaligned16((a)++)
+-#else
+-#  define OFF 1
+-#  define PUP(a) *++(a)
+-#  define UP_UNALIGNED(a) get_unaligned16(++(a))
+-#endif
+-
+ /*
+    Decode literal, length, and distance codes and write out the resulting
+    literal and match bytes until either not enough input or output is
+@@ -115,9 +94,9 @@ void inflate_fast(z_streamp strm, unsigned start)
+ 
+     /* copy state to local variables */
+     state = (struct inflate_state *)strm->state;
+-    in = strm->next_in - OFF;
++    in = strm->next_in;
+     last = in + (strm->avail_in - 5);
+-    out = strm->next_out - OFF;
++    out = strm->next_out;
+     beg = out - (start - strm->avail_out);
+     end = out + (strm->avail_out - 257);
+ #ifdef INFLATE_STRICT
+@@ -138,9 +117,9 @@ void inflate_fast(z_streamp strm, unsigned start)
+        input data or output space */
+     do {
+         if (bits < 15) {
+-            hold += (unsigned long)(PUP(in)) << bits;
++            hold += (unsigned long)(*in++) << bits;
+             bits += 8;
+-            hold += (unsigned long)(PUP(in)) << bits;
++            hold += (unsigned long)(*in++) << bits;
+             bits += 8;
+         }
+         this = lcode[hold & lmask];
+@@ -150,14 +129,14 @@ void inflate_fast(z_streamp strm, unsigned start)
+         bits -= op;
+         op = (unsigned)(this.op);
+         if (op == 0) {                          /* literal */
+-            PUP(out) = (unsigned char)(this.val);
++            *out++ = (unsigned char)(this.val);
+         }
+         else if (op & 16) {                     /* length base */
+             len = (unsigned)(this.val);
+             op &= 15;                           /* number of extra bits */
+             if (op) {
+                 if (bits < op) {
+-                    hold += (unsigned long)(PUP(in)) << bits;
++                    hold += (unsigned long)(*in++) << bits;
+                     bits += 8;
+                 }
+                 len += (unsigned)hold & ((1U << op) - 1);
+@@ -165,9 +144,9 @@ void inflate_fast(z_streamp strm, unsigned start)
+                 bits -= op;
+             }
+             if (bits < 15) {
+-                hold += (unsigned long)(PUP(in)) << bits;
++                hold += (unsigned long)(*in++) << bits;
+                 bits += 8;
+-                hold += (unsigned long)(PUP(in)) << bits;
++                hold += (unsigned long)(*in++) << bits;
+                 bits += 8;
+             }
+             this = dcode[hold & dmask];
+@@ -180,10 +159,10 @@ void inflate_fast(z_streamp strm, unsigned start)
+                 dist = (unsigned)(this.val);
+                 op &= 15;                       /* number of extra bits */
+                 if (bits < op) {
+-                    hold += (unsigned long)(PUP(in)) << bits;
++                    hold += (unsigned long)(*in++) << bits;
+                     bits += 8;
+                     if (bits < op) {
+-                        hold += (unsigned long)(PUP(in)) << bits;
++                        hold += (unsigned long)(*in++) << bits;
+                         bits += 8;
+                     }
+                 }
+@@ -205,13 +184,13 @@ void inflate_fast(z_streamp strm, unsigned start)
+                         state->mode = BAD;
+                         break;
+                     }
+-                    from = window - OFF;
++                    from = window;
+                     if (write == 0) {           /* very common case */
+                         from += wsize - op;
+                         if (op < len) {         /* some from window */
+                             len -= op;
+                             do {
+-                                PUP(out) = PUP(from);
++                                *out++ = *from++;
+                             } while (--op);
+                             from = out - dist;  /* rest from output */
+                         }
+@@ -222,14 +201,14 @@ void inflate_fast(z_streamp strm, unsigned start)
+                         if (op < len) {         /* some from end of window */
+                             len -= op;
+                             do {
+-                                PUP(out) = PUP(from);
++                                *out++ = *from++;
+                             } while (--op);
+-                            from = window - OFF;
++                            from = window;
+                             if (write < len) {  /* some from start of window */
+                                 op = write;
+                                 len -= op;
+                                 do {
+-                                    PUP(out) = PUP(from);
++                                    *out++ = *from++;
+                                 } while (--op);
+                                 from = out - dist;      /* rest from output */
+                             }
+@@ -240,21 +219,21 @@ void inflate_fast(z_streamp strm, unsigned start)
+                         if (op < len) {         /* some from window */
+                             len -= op;
+                             do {
+-                                PUP(out) = PUP(from);
++                                *out++ = *from++;
+                             } while (--op);
+                             from = out - dist;  /* rest from output */
+                         }
+                     }
+                     while (len > 2) {
+-                        PUP(out) = PUP(from);
+-                        PUP(out) = PUP(from);
+-                        PUP(out) = PUP(from);
++                        *out++ = *from++;
++                        *out++ = *from++;
++                        *out++ = *from++;
+                         len -= 3;
+                     }
+                     if (len) {
+-                        PUP(out) = PUP(from);
++                        *out++ = *from++;
+                         if (len > 1)
+-                            PUP(out) = PUP(from);
++                            *out++ = *from++;
+                     }
+                 }
+                 else {
+@@ -264,29 +243,29 @@ void inflate_fast(z_streamp strm, unsigned start)
+                     from = out - dist;          /* copy direct from output */
+ 		    /* minimum length is three */
+ 		    /* Align out addr */
+-		    if (!((long)(out - 1 + OFF) & 1)) {
+-			PUP(out) = PUP(from);
++		    if (!((long)(out - 1) & 1)) {
++			*out++ = *from++;
+ 			len--;
+ 		    }
+-		    sout = (unsigned short *)(out - OFF);
++		    sout = (unsigned short *)(out);
+ 		    if (dist > 2) {
+ 			unsigned short *sfrom;
+ 
+-			sfrom = (unsigned short *)(from - OFF);
++			sfrom = (unsigned short *)(from);
+ 			loops = len >> 1;
+ 			do
+ #ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
+-			    PUP(sout) = PUP(sfrom);
++			    *sout++ = *sfrom++;
+ #else
+-			    PUP(sout) = UP_UNALIGNED(sfrom);
++			    *sout++ = get_unaligned16(sfrom++);
+ #endif
+ 			while (--loops);
+-			out = (unsigned char *)sout + OFF;
+-			from = (unsigned char *)sfrom + OFF;
++			out = (unsigned char *)sout;
++			from = (unsigned char *)sfrom;
+ 		    } else { /* dist == 1 or dist == 2 */
+ 			unsigned short pat16;
+ 
+-			pat16 = *(sout-1+OFF);
++			pat16 = *(sout-1);
+ 			if (dist == 1) {
+ 				union uu mm;
+ 				/* copy one char pattern to both bytes */
+@@ -296,12 +275,12 @@ void inflate_fast(z_streamp strm, unsigned start)
+ 			}
+ 			loops = len >> 1;
+ 			do
+-			    PUP(sout) = pat16;
++			    *sout++ = pat16;
+ 			while (--loops);
+-			out = (unsigned char *)sout + OFF;
++			out = (unsigned char *)sout;
+ 		    }
+ 		    if (len & 1)
+-			PUP(out) = PUP(from);
++			*out++ = *from++;
+                 }
+             }
+             else if ((op & 64) == 0) {          /* 2nd level distance code */
+@@ -336,8 +315,8 @@ void inflate_fast(z_streamp strm, unsigned start)
+     hold &= (1U << bits) - 1;
+ 
+     /* update state and return */
+-    strm->next_in = in + OFF;
+-    strm->next_out = out + OFF;
++    strm->next_in = in;
++    strm->next_out = out;
+     strm->avail_in = (unsigned)(in < last ? 5 + (last - in) : 5 - (in - last));
+     strm->avail_out = (unsigned)(out < end ?
+                                  257 + (end - out) : 257 - (out - end));
+
+base-commit: a811c1fa0a02c062555b54651065899437bacdbe
+-- 
+2.26.2.526.g744177e7f7-goog
+
