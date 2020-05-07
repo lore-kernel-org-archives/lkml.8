@@ -2,117 +2,85 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F12C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC35C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E450520A8B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:13:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588850016;
-	bh=pV3ronhkIEWAJcNoKw7OVs+fbJV2F891DPKci/Ts4nI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wR2udFr2X8iLMIgVjIusiu3NnXWvsuL48zN72nAueUng2oYBybFZvSkh0vKx2QrZe
-	 aJ/j4rAAloA+j+dpvxXXMqSUXHaPHnNf0mnIg13eFYIOnZz3VBkk/MDikDsJICG74f
-	 qP76I60nrqck2YO/agyFiXXiZ+LJRwS2ITKPYhrk=
+	by mail.kernel.org (Postfix) with ESMTP id 2AFEF20870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:14:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S7E9vxwg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbgEGLNf (ORCPT
+        id S1726495AbgEGLOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 07:13:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44846 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725903AbgEGLNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 07:13:34 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB9DF208E4;
-        Thu,  7 May 2020 11:13:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588850014;
-        bh=pV3ronhkIEWAJcNoKw7OVs+fbJV2F891DPKci/Ts4nI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AH17zeETL9jLSPxgFlT3ARPqHgyVWNrm++uyvd9Mblf60Ivx7Wp8Vyv54i6EL5LBE
-         6QufC0K9RKSWGCDasaW+zwIU0ub6XyEtDxMeYKSt6avPt31Uf3cZHuy9qU7B+208+O
-         v+esGjl+Ical9l9+6EzENSTGdPW44TqauGY342/g=
-Received: by pali.im (Postfix)
-        id 768AB60D; Thu,  7 May 2020 13:13:31 +0200 (CEST)
-Date:   Thu, 7 May 2020 13:13:31 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     koba.ko@canonical.com
-Cc:     Matthew Garrett <mjg59@srcf.ucam.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: dell-laptop: don't register
- platform::micmute if the related tokens don't exist.
-Message-ID: <20200507111331.dzge7htw5toejh72@pali>
-References: <20200507094242.7523-1-koba.ko@canonical.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507094242.7523-1-koba.ko@canonical.com>
-User-Agent: NeoMutt/20180716
+        Thu, 7 May 2020 07:14:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46834 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbgEGLOy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 07:14:54 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 026ACC05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 04:14:54 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id t16so1936885plo.7
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 04:14:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=+rp0hHwgqIdfgMKxOUzphxxo4JDZCcfnfLUjyAdUEiI=;
+        b=S7E9vxwgne3IjONysfCfx0M3VX2AbXVhOXdey3dogNGV2F9OwqcBy3oTnxsMV7KGHv
+         +C0iOQhkPwhJuz3mhviDDa7H5Hy+OffpMWdD4yp1YJ750RC0BNC7bBwXGYRxEzN3/sWq
+         dBvNuWJmqhUgJIScldGp5wGxTV0vfwtEQnuOCvP9ellFEIiR7tvUi9pyVNUdeT/2vPlU
+         KCUfperFTOp1Q5Xn0pNcdhUCPmcvZakvQuFhVNTXsgGPfgTBHCDqsl3IAJVb8PDH7A09
+         jp8W9Il/Ex9De7qbCIerpVY3XezcvMHQq4qxT6KdR0kUaw9cP5USOO7TNMnkNjABweta
+         wrsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+rp0hHwgqIdfgMKxOUzphxxo4JDZCcfnfLUjyAdUEiI=;
+        b=MF7AhyicpjMdxwa/I8rKt7BHJ5KWRdO5t6dgYSOIzQ/e12uvy3+eE5EgOoS9djs5fI
+         Xwia4Z6oLg/WYUQ2/JANBuNcKKNeJ56aDRKII7Xz9fa96LKQ5nWOg/9qNyzRycwsM0Va
+         xgmkfDmEr8xPOheywXTRP8EKruSx3ApjPHlBFB98kL3+71ARa1KARcXXDhdpjkZLP8XY
+         l5dypQ7TILnUXt/HVw1Imwq+zSeucd/j3FLVlKNduL8Ur9HICyuTkj4XKQgFAFUtvQZ8
+         HTL4SrW8PVx+0wwaLbEHgmDlFPBYfltIVsTzpU4qX8Y0ZB9RKmwwjZDgigsbsIa0clwa
+         /PuQ==
+X-Gm-Message-State: AGi0PubM+BykbN7Bbtds6nGjfCvbbdiiUKVh87WdQmoonOLX+FY8K5qI
+        oL3XWjwPHNRDH5Vf9JeycOk=
+X-Google-Smtp-Source: APiQypLaeQmfMqENPb7tQLhoxQC3jxPkAodQ3l/6XIitoKL8eDkg01q/ii73kk1m0Mx56maZ5k9kDg==
+X-Received: by 2002:a17:902:bf46:: with SMTP id u6mr12316877pls.318.1588850093478;
+        Thu, 07 May 2020 04:14:53 -0700 (PDT)
+Received: from fmin-OptiPlex-7060.nreal.work ([103.206.190.146])
+        by smtp.gmail.com with ESMTPSA id l30sm7304041pje.34.2020.05.07.04.14.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 May 2020 04:14:52 -0700 (PDT)
+From:   dillon.minfei@gmail.com
+To:     mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        philippe.schenker@toradex.com
+Cc:     linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V2] Enable stmpe811 on stm32f429-disco board
+Date:   Thu,  7 May 2020 19:14:45 +0800
+Message-Id: <1588850086-24169-1-git-send-email-dillon.minfei@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 07 May 2020 17:42:42 koba.ko@canonical.com wrote:
-> From: Koba Ko <koba.ko@canonical.com>
-> 
-> Error messge is issued,
-> "platform::micmute: Setting an LED's brightness failed (-19)",
-> Even the device isn't presented.
-> 
-> Get the related tokens of SMBIOS, GLOBAL_MIC_MUTE_DISABLE/ENABLE.
-> If one of two tokens doesn't exist, don't register platform::micmute.
-> 
-> Signed-off-by: Koba Ko <koba.ko@canonical.com>
-> ---
->  drivers/platform/x86/dell-laptop.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-> index 1e46022fb2c5..afc1ded83e56 100644
-> --- a/drivers/platform/x86/dell-laptop.c
-> +++ b/drivers/platform/x86/dell-laptop.c
-> @@ -2208,10 +2208,13 @@ static int __init dell_init(void)
->  
->  	dell_laptop_register_notifier(&dell_laptop_notifier);
->  
-> -	micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
-> -	ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
-> -	if (ret < 0)
-> -		goto fail_led;
-> +	if (dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE) &&
-> +	    dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE)) {
-> +		micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
-> +		ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
-> +		if (ret < 0)
-> +			goto fail_led;
-> +	}
 
-Hello! I think that this is correct approach. Changing micmute LED is
-done via those GLOBAL_MIC_MUTE_DISABLE and GLOBAL_MIC_MUTE_ENABLE
-tokens. And if these tokens are not supported by hardware then linux
-kernel should not register micmute LED device. There are lot of Dell
-machines without led diode for microphone and these machines obviously
-would not support those tokens.
+This patchset has following one patchs changed in V2 based on V1
 
-But this change is incomplete as registration of led class dev would be
-optional. So deregistration also needs to be optional.
+Changes in V2:
 
-And I think there is missing better description / explanation of this
-change to make it clear what really happens.
+[Patch V2 3/4]: remove id, blocks, irq-trigger from dts node.
 
->  
->  	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
->  		return 0;
-> -- 
-> 2.17.1
-> 
+Changes in V1:
+
+[Patch 1/4]: add I2C3 support on STM32F429 SoC
+[Patch 2/4]: Add pin map for I2C3 controller on stm32f4
+[Patch 3/4]: enable stmpe811 on stm32429-disco board
+[Patch 4/4]; Fix stmpe811 get xyz data timeout issue
