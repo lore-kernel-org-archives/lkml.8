@@ -2,77 +2,134 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40745C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A91AEC47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ABD520A8B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90694216FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:21:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgEGRUp (ORCPT
+        id S1726913AbgEGRVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 13:20:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49292 "EHLO mx2.suse.de"
+        Thu, 7 May 2020 13:21:41 -0400
+Received: from mga17.intel.com ([192.55.52.151]:18693 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726222AbgEGRUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 13:20:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 1EA45AD93;
-        Thu,  7 May 2020 17:20:45 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     s.nawrocki@samsung.com, tim.gover@raspberrypi.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: brcmstb: Assert fundamental reset on initialization
-Date:   Thu,  7 May 2020 19:20:20 +0200
-Message-Id: <20200507172020.18000-1-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.26.2
+        id S1726222AbgEGRVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 13:21:40 -0400
+IronPort-SDR: cM+Yedsq6jkDtKE2D9Ke1MlcyZHSD1bwfkm7JyAEpLhfFlLChWaMvmtH9yH3tzrD5BQUchRkKU
+ 509LU12gci4Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 10:21:40 -0700
+IronPort-SDR: GK+1icHNFj19CJ+91hjNV73ayYdaExpKxnPX4/gEJDQJzbISNiD+HHK6RgHmxhcKuVCFKVYumN
+ tS6M1fgmCP/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,364,1583222400"; 
+   d="scan'208";a="285066680"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.157]) ([10.237.72.157])
+  by fmsmga004.fm.intel.com with ESMTP; 07 May 2020 10:21:34 -0700
+Subject: Re: [PATCH V2] mmc: core: Fix recursive locking issue in CQE recovery
+ path
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        ulf.hansson@linaro.org
+Cc:     stummala@codeaurora.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Sarthak Garg <sartgarg@codeaurora.org>, stable@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>
+References: <1588775643-18037-3-git-send-email-vbadigan@codeaurora.org>
+ <1588868135-31783-1-git-send-email-vbadigan@codeaurora.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <adecb267-0013-9eb2-42c3-89c660724176@intel.com>
+Date:   Thu, 7 May 2020 20:21:55 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1588868135-31783-1-git-send-email-vbadigan@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While preparing the driver for upstream this detail was missed.
+On 7/05/20 7:15 pm, Veerabhadrarao Badiganti wrote:
+> From: Sarthak Garg <sartgarg@codeaurora.org>
+> 
+> Consider the following stack trace
+> 
+> -001|raw_spin_lock_irqsave
+> -002|mmc_blk_cqe_complete_rq
+> -003|__blk_mq_complete_request(inline)
+> -003|blk_mq_complete_request(rq)
+> -004|mmc_cqe_timed_out(inline)
+> -004|mmc_mq_timed_out
+> 
+> mmc_mq_timed_out acquires the queue_lock for the first
+> time. The mmc_blk_cqe_complete_rq function also tries to acquire
+> the same queue lock resulting in recursive locking where the task
+> is spinning for the same lock which it has already acquired leading
+> to watchdog bark.
+> 
+> Fix this issue with the lock only for the required critical section.
+> 
+> Cc: <stable@vger.kernel.org>
+> Fixes: 1e8e55b67030 ("mmc: block: Add CQE support")
+> Suggested-by: Sahitya Tummala <stummala@codeaurora.org>
+> Signed-off-by: Sarthak Garg <sartgarg@codeaurora.org>
 
-If not asserted during the initialization process, devices connected on
-the bus will not be made aware of the internal reset happening. This,
-potentially resulting in unexpected behavior.
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Fixes: c0452137034b ("PCI: brcmstb: Add Broadcom STB PCIe host controller driver")
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
- drivers/pci/controller/pcie-brcmstb.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 0b97b94c4a9a..795a03be4150 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -699,6 +699,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 
- 	/* Reset the bridge */
- 	brcm_pcie_bridge_sw_init_set(pcie, 1);
-+	brcm_pcie_perst_set(pcie, 1);
- 
- 	usleep_range(100, 200);
- 
--- 
-2.26.2
+> ---
+>  drivers/mmc/core/queue.c | 13 ++++---------
+>  1 file changed, 4 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
+> index 25bee3d..b5fd3bc 100644
+> --- a/drivers/mmc/core/queue.c
+> +++ b/drivers/mmc/core/queue.c
+> @@ -107,7 +107,7 @@ static enum blk_eh_timer_return mmc_cqe_timed_out(struct request *req)
+>  	case MMC_ISSUE_DCMD:
+>  		if (host->cqe_ops->cqe_timeout(host, mrq, &recovery_needed)) {
+>  			if (recovery_needed)
+> -				__mmc_cqe_recovery_notifier(mq);
+> +				mmc_cqe_recovery_notifier(mrq);
+>  			return BLK_EH_RESET_TIMER;
+>  		}
+>  		/* No timeout (XXX: huh? comment doesn't make much sense) */
+> @@ -127,18 +127,13 @@ static enum blk_eh_timer_return mmc_mq_timed_out(struct request *req,
+>  	struct mmc_card *card = mq->card;
+>  	struct mmc_host *host = card->host;
+>  	unsigned long flags;
+> -	int ret;
+> +	bool ignore_tout;
+>  
+>  	spin_lock_irqsave(&mq->lock, flags);
+> -
+> -	if (mq->recovery_needed || !mq->use_cqe || host->hsq_enabled)
+> -		ret = BLK_EH_RESET_TIMER;
+> -	else
+> -		ret = mmc_cqe_timed_out(req);
+> -
+> +	ignore_tout = mq->recovery_needed || !mq->use_cqe || host->hsq_enabled;
+>  	spin_unlock_irqrestore(&mq->lock, flags);
+>  
+> -	return ret;
+> +	return ignore_tout ? BLK_EH_RESET_TIMER : mmc_cqe_timed_out(req);
+>  }
+>  
+>  static void mmc_mq_recovery_handler(struct work_struct *work)
+> 
 
