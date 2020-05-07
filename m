@@ -2,140 +2,192 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3443BC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BF9C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A7772083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:11:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="POoD53xZ"
+	by mail.kernel.org (Postfix) with ESMTP id 023642083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:14:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbgEGQLm (ORCPT
+        id S1727798AbgEGQOG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 12:11:42 -0400
-Received: from mail-dm6nam11on2082.outbound.protection.outlook.com ([40.107.223.82]:6124
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726767AbgEGQLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 12:11:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HnOcjmCPTXMwXOPMd6SE76hlx93/K7ldckVzgcaUEbJOINHnt+WFjKhpbjmyxP9KN0UXtBScGOZEVOEsuza3Bn5+mKcpK7H77PhjXpOwxXas7Eo+XlkYhwm35d9UFl2ITgi2Dddwiiqx9YP+idrW5pQfWHeyaZ5x5AGW2g2bizy9mXLzASwzLvyfIoVLcciAKZnoemaOImJM+EFwFiP7mLL/hUEIXTp8ytszjCpFAGayklGkuy11PF3QTtF5f6WtqADdAkbNU3MlQ5O7As0aRPQ+TzZt32UmCJD+xchHJZM4QWhx+1nogVlaZoPg9iRMRde9+TxFjtk3o7dyVoA31g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lmpNek7aTN3Snz2LxzsaAFwUjLYKDlaHSWDchFh262U=;
- b=Boob4I4/lnwuXjH7Un0NbKnsk9g3IW8ClY2i2W+zDJOJ3L/heE3sNOHXPznfUMI0QR29fr2zbXN11tYr6lpY+Bnu9TXluDQyJ/gnQ3bSzHDWOGj7v7d1nd8x3CtRdac/eagK1OKdXbFr+lDpZ906wM88APNUyspGiG2KoNpWENQSp9OXK0AuJ/MHr3F4XImFVT6xdGY+6xkUC89IjZZPOHAdTc1Ov7/GYwlMlh++7+XFOp4QUiABhrreRWNdAzaQLJeuBTb2mK3hV9MwAZHGKRNVSc1OIfG1Nc6l+c2Om4W+93RldHHj7uyz/6Q11lhkQJTOfXh/GyRJyygx9Qxc+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lmpNek7aTN3Snz2LxzsaAFwUjLYKDlaHSWDchFh262U=;
- b=POoD53xZeo9T5unfHIl+ieRRPZHMfHIGFoFJ63STnrBRhN69YRNJHckUjYSwkWI6jy6Rpc9MlmSOurOeTTxFnX1MGQ7AXAwvqPzAF3yxPGX05WM6QRa6MTWYUwJv+laRmELLVSBUaLJy5V2yBudfpLVEsRtVQdQNCcMKtP2dOXA=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
- by SN1PR12MB2461.namprd12.prod.outlook.com (2603:10b6:802:27::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19; Thu, 7 May
- 2020 16:11:38 +0000
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::c0f:2938:784f:ed8d]) by SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::c0f:2938:784f:ed8d%7]) with mapi id 15.20.2979.028; Thu, 7 May 2020
- 16:11:38 +0000
-Subject: Re: [PATCH 1/2] arch/x86: Rename config
- X86_INTEL_MEMORY_PROTECTION_KEYS to generic x86
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        hpa@zytor.com, sean.j.christopherson@intel.com, x86@kernel.org,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, dave.hansen@linux.intel.com, luto@kernel.org,
-        peterz@infradead.org, mchehab+samsung@kernel.org,
-        changbin.du@intel.com, namit@vmware.com,
-        yang.shi@linux.alibaba.com, asteinhauser@google.com,
-        anshuman.khandual@arm.com, jan.kiszka@siemens.com,
-        akpm@linux-foundation.org, steven.price@arm.com,
-        rppt@linux.vnet.ibm.com, peterx@redhat.com,
-        dan.j.williams@intel.com, arjunroy@google.com, logang@deltatee.com,
-        thellstrom@vmware.com, aarcange@redhat.com, justin.he@arm.com,
-        robin.murphy@arm.com, ira.weiny@intel.com, keescook@chromium.org,
-        jgross@suse.com, andrew.cooper3@citrix.com,
-        pawan.kumar.gupta@linux.intel.com, fenghua.yu@intel.com,
-        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
-        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <158880240546.11615.2219410169137148044.stgit@naples-babu.amd.com>
- <158880253347.11615.8499618616856685179.stgit@naples-babu.amd.com>
- <4d86b207-77af-dc5d-88a4-f092be0043f6@intel.com>
- <20200507072934.d5l6cpqyy54lrrla@linutronix.de>
- <034cfb90-7f75-8e36-5b1e-ceaef0dfa50d@intel.com>
- <1aca7824-f917-c027-ef02-d3a9e7780c3b@redhat.com>
- <4ca2dd51-c30a-c400-146a-8079ac4526c6@amd.com>
- <97773339-adf6-eab4-fbbc-4e20bbb7e024@redhat.com>
-From:   Babu Moger <babu.moger@amd.com>
-Message-ID: <730e8533-6385-7d51-9905-abca58bf8b90@amd.com>
-Date:   Thu, 7 May 2020 11:11:33 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-In-Reply-To: <97773339-adf6-eab4-fbbc-4e20bbb7e024@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DM6PR12CA0019.namprd12.prod.outlook.com
- (2603:10b6:5:1c0::32) To SN1PR12MB2560.namprd12.prod.outlook.com
- (2603:10b6:802:26::19)
+        Thu, 7 May 2020 12:14:06 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15518 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726467AbgEGQOF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 12:14:05 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 047G4OvV160549;
+        Thu, 7 May 2020 12:12:41 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30vmp6jc3d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 May 2020 12:12:41 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 047G5fk6165277;
+        Thu, 7 May 2020 12:12:40 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30vmp6jc2g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 May 2020 12:12:40 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 047G9kSs025490;
+        Thu, 7 May 2020 16:12:38 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04ams.nl.ibm.com with ESMTP id 30s0g5unrs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 May 2020 16:12:37 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 047GCZYR1048834
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 7 May 2020 16:12:35 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BA52442041;
+        Thu,  7 May 2020 16:12:35 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2DFA142047;
+        Thu,  7 May 2020 16:12:21 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.201.211])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu,  7 May 2020 16:12:20 +0000 (GMT)
+Date:   Thu, 7 May 2020 19:11:55 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Mike Rapoport <rppt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rich Felker <dalias@libc.org>, linux-ia64@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-sh@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-mm@kvack.org, Paul Mackerras <paulus@samba.org>,
+        linux-hexagon@vger.kernel.org, Will Deacon <will@kernel.org>,
+        kvmarm@lists.cs.columbia.edu, Jonas Bonn <jonas@southpole.se>,
+        linux-arch@vger.kernel.org, Brian Cain <bcain@codeaurora.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        uclinux-h8-devel@lists.sourceforge.jp,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>, kvm-ppc@vger.kernel.org,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        openrisc@lists.librecores.org, Stafford Horne <shorne@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        linux-arm-kernel@lists.infradead.org,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Tony Luck <tony.luck@intel.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        nios2-dev@lists.rocketboards.org, linuxppc-dev@lists.ozlabs.org,
+        =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH v4 02/14] arm: add support for folded p4d page tables
+Message-ID: <20200507161155.GE683243@linux.ibm.com>
+References: <20200414153455.21744-1-rppt@kernel.org>
+ <20200414153455.21744-3-rppt@kernel.org>
+ <CGME20200507121658eucas1p240cf4a3e0fe5c22dda5ec4f72734149f@eucas1p2.samsung.com>
+ <39ba8a04-d6b5-649d-c289-0c8b27cb66c5@samsung.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.236.30.87] (165.204.77.1) by DM6PR12CA0019.namprd12.prod.outlook.com (2603:10b6:5:1c0::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28 via Frontend Transport; Thu, 7 May 2020 16:11:34 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 02f65c40-6ca9-44ab-4a1a-08d7f2a151f2
-X-MS-TrafficTypeDiagnostic: SN1PR12MB2461:
-X-Microsoft-Antispam-PRVS: <SN1PR12MB24617A0D6EBA140F8614ACCE95A50@SN1PR12MB2461.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1388;
-X-Forefront-PRVS: 03965EFC76
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: iBiN9qioqd0lVGoBvhNXuZzV9D9W9bkkRSz4VyhHzXysoPI2dVwSB9QDSF11Wl9zpekqZ/5XNEfpohkDF11hchD4/k38Vazhc6NsPUWVInuwIxieg47Y8IufB+8WiwEqajdYEUu80W9j2rLZTeEa5mHrh5jMqWMDNpkQ/KdNCphiVNfcs5IxYoJqdfOGI47lQAKU9aodc9uatYOtbwkhQXnwD9PWnNBm+aT4ZPVkZ59v9oCTJ8N6z2vbIOwZfX8kP5MQzjv2pkDfkKwfIwG9nN1wRHBycSee1e6eySqpKyqvSptQvipGuQu7zvl0OetSFkzSuNU8q+T9TYlOVEu5Nd9XVcyqsKtmfoIKF9MPsxb2AR1O1j5fx4UQA1wuMVbXpwMr+CvH304q798NltsCQkHQX59z568iPub3Ds9kwJfKTk4a9iY7HrWAifPtF0Rkt/zCs9bydOEE2sRV9ZMVX6D+PMUHWCILvABgS3GXqJS85i/UY8QpO9V+BHJt3Pj9c91aZEApnm4Tssek0GUxgBfr7DnvUk22PIUKh67XUkhgD6wydT/+plAkgvvaTTgycE1nXI2E/WQdNJdreNcKGQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(366004)(396003)(136003)(346002)(33430700001)(52116002)(186003)(16526019)(8676002)(86362001)(4744005)(316002)(956004)(26005)(8936002)(66476007)(44832011)(33440700001)(16576012)(2616005)(478600001)(66556008)(31696002)(66946007)(53546011)(2906002)(7406005)(31686004)(6486002)(4326008)(110136005)(5660300002)(83280400001)(83310400001)(83290400001)(36756003)(83320400001)(7416002)(83300400001)(41533002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: FKBnT8LJG6JdThVqUSrAyWmNh4TJppZmevpXPBBJqcvEMQ2/vFpR6temOx6xsfpAeU+VT98wl9qPj0aTJ5j+Mm6KQJwz6WUxu+Wm/1UZSsRAp8WUpTPx9W7mbfmxmu9t7NOaQU9E19sQAsbtbTcOKVwaky8Oqm0NgFNQenvpX2g09z8banLOaaf8/fYD6kbJDhoJuBtcqUzaXiK0uxKAEtPUtDkGipe+mjEoymKLGQyhWhlSoR3R9IJw1/TqKU4Y/lmOdn/p7RNcuj2Z3emlizJN9yxnUkhCaSpOaGb26RtcN/xAUFPcknR2TIBiMi2t0UhRJb2rBiNf/4LWhjTRMj60H9hkF7gELcI7+gmDoGN4obXx2UPt/r38KC9tAewdYnBkzfUhzQMXIRUO4Chbu6HcvKxZTppxjbpgbXUF37hKh/2UTQykXw+uARdW8dU3Q5e2hbH9Vr7mITW8aGEicbtR7B97wpCbvYCx8He+bUCXLi6I4jyE5+8wHVERMvWTNSG/NKO0N8/uMykI5QC6T19CDRmgcATvx7wqfgK0TvJ5eOMoXWZm/n5NMMH+EELRN4GPGyta1Gof1OqO6sj3pvFz43FdjsXJ9mN592GUIQaEA75Qu7IbwnceSeH/7ojOqr0aBH/bnYdcUDdJPXgMlh7wuVljAO+BOOTaEYuvVhD9E6/zvulABLzzl71XQY6qRExgqld0mseFpXCHIY1ceI1jnu8IWLH11m18Q4/eIqelRZWDPCKB+3bLbd8gYJexC0VgjdY/4EFTrLZK8jga4q+UVz0QEXf22xVBTPywHf4=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 02f65c40-6ca9-44ab-4a1a-08d7f2a151f2
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2020 16:11:37.7542
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2mGyM4FrgCNVORmlKbz9ntYCiIDRmj1c2tUCcuEOXuwQFehHnpBMzAhpJdIZe6/l
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2461
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <39ba8a04-d6b5-649d-c289-0c8b27cb66c5@samsung.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-07_10:2020-05-07,2020-05-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ priorityscore=1501 suspectscore=1 malwarescore=0 impostorscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 adultscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005070125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-
-On 5/7/20 11:07 AM, Paolo Bonzini wrote:
-> On 07/05/20 18:06, Babu Moger wrote:
->>>> So, for now my preference would be to change the prompt, but leave the
->>>> CONFIG_ naming in place.
->>> I agree.
->>>
->>> What's in a name?  An Intel rose by any other name would smell as sweet.
->>
->> How about X86_MPK? Or I will use already proposed name
->> X86_MEMORY_PROTECTION_KEYS.
+On Thu, May 07, 2020 at 02:16:56PM +0200, Marek Szyprowski wrote:
+> Hi
 > 
-> Dave is proposing to keep the CONFIG_ as is and only change the prompt.
+> On 14.04.2020 17:34, Mike Rapoport wrote:
+> > From: Mike Rapoport <rppt@linux.ibm.com>
+> >
+> > Implement primitives necessary for the 4th level folding, add walks of p4d
+> > level where appropriate, and remove __ARCH_USE_5LEVEL_HACK.
+> >
+> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> 
+> Today I've noticed that kexec is broken on ARM 32bit. Bisecting between 
+> current linux-next and v5.7-rc1 pointed to this commit. I've tested this 
+> on Odroid XU4 and Raspberry Pi4 boards. Here is the relevant log:
+> 
+> # kexec --kexec-syscall -l zImage --append "$(cat /proc/cmdline)"
+> memory_range[0]:0x40000000..0xbe9fffff
+> memory_range[0]:0x40000000..0xbe9fffff
+> # kexec -e
+> kexec_core: Starting new kernel
+> 8<--- cut here ---
+> Unable to handle kernel paging request at virtual address c010f1f4
+> pgd = c6817793
+> [c010f1f4] *pgd=4000041e(bad)
+> Internal error: Oops: 80d [#1] PREEMPT ARM
+> Modules linked in:
+> CPU: 0 PID: 1329 Comm: kexec Tainted: G        W 
+> 5.7.0-rc3-00127-g6cba81ed0f62 #611
+> Hardware name: Samsung Exynos (Flattened Device Tree)
+> PC is at machine_kexec+0x40/0xfc
 
-Ok. Got it. thanks
+Any chance you have the debug info in this kernel?
+scripts/faddr2line would come handy here.
 
+> LR is at 0xffffffff
+> pc : [<c010f0b4>]    lr : [<ffffffff>]    psr: 60000013
+> sp : ebc13e60  ip : 40008000  fp : 00000001
+> r10: 00000058  r9 : fee1dead  r8 : 00000001
+> r7 : c121387c  r6 : 6c224000  r5 : ece40c00  r4 : ec222000
+> r3 : c010f1f4  r2 : c1100000  r1 : c1100000  r0 : 418d0000
+> Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+> Control: 10c5387d  Table: 6bc14059  DAC: 00000051
+> Process kexec (pid: 1329, stack limit = 0x366bb4dc)
+> Stack: (0xebc13e60 to 0xebc14000)
+> ...
+> [<c010f0b4>] (machine_kexec) from [<c01c0d84>] (kernel_kexec+0x74/0x7c)
+> [<c01c0d84>] (kernel_kexec) from [<c014b1bc>] (__do_sys_reboot+0x1f8/0x210)
+> [<c014b1bc>] (__do_sys_reboot) from [<c0100060>] (ret_fast_syscall+0x0/0x28)
+> Exception stack(0xebc13fa8 to 0xebc13ff0)
+> ...
+> ---[ end trace 3e8d6c81723c778d ]---
+> 1329 Segmentation fault      ./kexec -e
+> 
+> > ---
+> >   arch/arm/include/asm/pgtable.h     |  1 -
+> >   arch/arm/lib/uaccess_with_memcpy.c |  7 +++++-
+> >   arch/arm/mach-sa1100/assabet.c     |  2 +-
+> >   arch/arm/mm/dump.c                 | 29 +++++++++++++++++-----
+> >   arch/arm/mm/fault-armv.c           |  7 +++++-
+> >   arch/arm/mm/fault.c                | 22 ++++++++++------
+> >   arch/arm/mm/idmap.c                |  3 ++-
+> >   arch/arm/mm/init.c                 |  2 +-
+> >   arch/arm/mm/ioremap.c              | 12 ++++++---
+> >   arch/arm/mm/mm.h                   |  2 +-
+> >   arch/arm/mm/mmu.c                  | 35 +++++++++++++++++++++-----
+> >   arch/arm/mm/pgd.c                  | 40 ++++++++++++++++++++++++------
+> >   12 files changed, 125 insertions(+), 37 deletions(-)
+> >
+> > ...
+> 
+> Best regards
+> -- 
+> Marek Szyprowski, PhD
+> Samsung R&D Institute Poland
+> 
+
+-- 
+Sincerely yours,
+Mike.
