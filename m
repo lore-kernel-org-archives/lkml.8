@@ -2,88 +2,115 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 782FFC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8D0C47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 444D4215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:22:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FFDH1Kl/"
+	by mail.kernel.org (Postfix) with ESMTP id C6EF8215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:23:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588875781;
+	bh=7Jk0frUU8pj4R+QZ01+4CPwtyxDQgz9dP3pjH08JnUc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FVv66LuBYQPEGr8L5X2pOP2GM+G+kiDfgmDXT8BfLivytC7xbYksDNvPx31hUuMbC
+	 D0oJpxQSbl9r8qCfXBODAB6FCRbxuiGRwr/nQb8aBRCrYBeFmn8ZO0TKlWQVNKoqre
+	 brizDQWsTEFvtvMbZggaDlaoB9rK99vG/3YNBSIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbgEGSWn (ORCPT
+        id S1728334AbgEGSXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:22:43 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59184 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728279AbgEGSWm (ORCPT
+        Thu, 7 May 2020 14:23:01 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:35144 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726863AbgEGSXA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:22:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588875761;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=FTb6Jgxz0ykVKPeNAv5nqgXZUkMIvK3Ny3fqxRZnxuU=;
-        b=FFDH1Kl/Pi/jwbCm25DnpKwaeNEQxMTMoTCEaiOTWzt1wIiu+qEYUlU+BfcfA2D770ZYnA
-        KZfVvqP1rGb9IFqEMgGo75jav33cE5BvDQsn79FgB7sc7Zr2SJHnsLDaNZaNs8Ahmbc9oB
-        iAAV6vDtbQLmDWNDTQnK/09F/SkXDRE=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-424-mMwC4rehO2yiHxIR3Tm9mw-1; Thu, 07 May 2020 14:22:39 -0400
-X-MC-Unique: mMwC4rehO2yiHxIR3Tm9mw-1
-Received: by mail-qk1-f200.google.com with SMTP id a18so6756573qkl.0
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 11:22:39 -0700 (PDT)
+        Thu, 7 May 2020 14:23:00 -0400
+Received: by mail-pj1-f68.google.com with SMTP id ms17so2997470pjb.0;
+        Thu, 07 May 2020 11:22:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FTb6Jgxz0ykVKPeNAv5nqgXZUkMIvK3Ny3fqxRZnxuU=;
-        b=SYswSNO6nmr1iX5bA8Q6oDzF0fpv5p73TXbFHP10F9jtutQIVquPCcwyQeqrhETIVC
-         nQi4tb3dNNjXPVgtTazclZ2xFCv6hbzLJoG/+UGW8ZWPZnSayfhA7FDMWxjy7sWwbhSv
-         RkSS6B92TAKqXlG7g72FoFrwIvFSZeUkyHrnqP2QF4AUtG2Lv0B2gFlySlNrYz624moO
-         HUVdooBaBqU52XqLucbw6ES33MxqMDml+wJKbzNxnCBKASQ1q96ow+LJiPoKxGq8jr4e
-         vy0e+xBfNTn82YELRMha4qS7zSGsQXB3mtMckXtkOoRYjeTlLgsaNafpx+VBkxdzMs0G
-         BE1w==
-X-Gm-Message-State: AGi0PuZeBIqE3creoPCm3sbSd1LXnYKDkva+V7LkpbJwxPhtnDadXhgX
-        GjM37GdV+5jBwgQ9iKabEyweboKZIj+OWGcEL40t9s6xMbEaIR+Mf4M/YbcOL4p2UXQBX6Zf7Ky
-        LllK0Ofvc1gW1154H5TxSXEUe
-X-Received: by 2002:a05:620a:7ca:: with SMTP id 10mr15208052qkb.131.1588875758748;
-        Thu, 07 May 2020 11:22:38 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKCifR6UPiWN6/+9wr1Tx/y5vkRfYxk4HrSwoCiBdTYmZRrhZOsFmvk/nyG88T+rRN1zCXWaQ==
-X-Received: by 2002:a05:620a:7ca:: with SMTP id 10mr15208031qkb.131.1588875758550;
-        Thu, 07 May 2020 11:22:38 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id a17sm4857827qka.37.2020.05.07.11.22.37
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=crOGNM1IiUdeKZ/Udc473eZwbzdnFX83mUx0lAy7H7w=;
+        b=WbuHqxk+AdWTuV7r8z7510wccudAPgeCTPKpyIomIGpEaCBfAQKYf4fbWkRv+h2pD3
+         k7oV2HsHzcYijcjFfND0uVUDrI3c++5YdPyqtTYiF7yfL5wtvtcIOsVPN7KEaOgM0oed
+         dWYmcVuhqfTbU85qds9qo+iRr0SyNyabIrIxzGb5RV1s6O7E2YNst7llAX4KWKMCqusS
+         6xwnfIro1x679JKck+qUnjCIPwr0LRpCPUY+RDAfwuFy8AmCsBjkcqcl8J3p5qBiLPJC
+         wyvVdozulcXLNxZoTR322JwkTkuLmXLL/a218yG3lmhQFj+axxI66fSjVFna2JospJLt
+         Mu3g==
+X-Gm-Message-State: AGi0PuZ3NkBv112mEcylHZG7YEAQ4wC6NGWnIgvZHR8zniH+d9mwa5A1
+        xCryH86gj4V19eiUfMIsKrs=
+X-Google-Smtp-Source: APiQypKahnzYyNUg9AVnphKZxOGotDLI5iak1AH7DVsvqQtw4mS2xuWkahM3ViDKvMYI+csMPj4q9Q==
+X-Received: by 2002:a17:902:b206:: with SMTP id t6mr14698777plr.270.1588875779441;
+        Thu, 07 May 2020 11:22:59 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id 192sm5459770pfu.182.2020.05.07.11.22.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 11:22:37 -0700 (PDT)
-Date:   Thu, 7 May 2020 14:22:36 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH v2 6/9] KVM: nSVM: trap #DB and #BP to userspace if guest
- debugging is on
-Message-ID: <20200507182236.GJ228260@xz-x1>
-References: <20200507115011.494562-1-pbonzini@redhat.com>
- <20200507115011.494562-7-pbonzini@redhat.com>
+        Thu, 07 May 2020 11:22:58 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id CF043403EA; Thu,  7 May 2020 18:22:57 +0000 (UTC)
+Date:   Thu, 7 May 2020 18:22:57 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Rafael Aquini <aquini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        dyoung@redhat.com, bhe@redhat.com, corbet@lwn.net,
+        keescook@chromium.org, akpm@linux-foundation.org, cai@lca.pw,
+        rdunlap@infradead.org
+Subject: Re: [PATCH v2] kernel: add panic_on_taint
+Message-ID: <20200507182257.GX11244@42.do-not-panic.com>
+References: <20200507180631.308441-1-aquini@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200507115011.494562-7-pbonzini@redhat.com>
+In-Reply-To: <20200507180631.308441-1-aquini@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 07:50:08AM -0400, Paolo Bonzini wrote:
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+On Thu, May 07, 2020 at 02:06:31PM -0400, Rafael Aquini wrote:
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index 8a176d8727a3..b80ab660d727 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -1217,6 +1217,13 @@ static struct ctl_table kern_table[] = {
+>  		.extra1		= SYSCTL_ZERO,
+>  		.extra2		= SYSCTL_ONE,
+>  	},
+> +	{
+> +		.procname	= "panic_on_taint",
+> +		.data		= &panic_on_taint,
+> +		.maxlen		= sizeof(unsigned long),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_doulongvec_minmax,
+> +	},
 
-Reviewed-by: Peter Xu <peterx@redhat.com>
+You sent this out before I could reply to the other thread on v1.
+My thoughts on the min / max values, or lack here:
+                                                                                
+Valid range doesn't mean "currently allowed defined" masks.                     
 
--- 
-Peter Xu
+For example, if you expect to panic due to a taint, but a new taint type
+you want was not added on an older kernel you would be under a very
+*false* sense of security that your kernel may not have hit such a
+taint, but the reality of the situation was that the kernel didn't
+support that taint flag only added in future kernels.                           
 
+You may need to define a new flag (MAX_TAINT) which should be the last
+value + 1, the allowed max values would be                                      
+
+(2^MAX_TAINT)-1                                                                 
+
+or                                                                              
+
+(1<<MAX_TAINT)-1  
+
+Since this is to *PANIC* I think we do want to test ranges and ensure
+only valid ones are allowed.
+
+  Luis
