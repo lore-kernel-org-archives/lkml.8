@@ -6,36 +6,37 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE0EC47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E724C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96EDE2495C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7818720A8B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:40:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbgEGRjy (ORCPT
+        id S1728261AbgEGRkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 13:39:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35722 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 13:40:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727834AbgEGRja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727825AbgEGRja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 7 May 2020 13:39:30 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9987624956;
+        by mail.kernel.org (Postfix) with ESMTPSA id 307E8215A4;
         Thu,  7 May 2020 17:39:30 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1jWkUb-000DpG-H3; Thu, 07 May 2020 13:39:29 -0400
-Message-ID: <20200507173929.409881472@goodmis.org>
+        id 1jWkUb-000Dni-3C; Thu, 07 May 2020 13:39:29 -0400
+Message-ID: <20200507173928.961003729@goodmis.org>
 User-Agent: quilt/0.66
-Date:   Thu, 07 May 2020 13:39:12 -0400
+Date:   Thu, 07 May 2020 13:39:09 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Wei Yang <richard.weiyang@gmail.com>
-Subject: [for-linus][PATCH 8/9] tracing: Fix doc mistakes in trace sample
+        stable@vger.kernel.org, Xiao Yang <yangx.jy@cn.fujitsu.com>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: [for-linus][PATCH 5/9] tracing: Wait for preempt irq delay thread to finish
 References: <20200507173904.729935165@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -44,32 +45,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yang <richard.weiyang@gmail.com>
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-As the example below shows, DECLARE_EVENT_CLASS() is used instead of
-DEFINE_EVENT_CLASS().
+Running on a slower machine, it is possible that the preempt delay kernel
+thread may still be executing if the module was immediately removed after
+added, and this can cause the kernel to crash as the kernel thread might be
+executing after its code has been removed.
 
-Link: http://lkml.kernel.org/r/20200428214959.11259-1-richard.weiyang@gmail.com
+There's no reason that the caller of the code shouldn't just wait for the
+delay thread to finish, as the thread can also be created by a trigger in
+the sysfs code, which also has the same issues.
 
-Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+Link: http://lore.kernel.org/r/5EA2B0C8.2080706@cn.fujitsu.com
+
+Cc: stable@vger.kernel.org
+Fixes: 793937236d1ee ("lib: Add module for testing preemptoff/irqsoff latency tracers")
+Reported-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
+Reviewed-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
+Reviewed-by: Joel Fernandes <joel@joelfernandes.org>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- samples/trace_events/trace-events-sample.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/preemptirq_delay_test.c | 30 ++++++++++++++++++++++------
+ 1 file changed, 24 insertions(+), 6 deletions(-)
 
-diff --git a/samples/trace_events/trace-events-sample.h b/samples/trace_events/trace-events-sample.h
-index 80b4a70315b6..13a35f7cbe66 100644
---- a/samples/trace_events/trace-events-sample.h
-+++ b/samples/trace_events/trace-events-sample.h
-@@ -416,7 +416,7 @@ TRACE_EVENT_FN(foo_bar_with_fn,
-  * Note, TRACE_EVENT() itself is simply defined as:
-  *
-  * #define TRACE_EVENT(name, proto, args, tstruct, assign, printk)  \
-- *  DEFINE_EVENT_CLASS(name, proto, args, tstruct, assign, printk); \
-+ *  DECLARE_EVENT_CLASS(name, proto, args, tstruct, assign, printk); \
-  *  DEFINE_EVENT(name, name, proto, args)
-  *
-  * The DEFINE_EVENT() also can be declared with conditions and reg functions:
+diff --git a/kernel/trace/preemptirq_delay_test.c b/kernel/trace/preemptirq_delay_test.c
+index 31c0fad4cb9e..c4c86de63cf9 100644
+--- a/kernel/trace/preemptirq_delay_test.c
++++ b/kernel/trace/preemptirq_delay_test.c
+@@ -113,22 +113,42 @@ static int preemptirq_delay_run(void *data)
+ 
+ 	for (i = 0; i < s; i++)
+ 		(testfuncs[i])(i);
++
++	set_current_state(TASK_INTERRUPTIBLE);
++	while (!kthread_should_stop()) {
++		schedule();
++		set_current_state(TASK_INTERRUPTIBLE);
++	}
++
++	__set_current_state(TASK_RUNNING);
++
+ 	return 0;
+ }
+ 
+-static struct task_struct *preemptirq_start_test(void)
++static int preemptirq_run_test(void)
+ {
++	struct task_struct *task;
++
+ 	char task_name[50];
+ 
+ 	snprintf(task_name, sizeof(task_name), "%s_test", test_mode);
+-	return kthread_run(preemptirq_delay_run, NULL, task_name);
++	task =  kthread_run(preemptirq_delay_run, NULL, task_name);
++	if (IS_ERR(task))
++		return PTR_ERR(task);
++	if (task)
++		kthread_stop(task);
++	return 0;
+ }
+ 
+ 
+ static ssize_t trigger_store(struct kobject *kobj, struct kobj_attribute *attr,
+ 			 const char *buf, size_t count)
+ {
+-	preemptirq_start_test();
++	ssize_t ret;
++
++	ret = preemptirq_run_test();
++	if (ret)
++		return ret;
+ 	return count;
+ }
+ 
+@@ -148,11 +168,9 @@ static struct kobject *preemptirq_delay_kobj;
+ 
+ static int __init preemptirq_delay_init(void)
+ {
+-	struct task_struct *test_task;
+ 	int retval;
+ 
+-	test_task = preemptirq_start_test();
+-	retval = PTR_ERR_OR_ZERO(test_task);
++	retval = preemptirq_run_test();
+ 	if (retval != 0)
+ 		return retval;
+ 
 -- 
 2.26.2
 
