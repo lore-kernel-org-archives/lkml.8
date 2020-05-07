@@ -2,117 +2,86 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F6DC54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABC7C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F44C20735
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:49:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ug0Afhxk"
+	by mail.kernel.org (Postfix) with ESMTP id 49773208D6
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:50:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgEGUtX (ORCPT
+        id S1726575AbgEGUuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 16:49:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52110 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726268AbgEGUtW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 16:49:22 -0400
-Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9AAEC05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 13:49:23 -0700 (PDT)
-Received: by mail-qv1-xf4a.google.com with SMTP id z14so7116552qvv.6
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 13:49:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=N2ff8TXAhQSelwb8Fo/2whe057WE75uOPyG09EBawpk=;
-        b=ug0AfhxkFYxV7gPwZQUiO1TH3mLYMXaH6iQJmRt4l4dAOkKMo1p8glAwchEJSmd48c
-         KO6FfYEFXmZWE81BIC9AelKPV7tepn0+Ftyaib5noC4g13aPBsyAyMdxgvKHwAfQGO1v
-         /vVJqS1ZifkmreEOPNH/fBb0pIBBQzOBDGmV5r3SYopfhtu8NQep9Zx6wo2i+p6uof5f
-         arI5Xy212yrTpsSdUjgBM+SB60lQWQE4Ih4L+qjVG+DoXOQw5TjVQIFXe0UYJMfm83Ej
-         Hmmdem0OFwI/EwortJyPaS8KM+VjNt2vbRqfIIYMkolXyGcVgDuhhkk0U2bBr7SJPL4D
-         G7QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=N2ff8TXAhQSelwb8Fo/2whe057WE75uOPyG09EBawpk=;
-        b=sMX5D00O//tuIz6Lc9ISPVoAnki/LBIztNkg20c4u3R0UNI4dZ28MdVxlSS9OcHPab
-         PJd3uEw4OJGOY+OsPvCCCS4efuTpsSJMSOgc2xRBpg8iDEjoKEXVPuGRuRKIGvgtaKy5
-         9xSfjfWB4u5xT0uXg3FKgHLnlN6y7lILWlADd5xzEhaNYvtImA+RX9aGN01gC15fbAoR
-         MjZNdtEbOAobkaW8rk3T1id4D6iO5uq9ZP/vV8w+gNVDYZctENjBhVn1je4A4JhDF2Km
-         miOMP/zT7Dblg97CWD11oVe5ANGjNS34L09R34Nf4NzYWKmgoNhfMxwHlYIYDU/BPJ6w
-         L7Dw==
-X-Gm-Message-State: AGi0PuZbzOmet5ug9GUjNy3Ig9C/lm8tKfxDSvUrFLknlrWEYTzvHMkL
-        lpDA5hYhYWSxYjL9eRip0Ar5dakhe9QsHA==
-X-Google-Smtp-Source: APiQypLIwmOebFUIMyZG3XpyW3XxAzQzjw/dvg2VWxnQ01/+jF/bRCFmduwTX9Bdk6dvzmjtIRNXl65ogssE3Q==
-X-Received: by 2002:a37:aac5:: with SMTP id t188mr16318525qke.393.1588884562180;
- Thu, 07 May 2020 13:49:22 -0700 (PDT)
-Date:   Thu,  7 May 2020 13:49:13 -0700
-Message-Id: <20200507204913.18661-1-shakeelb@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-Subject: [PATCH] mm: vmscan: consistent update to pgsteal and pgscan
-From:   Shakeel Butt <shakeelb@google.com>
-To:     Mel Gorman <mgorman@suse.de>, Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Shakeel Butt <shakeelb@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 7 May 2020 16:50:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34006 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726218AbgEGUuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 16:50:54 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F5BF20735;
+        Thu,  7 May 2020 20:50:55 +0000 (UTC)
+Date:   Thu, 7 May 2020 16:50:53 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Julia Lawall <Julia.Lawall@inria.fr>
+Cc:     kernel-janitors@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Nic Volanschi <eugene.volanschi@inria.fr>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH] tracing/probe: reverse arguments to list_add
+Message-ID: <20200507165053.291ba5ea@gandalf.local.home>
+In-Reply-To: <1588879808-24488-1-git-send-email-Julia.Lawall@inria.fr>
+References: <1588879808-24488-1-git-send-email-Julia.Lawall@inria.fr>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One way to measure the efficiency of memory reclaim is to look at the
-ratio (pgscan+pfrefill)/pgsteal. However at the moment these stats are
-not updated consistently at the system level and the ratio of these are
-not very meaningful. The pgsteal and pgscan are updated for only global
-reclaim while pgrefill gets updated for global as well as cgroup
-reclaim.
+On Thu,  7 May 2020 21:30:08 +0200
+Julia Lawall <Julia.Lawall@inria.fr> wrote:
 
-Please note that this difference is only for system level vmstats. The
-cgroup stats returned by memory.stat are actually consistent. The
-cgroup's pgsteal contains number of reclaimed pages for global as well
-as cgroup reclaim. So, one way to get the system level stats is to get
-these stats from root's memory.stat but root does not expose that
-interface. Also for !CONFIG_MEMCG machines /proc/vmstat is the only way
-to get these stats. So, make these stats consistent.
+> Elsewhere in the file, the function trace_kprobe_has_same_kprobe uses
+> a trace_probe_event.probes object as the second argument of
+> list_for_each_entry, ie as a list head, while the list_for_each_entry
+> iterates over the list fields of the trace_probe structures, making
+> them the list elements.  So, exchange the arguments on the list_add
+> call to put the list head in the second argument.
+> 
+> Since both list_head structures were just initialized, this problem
+> did not cause any loss of information.
+> 
+> Fixes: 60d53e2c3b75 ("tracing/probe: Split trace_event related data from trace_probe")
+> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
 
-Signed-off-by: Shakeel Butt <shakeelb@google.com>
----
- mm/vmscan.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Masami,
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index cc555903a332..51f7d1efc912 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1943,8 +1943,7 @@ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
- 	reclaim_stat->recent_scanned[file] += nr_taken;
- 
- 	item = current_is_kswapd() ? PGSCAN_KSWAPD : PGSCAN_DIRECT;
--	if (!cgroup_reclaim(sc))
--		__count_vm_events(item, nr_scanned);
-+	__count_vm_events(item, nr_scanned);
- 	__count_memcg_events(lruvec_memcg(lruvec), item, nr_scanned);
- 	spin_unlock_irq(&pgdat->lru_lock);
- 
-@@ -1957,8 +1956,7 @@ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
- 	spin_lock_irq(&pgdat->lru_lock);
- 
- 	item = current_is_kswapd() ? PGSTEAL_KSWAPD : PGSTEAL_DIRECT;
--	if (!cgroup_reclaim(sc))
--		__count_vm_events(item, nr_reclaimed);
-+	__count_vm_events(item, nr_reclaimed);
- 	__count_memcg_events(lruvec_memcg(lruvec), item, nr_reclaimed);
- 	reclaim_stat->recent_rotated[0] += stat.nr_activate[0];
- 	reclaim_stat->recent_rotated[1] += stat.nr_activate[1];
--- 
-2.26.2.526.g744177e7f7-goog
+Can you give a Reviewed-by to this?
+
+-- Steve
+
+> 
+> ---
+>  kernel/trace/trace_probe.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index ab8b6436d53f..b8a928e925c7 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -1006,7 +1006,7 @@ int trace_probe_init(struct trace_probe *tp, const char *event,
+>  	INIT_LIST_HEAD(&tp->event->class.fields);
+>  	INIT_LIST_HEAD(&tp->event->probes);
+>  	INIT_LIST_HEAD(&tp->list);
+> -	list_add(&tp->event->probes, &tp->list);
+> +	list_add(&tp->list, &tp->event->probes);
+>  
+>  	call = trace_probe_event_call(tp);
+>  	call->class = &tp->event->class;
 
