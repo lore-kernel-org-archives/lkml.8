@@ -2,174 +2,215 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D6EC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C23FC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 863DD2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5D3B2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:08:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VCBJi/zF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jhaavaRP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgEGMHG (ORCPT
+        id S1726470AbgEGMIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 08:07:06 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:52038 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725914AbgEGMHG (ORCPT
+        Thu, 7 May 2020 08:08:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55296 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725879AbgEGMIu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 08:07:06 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588853225; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=CsTjSpDacRW1HUymiU2kvvRQCndHnkINhBw2dj0kpdw=;
- b=VCBJi/zFghQbr2Qt7aEbfgI7wDlvDsgh1nPtxN8Y+Q5up87HP98VrNa7dPyEpDg241JKcMPf
- Z5VmhkbfPj9TBrovOtMcYjNjrRkdPcNrXDQ3NhKvIhN1+3iSAJtUtw2R1rTSaTtfC2SFaMi/
- em92jHYtW+IuqHOTABZR9NK1F3Y=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb3f9d2.7efd1eecbce0-smtp-out-n02;
- Thu, 07 May 2020 12:06:42 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AB34DC44799; Thu,  7 May 2020 12:06:42 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 88106C4478F;
-        Thu,  7 May 2020 12:06:41 +0000 (UTC)
+        Thu, 7 May 2020 08:08:50 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44F8CC05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 05:08:50 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id y3so6112774wrt.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 05:08:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cU4Z779oiZ5X1KtL6o+GfgpTVjAX9hDbWnPU6sq2sRo=;
+        b=jhaavaRP0OgpViv0SFakoHbHfHJQ2+BF9Bw9ycjm7Dg2HSQSq/8xbwRXy53r/H2B73
+         dF3VeQ1DxWgL5AcoGDvK5me3OkdxwturoaKT8VRL79ZDfzmPNki3xUOhaG/VZlrc/NCu
+         4zihjNlAuF34vmVoPDSrfq7SYo4lk//qveC3wlG0PmqInrUid2TkF6Q1pxzkVaqA9UpB
+         KMcgL86SkX0+JhcGPEjv6CnKY6Oh48Hnbq+N47hB8x9ohbisDnzL6tqI4UTi7iRIsbNx
+         hj/WdKPYjbTH2SlnKgYjcccZu6vwORWuPu+hNhgjtDH6AbMmq6as/tP9YAfimmavYWDH
+         MptA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cU4Z779oiZ5X1KtL6o+GfgpTVjAX9hDbWnPU6sq2sRo=;
+        b=Di+WV7tbEH9k8tmEgcsBc8nDtjV6P3sYcq/OiKxFPZXuldOGk3rQF6BRle90X+61Vi
+         4y6PHgFTjDPXgPfQXkARdCLS1mKrHzbT7oLKLQ74ZnKnefH/4iVnalbYix3i98SlyM+C
+         GflyuiyAhGYUTyGVol/CPVQBCdn4k5Nf0378oHVAOzL6/5vniVGea2EHBR8DIv5doHN/
+         RYbg2KAXsd+BuSH3MpnOvpU3HL36XBW7TDzqBWba5Ho0GXVvnBQYLJKwe2KRaE3S2MQE
+         JE4DIzi5hmwLh64rmGfA53E16fn5QrMkXvHYR/8Q4gnHb2etk5DytFl+2mZF88Rumihz
+         JMeA==
+X-Gm-Message-State: AGi0PuZtZAIZdvA3VvS8BMVD8Zk5k2zsav8iUZRvnXvd5oHtqZNsqpml
+        dzXWe2pKhfLsvgPI6t1ygMwYOA==
+X-Google-Smtp-Source: APiQypIXn6rC140NZSrR3FyAareqVrgqZulNikJP/mOTFiNeikQMLpljvv2MgS3DJTGXJbCUvDzfaQ==
+X-Received: by 2002:adf:e9d2:: with SMTP id l18mr14969416wrn.34.1588853328684;
+        Thu, 07 May 2020 05:08:48 -0700 (PDT)
+Received: from localhost.localdomain ([87.120.218.65])
+        by smtp.googlemail.com with ESMTPSA id 1sm7874605wmz.13.2020.05.07.05.08.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 May 2020 05:08:46 -0700 (PDT)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     linux-pm@vger.kernel.org
+Cc:     evgreen@chromium.org, bjorn.andersson@linaro.org, mka@chromium.org,
+        akashast@codeaurora.org, linux-kernel@vger.kernel.org,
+        georgi.djakov@linaro.org
+Subject: [PATCH v2] interconnect: Add helpers for enabling/disabling a path
+Date:   Thu,  7 May 2020 15:08:46 +0300
+Message-Id: <20200507120846.8354-1-georgi.djakov@linaro.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
 Content-Transfer-Encoding: 8bit
-Date:   Thu, 07 May 2020 17:36:41 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Rob Clark <robdclark@gmail.com>
-Cc:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] iomm/arm-smmu: Add stall implementation hook
-In-Reply-To: <1ced023b-157c-21a0-ac75-1adef7f029f0@arm.com>
-References: <20200421202004.11686-1-saiprakash.ranjan@codeaurora.org>
- <b491e02ad790a437115fdeab6b21bc48@codeaurora.org>
- <1ced023b-157c-21a0-ac75-1adef7f029f0@arm.com>
-Message-ID: <fad5dc096a2bd9404341ba8738ba8fc9@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+There is a repeated pattern in multiple drivers where they want to switch
+the bandwidth between zero and some other value. This is happening often
+in the suspend/resume callbacks. Let's add helper functions to enable and
+disable the path, so that callers don't have to take care of remembering
+the bandwidth values and handle this in the framework instead.
 
-On 2020-05-07 16:25, Robin Murphy wrote:
-> On 2020-05-07 11:14 am, Sai Prakash Ranjan wrote:
->> Hi Will, Robin
->> 
->> On 2020-04-22 01:50, Sai Prakash Ranjan wrote:
->>> Add stall implementation hook to enable stalling
->>> faults on QCOM platforms which supports it without
->>> causing any kind of hardware mishaps. Without this
->>> on QCOM platforms, GPU faults can cause unrelated
->>> GPU memory accesses to return zeroes. This has the
->>> unfortunate result of command-stream reads from CP
->>> getting invalid data, causing a cascade of fail.
-> 
-> I think this came up before, but something about this rationale
-> doesn't add up - we're not *using* stalls at all, we're still
-> terminating faulting transactions unconditionally; we're just using
-> CFCFG to terminate them with a slight delay, rather than immediately.
-> It's really not clear how or why that makes a difference. Is it a GPU
-> bug? Or an SMMU bug? Is this reliable (or even a documented workaround
-> for something), or might things start blowing up again if any other
-> behaviour subtly changes? I'm not dead set against adding this, but
-> I'd *really* like to have a lot more confidence in it.
-> 
+With this patch the users can call icc_disable() and icc_enable() to lower
+their bandwidth request to zero and then restore it back to it's previous
+value.
 
-Yes it has come up before, you can find details in below links.
-  - https://patchwork.kernel.org/patch/9953803/
-  - https://patchwork.kernel.org/patch/10618713/
+Suggested-by: Evan Green <evgreen@chromium.org>
+Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+---
+v2: https://lore.kernel.org/r/20200428091650.27669-1-georgi.djakov@linaro.org/
+* Extract the common code into __icc_enable() (Matthias)
 
-Rob Clark can add more details on this probably for the GPU faults.
-As for the reliability, downstream kernel(I mean kernels with which 
-android
-devices with QCOM chipsets are shipped) has stalling enabled for a long 
-time
-now and has been stable in the field. So we can say that we are safe 
-with
-this enabled in QCOM implementation.
 
->>> Suggested-by: Rob Clark <robdclark@gmail.com>
->>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->>> ---
->>> This has been attempted previously by Rob Clark in 2017, 2018.
->>> Hopefully we can get something concluded in 2020.
->>>  * https://patchwork.kernel.org/patch/9953803/
->>>  * https://patchwork.kernel.org/patch/10618713/
->>> ---
->>>  drivers/iommu/arm-smmu-qcom.c | 1 +
->>>  drivers/iommu/arm-smmu.c      | 7 +++++++
->>>  drivers/iommu/arm-smmu.h      | 1 +
->>>  3 files changed, 9 insertions(+)
->>> 
->>> diff --git a/drivers/iommu/arm-smmu-qcom.c 
->>> b/drivers/iommu/arm-smmu-qcom.c
->>> index 24c071c1d8b0..a13b229389d4 100644
->>> --- a/drivers/iommu/arm-smmu-qcom.c
->>> +++ b/drivers/iommu/arm-smmu-qcom.c
->>> @@ -32,6 +32,7 @@ static int qcom_sdm845_smmu500_reset(struct
->>> arm_smmu_device *smmu)
->>> 
->>>  static const struct arm_smmu_impl qcom_smmu_impl = {
->>>      .reset = qcom_sdm845_smmu500_reset,
->>> +    .stall = true,
->>>  };
->>> 
->>>  struct arm_smmu_device *qcom_smmu_impl_init(struct arm_smmu_device 
->>> *smmu)
->>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
->>> index e622f4e33379..16b03fca9966 100644
->>> --- a/drivers/iommu/arm-smmu.c
->>> +++ b/drivers/iommu/arm-smmu.c
->>> @@ -488,6 +488,11 @@ static irqreturn_t arm_smmu_context_fault(int
->>> irq, void *dev)
->>>                  fsr, iova, fsynr, cbfrsynra, idx);
->>> 
->>>      arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_FSR, fsr);
->>> +
->>> +    if (smmu->impl && smmu->impl->stall && (fsr & ARM_SMMU_FSR_SS))
->>> +        arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_RESUME,
->>> +                  ARM_SMMU_RESUME_TERMINATE);
-> 
-> Shouldn't this be *before* the write to FSR, in case the outstanding
-> fault causes that to be immediately reasserted before we write
-> CB_RESUME and we end up immediately taking the IRQ a second time?
-> 
+ drivers/interconnect/core.c     | 39 ++++++++++++++++++++++++++++++++-
+ drivers/interconnect/internal.h |  2 ++
+ include/linux/interconnect.h    | 12 ++++++++++
+ 3 files changed, 52 insertions(+), 1 deletion(-)
 
-Yes, I will fixup this in the next version.
-
-> (The overall enablement being in impl is sound, but you still don't
-> get to play "works on my machine" in the architectural code :P)
-> 
-
-We could have our own context fault handler in QCOM implementation,
-but that would just be duplicating things from arm-smmu context fault
-handler. So I did not think it makes much sense to have our own
-fault handler in qcom impl just for enabling stall model.
-
-Thanks,
-Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+index f5699ed34e43..d5e0f93c942d 100644
+--- a/drivers/interconnect/core.c
++++ b/drivers/interconnect/core.c
+@@ -158,6 +158,7 @@ static struct icc_path *path_init(struct device *dev, struct icc_node *dst,
+ 		hlist_add_head(&path->reqs[i].req_node, &node->req_list);
+ 		path->reqs[i].node = node;
+ 		path->reqs[i].dev = dev;
++		path->reqs[i].enabled = true;
+ 		/* reference to previous node was saved during path traversal */
+ 		node = node->reverse;
+ 	}
+@@ -249,9 +250,12 @@ static int aggregate_requests(struct icc_node *node)
+ 	if (p->pre_aggregate)
+ 		p->pre_aggregate(node);
+ 
+-	hlist_for_each_entry(r, &node->req_list, req_node)
++	hlist_for_each_entry(r, &node->req_list, req_node) {
++		if (!r->enabled)
++			continue;
+ 		p->aggregate(node, r->tag, r->avg_bw, r->peak_bw,
+ 			     &node->avg_bw, &node->peak_bw);
++	}
+ 
+ 	return 0;
+ }
+@@ -571,6 +575,39 @@ int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
+ }
+ EXPORT_SYMBOL_GPL(icc_set_bw);
+ 
++static int __icc_enable(struct icc_path *path, bool enable)
++{
++	int i;
++
++	if (!path)
++		return 0;
++
++	if (WARN_ON(IS_ERR(path) || !path->num_nodes))
++		return -EINVAL;
++
++	mutex_lock(&icc_lock);
++
++	for (i = 0; i < path->num_nodes; i++)
++		path->reqs[i].enabled = enable;
++
++	mutex_unlock(&icc_lock);
++
++	return icc_set_bw(path, path->reqs[0].avg_bw,
++			  path->reqs[0].peak_bw);
++}
++
++int icc_disable(struct icc_path *path)
++{
++	return __icc_enable(path, false);
++}
++EXPORT_SYMBOL_GPL(icc_disable);
++
++int icc_enable(struct icc_path *path)
++{
++	return __icc_enable(path, true);
++}
++EXPORT_SYMBOL_GPL(icc_enable);
++
+ /**
+  * icc_get() - return a handle for path between two endpoints
+  * @dev: the device requesting the path
+diff --git a/drivers/interconnect/internal.h b/drivers/interconnect/internal.h
+index bf18cb7239df..f5f82a5c939e 100644
+--- a/drivers/interconnect/internal.h
++++ b/drivers/interconnect/internal.h
+@@ -14,6 +14,7 @@
+  * @req_node: entry in list of requests for the particular @node
+  * @node: the interconnect node to which this constraint applies
+  * @dev: reference to the device that sets the constraints
++ * @enabled: indicates whether the path with this request is enabled
+  * @tag: path tag (optional)
+  * @avg_bw: an integer describing the average bandwidth in kBps
+  * @peak_bw: an integer describing the peak bandwidth in kBps
+@@ -22,6 +23,7 @@ struct icc_req {
+ 	struct hlist_node req_node;
+ 	struct icc_node *node;
+ 	struct device *dev;
++	bool enabled;
+ 	u32 tag;
+ 	u32 avg_bw;
+ 	u32 peak_bw;
+diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
+index 770692421f4c..2b7b331c9354 100644
+--- a/include/linux/interconnect.h
++++ b/include/linux/interconnect.h
+@@ -30,6 +30,8 @@ struct icc_path *icc_get(struct device *dev, const int src_id,
+ struct icc_path *of_icc_get(struct device *dev, const char *name);
+ struct icc_path *devm_of_icc_get(struct device *dev, const char *name);
+ void icc_put(struct icc_path *path);
++int icc_disable(struct icc_path *path);
++int icc_enable(struct icc_path *path);
+ int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
+ void icc_set_tag(struct icc_path *path, u32 tag);
+ 
+@@ -57,6 +59,16 @@ static inline void icc_put(struct icc_path *path)
+ {
+ }
+ 
++static inline int icc_disable(struct icc_path *path)
++{
++	return 0;
++}
++
++static inline int icc_enable(struct icc_path *path)
++{
++	return 0;
++}
++
+ static inline int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
+ {
+ 	return 0;
