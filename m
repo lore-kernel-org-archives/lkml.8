@@ -2,98 +2,60 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F808C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A9BC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB632078C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:39:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588840777;
-	bh=Ld4HmaMz+uu6ugfeoP8TBmKNgDCsNouPkgsc7oqJvJ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qra04XMgiUe9X+0x2iHh91SgIUEzaZAONE6qNb5sWX0tzw8kXg8bf21FEHm77ij0G
-	 2FtvVpQTOJX5QHMhkQek/6HJ+fGEHfvlmU8/ln5MD63CJ+PlYKWZO035FbIrP04HuY
-	 M394qv66yWwOIxbsc0XF3ggbnfFBYtQKfrlbDXp4=
+	by mail.kernel.org (Postfix) with ESMTP id BBDD920870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:39:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbgEGIjg (ORCPT
+        id S1726555AbgEGIjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 04:39:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46292 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 04:39:24 -0400
+Received: from elvis.franken.de ([193.175.24.41]:43290 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726736AbgEGIje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 04:39:34 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F3782080D;
-        Thu,  7 May 2020 08:39:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588840774;
-        bh=Ld4HmaMz+uu6ugfeoP8TBmKNgDCsNouPkgsc7oqJvJ4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ro9/oIOy26gDdLHjpEUoFtciNshEP2GerzmgbWkGIanFXpQygbI2/v8W6P3WCmgyy
-         7Kr7vpMASvV958hsQEWu3oTRmchj+Ts2GFYBk2xWWCVepWBbLyZKBdzQ0rQ2GEjw1n
-         ALYvEew8+AvUNXKIKXDXpWcgpWnYLJsD2/+bcOoc=
-Date:   Thu, 7 May 2020 09:39:30 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Jason Wessel <jason.wessel@windriver.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        patches@linaro.org
-Subject: Re: [PATCH] kgdb: Fix spurious true from in_dbg_master()
-Message-ID: <20200507083929.GC28215@willie-the-truck>
-References: <20200506164223.2875760-1-daniel.thompson@linaro.org>
+        id S1725948AbgEGIjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 04:39:23 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jWc3t-0006Ql-04; Thu, 07 May 2020 10:39:21 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id AF1DFC03A8; Thu,  7 May 2020 10:38:57 +0200 (CEST)
+Date:   Thu, 7 May 2020 10:38:57 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     tglx@linutronix.de, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MIPS: Lasat: Remove dead code in lasat.h
+Message-ID: <20200507083857.GD8924@alpha.franken.de>
+References: <20200506134258.32634-1-yanaijie@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200506164223.2875760-1-daniel.thompson@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200506134258.32634-1-yanaijie@huawei.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 05:42:23PM +0100, Daniel Thompson wrote:
-> Currently there is a small window where a badly timed migration could
-> cause in_dbg_master() to spuriously return true. Specifically if we
-> migrate to a new core after reading the processor id and the previous
-> core takes a breakpoint then we will evaluate true if we read
-> kgdb_active before we get the IPI to bring us to halt.
+On Wed, May 06, 2020 at 09:42:58PM +0800, Jason Yan wrote:
+> This code has been marked dead for more than 10 years. Seems no need to
+> keep it now.
 > 
-> Fix this by checking irqs_disabled() first. Interrupts are always
-> disabled when we are executing the kgdb trap so this is an acceptable
-> prerequisite. This also allows us to replace raw_smp_processor_id()
-> with smp_processor_id() since the short circuit logic will prevent
-> warnings from PREEMPT_DEBUG.
-> 
-> Fixes: dcc7871128e9 ("kgdb: core changes to support kdb")
-> Suggested-by: Will Deacon <will@kernel.org>
-> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
 > ---
->  include/linux/kgdb.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
-> index b072aeb1fd78..4d6fe87fd38f 100644
-> --- a/include/linux/kgdb.h
-> +++ b/include/linux/kgdb.h
-> @@ -323,7 +323,7 @@ extern void gdbstub_exit(int status);
->  extern int			kgdb_single_step;
->  extern atomic_t			kgdb_active;
->  #define in_dbg_master() \
-> -	(raw_smp_processor_id() == atomic_read(&kgdb_active))
-> +	(irqs_disabled() && (smp_processor_id() == atomic_read(&kgdb_active)))
->  extern bool dbg_is_early;
->  extern void __init dbg_late_init(void);
->  extern void kgdb_panic(const char *msg);
+>  arch/mips/include/asm/lasat/lasat.h | 5 -----
+>  1 file changed, 5 deletions(-)
 
-Cheers, Daniel. I assume you'll route this one via the kgdb tree? I can
-live with the "small window" in the arm64 for-next/core branch ;)
+I'll send a patch shortly to remove lasat completly. Therefore I'm
+not going to apply this cleanup patch.
 
-Will
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
