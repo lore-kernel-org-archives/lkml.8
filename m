@@ -2,111 +2,178 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91634C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 01:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7711CC28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B97B2075A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 01:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D60220736
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:03:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fECPcz9f"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="t2/2L6p/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbgEGBtW (ORCPT
+        id S1726756AbgEGB4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 21:49:22 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39617 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725826AbgEGBtW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 21:49:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588816160;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TK5/TPkCA1YNIr46wnEPWN0J5TK8aDr7sImaoLSYw5c=;
-        b=fECPcz9fhmekTNETwLqqym4u6xoPxeVaytJdJtjMywQoboCG2k8L1erjdZG3QhwOV5mpxw
-        KwR8/BpvA1oyeCFAsKTQ9StWmO8UpoqBeIcxTgh+6RnUp3VpAGeS7lpgqF38HMw1mtmuWP
-        vkRmE3B+OBgPAXGmj7EvhEv58YVH+2o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-329-GDF1pxX9MseiT_uydVw24A-1; Wed, 06 May 2020 21:49:18 -0400
-X-MC-Unique: GDF1pxX9MseiT_uydVw24A-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2DC67107ACCA;
-        Thu,  7 May 2020 01:49:17 +0000 (UTC)
-Received: from [10.10.64.2] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0071310246E7;
-        Thu,  7 May 2020 01:49:15 +0000 (UTC)
-Subject: Re: [PATCH] efi/libstub/x86: Free EFI map buffer in allocate_e820()
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     eric.snowberg@oracle.com, Ingo Molnar <mingo@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200505190016.4350-1-lszubowi@redhat.com>
- <CAMj1kXHsvy09V0rK2Qh0eiR4Vi5ZDn=5ordNvEBH4c-Xk00QgQ@mail.gmail.com>
-From:   Lenny Szubowicz <lszubowi@redhat.com>
-Message-ID: <b2eb1c06-eb7c-8cfc-6cc8-9c66cf396813@redhat.com>
-Date:   Wed, 6 May 2020 21:49:15 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 6 May 2020 21:56:07 -0400
+Received: from mail-bn7nam10on2061.outbound.protection.outlook.com ([40.107.92.61]:19401
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725826AbgEGB4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 21:56:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=APnOU7BdBCl+KVb1rs4wUvN3htGT9B7+J3zN0R7WcrfcyS0Q1vZufPa7MNEhcCrrEHC8iPISx+40cpDE30MRAty6QcYPTUu0ViyLVzEL2PYKeyKqjAB4VFKGEqB/iBR/qLmaWIWpswzDvbZ15q3VEWt7yBq345AzMA7GE8iMGPYxfUgh4oDMDJae9QBtwY/cqKxU0B2C1mg4V1XmaOZmC8vzBU5SJacICG+C8fO1K4WXTf0y8KlUbjPim3Ce5H4oVY52ufgYB+rcVSglrfmzvIXBf+etEp3zA+oD4dxI0/Ayd/+lHllWekwqeP0GWJ+UbcaNbifG9cp0hWwfeWtwoA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YzwAgZXcs21w50xRn4XpDHvc31EBA+SFrA1pe/o7ogQ=;
+ b=eN67jVznF8U1KebcBIRdGtiXosiLgdYO3PQGNZfSQCPFD4UkI4E+zX8IYmEMmnNe83oTVrUN9cowLXuDtSwbc1NRRbuuWokvkNiaFZoaijFwR9scnD9ul1pmmKHm5w4mvVrIvo2A2dHp5jaTIqZJhn+f7Bg9P97VRUXYQsD/LEQkid3ktFNLRBCF4U8y3AtK+0V5kvxeGGv42y/bRaaRoJiew0f0kTF6zDe0D6TwRv0ItEKEDmDOhcRJV5UjlzTXo+GZoXEdrnC/Nudgt+kk30SJJ0hJLEkRSC53sQVqG8XsyNa7xHJlPfT4vKf1UZkW3z9rLE7pL+MCcGPooUVUkg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YzwAgZXcs21w50xRn4XpDHvc31EBA+SFrA1pe/o7ogQ=;
+ b=t2/2L6p/LDwyRDCkeknyoxuxLeqN0ih1NWCJOvbjawKJYokSy+9btAvuc7boHcy1MwJUXCsa4kvRNaVqjzozVaNgvYrfXgew/iQOzPBFLowC9vq76Zh++JOcM75j/TqGzqVH/UMKXUm3Tt38q/e00iwBLsv8hzcvqGlK14gVmMs=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=amd.com;
+Received: from CY4PR12MB1159.namprd12.prod.outlook.com (2603:10b6:903:36::17)
+ by CY4PR12MB1525.namprd12.prod.outlook.com (2603:10b6:910:11::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.27; Thu, 7 May
+ 2020 01:56:03 +0000
+Received: from CY4PR12MB1159.namprd12.prod.outlook.com
+ ([fe80::e9c0:2506:396c:70b7]) by CY4PR12MB1159.namprd12.prod.outlook.com
+ ([fe80::e9c0:2506:396c:70b7%10]) with mapi id 15.20.2979.028; Thu, 7 May 2020
+ 01:56:03 +0000
+Date:   Wed, 6 May 2020 21:55:58 -0400
+From:   Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+To:     Melissa Wen <melissa.srw@gmail.com>
+Cc:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/vkms: enable cursor by default
+Message-ID: <20200507015558.szxxcixhz7gnn3r2@outlook.office365.com>
+References: <20200321203740.pg3r7f4vybruowox@smtp.gmail.com>
+ <20200324120524.qz2lxzmialjdp3mj@outlook.office365.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cribvfniaehgra7r"
+Content-Disposition: inline
+In-Reply-To: <20200324120524.qz2lxzmialjdp3mj@outlook.office365.com>
+X-ClientProxiedBy: YT1PR01CA0007.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::20)
+ To CY4PR12MB1159.namprd12.prod.outlook.com (2603:10b6:903:36::17)
 MIME-Version: 1.0
-In-Reply-To: <CAMj1kXHsvy09V0rK2Qh0eiR4Vi5ZDn=5ordNvEBH4c-Xk00QgQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from outlook.office365.com (2607:fea8:56a0:11a1::4) by YT1PR01CA0007.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27 via Frontend Transport; Thu, 7 May 2020 01:56:03 +0000
+X-Originating-IP: [2607:fea8:56a0:11a1::4]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 3187f864-7288-4870-67e2-08d7f229cc7f
+X-MS-TrafficTypeDiagnostic: CY4PR12MB1525:
+X-Microsoft-Antispam-PRVS: <CY4PR12MB1525A48C2DDD6876C05F5E6698A50@CY4PR12MB1525.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 03965EFC76
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: LXKexfTQ7HzKgyjRawSyfK1zEfApfxl5fohkcDRqjfpmMYYmu9XRvabdRH9d/Hjc/K1BNMmpMV6mCKGiEeFfdMLwtXuuUZ7SP4EqcFn/fSZ0KfNJzx1qHVshYNC0vZadhe1AG2ZVPiNaNwr5ZDI5W7ngObYTaNJ6EvQrUjLnuOtjRnBzgVd3Ja/pMloAft90n8mnb3gmtxrHXSkCdHeJMSOhFWaw3frl7P4/LLemmI7cU6jozSS6XYxtbXnoC/OL8k5+TNYvq/DHqQ2yM24A6dxapCp55ov5sjonXoZJS7cfudPIJPXgJe+Cec8lTlXQ6C5Ylko1WlDLj9iNVql+S/cNBMJ7vw5a2N0tU+lF0gMdUl5VAk8t808TATM28BD7bvroOs6XY7udZqwF0sa6aUAkVxzQOI/SFY/8meFz6YK6hVE8gNV9x/u0PtNp5fXlfWbjMcqlVU2yCDu8CqfidNZhmCssoID5tIUOKfkRdnVJ06XRJ+lgEco0m8knlc8JHam0poHkdeCd94vKGt82YT19GC5+Un5jUI/iT2zgFb7GE4FhQlFXMBuQrPEaaiq1VgALxkup0KlxF9GBpvNF5TrWwH1reHQDrLMjHP68RAgOOoDE6YtQGnNHK0aizhG7
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR12MB1159.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(366004)(376002)(396003)(346002)(33430700001)(8676002)(52116002)(478600001)(6506007)(7696005)(1076003)(44144004)(54906003)(6916009)(6666004)(316002)(5660300002)(966005)(66476007)(9686003)(21480400003)(8936002)(55016002)(2906002)(66556008)(86362001)(4326008)(186003)(33440700001)(16526019)(66946007)(2700100001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 581rsbc+Ou+d2nBuXyCOBN7vsOoU77v/yBq129RnfPrHVyil1XYZF6CpR9P6niUQximNq002Kv2D0yihRTzycHF/1ByNPcgLmmu5rrMvINw2NC/SJEYNW+uK1eNutgeyaMp+96YAHqAvfIqH/MFOrJqhGHKa6sUS2DuxtO+N2XJJh8dxvJT91ymD8EGXMkvXaWJbeRECWGlQGLrrLlEI35g0iUw6sm1cstBkyZD4IP+13r/EN78rWboLK+v6tyzNgspopJuUuhKCDUSejl0gIu47dU/8JmmYawdbGH2rf3Ol2OkXw/RBNZ/xp97GB60Ih6McoF1r4wxu5EuT44M/TyD5mmsYExffRIWTSBiAU8E+9xegircCUkzJSs3zt54foZJfzRcPOt0D+y16gPf5EhZPuM3kMNbLBn29IslR/hYPHgJHK8RS9VKK8DvhHuYF0IMV1NRPMUdJFdWCVFpf3mp4TTm4gmNq+L5bGkDwvNIZzWGg7rDfyvSVYCTu9fOfn9WeIFtmDahQEQ15FEP/XzcI6+6fPKGh5bl4vtq/gZve4bPcNAUb9nl116502odKaNIxU8uA5bsdZ6BeM1K7ldETmrsRXrWHTS32CMHr52qsPr4eQN7l5JTLJV22OwNJWeq51smSm993H64BnpFdeY1MQRfQcag9iwzpTYKEheSeoso17Vu6MmKtNE7t/1V51yrhTsOskb0HMKqRQTDM7s5WIRHXEJdaJqf7pAem0aqxwPZsKYOSurBKhKhNCMMD1WQvE303suOHFzZPqHfACZPLlGUJpuUPFBNsPEaEB09OSRn+4EHqdQ2QORkZa1bt
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3187f864-7288-4870-67e2-08d7f229cc7f
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2020 01:56:03.6706
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WUQvtCRkcaDT7dsPyVW6mZluwHHB1Ks9Z8fCqxegg/TFOXAjwKAoypyg7l2ep7hHM+DwBknKnMzFz/qcMXNEwQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1525
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/6/20 3:23 AM, Ard Biesheuvel wrote:
-> On Tue, 5 May 2020 at 21:00, Lenny Szubowicz <lszubowi@redhat.com> wrote:
->>
->> In allocate_e820(), free the EFI map buffer that has been returned
->> by efi_get_memory_map(). The returned size of the EFI map buffer
->> is used to allocate an adequately sized e820ext buffer, if it's
->> needed. But the contents of that EFI map buffer is not used at all
->> and the local pointer to it is gone on return from allocate_e820().
->>
->> Signed-off-by: Lenny Szubowicz <lszubowi@redhat.com>
->> ---
->>   drivers/firmware/efi/libstub/x86-stub.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
->> index 05ccb229fb45..4efe3e7a218d 100644
->> --- a/drivers/firmware/efi/libstub/x86-stub.c
->> +++ b/drivers/firmware/efi/libstub/x86-stub.c
->> @@ -623,6 +623,9 @@ static efi_status_t allocate_e820(struct boot_params *params,
->>          if (status != EFI_SUCCESS)
->>                  return status;
->>
->> +       /* Allocated EFI map buf is not used here. Just need its size. */
->> +       efi_bs_call(free_pool, map);
->> +
-> 
-> Wouldn't it be better to call BS->GetMemoryMap() directly here, with a
-> zero size for the input buffer?
+--cribvfniaehgra7r
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I agree, that's a good suggestion. V2 coming shortly after testing.
+Applied to drm-misc-next.
 
-> 
->>          nr_desc = buff_size / desc_size;
->>
->>          if (nr_desc > ARRAY_SIZE(params->e820_table)) {
->> --
->> 2.18.4
->>
-> 
+On 03/24, Rodrigo Siqueira wrote:
+> Hi Melissa,
+>=20
+> First of all, thanks for your patch.
+>=20
+> I agree with you, it makes more sense to me if we enable cursors by
+> default. I don't remember why we decided to add it as a disabled by
+> default.
+>=20
+> Reviewed-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+>=20
+> On 03/21, Melissa Wen wrote:
+> > This patch proposes a change in the behavior of the cursor to enable it=
+ as
+> > soon as the vkms module is added. Enabling the cursor by default appears
+> > to be an expected and more friendly behavior, especially when running I=
+GT
+> > tests.
+> >=20
+> > Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
+> > ---
+> >  drivers/gpu/drm/vkms/vkms_drv.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkm=
+s_drv.c
+> > index 860de052e820..6e6feecf7f20 100644
+> > --- a/drivers/gpu/drm/vkms/vkms_drv.c
+> > +++ b/drivers/gpu/drm/vkms/vkms_drv.c
+> > @@ -34,7 +34,7 @@
+> > =20
+> >  static struct vkms_device *vkms_device;
+> > =20
+> > -bool enable_cursor;
+> > +bool enable_cursor =3D true;
+> >  module_param_named(enable_cursor, enable_cursor, bool, 0444);
+> >  MODULE_PARM_DESC(enable_cursor, "Enable/Disable cursor support");
+> > =20
+> > --=20
+> > 2.25.1
+> >=20
+>=20
+> --=20
+> Rodrigo Siqueira
+> https://siqueira.tech
 
+
+
+--=20
+Rodrigo Siqueira
+https://siqueira.tech
+
+--cribvfniaehgra7r
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE4tZ+ii1mjMCMQbfkWJzP/comvP8FAl6zaq4ACgkQWJzP/com
+vP+SXQ/9Fe8xOflNY8NrRtq5vyPQ7YcaP5H2ZokGvW5MuS1qIsKOeUDXlNkWkw85
+WyAE5RMtvgVHXv/WjBxn0SDYhpD3TCVltQcK1tnbB9VeyXImShUrMbGvX0MdmlwY
+ZO2dYcpGtzu1qJT3Uw/eGbgokuX0hDxSun0CrXwyxVkpp50M7es/RvO9lej9MH7i
+ws+SxGnSyowLTuOMYGxtobo0zxiyyB6przVvPHC1XPvQkX/tXXc0xPeclTaEaMKA
+fzVDk/vrDJAF2WsPCDgC6AWtNafqoWQKmBLQ2yYjexgn3EezVmUhNeBgS/lbE844
+/8YYOpraNJXqaUtCUcFngAO5voiFxw9efXw4PIJal1zYEORXFMjS4iwFWdzTsYA2
+l15nPVK47CQ5CfDaG/h4yMpoIYd8x0p4FEaFYflA8+xIcBMjDndpFvghoX6e6feq
+vxjJfQQViBWhghs2ZGv9Gg6Ut0wLzX99cQnQq+ITjGXPWAzJf7VBA6H5s4svwxXu
+ZsIO8VsywylL5LiO3D91YeEJv+bpgWvVJwdeFnk7VfhoyBbPJXz8OnlgrE6CEMcN
+InvlzsvSPyqmkqxf61esZby0pd70x3pTd/TNwj3usfmTlRwEn2+Tv9Fq86L2SrDm
+iCGnoY9PjvpNIAukU1kNRbQAoNi527bZ6yrl18res8X4lm8iSzI=
+=TbhH
+-----END PGP SIGNATURE-----
+
+--cribvfniaehgra7r--
