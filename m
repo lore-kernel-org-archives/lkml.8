@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 058B6C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86217C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D048120659
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C2A52073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:34:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588862069;
-	bh=ryjBNdDtm/1arVH5IDmIEcwKyKd10FYQTjhgnyy1IJE=;
+	s=default; t=1588862076;
+	bh=Bq4eHZWtEpaN3euD1FZIVBHPQAYGNnABrym1Qp0jRmI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rqa0jdtIuX/pxgW2Sn6d+ofeszKfV3evoU+H0NEl6xuFAmGVn1A8Q4MGxgEvaGQmS
-	 KQL+zH/gMArWvL9eIcHLjhfONEWez4JaTynPmyTiFXW+r5UTgdcVrOP5QhbMbt9+Ko
-	 74TosjoBx+fJd5zipVeWphkUQaFxjc0s/AMgC/ts=
+	b=Rbl3vtshtPLPc/BM2MOmrVGE2Dg4xWLRJgCfuIoF4Ti8hDXePhYZimHEAYowZ8P5G
+	 ynrc3xQicD3bd8SwV3P+neUqT2GUaKvSyt4NbMs/ZxVjri9GyI/mPuW71F6iAbwu9e
+	 eAoYSMVwSLmsCwnvEyDISLadOALdeNzj8zxmWyS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729023AbgEGOe2 (ORCPT
+        id S1728426AbgEGO3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:34:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56354 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:29:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728444AbgEGO3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:29:08 -0400
+        id S1728361AbgEGO27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:28:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 969DC208D6;
-        Thu,  7 May 2020 14:29:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01D0020936;
+        Thu,  7 May 2020 14:28:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861747;
-        bh=ryjBNdDtm/1arVH5IDmIEcwKyKd10FYQTjhgnyy1IJE=;
+        s=default; t=1588861738;
+        bh=Bq4eHZWtEpaN3euD1FZIVBHPQAYGNnABrym1Qp0jRmI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AZcMC9BkfLOkcmb0+3CBeeUiR98ecyeMh++QWjQxM3UaGXqUSz1iy9WWtwZCpzz57
-         z1cvgtoHiF+UER1xF35K0lgxl/CRzkRSq9sCQqTHBEAqwRBbtTF8pCopiTkkRVrSqh
-         vZlvlZV8qiLmxNrnfUxKcqpDq3vcZfiV1zcOfjLU=
+        b=uCGruXGNvVCibc0Kkzv6KgAZWS8HrGG6DJ+ZafePEp5TYQWcVIjpD0ptjPe1oGkMe
+         +u3Ed62e3+pZ5whsWSVrzvzZh4PQZByFV2I+7kVwc8VTdXqKFyxPXohEICdE671MZx
+         dZF+nmV1lYWmUbWGGtrsbAh3cGF5z/0wr6ttYW4I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        Lukas Czerner <lczerner@redhat.com>,
-        Ian Kent <raven@themaw.net>, Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 29/35] Fix use after free in get_tree_bdev()
-Date:   Thu,  7 May 2020 10:28:23 -0400
-Message-Id: <20200507142830.26239-29-sashal@kernel.org>
+Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 22/35] i2c: iproc: generate stop event for slave writes
+Date:   Thu,  7 May 2020 10:28:16 -0400
+Message-Id: <20200507142830.26239-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507142830.26239-1-sashal@kernel.org>
 References: <20200507142830.26239-1-sashal@kernel.org>
@@ -61,48 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 
-[ Upstream commit dd7bc8158b413e0b580c491e8bd18cb91057c7c2 ]
+[ Upstream commit 068143a8195fb0fdeea1f3ca430b3db0f6d04a53 ]
 
-Commit 6fcf0c72e4b9, a fix to get_tree_bdev() put a missing blkdev_put() in
-the wrong place, before a warnf() that displays the bdev under
-consideration rather after it.
+When slave status is I2C_SLAVE_RX_END, generate I2C_SLAVE_STOP
+event to i2c_client.
 
-This results in a silent lockup in printk("%pg") called via warnf() from
-get_tree_bdev() under some circumstances when there's a race with the
-blockdev being frozen.  This can be caused by xfstests/tests/generic/085 in
-combination with Lukas Czerner's ext4 mount API conversion patchset.  It
-looks like it ought to occur with other users of get_tree_bdev() such as
-XFS, but apparently doesn't.
-
-Fix this by switching the order of the lines.
-
-Fixes: 6fcf0c72e4b9 ("vfs: add missing blkdev_put() in get_tree_bdev()")
-Reported-by: Lukas Czerner <lczerner@redhat.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Ian Kent <raven@themaw.net>
-cc: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: c245d94ed106 ("i2c: iproc: Add multi byte read-write support for slave mode")
+Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/super.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-bcm-iproc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/super.c b/fs/super.c
-index cd352530eca90..a288cd60d2aed 100644
---- a/fs/super.c
-+++ b/fs/super.c
-@@ -1302,8 +1302,8 @@ int get_tree_bdev(struct fs_context *fc,
- 	mutex_lock(&bdev->bd_fsfreeze_mutex);
- 	if (bdev->bd_fsfreeze_count > 0) {
- 		mutex_unlock(&bdev->bd_fsfreeze_mutex);
--		blkdev_put(bdev, mode);
- 		warnf(fc, "%pg: Can't mount, blockdev is frozen", bdev);
-+		blkdev_put(bdev, mode);
- 		return -EBUSY;
- 	}
- 
+diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
+index 9ffdffaf6141e..03475f1799730 100644
+--- a/drivers/i2c/busses/i2c-bcm-iproc.c
++++ b/drivers/i2c/busses/i2c-bcm-iproc.c
+@@ -359,6 +359,9 @@ static bool bcm_iproc_i2c_slave_isr(struct bcm_iproc_i2c_dev *iproc_i2c,
+ 			value = (u8)((val >> S_RX_DATA_SHIFT) & S_RX_DATA_MASK);
+ 			i2c_slave_event(iproc_i2c->slave,
+ 					I2C_SLAVE_WRITE_RECEIVED, &value);
++			if (rx_status == I2C_SLAVE_RX_END)
++				i2c_slave_event(iproc_i2c->slave,
++						I2C_SLAVE_STOP, &value);
+ 		}
+ 	} else if (status & BIT(IS_S_TX_UNDERRUN_SHIFT)) {
+ 		/* Master read other than start */
 -- 
 2.20.1
 
