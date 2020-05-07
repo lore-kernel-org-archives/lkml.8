@@ -2,127 +2,59 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E94C47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94906C54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 860982078C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:39:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="pWbvTKbd"
+	by mail.kernel.org (Postfix) with ESMTP id 732DF2078C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:39:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbgEGIjA (ORCPT
+        id S1726636AbgEGIjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 04:39:00 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:33073 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725809AbgEGIjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 04:39:00 -0400
-Received: from [IPv6:2601:646:8600:3281:6547:66ee:1a90:d675] ([IPv6:2601:646:8600:3281:6547:66ee:1a90:d675])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 0478cW5L3345498
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Thu, 7 May 2020 01:38:34 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 0478cW5L3345498
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020042201; t=1588840714;
-        bh=Sizgvkow12UlMRPJ88fhJx797WUVfBKXkAG1rgsf2c0=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=pWbvTKbdT3Z9ZpBWKXPBwtJZAXHQfyZjxv1fcHlmU8Y2WI0GKZS+bXW4jKfNVOxuB
-         Q1aUV/RIeBosekLXwBmHgCOLaXwaEdyrEzND79HYWl7bbg/rat7qzgs/z1XbXJIh7K
-         g5fexfthTHnVCZVWCEsfogbhr8EJmZSoD+dWOFmVK5+SQXg0rAMwIB6Sn0qpAjOryn
-         UEmjvXWYSGbNW/8dkn9FMpSsobxxiWlOXcLQrRhPSW1fUj4IZxpXndZ7adrC+MFIGJ
-         Q465ut3P1RuXTNwH70HdrtMO4CKS6QfXVYt9OO4xmM+otX7z5fCnDmByw9gRabNsxA
-         HOQo13cFyMatg==
-Date:   Thu, 07 May 2020 01:38:26 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <ef7d077424554abebbd0d46738c90163@AcuMS.aculab.com>
-References: <20200505174423.199985-1-ndesaulniers@google.com> <CAMzpN2idWF2_4wtPebM2B2HVyksknr9hAqK8HJi_vjQ06bgu2g@mail.gmail.com> <60b16c05ca9e4954a7e4fcdd3075e23d@AcuMS.aculab.com> <7C32CF96-0519-4C32-B66B-23AD9C1F1F52@zytor.com> <ef7d077424554abebbd0d46738c90163@AcuMS.aculab.com>
+        Thu, 7 May 2020 04:39:25 -0400
+Received: from elvis.franken.de ([193.175.24.41]:43284 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726029AbgEGIjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 04:39:23 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jWc3t-0006Ql-03; Thu, 07 May 2020 10:39:21 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 2AD92C03A8; Thu,  7 May 2020 10:38:11 +0200 (CEST)
+Date:   Thu, 7 May 2020 10:38:11 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MIPS: Octeon: Remove dead code in
+ __cvmx_helper_npi_probe()
+Message-ID: <20200507083811.GC8924@alpha.franken.de>
+References: <20200506134315.32810-1-yanaijie@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: RE: [PATCH] x86: bitops: fix build regression
-To:     David Laight <David.Laight@ACULAB.COM>,
-        "'Brian Gerst'" <brgerst@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        "kernelci . org bot" <bot@kernelci.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>
-From:   hpa@zytor.com
-Message-ID: <3559DCF4-0E59-48DF-8500-D4BA2852975D@zytor.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506134315.32810-1-yanaijie@huawei.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On May 7, 2020 1:35:01 AM PDT, David Laight <David=2ELaight@ACULAB=2ECOM> w=
-rote:
->From: hpa@zytor=2Ecom
->> Sent: 07 May 2020 08:59
->> On May 7, 2020 12:44:44 AM PDT, David Laight
-><David=2ELaight@ACULAB=2ECOM> wrote:
->> >From: Brian Gerst
->> >> Sent: 07 May 2020 07:18
->> >=2E=2E=2E
->> >> > --- a/arch/x86/include/asm/bitops=2Eh
->> >> > +++ b/arch/x86/include/asm/bitops=2Eh
->> >> > @@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long
->> >*addr)
->> >> >         if (__builtin_constant_p(nr)) {
->> >> >                 asm volatile(LOCK_PREFIX "orb %1,%0"
->> >> >                         : CONST_MASK_ADDR(nr, addr)
->> >> > -                       : "iq" (CONST_MASK(nr) & 0xff)
->> >> > +                       : "iq" ((u8)(CONST_MASK(nr) & 0xff))
->> >>
->> >> I think a better fix would be to make CONST_MASK() return a u8
->value
->> >> rather than have to cast on every use=2E
->> >
->> >Or assign to a local variable - then it doesn't matter how
->> >the value is actually calculated=2E So:
->> >			u8 mask =3D CONST_MASK(nr);
->> >			asm volatile(LOCK_PREFIX "orb %1,%0"
->> >				: CONST_MASK_ADDR(nr, addr)
->> >				: "iq" mask
->> >
->> >	David
->> >
->> >-
->> >Registered Address Lakeside, Bramley Road, Mount Farm, Milton
->Keynes,
->> >MK1 1PT, UK
->> >Registration No: 1397386 (Wales)
->>=20
->> "const u8" please=2E=2E=2E
->
->Why, just a waste of disk space=2E
->
->	David
->
->-
->Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes,
->MK1 1PT, UK
->Registration No: 1397386 (Wales)
+On Wed, May 06, 2020 at 09:43:15PM +0800, Jason Yan wrote:
+> This code has been marked dead for more than 10 years. Seems no need to
+> keep it now.
+> 
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> ---
+>  arch/mips/cavium-octeon/executive/cvmx-helper-npi.c | 12 ------------
+>  1 file changed, 12 deletions(-)
 
-Descriptive=2E
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+appled to mips-next.
+
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
