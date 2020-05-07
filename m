@@ -4,418 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDAA8C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F4FC54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C4B220857
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5879208D6
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:01:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbgEGPBC (ORCPT
+        id S1728272AbgEGPBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 11:01:02 -0400
-Received: from mga01.intel.com ([192.55.52.88]:9363 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727815AbgEGPAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 11:00:18 -0400
-IronPort-SDR: Nsk5UbhGfBY080Afx/iTDuLsFbxITZ8nkMFMZYjTDIbyln6AT2nbR1vk1/8tH8h6ymN1TAwXJF
- mw85DWDYUmsA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 08:00:17 -0700
-IronPort-SDR: Dn6Fjj4n2zgdLUZ0IVTIotPJGX159airxYdWwps2UTbpenbtG3S6EHY/RPLJzqSz3bpUsxyRpn
- Lo+JVVU5ydHw==
-X-IronPort-AV: E=Sophos;i="5.73,364,1583222400"; 
-   d="scan'208";a="295747564"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 08:00:17 -0700
-From:   ira.weiny@intel.com
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Christoph Hellwig <hch@lst.de>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org,
-        Christian Koenig <christian.koenig@amd.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH V3 10/15] arch/kmap: Define kmap_atomic_prot() for all arch's
-Date:   Thu,  7 May 2020 07:59:58 -0700
-Message-Id: <20200507150004.1423069-11-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200507150004.1423069-1-ira.weiny@intel.com>
-References: <20200507150004.1423069-1-ira.weiny@intel.com>
+        Thu, 7 May 2020 11:01:12 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3902 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727795AbgEGPBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 11:01:05 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id DB54F71F3AD21596FD66;
+        Thu,  7 May 2020 23:01:00 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 7 May 2020 23:00:54 +0800
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+To:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
+CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Alan Kao <alankao@andestech.com>
+Subject: [PATCH -next] riscv: perf: RISCV_BASE_PMU should be closeable
+Date:   Thu, 7 May 2020 23:04:45 +0800
+Message-ID: <20200507150445.174390-2-wangkefeng.wang@huawei.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200507150445.174390-1-wangkefeng.wang@huawei.com>
+References: <20200507150445.174390-1-wangkefeng.wang@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+As 178e9fc47aae("perf: riscv: preliminary RISC-V support") said,
+For RISCV_BASE_PMU, 'this option can also be disable to reduce kernel size',
+but it could not work well, we need diable both RISCV_BASE_PMU and
+PERF_EVENTS manually, or build error will occur when only disable
+RISCV_BASE_PMU.
 
-To support kmap_atomic_prot(), all architectures need to support
-protections passed to their kmap_atomic_high() function.  Pass
-protections into kmap_atomic_high() and change the name to
-kmap_atomic_high_prot() to match.
-
-Then define kmap_atomic_prot() as a core function which calls
-kmap_atomic_high_prot() when needed.
-
-Finally, redefine kmap_atomic() as a wrapper of kmap_atomic_prot() with
-the default kmap_prot exported by the architectures.
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-
+Cc: Alan Kao <alankao@andestech.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 ---
-Changes from V1:
-	Adjust for bisect-ability
-	Adjust for removing kunmap_atomic_high
-	Remove kmap_atomic_high_prot declarations
----
- arch/arc/mm/highmem.c                 |  6 +++---
- arch/arm/mm/highmem.c                 |  6 +++---
- arch/csky/mm/highmem.c                |  6 +++---
- arch/microblaze/include/asm/highmem.h | 16 ----------------
- arch/mips/mm/highmem.c                |  6 +++---
- arch/nds32/mm/highmem.c               |  6 +++---
- arch/powerpc/include/asm/highmem.h    | 17 -----------------
- arch/sparc/mm/highmem.c               |  6 +++---
- arch/x86/include/asm/highmem.h        | 14 --------------
- arch/xtensa/mm/highmem.c              |  6 +++---
- include/linux/highmem.h               |  7 ++++---
- 11 files changed, 25 insertions(+), 71 deletions(-)
+ arch/riscv/include/asm/perf_event.h | 8 ++------
+ arch/riscv/kernel/Makefile          | 2 +-
+ 2 files changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arc/mm/highmem.c b/arch/arc/mm/highmem.c
-index 5d3eab4ac0b0..479b0d72d3cf 100644
---- a/arch/arc/mm/highmem.c
-+++ b/arch/arc/mm/highmem.c
-@@ -49,7 +49,7 @@
- extern pte_t * pkmap_page_table;
- static pte_t * fixmap_page_table;
+diff --git a/arch/riscv/include/asm/perf_event.h b/arch/riscv/include/asm/perf_event.h
+index 0234048b12bc..062efd3a1d5d 100644
+--- a/arch/riscv/include/asm/perf_event.h
++++ b/arch/riscv/include/asm/perf_event.h
+@@ -12,19 +12,14 @@
+ #include <linux/ptrace.h>
+ #include <linux/interrupt.h>
  
--void *kmap_atomic_high(struct page *page)
-+void *kmap_atomic_high_prot(struct page *page, pgprot_t prot)
- {
- 	int idx, cpu_idx;
- 	unsigned long vaddr;
-@@ -59,11 +59,11 @@ void *kmap_atomic_high(struct page *page)
- 	vaddr = FIXMAP_ADDR(idx);
++#ifdef CONFIG_RISCV_BASE_PMU
+ #define RISCV_BASE_COUNTERS	2
  
- 	set_pte_at(&init_mm, vaddr, fixmap_page_table + idx,
--		   mk_pte(page, kmap_prot));
-+		   mk_pte(page, prot));
- 
- 	return (void *)vaddr;
- }
--EXPORT_SYMBOL(kmap_atomic_high);
-+EXPORT_SYMBOL(kmap_atomic_high_prot);
- 
- void kunmap_atomic_high(void *kv)
- {
-diff --git a/arch/arm/mm/highmem.c b/arch/arm/mm/highmem.c
-index ac8394655a6e..e013f6b81328 100644
---- a/arch/arm/mm/highmem.c
-+++ b/arch/arm/mm/highmem.c
-@@ -31,7 +31,7 @@ static inline pte_t get_fixmap_pte(unsigned long vaddr)
- 	return *ptep;
- }
- 
--void *kmap_atomic_high(struct page *page)
-+void *kmap_atomic_high_prot(struct page *page, pgprot_t prot)
- {
- 	unsigned int idx;
- 	unsigned long vaddr;
-@@ -67,11 +67,11 @@ void *kmap_atomic_high(struct page *page)
- 	 * in place, so the contained TLB flush ensures the TLB is updated
- 	 * with the new mapping.
- 	 */
--	set_fixmap_pte(idx, mk_pte(page, kmap_prot));
-+	set_fixmap_pte(idx, mk_pte(page, prot));
- 
- 	return (void *)vaddr;
- }
--EXPORT_SYMBOL(kmap_atomic_high);
-+EXPORT_SYMBOL(kmap_atomic_high_prot);
- 
- void kunmap_atomic_high(void *kvaddr)
- {
-diff --git a/arch/csky/mm/highmem.c b/arch/csky/mm/highmem.c
-index f4311669b5bb..3ae5c8cd7619 100644
---- a/arch/csky/mm/highmem.c
-+++ b/arch/csky/mm/highmem.c
-@@ -21,7 +21,7 @@ EXPORT_SYMBOL(kmap_flush_tlb);
- 
- EXPORT_SYMBOL(kmap);
- 
--void *kmap_atomic_high(struct page *page)
-+void *kmap_atomic_high_prot(struct page *page, pgprot_t prot)
- {
- 	unsigned long vaddr;
- 	int idx, type;
-@@ -32,12 +32,12 @@ void *kmap_atomic_high(struct page *page)
- #ifdef CONFIG_DEBUG_HIGHMEM
- 	BUG_ON(!pte_none(*(kmap_pte - idx)));
- #endif
--	set_pte(kmap_pte-idx, mk_pte(page, kmap_prot));
-+	set_pte(kmap_pte-idx, mk_pte(page, prot));
- 	flush_tlb_one((unsigned long)vaddr);
- 
- 	return (void *)vaddr;
- }
--EXPORT_SYMBOL(kmap_atomic_high);
-+EXPORT_SYMBOL(kmap_atomic_high_prot);
- 
- void kunmap_atomic_high(void *kvaddr)
- {
-diff --git a/arch/microblaze/include/asm/highmem.h b/arch/microblaze/include/asm/highmem.h
-index 90d96239152f..d7c55cfd27bd 100644
---- a/arch/microblaze/include/asm/highmem.h
-+++ b/arch/microblaze/include/asm/highmem.h
-@@ -51,22 +51,6 @@ extern pte_t *pkmap_page_table;
- #define PKMAP_NR(virt)  ((virt - PKMAP_BASE) >> PAGE_SHIFT)
- #define PKMAP_ADDR(nr)  (PKMAP_BASE + ((nr) << PAGE_SHIFT))
- 
--extern void *kmap_atomic_high_prot(struct page *page, pgprot_t prot);
--static inline void *kmap_atomic_prot(struct page *page, pgprot_t prot)
--{
--	preempt_disable();
--	pagefault_disable();
--	if (!PageHighMem(page))
--		return page_address(page);
--
--	return kmap_atomic_high_prot(page, prot);
--}
--
--static inline void *kmap_atomic_high(struct page *page)
--{
--	return kmap_atomic_high_prot(page, kmap_prot);
--}
--
- #define flush_cache_kmaps()	{ flush_icache(); flush_dcache(); }
- 
- #endif /* __KERNEL__ */
-diff --git a/arch/mips/mm/highmem.c b/arch/mips/mm/highmem.c
-index 87023bd1a33c..37e244cdb14e 100644
---- a/arch/mips/mm/highmem.c
-+++ b/arch/mips/mm/highmem.c
-@@ -18,7 +18,7 @@ void kmap_flush_tlb(unsigned long addr)
- }
- EXPORT_SYMBOL(kmap_flush_tlb);
- 
--void *kmap_atomic_high(struct page *page)
-+void *kmap_atomic_high_prot(struct page *page, pgprot_t prot)
- {
- 	unsigned long vaddr;
- 	int idx, type;
-@@ -29,12 +29,12 @@ void *kmap_atomic_high(struct page *page)
- #ifdef CONFIG_DEBUG_HIGHMEM
- 	BUG_ON(!pte_none(*(kmap_pte - idx)));
- #endif
--	set_pte(kmap_pte-idx, mk_pte(page, kmap_prot));
-+	set_pte(kmap_pte-idx, mk_pte(page, prot));
- 	local_flush_tlb_one((unsigned long)vaddr);
- 
- 	return (void*) vaddr;
- }
--EXPORT_SYMBOL(kmap_atomic_high);
-+EXPORT_SYMBOL(kmap_atomic_high_prot);
- 
- void kunmap_atomic_high(void *kvaddr)
- {
-diff --git a/arch/nds32/mm/highmem.c b/arch/nds32/mm/highmem.c
-index 809f8c830f06..63ded527c1e8 100644
---- a/arch/nds32/mm/highmem.c
-+++ b/arch/nds32/mm/highmem.c
-@@ -10,7 +10,7 @@
- #include <asm/fixmap.h>
- #include <asm/tlbflush.h>
- 
--void *kmap_atomic_high(struct page *page)
-+void *kmap_atomic_high_prot(struct page *page, pgprot_t prot)
- {
- 	unsigned int idx;
- 	unsigned long vaddr, pte;
-@@ -21,7 +21,7 @@ void *kmap_atomic_high(struct page *page)
- 
- 	idx = type + KM_TYPE_NR * smp_processor_id();
- 	vaddr = __fix_to_virt(FIX_KMAP_BEGIN + idx);
--	pte = (page_to_pfn(page) << PAGE_SHIFT) | (kmap_prot);
-+	pte = (page_to_pfn(page) << PAGE_SHIFT) | prot;
- 	ptep = pte_offset_kernel(pmd_off_k(vaddr), vaddr);
- 	set_pte(ptep, pte);
- 
-@@ -32,7 +32,7 @@ void *kmap_atomic_high(struct page *page)
- 	return (void *)vaddr;
- }
- 
--EXPORT_SYMBOL(kmap_atomic_high);
-+EXPORT_SYMBOL(kmap_atomic_high_prot);
- 
- void kunmap_atomic_high(void *kvaddr)
- {
-diff --git a/arch/powerpc/include/asm/highmem.h b/arch/powerpc/include/asm/highmem.h
-index ee5de974c5ef..8d8ee3fcd800 100644
---- a/arch/powerpc/include/asm/highmem.h
-+++ b/arch/powerpc/include/asm/highmem.h
-@@ -59,23 +59,6 @@ extern pte_t *pkmap_page_table;
- #define PKMAP_NR(virt)  ((virt-PKMAP_BASE) >> PAGE_SHIFT)
- #define PKMAP_ADDR(nr)  (PKMAP_BASE + ((nr) << PAGE_SHIFT))
- 
--extern void *kmap_atomic_high_prot(struct page *page, pgprot_t prot);
--static inline void *kmap_atomic_prot(struct page *page, pgprot_t prot)
--{
--	preempt_disable();
--	pagefault_disable();
--	if (!PageHighMem(page))
--		return page_address(page);
--
--	return kmap_atomic_high_prot(page, prot);
--}
--
--static inline void *kmap_atomic_high(struct page *page)
--{
--	return kmap_atomic_high_prot(page, kmap_prot);
--}
--
--
- #define flush_cache_kmaps()	flush_cache_all()
- 
- #endif /* __KERNEL__ */
-diff --git a/arch/sparc/mm/highmem.c b/arch/sparc/mm/highmem.c
-index 9f06d75e88e1..414f578d1e57 100644
---- a/arch/sparc/mm/highmem.c
-+++ b/arch/sparc/mm/highmem.c
-@@ -54,7 +54,7 @@ void __init kmap_init(void)
-         kmap_prot = __pgprot(SRMMU_ET_PTE | SRMMU_PRIV | SRMMU_CACHE);
- }
- 
--void *kmap_atomic_high(struct page *page)
-+void *kmap_atomic_high_prot(struct page *page, pgprot_t prot)
- {
- 	unsigned long vaddr;
- 	long idx, type;
-@@ -73,7 +73,7 @@ void *kmap_atomic_high(struct page *page)
- #ifdef CONFIG_DEBUG_HIGHMEM
- 	BUG_ON(!pte_none(*(kmap_pte-idx)));
- #endif
--	set_pte(kmap_pte-idx, mk_pte(page, kmap_prot));
-+	set_pte(kmap_pte-idx, mk_pte(page, prot));
- /* XXX Fix - Anton */
- #if 0
- 	__flush_tlb_one(vaddr);
-@@ -83,7 +83,7 @@ void *kmap_atomic_high(struct page *page)
- 
- 	return (void*) vaddr;
- }
--EXPORT_SYMBOL(kmap_atomic_high);
-+EXPORT_SYMBOL(kmap_atomic_high_prot);
- 
- void kunmap_atomic_high(void *kvaddr)
- {
-diff --git a/arch/x86/include/asm/highmem.h b/arch/x86/include/asm/highmem.h
-index be66b77885a0..0f420b24e0fc 100644
---- a/arch/x86/include/asm/highmem.h
-+++ b/arch/x86/include/asm/highmem.h
-@@ -58,20 +58,6 @@ extern unsigned long highstart_pfn, highend_pfn;
- #define PKMAP_NR(virt)  ((virt-PKMAP_BASE) >> PAGE_SHIFT)
- #define PKMAP_ADDR(nr)  (PKMAP_BASE + ((nr) << PAGE_SHIFT))
- 
--extern void *kmap_atomic_high_prot(struct page *page, pgprot_t prot);
--static inline void *kmap_atomic_prot(struct page *page, pgprot_t prot)
--{
--	preempt_disable();
--	pagefault_disable();
--	if (!PageHighMem(page))
--		return page_address(page);
--
--	return kmap_atomic_high_prot(page, prot);
--}
--static inline void *kmap_atomic_high(struct page *page)
--{
--	return kmap_atomic_high_prot(page, kmap_prot);
--}
- void *kmap_atomic_pfn(unsigned long pfn);
- void *kmap_atomic_prot_pfn(unsigned long pfn, pgprot_t prot);
- 
-diff --git a/arch/xtensa/mm/highmem.c b/arch/xtensa/mm/highmem.c
-index 50168b09510a..99b5ad137ab5 100644
---- a/arch/xtensa/mm/highmem.c
-+++ b/arch/xtensa/mm/highmem.c
-@@ -37,7 +37,7 @@ static inline enum fixed_addresses kmap_idx(int type, unsigned long color)
- 		color;
- }
- 
--void *kmap_atomic_high(struct page *page)
-+void *kmap_atomic_high_prot(struct page *page, pgprot_t prot)
- {
- 	enum fixed_addresses idx;
- 	unsigned long vaddr;
-@@ -48,11 +48,11 @@ void *kmap_atomic_high(struct page *page)
- #ifdef CONFIG_DEBUG_HIGHMEM
- 	BUG_ON(!pte_none(*(kmap_pte + idx)));
- #endif
--	set_pte(kmap_pte + idx, mk_pte(page, kmap_prot));
-+	set_pte(kmap_pte + idx, mk_pte(page, prot));
- 
- 	return (void *)vaddr;
- }
--EXPORT_SYMBOL(kmap_atomic_high);
-+EXPORT_SYMBOL(kmap_atomic_high_prot);
- 
- void kunmap_atomic_high(void *kvaddr)
- {
-diff --git a/include/linux/highmem.h b/include/linux/highmem.h
-index c36c0ee09423..89838306f50d 100644
---- a/include/linux/highmem.h
-+++ b/include/linux/highmem.h
-@@ -32,7 +32,7 @@ static inline void invalidate_kernel_vmap_range(void *vaddr, int size)
- #include <asm/kmap_types.h>
- 
- #ifdef CONFIG_HIGHMEM
--extern void *kmap_atomic_high(struct page *page);
-+extern void *kmap_atomic_high_prot(struct page *page, pgprot_t prot);
- extern void kunmap_atomic_high(void *kvaddr);
- #include <asm/highmem.h>
- 
-@@ -76,14 +76,15 @@ static inline void kunmap(struct page *page)
-  * be used in IRQ contexts, so in some (very limited) cases we need
-  * it.
+ /*
+  * The RISCV_MAX_COUNTERS parameter should be specified.
   */
--static inline void *kmap_atomic(struct page *page)
-+static inline void *kmap_atomic_prot(struct page *page, pgprot_t prot)
- {
- 	preempt_disable();
- 	pagefault_disable();
- 	if (!PageHighMem(page))
- 		return page_address(page);
--	return kmap_atomic_high(page);
-+	return kmap_atomic_high_prot(page, prot);
- }
-+#define kmap_atomic(page)	kmap_atomic_prot(page, kmap_prot)
  
- /* declarations for linux/mm/highmem.c */
- unsigned int nr_free_highpages(void);
+-#ifdef CONFIG_RISCV_BASE_PMU
+ #define RISCV_MAX_COUNTERS	2
+-#endif
+-
+-#ifndef RISCV_MAX_COUNTERS
+-#error "Please provide a valid RISCV_MAX_COUNTERS for the PMU."
+-#endif
+ 
+ /*
+  * These are the indexes of bits in counteren register *minus* 1,
+@@ -82,6 +77,7 @@ struct riscv_pmu {
+ 	int		irq;
+ };
+ 
++#endif
+ #ifdef CONFIG_PERF_EVENTS
+ #define perf_arch_bpf_user_pt_regs(regs) (struct user_regs_struct *)regs
+ #endif
+diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+index 1f5736e996fd..b355cf485671 100644
+--- a/arch/riscv/kernel/Makefile
++++ b/arch/riscv/kernel/Makefile
+@@ -43,7 +43,7 @@ obj-$(CONFIG_MODULE_SECTIONS)	+= module-sections.o
+ obj-$(CONFIG_FUNCTION_TRACER)	+= mcount.o ftrace.o
+ obj-$(CONFIG_DYNAMIC_FTRACE)	+= mcount-dyn.o
+ 
+-obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o
++obj-$(CONFIG_RISCV_BASE_PMU)	+= perf_event.o
+ obj-$(CONFIG_PERF_EVENTS)	+= perf_callchain.o
+ obj-$(CONFIG_HAVE_PERF_REGS)	+= perf_regs.o
+ obj-$(CONFIG_RISCV_SBI)		+= sbi.o
 -- 
-2.25.1
+2.26.2
 
