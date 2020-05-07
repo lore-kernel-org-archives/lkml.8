@@ -2,109 +2,122 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39229C47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE20EC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA582078C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:43:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588833800;
-	bh=eoewxEcztPKZgseIqH5a8ofrxeV00nYAqCkx5/jYb3Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aGbiJFl51QvaWtW1f4WMBf7O5nLAjM0zJpMj1L3MeFQ4ypu+/7prLyL3ByqlanPnr
-	 5avkSazQu0O7ys1bJSPy1a8JQfejj/WSpNAFU47lbeq6wnSGWphi8Hm2TWG+zN3rDj
-	 /ZW/x2Ivu58AxQ55Dh4CXsneBGi+DTuV2T6bLTrg=
+	by mail.kernel.org (Postfix) with ESMTP id C2DB62078C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:43:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgEGGnT (ORCPT
+        id S1726612AbgEGGno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 02:43:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57196 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725949AbgEGGnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 02:43:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28B3620753;
-        Thu,  7 May 2020 06:43:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588833798;
-        bh=eoewxEcztPKZgseIqH5a8ofrxeV00nYAqCkx5/jYb3Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XPvD8KgwxMH5sL4bPiyyMBBEfy5TBjmlq04Aw0XMsUJjEQ8jvSzlTzfHiEmKlHW+r
-         2ahOmscHtP7Qc1qH/Is0de9nXTf57xUtlFyEC5mTta8lWBwRXQFeYPrT54AURx+oOT
-         36QF7pPCbOA45gItKGPKpB0Uf6Mka4US0fky+UOE=
-Date:   Thu, 7 May 2020 08:43:16 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Alan Cooper <alcooperx@gmail.com>
-Cc:     ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v6 3/4] usb: ehci: Add new EHCI driver for Broadcom STB
- SoC's
-Message-ID: <20200507064316.GC777100@kroah.com>
-References: <20200430111258.6091-1-alcooperx@gmail.com>
- <20200430111258.6091-4-alcooperx@gmail.com>
- <20200505110036.GB93160@kroah.com>
- <CAOGqxeXboYz2OQhgJsYmH5_7qEwKeWR5AA4Ljq_iFdSX=H2fkA@mail.gmail.com>
+        Thu, 7 May 2020 02:43:44 -0400
+Received: from smtprelay0193.hostedemail.com ([216.40.44.193]:51830 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725903AbgEGGnn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 02:43:43 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id AA3E7801A056;
+        Thu,  7 May 2020 06:43:42 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: humor62_7784db8d54d20
+X-Filterd-Recvd-Size: 3778
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Thu,  7 May 2020 06:43:41 +0000 (UTC)
+Message-ID: <158979eb8e6e80c9b535acfdb4821bc9547c7c50.camel@perches.com>
+Subject: Re: [PATCH -next] ASoC: amd: acp3x-pcm-dma: Use bitwise instead of
+ arithmetic operator for flags
+From:   Joe Perches <joe@perches.com>
+To:     Samuel Zou <zou_wei@huawei.com>, lgirdwood@gmail.com,
+        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        Julia Lawall <julia.lawall@lip6.fr>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Date:   Wed, 06 May 2020 23:43:40 -0700
+In-Reply-To: <1588833562-14417-1-git-send-email-zou_wei@huawei.com>
+References: <1588833562-14417-1-git-send-email-zou_wei@huawei.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOGqxeXboYz2OQhgJsYmH5_7qEwKeWR5AA4Ljq_iFdSX=H2fkA@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 04:23:01PM -0400, Alan Cooper wrote:
-> > > +     irq = platform_get_irq(pdev, 0);
-> > > +     if (irq < 0)
-> >
-> > "<=" right?
+On Thu, 2020-05-07 at 14:39 +0800, Samuel Zou wrote:
+> Fix the following coccinelle warnings:
+
+> sound/soc/amd/raven/acp3x-pcm-dma.c:161:39-40: WARNING: sum of probable bitmasks, consider |
+> sound/soc/amd/raven/acp3x-pcm-dma.c:172:39-40: WARNING: sum of probable bitmasks, consider |
+> sound/soc/amd/raven/acp3x-pcm-dma.c:183:39-40: WARNING: sum of probable bitmasks, consider |
+> sound/soc/amd/raven/acp3x-pcm-dma.c:194:39-40: WARNING: sum of probable bitmasks, consider |
+
+These are not bitmasks.
+
+Samuel, please look deeper at the code before submitting
+bad patches.
+
+And hey Julia.
+
+This is the second false positive submitted for this
+warning today.
+
+Can you please remove the script or fix it so it
+uses better logic?k
+
+Thanks.
+
+
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Samuel Zou <zou_wei@huawei.com>
+> ---
+>  sound/soc/amd/raven/acp3x-pcm-dma.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> The example in the comment above platform_get_irq in platform.c says
-> "if (irq < 0)"
+> diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
+> index e362f0b..b0cc0fe 100644
+> --- a/sound/soc/amd/raven/acp3x-pcm-dma.c
+> +++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
+> @@ -158,7 +158,7 @@ static void config_acp3x_dma(struct i2s_stream_instance *rtd, int direction)
+>  		switch (rtd->i2s_instance) {
+>  		case I2S_BT_INSTANCE:
+>  			reg_dma_size = mmACP_BT_TX_DMA_SIZE;
+> -			acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
+> +			acp_fifo_addr = ACP_SRAM_PTE_OFFSET |
+>  						BT_PB_FIFO_ADDR_OFFSET;
+>  			reg_fifo_addr = mmACP_BT_TX_FIFOADDR;
+>  			reg_fifo_size = mmACP_BT_TX_FIFOSIZE;
+> @@ -169,7 +169,7 @@ static void config_acp3x_dma(struct i2s_stream_instance *rtd, int direction)
+>  		case I2S_SP_INSTANCE:
+>  		default:
+>  			reg_dma_size = mmACP_I2S_TX_DMA_SIZE;
+> -			acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
+> +			acp_fifo_addr = ACP_SRAM_PTE_OFFSET |
+>  						SP_PB_FIFO_ADDR_OFFSET;
+>  			reg_fifo_addr =	mmACP_I2S_TX_FIFOADDR;
+>  			reg_fifo_size = mmACP_I2S_TX_FIFOSIZE;
+> @@ -180,7 +180,7 @@ static void config_acp3x_dma(struct i2s_stream_instance *rtd, int direction)
+>  		switch (rtd->i2s_instance) {
+>  		case I2S_BT_INSTANCE:
+>  			reg_dma_size = mmACP_BT_RX_DMA_SIZE;
+> -			acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
+> +			acp_fifo_addr = ACP_SRAM_PTE_OFFSET |
+>  						BT_CAPT_FIFO_ADDR_OFFSET;
+>  			reg_fifo_addr = mmACP_BT_RX_FIFOADDR;
+>  			reg_fifo_size = mmACP_BT_RX_FIFOSIZE;
+> @@ -191,7 +191,7 @@ static void config_acp3x_dma(struct i2s_stream_instance *rtd, int direction)
+>  		case I2S_SP_INSTANCE:
+>  		default:
+>  			reg_dma_size = mmACP_I2S_RX_DMA_SIZE;
+> -			acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
+> +			acp_fifo_addr = ACP_SRAM_PTE_OFFSET |
+>  						SP_CAPT_FIFO_ADDR_OFFSET;
+>  			reg_fifo_addr = mmACP_I2S_RX_FIFOADDR;
+>  			reg_fifo_size = mmACP_I2S_RX_FIFOSIZE;
 
-There is work to fix that up on the mailing lists, 0 is not a valid irq :)
-
-> > > +static int __init ehci_brcm_init(void)
-> > > +{
-> > > +     if (usb_disabled())
-> > > +             return -ENODEV;
-> >
-> > You check this here, so why are you also checking it in the probe
-> > function?
-> 
-> Good point. I'll remove the one in probe. This was another thing that
-> came from the ehci and ohci platform drivers.  About a third of the
-> drivers in this directory do this, probably because they started with
-> the platform drivers. Do you think it's worth me submitting a patch to
-> clean this up at some point?
-
-Yes please.
-
-> 
-> >
-> > thanks,
-> >
-> > greg k-h
-> 
-> I'll wait for your response before sending a V7.
-
-Never wait for someone who you have no idea how much email they get :)
-
-thanks,
-
-greg k-h
