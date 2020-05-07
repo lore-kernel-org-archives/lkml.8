@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B22D6C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A45AC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8074824958
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0185124956
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:48:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588877322;
-	bh=0FzK11nGj1WinKh7fS63LIRI8HxfTaRuog1W0ERLTfs=;
+	s=default; t=1588877328;
+	bh=DT6pf4s8Z+o8NdUVi2jciKOH7+SzyKg9SeNRFT3XikQ=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=waqG7UvmrY9nk08i2XfChRFI1bYSx+egE7LSsHZyCvkR4lnuk9cBVMhnbOh62+Nkm
-	 G5SOgl6g40otw+AX7pgWH7KD3EG52+7/HmgjbsGHTfKlNpyBmmmzpLVgkf+eHbSiRB
-	 2Ty3npgKbOEE5wL08Ag7xs8BVU6PjO9dU+B9Aewo=
+	b=fBe+NBpfXdZQZSw8FwaTBCX4Z2d/+rJWra+GlXv+ZfxSnPErXX242qxZuuSgVUMrY
+	 ffUm3bO0UaW9iM1pR10CsSiMEgcfXGCwPbW20ZEzHs/HorNvHd5sFt3opnt6Vfhkau
+	 nOS8RE+lZgGCcKum3qxRV+Dq3yM/XAzzSIg6E8Kg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbgEGSsm (ORCPT
+        id S1728632AbgEGSsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:48:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49710 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 14:48:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728166AbgEGSsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:48:41 -0400
+        id S1728166AbgEGSsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:48:46 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7608D21BE5;
-        Thu,  7 May 2020 18:48:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AD5124955;
+        Thu,  7 May 2020 18:48:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588877320;
-        bh=0FzK11nGj1WinKh7fS63LIRI8HxfTaRuog1W0ERLTfs=;
+        s=default; t=1588877326;
+        bh=DT6pf4s8Z+o8NdUVi2jciKOH7+SzyKg9SeNRFT3XikQ=;
         h=Date:From:To:Cc:Subject:From;
-        b=bGuqBT6fnSodm0+6QPewScsQbJptYCjrr+i1T9vjHa1tRj0wC+eI0fgcsNxFV0bdt
-         FKCHDjFot3fRPNHsXKMUs41k5WnUZtiTJlLhxAaScl2AIq8VmMA1QfYJzRsClpniN3
-         Yly1dIEELb172FcW65iiE9Oc220lV91G1NDL0UzI=
-Date:   Thu, 7 May 2020 13:53:07 -0500
+        b=NFjpeG2clblm3YEQEa2Jh77GUhDQCVQ3tU1sq58gS1/AxxDnOwLWyLH+nXsKqYeLE
+         UELbd3+57tHlw45RXPcCWTTmqUCDMevrd1h8/b9CQZvS6c03iyBuK95MWEE+oOhUBp
+         iyR/SdW+uXBH1oY5yzD2EVgFh63cPfUi2kiscyyU=
+Date:   Thu, 7 May 2020 13:53:13 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     linux-cachefs@redhat.com, linux-kernel@vger.kernel.org
-Subject: [PATCH] FS-Cache: Replace zero-length array with flexible-array
-Message-ID: <20200507185307.GA14353@embeddedor>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] treewide: Replace zero-length array with flexible-array
+Message-ID: <20200507185313.GA14373@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -91,20 +91,20 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- include/linux/fscache-cache.h |    2 +-
+ drivers/gnss/serial.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/fscache-cache.h b/include/linux/fscache-cache.h
-index d5ba431b5d63..5b6072e4a7ab 100644
---- a/include/linux/fscache-cache.h
-+++ b/include/linux/fscache-cache.h
-@@ -46,7 +46,7 @@ struct fscache_cache_tag {
- 	unsigned long		flags;
- #define FSCACHE_TAG_RESERVED	0		/* T if tag is reserved for a cache */
- 	atomic_t		usage;
--	char			name[0];	/* tag name */
-+	char			name[];	/* tag name */
+diff --git a/drivers/gnss/serial.h b/drivers/gnss/serial.h
+index 980ffdc86c2a..621953f7821d 100644
+--- a/drivers/gnss/serial.h
++++ b/drivers/gnss/serial.h
+@@ -16,7 +16,7 @@ struct gnss_serial {
+ 	struct gnss_device *gdev;
+ 	speed_t	speed;
+ 	const struct gnss_serial_ops *ops;
+-	unsigned long drvdata[0];
++	unsigned long drvdata[];
  };
  
- /*
+ enum gnss_serial_pm_state {
 
