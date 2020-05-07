@@ -2,135 +2,128 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2EAEC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB83C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB45420A8B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42AF220870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:44:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MXC2AagN"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FkNbon+/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728354AbgEGSnY (ORCPT
+        id S1728282AbgEGSoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:43:24 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:55562 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728324AbgEGSnX (ORCPT
+        Thu, 7 May 2020 14:44:24 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:5956 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbgEGSoY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:43:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588877002;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Jh97DkO75QGZr6UViEI6oioQHzU0u8jFEO5QZXD5xsY=;
-        b=MXC2AagNZJ2Sr2nah3oaYT+KfF1GJIsEJoVRDknesLkdp0yBMohg/A9lPx7MkHs14GiXai
-        mg+8P2Vf9CwLB8I3UTOuStQhJMgLIYy+i6wUmanJUKh53NPFUApbpquyIOPYY/qbboGSHz
-        qNou6sRDinJQOHTZ7SHPGyrgDKuIfkI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-254-hOsW7xkTMlefJxkiXvcjgg-1; Thu, 07 May 2020 14:43:18 -0400
-X-MC-Unique: hOsW7xkTMlefJxkiXvcjgg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7101319200C1;
-        Thu,  7 May 2020 18:43:16 +0000 (UTC)
-Received: from optiplex-lnx (unknown [10.3.128.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E61AE70559;
-        Thu,  7 May 2020 18:43:10 +0000 (UTC)
-Date:   Thu, 7 May 2020 14:43:07 -0400
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        dyoung@redhat.com, bhe@redhat.com, corbet@lwn.net,
-        keescook@chromium.org, akpm@linux-foundation.org, cai@lca.pw,
-        rdunlap@infradead.org
-Subject: Re: [PATCH v2] kernel: add panic_on_taint
-Message-ID: <20200507184307.GF205881@optiplex-lnx>
-References: <20200507180631.308441-1-aquini@redhat.com>
- <20200507182257.GX11244@42.do-not-panic.com>
+        Thu, 7 May 2020 14:44:24 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eb456c00000>; Thu, 07 May 2020 11:43:12 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 07 May 2020 11:44:23 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 07 May 2020 11:44:23 -0700
+Received: from [10.2.55.176] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 7 May
+ 2020 18:44:23 +0000
+Subject: Re: [RFC] mm/gup.c: Updated return value of
+ {get|pin}_user_pages_fast()
+To:     Souptick Joarder <jrdr.linux@gmail.com>, Jan Kara <jack@suse.cz>
+CC:     Tony Luck <tony.luck@intel.com>, <fenghua.yu@intel.com>,
+        Rob Springer <rspringer@google.com>,
+        Todd Poynor <toddpoynor@google.com>, <benchan@chromium.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>, <kuba@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        <inux-ia64@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        <tee-dev@lists.linaro.org>, Linux-MM <linux-mm@kvack.org>,
+        <netdev@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <rds-devel@oss.oracle.com>
+References: <1588706059-4208-1-git-send-email-jrdr.linux@gmail.com>
+ <0bfe4a8a-0d91-ef9b-066f-2ea7c68571b3@nvidia.com>
+ <CAFqt6zZMsQkOdjAb2k1EjwX=DtZ8gKfbRzwvreHOX-0vJLngNg@mail.gmail.com>
+ <20200506100649.GI17863@quack2.suse.cz>
+ <CAFqt6zYaNkJ4AfVzutXS=JsN4fE41ZAvnw03vHWpdyiRHY1m_w@mail.gmail.com>
+ <20200506125930.GJ17863@quack2.suse.cz>
+ <CAFqt6zZztn_AiaGAhV+_uwrnVdKY-xLsxOwYBt-zGmLaat+OhQ@mail.gmail.com>
+ <20200507101322.GB30922@quack2.suse.cz>
+ <CAFqt6zZ2pj_6q=5kf9dxOsSkHc7vJEHgCjuRmSELQF9KnoKCxA@mail.gmail.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <03bbc0f3-8edc-6110-6391-e540f773954c@nvidia.com>
+Date:   Thu, 7 May 2020 11:44:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507182257.GX11244@42.do-not-panic.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <CAFqt6zZ2pj_6q=5kf9dxOsSkHc7vJEHgCjuRmSELQF9KnoKCxA@mail.gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588876992; bh=s0GB/xjC+YXiEqpbpZ38ACIIfPDrfZoEl489zOuwW70=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=FkNbon+/lZBBjz9hvkzpf8XLqnxFhTzELzTdyEKvRurk0aqMSHwD85ZQ4E7KrBaQR
+         yvRSZEof1rMLcBARCOie6dDXHCRtJ6bX5o0M/30EtLT8wkidpsRgm1sAq5o8X1AYEf
+         ig/myAgWJBZambQrAm4QfpVWNRzk5lA/cuF17BMOs/H00NIHnt/EiCv2Mi0MJgUaW8
+         h/Tgfv4rUsuFQMKZC8/Z5izGkLhmkLb136CD93D+e6sy5bQZdnUnwN6nDSEOWnLbny
+         Lxw9pZdGOYtcDe5ymjtNUpKpBQUA87UMJMZ88DSlXVfnnIQYcIsGYSNMo4qeVJRrUS
+         szSLg14PEX/NQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 06:22:57PM +0000, Luis Chamberlain wrote:
-> On Thu, May 07, 2020 at 02:06:31PM -0400, Rafael Aquini wrote:
-> > diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> > index 8a176d8727a3..b80ab660d727 100644
-> > --- a/kernel/sysctl.c
-> > +++ b/kernel/sysctl.c
-> > @@ -1217,6 +1217,13 @@ static struct ctl_table kern_table[] = {
-> >  		.extra1		= SYSCTL_ZERO,
-> >  		.extra2		= SYSCTL_ONE,
-> >  	},
-> > +	{
-> > +		.procname	= "panic_on_taint",
-> > +		.data		= &panic_on_taint,
-> > +		.maxlen		= sizeof(unsigned long),
-> > +		.mode		= 0644,
-> > +		.proc_handler	= proc_doulongvec_minmax,
-> > +	},
+On 2020-05-07 03:32, Souptick Joarder wrote:
+...
+>> OK, so no real problem with any of these callers. I still don't see a
+>> justification for the churn you suggest... Auditting all those code sites
+>> is going to be pretty tedious.
 > 
-> You sent this out before I could reply to the other thread on v1.
-> My thoughts on the min / max values, or lack here:
->                                                                                 
-> Valid range doesn't mean "currently allowed defined" masks.                     
+> I try to audit all 42 callers of {get|pin}_user_pages_fast() and
+> figure out these 5 callers
+> which need to be updated and I think, other callers of
+> {get|pin}_user_pages_fast() will not be
+> effected.
 > 
-> For example, if you expect to panic due to a taint, but a new taint type
-> you want was not added on an older kernel you would be under a very
-> *false* sense of security that your kernel may not have hit such a
-> taint, but the reality of the situation was that the kernel didn't
-> support that taint flag only added in future kernels.                           
-> 
-> You may need to define a new flag (MAX_TAINT) which should be the last
-> value + 1, the allowed max values would be                                      
-> 
-> (2^MAX_TAINT)-1                                                                 
-> 
-> or                                                                              
-> 
-> (1<<MAX_TAINT)-1  
-> 
-> Since this is to *PANIC* I think we do want to test ranges and ensure
-> only valid ones are allowed.
->
-
-Ok. I'm thinking in:
-
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 8a176d8727a3..ee492431e7b0 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -1217,6 +1217,15 @@ static struct ctl_table kern_table[] = {
-                .extra1         = SYSCTL_ZERO,
-                .extra2         = SYSCTL_ONE,
-        },
-+       {
-+               .procname       = "panic_on_taint",
-+               .data           = &panic_on_taint,
-+               .maxlen         = sizeof(unsigned long),
-+               .mode           = 0644,
-+               .proc_handler   = proc_doulongvec_minmax,
-+               .extra1         = SYSCTL_ZERO,
-+               .extra2         = (1 << TAINT_FLAGS_COUNT << 1) - 1,
-+       },
+> But I didn't go through other variants of gup/pup except
+> {get|pin}_user_pages_fast().
 
 
-Would that address your concerns wrt this one?
+I feel the need to apologize for suggesting that a change to -EINVAL
+would help. :)
 
-Cheers!
--- Rafael
+If you change what the return value means, but only apply it the
+gup/pup _fast() variants of this API set, that would make
+the API significantly *worse*.
 
+Also, no one has been able to come up with a scenario in which the call
+sites actually have a problem handling return values of zero. In fact,
+on the contrary: there are call site where returning 0 after being
+requested to pin zero pages, helps simplify the code. For example, if
+they're just doing math such as "if(nr_expected != nr_pages_pinned) ...".
+
+
+This looks like a complete dead end, sorry.
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
