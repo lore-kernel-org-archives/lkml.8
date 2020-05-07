@@ -2,199 +2,150 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F24C54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 424E5C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 303A820753
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:13:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Df6/Mbha"
+	by mail.kernel.org (Postfix) with ESMTP id 1073020753
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:14:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588839254;
+	bh=IHVOyrSAKuw04bOmG6ITxstY/X3NC8ccL3LvYmC9lpY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lYjOBz43yKZFuADudoF86J/y532JCZxoFgmHa2mm2ugUmcOkhPWkNwl68Y/66yDH2
+	 1N4auyOO6GLAKuKG5NlUjB9/UzpTMNZObJr5LYgtogHU7n2omWAlNAvl00ANKkx6F1
+	 7ZCeCFyze4VyWltbFAUCJkIojgAnFixsj8rWliWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgEGINb (ORCPT
+        id S1726558AbgEGION (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 04:13:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46694 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726074AbgEGINa (ORCPT
+        Thu, 7 May 2020 04:14:13 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:34939 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbgEGIOM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 04:13:30 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D5D7C0610D6
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 01:13:29 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id k1so5206429wrx.4
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 01:13:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=J7Nyoh6TN298A/zGPu60YeuCRUMyhvi1B0VPpIRXkD8=;
-        b=Df6/MbhaEVfEMhHwUNcTRMIYUT9M/0U7WL0VSOMhhFZneTCeZNZC/3pFk4TAipIMT0
-         xp2xcpNiCkBgvgse0AeKftj58pwORKkjnwon9g3du+eSV+2bCTkCgHj9OncMCGqlQKq3
-         VCmFUyFXhiGRf9t65xr3URIgKtRwHajRWxvybsS/qcjlM/xfXZR059+o9IyjvCXbW11P
-         ibj2b7//mwD0B6P7LmHtKZUWbxVVVXt+IrbU9Uj8yY4xoDzGO7zoJGxcrVc9o+ukPx0n
-         vhmsIJRFDQC9yL45QQtGgUt8nhqV3aMHTbtJxlaFY+Vanip1Ibg5gT9UlKsLc25W3hy/
-         3rnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=J7Nyoh6TN298A/zGPu60YeuCRUMyhvi1B0VPpIRXkD8=;
-        b=JgxWoo8YU8Ns0IzC1CzHvW4mqU2FoHUgJR4FLRYtHt0qH2KcSW6oyM72MN7FcIInGA
-         j/dIhKApNh9s7Wh8ig47epy3DmA1M5kWUWFunIenDUbTuyihy15t63kmdC2wd+IuxSmn
-         hCYmtSa3o0f4qE6dr7Yjv4YlojxYz/XwC9iLk97PiGmEcIUIt5cpxCIOw8V7/uUCOoi8
-         OGDUYJp5KXztMi79z6Jj8hnuDPFG5iHy55gIDjR292sNs9BDuTT42yQxuBlqRczdhCFw
-         S2zzbDBP8GCoZJKcLR79qyl2Io5BWCl0Kjb0heElaP3Dh4GNNinI83l+Kc0qd2wpoET/
-         TWZA==
-X-Gm-Message-State: AGi0PuavIFDOnY9hFpJeCWgrBu1gRQbd2NoDxO7ArKI80r89nW23P4WF
-        v6GXO1KL7jtXzW5zBYf6gmQvM5cob/kZnw==
-X-Google-Smtp-Source: APiQypJn2l9LEXuUtrCJU4T9xg/aguaE6+ll31meUQQy/XlK4lu1w23zu47PB8L6M4tnbGGhLUVbTA==
-X-Received: by 2002:adf:f652:: with SMTP id x18mr13797663wrp.262.1588839207953;
-        Thu, 07 May 2020 01:13:27 -0700 (PDT)
-Received: from [192.168.1.3] (212-5-158-166.ip.btc-net.bg. [212.5.158.166])
-        by smtp.googlemail.com with ESMTPSA id s18sm7542852wra.94.2020.05.07.01.13.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 May 2020 01:13:27 -0700 (PDT)
-Subject: Re: [PATCH 1/2] media: venus: Add support for MSM8939
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-media@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200501203505.144362-1-konradybcio@gmail.com>
- <20200501203505.144362-2-konradybcio@gmail.com>
- <3d73eb09-ba4e-5706-042c-0d1894928a35@linaro.org>
- <CAMS8qEVa_uRdeHEGpjni-qwGqryVVRp9VY8Ej87MbSCfTqWOFA@mail.gmail.com>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <ed4b2b21-69f9-4272-2631-08e8e578096b@linaro.org>
-Date:   Thu, 7 May 2020 11:13:25 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 7 May 2020 04:14:12 -0400
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 0478Dc5P008707
+        for <linux-kernel@vger.kernel.org>; Thu, 7 May 2020 17:13:39 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 0478Dc5P008707
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1588839219;
+        bh=oO23HSsWhRBDhOTb98SBCWFO49siOAirG9x+sRE0UoY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=BaWCx5RzNwzhamAV77FD4rs3gnmwdJ+Zaa7bSJn/GYFhICn6TmXOG5IrDP6D8N6HL
+         qI3VUS6MizO/GSE1vbgx4SeNnrR8SydfXto0y6Qpqh6coGUpx7fAMuqLfH/KT+42oj
+         ZdOqwUky5jZgMtMOlHU68zbmcUMNzFLuBHsSSlDb3DDQSj7pQGt/tPzEiYmQUaPJXY
+         udPvY4id8t86ZxdtTMg4hsefqh1EvsFpOMUlEPOl7/6+dX1oCN4q4AJNgb54/97X0Y
+         xe+G85Aewmzmk26Lw7npmqwDhl8NDdtdy/UuTWf9Q7+3SVtwuHrMX3RWCD8ep3sdTJ
+         tP6TX/5sv9Aow==
+X-Nifty-SrcIP: [209.85.217.49]
+Received: by mail-vs1-f49.google.com with SMTP id s11so2826120vsm.3
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 01:13:39 -0700 (PDT)
+X-Gm-Message-State: AGi0PuazvZ5o0+z+M/SAc4U6bKX9gGbPpg5BIeImQw38mROEJ3JH997F
+        aTp5PNFx3gAcb4mtK18nwNlEKhGupVAXtherKzo=
+X-Google-Smtp-Source: APiQypLwM3BW7DMJPZFbKzpJjXsVIV8g3d+kRwYnRHMEncLQXUcHDXQGM178jYukr80/uu+tzH/cbAwxQL8aPJDRvlY=
+X-Received: by 2002:a67:6e07:: with SMTP id j7mr11040549vsc.181.1588839218008;
+ Thu, 07 May 2020 01:13:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAMS8qEVa_uRdeHEGpjni-qwGqryVVRp9VY8Ej87MbSCfTqWOFA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <CGME20200430124955epcas5p4b5c1dd7393a7b798d80206d071264df3@epcas5p4.samsung.com>
+ <1588250972-8507-1-git-send-email-maninder1.s@samsung.com> <1588250972-8507-2-git-send-email-maninder1.s@samsung.com>
+In-Reply-To: <1588250972-8507-2-git-send-email-maninder1.s@samsung.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 7 May 2020 17:13:02 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARQNmrCYofk5yG6diwrZnaqgUs0ASBo23k25SnOKM3viQ@mail.gmail.com>
+Message-ID: <CAK7LNARQNmrCYofk5yG6diwrZnaqgUs0ASBo23k25SnOKM3viQ@mail.gmail.com>
+Subject: Re: [PATCH 2/4] scripts/checkstack.pl: Add argument to print stacks
+ greather than value.
+To:     Maninder Singh <maninder1.s@samsung.com>
+Cc:     "George G. Davis" <george_davis@mentor.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        a.sahrawat@samsung.com, Vaneet Narang <v.narang@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Konrad,
+On Thu, Apr 30, 2020 at 9:50 PM Maninder Singh <maninder1.s@samsung.com> wrote:
+>
+> Add arguments support to print stacks which are greater than
+> argument value only.
+>
+> Signed-off-by: Vaneet Narang <v.narang@samsung.com>
+> Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
+> ---
+>  scripts/checkstack.pl | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+>
+> diff --git a/scripts/checkstack.pl b/scripts/checkstack.pl
+> index 412c459..8e5ef98 100755
+> --- a/scripts/checkstack.pl
+> +++ b/scripts/checkstack.pl
+> @@ -35,7 +35,7 @@ use strict;
+>  # $1 (first bracket) matches the dynamic amount of the stack growth
+>  #
+>  # use anything else and feel the pain ;)
+> -my (@stack, $re, $dre, $x, $xs, $funcre);
+> +my (@stack, $re, $dre, $x, $xs, $funcre, $min_stack);
+>  {
+>         my $arch = shift;
+>         if ($arch eq "") {
+> @@ -43,6 +43,11 @@ my (@stack, $re, $dre, $x, $xs, $funcre);
+>                 chomp($arch);
+>         }
+>
+> +       $min_stack = shift;
+> +       if ($min_stack eq "" || $min_stack !~ /^\d+$/) {
+> +               $min_stack = 100;
+> +       }
+> +
+>         $x      = "[0-9a-f]";   # hex character
+>         $xs     = "[0-9a-f ]";  # hex character or space
+>         $funcre = qr/^$x* <(.*)>:$/;
+> @@ -113,7 +118,7 @@ my ($func, $file, $lastslash, $total_size, $addr, $intro);
+>
+>  while (my $line = <STDIN>) {
+>         if ($line =~ m/$funcre/) {
+> -               if ($total_size > 100) {
+> +               if ($total_size > $min_stack) {
+>                         push @stack, "$intro$total_size\n";
+>                 }
+>
+> @@ -150,7 +155,6 @@ while (my $line = <STDIN>) {
+>                         $size += 0x80000000;
+>                 }
+>                 next if ($size > 0x10000000);
+> -
 
-On 5/7/20 12:23 AM, Konrad Dybcio wrote:
-> Hi Stan,
-> 
-> I have found some issues with the submitted GCC driver, related to
-> venus, but I have to further look into them locally and work out some
-> stuff. One of the things is that freq table for venus clock should be
-> changed to the values found here [1] (currently it has 8916
-> frequencies). When I find all the causes I'll resubmit this and
-> include them in the cover letter, as I might've overlooked something
-> wrt venus driver itself when creating this patch from my WIP branch.
-> Also it seems like I tested this very patch incorrectly (getting
-> segfaults in ffmpeg with v4l2m2m now)... Anyways, I'll get back to you
-> when I make it work for sure. Sorry again for the inconvenience.
 
-OK. Thanks for the details, I'm waiting for good news :). If you need
-some help with Venus bringup ping me on IRC - my nickname is svarbanov
-on #v4l channel.
+This is a noise change.
 
-Regarding to venus clocks, these two clocks exist in below gcc driver
-but missing in msm8916:
+You can do this in 1/4 if you want to.
 
-gcc_venus0_core0_vcodec0_clk
-gcc_venus0_core1_vcodec0_clk
 
-but the Venus IP block should be the same as in msm8916. Can you point
-me to the donwstream gcc driver or check from where they comes.
 
-> 
-> 
-> [1] https://github.com/konradybcio/android_kernel_asus_msm8916-1/blob/minimal/drivers/clk/qcom/clock-gcc-8936.c#L1613-L1618
-> 
-> Konrad
-> 
-> wt., 5 maj 2020 o 13:43 Stanimir Varbanov
-> <stanimir.varbanov@linaro.org> napisał(a):
->>
->> Hi Konrad,
->>
->> On 5/1/20 11:35 PM, Konrad Dybcio wrote:
->>> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
->>> ---
->>>  drivers/media/platform/qcom/venus/core.c | 33 ++++++++++++++++++++++++
->>>  1 file changed, 33 insertions(+)
->>>
->>> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
->>> index 194b10b987672..f3a15991ac763 100644
->>> --- a/drivers/media/platform/qcom/venus/core.c
->>> +++ b/drivers/media/platform/qcom/venus/core.c
->>> @@ -405,6 +405,38 @@ static const struct venus_resources msm8916_res = {
->>>       .fwname = "qcom/venus-1.8/venus.mdt",
->>>  };
->>>
->>> +static const struct freq_tbl msm8939_freq_table[] = {
->>> +     { 489600, 266670000 },  /* 1080p @ 60 */
->>> +     { 244800, 200000000 },  /* 1080p @ 30 */
->>> +     { 244800, 133330000 },  /* 1080p @ 30 (decode only) */
->>> +     { 220800, 133330000 },  /* 720p @ 60 (decode only?) */
->>> +     { 108000, 133330000 },  /* 720p @ 30*/
->>> +     { 72000, 133330000 },  /* VGA @ 60 */
->>> +     { 36000, 133330000 },  /* VGA @ 30 */
->>
->> 133MHz is the minimum clock frequency in the GCC driver? Do you think
->> that will change?
->>
->>> +};
->>> +
->>> +static const struct reg_val msm8939_reg_preset[] = {
->>> +     { 0xe0020, 0x0aaaaaaa },
->>> +     { 0xe0024, 0x0aaaaaaa },
->>> +     { 0x80124, 0x00000003 },
->>> +};
->>> +
->>> +static const struct venus_resources msm8939_res = {
->>> +     .freq_tbl = msm8939_freq_table,
->>> +     .freq_tbl_size = ARRAY_SIZE(msm8939_freq_table),
->>> +     .reg_tbl = msm8939_reg_preset,
->>> +     .reg_tbl_size = ARRAY_SIZE(msm8939_reg_preset),
->>> +     .clks = { "core", "iface", "bus", },
->>> +     .clks_num = 3,
->>> +     .max_load = 489600, /* 1080p @ 60 */
->>> +     .hfi_version = HFI_VERSION_1XX,
->>> +     .vmem_id = VIDC_RESOURCE_NONE,
->>> +     .vmem_size = 0,
->>> +     .vmem_addr = 0,
->>> +     .dma_mask = 0xddc00000 - 1,
->>> +     .fwname = "qcom/venus-1.8/venus.mdt",
->>> +};
->>> +
->>>  static const struct freq_tbl msm8996_freq_table[] = {
->>>       { 1944000, 520000000 }, /* 4k UHD @ 60 (decode only) */
->>>       {  972000, 520000000 }, /* 4k UHD @ 30 */
->>> @@ -567,6 +599,7 @@ static const struct venus_resources sc7180_res = {
->>>
->>>  static const struct of_device_id venus_dt_match[] = {
->>>       { .compatible = "qcom,msm8916-venus", .data = &msm8916_res, },
->>> +     { .compatible = "qcom,msm8939-venus", .data = &msm8939_res, },
->>>       { .compatible = "qcom,msm8996-venus", .data = &msm8996_res, },
->>>       { .compatible = "qcom,sdm845-venus", .data = &sdm845_res, },
->>>       { .compatible = "qcom,sdm845-venus-v2", .data = &sdm845_res_v2, },
->>>
->>
->> --
->> regards,
->> Stan
+>                 $total_size = $total_size + $size
+>         }
+>         elsif (defined $dre && $line =~ m/$dre/) {
+> @@ -160,7 +164,7 @@ while (my $line = <STDIN>) {
+>                 $total_size = $total_size + $size
+>         }
+>  }
+> -if ($total_size > 100) {
+> +if ($total_size > $min_stack) {
+>         push @stack, "$intro$total_size\n";
+>  }
+>
+> --
+> 1.9.1
+>
 
--- 
-regards,
-Stan
+
+--
+Best Regards
+
+Masahiro Yamada
