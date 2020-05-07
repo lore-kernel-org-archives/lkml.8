@@ -5,46 +5,47 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AB1C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC739C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC9B216FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:54:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF68421835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:54:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588877689;
-	bh=QtFVrGNgbhGsTGWwo1/9FJde4UjuqjORF0sq8noalvg=;
+	s=default; t=1588877696;
+	bh=HAF/oRojkDljr1eFLRHqTl9dtHCZGeFR/+2LDxzGKKY=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=JAXGd1DTYRXg05tHnS1Pe9O/p75KCAsA+xRslUpP6zsGECII/soKHrVabXKiAKr9r
-	 KuJRf+oZ64Xy8X/NNipx6L0NOsZej70AAMhqyq1PslIooEqtbQtM9uHAJeV/nANGA0
-	 1pLZj+3Npa3IzAsADF3GBXojj0axtpFSRRG4yQfA=
+	b=mF43H0uRdWgfhlO4LWn+5SpghSG5VVTBHNTmatV1A78KodOEGsxC1zDGoKVfeHrOL
+	 W3DtW02jeY8Dc91h8eL0zxJAM9uUM+QMURbET78mjrRpDXyUBYfnV7/kezY6RHAxjK
+	 jpaS/jZs37LYfcaKxuPaOqzEd2VM0d/+IXNaHEOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728375AbgEGSyt (ORCPT
+        id S1728567AbgEGSy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:54:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56908 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 14:54:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726518AbgEGSys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:54:48 -0400
+        id S1726518AbgEGSyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:54:55 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41AB820575;
-        Thu,  7 May 2020 18:54:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71F5E20575;
+        Thu,  7 May 2020 18:54:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588877687;
-        bh=QtFVrGNgbhGsTGWwo1/9FJde4UjuqjORF0sq8noalvg=;
+        s=default; t=1588877694;
+        bh=HAF/oRojkDljr1eFLRHqTl9dtHCZGeFR/+2LDxzGKKY=;
         h=Date:From:To:Cc:Subject:From;
-        b=JXc8lvAspZIJrRDLBtWfmNr69HFQgyhX9KEX2W3+JTL3DDd41hxNZt1ne1EWEWlJ/
-         2Ftl0FgU7lXkwt5y1gdrfsv99Slkr2+yx1I7QQgkQKTIxtHKs7FrZm9jp7zEL4IXvH
-         UJe4IoQhl3v64Tloheh8PuX9lbVnX9fnEM46QgZE=
-Date:   Thu, 7 May 2020 13:59:14 -0500
+        b=2EhmErFn2LX85sjp/FeeJMucTQta5AEMMF5VhGW2+khwX+hDXK9DvM3PDerwrWSzc
+         pP5EnH/kZRTLqEtfwNo4xlmAlbu4Sd94+WTd0le1kMUyyxaNSlC2g6UGRgAZnzn5bf
+         6lupoaMB2lCCK0sSNkkAToITfMdc1WT+GN3MQbfA=
+Date:   Thu, 7 May 2020 13:59:21 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Lennert Buytenhek <buytenh@wantstofly.org>
-Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mwl8k: Replace zero-length array with flexible-array
-Message-ID: <20200507185914.GA15124@embeddedor>
+To:     Tariq Toukan <tariqt@mellanox.com>
+Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] IB/mlx4: Replace zero-length array with flexible-array
+Message-ID: <20200507185921.GA15146@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -91,20 +92,20 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/net/wireless/marvell/mwl8k.c |    2 +-
+ include/linux/mlx4/qp.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/marvell/mwl8k.c b/drivers/net/wireless/marvell/mwl8k.c
-index 47fb4b3ea004..97f23f93f6e7 100644
---- a/drivers/net/wireless/marvell/mwl8k.c
-+++ b/drivers/net/wireless/marvell/mwl8k.c
-@@ -2668,7 +2668,7 @@ struct mwl8k_cmd_mac_multicast_adr {
- 	struct mwl8k_cmd_pkt header;
- 	__le16 action;
- 	__le16 numaddr;
--	__u8 addr[0][ETH_ALEN];
-+	__u8 addr[][ETH_ALEN];
+diff --git a/include/linux/mlx4/qp.h b/include/linux/mlx4/qp.h
+index 8e2828d48d7f..9db93e487496 100644
+--- a/include/linux/mlx4/qp.h
++++ b/include/linux/mlx4/qp.h
+@@ -362,7 +362,7 @@ struct mlx4_wqe_datagram_seg {
+ 
+ struct mlx4_wqe_lso_seg {
+ 	__be32			mss_hdr_size;
+-	__be32			header[0];
++	__be32			header[];
  };
  
- #define MWL8K_ENABLE_RX_DIRECTED	0x0001
+ enum mlx4_wqe_bind_seg_flags2 {
 
