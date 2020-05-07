@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0681FC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 548B4C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D55E82495E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 277B42495B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:51:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588877486;
-	bh=kMFA0b6aS1twModq1yHlIZlHwtdzbcyRe3/MvSJiG0s=;
+	s=default; t=1588877492;
+	bh=jpe2+TjrMnwu2H2dyg8faPNc4w8u0PpZiuofrEf/xT4=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=FeJz1YXsC0dds7IMWIABvVjDgTGFVY9yKF1+W9/yIg37XgDXDmSXQyHkNbq1D3Dyw
-	 X3dLDb/S651/EePCBqsfSeoPp+0KvzJdxynVb548jaKZKXumA+Yf7BljdZdxXOaIhd
-	 sMr6FPRlqnCc48CCf11PJNrmXvZx21DtU/9NNH9I=
+	b=o0S2y+jTeEmLzdClu6flngUTWaP7BolOPflQIPpQncD5gEIzA9mEhhLMoa9xIRF0l
+	 ko3xKzqdloAzT9m4YcLnRo0hFo7XJt2kP7i/YUHVVj8VQOPlGcvfwvUPUxD7YN3KW8
+	 s2GDw//Lsm5DCxZZ1idrp/+aVMIDYFCbmGxJ0mF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbgEGSvZ (ORCPT
+        id S1728731AbgEGSvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:51:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52192 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 14:51:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727964AbgEGSvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:51:24 -0400
+        id S1727964AbgEGSva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:51:30 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9977A2495D;
-        Thu,  7 May 2020 18:51:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09BEA24957;
+        Thu,  7 May 2020 18:51:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588877483;
-        bh=kMFA0b6aS1twModq1yHlIZlHwtdzbcyRe3/MvSJiG0s=;
+        s=default; t=1588877489;
+        bh=jpe2+TjrMnwu2H2dyg8faPNc4w8u0PpZiuofrEf/xT4=;
         h=Date:From:To:Cc:Subject:From;
-        b=JCrk0uwwkhfkTLux/mgp5WxUeHMtQt5a6q0bHSOxYvZT8vyTogP0sJafOoEk4JRXW
-         PIZOaa/Q+GYFBzbxJk0/szjg53/lf2XEHowx2S/TdV4GAH2+FlRSOj6KMgpcKOOm5s
-         BsUeOg5xzmGksQMqfqO+76ntwhcL9D3rLq42GPKE=
-Date:   Thu, 7 May 2020 13:55:50 -0500
+        b=hz8cQChXh4vf4srecpx8AKf9ARB4tro3ux3p9bC04rzou9lBEqxu5pkbcV3YwAtr2
+         XUwYFhyS8iTI6CUN6Q+S9Uc74jYWdfW+65avnCLWTDVyt3HsikQ5A5dw0XkdBBQl+x
+         oPrZRUZlVP/L2sy9TBxninEpu8ywVfKmb8NKsai0=
+Date:   Thu, 7 May 2020 13:55:55 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Dave Kleikamp <shaggy@kernel.org>
-Cc:     jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: [PATCH] JFS: Replace zero-length array with flexible-array
-Message-ID: <20200507185550.GA14715@embeddedor>
+To:     David Woodhouse <dwmw2@infradead.org>,
+        Richard Weinberger <richard@nod.at>
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] jffs2: Replace zero-length array with flexible-array
+Message-ID: <20200507185555.GA14739@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -91,40 +92,43 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- fs/jfs/jfs_dtree.c |    2 +-
- fs/jfs/jfs_xattr.h |    4 ++--
+ fs/jffs2/nodelist.h |    2 +-
+ fs/jffs2/summary.h  |    4 ++--
  2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/jfs/jfs_dtree.c b/fs/jfs/jfs_dtree.c
-index 3acc954f7c04..837d42f61464 100644
---- a/fs/jfs/jfs_dtree.c
-+++ b/fs/jfs/jfs_dtree.c
-@@ -2964,7 +2964,7 @@ struct jfs_dirent {
- 	loff_t position;
- 	int ino;
- 	u16 name_len;
--	char name[0];
-+	char name[];
+diff --git a/fs/jffs2/nodelist.h b/fs/jffs2/nodelist.h
+index 0637271f3770..8ff4d1a1e774 100644
+--- a/fs/jffs2/nodelist.h
++++ b/fs/jffs2/nodelist.h
+@@ -259,7 +259,7 @@ struct jffs2_full_dirent
+ 	uint32_t ino; /* == zero for unlink */
+ 	unsigned int nhash;
+ 	unsigned char type;
+-	unsigned char name[0];
++	unsigned char name[];
  };
  
  /*
-diff --git a/fs/jfs/jfs_xattr.h b/fs/jfs/jfs_xattr.h
-index f0558b3348da..c50167a7bc50 100644
---- a/fs/jfs/jfs_xattr.h
-+++ b/fs/jfs/jfs_xattr.h
-@@ -17,12 +17,12 @@ struct jfs_ea {
- 	u8 flag;	/* Unused? */
- 	u8 namelen;	/* Length of name */
- 	__le16 valuelen;	/* Length of value */
--	char name[0];	/* Attribute name (includes null-terminator) */
-+	char name[];	/* Attribute name (includes null-terminator) */
- };			/* Value immediately follows name */
+diff --git a/fs/jffs2/summary.h b/fs/jffs2/summary.h
+index 60207a2ae952..e4131cb1f1d4 100644
+--- a/fs/jffs2/summary.h
++++ b/fs/jffs2/summary.h
+@@ -61,7 +61,7 @@ struct jffs2_sum_dirent_flash
+ 	jint32_t ino; 		/* == zero for unlink */
+ 	uint8_t nsize;		/* dirent name size */
+ 	uint8_t type;		/* dirent type */
+-	uint8_t name[0];	/* dirent name */
++	uint8_t name[];	/* dirent name */
+ } __attribute__((packed));
  
- struct jfs_ea_list {
- 	__le32 size;		/* overall size */
--	struct jfs_ea ea[0];	/* Variable length list */
-+	struct jfs_ea ea[];	/* Variable length list */
- };
+ struct jffs2_sum_xattr_flash
+@@ -117,7 +117,7 @@ struct jffs2_sum_dirent_mem
+ 	jint32_t ino; 		/* == zero for unlink */
+ 	uint8_t nsize;		/* dirent name size */
+ 	uint8_t type;		/* dirent type */
+-	uint8_t name[0];	/* dirent name */
++	uint8_t name[];	/* dirent name */
+ } __attribute__((packed));
  
- /* Macros for defining maxiumum number of bytes supported for EAs */
+ struct jffs2_sum_xattr_mem
 
