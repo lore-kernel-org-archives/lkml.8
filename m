@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86217C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5B1C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C2A52073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2A5F2073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:34:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588862076;
-	bh=Bq4eHZWtEpaN3euD1FZIVBHPQAYGNnABrym1Qp0jRmI=;
+	s=default; t=1588862077;
+	bh=MZoJruzevu0Mqm1XG+YDSEIaVLGDBxikzdKGaPu4uuM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rbl3vtshtPLPc/BM2MOmrVGE2Dg4xWLRJgCfuIoF4Ti8hDXePhYZimHEAYowZ8P5G
-	 ynrc3xQicD3bd8SwV3P+neUqT2GUaKvSyt4NbMs/ZxVjri9GyI/mPuW71F6iAbwu9e
-	 eAoYSMVwSLmsCwnvEyDISLadOALdeNzj8zxmWyS8=
+	b=X1H0UTExJK7HLhEp5MBu778K0huyoYzFG/sXp7HnaeV2+I5tkdsSlxitW+LbZ71hf
+	 9FQqqsvilckD6N0Jk3HHcFThOkg2IiwR5Lvk3d/duV25Rpovg46XKFQQgKeobzQZM7
+	 hyYohkM5isgDbDLsAHqZ1pyJ1Ho9ew6EYNBJtgzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728426AbgEGO3G (ORCPT
+        id S1728556AbgEGOeh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:29:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56082 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:34:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728361AbgEGO27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:28:59 -0400
+        id S1728421AbgEGO3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:29:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01D0020936;
-        Thu,  7 May 2020 14:28:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AFB72184D;
+        Thu,  7 May 2020 14:29:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861738;
-        bh=Bq4eHZWtEpaN3euD1FZIVBHPQAYGNnABrym1Qp0jRmI=;
+        s=default; t=1588861746;
+        bh=MZoJruzevu0Mqm1XG+YDSEIaVLGDBxikzdKGaPu4uuM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uCGruXGNvVCibc0Kkzv6KgAZWS8HrGG6DJ+ZafePEp5TYQWcVIjpD0ptjPe1oGkMe
-         +u3Ed62e3+pZ5whsWSVrzvzZh4PQZByFV2I+7kVwc8VTdXqKFyxPXohEICdE671MZx
-         dZF+nmV1lYWmUbWGGtrsbAh3cGF5z/0wr6ttYW4I=
+        b=kW+J2htEAL1H1HndU6CWy0/3crLNewSkRIL8sT6fZTLUZSsyEKTwaitrxIKsc5d2+
+         w9LAiBYEszMI386dzljCEAaLy3XQikj7eZJdN/aNskSLWIWdVo+TttGMAZ8r4Yx24q
+         QEadb5h1iwLyj7SFupEr3ZMMezIvG16FGT1JJQqQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 22/35] i2c: iproc: generate stop event for slave writes
-Date:   Thu,  7 May 2020 10:28:16 -0400
-Message-Id: <20200507142830.26239-22-sashal@kernel.org>
+Cc:     Sung Lee <sung.lee@amd.com>, Yongqiang Sun <yongqiang.sun@amd.com>,
+        Aurabindo Pillai <aurabindo.pillai@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 28/35] drm/amd/display: Update downspread percent to match spreadsheet for DCN2.1
+Date:   Thu,  7 May 2020 10:28:22 -0400
+Message-Id: <20200507142830.26239-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507142830.26239-1-sashal@kernel.org>
 References: <20200507142830.26239-1-sashal@kernel.org>
@@ -60,35 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+From: Sung Lee <sung.lee@amd.com>
 
-[ Upstream commit 068143a8195fb0fdeea1f3ca430b3db0f6d04a53 ]
+[ Upstream commit 668a6741f809f2d15d125cfe2b39661e8f1655ea ]
 
-When slave status is I2C_SLAVE_RX_END, generate I2C_SLAVE_STOP
-event to i2c_client.
+[WHY]
+The downspread percentage was copied over from a previous version
+of the display_mode_lib spreadsheet. This value has been updated,
+and the previous value is too high to allow for such modes as
+4K120hz. The new value is sufficient for such modes.
 
-Fixes: c245d94ed106 ("i2c: iproc: Add multi byte read-write support for slave mode")
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+[HOW]
+Update the value in dcn21_resource to match the spreadsheet.
+
+Signed-off-by: Sung Lee <sung.lee@amd.com>
+Reviewed-by: Yongqiang Sun <yongqiang.sun@amd.com>
+Acked-by: Aurabindo Pillai <aurabindo.pillai@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-bcm-iproc.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
-index 9ffdffaf6141e..03475f1799730 100644
---- a/drivers/i2c/busses/i2c-bcm-iproc.c
-+++ b/drivers/i2c/busses/i2c-bcm-iproc.c
-@@ -359,6 +359,9 @@ static bool bcm_iproc_i2c_slave_isr(struct bcm_iproc_i2c_dev *iproc_i2c,
- 			value = (u8)((val >> S_RX_DATA_SHIFT) & S_RX_DATA_MASK);
- 			i2c_slave_event(iproc_i2c->slave,
- 					I2C_SLAVE_WRITE_RECEIVED, &value);
-+			if (rx_status == I2C_SLAVE_RX_END)
-+				i2c_slave_event(iproc_i2c->slave,
-+						I2C_SLAVE_STOP, &value);
- 		}
- 	} else if (status & BIT(IS_S_TX_UNDERRUN_SHIFT)) {
- 		/* Master read other than start */
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
+index 161bf7caf3ae0..bb7add5ea2273 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
+@@ -247,7 +247,7 @@ struct _vcs_dpi_soc_bounding_box_st dcn2_1_soc = {
+ 	.dram_channel_width_bytes = 4,
+ 	.fabric_datapath_to_dcn_data_return_bytes = 32,
+ 	.dcn_downspread_percent = 0.5,
+-	.downspread_percent = 0.5,
++	.downspread_percent = 0.38,
+ 	.dram_page_open_time_ns = 50.0,
+ 	.dram_rw_turnaround_time_ns = 17.5,
+ 	.dram_return_buffer_per_channel_bytes = 8192,
 -- 
 2.20.1
 
