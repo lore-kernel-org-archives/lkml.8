@@ -2,118 +2,171 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86101C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 05:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58935C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 05:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6723320736
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 05:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21EE9208D6
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 05:15:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KgV4t378"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725964AbgEGFNo (ORCPT
+        id S1725914AbgEGFPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 01:13:44 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:52159 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbgEGFNo (ORCPT
+        Thu, 7 May 2020 01:15:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47438 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725802AbgEGFPm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 01:13:44 -0400
-Received: from fsav303.sakura.ne.jp (fsav303.sakura.ne.jp [153.120.85.134])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 0475DfVC006851;
-        Thu, 7 May 2020 14:13:41 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav303.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp);
- Thu, 07 May 2020 14:13:41 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 0475Dea3006806
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Thu, 7 May 2020 14:13:41 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] printk: Add loglevel for "do not print to consoles".
-To:     Joe Perches <joe@perches.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-References: <20200424024239.63607-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20200425004609.GE8982@jagdpanzerIV.localdomain>
- <842ff40b-a232-6098-4333-996a3033b30a@i-love.sakura.ne.jp>
- <20200427062117.GC486@jagdpanzerIV.localdomain>
- <4dae86af-1d9a-f5a8-cff6-aa91ec038a79@i-love.sakura.ne.jp>
- <344199f1-639b-ee93-2388-57b0549641f9@i-love.sakura.ne.jp>
- <dfe10cb0359c37dff46c93dfacf909dd33b2593f.camel@perches.com>
- <0d513c80-8c8e-17b6-5b9c-73c7bca77252@i-love.sakura.ne.jp>
- <63f58a1c334d8d44ddf1788091be9b2232054b03.camel@perches.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <36db0dfe-9d7e-0616-cbe6-4bfb99a1f470@i-love.sakura.ne.jp>
-Date:   Thu, 7 May 2020 14:13:34 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 7 May 2020 01:15:42 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E484C061A0F;
+        Wed,  6 May 2020 22:15:42 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id z6so1593685plk.10;
+        Wed, 06 May 2020 22:15:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=nX7bM4TH0Tvn6hSm8gSOJvn+yn2K9ALhjMGae7bRORU=;
+        b=KgV4t378aPEJDPqUuu6JwtkmVJRC3gE1dk5/MGcb8Yrk5OlinEQlA2gw7Sz9Mg9qs1
+         jD9EwAodYa1MlHq2ChhmDoCDIfQ8sG6myoTqYosXggAvFgzt9KwldVTSMwNU3dwGtCCP
+         8YiRvRpeDe+N/SNEORLTcWtH9rWRG2Li21bnTX/8GvM5+vvH7Kp3/IRgq7zkJiC8HcoX
+         FE6AXO9JggRx2ya4fXFcbG/QOwpVjDnJGK1unI13UGlWhCw4NIgkURyI0f/VO7xRbS/p
+         eHj9tpOP2XdeORrVOUm7SIjZOKlZgu1pKGnVjJ/YjfEEk79o3UZFOT/l1M7aq6aKiyYq
+         5dmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=nX7bM4TH0Tvn6hSm8gSOJvn+yn2K9ALhjMGae7bRORU=;
+        b=bnjl2q+K6AKyF7nH6jzuUl0pYzqYP9aUAD/gGt56CrfPuVR0kiaKekc4GxqhDVABll
+         rVkEvMVFb0mQLDo/XRuhYK7rstin4sSar5b23FEZ5Z5wGczHOd4hGu86U1l0P+PXVUgH
+         7K4EIUx+U3iIJZgR+C9cKJC6Zi58Ll1QgWf7cpZ7by0frs9HcgzX28T/aDibanI5yA7p
+         XP9FLcqnRk/J1JT8dl+Y4FhvUZHn3TER7mm1c1L8s0hMZSxhv+gRGkLs95Ys9mld8ILA
+         NZnFCZnV43n5Dlr+91t7SJ8lqlCsIBtprs85nwVlPZM3tQyj0X39m0PKtF5xirswT2nQ
+         qC+Q==
+X-Gm-Message-State: AGi0PuZA5pbmQiO5AdysJ+q5OGTD8Idq1vKQBpLWp+FfQoWdo3sgr28r
+        JmnpDM+lq66/zlJabeJAXnNOnWvbbgY=
+X-Google-Smtp-Source: APiQypLlqbbQkO44XhBAGOE2WtkfSoD8mEKjku4O8Ur/r2EPn0z3KOuE/0+kT/ufg1eo+jyqYfJs5w==
+X-Received: by 2002:a17:90a:6f22:: with SMTP id d31mr13316874pjk.14.1588828541305;
+        Wed, 06 May 2020 22:15:41 -0700 (PDT)
+Received: from [192.168.1.7] ([120.244.109.48])
+        by smtp.gmail.com with ESMTPSA id z25sm3549380pfa.213.2020.05.06.22.15.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 May 2020 22:15:40 -0700 (PDT)
+Subject: Re: [PATCH] media: usb: ttusb-dec: avoid buffer overflow in
+ ttusb_dec_handle_irq() when DMA failures/attacks occur
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     mchehab@kernel.org, kstewart@linuxfoundation.org,
+        tomasbortoli@gmail.com, sean@mess.org, allison@lohutok.net,
+        tglx@linutronix.de, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200505142110.7620-1-baijiaju1990@gmail.com>
+ <20200505181042.GD1199718@kroah.com>
+ <0e4a86ee-8c4e-4ac3-8499-4e9a6ed7bd1e@gmail.com>
+ <20200506110722.GA2975410@kroah.com>
+ <b3af10e3-8709-3da0-6841-e5ddd6b4a609@gmail.com>
+ <20200506155257.GB3537174@kroah.com>
+ <46615f6e-11ec-6546-42a9-3490414f9550@gmail.com>
+ <20200506174345.GA3711921@kroah.com>
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+Message-ID: <4bc70ec6-e518-5f42-b336-c86e1f92619f@gmail.com>
+Date:   Thu, 7 May 2020 13:15:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <63f58a1c334d8d44ddf1788091be9b2232054b03.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200506174345.GA3711921@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/05/07 10:02, Joe Perches wrote:
->>> printk_get_level / printk_skip_level and the various
->>> uses of %pV using printk_get_level
->>>
+
+
+On 2020/5/7 1:43, Greg KH wrote:
+> On Thu, May 07, 2020 at 12:48:47AM +0800, Jia-Ju Bai wrote:
+>> Yes, I agree that this issue is not new, because DMA attacks are old
+>> problems.
+>> But I am a little surprised that many current drivers are still vulnerable
+>> to DMA attacks.
+> Given that the attack vector is very hard to actually do, that's not
+> a suprise.
+>
+> It's only a very recent thing that Linux drivers have started to work on
+> "we don't trust the data coming from the hardware" path.  Previously we
+> always trusted that, but did not trust data coming from userspace.  So
+> work on fixing up drivers in this area is always encouraged.
+>
+> An example of this would be all of the fuzzing that USB drivers have
+> been getting with custom loop-back interfaces and the like over the past
+> year or so.  Expanding that to "we don't trust PCI device data" should
+> be the next step on this, and would help out your area as well.
+
+Okay, I am glad to hear that :)
+Hardware security for the Linux kernel should receive more attention.
+Last year some researchers finished an interesting work about fuzzing 
+the inputs from hardware:
+https://github.com/securesystemslab/periscope
+
+
+>
+>>> If you trust a device enough to plug it in, well, you need to trust it
+>>> :)
+>> Well, maybe I need to trust all devices in my computer :)
 >>
->> Excuse me, but what do you mean?
->>
->> I wish printk() accepts "loglevel" argument detached from "fmt" argument (e.g.
-> 
-> I think that's a bad idea as it would expand
-> _every_ use of printk with another argument
-> and overall code size would increase for very
-> little value.
+>> Anyway, thanks a lot for your patient explanation and reply.
+>> If you have encountered other kinds of DMA-related bugs/vulnerabilities,
+>> maybe I can help to detect them using my static-analysis tool :)
+> Did you only find a problem in this one driver?  Have you run it on any
+> more "complex" drivers and gotten any good results showing either that
+> we are programming defensively in this area, or not?
+>
 
-I'm not saying that we should add loglevel argument to all printk() callers.
-I'm saying that we could add a variant of printk() which accepts loglevel
-argument (say, e.g. printkl() and vprintkl()).
+At present, I only detect the cases that a DMA value *directly* taints 
+array index, loop condition and important kernel-interface calls (such 
+as request_irq()).
+In this one driver, I only find two problems that mentioned in this patch.
+With the kernel configuration "allyesconfig" in my x86_64 machine, I 
+find nearly 200 such problems (intra-procedurally and 
+inter-procedurally) in all the compiled device drivers.
 
-I think that some of printk_get_level() users are using printk_get_level() only
-for detaching loglevel argument from fmt argument.
+I also find that several drivers check the data from DMA memory, but 
+some of these checks can be bypassed.
+Here is an example in drivers/scsi/esas2r/esas2r_vda.c:
 
-For example, fs/f2fs/f2fs.h defines f2fs_{err,warn,notice,info,debug}() which pass
-KERN_* to f2fs_printk(), but f2fs_printk() in fs/f2fs/super.c trims KERN_* and passes
-it back to printk(). If printkl() were there, f2fs_err() etc. can directly call
-printkl() (and avoids printk_get_level(), printk_skip_level() and "struct va_format").
+The function esas2r_read_vda() uses a DMA value "vi":
+   struct atto_ioctl_vda *vi =
+             (struct atto_ioctl_vda *)a->vda_buffer;
 
-fs/btrfs/ctree.h similarly defines btrfs_{emerg,alert,crit,err,warn,notice,info}() and
-their RCU and latelimited variants which pass KERN_* to btrfs_printk(), but
-btrfs_printk() in fs/btrfs/super.c trims KERN_* and passes it back to printk().
-If printkl() were there, btrfs_emerg() etc. can avoid printk_get_level() and
-printk_skip_level().
+Then esas2r_read_vda() calls esas2r_process_vda_ioctl() with vi:
+   esas2r_process_vda_ioctl(a, vi, rq, &sgc);
 
-sound/core/misc.c defines __snd_printk() which allows inserting filename and line number.
-If printkl() were there, __snd_printk() can avoid printk_get_level() and printk_skip_level(),
-and can constify format argument variable (which is currently writable just in order to embed
-loglevel argument).
+In esas2r_process_vda_ioctl(), the DMA value "vi->function" is
+used at many places, such as:
+   if (vi->function >= vercnt)
+   ...
+   if (vi->version > esas2r_vdaioctl_versions[vi->function])
+   ...
 
-I don't know how the lockless logbuf will replace printk_safe_flush_buffer(). But I guess
-it is possible to avoid printk_safe_flush_buffer() and printk_skip_level() as demonstrated
-by https://lkml.kernel.org/r/5e192ca2-3b24-0b45-fc13-51feec43c216@i-love.sakura.ne.jp .
+However, when DMA failures or attacks occur, the value of vi->function 
+can be changed at any time. In this case, vi->function can be first 
+smaller than vercnt, and then it can be larger than vercnt when it is 
+used as the array index of esas2r_vdaioctl_versions, causing a 
+buffer-overflow vulnerability.
 
-Then, printk_skip_headers() will be the only user of printk_skip_level(). I don't know how
-vkdb_printf() works, but vkdb_printf() is currently using printk_skip_level() in order to
-remove loglevel argument. We can avoid printk_skip_level() if loglevel argument is detached
- from fmt argument.
+I also submitted this patch, but no one has replied yet:
+https://lore.kernel.org/lkml/20200504172412.25985-1-baijiaju1990@gmail.com/
 
-> 
-> And do look at the code and uses of printk_get_level.
 
-And again, what am I missing?
-
+Best wishes,
+Jia-Ju Bai
