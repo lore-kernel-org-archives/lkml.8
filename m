@@ -2,118 +2,105 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 956FBC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01473C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71033215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB086216FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:22:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgEGSWd (ORCPT
+        id S1728277AbgEGSWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:22:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728198AbgEGSWb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:22:31 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D1F5C05BD43;
-        Thu,  7 May 2020 11:22:31 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jWl9z-0002qB-Ia; Thu, 07 May 2020 20:22:15 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id B9DAE102652; Thu,  7 May 2020 20:22:14 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Rik van Riel <riel@surriel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>, sam <sunhaoyl@outlook.com>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Jann Horn <jannh@google.com>,
+        Thu, 7 May 2020 14:22:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728244AbgEGSWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:22:38 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 437EF215A4;
+        Thu,  7 May 2020 18:22:37 +0000 (UTC)
+Date:   Thu, 7 May 2020 14:22:35 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Potapenko <glider@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, stable@vger.kernel.org
-Subject: Re: [PATCH] x86/fpu/xstate: Clear uninitialized xstate areas in core dump
-In-Reply-To: <20200507164904.26927-1-yu-cheng.yu@intel.com>
-References: <20200507164904.26927-1-yu-cheng.yu@intel.com>
-Date:   Thu, 07 May 2020 20:22:14 +0200
-Message-ID: <87lfm3ehbd.fsf@nanos.tec.linutronix.de>
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Yunfeng Ye <yeyunfeng@huawei.com>
+Subject: [for-linus][PATCH 10/9] tools/bootconfig: Fix resource leak in
+ apply_xbc()
+Message-ID: <20200507142235.40db5e7c@gandalf.local.home>
+In-Reply-To: <20200507173904.729935165@goodmis.org>
+References: <20200507173904.729935165@goodmis.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yu-cheng Yu <yu-cheng.yu@intel.com> writes:
-> @@ -983,6 +983,7 @@ int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsigned int of
->  {
->  	unsigned int offset, size;
->  	struct xstate_header header;
-> +	int last_off;
->  	int i;
->  
->  	/*
-> @@ -1006,7 +1007,17 @@ int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsigned int of
->  
->  	__copy_xstate_to_kernel(kbuf, &header, offset, size, size_total);
->  
-> +	last_off = 0;
-> +
->  	for (i = 0; i < XFEATURE_MAX; i++) {
-> +		/*
-> +		 * Clear uninitialized area before XSAVE header.
-> +		 */
-> +		if (i == FIRST_EXTENDED_XFEATURE) {
-> +			memset(kbuf + last_off, 0, XSAVE_HDR_OFFSET - last_off);
-> +			last_off = XSAVE_HDR_OFFSET + XSAVE_HDR_SIZE;
-> +		}
-> +
->  		/*
->  		 * Copy only in-use xstates:
->  		 */
-> @@ -1020,11 +1031,16 @@ int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsigned int of
->  			if (offset + size > size_total)
->  				break;
->  
-> +			memset(kbuf + last_off, 0, offset - last_off);
-> +			last_off = offset + size;
-> +
->  			__copy_xstate_to_kernel(kbuf, src, offset, size, size_total);
->  		}
->  
->  	}
->  
-> +	memset(kbuf + last_off, 0, size_total - last_off);
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-Why doing all this partial zeroing? There is absolutely no point.
+Fix the @data and @fd allocations that are leaked in the error path of
+apply_xbc().
 
-Either the caller clears the buffer or this function clears it right at
-the beginning with:
+Link: http://lkml.kernel.org/r/583a49c9-c27a-931d-e6c2-6f63a4b18bea@huawei.com
 
-    memset(kbuf, 0, min(size_total, XSAVE_MAX_SIZE));
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ tools/bootconfig/main.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-Thanks,
+diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
+index 16b9a420e6fd..001076c51712 100644
+--- a/tools/bootconfig/main.c
++++ b/tools/bootconfig/main.c
+@@ -314,6 +314,7 @@ int apply_xbc(const char *path, const char *xbc_path)
+ 	ret = delete_xbc(path);
+ 	if (ret < 0) {
+ 		pr_err("Failed to delete previous boot config: %d\n", ret);
++		free(data);
+ 		return ret;
+ 	}
+ 
+@@ -321,24 +322,26 @@ int apply_xbc(const char *path, const char *xbc_path)
+ 	fd = open(path, O_RDWR | O_APPEND);
+ 	if (fd < 0) {
+ 		pr_err("Failed to open %s: %d\n", path, fd);
++		free(data);
+ 		return fd;
+ 	}
+ 	/* TODO: Ensure the @path is initramfs/initrd image */
+ 	ret = write(fd, data, size + 8);
+ 	if (ret < 0) {
+ 		pr_err("Failed to apply a boot config: %d\n", ret);
+-		return ret;
++		goto out;
+ 	}
+ 	/* Write a magic word of the bootconfig */
+ 	ret = write(fd, BOOTCONFIG_MAGIC, BOOTCONFIG_MAGIC_LEN);
+ 	if (ret < 0) {
+ 		pr_err("Failed to apply a boot config magic: %d\n", ret);
+-		return ret;
++		goto out;
+ 	}
++out:
+ 	close(fd);
+ 	free(data);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ int usage(void)
+-- 
+2.20.1
 
-        tglx
