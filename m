@@ -2,109 +2,165 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 437F7C47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC57C35280
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18ABE2083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAA94208CA
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:54:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="d66q7XIG"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WAPAb6AJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgEGWx0 (ORCPT
+        id S1727124AbgEGWyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 18:53:26 -0400
-Received: from ozlabs.org ([203.11.71.1]:59751 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726515AbgEGWxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 18:53:25 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49J7zQ5Hcsz9sRY;
-        Fri,  8 May 2020 08:53:22 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588892003;
-        bh=bjOOtanshmPtcis3DwE+InyiVjX3681m9s9kVOMiMC0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=d66q7XIG7+EHx2Hv+VyeyXFATWEqe+3B2ZbpZo5BK+uis3+TpHVwuwzs+2hgQ5EUu
-         75mb1hMsuAl/wh2ssrMwHqTGFVxIixA6ipH34GQPrbZdowhkwG46p1g5uY9cNns4DP
-         qER4nx9eDppqU11qIvHGce+YKw/wc0ELGjgjL1hfKy4tsygsvAPd2khjzjGz9DjV/4
-         bi3vS46CrISOdOfHluUOB0AGx8yGQu41jjLSXv+4yjyUeiOKA0HfR2sqeZhHs3BuBA
-         OngeihhcN2mvRcThow9uqp9tbBXoJ9WE1wP5Il29i09xHHBH6BPY4L3buN4ulSYlIi
-         MctPP8QqvNUIQ==
-Date:   Fri, 8 May 2020 08:53:20 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: linux-next: Fixes tags need some work in the omap tree
-Message-ID: <20200508085320.58da9ffa@canb.auug.org.au>
+        Thu, 7 May 2020 18:54:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43226 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbgEGWyV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 18:54:21 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D49FFC05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 15:54:20 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id q24so3316005pjd.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 15:54:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=X1eOoZGo2RhELWP8ZXLrEQsjy79crnPXYewegVbC2bc=;
+        b=WAPAb6AJ5skxQqiGjsj4YLprJto6hJMDsC1OXq2025SYCXQw680iFz8cZQDTQ1DckJ
+         EmxNFgDSkka2NqoQTFhhqT/tuSIZd2brTu/CJYiVc8+eMuFmzWsQT+pvUbKme/7dYNq5
+         oV1FD3X4i27cGhlx9grXyhUdkRWJpiSoqqf6w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=X1eOoZGo2RhELWP8ZXLrEQsjy79crnPXYewegVbC2bc=;
+        b=BMcvs8Wb6kVEyfZ3A9cz77LSIg8lKNyraK1R6tI2Bng4W01Q93AhI1vLwgWhwnqcZo
+         8MZZEtHfjXG/euOagjBmsRYRh/SKTGhxun/JV+MG4gJNMCVaQey+f3KpxHS4UzoMXkj+
+         qsDSfxWvAjL6AROEhykpDRqyiXfr5Nk1m15olmRISRgihnBu/9K5cF7UOmK6IvkrmH+x
+         sFHk0O7FaGUSUKQmkKDnQHiR7GJ1zg9x3zkpgeMWxI9/ZxCof4lXms5ydsb1rdtjJmwp
+         60K/0bH2ZFP8NhksiO6A8Km/bAHL3lTvlAr4Pp8dqWfNywHU2Ar+A9r5uDi75u5RHpLH
+         J0mg==
+X-Gm-Message-State: AGi0PuYxud6twgHjRxUy+d/VP0vnQ4bj/yurY2r4pDLjrsaIhlDeg617
+        avxIzOJ0iOgLMcFZaNLd1lJvew==
+X-Google-Smtp-Source: APiQypJKFKpsytswpG/Q3vS6VvEccA4XHAZJIeSSZXlao5nBRjVP6Zd0WcIrMxJfYOyASvW1D28v3w==
+X-Received: by 2002:a17:90a:ba88:: with SMTP id t8mr2525688pjr.182.1588892059212;
+        Thu, 07 May 2020 15:54:19 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id k6sm763768pju.44.2020.05.07.15.54.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 15:54:18 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Jason Wessel <jason.wessel@windriver.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     sumit.garg@linaro.org, Douglas Anderson <dianders@chromium.org>,
+        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: [PATCH] kgdb: Avoid suspicious RCU usage warning
+Date:   Thu,  7 May 2020 15:53:58 -0700
+Message-Id: <20200507153444.1.I70e0d4fd46d5ed2aaf0c98a355e8e1b7a5bb7e4e@changeid>
+X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/R0thPct+ecGr7jqJLj_4F2S";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/R0thPct+ecGr7jqJLj_4F2S
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+At times when I'm using kgdb I see a splat on my console about
+suspicious RCU usage.  I managed to come up with a case that could
+reproduce this that looked like this:
 
-Hi all,
+  WARNING: suspicious RCU usage
+  5.7.0-rc4+ #609 Not tainted
+  -----------------------------
+  kernel/pid.c:395 find_task_by_pid_ns() needs rcu_read_lock() protection!
 
-In commit
+  other info that might help us debug this:
 
-  0f84d0247722 ("ARM: dts: am437x: fix networking on boards with ksz9031 ph=
-y")
+    rcu_scheduler_active = 2, debug_locks = 1
+  3 locks held by swapper/0/1:
+   #0: ffffff81b6b8e988 (&dev->mutex){....}-{3:3}, at: __device_attach+0x40/0x13c
+   #1: ffffffd01109e9e8 (dbg_master_lock){....}-{2:2}, at: kgdb_cpu_enter+0x20c/0x7ac
+   #2: ffffffd01109ea90 (dbg_slave_lock){....}-{2:2}, at: kgdb_cpu_enter+0x3ec/0x7ac
 
-Fixes tag
+  stack backtrace:
+  CPU: 7 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc4+ #609
+  Hardware name: Google Cheza (rev3+) (DT)
+  Call trace:
+   dump_backtrace+0x0/0x1b8
+   show_stack+0x1c/0x24
+   dump_stack+0xd4/0x134
+   lockdep_rcu_suspicious+0xf0/0x100
+   find_task_by_pid_ns+0x5c/0x80
+   getthread+0x8c/0xb0
+   gdb_serial_stub+0x9d4/0xd04
+   kgdb_cpu_enter+0x284/0x7ac
+   kgdb_handle_exception+0x174/0x20c
+   kgdb_brk_fn+0x24/0x30
+   call_break_hook+0x6c/0x7c
+   brk_handler+0x20/0x5c
+   do_debug_exception+0x1c8/0x22c
+   el1_sync_handler+0x3c/0xe4
+   el1_sync+0x7c/0x100
+   rpmh_rsc_probe+0x38/0x420
+   platform_drv_probe+0x94/0xb4
+   really_probe+0x134/0x300
+   driver_probe_device+0x68/0x100
+   __device_attach_driver+0x90/0xa8
+   bus_for_each_drv+0x84/0xcc
+   __device_attach+0xb4/0x13c
+   device_initial_probe+0x18/0x20
+   bus_probe_device+0x38/0x98
+   device_add+0x38c/0x420
 
-  Fixes: commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for t=
-he KSZ9031 PHY")
+If I understand properly we should just be able to blanket kgdb under
+one big RCU read lock and the problem should go away.  We'll add it to
+the beast-of-a-function known as kgdb_cpu_enter().
 
-has these problem(s):
+With this I no longer get any splats and things seem to work fine.
 
-  - leading word 'commit' unexpected
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-In commit
+ kernel/debug/debug_core.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-  3a78c16f67a0 ("ARM: dts: am57xx: fix networking on boards with ksz9031 ph=
-y")
+diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+index 2b7c9b67931d..5155cf06731b 100644
+--- a/kernel/debug/debug_core.c
++++ b/kernel/debug/debug_core.c
+@@ -564,6 +564,8 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
+ 	int online_cpus = num_online_cpus();
+ 	u64 time_left;
+ 
++	rcu_read_lock();
++
+ 	kgdb_info[ks->cpu].enter_kgdb++;
+ 	kgdb_info[ks->cpu].exception_state |= exception_state;
+ 
+@@ -635,6 +637,7 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
+ 			atomic_dec(&slaves_in_kgdb);
+ 			dbg_touch_watchdogs();
+ 			local_irq_restore(flags);
++			rcu_read_unlock();
+ 			return 0;
+ 		}
+ 		cpu_relax();
+@@ -773,6 +776,8 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
+ 	dbg_touch_watchdogs();
+ 	local_irq_restore(flags);
+ 
++	rcu_read_unlock();
++
+ 	return kgdb_info[cpu].ret_state;
+ }
+ 
+-- 
+2.26.2.645.ge9eca65c58-goog
 
-Fixes tag
-
-  Fixes: commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for t=
-he KSZ9031 PHY")
-
-has these problem(s):
-
-  - leading word 'commit' unexpected
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/R0thPct+ecGr7jqJLj_4F2S
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl60kWAACgkQAVBC80lX
-0GynsQf/eAv93WMBJuy28pPmLTC3GcpUwAcvjPgzay0sN9HnAwNEhKmuLtU9dByD
-o7bu1b4CHNYTGA/b2vmnsWAKgzKBFU/E8gtSaZ/WgGy2XYZkZOEkBMZjdkaqTjf0
-PbmkU/NQs3hr+PgJlaGWsoHCaetWCKlNsFClj8WUwLGxVbAVLqP20QXaZpkISp8n
-GCbWMK3MfW0JYR+wzsFBWRCzZfD0HgZDkpO8/+kP6D+hqI/KXkobDHcIuUn+psYJ
-azb+8ezEvdKiGvFN9ajngy1X1v8xXpD4PVWpUONFKO1yyMvSWe3mhBdC33d0FMHm
-Gf09tAEMxObucDAnyi1KnDMKigjuwA==
-=GPsj
------END PGP SIGNATURE-----
-
---Sig_/R0thPct+ecGr7jqJLj_4F2S--
