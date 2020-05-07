@@ -2,117 +2,96 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FDBC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C75DC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1032A208CA
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:54:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588856045;
-	bh=ejai9cTPU/wXSWdxchfGt1itA5yy8fQdOCXV1pCVHB8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mCGsq1gr45vI4yqRhTSuvK8kZIhd0IvhdfW7VaQYI83kTEfl2ZEE5TKT15DFuAqxH
-	 I3w4w8ThToiY1Pb+HrfRJTtOhBKlLIGrGNr+YoJya18x4l5wbLmemVjEkMvzpD7WRc
-	 zzocV/D6G4z9U+2wv5m+dD8orCzHlXKmeA8W0c+I=
+	by mail.kernel.org (Postfix) with ESMTP id 420E520870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:54:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GC2cNFbW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgEGMyE (ORCPT
+        id S1727082AbgEGMyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 08:54:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37154 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725947AbgEGMyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 08:54:03 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEE472082E;
-        Thu,  7 May 2020 12:54:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588856043;
-        bh=ejai9cTPU/wXSWdxchfGt1itA5yy8fQdOCXV1pCVHB8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RQWnluLJiArcmPu9fOV36aetvJ89LlV4OkXKlOag7m8wEFYv8k8CmgXArbDzu6Wsq
-         pswbvEeTfFU5iF88PS7C3PtcspXniovK40FRu2E7ppNmm6cyjd3Iso9XksHltSy6+K
-         p+BGlBgqY06MAoY6CKRIfJ85jBPtzde5OXgykwOI=
-Date:   Thu, 7 May 2020 13:53:58 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] iomm/arm-smmu: Add stall implementation hook
-Message-ID: <20200507125357.GA31783@willie-the-truck>
-References: <20200421202004.11686-1-saiprakash.ranjan@codeaurora.org>
- <b491e02ad790a437115fdeab6b21bc48@codeaurora.org>
- <1ced023b-157c-21a0-ac75-1adef7f029f0@arm.com>
+        Thu, 7 May 2020 08:54:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34342 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725947AbgEGMyU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 08:54:20 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29738C05BD43;
+        Thu,  7 May 2020 05:54:20 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id js4so551290pjb.5;
+        Thu, 07 May 2020 05:54:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=zft9HmfE/cb19n4/HL8+WvtZ/FjZoMDNx3WAUznuwF4=;
+        b=GC2cNFbWuQrdvino/O5PK8jtbZyu070ia6LRYJpmpxBckEfO0f0wJosaeUAA7Ccfqy
+         4ke5vEAA+FEzIBSbR312EMTF+L5WRKpKEtG54Wup1vlsglpVCvO/5fteqEyBOKs50FRM
+         tRWfR0akv29PY66OLqXdrcw/0fNQoPi2FW4B7H46lwE2H/Vcrs99upppoQP4ZDRRtN86
+         WWgFsFxw/ScSDgH5KMusKRrgjrXxzuTllf4KTl0+W/ZtMBDnfzBs2v9Am07daVxlmD8P
+         yMFPVJt67uxVyg1K3B8VH4m8CbEEMJ9yN1Hn627UFXrwdfeA63YNJNq1L5Lff1wK3xLj
+         mrUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zft9HmfE/cb19n4/HL8+WvtZ/FjZoMDNx3WAUznuwF4=;
+        b=s0LEJCYKulmHO/k62cUwN0p3NQVQtBaRjz9i9nySL8b+La9vdpUuuRfr/VAuKnvT00
+         zWr4cFl5AQlc0U5zCCxG/I+MLJ2Dafdu505RZMvngcdlaeqgVos/dVgqt0LHw0j9K5Nn
+         T0Bq27+6tQ/iK/d//OqGXEQMVm2goYxsXCsyoKOoYVU0mHOWw9HtFLlZpr6w+njUcfXY
+         kBYOm7etGVVE4jGWlD4gNaqphng7NtGR796Bek1BszEacaXow4Fp/RWh9cQj5K05yfXL
+         9OINJGCFdbnABlZ7OVn7CJYY/BulfVbadj7GdGilXZ0O9AXJ3klUddOT/i+BmLnLID95
+         9Rew==
+X-Gm-Message-State: AGi0PuaYTGNGadTxjz5sI/NN7nzPceKcFoNKeZa+oqdt5h1UI0+fQchw
+        Q9iHH30Y1vElFHBEaemJErDmZaZYekMFGNkaClQ=
+X-Google-Smtp-Source: APiQypKJ/6VrPRxAWhwc2DxkNb5irAjHvIlLvXW9OzFqYnbNVbGewzZdeJSVOLX7iGwM9EfTn4MNTztUtOeGjkgg27U=
+X-Received: by 2002:a17:90a:37a3:: with SMTP id v32mr15294905pjb.2.1588856059648;
+ Thu, 07 May 2020 05:54:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1ced023b-157c-21a0-ac75-1adef7f029f0@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200507094242.7523-1-koba.ko@canonical.com> <20200507111331.dzge7htw5toejh72@pali>
+ <CAJB-X+WKqrWuKK0=BWtj7f8AovsMzbCO-QaLi2ZaP0_Q6321WQ@mail.gmail.com> <20200507114517.tslux7m7aysuwaok@pali>
+In-Reply-To: <20200507114517.tslux7m7aysuwaok@pali>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 7 May 2020 15:54:06 +0300
+Message-ID: <CAHp75Vcz+HgR1Vxjio+HvLOi_gpZiZLe4P-iPtsLRY8nVWE2+w@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: dell-laptop: don't register
+ platform::micmute if the related tokens don't exist.
+To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc:     Koba Ko <koba.ko@canonical.com>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 11:55:54AM +0100, Robin Murphy wrote:
-> On 2020-05-07 11:14 am, Sai Prakash Ranjan wrote:
-> > On 2020-04-22 01:50, Sai Prakash Ranjan wrote:
-> > > Add stall implementation hook to enable stalling
-> > > faults on QCOM platforms which supports it without
-> > > causing any kind of hardware mishaps. Without this
-> > > on QCOM platforms, GPU faults can cause unrelated
-> > > GPU memory accesses to return zeroes. This has the
-> > > unfortunate result of command-stream reads from CP
-> > > getting invalid data, causing a cascade of fail.
-> 
-> I think this came up before, but something about this rationale doesn't add
-> up - we're not *using* stalls at all, we're still terminating faulting
-> transactions unconditionally; we're just using CFCFG to terminate them with
-> a slight delay, rather than immediately. It's really not clear how or why
-> that makes a difference. Is it a GPU bug? Or an SMMU bug? Is this reliable
-> (or even a documented workaround for something), or might things start
-> blowing up again if any other behaviour subtly changes? I'm not dead set
-> against adding this, but I'd *really* like to have a lot more confidence in
-> it.
+On Thu, May 7, 2020 at 2:45 PM Pali Roh=C3=A1r <pali@kernel.org> wrote:
+> On Thursday 07 May 2020 19:27:47 Koba Ko wrote:
 
-Rob mentioned something about the "bus returning zeroes" before, but I agree
-that we need more information so that we can reason about this and maintain
-the code as the driver continues to change. That needs to be a comment in
-the driver, and I don't think "but android seems to work" is a good enough
-justification. There was some interaction with HUPCF as well.
+> > don't understand "registration and deregistration would be optional',
+> > could you explain more!?
+>
+> After your patch led_classdev_register() function is not always called.
+> And led_classdev_unregister() should not be called when there is no
+> device registered.
 
-As a template, I'd suggest:
+I think it's not a strong requirement after the commit
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit?i=
+d=3D1dbb9fb4082ce2a2f1cf9596881ddece062d15d0
 
-> > > diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
-> > > index 8d1cd54d82a6..d5134e0d5cce 100644
-> > > --- a/drivers/iommu/arm-smmu.h
-> > > +++ b/drivers/iommu/arm-smmu.h
-> > > @@ -386,6 +386,7 @@ struct arm_smmu_impl {
-> > >      int (*init_context)(struct arm_smmu_domain *smmu_domain);
-> > >      void (*tlb_sync)(struct arm_smmu_device *smmu, int page, int sync,
-> > >               int status);
-
-/*
- * Stall transactions on a context fault, where they will be terminated
- * in response to the resulting IRQ rather than immediately. This should
- * pretty much always be set to "false" as stalling can introduce the
- * potential for deadlock in most SoCs, however it is needed on Qualcomm
- * XXXX because YYYY.
- */
-
-> > > +    bool stall;
-
-Hmm, the more I think about this, the more I think this is an erratum
-workaround in disguise, in which case this could be better named...
-
-Will
+--=20
+With Best Regards,
+Andy Shevchenko
