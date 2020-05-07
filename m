@@ -5,67 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA85C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9FEC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA47B208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:44:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3798F208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:44:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="dkeBq94O"
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="Js03/NCa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgEGVok (ORCPT
+        id S1726906AbgEGVob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 17:44:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60648 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727783AbgEGVob (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 7 May 2020 17:44:31 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0ACFC05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 14:44:29 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id nv1so5915909ejb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 14:44:29 -0700 (PDT)
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60652 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727117AbgEGVo1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 17:44:27 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59259C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 14:44:26 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id a2so5906555ejx.5
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 14:44:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloud.ionos.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=p3qBa9K9MbgLEfhWUqlAktM7PPXv8tgud53nGFCyYG0=;
-        b=dkeBq94OBb3NF7kVoAbkVx2HSO3CU2chuvwHNFGEWXV0yhNdXxm/WFjxCC0MkuBwOQ
-         ukTQVmH3uUPgYCweOd1LQwPUAiwXSwuEHHA3DGaAzdHCj7mD6A77knGTR2DbyLLaoMmr
-         P9/xT7V4BL2slYRI2haV4GFVTBcxtTPf1JtlHWg9BSOm7kTAMgWRJ5oRuiN5qcHOOlyX
-         BNtTA6Fe24s8s4Oa3ZVX5xjq6Kj2yZ8P5YLEXdWpAx+lfEA+3pPnLlKxThXhKsFv5fWe
-         zkNndfIoksb9SEG4OkxblR24QSkvS1+qVaCorcEY8RlAtYD1QYFhXRzyfiZlmBPsE72S
-         mwbg==
+        bh=MKELhdYWYdAhzUDf2017C+zkiBNUO+dgi+kWgqsMaQo=;
+        b=Js03/NCa0TzF0VfdeXIzvkro8wybq6NjNQGCqPdKQimeJrwvTYtam+cSE0RRwMUm3v
+         UKO22AXxUWq/amzRnIRIwO0Z5TTODWjNj+FTzFVyBu30xNOBzSAfGNyNMKkLB+Armh8i
+         nvTYb6dHmiGx9DTByyKmOD/rNqQhoVbdn/2HvmK0gC/pAmGrkxCsvIYzi4qm0lTF/Dof
+         bOzxMb3YXJQhTb0g/oiCNAhJ7f03rlHoxMG7flnajSrFCu0UUpFwCNuCbH6q4YTGwB58
+         tjjHhZ0vmnw9ocarUaxvdVGuTgV9Gh2fHuamzzNAgyG4ZfzqwxeVh4dcPrvW+ZQdPafm
+         8E6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=p3qBa9K9MbgLEfhWUqlAktM7PPXv8tgud53nGFCyYG0=;
-        b=eMo2coVjEoYI+5epQlBZL2yApjFlF6P+em17TlyHz82JEJL3MyN2AvZZ6a99IaMrX8
-         h9/sm1frio9ptsP4HHDIy9NiP0KqKfR1zOOJDmB97kzFCQLC/ixwWOSZz2bcYIsjLUdS
-         MbfjNTOLlbWC8FHIdP9wlYf7fX+3Wyqp52k22Ryu4xZdWZa0W8Jb331WZVJ+GxoufoxQ
-         kwqR9lQeFXeXyCcHHJcMjf2GCEveP6+S4AsV0EUe/MeqZvPtiFd3uOnI0GuN3L1IrXYK
-         /UKc35hoS3kygNrtD8xZia1zp554baC5FyZviYnzdZlpVP1G3xSSQhldQ9hAlKFWyJfN
-         Ksxg==
-X-Gm-Message-State: AGi0PuaqIUbornj6LiS7t5026uMxOkk2GqA+Ww0yPqDTw1PqRiOe141E
-        zrmHJPwctDTHmAOoEVWTiHt/lw==
-X-Google-Smtp-Source: APiQypIynmIlSHyf+k65C+y42oKo8PLrA1c4S7WEkoE13fKDpP+OJZwLHdb5GIwza40Y5+tp0xnxFQ==
-X-Received: by 2002:a17:906:a857:: with SMTP id dx23mr14469278ejb.52.1588887868069;
-        Thu, 07 May 2020 14:44:28 -0700 (PDT)
+        bh=MKELhdYWYdAhzUDf2017C+zkiBNUO+dgi+kWgqsMaQo=;
+        b=ls/7YRx1yeZqJb4Mxmt1x49cTAzIXct5oActw1C0mKqnMitK4c350aGbr4HhpiB8uW
+         eYAx0E+On1AEr/pp+yGTG3QlnUKwQEn9j2HXpfUMir4wymrLid1pBG/sXMleW585diUU
+         SCAaPRRkYWsiIqrYw8pF8p4/jF4ejDiNBqevz9SFWdLnuWXgyD75VXF8BIbvFd5BBIsP
+         C096+8LF6Q/CEYgRkVYz1J+kr6wIbQZREUos22jVPJpXKu0dRlxDvV1tRfmqywS/bGLu
+         4R/jpEwJskCXOQZcxfrH9PxD7/UgFDE95anu8jUccd0Gz/1ef5PLwBHUZJrTrx7g2I0n
+         GzlA==
+X-Gm-Message-State: AGi0PuYAgYHWlmZLcBkwEdZium3JGNufso7TfH6fu0/evdKM4TOVsdtk
+        rlP0lRnwY72xHWtpmG/7zcQuTw==
+X-Google-Smtp-Source: APiQypJzdpl8spMfNAAlzzO6AXeNQL/Cqjj7WRO6qZUO8sBaGbOHi6SshrS0cNwvt3L9wQtnEzsBJw==
+X-Received: by 2002:a17:906:6990:: with SMTP id i16mr13653114ejr.175.1588887864765;
+        Thu, 07 May 2020 14:44:24 -0700 (PDT)
 Received: from ls00508.pb.local ([2001:1438:4010:2540:a1ee:a39a:b93a:c084])
-        by smtp.gmail.com with ESMTPSA id k3sm613530edi.60.2020.05.07.14.44.27
+        by smtp.gmail.com with ESMTPSA id k3sm613530edi.60.2020.05.07.14.44.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 14:44:27 -0700 (PDT)
+        Thu, 07 May 2020 14:44:23 -0700 (PDT)
 From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     david@fromorbit.com, hch@infradead.org, willy@infradead.org,
         Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
-Subject: [RFC PATCH V3 10/10] mm/migrate.c: call detach_page_private to cleanup code
-Date:   Thu,  7 May 2020 23:44:00 +0200
-Message-Id: <20200507214400.15785-11-guoqing.jiang@cloud.ionos.com>
+        Anton Altaparmakov <anton@tuxera.com>,
+        linux-ntfs-dev@lists.sourceforge.net
+Subject: [RFC PATCH V3 07/10] ntfs: replace attach_page_buffers with attach_page_private
+Date:   Thu,  7 May 2020 23:43:57 +0200
+Message-Id: <20200507214400.15785-8-guoqing.jiang@cloud.ionos.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200507214400.15785-1-guoqing.jiang@cloud.ionos.com>
 References: <20200507214400.15785-1-guoqing.jiang@cloud.ionos.com>
@@ -74,33 +75,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can cleanup code a little by call detach_page_private here.
+Call the new function since attach_page_buffers will be removed.
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org
+Cc: Anton Altaparmakov <anton@tuxera.com>
+Cc: linux-ntfs-dev@lists.sourceforge.net
 Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 ---
-Added since RFC V3.
+RFC V2 -> RFC V3: no change
 
- mm/migrate.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+RFC -> RFC V2
+1. change the name of new function to attach_page_private.
 
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 7160c1556f79..f214adfb3fa4 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -797,10 +797,7 @@ static int __buffer_migrate_page(struct address_space *mapping,
- 	if (rc != MIGRATEPAGE_SUCCESS)
- 		goto unlock_buffers;
- 
--	ClearPagePrivate(page);
--	set_page_private(newpage, page_private(page));
--	set_page_private(page, 0);
--	put_page(page);
-+	set_page_private(newpage, detach_page_private(page));
- 	get_page(newpage);
- 
- 	bh = head;
+ fs/ntfs/aops.c | 2 +-
+ fs/ntfs/mft.c  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/ntfs/aops.c b/fs/ntfs/aops.c
+index 554b744f41bf..bb0a43860ad2 100644
+--- a/fs/ntfs/aops.c
++++ b/fs/ntfs/aops.c
+@@ -1732,7 +1732,7 @@ void mark_ntfs_record_dirty(struct page *page, const unsigned int ofs) {
+ 				bh = bh->b_this_page;
+ 			} while (bh);
+ 			tail->b_this_page = head;
+-			attach_page_buffers(page, head);
++			attach_page_private(page, head);
+ 		} else
+ 			buffers_to_free = bh;
+ 	}
+diff --git a/fs/ntfs/mft.c b/fs/ntfs/mft.c
+index 3aac5c917afe..fbb9f1bc623d 100644
+--- a/fs/ntfs/mft.c
++++ b/fs/ntfs/mft.c
+@@ -504,7 +504,7 @@ int ntfs_sync_mft_mirror(ntfs_volume *vol, const unsigned long mft_no,
+ 			bh = bh->b_this_page;
+ 		} while (bh);
+ 		tail->b_this_page = head;
+-		attach_page_buffers(page, head);
++		attach_page_private(page, head);
+ 	}
+ 	bh = head = page_buffers(page);
+ 	BUG_ON(!bh);
 -- 
 2.17.1
 
