@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3129AC54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFCA0C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FC382083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF79A2082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:10:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MbcHpI1S"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JJ5GJm9H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbgEGOKR (ORCPT
+        id S1728212AbgEGOIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:10:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46096 "EHLO
+        Thu, 7 May 2020 10:08:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728256AbgEGOIu (ORCPT
+        with ESMTP id S1727937AbgEGOIl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:08:50 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13368C05BD09
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 07:08:50 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id w6so6849601qtt.21
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 07:08:50 -0700 (PDT)
+        Thu, 7 May 2020 10:08:41 -0400
+Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E8ADC05BD0A
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 07:08:40 -0700 (PDT)
+Received: by mail-qv1-xf49.google.com with SMTP id ce16so5984119qvb.15
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 07:08:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=dJgmTX+e/XhBfHBE3JA0uHT0QwjnDN/7PIiY44zE/Pk=;
-        b=MbcHpI1S5OxMmKRIL8TmEwAjmGUuXiQUNWFjjN/YpqFTRBD28jHsEegJVELa5W2k/9
-         agkiEFw7uakxlx7LIOatx3eUukVnVn0MX1SdDkQwJzXM+Y6M2N3zKYZAyCDMwWCJgy2M
-         JBlNzYMrEduwie1OvQrSwG8YaMYQii6XclidLVgaYWWMD3ddbi39V5bC3xMmWl3cV8oZ
-         GvAUZw/74ADf8w/0A+sA97fiDE+T8g8zgMq8TDE6prBfrYqLthp7JHLjFbszGMXNXuca
-         WT59CP91C8yIadGORdXB7PvIbWHaO45YbqSSxU5QDB6+oiQmCHFasvhmPsBfbgtxxVqm
-         x4WQ==
+        bh=Ew1Auf+JJ2L5arU3PyljE3NdvPut2GJPZ3Rkkz6XalQ=;
+        b=JJ5GJm9HqdYdzOugzSLtwI9AsSWBWZKzE0tdn+cUIqA3aCKIQZvuruHCGe3GCSg3TK
+         tZvjcBl21VXdjWAYumT34XIqMXm5v6nl2ZI+wwoAANrdsjDDO07rP7KzZXuqxVJJF0aG
+         /F8asZ5Q2yofy8kEROaHB1fRHDJ2QHdTDfFWrNQ01WMMEm7bH6p1PGxmq7UxTiC12V4b
+         dv14eZS1uWivH9QOUP30/IP+hxLeRi8ZpMi3bm90vWdkzzH3ABAws+Gsl7CNpOskAHv2
+         0MJnHPB52IfsWjUuEj4zi4PJKtT+Pvu360/5rZcrd8TvM4F9pOhUiFmNhhsvTuRnnv/d
+         l6dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=dJgmTX+e/XhBfHBE3JA0uHT0QwjnDN/7PIiY44zE/Pk=;
-        b=D2FP7QMfIvtgUdFKxCZfJEsHo5FqdPkLMjR2QaIqbuwgJmrK2DFNZ401dAChhcn8ER
-         vCyZXekbvLpu0pyG6VPr2V94kEjAXZXNVFo+GDWS47tNLkJEVPwgfnMWsw/YWTjvxkUM
-         iiQSpdsm/G2XqZWl91GmO019vf9db/AKGn7XhL1JHBbNOa820NRrDYUgzK27B1vtfHQE
-         5qZILbE08hRTxa+crplvOqftyN8ejq2zDIDuXsesJsGoJGo2vhxw2NGmW1SAs1p8oCr8
-         o8pZ1WtrsC3bEsS21Lg3hycxD7djefmsNAGrOv2ms0gOB1NnidggbBN4mCuzGsqj/Mwq
-         +57A==
-X-Gm-Message-State: AGi0PubuMt/7ZoXHAFPZ9RM/QRAMXpEtl1U0vwG90lY/oYeWBupDXxWN
-        xzxuanem3V3SEQHaZ46XOkD8WKTDDTjI
-X-Google-Smtp-Source: APiQypLCl/Z5EIdl/XTfe2GJCrqiaYwhgjj4RK37r3mcFcJW50Dz8UgEcRa3XlIlulU2fheTegM9wZXLkQPa
-X-Received: by 2002:ad4:4105:: with SMTP id i5mr13742509qvp.205.1588860529184;
- Thu, 07 May 2020 07:08:49 -0700 (PDT)
-Date:   Thu,  7 May 2020 07:08:09 -0700
+        bh=Ew1Auf+JJ2L5arU3PyljE3NdvPut2GJPZ3Rkkz6XalQ=;
+        b=btVrlyWNxVbk+mPofgJKzCUNNGWnM1Sae3P3JVctBDaERztG9aL0JHkAWPR/MjfAQq
+         U9sqyOhRi2Ruiw8pajT9Zduq6QTOA7rW9lKfd0kiyZz6Skf0mQ3wb8gnqvLA3Q1/nToX
+         rSG7dNDyE70dEWpHkH9jOGa+Pzj2UbrZf7TBoTZW0kwDDfh4mFeSFJW64HQPZUd8LRqB
+         oPtw/vTEVZa132aSNky15O6P6VQYI3MIIw7RYlfmpjEITgfDZQlHHfeg2RMbV3Zi1ulp
+         +HElw738EaS7x/SHKi13FrE66zktiwPrljvzhZ3Uae0RvDPeeOafmTj5CVU4g5gr28eA
+         SGZg==
+X-Gm-Message-State: AGi0PuZl2w3fLL0972bgmYj5298iq9H/ELPL3+Gfu+0HlPkmo8lb/aES
+        4NiZEeWXfn30oAS5BeQECYdVbdFHuP1Z
+X-Google-Smtp-Source: APiQypJvJKA9NnfhOBmsKSvoOjMdo+d1dPOHMI0HSSVAAH72zsNS1j+NeUQeK4QYwqrfA+9aozSBGliqUofk
+X-Received: by 2002:ad4:45ac:: with SMTP id y12mr13426252qvu.227.1588860519436;
+ Thu, 07 May 2020 07:08:39 -0700 (PDT)
+Date:   Thu,  7 May 2020 07:08:04 -0700
 In-Reply-To: <20200507140819.126960-1-irogers@google.com>
-Message-Id: <20200507140819.126960-14-irogers@google.com>
+Message-Id: <20200507140819.126960-9-irogers@google.com>
 Mime-Version: 1.0
 References: <20200507140819.126960-1-irogers@google.com>
 X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-Subject: [RFC PATCH v2 13/23] lib/bpf hashmap: increase portability
+Subject: [RFC PATCH v2 08/23] perf metrics: fix parse errors in power8 metrics
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -88,37 +88,36 @@ To:     Peter Zijlstra <peterz@infradead.org>,
 Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
         Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+        Ian Rogers <irogers@google.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't include libbpf_internal.h as it is unused and has conflicting
-definitions, for example, with tools/perf/util/debug.h.
-Fix a non-glibc include path.
+Mismatched parentheses.
 
+Fixes: dd81eafacc52 (perf vendor events power8: Cpi_breakdown & estimated_dcache_miss_cpi metrics)
+Reviewed-by: Paul A. Clarke <pc@us.ibm.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/bpf/hashmap.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ tools/perf/pmu-events/arch/powerpc/power8/metrics.json | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/lib/bpf/hashmap.h b/tools/lib/bpf/hashmap.h
-index bae8879cdf58..d5ef212a55ba 100644
---- a/tools/lib/bpf/hashmap.h
-+++ b/tools/lib/bpf/hashmap.h
-@@ -13,9 +13,8 @@
- #ifdef __GLIBC__
- #include <bits/wordsize.h>
- #else
--#include <bits/reg.h>
-+#include <linux/bitops.h>
- #endif
--#include "libbpf_internal.h"
- 
- static inline size_t hash_bits(size_t h, int bits)
- {
+diff --git a/tools/perf/pmu-events/arch/powerpc/power8/metrics.json b/tools/perf/pmu-events/arch/powerpc/power8/metrics.json
+index bffb2d4a6420..fc4aa6c2ddc9 100644
+--- a/tools/perf/pmu-events/arch/powerpc/power8/metrics.json
++++ b/tools/perf/pmu-events/arch/powerpc/power8/metrics.json
+@@ -169,7 +169,7 @@
+     },
+     {
+         "BriefDescription": "Cycles GCT empty where dispatch was held",
+-        "MetricExpr": "(PM_GCT_NOSLOT_DISP_HELD_MAP + PM_GCT_NOSLOT_DISP_HELD_SRQ + PM_GCT_NOSLOT_DISP_HELD_ISSQ + PM_GCT_NOSLOT_DISP_HELD_OTHER) / PM_RUN_INST_CMPL)",
++        "MetricExpr": "(PM_GCT_NOSLOT_DISP_HELD_MAP + PM_GCT_NOSLOT_DISP_HELD_SRQ + PM_GCT_NOSLOT_DISP_HELD_ISSQ + PM_GCT_NOSLOT_DISP_HELD_OTHER) / PM_RUN_INST_CMPL",
+         "MetricGroup": "cpi_breakdown",
+         "MetricName": "gct_empty_disp_held_cpi"
+     },
 -- 
 2.26.2.526.g744177e7f7-goog
 
