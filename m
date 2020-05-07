@@ -2,48 +2,49 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C24AC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3B9C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CE95205C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E72F22083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:02:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cA2dOUFy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pls1SqfZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgEGOCP (ORCPT
+        id S1726825AbgEGOCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:02:15 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:30719 "EHLO
+        Thu, 7 May 2020 10:02:24 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54247 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725969AbgEGOCO (ORCPT
+        by vger.kernel.org with ESMTP id S1726678AbgEGOCX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:02:14 -0400
+        Thu, 7 May 2020 10:02:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588860131;
+        s=mimecast20190719; t=1588860142;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=YnnUFsND7O7jqtL6msM8nwBMUisTSmUw25RGNt2JJrs=;
-        b=cA2dOUFyzz3xZhTTLdSIVp2NdSKgyvVyjJ7QTDkMFgWT9gTFSDzCrdeUyfPikRSQMu3xGf
-        Mq74s3CzLtsnht/MY5YB3umFiMFUBEIhpmuc16oAZyq+CtENaxIBF23J2auFnsQThh6Tyl
-        aRd0kk9AqCyan2cnxq6EYo9YLniVyaY=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bZbBw7pXrLEF6sMrGYbjSbEl9LiCTQZ70w4P7ewpeMA=;
+        b=Pls1SqfZaBSO+HODDTIPG3YFWhGXeyiAS0qlXVakaSan+Cc7dP3G4s9nNmNVzCTkqQoWH6
+        kPUsHIY+nJDctAQLySGmxw8P0KfOlF1Nz0uexHNvsBuUBe8g7JS7rabvKGSgfQVn9aj8mo
+        aZD906JpyzDS07Bqujqe0re8JjRd814=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-103-rdP8lYCVMWC9u4yrElCVAQ-1; Thu, 07 May 2020 10:02:03 -0400
-X-MC-Unique: rdP8lYCVMWC9u4yrElCVAQ-1
+ us-mta-262-FujlqWNdOwiAyUi_dGs_dg-1; Thu, 07 May 2020 10:02:15 -0400
+X-MC-Unique: FujlqWNdOwiAyUi_dGs_dg-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C4169835B45;
-        Thu,  7 May 2020 14:01:58 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D0FD9835B52;
+        Thu,  7 May 2020 14:02:13 +0000 (UTC)
 Received: from t480s.redhat.com (ovpn-113-245.ams2.redhat.com [10.36.113.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AF26260FB9;
-        Thu,  7 May 2020 14:01:40 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0024661100;
+        Thu,  7 May 2020 14:02:11 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
@@ -51,36 +52,12 @@ Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
         Michal Hocko <mhocko@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         "Michael S . Tsirkin" <mst@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Alexander Potapenko <glider@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Len Brown <lenb@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Wei Yang <richard.weiyang@gmail.com>
-Subject: [PATCH v4 00/15] virtio-mem: paravirtualized memory
-Date:   Thu,  7 May 2020 16:01:24 +0200
-Message-Id: <20200507140139.17083-1-david@redhat.com>
+        David Hildenbrand <david@redhat.com>
+Subject: [PATCH v4 02/15] MAINTAINERS: Add myself as virtio-mem maintainer
+Date:   Thu,  7 May 2020 16:01:26 +0200
+Message-Id: <20200507140139.17083-3-david@redhat.com>
+In-Reply-To: <20200507140139.17083-1-david@redhat.com>
+References: <20200507140139.17083-1-david@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
@@ -89,71 +66,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series is based on v5.7-rc4. The patches are located at:
-    https://github.com/davidhildenbrand/linux.git virtio-mem-v4
+Let's make sure patches/bug reports find the right person.
 
-This is basically a resend of v3 [1], now based on v5.7-rc4 and restested.
-One patch was reshuffled and two ACKs I missed to add were added. The
-rebase did not require any modifications to patches.
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Details about virtio-mem can be found in the cover letter of v2 [2]. A
-basic QEMU implementation was posted yesterday [3].
-
-[1] https://lkml.kernel.org/r/20200507103119.11219-1-david@redhat.com
-[2] https://lkml.kernel.org/r/20200311171422.10484-1-david@redhat.com
-[3] https://lkml.kernel.org/r/20200506094948.76388-1-david@redhat.com
-
-v3 -> v4:
-- Move "MAINTAINERS: Add myself as virtio-mem maintainer" to #2
-- Add two ACKs from Andrew (in reply to v2)
--- "mm: Allow to offline unmovable PageOffline() pages via ..."
--- "mm/memory_hotplug: Introduce offline_and_remove_memory()"
-
-v2 -> v3:
-- "virtio-mem: Paravirtualized memory hotplug"
--- Include "linux/slab.h" to fix build issues
--- Remember the "region_size", helpful for patch #11
--- Minor simplifaction in virtio_mem_overlaps_range()
--- Use notifier_from_errno() instead of notifier_to_errno() in notifier
--- More reliable check for added memory when unloading the driver
-- "virtio-mem: Allow to specify an ACPI PXM as nid"
--- Also print the nid
-- Added patch #11-#15
-
-David Hildenbrand (15):
-  virtio-mem: Paravirtualized memory hotplug
-  MAINTAINERS: Add myself as virtio-mem maintainer
-  virtio-mem: Allow to specify an ACPI PXM as nid
-  virtio-mem: Paravirtualized memory hotunplug part 1
-  virtio-mem: Paravirtualized memory hotunplug part 2
-  mm: Allow to offline unmovable PageOffline() pages via
-    MEM_GOING_OFFLINE
-  virtio-mem: Allow to offline partially unplugged memory blocks
-  mm/memory_hotplug: Introduce offline_and_remove_memory()
-  virtio-mem: Offline and remove completely unplugged memory blocks
-  virtio-mem: Better retry handling
-  virtio-mem: Add parent resource for all added "System RAM"
-  virtio-mem: Drop manual check for already present memory
-  virtio-mem: Unplug subblocks right-to-left
-  virtio-mem: Use -ETXTBSY as error code if the device is busy
-  virtio-mem: Try to unplug the complete online memory block first
-
- MAINTAINERS                     |    7 +
- drivers/acpi/numa/srat.c        |    1 +
- drivers/virtio/Kconfig          |   17 +
- drivers/virtio/Makefile         |    1 +
- drivers/virtio/virtio_mem.c     | 1962 +++++++++++++++++++++++++++++++
- include/linux/memory_hotplug.h  |    1 +
- include/linux/page-flags.h      |   10 +
- include/uapi/linux/virtio_ids.h |    1 +
- include/uapi/linux/virtio_mem.h |  208 ++++
- mm/memory_hotplug.c             |   81 +-
- mm/page_alloc.c                 |   26 +
- mm/page_isolation.c             |    9 +
- 12 files changed, 2314 insertions(+), 10 deletions(-)
- create mode 100644 drivers/virtio/virtio_mem.c
- create mode 100644 include/uapi/linux/virtio_mem.h
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2926327e4976..014bbf5897c2 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17972,6 +17972,13 @@ S:	Maintained
+ F:	drivers/iommu/virtio-iommu.c
+ F:	include/uapi/linux/virtio_iommu.h
+ 
++VIRTIO MEM DRIVER
++M:	David Hildenbrand <david@redhat.com>
++L:	virtualization@lists.linux-foundation.org
++S:	Maintained
++F:	drivers/virtio/virtio_mem.c
++F:	include/uapi/linux/virtio_mem.h
++
+ VIRTUAL BOX GUEST DEVICE DRIVER
+ M:	Hans de Goede <hdegoede@redhat.com>
+ M:	Arnd Bergmann <arnd@arndb.de>
 -- 
 2.25.3
 
