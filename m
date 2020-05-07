@@ -2,81 +2,112 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0E3C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 05:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54460C47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 05:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 786B921841
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 05:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EC7F2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 05:18:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="slcpKIce"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgEGFSU (ORCPT
+        id S1726495AbgEGFSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 01:18:20 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3831 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725601AbgEGFSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 01:18:20 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 41BE2419C58FC7F755E5;
-        Thu,  7 May 2020 13:18:18 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 7 May 2020 13:18:08 +0800
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-To:     David Kershner <david.kershner@unisys.com>
-CC:     Wei Yongjun <weiyongjun1@huawei.com>, <sparmaintainer@unisys.com>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] visorbus: fix error return code in visorchipset_init()
-Date:   Thu, 7 May 2020 05:22:11 +0000
-Message-ID: <20200507052211.103018-1-weiyongjun1@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 7 May 2020 01:18:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47854 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725601AbgEGFSY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 01:18:24 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD580C061A41
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 22:18:22 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id j21so2296743pgb.7
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 22:18:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EjwpJVR1oS9DdS7pegxHcKxChjnzSaTIkyZTVhILaoo=;
+        b=slcpKIceAq3cfjYgNr8Zhq1cKoLAoXXqoHotEAb2xiQ35kfA512G47MwpKhZXuM/7e
+         CPnlmatcZzVIRfNzpy00KH25stfePubouqjpWYnEmzYbZ4ABGq0cZy3Nmuh7tvH2wUGL
+         a5veNcqHV2kXAgW7D+G/lGfw7VAQcdJhiOQnGPFvP3w7C1vRRwMk7rCHjG23Uw3Q0w1u
+         jBhgWVFKipZ/m5hr6AzK9WoqH9NgDiX0dGl4AWiRoCTXvB4aa07ZvnHrV99m3lGg3wsh
+         //8wutcZlOEfr0/AnEAjs7Cc4yZV4yYPA2Db4R7sXaVoPjV+1d9BSXEk4soUalWD6wMI
+         L1ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EjwpJVR1oS9DdS7pegxHcKxChjnzSaTIkyZTVhILaoo=;
+        b=TOMVWTcWl+l9u6e4znPHPqzKMsA2ZngyEI4/EQBeBuOgscnAcQyQUswNXwEfX0XkHf
+         VX/K91eapLZcxrMJczDXPZE03NKWyrxAi2Wf72X3QSEEj1d2ImapWLigXDKEEbe+nVLo
+         5Sw9jQ3j4CTpgATM0yEK01VTDnikMiVVyXu+sp1z+KL8Di6LByT7e8bIjXL6XFtwZtnX
+         wluv6VRXedeBFykNuo9eKUpcanl4IYoNzIg8F4ImrCeVfSaF7h4UroPK7Tj/e6pSI4+L
+         Z42ZeJujmQ8Q/fRcSdzbPaJ2JA/lGEsMWGAW5nJMfcued1XV4TOgP82btSjvAMlyJotX
+         mMIA==
+X-Gm-Message-State: AGi0PuZ2jeqDrT9lg24SuNG6OTCxrJAstA+OKVw3gC+ZWH55Q8fC1C89
+        xZ/qAgsK5PKrGFieVpkEnr4j/g==
+X-Google-Smtp-Source: APiQypIEmsP8B+EwGLQga6A4T0mFxXwfh7oJIQ8PZk2O+MdkKuUNTJ0xX+z5cnzD4HZ+G174irQzXg==
+X-Received: by 2002:a62:3181:: with SMTP id x123mr11697759pfx.109.1588828701997;
+        Wed, 06 May 2020 22:18:21 -0700 (PDT)
+Received: from localhost ([122.171.118.46])
+        by smtp.gmail.com with ESMTPSA id v127sm3499629pfv.77.2020.05.06.22.18.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 May 2020 22:18:21 -0700 (PDT)
+Date:   Thu, 7 May 2020 10:48:18 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     rjw@rjwysocki.net, Mian Yousaf Kaukab <ykaukab@suse.de>
+Cc:     linux-pm@vger.kernel.org, andy.tang@nxp.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, shawnguo@kernel.org, leoyang.li@nxp.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v2 1/2] cpufreq: qoriq: convert to a platform driver
+Message-ID: <20200507051818.xi43yfusjktemd5r@vireshk-i7>
+References: <20200421083000.16740-1-ykaukab@suse.de>
+ <20200428110125.lobyrsbma6astfmq@vireshk-i7>
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428110125.lobyrsbma6astfmq@vireshk-i7>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix to return negative error code -ENODEV from the visor_check_channel()
-error handling case instead of 0. Also change the error code to -ENOMEM
-in kzalloc() error case.
+On 28-04-20, 16:31, Viresh Kumar wrote:
+> On 21-04-20, 10:29, Mian Yousaf Kaukab wrote:
+> > The driver has to be manually loaded if it is built as a module. It
+> > is neither exporting MODULE_DEVICE_TABLE nor MODULE_ALIAS. Moreover,
+> > no platform-device is created (and thus no uevent is sent) for the
+> > clockgen nodes it depends on.
+> > 
+> > Convert the module to a platform driver with its own alias. Moreover,
+> > drop whitelisted SOCs. Platform device will be created only for the
+> > compatible platforms.
+> > 
+> > Reviewed-by: Yuantian Tang <andy.tang@nxp.com>
+> > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
+> > ---
+> > v2:
+> >  +Rafael, Stephen, linux-clk
+> >  Add Reviewed-by and Acked-by tags
+> > 
+> >  drivers/cpufreq/qoriq-cpufreq.c | 76 ++++++++++++++++-------------------------
+> >  1 file changed, 29 insertions(+), 47 deletions(-)
+> 
+> @Rafael,
+> 
+> Though this looks to be PPC stuff, but it is used on both ARM and PPC. Do you
+> want to pick them up or should I do that ?
 
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
----
- drivers/visorbus/visorchipset.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Applied now. Thanks.
 
-diff --git a/drivers/visorbus/visorchipset.c b/drivers/visorbus/visorchipset.c
-index cb1eb7e05f87..5668cad86e37 100644
---- a/drivers/visorbus/visorchipset.c
-+++ b/drivers/visorbus/visorchipset.c
-@@ -1561,7 +1561,7 @@ static void controlvm_periodic_work(struct work_struct *work)
- 
- static int visorchipset_init(struct acpi_device *acpi_device)
- {
--	int err = -ENODEV;
-+	int err = -ENOMEM;
- 	struct visorchannel *controlvm_channel;
- 
- 	chipset_dev = kzalloc(sizeof(*chipset_dev), GFP_KERNEL);
-@@ -1584,8 +1584,10 @@ static int visorchipset_init(struct acpi_device *acpi_device)
- 				 "controlvm",
- 				 sizeof(struct visor_controlvm_channel),
- 				 VISOR_CONTROLVM_CHANNEL_VERSIONID,
--				 VISOR_CHANNEL_SIGNATURE))
-+				 VISOR_CHANNEL_SIGNATURE)) {
-+		err = -ENODEV;
- 		goto error_delete_groups;
-+	}
- 	/* if booting in a crash kernel */
- 	if (is_kdump_kernel())
- 		INIT_DELAYED_WORK(&chipset_dev->periodic_controlvm_work,
-
-
-
+-- 
+viresh
